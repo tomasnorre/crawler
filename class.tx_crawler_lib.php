@@ -748,7 +748,6 @@ class tx_crawler_lib {
 			$reqHeaders = array();
 			$reqHeaders[] = 'GET '.$url['path'].($url['query'] ? '?'.$url['query'] : '').' HTTP/1.0';
 			$reqHeaders[] = 'Host: '.$url['host'];
-			$reqHeaders[] = 'Connection: keep-alive';
 			$reqHeaders[] = 'X-T3crawler: '.$crawlerId;
 
 				// Request message:
