@@ -1,0 +1,10 @@
+
+  # cat=basic//10; type=int [0-10000]; label= Time in milliseconds the crawler should sleep beetween requesting urls: low = faster / high = less stress for the server
+  sleepTime = 1000
+
+  
+  # cat=basic//10; type=int [0-100]; label= Time in seconds the crawler should sleep before finishing
+  sleepAfterFinish=10
+  
+  # cat=basic//10; type=int [1-10000]; label= How many queue entries should be processed in a run
+  countInARun=100
