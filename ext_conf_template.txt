@@ -1,10 +1,12 @@
 
   # cat=basic//10; type=int [0-10000]; label= Time in milliseconds the crawler should sleep beetween requesting urls: low = faster / high = less stress for the server
   sleepTime = 1000
-
   
   # cat=basic//10; type=int [0-100]; label= Time in seconds the crawler should sleep before finishing
   sleepAfterFinish=10
   
   # cat=basic//10; type=int [1-10000]; label= How many queue entries should be processed in a run
   countInARun=100
+  
+  # cat=basic//10; type=int [1-365]; label= Delete processed items from the queue after n days (0 will keep the entries forever - the database may grow very large over time!)
+  purgeQueueDays=14

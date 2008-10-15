@@ -161,7 +161,7 @@ class tx_crawler_lib {
 	function tx_crawler_lib() {
 	    //read ext_em_conf_template settings and set
 	    $this->extensionSettings=unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['crawler']);
-	    print_r($this->extensionSettings);
+	    // print_r($this->extensionSettings);
 	    //set defaults:
 	    if ($this->extensionSettings['countInARun']=='') $this->extensionSettings['countInARun']=100;
 	    
@@ -1182,6 +1182,15 @@ class tx_crawler_lib {
 	    
 			// First, run hooks:
 		$this->CLI_runHooks();
+		
+			// Clean up the queue
+		if (intval($this->extensionSettings['purgeQueueDays']) > 0) {
+			$purgeDate = time() - 24 * 60 * 60 * intval($this->extensionSettings['purgeQueueDays']);
+			$del = $GLOBALS['TYPO3_DB']->exec_DELETEquery(
+				'tx_crawler_queue',
+				'exec_time!=0 AND exec_time<' . $purgeDate
+			);
+		}
 
 			// Select entries:
 		$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
@@ -1190,18 +1199,18 @@ class tx_crawler_lib {
 			'exec_time=0
 				AND scheduled<='.time(),
 			'',
-			'scheduled',
-			$this->extensionSettings['countInARun']);
+			'scheduled, qid',
+			intval($this->extensionSettings['countInARun']));
 
 		$counter = 0;
 		foreach($rows as $r)	{
 			$this->readUrl($r['qid']);
 			$counter++;
-			usleep($this->extensionSettings['sleepTime']);	// Just to relax the system 
+			usleep(intval($this->extensionSettings['sleepTime']));	// Just to relax the system 
 
 			if ($this->CLI_isDisabled())	break;
 		}
-		sleep($this->extensionSettings['sleepAfterFinish']); 
+		sleep(intval($this->extensionSettings['sleepAfterFinish'])); 
 		return 'Rows: '.$counter;
 	}
 
