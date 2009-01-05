@@ -10,3 +10,12 @@
   
   # cat=basic//10; type=int [1-365]; label= Delete processed items from the queue after n days (0 will keep the entries forever - the database may grow very large over time!)
   purgeQueueDays=14
+  
+  # cat=basic//10; type=int [1-99]; label= Maximum processes: 1 keeps the default - 2+ should be used with adjusted CLI-Calls only
+  processLimit=1
+  
+  # cat=basic//10; type=int [1- 86400]; label= Maximal process runtime: in secounds - only necessary if processLimit > 1
+  processMaxRunTime=300
+  
+  # cat=basic//10; type=boolean; label= Print Multiprocess- processing informations - prints some informations whether a process was really executed and which status it has
+  processDebug=0
