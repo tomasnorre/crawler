@@ -306,8 +306,7 @@ class tx_crawler_lib {
 							$res[$key]['subCfg'] = $subCfg;
 							$res[$key]['paramParsed'] = $this->parseParams($values);
 							$res[$key]['paramExpanded'] = $this->expandParameters($res[$key]['paramParsed'],$id);
-							$res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'],array('?id='.$id));
-						
+							
 							// recognize MP value
 							if(!$this->MP){
 								$res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'],array('?id='.$id));
