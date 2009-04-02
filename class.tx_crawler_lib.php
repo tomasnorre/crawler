@@ -1087,7 +1087,7 @@ class tx_crawler_lib {
 	 */
 	function CLI_main()	{
         if ($this->debugMode) t3lib_div::devlog('crawler CLI_main -'.microtime(true),__FUNCTION__);
-        $this->CLI_debug("creating process (".$this->CLI_buildProcessId().")");
+        $this->CLI_debug("creating process (".$this->CLI_buildProcessId().")");        
 		// Checking that no other CLI is running:
         if (($this->hasMultipleProcessSupport() && $this->CLI_checkAndAcquireNewProcess($this->CLI_buildProcessId())) || !$this->CLI_checkProcess())	{
 				// Set "start" status (thus reserving to run!)
@@ -1412,11 +1412,12 @@ class tx_crawler_lib {
         // this ensures that a single process can't mess up the entire process table
         
         // mark all processes as deleted which have no "waiting" queue-entires and which are not active
-        $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_crawler_process','active=0 AND NOT EXISTS (SELECT * FROM tx_crawler_queue  WHERE tx_crawler_queue.process_id = tx_crawler_process.process_id AND tx_crawler_queue.exec_time = 0',array('deleted'=>'1'));
-        
+        $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_crawler_queue','process_id IN (SELECT process_id FROM tx_crawler_process WHERE active=0 AND deleted=0)',array('process_scheduled'=>0,'process_id'=>''));        
+        $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_crawler_process','active=0 AND NOT EXISTS (SELECT * FROM tx_crawler_queue  WHERE tx_crawler_queue.process_id = tx_crawler_process.process_id AND tx_crawler_queue.exec_time = 0)',array('deleted'=>'1'));
+       
         // mark all requested processes as non-active
         $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_crawler_process','process_id IN (\''.implode('\',\'',$releaseIds).'\') AND deleted=0',array('active'=>'0'));
-        $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_crawler_queue','exec_time=0 AND process_id IN ("'.implode('","',$releaseIds).'")',array('process_scheduled'=>0));        
+        $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_crawler_queue','exec_time=0 AND process_id IN ("'.implode('","',$releaseIds).'")',array('process_scheduled'=>0,'process_id'=>''));        
         if(!$withinLock) $GLOBALS['TYPO3_DB']->sql_query('COMMIT');    
         return true;
     }   
