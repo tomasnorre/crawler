@@ -774,6 +774,7 @@ class tx_crawler_lib {
 //			$reqHeaders[] = 'Connection: keep-alive';
 			$reqHeaders[] = 'Connection: close';
 			$reqHeaders[] = 'X-T3crawler: '.$crawlerId;
+			$reqHeaders[] = 'User-Agent: TYPO3 crawler';
 				// Request message:
 			$msg = implode("\r\n",$reqHeaders)."\r\n\r\n";
 
