@@ -966,12 +966,12 @@ class tx_crawler_lib {
 		$pageinfo = t3lib_BEfunc::readPageAccess($id,$perms_clause);
 
 			// Set root row:
-		$HTML = '<img src="'.$BACK_PATH.t3lib_iconWorks::getIcon('pages',$pageinfo).'" width="18" height="16" align="top" class="c-recIcon" alt="" />';
+		$HTML = '<img' . t3lib_iconWorks::skinImg($GLOBALS['BACK_PATH'], t3lib_iconWorks::getIcon('pages', $this->pObj->pageinfo)) . ' align="top" class="c-recIcon" alt="" />';
+
 		$tree->tree[] = Array(
 			'row' => $pageinfo,
 			'HTML' => $HTML
 		);
-
 
 			// Get branch beneath:
 		if ($depth)	{
