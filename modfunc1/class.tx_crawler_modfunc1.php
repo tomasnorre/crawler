@@ -767,7 +767,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		$output.= ' - <input type="submit" value="Run now" name="_run" />';
 
 		$output.= '<br/><br/>Consider running the CLI script from shell: <br/>'.
-					t3lib_extMgm::extPath('crawler').'cli/crawler_cli.phpsh';
+					t3lib_div::getIndpEnv('TYPO3_DOCUMENT_ROOT') . '/typo3/cli_dispatch.phpsh crawler';
 
 
 		return $output;
