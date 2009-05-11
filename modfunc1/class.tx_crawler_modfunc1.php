@@ -581,8 +581,12 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 					$requestContent = unserialize($vv['result_data']);
 					$requestResult = unserialize($requestContent['content']);
 
-					if (is_array($requestResult))	{
-						$resStatus = 'OK';
+					if (is_array($requestResult)) {
+						if (empty($requestResult['errorlog'])) {
+							$resStatus = 'OK';
+						} else {
+							$resStatus = implode("\n", $requestResult['errorlog']);
+						}
 						$resLog = is_array($requestResult['log']) ?  implode(chr(10),$requestResult['log']) : '';
 					} else {
 						$resStatus = 'Error: '.substr(ereg_replace('[[:space:]]+',' ',strip_tags($requestContent['content'])),0,100).'...';
