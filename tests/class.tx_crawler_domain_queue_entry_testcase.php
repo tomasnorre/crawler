@@ -82,12 +82,34 @@ class tx_crawler_domain_queueEntry_testcase extends tx_phpunit_database_testcase
    		$GLOBALS['TYPO3_DB']->sql_select_db(TYPO3_db);
 	}
 	
+
 	/**
-	* Implemt your test here!
-	* @todo
-	*/
-	public function test_canSubjectDo(){
-		$this->fail('implement a testcase');
+	 * This testcase should be used to test, that an queueEntry object creates the correct urls
+	 * to be crawled by the crawler.
+	 * 
+	 * @param void
+	 * @return void
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 *
+	 */
+	public function canGetUrlsFromQueueEntry(){
+		$fixtureCrawlerConfiguration = new tx_crawler_domain_configuration_configuration();
+		$fixtureCrawlerConfiguration->setName('staticpub');
+		$fixtureCrawlerConfiguration->setConfiguration('&S=CRAWL&L=[4|5]');
+		$fixtureCrawlerConfiguration->setBaseUrl('http://www.testcase.de');
+		$fixtureCrawlerConfiguration->setProcInstructionFilter('tx_staticpub_publish,tx_cachemgm_recache');
+
+		//
+		$queueEntryMock 			 = $this->getMock('tx_crawler_domain_queue_entry',array('getConfigurationObject'),array());
+		$queueEntryMock->setPageid(4711);
+		$queueEntryMock->expects($this->any())->method('getConfigurationObject')->will($this->returnValue($fixtureCrawlerConfiguration));
+		
+		$URLs = $queueEntryMock->getUrls();
+		
+		$this->assertEquals($URLs[0],'http://www.testcase.de/index.php?id=4711&L=4&S=CRAWL');
+		$this->assertEquals($URLs[1],'http://www.testcase.de/index.php?id=4711&L=5&S=CRAWL');
+		$this->assertEquals($URLs[2],'http://www.testcase.de/index.php?id=4711&L=4&S=CRAWL');
+		$this->assertEquals($URLs[3],'http://www.testcase.de/index.php?id=4711&L=5&S=CRAWL');
 	}
 }
 

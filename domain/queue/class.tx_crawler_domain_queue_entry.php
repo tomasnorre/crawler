@@ -68,17 +68,20 @@ class tx_crawler_domain_queue_entry extends tx_mvc_ddd_abstractDbObject {
 	 * 
 	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 * @return tx_crawler_domain_configuration_configuration
-	 * 
-	 *
 	 */
 	protected function getConfigurationObject(){
-		//if internal attribute is set retrieve from record 
-		if(is_int($this->getConfiguration_id())){
-			
-			
-		}elseif(is_string( $this->getConfiguration_id() )){
-			//else parse from pagets config 
+
+		if(!$this->row['configurationObject'] instanceof tx_crawler_domain_configuration_configuration){
+			//if internal attribute is set retrieve from record 
+			if(is_int($this->getConfiguration_id())){
+				$configurationRepository = new tx_crawler_configuration_configurationRepository();
+				$this->row['configurationObject'] = $configurationRepository->findById($this->getConfiguration_id());
+			}elseif(is_string( $this->getConfiguration_id() )){
+				//else parse from pagets config 
+			}
 		}
+		
+		return $this->row['configurationObject'];
 	}
 	
 	/**
@@ -86,16 +89,17 @@ class tx_crawler_domain_queue_entry extends tx_mvc_ddd_abstractDbObject {
 	 * entry.
 	 * 
 	 * @return ArrayObject
-	 *
 	 */
 	public function getURLs(){
 		$URLs = $this->compileUrls($this->getExpandedParameters(),array('?id='.$this->getPageId()));
 		
+		return $URLs;
 	}
 	
 	/**
 	 * Returns an array with expanded parameters
-	 *
+	 * 
+	 * @author Fabrizio Branca und Timo Schmidt 
 	 * @return array
 	 */
 	public function getExpandedParameters(){

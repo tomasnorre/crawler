@@ -5,6 +5,7 @@ CREATE TABLE tx_crawler_queue (
   qid int(11) DEFAULT '0' NOT NULL auto_increment,
   page_id int(11) DEFAULT '0' NOT NULL,
   parameters text NOT NULL,
+  crawler_configuration_id text NOT NULL,
   scheduled int(11) DEFAULT '0' NOT NULL,
   exec_time int(11) DEFAULT '0' NOT NULL,
   set_id int(11) DEFAULT '0' NOT NULL,

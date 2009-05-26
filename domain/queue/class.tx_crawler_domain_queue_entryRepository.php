@@ -114,6 +114,20 @@ class tx_crawler_domain_queue_entryRepository extends tx_mvc_ddd_abstractReposit
 	}
 	
 	/**
+	 * This method is used to return a set of queueEntrys.
+	 *
+	 */
+	public function findSetBySetId($setId){
+		$setId 					= tx_mvc_filter_factory::getIntGreaterThanFilter()->filter($setId);
+		
+		$where 					= "set_id='".$setId."'";
+		$orderby				= 'scheduled, qid';
+		$arrayObjects 			= $this->findByWhere($where,true,$orderby,'',$limit);
+		$queueEntryCollection 	= $this->buildQueueEntryCollectionFromArrayObject($arrayObjects);
+	}
+	
+	
+	/**
 	 * Helpermethod to create a queueEntryCollection from an ArrayObject
 	 *
 	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
