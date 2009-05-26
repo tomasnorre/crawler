@@ -9,7 +9,6 @@
 # Only the data in the array - anything else is removed by next write.
 # "version" and "dependencies" must not be touched!
 ########################################################################
-
 $EM_CONF[$_EXTKEY] = array(
 	'title' => 'Site Crawler',
 	'description' => 'Libraries and scripts for crawling the TYPO3 page tree. Used for re-caching, re-indexing, publishing applications etc.',

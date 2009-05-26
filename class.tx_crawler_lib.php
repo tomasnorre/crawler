@@ -176,11 +176,11 @@ class tx_crawler_lib {
 	 * @see getUrlsForPageId()
 	 */
 	function getUrlsForPageRow($pageRow)	{
-
 		if (!t3lib_div::inList('3,4',$pageRow['doktype']) && $pageRow['doktype']<200)	{
-			$res = $this->getUrlsForPageId($pageRow['uid']);
+			$res = tx_crawler_crawlerService::getCrawlerConfigurationsForPage($pageRow['uid']);
+			//$res = $this->getUrlsForPageId($pageRow['uid']);
 		} else {
-			$res = array();
+			$res = false;
 		}
 
 		return $res;
@@ -273,7 +273,8 @@ class tx_crawler_lib {
 	 * @return	array
 	 */
 	function getUrlsForPageId($id)	{
-
+		throw new Exception('deprecated');
+		
 			// Get page TSconfig for page ID:
 		$pageTSconfig = t3lib_BEfunc::getPagesTSconfig($id);
 
@@ -308,6 +309,7 @@ class tx_crawler_lib {
 				return $res;
 			}
 		}
+		
 
 		return array();
 	}
@@ -319,7 +321,8 @@ class tx_crawler_lib {
 	 * @return	array		Keys are Get var names, values are the values of the GET vars.
 	 */
 	function parseParams($inputQuery)	{
-
+		throw new Exception('deprecated');
+		
 			// Extract all GET parameters into an ARRAY:
 		$paramKeyValues = array();
 		$GETparams = explode('&', $inputQuery);
@@ -348,6 +351,7 @@ class tx_crawler_lib {
 	 * @return	array		Array with key (GET var name) with the value being an array of all possible values for that key.
 	 */
 	function expandParameters($paramArray,$pid)	{
+		throw new Exception('deprecated');
 		global $TCA;
 
 			// Traverse parameter names:
@@ -443,7 +447,8 @@ class tx_crawler_lib {
 	 * @return	array		URLs accumulated, if number of urls exceed 10000 it will return false as an error!
 	 */
 	function compileUrls($paramArray, $urls=array())	{
-
+		throw new Exception('deprecated');
+		
 		if (count($paramArray) && is_array($urls))	{
 
 				// shift first off stack:
@@ -803,126 +808,6 @@ class tx_crawler_lib {
 		}
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-	/**************************
-	 *
-	 * tslib_fe hooks:
-	 *
-	 **************************/
-
-	/**
-	 * Initialization hook (called after database connection)
-	 * Takes the "HTTP_X_T3CRAWLER" header and looks up queue record and verifies if the session comes from the system (by comparing hashes)
-	 *
-	 * @param	array		Parameters from frontend
-	 * @param	object		TSFE object (reference under PHP5)
-	 * @return	void
-	 */
-	function fe_init(&$params, $ref)	{
-
-			// Authenticate crawler request:
-		if (isset($_SERVER['HTTP_X_T3CRAWLER']))	{
-			list($queueId,$hash) = explode(':', $_SERVER['HTTP_X_T3CRAWLER']);
-			list($queueRec) = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*','tx_crawler_queue','qid='.intval($queueId));
-
-				// If a crawler record was found and hash was matching, set it up:
-			if (is_array($queueRec) && $hash === md5($queueRec['qid'].'|'.$queueRec['set_id'].'|'.$GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']))	{
-				$params['pObj']->applicationData['tx_crawler']['running'] = TRUE;
-				$params['pObj']->applicationData['tx_crawler']['parameters'] = unserialize($queueRec['parameters']);
-				$params['pObj']->applicationData['tx_crawler']['log'] = array();
-			} else {
-				die('No crawler entry found!');
-			}
-		}
-	}
-
-	/**
-	 * Initialization of FE-user, setting the user-group list if applicable.
-	 *
-	 * @param	array		Parameters from frontend
-	 * @param	object		TSFE object
-	 * @return	void
-	 */
-	function fe_feuserInit(&$params, $ref)	{
-		if ($params['pObj']->applicationData['tx_crawler']['running'])	{
-			$grList = $params['pObj']->applicationData['tx_crawler']['parameters']['feUserGroupList'];
-			if ($grList)	{
-				if (!is_array($params['pObj']->fe_user->user))	$params['pObj']->fe_user->user = array();
-				$params['pObj']->fe_user->user['usergroup'] = $grList;
-				$params['pObj']->applicationData['tx_crawler']['log'][] = 'User Groups: '.$grList;
-			}
-		}
-	}
-
-	/**
-	 * Whether to output rendered content or not. If the crawler is running, the rendered output is never outputted!
-	 *
-	 * @param	array		Parameters from frontend
-	 * @param	object		TSFE object
-	 * @return	void
-	 */
-	function fe_isOutputting(&$params, $ref)	{
-		if ($params['pObj']->applicationData['tx_crawler']['running'])	{
-			$params['enableOutput'] = FALSE;
-		}
-	}
-
-	/**
-	 * Concluding: Outputting serialized information instead of letting rendered content out.
-	 *
-	 * @param	array		Parameters from frontend
-	 * @param	object		TSFE object
-	 * @return	void
-	 */
-	function fe_eofe(&$params, $ref)	{
-		if ($params['pObj']->applicationData['tx_crawler']['running'])	{
-			$params['pObj']->applicationData['tx_crawler']['vars'] = array(
-				'id' => $params['pObj']->id,
-				'gr_list' => $params['pObj']->gr_list,
-				'no_cache' => $params['pObj']->no_cache,
-			);
-				/**
-				 * Required because some extensions (staticpub) might never be requested to run due to some Core side effects
-				 * and since this is considered as error the crawler should handle it properly
-				 */
-				if(is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'])) {
-					foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'] as $pollable) {
-						if(empty($params['pObj']->applicationData['tx_crawler']['log'][$pollable]['success'])) {
-							$params['pObj']->applicationData['tx_crawler']['errorlog'][] = 'Error: pollable extension ('.$pollable.') did not complete successfully.';
-						}
-					}
-				}
-
-				// Output log data for crawler (serialized content):
-				$str = serialize($params['pObj']->applicationData['tx_crawler']);
-				header('Content-Length: '.strlen($str));
-				echo $str;
-                // Exit since we don't want anymore output!
-			exit;
-		}
-	}
-
-
-
-
-
-
-
-
-
-
-
-
 	/*****************************
 	 *
 	 * Compiling URLs to crawl - tools
@@ -1222,10 +1107,15 @@ class tx_crawler_lib {
 			intval($this->extensionSettings['countInARun']));
 
         if ($this->hasMultipleProcessSupport() && count($rows)>0) {
-            $quidList = array();
+            
+        	/**
+        	 * Build a list of queue entrys
+        	 */
+        	$quidList = array();
             foreach($rows as $r) {
                 $quidList[] = $r['qid'];
             }
+            
             $GLOBALS['TYPO3_DB']->sql_query('BEGIN');
             $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_crawler_queue','qid IN ('.implode(',',$quidList).')',array('process_scheduled'=>time(),'process_id'=>$this->CLI_buildProcessId()));
             if($GLOBALS['TYPO3_DB']->sql_affected_rows() == count($quidList)) {
@@ -1374,7 +1264,7 @@ class tx_crawler_lib {
     *   @param  string  identification string for the process
     *   @return	boolean determines whether the attempt to get resources was successful
     */
-    function CLI_checkAndAcquireNewProcess($id) {
+    protected function CLI_checkAndAcquireNewProcess($id) {
 
         $ret = true;
         $processCount=0;
@@ -1409,7 +1299,7 @@ class tx_crawler_lib {
     *   @param boolean  show whether the DB-actions are included within an existings lock
     *   @return void
     */
-    function CLI_releaseProcesses($releaseIds,$withinLock=false) {
+    protected function CLI_releaseProcesses($releaseIds,$withinLock=false) {
 
         if(!is_array($releaseIds)) {
             $releaseIds = array($releaseIds);
@@ -1440,7 +1330,7 @@ class tx_crawler_lib {
     *   @param  string  identification string for the process
     *   @return boolean determines if the proccess is still active / has resources
     */
-    function CLI_checkIfProcessIsActive($pid) {
+    protected function CLI_checkIfProcessIsActive($pid) {
 
         $ret = false;
         $GLOBALS['TYPO3_DB']->sql_query('BEGIN');
@@ -1458,7 +1348,7 @@ class tx_crawler_lib {
     *
     *   @return string  the ID
     */
-    function CLI_buildProcessId() {
+    protected function CLI_buildProcessId() {
         if(!$this->processID) {
             $this->processID= t3lib_div::shortMD5(microtime(true));
         }
@@ -1470,7 +1360,7 @@ class tx_crawler_lib {
     *
     *   @param  string  the message
     */
-    function CLI_debug($msg) {
+    protected function CLI_debug($msg) {
         if(intval($this->extensionSettings['processDebug'])) {
             echo $msg."\n"; flush();
         }
@@ -1478,7 +1368,7 @@ class tx_crawler_lib {
 
     /**
     *    Determines whether multiple proccesses are supported
-    *
+    *	@todo check visibility
     *   @return boolean
     */
     function hasMultipleProcessSupport() {

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testcase>
+	<!-- now is 345600, yesterday is 259200 -->
+	<!-- processed entrys -->
+    <tx_crawler_queue>
+        <qid>3141</qid>
+        <page_id>10017</page_id>
+        <parameters></parameters>
+        <scheduled>259100</scheduled>
+        <exec_time>259130</exec_time>
+        <set_id>66254179</set_id>
+        <result_data></result_data>
+        <process_scheduled>0</process_scheduled>
+        <process_id></process_id>
+    </tx_crawler_queue>
+    
+    
+    <!-- items to process -->
+    <tx_crawler_queue>
+        <qid>3142</qid>
+        <page_id>10017</page_id>
+        <parameters></parameters>
+        <scheduled>259100</scheduled>
+        <exec_time></exec_time>
+        <set_id>66254179</set_id>
+        <result_data></result_data>
+        <process_scheduled>0</process_scheduled>
+        <process_id></process_id>
+    </tx_crawler_queue>
+    <tx_crawler_queue>
+        <qid>3143</qid>
+        <page_id>10017</page_id>
+        <parameters></parameters>
+        <scheduled>259100</scheduled>
+        <exec_time></exec_time>
+        <set_id>66254179</set_id>
+        <result_data></result_data>
+        <process_scheduled>0</process_scheduled>
+        <process_id></process_id>
+    </tx_crawler_queue>
+
+	<!-- future queue entry, should not be delivered -->
+    <tx_crawler_queue>
+        <qid>3144</qid>
+        <page_id>10017</page_id>
+        <parameters></parameters>
+        <scheduled>345601</scheduled>
+        <exec_time></exec_time>
+        <set_id>66254179</set_id>
+        <result_data></result_data>
+        <process_scheduled>0</process_scheduled>
+        <process_id></process_id>
+    </tx_crawler_queue>
+
+</testcase>
