@@ -1,5 +1,5 @@
 #
-# Table structure for table 'tx_realurl_pathcache'
+# Table structure for table 'tx_crawler_queue'
 #
 CREATE TABLE tx_crawler_queue (
   qid int(11) DEFAULT '0' NOT NULL auto_increment,
@@ -19,6 +19,10 @@ CREATE TABLE tx_crawler_queue (
 ) ENGINE=InnoDB;
 
 
+
+#
+# Table structure for table 'tx_crawler_process'
+#
 CREATE TABLE tx_crawler_process (
     process_id varchar(50) DEFAULT '' NOT NULL,
     active smallint(6) DEFAULT '0',
@@ -26,5 +30,18 @@ CREATE TABLE tx_crawler_process (
     deleted tinyint(4) unsigned DEFAULT '0' NOT NULL,
     
     KEY process_id (process_id)
+) ENGINE=InnoDB;
+
+
+
+#
+# Table structure for table 'tx_crawler_infopot'
+#
+CREATE TABLE tx_crawler_infopot (
+  uid int(11) DEFAULT '0' NOT NULL auto_increment,
+  entry int(11) DEFAULT '0' NOT NULL,
+  type text NOT NULL,
+
+  PRIMARY KEY (uid),
 ) ENGINE=InnoDB;
 
