@@ -46,6 +46,7 @@ require_once t3lib_extMgm::extPath('crawler') . 'domain/configuration/class.tx_c
 
 
 class tx_crawler_domain_queueEntry_testcase extends tx_phpunit_database_testcase {	
+	
 	/**
 	* This method overwrites the method of the baseclass to ensure that no live database will be used.
 	*

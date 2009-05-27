@@ -76,7 +76,9 @@ class tx_crawler_domain_queue_entry extends tx_mvc_ddd_abstractDbObject {
 			//if internal attribute is set retrieve from record 
 			if(is_int($this->getConfiguration_id())){
 				$configurationRepository = new tx_crawler_configuration_configurationRepository();
-				$this->row['configurationObject'] = $configurationRepository->findById($this->getConfiguration_id());
+				$configurationObject = $configurationRepository->findById($this->getConfiguration_id());
+				
+				 $this->row['configurationObject'] = $configurationObject;
 			}elseif(is_string( $this->getConfiguration_id() )){
 				//else parse from page ts configm the configuration id is the key of the configuration in this case 
 				$this->row['configurationObject'] = self::getCrawlerConfigurationObjectFromPageTsConfig($this->getPageid(), $this->getConfiguration_id());

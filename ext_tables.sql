@@ -53,7 +53,7 @@ CREATE TABLE tx_crawler_configuration (
   uid int(11) DEFAULT '0' NOT NULL auto_increment,
   name varchar (255),
   processing_instruction_filter varchar (255),
-  processing_instruction_parameters text,
+  processing_instruction_parameters_ts text,
   configuration text,
   base_url varchar (255),
   pidsonly varchar (255),
