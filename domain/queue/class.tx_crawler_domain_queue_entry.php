@@ -56,6 +56,7 @@ class tx_crawler_domain_queue_entry extends tx_mvc_ddd_abstractDbObject {
 	 * This method is used to overwrite the default primary key
 	 * in case of the crawler queue the primary key is qid
 	 *
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 * @return string
 	 */
 	public static function getPrimaryKeyField() {
@@ -77,18 +78,54 @@ class tx_crawler_domain_queue_entry extends tx_mvc_ddd_abstractDbObject {
 				$configurationRepository = new tx_crawler_configuration_configurationRepository();
 				$this->row['configurationObject'] = $configurationRepository->findById($this->getConfiguration_id());
 			}elseif(is_string( $this->getConfiguration_id() )){
-				//else parse from pagets config 
+				//else parse from page ts configm the configuration id is the key of the configuration in this case 
+				$this->row['configurationObject'] = self::getCrawlerConfigurationObjectFromPageTsConfig($this->getPageid(), $this->getConfiguration_id());
 			}
 		}
 		
 		return $this->row['configurationObject'];
 	}
 	
+	
+	/**
+	 * This method creates an instance of a crawler_configuration object from the page ts config
+	 *
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 * @param int $page_id
+	 * @param string $configuration_id id of the configuration subpart
+	 * @return tx_crawler_domain_configuration_configuration
+	 */
+	protected static function getCrawlerConfigurationObjectFromPageTsConfig($page_id, $configuration_id){
+		$ts_config	= t3lib_BEfunc::getPagesTSconfig($page_id);
+
+		$configurationObject	= new tx_crawler_domain_configuration_configuration();
+		
+		if(is_array($ts_config)){
+			$crawlerConfig 			= $ts_config['tx_crawler.']['crawlerCfg.']['paramSets.'];
+			$configString 			= $crawlerConfig[$configuration_id];
+			$subConfiguration 		= $crawlerConfig[$configuration_id.'.'];
+			
+			$configurationObject->setConfiguration($configString);
+			
+			if(is_array($subConfiguration)){
+				$configurationObject->setPidsonly($subConfiguration['pidsOnly']);
+				$configurationObject->setProcessing_instruction_filter(		$subConfiguration['procInstrFilter']);
+				$configurationObject->setProcessing_instruction_parameters(	$subConfiguration['procInstrParams.']);
+				$configurationObject->setBase_url($subConfiguration['baseUrl']);
+			}	
+		}
+		
+		
+		return $configurationObject;
+	}
+	
+	
 	/**
 	 * Returns a collection of urls which need to be crawled to complete this
 	 * entry.
 	 * 
-	 * @return ArrayObject
+	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 * @return array
 	 */
 	public function getURLs(){
 		$URLs = $this->compileUrls($this->getExpandedParameters(),array('?id='.$this->getPageId()));

@@ -133,7 +133,17 @@ class tx_crawler_domain_queueEntry_testcase extends tx_phpunit_database_testcase
 	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 */
 	public function canGetCrawlerConfigurationFromPageTSConfig(){
-		$this->importDataSet('fixtures/canGetCrawlerConfigurationFromPageTSConfig/pages.xml');
+		$this->importDataSet('/fixtures/canGetCrawlerConfigurationFromPageTSConfig/pages.xml');
+		$queueEntry = new tx_crawler_domain_queue_entry();
+		$queueEntry->setPageid(4711);
+		//needed to determine the correct subconfiguration from pagets config
+		$queueEntry->setConfiguration_id('staticpub');
+		
+		$URLs 		= $queueEntry->getUrls();
+		
+		$this->assertEquals($URLs[0],'?id=4711&L=4&S=CRAWL');
+		$this->assertEquals($URLs[1],'?id=4711&L=5&S=CRAWL');		
+		
 	}
 }
 
