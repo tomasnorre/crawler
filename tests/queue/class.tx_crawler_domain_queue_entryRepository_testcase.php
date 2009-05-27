@@ -97,7 +97,15 @@ class tx_crawler_domain_queue_entryRepository_testcase extends tx_phpunit_databa
    		$this->dropDatabase();
    		$GLOBALS['TYPO3_DB']->sql_select_db(TYPO3_db);
 	}
-	
+
+	/**
+	 * Overwrites the importDataSet method 
+	 * 
+	 * @param string path to import
+	 */
+	protected function importDataSet($path){
+		parent::importDataSet(  dirname ( __FILE__ ) . $path);	
+	}	
 	
 	/**
 	* This testcase is used to test that old queue entrys can be purged.
