@@ -39,15 +39,24 @@ CREATE TABLE tx_crawler_process (
 # Table structure for table 'tx_crawler_infopot'
 #
 CREATE TABLE tx_crawler_infopot (
-    uid int(11) NOT NULL auto_increment,
-    pid int(11) DEFAULT '0' NOT NULL,
-    tstamp int(11) DEFAULT '0' NOT NULL,
-    crdate int(11) DEFAULT '0' NOT NULL,
-    cruser_id int(11) DEFAULT '0' NOT NULL,
-    type tinytext NOT NULL,
-    queueentry_id blob NOT NULL,
-    
-    PRIMARY KEY (uid),
-    KEY parent (pid)
-);
+  uid int(11) DEFAULT '0' NOT NULL auto_increment,
+  entry int(11) DEFAULT '0' NOT NULL,
+  type text NOT NULL,
 
+  PRIMARY KEY (uid),
+) ENGINE=InnoDB;
+
+#
+# Table structure for table 'tx_crawler_configuration'
+#
+CREATE TABLE tx_crawler_configuration (
+  uid int(11) DEFAULT '0' NOT NULL auto_increment,
+  name varchar (255),
+  processing_instruction_filter varchar (255),
+  processing_instruction_parameters text,
+  configuration text,
+  base_url varchar (255),
+  pidsonly varchar (255),
+
+  PRIMARY KEY (uid),
+) ENGINE=InnoDB;
