@@ -89,6 +89,8 @@
 require_once(PATH_t3lib.'class.t3lib_pagetree.php');
 require_once(PATH_t3lib.'class.t3lib_cli.php');
 
+require_once t3lib_extMgm::extPath('crawler').'domain/crawler/class.tx_crawler_domain_crawler_service.php';
+
 
 /**
  * Cli basis:
@@ -144,8 +146,10 @@ class tx_crawler_lib {
 	var $duplicateTrack = array();
 	var $downloadUrls = array();
 
-
-	var $registerQueueEntriesInternallyOnly = array();
+	/**
+	 * @var bool
+	 */
+	var $registerQueueEntriesInternallyOnly  = false;
 	var $queueEntries = array();
 	var $urlList = array();
 
@@ -161,7 +165,7 @@ class tx_crawler_lib {
 
 	function tx_crawler_lib() {
 	    //read ext_em_conf_template settings and set
-	    $this->extensionSettings=unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['crawler']);
+	    $this->extensionSettings = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['crawler']);
 	    // print_r($this->extensionSettings);
 	    //set defaults:
 	    if ($this->extensionSettings['countInARun']=='') $this->extensionSettings['countInARun']=100;
@@ -171,13 +175,12 @@ class tx_crawler_lib {
 	/**
 	 * Returns array with URLs to process for input page row, ignoring pages like doktype 3,4 and 200+
 	 *
-	 * @param	array		Page record with at least doktype and uid columns.
-	 * @return	array		Result (see getUrlsForPageId())
-	 * @see getUrlsForPageId()
+	 * @param array Page record with at least doktype and uid columns.
+	 * @return tx_crawler_domain_configuration_configurationCollection
 	 */
-	function getUrlsForPageRow($pageRow)	{
+	function getUrlsForPageRow(array $pageRow)	{
 		if (!t3lib_div::inList('3,4',$pageRow['doktype']) && $pageRow['doktype']<200)	{
-			$res = tx_crawler_crawlerService::getCrawlerConfigurationsForPage($pageRow['uid']);
+			$res = tx_crawler_domain_crawler_service::getCrawlerConfigurationsForPage($pageRow['uid']);
 			//$res = $this->getUrlsForPageId($pageRow['uid']);
 		} else {
 			$res = false;
@@ -274,7 +277,7 @@ class tx_crawler_lib {
 	 */
 	function getUrlsForPageId($id)	{
 		throw new Exception('deprecated');
-		
+
 			// Get page TSconfig for page ID:
 		$pageTSconfig = t3lib_BEfunc::getPagesTSconfig($id);
 
@@ -309,7 +312,7 @@ class tx_crawler_lib {
 				return $res;
 			}
 		}
-		
+
 
 		return array();
 	}
@@ -322,7 +325,7 @@ class tx_crawler_lib {
 	 */
 	function parseParams($inputQuery)	{
 		throw new Exception('deprecated');
-		
+
 			// Extract all GET parameters into an ARRAY:
 		$paramKeyValues = array();
 		$GETparams = explode('&', $inputQuery);
@@ -448,7 +451,7 @@ class tx_crawler_lib {
 	 */
 	function compileUrls($paramArray, $urls=array())	{
 		throw new Exception('deprecated');
-		
+
 		if (count($paramArray) && is_array($urls))	{
 
 				// shift first off stack:
@@ -607,7 +610,7 @@ class tx_crawler_lib {
 	 * @param	integer		Scheduled-time
 	 * @return	void
 	 */
-	function addUrl($id,$url,$subCfg,$tstamp)	{
+	function addUrl($id, $url, $subCfg, $tstamp)	{
 		global $TYPO3_CONF_VARS;
 
 			// Creating parameters:
@@ -637,7 +640,7 @@ class tx_crawler_lib {
 			'result_data' => '',
 		);
 
-
+		// TODO: replace by
 		if ($this->registerQueueEntriesInternallyOnly)	{
 			$this->queueEntries[] = $fieldArray;
 		} else {
@@ -690,10 +693,10 @@ class tx_crawler_lib {
 	/**
 	 * Read URL for not-yet-inserted log-entry
 	 *
-	 * @param	integer		Queue field array,
-	 * @return	void
+	 * @param	array		Queue field array,
+	 * @return	tx_crawler_domain_crawler_httpResponse
 	 */
-	function readUrlFromArray($field_array)	{
+	function readUrlFromArray(array $field_array)	{
 
 			// Set exec_time to lock record:
 		$field_array['exec_time'] = time();
@@ -712,33 +715,37 @@ class tx_crawler_lib {
 	/**
 	 * Read URL for a queue record
 	 *
-	 * @param	array		Queue record
-	 * @return	string		Result output.
+	 * @param array Queue record
+	 * @return tx_crawler_domain_crawler_httpResponse
+	 * @throws tx_mvc_exception
 	 */
-	function readUrl_exec($queueRec)	{
+	function readUrl_exec(array $queueRec) {
 		// Decode parameters:
 		$parameters = unserialize($queueRec['parameters']);
-#		print_r($parameters);
-		$result = 'ERROR';
-		if (is_array($parameters))	{
-			if ($parameters['_CALLBACKOBJ'])	{	// Calling object:
-				$objRef = $parameters['_CALLBACKOBJ'];
-				$callBackObj = &t3lib_div::getUserObj($objRef);
-				if (is_object($callBackObj))	{
-					unset($parameters['_CALLBACKOBJ']);
-					$result = array('content' => serialize($callBackObj->crawler_execute($parameters,$this)));
-				} else {
-					$result = array('content' => 'No object: '.$objRef);
-				}
-			} else {	// Regular FE request:
 
-					// Prepare:
-				$crawlerId = $queueRec['qid'].':'.md5($queueRec['qid'].'|'.$queueRec['set_id'].'|'.$GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']);
-
-					// Get result:
-				$result = $this->requestUrl($parameters['url'],$crawlerId);
-			}
+		if (!is_array($parameters)) {
+			throw new tx_mvc_exception('No parameters found!');
 		}
+
+		if ($parameters['_CALLBACKOBJ'])	{	// Calling object:
+			$objRef = $parameters['_CALLBACKOBJ'];
+			$callBackObj = t3lib_div::getUserObj($objRef);
+			if (is_object($callBackObj))	{
+				unset($parameters['_CALLBACKOBJ']);
+				$result = array('content' => serialize($callBackObj->crawler_execute($parameters, $this)));
+			} else {
+				$result = array('content' => 'No object: '.$objRef);
+			}
+		} else {	// Regular FE request:
+
+				// Prepare:
+			$crawlerId = $queueRec['qid'].':'.md5($queueRec['qid'].'|'.$queueRec['set_id'].'|'.$GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']);
+
+				// Get result:
+			// $result = $this->requestUrl($parameters['url'],$crawlerId);
+			$result = tx_crawler_domain_crawler_requestor::requestUrl($parameters['url'], $crawlerId);
+		}
+
 		return $result;
 	}
 
@@ -751,6 +758,9 @@ class tx_crawler_lib {
 	 * @return	array		Array with content
 	 */
 	function requestUrl($url, $crawlerId, $timeout=2)	{
+
+		throw new tx_mvc_exception('Deprecated!');
+
 			// Parse URL, checking for scheme:
 		$url = parse_url($url);
 
@@ -824,7 +834,7 @@ class tx_crawler_lib {
 	 * @param	array		Array of processing instructions
 	 * @return	string		HTML code
 	 */
-	function getPageTreeAndUrls($id,$depth,$scheduledTime,$reqMinute,$submitCrawlUrls,$downloadCrawlUrls,$incomingProcInstructions)	{
+	function getPageTreeAndUrls($id, $depth, $scheduledTime, $reqMinute, $submitCrawlUrls, $downloadCrawlUrls, $incomingProcInstructions)	{
 		global $BACK_PATH;
 		global $LANG;
 		if (!is_object($LANG)) {
@@ -881,7 +891,7 @@ class tx_crawler_lib {
 	 * @param	string		Page icon and title for row
 	 * @return	string		HTML <tr> content (one or more)
 	 */
-	function drawURLs_addRowsForPage($pageRow,$pageTitleAndIcon)	{
+	function drawURLs_addRowsForPage(array $pageRow, $pageTitleAndIcon)	{
 
 			// Get list of URLs from page:
 		$res = $this->getUrlsForPageRow($pageRow);
@@ -901,7 +911,17 @@ class tx_crawler_lib {
 				}
 
 					// URL list:
-				$urlList = $this->urlListFromUrlArray($vv,$pageRow,$this->scheduledTime,$this->reqMinute,$this->submitCrawlUrls,$this->downloadCrawlUrls,$this->duplicateTrack,$this->downloadUrls,$this->incomingProcInstructions);
+				$urlList = $this->urlListFromUrlArray(
+					$vv,
+					$pageRow,
+					$this->scheduledTime,
+					$this->reqMinute,
+					$this->submitCrawlUrls,
+					$this->downloadCrawlUrls,
+					$this->duplicateTrack,
+					$this->downloadUrls,
+					$this->incomingProcInstructions
+				);
 
 					// Expanded parameters:
 				$paramExpanded = '';
@@ -979,9 +999,11 @@ class tx_crawler_lib {
 	 * Main function for running from Command Line PHP script (cron job)
 	 * See ext/crawler/cli/crawler_cli.phpsh for details
 	 *
+	 * This method is called by the crawler_cli.php script
+	 *
 	 * @return	void
 	 */
-	function CLI_main()	{
+	public function CLI_main()	{
         if ($this->debugMode) t3lib_div::devlog('crawler CLI_main -'.microtime(true),__FUNCTION__);
         $this->CLI_debug("creating process (".$this->CLI_buildProcessId().")");
 		// Checking that no other CLI is running:
@@ -1011,10 +1033,11 @@ class tx_crawler_lib {
 
 	/**
 	 * Function executed by crawler_im.php cli script.
+	 * This method is called by the crawler_im.php script
 	 *
 	 * @return	void
 	 */
-	function CLI_main_im()	{
+	public function CLI_main_im()	{
 		$cliObj = t3lib_div::makeInstance('tx_crawler_cli_im');
 
 			// Force user to admin state and set workspace to "Live":
@@ -1059,12 +1082,15 @@ class tx_crawler_lib {
 
 				$result = $this->readUrlFromArray($queueRec);
 
-				$requestResult = unserialize($result['content']);
+				// this content will be outputted in tx_crawler_hooks_tsfe->fe_eofe() instead of the real page output
+				// it contains information for the crawler
+				$requestResult = unserialize($result->getContent());
+
 				if (is_array($requestResult))	{
 					$resLog = is_array($requestResult['log']) ?  chr(10).chr(9).chr(9).implode(chr(10).chr(9).chr(9),$requestResult['log']) : '';
 					$cliObj->cli_echo('OK: '.$resLog.chr(10));
 				} else {
-					$cliObj->cli_echo('Error checking Crawler Result: '.substr(ereg_replace('[[:space:]]+',' ',strip_tags($result['content'])),0,30000).'...'.chr(10));
+					$cliObj->cli_echo('Error checking Crawler Result: '.substr(ereg_replace('[[:space:]]+',' ',strip_tags($result->getContent())),0,30000).'...'.chr(10));
 				}
 			}
 		} elseif ($cliObj->cli_argValue('-o')==='queue')	{
@@ -1107,7 +1133,7 @@ class tx_crawler_lib {
 			intval($this->extensionSettings['countInARun']));
 
         if ($this->hasMultipleProcessSupport() && count($rows)>0) {
-            
+
         	/**
         	 * Build a list of queue entrys
         	 */
@@ -1115,7 +1141,7 @@ class tx_crawler_lib {
             foreach($rows as $r) {
                 $quidList[] = $r['qid'];
             }
-            
+
             $GLOBALS['TYPO3_DB']->sql_query('BEGIN');
             $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_crawler_queue','qid IN ('.implode(',',$quidList).')',array('process_scheduled'=>time(),'process_id'=>$this->CLI_buildProcessId()));
             if($GLOBALS['TYPO3_DB']->sql_affected_rows() == count($quidList)) {

@@ -47,10 +47,22 @@ class tx_crawler_domain_crawler_httpResponse {
 	 */
 	protected $content;
 
+	/**
+	 * Get header
+	 *
+	 * @param void
+	 * @return string header
+	 */
 	public function getHeader() {
 		return $this->header;
 	}
 
+	/**
+	 * Get content
+	 *
+	 * @param void
+	 * @return string content
+	 */
 	public function getContent() {
 		return $this->content;
 	}
