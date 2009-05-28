@@ -1064,7 +1064,17 @@ class tx_crawler_lib {
 				}
 
 					// URL list:
-				$urlList = $this->urlListFromUrlArray($vv,$pageRow,$this->scheduledTime,$this->reqMinute,$this->submitCrawlUrls,$this->downloadCrawlUrls,$this->duplicateTrack,$this->downloadUrls,$this->incomingProcInstructions);
+				$urlList = $this->urlListFromUrlArray(
+					$vv,
+					$pageRow,
+					$this->scheduledTime,
+					$this->reqMinute,
+					$this->submitCrawlUrls,
+					$this->downloadCrawlUrls,
+					$this->duplicateTrack,
+					$this->downloadUrls,
+					$this->incomingProcInstructions
+				);
 
 					// Expanded parameters:
 				$paramExpanded = '';
