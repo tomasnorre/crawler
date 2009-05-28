@@ -10,10 +10,12 @@ if (TYPO3_MODE=='BE')	{
 	);
 }
 
+t3lib_extMgm::allowTableOnStandardPages('tx_crawler_configuration');
+
 $TCA["tx_crawler_configuration"] = array (
     "ctrl" => array (
         'title'     => 'LLL:EXT:crawler/locallang_db.xml:tx_crawler_configuration',
-        'label'     => 'uid',
+        'label'     => 'name',
         'tstamp'    => 'tstamp',
         'crdate'    => 'crdate',
         'cruser_id' => 'cruser_id',
@@ -29,6 +31,5 @@ $TCA["tx_crawler_configuration"] = array (
         "fe_admin_fieldList" => "hidden, name, processing_instruction_filter, processing_instruction_parameters_ts, configuration, base_url, pidsonly",
     )
 );
-
 
 ?>

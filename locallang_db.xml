@@ -7,6 +7,15 @@
 	<data type="array">
 		<languageKey index="default" type="array">
 			<label index="moduleFunction.tx_crawler_modfunc1">Site Crawler</label>
+			
+			<label index="tx_crawler_configuration">Crawler Configuration</label>
+	            <label index="tx_crawler_configuration.name">Name</label>
+	            <label index="tx_crawler_configuration.processing_instruction_filter">Processing instruction filter</label>
+	            <label index="tx_crawler_configuration.processing_instruction_parameters_ts">Processing instruction parameters</label>
+	            <label index="tx_crawler_configuration.configuration">Configuration</label>
+	            <label index="tx_crawler_configuration.base_url">Base url</label>
+	            <label index="tx_crawler_configuration.pidsonly">Pids only</label>
+			
 		</languageKey>
 	</data>
 </T3locallang>
