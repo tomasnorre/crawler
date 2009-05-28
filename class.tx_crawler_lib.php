@@ -88,6 +88,7 @@
 
 require_once(PATH_t3lib.'class.t3lib_pagetree.php');
 require_once(PATH_t3lib.'class.t3lib_cli.php');
+require_once(PATH_t3lib.'class.t3lib_tsparser.php');
 
 
 /**
@@ -274,8 +275,14 @@ class tx_crawler_lib {
 	 */
 	function getUrlsForPageId($id)	{
 
-			// Get page TSconfig for page ID:
+		/**
+		 * Get configuration from tsConfig
+		 */
+
+		// Get page TSconfig for page ID:
 		$pageTSconfig = t3lib_BEfunc::getPagesTSconfig($id);
+
+		$res = array();
 
 		if (is_array($pageTSconfig) && is_array($pageTSconfig['tx_crawler.']['crawlerCfg.']))	{
 			$crawlerCfg = $pageTSconfig['tx_crawler.']['crawlerCfg.'];
@@ -305,11 +312,52 @@ class tx_crawler_lib {
 					}
 				}
 
-				return $res;
 			}
 		}
 
-		return array();
+		/**
+		 * Get configutation from tx_crawler_configuration records
+		 */
+
+		// get records along the rootline
+		$rootLine = t3lib_BEfunc::BEgetRootLine($id);
+
+		foreach ($rootLine as $page) {
+			$configurationRecordsForCurrentPage = t3lib_BEfunc::getRecordsByField('tx_crawler_configuration', 'pid', intval($page['uid']));
+
+			if (is_array($configurationRecordsForCurrentPage)) {
+				foreach ($configurationRecordsForCurrentPage as $configurationRecord) {
+
+					$pidOnlyList = implode(',',t3lib_div::trimExplode(',',$configurationRecord['pidsonly'],1));
+
+					// process configuration if it is not page-specific or if the specific page is the current page:
+					if (!strcmp($configurationRecord['pidsOnly'],'') || t3lib_div::inList($pidOnlyList,$id)) {
+						$key = $configurationRecord['name'];
+
+						// don't overwrite previously defined paramSets
+						if (!isset($res[$key])) {
+
+							$TSparserObject = t3lib_div::makeInstance('t3lib_tsparser');
+							$procInstrParams = $TSparserObject->parse($configurationRecord['processing_instruction_parameters_ts']);
+
+							$subCfg = array(
+								'procInstrFilter' => $configurationRecord['processing_instruction_filter'],
+								'procInstrParams' => $procInstrParams,
+								'baseUrl' => $configurationRecord['base_url'],
+							);
+
+							$res[$key] = array();
+							$res[$key]['subCfg'] = $subCfg;
+							$res[$key]['paramParsed'] = $this->parseParams($configurationRecord['configuration']);
+							$res[$key]['paramExpanded'] = $this->expandParameters($res[$key]['paramParsed'], $id);
+							$res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'], array('?id='.$id));
+						}
+					}
+				}
+			}
+		}
+
+		return $res;
 	}
 
 	/**
