@@ -337,12 +337,12 @@ class tx_crawler_lib {
 						// don't overwrite previously defined paramSets
 						if (!isset($res[$key])) {
 
-							$TSparserObject = t3lib_div::makeInstance('t3lib_tsparser');
+							$TSparserObject = t3lib_div::makeInstance('t3lib_tsparser'); /* @var $TSparserObject t3lib_tsparser */
 							$procInstrParams = $TSparserObject->parse($configurationRecord['processing_instruction_parameters_ts']);
 
 							$subCfg = array(
 								'procInstrFilter' => $configurationRecord['processing_instruction_filter'],
-								'procInstrParams' => $procInstrParams,
+								'procInstrParams.' => $TSparserObject->setup,
 								'baseUrl' => $configurationRecord['base_url'],
 							);
 
@@ -1044,7 +1044,7 @@ class tx_crawler_lib {
 	 * @param	string		Page icon and title for row
 	 * @return	string		HTML <tr> content (one or more)
 	 */
-	function drawURLs_addRowsForPage($pageRow,$pageTitleAndIcon)	{
+	function drawURLs_addRowsForPage($pageRow, $pageTitleAndIcon)	{
 
 			// Get list of URLs from page:
 		$res = $this->getUrlsForPageRow($pageRow);
@@ -1106,6 +1106,7 @@ class tx_crawler_lib {
 						<td>'.$paramExpanded.'</td>
 						<td nowrap="nowrap">'.$urlList.'</td>
 						<td nowrap="nowrap">'.$optionValues.'</td>
+						<td nowrap="nowrap">'.t3lib_div::view_array($vv['subCfg']['procInstrParams.']).'</td>
 					</tr>';
 				$c++;
 			}
@@ -1114,7 +1115,7 @@ class tx_crawler_lib {
 			$content.= '
 				<tr class="bgColor-20">
 					<td>'.$pageTitleAndIcon.'</td>
-					<td colspan="5"><em>No entries</em></td>
+					<td colspan="6"><em>No entries</em></td>
 				</tr>';
 		}
 

@@ -29,8 +29,11 @@ $TCA["tx_crawler_configuration"] = array (
             "exclude" => 1,
             "label" => "LLL:EXT:crawler/locallang_db.xml:tx_crawler_configuration.processing_instruction_filter",
             "config" => Array (
-                "type" => "input",
-                "size" => "30",
+                "type" => "select",
+                "itemsProcFunc" => "EXT:crawler/class.tx_crawler_tcaFunc.php:tx_crawler_tcaFunc->getProcessingInstructions",
+        		"eval" => "required",
+        		"renderMode" => "checkbox",
+        		"maxitems" => 100
             )
         ),
         "processing_instruction_parameters_ts" => Array (
@@ -38,9 +41,10 @@ $TCA["tx_crawler_configuration"] = array (
             "label" => "LLL:EXT:crawler/locallang_db.xml:tx_crawler_configuration.processing_instruction_parameters_ts",
             "config" => Array (
                 "type" => "text",
-                "cols" => "30",
+                "cols" => "40",
                 "rows" => "5",
-            )
+            ),
+            "defaultExtras" => "fixed-font : enable-tab",
         ),
         "configuration" => Array (
             "exclude" => 1,
@@ -72,7 +76,7 @@ $TCA["tx_crawler_configuration"] = array (
         ),
     ),
     "types" => array (
-        "0" => array("showitem" => "hidden;;1;;1-1-1, name, processing_instruction_filter, processing_instruction_parameters_ts, configuration, base_url, pidsonly")
+        "0" => array("showitem" => "name, processing_instruction_filter, configuration, base_url, pidsonly, processing_instruction_parameters_ts")
     ),
     "palettes" => array (
         "1" => array("showitem" => "")

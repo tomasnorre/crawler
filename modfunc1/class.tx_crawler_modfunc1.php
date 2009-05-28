@@ -345,6 +345,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				<td>Values Expanded:</td>
 				<td>URLs:</td>
 				<td>Options:</td>
+				<td>Parameters:</td>
 			</tr>';
 
 		return $content;
