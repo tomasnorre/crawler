@@ -11,6 +11,7 @@ CREATE TABLE tx_crawler_queue (
   result_data text NOT NULL,
   process_scheduled int(11) DEFAULT '0' NOT NULL,
   process_id varchar(50) DEFAULT '' NOT NULL,
+  process_id_completed varchar(50) DEFAULT '' NOT NULL,
 
   PRIMARY KEY (qid),
   KEY page_id (page_id),

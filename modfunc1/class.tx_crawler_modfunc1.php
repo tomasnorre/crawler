@@ -62,12 +62,10 @@ require_once(PATH_t3lib.'class.t3lib_extobjbase.php');
 
 require_once(t3lib_extMgm::extPath('crawler').'class.tx_crawler_lib.php');
 
+//
+require_once t3lib_extMgm::extPath('crawler').'domain/process/class.tx_crawler_domain_process_repository.php';
 
-
-
-
-
-
+require_once t3lib_extMgm::extPath('crawler').'view/process/class.tx_crawler_view_process_list.php';
 
 
 /**
@@ -117,6 +115,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				'start' => 'Start Crawling',
 				'log' => 'Crawler log',
 				'cli' => 'CLI status',
+				'multiprocess' => 'Crawling Processes'
 			),
 			'log_resultLog' => '',
 			'log_feVars' => '',
@@ -171,6 +170,10 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 			break;
 			case 'cli':
 				$theOutput.= $this->pObj->doc->section('',$this->drawCLIstatus(),0,1);
+			break;
+			
+			case 'multiprocess':
+				$theOutput .= $this->pObj->doc->section('',$this->drawProcessOverviewAction(),0,1);
 			break;
 		}
 
@@ -786,8 +789,37 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 
 
 
+	/**
+	 * This method is used to show an overview about the active an the finished crawling processes
+	 * 
+	 * @author Timo Schmidt
+	 * @param void
+	 * @return void
+	 *
+	 */
+	protected function drawProcessOverviewAction(){
+		global $BACK_PATH;
+		$offset 	= 0;
+		$perpage 	= 20;
+		
+		$processRepository	= new tx_crawler_domain_process_repository();
+		$allProcesses 		= $processRepository->findAll('ttl','DESC', $perpage, $offset);
+		$allCount			= $processRepository->countAll();
 
+		$listView			= new tx_crawler_view_process_list();
+		$listView->setIconPath($BACK_PATH.'../typo3conf/ext/crawler/template/process/res/img/');
+		$listView->setProcessCollection($allProcesses);
+		
 
+		
+	/*	$paginationView		= new tx_crawler_view_pagination();
+		$paginationView->setCurrentOffset($offset);
+		$paginationView->setPerPage($perpage);
+		
+		
+		return $listView->render().' '.$paginationView->render();*/
+		return $listView->render();
+	}
 
 
 

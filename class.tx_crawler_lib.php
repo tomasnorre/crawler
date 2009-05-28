@@ -719,6 +719,11 @@ class tx_crawler_lib {
 		if (is_array($queueRec))	{
 				// Set exec_time to lock record:
 			$field_array = array('exec_time' => time());
+			
+			if(isset($this->processID)){
+				//if mulitprocessing is used we need to store the id of the process which has handled this entry
+				$field_array['process_id_completed'] = $this->processID;
+			}
 			$GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_crawler_queue','qid='.intval($queueId), $field_array);
 
 			$result = $this->readUrl_exec($queueRec);
@@ -893,81 +898,6 @@ class tx_crawler_lib {
 			}
 		}
 	}
-
-	/**
-	 * Initialization of FE-user, setting the user-group list if applicable.
-	 *
-	 * @param	array		Parameters from frontend
-	 * @param	object		TSFE object
-	 * @return	void
-	 */
-	function fe_feuserInit(&$params, $ref)	{
-		if ($params['pObj']->applicationData['tx_crawler']['running'])	{
-			$grList = $params['pObj']->applicationData['tx_crawler']['parameters']['feUserGroupList'];
-			if ($grList)	{
-				if (!is_array($params['pObj']->fe_user->user))	$params['pObj']->fe_user->user = array();
-				$params['pObj']->fe_user->user['usergroup'] = $grList;
-				$params['pObj']->applicationData['tx_crawler']['log'][] = 'User Groups: '.$grList;
-			}
-		}
-	}
-
-	/**
-	 * Whether to output rendered content or not. If the crawler is running, the rendered output is never outputted!
-	 *
-	 * @param	array		Parameters from frontend
-	 * @param	object		TSFE object
-	 * @return	void
-	 */
-	function fe_isOutputting(&$params, $ref)	{
-		if ($params['pObj']->applicationData['tx_crawler']['running'])	{
-			$params['enableOutput'] = FALSE;
-		}
-	}
-
-	/**
-	 * Concluding: Outputting serialized information instead of letting rendered content out.
-	 *
-	 * @param	array		Parameters from frontend
-	 * @param	object		TSFE object
-	 * @return	void
-	 */
-	function fe_eofe(&$params, $ref)	{
-		if ($params['pObj']->applicationData['tx_crawler']['running'])	{
-			$params['pObj']->applicationData['tx_crawler']['vars'] = array(
-				'id' => $params['pObj']->id,
-				'gr_list' => $params['pObj']->gr_list,
-				'no_cache' => $params['pObj']->no_cache,
-			);
-				/**
-				 * Required because some extensions (staticpub) might never be requested to run due to some Core side effects
-				 * and since this is considered as error the crawler should handle it properly
-				 */
-				if(is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'])) {
-					foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'] as $pollable) {
-						if(empty($params['pObj']->applicationData['tx_crawler']['log'][$pollable]['success'])) {
-							$params['pObj']->applicationData['tx_crawler']['errorlog'][] = 'Error: pollable extension ('.$pollable.') did not complete successfully.';
-						}
-					}
-				}
-
-				// Output log data for crawler (serialized content):
-				$str = serialize($params['pObj']->applicationData['tx_crawler']);
-				header('Content-Length: '.strlen($str));
-				echo $str;
-                // Exit since we don't want anymore output!
-			exit;
-		}
-	}
-
-
-
-
-
-
-
-
-
 
 
 
