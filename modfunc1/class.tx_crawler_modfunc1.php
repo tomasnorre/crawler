@@ -740,11 +740,11 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 			// Create output:
 		$dat = $this->crawlerObj->CLI_readProcessData();
 		
-		$view = new tx_crawler_view_cli_status();
+		/*$view = new tx_crawler_view_cli_status();
 		$view->setCliProcessData($dat);
-		$view->setCurrentPageId($this->pObj->id);
+		$view->setCurrentPageId($this->pObj->id);*/
 		
-	/*	$output = '
+		$output = '
 			<br/><br/>
 			<table border="0" cellspacing="1" cellpadding="0" class="lrPadding c-list">
 				<tr>
@@ -784,7 +784,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		$output.= ' - <input type="submit" value="Run now" name="_run" />';
 
 		$output.= '<br/><br/>Consider running the CLI script from shell: <br/>'.
-					t3lib_extMgm::extPath('crawler').'cli/crawler_cli.phpsh'; */
+					t3lib_extMgm::extPath('crawler').'cli/crawler_cli.phpsh'; 
 
 
 		return $output;
