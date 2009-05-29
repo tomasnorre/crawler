@@ -66,6 +66,7 @@ require_once(t3lib_extMgm::extPath('crawler').'class.tx_crawler_lib.php');
 require_once t3lib_extMgm::extPath('crawler').'domain/process/class.tx_crawler_domain_process_repository.php';
 
 require_once t3lib_extMgm::extPath('crawler').'view/process/class.tx_crawler_view_process_list.php';
+require_once t3lib_extMgm::extPath('crawler').'view/class.tx_crawler_view_pagination.php';
 
 
 /**
@@ -738,7 +739,12 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 
 			// Create output:
 		$dat = $this->crawlerObj->CLI_readProcessData();
-		$output = '
+		
+		$view = new tx_crawler_view_cli_status();
+		$view->setCliProcessData($dat);
+		$view->setCurrentPageId($this->pObj->id);
+		
+	/*	$output = '
 			<br/><br/>
 			<table border="0" cellspacing="1" cellpadding="0" class="lrPadding c-list">
 				<tr>
@@ -778,15 +784,11 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		$output.= ' - <input type="submit" value="Run now" name="_run" />';
 
 		$output.= '<br/><br/>Consider running the CLI script from shell: <br/>'.
-					t3lib_extMgm::extPath('crawler').'cli/crawler_cli.phpsh';
+					t3lib_extMgm::extPath('crawler').'cli/crawler_cli.phpsh'; */
 
 
 		return $output;
 	}
-
-
-
-
 
 
 	/**
@@ -799,7 +801,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 */
 	protected function drawProcessOverviewAction(){
 		global $BACK_PATH;
-		$offset 	= 0;
+		$offset 	= intval(t3lib_div::_GP('offset'));
 		$perpage 	= 20;
 		
 		$processRepository	= new tx_crawler_domain_process_repository();
@@ -809,21 +811,14 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		$listView			= new tx_crawler_view_process_list();
 		$listView->setIconPath($BACK_PATH.'../typo3conf/ext/crawler/template/process/res/img/');
 		$listView->setProcessCollection($allProcesses);
-		
-
-		
-	/*	$paginationView		= new tx_crawler_view_pagination();
+			
+		$paginationView		= new tx_crawler_view_pagination();
 		$paginationView->setCurrentOffset($offset);
 		$paginationView->setPerPage($perpage);
+		$paginationView->setTotalItemCount($allCount);
 		
-		
-		return $listView->render().' '.$paginationView->render();*/
-		return $listView->render();
+		return $listView->render().' <br />'.$paginationView->render();
 	}
-
-
-
-
 
 	/*****************************
 	 *
