@@ -113,7 +113,13 @@ class tx_crawler_domain_process{
 		$toProcess =$this->countItemsToProcess();
 		$processed = $this->countItemsProcessed();
 		$all = $toProcess + $processed;
-		return round(( 100 / $all) * $this->countItemsProcessed());
+		if($all > 0){
+			$res = round(( 100 / $all) * $this->countItemsProcessed());
+		}else{
+			$res = 0;
+		}
+		
+		return $res;
 	}
 	
 	public function getState(){

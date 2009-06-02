@@ -145,7 +145,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		$h_func = t3lib_BEfunc::getFuncMenu($this->pObj->id,'SET[crawlaction]',$this->pObj->MOD_SETTINGS['crawlaction'],$this->pObj->MOD_MENU['crawlaction'],'index.php');
 
 			// Showing depth-menu in certain cases:
-		if ($this->pObj->MOD_SETTINGS['crawlaction']!=='cli' && ($this->pObj->MOD_SETTINGS['crawlaction']!=='log' || $this->pObj->id))	{
+		if ($this->pObj->MOD_SETTINGS['crawlaction']!=='cli' && $this->pObj->MOD_SETTINGS['crawlaction']!== 'multiprocess' && ($this->pObj->MOD_SETTINGS['crawlaction']!=='log' || $this->pObj->id))	{
 			$h_func.= t3lib_BEfunc::getFuncMenu($this->pObj->id,'SET[depth]',$this->pObj->MOD_SETTINGS['depth'],$this->pObj->MOD_MENU['depth'],'index.php');
 		}
 
@@ -805,12 +805,15 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		$perpage 	= 20;
 		
 		$processRepository	= new tx_crawler_domain_process_repository();
+		$queueRepository	= new tx_crawler_domain_queue_repository();
+		
 		$allProcesses 		= $processRepository->findAll('ttl','DESC', $perpage, $offset);
 		$allCount			= $processRepository->countAll();
 
 		$listView			= new tx_crawler_view_process_list();
 		$listView->setIconPath($BACK_PATH.'../typo3conf/ext/crawler/template/process/res/img/');
 		$listView->setProcessCollection($allProcesses);
+		$listView->setTotalItemCount($queueRepository->countAllPendingItems());
 			
 		$paginationView		= new tx_crawler_view_pagination();
 		$paginationView->setCurrentOffset($offset);

@@ -72,6 +72,17 @@ class tx_crawler_domain_queue_repository{
 	}
 	
 	/**
+	 * This method can be used to count all queue entrys which are 
+	 * scheduled for now or a earler date.
+	 * 
+	 * @param void
+	 * @return int
+	 */
+	public function countAllPendingItems(){
+		return $this->countItemsByWhereClause('exec_time = 0 AND scheduled < '.time());
+	}
+	
+	/**
 	 * Internal method to count items by a given where clause
 	 *
 	 */

@@ -1,5 +1,16 @@
+<span style="padding-left: 5px;">
+	<a href="index.php"><?php echo $this->getRefreshIcon(); ?></a> <br/>
+</span>
 
-<h2>Crawling Processes</h2>
+<h2>General Informations:</h2>
+<table>
+	<tr>
+		<td>Pending Entries:</td>
+		<td><?php echo $this->getTotalItemCount(); ?>
+	</tr>
+</table>
+
+<h2>Process States: </h2>
 <table>
 	<tr>
 		<td>State: </td>
@@ -24,3 +35,5 @@
 		</tr>
 	<?php } ?>
 </table>
+
+<br />

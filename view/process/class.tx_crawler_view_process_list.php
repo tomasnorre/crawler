@@ -5,6 +5,29 @@ class tx_crawler_view_process_list{
 	protected $iconPath;
 	
 	/**
+	 * Holds the total number of items pending in the queue to be processed
+	 *
+	 * @var int
+	 */
+	protected $totalItemCount;
+	
+	/**
+	 * @return int
+	 */
+	public function getTotalItemCount() {
+		return $this->totalItemCount;
+	}
+	
+	/**
+	 * @param int $totalItemCount
+	 */
+	public function setTotalItemCount($totalItemCount) {
+		$this->totalItemCount = $totalItemCount;
+	}
+
+	
+	
+	/**
 	 * Method to set the path to the icon from outside
 	 *
 	 * @param string $iconPath
@@ -79,6 +102,25 @@ class tx_crawler_view_process_list{
 			case 'canceled': $icon = 'bullet_red'; break;
 		}
 		
+		return $this->getIcon($icon);
+	}
+	
+	/**
+	 * Returns a tag for the refresh icon
+	 *
+	 * @return string
+	 */
+	protected function getRefreshIcon(){
+		return $this->getIcon('arrow_refresh');
+	}
+	
+	/**
+	 * Returns an imagetag for an icon
+	 *
+	 * @param string $icon
+	 * @return string html tag for icon
+	 */
+	protected function getIcon($icon){
 		return '<img src="'.$this->getIconPath().$icon.'.png" />';
 	}
 	
