@@ -79,14 +79,15 @@ class tx_crawler_hooks_tsfe{
 				'gr_list' => $params['pObj']->gr_list,
 				'no_cache' => $params['pObj']->no_cache,
 			);
+
 				/**
 				 * Required because some extensions (staticpub) might never be requested to run due to some Core side effects
 				 * and since this is considered as error the crawler should handle it properly
 				 */
 				if(is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'])) {
 					foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'] as $pollable) {
-						if(empty($params['pObj']->applicationData['tx_crawler']['log'][$pollable]['success'])) {
-							$params['pObj']->applicationData['tx_crawler']['errorlog'][] = 'Error: pollable extension ('.$pollable.') did not complete successfully.';
+						if(empty($params['pObj']->applicationData['tx_crawler']['success'][$pollable])) {
+							$params['pObj']->applicationData['tx_crawler']['errorlog'][] = 'Error: Pollable extension ('.$pollable.') did not complete successfully.';
 						}
 					}
 				}
