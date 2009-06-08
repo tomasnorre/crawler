@@ -85,7 +85,16 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 
 	var $scheduledTime = 0;
 	var $reqMinute = 0;
+
+	/**
+	 * @var array holds the selection of processing instructions from the processing instructions selector box
+	 */
 	var $incomingProcInstructions = array();
+
+	/**
+	 * @var array holds the selection of configuration from the configuration selector box
+	 */
+	var $incomingConfigurationSelection = array();
 
 	/**
 	 * @var tx_crawler_lib
@@ -141,6 +150,18 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 			TABLE.c-list TR TD { white-space: nowrap; vertical-align: top; }
 		',$this->pObj->content);
 
+		$this->pObj->content .= '<style type="text/css"><!--
+			table.url-table,
+			table.param-expanded {
+				border: 1px solid black;
+				border-spacing: 0;
+				border-collapse: collapse;
+			}
+			table.url-table td {
+				border: 1px solid black;
+			}
+		--></style>';
+
 			// Type function menu:
 		$h_func = t3lib_BEfunc::getFuncMenu($this->pObj->id,'SET[crawlaction]',$this->pObj->MOD_SETTINGS['crawlaction'],$this->pObj->MOD_MENU['crawlaction'],'index.php');
 
@@ -172,7 +193,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 			case 'cli':
 				$theOutput.= $this->pObj->doc->section('',$this->drawCLIstatus(),0,1);
 			break;
-			
+
 			case 'multiprocess':
 				$theOutput .= $this->pObj->doc->section('',$this->drawProcessOverviewAction(),0,1);
 			break;
@@ -208,10 +229,10 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 
 			// Init:
 		$this->duplicateTrack = array();
-		$this->submitCrawlUrls = t3lib_div::_POST('_crawl');
-		$this->downloadCrawlUrls = t3lib_div::_POST('_download');
+		$this->submitCrawlUrls = t3lib_div::_GP('_crawl');
+		$this->downloadCrawlUrls = t3lib_div::_GP('_download');
 
-		switch((string)t3lib_div::_POST('tstamp'))	{
+		switch((string)t3lib_div::_GP('tstamp'))	{
 			case 'midnight':
 				$this->scheduledTime = mktime(0,0,0);
 			break;
@@ -223,10 +244,13 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				$this->scheduledTime = time();
 			break;
 		}
-		$this->reqMinute = t3lib_div::intInRange(t3lib_div::_POST('perminute'),1,10000);
+		$this->reqMinute = t3lib_div::intInRange(t3lib_div::_GP('perminute'),1,10000);
 
-		$this->incomingProcInstructions = t3lib_div::_POST('procInstructions');
+		$this->incomingProcInstructions = t3lib_div::_GP('procInstructions');
 		$this->incomingProcInstructions = is_array($this->incomingProcInstructions) ? $this->incomingProcInstructions : array('');
+
+		$this->incomingConfigurationSelection = t3lib_div::_GP('configurationSelection');
+		$this->incomingConfigurationSelection = is_array($this->incomingConfigurationSelection) ? $this->incomingConfigurationSelection : array('');
 
 		$this->crawlerObj = t3lib_div::makeInstance('tx_crawler_lib');
 		$this->crawlerObj->setID = t3lib_div::md5int(microtime());
@@ -238,7 +262,8 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				$this->reqMinute,
 				$this->submitCrawlUrls,
 				$this->downloadCrawlUrls,
-				$this->incomingProcInstructions
+				$this->incomingProcInstructions,
+				$this->incomingConfigurationSelection
 			);
 		$this->downloadUrls = $this->crawlerObj->downloadUrls;
 		$this->duplicateTrack = $this->crawlerObj->duplicateTrack;
@@ -257,7 +282,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				$output .= 'Count: '.count(array_keys($this->duplicateTrack)).'<br/>';
 				$output .= 'Current server time: '.date('H:i:s',time()).'<br/>';
 				$output .= '<br/>
-					<table border="0" cellspacing="1" cellpadding="0" class="lrPadding c-list">'.
+					<table class="lrPadding c-list url-table">'.
 						$this->drawURLs_printTableHeader().
 						$code.
 					'</table>';
@@ -300,36 +325,58 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		}
 		$cell[] = $this->selectorBox($pIs, 'procInstructions', $this->incomingProcInstructions, 1);
 
+		$availableConfigurations = array_keys($this->crawlerObj->getUrlsForPageId($this->pObj->id));
+		array_unshift($availableConfigurations, '');
+
+			// Configurations
+		$cell[] = $this->selectorBox(
+			array_combine($availableConfigurations, $availableConfigurations),
+			'configurationSelection',
+			$this->incomingConfigurationSelection,
+			1
+		);
+
 			// Scheduled time:
-		$cell[] = $this->selectorBox(array(
-						'now' => 'Now',
-						'midnight' => 'Midnight',
-						'04:00' => '04:00 AM',
-					),'tstamp',t3lib_div::_POST('tstamp'),0);
+		$cell[] = $this->selectorBox(
+			array(
+				'now' => 'Now',
+				'midnight' => 'Midnight',
+				'04:00' => '04:00 AM',
+			),
+			'tstamp',
+			t3lib_div::_POST('tstamp'),
+			0
+		);
 
 			// Requests per minute:
-		$cell[] = $this->selectorBox(array(
-						30 => '[Default]',
-						1 => '1',
-						5 => '5',
-						10 => '10',
-						20 => '20',
-						30 => '30',
-						50 => '50',
-						100 => '100',
-						200 => '200',
-						1000 => '1000',
-					),'perminute',t3lib_div::_POST('perminute'),0);
+		$cell[] = $this->selectorBox(
+			array(
+				30 => '[Default]',
+				1 => '1',
+				5 => '5',
+				10 => '10',
+				20 => '20',
+				30 => '30',
+				50 => '50',
+				100 => '100',
+				200 => '200',
+				1000 => '1000',
+			),
+			'perminute',
+			t3lib_div::_POST('perminute'),
+			0
+		);
 
 		$output = '
-			<table border="0" cellspacing="1" cellpadding="0" class="lrPadding c-list">
+			<table class="lrPadding c-list">
 				<tr class="bgColor5 tableheader">
 					<td>Processing Instructions:</td>
+					<td>Configurations:</td>
 					<td>Scheduled:</td>
 					<td>Requests / Minute:</td>
 				</tr>
 				<tr class="bgColor4">
-					<td valign="top">'.implode('</td>
+					<td valign="top">' . implode('</td>
 					<td valign="top">', $cell).'</td>
 				</tr>
 			</table>';
@@ -470,7 +517,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 						<br/><br/>
 
 
-						<table border="0" cellspacing="1" cellpadding="0" class="lrPadding c-list">'.
+						<table class="lrPadding c-list">'.
 							$this->drawLog_printTableHeader().
 							$code.
 						'</table>';
@@ -507,7 +554,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 
 				$output .= '
 					<br/><br/>
-					<table border="0" cellspacing="1" cellpadding="0" class="lrPadding c-list">'.
+					<table class="lrPadding c-list">'.
 						$code.
 					'</table>';
 			}
@@ -552,7 +599,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 * @param	string		Title string
 	 * @return	string		HTML <tr> content (one or more)
 	 */
-	function drawLog_addRows($pageRow_setId,$titleString)	{
+	function drawLog_addRows($pageRow_setId, $titleString)	{
 
 			// If Flush button is pressed, flush tables instead of selecting entries:
 		$doFlush = t3lib_div::_POST('_flush') ? TRUE : FALSE;
@@ -588,7 +635,6 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				if ($vv['result_data'])	{
 					$requestContent = unserialize($vv['result_data']);
 					$requestResult = unserialize($requestContent['content']);
-
 					if (is_array($requestResult)) {
 						if (empty($requestResult['errorlog'])) {
 							$resStatus = 'OK';
@@ -597,7 +643,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 						}
 						$resLog = is_array($requestResult['log']) ?  implode(chr(10),$requestResult['log']) : '';
 					} else {
-						$resStatus = 'Error: '.substr(ereg_replace('[[:space:]]+',' ',strip_tags($requestContent['content'])),0,100).'...';
+						$resStatus = 'Error: '.substr(ereg_replace('[[:space:]]+',' ',strip_tags($requestContent['content'])),0,10000).'...';
 					}
 				} else {
 					$resStatus = '..';
@@ -739,14 +785,14 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 
 			// Create output:
 		$dat = $this->crawlerObj->CLI_readProcessData();
-		
+
 		/*$view = new tx_crawler_view_cli_status();
 		$view->setCliProcessData($dat);
 		$view->setCurrentPageId($this->pObj->id);*/
-		
+
 		$output = '
 			<br/><br/>
-			<table border="0" cellspacing="1" cellpadding="0" class="lrPadding c-list">
+			<table class="lrPadding c-list">
 				<tr>
 					<td class="bgColor5 tableheader">Status:</td>
 					<td class="bgColor-20">'.htmlspecialchars($dat['status']).'</td>
@@ -784,7 +830,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		$output.= ' - <input type="submit" value="Run now" name="_run" />';
 
 		$output.= '<br/><br/>Consider running the CLI script from shell: <br/>'.
-					t3lib_extMgm::extPath('crawler').'cli/crawler_cli.phpsh'; 
+					t3lib_extMgm::extPath('crawler').'cli/crawler_cli.phpsh';
 
 
 		return $output;
@@ -793,7 +839,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 
 	/**
 	 * This method is used to show an overview about the active an the finished crawling processes
-	 * 
+	 *
 	 * @author Timo Schmidt
 	 * @param void
 	 * @return void
@@ -803,10 +849,10 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		global $BACK_PATH;
 		$offset 	= intval(t3lib_div::_GP('offset'));
 		$perpage 	= 20;
-		
+
 		$processRepository	= new tx_crawler_domain_process_repository();
 		$queueRepository	= new tx_crawler_domain_queue_repository();
-		
+
 		$allProcesses 		= $processRepository->findAll('ttl','DESC', $perpage, $offset);
 		$allCount			= $processRepository->countAll();
 
@@ -814,12 +860,12 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		$listView->setIconPath($BACK_PATH.'../typo3conf/ext/crawler/template/process/res/img/');
 		$listView->setProcessCollection($allProcesses);
 		$listView->setTotalItemCount($queueRepository->countAllPendingItems());
-			
+
 		$paginationView		= new tx_crawler_view_pagination();
 		$paginationView->setCurrentOffset($offset);
 		$paginationView->setPerPage($perpage);
 		$paginationView->setTotalItemCount($allCount);
-		
+
 		return $listView->render().' <br />'.$paginationView->render();
 	}
 

@@ -146,6 +146,9 @@ class tx_crawler_lib {
 	var $duplicateTrack = array();
 	var $downloadUrls = array();
 
+	var $incomingProcInstructions = array();
+	var $incomingConfigurationSelection = array();
+
 
 	var $registerQueueEntriesInternallyOnly = array();
 	var $queueEntries = array();
@@ -177,7 +180,7 @@ class tx_crawler_lib {
 	 * @return	array		Result (see getUrlsForPageId())
 	 * @see getUrlsForPageId()
 	 */
-	function getUrlsForPageRow($pageRow)	{
+	function getUrlsForPageRow(array $pageRow)	{
 
 		if (!t3lib_div::inList('3,4',$pageRow['doktype']) && $pageRow['doktype']<200)	{
 			$res = $this->getUrlsForPageId($pageRow['uid']);
@@ -203,7 +206,17 @@ class tx_crawler_lib {
 	 * @param	array		Array of processing instructions
 	 * @return	string		List of URLs (meant for display in backend module)
 	 */
-	function urlListFromUrlArray($vv,$pageRow,$scheduledTime,$reqMinute,$submitCrawlUrls,$downloadCrawlUrls,&$duplicateTrack,&$downloadUrls,$incomingProcInstructions)	{
+	function urlListFromUrlArray(
+		$vv,
+		$pageRow,
+		$scheduledTime,
+		$reqMinute,
+		$submitCrawlUrls,
+		$downloadCrawlUrls,
+		&$duplicateTrack,
+		&$downloadUrls,
+		$incomingProcInstructions) {
+
 		if (is_array($vv['URLs']))	{
 			foreach($vv['URLs'] as $u)	{
 
@@ -324,7 +337,12 @@ class tx_crawler_lib {
 		$rootLine = t3lib_BEfunc::BEgetRootLine($id);
 
 		foreach ($rootLine as $page) {
-			$configurationRecordsForCurrentPage = t3lib_BEfunc::getRecordsByField('tx_crawler_configuration', 'pid', intval($page['uid']));
+			$configurationRecordsForCurrentPage = t3lib_BEfunc::getRecordsByField(
+				'tx_crawler_configuration',
+				'pid',
+				intval($page['uid']),
+				t3lib_BEfunc::BEenableFields('tx_crawler_configuration')
+			);
 
 			if (is_array($configurationRecordsForCurrentPage)) {
 				foreach ($configurationRecordsForCurrentPage as $configurationRecord) {
@@ -720,7 +738,7 @@ class tx_crawler_lib {
 		if (is_array($queueRec))	{
 				// Set exec_time to lock record:
 			$field_array = array('exec_time' => time());
-			
+
 			if(isset($this->processID)){
 				//if mulitprocessing is used we need to store the id of the process which has handled this entry
 				$field_array['process_id_completed'] = $this->processID;
@@ -916,9 +934,10 @@ class tx_crawler_lib {
 	 * @param	boolean		If set, submits the URLs to queue in database (real crawling)
 	 * @param	boolean		If set (and submitcrawlUrls is false) will fill $downloadUrls with entries)
 	 * @param	array		Array of processing instructions
+	 * @param	array		Array of configuration keys
 	 * @return	string		HTML code
 	 */
-	function getPageTreeAndUrls($id,$depth,$scheduledTime,$reqMinute,$submitCrawlUrls,$downloadCrawlUrls,$incomingProcInstructions)	{
+	function getPageTreeAndUrls($id, $depth, $scheduledTime, $reqMinute, $submitCrawlUrls, $downloadCrawlUrls, array $incomingProcInstructions, array $configurationSelection)	{
 		global $BACK_PATH;
 		global $LANG;
 		if (!is_object($LANG)) {
@@ -932,15 +951,17 @@ class tx_crawler_lib {
 		$this->submitCrawlUrls = $submitCrawlUrls;
 		$this->downloadCrawlUrls = $downloadCrawlUrls;
 		$this->incomingProcInstructions = $incomingProcInstructions;
+		$this->incomingConfigurationSelection = $configurationSelection;
+
 		$this->duplicateTrack = array();
 		$this->downloadUrls = array();
 
 			// Drawing tree:
 		$tree = t3lib_div::makeInstance('t3lib_pageTree');
 		$perms_clause = $GLOBALS['BE_USER']->getPagePermsClause(1);
-		$tree->init('AND '.$perms_clause);
+		$tree->init('AND ' . $perms_clause);
 
-		$pageinfo = t3lib_BEfunc::readPageAccess($id,$perms_clause);
+		$pageinfo = t3lib_BEfunc::readPageAccess($id, $perms_clause);
 
 			// Set root row:
 		$HTML = '<img src="'.$BACK_PATH.t3lib_iconWorks::getIcon('pages',$pageinfo).'" width="18" height="16" align="top" class="c-recIcon" alt="" />';
@@ -957,11 +978,12 @@ class tx_crawler_lib {
 
 			// Traverse page tree:
 		$code = '';
-		foreach($tree->tree as $data)	{
-			$code.= $this->drawURLs_addRowsForPage(
-						$data['row'],
-						$data['HTML'].t3lib_BEfunc::getRecordTitle('pages',$data['row'],TRUE)
-					);
+
+		foreach ($tree->tree as $data) {
+			$code .= $this->drawURLs_addRowsForPage(
+				$data['row'],
+				$data['HTML'] . t3lib_BEfunc::getRecordTitle('pages', $data['row'], TRUE)
+			);
 		}
 
 		return $code;
@@ -979,6 +1001,20 @@ class tx_crawler_lib {
 
 			// Get list of URLs from page:
 		$res = $this->getUrlsForPageRow($pageRow);
+
+
+		foreach ($res as $key => $value) {
+
+				// remove configuration that does not match the current selection
+			if (!in_array($key, $this->incomingConfigurationSelection)) {
+				unset($res[$key]);
+			} else {
+					// remove configuration that does not match current processing instructions
+				if (!$this->drawURLs_PIfilter($value['subCfg']['procInstrFilter'],$this->incomingProcInstructions)) {
+					unset($res[$key]);
+				}
+			}
+		}
 
 			// Traverse parameter combinations:
 		$c = 0;
@@ -1023,7 +1059,7 @@ class tx_crawler_lib {
 					$calcRes*= count($gVal);
 					$calcAccu[] = count($gVal);
 				}
-				$paramExpanded = '<table border="0" cellspacing="1" cellpadding="0" class="lrPadding c-list">'.$paramExpanded.'</table>';
+				$paramExpanded = '<table class="lrPadding c-list param-expanded">'.$paramExpanded.'</table>';
 				$paramExpanded.= 'Comb: '.implode('*',$calcAccu).'='.$calcRes;
 
 					// Options
@@ -1040,7 +1076,7 @@ class tx_crawler_lib {
 
 					// Compile row:
 				$content.= '
-					<tr class="bgColor'.($c%2 ? '-20':'-10').'">
+					<tr class="bgColor'.($c%2 ? '-20':'-10') . '">
 						'.$titleClm.'
 						<td>'.htmlspecialchars($kk).'</td>
 						<td>'.nl2br(htmlspecialchars(rawurldecode(trim(str_replace('&',chr(10).'&',t3lib_div::implodeArrayForUrl('',$vv['paramParsed'])))))).'</td>
@@ -1049,12 +1085,14 @@ class tx_crawler_lib {
 						<td nowrap="nowrap">'.$optionValues.'</td>
 						<td nowrap="nowrap">'.t3lib_div::view_array($vv['subCfg']['procInstrParams.']).'</td>
 					</tr>';
+
+
 				$c++;
 			}
 		} else {
 				// Compile row:
 			$content.= '
-				<tr class="bgColor-20">
+				<tr class="bgColor-20" style="border-bottom: 1px solid black;">
 					<td>'.$pageTitleAndIcon.'</td>
 					<td colspan="6"><em>No entries</em></td>
 				</tr>';
