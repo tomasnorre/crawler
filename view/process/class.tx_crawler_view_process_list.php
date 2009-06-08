@@ -1,23 +1,23 @@
 <?php
 class tx_crawler_view_process_list{
 	protected $template = 'EXT:crawler/template/process/list.php';
-	
+
 	protected $iconPath;
-	
+
 	/**
 	 * Holds the total number of items pending in the queue to be processed
 	 *
 	 * @var int
 	 */
 	protected $totalItemCount;
-	
+
 	/**
 	 * @return int
 	 */
 	public function getTotalItemCount() {
 		return $this->totalItemCount;
 	}
-	
+
 	/**
 	 * @param int $totalItemCount
 	 */
@@ -25,8 +25,8 @@ class tx_crawler_view_process_list{
 		$this->totalItemCount = $totalItemCount;
 	}
 
-	
-	
+
+
 	/**
 	 * Method to set the path to the icon from outside
 	 *
@@ -35,7 +35,7 @@ class tx_crawler_view_process_list{
 	public function setIconPath($iconPath){
 		$this->iconPath = $iconPath;
 	}
-	
+
 	/**
 	 * Method to read the configured icon path
 	 *
@@ -44,7 +44,7 @@ class tx_crawler_view_process_list{
 	protected function getIconPath(){
 		return $this->iconPath;
 	}
-	
+
 	/**
 	 * Method to set a collection of process objects to be displayed in
 	 * the list view.
@@ -54,7 +54,7 @@ class tx_crawler_view_process_list{
 	public function setProcessCollection($processCollection){
 		$this->processCollection = $processCollection;
 	}
-	
+
 	/**
 	 * Returns a collection of processObjects.
 	 *
@@ -63,7 +63,7 @@ class tx_crawler_view_process_list{
 	protected function getProcessCollection(){
 		return $this->processCollection;
 	}
-	
+
 	/**
 	 * Formats a timestamp as date
 	 *
@@ -72,12 +72,12 @@ class tx_crawler_view_process_list{
 	 */
 	protected function asDate($timestamp){
 		if($timestamp > 0){
-			return date("H:i:s / d m Y", $timestamp);
+			return date("H:i:s / d.m.Y", $timestamp);
 		}else{
 			return '';
 		}
 	}
-	
+
 	/**
 	 * Converts seconds into minutes
 	 *
@@ -87,9 +87,9 @@ class tx_crawler_view_process_list{
 	protected function asMinutes($seconds){
 		return round($seconds / 60);
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Returns the state icon for the current job
 	 *
@@ -101,10 +101,10 @@ class tx_crawler_view_process_list{
 			case 'completed': $icon = 'bullet_green'; break;
 			case 'canceled': $icon = 'bullet_red'; break;
 		}
-		
+
 		return $this->getIcon($icon);
 	}
-	
+
 	/**
 	 * Returns a tag for the refresh icon
 	 *
@@ -113,7 +113,7 @@ class tx_crawler_view_process_list{
 	protected function getRefreshIcon(){
 		return $this->getIcon('arrow_refresh');
 	}
-	
+
 	/**
 	 * Returns an imagetag for an icon
 	 *
@@ -123,7 +123,7 @@ class tx_crawler_view_process_list{
 	protected function getIcon($icon){
 		return '<img src="'.$this->getIconPath().$icon.'.png" />';
 	}
-	
+
 	/**
 	 * Method to render the view.
 	 *
