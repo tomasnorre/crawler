@@ -2,12 +2,21 @@
 if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
 
 if (TYPO3_MODE=='BE')	{
+
+		// add info module function
 	t3lib_extMgm::insertModuleFunction(
 		'web_info',
 		'tx_crawler_modfunc1',
 		t3lib_extMgm::extPath($_EXTKEY).'modfunc1/class.tx_crawler_modfunc1.php',
 		'LLL:EXT:crawler/locallang_db.php:moduleFunction.tx_crawler_modfunc1'
 	);
+
+		// add context menu item
+	$GLOBALS['TBE_MODULES_EXT']['xMOD_alt_clickmenu']['extendCMclasses'][] = array(
+		'name' => 'tx_crawler_contextMenu',
+		'path' => t3lib_extMgm::extPath($_EXTKEY).'class.tx_crawler_contextMenu.php'
+	);
+
 }
 
 t3lib_extMgm::allowTableOnStandardPages('tx_crawler_configuration');
