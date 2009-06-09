@@ -333,7 +333,7 @@ class tx_crawler_lib {
 		 * Get configutation from tx_crawler_configuration records
 		 */
 
-		// get records along the rootline
+			// get records along the rootline
 		$rootLine = t3lib_BEfunc::BEgetRootLine($id);
 
 		foreach ($rootLine as $page) {
@@ -341,35 +341,39 @@ class tx_crawler_lib {
 				'tx_crawler_configuration',
 				'pid',
 				intval($page['uid']),
-				t3lib_BEfunc::BEenableFields('tx_crawler_configuration')
+				t3lib_BEfunc::BEenableFields('tx_crawler_configuration') . t3lib_BEfunc::deleteClause('tx_crawler_configuration')
 			);
 
 			if (is_array($configurationRecordsForCurrentPage)) {
 				foreach ($configurationRecordsForCurrentPage as $configurationRecord) {
 
-					$pidOnlyList = implode(',',t3lib_div::trimExplode(',',$configurationRecord['pidsonly'],1));
+						// check access to the configuration record
+					if (empty($configurationRecord['begroups']) || $GLOBALS['BE_USER']->isAdmin() || $this->hasGroupAccess($GLOBALS['BE_USER']->user['usergroup_cached_list'], $configurationRecord['begroups'])) {
 
-					// process configuration if it is not page-specific or if the specific page is the current page:
-					if (!strcmp($configurationRecord['pidsOnly'],'') || t3lib_div::inList($pidOnlyList,$id)) {
-						$key = $configurationRecord['name'];
+						$pidOnlyList = implode(',',t3lib_div::trimExplode(',',$configurationRecord['pidsonly'],1));
 
-						// don't overwrite previously defined paramSets
-						if (!isset($res[$key])) {
+						// process configuration if it is not page-specific or if the specific page is the current page:
+						if (!strcmp($configurationRecord['pidsOnly'],'') || t3lib_div::inList($pidOnlyList,$id)) {
+							$key = $configurationRecord['name'];
 
-							$TSparserObject = t3lib_div::makeInstance('t3lib_tsparser'); /* @var $TSparserObject t3lib_tsparser */
-							$procInstrParams = $TSparserObject->parse($configurationRecord['processing_instruction_parameters_ts']);
+							// don't overwrite previously defined paramSets
+							if (!isset($res[$key])) {
 
-							$subCfg = array(
-								'procInstrFilter' => $configurationRecord['processing_instruction_filter'],
-								'procInstrParams.' => $TSparserObject->setup,
-								'baseUrl' => $configurationRecord['base_url'],
-							);
+								$TSparserObject = t3lib_div::makeInstance('t3lib_tsparser'); /* @var $TSparserObject t3lib_tsparser */
+								$procInstrParams = $TSparserObject->parse($configurationRecord['processing_instruction_parameters_ts']);
 
-							$res[$key] = array();
-							$res[$key]['subCfg'] = $subCfg;
-							$res[$key]['paramParsed'] = $this->parseParams($configurationRecord['configuration']);
-							$res[$key]['paramExpanded'] = $this->expandParameters($res[$key]['paramParsed'], $id);
-							$res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'], array('?id='.$id));
+								$subCfg = array(
+									'procInstrFilter' => $configurationRecord['processing_instruction_filter'],
+									'procInstrParams.' => $TSparserObject->setup,
+									'baseUrl' => $configurationRecord['base_url'],
+								);
+
+								$res[$key] = array();
+								$res[$key]['subCfg'] = $subCfg;
+								$res[$key]['paramParsed'] = $this->parseParams($configurationRecord['configuration']);
+								$res[$key]['paramExpanded'] = $this->expandParameters($res[$key]['paramParsed'], $id);
+								$res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'], array('?id='.$id));
+							}
 						}
 					}
 				}
@@ -378,6 +382,29 @@ class tx_crawler_lib {
 
 		return $res;
 	}
+
+    /**
+     * Check if a user has access to an item
+     * (e.g. get the group list of the current logged in user from $GLOBALS['TSFE']->gr_list)
+     *
+     * @see	t3lib_pageSelect::getMultipleGroupsWhereClause()
+     * @param string comma-separated list of (fe_)group uids from a user
+     * @param string comma-separated list of (fe_)group uids of the item to access
+     * @return bool true if at least one of the users group uids is in the access list or the access list is empty
+     * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
+     * @since 2009-01-19
+     */
+    function hasGroupAccess($groupList, $accessList) {
+        if (empty($accessList)) {
+            return true;
+        }
+        foreach(t3lib_div::intExplode(',', $groupList) as $groupUid) {
+            if (t3lib_div::inList($accessList, $groupUid)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 	/**
 	 * Parse GET vars of input Query into array with key=>value pairs

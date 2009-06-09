@@ -15,6 +15,7 @@
 	            <label index="tx_crawler_configuration.configuration">Configuration</label>
 	            <label index="tx_crawler_configuration.base_url">Base url</label>
 	            <label index="tx_crawler_configuration.pidsonly">Pids only</label>
+	            <label index="tx_crawler_configuration.begroups">Restrict access to</label>
 			
 		</languageKey>
 	</data>
