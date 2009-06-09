@@ -63,15 +63,17 @@ class tx_crawler_contextMenu {
 				$url .= '&procInstructions[]=' . $processing_instruction;
 			}
 
+			// $onClick = $backRef->urlRefForCM($url);
+			$onClick = "top.nextLoadModuleUrl='".$url."';top.goToModule('web_info',1);";
+
 			$localItems[] = $backRef->linkItem(
 				'Crawl',
 				$backRef->excludeIcon('<img src="'.$backRef->backPath . t3lib_extMgm::extRelPath('crawler').'icon_tx_crawler_configuration.gif" border="0" align="top" alt="" />'),
-				$backRef->urlRefForCM($url),
+				$onClick,
 				0
 			);
 
 		}
-
 		return array_merge($menuItems, $localItems);
 	}
 }
