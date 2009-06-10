@@ -1,19 +1,12 @@
 <?php
-class tx_crawler_domain_queue_entry{
+require_once t3lib_extMgm::extPath('crawler') . 'domain/lib/class.tx_crawler_domain_lib_abstract_dbobject.php';
 
-	/**
-	 * @var array
-	 */
-	protected $row;
+class tx_crawler_domain_queue_entry extends tx_crawler_domain_lib_abstract_dbobject{
 	
-	
-	/**
-	 * Method to initialize the process object
-	 *
-	 * @param array $row
-	 */
-	public function __construct($row = array()){
-		$this->row = $row;
+	protected static $tableName = 'tx_crawler_queue';
+
+	public static function getTableName(){
+		return self::$tableName;
 	}
 	
 	/**

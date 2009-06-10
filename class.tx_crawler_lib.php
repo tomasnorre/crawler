@@ -91,6 +91,8 @@ require_once(PATH_t3lib.'class.t3lib_pagetree.php');
 require_once(PATH_t3lib.'class.t3lib_cli.php');
 require_once(PATH_t3lib.'class.t3lib_tsparser.php');
 
+require_once t3lib_extMgm::extPath('crawler') . 'domain/reason/class.tx_crawler_domain_reason.php';
+require_once t3lib_extMgm::extPath('crawler') . 'domain/reason/class.tx_crawler_domain_reason_repository.php';
 
 /**
  * Cli basis:
@@ -158,6 +160,31 @@ class tx_crawler_lib {
 
 	var $extensionSettings=array();
 
+	/**
+	 * Holds the internal access mode can be 'gui','cli' or 'cli_im'
+	 *
+	 * @var string
+	 */
+	protected $accessMode;
+	
+	/**
+	 * Method to set the accessMode can be gui, cli or cli_im
+	 * 
+	 * @return string
+	 */
+	public function getAccessMode() {
+		return $this->accessMode;
+	}
+	
+	/**
+	 * @param string $accessMode
+	 */
+	public function setAccessMode($accessMode) {
+		$this->accessMode = $accessMode;
+	}
+
+	
+	
 	/************************************
 	 *
 	 * Getting URLs based on Page TSconfig
@@ -204,7 +231,9 @@ class tx_crawler_lib {
 	 * @param	array		Array which is passed by reference and contains the an id per url to secure we will not crawl duplicates
 	 * @param	array		Array which will be filled with URLS for download if flag is set.
 	 * @param	array		Array of processing instructions
+	 * @param 	tx_crawler_domain_reason
 	 * @return	string		List of URLs (meant for display in backend module)
+	 * 
 	 */
 	function urlListFromUrlArray(
 		$vv,
@@ -215,46 +244,44 @@ class tx_crawler_lib {
 		$downloadCrawlUrls,
 		&$duplicateTrack,
 		&$downloadUrls,
-		$incomingProcInstructions) {
+		$incomingProcInstructions,
+		$reason = null) {
 
 		if (is_array($vv['URLs']))	{
-			foreach($vv['URLs'] as $u)	{
+			foreach($vv['URLs'] as $urlQuery)	{
 
 				if ($this->drawURLs_PIfilter($vv['subCfg']['procInstrFilter'],$incomingProcInstructions))	{
 
 						// Calculate cHash:
 					$cHash_calc = '';
 					if ($vv['subCfg']['cHash'])	{
-						$pA = t3lib_div::cHashParams($u);
+						$pA = t3lib_div::cHashParams($urlQuery);
 						if (count($pA)>1)	{
 							$cHash_calc = t3lib_div::shortMD5(serialize($pA));
-							$u.='&cHash='.rawurlencode($cHash_calc);
+							$urlQuery.='&cHash='.rawurlencode($cHash_calc);
 						}
 					}
 
 						// Create key by which to determine unique-ness:
-					$uKey = $u.'|'.$vv['subCfg']['userGroups'].'|'.$vv['subCfg']['baseUrl'].'|'.$vv['subCfg']['procInstrFilter'];
+					$uKey = $urlQuery.'|'.$vv['subCfg']['userGroups'].'|'.$vv['subCfg']['baseUrl'].'|'.$vv['subCfg']['procInstrFilter'];
 
 						// Scheduled time:
 					$schTime = $scheduledTime + round(count($duplicateTrack)*(60/$reqMinute));
 					$schTime = floor($schTime/60)*60;
 
 					if (isset($duplicateTrack[$uKey]))	{
-						$urlList.='<em><span class="typo3-dimmed">'.htmlspecialchars($u).'</span></em><br/>';
+						//if the url key is registered just display it and do not resubmit is
+						$urlList.='<em><span class="typo3-dimmed">'.htmlspecialchars($urlQuery).'</span></em><br/>';
 					} else {
-						$urlList.= '['.date('d-m H:i:s',$schTime).'] '.htmlspecialchars($u).'<br/>';
-						$this->urlList[] = '['.date('d-m H:i:s',$schTime).'] '.$u;
+						$urlList.= '['.date('d-m H:i:s',$schTime).'] '.htmlspecialchars($urlQuery).'<br/>';
+						$this->urlList[] = '['.date('d-m H:i:s',$schTime).'] '.$urlQuery;
 
+						$theUrl = ($vv['subCfg']['baseUrl'] ? $vv['subCfg']['baseUrl'] : t3lib_div::getIndpEnv('TYPO3_SITE_URL')).'index.php'.$urlQuery;
+						
 							// Submit for crawling!
 						if ($submitCrawlUrls)	{
-							$this->addUrl(
-								$pageRow['uid'],
-								($vv['subCfg']['baseUrl'] ? $vv['subCfg']['baseUrl'] : t3lib_div::getIndpEnv('TYPO3_SITE_URL')).'index.php'.$u,
-								$vv['subCfg'],
-								$scheduledTime
-							);
+							$this->addUrl($pageRow['uid'],$theUrl,$vv['subCfg'],$scheduledTime,$reason);
 						} elseif ($downloadCrawlUrls)	{
-							$theUrl = ($vv['subCfg']['baseUrl'] ? $vv['subCfg']['baseUrl'] : t3lib_div::getIndpEnv('TYPO3_SITE_URL')).'index.php'.$u;
 							$downloadUrls[$theUrl] = $theUrl;
 						}
 					}
@@ -696,7 +723,7 @@ class tx_crawler_lib {
 	 * @param	integer		Scheduled-time
 	 * @return	void
 	 */
-	function addUrl($id,$url,$subCfg,$tstamp)	{
+	function addUrl($id,$url,$subCfg,$tstamp,$reason=null)	{
 		global $TYPO3_CONF_VARS;
 
 			// Creating parameters:
@@ -731,17 +758,64 @@ class tx_crawler_lib {
 			$this->queueEntries[] = $fieldArray;
 		} else {
 			$GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_crawler_queue',$fieldArray);
+			$queueId  =$GLOBALS['TYPO3_DB']->sql_insert_id();
+	
+			//finally handle the reason for this entry
+			$this->addReasonForQueueEntry($queueId,$reason);
 		}
 	}
 
 
+	/**
+	 * This method is used to create a reason entry for a queue entry.
+	 * if no reason is given, a default reason for the current accessMode will be used.
+	 * 
+	 * @author Timo Schmidt <schmidt@aoemedia.de>
+	 * @param int uid of the queue entry
+	 * 
+	 */
+	protected function addReasonForQueueEntry($queueId,$reason = null){
+		if($reason == null){
+			//if there is no reason created a default reason
+			$reason = new tx_crawler_domain_reason();
+			$reasonType = $this->getReasonTypeFromAccessMode();
+			
+			$reason->setReason($reasonType);
+			$reason->setDetailText('Default detail text createad by '.__FILE__);
+		}
+		
+		$reason->setQueueEntryUid($queueId);
+		$reason->setCreationDate(time());
+		
+		if(isset($GLOBALS['BE_USER']->user)){
+			$reason->setBackendUserId($GLOBALS['BE_USER']->user['uid']);
+		}
+		
+		$reasonRepository = new tx_crawler_domain_reason_repository();
+		$reasonRepository->add($reason);
+	}
 
-
-
-
-
-
-
+	/**
+	 *This method is used to determine a crawling reason based on the run mode of the crawler.
+	 *
+	 * @author Timo Schmidt <schmidt@aoemedia.de>
+	 * @return string
+	 */
+	protected function getReasonTypeFromAccessMode(){
+		switch($this->getAccessMode()){
+			case 'gui':
+				$reasonType = tx_crawler_domain_reason::REASON_GUI_SUBMIT;
+			break;
+			case 'cli':
+				$reasonType = tx_crawler_domain_reason::REASON_CLI_SUBMIT;
+			break;
+			default:
+				$reasonType = tx_crawler_domain_reason::REASON_DEFAULT;
+			break;
+		}
+		
+		return $reasonType;
+	}
 
 
 	/************************************
@@ -1152,6 +1226,8 @@ class tx_crawler_lib {
 	 * @return	void
 	 */
 	function CLI_main()	{
+		
+		$this->setAccessMode('cli');
         if ($this->debugMode) t3lib_div::devlog('crawler CLI_main -'.microtime(true),__FUNCTION__);
         $this->CLI_debug("creating process (".$this->CLI_buildProcessId().")");
 		// Checking that no other CLI is running:
@@ -1185,6 +1261,8 @@ class tx_crawler_lib {
 	 * @return	void
 	 */
 	function CLI_main_im()	{
+		$this->setAccessMode('cli_im');
+		
 		$cliObj = t3lib_div::makeInstance('tx_crawler_cli_im');
 
 			// Force user to admin state and set workspace to "Live":

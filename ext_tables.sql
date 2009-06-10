@@ -54,3 +54,22 @@ CREATE TABLE tx_crawler_configuration (
     PRIMARY KEY (uid),
     KEY parent (pid)
 );
+
+#
+# Table structure for table 'tx_crawler_reason'
+#
+CREATE TABLE tx_crawler_reason (
+    uid int(11) NOT NULL auto_increment,
+    pid int(11) DEFAULT '0' NOT NULL,
+    tstamp int(11) DEFAULT '0' NOT NULL,
+    crdate int(11) DEFAULT '0' NOT NULL,
+    cruser_id int(11) DEFAULT '0' NOT NULL,
+    deleted tinyint(4) DEFAULT '0' NOT NULL,
+    hidden tinyint(4) DEFAULT '0' NOT NULL,
+    reason tinytext NOT NULL,
+    detail_text text NOT NULL,
+	queue_entry_uid int(11) DEFAULT '0' NOT NULL,
+
+    PRIMARY KEY (uid),
+    KEY parent (pid)
+);

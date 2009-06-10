@@ -1,23 +1,12 @@
 <?php
 
 require_once t3lib_extMgm::extPath('crawler') . 'domain/queue/class.tx_crawler_domain_queue_repository.php';
+require_once t3lib_extMgm::extPath('crawler') . 'domain/lib/class.tx_crawler_domain_lib_abstract_dbobject.php';
 
-class tx_crawler_domain_process{
-	/**
-	 * @var array
-	 */
-	protected $row;
-	
-	/**
-	 * Method to initialize the process object
-	 *
-	 * @param array $row
-	 */
-	public function __construct($row = array()){
-		$this->row = $row;
-	}
-	
 
+class tx_crawler_domain_process extends tx_crawler_domain_lib_abstract_dbobject{
+	
+	protected static $tableName = 'tx_crawler_process';
 	/**
 	 * Returns the activity state for this process
 	 *
@@ -25,6 +14,10 @@ class tx_crawler_domain_process{
 	 */
 	public function getActive(){
 		return $this->row['active'];
+	}
+	
+	public static function getTableName(){
+		return self::$tableName;
 	}
 	
 	/**

@@ -2,7 +2,12 @@
 
 require_once t3lib_extMgm::extPath('crawler') . 'domain/queue/class.tx_crawler_domain_queue_entry.php';
 
-class tx_crawler_domain_queue_repository{
+require_once t3lib_extMgm::extPath('crawler') . 'domain/lib/class.tx_crawler_domain_lib_abstract_repository.php';
+
+class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_repository{
+	
+	
+	protected $objectClassname = 'tx_crawler_domain_queue_entry';
 	
 	/**
 	 * This mehtod is used to find the youngest entry for a given process.
@@ -35,7 +40,7 @@ class tx_crawler_domain_queue_repository{
 	 */
 	protected function getFirstOrLastObjectByProcess($process, $orderby){
 		$db = $this->getDB();
-		$where = 'process_id_completed='.$db->fullQuoteStr($process->getProcess_id(),'tx_crawler_queue').
+		$where = 'process_id_completed='.$db->fullQuoteStr($process->getProcess_id(),$this->tableName).
 				 ' AND exec_time > 0 ';
 		$limit = 1;
 		$groupby = '';
@@ -58,7 +63,7 @@ class tx_crawler_domain_queue_repository{
 	 */
 	public function countExtecutedItemsByProcess($process){
 		
-		return $this->countItemsByWhereClause('exec_time > 0 AND process_id_completed = '.$this->getDB()->fullQuoteStr($process->getProcess_id(),'tx_crawler_queue'));
+		return $this->countItemsByWhereClause('exec_time > 0 AND process_id_completed = '.$this->getDB()->fullQuoteStr($process->getProcess_id(),$this->tableName));
 	}
 	
 	/**
@@ -68,7 +73,7 @@ class tx_crawler_domain_queue_repository{
 	 * @return int
 	 */
 	public function countNonExecutedItemsByProcess($process){
-		return $this->countItemsByWhereClause('exec_time = 0 AND process_id = '.$this->getDB()->fullQuoteStr($process->getProcess_id(),'tx_crawler_queue'));
+		return $this->countItemsByWhereClause('exec_time = 0 AND process_id = '.$this->getDB()->fullQuoteStr($process->getProcess_id(),$this->tableName));
 	}
 	
 	/**
@@ -88,21 +93,12 @@ class tx_crawler_domain_queue_repository{
 	 */
 	protected function countItemsByWhereClause($where){
 		$db 	= $this->getDB();
-		$rs 	= $db->exec_SELECTquery('count(*) as anz','tx_crawler_queue',$where);
+		$rs 	= $db->exec_SELECTquery('count(*) as anz',$this->tableName,$where);
 		$res 	= $db->sql_fetch_assoc($rs);
 
 		return $res['anz']; 	
 	}
 	
-	
-	/**
-	 * Returns an instance of the TYPO3 database class.
-	 *
-	 * @return  t3lib_DB
-	 */
-	protected function getDB(){
-		return 	$GLOBALS['TYPO3_DB'];
-		
-	}
+
 }
 ?>

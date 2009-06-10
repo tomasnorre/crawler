@@ -3,8 +3,12 @@
 require_once t3lib_extMgm::extPath('crawler') . 'domain/process/class.tx_crawler_domain_process.php';
 require_once t3lib_extMgm::extPath('crawler') . 'domain/process/class.tx_crawler_domain_process_collection.php';
 
+require_once t3lib_extMgm::extPath('crawler') . 'domain/lib/class.tx_crawler_domain_lib_abstract_repository.php';
 
-class tx_crawler_domain_process_repository{
+
+class tx_crawler_domain_process_repository extends tx_crawler_domain_lib_abstract_repository{
+	
+	protected $objectClassname = 'tx_crawler_domain_process';
 	
 	/**
 	 * This method is used to find all cli processes within a limit
@@ -25,7 +29,7 @@ class tx_crawler_domain_process_repository{
 		$where 		= '';
 		$groupby 	= '';
 		
-		$rows = $db->exec_SELECTgetRows('*','tx_crawler_process',$where,$groupby,$orderby,$limit);
+		$rows = $db->exec_SELECTgetRows('*',$this->tableName,$where,$groupby,$orderby,$limit);
 		$processes = array();
 		
 		if(is_array($rows)){
@@ -47,7 +51,7 @@ class tx_crawler_domain_process_repository{
 	 */
 	public function countAll(){
 		$db 	= $this->getDB();
-		$rs 	= $db->exec_SELECTquery('count(*) as anz','tx_crawler_process','1=1');
+		$rs 	= $db->exec_SELECTquery('count(*) as anz',$this->tableName,'1=1');
 		$res 	= $db->sql_fetch_assoc($rs);
 
 		return $res['anz']; 
@@ -73,14 +77,6 @@ class tx_crawler_domain_process_repository{
 		return $limit;
 	}
 		
-	/**
-	 * Returns an instance of the TYPO3 database class.
-	 *
-	 * @return  t3lib_DB
-	 */
-	protected function getDB(){
-		return 	$GLOBALS['TYPO3_DB'];
-		
-	}
+
 }
 ?>

@@ -277,6 +277,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		$this->incomingConfigurationSelection = is_array($this->incomingConfigurationSelection) ? $this->incomingConfigurationSelection : array('');
 
 		$this->crawlerObj = t3lib_div::makeInstance('tx_crawler_lib');
+		$this->crawlerObj->setAccessMode('gui');
 		$this->crawlerObj->setID = t3lib_div::md5int(microtime());
 
 		if (empty($this->incomingConfigurationSelection)
@@ -484,6 +485,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 
 			// Init:
 		$this->crawlerObj = t3lib_div::makeInstance('tx_crawler_lib');
+		$this->crawlerObj->setAccessMode('gui');
 		$this->crawlerObj->setID = t3lib_div::md5int(microtime());
 
 			// Read URL:
