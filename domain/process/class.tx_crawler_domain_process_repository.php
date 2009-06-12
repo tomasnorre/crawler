@@ -20,13 +20,12 @@ class tx_crawler_domain_process_repository extends tx_crawler_domain_lib_abstrac
 	 * @return tx_crawler_domain_process_collection a collection of process objects
 	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 */
-	public function findAll($orderField = '',$orderDirection = 'DESC', $itemcount = NULL, $offset = NULL){
+	public function findAll($orderField = '',$orderDirection = 'DESC', $itemcount = NULL, $offset = NULL, $where = ''){
 		
 		$limit = self::getLimitFromItemCountAndOffset($itemcount,$offset);
 		$db = $this->getDB();	
 		
 		$orderby 	= htmlspecialchars($orderField).' '.htmlspecialchars($orderDirection);
-		$where 		= '';
 		$groupby 	= '';
 		
 		$rows = $db->exec_SELECTgetRows('*',$this->tableName,$where,$groupby,$orderby,$limit);
@@ -49,8 +48,8 @@ class tx_crawler_domain_process_repository extends tx_crawler_domain_lib_abstrac
 	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
 	 * @return int
 	 */
-	public function countAll(){
-		return $this->countByWhere('1=1');
+	public function countAll($where = '1=1'){
+		return $this->countByWhere($where);
 	}
 
 

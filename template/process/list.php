@@ -2,6 +2,7 @@
 	<a href="index.php"><?php echo $this->getRefreshIcon(); ?></a>
 	<?php echo $this->getEnableDisableLink(); ?>
 	<?php echo $this->getAddLink(); ?>
+	<?php echo $this->getModeLink(); ?>
 </span>	
 <?php if($this->getActionMessage() != ''){ ?>
 	<div id="message">

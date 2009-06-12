@@ -48,6 +48,29 @@ class tx_crawler_view_process_list{
 	 */
 	protected $actionMessage;
 	
+	
+	/**
+	 * Holds the mode state, can be simple or detail
+	 *
+	 * @var string
+	 */
+	protected $mode;
+	
+	/**
+	 * @return string
+	 */
+	public function getMode() {
+		return $this->mode;
+	}
+	
+	/**
+	 * @param string $mode
+	 */
+	public function setMode($mode) {
+		$this->mode = $mode;
+	}
+
+	
 	/**
 	 * @return string
 	 */
@@ -242,6 +265,15 @@ class tx_crawler_view_process_list{
 			return '<a href="index.php?action=stopCrawling" title="Stop all processes and disable crawling">'.$this->getIcon('control_stop_blue').'</a>';
 		}else{
 			return '<a href="index.php?action=resumeCrawling" title="Enable crawling">'.$this->getIcon('control_play').'</a>';
+		}
+	}
+	
+	
+	protected function getModeLink(){
+		if($this->getMode() == 'detail'){
+			return '<a href="index.php?action=setMode&mode=simple" title="Show only running processes">'.$this->getIcon('arrow_in').'</a>';
+		}elseif($this->getMode() == 'simple'){
+			return '<a href="index.php?action=setMode&mode=detail" title="Show finished and terminated processes">'.$this->getIcon('arrow_out').'</a>';
 		}
 	}
 	

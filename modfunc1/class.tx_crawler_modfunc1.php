@@ -111,6 +111,13 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	protected $extensionSettings = array();
 	
 	/**
+	 * Mode how the process list should be displayed
+	 *
+	 * @var string
+	 */
+	protected $processListMode;
+	
+	/**
 	 * Additions to the function menu array
 	 *
 	 * @return	array		Menu array
@@ -154,6 +161,8 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		global $LANG, $BACK_PATH;
 		
 		$this->loadExtensionSettings();
+		$this->processListMode = 'simple';
+		
 		$this->pObj->MOD_SETTINGS['depth'] = t3lib_div::_GP('depth');
 
 			// Set CSS styles specific for this document:
@@ -922,8 +931,15 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		$processRepository	= new tx_crawler_domain_process_repository();
 		$queueRepository	= new tx_crawler_domain_queue_repository();
 
-		$allProcesses 		= $processRepository->findAll('ttl','DESC', $perpage, $offset);
-		$allCount			= $processRepository->countAll();
+		$mode = $this->processListMode;
+		if($mode == 'detail'){
+			$where = '';
+		}elseif($mode == 'simple'){
+			$where = 'active = 1';
+		}
+		
+		$allProcesses 		= $processRepository->findAll('ttl','DESC', $perpage, $offset,$where);
+		$allCount			= $processRepository->countAll($where);
 
 		$listView			= new tx_crawler_view_process_list();
 		$listView->setIconPath($BACK_PATH.'../typo3conf/ext/crawler/template/process/res/img/');
@@ -934,6 +950,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		$listView->setActiveProcessCount($processRepository->countActive());
 		$listView->setMaxActiveProcessCount($this->extensionSettings['processLimit']);
 		$listView->setActionMessage($message);
+		$listView->setMode($mode);
 		
 		$paginationView		= new tx_crawler_view_pagination();
 		$paginationView->setCurrentOffset($offset);
@@ -966,6 +983,9 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 			$completePath 	= escapeshellcmd  ( 'nohup '.$this->getCrawlerCliPath()).' &';
 			$handle = popen($completePath,'r');	
 			return 'New process has been started, refresh to monitor the state';		
+		}
+		elseif(t3lib_div::_GP('action') == 'setMode'){
+			$this->processListMode = htmlspecialchars(t3lib_div::_GP('mode'));
 		}
 	}
 	
