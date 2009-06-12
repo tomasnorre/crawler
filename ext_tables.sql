@@ -26,6 +26,7 @@ CREATE TABLE tx_crawler_process (
     process_id varchar(50) DEFAULT '' NOT NULL,
     active smallint(6) DEFAULT '0',
     ttl int(11) DEFAULT '0' NOT NULL,
+	assigned_items_count int(11) DEFAULT '0' NOT NULL,
     deleted tinyint(4) unsigned DEFAULT '0' NOT NULL,
     
     KEY process_id (process_id)

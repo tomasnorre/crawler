@@ -103,7 +103,13 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	var $CSVaccu = array();
 	var $downloadUrls = array();
 
-
+	/**
+	 * Holds the configuration from ext_conf_template loaded by loadExtensionSettings()
+	 *
+	 * @var array
+	 */
+	protected $extensionSettings = array();
+	
 	/**
 	 * Additions to the function menu array
 	 *
@@ -124,7 +130,6 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 			'crawlaction' => array(
 				'start' => 'Start Crawling',
 				'log' => 'Crawler log',
-				'cli' => 'CLI status',
 				'multiprocess' => 'Crawling Processes'
 			),
 			'log_resultLog' => '',
@@ -136,15 +141,19 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 			)
 		);
 	}
-
+	protected function loadExtensionSettings(){
+		$this->extensionSettings=unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['crawler']);
+		
+	}
 	/**
 	 * Main function
 	 *
 	 * @return	string		HTML output
 	 */
 	function main()	{
-		global $LANG;
-
+		global $LANG, $BACK_PATH;
+		
+		$this->loadExtensionSettings();
 		$this->pObj->MOD_SETTINGS['depth'] = t3lib_div::_GP('depth');
 
 			// Set CSS styles specific for this document:
@@ -164,7 +173,9 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 			table.url-table td {
 				border: 1px solid black;
 			}
-		--></style>';
+		--></style>
+		<link rel="stylesheet" type="text/css" href="'.$BACK_PATH.'../typo3conf/ext/crawler/template/res.css" />
+		';
 
 			// Type function menu:
 		$h_func = t3lib_BEfunc::getFuncMenu(
@@ -901,6 +912,10 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 */
 	protected function drawProcessOverviewAction(){
 		global $BACK_PATH;
+		
+		$crawler = $this->findCrawler();
+		$message = $this->handleProcessOverviewActions();
+		
 		$offset 	= intval(t3lib_div::_GP('offset'));
 		$perpage 	= 20;
 
@@ -913,8 +928,13 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		$listView			= new tx_crawler_view_process_list();
 		$listView->setIconPath($BACK_PATH.'../typo3conf/ext/crawler/template/process/res/img/');
 		$listView->setProcessCollection($allProcesses);
+		$listView->setCliPath($this->getCrawlerCliPath());
+		$listView->setIsCrawlerEnabled(!$crawler->CLI_isDisabled());
 		$listView->setTotalItemCount($queueRepository->countAllPendingItems());
-
+		$listView->setActiveProcessCount($processRepository->countActive());
+		$listView->setMaxActiveProcessCount($this->extensionSettings['processLimit']);
+		$listView->setActionMessage($message);
+		
 		$paginationView		= new tx_crawler_view_pagination();
 		$paginationView->setCurrentOffset($offset);
 		$paginationView->setPerPage($perpage);
@@ -922,7 +942,61 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 
 		return $listView->render().' <br />'.$paginationView->render();
 	}
+	
+	/**
+	 * Method to handle incomming actions of the process overview
+	 * 
+	 * @param void
+	 * @return void
+	 *
+	 */
+	protected function handleProcessOverviewActions(){
+		$crawler = $this->findCrawler();
+		
+		if(t3lib_div::_GP('action') == 'stopCrawling'){
+			//set the cli status to disable (all processes will be terminated)
+			$crawler->CLI_setProcess('disabled', 'Status set by backend module');
+		}
+		elseif(t3lib_div::_GP('action') == 'resumeCrawling'){
+			//set the cli status to end (all processes will be terminated)
+			$crawler->CLI_setProcess('end', 'Status set by backend module');		
+		}
+		
+		elseif(t3lib_div::_GP('action') == 'addProcess'){
+			$completePath 	= escapeshellcmd  ( 'nohup '.$this->getCrawlerCliPath()).' &';
+			$handle = popen($completePath,'r');	
+			return 'New process has been started, refresh to monitor the state';		
+		}
+	}
+	
+	
+	/**
+	 * Returns the path to start the crawler from the command line
+	 *
+	 * @return string
+	 */
+	protected function getCrawlerCliPath(){
+		$pathToTypo3 	= t3lib_div::getIndpEnv('TYPO3_DOCUMENT_ROOT');
+		$cliPart	 	= '/typo3/cli_dispatch.phpsh crawler';
+		return $pathToTypo3.$cliPart;
+	}
 
+	/**
+	 * Returns the singleton instance of the crawler.
+	 * 
+	 * @author Timo Schmidt <schmidt@aoemedia.de>
+	 * @return tx_crawler_lib
+	 */
+	protected function findCrawler(){
+		if(!$this->crawlerObj instanceof tx_crawler_lib){
+			$this->crawlerObj = t3lib_div::makeInstance('tx_crawler_lib');
+		}
+		
+		return $this->crawlerObj;
+	}
+	
+
+	
 	/*****************************
 	 *
 	 * General Helper Functions

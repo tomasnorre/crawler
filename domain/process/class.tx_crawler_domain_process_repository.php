@@ -50,11 +50,16 @@ class tx_crawler_domain_process_repository extends tx_crawler_domain_lib_abstrac
 	 * @return int
 	 */
 	public function countAll(){
-		$db 	= $this->getDB();
-		$rs 	= $db->exec_SELECTquery('count(*) as anz',$this->tableName,'1=1');
-		$res 	= $db->sql_fetch_assoc($rs);
+		return $this->countByWhere('1=1');
+	}
 
-		return $res['anz']; 
+
+	/**
+	 * Returns the number of active processes
+	 * @return int
+	 */
+	public function countActive(){
+		return $this->countByWhere('active=1');
 	}
 	
 	

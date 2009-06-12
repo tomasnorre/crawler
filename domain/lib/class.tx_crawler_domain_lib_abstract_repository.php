@@ -23,6 +23,21 @@ abstract class tx_crawler_domain_lib_abstract_repository{
 		return 	$GLOBALS['TYPO3_DB'];
 		
 	}
+	
+	
+	/**
+	 * Counts items by a given where clause
+	 *
+	 * @param unknown_type $where
+	 * @return unknown
+	 */
+	protected function countByWhere($where){
+		$db 	= $this->getDB();
+		$rs 	= $db->exec_SELECTquery('count(*) as anz',$this->tableName,$where);
+		$res 	= $db->sql_fetch_assoc($rs);
+
+		return $res['anz']; 
+	}
 }
 
 ?>

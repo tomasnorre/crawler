@@ -103,9 +103,7 @@ class tx_crawler_domain_process extends tx_crawler_domain_lib_abstract_dbobject{
 	 * @return float
 	 */
 	public function getProgress(){
-		$toProcess =$this->countItemsToProcess();
-		$processed = $this->countItemsProcessed();
-		$all = $toProcess + $processed;
+		$all = $this->countItemsAssigned();
 		if($all > 0){
 			$res = round(( 100 / $all) * $this->countItemsProcessed());
 		}else{
@@ -113,6 +111,16 @@ class tx_crawler_domain_process extends tx_crawler_domain_lib_abstract_dbobject{
 		}
 		
 		return $res;
+	}
+	
+	/**
+	 * Returns the number of assigned Entrys
+	 * 
+	 * @return int
+	 *
+	 */
+	public function countItemsAssigned(){
+		return $this->row['assigned_items_count'];
 	}
 	
 	public function getState(){

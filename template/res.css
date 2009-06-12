@@ -1,0 +1,23 @@
+
+table.process_states  {
+ margin: 0px;
+ padding: 0px;
+ border-collapse:collapse;
+}
+
+table.processes > tbody >  tr.odd{
+ background-color: #eee;
+ margin: 0px;
+ padding: 0px;
+ border: 0px; 
+}
+
+table.processes > tbody >  tr.odd > td{
+ background-color: #eee; 
+}
+
+div#message{
+	border: solid 1px; 
+	border-color: #f00;	
+}
+

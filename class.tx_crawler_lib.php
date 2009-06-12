@@ -1232,17 +1232,12 @@ class tx_crawler_lib {
         $this->CLI_debug("creating process (".$this->CLI_buildProcessId().")");
 		// Checking that no other CLI is running:
         if (($this->hasMultipleProcessSupport() && $this->CLI_checkAndAcquireNewProcess($this->CLI_buildProcessId())) || !$this->CLI_checkProcess())	{
-				// Set "start" status (thus reserving to run!)
-			$this->CLI_setProcess('start');
-            $this->CLI_debug("process running (".$this->CLI_buildProcessId().")");
-				// Run process:
-			$msg = $this->CLI_run();
-            $this->CLI_debug($msg." (".$this->CLI_buildProcessId().")");
-				// End process (releasing process):
 			if ($this->CLI_isDisabled())	{
 				$this->CLI_setProcess('disabled', $msg);
 			} else {
-				$this->CLI_setProcess('end', $msg);
+					// Run process:
+				$res = $this->CLI_run();
+
 			}
 
             if($this->hasMultipleProcessSupport()) {
@@ -1330,7 +1325,10 @@ class tx_crawler_lib {
 	 * @return	string		Status message
 	 */
 	function CLI_run()	{
-
+		   // Set "start" status (thus reserving to run!)
+		$this->CLI_setProcess('start');
+        $this->CLI_debug("process running (".$this->CLI_buildProcessId().")");
+            	
 			// First, run hooks:
 		$this->CLI_runHooks();
 
@@ -1359,12 +1357,24 @@ class tx_crawler_lib {
             foreach($rows as $r) {
                 $quidList[] = $r['qid'];
             }
+            
+            
+            $processId = $this->CLI_buildProcessId();
+            
+            //reserve queue entrys for process
             $GLOBALS['TYPO3_DB']->sql_query('BEGIN');
-            $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_crawler_queue','qid IN ('.implode(',',$quidList).')',array('process_scheduled'=>time(),'process_id'=>$this->CLI_buildProcessId()));
-            if($GLOBALS['TYPO3_DB']->sql_affected_rows() == count($quidList)) {
+            
+            $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_crawler_queue','qid IN ('.implode(',',$quidList).')',array('process_scheduled'=> intval(time()),'process_id'=> $processId));
+            
+            //save the number of assigned queue entrys to determine who many have been processed later
+            $numberOfAffectedRows = $GLOBALS['TYPO3_DB']->sql_affected_rows();
+            $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_crawler_process'," process_id = '".$processId."'" , array('assigned_items_count' => intval($numberOfAffectedRows)));
+         
+            if($numberOfAffectedRows == count($quidList)) {	
                 $GLOBALS['TYPO3_DB']->sql_query('COMMIT');
-            } else  {
+            } else  {	
                 $GLOBALS['TYPO3_DB']->sql_query('ROLLBACK');
+
                 return 'Nothing processed due to multi-process collision';
             }
         } else {
@@ -1377,14 +1387,28 @@ class tx_crawler_lib {
 			$counter++;
 			usleep(intval($this->extensionSettings['sleepTime']));	// Just to relax the system
 
-			if ($this->CLI_isDisabled())	break;
-            if ($this->hasMultipleProcessSupport() && !$this->CLI_checkIfProcessIsActive($this->CLI_buildProcessId())) {
-                    $this->CLI_debug("conflict / timeout (".$this->CLI_buildProcessId().")");
-                    break;     //possible timeout
-            }
+			//if during the start and the current read url the cli has been disable we need to return from the function
+			// mark the process NOT as ended.
+			if ($this->CLI_isDisabled()){
+				return false;
+			}
+			if ($this->hasMultipleProcessSupport() && !$this->CLI_checkIfProcessIsActive($this->CLI_buildProcessId())) {
+				$this->CLI_debug("conflict / timeout (".$this->CLI_buildProcessId().")");
+				 break;     //possible timeout
+			}
 		}
 		sleep(intval($this->extensionSettings['sleepAfterFinish']));
-		return 'Rows: '.$counter;
+		
+		$msg = 'Rows: '.$counter;
+			
+		// End process only if not disabled:
+		if(!$this->CLI_isDisabled()){				
+			$this->CLI_setProcess('end', $msg);
+		}
+		
+		$this->CLI_debug($msg." (".$this->CLI_buildProcessId().")");		
+		
+		return true;
 	}
 
 	/**

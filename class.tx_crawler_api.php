@@ -242,10 +242,9 @@ class tx_crawler_api{
 	* @return array
 	*/
 	public function getUnprocessedItems(){
-		$query = '*';
-		$where = 'exec_time = 0';
-		
-		$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($query,'tx_crawler_queue',$where,'','page_id, scheduled');
+		$query 	= '*';
+		$where 	= 'exec_time = 0';
+		$rows 	= $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($query,'tx_crawler_queue',$where,'','page_id, scheduled');
 		
 		return $rows;
 	}
