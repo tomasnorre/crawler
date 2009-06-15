@@ -305,11 +305,11 @@ class tx_crawler_view_process_list {
 	}
 
 
-	protected function getModeLink(){
-		if($this->getMode() == 'detail'){
-			return '<a href="index.php?id='.$this->pageId.'&action=setMode&mode=simple" title="Show only running processes">'.$this->getIcon('arrow_in').'</a>';
-		}elseif($this->getMode() == 'simple'){
-			return '<a href="index.php?id='.$this->pageId.'&action=setMode&mode=detail" title="Show finished and terminated processes">'.$this->getIcon('arrow_out').'</a>';
+	protected function getModeLink() {
+		if ($this->getMode() == 'detail') {
+			return '<a href="index.php?id='.$this->pageId.'&SET[processListMode]=simple" title="Show only running processes">'.$this->getIcon('arrow_in').'</a>';
+		} elseif($this->getMode() == 'simple') {
+			return '<a href="index.php?id='.$this->pageId.'&SET[processListMode]=detail" title="Show finished and terminated processes">'.$this->getIcon('arrow_out').'</a>';
 		}
 	}
 

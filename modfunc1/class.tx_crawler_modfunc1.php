@@ -134,6 +134,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 			),
 			'log_resultLog' => '',
 			'log_feVars' => '',
+			'processListMode' => '',
 			'log_display' => array(
 				'all' => 'All',
 				'pending' => 'Pending',
@@ -141,10 +142,17 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 			)
 		);
 	}
+
+	/**
+	 * Load extension settings
+	 *
+	 * @param void
+	 * @return void
+	 */
 	protected function loadExtensionSettings(){
 		$this->extensionSettings=unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['crawler']);
-
 	}
+
 	/**
 	 * Main function
 	 *
@@ -995,10 +1003,6 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 					throw new Exception('Error while starting process');
 				}
 				return 'New process has been started, refresh to monitor the state';
-				break;
-			case 'setMode' :
-				$this->pObj->MOD_SETTINGS['processListMode'] = htmlspecialchars(t3lib_div::_GP('mode'));
-				// TODO: store into session
 				break;
 		}
 	}
