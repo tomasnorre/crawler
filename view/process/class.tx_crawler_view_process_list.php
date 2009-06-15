@@ -1,5 +1,7 @@
 <?php
-class tx_crawler_view_process_list{
+
+class tx_crawler_view_process_list {
+
 	protected $template = 'EXT:crawler/template/process/list.php';
 
 	protected $iconPath;
@@ -10,59 +12,84 @@ class tx_crawler_view_process_list{
 	 * @var string
 	 */
 	protected $cliPath;
-	
+
 	/**
 	 * Holds the total number of items pending in the queue to be processed
 	 *
 	 * @var int
 	 */
 	protected $totalItemCount;
-	
+
 	/**
 	 * Holds the enable state of the crawler
 	 *
 	 * @var boolean
 	 */
 	protected $isCrawlerEnabled;
-	
-	
+
+
 	/**
 	 * Holds the number of active processes
 	 *
 	 * @var int
 	 */
 	protected $activeProcessCount;
-	
-	
+
+
 	/**
 	 * Holds the number of maximum active processes
 	 *
 	 * @var int
 	 */
 	protected $maxActiveProcessCount;
-	
+
 	/**
 	 * Holds an internal message, when an action has been performed
 	 *
 	 * @var string
 	 */
 	protected $actionMessage;
-	
-	
+
+
 	/**
 	 * Holds the mode state, can be simple or detail
 	 *
 	 * @var string
 	 */
 	protected $mode;
-	
+
+	/**
+	 * Holds the current page id
+	 *
+	 * @var int
+	 */
+	protected $pageId;
+
+	/**
+	 * Set the page id
+	 *
+	 * @param int page id
+	 */
+	public function setPageId($pageId) {
+		$this->pageId = $pageId;
+	}
+
+	/**
+	 * Get the page id
+	 *
+	 * @return int page id
+	 */
+	public function getPageId() {
+		return $this->pageId;
+	}
+
 	/**
 	 * @return string
 	 */
 	public function getMode() {
 		return $this->mode;
 	}
-	
+
 	/**
 	 * @param string $mode
 	 */
@@ -70,14 +97,14 @@ class tx_crawler_view_process_list{
 		$this->mode = $mode;
 	}
 
-	
+
 	/**
 	 * @return string
 	 */
 	public function getActionMessage() {
 		return $this->actionMessage;
 	}
-	
+
 	/**
 	 * @param string $actionMessage
 	 */
@@ -85,14 +112,14 @@ class tx_crawler_view_process_list{
 		$this->actionMessage = $actionMessage;
 	}
 
-	
+
 	/**
 	 * @return int
 	 */
 	public function getMaxActiveProcessCount() {
 		return $this->maxActiveProcessCount;
 	}
-	
+
 	/**
 	 * @param int $maxActiveProcessCount
 	 */
@@ -100,14 +127,14 @@ class tx_crawler_view_process_list{
 		$this->maxActiveProcessCount = $maxActiveProcessCount;
 	}
 
-	
+
 	/**
 	 * @return int
 	 */
 	public function getActiveProcessCount() {
 		return $this->activeProcessCount;
 	}
-	
+
 	/**
 	 * @param int $activeProcessCount
 	 */
@@ -121,7 +148,7 @@ class tx_crawler_view_process_list{
 	public function getIsCrawlerEnabled() {
 		return $this->isCrawlerEnabled;
 	}
-	
+
 	/**
 	 * @param boolean $isCrawlerEnabled
 	 */
@@ -129,7 +156,7 @@ class tx_crawler_view_process_list{
 		$this->isCrawlerEnabled = $isCrawlerEnabled;
 	}
 
-	
+
 	/**
 	 * Returns the path to start a cli process from the shell
 	 * @return string
@@ -137,15 +164,15 @@ class tx_crawler_view_process_list{
 	public function getCliPath() {
 		return $this->cliPath;
 	}
-	
+
 	/**
 	 * @param string $cliPath
 	 */
 	public function setCliPath($cliPath) {
 		$this->cliPath = $cliPath;
 	}
-	
-	
+
+
 	/**
 	 * @return int
 	 */
@@ -247,6 +274,15 @@ class tx_crawler_view_process_list{
 	}
 
 	/**
+	 * Returns a tag for the refresh icon
+	 *
+	 * @return string
+	 */
+	protected function getRefreshLink(){
+		return '<a href="index.php?id='.$this->pageId.'" title="Refresh">' . $this->getRefreshIcon() . '</a>';
+	}
+
+	/**
 	 * Returns an icon to stop all processes
 	 *
 	 * @return string html tag for stop icon
@@ -254,7 +290,7 @@ class tx_crawler_view_process_list{
 	protected function getStopIcon(){
 		return $this->getIcon('stop');
 	}
-	
+
 	/**
 	 * Returns a link for the panel to enable or disable the crawler
 	 *
@@ -262,32 +298,32 @@ class tx_crawler_view_process_list{
 	 */
 	protected function getEnableDisableLink(){
 		if($this->getIsCrawlerEnabled()){
-			return '<a href="index.php?action=stopCrawling" title="Stop all processes and disable crawling">'.$this->getIcon('control_stop_blue').'</a>';
+			return '<a href="index.php?id='.$this->pageId.'&action=stopCrawling" title="Stop all processes and disable crawling">'.$this->getIcon('control_stop_blue').'</a>';
 		}else{
-			return '<a href="index.php?action=resumeCrawling" title="Enable crawling">'.$this->getIcon('control_play').'</a>';
+			return '<a href="index.php?id='.$this->pageId.'&action=resumeCrawling" title="Enable crawling">'.$this->getIcon('control_play').'</a>';
 		}
 	}
-	
-	
+
+
 	protected function getModeLink(){
 		if($this->getMode() == 'detail'){
-			return '<a href="index.php?action=setMode&mode=simple" title="Show only running processes">'.$this->getIcon('arrow_in').'</a>';
+			return '<a href="index.php?id='.$this->pageId.'&action=setMode&mode=simple" title="Show only running processes">'.$this->getIcon('arrow_in').'</a>';
 		}elseif($this->getMode() == 'simple'){
-			return '<a href="index.php?action=setMode&mode=detail" title="Show finished and terminated processes">'.$this->getIcon('arrow_out').'</a>';
+			return '<a href="index.php?id='.$this->pageId.'&action=setMode&mode=detail" title="Show finished and terminated processes">'.$this->getIcon('arrow_out').'</a>';
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	protected function getAddLink(){
 		if($this->getActiveProcessCount() < $this->getMaxActiveProcessCount() && $this->getIsCrawlerEnabled()){
-			return '<a href="index.php?action=addProcess">'.$this->getAddIcon().'</a>';
+			return '<a href="index.php?id='.$this->pageId.'&action=addProcess" title="Add process">'.$this->getAddIcon().'</a>';
 		}else{
 			return '';
 		}
 	}
-	
+
 	/**
 	 * Returns the icon to add new crawler processes
 	 *
@@ -296,7 +332,7 @@ class tx_crawler_view_process_list{
 	protected function getAddIcon(){
 		return $this->getIcon('add');
 	}
-	
+
 	/**
 	 * Returns an imagetag for an icon
 	 *
