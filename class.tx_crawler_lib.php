@@ -201,17 +201,86 @@ class tx_crawler_lib {
 	}
 
 	/**
+	 * Check if the given page should be crawled
+	 *
+	 * @param array $pageRow
+	 * @return false|string false if the page should be crawled (not excluded), true / skipMessage if it should be skipped
+	 * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
+	 */
+	public function checkIfPageShouldBeSkipped(array $pageRow) {
+
+		$skipPage = false;
+		$skipMessage = 'Skipped'; // message will be overwritten later
+
+			// if page is hidden
+		if (!$this->extensionSettings['crawlHiddenPages']) {
+			if ($pageRow['hidden']) {
+				$skipPage = true;
+				$skipMessage = 'Because page is hidden';
+			}
+		}
+
+		if (!$skipPage) {
+			if (t3lib_div::inList('3,4', $pageRow['doktype']) || $pageRow['doktype']>=200)	{
+				$skipPage = true;
+				$skipMessage = 'Because doktype is not allowed';
+			}
+		}
+
+		if (!$skipPage) {
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['excludeDoktype'])) {
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['excludeDoktype'] as $key => $doktypeList) {
+					if (t3lib_div::inList($doktypeList, $pageRow['doktype'])) {
+						$skipPage = true;
+						$skipMessage = 'Doktype was excluded by "'.$key.'"';
+						break;
+					}
+				}
+			}
+		}
+
+		if (!$skipPage) {
+			// veto hook
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pageVeto'])) {
+				foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pageVeto'] as $key => $func)	{
+					$params = array(
+						'pageRow' => $pageRow
+					);
+					// expects "false" if page is ok and "true" or a skipMessage if this page should _not_ be crawled
+					$veto = t3lib_div::callUserFunction($func, $params, $this);
+					if ($veto !== false)	{
+						$skipPage = true;
+						if (is_string($veto)) {
+							$skipMessage = $veto;
+						} else {
+							$skipMessage = 'Veto from hook "'.htmlspecialchars($key).'"';
+						}
+						// no need to execute other hooks if a previous one return a veto
+						break;
+					}
+				}
+			}
+		}
+
+		return $skipPage ? $skipMessage : false;
+	}
+
+	/**
 	 * Returns array with URLs to process for input page row, ignoring pages like doktype 3,4 and 200+
 	 *
 	 * @param	array		Page record with at least doktype and uid columns.
 	 * @return	array		Result (see getUrlsForPageId())
 	 * @see getUrlsForPageId()
 	 */
-	function getUrlsForPageRow(array $pageRow)	{
+	function getUrlsForPageRow(array $pageRow, &$skipMessage) {
 
-		if (!t3lib_div::inList('3,4',$pageRow['doktype']) && $pageRow['doktype']<200)	{
+		$message = $this->checkIfPageShouldBeSkipped($pageRow);
+
+		if ($message === false) {
 			$res = $this->getUrlsForPageId($pageRow['uid']);
+			$skipMessage = '';
 		} else {
+			$skipMessage = $message;
 			$res = array();
 		}
 
@@ -236,16 +305,16 @@ class tx_crawler_lib {
 	 *
 	 */
 	function urlListFromUrlArray(
-		$vv,
-		$pageRow,
+		array $vv,
+		array $pageRow,
 		$scheduledTime,
 		$reqMinute,
 		$submitCrawlUrls,
 		$downloadCrawlUrls,
-		&$duplicateTrack,
-		&$downloadUrls,
-		$incomingProcInstructions,
-		$reason = null) {
+		array &$duplicateTrack,
+		array &$downloadUrls,
+		array $incomingProcInstructions,
+		tx_crawler_domain_reason $reason = null) {
 
 		if (is_array($vv['URLs']))	{
 			foreach($vv['URLs'] as $urlQuery)	{
@@ -269,21 +338,29 @@ class tx_crawler_lib {
 					$schTime = $scheduledTime + round(count($duplicateTrack)*(60/$reqMinute));
 					$schTime = floor($schTime/60)*60;
 
-					if (isset($duplicateTrack[$uKey]))	{
+					if (isset($duplicateTrack[$uKey])) {
+
 						//if the url key is registered just display it and do not resubmit is
-						$urlList.='<em><span class="typo3-dimmed">'.htmlspecialchars($urlQuery).'</span></em><br/>';
+						$urlList .= '<em><span class="typo3-dimmed">'.htmlspecialchars($urlQuery).'</span></em><br/>';
+
 					} else {
-						$urlList.= '['.date('d-m H:i:s',$schTime).'] '.htmlspecialchars($urlQuery).'<br/>';
-						$this->urlList[] = '['.date('d-m H:i:s',$schTime).'] '.$urlQuery;
+
+						$urlList .= '['.date('d-m H:i:s', $schTime).'] '.htmlspecialchars($urlQuery);
+						$this->urlList[] = '['.date('d-m H:i:s', $schTime).'] '.$urlQuery;
 
 						$theUrl = ($vv['subCfg']['baseUrl'] ? $vv['subCfg']['baseUrl'] : t3lib_div::getIndpEnv('TYPO3_SITE_URL')).'index.php'.$urlQuery;
 
 							// Submit for crawling!
 						if ($submitCrawlUrls)	{
-							$this->addUrl($pageRow['uid'],$theUrl,$vv['subCfg'],$scheduledTime,$reason);
+							$added = $this->addUrl($pageRow['uid'], $theUrl, $vv['subCfg'], $scheduledTime, $reason);
+							if ($added === false) {
+								$urlList .= ' (Url already existed)';
+							}
 						} elseif ($downloadCrawlUrls)	{
 							$downloadUrls[$theUrl] = $theUrl;
 						}
+
+						$urlList .= '<br />';
 					}
 					$duplicateTrack[$uKey] = TRUE;
 				}
@@ -721,10 +798,13 @@ class tx_crawler_lib {
 	 * @param	string		Complete URL
 	 * @param	array		Sub configuration array (from TS config)
 	 * @param	integer		Scheduled-time
-	 * @return	void
+	 * @param	tx_crawler_domain_reason	reason (optional)
+	 * @return	bool		true if the url was added, false if it already existed
 	 */
-	function addUrl($id,$url,$subCfg,$tstamp,$reason=null)	{
+	function addUrl($id, $url, $subCfg, $tstamp, tx_crawler_domain_reason $reason=null)	{
 		global $TYPO3_CONF_VARS;
+
+		$urlAdded = false;
 
 			// Creating parameters:
 		$parameters = array(
@@ -757,12 +837,40 @@ class tx_crawler_lib {
 		if ($this->registerQueueEntriesInternallyOnly)	{
 			$this->queueEntries[] = $fieldArray;
 		} else {
-			$GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_crawler_queue',$fieldArray);
-			$queueId  =$GLOBALS['TYPO3_DB']->sql_insert_id();
 
-			//finally handle the reason for this entry
-			$this->addReasonForQueueEntry($queueId,$reason);
+			$rows = array();
+
+			// check if there is already an equal entry
+
+				// only if this entry is scheduled with "now"
+			if ($tstamp <= time()) {
+				$result = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+					'qid',
+					'tx_crawler_queue',
+					'scheduled <= ' . time() .
+						' AND parameters = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($fieldArray['parameters'], 'tx_crawler_queue') .
+						' AND NOT exec_time' .
+						' AND NOT process_id '
+				);
+				foreach ($result as $value) {
+					$rows[] = $value['qid'];
+				}
+			}
+
+			if (empty($rows)) {
+				$GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_crawler_queue', $fieldArray);
+				$rows[] = $GLOBALS['TYPO3_DB']->sql_insert_id();
+				$urlAdded = true;
+			}
+
+			foreach ($rows as $queueId) {
+				//finally handle the reason for this entry
+				$this->addReasonForQueueEntry($queueId, $reason);
+			}
+
 		}
+
+		return $urlAdded;
 	}
 
 
@@ -1099,11 +1207,12 @@ class tx_crawler_lib {
 	 * @param	string		Page icon and title for row
 	 * @return	string		HTML <tr> content (one or more)
 	 */
-	function drawURLs_addRowsForPage($pageRow, $pageTitleAndIcon)	{
+	public function drawURLs_addRowsForPage(array $pageRow, $pageTitleAndIcon)	{
+
+		$skipMessage = '';
 
 			// Get list of URLs from page:
-		$res = $this->getUrlsForPageRow($pageRow);
-
+		$res = $this->getUrlsForPageRow($pageRow, $skipMessage);
 
 		foreach ($res as $key => $value) {
 
@@ -1122,7 +1231,7 @@ class tx_crawler_lib {
 		$c = 0;
 		$cc = 0;
 		$content = '';
-		if (count($res))	{
+		if (count($res)) {
 			foreach($res as $kk => $vv)	{
 
 					// Title column:
@@ -1192,11 +1301,14 @@ class tx_crawler_lib {
 				$c++;
 			}
 		} else {
+
+			$message = !empty($skipMessage) ? ' ('.$skipMessage.')' : '';
+
 				// Compile row:
 			$content.= '
 				<tr class="bgColor-20" style="border-bottom: 1px solid black;">
 					<td>'.$pageTitleAndIcon.'</td>
-					<td colspan="6"><em>No entries</em></td>
+					<td colspan="6"><em>No entries</em>'.$message.'</td>
 				</tr>';
 		}
 

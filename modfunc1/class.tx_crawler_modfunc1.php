@@ -111,13 +111,6 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	protected $extensionSettings = array();
 
 	/**
-	 * Mode how the process list should be displayed
-	 *
-	 * @var string
-	 */
-	protected $processListMode;
-
-	/**
 	 * Additions to the function menu array
 	 *
 	 * @return	array		Menu array
@@ -166,7 +159,9 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 
 
 		$this->loadExtensionSettings();
-		$this->processListMode = 'simple';
+		if (empty($this->pObj->MOD_SETTINGS['processListMode'])) {
+			$this->pObj->MOD_SETTINGS['processListMode'] = 'simple';
+		}
 
 		$this->pObj->MOD_SETTINGS['depth'] = t3lib_div::_GP('depth');
 
@@ -922,9 +917,12 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 * @author Timo Schmidt
 	 * @param void
 	 * @return void
-	 *
 	 */
 	protected function drawProcessOverviewAction(){
+
+		// reload page automatically every 30 seconds
+		header('refresh: 30;');
+
 		global $BACK_PATH;
 
 		$crawler = $this->findCrawler();
@@ -936,10 +934,10 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		$processRepository	= new tx_crawler_domain_process_repository();
 		$queueRepository	= new tx_crawler_domain_queue_repository();
 
-		$mode = $this->processListMode;
-		if($mode == 'detail'){
+		$mode = $this->pObj->MOD_SETTINGS['processListMode'];
+		if ($mode == 'detail') {
 			$where = '';
-		}elseif($mode == 'simple'){
+		} elseif($mode == 'simple') {
 			$where = 'active = 1';
 		}
 
@@ -963,7 +961,13 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		$paginationView->setPerPage($perpage);
 		$paginationView->setTotalItemCount($allCount);
 
-		return $listView->render().' <br />'.$paginationView->render();
+		$output = $listView->render();
+
+		if ($paginationView->getTotalPagesCount() > 1) {
+			$output .= ' <br />'.$paginationView->render();
+		}
+
+		return $output;
 	}
 
 	/**
@@ -971,27 +975,31 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 *
 	 * @param void
 	 * @return void
-	 *
 	 */
 	protected function handleProcessOverviewActions(){
 		$crawler = $this->findCrawler();
 
-		if(t3lib_div::_GP('action') == 'stopCrawling'){
-			//set the cli status to disable (all processes will be terminated)
-			$crawler->CLI_setProcess('disabled', 'Status set by backend module');
-		}
-		elseif(t3lib_div::_GP('action') == 'resumeCrawling'){
-			//set the cli status to end (all processes will be terminated)
-			$crawler->CLI_setProcess('end', 'Status set by backend module');
-		}
-
-		elseif(t3lib_div::_GP('action') == 'addProcess'){
-			$completePath 	= escapeshellcmd  ( 'nohup '.$this->getCrawlerCliPath()).' &';
-			$handle = popen($completePath,'r');
-			return 'New process has been started, refresh to monitor the state';
-		}
-		elseif(t3lib_div::_GP('action') == 'setMode'){
-			$this->processListMode = htmlspecialchars(t3lib_div::_GP('mode'));
+		switch (t3lib_div::_GP('action')) {
+			case 'stopCrawling' :
+				//set the cli status to disable (all processes will be terminated)
+				$crawler->CLI_setProcess('disabled', 'Status set by backend module');
+				break;
+			case 'resumeCrawling' :
+				//set the cli status to end (all processes will be terminated)
+				$crawler->CLI_setProcess('end', 'Status set by backend module');
+				break;
+			case 'addProcess' :
+				$completePath = 'nohup ' . escapeshellcmd($this->getCrawlerCliPath()) . ' &';
+				$handle = popen($completePath,'r');
+				if ($handle === false) {
+					throw new Exception('Error while starting process');
+				}
+				return 'New process has been started, refresh to monitor the state';
+				break;
+			case 'setMode' :
+				$this->pObj->MOD_SETTINGS['processListMode'] = htmlspecialchars(t3lib_div::_GP('mode'));
+				// TODO: store into session
+				break;
 		}
 	}
 
@@ -1056,4 +1064,5 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/modfunc1/class.tx_crawler_modfunc1.php'])	{
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/modfunc1/class.tx_crawler_modfunc1.php']);
 }
+
 ?>
