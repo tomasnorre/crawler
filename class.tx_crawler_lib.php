@@ -1454,6 +1454,9 @@ class tx_crawler_lib {
 			);
 		}
 
+			// cleanup
+		$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_crawler_process', 'assigned_items_count = 0');
+
 			// Select entries:
 		$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			'qid,scheduled',
