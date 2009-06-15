@@ -39,14 +39,13 @@
 		<td>Runtime: </td>
 		<td>TTL: </td>
 		<td>Processed: </td>
-		<td>Initial Assigned:</td>
-		<td>Finally Assigned:</td>
+		<td>Initially assigned:</td>
+		<td>Finally assigned:</td>
 		<td>Progress: </td>
 	</tr>
-	<?php foreach($this->getProcessCollection() as $process){
+	<?php foreach($this->getProcessCollection() as $process){ /* @var $process tx_crawler_domain_process */
 		$count++;
 		$odd = ($count % 2 == 0) ? true : false;
-			/** @var tx_crawler_domain_process $process */
 	?>
 		<tr class="<?php echo $odd ? 'odd': 'even' ?>">
 			<td><?php echo $this->getIconForState(htmlspecialchars($process->getState())); ?></td>

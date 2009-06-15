@@ -166,16 +166,16 @@ class tx_crawler_lib {
 	 * @var string
 	 */
 	protected $accessMode;
-	
+
 	/**
 	 * Method to set the accessMode can be gui, cli or cli_im
-	 * 
+	 *
 	 * @return string
 	 */
 	public function getAccessMode() {
 		return $this->accessMode;
 	}
-	
+
 	/**
 	 * @param string $accessMode
 	 */
@@ -183,8 +183,8 @@ class tx_crawler_lib {
 		$this->accessMode = $accessMode;
 	}
 
-	
-	
+
+
 	/************************************
 	 *
 	 * Getting URLs based on Page TSconfig
@@ -233,7 +233,7 @@ class tx_crawler_lib {
 	 * @param	array		Array of processing instructions
 	 * @param 	tx_crawler_domain_reason
 	 * @return	string		List of URLs (meant for display in backend module)
-	 * 
+	 *
 	 */
 	function urlListFromUrlArray(
 		$vv,
@@ -277,7 +277,7 @@ class tx_crawler_lib {
 						$this->urlList[] = '['.date('d-m H:i:s',$schTime).'] '.$urlQuery;
 
 						$theUrl = ($vv['subCfg']['baseUrl'] ? $vv['subCfg']['baseUrl'] : t3lib_div::getIndpEnv('TYPO3_SITE_URL')).'index.php'.$urlQuery;
-						
+
 							// Submit for crawling!
 						if ($submitCrawlUrls)	{
 							$this->addUrl($pageRow['uid'],$theUrl,$vv['subCfg'],$scheduledTime,$reason);
@@ -759,7 +759,7 @@ class tx_crawler_lib {
 		} else {
 			$GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_crawler_queue',$fieldArray);
 			$queueId  =$GLOBALS['TYPO3_DB']->sql_insert_id();
-	
+
 			//finally handle the reason for this entry
 			$this->addReasonForQueueEntry($queueId,$reason);
 		}
@@ -769,28 +769,29 @@ class tx_crawler_lib {
 	/**
 	 * This method is used to create a reason entry for a queue entry.
 	 * if no reason is given, a default reason for the current accessMode will be used.
-	 * 
-	 * @author Timo Schmidt <schmidt@aoemedia.de>
+	 *
 	 * @param int uid of the queue entry
-	 * 
+	 * @param tx_crawler_domain_reason optional reason
+	 * @return void
+	 * @author Timo Schmidt <schmidt@aoemedia.de>
 	 */
-	protected function addReasonForQueueEntry($queueId,$reason = null){
+	protected function addReasonForQueueEntry($queueId, tx_crawler_domain_reason $reason=null){
 		if($reason == null){
 			//if there is no reason created a default reason
 			$reason = new tx_crawler_domain_reason();
 			$reasonType = $this->getReasonTypeFromAccessMode();
-			
+
 			$reason->setReason($reasonType);
-			$reason->setDetailText('Default detail text createad by '.__FILE__);
+			$reason->setDetailText('Default detail text created by '.__FILE__);
 		}
-		
+
 		$reason->setQueueEntryUid($queueId);
 		$reason->setCreationDate(time());
-		
+
 		if(isset($GLOBALS['BE_USER']->user)){
 			$reason->setBackendUserId($GLOBALS['BE_USER']->user['uid']);
 		}
-		
+
 		$reasonRepository = new tx_crawler_domain_reason_repository();
 		$reasonRepository->add($reason);
 	}
@@ -813,7 +814,7 @@ class tx_crawler_lib {
 				$reasonType = tx_crawler_domain_reason::REASON_DEFAULT;
 			break;
 		}
-		
+
 		return $reasonType;
 	}
 
@@ -1226,7 +1227,7 @@ class tx_crawler_lib {
 	 * @return	void
 	 */
 	function CLI_main()	{
-		
+
 		$this->setAccessMode('cli');
         if ($this->debugMode) t3lib_div::devlog('crawler CLI_main -'.microtime(true),__FUNCTION__);
         $this->CLI_debug("creating process (".$this->CLI_buildProcessId().")");
@@ -1257,7 +1258,7 @@ class tx_crawler_lib {
 	 */
 	function CLI_main_im()	{
 		$this->setAccessMode('cli_im');
-		
+
 		$cliObj = t3lib_div::makeInstance('tx_crawler_cli_im');
 
 			// Force user to admin state and set workspace to "Live":
@@ -1328,7 +1329,7 @@ class tx_crawler_lib {
 		   // Set "start" status (thus reserving to run!)
 		$this->CLI_setProcess('start');
         $this->CLI_debug("process running (".$this->CLI_buildProcessId().")");
-            	
+
 			// First, run hooks:
 		$this->CLI_runHooks();
 
@@ -1357,22 +1358,22 @@ class tx_crawler_lib {
             foreach($rows as $r) {
                 $quidList[] = $r['qid'];
             }
-            
-            
+
+
             $processId = $this->CLI_buildProcessId();
-            
+
             //reserve queue entrys for process
             $GLOBALS['TYPO3_DB']->sql_query('BEGIN');
-            
+
             $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_crawler_queue','qid IN ('.implode(',',$quidList).')',array('process_scheduled'=> intval(time()),'process_id'=> $processId));
-            
+
             //save the number of assigned queue entrys to determine who many have been processed later
             $numberOfAffectedRows = $GLOBALS['TYPO3_DB']->sql_affected_rows();
             $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_crawler_process'," process_id = '".$processId."'" , array('assigned_items_count' => intval($numberOfAffectedRows)));
-         
-            if($numberOfAffectedRows == count($quidList)) {	
+
+            if($numberOfAffectedRows == count($quidList)) {
                 $GLOBALS['TYPO3_DB']->sql_query('COMMIT');
-            } else  {	
+            } else  {
                 $GLOBALS['TYPO3_DB']->sql_query('ROLLBACK');
 
                 return 'Nothing processed due to multi-process collision';
@@ -1398,16 +1399,16 @@ class tx_crawler_lib {
 			}
 		}
 		sleep(intval($this->extensionSettings['sleepAfterFinish']));
-		
+
 		$msg = 'Rows: '.$counter;
-			
+
 		// End process only if not disabled:
-		if(!$this->CLI_isDisabled()){				
+		if(!$this->CLI_isDisabled()){
 			$this->CLI_setProcess('end', $msg);
 		}
-		
-		$this->CLI_debug($msg." (".$this->CLI_buildProcessId().")");		
-		
+
+		$this->CLI_debug($msg." (".$this->CLI_buildProcessId().")");
+
 		return true;
 	}
 
