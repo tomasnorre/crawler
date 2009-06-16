@@ -170,7 +170,7 @@ class tx_crawler_api {
 	 * @param int uid
 	 * @param boolean configure the method, to handle only unprocessed items as queued
 	 */
-	public function isPageInQueue($uid,$unprocessed_only = true,$timed_only=false,$timstamp=false) {
+	public function isPageInQueue($uid,$unprocessed_only = true,$timed_only=false,$timestamp=false) {
 		$uid = intval($uid);
 
 		if($timestamp != false) { $timestamp = intval($timestamp);}
@@ -186,7 +186,7 @@ class tx_crawler_api {
 		if($timed_only) {
 			$where .= ' AND scheduled != 0';
 		}
-		if($timstamp) {
+		if($timestamp) {
 			$where .= ' AND scheduled = '.$timestamp;
 		}
 
