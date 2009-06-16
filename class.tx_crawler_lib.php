@@ -766,7 +766,7 @@ class tx_crawler_lib {
 		$fieldArray = array(
 			'page_id' => $page_id,
 			'parameters' => serialize($params),
-			'scheduled' => $schedule ? $schedule : time(),
+			'scheduled' => $schedule ? $schedule : $this->getCurrentTime(),
 			'exec_time' => 0,
 			'set_id' => $setId,
 			'result_data' => '',
@@ -843,11 +843,11 @@ class tx_crawler_lib {
 			// check if there is already an equal entry
 
 				// only if this entry is scheduled with "now"
-			if ($tstamp <= time()) {
+			if ($tstamp <= $this->getCurrentTime()) {
 				$result = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 					'qid',
 					'tx_crawler_queue',
-					'scheduled <= ' . time() .
+					'scheduled <= ' . $this->getCurrentTime() .
 						' AND parameters = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($fieldArray['parameters'], 'tx_crawler_queue') .
 						' AND NOT exec_time' .
 						' AND NOT process_id '
@@ -873,6 +873,15 @@ class tx_crawler_lib {
 		return $urlAdded;
 	}
 
+	/**
+	 * Returns the current system time
+	 *
+	 * @author Timo Schmidt <schmidt@aoemedia.de>
+	 * @return int
+	 */
+	public function getCurrentTime(){
+		return time();
+	}
 
 	/**
 	 * This method is used to create a reason entry for a queue entry.
@@ -894,7 +903,7 @@ class tx_crawler_lib {
 		}
 
 		$reason->setQueueEntryUid($queueId);
-		$reason->setCreationDate(time());
+		$reason->setCreationDate($this->getCurrentTime());
 
 		if(isset($GLOBALS['BE_USER']->user)){
 			$reason->setBackendUserId($GLOBALS['BE_USER']->user['uid']);
@@ -947,7 +956,7 @@ class tx_crawler_lib {
 
 		if (is_array($queueRec))	{
 				// Set exec_time to lock record:
-			$field_array = array('exec_time' => time());
+			$field_array = array('exec_time' => $this->getCurrentTime());
 
 			if(isset($this->processID)){
 				//if mulitprocessing is used we need to store the id of the process which has handled this entry
@@ -973,7 +982,7 @@ class tx_crawler_lib {
 	function readUrlFromArray($field_array)	{
 
 			// Set exec_time to lock record:
-		$field_array['exec_time'] = time();
+		$field_array['exec_time'] = $this->getCurrentTime();
 		$GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_crawler_queue', $field_array);
 		$queueId = $field_array['qid'] = $GLOBALS['TYPO3_DB']->sql_insert_id();
 
@@ -1394,7 +1403,7 @@ class tx_crawler_lib {
 		$this->getPageTreeAndUrls(
 			t3lib_div::intInRange($cliObj->cli_args['_DEFAULT'][1],0),
 			t3lib_div::intInRange($cliObj->cli_argValue('-d'),0,99),
-			time(),
+			$this->getCurrentTime(),
 			t3lib_div::intInRange($cliObj->cli_isArg('-n') ? $cliObj->cli_argValue('-n') : 30,1,1000),
 			$cliObj->cli_argValue('-o')==='queue' || $cliObj->cli_argValue('-o')==='exec',
 			$cliObj->cli_argValue('-o')==='url',
@@ -1447,7 +1456,7 @@ class tx_crawler_lib {
 
 			// Clean up the queue
 		if (intval($this->extensionSettings['purgeQueueDays']) > 0) {
-			$purgeDate = time() - 24 * 60 * 60 * intval($this->extensionSettings['purgeQueueDays']);
+			$purgeDate = $this->getCurrentTime() - 24 * 60 * 60 * intval($this->extensionSettings['purgeQueueDays']);
 			$del = $GLOBALS['TYPO3_DB']->exec_DELETEquery(
 				'tx_crawler_queue',
 				'exec_time!=0 AND exec_time<' . $purgeDate
@@ -1463,7 +1472,7 @@ class tx_crawler_lib {
 			'tx_crawler_queue',
 			'exec_time=0
 				AND process_scheduled= 0
-                AND scheduled<='.time(),
+                AND scheduled<='.$this->getCurrentTime(),
 			'',
 			'scheduled, qid',
 			intval($this->extensionSettings['countInARun']));
@@ -1480,7 +1489,7 @@ class tx_crawler_lib {
             //reserve queue entrys for process
             $GLOBALS['TYPO3_DB']->sql_query('BEGIN');
 
-            $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_crawler_queue','qid IN ('.implode(',',$quidList).')',array('process_scheduled'=> intval(time()),'process_id'=> $processId));
+            $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_crawler_queue','qid IN ('.implode(',',$quidList).')',array('process_scheduled'=> intval($this->getCurrentTime()),'process_id'=> $processId));
 
             //save the number of assigned queue entrys to determine who many have been processed later
             $numberOfAffectedRows = $GLOBALS['TYPO3_DB']->sql_affected_rows();
@@ -1558,7 +1567,7 @@ class tx_crawler_lib {
 		if ($dat['status'] && $dat['status']!=='end')	{
 				// IF more than one hour has passed since last start, the process is probably stalled and we allow it to run:
 				// todo: Could be to check the process list for occurences of this script name and use that as indication of a running, non-stalled process instead of time!
-			if ($dat['status']==='start' && $dat['starttime']+$this->max_CLI_exec_time < time())	{
+			if ($dat['status']==='start' && $dat['starttime']+$this->max_CLI_exec_time < $this->getCurrentTime())	{
 				return FALSE;
 			} else {
 				return TRUE;
@@ -1613,7 +1622,7 @@ class tx_crawler_lib {
 			// Initialize array:
 		$statusArray = array(
 			'status' => $status,
-			'tstamp' => time(),
+			'tstamp' => $this->getCurrentTime(),
 			'msg' => $msg,
 			'counter' => $currentStatus['counter']
 		);
@@ -1621,13 +1630,13 @@ class tx_crawler_lib {
 			// Set other variables:
 		switch((string)$status)	{
 			case 'start':
-				$statusArray['starttime'] = time();
+				$statusArray['starttime'] = $this->getCurrentTime();
 				$statusArray['endtime'] = 0;
 				$statusArray['counter']++;
 			break;
 			case 'end':
 				$statusArray['starttime'] = $currentStatus['starttime'];
-				$statusArray['endtime'] = time();
+				$statusArray['endtime'] = $this->getCurrentTime();
 			break;
 		}
 
@@ -1656,7 +1665,7 @@ class tx_crawler_lib {
         $GLOBALS['TYPO3_DB']->sql_query('BEGIN');
         $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('process_id,ttl','tx_crawler_process','active=1 AND deleted=0');
         while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))	{
-            if($row['ttl']<time()) {
+            if($row['ttl']<$this->getCurrentTime()) {
                 $orphranProcesses[] = $row['process_id'];
             } else {
                 $processCount++;
@@ -1664,7 +1673,7 @@ class tx_crawler_lib {
         }
         if($processCount < intval($this->extensionSettings['processLimit'])) {
             $this->CLI_debug("add ".$this->CLI_buildProcessId()." (".($processCount+1)."/".intval($this->extensionSettings['processLimit']).")");
-            $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_crawler_process',array('process_id'=>$id,'active'=>'1','ttl'=>(time()+$this->extensionSettings['processMaxRunTime'])));
+            $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_crawler_process',array('process_id'=>$id,'active'=>'1','ttl'=>($this->getCurrentTime()+$this->extensionSettings['processMaxRunTime'])));
         } else {
             $ret = false;
         }

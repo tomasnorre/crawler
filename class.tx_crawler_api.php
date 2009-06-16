@@ -13,12 +13,27 @@ class tx_crawler_api {
 	private $validator;
 
 	public function __construct() {
-		$this->validator = t3lib_div::makeInstance('tx_crawler_system_validator');
+		
 	}
+	
+	/**
+	 * Returns an instance of the validator
+	 *
+	 * @return tx_crawler_system_validator
+	 */
+	protected function findValidator(){
+		if(!$this->validator instanceof tx_crawler_system_validator){
+			$this->validator = t3lib_div::makeInstance('tx_crawler_system_validator');
+		}
 
+		return $this->validator;
+	}
+	
 	/**
 	* Each crawlerrun has a setid, this facade method delegates
 	* the it to the crawler object
+	* 
+	* @param int
 	*/
 	public function overwriteSetId($id) {
 		$id = intval($id);
@@ -40,7 +55,7 @@ class tx_crawler_api {
 	*
 	* @return tx_crawler_lib Instance of the crawler lib
 	*/
-	private function findCrawler() {
+	protected function findCrawler() {
 		if(!is_object($this->crawlerObj)) {
 			$this->crawlerObj = t3lib_div::makeInstance('tx_crawler_lib');
 			$this->crawlerObj->setID = t3lib_div::md5int(microtime());
@@ -75,7 +90,7 @@ class tx_crawler_api {
 		$uid = intval($uid);
 		$time = intval($time);
 
-		if(!$this->validator->isInt($uid) || !$this->validator->isInt($time)) {
+		if(!$this->findValidator()->isInt($uid) || !$this->findValidator()->isInt($time)) {
 			throw new Exception('wrong parameter type '.var_dump($uid).' '.var_dump($time).' in function '.__METHOD__);
 		}
 
@@ -158,11 +173,9 @@ class tx_crawler_api {
 	public function isPageInQueue($uid,$unprocessed_only = true,$timed_only=false,$timstamp=false) {
 		$uid = intval($uid);
 
-		if($timestamp != false) {
-			$timestamp = intval($timestamp);
-		}
+		if($timestamp != false) { $timestamp = intval($timestamp);}
 
-		if(!$this->validator->isInt($uid)) { die('wrong parameter type'); }
+		if(!$this->findValidator()->isInt($uid)) { die('wrong parameter type'); }
 
 		$query = 'count(*) as anz';
 		$where = 'page_id = '.$uid;
@@ -295,8 +308,6 @@ class tx_crawler_api {
 		$where = ' qid='.$qid;
 		$GLOBALS['TYPO3_DB']->exec_DELETEquery($table,$where);
 	}
-
-
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/class.tx_crawler_api.php']) {
