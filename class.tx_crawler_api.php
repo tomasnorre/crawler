@@ -4,7 +4,7 @@
  * It uses internally the class tx_crawler_lib modify the queue.
  *
  */
-require_once t3lib_extMgm::extPath('crawler') . 'class.tx_crawler_validator.php';
+require_once t3lib_extMgm::extPath('crawler') . 'system/class.tx_crawler_system_validator.php';
 
 class tx_crawler_api {
 
@@ -13,7 +13,7 @@ class tx_crawler_api {
 	private $validator;
 
 	public function __construct() {
-		$this->validator = t3lib_div::makeInstance('tx_crawler_validator');
+		$this->validator = t3lib_div::makeInstance('tx_crawler_system_validator');
 	}
 
 	/**

@@ -1,5 +1,5 @@
 <?php
-class tx_crawler_validator{
+class tx_crawler_system_validator{
 	private $patterns;
 	
 	public function __construct(){
