@@ -253,15 +253,25 @@ class tx_crawler_view_process_list {
 	 * Returns the state icon for the current job
 	 *
 	 * @param string $state
+	 * @return string icon
 	 */
 	protected function getIconForState($state){
 		switch($state){
-			case 'running':	$icon = 'bullet_orange'; break;
-			case 'completed': $icon = 'bullet_green'; break;
-			case 'canceled': $icon = 'bullet_red'; break;
+			case 'running':
+				$icon = 'bullet_orange';
+				$title = 'Process running';
+				break;
+			case 'completed':
+				$icon = 'bullet_green';
+				$title = 'Process completed successfully';
+				break;
+			case 'canceled':
+				$icon = 'bullet_red';
+				$title = 'Process was cancelled';
+				break;
 		}
 
-		return $this->getIcon($icon);
+		return $this->getIcon($icon, $title);
 	}
 
 	/**
@@ -339,8 +349,11 @@ class tx_crawler_view_process_list {
 	 * @param string $icon
 	 * @return string html tag for icon
 	 */
-	protected function getIcon($icon){
-		return '<img src="'.$this->getIconPath().$icon.'.png" />';
+	protected function getIcon($icon, $title='') {
+		if (!empty($title)) {
+			$title = ' title="'.$title.'"';
+		}
+		return '<img src="'.$this->getIconPath().$icon.'.png" ' . $title . ' />';
 	}
 
 	/**

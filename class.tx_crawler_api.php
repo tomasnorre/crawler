@@ -12,10 +12,6 @@ class tx_crawler_api {
 	private $allow_duplicate_entries = false;
 	private $validator;
 
-	public function __construct() {
-		
-	}
-	
 	/**
 	 * Returns an instance of the validator
 	 *
@@ -28,11 +24,11 @@ class tx_crawler_api {
 
 		return $this->validator;
 	}
-	
+
 	/**
 	* Each crawlerrun has a setid, this facade method delegates
 	* the it to the crawler object
-	* 
+	*
 	* @param int
 	*/
 	public function overwriteSetId($id) {

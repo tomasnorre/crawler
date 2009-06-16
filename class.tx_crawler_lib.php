@@ -25,67 +25,8 @@
 /**
  * Crawler library, executed in a backend context
  *
- * @author    Kasper Sk�rh�j <kasperYYYY@typo3.com>
+ * @author Kasper Skaarhoej <kasperYYYY@typo3.com>
  */
-/**
- * [CLASS/FUNCTION INDEX of SCRIPT]
- *
- *
- *
- *  100: class tx_crawler_cli_im extends t3lib_cli
- *  107:     function tx_crawler_cli_im()
- *
- *
- *  138: class tx_crawler_lib
- *
- *              SECTION: Getting URLs based on Page TSconfig
- *  165:     function getUrlsForPageRow($pageRow)
- *  191:     function urlListFromUrlArray($vv,$pageRow,$scheduledTime,$reqMinute,$submitCrawlUrls,$downloadCrawlUrls,&$duplicateTrack,&$downloadUrls,$incomingProcInstructions)
- *  250:     function drawURLs_PIfilter($piString,$incomingProcInstructions)
- *  262:     function getUrlsForPageId($id)
- *  308:     function parseParams($inputQuery)
- *  337:     function expandParameters($paramArray,$pid)
- *  432:     function compileUrls($paramArray, $urls=array())
- *
- *              SECTION: Crawler log
- *  487:     function getLogEntriesForPageId($id,$filter='',$doFlush=FALSE)
- *  517:     function getLogEntriesForSetId($set_id,$filter='',$doFlush=FALSE)
- *  549:     function addQueueEntry_callBack($setId,$params,$callBack,$page_id=0,$schedule=0)
- *
- *              SECTION: URL setting
- *  592:     function addUrl($id,$url,$subCfg,$tstamp)
- *
- *              SECTION: URL reading
- *  650:     function readUrl($queueId, $force=FALSE)
- *  675:     function readUrlFromArray($field_array)
- *  697:     function readUrl_exec($queueRec)
- *  732:     function requestUrl($url, $crawlerId, $timeout=2)
- *
- *              SECTION: tslib_fe hooks:
- *  803:     function fe_init(&$params, $ref)
- *  826:     function fe_feuserInit(&$params, $ref)
- *  844:     function fe_isOutputting(&$params, $ref)
- *  857:     function fe_eofe(&$params, $ref)
- *
- *              SECTION: Compiling URLs to crawl - tools
- *  900:     function getPageTreeAndUrls($id,$depth,$scheduledTime,$reqMinute,$submitCrawlUrls,$downloadCrawlUrls,$incomingProcInstructions)
- *  951:     function drawURLs_addRowsForPage($pageRow,$pageTitleAndIcon)
- *
- *              SECTION: CLI functions
- * 1051:     function CLI_main()
- * 1076:     function CLI_set()
- * 1145:     function CLI_run()
- * 1179:     function CLI_runHooks()
- * 1197:     function CLI_checkProcess()
- * 1219:     function CLI_isDisabled()
- * 1235:     function CLI_readProcessData()
- * 1253:     function CLI_setProcess($status, $msg='')
- *
- * TOTAL FUNCTIONS: 30
- * (This index is automatically created/updated by the extension "extdeveval")
- *
- */
-
 
 require_once(PATH_t3lib.'class.t3lib_pagetree.php');
 require_once(PATH_t3lib.'class.t3lib_cli.php');
@@ -97,7 +38,7 @@ require_once t3lib_extMgm::extPath('crawler') . 'domain/reason/class.tx_crawler_
 /**
  * Cli basis:
  *
- * @author	Kasper Sk�rh�j <kasperYYYY@typo3.com>
+ * @author	Kasper Skaarhoej <kasperYYYY@typo3.com>
  * @package TYPO3
  * @subpackage tx_crawler
  */
@@ -160,6 +101,8 @@ class tx_crawler_lib {
 
 	var $extensionSettings=array();
 
+	protected $processFilename;
+
 	/**
 	 * Holds the internal access mode can be 'gui','cli' or 'cli_im'
 	 *
@@ -191,11 +134,14 @@ class tx_crawler_lib {
 	 *
 	 ************************************/
 
-	function tx_crawler_lib() {
-	    //read ext_em_conf_template settings and set
+	public function __construct() {
+
+		$this->processFilename = PATH_site.'typo3temp/tx_crawler.proc';
+
+	    // read ext_em_conf_template settings and set
 	    $this->extensionSettings=unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['crawler']);
-	    // print_r($this->extensionSettings);
-	    //set defaults:
+
+	    // set defaults:
 	    if ($this->extensionSettings['countInARun']=='') $this->extensionSettings['countInARun']=100;
 	    if (!t3lib_div::intInRange($this->extensionSettings['processLimit'],1,99)) $this->extensionSettings['processLimit']=1;
 	}
@@ -1350,25 +1296,16 @@ class tx_crawler_lib {
 	function CLI_main()	{
 
 		$this->setAccessMode('cli');
-        if ($this->debugMode) t3lib_div::devlog('crawler CLI_main -'.microtime(true),__FUNCTION__);
-        $this->CLI_debug("creating process (".$this->CLI_buildProcessId().")");
-		// Checking that no other CLI is running:
-        if (($this->hasMultipleProcessSupport() && $this->CLI_checkAndAcquireNewProcess($this->CLI_buildProcessId())) || !$this->CLI_checkProcess())	{
-			if ($this->CLI_isDisabled())	{
-				$this->CLI_setProcess('disabled', $msg);
-			} else {
-					// Run process:
-				$res = $this->CLI_run();
 
-			}
+		if (!$this->getDisabled() && $this->CLI_checkAndAcquireNewProcess($this->CLI_buildProcessId())) {
 
-            if($this->hasMultipleProcessSupport()) {
-                $this->CLI_releaseProcesses($this->CLI_buildProcessId());
-            }
-            $this->CLI_debug("process released successful (".$this->CLI_buildProcessId().")");
-		} else {
-		    if ($this->debugMode) t3lib_div::devlog('crawler CLI_main - found another crawler process - nothing to do'.microtime(true),__FUNCTION__);
-            $this->CLI_debug("no resources for processs (".$this->CLI_buildProcessId().")");
+				// Run process:
+			$res = $this->CLI_run();
+
+				// cleanup
+			$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_crawler_process', 'assigned_items_count = 0');
+
+            $this->CLI_releaseProcesses($this->CLI_buildProcessId());
 		}
 	}
 
@@ -1446,10 +1383,7 @@ class tx_crawler_lib {
 	 *
 	 * @return	string		Status message
 	 */
-	function CLI_run()	{
-		   // Set "start" status (thus reserving to run!)
-		$this->CLI_setProcess('start');
-        $this->CLI_debug("process running (".$this->CLI_buildProcessId().")");
+	public function CLI_run()	{
 
 			// First, run hooks:
 		$this->CLI_runHooks();
@@ -1463,9 +1397,6 @@ class tx_crawler_lib {
 			);
 		}
 
-			// cleanup
-		$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_crawler_process', 'assigned_items_count = 0');
-
 			// Select entries:
 		$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			'qid,scheduled',
@@ -1475,25 +1406,40 @@ class tx_crawler_lib {
                 AND scheduled<='.$this->getCurrentTime(),
 			'',
 			'scheduled, qid',
-			intval($this->extensionSettings['countInARun']));
+			intval($this->extensionSettings['countInARun'])
+		);
 
-        if ($this->hasMultipleProcessSupport() && count($rows)>0) {
-            $quidList = array();
+        if (count($rows)>0) {
+
+        	$quidList = array();
+
             foreach($rows as $r) {
                 $quidList[] = $r['qid'];
             }
-
 
             $processId = $this->CLI_buildProcessId();
 
             //reserve queue entrys for process
             $GLOBALS['TYPO3_DB']->sql_query('BEGIN');
 
-            $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_crawler_queue','qid IN ('.implode(',',$quidList).')',array('process_scheduled'=> intval($this->getCurrentTime()),'process_id'=> $processId));
+            $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
+            	'tx_crawler_queue',
+            	'qid IN ('.implode(',',$quidList).')',
+            	array(
+            		'process_scheduled' => intval($this->getCurrentTime()),
+            		'process_id' => $processId
+            	)
+            );
 
             //save the number of assigned queue entrys to determine who many have been processed later
             $numberOfAffectedRows = $GLOBALS['TYPO3_DB']->sql_affected_rows();
-            $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_crawler_process'," process_id = '".$processId."'" , array('assigned_items_count' => intval($numberOfAffectedRows)));
+            $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
+            	'tx_crawler_process',
+            	"process_id = '".$processId."'" ,
+            	array(
+            		'assigned_items_count' => intval($numberOfAffectedRows)
+            	)
+            );
 
             if($numberOfAffectedRows == count($quidList)) {
                 $GLOBALS['TYPO3_DB']->sql_query('COMMIT');
@@ -1512,24 +1458,21 @@ class tx_crawler_lib {
 			$counter++;
 			usleep(intval($this->extensionSettings['sleepTime']));	// Just to relax the system
 
-			//if during the start and the current read url the cli has been disable we need to return from the function
+			// if during the start and the current read url the cli has been disable we need to return from the function
 			// mark the process NOT as ended.
-			if ($this->CLI_isDisabled()){
+			if ($this->getDisabled()) {
 				return false;
 			}
-			if ($this->hasMultipleProcessSupport() && !$this->CLI_checkIfProcessIsActive($this->CLI_buildProcessId())) {
+
+			if (!$this->CLI_checkIfProcessIsActive($this->CLI_buildProcessId())) {
 				$this->CLI_debug("conflict / timeout (".$this->CLI_buildProcessId().")");
-				 break;     //possible timeout
+				break;     //possible timeout
 			}
 		}
+
 		sleep(intval($this->extensionSettings['sleepAfterFinish']));
 
 		$msg = 'Rows: '.$counter;
-
-		// End process only if not disabled:
-		if(!$this->CLI_isDisabled()){
-			$this->CLI_setProcess('end', $msg);
-		}
 
 		$this->CLI_debug($msg." (".$this->CLI_buildProcessId().")");
 
@@ -1553,180 +1496,147 @@ class tx_crawler_lib {
 		}
 	}
 
-	/**
-	 * Checking if another process is already running and didn't finish.
-	 *
-	 * @return	boolean		True if another process is running
-	 */
-	function CLI_checkProcess()	{
-
-			// Read status data
-		$dat = $this->CLI_readProcessData();
-
-			// See if is set and set to end; if not, return last starttime.
-		if ($dat['status'] && $dat['status']!=='end')	{
-				// IF more than one hour has passed since last start, the process is probably stalled and we allow it to run:
-				// todo: Could be to check the process list for occurences of this script name and use that as indication of a running, non-stalled process instead of time!
-			if ($dat['status']==='start' && $dat['starttime']+$this->max_CLI_exec_time < $this->getCurrentTime())	{
-				return FALSE;
-			} else {
-				return TRUE;
-			}
-		}
-	}
-
-	/**
-	 * Checking if CLI has been disabled from backend
-	 *
-	 * @return	boolean		True if disabled
-	 */
-	function CLI_isDisabled()	{
-
-			// Read status data
-		$dat = $this->CLI_readProcessData();
-
-			// See if is set and set to end; if not, return last starttime.
-		if ($dat['status'] && $dat['status']==='disabled')	{
-			return TRUE;
-		}
-	}
-
-	/**
-	 * Reading data from process file
-	 *
-	 * @return	array		Process file data, empty array if didn't exist (or parseerror)
-	 */
-	function CLI_readProcessData()	{
-			// Look for process file:
-		$filePath = $this->singleProcessFileName();
-		if (@is_file($filePath))	{
-
-				// Read status and return it:
-			$dat = t3lib_div::xml2array(t3lib_div::getUrl($filePath));
-			return (array)$dat;
-		} else return array();
-	}
-
-	/**
-	 * Write process data
-	 *
-	 * @param	string		Process status ("start", "end" etc).
-	 * @param	string		Status message to set.
-	 * @return	void
-	 */
-	function CLI_setProcess($status, $msg='')	{
-
-			// Get current
-		$currentStatus = $this->CLI_readProcessData();
-
-			// Initialize array:
-		$statusArray = array(
-			'status' => $status,
-			'tstamp' => $this->getCurrentTime(),
-			'msg' => $msg,
-			'counter' => $currentStatus['counter']
-		);
-
-			// Set other variables:
-		switch((string)$status)	{
-			case 'start':
-				$statusArray['starttime'] = $this->getCurrentTime();
-				$statusArray['endtime'] = 0;
-				$statusArray['counter']++;
-			break;
-			case 'end':
-				$statusArray['starttime'] = $currentStatus['starttime'];
-				$statusArray['endtime'] = $this->getCurrentTime();
-			break;
-		}
-
-			// Create XML:
-		$xmlContent = t3lib_div::array2xml_cs($statusArray);
-
-			// Save to file:
-		$filePath = PATH_site.'typo3temp/tx_crawler.proc';
-		t3lib_div::writeFile($filePath,$xmlContent);
-	}
-
     /**
-    *   Try to aquire a new process with the given id
-    *   also performs some auto-cleanup for orphran processes
-    *   only required for multiprocess-environments
-    *
-    *   @param  string  identification string for the process
-    *   @return	boolean determines whether the attempt to get resources was successful
-    */
+     * Try to aquire a new process with the given id
+     * also performs some auto-cleanup for orphan processes
+     *
+     * @param string  identification string for the process
+     * @return boolean determines whether the attempt to get resources was successful
+     */
     function CLI_checkAndAcquireNewProcess($id) {
 
         $ret = true;
-        $processCount=0;
-        $orphanProcesses=array();
+
+        $processCount = 0;
+        $orphanProcesses = array();
 
         $GLOBALS['TYPO3_DB']->sql_query('BEGIN');
-        $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('process_id,ttl','tx_crawler_process','active=1 AND deleted=0');
+
+        $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+        	'process_id,ttl',
+        	'tx_crawler_process',
+        	'active=1 AND deleted=0'
+       	);
+
+       	$currentTime = $this->getCurrentTime();
+
         while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))	{
-            if($row['ttl']<$this->getCurrentTime()) {
-                $orphranProcesses[] = $row['process_id'];
+            if ($row['ttl'] < $currentTime) {
+                $orphanProcesses[] = $row['process_id'];
             } else {
                 $processCount++;
             }
         }
-        if($processCount < intval($this->extensionSettings['processLimit'])) {
+
+        	// if there are less than allowed active processes then add a new one
+        if ($processCount < intval($this->extensionSettings['processLimit'])) {
             $this->CLI_debug("add ".$this->CLI_buildProcessId()." (".($processCount+1)."/".intval($this->extensionSettings['processLimit']).")");
-            $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_crawler_process',array('process_id'=>$id,'active'=>'1','ttl'=>($this->getCurrentTime()+$this->extensionSettings['processMaxRunTime'])));
+
+            // create new process record
+            $GLOBALS['TYPO3_DB']->exec_INSERTquery(
+            	'tx_crawler_process',
+            	array(
+            		'process_id' => $id,
+            		'active'=>'1',
+            		'ttl' => ($currentTime + intval($this->extensionSettings['processMaxRunTime']))
+            	)
+            );
+
         } else {
             $ret = false;
         }
-        $this->CLI_releaseProcesses($orphranProcesses,true);     // maybe this should be somehow included into the current lock
 
+        $this->CLI_releaseProcesses($orphanProcesses, true); // maybe this should be somehow included into the current lock
 
         $GLOBALS['TYPO3_DB']->sql_query('COMMIT');
+
         return $ret;
     }
 
     /**
-    *   Release a process and the required resources
-    *
-    *   @param  mixed   string with a single process-id or array with multiple process-ids
-    *   @param boolean  show whether the DB-actions are included within an existings lock
-    *   @return void
-    */
-    function CLI_releaseProcesses($releaseIds,$withinLock=false) {
+     * Release a process and the required resources
+     *
+     * @param  mixed   string with a single process-id or array with multiple process-ids
+     * @param boolean  show whether the DB-actions are included within an existings lock
+     * @return void
+     */
+    function CLI_releaseProcesses($releaseIds, $withinLock=false) {
 
-        if(!is_array($releaseIds)) {
+        if (!is_array($releaseIds)) {
             $releaseIds = array($releaseIds);
         }
-        if(!count($releaseIds)>0) {
+
+        if (!count($releaseIds) > 0) {
             return false;   //nothing to release
         }
 
         if(!$withinLock) $GLOBALS['TYPO3_DB']->sql_query('BEGIN');
-        // some kind of 2nd chance algo - this way you need at least 2 processes to have a real cleanup
-        // this ensures that a single process can't mess up the entire process table
 
-        // mark all processes as deleted which have no "waiting" queue-entires and which are not active
-        $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_crawler_queue','process_id IN (SELECT process_id FROM tx_crawler_process WHERE active=0 AND deleted=0)',array('process_scheduled'=>0,'process_id'=>''));
-        $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_crawler_process','active=0 AND NOT EXISTS (SELECT * FROM tx_crawler_queue  WHERE tx_crawler_queue.process_id = tx_crawler_process.process_id AND tx_crawler_queue.exec_time = 0)',array('deleted'=>'1'));
+	        // some kind of 2nd chance algo - this way you need at least 2 processes to have a real cleanup
+	        // this ensures that a single process can't mess up the entire process table
 
-        // mark all requested processes as non-active
-        $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_crawler_process','process_id IN (\''.implode('\',\'',$releaseIds).'\') AND deleted=0',array('active'=>'0'));
-        $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_crawler_queue','exec_time=0 AND process_id IN ("'.implode('","',$releaseIds).'")',array('process_scheduled'=>0,'process_id'=>''));
+	        // mark all processes as deleted which have no "waiting" queue-entires and which are not active
+	        $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
+	        	'tx_crawler_queue',
+	        	'process_id IN (SELECT process_id FROM tx_crawler_process WHERE active=0 AND deleted=0)',
+	        	array(
+	        		'process_scheduled' => 0,
+	        		'process_id' => ''
+	        	)
+	        );
+	        $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
+	        	'tx_crawler_process',
+	        	'active=0
+	        		AND NOT EXISTS (
+	        			SELECT * FROM tx_crawler_queue
+	        			WHERE tx_crawler_queue.process_id = tx_crawler_process.process_id
+	        				AND tx_crawler_queue.exec_time = 0
+	        			)',
+	        	array(
+	        		'deleted'=>'1'
+	        	)
+	        );
+
+	        // mark all requested processes as non-active
+	        $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
+	        	'tx_crawler_process',
+	        	'process_id IN (\''.implode('\',\'',$releaseIds).'\') AND deleted=0',
+	        	array(
+	        		'active'=>'0'
+	        	)
+	        );
+	        $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
+	        	'tx_crawler_queue',
+	        	'exec_time=0 AND process_id IN ("'.implode('","',$releaseIds).'")',
+	        	array(
+	        		'process_scheduled'=>0,
+	        		'process_id'=>''
+	        	)
+	        );
+
         if(!$withinLock) $GLOBALS['TYPO3_DB']->sql_query('COMMIT');
+
         return true;
     }
 
     /**
-    *   Check if there are still resources left for the process with the given id
-    *   Used to determine timeouts and to ensure a proper cleanup if there's a timeout
-    *
-    *   @param  string  identification string for the process
-    *   @return boolean determines if the proccess is still active / has resources
-    */
+     * Check if there are still resources left for the process with the given id
+     * Used to determine timeouts and to ensure a proper cleanup if there's a timeout
+     *
+     * @param  string  identification string for the process
+     * @return boolean determines if the proccess is still active / has resources
+     */
     function CLI_checkIfProcessIsActive($pid) {
 
         $ret = false;
         $GLOBALS['TYPO3_DB']->sql_query('BEGIN');
-        $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('process_id,active,ttl','tx_crawler_process','process_id = \''.$pid.'\'  AND deleted=0','','ttl','0,1');
+        $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+        	'process_id,active,ttl',
+        	'tx_crawler_process','process_id = \''.$pid.'\'  AND deleted=0',
+        	'',
+        	'ttl',
+        	'0,1'
+       	);
         if($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))	{
             $ret = intVal($row['active'])==1;
         }
@@ -1758,23 +1668,35 @@ class tx_crawler_lib {
         }
     }
 
-    /**
-    *    Determines whether multiple proccesses are supported
-    *
-    *   @return boolean
-    */
-    function hasMultipleProcessSupport() {
-        return (intval($this->extensionSettings['processLimit']) > 1);
-    }
+	/**
+	 * Set disabled status to prevent processes from being processed
+	 *
+	 * @param bool disabled (optional, defaults to true)
+	 * @return void
+	 */
+	public function setDisabled($disabled=true) {
+		if ($disabled) {
+			t3lib_div::writeFile($this->processFilename, '');
+		} else {
+			if (is_file($this->processFilename)) {
+				unlink($this->processFilename);
+			}
+		}
+	}
 
-    /**
-    *   Returns the filename where single-proccess crawlers store there information
-    *
-    *   @return string
-    */
-    function singleProcessFileName() {
-        return PATH_site.'typo3temp/tx_crawler.proc';
-    }
+	/**
+	 * Get disable status
+	 *
+	 * @param void
+	 * @return bool true if disabled
+	 */
+	public function getDisabled() {
+		if (is_file($this->processFilename)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
 
 

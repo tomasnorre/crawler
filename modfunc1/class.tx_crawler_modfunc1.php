@@ -100,6 +100,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 * @var tx_crawler_lib
 	 */
 	var $crawlerObj;
+
 	var $CSVaccu = array();
 	var $downloadUrls = array();
 
@@ -845,81 +846,6 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 *****************************/
 
 	/**
-	 * Display status of CLI script
-	 *
-	 * @return	void
-	 */
-	function drawCLIstatus()	{
-
-			// Init:
-		$this->crawlerObj = t3lib_div::makeInstance('tx_crawler_lib');
-
-			// Processing:
-		if (t3lib_div::_POST('_run'))	{
-			$this->crawlerObj->CLI_main();
-		}
-		if (t3lib_div::_POST('_enable'))	{
-			$this->crawlerObj->CLI_setProcess('end', 'Status set by backend module');
-		}
-		if (t3lib_div::_POST('_disable'))	{
-			$this->crawlerObj->CLI_setProcess('disabled', 'Status set by backend module');
-		}
-
-			// Create output:
-		$dat = $this->crawlerObj->CLI_readProcessData();
-
-		/*$view = new tx_crawler_view_cli_status();
-		$view->setCliProcessData($dat);
-		$view->setCurrentPageId($this->pObj->id);*/
-
-		$output = '
-			<br /><br />
-			<table class="lrPadding c-list">
-				<tr>
-					<td class="bgColor5 tableheader">Status:</td>
-					<td class="bgColor-20">'.htmlspecialchars($dat['status']).'</td>
-				</tr>
-				<tr>
-					<td class="bgColor5 tableheader">Message:</td>
-					<td class="bgColor-20">'.htmlspecialchars($dat['msg']).'</td>
-				</tr>
-				<tr>
-					<td class="bgColor5 tableheader">Counter:</td>
-					<td class="bgColor-20">'.htmlspecialchars($dat['counter']).'</td>
-				</tr>
-				<tr>
-					<td class="bgColor5 tableheader">Last seen:</td>
-					<td class="bgColor-20">'.htmlspecialchars(t3lib_BEfunc::dateTimeAge($dat['tstamp'])).'</td>
-				</tr>
-				<tr>
-					<td class="bgColor5 tableheader">Last proc. time:</td>
-					<td class="bgColor-20">'.htmlspecialchars($dat['endtime'] && $dat['starttime'] ? $dat['endtime']-$dat['starttime'] : '-').' seconds</td>
-				</tr>
-			</table>
-
-			<br />
-			Current server time: '.date('H:i:s',time()).'
-			<input type="hidden" value="'.$this->pObj->id.'" name="id" />
-			<input type="submit" value="Reload" name="_" />
-			';
-
-		if ($dat['status']==='disabled')	{
-			$output.= ' - <input type="submit" value="Enable" name="_enable" />';
-		} else {
-			$output.= ' - <input type="submit" value="Disable" name="_disable" />';
-		}
-
-		$output.= ' - <input type="submit" value="Run now" name="_run" />';
-
-		$output.= '<br /><br />Consider running the CLI script from shell: <br />'.
-					t3lib_extMgm::extPath('crawler').'cli/crawler_cli.phpsh';
-
-
-		return $output;
-	}
-
-
-	/**
 	 * This method is used to show an overview about the active an the finished crawling processes
 	 *
 	 * @author Timo Schmidt
@@ -957,7 +883,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		$listView->setIconPath($BACK_PATH.'../typo3conf/ext/crawler/template/process/res/img/');
 		$listView->setProcessCollection($allProcesses);
 		$listView->setCliPath($this->getCrawlerCliPath());
-		$listView->setIsCrawlerEnabled(!$crawler->CLI_isDisabled());
+		$listView->setIsCrawlerEnabled(!$crawler->getDisabled());
 		$listView->setTotalItemCount($queueRepository->countAllPendingItems());
 		$listView->setActiveProcessCount($processRepository->countActive());
 		$listView->setMaxActiveProcessCount($this->extensionSettings['processLimit']);
@@ -985,16 +911,17 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 * @return void
 	 */
 	protected function handleProcessOverviewActions(){
+
 		$crawler = $this->findCrawler();
 
 		switch (t3lib_div::_GP('action')) {
 			case 'stopCrawling' :
 				//set the cli status to disable (all processes will be terminated)
-				$crawler->CLI_setProcess('disabled', 'Status set by backend module');
+				$crawler->setDisabled(true);
 				break;
 			case 'resumeCrawling' :
 				//set the cli status to end (all processes will be terminated)
-				$crawler->CLI_setProcess('end', 'Status set by backend module');
+				$crawler->setDisabled(false);
 				break;
 			case 'addProcess' :
 				$completePath = 'nohup ' . escapeshellcmd($this->getCrawlerCliPath()) . ' &';
@@ -1022,14 +949,14 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	/**
 	 * Returns the singleton instance of the crawler.
 	 *
+	 * @param void
+	 * @return tx_crawler_lib crawler object
 	 * @author Timo Schmidt <schmidt@aoemedia.de>
-	 * @return tx_crawler_lib
 	 */
 	protected function findCrawler(){
 		if(!$this->crawlerObj instanceof tx_crawler_lib){
 			$this->crawlerObj = t3lib_div::makeInstance('tx_crawler_lib');
 		}
-
 		return $this->crawlerObj;
 	}
 
