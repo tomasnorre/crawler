@@ -75,12 +75,9 @@ class tx_crawler_api {
 	 * @param int timestamp
 	 */
 	public function addPageToQueueTimed($uid,$time, tx_crawler_domain_reason $reason = null) {
+
 		$uid = intval($uid);
 		$time = intval($time);
-
-		if(!$this->findValidator()->isInt($uid) || !$this->findValidator()->isInt($time)) {
-			throw new Exception('wrong parameter type '.var_dump($uid).' '.var_dump($time).' in function '.__METHOD__);
-		}
 
 		$crawler 	= $this->findCrawler();
 		$conf 		= $crawler->getUrlsForPageId($uid);
@@ -94,7 +91,7 @@ class tx_crawler_api {
 			foreach ($conf as  $cv) {
 				//enable inserting of entries
 				$crawler->registerQueueEntriesInternallyOnly=false;
-				$crawler->urlListFromUrlArray(	
+				$crawler->urlListFromUrlArray(
 					$cv,
 					$pageData,
 					$time,
@@ -106,7 +103,7 @@ class tx_crawler_api {
 					$pI[2],
 					$reason
 				);
-					
+
 				//reset the queue because the entries have been written to the db
 				unset($crawler->queueEntries);
 			}

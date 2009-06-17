@@ -787,7 +787,7 @@ class tx_crawler_lib {
 
 			// check if there is already an equal entry
 			$rows = $this->getDuplicateRowsIfExist($tstamp,$fieldArray['parameters']);
-	
+
 			if (empty($rows)) {
 				$GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_crawler_queue', $fieldArray);
 				$rows[] = $GLOBALS['TYPO3_DB']->sql_insert_id();
@@ -816,7 +816,7 @@ class tx_crawler_lib {
 	 */
 	protected function getDuplicateRowsIfExist($tstamp,$parameters){
 		$rows = array();
-		
+
 		//if this entry is scheduled with "now"
 		if ($tstamp <= $this->getCurrentTime()) {
 			$where = 'scheduled <= ' . $this->getCurrentTime();
@@ -825,7 +825,7 @@ class tx_crawler_lib {
 			//entry with a timestamp in the future need to have the same schedule time
 			$where = 'scheduled = ' . $tstamp ;
 		}
-			
+
 		if(!empty($where)){
 			$result = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 				'qid',
@@ -835,15 +835,15 @@ class tx_crawler_lib {
 				' AND NOT exec_time' .
 				' AND NOT process_id '
 			);
-			
+
 			foreach ($result as $value) {
 				$rows[] = $value['qid'];
-			}		
+			}
 		}
-		
+
 		return $rows;
 	}
-	
+
 	/**
 	 * Returns the current system time
 	 *
@@ -1474,7 +1474,7 @@ class tx_crawler_lib {
                 return 'Nothing processed due to multi-process collision';
             }
         } else {
-            print_r($rows);
+            // print_r($rows);
         }
 
 		$counter = 0;
