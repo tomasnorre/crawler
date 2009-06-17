@@ -9,7 +9,7 @@ require_once t3lib_extMgm::extPath('crawler') . 'system/class.tx_crawler_system_
 class tx_crawler_api {
 
 	private $crawlerObj;
-	private $allow_duplicate_entries = false;
+
 	private $validator;
 
 	/**
@@ -36,15 +36,7 @@ class tx_crawler_api {
 		$this->findCrawler()->setID = $id;
 	}
 
-	/**
-	* Method to configure the facade to allow duplicate entrys of
-	* pages in the crawlerqueue.
-	*
-	* @param boolean
-	*/
-	public function setAllowDuplicateEntries($duplicate) {
-		$this->allow_duplicate_entries = $duplicate;
-	}
+
 
 	/**
 	* Method to get an instance of the internal crawler singleton
@@ -96,39 +88,27 @@ class tx_crawler_api {
 
 		//pTestI ist for testing, to check if queue entries exist
 		//pI is for inserting
-		$pTestI = $pI = array(array(),array(),array_keys($this->getCrawlerProcInstructions()));
+		$pI = array(array(),array(),array_keys($this->getCrawlerProcInstructions()));
 
 		if (is_array($conf)) {
-			foreach ($conf as $ck => $cv) {
-
-				if ($this->allow_duplicate_entries) {
-					//if duplicate entries are allowed always insert the items into the queue
-					$doCreate = true;
-				} else {
-					//disable inserting in the crawler_lib to count the number of entries
-					$crawler->registerQueueEntriesInternallyOnly=true;
-
-					//$pTestI[0] => duplicateTrack,$pTestI[1] => downloadUrls, $pTestI[2] => incomingProcInstructions
-					$crawler->urlListFromUrlArray($cv,$pageData,$time,300,true,false,$pTestI[0],$pTestI[1],$pTestI[2],$reason);
-					$entriesInQueue  =  count($crawler->queueEntries);
-					unset($crawler->queueEntries);
-					$entriesInDB 	= $this->countEntriesInQueueForPageByScheduletime($uid,$time);
-
-					//if the number of unprocessed entries in the database is less than the numbers of entries to process do
-					//an insert for pages to the queue
-					$doCreate = ($entriesInQueue > $entriesInDB) ? true : false;
-				}
-
-				if($doCreate) {
-					//enable inserting of entries
-					$crawler->registerQueueEntriesInternallyOnly=false;
-					$crawler->urlListFromUrlArray($cv,$pageData,$time,300,true,false,$pI[0],$pI[1],$pI[2],$reason);
-					//reset the queue because the entries have been written to the db
-					unset($crawler->queueEntries);
-
-				} else {
-					//nothing todo maybe the entries already exist
-				}
+			foreach ($conf as  $cv) {
+				//enable inserting of entries
+				$crawler->registerQueueEntriesInternallyOnly=false;
+				$crawler->urlListFromUrlArray(	
+					$cv,
+					$pageData,
+					$time,
+					300,
+					true,
+					false,
+					$pI[0],
+					$pI[1],
+					$pI[2],
+					$reason
+				);
+					
+				//reset the queue because the entries have been written to the db
+				unset($crawler->queueEntries);
 			}
 		} else {
 			//no configuration found

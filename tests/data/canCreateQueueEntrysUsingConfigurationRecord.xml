@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<pages uid="7">
+		<uid>7</uid>
+		<TSconfig>
+		</TSconfig>
+	</pages>
+    <tx_crawler_configuration>
+        <uid>7</uid>
+        <pid>7</pid>
+        <tstamp>1245224687</tstamp>
+        <crdate>1245224687</crdate>
+        <cruser_id>831</cruser_id>
+        <deleted>0</deleted>
+        <hidden>0</hidden>
+        <name>staticpub</name>
+        <processing_instruction_filter>tx_staticpub_publish</processing_instruction_filter>
+        <processing_instruction_parameters_ts>tx_staticpub_publish.includeResources=relPath</processing_instruction_parameters_ts>
+        <configuration>&amp;S=CRAWL&amp;L=[0]</configuration>
+        <base_url>http://www.testcase.de/</base_url>
+    </tx_crawler_configuration>	
+</dataset>

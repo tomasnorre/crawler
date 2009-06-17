@@ -781,28 +781,13 @@ class tx_crawler_lib {
 
 
 		if ($this->registerQueueEntriesInternallyOnly)	{
+			//the entries will only be registered and not stored to the database
 			$this->queueEntries[] = $fieldArray;
 		} else {
 
-			$rows = array();
-
 			// check if there is already an equal entry
-
-				// only if this entry is scheduled with "now"
-			if ($tstamp <= $this->getCurrentTime()) {
-				$result = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-					'qid',
-					'tx_crawler_queue',
-					'scheduled <= ' . $this->getCurrentTime() .
-						' AND parameters = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($fieldArray['parameters'], 'tx_crawler_queue') .
-						' AND NOT exec_time' .
-						' AND NOT process_id '
-				);
-				foreach ($result as $value) {
-					$rows[] = $value['qid'];
-				}
-			}
-
+			$rows = $this->getDuplicateRowsIfExist($tstamp,$fieldArray['parameters']);
+	
 			if (empty($rows)) {
 				$GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_crawler_queue', $fieldArray);
 				$rows[] = $GLOBALS['TYPO3_DB']->sql_insert_id();
@@ -813,12 +798,52 @@ class tx_crawler_lib {
 				//finally handle the reason for this entry
 				$this->addReasonForQueueEntry($queueId, $reason);
 			}
-
 		}
 
 		return $urlAdded;
 	}
 
+	/**
+	 * This method determines duplicates for a queue entry with the same parameters and this timestamp.
+	 * If the timestamp is in the past, it will check if there is any unprocessed queue entry in the past.
+	 * If the timestamp is in the future it will check, if the queued entry has exactly the same timestamp
+	 *
+	 * @param int $tstamp
+	 * @param string $parameters
+	 * @author Fabrizio Branca
+	 * @author Timo Schmidt
+	 * @return array;
+	 */
+	protected function getDuplicateRowsIfExist($tstamp,$parameters){
+		$rows = array();
+		
+		//if this entry is scheduled with "now"
+		if ($tstamp <= $this->getCurrentTime()) {
+			$where = 'scheduled <= ' . $this->getCurrentTime();
+		}
+		elseif ($tstamp > $this->getCurrentTime()) {
+			//entry with a timestamp in the future need to have the same schedule time
+			$where = 'scheduled = ' . $tstamp ;
+		}
+			
+		if(!empty($where)){
+			$result = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+				'qid',
+				'tx_crawler_queue',
+				$where.
+				' AND parameters = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($parameters, 'tx_crawler_queue') .
+				' AND NOT exec_time' .
+				' AND NOT process_id '
+			);
+			
+			foreach ($result as $value) {
+				$rows[] = $value['qid'];
+			}		
+		}
+		
+		return $rows;
+	}
+	
 	/**
 	 * Returns the current system time
 	 *

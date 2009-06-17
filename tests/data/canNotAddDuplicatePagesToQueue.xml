@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<pages uid="5">
+		<uid>5</uid>
+		<TSconfig>
+		staticPubBaseUrl=
+staticPubNewsParameters=&amp;S=CRAWL&amp;L=[0]&amp;tx_ttnews[tt_news]=[_TABLE:tt_news;_PID:5;_FIELD:uid]
+
+#################
+# staticpub
+#################
+
+tx_crawler.crawlerCfg.paramSets {  
+  //default export
+  staticpub = &amp;S=CRAWL&amp;L=[0]
+  staticpub.procInstrFilter = tx_staticpub_publish
+  staticpub.baseUrl &lt; staticPubBaseUrl
+  staticpub.procInstrParams.tx_staticpub_publish.includeResources=relPath
+} 
+		</TSconfig>
+	</pages>
+</dataset>
