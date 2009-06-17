@@ -86,6 +86,17 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
 	public function countAllPendingItems(){
 		return $this->countItemsByWhereClause('exec_time = 0 AND scheduled < '.time());
 	}
+
+	/**
+	 * This method can be used to count all queue entrys which are 
+	 * scheduled for now or a earler date and are assigned to a process.
+	 * 
+	 * @param void
+	 * @return int
+	 */
+	public function countAllAssignedPendingItems(){
+		return $this->countItemsByWhereClause("exec_time = 0 AND scheduled < ".time()." AND process_id != ''");
+	}
 	
 	/**
 	 * Internal method to count items by a given where clause

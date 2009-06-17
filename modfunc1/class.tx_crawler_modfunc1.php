@@ -884,7 +884,8 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		$listView->setProcessCollection($allProcesses);
 		$listView->setCliPath($this->getCrawlerCliPath());
 		$listView->setIsCrawlerEnabled(!$crawler->getDisabled());
-		$listView->setTotalItemCount($queueRepository->countAllPendingItems());
+		$listView->setTotalUnprocessedItemCount($queueRepository->countAllPendingItems());
+		$listView->setAssignedUnprocessedItemCount($queueRepository->countAllAssignedPendingItems());
 		$listView->setActiveProcessCount($processRepository->countActive());
 		$listView->setMaxActiveProcessCount($this->extensionSettings['processLimit']);
 		$listView->setActionMessage($message);

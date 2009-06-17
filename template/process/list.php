@@ -12,8 +12,8 @@
 <h2>General Informations:</h2>
 <table>
 	<tr>
-		<td>Pending Entries:</td>
-		<td><?php echo htmlspecialchars($this->getTotalItemCount()); ?>
+		<td>Pending Entries (assigned / overall):</td>
+		<td><?php echo htmlspecialchars($this->getAssignedUnprocessedItemCount()); ?> / <?php echo htmlspecialchars($this->getTotalUnprocessedItemCount()); ?>  </td>
 	</tr>
 	<tr>
 		<td>Servertime:</td>

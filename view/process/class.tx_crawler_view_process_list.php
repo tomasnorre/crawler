@@ -66,6 +66,47 @@ class tx_crawler_view_process_list {
 	protected $pageId;
 
 	/**
+	 * @var int $totalItemCount number of total item
+	 */
+	protected $totalUnprocessedItemCount;
+	
+	/**
+	 * Holds the number of assigned unprocessed items 
+	 *
+	 * @var int
+	 */
+	protected $assignedUnprocessedItemCount;	
+	
+	
+	/**
+	 * @return int
+	 */
+	public function getAssignedUnprocessedItemCount() {
+		return $this->assignedUnprocessedItemCount;
+	}
+	
+	/**
+	 * @return int
+	 */
+	public function getTotalUnprocessedItemCount() {
+		return $this->totalUnprocessedItemCount;
+	}
+	
+	/**
+	 * @param int $assignedUnprocessedItemCount
+	 */
+	public function setAssignedUnprocessedItemCount($assignedUnprocessedItemCount) {
+		$this->assignedUnprocessedItemCount = $assignedUnprocessedItemCount;
+	}
+	
+	/**
+	 * @param int $totalUnprocessedItemCount
+	 */
+	public function setTotalUnprocessedItemCount($totalUnprocessedItemCount) {
+		$this->totalUnprocessedItemCount = $totalUnprocessedItemCount;
+	}	
+	
+	/**
 	 * Set the page id
 	 *
 	 * @param int page id
