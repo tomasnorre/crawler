@@ -167,7 +167,6 @@ class tx_crawler_api_testcase extends tx_phpunit_database_testcase {
 		$this->assertEquals($queueItems[1]['parameters'],$assertedParameter,'Wrong queue parameters created by crawler lib for configuration record');
 		
 		$this->assertEquals($crawler_api->countUnprocessedItems(),2,'Could not add pages to queue configured by record');
-		
 	}
 	
 	
