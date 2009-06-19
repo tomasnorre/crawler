@@ -1011,10 +1011,14 @@ class tx_crawler_lib {
 			// Parse URL, checking for scheme:
 		$url = parse_url($url);
 
-		if(!in_array($url['scheme'],array('','http')))	return FALSE;
+		if(!in_array($url['scheme'],array('','http'))) {
+			if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Scheme does not match for url "%s"', $url), 'crawler', 4, array('crawlerId' => $crawlerId));
+			return FALSE;
+		}
 
 		$fp = fsockopen ($url['host'], ($url['port'] > 0 ? $url['port'] : 80), $errno, $errstr, $timeout);
 		if (!$fp)	{
+			if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Error while opening "%s"', $url), 'crawler', 4, array('crawlerId' => $crawlerId));
 			return FALSE;
 		} else {	// Requesting...:
 				// Request headers:
