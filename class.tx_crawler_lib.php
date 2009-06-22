@@ -1025,7 +1025,7 @@ class tx_crawler_lib {
 			$reqHeaders = array();
 			$reqHeaders[] = 'GET '.$url['path'].($url['query'] ? '?'.$url['query'] : '').' HTTP/1.0';
 			$reqHeaders[] = 'Host: '.$url['host'];
-//			$reqHeaders[] = 'Connection: keep-alive';
+			$reqHeaders[] = 'Connection: keep-alive';
 			$reqHeaders[] = 'Connection: close';
 			$reqHeaders[] = 'X-T3crawler: '.$crawlerId;
 				// Request message:
@@ -1042,7 +1042,7 @@ class tx_crawler_lib {
 			while (!feof($fp)) {
 				$line = fgets ($fp,$blocksize);
                 if (($part==='headers' && trim($line)==='') && !$isFirstLine)	{
-                    //switch to "content" part if empty row detected - tis should not be the first row of the response anyway
+                    // switch to "content" part if empty row detected - this should not be the first row of the response anyway
 					$part = 'content';
 				} elseif(($part==='headers') && stristr($line,'Content-Length:')) {
 					$contentLength = intval(str_replace('Content-Length: ','',$line));
