@@ -28,6 +28,7 @@
  * @author Kasper Skaarhoej <kasperYYYY@typo3.com>
  */
 
+require_once(PATH_t3lib.'class.t3lib_page.php');
 require_once(PATH_t3lib.'class.t3lib_pagetree.php');
 require_once(PATH_t3lib.'class.t3lib_cli.php');
 require_once(PATH_t3lib.'class.t3lib_tsparser.php');
@@ -262,6 +263,24 @@ class tx_crawler_lib {
 		array $incomingProcInstructions,
 		tx_crawler_domain_reason $reason = null) {
 
+		// realurl support (thanks to Ingo Renner)
+		if (t3lib_extMgm::isLoaded('realurl') && $vv['subCfg']['realurl']) {
+			require_once(t3lib_extMgm::extPath('realurl') . 'class.tx_realurl.php');
+			$urlObj = t3lib_div::makeInstance('tx_realurl');
+			$urlObj->extConf = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['realurl']['_DEFAULT'];
+			if (!$GLOBALS['TSFE']->sys_page) {
+				$GLOBALS['TSFE']->sys_page = t3lib_div::makeInstance('t3lib_pageSelect');
+			}
+			if (!$GLOBALS['TSFE']->csConvObj) {
+				$GLOBALS['TSFE']->csConvObj = t3lib_div::makeInstance('t3lib_cs');
+			}
+			if (!$GLOBALS['TSFE']->tmpl->rootLine[0]['uid']) {
+				$GLOBALS['TSFE']->tmpl->rootLine[0]['uid'] = $urlObj->extConf['pagePath']['rootpage_id'];
+			}
+		}
+
+
+
 		if (is_array($vv['URLs']))	{
 			foreach($vv['URLs'] as $urlQuery)	{
 
@@ -269,7 +288,8 @@ class tx_crawler_lib {
 
 						// Calculate cHash:
 					$cHash_calc = '';
-					if ($vv['subCfg']['cHash'])	{
+					$calculateCHash = $vv['subCfg']['cHash'] ? $vv['subCfg']['cHash'] : false;
+					if ($calculateCHash)	{
 						$pA = t3lib_div::cHashParams($urlQuery);
 						if (count($pA)>1)	{
 							$cHash_calc = t3lib_div::shortMD5(serialize($pA));
@@ -279,6 +299,13 @@ class tx_crawler_lib {
 
 						// Create key by which to determine unique-ness:
 					$uKey = $urlQuery.'|'.$vv['subCfg']['userGroups'].'|'.$vv['subCfg']['baseUrl'].'|'.$vv['subCfg']['procInstrFilter'];
+
+						// realurl support (thanks to Ingo Renner)
+					$urlQuery = 'index.php' . $urlQuery;
+					if (t3lib_extMgm::isLoaded('realurl') && $vv['subCfg']['realurl']) {
+						$uParts = parse_url($urlQuery);
+        				$urlQuery = $urlObj->encodeSpURL_doEncode($uParts['query'] , $calculateCHash, $urlQuery);
+					}
 
 						// Scheduled time:
 					$schTime = $scheduledTime + round(count($duplicateTrack)*(60/$reqMinute));
@@ -294,11 +321,17 @@ class tx_crawler_lib {
 						$urlList .= '['.date('d-m H:i:s', $schTime).'] '.htmlspecialchars($urlQuery);
 						$this->urlList[] = '['.date('d-m H:i:s', $schTime).'] '.$urlQuery;
 
-						$theUrl = ($vv['subCfg']['baseUrl'] ? $vv['subCfg']['baseUrl'] : t3lib_div::getIndpEnv('TYPO3_SITE_URL')).'index.php'.$urlQuery;
+						$theUrl = ($vv['subCfg']['baseUrl'] ? $vv['subCfg']['baseUrl'] : t3lib_div::getIndpEnv('TYPO3_SITE_URL')) . $urlQuery;
 
 							// Submit for crawling!
 						if ($submitCrawlUrls)	{
-							$added = $this->addUrl($pageRow['uid'], $theUrl, $vv['subCfg'], $scheduledTime, $reason);
+							$added = $this->addUrl(
+								$pageRow['uid'],
+								$theUrl,
+								$vv['subCfg'],
+								$scheduledTime,
+								$reason
+							);
 							if ($added === false) {
 								$urlList .= ' (Url already existed)';
 							}
@@ -366,6 +399,11 @@ class tx_crawler_lib {
 							// process configuration if it is not page-specific or if the specific page is the current page:
 						if (!strcmp($subCfg['pidsOnly'],'') || t3lib_div::inList($pidOnlyList,$id))	{
 
+								// add trailing slash if not present
+							if (!empty($subCfg['baseUrl']) && substr($subCfg['baseUrl'], -1) != '/') {
+								$subCfg['baseUrl'] .= '/';
+							}
+
 								// Explode, process etc.:
 							$res[$key] = array();
 							$res[$key]['subCfg'] = $subCfg;
@@ -416,7 +454,13 @@ class tx_crawler_lib {
 									'procInstrFilter' => $configurationRecord['processing_instruction_filter'],
 									'procInstrParams.' => $TSparserObject->setup,
 									'baseUrl' => $configurationRecord['base_url'],
+									'realurl' => $configurationRecord['realurl'],
 								);
+
+									// add trailing slash if not present
+								if (!empty($subCfg['baseUrl']) && substr($subCfg['baseUrl'], -1) != '/') {
+									$subCfg['baseUrl'] .= '/';
+								}
 
 								$res[$key] = array();
 								$res[$key]['subCfg'] = $subCfg;

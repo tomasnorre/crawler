@@ -4,7 +4,7 @@ if (!defined ('TYPO3_MODE'))     die ('Access denied.');
 $TCA["tx_crawler_configuration"] = array (
     "ctrl" => $TCA["tx_crawler_configuration"]["ctrl"],
     "interface" => array (
-        "showRecordFieldList" => "hidden,name,processing_instruction_filter,processing_instruction_parameters_ts,configuration,base_url,pidsonly,begroups"
+        "showRecordFieldList" => "hidden,name,processing_instruction_filter,processing_instruction_parameters_ts,configuration,base_url,pidsonly,begroups,realurl"
     ),
     "feInterface" => $TCA["tx_crawler_configuration"]["feInterface"],
     "columns" => array (
@@ -86,9 +86,16 @@ $TCA["tx_crawler_configuration"] = array (
 				'foreign_table' => 'be_groups'
 			)
 		),
+		'realurl' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:crawler/locallang_db.xml:tx_crawler_configuration.realurl',
+			'config' => Array (
+				'type' => 'check',
+			)
+		),
     ),
     "types" => array (
-        "0" => array("showitem" => "name, processing_instruction_filter, configuration, base_url, pidsonly, processing_instruction_parameters_ts,begroups")
+        "0" => array("showitem" => "name, processing_instruction_filter, configuration, base_url, pidsonly, processing_instruction_parameters_ts,begroups, realurl")
     ),
     "palettes" => array (
         "1" => array("showitem" => "")

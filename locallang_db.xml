@@ -16,7 +16,7 @@
 	            <label index="tx_crawler_configuration.base_url">Base url</label>
 	            <label index="tx_crawler_configuration.pidsonly">Pids only</label>
 	            <label index="tx_crawler_configuration.begroups">Restrict access to</label>
-			
+	            <label index="tx_crawler_configuration.realurl">Use realurl urls</label>
 		</languageKey>
 	</data>
 </T3locallang>
