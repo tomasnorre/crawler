@@ -835,9 +835,10 @@ class tx_crawler_lib {
 				' AND NOT exec_time' .
 				' AND NOT process_id '
 			);
-
-			foreach ($result as $value) {
-				$rows[] = $value['qid'];
+			if (is_array($result)) {
+				foreach ($result as $value) {
+					$rows[] = $value['qid'];
+				}
 			}
 		}
 
