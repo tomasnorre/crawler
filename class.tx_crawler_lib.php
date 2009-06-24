@@ -1079,8 +1079,16 @@ class tx_crawler_lib {
 			return FALSE;
 		}
 
-		$fp = fsockopen ($url['host'], ($url['port'] > 0 ? $url['port'] : 80), $errno, $errstr, $timeout);
-		if (!$fp)	{
+			// thanks to Pierrick Caillon for adding proxy support
+ 		$rurl = $url;
+ 		if ($GLOBALS['TYPO3_CONF_VARS']['SYS']['curlUse']) {
+ 			$rurl = parse_url($GLOBALS['TYPO3_CONF_VARS']['SYS']['curlProxyServer']);
+ 			$url['path'] = $url['scheme'] . '://' . $url['host'] . ($url['port'] > 0 ? ':' . $url['port'] : '') . $url['path'];
+ 		}
+
+ 		$fp = fsockopen ($rurl['host'], ($rurl['port'] > 0 ? $rurl['port'] : 80), $errno, $errstr, $timeout);
+
+ 		if (!$fp)	{
 			if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Error while opening "%s"', $url), 'crawler', 4, array('crawlerId' => $crawlerId));
 			return FALSE;
 		} else {	// Requesting...:
