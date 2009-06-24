@@ -610,7 +610,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 								'set_id, count(*) as count_value, scheduled',
 								'tx_crawler_queue',
 								'',
-								'set_id',
+								'set_id, scheduled',
 								'scheduled DESC'
 							);
 
