@@ -1038,7 +1038,6 @@ class tx_crawler_lib {
 	function readUrl_exec($queueRec)	{
 		// Decode parameters:
 		$parameters = unserialize($queueRec['parameters']);
-#		print_r($parameters);
 		$result = 'ERROR';
 		if (is_array($parameters))	{
 			if ($parameters['_CALLBACKOBJ'])	{	// Calling object:
@@ -1074,7 +1073,7 @@ class tx_crawler_lib {
 			// Parse URL, checking for scheme:
 		$url = parse_url($url);
 
-		if(!in_array($url['scheme'],array('','http'))) {
+		if(!in_array($url['scheme'],array('','http','https'))) {
 			if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Scheme does not match for url "%s"', $url), 'crawler', 4, array('crawlerId' => $crawlerId));
 			return FALSE;
 		}
@@ -1086,7 +1085,14 @@ class tx_crawler_lib {
  			$url['path'] = $url['scheme'] . '://' . $url['host'] . ($url['port'] > 0 ? ':' . $url['port'] : '') . $url['path'];
  		}
 
- 		$fp = fsockopen ($rurl['host'], ($rurl['port'] > 0 ? $rurl['port'] : 80), $errno, $errstr, $timeout);
+ 		$host = $rurl['host'];
+ 		if ($url['scheme'] == 'https') {
+ 			$host = 'ssl://' . $host;
+ 		}
+
+ 		$port = ($rurl['port'] > 0) ? $rurl['port'] : 80;
+
+ 		$fp = fsockopen($host, $port, $errno, $errstr, $timeout);
 
  		if (!$fp)	{
 			if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Error while opening "%s"', $url), 'crawler', 4, array('crawlerId' => $crawlerId));
