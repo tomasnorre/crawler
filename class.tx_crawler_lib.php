@@ -614,6 +614,7 @@ class tx_crawler_lib {
 						if (isset($TCA[$subpartParams['_TABLE']]))	{
 							t3lib_div::loadTCA($subpartParams['_TABLE']);
 							$lookUpPid = isset($subpartParams['_PID']) ? intval($subpartParams['_PID']) : $pid;
+							$pidField =  isset($subpartParams['_PIDFIELD']) ? trim($subpartParams['_PIDFIELD']) : 'pid';
 
 							$fieldName = $subpartParams['_FIELD'] ? $subpartParams['_FIELD'] : 'uid';
 							if ($fieldName==='uid' || $TCA[$subpartParams['_TABLE']]['columns'][$fieldName])	{
@@ -621,7 +622,7 @@ class tx_crawler_lib {
 								$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 											$fieldName,
 											$subpartParams['_TABLE'],
-											'pid='.intval($lookUpPid).
+											$GLOBALS['TYPO3_DB']->quoteStr($pidField) .'='.intval($lookUpPid).
 												t3lib_BEfunc::deleteClause($subpartParams['_TABLE']),
 											'',
 											'',
