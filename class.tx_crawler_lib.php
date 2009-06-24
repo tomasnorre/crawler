@@ -911,7 +911,7 @@ class tx_crawler_lib {
 				'qid',
 				'tx_crawler_queue',
 				$where.
-				' NOT exec_time' .
+				' AND NOT exec_time' .
 				' AND NOT process_id '.
 				' AND page_id='.intval($fieldArray['page_id']).
 				' AND parameters_hash = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($fieldArray['parameters_hash'], 'tx_crawler_queue')
