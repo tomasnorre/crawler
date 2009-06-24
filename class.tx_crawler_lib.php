@@ -890,13 +890,15 @@ class tx_crawler_lib {
 	protected function getDuplicateRowsIfExist($tstamp,$parameters){
 		$rows = array();
 
+		$currentTime = $this->getCurrentTime();
+
 		//if this entry is scheduled with "now"
-		if ($tstamp <= $this->getCurrentTime()) {
-			$where = 'scheduled <= ' . $this->getCurrentTime();
+		if ($tstamp <= $currentTime) {
+			$where = 'scheduled <= ' . $currentTime;
 		}
-		elseif ($tstamp > $this->getCurrentTime()) {
+		elseif ($tstamp > $currentTime) {
 			//entry with a timestamp in the future need to have the same schedule time
-			$where = 'scheduled = ' . $tstamp ;
+			$where = 'scheduled = ' . $currentTime ;
 		}
 
 		if(!empty($where)){
@@ -904,9 +906,9 @@ class tx_crawler_lib {
 				'qid',
 				'tx_crawler_queue',
 				$where.
-				' AND parameters = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($parameters, 'tx_crawler_queue') .
 				' AND NOT exec_time' .
-				' AND NOT process_id '
+				' AND NOT process_id '.
+				' AND parameters = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($parameters, 'tx_crawler_queue')
 			);
 			if (is_array($result)) {
 				foreach ($result as $value) {
