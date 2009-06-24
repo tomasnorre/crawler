@@ -336,8 +336,8 @@ class tx_crawler_lib {
 
 					} else {
 
-						$urlList .= '['.date('d-m H:i:s', $schTime).'] '.htmlspecialchars($urlQuery);
-						$this->urlList[] = '['.date('d-m H:i:s', $schTime).'] '.$urlQuery;
+						$urlList .= '['.date('d.m.y H:i', $schTime).'] '.htmlspecialchars($urlQuery);
+						$this->urlList[] = '['.date('d.m.y H:i', $schTime).'] '.$urlQuery;
 
 						$theUrl = ($vv['subCfg']['baseUrl'] ? $vv['subCfg']['baseUrl'] : t3lib_div::getIndpEnv('TYPO3_SITE_URL')) . $urlQuery;
 
