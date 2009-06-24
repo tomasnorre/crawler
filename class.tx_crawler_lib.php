@@ -428,6 +428,7 @@ class tx_crawler_lib {
 							$res[$key]['paramParsed'] = $this->parseParams($values);
 							$res[$key]['paramExpanded'] = $this->expandParameters($res[$key]['paramParsed'],$id);
 							$res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'],array('?id='.$id));
+							$res[$key]['origin'] = 'pagets';
 						}
 					}
 				}
@@ -485,10 +486,20 @@ class tx_crawler_lib {
 								$res[$key]['paramParsed'] = $this->parseParams($configurationRecord['configuration']);
 								$res[$key]['paramExpanded'] = $this->expandParameters($res[$key]['paramParsed'], $id);
 								$res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'], array('?id='.$id));
+								$res[$key]['origin'] = 'tx_crawler_configuration_'.$configurationRecord['uid'];
 							}
 						}
 					}
 				}
+			}
+		}
+
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['processUrls']))	{
+			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['processUrls'] as $func)	{
+				$params = array(
+					'res' => &$res,
+				);
+				t3lib_div::callUserFunction($func, $params, $this);
 			}
 		}
 
