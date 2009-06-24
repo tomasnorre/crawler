@@ -52,7 +52,7 @@
 			<td> <?php echo htmlspecialchars($process->getProcess_id()); ?></td>
 			<td><?php echo htmlspecialchars($this->asDate($process->getTimeForFirstItem())); ?></td>
 			<td><?php echo htmlspecialchars($this->asDate($process->getTimeForLastItem())); ?></td>
-			<td><?php echo htmlspecialchars(floor($process->getRuntime()/ 60)); ?> min. <? echo htmlspecialchars($process->getRuntime()) % 60 ?> sec.</td>
+			<td><?php echo htmlspecialchars(floor($process->getRuntime()/ 60)); ?> min. <?php echo htmlspecialchars($process->getRuntime()) % 60 ?> sec.</td>
 			<td><?php echo htmlspecialchars($this->asDate($process->getTTL())); ?></td>
 			<td><?php echo htmlspecialchars($process->countItemsProcessed()); ?></td>
 			<td><?php echo htmlspecialchars($process->countItemsAssigned()); ?></td>
