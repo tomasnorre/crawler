@@ -266,7 +266,25 @@ class tx_crawler_lib {
 		// realurl support (thanks to Ingo Renner)
 		if (t3lib_extMgm::isLoaded('realurl') && $vv['subCfg']['realurl']) {
 			require_once(t3lib_extMgm::extPath('realurl') . 'class.tx_realurl.php');
+			/* @var $urlObj tx_realurl */
 			$urlObj = t3lib_div::makeInstance('tx_realurl');
+			$urlObj->setConfig();
+
+			if (!empty($vv['subCfg']['baseUrl'])) {
+				$urlParts = parse_url($vv['subCfg']['baseUrl']);
+				$host = strtolower($urlParts['host']);
+				$urlObj->host = $host;
+
+					// First pass, finding configuration OR pointer string:
+				$urlObj->extConf = isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['realurl'][$urlObj->host]) ? $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['realurl'][$urlObj->host] : $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['realurl']['_DEFAULT'];
+
+					// If it turned out to be a string pointer, then look up the real config:
+				if (is_string($urlObj->extConf)) {
+					$urlObj->extConf = is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['realurl'][$urlObj->extConf]) ? $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['realurl'][$urlObj->extConf] : $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['realurl']['_DEFAULT'];
+				}
+
+			}
+
 			$urlObj->extConf = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['realurl']['_DEFAULT'];
 			if (!$GLOBALS['TSFE']->sys_page) {
 				$GLOBALS['TSFE']->sys_page = t3lib_div::makeInstance('t3lib_pageSelect');
@@ -1073,6 +1091,8 @@ class tx_crawler_lib {
 			$reqHeaders[] = 'Connection: keep-alive';
 			$reqHeaders[] = 'Connection: close';
 			$reqHeaders[] = 'X-T3crawler: '.$crawlerId;
+			$reqHeaders[] = 'User-Agent: X-T3crawler';
+
 				// Request message:
 			$msg = implode("\r\n",$reqHeaders)."\r\n\r\n";
 
