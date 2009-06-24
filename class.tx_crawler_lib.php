@@ -842,14 +842,18 @@ class tx_crawler_lib {
 			$parameters['procInstrParams'] = $subCfg['procInstrParams.'];
 		}
 
+		
 			// Compile value array:
+		$parameters_serialized = serialize($parameters);
 		$fieldArray = array(
 			'page_id' => $id,
-			'parameters' => serialize($parameters),
+			'parameters' => $parameters_serialized,
+			'parameters_hash' => t3lib_div::shortMD5($parameters_serialized),
 			'scheduled' => $tstamp,
 			'exec_time' => 0,
 			'set_id' => $this->setID,
 			'result_data' => '',
+		
 		);
 
 
@@ -859,7 +863,7 @@ class tx_crawler_lib {
 		} else {
 
 			// check if there is already an equal entry
-			$rows = $this->getDuplicateRowsIfExist($tstamp,$fieldArray['parameters']);
+			$rows = $this->getDuplicateRowsIfExist($tstamp,$fieldArray);
 
 			if (empty($rows)) {
 				$GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_crawler_queue', $fieldArray);
@@ -887,7 +891,7 @@ class tx_crawler_lib {
 	 * @author Timo Schmidt
 	 * @return array;
 	 */
-	protected function getDuplicateRowsIfExist($tstamp,$parameters){
+	protected function getDuplicateRowsIfExist($tstamp,$fieldArray){
 		$rows = array();
 
 		$currentTime = $this->getCurrentTime();
@@ -906,9 +910,10 @@ class tx_crawler_lib {
 				'qid',
 				'tx_crawler_queue',
 				$where.
-				' AND NOT exec_time' .
+				' NOT exec_time' .
 				' AND NOT process_id '.
-				' AND parameters = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($parameters, 'tx_crawler_queue')
+				' AND page_id='.intval($fieldArray['page_id']).
+				' AND parameters_hash = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($fieldArray['parameters_hash'], 'tx_crawler_queue')
 			);
 			if (is_array($result)) {
 				foreach ($result as $value) {
@@ -1576,6 +1581,7 @@ class tx_crawler_lib {
 		$counter = 0;
 		foreach($rows as $r)	{
 			$this->readUrl($r['qid']);
+
 			$counter++;
 			usleep(intval($this->extensionSettings['sleepTime']));	// Just to relax the system
 
