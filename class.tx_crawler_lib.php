@@ -622,7 +622,7 @@ class tx_crawler_lib {
 								$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 											$fieldName,
 											$subpartParams['_TABLE'],
-											$GLOBALS['TYPO3_DB']->quoteStr($pidField) .'='.intval($lookUpPid).
+											$GLOBALS['TYPO3_DB']->quoteStr($pidField, $subpartParams['_TABLE']) .'='.intval($lookUpPid).
 												t3lib_BEfunc::deleteClause($subpartParams['_TABLE']),
 											'',
 											'',
@@ -843,7 +843,7 @@ class tx_crawler_lib {
 			$parameters['procInstrParams'] = $subCfg['procInstrParams.'];
 		}
 
-		
+
 			// Compile value array:
 		$parameters_serialized = serialize($parameters);
 		$fieldArray = array(
@@ -854,7 +854,7 @@ class tx_crawler_lib {
 			'exec_time' => 0,
 			'set_id' => $this->setID,
 			'result_data' => '',
-		
+
 		);
 
 
