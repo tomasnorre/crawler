@@ -162,10 +162,6 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	function main()	{
 		global $LANG, $BACK_PATH;
 
-		if (empty($this->pObj->id)) {
-			return 'Please select a page in the pagetree';
-		}
-
 		$this->loadExtensionSettings();
 		if (empty($this->pObj->MOD_SETTINGS['processListMode'])) {
 			$this->pObj->MOD_SETTINGS['processListMode'] = 'simple';
@@ -238,7 +234,12 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 			// Branch based on type:
 		switch((string)$this->pObj->MOD_SETTINGS['crawlaction'])	{
 			case 'start':
-				$theOutput .= $this->pObj->doc->section('',$this->drawURLs(),0,1);
+
+				if (empty($this->pObj->id)) {
+					$theOutput .= '<br />Please select a page in the pagetree';
+				} else {
+					$theOutput .= $this->pObj->doc->section('',$this->drawURLs(),0,1);
+				}
 			break;
 			case 'log':
 				$theOutput .= $this->pObj->doc->section('',$this->drawLog(),0,1);
