@@ -102,6 +102,8 @@ class tx_crawler_lib {
 
 	var $extensionSettings=array();
 
+	var $MP = false; // mount point
+
 	protected $processFilename;
 
 	/**
@@ -394,8 +396,14 @@ class tx_crawler_lib {
 		 * Get configuration from tsConfig
 		 */
 
-		// Get page TSconfig for page ID:
-		$pageTSconfig = t3lib_BEfunc::getPagesTSconfig($id);
+			// Get page TSconfig for page ID:
+		if(!$this->MP){
+			$pageTSconfig = t3lib_BEfunc::getPagesTSconfig($id);
+		} else {
+			list(,$mountPointId) = explode('-', $this->MP);
+			$pageTSconfig = t3lib_BEfunc::getPagesTSconfig($mountPointId);
+		}
+
 
 		$res = array();
 
@@ -427,8 +435,14 @@ class tx_crawler_lib {
 							$res[$key]['subCfg'] = $subCfg;
 							$res[$key]['paramParsed'] = $this->parseParams($values);
 							$res[$key]['paramExpanded'] = $this->expandParameters($res[$key]['paramParsed'],$id);
-							$res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'],array('?id='.$id));
 							$res[$key]['origin'] = 'pagets';
+
+							// recognize MP value
+							if(!$this->MP){
+								$res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'],array('?id='.$id));
+							} else {
+								$res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'],array('?id='.$id.'&MP='.$this->MP));
+							}
 						}
 					}
 				}
@@ -1256,7 +1270,9 @@ class tx_crawler_lib {
 		$pageinfo = t3lib_BEfunc::readPageAccess($id, $perms_clause);
 
 			// Set root row:
-		$HTML = '<img src="'.$BACK_PATH.t3lib_iconWorks::getIcon('pages',$pageinfo).'" width="18" height="16" align="top" class="c-recIcon" alt="" />';
+		$HTML = '<img' . t3lib_iconWorks::skinImg($GLOBALS['BACK_PATH'], t3lib_iconWorks::getIcon('pages', $this->pObj->pageinfo)) . ' align="top" class="c-recIcon" alt="" />';
+
+
 		$tree->tree[] = Array(
 			'row' => $pageinfo,
 			'HTML' => $HTML
@@ -1272,6 +1288,36 @@ class tx_crawler_lib {
 		$code = '';
 
 		foreach ($tree->tree as $data) {
+
+			$this->MP = false;
+
+			// recognize mount points
+			if($data['row']['doktype'] == 7){
+				$mountpage = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'pages', 'uid = '.$data['row']['uid']);
+
+				// fetch mounted pages
+				$this->MP = $mountpage[0]['mount_pid'].'-'.$data['row']['uid'];
+
+				$mountTree = t3lib_div::makeInstance('t3lib_pageTree');
+				$mountTree->init('AND '.$perms_clause);
+				$mountTree->getTree($mountpage[0]['mount_pid'], $depth, '');
+
+				foreach($mountTree->tree as $mountData)	{
+					$code .= $this->drawURLs_addRowsForPage(
+						$mountData['row'],
+						$mountData['HTML'].t3lib_BEfunc::getRecordTitle('pages',$mountData['row'],TRUE)
+					);
+				}
+
+				// replace page when mount_pid_ol is enabled
+				if($mountpage[0]['mount_pid_ol']){
+					$data['row']['uid'] = $mountpage[0]['mount_pid'];
+				} else {
+					// if the mount_pid_ol is not set the MP must not be used for the mountpoint page
+					$this->MP = false;
+				}
+			}
+
 			$code .= $this->drawURLs_addRowsForPage(
 				$data['row'],
 				$data['HTML'] . t3lib_BEfunc::getRecordTitle('pages', $data['row'], TRUE)

@@ -166,7 +166,6 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 			return 'Please select a page in the pagetree';
 		}
 
-
 		$this->loadExtensionSettings();
 		if (empty($this->pObj->MOD_SETTINGS['processListMode'])) {
 			$this->pObj->MOD_SETTINGS['processListMode'] = 'simple';
