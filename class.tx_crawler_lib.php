@@ -1249,8 +1249,7 @@ class tx_crawler_lib {
 		global $BACK_PATH;
 		global $LANG;
 		if (!is_object($LANG)) {
-			//echo $BACK_PATH.'typo3/sysext/lang/lang.php';
-			include_once(PATH_typo3.'sysext/lang/lang.php');
+			require_once(t3lib_extMgm::extPath('lang', 'lang.php'));
 			$LANG = t3lib_div::makeInstance('language');
 			$LANG->init(0);
 		}
