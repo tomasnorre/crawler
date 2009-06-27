@@ -267,6 +267,7 @@ class tx_crawler_lib {
 
 		// realurl support (thanks to Ingo Renner)
 		if (t3lib_extMgm::isLoaded('realurl') && $vv['subCfg']['realurl']) {
+            global $TYPO3_CONF_VARS;     /// we're including within the wrong context therefore without this line XCLASSes and other settings might be lost for realurl
 			require_once(t3lib_extMgm::extPath('realurl') . 'class.tx_realurl.php');
 			/* @var $urlObj tx_realurl */
 			$urlObj = t3lib_div::makeInstance('tx_realurl');
@@ -930,7 +931,8 @@ class tx_crawler_lib {
 				' AND page_id='.intval($fieldArray['page_id']).
 				' AND parameters_hash = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($fieldArray['parameters_hash'], 'tx_crawler_queue')
 			);
-			if (is_array($result)) {
+
+			if (is_array($result)) {
 				foreach ($result as $value) {
 					$rows[] = $value['qid'];
 				}
