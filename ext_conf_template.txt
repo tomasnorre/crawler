@@ -22,5 +22,5 @@ processDebug=0
 # cat=basic//10; type=boolean; label= Crawl hidden pages: Crawl hidden pages (By default they won't be crawled) 
 crawlHiddenPages=0
 
-# cat=basic//10; type=string; label= PHP Path
+# cat=basic//10; type=string; label= PHP Path: 
 phpPath = /usr/bin/php

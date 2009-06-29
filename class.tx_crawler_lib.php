@@ -235,7 +235,27 @@ class tx_crawler_lib {
 
 		return $res;
 	}
-
+	
+	/**
+	 * This method is used to count if there are ANY unporocessed queue entrys
+	 * of a given page_id and the configuration wich matches a given hash.
+	 * If there if none, we can skip an inner detail check
+	 *
+	 * @param int $uid
+	 * @param string $configurationHash
+	 * @return boolean
+	 */
+	protected function noUnprocessedQueueEntriesForPageWithConfigurationHashExist($uid,$configurationHash){
+		/* @var $db t3lib_Db*/
+		$db 				= $GLOBALS['TYPO3_DB'];
+		$uid 				= intval($uid);
+		$configurationHash  = $db->fullQuoteStr($configurationHash,'tx_crawler_queue');
+		$res 				= $db->exec_SELECTquery('count(*) as anz','tx_crawler_queue',"page_id=".intval($uid)." AND configuration_hash=".$configurationHash." AND exec_time=0");
+		$row				= $db->sql_fetch_assoc($res);
+		
+		return ($row['anz'] == 0);
+	}
+	
 	/**
 	 * Creates a list of URLs from input array (and submits them to queue if asked for)
 	 * See Web > Info module script + "indexed_search"'s crawler hook-client using this!
@@ -304,7 +324,11 @@ class tx_crawler_lib {
 
 		if (is_array($vv['URLs']))	{
 			foreach($vv['URLs'] as $urlQuery)	{
-
+				$configurationHash 	=	md5(serialize($vv));
+			
+				//this 
+				$skipInnerCheck 	=	$this->noUnprocessedQueueEntriesForPageWithConfigurationHashExist($pageRow['uid'],$configurationHash);
+				
 				if ($this->drawURLs_PIfilter($vv['subCfg']['procInstrFilter'],$incomingProcInstructions))	{
 
 						// Calculate cHash:
@@ -351,7 +375,9 @@ class tx_crawler_lib {
 								$theUrl,
 								$vv['subCfg'],
 								$scheduledTime,
-								$reason
+								$reason,
+								$configurationHash,
+								$skipInnerCheck
 							);
 							if ($added === false) {
 								$urlList .= ' (Url already existed)';
@@ -836,7 +862,7 @@ class tx_crawler_lib {
 	 * @param	tx_crawler_domain_reason	reason (optional)
 	 * @return	bool		true if the url was added, false if it already existed
 	 */
-	function addUrl($id, $url, $subCfg, $tstamp, tx_crawler_domain_reason $reason=null)	{
+	function addUrl($id, $url, $subCfg, $tstamp, tx_crawler_domain_reason $reason=null,$configurationHash='',$skipInnerDuplicationCheck=fals)	{
 		global $TYPO3_CONF_VARS;
 
 		$urlAdded = false;
@@ -877,9 +903,10 @@ class tx_crawler_lib {
 			//the entries will only be registered and not stored to the database
 			$this->queueEntries[] = $fieldArray;
 		} else {
-
-			// check if there is already an equal entry
-			$rows = $this->getDuplicateRowsIfExist($tstamp,$fieldArray);
+			if(!$skipInnerDuplicationCheck){
+				// check if there is already an equal entry
+				$rows = $this->getDuplicateRowsIfExist($tstamp,$fieldArray);
+			}
 
 			if (empty($rows)) {
 				$GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_crawler_queue', $fieldArray);
