@@ -252,7 +252,7 @@ class tx_crawler_lib {
 		$configurationHash  = $db->fullQuoteStr($configurationHash,'tx_crawler_queue');
 		$res 				= $db->exec_SELECTquery('count(*) as anz','tx_crawler_queue',"page_id=".intval($uid)." AND configuration_hash=".$configurationHash." AND exec_time=0");
 		$row				= $db->sql_fetch_assoc($res);
-		
+
 		return ($row['anz'] == 0);
 	}
 	
@@ -891,6 +891,7 @@ class tx_crawler_lib {
 			'page_id' => $id,
 			'parameters' => $parameters_serialized,
 			'parameters_hash' => t3lib_div::shortMD5($parameters_serialized),
+			'configuration_hash' => $configurationHash,
 			'scheduled' => $tstamp,
 			'exec_time' => 0,
 			'set_id' => $this->setID,
@@ -903,6 +904,7 @@ class tx_crawler_lib {
 			//the entries will only be registered and not stored to the database
 			$this->queueEntries[] = $fieldArray;
 		} else {
+		
 			if(!$skipInnerDuplicationCheck){
 				// check if there is already an equal entry
 				$rows = $this->getDuplicateRowsIfExist($tstamp,$fieldArray);
@@ -941,7 +943,15 @@ class tx_crawler_lib {
 
 		//if this entry is scheduled with "now"
 		if ($tstamp <= $currentTime) {
-			$where = 'scheduled <= ' . $currentTime;
+			if($this->extensionSettings['enableTimeslot']){
+				$timeBegin 	= $currentTime - 100;
+				$timeEnd 	= $currentTime + 100;
+				$where 		= ' (scheduled BETWEEN '.$timeBegin.' AND '.$timeEnd.' ) OR scheduled = 0 ';
+				
+			}else{
+				$where = 'scheduled <= ' . $currentTime;
+				
+			}
 		}
 		elseif ($tstamp > $currentTime) {
 			//entry with a timestamp in the future need to have the same schedule time

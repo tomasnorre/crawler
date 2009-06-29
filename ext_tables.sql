@@ -7,6 +7,7 @@ CREATE TABLE tx_crawler_queue (
   parameters text NOT NULL,
   parameters_hash varchar(50) DEFAULT '' NOT NULL,
   configuration_hash varchar(50) DEFAULT '' NOT NULL,
+  configuration_hash varchar(50) DEFAULT '' NOT NULL,
   scheduled int(11) DEFAULT '0' NOT NULL,
   exec_time int(11) DEFAULT '0' NOT NULL,
   set_id int(11) DEFAULT '0' NOT NULL,
@@ -17,9 +18,10 @@ CREATE TABLE tx_crawler_queue (
 
   PRIMARY KEY (qid),
   KEY page_id (page_id),
-  KEY set_id (set_id,exec_time)
-  KEY process_id (process_id)
-  KEY parameters_hash (parameters_hash) 
+  KEY set_id (set_id,exec_time),
+  KEY process_id (process_id),
+  KEY parameters_hash (parameters_hash),
+  KEY configuration_hash (configuration_hash)
 ) ENGINE=InnoDB;
 
 #
