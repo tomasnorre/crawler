@@ -167,7 +167,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 			$this->pObj->MOD_SETTINGS['processListMode'] = 'simple';
 		}
 
-		$this->pObj->MOD_SETTINGS['depth'] = t3lib_div::_GP('depth');
+//		$this->pObj->MOD_SETTINGS['depth'] = t3lib_div::_GP('depth');
 
 			// Set CSS styles specific for this document:
 		$this->pObj->content = str_replace('/*###POSTCSSMARKER###*/','
