@@ -135,7 +135,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 
 			// Set CSS styles specific for this document:
 		$this->pObj->content = str_replace('/*###POSTCSSMARKER###*/','
-			TABLE.c-list TR TD { white-space: nowrap; vertical-align: top; }
+			TABLE.crawlerlog TR TD { white-space: nowrap; vertical-align: top; }
 		',$this->pObj->content);
 
 			// Type function menu:
