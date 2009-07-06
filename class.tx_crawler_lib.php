@@ -946,7 +946,7 @@ class tx_crawler_lib {
 			if($this->extensionSettings['enableTimeslot']){
 				$timeBegin 	= $currentTime - 100;
 				$timeEnd 	= $currentTime + 100;
-				$where 		= ' (scheduled BETWEEN '.$timeBegin.' AND '.$timeEnd.' ) OR scheduled = 0 ';
+				$where 		= ' ((scheduled BETWEEN '.$timeBegin.' AND '.$timeEnd.' ) OR scheduled = 0) ';
 				
 			}else{
 				$where = 'scheduled <= ' . $currentTime;
