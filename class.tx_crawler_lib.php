@@ -493,7 +493,7 @@ class tx_crawler_lib {
 						$pidOnlyList = implode(',',t3lib_div::trimExplode(',',$configurationRecord['pidsonly'],1));
 
 						// process configuration if it is not page-specific or if the specific page is the current page:
-						if (!strcmp($configurationRecord['pidsOnly'],'') || t3lib_div::inList($pidOnlyList,$id)) {
+						if (!strcmp($configurationRecord['pidsonly'],'') || t3lib_div::inList($pidOnlyList,$id)) {
 							$key = $configurationRecord['name'];
 
 							// don't overwrite previously defined paramSets
