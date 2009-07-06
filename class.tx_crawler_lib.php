@@ -1538,6 +1538,16 @@ class tx_crawler_lib {
 			$this->registerQueueEntriesInternallyOnly=TRUE;
 		}
 
+		$pageId = t3lib_div::intInRange($cliObj->cli_args['_DEFAULT'][1],0);	
+
+		$configurations = $this->getUrlsForPageId($pageId);
+		
+		if(is_array($configurations)){
+			$configurationKeys = array_keys($configurations);
+		}else{
+			$configurationKeys = array();
+		}
+		
 		$this->setID = t3lib_div::md5int(microtime());
 		$this->getPageTreeAndUrls(
 			t3lib_div::intInRange($cliObj->cli_args['_DEFAULT'][1],0),
@@ -1546,7 +1556,8 @@ class tx_crawler_lib {
 			t3lib_div::intInRange($cliObj->cli_isArg('-n') ? $cliObj->cli_argValue('-n') : 30,1,1000),
 			$cliObj->cli_argValue('-o')==='queue' || $cliObj->cli_argValue('-o')==='exec',
 			$cliObj->cli_argValue('-o')==='url',
-			t3lib_div::trimExplode(',',$cliObj->cli_argValue('-proc'),1)
+			t3lib_div::trimExplode(',',$cliObj->cli_argValue('-proc'),1),
+			$configurationKeys
 		);
 
 		if ($cliObj->cli_argValue('-o')==='url')	{
