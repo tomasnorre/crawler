@@ -235,7 +235,7 @@ class tx_crawler_lib {
 
 		return $res;
 	}
-	
+
 	/**
 	 * This method is used to count if there are ANY unporocessed queue entrys
 	 * of a given page_id and the configuration wich matches a given hash.
@@ -287,7 +287,6 @@ class tx_crawler_lib {
 
 		// realurl support (thanks to Ingo Renner)
 		if (t3lib_extMgm::isLoaded('realurl') && $vv['subCfg']['realurl']) {
-            global $TYPO3_CONF_VARS;     /// we're including within the wrong context therefore without this line XCLASSes and other settings might be lost for realurl
 			require_once(t3lib_extMgm::extPath('realurl') . 'class.tx_realurl.php');
 			/* @var $urlObj tx_realurl */
 			$urlObj = t3lib_div::makeInstance('tx_realurl');
@@ -324,21 +323,14 @@ class tx_crawler_lib {
 
 		if (is_array($vv['URLs']))	{
 			foreach($vv['URLs'] as $urlQuery)	{
-				$configurationHash 	=	md5(serialize($vv));
-			
-				//this 
-				$skipInnerCheck 	=	$this->noUnprocessedQueueEntriesForPageWithConfigurationHashExist($pageRow['uid'],$configurationHash);
-				
+
 				if ($this->drawURLs_PIfilter($vv['subCfg']['procInstrFilter'],$incomingProcInstructions))	{
 
 						// Calculate cHash:
-					$cHash_calc = '';
-					$calculateCHash = $vv['subCfg']['cHash'] ? $vv['subCfg']['cHash'] : false;
-					if ($calculateCHash)	{
+					if ($vv['subCfg']['cHash'])	{
 						$pA = t3lib_div::cHashParams($urlQuery);
 						if (count($pA)>1)	{
-							$cHash_calc = t3lib_div::shortMD5(serialize($pA));
-							$urlQuery.='&cHash='.rawurlencode($cHash_calc);
+							$urlQuery .= '&cHash='.rawurlencode(t3lib_div::shortMD5(serialize($pA)));
 						}
 					}
 
@@ -349,7 +341,7 @@ class tx_crawler_lib {
 					$urlQuery = 'index.php' . $urlQuery;
 					if (t3lib_extMgm::isLoaded('realurl') && $vv['subCfg']['realurl']) {
 						$uParts = parse_url($urlQuery);
-        				$urlQuery = $urlObj->encodeSpURL_doEncode($uParts['query'] , $calculateCHash, $urlQuery);
+        				$urlQuery = $urlObj->encodeSpURL_doEncode($uParts['query'], $vv['subCfg']['cHash'], $urlQuery);
 					}
 
 						// Scheduled time:
@@ -515,6 +507,7 @@ class tx_crawler_lib {
 									'procInstrParams.' => $TSparserObject->setup,
 									'baseUrl' => $configurationRecord['base_url'],
 									'realurl' => $configurationRecord['realurl'],
+									'cHash' => $configurationRecord['chash'],
 								);
 
 									// add trailing slash if not present
@@ -904,10 +897,10 @@ class tx_crawler_lib {
 			//the entries will only be registered and not stored to the database
 			$this->queueEntries[] = $fieldArray;
 		} else {
-		
+
 			if(!$skipInnerDuplicationCheck){
-				// check if there is already an equal entry
-				$rows = $this->getDuplicateRowsIfExist($tstamp,$fieldArray);
+			// check if there is already an equal entry
+			$rows = $this->getDuplicateRowsIfExist($tstamp,$fieldArray);
 			}
 
 			if (empty($rows)) {
@@ -949,9 +942,8 @@ class tx_crawler_lib {
 				$where 		= ' ((scheduled BETWEEN '.$timeBegin.' AND '.$timeEnd.' ) OR scheduled = 0) ';
 				
 			}else{
-				$where = 'scheduled <= ' . $currentTime;
-				
-			}
+			$where = 'scheduled <= ' . $currentTime;
+		}
 		}
 		elseif ($tstamp > $currentTime) {
 			//entry with a timestamp in the future need to have the same schedule time
@@ -968,8 +960,7 @@ class tx_crawler_lib {
 				' AND page_id='.intval($fieldArray['page_id']).
 				' AND parameters_hash = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($fieldArray['parameters_hash'], 'tx_crawler_queue')
 			);
-
-			if (is_array($result)) {
+			if (is_array($result)) {
 				foreach ($result as $value) {
 					$rows[] = $value['qid'];
 				}
