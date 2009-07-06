@@ -60,7 +60,8 @@ class tx_crawler_cli_im extends t3lib_cli {
 		$this->cli_options[] = array('-d depth', 'Tree depth, 0-99', "How many levels under the 'page_id' to include.");
 		$this->cli_options[] = array('-o mode', 'Output mode: "url", "exec", "queue"', "Specifies output modes\nurl : Will list URLs which wget could use as input.\nqueue: Will put entries in queue table.\nexec: Will execute all entries right away!");
 		$this->cli_options[] = array('-n number', 'Number of items per minute.', 'Specifies how many items are put in the queue per minute. Only valid for output mode "queue"');
-#		$this->cli_options[] = array('-v level', 'Verbosity level 0-3', "The value of level can be:\n  0 = all output\n  1 = info and greater (default)\n  2 = warnings and greater\n  3 = errors");
+		$this->cli_options[] = array('-conf configurationkeys','List of Configuration Keys','A commaseperated list of crawler configurations');
+		#		$this->cli_options[] = array('-v level', 'Verbosity level 0-3', "The value of level can be:\n  0 = all output\n  1 = info and greater (default)\n  2 = warnings and greater\n  3 = errors");
 
 			// Setting help texts:
 		$this->cli_help['name'] = 'crawler CLI interface -- Submitting URLs to be crawled via CLI interface.';
@@ -1540,12 +1541,16 @@ class tx_crawler_lib {
 
 		$pageId = t3lib_div::intInRange($cliObj->cli_args['_DEFAULT'][1],0);	
 
-		$configurations = $this->getUrlsForPageId($pageId);
 		
-		if(is_array($configurations)){
-			$configurationKeys = array_keys($configurations);
-		}else{
-			$configurationKeys = array();
+		$configurationKeys  = t3lib_div::trimExplode(',',$cliObj->cli_argValue('-conf'));
+		
+		if(!is_array($configurationKeys)){
+			$configurations = $this->getUrlsForPageId($pageId);
+			if(is_array($configurations)){
+				$configurationKeys = array_keys($configurations);
+			}else{
+				$configurationKeys = array();
+			}
 		}
 		
 		$this->setID = t3lib_div::md5int(microtime());
