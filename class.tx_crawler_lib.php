@@ -256,7 +256,7 @@ class tx_crawler_lib {
 
 		return ($row['anz'] == 0);
 	}
-	
+
 	/**
 	 * Creates a list of URLs from input array (and submits them to queue if asked for)
 	 * See Web > Info module script + "indexed_search"'s crawler hook-client using this!
@@ -431,7 +431,6 @@ class tx_crawler_lib {
 			$crawlerCfg = $pageTSconfig['tx_crawler.']['crawlerCfg.'];
 
 			if (is_array($crawlerCfg['paramSets.']))	{
-				$res = array();
 				foreach($crawlerCfg['paramSets.'] as $key => $values)	{
 					if (!is_array($values))	{
 
@@ -500,8 +499,9 @@ class tx_crawler_lib {
 							// don't overwrite previously defined paramSets
 							if (!isset($res[$key])) {
 
-								$TSparserObject = t3lib_div::makeInstance('t3lib_tsparser'); /* @var $TSparserObject t3lib_tsparser */
-								$procInstrParams = $TSparserObject->parse($configurationRecord['processing_instruction_parameters_ts']);
+								/* @var $TSparserObject t3lib_tsparser */
+								$TSparserObject = t3lib_div::makeInstance('t3lib_tsparser');
+								$TSparserObject->parse($configurationRecord['processing_instruction_parameters_ts']);
 
 								$subCfg = array(
 									'procInstrFilter' => $configurationRecord['processing_instruction_filter'],
@@ -856,8 +856,7 @@ class tx_crawler_lib {
 	 * @param	tx_crawler_domain_reason	reason (optional)
 	 * @return	bool		true if the url was added, false if it already existed
 	 */
-	function addUrl($id, $url, $subCfg, $tstamp, tx_crawler_domain_reason $reason=null,$configurationHash='',$skipInnerDuplicationCheck=fals)	{
-		global $TYPO3_CONF_VARS;
+	function addUrl($id, $url, array $subCfg, $tstamp, tx_crawler_domain_reason $reason=null, $configurationHash='', $skipInnerDuplicationCheck=false)	{
 
 		$urlAdded = false;
 
@@ -890,7 +889,6 @@ class tx_crawler_lib {
 			'exec_time' => 0,
 			'set_id' => $this->setID,
 			'result_data' => '',
-
 		);
 
 
@@ -900,8 +898,8 @@ class tx_crawler_lib {
 		} else {
 
 			if(!$skipInnerDuplicationCheck){
-			// check if there is already an equal entry
-			$rows = $this->getDuplicateRowsIfExist($tstamp,$fieldArray);
+				// check if there is already an equal entry
+				$rows = $this->getDuplicateRowsIfExist($tstamp,$fieldArray);
 			}
 
 			if (empty($rows)) {
@@ -941,7 +939,7 @@ class tx_crawler_lib {
 				$timeBegin 	= $currentTime - 100;
 				$timeEnd 	= $currentTime + 100;
 				$where 		= ' ((scheduled BETWEEN '.$timeBegin.' AND '.$timeEnd.' ) OR scheduled = 0) ';
-				
+
 			}else{
 			$where = 'scheduled <= ' . $currentTime;
 		}
@@ -1539,11 +1537,11 @@ class tx_crawler_lib {
 			$this->registerQueueEntriesInternallyOnly=TRUE;
 		}
 
-		$pageId = t3lib_div::intInRange($cliObj->cli_args['_DEFAULT'][1],0);	
+		$pageId = t3lib_div::intInRange($cliObj->cli_args['_DEFAULT'][1],0);
 
-		
+
 		$configurationKeys  = t3lib_div::trimExplode(',',$cliObj->cli_argValue('-conf'));
-		
+
 		if(!is_array($configurationKeys)){
 			$configurations = $this->getUrlsForPageId($pageId);
 			if(is_array($configurations)){
@@ -1552,7 +1550,7 @@ class tx_crawler_lib {
 				$configurationKeys = array();
 			}
 		}
-		
+
 		$this->setID = t3lib_div::md5int(microtime());
 		$this->getPageTreeAndUrls(
 			t3lib_div::intInRange($cliObj->cli_args['_DEFAULT'][1],0),

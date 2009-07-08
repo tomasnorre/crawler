@@ -18,6 +18,7 @@
 	            <label index="tx_crawler_configuration.begroups">Restrict access to</label>
 	            <label index="tx_crawler_configuration.realurl">Use realurl urls</label>
 	            <label index="tx_crawler_configuration.chash">Append cHash</label>
+	            <label index="tx_crawler_configuration.exclude">Exclude pages</label>
 		</languageKey>
 	</data>
 </T3locallang>

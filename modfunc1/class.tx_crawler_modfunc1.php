@@ -167,8 +167,6 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 			$this->pObj->MOD_SETTINGS['processListMode'] = 'simple';
 		}
 
-//		$this->pObj->MOD_SETTINGS['depth'] = t3lib_div::_GP('depth');
-
 			// Set CSS styles specific for this document:
 		$this->pObj->content = str_replace('/*###POSTCSSMARKER###*/','
 			TABLE.c-list TR TD { white-space: nowrap; vertical-align: top; }
@@ -297,7 +295,9 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				$this->scheduledTime = time();
 			break;
 		}
-		$this->reqMinute = t3lib_div::intInRange(t3lib_div::_GP('perminute'),1,10000);
+		// $this->reqMinute = t3lib_div::intInRange(t3lib_div::_GP('perminute'),1,10000);
+		// TODO: check relevance
+		$this->reqMinute = 30;
 
 		$this->incomingProcInstructions = t3lib_div::_GP('procInstructions');
 		$this->incomingProcInstructions = is_array($this->incomingProcInstructions) ? $this->incomingProcInstructions : array('');
@@ -394,8 +394,8 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				4 => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_4'),
 				99 => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_infi'),
 			),
-			'depth',
-			t3lib_div::_GP('depth'),
+			'SET[depth]',
+			$this->pObj->MOD_SETTINGS['depth'],
 			0
 		);
 
@@ -404,7 +404,12 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		foreach((array)$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'] as $k => $v)	{
 			$pIs[$k] = $v.' ['.$k.']';
 		}
-		$cell[] = $this->selectorBox($pIs, 'procInstructions', $this->incomingProcInstructions, 1);
+		$cell[] = $this->selectorBox(
+			$pIs,
+			'procInstructions',
+			$this->incomingProcInstructions,
+			1
+		);
 
 		$availableConfigurations = array_keys($this->crawlerObj->getUrlsForPageId($this->pObj->id));
 		array_unshift($availableConfigurations, '');
@@ -429,6 +434,8 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 			0
 		);
 
+		// TODO: check relevance
+		/*
 			// Requests per minute:
 		$cell[] = $this->selectorBox(
 			array(
@@ -443,10 +450,11 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				200 => '200',
 				1000 => '1000',
 			),
-			'perminute',
-			t3lib_div::_POST('perminute'),
+			'SET[perminute]',
+			$this->pObj->MOD_SETTINGS['perminute'],
 			0
 		);
+		*/
 
 		$output = '
 			<table class="lrPadding c-list">
@@ -455,7 +463,6 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 					<td>Processing Instructions:</td>
 					<td>Configurations:</td>
 					<td>Scheduled:</td>
-					<td>Requests / Minute:</td>
 				</tr>
 				<tr class="bgColor4">
 					<td valign="top">' . implode('</td>

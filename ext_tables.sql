@@ -58,6 +58,7 @@ CREATE TABLE tx_crawler_configuration (
   	begroups varchar(100) DEFAULT '0' NOT NULL,
   	realurl tinyint(4) DEFAULT '0' NOT NULL,
   	chash tinyint(4) DEFAULT '0' NOT NULL,
+  	exclude text NOT NULL,
     
     PRIMARY KEY (uid),
     KEY parent (pid)
