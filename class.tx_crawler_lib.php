@@ -143,7 +143,7 @@ class tx_crawler_lib {
 		$this->processFilename = PATH_site.'typo3temp/tx_crawler.proc';
 
 	    // read ext_em_conf_template settings and set
-	    $this->extensionSettings=unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['crawler']);
+	    $this->extensionSettings = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['crawler']);
 
 	    // set defaults:
 	    if ($this->extensionSettings['countInARun']=='') $this->extensionSettings['countInARun']=100;
@@ -509,6 +509,7 @@ class tx_crawler_lib {
 									'baseUrl' => $configurationRecord['base_url'],
 									'realurl' => $configurationRecord['realurl'],
 									'cHash' => $configurationRecord['chash'],
+									'exclude' => $configurationRecord['exclude']
 								);
 
 									// add trailing slash if not present
@@ -1131,9 +1132,9 @@ class tx_crawler_lib {
 	 * @param	integer		Timeout time
 	 * @return	array		Array with content
 	 */
-	function requestUrl($url, $crawlerId, $timeout=2)	{
+	function requestUrl($originalUrl, $crawlerId, $timeout=2)	{
 			// Parse URL, checking for scheme:
-		$url = parse_url($url);
+		$url = parse_url($originalUrl);
 
 		if(!in_array($url['scheme'],array('','http','https'))) {
 			if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Scheme does not match for url "%s"', $url), 'crawler', 4, array('crawlerId' => $crawlerId));
@@ -1153,6 +1154,8 @@ class tx_crawler_lib {
  		}
 
  		$port = ($rurl['port'] > 0) ? $rurl['port'] : 80;
+
+ 		$startTime = microtime(true);
 
  		$fp = fsockopen($host, $port, $errno, $errstr, $timeout);
 
@@ -1201,6 +1204,12 @@ class tx_crawler_lib {
 				$isFirstLine=FALSE;
 			}
 			fclose ($fp);
+
+			$time = microtime(true) - $startTime;
+
+			if (!empty($this->extensionSettings['logFileName'])) {
+				file_put_contents($this->extensionSettings['logFileName'], $originalUrl .' '.$time."\n", FILE_APPEND);
+			}
 
 				// Implode content and headers:
 			$d['headers'] = implode('', $d['headers']);

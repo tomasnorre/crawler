@@ -27,3 +27,6 @@ phpPath=/usr/bin/php
 
 # cat=basic//10; type=boolean; label= Enabled Timeslot for Duplicationcheck: When this option is active items will not be queue twice for the past if theire schedule time is the currenttime +-100 seconds.
 enableTimeslot=1
+
+# cat=basic//10; type=string; label= Log Filename:
+logFileName=
