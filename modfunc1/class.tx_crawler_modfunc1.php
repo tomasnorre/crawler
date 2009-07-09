@@ -87,11 +87,6 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	var $reqMinute = 0;
 
 	/**
-	 * @var array holds the selection of processing instructions from the processing instructions selector box
-	 */
-	var $incomingProcInstructions = array();
-
-	/**
 	 * @var array holds the selection of configuration from the configuration selector box
 	 */
 	var $incomingConfigurationSelection = array();
@@ -150,8 +145,8 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 * @param void
 	 * @return void
 	 */
-	protected function loadExtensionSettings(){
-		$this->extensionSettings=unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['crawler']);
+	protected function loadExtensionSettings() {
+		$this->extensionSettings = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['crawler']);
 	}
 
 	/**
@@ -299,8 +294,6 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		// TODO: check relevance
 		$this->reqMinute = 30;
 
-		$this->incomingProcInstructions = t3lib_div::_GP('procInstructions');
-		$this->incomingProcInstructions = is_array($this->incomingProcInstructions) ? $this->incomingProcInstructions : array('');
 
 		$this->incomingConfigurationSelection = t3lib_div::_GP('configurationSelection');
 		$this->incomingConfigurationSelection = is_array($this->incomingConfigurationSelection) ? $this->incomingConfigurationSelection : array('');
@@ -310,13 +303,11 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		$this->crawlerObj->setID = t3lib_div::md5int(microtime());
 
 		if (empty($this->incomingConfigurationSelection)
-			|| empty($this->incomingProcInstructions)
 			|| (count($this->incomingConfigurationSelection)==1 && empty($this->incomingConfigurationSelection[0]))
-			|| (count($this->incomingProcInstructions)==1 && empty($this->incomingProcInstructions[0]))
 			) {
 			$code= '
 			<tr>
-				<td colspan="7"><b>Please select at least one processing instruction and at least one configuration</b></td>
+				<td colspan="7"><b>Please select at least one configuration</b></td>
 			</tr>';
 		} else {
 			$code = $this->crawlerObj->getPageTreeAndUrls(
@@ -326,7 +317,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				$this->reqMinute,
 				$this->submitCrawlUrls,
 				$this->downloadCrawlUrls,
-				$this->incomingProcInstructions,
+				array(), // Do not filter any processing instructions
 				$this->incomingConfigurationSelection
 			);
 		}
@@ -399,18 +390,6 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 			0
 		);
 
-			// Processing Instructions:
-		$pIs = array('' => '');
-		foreach((array)$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'] as $k => $v)	{
-			$pIs[$k] = $v.' ['.$k.']';
-		}
-		$cell[] = $this->selectorBox(
-			$pIs,
-			'procInstructions',
-			$this->incomingProcInstructions,
-			1
-		);
-
 		$availableConfigurations = array_keys($this->crawlerObj->getUrlsForPageId($this->pObj->id));
 		array_unshift($availableConfigurations, '');
 
@@ -460,7 +439,6 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 			<table class="lrPadding c-list">
 				<tr class="bgColor5 tableheader">
 					<td>Depth:</td>
-					<td>Processing Instructions:</td>
 					<td>Configurations:</td>
 					<td>Scheduled:</td>
 				</tr>

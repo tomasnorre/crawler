@@ -327,7 +327,7 @@ class tx_crawler_lib {
 		if (is_array($vv['URLs']))	{
 			foreach($vv['URLs'] as $urlQuery)	{
 
-				if ($this->drawURLs_PIfilter($vv['subCfg']['procInstrFilter'],$incomingProcInstructions))	{
+				if ($this->drawURLs_PIfilter($vv['subCfg']['procInstrFilter'], $incomingProcInstructions))	{
 
 						// Calculate cHash:
 					if ($vv['subCfg']['cHash'])	{
@@ -400,9 +400,16 @@ class tx_crawler_lib {
 	 * @param	array		Processing instructions
 	 * @return	boolean		TRUE if found
 	 */
-	function drawURLs_PIfilter($piString,$incomingProcInstructions)	{
+	function drawURLs_PIfilter($piString, array $incomingProcInstructions)	{
+
+		if (empty($incomingProcInstructions)) {
+			return true;
+		}
+
 		foreach($incomingProcInstructions as $pi) {
-			if (t3lib_div::inList($piString,$pi))	return TRUE;
+			if (t3lib_div::inList($piString, $pi)) {
+				return TRUE;
+			}
 		}
 	}
 
@@ -866,9 +873,19 @@ class tx_crawler_lib {
 	 * @param	array		Sub configuration array (from TS config)
 	 * @param	integer		Scheduled-time
 	 * @param	tx_crawler_domain_reason	reason (optional)
+	 * @param 	string		(optional) configuration hash
+	 * @param 	bool		(optional) skip inner duplication check
 	 * @return	bool		true if the url was added, false if it already existed
 	 */
-	function addUrl($id, $url, array $subCfg, $tstamp, tx_crawler_domain_reason $reason=null, $configurationHash='', $skipInnerDuplicationCheck=false)	{
+	function addUrl (
+		$id,
+		$url,
+		array $subCfg,
+		$tstamp,
+		tx_crawler_domain_reason $reason=null,
+		$configurationHash='',
+		$skipInnerDuplicationCheck=false
+		) {
 
 		$urlAdded = false;
 
@@ -902,7 +919,6 @@ class tx_crawler_lib {
 			'set_id' => $this->setID,
 			'result_data' => '',
 		);
-
 
 		if ($this->registerQueueEntriesInternallyOnly)	{
 			//the entries will only be registered and not stored to the database
@@ -1382,19 +1398,6 @@ class tx_crawler_lib {
 
 
 	/**
-	 * Get an instance of t3lib_pageTree
-	 *
-	 * @return t3lib_pageTree
-	 */
-	protected function getNewTreeInstance() {
-		$tree = t3lib_div::makeInstance('t3lib_pageTree');
-		$perms_clause = $GLOBALS['BE_USER']->getPagePermsClause(1);
-		$tree->init('AND ' . $perms_clause);
-		return $tree;
-	}
-
-
-	/**
 	 * Expand exclude string
 	 *
 	 * @param string exclude string
@@ -1409,7 +1412,12 @@ class tx_crawler_lib {
 		if (empty($expandedExcludeStringCache[$excludeString])) {
 			$pidList = array();
 			if (!empty($excludeString)) {
-				$tree = $this->getNewTreeInstance();
+
+				/* @var $tree t3lib_pageTree */
+				$tree = t3lib_div::makeInstance('t3lib_pageTree');
+				$perms_clause = $GLOBALS['BE_USER']->getPagePermsClause(1);
+				$tree->init('AND ' . $perms_clause);
+
 				$excludeParts = t3lib_div::trimExplode(',', $excludeString);
 				foreach ($excludeParts as $excludePart) {
 					list($pid, $depth) = t3lib_div::trimExplode('+', $excludePart);
@@ -1452,16 +1460,10 @@ class tx_crawler_lib {
 			// Get list of configurations
 		$configurations = $this->getUrlsForPageRow($pageRow, $skipMessage);
 
+		// 	remove configuration that does not match the current selection
 		foreach ($configurations as $confKey => $confArray) {
-
-				// remove configuration that does not match the current selection
 			if (!in_array($confKey, $this->incomingConfigurationSelection)) {
 				unset($configurations[$confKey]);
-			} else {
-					// remove configuration that does not match current processing instructions
-				if (!$this->drawURLs_PIfilter($confArray['subCfg']['procInstrFilter'], $this->incomingProcInstructions)) {
-					unset($configurations[$confKey]);
-				}
 			}
 		}
 
@@ -1492,7 +1494,7 @@ class tx_crawler_lib {
 						$this->downloadCrawlUrls,
 						$this->duplicateTrack,
 						$this->downloadUrls,
-						$this->incomingProcInstructions
+						$this->incomingProcInstructions // if empty the urls won't be filtered by processing instructions
 					);
 
 						// Expanded parameters:
