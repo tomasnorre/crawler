@@ -663,7 +663,8 @@ class tx_crawler_lib {
 								$languageField = $TCA[$subpartParams['_TABLE']]['ctrl']['languageField'];
 
 								if ($subpartParams['_ENABLELANG'] && $languageField) {
-									$andWhereLanguage = ' AND ' . $GLOBALS['TYPO3_DB']->quoteStr($languageField, $subpartParams['_TABLE']) .' <= 0';
+									// $andWhereLanguage = ' AND ' . $GLOBALS['TYPO3_DB']->quoteStr($languageField, $subpartParams['_TABLE']) .' <= 0';
+									$andWhereLanguage = ' AND l18n_parent <= 0';
 								}
 
 								$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
