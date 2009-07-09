@@ -1396,6 +1396,12 @@ class tx_crawler_lib {
 	}
 
 
+	/**
+	 * Expand exclude string
+	 *
+	 * @param string exclude string
+	 * @return array array of page ids
+	 */
 	public function expandExcludeString($excludeString) {
 
 		// internal static caches;
@@ -1414,6 +1420,9 @@ class tx_crawler_lib {
 					if (empty($depth)) {
 						$depth = 0;
 					}
+
+					$pidList[] = $pid;
+
 					if ($depth > 0) {
 						if (empty($treeCache[$pid][$depth])) {
 							$tree->getTree($pid, $depth);
@@ -1422,8 +1431,6 @@ class tx_crawler_lib {
 						foreach ($treeCache[$pid][$depth] as $data) {
 							$pidList[] = $data['row']['uid'];
 						}
-					} else {
-						$pidList[] = $pid;
 					}
 				}
 			}
