@@ -148,6 +148,7 @@ class tx_crawler_lib {
 	    // set defaults:
 	    if ($this->extensionSettings['countInARun']=='') $this->extensionSettings['countInARun']=100;
 	    if (!t3lib_div::intInRange($this->extensionSettings['processLimit'],1,99)) $this->extensionSettings['processLimit']=1;
+
 	}
 
 	/**
@@ -216,7 +217,8 @@ class tx_crawler_lib {
 	}
 
 	/**
-	 * Returns array with URLs to process for input page row, ignoring pages like doktype 3,4 and 200+
+	 * Wrapper method for getUrlsForPageId()
+	 * It returns an array of configurations and no urls!
 	 *
 	 * @param	array		Page record with at least doktype and uid columns.
 	 * @return	array		Result (see getUrlsForPageId())
@@ -405,10 +407,11 @@ class tx_crawler_lib {
 	}
 
 	/**
-	 * Compile array of URLs based on configuration parameters from Page TSconfig
+	 * This methods returns an array of configurations.
+	 * And no urls!
 	 *
 	 * @param	integer		Page ID
-	 * @return	array
+	 * @return	array		configurations from pagets and configuration records
 	 */
 	function getUrlsForPageId($id)	{
 
@@ -1281,7 +1284,17 @@ class tx_crawler_lib {
 	 * @param	array		Array of configuration keys
 	 * @return	string		HTML code
 	 */
-	function getPageTreeAndUrls($id, $depth, $scheduledTime, $reqMinute, $submitCrawlUrls, $downloadCrawlUrls, array $incomingProcInstructions, array $configurationSelection)	{
+	function getPageTreeAndUrls(
+		$id,
+		$depth,
+		$scheduledTime,
+		$reqMinute,
+		$submitCrawlUrls,
+		$downloadCrawlUrls,
+		array $incomingProcInstructions,
+		array $configurationSelection
+		) {
+
 		global $BACK_PATH;
 		global $LANG;
 		if (!is_object($LANG)) {
@@ -1300,6 +1313,7 @@ class tx_crawler_lib {
 		$this->downloadUrls = array();
 
 			// Drawing tree:
+		/* @var $tree t3lib_pageTree */
 		$tree = t3lib_div::makeInstance('t3lib_pageTree');
 		$perms_clause = $GLOBALS['BE_USER']->getPagePermsClause(1);
 		$tree->init('AND ' . $perms_clause);
@@ -1307,14 +1321,10 @@ class tx_crawler_lib {
 		$pageinfo = t3lib_BEfunc::readPageAccess($id, $perms_clause);
 
 			// Set root row:
-		$HTML = '<img' . t3lib_iconWorks::skinImg($GLOBALS['BACK_PATH'], t3lib_iconWorks::getIcon('pages', $this->pObj->pageinfo)) . ' align="top" class="c-recIcon" alt="" />';
-
-
 		$tree->tree[] = Array(
 			'row' => $pageinfo,
-			'HTML' => $HTML
+			'HTML' => '<img' . t3lib_iconWorks::skinImg($GLOBALS['BACK_PATH'], t3lib_iconWorks::getIcon('pages', $this->pObj->pageinfo)) . ' align="top" class="c-recIcon" alt="" />'
 		);
-
 
 			// Get branch beneath:
 		if ($depth)	{
@@ -1364,6 +1374,56 @@ class tx_crawler_lib {
 		return $code;
 	}
 
+
+	/**
+	 * Get an instance of t3lib_pageTree
+	 *
+	 * @return t3lib_pageTree
+	 */
+	protected function getNewTreeInstance() {
+		$tree = t3lib_div::makeInstance('t3lib_pageTree');
+		$perms_clause = $GLOBALS['BE_USER']->getPagePermsClause(1);
+		$tree->init('AND ' . $perms_clause);
+		return $tree;
+	}
+
+
+	public function expandExcludeString($excludeString) {
+
+		// internal static caches;
+		static $expandedExcludeStringCache;
+		static $treeCache;
+
+		if (empty($expandedExcludeStringCache[$excludeString])) {
+			$pidList = array();
+			if (!empty($excludeString)) {
+				$tree = $this->getNewTreeInstance();
+				$excludeParts = t3lib_div::trimExplode(',', $excludeString);
+				foreach ($excludeParts as $excludePart) {
+					list($pid, $depth) = t3lib_div::trimExplode('+', $excludePart);
+
+					// default is "page only" = "depth=0"
+					if (empty($depth)) {
+						$depth = 0;
+					}
+					if ($depth > 0) {
+						if (empty($treeCache[$pid][$depth])) {
+							$tree->getTree($pid, $depth);
+							$treeCache[$pid][$depth] = $tree->tree;
+						}
+						foreach ($treeCache[$pid][$depth] as $data) {
+							$pidList[] = $data['row']['uid'];
+						}
+					} else {
+						$pidList[] = $pid;
+					}
+				}
+			}
+			$expandedExcludeStringCache[$excludeString] = array_unique($pidList);
+		}
+		return $expandedExcludeStringCache[$excludeString];
+	}
+
 	/**
 	 * Create the rows for display of the page tree
 	 * For each page a number of rows are shown displaying GET variable configuration
@@ -1376,18 +1436,18 @@ class tx_crawler_lib {
 
 		$skipMessage = '';
 
-			// Get list of URLs from page:
-		$res = $this->getUrlsForPageRow($pageRow, $skipMessage);
+			// Get list of configurations
+		$configurations = $this->getUrlsForPageRow($pageRow, $skipMessage);
 
-		foreach ($res as $key => $value) {
+		foreach ($configurations as $confKey => $confArray) {
 
 				// remove configuration that does not match the current selection
-			if (!in_array($key, $this->incomingConfigurationSelection)) {
-				unset($res[$key]);
+			if (!in_array($confKey, $this->incomingConfigurationSelection)) {
+				unset($configurations[$confKey]);
 			} else {
 					// remove configuration that does not match current processing instructions
-				if (!$this->drawURLs_PIfilter($value['subCfg']['procInstrFilter'],$this->incomingProcInstructions)) {
-					unset($res[$key]);
+				if (!$this->drawURLs_PIfilter($confArray['subCfg']['procInstrFilter'], $this->incomingProcInstructions)) {
+					unset($configurations[$confKey]);
 				}
 			}
 		}
@@ -1396,71 +1456,83 @@ class tx_crawler_lib {
 		$c = 0;
 		$cc = 0;
 		$content = '';
-		if (count($res)) {
-			foreach($res as $kk => $vv)	{
+		if (count($configurations)) {
+			foreach($configurations as $confKey => $confArray)	{
 
 					// Title column:
-				if (!$c)	{
-					$titleClm = '<td rowspan="'.count($res).'">'.$pageTitleAndIcon.'</td>';
+				if (!$c) {
+					$titleClm = '<td rowspan="'.count($configurations).'">'.$pageTitleAndIcon.'</td>';
 				} else {
 					$titleClm = '';
 				}
 
-					// URL list:
-				$urlList = $this->urlListFromUrlArray(
-					$vv,
-					$pageRow,
-					$this->scheduledTime,
-					$this->reqMinute,
-					$this->submitCrawlUrls,
-					$this->downloadCrawlUrls,
-					$this->duplicateTrack,
-					$this->downloadUrls,
-					$this->incomingProcInstructions
-				);
 
-					// Expanded parameters:
-				$paramExpanded = '';
-				$calcAccu = array();
-				$calcRes = 1;
-				foreach($vv['paramExpanded'] as $gVar => $gVal)	{
-					$paramExpanded.= '
-						<tr>
-							<td class="bgColor4-20">'.htmlspecialchars('&'.$gVar.'=').'<br/>'.
-											'('.count($gVal).')'.
-											'</td>
-							<td class="bgColor4" nowrap="nowrap">'.nl2br(htmlspecialchars(implode(chr(10),$gVal))).'</td>
-						</tr>
-					';
-					$calcRes*= count($gVal);
-					$calcAccu[] = count($gVal);
-				}
-				$paramExpanded = '<table class="lrPadding c-list param-expanded">'.$paramExpanded.'</table>';
-				$paramExpanded.= 'Comb: '.implode('*',$calcAccu).'='.$calcRes;
+				if (!in_array($pageRow['uid'], $this->expandExcludeString($confArray['subCfg']['exclude']))) {
 
-					// Options
-				$optionValues = '';
-				if ($vv['subCfg']['userGroups'])	{
-					$optionValues.='User Groups: '.$vv['subCfg']['userGroups'].'<br/>';
-				}
-				if ($vv['subCfg']['baseUrl'])	{
-					$optionValues.='Base Url: '.$vv['subCfg']['baseUrl'].'<br/>';
-				}
-				if ($vv['subCfg']['procInstrFilter'])	{
-					$optionValues.='ProcInstr: '.$vv['subCfg']['procInstrFilter'].'<br/>';
-				}
+						// URL list:
+					$urlList = $this->urlListFromUrlArray(
+						$confArray,
+						$pageRow,
+						$this->scheduledTime,
+						$this->reqMinute,
+						$this->submitCrawlUrls,
+						$this->downloadCrawlUrls,
+						$this->duplicateTrack,
+						$this->downloadUrls,
+						$this->incomingProcInstructions
+					);
 
-					// Compile row:
-				$content.= '
-					<tr class="bgColor'.($c%2 ? '-20':'-10') . '">
-						'.$titleClm.'
-						<td>'.htmlspecialchars($kk).'</td>
-						<td>'.nl2br(htmlspecialchars(rawurldecode(trim(str_replace('&',chr(10).'&',t3lib_div::implodeArrayForUrl('',$vv['paramParsed'])))))).'</td>
-						<td>'.$paramExpanded.'</td>
-						<td nowrap="nowrap">'.$urlList.'</td>
-						<td nowrap="nowrap">'.$optionValues.'</td>
-						<td nowrap="nowrap">'.t3lib_div::view_array($vv['subCfg']['procInstrParams.']).'</td>
-					</tr>';
+						// Expanded parameters:
+					$paramExpanded = '';
+					$calcAccu = array();
+					$calcRes = 1;
+					foreach($confArray['paramExpanded'] as $gVar => $gVal)	{
+						$paramExpanded.= '
+							<tr>
+								<td class="bgColor4-20">'.htmlspecialchars('&'.$gVar.'=').'<br/>'.
+												'('.count($gVal).')'.
+												'</td>
+								<td class="bgColor4" nowrap="nowrap">'.nl2br(htmlspecialchars(implode(chr(10),$gVal))).'</td>
+							</tr>
+						';
+						$calcRes*= count($gVal);
+						$calcAccu[] = count($gVal);
+					}
+					$paramExpanded = '<table class="lrPadding c-list param-expanded">'.$paramExpanded.'</table>';
+					$paramExpanded.= 'Comb: '.implode('*',$calcAccu).'='.$calcRes;
+
+						// Options
+					$optionValues = '';
+					if ($confArray['subCfg']['userGroups'])	{
+						$optionValues.='User Groups: '.$confArray['subCfg']['userGroups'].'<br/>';
+					}
+					if ($confArray['subCfg']['baseUrl'])	{
+						$optionValues.='Base Url: '.$confArray['subCfg']['baseUrl'].'<br/>';
+					}
+					if ($confArray['subCfg']['procInstrFilter'])	{
+						$optionValues.='ProcInstr: '.$confArray['subCfg']['procInstrFilter'].'<br/>';
+					}
+
+						// Compile row:
+					$content .= '
+						<tr class="bgColor'.($c%2 ? '-20':'-10') . '">
+							'.$titleClm.'
+							<td>'.htmlspecialchars($confKey).'</td>
+							<td>'.nl2br(htmlspecialchars(rawurldecode(trim(str_replace('&',chr(10).'&',t3lib_div::implodeArrayForUrl('',$confArray['paramParsed'])))))).'</td>
+							<td>'.$paramExpanded.'</td>
+							<td nowrap="nowrap">'.$urlList.'</td>
+							<td nowrap="nowrap">'.$optionValues.'</td>
+							<td nowrap="nowrap">'.t3lib_div::view_array($confArray['subCfg']['procInstrParams.']).'</td>
+						</tr>';
+				} else {
+
+					$content .= '<tr class="bgColor'.($c%2 ? '-20':'-10') . '">
+							'.$titleClm.'
+							<td>'.htmlspecialchars($confKey).'</td>
+							<td colspan="5"><em>No entries</em> (Page is excluded in this configuration)</td>
+						</tr>';
+
+				}
 
 
 				$c++;
