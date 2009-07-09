@@ -1155,7 +1155,7 @@ class tx_crawler_lib {
 
 			// thanks to Pierrick Caillon for adding proxy support
  		$rurl = $url;
- 		if ($GLOBALS['TYPO3_CONF_VARS']['SYS']['curlUse']) {
+ 		if ($GLOBALS['TYPO3_CONF_VARS']['SYS']['curlUse'] && $GLOBALS['TYPO3_CONF_VARS']['SYS']['curlProxyServer']) {
  			$rurl = parse_url($GLOBALS['TYPO3_CONF_VARS']['SYS']['curlProxyServer']);
  			$url['path'] = $url['scheme'] . '://' . $url['host'] . ($url['port'] > 0 ? ':' . $url['port'] : '') . $url['path'];
  		}
