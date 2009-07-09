@@ -596,7 +596,8 @@ class tx_crawler_lib {
 	 * - Configuration is splitted by "|" and the parts are processed individually and finally added together
 	 * - For each configuration part:
 	 * 		- "[int]-[int]" = Integer range, will be expanded to all values in between, values included, starting from low to high (max. 1000). Example "1-34" or "-40--30"
-	 * 		- "_TABLE:[TCA table name];[_PID:[optional page id, default is current page]]" = Look up of table records from PID, filtering out deleted records. Example "_TABLE:tt_content; _PID:123"
+	 * 		- "_TABLE:[TCA table name];[_PID:[optional page id, default is current page]];[_ENABLELANG:1]" = Look up of table records from PID, filtering out deleted records. Example "_TABLE:tt_content; _PID:123"
+	 *  	  _ENABLELANG:1 picks only original records without their language overlays
 	 * 		- Default: Literal value
 	 *
 	 * @param	array		Array with key (GET var name) and values (value of GET var which is configuration for expansion)
@@ -658,11 +659,18 @@ class tx_crawler_lib {
 							$fieldName = $subpartParams['_FIELD'] ? $subpartParams['_FIELD'] : 'uid';
 							if ($fieldName==='uid' || $TCA[$subpartParams['_TABLE']]['columns'][$fieldName])	{
 
+								$andWhereLanguage = '';
+								$languageField = $TCA[$subpartParams['_TABLE']]['ctrl']['languageField'];
+
+								if ($subpartParams['_ENABLELANG'] && $languageField) {
+									$andWhereLanguage = ' AND ' . $GLOBALS['TYPO3_DB']->quoteStr($languageField, $subpartParams['_TABLE']) .' <= 0';
+								}
+
 								$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 											$fieldName,
 											$subpartParams['_TABLE'],
 											$GLOBALS['TYPO3_DB']->quoteStr($pidField, $subpartParams['_TABLE']) .'='.intval($lookUpPid).
-												t3lib_BEfunc::deleteClause($subpartParams['_TABLE']),
+												t3lib_BEfunc::deleteClause($subpartParams['_TABLE']) . $andWhereLanguage,
 											'',
 											'',
 											'',
