@@ -660,11 +660,10 @@ class tx_crawler_lib {
 							if ($fieldName==='uid' || $TCA[$subpartParams['_TABLE']]['columns'][$fieldName])	{
 
 								$andWhereLanguage = '';
-								$languageField = $TCA[$subpartParams['_TABLE']]['ctrl']['languageField'];
+								$transOrigPointerField = $TCA[$subpartParams['_TABLE']]['ctrl']['transOrigPointerField'];
 
-								if ($subpartParams['_ENABLELANG'] && $languageField) {
-									// $andWhereLanguage = ' AND ' . $GLOBALS['TYPO3_DB']->quoteStr($languageField, $subpartParams['_TABLE']) .' <= 0';
-									$andWhereLanguage = ' AND l18n_parent <= 0';
+								if ($subpartParams['_ENABLELANG'] && $transOrigPointerField) {
+									$andWhereLanguage = ' AND ' . $GLOBALS['TYPO3_DB']->quoteStr($transOrigPointerField, $subpartParams['_TABLE']) .' <= 0';
 								}
 
 								$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
