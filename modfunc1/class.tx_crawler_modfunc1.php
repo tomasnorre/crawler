@@ -171,13 +171,15 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 			table.url-table,
 			table.param-expanded,
 			table.crawlerlog {
-				border: 1px solid black;
+				border-bottom: 1px solid grey;
 				border-spacing: 0;
 				border-collapse: collapse;
 			}
 			table.crawlerlog td,
 			table.url-table td {
-				border: 1px solid black;
+				border: 1px solid lightgrey;
+				border-bottom: 1px solid grey;
+				 white-space: nowrap; vertical-align: top;
 			}
 		--></style>
 		<link rel="stylesheet" type="text/css" href="'.$BACK_PATH.'../typo3conf/ext/crawler/template/res.css" />
