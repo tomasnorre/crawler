@@ -1192,8 +1192,11 @@ class tx_crawler_lib {
 			$reqHeaders = array();
 			$reqHeaders[] = 'GET '.$url['path'].($url['query'] ? '?'.$url['query'] : '').' HTTP/1.0';
 			$reqHeaders[] = 'Host: '.$url['host'];
-			$reqHeaders[] = 'Connection: keep-alive';
+//			$reqHeaders[] = 'Connection: keep-alive';
 			$reqHeaders[] = 'Connection: close';
+            if($url['user']!='') {
+                $reqHeaders[] = 'Authorization: Basic '. base64_encode($url['user'].':'.$url['pass']);
+            }			
 			$reqHeaders[] = 'X-T3crawler: '.$crawlerId;
 			$reqHeaders[] = 'User-Agent: TYPO3 crawler';
 
@@ -1237,6 +1240,7 @@ class tx_crawler_lib {
 			}
 
 				// Implode content and headers:
+			$d['request'] = implode(chr(10), $reqHeaders);
 			$d['headers'] = implode('', $d['headers']);
 			$d['content'] = implode('', (array)$d['content']);
 				// Return
