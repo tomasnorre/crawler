@@ -30,3 +30,6 @@ enableTimeslot=1
 
 # cat=basic//10; type=string; label= Log Filename:
 logFileName=
+
+# cat=basic//10; type=boolean; label= Follow 301 and 302: If checked the crawler will follow the URLs (Location) given in a HTTP 301 and 302 response.
+follow30x=

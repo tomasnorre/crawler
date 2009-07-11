@@ -1155,9 +1155,12 @@ class tx_crawler_lib {
 	 * @param	string		URL to read
 	 * @param	string		Crawler ID string (qid + hash to verify)
 	 * @param	integer		Timeout time
+	 * @param	integer		Recursion limiter for 302 redirects	 
 	 * @return	array		Array with content
 	 */
-	function requestUrl($originalUrl, $crawlerId, $timeout=2)	{
+	function requestUrl($originalUrl, $crawlerId, $timeout=2, $recursion=10)	{
+
+		if(!$recursion) return false;
 			// Parse URL, checking for scheme:
 		$url = parse_url($originalUrl);
 
@@ -1216,7 +1219,7 @@ class tx_crawler_lib {
                 if (($part==='headers' && trim($line)==='') && !$isFirstLine)	{
                     // switch to "content" part if empty row detected - this should not be the first row of the response anyway
 					$part = 'content';
-				} elseif(($part==='headers') && stristr($line,'Content-Length:')) {
+				} elseif(($part==='headers') && stristr($line,'Content-Length: ')) {
 					$contentLength = intval(str_replace('Content-Length: ','',$line));
 					if ($this->debugMode) t3lib_div::devlog('crawler - Content-Length detected: '.$contentLength,__FUNCTION__);
 					$d[$part][] = $line;
@@ -1238,19 +1241,48 @@ class tx_crawler_lib {
 			if (!empty($this->extensionSettings['logFileName'])) {
 				file_put_contents($this->extensionSettings['logFileName'], $originalUrl .' '.$time."\n", FILE_APPEND);
 			}
-
 				// Implode content and headers:
-			$d['request'] = implode(chr(10), $reqHeaders);
-			$d['headers'] = implode('', $d['headers']);
-			$d['content'] = implode('', (array)$d['content']);
-				// Return
-			return $d;
+			$result = array(
+				'request' => implode(chr(10), $reqHeaders),
+				'headers' => implode('', $d['headers']),
+				'content' => implode('', (array)$d['content'])
+			);
+
+			if(($this->extensionSettings['follow30x']) && ($newUrl = $this->getRequestUrlFrom302Header($d['headers'],$url['user'],$url['pass']))) {
+				$result=array_merge(array('parentRequest'=>$result),$this->requestUrl($newUrl, $crawlerId, $recursion--));
+			}
+			return $result;
 		}
 	}
 
+	/**
+	* Check if the submitted HTTP-Header contains a redirect location and built new crawler-url
+	*
+	* @param	array		HTTP Header
+	* @param	string		HTTP Auth. User
+	* @param	string		HTTP Auth. Password
+	* @return	string		URL from redirection
+	*/
+	function getRequestUrlFrom302Header($headers,$user='',$pass='') {
+		if(!is_array($headers)) return false;
+		if(!(stristr($headers[0],'301 Moved') || stristr($headers[0],'302 Found'))) return false;
+		
+		foreach($headers as $hl) {
+			$tmp = explode(": ",$hl);
+			$header[trim($tmp[0])] = trim($tmp[1]);
+			if(trim($tmp[0])=='Location') break;
+		}	
+		if(!array_key_exists('Location',$header)) return false;
 
-
-
+		if($user!='') {
+			if(!($tmp = parse_url($header['Location']))) return false;
+			$newUrl = $tmp['scheme'] . '://' . $user . ':' . $pass . '@' . $tmp['host'] . $tmp['path'];
+			if($tmp['query']!='') $newUrl .= '?' . $tmp['query'];
+		} else {
+			$newUrl = $header['Location'];
+		}
+		return $newUrl;
+	}
 
 
 
