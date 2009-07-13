@@ -326,7 +326,11 @@ class tx_crawler_lib {
 
 		if (is_array($vv['URLs']))	{
 			foreach($vv['URLs'] as $urlQuery)	{
-
+				$configurationHash 	=	md5(serialize($vv));
+			
+				//this 
+				$skipInnerCheck 	=	$this->noUnprocessedQueueEntriesForPageWithConfigurationHashExist($pageRow['uid'],$configurationHash);
+				
 				if ($this->drawURLs_PIfilter($vv['subCfg']['procInstrFilter'], $incomingProcInstructions))	{
 
 						// Calculate cHash:
@@ -930,7 +934,7 @@ class tx_crawler_lib {
 				$rows = $this->getDuplicateRowsIfExist($tstamp,$fieldArray);
 			}
 
-			if (empty($rows)) {
+			if (count($rows) == 0) {
 				$GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_crawler_queue', $fieldArray);
 				$rows[] = $GLOBALS['TYPO3_DB']->sql_insert_id();
 				$urlAdded = true;
@@ -972,7 +976,7 @@ class tx_crawler_lib {
 			}
 		} elseif ($tstamp > $currentTime) {
 			//entry with a timestamp in the future need to have the same schedule time
-			$where = 'scheduled = ' . $currentTime ;
+			$where = 'scheduled = ' . $tstamp ;
 		}
 
 		if(!empty($where)){
@@ -991,6 +995,7 @@ class tx_crawler_lib {
 				}
 			}
 		}
+		
 
 		return $rows;
 	}
