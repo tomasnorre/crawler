@@ -523,7 +523,8 @@ class tx_crawler_lib {
 									'baseUrl' => $configurationRecord['base_url'],
 									'realurl' => $configurationRecord['realurl'],
 									'cHash' => $configurationRecord['chash'],
-									'exclude' => $configurationRecord['exclude']
+									'exclude' => $configurationRecord['exclude'],
+									'workspace' => $configurationRecord['sys_workspace_uid']
 								);
 
 									// add trailing slash if not present
@@ -535,7 +536,7 @@ class tx_crawler_lib {
 								$res[$key]['subCfg'] = $subCfg;
 								$res[$key]['paramParsed'] = $this->parseParams($configurationRecord['configuration']);
 								$res[$key]['paramExpanded'] = $this->expandParameters($res[$key]['paramParsed'], $id);
-								$res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'], array('?id='.$id));
+								$res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'], array('?id='.$id. (($subCfg['workspace']!='0')?'&ADMCMD_view=1&ADMCMD_editIcons=0&ADMCMD_previewWS='.$subCfg['workspace']:'')));
 								$res[$key]['origin'] = 'tx_crawler_configuration_'.$configurationRecord['uid'];
 							}
 						}
@@ -1197,10 +1198,10 @@ class tx_crawler_lib {
 			return FALSE;
 		} else {	// Requesting...:
 				// Request headers:
-			$reqHeaders = array();
+			$reqHeaders = array();			
 			$reqHeaders[] = 'GET '.$url['path'].($url['query'] ? '?'.$url['query'] : '').' HTTP/1.0';
 			$reqHeaders[] = 'Host: '.$url['host'];
-//			$reqHeaders[] = 'Connection: keep-alive';
+			$reqHeaders[] = 'Cookie: $Version="1"; be_typo_user="1"; $Path=/';
 			$reqHeaders[] = 'Connection: close';
             if($url['user']!='') {
                 $reqHeaders[] = 'Authorization: Basic '. base64_encode($url['user'].':'.$url['pass']);
@@ -1248,7 +1249,7 @@ class tx_crawler_lib {
 			}
 				// Implode content and headers:
 			$result = array(
-				'request' => implode(chr(10), $reqHeaders),
+				'request' => $msg,
 				'headers' => implode('', $d['headers']),
 				'content' => implode('', (array)$d['content'])
 			);

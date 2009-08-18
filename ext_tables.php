@@ -37,7 +37,7 @@ $TCA["tx_crawler_configuration"] = array (
         'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_crawler_configuration.gif',
     ),
     "feInterface" => array (
-        "fe_admin_fieldList" => "hidden, name, processing_instruction_filter, processing_instruction_parameters_ts, configuration, base_url, pidsonly, begroups, realurl, chash, exclude",
+        "fe_admin_fieldList" => "hidden, name, processing_instruction_filter, processing_instruction_parameters_ts, configuration, base_url, pidsonly, begroups, sys_workspace_uid, realurl, chash, exclude",
     )
 );
 

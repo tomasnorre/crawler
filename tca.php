@@ -86,6 +86,22 @@ $TCA["tx_crawler_configuration"] = array (
 				'foreign_table' => 'be_groups'
 			)
 		),
+		'sys_workspace_uid' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:crawler/locallang_db.xml:tx_crawler_configuration.sys_workspace_uid',
+			'config' => Array (
+				'type' => 'select',
+				'items' => Array (
+					Array('LLL:EXT:lang/locallang_misc.xml:shortcut_onlineWS',0),
+					Array('LLL:EXT:lang/locallang_misc.xml:shortcut_offlineWS',-1),
+					Array('',0),
+				),
+				'size' => 1,
+				'maxitems' => 1,
+				'exclusiveKeys' => '-1,0',
+				'foreign_table' => 'sys_workspace'
+			)
+		),
 		'realurl' => Array (
 			'exclude' => 1,
 			'label' => 'LLL:EXT:crawler/locallang_db.xml:tx_crawler_configuration.realurl',
@@ -111,7 +127,7 @@ $TCA["tx_crawler_configuration"] = array (
 		),
     ),
     "types" => array (
-        "0" => array("showitem" => "name, processing_instruction_filter, configuration, base_url, pidsonly, processing_instruction_parameters_ts,begroups, realurl, chash, exclude")
+        "0" => array("showitem" => "name, processing_instruction_filter, configuration, base_url, pidsonly, processing_instruction_parameters_ts,begroups, sys_workspace_uid, realurl, chash, exclude")
     ),
     "palettes" => array (
         "1" => array("showitem" => "")

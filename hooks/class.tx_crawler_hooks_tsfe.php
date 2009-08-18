@@ -94,9 +94,11 @@ class tx_crawler_hooks_tsfe{
 
 				// Output log data for crawler (serialized content):
 				$str = serialize($params['pObj']->applicationData['tx_crawler']);
+					//just make sure that no other output distracts this
+				ob_clean();
 				header('Content-Length: '.strlen($str));
 				echo $str;
-                // Exit since we don't want anymore output!
+				// Exit since we don't want anymore output!
 			exit;
 		}
 	}
