@@ -391,9 +391,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 			$this->pObj->MOD_SETTINGS['depth'],
 			0
 		);
-
-		$availableConfigurations = array_keys($this->crawlerObj->getUrlsForPageId($this->pObj->id));
-		array_unshift($availableConfigurations, '');
+		$availableConfigurations = $this->crawlerObj->getConfigurationsForBranch($this->pObj->id, $this->pObj->MOD_SETTINGS['depth']?$this->pObj->MOD_SETTINGS['depth']:0 );
 
 			// Configurations
 		$cell[] = $this->selectorBox(

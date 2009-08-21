@@ -417,6 +417,17 @@ class tx_crawler_lib {
 		}
 	}
 
+
+	function getPageTSconfigForId($id) {
+		if(!$this->MP){
+			$pageTSconfig = t3lib_BEfunc::getPagesTSconfig($id);
+		} else {
+			list(,$mountPointId) = explode('-', $this->MP);
+			$pageTSconfig = t3lib_BEfunc::getPagesTSconfig($mountPointId);
+		}
+		return $pageTSconfig;
+	}
+	
 	/**
 	 * This methods returns an array of configurations.
 	 * And no urls!
@@ -431,13 +442,7 @@ class tx_crawler_lib {
 		 */
 
 			// Get page TSconfig for page ID:
-		if(!$this->MP){
-			$pageTSconfig = t3lib_BEfunc::getPagesTSconfig($id);
-		} else {
-			list(,$mountPointId) = explode('-', $this->MP);
-			$pageTSconfig = t3lib_BEfunc::getPagesTSconfig($mountPointId);
-		}
-
+		$pageTSconfig = $this->getPageTSconfigForId($id);
 
 		$res = array();
 
@@ -557,6 +562,52 @@ class tx_crawler_lib {
 		return $res;
 	}
 
+	function getConfigurationsForBranch($rootid, $depth) {
+		
+		$configurationsForBranch = array();
+		
+		$pageTSconfig = $this->getPageTSconfigForId($rootid);
+		if (is_array($pageTSconfig) && is_array($pageTSconfig['tx_crawler.']['crawlerCfg.']) && is_array($pageTSconfig['tx_crawler.']['crawlerCfg.']['paramSets.']))	{
+			
+			$sets = $pageTSconfig['tx_crawler.']['crawlerCfg.']['paramSets.'];
+			if(is_array($sets)) {
+				foreach($sets as $key=>$value) {
+					if(!is_array($value)) continue;
+					$configurationsForBranch[] = substr($key,-1)=='.'?substr($key,0,-1):$key;
+				}
+				
+			}
+		}
+		$pids = array();
+		$rootLine = t3lib_BEfunc::BEgetRootLine($rootid);
+		foreach($rootLine as $node) {
+			$pids[] = $node['uid'];
+		}
+		/* @var t3lib_pageTree */
+		$tree = t3lib_div::makeInstance('t3lib_pageTree');
+		$perms_clause = $GLOBALS['BE_USER']->getPagePermsClause(1);
+		$tree->init('AND ' . $perms_clause);
+		$tree->getTree($rootid, $depth, '');
+		foreach($tree->tree as $node) {
+			$pids[] = $node['row']['uid'];
+		}
+
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+			'*',
+			'tx_crawler_configuration',
+			'pid IN ('.implode(',', $pids).') '.
+				t3lib_BEfunc::BEenableFields('tx_crawler_configuration') . 
+				t3lib_BEfunc::deleteClause('tx_crawler_configuration').' '.
+				t3lib_BEfunc::versioningPlaceholderClause('tx_crawler_configuration').' '
+		);
+		$rows = array();
+		while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+			$configurationsForBranch[] = $row['name'];
+		}
+		$GLOBALS['TYPO3_DB']->sql_free_result($res);
+		return $configurationsForBranch;
+	}	
+	
     /**
      * Check if a user has access to an item
      * (e.g. get the group list of the current logged in user from $GLOBALS['TSFE']->gr_list)
