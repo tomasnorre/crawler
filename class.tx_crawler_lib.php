@@ -1252,7 +1252,7 @@ class tx_crawler_lib {
 			$reqHeaders = array();			
 			$reqHeaders[] = 'GET '.$url['path'].($url['query'] ? '?'.$url['query'] : '').' HTTP/1.0';
 			$reqHeaders[] = 'Host: '.$url['host'];
-			$reqHeaders[] = 'Cookie: $Version="1"; be_typo_user="1"; $Path=/';
+			if(stristr($url['query'],'ADMCMD_previewWS')) $reqHeaders[] = 'Cookie: $Version="1"; be_typo_user="1"; $Path=/';
 			$reqHeaders[] = 'Connection: close';
             if($url['user']!='') {
                 $reqHeaders[] = 'Authorization: Basic '. base64_encode($url['user'].':'.$url['pass']);
