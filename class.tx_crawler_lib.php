@@ -536,7 +536,7 @@ class tx_crawler_lib {
 								$res[$key]['subCfg'] = $subCfg;
 								$res[$key]['paramParsed'] = $this->parseParams($configurationRecord['configuration']);
 								$res[$key]['paramExpanded'] = $this->expandParameters($res[$key]['paramParsed'], $id);
-								$res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'], array('?id='.$id. (($subCfg['workspace']!='0')?'&ADMCMD_view=1&ADMCMD_editIcons=0&ADMCMD_previewWS='.$subCfg['workspace']:'')));
+								$res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'], array('?id='.$id. ((abs($subCfg['workspace'])>0)?'&ADMCMD_view=1&ADMCMD_editIcons=0&ADMCMD_previewWS='.$subCfg['workspace']:'')));
 								$res[$key]['origin'] = 'tx_crawler_configuration_'.$configurationRecord['uid'];
 							}
 						}
@@ -1466,7 +1466,7 @@ class tx_crawler_lib {
 
 					// default is "page only" = "depth=0"
 					if (empty($depth)) {
-						$depth = 0;
+						$depth = ( stristr($excludeString,'+')) ? 99 : 0;
 					}
 
 					$pidList[] = $pid;

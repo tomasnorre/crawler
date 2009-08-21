@@ -19,6 +19,7 @@
 	            <label index="tx_crawler_configuration.realurl">Use realurl urls</label>
 	            <label index="tx_crawler_configuration.chash">Append cHash</label>
 	            <label index="tx_crawler_configuration.exclude">Exclude pages</label>
+	            <label index="tx_crawler_configuration.sys_workspace_uid">Crawl workspace</label>
 		</languageKey>
 	</data>
 </T3locallang>
