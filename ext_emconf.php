@@ -27,15 +27,15 @@ $EM_CONF[$_EXTKEY] = array(
 	'modify_tables' => '',
 	'clearcacheonload' => 0,
 	'lockType' => '',
-	'author' => 'Kasper Skaarhoj, Daniel Poetzinger - AOE media, Fabrizio Branca, Tolleiv Nietsch, Timo Schmidt',
-	'author_email' => 'kasper2005@typo3.com',
-	'author_company' => '',
+	'author' => 'Kasper Skaarhoj, Daniel Poetzinger, Fabrizio Branca, Tolleiv Nietsch, Timo Schmidt',
+	'author_email' => 'dev@aoemedia.de',
+	'author_company' => 'AOE media GmbH',
 	'CGLcompliance' => '',
 	'CGLcompliance_note' => '',
 	'constraints' => array(
 		'depends' => array(
-			'php' => '3.0.0-0.0.0',
-			'typo3' => '3.5.0-0.0.0',
+			'php' => '5.1.0-0.0.0',
+			'typo3' => '4.2.0-0.0.0',
 		),
 		'conflicts' => array(
 		),
