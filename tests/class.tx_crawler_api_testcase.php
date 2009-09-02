@@ -100,10 +100,10 @@ class tx_crawler_api_testcase extends tx_phpunit_database_testcase {
 		
 		$crawler_api = $this->getMockedCrawlerAPI(100000);
 
-	//	$crawler_api->addPageToQueueTimed(5,9998);
-	//	$crawler_api->addPageToQueueTimed(5,3422);
+		$crawler_api->addPageToQueueTimed(5,9998);
+		$crawler_api->addPageToQueueTimed(5,3422);
 		
-	//	$this->assertEquals($crawler_api->countUnprocessedItems(),1);
+		$this->assertEquals($crawler_api->countUnprocessedItems(),1);
 	}
 	
 	/**
