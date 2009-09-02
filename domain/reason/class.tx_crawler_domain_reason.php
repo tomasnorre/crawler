@@ -52,12 +52,31 @@ class tx_crawler_domain_reason extends tx_crawler_domain_lib_abstract_dbobject{
 	}
 	
 	/**
+	 * This method returns the attached reason text.
+	 * @return string
+	 */
+	public function getReason(){
+		return $this->row['reason'];
+	}
+	
+	/**
 	 * This method can be used to assign a detail text to the crawler reason
 	 *
 	 * @param string $detail_text
 	 */
 	public function setDetailText($detail_text){
 		$this->row['detail_text'] = $detail_text;
+	}
+	
+	
+	/**
+	 * Returns the attachet detail text.
+	 * 
+	 * @param void
+	 * @return string
+	 */
+	public function getDetailText(){
+		return $this->row['detail_text'];
 	}
 	
 	/**

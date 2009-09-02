@@ -36,6 +36,14 @@ class tx_crawler_api {
 		$this->findCrawler()->setID = $id;
 	}
 
+	/**
+	 * Returns the setID of the crawler
+	 * 
+	 * @return int
+	 */
+	public function getSetId(){
+		return $this->findCrawler()->setID;
+	}
 
 
 	/**
@@ -61,10 +69,10 @@ class tx_crawler_api {
 	 *
 	 * @param int uid
 	 */
-	public function addPageToQueue($uid, tx_crawler_domain_reason $reason = null) {
+	public function addPageToQueue($uid) {
 		$uid = intval($uid);
 		//non timed elements will be added with timestamp 0
-		$this->addPageToQueueTimed($uid,0,$reason);
+		$this->addPageToQueueTimed($uid,0);
 	}
 
 	/**
@@ -74,7 +82,7 @@ class tx_crawler_api {
 	 * @param int pageid
 	 * @param int timestamp
 	 */
-	public function addPageToQueueTimed($uid,$time, tx_crawler_domain_reason $reason = null) {
+	public function addPageToQueueTimed($uid,$time) {
 
 		$uid = intval($uid);
 		$time = intval($time);
@@ -100,8 +108,7 @@ class tx_crawler_api {
 					false,
 					$pI[0],
 					$pI[1],
-					$pI[2],
-					$reason
+					$pI[2]
 				);
 
 				//reset the queue because the entries have been written to the db

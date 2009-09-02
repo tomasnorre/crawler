@@ -312,6 +312,14 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				<td colspan="7"><b>Please select at least one configuration</b></td>
 			</tr>';
 		} else {
+			if($this->submitCrawlUrls){
+				$reason = new tx_crawler_domain_reason();
+				$reason->setReason(tx_crawler_domain_reason::REASON_GUI_SUBMIT);
+				tx_crawler_domain_events_dispatcher::getInstance()->post(	'invokeQueueChange',
+																			$this->findCrawler()->setID,
+																			array(	'reason' => $reason ));			
+			}
+			
 			$code = $this->crawlerObj->getPageTreeAndUrls(
 				$this->pObj->id,
 				$this->pObj->MOD_SETTINGS['depth'],
@@ -322,6 +330,8 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				array(), // Do not filter any processing instructions
 				$this->incomingConfigurationSelection
 			);
+			
+
 		}
 
 		$this->downloadUrls = $this->crawlerObj->downloadUrls;

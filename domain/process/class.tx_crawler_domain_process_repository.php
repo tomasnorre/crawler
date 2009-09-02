@@ -52,7 +52,6 @@ class tx_crawler_domain_process_repository extends tx_crawler_domain_lib_abstrac
 		return $this->countByWhere($where);
 	}
 
-
 	/**
 	 * Returns the number of active processes
 	 * @return int
@@ -60,7 +59,6 @@ class tx_crawler_domain_process_repository extends tx_crawler_domain_lib_abstrac
 	public function countActive(){
 		return $this->countByWhere('active=1');
 	}
-	
 	
 	/**
 	 * Get limit clause
@@ -80,7 +78,5 @@ class tx_crawler_domain_process_repository extends tx_crawler_domain_lib_abstrac
 		}
 		return $limit;
 	}
-		
-
 }
 ?>
