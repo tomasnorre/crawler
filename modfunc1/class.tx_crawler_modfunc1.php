@@ -748,8 +748,8 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				if ($this->pObj->MOD_SETTINGS['log_resultLog'])	{
 					$rowData['result_log'] = $resLog;
 				} else {
-					$rowData['scheduled'] = ($vv['scheduled']> 0) ? (t3lib_BEfunc::date($vv['scheduled']).' '.date('H:i:s',$vv['scheduled'])) : ' immediate';
-					$rowData['exec_time'] = $vv['exec_time'] ? t3lib_BEfunc::date($vv['exec_time']).' '.date('H:i:s',$vv['exec_time']) : '-';
+					$rowData['scheduled'] = ($vv['scheduled']> 0) ? t3lib_BEfunc::datetime($vv['scheduled']) : ' '.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.php:labels.immediate');
+					$rowData['exec_time'] = $vv['exec_time'] ? t3lib_BEfunc::datetime($vv['exec_time']) : '-';
 				}
 				$rowData['result_status'] = $resStatus;
 				$rowData['url'] = '<a href="'.htmlspecialchars($parameters['url']).'" target="_newWIndow">'.htmlspecialchars($parameters['url']).'</a>';
@@ -787,8 +787,8 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 						// Only for CSV (adding qid and scheduled/exec_time if needed):
 					$rowData['result_log'] = implode('// ',explode(chr(10),$resLog));
 					$rowData['qid'] = $vv['qid'];
-					$rowData['scheduled'] = t3lib_BEfunc::date($vv['scheduled']).' '.date('H:i:s',$vv['scheduled']);
-					$rowData['exec_time'] = $vv['exec_time'] ? t3lib_BEfunc::date($vv['exec_time']).' '.date('H:i:s',$vv['exec_time']) : '-';
+					$rowData['scheduled'] = t3lib_BEfunc::datetime($vv['scheduled']);
+					$rowData['exec_time'] = $vv['exec_time'] ? t3lib_BEfunc::datetime($vv['exec_time']) : '-';
 					$this->CSVaccu[] = $rowData;
 				}
 			}
@@ -798,7 +798,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 			$content.= '
 				<tr class="bgColor-20">
 					<td>'.$titleString.'</td>
-					<td colspan="'.$colSpan.'"><em>No entries</em></td>
+					<td colspan="'.$colSpan.'"><em>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.php:labels.noentries').'</em></td>
 				</tr>';
 		}
 

@@ -114,6 +114,5 @@ class tx_crawler_view_pagination{
 		return $pageoffset + 1;
 	}
 
-
 }
 ?>
