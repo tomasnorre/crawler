@@ -1,91 +1,142 @@
 <?php
 /**
- * Language labels for module ""
+ * Language labels for module 'crawler'
  *
  * This file is detected by the translation tool.
  */
 
 $LOCAL_LANG = Array (
-	"default" => Array (
-		"title" => "Site Crawler",
+	'default' => Array (
+		'title' => 'Site Crawler',
+		'labels.start' => 'Start Crawling',
+		'labels.log' =>	'Crawler log',
+		'labels.multiprocess' =>	'Crawling Processes',
+		'labels.all' =>	'All',
+		'labels.pending' =>	'Pending',
+		'labels.finished' =>	'Finished',
+		'labels.noPageSelected' =>	'Please select a page in the pagetree',
+		'labels.noConfigSelected' =>	'Please select at least one configuration',
+		'labels.configuration' =>	'Crawl configuration',
+		'labels.triggerUpdate' =>	'Update',
+		'labels.triggerCrawl' =>	'Crawl URLs',
+		'labels.triggerDownload' =>	'Download URLs',
+		'labels.continue' =>	'Continue',
+		'labels.continueinlog' =>	'Continue and show Log',
+		'labels.count' =>	'Count',
+		'labels.time' =>	'Time',
+		'labels.curtime' =>	'Current server time',
+		'labels.submitted' =>	'URLs submitted',
+		'labels.depth' =>	'Depth',
+		'labels.configurations' =>	'Configurations',
+		'labels.scheduled' =>	'Scheduled',
+		'labels.pagetitle' =>	'Page title',
+		'labels.key' =>	'Key',
+		'labels.parametercfg' =>	'Parameter Cfg',
+		'labels.values' =>	'Values Expanded',
+		'labels.url' =>	'URL',
+		'labels.urls' =>	'URLs',
+		'labels.options' =>	'Options',
+		'labels.parameters' =>	'Parameters',
+		'labels.back' =>	'Back',
+		'labels.reloadlist' =>	'Reload list',
+		'labels.downloadcsv' =>	'Download entries as CSV',
+		'labels.flushvisiblequeue' =>	'Flush visible entries',
+		'labels.flushfullqueue' =>	'Flush entire queue',
+		'labels.confirmyouresure' =>	'Are you sure?',
+		'labels.setid' =>	'Set ID',
+		'labels.qid' =>	'Queue id',
+		'labels.resultlog' =>	'Result Log',
+		'labels.scheduledtime' =>	'Scheduled',
+		'labels.runtime' =>	'Run-time',
+		'labels.status' =>	'Status',
+		'labels.groups' =>	'Groups',
+		'labels.procinstr' =>	'Proc. Instr.',
+		'labels.newprocess' =>	'New process has been started, refresh to monitor the state',
+		'labels.newprocesserror' =>	'Error while starting process',
+		'labels.time.now' =>	'Now',
+		'labels.time.midnight' =>	'Midnight',
+		'labels.time.4am' =>	'4 AM',
+		'labels.display' =>	'Display',
+		'labels.showresultlog' =>	'Show Result Log',
+		'labels.showfevars' =>	'Show FE Vars',
 	),
-	"dk" => Array (
+	'dk' => Array (
 	),
-	"de" => Array (
+	'de' => Array (
 	),
-	"no" => Array (
+	'no' => Array (
 	),
-	"it" => Array (
+	'it' => Array (
 	),
-	"fr" => Array (
+	'fr' => Array (
 	),
-	"es" => Array (
+	'es' => Array (
 	),
-	"nl" => Array (
+	'nl' => Array (
 	),
-	"cz" => Array (
+	'cz' => Array (
 	),
-	"pl" => Array (
+	'pl' => Array (
 	),
-	"si" => Array (
+	'si' => Array (
 	),
-	"fi" => Array (
+	'fi' => Array (
 	),
-	"tr" => Array (
+	'tr' => Array (
 	),
-	"se" => Array (
+	'se' => Array (
 	),
-	"pt" => Array (
+	'pt' => Array (
 	),
-	"ru" => Array (
+	'ru' => Array (
 	),
-	"ro" => Array (
+	'ro' => Array (
 	),
-	"ch" => Array (
+	'ch' => Array (
 	),
-	"sk" => Array (
+	'sk' => Array (
 	),
-	"lt" => Array (
+	'lt' => Array (
 	),
-	"is" => Array (
+	'is' => Array (
 	),
-	"hr" => Array (
+	'hr' => Array (
 	),
-	"hu" => Array (
+	'hu' => Array (
 	),
-	"gl" => Array (
+	'gl' => Array (
 	),
-	"th" => Array (
+	'th' => Array (
 	),
-	"gr" => Array (
+	'gr' => Array (
 	),
-	"hk" => Array (
+	'hk' => Array (
 	),
-	"eu" => Array (
+	'eu' => Array (
 	),
-	"bg" => Array (
+	'bg' => Array (
 	),
-	"br" => Array (
+	'br' => Array (
 	),
-	"et" => Array (
+	'et' => Array (
 	),
-	"ar" => Array (
+	'ar' => Array (
 	),
-	"he" => Array (
+	'he' => Array (
 	),
-	"ua" => Array (
+	'ua' => Array (
 	),
-	"lv" => Array (
+	'lv' => Array (
 	),
-	"jp" => Array (
+	'jp' => Array (
 	),
-	"vn" => Array (
+	'vn' => Array (
 	),
-	"ca" => Array (
+	'ca' => Array (
 	),
-	"ba" => Array (
+	'ba' => Array (
 	),
-	"kr" => Array (
+	'kr' => Array (
 	),
 );
 ?>
