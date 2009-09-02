@@ -822,7 +822,7 @@ class tx_crawler_lib {
 	 * @param	boolean		If TRUE, then entries selected at DELETED(!) instead of selected!
 	 * @return	array
 	 */
-	function getLogEntriesForPageId($id,$filter='',$doFlush=FALSE)	{
+	function getLogEntriesForPageId($id,$filter='',$doFlush=FALSE, $doFullFlush=FALSE)	{
 
 		switch($filter)	{
 			case 'pending':
@@ -837,7 +837,7 @@ class tx_crawler_lib {
 		}
 
 		if ($doFlush)	{
-			$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_crawler_queue','page_id='.intval($id).$addWhere);
+			$this->flushQueue($doFullFlush?'':('page_id='.intval($id).$addWhere));
 			return array();
 		} else {
 			return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*','tx_crawler_queue','page_id='.intval($id).$addWhere,'','scheduled');
@@ -852,7 +852,7 @@ class tx_crawler_lib {
 	 * @param	boolean		If TRUE, then entries selected at DELETED(!) instead of selected!
 	 * @return	array
 	 */
-	function getLogEntriesForSetId($set_id,$filter='',$doFlush=FALSE)	{
+	function getLogEntriesForSetId($set_id,$filter='',$doFlush=FALSE, $doFullFlush=FALSE)	{
 
 		switch($filter)	{
 			case 'pending':
@@ -867,13 +867,33 @@ class tx_crawler_lib {
 		}
 
 		if ($doFlush)	{
-			$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_crawler_queue','set_id='.intval($set_id).$addWhere);
+			$this->flushQueue($doFullFlush?'':('set_id='.intval($set_id).$addWhere));
 			return array();
 		} else {
 			return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*','tx_crawler_queue','set_id='.intval($set_id).$addWhere,'','scheduled');
 		}
 	}
 
+	/**
+	 * Removes queue entires
+	 * 
+	 * @param $where	SQL related filter for the entries which should be removed
+	 * @return void
+	 */
+	protected function flushQueue($where='') {
+		
+		$realWhere = strlen($where)>0?$where:'1=1';
+		
+		if(tx_crawler_domain_events_dispatcher::getInstance()->hasObserver('queueEntryFlush')) {
+			$groups = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('DISTINCT set_id','tx_crawler_queue',$realWhere);
+			foreach($groups as $group) {
+				tx_crawler_domain_events_dispatcher::getInstance()->post('queueEntryFlush',$group['set_id'], $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid, set_id','tx_crawler_queue',$realWhere.' AND set_id="'.$group['set_id'].'"'));
+			}
+		}
+
+		$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_crawler_queue', $realWhere);
+	}
+	
 	/**
 	 * Adding call back entries to log (called from hooks typically, see indexed search class "class.crawler.php"
 	 *

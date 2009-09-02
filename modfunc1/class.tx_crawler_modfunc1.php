@@ -587,7 +587,8 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 						<br /><br />
 						<input type="submit" value="Reload list" name="_reload" />
 						<input type="submit" value="Download entries as CSV" name="_csv" />
-						<input type="submit" value="Flush entries" name="_flush" onclick="return confirm(\'Are you sure?\');" />
+						<input type="submit" value="Flush visible entries" name="_flush" onclick="return confirm(\'Are you sure?\');" />
+						<input type="submit" value="Flush entire queue" name="_flush_all" onclick="return confirm(\'Are you sure?\');" />
 						<input type="hidden" value="'.$this->pObj->id.'" name="id" />
 						<input type="hidden" value="'.$showSetId.'" name="setID" />
 						<br />
@@ -680,14 +681,23 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	function drawLog_addRows($pageRow_setId, $titleString)	{
 
 			// If Flush button is pressed, flush tables instead of selecting entries:
-		$doFlush = t3lib_div::_POST('_flush') ? TRUE : FALSE;
-		$doCSV = t3lib_div::_POST('_csv') ? TRUE : FALSE;
+
+		if(t3lib_div::_POST('_flush')) {
+			$doFlush = true;
+			$doFullFlush = false;
+		} elseif(t3lib_div::_POST('_flush_all')) {
+			$doFlush = true;
+			$doFullFlush = true;
+		} else {
+			$doFlush = false;
+			$doFullFlush = false;
+		}
 
 			// Get result:
 		if (is_array($pageRow_setId))	{
-			$res = $this->crawlerObj->getLogEntriesForPageId($pageRow_setId['uid'], $this->pObj->MOD_SETTINGS['log_display'], $doFlush);
+			$res = $this->crawlerObj->getLogEntriesForPageId($pageRow_setId['uid'], $this->pObj->MOD_SETTINGS['log_display'], $doFlush, $doFullFlush);
 		} else {
-			$res = $this->crawlerObj->getLogEntriesForSetId($pageRow_setId, $this->pObj->MOD_SETTINGS['log_display'], $doFlush);
+			$res = $this->crawlerObj->getLogEntriesForSetId($pageRow_setId, $this->pObj->MOD_SETTINGS['log_display'], $doFlush, $doFullFlush);
 		}
 
 			// Init var:
@@ -724,7 +734,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 						$resStatus = 'Error: '.substr(ereg_replace('[[:space:]]+',' ',strip_tags($requestContent['content'])),0,10000).'...';
 					}
 				} else {
-					$resStatus = '..';
+					$resStatus = '-';
 				}
 
 					// Compile row:
@@ -735,7 +745,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				if ($this->pObj->MOD_SETTINGS['log_resultLog'])	{
 					$rowData['result_log'] = $resLog;
 				} else {
-					$rowData['scheduled'] = t3lib_BEfunc::date($vv['scheduled']).' '.date('H:i:s',$vv['scheduled']);
+					$rowData['scheduled'] = ($vv['scheduled']> 0) ? (t3lib_BEfunc::date($vv['scheduled']).' '.date('H:i:s',$vv['scheduled'])) : ' immediate';
 					$rowData['exec_time'] = $vv['exec_time'] ? t3lib_BEfunc::date($vv['exec_time']).' '.date('H:i:s',$vv['exec_time']) : '-';
 				}
 				$rowData['result_status'] = $resStatus;

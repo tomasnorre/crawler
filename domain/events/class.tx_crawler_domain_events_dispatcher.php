@@ -66,7 +66,17 @@ class tx_crawler_domain_events_dispatcher{
 	public function addObserver($observer_object, $observer_method, $event){
 		$this->observers[$event][] = array('object' => $observer_object, 'method' => $observer_method);
 	}
-	
+
+	/**
+	 * Enables checking whether a certain event is observed by anyone
+	 * 
+	 * @param $event
+	 * @return boolean
+	 */
+	public function hasObserver($event) {
+		return count($this->observers[$event]) > 0;
+	}
+
 	/**
 	 * This method should be used to post a event to the dispatcher. Each 
 	 * registered observer will be notified about the event.
@@ -77,7 +87,7 @@ class tx_crawler_domain_events_dispatcher{
 	 * 
 	 * @return void
 	 */
-	public function post($event, $group, $attachedData){		
+	public function post($event, $group, $attachedData){
 		if(is_array($this->observers[$event])){
 			foreach($this->observers[$event] as $eventObserver){
 				call_user_func(array($eventObserver['object'],$eventObserver['method']),$group,$attachedData);
