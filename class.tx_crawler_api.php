@@ -393,7 +393,7 @@ class tx_crawler_api {
 
 		$time = $startTime - $oldestTimestampThatIsNotTooOld;
 
-		$speed = $time / $pages;
+		$speed = $pages / ($time / 60);
 
 		return $speed;
 	}
