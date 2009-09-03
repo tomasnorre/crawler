@@ -325,10 +325,10 @@ class tx_crawler_lib {
 		if (is_array($vv['URLs']))	{
 			foreach($vv['URLs'] as $urlQuery)	{
 				$configurationHash 	=	md5(serialize($vv));
-			
-				//this 
+
+				//this
 				$skipInnerCheck 	=	$this->noUnprocessedQueueEntriesForPageWithConfigurationHashExist($pageRow['uid'],$configurationHash);
-				
+
 				if ($this->drawURLs_PIfilter($vv['subCfg']['procInstrFilter'], $incomingProcInstructions))	{
 
 						// Calculate cHash:
@@ -424,7 +424,7 @@ class tx_crawler_lib {
 		}
 		return $pageTSconfig;
 	}
-	
+
 	/**
 	 * This methods returns an array of configurations.
 	 * And no urls!
@@ -452,6 +452,8 @@ class tx_crawler_lib {
 
 							// Sub configuration for a single configuration string:
 						$subCfg = (array)$crawlerCfg['paramSets.'][$key.'.'];
+						$subCfg['key'] = $key;
+
 						if (strcmp($subCfg['procInstrFilter'],''))	{
 							$subCfg['procInstrFilter'] = implode(',',t3lib_div::trimExplode(',',$subCfg['procInstrFilter']));
 						}
@@ -526,7 +528,8 @@ class tx_crawler_lib {
 									'realurl' => $configurationRecord['realurl'],
 									'cHash' => $configurationRecord['chash'],
 									'exclude' => $configurationRecord['exclude'],
-									'workspace' => $configurationRecord['sys_workspace_uid']
+									'workspace' => $configurationRecord['sys_workspace_uid'],
+									'key' => $key,
 								);
 
 									// add trailing slash if not present
@@ -560,19 +563,19 @@ class tx_crawler_lib {
 	}
 
 	function getConfigurationsForBranch($rootid, $depth) {
-		
+
 		$configurationsForBranch = array();
-		
+
 		$pageTSconfig = $this->getPageTSconfigForId($rootid);
 		if (is_array($pageTSconfig) && is_array($pageTSconfig['tx_crawler.']['crawlerCfg.']) && is_array($pageTSconfig['tx_crawler.']['crawlerCfg.']['paramSets.']))	{
-			
+
 			$sets = $pageTSconfig['tx_crawler.']['crawlerCfg.']['paramSets.'];
 			if(is_array($sets)) {
 				foreach($sets as $key=>$value) {
 					if(!is_array($value)) continue;
 					$configurationsForBranch[] = substr($key,-1)=='.'?substr($key,0,-1):$key;
 				}
-				
+
 			}
 		}
 		$pids = array();
@@ -593,7 +596,7 @@ class tx_crawler_lib {
 			'*',
 			'tx_crawler_configuration',
 			'pid IN ('.implode(',', $pids).') '.
-				t3lib_BEfunc::BEenableFields('tx_crawler_configuration') . 
+				t3lib_BEfunc::BEenableFields('tx_crawler_configuration') .
 				t3lib_BEfunc::deleteClause('tx_crawler_configuration').' '.
 				t3lib_BEfunc::versioningPlaceholderClause('tx_crawler_configuration').' '
 		);
@@ -603,8 +606,8 @@ class tx_crawler_lib {
 		}
 		$GLOBALS['TYPO3_DB']->sql_free_result($res);
 		return $configurationsForBranch;
-	}	
-	
+	}
+
     /**
      * Check if a user has access to an item
      * (e.g. get the group list of the current logged in user from $GLOBALS['TSFE']->gr_list)
@@ -876,14 +879,14 @@ class tx_crawler_lib {
 
 	/**
 	 * Removes queue entires
-	 * 
+	 *
 	 * @param $where	SQL related filter for the entries which should be removed
 	 * @return void
 	 */
 	protected function flushQueue($where='') {
-		
+
 		$realWhere = strlen($where)>0?$where:'1=1';
-		
+
 		if(tx_crawler_domain_events_dispatcher::getInstance()->hasObserver('queueEntryFlush')) {
 			$groups = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('DISTINCT set_id','tx_crawler_queue',$realWhere);
 			foreach($groups as $group) {
@@ -893,7 +896,7 @@ class tx_crawler_lib {
 
 		$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_crawler_queue', $realWhere);
 	}
-	
+
 	/**
 	 * Adding call back entries to log (called from hooks typically, see indexed search class "class.crawler.php"
 	 *
@@ -989,6 +992,7 @@ class tx_crawler_lib {
 			'exec_time' => 0,
 			'set_id' => $this->setID,
 			'result_data' => '',
+			'configuration' => $subCfg['key'],
 		);
 
 		if ($this->registerQueueEntriesInternallyOnly)	{
@@ -1061,7 +1065,7 @@ class tx_crawler_lib {
 				}
 			}
 		}
-		
+
 
 		return $rows;
 	}
@@ -1129,7 +1133,7 @@ class tx_crawler_lib {
 		$queueId = $field_array['qid'] = $GLOBALS['TYPO3_DB']->sql_insert_id();
 
 		$result = $this->readUrl_exec($field_array);
-		
+
 			// Set result in log which also denotes the end of the processing of this entry.
 		$field_array = array('result_data' => serialize($result));
 		$GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_crawler_queue','qid='.intval($queueId), $field_array);
@@ -1153,7 +1157,7 @@ class tx_crawler_lib {
 				$callBackObj = &t3lib_div::getUserObj($objRef);
 				if (is_object($callBackObj))	{
 					unset($parameters['_CALLBACKOBJ']);
-					$result = array('content' => serialize($callBackObj->crawler_execute($parameters,$this)));					
+					$result = array('content' => serialize($callBackObj->crawler_execute($parameters,$this)));
 				} else {
 					$result = array('content' => 'No object: '.$objRef);
 				}
@@ -1164,13 +1168,13 @@ class tx_crawler_lib {
 
 					// Get result:
 				$result = $this->requestUrl($parameters['url'],$crawlerId);
-				
 
-				tx_crawler_domain_events_dispatcher::getInstance()->post('urlCrawled',$queueRec['set_id'],array('url' => $parameters['url'], 'result' => $result));				
+
+				tx_crawler_domain_events_dispatcher::getInstance()->post('urlCrawled',$queueRec['set_id'],array('url' => $parameters['url'], 'result' => $result));
 			}
 		}
-		
-		
+
+
 		return $result;
 	}
 
@@ -1180,7 +1184,7 @@ class tx_crawler_lib {
 	 * @param	string		URL to read
 	 * @param	string		Crawler ID string (qid + hash to verify)
 	 * @param	integer		Timeout time
-	 * @param	integer		Recursion limiter for 302 redirects	 
+	 * @param	integer		Recursion limiter for 302 redirects
 	 * @return	array		Array with content
 	 */
 	function requestUrl($originalUrl, $crawlerId, $timeout=2, $recursion=10)	{
@@ -1217,14 +1221,14 @@ class tx_crawler_lib {
 			return FALSE;
 		} else {	// Requesting...:
 				// Request headers:
-			$reqHeaders = array();			
+			$reqHeaders = array();
 			$reqHeaders[] = 'GET '.$url['path'].($url['query'] ? '?'.$url['query'] : '').' HTTP/1.0';
 			$reqHeaders[] = 'Host: '.$url['host'];
 			if(stristr($url['query'],'ADMCMD_previewWS')) $reqHeaders[] = 'Cookie: $Version="1"; be_typo_user="1"; $Path=/';
 			$reqHeaders[] = 'Connection: close';
             if($url['user']!='') {
                 $reqHeaders[] = 'Authorization: Basic '. base64_encode($url['user'].':'.$url['pass']);
-            }			
+            }
 			$reqHeaders[] = 'X-T3crawler: '.$crawlerId;
 			$reqHeaders[] = 'User-Agent: TYPO3 crawler';
 
@@ -1291,12 +1295,12 @@ class tx_crawler_lib {
 	function getRequestUrlFrom302Header($headers,$user='',$pass='') {
 		if(!is_array($headers)) return false;
 		if(!(stristr($headers[0],'301 Moved') || stristr($headers[0],'302 Found'))) return false;
-		
+
 		foreach($headers as $hl) {
 			$tmp = explode(": ",$hl);
 			$header[trim($tmp[0])] = trim($tmp[1]);
 			if(trim($tmp[0])=='Location') break;
-		}	
+		}
 		if(!array_key_exists('Location',$header)) return false;
 
 		if($user!='') {
@@ -1707,16 +1711,16 @@ class tx_crawler_lib {
 				$configurationKeys = array();
 			}
 		}
-		
+
 		if($cliObj->cli_argValue('-o')==='queue' || $cliObj->cli_argValue('-o')==='exec'){
-			//if items should be written to 
+			//if items should be written to
 			$reason = new tx_crawler_domain_reason();
 			$reason->setReason(tx_crawler_domain_reason::REASON_GUI_SUBMIT);
 			tx_crawler_domain_events_dispatcher::getInstance()->post(	'invokeQueueChange',
 																		$this->setID,
-																		array(	'reason' => $reason ));		
+																		array(	'reason' => $reason ));
 		}
-		
+
 		$this->setID = t3lib_div::md5int(microtime());
 		$this->getPageTreeAndUrls(
 			t3lib_div::intInRange($cliObj->cli_args['_DEFAULT'][1],0),
@@ -1728,7 +1732,7 @@ class tx_crawler_lib {
 			t3lib_div::trimExplode(',',$cliObj->cli_argValue('-proc'),1),
 			$configurationKeys
 		);
-		
+
 
 
 		if ($cliObj->cli_argValue('-o')==='url')	{
