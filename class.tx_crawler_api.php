@@ -4,13 +4,28 @@
  * It uses internally the class tx_crawler_lib modify the queue.
  *
  */
-require_once t3lib_extMgm::extPath('crawler') . 'system/class.tx_crawler_system_validator.php';
+require_once t3lib_extMgm::extPath('crawler').'system/class.tx_crawler_system_validator.php';
+
+require_once t3lib_extMgm::extPath('crawler').'domain/queue/class.tx_crawler_domain_queue_repository.php';
+require_once t3lib_extMgm::extPath('crawler').'domain/process/class.tx_crawler_domain_process_repository.php';
+
 
 class tx_crawler_api {
 
+	/**
+	 * @var tx_crawler_lib
+	 */
 	private $crawlerObj;
 
+	/**
+	 * @var tx_crawler_system_validator validator
+	 */
 	private $validator;
+
+	/**
+	 * @var tx_crawler_domain_queue_repository queue repository
+	 */
+	protected $queueRepository;
 
 	/**
 	 * Returns an instance of the validator
@@ -38,7 +53,7 @@ class tx_crawler_api {
 
 	/**
 	 * Returns the setID of the crawler
-	 * 
+	 *
 	 * @return int
 	 */
 	public function getSetId(){
@@ -287,6 +302,100 @@ class tx_crawler_api {
 		$table = 'tx_crawler_queue';
 		$where = ' qid='.$qid;
 		$GLOBALS['TYPO3_DB']->exec_DELETEquery($table,$where);
+	}
+
+	/**
+	 * Get queue statistics
+	 *
+	 * @param void
+	 * @return array array('assignedButUnprocessed' => <>, 'unprocessed' => <>);
+	 * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
+	 * @since 2009-09-02
+	 */
+	public function getQueueStatistics() {
+		return array(
+			'assignedButUnprocessed' => $this->getQueueRepository()->countAllAssignedPendingItems(),
+			'unprocessed' => $this->getQueueRepository()->countAllPendingItems()
+		);
+	}
+
+	/**
+	 * Get queue repository
+	 *
+	 * @param void
+	 * @return tx_crawler_domain_queue_repository queue repository
+	 * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
+	 * @since 2009-09-03
+	 */
+	protected function getQueueRepository() {
+		if (!$this->queueRepository instanceof tx_crawler_domain_queue_repository) {
+			$this->queueRepository = new tx_crawler_domain_queue_repository();
+		}
+		return $this->queueRepository;
+	}
+
+	/**
+	 * Get queue statistics by configuration
+	 *
+	 * @param void
+	 * @return array array of array('configuration' => <>, 'assignedButUnprocessed' => <>, 'unprocessed' => <>)
+	 * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
+	 * @since 2009-09-02
+	 */
+	public function getQueueStatisticsByConfiguration() {
+		return $this->getQueueRepository()->countPendingItemsGroupedByConfigurationKey();
+	}
+
+	/**
+	 * Get active processes count
+	 *
+	 * @param void
+	 * @return int
+	 * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
+	 * @since 2009-09-03
+	 */
+	public function getActiveProcessesCount() {
+		$processRepository = new tx_crawler_domain_process_repository();
+		return $processRepository->countActive();
+	}
+
+	/**
+	 * Get current crawling speed
+	 *
+	 * @param float|false page speed in pages per minute
+	 * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
+	 * @since 2009-09-03
+	 */
+	public function getCurrentCrawlingSpeed() {
+		$lastProcessedEntries = $this->getQueueRepository()->getLastProcessedEntriesTimestamps();
+
+		if (count($lastProcessedEntries) < 10) return false;
+
+		$tooOldDelta = 60; // time between two entries is "too old"
+
+		$compareValue = time();
+		$startTime = $lastProcessedEntries[0];
+
+		$pages = 0;
+
+		reset($lastProcessedEntries);
+		while (list($key, $timestamp) = each($lastProcessedEntries)) {
+			if ($compareValue - $timestamp > $tooOldDelta) break;
+			$compareValue = $timestamp;
+			$pages++;
+		}
+
+		if ($pages < 10) {
+			return false;
+		}
+
+		$oldestTimestampThatIsNotTooOld = $compareValue;
+
+		$time = $startTime - $oldestTimestampThatIsNotTooOld;
+
+		$speed = $time / $pages;
+
+		return $speed;
 	}
 }
 
