@@ -343,7 +343,18 @@ class tx_crawler_api {
 	 * @since 2009-09-02
 	 */
 	public function getQueueStatisticsByConfiguration() {
-		return $this->getQueueRepository()->countPendingItemsGroupedByConfigurationKey();
+		$statistics = $this->getQueueRepository()->countPendingItemsGroupedByConfigurationKey();
+
+		$setIds = $this->getQueueRepository()->getSetIdWithUnprocessedEntries();
+
+		$totals = $this->getQueueRepository()->getTotalQueueEntriesByConfiguration($setIds);
+
+		// "merge" arrays
+		foreach ($statistics as $key => &$value) {
+			$value['total'] = $totals[$value['configuration']];
+		}
+
+		return $statistics;
 	}
 
 	/**
@@ -369,7 +380,10 @@ class tx_crawler_api {
 	public function getCurrentCrawlingSpeed() {
 		$lastProcessedEntries = $this->getQueueRepository()->getLastProcessedEntriesTimestamps();
 
-		if (count($lastProcessedEntries) < 10) return false;
+		if (count($lastProcessedEntries) < 10) {
+			// not enough information
+			return false;
+		}
 
 		$tooOldDelta = 60; // time between two entries is "too old"
 
@@ -386,13 +400,11 @@ class tx_crawler_api {
 		}
 
 		if ($pages < 10) {
+			// not enough information
 			return false;
 		}
-
 		$oldestTimestampThatIsNotTooOld = $compareValue;
-
 		$time = $startTime - $oldestTimestampThatIsNotTooOld;
-
 		$speed = $pages / ($time / 60);
 
 		return $speed;

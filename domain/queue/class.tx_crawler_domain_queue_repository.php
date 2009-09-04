@@ -133,6 +133,38 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
 		return $rows;
 	}
 
+	public function getSetIdWithUnprocessedEntries() {
+		$db = $this->getDB();
+		$res = $db->exec_SELECTquery(
+			'set_id',
+			$this->tableName,
+			'exec_time = 0 AND scheduled < '.time(),
+			'set_id'
+		);
+		$setIds = array();
+		while ($row = $db->sql_fetch_assoc($res)) {
+			$setIds[] = $row['set_id'];
+		}
+		return $setIds;
+	}
+
+	public function getTotalQueueEntriesByConfiguration(array $setIds) {
+		$totals = array();
+		if (count($setIds) > 0) {
+			$db = $this->getDB();
+			$res = $db->exec_SELECTquery(
+				'configuration, count(*) as c',
+				$this->tableName,
+				'set_id in ('. implode(',',$setIds).') AND scheduled < '.time(),
+				'configuration'
+			);
+			while ($row = $db->sql_fetch_assoc($res)) {
+				$totals[$row['configuration']] = $row['c'];
+			}
+		}
+		return $totals;
+	}
+
 	/**
 	 * Count pending queue entries grouped by configuration key
 	 *
