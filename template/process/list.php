@@ -4,11 +4,13 @@
 	<?php echo $this->getAddLink(); ?>
 	<?php echo $this->getModeLink(); ?>
 </span>
-<?php if($this->getActionMessage() != ''){ ?>
+
+<?php if($this->getActionMessage() != ''): ?>
 	<div id="message">
 		<?php echo $this->getActionMessage(); ?>
 	</div>
-<?php } ?>
+<?php endif; ?>
+
 <h2><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.php:labels.generalinformation'); ?>:</h2>
 <table>
 	<tr>
@@ -43,13 +45,10 @@
 		<td><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.php:labels.status.finally'); ?>:</td>
 		<td><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.php:labels.status.progress'); ?>: </td>
 	</tr>
-	<?php foreach($this->getProcessCollection() as $process){ /* @var $process tx_crawler_domain_process */
-		$count++;
-		$odd = ($count % 2 == 0) ? true : false;
-	?>
-		<tr class="<?php echo $odd ? 'odd': 'even' ?>">
+	<?php foreach($this->getProcessCollection() as $process): /* @var $process tx_crawler_domain_process */ ?>
+		<tr class="<?php echo (++$count % 2 == 0) ? 'odd': 'even' ?>">
 			<td><?php echo $this->getIconForState(htmlspecialchars($process->getState())); ?></td>
-			<td> <?php echo htmlspecialchars($process->getProcess_id()); ?></td>
+			<td><?php echo htmlspecialchars($process->getProcess_id()); ?></td>
 			<td><?php echo htmlspecialchars($this->asDate($process->getTimeForFirstItem())); ?></td>
 			<td><?php echo htmlspecialchars($this->asDate($process->getTimeForLastItem())); ?></td>
 			<td><?php echo htmlspecialchars(floor($process->getRuntime()/ 60)); ?> min. <?php echo htmlspecialchars($process->getRuntime()) % 60 ?> sec.</td>
@@ -59,7 +58,7 @@
 			<td><?php echo htmlspecialchars($process->countItemsToProcess()+$process->countItemsProcessed()); ?></td>
 			<td><?php echo htmlspecialchars($process->getProgress()) ?> %</td>
 		</tr>
-	<?php } ?>
+	<?php endforeach; ?>
 </table>
 
 <br />

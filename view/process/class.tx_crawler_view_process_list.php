@@ -69,43 +69,43 @@ class tx_crawler_view_process_list {
 	 * @var int $totalItemCount number of total item
 	 */
 	protected $totalUnprocessedItemCount;
-	
+
 	/**
-	 * Holds the number of assigned unprocessed items 
+	 * Holds the number of assigned unprocessed items
 	 *
 	 * @var int
 	 */
-	protected $assignedUnprocessedItemCount;	
-	
-	
+	protected $assignedUnprocessedItemCount;
+
+
 	/**
 	 * @return int
 	 */
 	public function getAssignedUnprocessedItemCount() {
 		return $this->assignedUnprocessedItemCount;
 	}
-	
+
 	/**
 	 * @return int
 	 */
 	public function getTotalUnprocessedItemCount() {
 		return $this->totalUnprocessedItemCount;
 	}
-	
+
 	/**
 	 * @param int $assignedUnprocessedItemCount
 	 */
 	public function setAssignedUnprocessedItemCount($assignedUnprocessedItemCount) {
 		$this->assignedUnprocessedItemCount = $assignedUnprocessedItemCount;
 	}
-	
+
 	/**
 	 * @param int $totalUnprocessedItemCount
 	 */
 	public function setTotalUnprocessedItemCount($totalUnprocessedItemCount) {
 		$this->totalUnprocessedItemCount = $totalUnprocessedItemCount;
-	}	
-	
+	}
+
 	/**
 	 * Set the page id
 	 *
@@ -330,7 +330,7 @@ class tx_crawler_view_process_list {
 	 * @return string
 	 */
 	protected function getRefreshLink(){
-		return '<input type="button"><a href="index.php?id='.$this->pageId.'" title="'.$this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.php:labels.refresh').'">' . $this->getRefreshIcon() . '</a></input>';
+		return '<a href="index.php?id='.$this->pageId.'" title="'.$this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.php:labels.refresh').'">' . $this->getRefreshIcon() . '</a>';
 	}
 
 	/**
@@ -411,12 +411,12 @@ class tx_crawler_view_process_list {
 
 		return $content;
 	}
-	
+
 	/**
 	 * retrieve locallanglabel from environment
 	 * just a wrapper should be done in a cleaner way
 	 * later on
-	 * 
+	 *
 	 * @param $label
 	 * @return string
 	 */
