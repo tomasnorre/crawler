@@ -90,7 +90,7 @@ class tx_crawler_domain_events_dispatcher{
 	public function post($event, $group, $attachedData){
 		if(is_array($this->observers[$event])){
 			foreach($this->observers[$event] as $eventObserver){
-				call_user_func(array($eventObserver['object'],$eventObserver['method']),$group,$attachedData);
+				call_user_func(array($eventObserver['object'],$eventObserver['method']),$event,$group,$attachedData);
 			}
 		}
 	}
