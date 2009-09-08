@@ -192,6 +192,25 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
 
 	}
 
+	public function getPerformanceData($start, $end) {
+		/*
+		 * SELECT process_id_completed, min(exec_time) as start, max(exec_time) as end, (max(exec_time)-min(exec_time)) as length, count(*) as urlCount, 60* 1/((max(exec_time)-min(exec_time))/count(*)) as urlsPerMinute FROM `tx_crawler_queue` where `exec_time` != 0 group by `process_id_completed`
+		 */
+		$db = $this->getDB();
+		$res = $db->exec_SELECTquery(
+			'process_id_completed, min(exec_time) as start, max(exec_time) as end, count(*) as urlcount',
+			$this->tableName,
+			'exec_time != 0 and exec_time >= '.intval($start). ' and exec_time <= ' . intval($end),
+			'process_id_completed'
+		);
+
+		$rows = array();
+		while (($row = $db->sql_fetch_assoc($res)) !== false) {
+			$rows[$row['process_id_completed']] = $row;
+		}
+		return $rows;
+	}
+
 
 }
 ?>

@@ -409,6 +409,66 @@ class tx_crawler_api {
 
 		return $speed;
 	}
+
+	/**
+	 * Get some performance data
+	 *
+	 * @param integer $start
+	 * @param integer $end
+	 * @param integer $resolution
+	 * @return array data
+	 * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
+	 * @since 2009-09-08
+	 */
+	public function getPerformanceData($start, $end, $resolution) {
+		$data = array();
+
+		$data['urlcount'] = 0;
+		$data['start'] = $start;
+		$data['end'] = $end;
+		$data['duration'] =	$data['end'] - $data['start'];
+
+		if ($data['duration'] < 1) {
+			throw new Exception('End timestamp must be after start timestamp');
+		}
+
+		for ($slotStart = $start; $slotStart < $end; $slotStart += $resolution) {
+			$slotEnd = min($slotStart+$resolution-1, $end);
+			$slotData = $this->getQueueRepository()->getPerformanceData($slotStart, $slotEnd);
+
+			$slotUrlCount = 0;
+			foreach($slotData as $processId => &$processData) {
+				$duration = $processData['end'] - $processData['start'];
+				if ($processData['urlcount'] > 0 && $duration > 0) {
+					$processData['speed'] = 60 * 1 / ($duration/$processData['urlcount']);
+				}
+				$slotUrlCount += $processData['urlcount'];
+			}
+
+			$data['urlcount'] += $slotUrlCount;
+
+			$data['slots'][$slotEnd] = array(
+				'amountProcesses' => count($slotData),
+				'urlcount' => $slotUrlCount,
+				'processes' => $slotData,
+			);
+
+			if ($slotUrlCount > 0) {
+				$data['slots'][$slotEnd]['speed'] = 60 * 1 / ($slotEnd-$slotStart / $slotUrlCount);
+			} else {
+				$data['slots'][$slotEnd]['speed'] = 0;
+			}
+
+		}
+
+		if ($data['urlcount'] > 0) {
+			$data['speed'] = 60 * 1 / ($data['duration'] / $data['urlcount']);
+		} else {
+			$data['speed'] = 0;
+		}
+
+		return $data;
+	}
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/class.tx_crawler_api.php']) {
