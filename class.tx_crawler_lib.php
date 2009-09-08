@@ -667,7 +667,7 @@ class tx_crawler_lib {
 	 * @param	integer		Current page ID
 	 * @return	array		Array with key (GET var name) with the value being an array of all possible values for that key.
 	 */
-	function expandParameters($paramArray,$pid)	{
+	function expandParameters($paramArray, $pid)	{
 		global $TCA;
 
 			// Traverse parameter names:
@@ -717,7 +717,7 @@ class tx_crawler_lib {
 						if (isset($TCA[$subpartParams['_TABLE']]))	{
 							t3lib_div::loadTCA($subpartParams['_TABLE']);
 							$lookUpPid = isset($subpartParams['_PID']) ? intval($subpartParams['_PID']) : $pid;
-							$pidField =  isset($subpartParams['_PIDFIELD']) ? trim($subpartParams['_PIDFIELD']) : 'pid';
+							$pidField = isset($subpartParams['_PIDFIELD']) ? trim($subpartParams['_PIDFIELD']) : 'pid';
 
 							$fieldName = $subpartParams['_FIELD'] ? $subpartParams['_FIELD'] : 'uid';
 							if ($fieldName==='uid' || $TCA[$subpartParams['_TABLE']]['columns'][$fieldName])	{
@@ -729,16 +729,18 @@ class tx_crawler_lib {
 									$andWhereLanguage = ' AND ' . $GLOBALS['TYPO3_DB']->quoteStr($transOrigPointerField, $subpartParams['_TABLE']) .' <= 0';
 								}
 
+								$where = $GLOBALS['TYPO3_DB']->quoteStr($pidField, $subpartParams['_TABLE']) .'='.intval($lookUpPid).
+										t3lib_BEfunc::deleteClause($subpartParams['_TABLE']) . $andWhereLanguage;
+
 								$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-											$fieldName,
-											$subpartParams['_TABLE'],
-											$GLOBALS['TYPO3_DB']->quoteStr($pidField, $subpartParams['_TABLE']) .'='.intval($lookUpPid).
-												t3lib_BEfunc::deleteClause($subpartParams['_TABLE']) . $andWhereLanguage,
-											'',
-											'',
-											'',
-											$fieldName
-										);
+									$fieldName,
+									$subpartParams['_TABLE'],
+									$where,
+									'',
+									'',
+									'',
+									$fieldName
+								);
 
 								if (is_array($rows))	{
 									$paramArray[$p] = array_merge($paramArray[$p],array_keys($rows));
