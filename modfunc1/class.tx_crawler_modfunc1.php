@@ -862,9 +862,6 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 */
 	protected function drawProcessOverviewAction(){
 
-		// reload page automatically every 30 seconds
-		header('refresh: 30;');
-
 		global $BACK_PATH;
 
 		$crawler = $this->findCrawler();
