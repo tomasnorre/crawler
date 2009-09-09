@@ -89,6 +89,7 @@ $TCA["tx_crawler_configuration"] = array (
 		'sys_workspace_uid' => Array (
 			'exclude' => 1,
 			'label' => 'LLL:EXT:crawler/locallang_db.xml:tx_crawler_configuration.sys_workspace_uid',
+			'displayCond' => 'EXT:version:LOADED:true',
 			'config' => Array (
 				'type' => 'select',
 				'items' => Array (

@@ -156,9 +156,9 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 */
 	function main()	{
 		global $LANG, $BACK_PATH;
-		
+
 		$this->incLocalLang();
-		
+
 		$this->loadExtensionSettings();
 		if (empty($this->pObj->MOD_SETTINGS['processListMode'])) {
 			$this->pObj->MOD_SETTINGS['processListMode'] = 'simple';
@@ -296,7 +296,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		}
 		// $this->reqMinute = t3lib_div::intInRange(t3lib_div::_GP('perminute'),1,10000);
 		// TODO: check relevance
-		$this->reqMinute = 30;
+		$this->reqMinute = 1000;
 
 
 		$this->incomingConfigurationSelection = t3lib_div::_GP('configurationSelection');
@@ -319,9 +319,9 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				$reason->setReason(tx_crawler_domain_reason::REASON_GUI_SUBMIT);
 				tx_crawler_domain_events_dispatcher::getInstance()->post(	'invokeQueueChange',
 																			$this->findCrawler()->setID,
-																			array(	'reason' => $reason ));			
+																			array(	'reason' => $reason ));
 			}
-			
+
 			$code = $this->crawlerObj->getPageTreeAndUrls(
 				$this->pObj->id,
 				$this->pObj->MOD_SETTINGS['depth'],
@@ -332,7 +332,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				array(), // Do not filter any processing instructions
 				$this->incomingConfigurationSelection
 			);
-			
+
 
 		}
 

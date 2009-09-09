@@ -439,7 +439,7 @@ class tx_crawler_api {
 			$slotUrlCount = 0;
 			foreach($slotData as $processId => &$processData) {
 				$duration = $processData['end'] - $processData['start'];
-				if ($processData['urlcount'] > 0 && $duration > 0) {
+				if ($processData['urlcount'] > 5 && $duration > 0) {
 					$processData['speed'] = 60 * 1 / ($duration/$processData['urlcount']);
 				}
 				$slotUrlCount += $processData['urlcount'];
@@ -453,7 +453,7 @@ class tx_crawler_api {
 				'processes' => $slotData,
 			);
 
-			if ($slotUrlCount > 0) {
+			if ($slotUrlCount > 5) {
 				$data['slots'][$slotEnd]['speed'] = 60 * 1 / ($slotEnd-$slotStart / $slotUrlCount);
 			} else {
 				$data['slots'][$slotEnd]['speed'] = 0;
@@ -461,7 +461,7 @@ class tx_crawler_api {
 
 		}
 
-		if ($data['urlcount'] > 0) {
+		if ($data['urlcount'] > 5) {
 			$data['speed'] = 60 * 1 / ($data['duration'] / $data['urlcount']);
 		} else {
 			$data['speed'] = 0;
