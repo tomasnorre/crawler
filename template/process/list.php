@@ -13,40 +13,40 @@
 	</div>
 <?php endif; ?>
 
-<h2><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.php:labels.generalinformation'); ?>:</h2>
+<h2><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.generalinformation'); ?>:</h2>
 <table>
 	<tr>
-		<td><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.php:labels.pendingoverview'); ?>:</td>
+		<td><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.pendingoverview'); ?>:</td>
 		<td><?php echo htmlspecialchars($this->getAssignedUnprocessedItemCount()); ?> / <?php echo htmlspecialchars($this->getTotalUnprocessedItemCount()); ?>  </td>
 	</tr>
 	<tr>
-		<td><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.php:labels.curtime'); ?>:</td>
+		<td><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.curtime'); ?>:</td>
 		<td><?php echo $this->asDate(time()); ?></td>
 	</tr>
 	<tr>
-		<td><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.php:labels.processcount'); ?></td>
+		<td><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.processcount'); ?></td>
 		<td><?php echo htmlspecialchars($this->getActiveProcessCount()); ?> / <?php echo htmlspecialchars($this->getMaxActiveProcessCount()); ?></td>
 	</tr>
 	<tr>
-		<td><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.php:labels.clipath'); ?>:</td>
+		<td><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.clipath'); ?>:</td>
 		<td><?php echo htmlspecialchars($this->getCliPath()); ?></td>
 	</tr>
 </table>
 
-<h2><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.php:labels.processstates'); ?>: </h2>
+<h2><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.processstates'); ?>: </h2>
 <table class="processes">
 	<thead>
 		<tr>
-			<th><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.php:labels.state'); ?>: </th>
-			<th><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.php:labels.processid'); ?>: </th>
-			<th><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.php:labels.time.first'); ?>: </th>
-			<th><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.php:labels.time.last'); ?>: </th>
-			<th><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.php:labels.time.duration'); ?>: </th>
-			<th><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.php:labels.ttl'); ?>: </th>
-			<th><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.php:labels.status.current'); ?>: </th>
-			<th><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.php:labels.status.initial'); ?>:</th>
-			<th><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.php:labels.status.finally'); ?>:</th>
-			<th><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.php:labels.status.progress'); ?>: </th>
+			<th><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.state'); ?>: </th>
+			<th><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.processid'); ?>: </th>
+			<th><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.time.first'); ?>: </th>
+			<th><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.time.last'); ?>: </th>
+			<th><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.time.duration'); ?>: </th>
+			<th><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.ttl'); ?>: </th>
+			<th><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.status.current'); ?>: </th>
+			<th><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.status.initial'); ?>:</th>
+			<th><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.status.finally'); ?>:</th>
+			<th><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.status.progress'); ?>: </th>
 		</tr>
 	</thead>
 	<tbody>
@@ -68,9 +68,9 @@
 						<div class="crawlerprocessprogress-label"><?php echo $process->getProgress(); ?> %</div>
 					</div>
 				<?php elseif ($process->getState() == 'cancelled'): ?>
-					<?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.php:labels.process.cancelled'); ?>
+					<?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.process.cancelled'); ?>
 				<?php else: ?>
-					<?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.php:labels.process.success'); ?>
+					<?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.process.success'); ?>
 				<?php endif; ?>
 				</td>
 			</tr>
