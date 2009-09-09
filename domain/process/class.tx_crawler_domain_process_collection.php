@@ -23,9 +23,7 @@
  ***************************************************************/
 
 /**
- * documenation
- *
- * {@inheritdoc}
+ * Process collection
  *
  * class.tx_crawler_domain_process_collection.php
  *
@@ -44,11 +42,11 @@
 class tx_crawler_domain_process_collection extends ArrayObject {
 
 	/**
-	* Method to retrieve an element from the collection.
-	* @access public
- 	* @throws Exception
-	* @return tx_crawler_domain_process
-	*/
+	 * Method to retrieve an element from the collection.
+	 * @access public
+ 	 * @throws Exception
+	 * @return tx_crawler_domain_process
+	 */
 	public function offsetGet($index) {
 		if (! parent::offsetExists($index)) {
 			throw new Exception('Index "' . var_export($index, true) . '" for tx_crawler_domain_process are not available');
@@ -57,34 +55,33 @@ class tx_crawler_domain_process_collection extends ArrayObject {
 	}
 
 	/**
-	* Mehtod to add an element to the collection-
-	*
-	* @param mixed $index
-	* @param tx_crawler_domain_process $subject
-	* @throws InvalidArgumentException
-	* @return void
-	*/
-	public function offsetSet($index, $subject) {
+	 * Method to add an element to the collection-
+	 *
+	 * @param mixed $index
+	 * @param tx_crawler_domain_process $subject
+	 * @throws InvalidArgumentException
+	 * @return void
+	 */
+	public function offsetSet($index, tx_crawler_domain_process $subject) {
 		if (! $subject instanceof tx_crawler_domain_process ) {
 			throw new InvalidArgumentException('Wrong parameter type given, "tx_crawler_domain_process" expected!');
 		}
-		
 		parent::offsetSet($index, $subject);
 	}
 
 	/**
-	* Method to append an element to the collection
-	* @param tx_crawler_domain_process $subject
-	* @throws InvalidArgumentException
-	* @return void
-	*/
-	public function append($subject) {
+	 * Method to append an element to the collection
+	 * @param tx_crawler_domain_process $subject
+	 * @throws InvalidArgumentException
+	 * @return void
+	 */
+	public function append(tx_crawler_domain_process $subject) {
 		if (! $subject instanceof tx_crawler_domain_process ) {
 			throw new InvalidArgumentException('Wrong parameter type given, "tx_crawler_domain_process" expected!');
 		}
-		
 		parent::append($subject);
 	}
+
 }
 
 

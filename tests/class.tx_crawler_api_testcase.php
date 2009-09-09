@@ -82,7 +82,6 @@ class tx_crawler_api_testcase extends tx_phpunit_database_testcase {
    		$GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields'] = $this->oldRootline;
 	}
 
-
 	/**
 	 * This test is used to check that the api will not create duplicate entries for
 	 * two pages which should both be crawled in the past, because it is only needed one times.
@@ -180,7 +179,6 @@ class tx_crawler_api_testcase extends tx_phpunit_database_testcase {
 
 		$this->assertEquals($crawler_api->countUnprocessedItems(),2,'Could not add pages to queue configured by record');
 	}
-
 
 	/**
 	 * Creates a mocked crawler api with a faked current time state

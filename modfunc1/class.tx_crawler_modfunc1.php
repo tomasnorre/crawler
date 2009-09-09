@@ -26,45 +26,12 @@
  *
  * @author	Kasper Skaarhoj <kasperYYYY@typo3.com>
  */
-/**
- * [CLASS/FUNCTION INDEX of SCRIPT]
- *
- *
- *
- *   80: class tx_crawler_modfunc1 extends t3lib_extobjbase
- *  101:     function modMenu()
- *  133:     function main()
- *
- *              SECTION: Generate URLs for crawling:
- *  199:     function drawURLs()
- *  287:     function drawURLs_cfgSelectors()
- *  338:     function drawURLs_printTableHeader()
- *
- *              SECTION: Shows log of indexed URLs
- *  375:     function drawLog()
- *  547:     function drawLog_addRows($pageRow_setId,$titleString)
- *  664:     function drawLog_printTableHeader()
- *
- *              SECTION: CLI status display
- *  712:     function drawCLIstatus()
- *
- *              SECTION: General Helper Functions
- *  803:     function selectorBox($optArray, $name, $value, $multiple)
- *
- * TOTAL FUNCTIONS: 10
- * (This index is automatically created/updated by the extension "extdeveval")
- *
- */
-
 
 require_once(PATH_t3lib.'class.t3lib_pagetree.php');
 require_once(PATH_t3lib.'class.t3lib_extobjbase.php');
 
 require_once(t3lib_extMgm::extPath('crawler').'class.tx_crawler_lib.php');
-
-//
 require_once t3lib_extMgm::extPath('crawler').'domain/process/class.tx_crawler_domain_process_repository.php';
-
 require_once t3lib_extMgm::extPath('crawler').'view/process/class.tx_crawler_view_process_list.php';
 require_once t3lib_extMgm::extPath('crawler').'view/class.tx_crawler_view_pagination.php';
 
@@ -996,6 +963,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 
 		return $output;
 	}
+
 }
 
 

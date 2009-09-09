@@ -1,67 +1,76 @@
 <?php
+/***************************************************************
+ *  Copyright notice
+ *
+ *  (c) 2009 AOE media (dev@aoemedia.de)
+ *  All rights reserved
+ *
+ *  This script is part of the TYPO3 project. The TYPO3 project is
+ *  free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  The GNU General Public License can be found at
+ *  http://www.gnu.org/copyleft/gpl.html.
+ *
+ *  This script is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  This copyright notice MUST APPEAR in all copies of the script!
+ ***************************************************************/
 
 class tx_crawler_view_process_list {
 
+	/**
+	 * @var string template path
+	 */
 	protected $template = 'EXT:crawler/template/process/list.php';
 
+	/**
+	 * @var string icon path
+	 */
 	protected $iconPath;
 
 	/**
-	 * Holds the path to start a cli process via command line
-	 *
-	 * @var string
+	 * @var string Holds the path to start a cli process via command line
 	 */
 	protected $cliPath;
 
 	/**
-	 * Holds the total number of items pending in the queue to be processed
-	 *
-	 * @var int
+	 * @var int Holds the total number of items pending in the queue to be processed
 	 */
 	protected $totalItemCount;
 
 	/**
-	 * Holds the enable state of the crawler
-	 *
-	 * @var boolean
+	 * @var boolean Holds the enable state of the crawler
 	 */
 	protected $isCrawlerEnabled;
 
-
 	/**
-	 * Holds the number of active processes
-	 *
-	 * @var int
+	 * @var int Holds the number of active processes
 	 */
 	protected $activeProcessCount;
 
-
 	/**
-	 * Holds the number of maximum active processes
-	 *
-	 * @var int
+	 * @var int Holds the number of maximum active processes
 	 */
 	protected $maxActiveProcessCount;
 
 	/**
-	 * Holds an internal message, when an action has been performed
-	 *
-	 * @var string
+	 * @var string Holds an internal message, when an action has been performed
 	 */
 	protected $actionMessage;
 
-
 	/**
-	 * Holds the mode state, can be simple or detail
-	 *
-	 * @var string
+	 * @var string Holds the mode state, can be simple or detail
 	 */
 	protected $mode;
 
 	/**
-	 * Holds the current page id
-	 *
-	 * @var int
+	 * @var int Holds the current page id
 	 */
 	protected $pageId;
 
@@ -71,9 +80,7 @@ class tx_crawler_view_process_list {
 	protected $totalUnprocessedItemCount;
 
 	/**
-	 * Holds the number of assigned unprocessed items
-	 *
-	 * @var int
+	 * @var int Holds the number of assigned unprocessed items
 	 */
 	protected $assignedUnprocessedItemCount;
 

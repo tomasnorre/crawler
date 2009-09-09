@@ -1,11 +1,33 @@
 <?php
+/***************************************************************
+ *  Copyright notice
+ *
+ *  (c) 2009 AOE media (dev@aoemedia.de)
+ *  All rights reserved
+ *
+ *  This script is part of the TYPO3 project. The TYPO3 project is
+ *  free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  The GNU General Public License can be found at
+ *  http://www.gnu.org/copyleft/gpl.html.
+ *
+ *  This script is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  This copyright notice MUST APPEAR in all copies of the script!
+ ***************************************************************/
+
 /**
  * This api class can be used to add pages to the crawlerqueue.
  * It uses internally the class tx_crawler_lib modify the queue.
- *
  */
-require_once t3lib_extMgm::extPath('crawler').'system/class.tx_crawler_system_validator.php';
 
+require_once t3lib_extMgm::extPath('crawler').'system/class.tx_crawler_system_validator.php';
 require_once t3lib_extMgm::extPath('crawler').'domain/queue/class.tx_crawler_domain_queue_repository.php';
 require_once t3lib_extMgm::extPath('crawler').'domain/process/class.tx_crawler_domain_process_repository.php';
 
@@ -32,8 +54,8 @@ class tx_crawler_api {
 	 *
 	 * @return tx_crawler_system_validator
 	 */
-	protected function findValidator(){
-		if(!$this->validator instanceof tx_crawler_system_validator){
+	protected function findValidator() {
+		if(!$this->validator instanceof tx_crawler_system_validator) {
 			$this->validator = t3lib_div::makeInstance('tx_crawler_system_validator');
 		}
 
@@ -41,11 +63,11 @@ class tx_crawler_api {
 	}
 
 	/**
-	* Each crawlerrun has a setid, this facade method delegates
-	* the it to the crawler object
-	*
-	* @param int
-	*/
+	 * Each crawlerrun has a setid, this facade method delegates
+	 * the it to the crawler object
+	 *
+	 * @param int
+	 */
 	public function overwriteSetId($id) {
 		$id = intval($id);
 		$this->findCrawler()->setID = $id;
@@ -56,16 +78,15 @@ class tx_crawler_api {
 	 *
 	 * @return int
 	 */
-	public function getSetId(){
+	public function getSetId() {
 		return $this->findCrawler()->setID;
 	}
 
-
 	/**
-	* Method to get an instance of the internal crawler singleton
-	*
-	* @return tx_crawler_lib Instance of the crawler lib
-	*/
+	 * Method to get an instance of the internal crawler singleton
+	 *
+	 * @return tx_crawler_lib Instance of the crawler lib
+	 */
 	protected function findCrawler() {
 		if(!is_object($this->crawlerObj)) {
 			$this->crawlerObj = t3lib_div::makeInstance('tx_crawler_lib');
@@ -146,7 +167,7 @@ class tx_crawler_api {
 		if($schedule_timestamp == 0) {
 			//untimed elements need an exec_time with 0 because they can occure multiple times
 			$where = 'page_id='.$page_uid.' AND exec_time = 0 AND scheduled='.$schedule_timestamp;
-		}else{
+		} else {
 			//timed elementes have got a fixed schedule time, if a record with this time
 			//exists it is maybe queued for the future, or is has been queue for the past and therefore
 			//also been processed.
@@ -157,7 +178,6 @@ class tx_crawler_api {
 
 		return intval($row['cnt']);
 	}
-
 
 	/**
 	 * Determines if a page is queued.
@@ -195,10 +215,10 @@ class tx_crawler_api {
 	}
 
 	/**
-	* Method to return the latest Crawle Timestamp for a page.
-	*
-	* @param uid id of the page
-	*/
+	 * Method to return the latest Crawle Timestamp for a page.
+	 *
+	 * @param uid id of the page
+	 */
 	public function getLatestCrawlTimestampForPage($uid,$future_crawldates_only=false, $unprocessed_only = false) {
 		$uid = intval($uid);
 		$query = 'max(scheduled) as latest';
@@ -215,7 +235,7 @@ class tx_crawler_api {
 		$rs 	= $GLOBALS['TYPO3_DB']->exec_SELECTquery($query,'tx_crawler_queue',$where);
 		if($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($rs)) {
 			$res = $row['latest'];
-		}else{
+		} else {
 			$res = 0;
 		}
 
@@ -223,13 +243,13 @@ class tx_crawler_api {
 	}
 
 	/**
-	* Returns an array with timestamps when the page has been scheduled for crawling and
-	* at what time the scheduled crawl has been executed. The array also contains items that are
-	* scheduled but have note been crawled yet.
-	*
-	* @param int uid of the page
-	* @return array array with the crawlhistory of a page => 0 : scheduled time , 1 : execuded_time, 2 : set_id
-	*/
+	 * Returns an array with timestamps when the page has been scheduled for crawling and
+	 * at what time the scheduled crawl has been executed. The array also contains items that are
+	 * scheduled but have note been crawled yet.
+	 *
+	 * @param int uid of the page
+	 * @return array array with the crawlhistory of a page => 0 : scheduled time , 1 : execuded_time, 2 : set_id
+	 */
 	public function getCrawlHistoryForPage($uid,$limit=false) {
 		$uid = intval($uid);
 		$limit = mysql_real_escape_string($limit);
@@ -245,10 +265,10 @@ class tx_crawler_api {
 	}
 
 	/**
-	* Method to determine unprocessed Items in the crawler queue.
-	*
-	* @return array
-	*/
+	 * Method to determine unprocessed Items in the crawler queue.
+	 *
+	 * @return array
+	 */
 	public function getUnprocessedItems() {
 		$query 	= '*';
 		$where 	= 'exec_time = 0';
@@ -258,10 +278,10 @@ class tx_crawler_api {
 	}
 
 	/**
-	* Method to get the number of unprocessed items in the crawler
-	*
-	* @param int number of unprocessed items in the queue
-	*/
+	 * Method to get the number of unprocessed items in the crawler
+	 *
+	 * @param int number of unprocessed items in the queue
+	 */
 	public function countUnprocessedItems() {
 		$query = 'count(page_id) as anz';
 		$where = 'exec_time = 0';
@@ -474,4 +494,5 @@ class tx_crawler_api {
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/class.tx_crawler_api.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/class.tx_crawler_api.php']);
 }
+
 ?>

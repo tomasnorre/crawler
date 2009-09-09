@@ -134,4 +134,5 @@ $TCA["tx_crawler_configuration"] = array (
         "1" => array("showitem" => "")
     )
 );
+
 ?>

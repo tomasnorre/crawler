@@ -76,6 +76,7 @@ class tx_crawler_contextMenu {
 		}
 		return array_merge($menuItems, $localItems);
 	}
+
 }
 
 

@@ -26,16 +26,16 @@
 /**
  * Url login authentification service
  */
-class tx_crawler_auth extends tx_sv_authbase 	{
+class tx_crawler_auth extends tx_sv_authbase {
 
 	/**
 	 * Find a user by IP ('REMOTE_ADDR')
 	 *
 	 * @return	mixed	user array or false
 	 */
-	public function getUser()	{
+	public function getUser() {
 		$user = false;
-		if (isset($_SERVER['HTTP_X_T3CRAWLER']))	{
+		if (isset($_SERVER['HTTP_X_T3CRAWLER'])) {
 			$user = $this->fetchUserRecord('_cli_crawler');
 		}
 		return $user;
@@ -53,8 +53,8 @@ class tx_crawler_auth extends tx_sv_authbase 	{
 		}
 		return 100;
 	}
-}
 
+}
 
 
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/aoe_wspreview/service/class.tx_aoewspreview_service_urlLogin.php"])	{

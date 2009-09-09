@@ -1,5 +1,4 @@
 <?php
-
 /***************************************************************
 *  Copyright notice
 *
@@ -1061,7 +1060,8 @@ class tx_crawler_lib {
 				' AND page_id='.intval($fieldArray['page_id']).
 				' AND parameters_hash = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($fieldArray['parameters_hash'], 'tx_crawler_queue')
 			);
-			if (is_array($result)) {
+
+			if (is_array($result)) {
 				foreach ($result as $value) {
 					$rows[] = $value['qid'];
 				}
