@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>database</type>
+		<description>Language labels for database tables/fields belonging to extension 'crawler'</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="moduleFunction.tx_crawler_modfunc1">Site Crawler</label>
+			
+			<label index="tx_crawler_configuration">Crawler Configuration</label>
+	            <label index="tx_crawler_configuration.name">Name</label>
+	            <label index="tx_crawler_configuration.processing_instruction_filter">Processing instruction filter</label>
+	            <label index="tx_crawler_configuration.processing_instruction_parameters_ts">Processing instruction parameters</label>
+	            <label index="tx_crawler_configuration.configuration">Configuration</label>
+	            <label index="tx_crawler_configuration.base_url">Base url</label>
+	            <label index="tx_crawler_configuration.pidsonly">Pids only</label>
+	            <label index="tx_crawler_configuration.begroups">Restrict access to</label>
+	            <label index="tx_crawler_configuration.realurl">Use realurl urls</label>
+	            <label index="tx_crawler_configuration.chash">Append cHash</label>
+	            <label index="tx_crawler_configuration.exclude">Exclude pages</label>
+	            <label index="tx_crawler_configuration.sys_workspace_uid">Crawl workspace</label>
+		</languageKey>
+	</data>
+</T3locallang>

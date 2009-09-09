@@ -26,48 +26,14 @@
  *
  * @author	Kasper Skaarhoj <kasperYYYY@typo3.com>
  */
-/**
- * [CLASS/FUNCTION INDEX of SCRIPT]
- *
- *
- *
- *   80: class tx_crawler_modfunc1 extends t3lib_extobjbase
- *  101:     function modMenu()
- *  133:     function main()
- *
- *              SECTION: Generate URLs for crawling:
- *  199:     function drawURLs()
- *  287:     function drawURLs_cfgSelectors()
- *  338:     function drawURLs_printTableHeader()
- *
- *              SECTION: Shows log of indexed URLs
- *  375:     function drawLog()
- *  547:     function drawLog_addRows($pageRow_setId,$titleString)
- *  664:     function drawLog_printTableHeader()
- *
- *              SECTION: CLI status display
- *  712:     function drawCLIstatus()
- *
- *              SECTION: General Helper Functions
- *  803:     function selectorBox($optArray, $name, $value, $multiple)
- *
- * TOTAL FUNCTIONS: 10
- * (This index is automatically created/updated by the extension "extdeveval")
- *
- */
-
 
 require_once(PATH_t3lib.'class.t3lib_pagetree.php');
 require_once(PATH_t3lib.'class.t3lib_extobjbase.php');
 
 require_once(t3lib_extMgm::extPath('crawler').'class.tx_crawler_lib.php');
-
-
-
-
-
-
-
+require_once t3lib_extMgm::extPath('crawler').'domain/process/class.tx_crawler_domain_process_repository.php';
+require_once t3lib_extMgm::extPath('crawler').'view/process/class.tx_crawler_view_process_list.php';
+require_once t3lib_extMgm::extPath('crawler').'view/class.tx_crawler_view_pagination.php';
 
 
 /**
@@ -86,12 +52,26 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 
 	var $scheduledTime = 0;
 	var $reqMinute = 0;
-	var $incomingProcInstructions = array();
 
+	/**
+	 * @var array holds the selection of configuration from the configuration selector box
+	 */
+	var $incomingConfigurationSelection = array();
+
+	/**
+	 * @var tx_crawler_lib
+	 */
 	var $crawlerObj;
+
 	var $CSVaccu = array();
 	var $downloadUrls = array();
 
+	/**
+	 * Holds the configuration from ext_conf_template loaded by loadExtensionSettings()
+	 *
+	 * @var array
+	 */
+	protected $extensionSettings = array();
 
 	/**
 	 * Additions to the function menu array
@@ -111,18 +91,29 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				99 => $LANG->sL('LLL:EXT:lang/locallang_core.php:labels.depth_infi'),
 			),
 			'crawlaction' => array(
-				'start' => 'Start Crawling',
-				'log' => 'Crawler log',
-				'cli' => 'CLI status',
+				'start' => $LANG->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.start'),
+				'log' => $LANG->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.log'),
+				'multiprocess' => $LANG->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.multiprocess')
 			),
 			'log_resultLog' => '',
 			'log_feVars' => '',
+			'processListMode' => '',
 			'log_display' => array(
-				'all' => 'All',
-				'pending' => 'Pending',
-				'finished' => 'Finished',
+				'all' => $LANG->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.all'),
+				'pending' => $LANG->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.pending'),
+				'finished' => $LANG->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.finished')
 			)
 		);
+	}
+
+	/**
+	 * Load extension settings
+	 *
+	 * @param void
+	 * @return void
+	 */
+	protected function loadExtensionSettings() {
+		$this->extensionSettings = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['crawler']);
 	}
 
 	/**
@@ -131,43 +122,97 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 * @return	string		HTML output
 	 */
 	function main()	{
-		global $LANG;
+		global $LANG, $BACK_PATH;
+
+		$this->incLocalLang();
+
+		$this->loadExtensionSettings();
+		if (empty($this->pObj->MOD_SETTINGS['processListMode'])) {
+			$this->pObj->MOD_SETTINGS['processListMode'] = 'simple';
+		}
 
 			// Set CSS styles specific for this document:
 		$this->pObj->content = str_replace('/*###POSTCSSMARKER###*/','
-			TABLE.crawlerlog TR TD { white-space: nowrap; vertical-align: top; }
+			TABLE.c-list TR TD { white-space: nowrap; vertical-align: top; }
 		',$this->pObj->content);
 
-			// Type function menu:
-		$h_func = t3lib_BEfunc::getFuncMenu($this->pObj->id,'SET[crawlaction]',$this->pObj->MOD_SETTINGS['crawlaction'],$this->pObj->MOD_MENU['crawlaction'],'index.php');
+		$this->pObj->content .= '<style type="text/css"><!--
+			table.url-table,
+			table.param-expanded,
+			table.crawlerlog {
+				border-bottom: 1px solid grey;
+				border-spacing: 0;
+				border-collapse: collapse;
+			}
+			table.crawlerlog td,
+			table.url-table td {
+				border: 1px solid lightgrey;
+				border-bottom: 1px solid grey;
+				 white-space: nowrap; vertical-align: top;
+			}
+		--></style>
+		<link rel="stylesheet" type="text/css" href="'.$BACK_PATH.'../typo3conf/ext/crawler/template/res.css" />
+		';
 
+			// Type function menu:
+		$h_func = t3lib_BEfunc::getFuncMenu(
+			$this->pObj->id,
+			'SET[crawlaction]',
+			$this->pObj->MOD_SETTINGS['crawlaction'],
+			$this->pObj->MOD_MENU['crawlaction'],
+			'index.php'
+		);
+
+		/*
 			// Showing depth-menu in certain cases:
-		if ($this->pObj->MOD_SETTINGS['crawlaction']!=='cli' && ($this->pObj->MOD_SETTINGS['crawlaction']!=='log' || $this->pObj->id))	{
-			$h_func.= t3lib_BEfunc::getFuncMenu($this->pObj->id,'SET[depth]',$this->pObj->MOD_SETTINGS['depth'],$this->pObj->MOD_MENU['depth'],'index.php');
+		if ($this->pObj->MOD_SETTINGS['crawlaction']!=='cli' && $this->pObj->MOD_SETTINGS['crawlaction']!== 'multiprocess' && ($this->pObj->MOD_SETTINGS['crawlaction']!=='log' || $this->pObj->id))	{
+			$h_func .= t3lib_BEfunc::getFuncMenu(
+				$this->pObj->id,
+				'SET[depth]',
+				$this->pObj->MOD_SETTINGS['depth'],
+				$this->pObj->MOD_MENU['depth'],
+				'index.php'
+			);
 		}
+		*/
 
 			// Additional menus for the log type:
 		if ($this->pObj->MOD_SETTINGS['crawlaction']==='log')	{
+			$h_func .= t3lib_BEfunc::getFuncMenu(
+				$this->pObj->id,
+				'SET[depth]',
+				$this->pObj->MOD_SETTINGS['depth'],
+				$this->pObj->MOD_MENU['depth'],
+				'index.php'
+			);
 			$h_func.= '<hr/>'.
-					'Display: '.t3lib_BEfunc::getFuncMenu($this->pObj->id,'SET[log_display]',$this->pObj->MOD_SETTINGS['log_display'],$this->pObj->MOD_MENU['log_display'],'index.php','&setID='.t3lib_div::_GP('setID')).' - '.
-					'Show Result Log: '.t3lib_BEfunc::getFuncCheck($this->pObj->id,'SET[log_resultLog]',$this->pObj->MOD_SETTINGS['log_resultLog'],'index.php','&setID='.t3lib_div::_GP('setID')).' - '.
-					'Show FE Vars: '.t3lib_BEfunc::getFuncCheck($this->pObj->id,'SET[log_feVars]',$this->pObj->MOD_SETTINGS['log_feVars'],'index.php','&setID='.t3lib_div::_GP('setID'));
+					$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.display').': '.t3lib_BEfunc::getFuncMenu($this->pObj->id,'SET[log_display]',$this->pObj->MOD_SETTINGS['log_display'],$this->pObj->MOD_MENU['log_display'],'index.php','&setID='.t3lib_div::_GP('setID')).' - '.
+					$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.showresultlog').': '.t3lib_BEfunc::getFuncCheck($this->pObj->id,'SET[log_resultLog]',$this->pObj->MOD_SETTINGS['log_resultLog'],'index.php','&setID='.t3lib_div::_GP('setID')).' - '.
+					$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.showfevars').': '.t3lib_BEfunc::getFuncCheck($this->pObj->id,'SET[log_feVars]',$this->pObj->MOD_SETTINGS['log_feVars'],'index.php','&setID='.t3lib_div::_GP('setID'));
 		}
 
 		$theOutput.= $this->pObj->doc->spacer(5);
-		$theOutput.= $this->pObj->doc->section($LANG->getLL('title'),$h_func,0,1);
+		$theOutput.= $this->pObj->doc->section($LANG->getLL('title'), $h_func, 0, 1);
 
 
 			// Branch based on type:
 		switch((string)$this->pObj->MOD_SETTINGS['crawlaction'])	{
 			case 'start':
-				$theOutput.= $this->pObj->doc->section('',$this->drawURLs(),0,1);
+
+				if (empty($this->pObj->id)) {
+					$theOutput .= '<br />'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.noPageSelected');
+				} else {
+					$theOutput .= $this->pObj->doc->section('',$this->drawURLs(),0,1);
+				}
 			break;
 			case 'log':
-				$theOutput.= $this->pObj->doc->section('',$this->drawLog(),0,1);
+				$theOutput .= $this->pObj->doc->section('',$this->drawLog(),0,1);
 			break;
 			case 'cli':
-				$theOutput.= $this->pObj->doc->section('',$this->drawCLIstatus(),0,1);
+				$theOutput .= $this->pObj->doc->section('',$this->drawCLIstatus(),0,1);
+			break;
+			case 'multiprocess':
+				$theOutput .= $this->pObj->doc->section('',$this->drawProcessOverviewAction(),0,1);
 			break;
 		}
 
@@ -201,10 +246,10 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 
 			// Init:
 		$this->duplicateTrack = array();
-		$this->submitCrawlUrls = t3lib_div::_POST('_crawl');
-		$this->downloadCrawlUrls = t3lib_div::_POST('_download');
+		$this->submitCrawlUrls = t3lib_div::_GP('_crawl');
+		$this->downloadCrawlUrls = t3lib_div::_GP('_download');
 
-		switch((string)t3lib_div::_POST('tstamp'))	{
+		switch((string)t3lib_div::_GP('tstamp'))	{
 			case 'midnight':
 				$this->scheduledTime = mktime(0,0,0);
 			break;
@@ -216,47 +261,73 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				$this->scheduledTime = time();
 			break;
 		}
-		$this->reqMinute = t3lib_div::intInRange(t3lib_div::_POST('perminute'),1,10000);
+		// $this->reqMinute = t3lib_div::intInRange(t3lib_div::_GP('perminute'),1,10000);
+		// TODO: check relevance
+		$this->reqMinute = 1000;
 
-		$this->incomingProcInstructions = t3lib_div::_POST('procInstructions');
-		$this->incomingProcInstructions = is_array($this->incomingProcInstructions) ? $this->incomingProcInstructions : array('');
+
+		$this->incomingConfigurationSelection = t3lib_div::_GP('configurationSelection');
+		$this->incomingConfigurationSelection = is_array($this->incomingConfigurationSelection) ? $this->incomingConfigurationSelection : array('');
 
 		$this->crawlerObj = t3lib_div::makeInstance('tx_crawler_lib');
+		$this->crawlerObj->setAccessMode('gui');
 		$this->crawlerObj->setID = t3lib_div::md5int(microtime());
 
-		$code = $this->crawlerObj->getPageTreeAndUrls(
+		if (empty($this->incomingConfigurationSelection)
+			|| (count($this->incomingConfigurationSelection)==1 && empty($this->incomingConfigurationSelection[0]))
+			) {
+			$code= '
+			<tr>
+				<td colspan="7"><b>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.noConfigSelected').'</b></td>
+			</tr>';
+		} else {
+			if($this->submitCrawlUrls){
+				$reason = new tx_crawler_domain_reason();
+				$reason->setReason(tx_crawler_domain_reason::REASON_GUI_SUBMIT);
+				tx_crawler_domain_events_dispatcher::getInstance()->post(	'invokeQueueChange',
+																			$this->findCrawler()->setID,
+																			array(	'reason' => $reason ));
+			}
+
+			$code = $this->crawlerObj->getPageTreeAndUrls(
 				$this->pObj->id,
 				$this->pObj->MOD_SETTINGS['depth'],
 				$this->scheduledTime,
 				$this->reqMinute,
 				$this->submitCrawlUrls,
 				$this->downloadCrawlUrls,
-				$this->incomingProcInstructions
+				array(), // Do not filter any processing instructions
+				$this->incomingConfigurationSelection
 			);
+
+
+		}
+
 		$this->downloadUrls = $this->crawlerObj->downloadUrls;
 		$this->duplicateTrack = $this->crawlerObj->duplicateTrack;
 
 		$output = '';
 		if ($code)	{
 
-			$output .= '<h3>Crawl configuration:</h3>';
+			$output .= '<h3>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.configuration').':</h3>';
 			$output .= '<input type="hidden" name="id" value="'.intval($this->pObj->id).'" />';
 
 			if (!$this->submitCrawlUrls)	{
-				$output .= '<input type="submit" name="_update" value="Update" /> ';
-				$output .= '<input type="submit" name="_crawl" value="Crawl URLs" /> ';
-				$output .= '<input type="submit" name="_download" value="Download URLs" /><br/>';
-				$output .= '<br/>'.$this->drawURLs_cfgSelectors().'<br/>';
-				$output .= 'Count: '.count(array_keys($this->duplicateTrack)).'<br/>';
-				$output .= 'Current server time: '.date('H:i:s',time()).'<br/>';
-				$output .= '<br/>
-					<table border="0" cellspacing="1" cellpadding="0" class="lrPadding c-list">'.
+				$output .= $this->drawURLs_cfgSelectors().'<br />';
+				$output .= '<input type="submit" name="_update" value="'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.triggerUpdate').'" /> ';
+				$output .= '<input type="submit" name="_crawl" value="'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.triggerCrawl').'" /> ';
+				$output .= '<input type="submit" name="_download" value="'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.triggerDownload').'" /><br /><br />';
+				$output .= $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.count').': '.count(array_keys($this->duplicateTrack)).'<br />';
+				$output .= $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.curtime').': '.date('H:i:s',time()).'<br />';
+				$output .= '<br />
+					<table class="lrPadding c-list url-table">'.
 						$this->drawURLs_printTableHeader().
 						$code.
 					'</table>';
 			} else {
-				$output .= count(array_keys($this->duplicateTrack)).' URLs submitted. <br/>';
-				$output .= '<input type="submit" name="_" value="Continue" />';
+				$output .= count(array_keys($this->duplicateTrack)).' '.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.submitted').'. <br /><br />';
+				$output .= '<input type="submit" name="_" value="'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.continue').'" />';
+				$output .= '<input type="submit" onclick="this.form.elements[\'SET[crawlaction]\'].value=\'log\';" value="'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.continueinlog').'" />';
 			}
 		}
 
@@ -286,43 +357,73 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 */
 	function drawURLs_cfgSelectors()	{
 
-			// Processing Instructions:
-		$pIs = array('' => '');
-		foreach((array)$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'] as $k => $v)	{
-			$pIs[$k] = $v.' ['.$k.']';
-		}
-		$cell[] = $this->selectorBox($pIs, 'procInstructions', $this->incomingProcInstructions, 1);
+			// depth
+		$cell[] = $this->selectorBox(
+			array(
+				0 => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_0'),
+				1 => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_1'),
+				2 => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_2'),
+				3 => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_3'),
+				4 => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_4'),
+				99 => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_infi'),
+			),
+			'SET[depth]',
+			$this->pObj->MOD_SETTINGS['depth'],
+			0
+		);
+		$availableConfigurations = $this->crawlerObj->getConfigurationsForBranch($this->pObj->id, $this->pObj->MOD_SETTINGS['depth']?$this->pObj->MOD_SETTINGS['depth']:0 );
+
+			// Configurations
+		$cell[] = $this->selectorBox(
+			array_combine($availableConfigurations, $availableConfigurations),
+			'configurationSelection',
+			$this->incomingConfigurationSelection,
+			1
+		);
 
 			// Scheduled time:
-		$cell[] = $this->selectorBox(array(
-						'now' => 'Now',
-						'midnight' => 'Midnight',
-						'04:00' => '04:00 AM',
-					),'tstamp',t3lib_div::_POST('tstamp'),0);
+		$cell[] = $this->selectorBox(
+			array(
+				'now' => $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.time.now'),
+				'midnight' => $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.time.midnight'),
+				'04:00' => $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.time.4am'),
+			),
+			'tstamp',
+			t3lib_div::_POST('tstamp'),
+			0
+		);
 
+		// TODO: check relevance
+		/*
 			// Requests per minute:
-		$cell[] = $this->selectorBox(array(
-						30 => '[Default]',
-						1 => '1',
-						5 => '5',
-						10 => '10',
-						20 => '20',
-						30 => '30',
-						50 => '50',
-						100 => '100',
-						200 => '200',
-						1000 => '1000',
-					),'perminute',t3lib_div::_POST('perminute'),0);
+		$cell[] = $this->selectorBox(
+			array(
+				30 => '[Default]',
+				1 => '1',
+				5 => '5',
+				10 => '10',
+				20 => '20',
+				30 => '30',
+				50 => '50',
+				100 => '100',
+				200 => '200',
+				1000 => '1000',
+			),
+			'SET[perminute]',
+			$this->pObj->MOD_SETTINGS['perminute'],
+			0
+		);
+		*/
 
 		$output = '
-			<table border="0" cellspacing="1" cellpadding="0" class="lrPadding c-list">
+			<table class="lrPadding c-list">
 				<tr class="bgColor5 tableheader">
-					<td>Processing Instructions:</td>
-					<td>Scheduled:</td>
-					<td>Requests / Minute:</td>
+					<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.depth').':</td>
+					<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.configurations').':</td>
+					<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.scheduled').':</td>
 				</tr>
 				<tr class="bgColor4">
-					<td valign="top">'.implode('</td>
+					<td valign="top">' . implode('</td>
 					<td valign="top">', $cell).'</td>
 				</tr>
 			</table>';
@@ -339,12 +440,13 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 
 		$content = '
 			<tr class="bgColor5 tableheader">
-				<td>Page title:</td>
-				<td>Key:</td>
-				<td>Parameter Cfg:</td>
-				<td>Values Expanded:</td>
-				<td>URLs:</td>
-				<td>Options:</td>
+				<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.pagetitle').':</td>
+				<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.key').':</td>
+				<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.parametercfg').':</td>
+				<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.values').':</td>
+				<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.urls').':</td>
+				<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.options').':</td>
+				<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.parameters').':</td>
 			</tr>';
 
 		return $content;
@@ -377,6 +479,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 
 			// Init:
 		$this->crawlerObj = t3lib_div::makeInstance('tx_crawler_lib');
+		$this->crawlerObj->setAccessMode('gui');
 		$this->crawlerObj->setID = t3lib_div::md5int(microtime());
 
 			// Read URL:
@@ -402,11 +505,11 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 
 				// Print rudimentary details:
 			$output .= '
-				<br/><br/>
-				<input type="submit" value="Back" name="_back" />
+				<br /><br />
+				<input type="submit" value="'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.back').'" name="_back" />
 				<input type="hidden" value="'.$this->pObj->id.'" name="id" />
 				<input type="hidden" value="'.$showSetId.'" name="setID" />
-				<br/>
+				<br />
 				Current server time: '.date('H:i:s',time()).
 				t3lib_div::view_array($q_entry);
 		} else {	// Show list:
@@ -451,18 +554,19 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				if ($code)	{
 
 					$output .= '
-						<br/><br/>
-						<input type="submit" value="Reload list" name="_reload" />
-						<input type="submit" value="Download entries as CSV" name="_csv" />
-						<input type="submit" value="Flush entries" name="_flush" onclick="return confirm(\'Are you sure?\');" />
+						<br /><br />
+						<input type="submit" value="'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.reloadlist').'" name="_reload" />
+						<input type="submit" value="'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.downloadcsv').'" name="_csv" />
+						<input type="submit" value="'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.flushvisiblequeue').'" name="_flush" onclick="return confirm(\''.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.confirmyouresure').'\');" />
+						<input type="submit" value="'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.flushfullqueue').'" name="_flush_all" onclick="return confirm(\''.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.confirmyouresure').'\');" />
 						<input type="hidden" value="'.$this->pObj->id.'" name="id" />
 						<input type="hidden" value="'.$showSetId.'" name="setID" />
-						<br/>
-						Current server time: '.date('H:i:s',time()).'
-						<br/><br/>
+						<br />
+						'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.curtime').': '.date('H:i:s',time()).'
+						<br /><br />
 
 
-						<table border="0" cellspacing="1" cellpadding="0" class="lrPadding c-list">'.
+						<table class="lrPadding c-list crawlerlog">'.
 							$this->drawLog_printTableHeader().
 							$code.
 						'</table>';
@@ -472,15 +576,15 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 								'set_id, count(*) as count_value, scheduled',
 								'tx_crawler_queue',
 								'',
-								'set_id',
+								'set_id, scheduled',
 								'scheduled DESC'
 							);
 
 				$code = '
 					<tr class="bgColor5 tableheader">
-						<td>Set ID:</td>
-						<td>Count:</td>
-						<td>Time:</td>
+						<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.setid').':</td>
+						<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.count').'t:</td>
+						<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.time').':</td>
 					</tr>
 				';
 
@@ -498,8 +602,8 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				}
 
 				$output .= '
-					<br/><br/>
-					<table border="0" cellspacing="1" cellpadding="0" class="lrPadding c-list">'.
+					<br /><br />
+					<table class="lrPadding c-list">'.
 						$code.
 					'</table>';
 			}
@@ -544,17 +648,26 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 * @param	string		Title string
 	 * @return	string		HTML <tr> content (one or more)
 	 */
-	function drawLog_addRows($pageRow_setId,$titleString)	{
+	function drawLog_addRows($pageRow_setId, $titleString)	{
 
 			// If Flush button is pressed, flush tables instead of selecting entries:
-		$doFlush = t3lib_div::_POST('_flush') ? TRUE : FALSE;
-		$doCSV = t3lib_div::_POST('_csv') ? TRUE : FALSE;
+
+		if(t3lib_div::_POST('_flush')) {
+			$doFlush = true;
+			$doFullFlush = false;
+		} elseif(t3lib_div::_POST('_flush_all')) {
+			$doFlush = true;
+			$doFullFlush = true;
+		} else {
+			$doFlush = false;
+			$doFullFlush = false;
+		}
 
 			// Get result:
 		if (is_array($pageRow_setId))	{
-			$res = $this->crawlerObj->getLogEntriesForPageId($pageRow_setId['uid'], $this->pObj->MOD_SETTINGS['log_display'], $doFlush);
+			$res = $this->crawlerObj->getLogEntriesForPageId($pageRow_setId['uid'], $this->pObj->MOD_SETTINGS['log_display'], $doFlush, $doFullFlush);
 		} else {
-			$res = $this->crawlerObj->getLogEntriesForSetId($pageRow_setId, $this->pObj->MOD_SETTINGS['log_display'], $doFlush);
+			$res = $this->crawlerObj->getLogEntriesForSetId($pageRow_setId, $this->pObj->MOD_SETTINGS['log_display'], $doFlush, $doFullFlush);
 		}
 
 			// Init var:
@@ -580,15 +693,18 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				if ($vv['result_data'])	{
 					$requestContent = unserialize($vv['result_data']);
 					$requestResult = unserialize($requestContent['content']);
-
-					if (is_array($requestResult))	{
-						$resStatus = 'OK';
+					if (is_array($requestResult)) {
+						if (empty($requestResult['errorlog'])) {
+							$resStatus = 'OK';
+						} else {
+							$resStatus = implode("\n", $requestResult['errorlog']);
+						}
 						$resLog = is_array($requestResult['log']) ?  implode(chr(10),$requestResult['log']) : '';
 					} else {
-						$resStatus = 'Error: '.substr(ereg_replace('[[:space:]]+',' ',strip_tags($requestContent['content'])),0,100).'...';
+						$resStatus = 'Error: '.substr(ereg_replace('[[:space:]]+',' ',strip_tags($requestContent['content'])),0,10000).'...';
 					}
 				} else {
-					$resStatus = '..';
+					$resStatus = '-';
 				}
 
 					// Compile row:
@@ -599,8 +715,8 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				if ($this->pObj->MOD_SETTINGS['log_resultLog'])	{
 					$rowData['result_log'] = $resLog;
 				} else {
-					$rowData['scheduled'] = t3lib_BEfunc::date($vv['scheduled']).' '.date('H:i:s',$vv['scheduled']);
-					$rowData['exec_time'] = $vv['exec_time'] ? t3lib_BEfunc::date($vv['exec_time']).' '.date('H:i:s',$vv['exec_time']) : '-';
+					$rowData['scheduled'] = ($vv['scheduled']> 0) ? t3lib_BEfunc::datetime($vv['scheduled']) : ' '.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.immediate');
+					$rowData['exec_time'] = $vv['exec_time'] ? t3lib_BEfunc::datetime($vv['exec_time']) : '-';
 				}
 				$rowData['result_status'] = $resStatus;
 				$rowData['url'] = '<a href="'.htmlspecialchars($parameters['url']).'" target="_newWIndow">'.htmlspecialchars($parameters['url']).'</a>';
@@ -620,7 +736,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 						'.$titleClm.'
 						<td><a href="index.php?id='.$this->pObj->id.'&qid_details='.$vv['qid'].'&setID='.t3lib_div::_GP('setID').'">'.htmlspecialchars($vv['qid']).'</a></td>
 						<td><a href="index.php?id='.$this->pObj->id.'&qid_read='.$vv['qid'].'&setID='.t3lib_div::_GP('setID').'"><img src="'.$GLOBALS['BACK_PATH'].'gfx/refresh_n.gif" width="14" hspace="1" vspace="2" height="14" border="0" title="'.htmlspecialchars('Read').'" alt="" /></a></td>';
-				foreach($rowData as $fKey => $value)	{
+				foreach($rowData as $fKey => $value) {
 
 					if (t3lib_div::inList('url',$fKey))	{
 						$content.= '
@@ -638,8 +754,8 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 						// Only for CSV (adding qid and scheduled/exec_time if needed):
 					$rowData['result_log'] = implode('// ',explode(chr(10),$resLog));
 					$rowData['qid'] = $vv['qid'];
-					$rowData['scheduled'] = t3lib_BEfunc::date($vv['scheduled']).' '.date('H:i:s',$vv['scheduled']);
-					$rowData['exec_time'] = $vv['exec_time'] ? t3lib_BEfunc::date($vv['exec_time']).' '.date('H:i:s',$vv['exec_time']) : '-';
+					$rowData['scheduled'] = t3lib_BEfunc::datetime($vv['scheduled']);
+					$rowData['exec_time'] = $vv['exec_time'] ? t3lib_BEfunc::datetime($vv['exec_time']) : '-';
 					$this->CSVaccu[] = $rowData;
 				}
 			}
@@ -649,7 +765,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 			$content.= '
 				<tr class="bgColor-20">
 					<td>'.$titleString.'</td>
-					<td colspan="'.$colSpan.'"><em>No entries</em></td>
+					<td colspan="'.$colSpan.'"><em>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.noentries').'</em></td>
 				</tr>';
 		}
 
@@ -665,18 +781,18 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 
 		$content = '
 			<tr class="bgColor5 tableheader">
-				<td>Page Title:</td>
-				<td>qid:</td>
+				<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.pagetitle').':</td>
+				<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.qid').':</td>
 				<td>&nbsp;</td>'.
 				($this->pObj->MOD_SETTINGS['log_resultLog'] ? '
-				<td>Result Log:</td>' : '
-				<td>Scheduled:</td>
-				<td>Run-time:</td>').'
-				<td>Status:</td>
-				<td>Url:</td>
-				<td>Groups:</td>
-				<td>Proc. Instr.:</td>
-				<td>set_id:</td>'.
+				<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.resultlog').':</td>' : '
+				<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.scheduledtime').':</td>
+				<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.runtime').':</td>').'
+				<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.status').':</td>
+				<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.url').':</td>
+				<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.groups').':</td>
+				<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.procinstr').':</td>
+				<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.setid').':</td>'.
 				($this->pObj->MOD_SETTINGS['log_feVars'] ? '
 				<td>'.htmlspecialchars('TSFE->id').'</td>
 				<td>'.htmlspecialchars('TSFE->gr_list').'</td>
@@ -705,83 +821,118 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 *****************************/
 
 	/**
-	 * Display status of CLI script
+	 * This method is used to show an overview about the active an the finished crawling processes
 	 *
-	 * @return	void
+	 * @author Timo Schmidt
+	 * @param void
+	 * @return void
 	 */
-	function drawCLIstatus()	{
+	protected function drawProcessOverviewAction(){
 
-			// Init:
-		$this->crawlerObj = t3lib_div::makeInstance('tx_crawler_lib');
+		global $BACK_PATH;
 
-			// Processing:
-		if (t3lib_div::_POST('_run'))	{
-			$this->crawlerObj->CLI_main();
-		}
-		if (t3lib_div::_POST('_enable'))	{
-			$this->crawlerObj->CLI_setProcess('end', 'Status set by backend module');
-		}
-		if (t3lib_div::_POST('_disable'))	{
-			$this->crawlerObj->CLI_setProcess('disabled', 'Status set by backend module');
-		}
+		$crawler = $this->findCrawler();
+		$message = $this->handleProcessOverviewActions();
 
-			// Create output:
-		$dat = $this->crawlerObj->CLI_readProcessData();
-		$output = '
-			<br/><br/>
-			<table border="0" cellspacing="1" cellpadding="0" class="lrPadding c-list">
-				<tr>
-					<td class="bgColor5 tableheader">Status:</td>
-					<td class="bgColor-20">'.htmlspecialchars($dat['status']).'</td>
-				</tr>
-				<tr>
-					<td class="bgColor5 tableheader">Message:</td>
-					<td class="bgColor-20">'.htmlspecialchars($dat['msg']).'</td>
-				</tr>
-				<tr>
-					<td class="bgColor5 tableheader">Counter:</td>
-					<td class="bgColor-20">'.htmlspecialchars($dat['counter']).'</td>
-				</tr>
-				<tr>
-					<td class="bgColor5 tableheader">Last seen:</td>
-					<td class="bgColor-20">'.htmlspecialchars(t3lib_BEfunc::dateTimeAge($dat['tstamp'])).'</td>
-				</tr>
-				<tr>
-					<td class="bgColor5 tableheader">Last proc. time:</td>
-					<td class="bgColor-20">'.htmlspecialchars($dat['endtime'] && $dat['starttime'] ? $dat['endtime']-$dat['starttime'] : '-').' seconds</td>
-				</tr>
-			</table>
+		$offset 	= intval(t3lib_div::_GP('offset'));
+		$perpage 	= 20;
 
-			<br/>
-			Current server time: '.date('H:i:s',time()).'
-			<input type="hidden" value="'.$this->pObj->id.'" name="id" />
-			<input type="submit" value="Reload" name="_" />
-			';
+		$processRepository	= new tx_crawler_domain_process_repository();
+		$queueRepository	= new tx_crawler_domain_queue_repository();
 
-		if ($dat['status']==='disabled')	{
-			$output.= ' - <input type="submit" value="Enable" name="_enable" />';
-		} else {
-			$output.= ' - <input type="submit" value="Disable" name="_disable" />';
+		$mode = $this->pObj->MOD_SETTINGS['processListMode'];
+		if ($mode == 'detail') {
+			$where = '';
+		} elseif($mode == 'simple') {
+			$where = 'active = 1';
 		}
 
-		$output.= ' - <input type="submit" value="Run now" name="_run" />';
+		$allProcesses 		= $processRepository->findAll('ttl','DESC', $perpage, $offset,$where);
+		$allCount			= $processRepository->countAll($where);
 
-		$output.= '<br/><br/>Consider running the CLI script from shell: <br/>'.
-					t3lib_div::getIndpEnv('TYPO3_DOCUMENT_ROOT') . '/typo3/cli_dispatch.phpsh crawler';
+		$listView			= new tx_crawler_view_process_list();
+		$listView->setPageId($this->pObj->id);
+		$listView->setIconPath($BACK_PATH.'../typo3conf/ext/crawler/template/process/res/img/');
+		$listView->setProcessCollection($allProcesses);
+		$listView->setCliPath($this->getCrawlerCliPath());
+		$listView->setIsCrawlerEnabled(!$crawler->getDisabled());
+		$listView->setTotalUnprocessedItemCount($queueRepository->countAllPendingItems());
+		$listView->setAssignedUnprocessedItemCount($queueRepository->countAllAssignedPendingItems());
+		$listView->setActiveProcessCount($processRepository->countActive());
+		$listView->setMaxActiveProcessCount($this->extensionSettings['processLimit']);
+		$listView->setActionMessage($message);
+		$listView->setMode($mode);
 
+		$paginationView		= new tx_crawler_view_pagination();
+		$paginationView->setCurrentOffset($offset);
+		$paginationView->setPerPage($perpage);
+		$paginationView->setTotalItemCount($allCount);
+
+		$output = $listView->render();
+
+		if ($paginationView->getTotalPagesCount() > 1) {
+			$output .= ' <br />'.$paginationView->render();
+		}
 
 		return $output;
 	}
 
+	/**
+	 * Method to handle incomming actions of the process overview
+	 *
+	 * @param void
+	 * @return void
+	 */
+	protected function handleProcessOverviewActions(){
+
+		$crawler = $this->findCrawler();
+
+		switch (t3lib_div::_GP('action')) {
+			case 'stopCrawling' :
+				//set the cli status to disable (all processes will be terminated)
+				$crawler->setDisabled(true);
+				break;
+			case 'resumeCrawling' :
+				//set the cli status to end (all processes will be terminated)
+				$crawler->setDisabled(false);
+				break;
+			case 'addProcess' :
+				$completePath = 'nohup ' . escapeshellcmd($this->getCrawlerCliPath()) . ' &';
+				$handle = popen($completePath,'r');
+				if ($handle === false) {
+					throw new Exception($GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.newprocesserror'));
+				}
+				return $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.newprocess');
+				break;
+		}
+	}
 
 
+	/**
+	 * Returns the path to start the crawler from the command line
+	 *
+	 * @return string
+	 */
+	protected function getCrawlerCliPath(){
+		$phpPath 		= $this->crawlerObj->extensionSettings['phpPath'] . ' ';
+		$pathToTypo3 	= t3lib_div::getIndpEnv('TYPO3_DOCUMENT_ROOT');
+		$cliPart	 	= '/typo3/cli_dispatch.phpsh crawler';
+		return $phpPath.$pathToTypo3.$cliPart;
+	}
 
-
-
-
-
-
-
+	/**
+	 * Returns the singleton instance of the crawler.
+	 *
+	 * @param void
+	 * @return tx_crawler_lib crawler object
+	 * @author Timo Schmidt <schmidt@aoemedia.de>
+	 */
+	protected function findCrawler(){
+		if(!$this->crawlerObj instanceof tx_crawler_lib){
+			$this->crawlerObj = t3lib_div::makeInstance('tx_crawler_lib');
+		}
+		return $this->crawlerObj;
+	}
 
 
 
@@ -812,10 +963,12 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 
 		return $output;
 	}
+
 }
 
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/modfunc1/class.tx_crawler_modfunc1.php'])	{
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/modfunc1/class.tx_crawler_modfunc1.php']);
 }
+
 ?>
