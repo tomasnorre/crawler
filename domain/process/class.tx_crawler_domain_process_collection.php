@@ -62,7 +62,7 @@ class tx_crawler_domain_process_collection extends ArrayObject {
 	 * @throws InvalidArgumentException
 	 * @return void
 	 */
-	public function offsetSet($index, tx_crawler_domain_process $subject) {
+	public function offsetSet($index, $subject) {
 		if (! $subject instanceof tx_crawler_domain_process ) {
 			throw new InvalidArgumentException('Wrong parameter type given, "tx_crawler_domain_process" expected!');
 		}
@@ -75,7 +75,7 @@ class tx_crawler_domain_process_collection extends ArrayObject {
 	 * @throws InvalidArgumentException
 	 * @return void
 	 */
-	public function append(tx_crawler_domain_process $subject) {
+	public function append($subject) {
 		if (! $subject instanceof tx_crawler_domain_process ) {
 			throw new InvalidArgumentException('Wrong parameter type given, "tx_crawler_domain_process" expected!');
 		}

@@ -35,16 +35,6 @@ abstract class tx_crawler_domain_lib_abstract_repository {
 	protected $tableName;
 
 	/**
-	 * Contructor to initialize the repository
-	 *
-	 * @param void
-	 */
-	public function __construct() {
-		$className = $this->objectClassname;
-		$this->tableName = call_user_func ( array($className, 'getTableName') );
-	}
-
-	/**
 	 * Returns an instance of the TYPO3 database class.
 	 *
 	 * @return  t3lib_DB
@@ -61,7 +51,7 @@ abstract class tx_crawler_domain_lib_abstract_repository {
 	 */
 	protected function countByWhere($where) {
 		$db 	= $this->getDB();
-		$rs 	= $db->exec_SELECTquery('count(*) as anz',$this->tableName,$where);
+		$rs 	= $db->exec_SELECTquery('count(*) as anz', $this->tableName, $where);
 		$res 	= $db->sql_fetch_assoc($rs);
 
 		return $res['anz'];

@@ -30,6 +30,8 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
 
 	protected $objectClassname = 'tx_crawler_domain_queue_entry';
 
+	protected $tableName = 'tx_crawler_queue';
+
 	/**
 	 * This mehtod is used to find the youngest entry for a given process.
 	 *

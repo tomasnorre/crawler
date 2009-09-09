@@ -34,6 +34,8 @@ class tx_crawler_domain_process_repository extends tx_crawler_domain_lib_abstrac
 	 */
 	protected $objectClassname = 'tx_crawler_domain_process';
 
+	protected $tableName = 'tx_crawler_process';
+
 	/**
 	 * This method is used to find all cli processes within a limit
 	 *
