@@ -769,7 +769,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 						'.$titleClm.'
 						<td><a href="index.php?id='.$this->pObj->id.'&qid_details='.$vv['qid'].'&setID='.t3lib_div::_GP('setID').'">'.htmlspecialchars($vv['qid']).'</a></td>
 						<td><a href="index.php?id='.$this->pObj->id.'&qid_read='.$vv['qid'].'&setID='.t3lib_div::_GP('setID').'"><img src="'.$GLOBALS['BACK_PATH'].'gfx/refresh_n.gif" width="14" hspace="1" vspace="2" height="14" border="0" title="'.htmlspecialchars('Read').'" alt="" /></a></td>';
-				foreach($rowData as $fKey => $value)	{
+				foreach($rowData as $fKey => $value) {
 
 					if (t3lib_div::inList('url',$fKey))	{
 						$content.= '

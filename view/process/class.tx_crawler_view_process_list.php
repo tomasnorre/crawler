@@ -77,7 +77,6 @@ class tx_crawler_view_process_list {
 	 */
 	protected $assignedUnprocessedItemCount;
 
-
 	/**
 	 * @return int
 	 */
@@ -233,7 +232,7 @@ class tx_crawler_view_process_list {
 	 *
 	 * @param string $iconPath
 	 */
-	public function setIconPath($iconPath){
+	public function setIconPath($iconPath) {
 		$this->iconPath = $iconPath;
 	}
 
@@ -242,7 +241,7 @@ class tx_crawler_view_process_list {
 	 *
 	 * @return string
 	 */
-	protected function getIconPath(){
+	protected function getIconPath() {
 		return $this->iconPath;
 	}
 
@@ -252,7 +251,7 @@ class tx_crawler_view_process_list {
 	 *
 	 * @param tx_crawler_domain_process_collection $processCollection
 	 */
-	public function setProcessCollection($processCollection){
+	public function setProcessCollection($processCollection) {
 		$this->processCollection = $processCollection;
 	}
 
@@ -261,7 +260,7 @@ class tx_crawler_view_process_list {
 	 *
 	 * @return tx_crawler_domain_process_collection
 	 */
-	protected function getProcessCollection(){
+	protected function getProcessCollection() {
 		return $this->processCollection;
 	}
 
@@ -271,10 +270,10 @@ class tx_crawler_view_process_list {
 	 * @param int $timestamp
 	 * @return string
 	 */
-	protected function asDate($timestamp){
-		if($timestamp > 0){
+	protected function asDate($timestamp) {
+		if ($timestamp > 0) {
 			return date($this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.php:time.detailed'), $timestamp);
-		}else{
+		} else {
 			return '';
 		}
 	}
@@ -285,10 +284,9 @@ class tx_crawler_view_process_list {
 	 * @param int $seconds
 	 * @return int
 	 */
-	protected function asMinutes($seconds){
+	protected function asMinutes($seconds) {
 		return round($seconds / 60);
 	}
-
 
 	/**
 	 * Returns the state icon for the current job
@@ -296,8 +294,8 @@ class tx_crawler_view_process_list {
 	 * @param string $state
 	 * @return string icon
 	 */
-	protected function getIconForState($state){
-		switch($state){
+	protected function getIconForState($state) {
+		switch($state) {
 			case 'running':
 				$icon = 'bullet_orange';
 				$title = $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.php:labels.process.running');
@@ -306,9 +304,9 @@ class tx_crawler_view_process_list {
 				$icon = 'bullet_green';
 				$title = $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.php:labels.process.success');
 				break;
-			case 'canceled':
+			case 'cancelled':
 				$icon = 'bullet_red';
-				$title = $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.php:labels.process.chanceled');
+				$title = $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.php:labels.process.cancelled');
 				break;
 		}
 
@@ -320,7 +318,7 @@ class tx_crawler_view_process_list {
 	 *
 	 * @return string
 	 */
-	protected function getRefreshIcon(){
+	protected function getRefreshIcon() {
 		return $this->getIcon('arrow_refresh');
 	}
 
@@ -329,7 +327,7 @@ class tx_crawler_view_process_list {
 	 *
 	 * @return string
 	 */
-	protected function getRefreshLink(){
+	protected function getRefreshLink() {
 		return '<a href="index.php?id='.$this->pageId.'" title="'.$this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.php:labels.refresh').'">' . $this->getRefreshIcon() . '</a>';
 	}
 
@@ -338,7 +336,7 @@ class tx_crawler_view_process_list {
 	 *
 	 * @return string html tag for stop icon
 	 */
-	protected function getStopIcon(){
+	protected function getStopIcon() {
 		return $this->getIcon('stop');
 	}
 
@@ -347,30 +345,38 @@ class tx_crawler_view_process_list {
 	 *
 	 * @return string
 	 */
-	protected function getEnableDisableLink(){
-		if($this->getIsCrawlerEnabled()){
+	protected function getEnableDisableLink() {
+		if ($this->getIsCrawlerEnabled()) {
 			return '<a href="index.php?id='.$this->pageId.'&action=stopCrawling" title="'.$this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.php:labels.disablecrawling').'">'.$this->getIcon('control_stop_blue').'</a>';
-		}else{
+		} else {
 			return '<a href="index.php?id='.$this->pageId.'&action=resumeCrawling" title="'.$this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.php:labels.enablecrawling').'">'.$this->getIcon('control_play').'</a>';
 		}
 	}
 
-
+	/**
+	 * Get mode link
+	 *
+	 * @param void
+	 * @return string a-tag
+	 */
 	protected function getModeLink() {
 		if ($this->getMode() == 'detail') {
 			return '<a href="index.php?id='.$this->pageId.'&SET[processListMode]=simple" title="'.$this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.php:labels.show.running').'">'.$this->getIcon('arrow_in').'</a>';
-		} elseif($this->getMode() == 'simple') {
+		} elseif ($this->getMode() == 'simple') {
 			return '<a href="index.php?id='.$this->pageId.'&SET[processListMode]=detail" title="'.$this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.php:labels.show.all').'">'.$this->getIcon('arrow_out').'</a>';
 		}
 	}
 
 	/**
+	 * Get add link
 	 *
+	 * @param void
+	 * @return string a-tag
 	 */
-	protected function getAddLink(){
-		if($this->getActiveProcessCount() < $this->getMaxActiveProcessCount() && $this->getIsCrawlerEnabled()){
+	protected function getAddLink() {
+		if ($this->getActiveProcessCount() < $this->getMaxActiveProcessCount() && $this->getIsCrawlerEnabled()) {
 			return '<a href="index.php?id='.$this->pageId.'&action=addProcess" title="'.$this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.php:labels.process.add').'">'.$this->getAddIcon().'</a>';
-		}else{
+		} else {
 			return '';
 		}
 	}
@@ -380,7 +386,7 @@ class tx_crawler_view_process_list {
 	 *
 	 * @return string html tag for image to add new processes
 	 */
-	protected function getAddIcon(){
+	protected function getAddIcon() {
 		return $this->getIcon('add');
 	}
 
@@ -402,13 +408,12 @@ class tx_crawler_view_process_list {
 	 *
 	 * @return string html content
 	 */
-	public function render(){
+	public function render() {
 		ob_start();
 		$this->template = t3lib_div::getFileAbsFileName($this->template);
 		include($this->template);
 		$content = ob_get_contents();
 		ob_end_clean();
-
 		return $content;
 	}
 
@@ -424,4 +429,5 @@ class tx_crawler_view_process_list {
 		return $GLOBALS['LANG']->sL($label);
 	}
 }
+
 ?>
