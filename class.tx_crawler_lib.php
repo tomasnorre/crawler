@@ -533,6 +533,7 @@ class tx_crawler_lib {
 									'baseUrl' => $configurationRecord['base_url'],
 									'realurl' => $configurationRecord['realurl'],
 									'cHash' => $configurationRecord['chash'],
+									'userGroups' => $configurationRecord['fegroups'],
 									'exclude' => $configurationRecord['exclude'],
 									'workspace' => $configurationRecord['sys_workspace_uid'],
 									'key' => $key,
