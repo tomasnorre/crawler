@@ -69,8 +69,16 @@ class tx_crawler_domain_events_dispatcher {
 	 * @param void
 	 * @return void
 	 */
-    private function __construct() {
+    function __construct() {
     	$this->observers = array();
+    	if (is_array ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/domain/events/class.tx_crawler_domain_events_dispatcher.php']['registerObservers'])) {
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/domain/events/class.tx_crawler_domain_events_dispatcher.php']['registerObservers'] as $classRef) {
+				$hookObj = &t3lib_div::getUserObj($classRef);
+				if (method_exists($hookObj, 'registerObservers')) {
+					$hookObj->registerObservers($this);
+				}
+			}
+		}
     }
 
     /**
@@ -129,19 +137,9 @@ class tx_crawler_domain_events_dispatcher {
 	 * @return tx_crawler_domain_events_dispatcher
 	 */
 	public static function getInstance() {
-		global $TYPO3_CONF_VARS;
+
 		if(!self::$instance instanceof tx_crawler_domain_events_dispatcher) {
 			$dispatcher = new tx_crawler_domain_events_dispatcher();
-
-			if (is_array ($TYPO3_CONF_VARS['SC_OPTIONS']['crawler/domain/events/class.tx_crawler_domain_events_dispatcher.php']['registerObservers'])) {
-				foreach ($TYPO3_CONF_VARS['SC_OPTIONS']['crawler/domain/events/class.tx_crawler_domain_events_dispatcher.php']['registerObservers'] as $classRef) {
-					$hookObj = &t3lib_div::getUserObj($classRef);
-					if (method_exists($hookObj, 'registerObservers')) {
-						$hookObj->registerObservers($dispatcher);
-					}
-				}
-			}
-
 			self::$instance = $dispatcher;
 		}
 
