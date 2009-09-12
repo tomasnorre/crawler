@@ -21,6 +21,8 @@
 	            <label index="tx_crawler_configuration.chash">Append cHash</label>
 	            <label index="tx_crawler_configuration.exclude">Exclude pages</label>
 	            <label index="tx_crawler_configuration.sys_workspace_uid">Crawl workspace</label>
+	            <label index="crawler_task.name">Crawler Run</label>
+	            <label index="crawler_task.description">Running the crawler to extension to process it's queue-entries.</label>
 		</languageKey>
 	</data>
 </T3locallang>

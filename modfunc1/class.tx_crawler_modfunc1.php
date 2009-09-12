@@ -375,7 +375,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 
 			// Configurations
 		$cell[] = $this->selectorBox(
-			array_combine($availableConfigurations, $availableConfigurations),
+			empty($availableConfigurations)?array():array_combine($availableConfigurations, $availableConfigurations),
 			'configurationSelection',
 			$this->incomingConfigurationSelection,
 			1
@@ -859,7 +859,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		$listView->setTotalUnprocessedItemCount($queueRepository->countAllPendingItems());
 		$listView->setAssignedUnprocessedItemCount($queueRepository->countAllAssignedPendingItems());
 		$listView->setActiveProcessCount($processRepository->countActive());
-		$listView->setMaxActiveProcessCount($this->extensionSettings['processLimit']);
+		$listView->setMaxActiveProcessCount(t3lib_div::intInRange($this->extensionSettings['processLimit'],1,99,1));
 		$listView->setActionMessage($message);
 		$listView->setMode($mode);
 

@@ -32,4 +32,11 @@ t3lib_extMgm::addService(
 	)
 );
 
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['tx_crawler_scheduler_task'] = array(
+	'extension'        => $_EXTKEY,
+	'title'            => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:crawler_task.name',
+	'description'      => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:crawler_task.description',
+	'additionalFields' => 'tx_crawler_scheduler_AdditionalFieldProvider'
+);
+
 ?>

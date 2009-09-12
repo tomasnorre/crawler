@@ -153,8 +153,7 @@ class tx_crawler_lib {
 
 	    // set defaults:
 	    if ($this->extensionSettings['countInARun']=='') $this->extensionSettings['countInARun']=100;
-	    if (!t3lib_div::intInRange($this->extensionSettings['processLimit'],1,99)) $this->extensionSettings['processLimit']=1;
-
+	    $this->extensionSettings['processLimit'] = t3lib_div::intInRange($this->extensionSettings['processLimit'],1,99,1);
 	}
 
 	/**
@@ -1677,8 +1676,9 @@ class tx_crawler_lib {
 				// cleanup
 			$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_crawler_process', 'assigned_items_count = 0');
 
-            $this->CLI_releaseProcesses($this->CLI_buildProcessId());
+            return $this->CLI_releaseProcesses($this->CLI_buildProcessId());
 		}
+		return false;
 	}
 
 	/**
