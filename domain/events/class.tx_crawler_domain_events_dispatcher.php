@@ -69,7 +69,7 @@ class tx_crawler_domain_events_dispatcher {
 	 * @param void
 	 * @return void
 	 */
-    function __construct() {
+    protected function __construct() {
     	$this->observers = array();
     	if (is_array ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/domain/events/class.tx_crawler_domain_events_dispatcher.php']['registerObservers'])) {
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/domain/events/class.tx_crawler_domain_events_dispatcher.php']['registerObservers'] as $classRef) {

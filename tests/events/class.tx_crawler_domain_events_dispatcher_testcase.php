@@ -17,7 +17,6 @@ class tx_crawler_domain_events_dispatcher_testcase extends tx_phpunit_testcase {
 	public function setUp(){
 		$this->oldObservers = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/domain/events/class.tx_crawler_domain_events_dispatcher.php']['registerObservers'];
 		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/domain/events/class.tx_crawler_domain_events_dispatcher.php']['registerObservers'] = array();
-		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/domain/events/class.tx_crawler_domain_events_dispatcher.php']['registerObservers'][] = 'EXT:crawler/tests/events/data/class.tx_crawler_domain_events_test.php:tx_crawler_domain_events_test';
 	}
 
 	/**
@@ -86,9 +85,11 @@ class tx_crawler_domain_events_dispatcher_testcase extends tx_phpunit_testcase {
 		tx_crawler_domain_events_test::$called_foo = 0;
 		tx_crawler_domain_events_test::$called_bar = 0;
 		
-			//we're bypassing the signleton here because we don't want to share data with former testcases
-		$dispatcher = new tx_crawler_domain_events_dispatcher();
-
+			//we're bypassing the signleton here because we don't want to share data with former testcases. Therefore we mock the protected constructor and create a fresh dispatcher
+		$dispatcher 	= $this->getMock('tx_crawler_domain_events_dispatcher',array('__construct'),array(),'',false);
+		$observer 		= new tx_crawler_domain_events_test();
+		$observer->registerObservers($dispatcher);
+		
 		foreach($events as $event){
 			$dispatcher->post($event['name'],$event['group'],$event['parameters']);
 		}
