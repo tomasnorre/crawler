@@ -10,7 +10,7 @@ CREATE TABLE tx_crawler_queue (
   scheduled int(11) DEFAULT '0' NOT NULL,
   exec_time int(11) DEFAULT '0' NOT NULL,
   set_id int(11) DEFAULT '0' NOT NULL,
-  result_data LONGTEXT NOT NULL,
+  result_data longtext NOT NULL,
   process_scheduled int(11) DEFAULT '0' NOT NULL,
   process_id varchar(50) DEFAULT '' NOT NULL,
   process_id_completed varchar(50) DEFAULT '' NOT NULL,
