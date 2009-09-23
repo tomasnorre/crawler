@@ -1,7 +1,3 @@
-CRAWLER:
-
-- Way to filter out page IDs known to not be crawlable, eg. via Page TSconfig (DS req).
-
 Submitting links to queue (ideas):
 - Re-set crawled entries (crawler)
 - Making URLs from realurl page-cache table? (DS req?)
@@ -12,4 +8,4 @@ Submitting links to queue (ideas):
 			- A hook in linkData() or the like makes it possible for "crawler" to insert a URL in a new table of "visited URLs" which can be (regularily) transferred to the crawler queue (DS req. for P&S section!!)
 - When indexed search would otherwise have indexed a page, simply add it to queue.
 
-- Backend module: getLL() / XHTML / Skinning
+- Backend module: XHTML / Skinning
