@@ -1207,6 +1207,31 @@ class tx_crawler_lib {
 			return FALSE;
 		}
 
+ 		$reqHeaders = $this->buildRequestHeaderArray($url, $crawlerId);
+
+
+ 		// direct request
+ 		if ($this->extensionSettings['makeDirectRequests']) {
+	 		$cmd = escapeshellcmd($this->extensionSettings['phpPath']);
+	 		$cmd .= ' ';
+	 		$cmd .= escapeshellarg(t3lib_extMgm::extPath('crawler').'cli/bootstrap.php');
+	 		$cmd .= ' ';
+			$cmd .= escapeshellarg($originalUrl);
+			$cmd .= ' ';
+			$cmd .= escapeshellarg(base64_encode(serialize($reqHeaders)));
+
+			$content = shell_exec($cmd);
+
+			$result = array(
+				'request' => implode("\r\n",$reqHeaders)."\r\n\r\n",
+				'headers' => '',
+				'content' => $content
+			);
+
+			return $result;
+ 		}
+
+
 			// thanks to Pierrick Caillon for adding proxy support
  		$rurl = $url;
  		if ($GLOBALS['TYPO3_CONF_VARS']['SYS']['curlUse'] && $GLOBALS['TYPO3_CONF_VARS']['SYS']['curlProxyServer']) {
@@ -1219,6 +1244,7 @@ class tx_crawler_lib {
  			$host = 'ssl://' . $host;
  		}
 
+
  		$port = ($rurl['port'] > 0) ? $rurl['port'] : 80;
 
  		$startTime = microtime(true);
@@ -1229,17 +1255,6 @@ class tx_crawler_lib {
 			if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Error while opening "%s"', $url), 'crawler', 4, array('crawlerId' => $crawlerId));
 			return FALSE;
 		} else {	// Requesting...:
-				// Request headers:
-			$reqHeaders = array();
-			$reqHeaders[] = 'GET '.$url['path'].($url['query'] ? '?'.$url['query'] : '').' HTTP/1.0';
-			$reqHeaders[] = 'Host: '.$url['host'];
-			if(stristr($url['query'],'ADMCMD_previewWS')) $reqHeaders[] = 'Cookie: $Version="1"; be_typo_user="1"; $Path=/';
-			$reqHeaders[] = 'Connection: close';
-            if($url['user']!='') {
-                $reqHeaders[] = 'Authorization: Basic '. base64_encode($url['user'].':'.$url['pass']);
-            }
-			$reqHeaders[] = 'X-T3crawler: '.$crawlerId;
-			$reqHeaders[] = 'User-Agent: TYPO3 crawler';
 
 				// Request message:
 			$msg = implode("\r\n",$reqHeaders)."\r\n\r\n";
@@ -1287,10 +1302,28 @@ class tx_crawler_lib {
 			);
 
 			if(($this->extensionSettings['follow30x']) && ($newUrl = $this->getRequestUrlFrom302Header($d['headers'],$url['user'],$url['pass']))) {
-				$result=array_merge(array('parentRequest'=>$result),$this->requestUrl($newUrl, $crawlerId, $recursion--));
+				$result = array_merge(array('parentRequest'=>$result),$this->requestUrl($newUrl, $crawlerId, $recursion--));
 			}
 			return $result;
 		}
+	}
+
+
+
+	function buildRequestHeaderArray(array $url, $crawlerId) {
+		$reqHeaders = array();
+		$reqHeaders[] = 'GET '.$url['path'].($url['query'] ? '?'.$url['query'] : '').' HTTP/1.0';
+		$reqHeaders[] = 'Host: '.$url['host'];
+		if (stristr($url['query'],'ADMCMD_previewWS')) {
+			$reqHeaders[] = 'Cookie: $Version="1"; be_typo_user="1"; $Path=/';
+		}
+		$reqHeaders[] = 'Connection: close';
+            if ($url['user']!='') {
+                $reqHeaders[] = 'Authorization: Basic '. base64_encode($url['user'].':'.$url['pass']);
+            }
+		$reqHeaders[] = 'X-T3crawler: '.$crawlerId;
+		$reqHeaders[] = 'User-Agent: TYPO3 crawler';
+		return $reqHeaders;
 	}
 
 	/**
