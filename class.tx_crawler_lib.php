@@ -1759,6 +1759,7 @@ class tx_crawler_lib {
 			//if items should be written to
 			$reason = new tx_crawler_domain_reason();
 			$reason->setReason(tx_crawler_domain_reason::REASON_GUI_SUBMIT);
+			$reason->setDetailText('The cli script of the crawler added to the queue');
 			tx_crawler_domain_events_dispatcher::getInstance()->post(	'invokeQueueChange',
 																		$this->setID,
 																		array(	'reason' => $reason ));

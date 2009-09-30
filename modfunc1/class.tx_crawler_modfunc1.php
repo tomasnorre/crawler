@@ -242,7 +242,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 * @return	string		HTML output
 	 */
 	function drawURLs()	{
-		global $BACK_PATH;
+		global $BACK_PATH, $BE_USER;
 
 			// Init:
 		$this->duplicateTrack = array();
@@ -284,6 +284,10 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 			if($this->submitCrawlUrls){
 				$reason = new tx_crawler_domain_reason();
 				$reason->setReason(tx_crawler_domain_reason::REASON_GUI_SUBMIT);
+				
+				if($BE_USER instanceof t3lib_beUserAuth){ $username = $BE_USER->user['username']; }
+				$reason->setDetailText('The user '.$username.' added pages to the crawler queue manually ');
+				
 				tx_crawler_domain_events_dispatcher::getInstance()->post(	'invokeQueueChange',
 																			$this->findCrawler()->setID,
 																			array(	'reason' => $reason ));
