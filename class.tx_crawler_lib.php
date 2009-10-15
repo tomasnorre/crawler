@@ -1219,6 +1219,8 @@ class tx_crawler_lib {
 			$cmd .= escapeshellarg($originalUrl);
 			$cmd .= ' ';
 			$cmd .= escapeshellarg(base64_encode(serialize($reqHeaders)));
+			
+			file_put_contents('/tmp/crawler.log', date('H:i:s') . "\n" . $cmd. "\n\n", FILE_APPEND);
 
 			$content = shell_exec($cmd);
 
@@ -1227,6 +1229,8 @@ class tx_crawler_lib {
 				'headers' => '',
 				'content' => $content
 			);
+			
+			// var_dump($result);
 
 			return $result;
  		}

@@ -4,6 +4,8 @@
 /**
  * Retrieve path (taken from cli_dispatch.phpsh)
  */
+// echo realpath(dirname(__FILE__).'/../../../..'), "\n";
+
 
 	// Get path to this script
 $temp_PATH_thisScript = isset($_SERVER['argv'][0]) ? $_SERVER['argv'][0] : (isset($_ENV['_']) ? $_ENV['_'] : $_SERVER['_']);
@@ -36,35 +38,49 @@ if ($relativePath) {
 	}
 }
 
-$documentRoot = str_replace('typo3conf/ext/crawler/cli/bootstrap.php', '', $temp_PATH_thisScript);
+$documentRoot = str_replace('/typo3conf/ext/crawler/cli/bootstrap.php', '', $temp_PATH_thisScript);
+
 
 
 /**
  * Second paramater is a base64 encoded serialzed array of header data
  */
 $additionalHeaders = unserialize(base64_decode($_SERVER['argv'][2]));
-foreach ($additionalHeaders as $additionalHeader) {
-	list($key, $value) = explode(':', $additionalHeader, 2);
-	$key = str_replace('-', '_', strtoupper(trim($key)));
-	if ($key != 'HOST') {
-		$_SERVER['HTTP_'.$key] = $value;
+if (is_array($additionalHeaders)) {
+	foreach ($additionalHeaders as $additionalHeader) {
+		if (strpos($additionalHeader, ':') !== false) {
+			list($key, $value) = explode(':', $additionalHeader, 2);
+			$key = str_replace('-', '_', strtoupper(trim($key)));
+			if ($key != 'HOST') {
+				$_SERVER['HTTP_'.$key] = $value;
+			}
+		}
 	}
 }
 
 
 // put parsed query parts into $_GET array
 $urlParts = parse_url($_SERVER['argv'][1]);
+// Populating $_GET
 parse_str($urlParts['query'], $_GET);
+// Populating $_REQUEST
+parse_str($urlParts['query'], $_REQUEST);
+// Populating $_POST
+$_POST = array();
+// Populating $_COOKIE
+$_COOKIE = array();
 
 // faking the environment
+$_SERVER['ORIG_SCRIPT_FILENAME'] = '';
 $_SERVER['HTTP_HOST'] = $_SERVER['SERVER_NAME'] = $urlParts['host'];
 $_SERVER['HTTP_USER_AGENT'] = 'CLI Mode';
 $_SERVER['SCRIPT_NAME'] = $_SERVER['PHP_SELF'] = $urlParts['path'];
-$_SERVER['SCRIPT_FILENAME'] = $documentRoot . $_SERVER['SCRIPT_NAME'];
+$_SERVER['PATH_TRANSLATED'] = $_SERVER['SCRIPT_FILENAME'] = $documentRoot . $_SERVER['SCRIPT_NAME'];
 $_SERVER['QUERY_STRING'] = $urlParts['query'];
 $_SERVER['DOCUMENT_ROOT'] = '';
 $_SERVER['REQUEST_URI'] = $_SERVER['SCRIPT_NAME'] . (empty($_SERVER['QUERY_STRING']) ? '' : '?'.$_SERVER['QUERY_STRING']);
 
-include($documentRoot.'index.php');
+chdir($documentRoot);
+include($documentRoot . '/index.php');
 
 ?>
