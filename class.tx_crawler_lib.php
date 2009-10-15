@@ -1220,8 +1220,9 @@ class tx_crawler_lib {
 			$cmd .= ' ';
 			$cmd .= escapeshellarg(base64_encode(serialize($reqHeaders)));
 			
-			file_put_contents('/tmp/crawler.log', date('H:i:s') . "\n" . $cmd. "\n\n", FILE_APPEND);
-
+			if (!empty($this->extensionSettings['logFileName'])) {
+				file_put_contents($this->extensionSettings['logFileName'], date('H:i:s') . "\n" . $cmd. "\n\n", FILE_APPEND);
+			}
 			$content = shell_exec($cmd);
 
 			$result = array(
@@ -1680,7 +1681,19 @@ class tx_crawler_lib {
 
 
 
-
+	function getUnprocessedItemsCount() {
+		 $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+                        'count(*) as num',
+                        'tx_crawler_queue',
+                        'exec_time=0
+                                AND process_scheduled= 0
+                AND scheduled<='.$this->getCurrentTime()
+                        
+                );
+		
+		$count = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+		return $count['num'];
+	}
 
 
 
@@ -1699,7 +1712,7 @@ class tx_crawler_lib {
 	 * Main function for running from Command Line PHP script (cron job)
 	 * See ext/crawler/cli/crawler_cli.phpsh for details
 	 *
-	 * @return	void
+	 * @return	int number of remaining items or false if error
 	 */
 	function CLI_main()	{
 
@@ -1713,7 +1726,9 @@ class tx_crawler_lib {
 				// cleanup
 			$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_crawler_process', 'assigned_items_count = 0');
 
-            return $this->CLI_releaseProcesses($this->CLI_buildProcessId());
+            		$releaseStatus = $this->CLI_releaseProcesses($this->CLI_buildProcessId());
+			$this->CLI_debug("Unprocessed Items remaining:".$this->getUnprocessedItemsCount()." (".$this->CLI_buildProcessId().")");
+			return $this->getUnprocessedItemsCount();
 		}
 		return false;
 	}
@@ -1995,7 +2010,7 @@ class tx_crawler_lib {
      *
      * @param  mixed   string with a single process-id or array with multiple process-ids
      * @param boolean  show whether the DB-actions are included within an existings lock
-     * @return void
+     * @return boolean
      */
     function CLI_releaseProcesses($releaseIds, $withinLock=false) {
 
