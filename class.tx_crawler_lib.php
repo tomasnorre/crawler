@@ -1219,18 +1219,19 @@ class tx_crawler_lib {
 			$cmd .= escapeshellarg($originalUrl);
 			$cmd .= ' ';
 			$cmd .= escapeshellarg(base64_encode(serialize($reqHeaders)));
-			
-			if (!empty($this->extensionSettings['logFileName'])) {
-				file_put_contents($this->extensionSettings['logFileName'], date('H:i:s') . "\n" . $cmd. "\n\n", FILE_APPEND);
-			}
+
+			$startTime = microtime(true);
 			$content = shell_exec($cmd);
+			$time = microtime(true) - $startTime;
+
+			$this->log($originalUrl . $time);
 
 			$result = array(
 				'request' => implode("\r\n",$reqHeaders)."\r\n\r\n",
 				'headers' => '',
 				'content' => $content
 			);
-			
+
 			// var_dump($result);
 
 			return $result;
@@ -1296,9 +1297,8 @@ class tx_crawler_lib {
 
 			$time = microtime(true) - $startTime;
 
-			if (!empty($this->extensionSettings['logFileName'])) {
-				file_put_contents($this->extensionSettings['logFileName'], $originalUrl .' '.$time."\n", FILE_APPEND);
-			}
+			$this->log($originalUrl .' '.$time);
+
 				// Implode content and headers:
 			$result = array(
 				'request' => $msg,
@@ -1312,8 +1312,14 @@ class tx_crawler_lib {
 			return $result;
 		}
 	}
-
-
+	/**
+	 * @param message
+	 */
+	protected function log($message) {
+		if (!empty($this->extensionSettings['logFileName'])) {
+			@file_put_contents($this->extensionSettings['logFileName'], date('Ymd His') . $message . "\n", FILE_APPEND);
+		}
+	}
 
 	function buildRequestHeaderArray(array $url, $crawlerId) {
 		$reqHeaders = array();
