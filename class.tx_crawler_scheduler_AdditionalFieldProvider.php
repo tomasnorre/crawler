@@ -34,7 +34,7 @@ class tx_crawler_scheduler_AdditionalFieldProvider implements tx_scheduler_Addit
 	 *
 	 * @see interfaces/tx_scheduler_AdditionalFieldProvider#getAdditionalFields($taskInfo, $task, $schedulerModule)
 	 */
-	public function getAdditionalFields(array &$taskInfo, $task, tx_scheduler_module1 $parentObject) {
+	public function getAdditionalFields(array &$taskInfo, $task, tx_scheduler_Module $schedulerModule) {
 /*
 			// Initialize extra field value
 		if (empty($taskInfo['sleepTime'])) {
@@ -73,7 +73,7 @@ class tx_crawler_scheduler_AdditionalFieldProvider implements tx_scheduler_Addit
 	 * @param	tx_scheduler_module1	$parentObject: reference to the calling object (Scheduler's BE module)
 	 * @return	boolean					True if validation was ok (or selected class is not relevant), false otherwise
 	 */
-	public function validateAdditionalFields(array &$submittedData, tx_scheduler_module1 $parentObject) {
+	public function validateAdditionalFields(array &$submittedData, tx_scheduler_Module $schedulerModule) {
 		return true;
 /*		$submittedData['sleepTime'] = intval($submittedData['sleepTime']);
 
