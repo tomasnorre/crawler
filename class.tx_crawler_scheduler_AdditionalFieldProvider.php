@@ -35,33 +35,9 @@ class tx_crawler_scheduler_AdditionalFieldProvider implements tx_scheduler_Addit
 	 * @see interfaces/tx_scheduler_AdditionalFieldProvider#getAdditionalFields($taskInfo, $task, $schedulerModule)
 	 */
 	public function getAdditionalFields(array &$taskInfo, $task, tx_scheduler_Module $schedulerModule) {
-/*
-			// Initialize extra field value
-		if (empty($taskInfo['sleepTime'])) {
-			if ($parentObject->CMD == 'add') {
-					// In case of new task and if field is empty, set default sleep time
-				$taskInfo['sleepTime'] = 30;
-			} else if ($parentObject->CMD == 'edit') {
-					// In case of edit, set to internal value if no data was submitted already
-				$taskInfo['sleepTime'] = $task->sleepTime;
-			} else {
-					// Otherwise set an empty value, as it will not be used anyway
-				$taskInfo['sleepTime'] = '';
-			}
-		}
 
-			// Write the code for the field
-		$fieldID = 'task_sleepTime';
-		$fieldCode = '<input type="text" name="tx_scheduler[sleepTime]" id="' . $fieldID . '" value="' . $taskInfo['sleepTime'] . '" size="10" />';
-*/
 		$additionalFields = array();
-/*		$additionalFields[$fieldID] = array(
-			'code'     => $fieldCode,
-			'label'    => 'LLL:EXT:scheduler/mod1/locallang.xml:label.sleepTime',
-			'cshKey'   => '_MOD_tools_txschedulerM1',
-			'cshLabel' => $fieldID
-		);
-*/
+
 		return $additionalFields;
 	}
 
@@ -75,16 +51,6 @@ class tx_crawler_scheduler_AdditionalFieldProvider implements tx_scheduler_Addit
 	 */
 	public function validateAdditionalFields(array &$submittedData, tx_scheduler_Module $schedulerModule) {
 		return true;
-/*		$submittedData['sleepTime'] = intval($submittedData['sleepTime']);
-
-		if ($submittedData['sleepTime'] < 0) {
-			$parentObject->addMessage($GLOBALS['LANG']->sL('LLL:EXT:scheduler/mod1/locallang.xml:msg.invalidSleepTime'), t3lib_FlashMessage::ERROR);
-			$result = false;
-		} else {
-			$result = true;
-		}
-		return $result;
-*/
 	}
 
 	/**
@@ -95,7 +61,6 @@ class tx_crawler_scheduler_AdditionalFieldProvider implements tx_scheduler_Addit
 	 * @param	tx_scheduler_Task	$task: reference to the current task object
 	 */
 	public function saveAdditionalFields(array $submittedData, tx_scheduler_Task $task) {
-		$task->sleepTime = $submittedData['sleepTime'];
 	}
 }
 
