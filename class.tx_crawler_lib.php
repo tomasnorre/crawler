@@ -120,6 +120,11 @@ class tx_crawler_lib {
 	 */
 	protected $accessMode;
 
+	const CLI_STATUS_REMAIN = 1;	//queue not empty
+	const CLI_STATUS_PROCESSED = 2;	//(some) queue items where processed
+	const CLI_STATUS_ABORTED = 4;	//instance didn't finish
+	const CLI_STATUS_POLLABLE_PROCESSED = 8;
+
 	/**
 	 * Method to set the accessMode can be gui, cli or cli_im
 	 *
@@ -1105,7 +1110,8 @@ class tx_crawler_lib {
 	 * @return	void
 	 */
 	function readUrl($queueId, $force=FALSE)	{
-        if ($this->debugMode) t3lib_div::devlog('crawler-readurl start '.microtime(true),__FUNCTION__);
+		$ret = 0;
+		if ($this->debugMode) t3lib_div::devlog('crawler-readurl start '.microtime(true),__FUNCTION__);
 			// Get entry:
 		list($queueRec) = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*','tx_crawler_queue','qid='.intval($queueId).($force ? '' : ' AND exec_time=0 AND process_scheduled > 0'));
 
@@ -1120,12 +1126,23 @@ class tx_crawler_lib {
 			$GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_crawler_queue','qid='.intval($queueId), $field_array);
 
 			$result = $this->readUrl_exec($queueRec);
+			$resultData = unserialize($result['content']);
+
+				//atm there's no need to point to specific pollable extensions
+			if(is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'])) {
+				foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'] as $pollable) {
+					if(!empty($resultData['success'][$pollable]) && $resultData['success'][$pollable]) {
+						$ret |= self::CLI_STATUS_POLLABLE_PROCESSED;
+					}
+				}
+			}
 
 				// Set result in log which also denotes the end of the processing of this entry.
 			$field_array = array('result_data' => serialize($result));
 			$GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_crawler_queue','qid='.intval($queueId), $field_array);
 		}
-        if ($this->debugMode) t3lib_div::devlog('crawler-readurl stop '.microtime(true),__FUNCTION__);
+		if ($this->debugMode) t3lib_div::devlog('crawler-readurl stop '.microtime(true),__FUNCTION__);
+		return $ret;
 	}
 
 	/**
@@ -1692,11 +1709,10 @@ class tx_crawler_lib {
                         'count(*) as num',
                         'tx_crawler_queue',
                         'exec_time=0
-                                AND process_scheduled= 0
-                AND scheduled<='.$this->getCurrentTime()
-                        
+						AND process_scheduled= 0
+						AND scheduled<='.$this->getCurrentTime()
                 );
-		
+
 		$count = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 		return $count['num'];
 	}
@@ -1723,20 +1739,25 @@ class tx_crawler_lib {
 	function CLI_main()	{
 
 		$this->setAccessMode('cli');
+		$result = 0;
 
 		if (!$this->getDisabled() && $this->CLI_checkAndAcquireNewProcess($this->CLI_buildProcessId())) {
 
 				// Run process:
-			$res = $this->CLI_run();
+			$result = $this->CLI_run();
 
-				// cleanup
+				// Cleanup
 			$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_crawler_process', 'assigned_items_count = 0');
 
-            		$releaseStatus = $this->CLI_releaseProcesses($this->CLI_buildProcessId());
+				//TODO can't we do that in a clean way?
+			$releaseStatus = $this->CLI_releaseProcesses($this->CLI_buildProcessId());
+
 			$this->CLI_debug("Unprocessed Items remaining:".$this->getUnprocessedItemsCount()." (".$this->CLI_buildProcessId().")");
-			return $this->getUnprocessedItemsCount();
+			$result |= ( $this->getUnprocessedItemsCount() > 0 ? self::CLI_STATUS_REMAIN : 0 );
+		} else {
+			$result |= self::CLI_STATUS_ABORTED;
 		}
-		return false;
+		return $result;
 	}
 
 	/**
@@ -1781,7 +1802,7 @@ class tx_crawler_lib {
 		}
 
 		if($cliObj->cli_argValue('-o')==='queue' || $cliObj->cli_argValue('-o')==='exec'){
-			//if items should be written to
+
 			$reason = new tx_crawler_domain_reason();
 			$reason->setReason(tx_crawler_domain_reason::REASON_GUI_SUBMIT);
 			$reason->setDetailText('The cli script of the crawler added to the queue');
@@ -1841,7 +1862,7 @@ class tx_crawler_lib {
 	 * @return	string		Status message
 	 */
 	public function CLI_run()	{
-
+		$result = 0;
 			// First, run hooks:
 		$this->CLI_runHooks();
 
@@ -1855,6 +1876,7 @@ class tx_crawler_lib {
 		}
 
 			// Select entries:
+			//TODO Shouldn't this reside within the transaction?
 		$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			'qid,scheduled',
 			'tx_crawler_queue',
@@ -1867,7 +1889,6 @@ class tx_crawler_lib {
 		);
 
         if (count($rows)>0) {
-
         	$quidList = array();
 
             foreach($rows as $r) {
@@ -1876,9 +1897,9 @@ class tx_crawler_lib {
 
             $processId = $this->CLI_buildProcessId();
 
-            //reserve queue entrys for process
+				//reserve queue entrys for process
             $GLOBALS['TYPO3_DB']->sql_query('BEGIN');
-
+				//TODO make sure we're not taking assigned queue-entires
             $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
             	'tx_crawler_queue',
             	'qid IN ('.implode(',',$quidList).')',
@@ -1888,7 +1909,7 @@ class tx_crawler_lib {
             	)
             );
 
-            //save the number of assigned queue entrys to determine who many have been processed later
+				//save the number of assigned queue entrys to determine who many have been processed later
             $numberOfAffectedRows = $GLOBALS['TYPO3_DB']->sql_affected_rows();
             $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
             	'tx_crawler_process',
@@ -1902,39 +1923,44 @@ class tx_crawler_lib {
                 $GLOBALS['TYPO3_DB']->sql_query('COMMIT');
             } else  {
                 $GLOBALS['TYPO3_DB']->sql_query('ROLLBACK');
-
-                return 'Nothing processed due to multi-process collision';
+				$this->CLI_debug("Nothing processed due to multi-process collision (".$this->CLI_buildProcessId().")");
+				return ( $result | self::CLI_STATUS_ABORTED );
             }
         } else {
-            // print_r($rows);
+				$this->CLI_debug("Nothing within queue which needs to be processed (".$this->CLI_buildProcessId().")");
         }
 
 		$counter = 0;
 		foreach($rows as $r)	{
-			$this->readUrl($r['qid']);
+			$result |= $this->readUrl($r['qid']);
 
 			$counter++;
 			usleep(intval($this->extensionSettings['sleepTime']));	// Just to relax the system
 
-			// if during the start and the current read url the cli has been disable we need to return from the function
-			// mark the process NOT as ended.
+				// if during the start and the current read url the cli has been disable we need to return from the function
+				// mark the process NOT as ended.
 			if ($this->getDisabled()) {
-				return false;
+				return ( $result | self::CLI_STATUS_ABORTED );
 			}
 
 			if (!$this->CLI_checkIfProcessIsActive($this->CLI_buildProcessId())) {
 				$this->CLI_debug("conflict / timeout (".$this->CLI_buildProcessId().")");
-				break;     //possible timeout
+
+					//TODO might need an additional returncode
+				$result |= self::CLI_STATUS_ABORTED;
+				break;		//possible timeout
 			}
 		}
 
 		sleep(intval($this->extensionSettings['sleepAfterFinish']));
 
 		$msg = 'Rows: '.$counter;
-
 		$this->CLI_debug($msg." (".$this->CLI_buildProcessId().")");
 
-		return true;
+		if($counter > 0) {
+			$result |= self::CLI_STATUS_PROCESSED;
+		}
+		return $result;
 	}
 
 	/**
@@ -1957,7 +1983,8 @@ class tx_crawler_lib {
     /**
      * Try to aquire a new process with the given id
      * also performs some auto-cleanup for orphan processes
-     *
+     * @todo preemption might not be the most elegant way to clean up
+	*
      * @param string  identification string for the process
      * @return boolean determines whether the attempt to get resources was successful
      */
