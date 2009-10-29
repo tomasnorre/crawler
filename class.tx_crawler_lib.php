@@ -234,7 +234,7 @@ class tx_crawler_lib {
 	 * @return	array		Result (see getUrlsForPageId())
 	 * @see getUrlsForPageId()
 	 */
-	function getUrlsForPageRow(array $pageRow, &$skipMessage) {
+	function getUrlsForPageRow(array $pageRow, &$skipMessage='') {
 
 		$message = $this->checkIfPageShouldBeSkipped($pageRow);
 
