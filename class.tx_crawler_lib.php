@@ -431,6 +431,18 @@ class tx_crawler_lib {
 			list(,$mountPointId) = explode('-', $this->MP);
 			$pageTSconfig = t3lib_BEfunc::getPagesTSconfig($mountPointId);
 		}
+
+		// Call a hook to alter configuration
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['getPageTSconfigForId'])) {
+			$params = array(
+				'pageId' => $id,
+				'pageTSConfig' => &$pageTSconfig
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['getPageTSconfigForId'] as $userFunc) {
+				t3lib_div::callUserFunction($userFunc, $params, $this);
+			}
+		}
+
 		return $pageTSconfig;
 	}
 
