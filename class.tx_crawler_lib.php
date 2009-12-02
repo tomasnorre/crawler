@@ -333,11 +333,10 @@ class tx_crawler_lib {
 
 
 		if (is_array($vv['URLs']))	{
+			$configurationHash 	=	md5(serialize($vv));
+			$skipInnerCheck 	=	$this->noUnprocessedQueueEntriesForPageWithConfigurationHashExist($pageRow['uid'],$configurationHash);
+				
 			foreach($vv['URLs'] as $urlQuery)	{
-				$configurationHash 	=	md5(serialize($vv));
-
-				//this
-				$skipInnerCheck 	=	$this->noUnprocessedQueueEntriesForPageWithConfigurationHashExist($pageRow['uid'],$configurationHash);
 
 				if ($this->drawURLs_PIfilter($vv['subCfg']['procInstrFilter'], $incomingProcInstructions))	{
 
