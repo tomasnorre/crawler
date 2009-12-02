@@ -335,7 +335,7 @@ class tx_crawler_lib {
 		if (is_array($vv['URLs']))	{
 			$configurationHash 	=	md5(serialize($vv));
 			$skipInnerCheck 	=	$this->noUnprocessedQueueEntriesForPageWithConfigurationHashExist($pageRow['uid'],$configurationHash);
-				
+
 			foreach($vv['URLs'] as $urlQuery)	{
 
 				if ($this->drawURLs_PIfilter($vv['subCfg']['procInstrFilter'], $incomingProcInstructions))	{
@@ -876,7 +876,7 @@ class tx_crawler_lib {
 		}
 
 		if ($doFlush)	{
-			$this->flushQueue($doFullFlush?'':('page_id='.intval($id).$addWhere));
+			$this->flushQueue( ($doFullFlush?'1=1':('page_id='.intval($id))) .$addWhere);
 			return array();
 		} else {
 			return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*',
@@ -1883,6 +1883,49 @@ class tx_crawler_lib {
 		} else {
 			$cliObj->cli_echo(count($this->urlList)." entries found for processing. (Use -o to decide action):\n\n",1);
 			$cliObj->cli_echo(implode(chr(10),$this->urlList).chr(10),1);
+		}
+	}
+
+
+	/**
+	 * Function executed by crawler_im.php cli script.
+	 *
+	 * @return	void
+	 */
+	function CLI_main_flush()	{
+		$this->setAccessMode('cli_im');
+
+		$cliObj = t3lib_div::makeInstance('tx_crawler_cli_flush');
+
+			// Force user to admin state and set workspace to "Live":
+		$GLOBALS['BE_USER']->user['admin'] = 1;
+		$GLOBALS['BE_USER']->setWorkspace(0);
+
+			// Print help
+		if (!isset($cliObj->cli_args['_DEFAULT'][1]))	{
+			$cliObj->cli_validateArgs();
+			$cliObj->cli_help();
+			exit;
+		}
+
+		$cliObj->cli_validateArgs();
+
+		$pageId = t3lib_div::intInRange($cliObj->cli_args['_DEFAULT'][1],0);
+
+		$fullFlush = ($pageId == 0);
+
+		$mode = $cliObj->cli_argValue('-o');
+		switch($mode) {
+			case 'all':
+					$this->getLogEntriesForPageId($pageId, '', true, $fullFlush);
+				break;
+			case 'finished':
+			case 'pending':
+				$this->getLogEntriesForPageId($pageId, $mode, true, $fullFlush);
+				break;
+			default:
+				$cliObj->cli_validateArgs();
+				$cliObj->cli_help();
 		}
 	}
 
