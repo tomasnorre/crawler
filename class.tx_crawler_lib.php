@@ -847,9 +847,10 @@ class tx_crawler_lib {
 	 * @param	integer		Page ID for which to look up log entries.
 	 * @param	string		Filter: "all" => all entries, "pending" => all that is not yet run, "finished" => all complete ones
 	 * @param	boolean		If TRUE, then entries selected at DELETED(!) instead of selected!
+	 * @param	integer		Limit the amount of entires per page default is 10
 	 * @return	array
 	 */
-	function getLogEntriesForPageId($id,$filter='',$doFlush=FALSE, $doFullFlush=FALSE)	{
+	function getLogEntriesForPageId($id,$filter='',$doFlush=FALSE, $doFullFlush=FALSE, $itemsPerPage=10)	{
 
 		switch($filter)	{
 			case 'pending':
@@ -867,7 +868,10 @@ class tx_crawler_lib {
 			$this->flushQueue($doFullFlush?'':('page_id='.intval($id).$addWhere));
 			return array();
 		} else {
-			return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*','tx_crawler_queue','page_id='.intval($id).$addWhere,'','scheduled');
+			return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*',
+				'tx_crawler_queue',
+				'page_id=' . intval($id) . $addWhere, '', 'scheduled DESC',
+				(intval($itemsPerPage)>0 ? intval($itemsPerPage) : ''));
 		}
 	}
 
@@ -877,9 +881,10 @@ class tx_crawler_lib {
 	 * @param	integer		Set ID for which to look up log entries.
 	 * @param	string		Filter: "all" => all entries, "pending" => all that is not yet run, "finished" => all complete ones
 	 * @param	boolean		If TRUE, then entries selected at DELETED(!) instead of selected!
+	 * @param	integer		Limit the amount of entires per page default is 10
 	 * @return	array
 	 */
-	function getLogEntriesForSetId($set_id,$filter='',$doFlush=FALSE, $doFullFlush=FALSE)	{
+	function getLogEntriesForSetId($set_id,$filter='',$doFlush=FALSE, $doFullFlush=FALSE, $itemsPerPage=10)	{
 
 		switch($filter)	{
 			case 'pending':
@@ -897,7 +902,10 @@ class tx_crawler_lib {
 			$this->flushQueue($doFullFlush?'':('set_id='.intval($set_id).$addWhere));
 			return array();
 		} else {
-			return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*','tx_crawler_queue','set_id='.intval($set_id).$addWhere,'','scheduled');
+			return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*',
+				'tx_crawler_queue',
+				'set_id='.intval($set_id).$addWhere,'','scheduled DESC',
+				(intval($itemsPerPage)>0 ? intval($itemsPerPage) : ''));
 		}
 	}
 

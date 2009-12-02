@@ -102,6 +102,12 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				'all' => $LANG->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.all'),
 				'pending' => $LANG->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.pending'),
 				'finished' => $LANG->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.finished')
+			),
+			'itemsPerPage' => array(
+				'5' => $LANG->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.itemsPerPage.5'),
+				'10' => $LANG->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.itemsPerPage.10'),
+				'50' => $LANG->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.itemsPerPage.50'),
+				'0' => $LANG->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.itemsPerPage.0')
 			)
 		);
 	}
@@ -186,9 +192,17 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				'index.php'
 			);
 			$h_func.= '<hr/>'.
-					$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.display').': '.t3lib_BEfunc::getFuncMenu($this->pObj->id,'SET[log_display]',$this->pObj->MOD_SETTINGS['log_display'],$this->pObj->MOD_MENU['log_display'],'index.php','&setID='.t3lib_div::_GP('setID')).' - '.
-					$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.showresultlog').': '.t3lib_BEfunc::getFuncCheck($this->pObj->id,'SET[log_resultLog]',$this->pObj->MOD_SETTINGS['log_resultLog'],'index.php','&setID='.t3lib_div::_GP('setID')).' - '.
-					$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.showfevars').': '.t3lib_BEfunc::getFuncCheck($this->pObj->id,'SET[log_feVars]',$this->pObj->MOD_SETTINGS['log_feVars'],'index.php','&setID='.t3lib_div::_GP('setID'));
+					$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.display').': '.t3lib_BEfunc::getFuncMenu($this->pObj->id,'SET[log_display]',$this->pObj->MOD_SETTINGS['log_display'],$this->pObj->MOD_MENU['log_display'],'index.php','&setID='.t3lib_div::_GP('setID')) . ' - ' .
+					$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.showresultlog').': '.t3lib_BEfunc::getFuncCheck($this->pObj->id,'SET[log_resultLog]',$this->pObj->MOD_SETTINGS['log_resultLog'],'index.php','&setID='.t3lib_div::_GP('setID')) . ' - ' .
+					$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.showfevars').': '.t3lib_BEfunc::getFuncCheck($this->pObj->id,'SET[log_feVars]',$this->pObj->MOD_SETTINGS['log_feVars'],'index.php','&setID='.t3lib_div::_GP('setID')) . ' - ' .
+					$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.itemsPerPage').': ' .
+					t3lib_BEfunc::getFuncMenu(
+						$this->pObj->id,
+						'SET[itemsPerPage]',
+						$this->pObj->MOD_SETTINGS['itemsPerPage'],
+						$this->pObj->MOD_MENU['itemsPerPage'],
+						'index.php'
+					);
 		}
 
 		$theOutput.= $this->pObj->doc->spacer(5);
@@ -284,10 +298,10 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 			if($this->submitCrawlUrls){
 				$reason = new tx_crawler_domain_reason();
 				$reason->setReason(tx_crawler_domain_reason::REASON_GUI_SUBMIT);
-				
+
 				if($BE_USER instanceof t3lib_beUserAuth){ $username = $BE_USER->user['username']; }
 				$reason->setDetailText('The user '.$username.' added pages to the crawler queue manually ');
-				
+
 				tx_crawler_domain_events_dispatcher::getInstance()->post(	'invokeQueueChange',
 																			$this->findCrawler()->setID,
 																			array(	'reason' => $reason ));
@@ -539,12 +553,16 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 					}
 
 						// Traverse page tree:
-					$code = '';
+					$code = ''; $count = 0;
 					foreach($tree->tree as $data)	{
-						$code.= $this->drawLog_addRows(
+						$code .= $this->drawLog_addRows(
 									$data['row'],
-									$data['HTML'].t3lib_BEfunc::getRecordTitle('pages',$data['row'],TRUE)
+									$data['HTML'].t3lib_BEfunc::getRecordTitle('pages',$data['row'],TRUE),
+									intval($this->pObj->MOD_SETTINGS['itemsPerPage'])
 								);
+						if (++$count == 1000) {
+							break;
+						}
 					}
 				} else {
 					$code = '';
@@ -650,9 +668,10 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 *
 	 * @param	array		Page row or set-id
 	 * @param	string		Title string
+	 * @param	int			Items per Page setting
 	 * @return	string		HTML <tr> content (one or more)
 	 */
-	function drawLog_addRows($pageRow_setId, $titleString)	{
+	function drawLog_addRows($pageRow_setId, $titleString, $itemsPerPage=10)	{
 
 			// If Flush button is pressed, flush tables instead of selecting entries:
 
@@ -669,9 +688,9 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 
 			// Get result:
 		if (is_array($pageRow_setId))	{
-			$res = $this->crawlerObj->getLogEntriesForPageId($pageRow_setId['uid'], $this->pObj->MOD_SETTINGS['log_display'], $doFlush, $doFullFlush);
+			$res = $this->crawlerObj->getLogEntriesForPageId($pageRow_setId['uid'], $this->pObj->MOD_SETTINGS['log_display'], $doFlush, $doFullFlush, intval($itemsPerPage));
 		} else {
-			$res = $this->crawlerObj->getLogEntriesForSetId($pageRow_setId, $this->pObj->MOD_SETTINGS['log_display'], $doFlush, $doFullFlush);
+			$res = $this->crawlerObj->getLogEntriesForSetId($pageRow_setId, $this->pObj->MOD_SETTINGS['log_display'], $doFlush, $doFullFlush, intval($itemsPerPage));
 		}
 
 			// Init var:

@@ -88,6 +88,11 @@
             <label index="labels.show.all">Show finished and terminated processes</label>
             <label index="labels.process.add">Add process</label>
             <label index="time.detailed">d-m-y H:i:s</label>
+            <label index="labels.itemsPerPage.5">limit to 5</label>
+            <label index="labels.itemsPerPage.10">limit to 10</label>
+            <label index="labels.itemsPerPage.50">limit to 50</label>
+            <label index="labels.itemsPerPage.0">no limit</label>
+            <label index="labels.itemsPerPage">Items per page</label>
         </languageKey>
     </data>
 </T3locallang>
