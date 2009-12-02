@@ -191,10 +191,13 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				$this->pObj->MOD_MENU['depth'],
 				'index.php'
 			);
+
+			$quiPart = t3lib_div::_GP('qid_details') ? '&qid_details=' . t3lib_div::_GP('qid_details') : '';
+
 			$h_func.= '<hr/>'.
 					$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.display').': '.t3lib_BEfunc::getFuncMenu($this->pObj->id,'SET[log_display]',$this->pObj->MOD_SETTINGS['log_display'],$this->pObj->MOD_MENU['log_display'],'index.php','&setID='.t3lib_div::_GP('setID')) . ' - ' .
-					$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.showresultlog').': '.t3lib_BEfunc::getFuncCheck($this->pObj->id,'SET[log_resultLog]',$this->pObj->MOD_SETTINGS['log_resultLog'],'index.php','&setID='.t3lib_div::_GP('setID')) . ' - ' .
-					$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.showfevars').': '.t3lib_BEfunc::getFuncCheck($this->pObj->id,'SET[log_feVars]',$this->pObj->MOD_SETTINGS['log_feVars'],'index.php','&setID='.t3lib_div::_GP('setID')) . ' - ' .
+					$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.showresultlog').': '.t3lib_BEfunc::getFuncCheck($this->pObj->id,'SET[log_resultLog]',$this->pObj->MOD_SETTINGS['log_resultLog'],'index.php','&setID='.t3lib_div::_GP('setID') . $quiPart) . ' - ' .
+					$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.showfevars').': '.t3lib_BEfunc::getFuncCheck($this->pObj->id,'SET[log_feVars]',$this->pObj->MOD_SETTINGS['log_feVars'],'index.php','&setID='.t3lib_div::_GP('setID') . $quiPart) . ' - ' .
 					$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.itemsPerPage').': ' .
 					t3lib_BEfunc::getFuncMenu(
 						$this->pObj->id,
@@ -515,10 +518,15 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 			list($q_entry) = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*','tx_crawler_queue','qid='.intval(t3lib_div::_GP('qid_details')));
 
 				// Explode values:
+				$resStatus = $this->getResStatus($q_entry);
 			$q_entry['parameters'] = unserialize($q_entry['parameters']);
 			$q_entry['result_data'] = unserialize($q_entry['result_data']);
 			if (is_array($q_entry['result_data']))	{
 				$q_entry['result_data']['content'] = unserialize($q_entry['result_data']['content']);
+			}
+
+			if(!$this->pObj->MOD_SETTINGS['log_resultLog']) {
+				unset($q_entry['result_data']['content']['log']);
 			}
 
 				// Print rudimentary details:
@@ -528,7 +536,8 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				<input type="hidden" value="'.$this->pObj->id.'" name="id" />
 				<input type="hidden" value="'.$showSetId.'" name="setID" />
 				<br />
-				Current server time: '.date('H:i:s',time()).
+				Current server time: '.date('H:i:s',time()). '<br />' .
+				'Status: ' . $resStatus . '<br />' .
 				t3lib_div::view_array($q_entry);
 		} else {	// Show list:
 
@@ -713,22 +722,9 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 
 					// Result:
 				$resLog = '';
-				if ($vv['result_data'])	{
-					$requestContent = unserialize($vv['result_data']);
-					$requestResult = unserialize($requestContent['content']);
-					if (is_array($requestResult)) {
-						if (empty($requestResult['errorlog'])) {
-							$resStatus = 'OK';
-						} else {
-							$resStatus = implode("\n", $requestResult['errorlog']);
-						}
-						$resLog = is_array($requestResult['log']) ?  implode(chr(10),$requestResult['log']) : '';
-					} else {
-						$resStatus = 'Error: '.substr(ereg_replace('[[:space:]]+',' ',strip_tags($requestContent['content'])),0,10000).'...';
-					}
-				} else {
-					$resStatus = '-';
-				}
+
+
+				$resStatus = $this->getResStatus($vv);
 
 					// Compile row:
 				$parameters = unserialize($vv['parameters']);
@@ -741,7 +737,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 					$rowData['scheduled'] = ($vv['scheduled']> 0) ? t3lib_BEfunc::datetime($vv['scheduled']) : ' '.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.immediate');
 					$rowData['exec_time'] = $vv['exec_time'] ? t3lib_BEfunc::datetime($vv['exec_time']) : '-';
 				}
-				$rowData['result_status'] = $resStatus;
+				$rowData['result_status'] = t3lib_div::fixed_lgd_cs($resStatus,50);
 				$rowData['url'] = '<a href="'.htmlspecialchars($parameters['url']).'" target="_newWIndow">'.htmlspecialchars($parameters['url']).'</a>';
 				$rowData['feUserGroupList'] = $parameters['feUserGroupList'];
 				$rowData['procInstructions'] = is_array($parameters['procInstructions']) ? implode('; ',$parameters['procInstructions']) : '';
@@ -829,6 +825,25 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 
 
 
+	function getResStatus($vv) {
+		if ($vv['result_data'])	{
+			$requestContent = unserialize($vv['result_data']);
+			$requestResult = unserialize($requestContent['content']);
+			if (is_array($requestResult)) {
+				if (empty($requestResult['errorlog'])) {
+					$resStatus = 'OK';
+				} else {
+					$resStatus = implode("\n", $requestResult['errorlog']);
+				}
+				$resLog = is_array($requestResult['log']) ?  implode(chr(10),$requestResult['log']) : '';
+			} else {
+				$resStatus = 'Error: '.substr(ereg_replace('[[:space:]]+',' ',strip_tags($requestContent['content'])),0,10000).'...';
+			}
+		} else {
+			$resStatus = '-';
+		}
+		return $resStatus;
+	}
 
 
 
