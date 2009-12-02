@@ -761,6 +761,19 @@ class tx_crawler_lib {
 					} else {	// Just add value:
 						$paramArray[$p][] = $pV;
 					}
+						// Hook for processing own expandParameters place holder
+					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/class.tx_crawler_lib.php']['expandParameters'])) {
+						$_params = array(
+							'pObj' => &$this,
+							'paramArray' => &$paramArray,
+							'currentKey' => $p,
+							'currentValue' => $pV,
+							'pid' => $pid
+						);
+						foreach($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/class.tx_crawler_lib.php']['expandParameters'] as $key => $_funcRef)	{
+							t3lib_div::callUserFunction($_funcRef, $_params, $this);
+						}
+					}
 				}
 
 					// Make unique set of values and sort array by key:
