@@ -781,7 +781,7 @@ class tx_crawler_lib {
 	 *
 	 * @param	array		output of expandParameters(): Array with keys (GET var names) and for each an array of values
 	 * @param	array		URLs accumulated in this array (for recursion)
-	 * @return	array		URLs accumulated, if number of urls exceed 10000 it will return false as an error!
+	 * @return	array		URLs accumulated, if number of urls exceed 'maxCompileUrls' it will return false as an error!
 	 */
 	function compileUrls($paramArray, $urls=array())	{
 
@@ -800,10 +800,8 @@ class tx_crawler_lib {
 							(strcmp($val,'') ? '&'.rawurlencode($varName).'='.rawurlencode($val) : '');
 
 						// Recursion brake:
-					if (count($newUrls)>10000)	{
-						$newUrls = FALSE;
-						break;
-						break;
+					if (count($newUrls) >  $this->extensionSettings['maxCompileUrls'])	{
+						return FALSE;
 					}
 				}
 			}
