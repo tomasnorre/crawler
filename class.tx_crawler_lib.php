@@ -342,7 +342,11 @@ class tx_crawler_lib {
 					if ($vv['subCfg']['cHash'])	{
 						$pA = t3lib_div::cHashParams($urlQuery);
 						if (count($pA)>1)	{
-							$urlQuery .= '&cHash='.rawurlencode(t3lib_div::shortMD5(serialize($pA)));
+							if (t3lib_div::compat_version ('4.3')) {
+								$urlQuery .= '&cHash=' . t3lib_div::calculateCHash($pA);
+							} else {
+								$urlQuery .= '&cHash='.rawurlencode(t3lib_div::shortMD5(serialize($pA)));
+							}
 						}
 					}
 
