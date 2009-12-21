@@ -65,3 +65,9 @@ class tx_crawler_cli_flush extends t3lib_cli {
 		$this->cli_help['author'] = 'Kasper Skaarhoj, Daniel Poetzinger, Fabrizio Branca, Tolleiv Nietsch, Timo Schmidt - AOE media 2009';
 	}
 }
+
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/cli/class.tx_crawler_cli_flush.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/cli/class.tx_crawler_cli_flush.php']);
+}
+
+?>

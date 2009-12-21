@@ -184,4 +184,9 @@ class tx_crawler_system_validator {
 		return $bool;
 	}
 }
+
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/system/class.tx_crawler_system_validator.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/system/class.tx_crawler_system_validator.php']);
+}
+
 ?>
