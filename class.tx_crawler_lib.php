@@ -706,8 +706,8 @@ class tx_crawler_lib {
 				$parts = explode('|',$v);
 				foreach($parts as $pV)	{
 
-						// Look for integer range: (fx. 1-34 or -40--30)
-					if (ereg('^(-?[0-9]+)[[:space:]]*-[[:space:]]*(-?[0-9]+)$',trim($pV),$reg))	{	// Integer range:
+						// Look for integer range: (fx. 1-34 or -40--30 // reads minus 40 to minus 30)
+					if (preg_match('/^(-?[0-9]+)\s*-\s*(-?[0-9]+)$/',trim($pV),$reg))	{	// Integer range:
 
 							// Swap if first is larger than last:
 						if ($reg[1] > $reg[2])	{
@@ -1874,7 +1874,7 @@ class tx_crawler_lib {
 					$resLog = is_array($requestResult['log']) ?  chr(10).chr(9).chr(9).implode(chr(10).chr(9).chr(9),$requestResult['log']) : '';
 					$cliObj->cli_echo('OK: '.$resLog.chr(10));
 				} else {
-					$cliObj->cli_echo('Error checking Crawler Result: '.substr(ereg_replace('[[:space:]]+',' ',strip_tags($result['content'])),0,30000).'...'.chr(10));
+					$cliObj->cli_echo('Error checking Crawler Result: '.substr(preg_replace('/\s+/',' ',strip_tags($result['content'])),0,30000).'...'.chr(10));
 				}
 			}
 		} elseif ($cliObj->cli_argValue('-o')==='queue')	{

@@ -837,7 +837,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				}
 				$resLog = is_array($requestResult['log']) ?  implode(chr(10),$requestResult['log']) : '';
 			} else {
-				$resStatus = 'Error: '.substr(ereg_replace('[[:space:]]+',' ',strip_tags($requestContent['content'])),0,10000).'...';
+				$resStatus = 'Error: '.substr(preg_replace('/\s+/',' ',strip_tags($requestContent['content'])),0,10000).'...';
 			}
 		} else {
 			$resStatus = '-';
