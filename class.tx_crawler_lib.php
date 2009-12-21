@@ -330,8 +330,6 @@ class tx_crawler_lib {
 			}
 		}
 
-
-
 		if (is_array($vv['URLs']))	{
 			$configurationHash 	=	md5(serialize($vv));
 			$skipInnerCheck 	=	$this->noUnprocessedQueueEntriesForPageWithConfigurationHashExist($pageRow['uid'],$configurationHash);
@@ -397,7 +395,7 @@ class tx_crawler_lib {
 				}
 			}
 		} else {
-			$urlList = 'ERROR';
+			$urlList = 'ERROR - no URL generated';
 		}
 
 		return $urlList;
@@ -820,12 +818,11 @@ class tx_crawler_lib {
 			$newUrls = array();
 			foreach($urls as $url)	{
 				foreach($valueSet as $val)	{
-					$newUrls[] = $url.
-					(strcmp($val,'') ? '&'.rawurlencode($varName).'='.rawurlencode($val) : '');
+					$newUrls[] = $url.(strcmp($val,'') ? '&'.rawurlencode($varName).'='.rawurlencode($val) : '');
 
-						// Recursion brake:
-					if (count($newUrls) >  $this->extensionSettings['maxCompileUrls'])	{
-						return FALSE;
+					if (count($newUrls) >  t3lib_div::intInRange($this->extensionSettings['maxCompileUrls'], 1, 1000000000, 10000))	{
+						break;
+						break;
 					}
 				}
 			}
@@ -2174,7 +2171,7 @@ class tx_crawler_lib {
 				'process_scheduled'=>0,
 				'process_id'=>''
 			)
-		};
+		);
 
 		if(!$withinLock) $GLOBALS['TYPO3_DB']->sql_query('COMMIT');
 
