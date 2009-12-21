@@ -1898,8 +1898,11 @@ class tx_crawler_lib {
 	 *
 	 * @return	void
 	 */
-	function CLI_main_flush()	{
-		$this->setAccessMode('cli_im');
+	function CLI_main_flush($altArgv=array())	{
+
+		$result = true;
+
+		$this->setAccessMode('cli_flush');
 
 		$cliObj = t3lib_div::makeInstance('tx_crawler_cli_flush');
 
@@ -1923,16 +1926,18 @@ class tx_crawler_lib {
 		$mode = $cliObj->cli_argValue('-o');
 		switch($mode) {
 			case 'all':
-				$this->getLogEntriesForPageId($pageId, '', true, $fullFlush);
+				$result = $this->getLogEntriesForPageId($pageId, '', true, $fullFlush);
 				break;
 			case 'finished':
 			case 'pending':
-				$this->getLogEntriesForPageId($pageId, $mode, true, $fullFlush);
+				$result = $this->getLogEntriesForPageId($pageId, $mode, true, $fullFlush);
 				break;
 			default:
 				$cliObj->cli_validateArgs();
 				$cliObj->cli_help();
+				$result = false;
 		}
+		return $result!==false;
 	}
 
 	/**

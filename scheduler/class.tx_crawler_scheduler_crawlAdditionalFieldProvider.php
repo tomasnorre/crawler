@@ -28,7 +28,7 @@
  * @package
  * @version $Id:$
  */
-class tx_crawler_scheduler_AdditionalFieldProvider implements tx_scheduler_AdditionalFieldProvider {
+class tx_crawler_scheduler_crawlAdditionalFieldProvider implements tx_scheduler_AdditionalFieldProvider {
 	/**
 	 * render additional information fields within the scheduler backend
 	 *
@@ -64,8 +64,8 @@ class tx_crawler_scheduler_AdditionalFieldProvider implements tx_scheduler_Addit
 	}
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/scheduler/examples/class.tx_scheduler_sleeptask_additionalfieldprovider.php'])	{
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/scheduler/examples/class.tx_scheduler_sleeptask_additionalfieldprovider.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/class.tx_crawler_scheduler_crawlAdditionalFieldProvider.php'])	{
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/class.tx_crawler_scheduler_crawlAdditionalFieldProvider.php']);
 }
 
 ?>

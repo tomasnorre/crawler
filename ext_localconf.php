@@ -34,11 +34,18 @@ t3lib_extMgm::addService(
 	)
 );
 
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['tx_crawler_scheduler_task'] = array(
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['tx_crawler_scheduler_crawl'] = array(
 	'extension'        => $_EXTKEY,
-	'title'            => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:crawler_task.name',
-	'description'      => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:crawler_task.description',
-	'additionalFields' => 'tx_crawler_scheduler_AdditionalFieldProvider'
+	'title'            => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:crawler_crawl.name',
+	'description'      => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:crawler_crawl.description',
+	'additionalFields' => 'tx_crawler_scheduler_crawlAdditionalFieldProvider'
+);
+
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['tx_crawler_scheduler_flush'] = array(
+	'extension'        => $_EXTKEY,
+	'title'            => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:crawler_flush.name',
+	'description'      => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:crawler_flush.description',
+	'additionalFields' => 'tx_crawler_scheduler_flushAdditionalFieldProvider'
 );
 
 ?>

@@ -28,7 +28,7 @@
  * @package
  * @version $Id:$
  */
-class tx_crawler_scheduler_task extends tx_scheduler_Task {
+class tx_crawler_scheduler_crawl extends tx_scheduler_Task {
 
 	/**
 	 * Function executed from the Scheduler.
@@ -36,7 +36,6 @@ class tx_crawler_scheduler_task extends tx_scheduler_Task {
 	 * @return	void
 	 */
 	public function execute() {
-		//TODO trigger crawler
 			/* @var $crawlerObj tx_crawler_lib */
 		$crawlerObj = t3lib_div::makeInstance('tx_crawler_lib');
 		return $crawlerObj->CLI_main();
