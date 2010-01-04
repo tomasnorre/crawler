@@ -1725,15 +1725,29 @@ class tx_crawler_lib {
 	 *
 	 * @return	int number of remaining items or false if error
 	 */
-	function CLI_main()	{
+	function CLI_main($altArgv=array())	{
 
 		$this->setAccessMode('cli');
 		$result = 0;
 
+		$cliObj = t3lib_div::makeInstance('tx_crawler_cli');
+
+		if (isset($cliObj->cli_args['-h']) || isset($cliObj->cli_args['--help']))	{
+			$cliObj->cli_validateArgs();
+			$cliObj->cli_help();
+			exit;
+		}
+
 		if (!$this->getDisabled() && $this->CLI_checkAndAcquireNewProcess($this->CLI_buildProcessId())) {
 
+			$countInARun = $cliObj->cli_argValue('-countInARun') ? intval($cliObj->cli_argValue('-countInARun')) : $this->extensionSettings['countInARun'];
+				//Seconds
+			$sleepAfterFinish = $cliObj->cli_argValue('-sleepAfterFinish') ? intval($cliObj->cli_argValue('-sleepAfterFinish')) : $this->extensionSettings['sleepAfterFinish'];
+				//Milliseconds
+			$sleepTime = $cliObj->cli_argValue('-sleepTime') ? intval($cliObj->cli_argValue('-sleepTime')) : $this->extensionSettings['sleepTime'];
+
 				// Run process:
-			$result = $this->CLI_run();
+			$result = $this->CLI_run($countInARun, $sleepTime, $sleepAfterFinish);
 
 				// Cleanup
 			$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_crawler_process', 'assigned_items_count = 0');
@@ -1899,7 +1913,7 @@ class tx_crawler_lib {
 	 *
 	 * @return	string		Status message
 	 */
-	public function CLI_run()	{
+	public function CLI_run($countInARun, $sleepTime, $sleepAfterFinish)	{
 		$result = 0;
 			// First, run hooks:
 		$this->CLI_runHooks();
@@ -1923,7 +1937,7 @@ class tx_crawler_lib {
 				AND scheduled<='.$this->getCurrentTime(),
 			'',
 			'scheduled, qid',
-		intval($this->extensionSettings['countInARun'])
+		intval($countInARun)
 		);
 
 		if (count($rows)>0) {
@@ -1973,7 +1987,7 @@ class tx_crawler_lib {
 			$result |= $this->readUrl($r['qid']);
 
 			$counter++;
-			usleep(intval($this->extensionSettings['sleepTime']));	// Just to relax the system
+			usleep(intval($sleepTime));	// Just to relax the system
 
 				// if during the start and the current read url the cli has been disable we need to return from the function
 				// mark the process NOT as ended.
@@ -1990,7 +2004,7 @@ class tx_crawler_lib {
 			}
 		}
 
-		sleep(intval($this->extensionSettings['sleepAfterFinish']));
+		sleep(intval($sleepAfterFinish));
 
 		$msg = 'Rows: '.$counter;
 		$this->CLI_debug($msg." (".$this->CLI_buildProcessId().")");
