@@ -124,8 +124,8 @@ class tx_crawler_api {
 		$time = intval($time);
 
 		$crawler 	= $this->findCrawler();
-		$conf 		= $crawler->getUrlsForPageId($uid);
 		$pageData = t3lib_div::makeInstance('t3lib_pageSelect')->getPage($uid);
+		$conf = $crawler->getUrlsForPageRow($pageData);
 
 		//pTestI ist for testing, to check if queue entries exist
 		//pI is for inserting

@@ -188,7 +188,7 @@ class tx_crawler_lib {
 	 * @return	array		Result (see getUrlsForPageId())
 	 * @see getUrlsForPageId()
 	 */
-	function getUrlsForPageRow(array $pageRow, &$skipMessage='') {
+	public function getUrlsForPageRow(array $pageRow, &$skipMessage='') {
 
 		$message = $this->checkIfPageShouldBeSkipped($pageRow);
 
@@ -409,7 +409,7 @@ class tx_crawler_lib {
 	 * @param	integer		Page ID
 	 * @return	array		configurations from pagets and configuration records
 	 */
-	function getUrlsForPageId($id)	{
+	protected function getUrlsForPageId($id)	{
 
 		/**
 		 * Get configuration from tsConfig
