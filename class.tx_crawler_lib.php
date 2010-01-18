@@ -136,7 +136,7 @@ class tx_crawler_lib {
 		}
 
 		if (!$skipPage) {
-			if (t3lib_div::inList('3,4', $pageRow['doktype']) || $pageRow['doktype']>=200)	{
+			if (t3lib_div::inList('3,4', $pageRow['doktype']) || $pageRow['doktype']>=199)	{
 				$skipPage = true;
 				$skipMessage = 'Because doktype is not allowed';
 			}
