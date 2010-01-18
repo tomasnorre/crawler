@@ -65,6 +65,12 @@ class tx_crawler_scheduler_imAdditionalFieldProvider implements tx_scheduler_Add
 		return $additionalFields;
 	}
 
+	/**
+	 * Mark current value as selected by returning the "selected" attribute
+	 *
+	 * @access protected
+	 * @return string
+	 */
 	protected function getSelectedState($configurationArray, $currentValue) {
 		$selected = '';
 		for ($i = 0; $i < count($configurationArray); $i++) {
