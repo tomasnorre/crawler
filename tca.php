@@ -22,7 +22,7 @@ $TCA["tx_crawler_configuration"] = array (
             "config" => Array (
                 "type" => "input",
                 "size" => "30",
-        		"eval" => "required",
+       		"eval" => "required,trim,lower,alphanum_x",
             )
         ),
         "processing_instruction_filter" => Array (
