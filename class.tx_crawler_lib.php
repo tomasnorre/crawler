@@ -74,6 +74,7 @@ class tx_crawler_lib {
 	 */
 	protected $accessMode;
 
+	const CLI_STATUS_NOTHING_PROCCESSED = 0;
 	const CLI_STATUS_REMAIN = 1;	//queue not empty
 	const CLI_STATUS_PROCESSED = 2;	//(some) queue items where processed
 	const CLI_STATUS_ABORTED = 4;	//instance didn't finish
@@ -1728,7 +1729,7 @@ class tx_crawler_lib {
 	function CLI_main($altArgv=array())	{
 
 		$this->setAccessMode('cli');
-		$result = 0;
+		$result = self::CLI_STATUS_NOTHING_PROCCESSED;
 
 		$cliObj = t3lib_div::makeInstance('tx_crawler_cli');
 
@@ -1756,7 +1757,7 @@ class tx_crawler_lib {
 			$releaseStatus = $this->CLI_releaseProcesses($this->CLI_buildProcessId());
 
 			$this->CLI_debug("Unprocessed Items remaining:".$this->getUnprocessedItemsCount()." (".$this->CLI_buildProcessId().")");
-			$result |= ( $this->getUnprocessedItemsCount() > 0 ? self::CLI_STATUS_REMAIN : 0 );
+			$result |= ( $this->getUnprocessedItemsCount() > 0 ? self::CLI_STATUS_REMAIN : self::CLI_STATUS_NOTHING_PROCCESSED );
 		} else {
 			$result |= self::CLI_STATUS_ABORTED;
 		}

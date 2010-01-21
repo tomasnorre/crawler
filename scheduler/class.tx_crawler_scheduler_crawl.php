@@ -38,7 +38,8 @@ class tx_crawler_scheduler_crawl extends tx_scheduler_Task {
 	public function execute() {
 			/* @var $crawlerObj tx_crawler_lib */
 		$crawlerObj = t3lib_div::makeInstance('tx_crawler_lib');
-		return $crawlerObj->CLI_main();
+		$crawlerObj->CLI_main();
+		return true;
 	}
 }
 
