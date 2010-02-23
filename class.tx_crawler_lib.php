@@ -1584,10 +1584,12 @@ class tx_crawler_lib {
 			// Get list of configurations
 		$configurations = $this->getUrlsForPageRow($pageRow, $skipMessage);
 
-			// 	remove configuration that does not match the current selection
-		foreach ($configurations as $confKey => $confArray) {
-			if (!in_array($confKey, $this->incomingConfigurationSelection)) {
-				unset($configurations[$confKey]);
+		if (count($this->incomingConfigurationSelection) > 0) {
+				// 	remove configuration that does not match the current selection
+			foreach ($configurations as $confKey => $confArray) {
+				if (!in_array($confKey, $this->incomingConfigurationSelection)) {
+					unset($configurations[$confKey]);
+				}
 			}
 		}
 
@@ -1793,8 +1795,7 @@ class tx_crawler_lib {
 
 		$pageId = t3lib_div::intInRange($cliObj->cli_args['_DEFAULT'][1],0);
 
-
-		$configurationKeys  = t3lib_div::trimExplode(',',$cliObj->cli_argValue('-conf'));
+		$configurationKeys  = $this->getConfigurationKeys($cliObj);
 
 		if(!is_array($configurationKeys)){
 			$configurations = $this->getUrlsForPageId($pageId);
@@ -1907,6 +1908,18 @@ class tx_crawler_lib {
 				$result = false;
 		}
 		return $result!==false;
+	}
+
+	/**
+	 * Obtains configuration keys from the CLI arguments
+	 *
+	 * @param	tx_crawler_cli_im	$cliObj	Command line object
+	 * @return	mixed	Array of keys or null if no keys found
+	 */
+	protected function getConfigurationKeys(tx_crawler_cli_im &$cliObj) {
+		$parameter = trim($cliObj->cli_argValue('-conf'));
+
+		return ($parameter != '' ? t3lib_div::trimExplode(',', $parameter) : array());
 	}
 
 	/**
