@@ -707,17 +707,16 @@ class tx_crawler_lib {
 								$transOrigPointerField = $TCA[$subpartParams['_TABLE']]['ctrl']['transOrigPointerField'];
 
 								if ($subpartParams['_ENABLELANG'] && $transOrigPointerField) {
-									$andWhereLanguage = ' AND ' . $GLOBALS['TYPO3_DB']->quoteStr($transOrigPointerField, $subpartParams['_TABLE']) .' <= 0';
+									$andWhereLanguage = ' AND ' . $GLOBALS['TYPO3_DB']->quoteStr($transOrigPointerField, $subpartParams['_TABLE']) .' <= 0 ';
 								}
 
-								$where = $GLOBALS['TYPO3_DB']->quoteStr($pidField, $subpartParams['_TABLE']) .'='.intval($lookUpPid).
-									t3lib_BEfunc::deleteClause($subpartParams['_TABLE']) . $andWhereLanguage;
+								$where = $GLOBALS['TYPO3_DB']->quoteStr($pidField, $subpartParams['_TABLE']) .'='.intval($lookUpPid) . ' ' .
+									$andWhereLanguage . $where;
 
 								$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 									$fieldName,
 									$subpartParams['_TABLE'] . $addTable,
-									$where . ' pid=' . intval($lookUpPid) . 
- 										t3lib_BEfunc::deleteClause($subpartParams['_TABLE']),
+									$where . t3lib_BEfunc::deleteClause($subpartParams['_TABLE']),
 									'',
 									'',
 									'',
