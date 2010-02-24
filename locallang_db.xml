@@ -22,6 +22,8 @@
 			<label index="tx_crawler_configuration.sys_workspace_uid">Crawl workspace</label>
 			<label index="crawler_im.name">Crawler queue</label>
 			<label index="crawler_im.description">Running the crawler queue process to collect the relevant entries.</label>
+			<label index="crawler_im.depth">Depth</label>
+			<label index="crawler_im.invalidDepth">There is no depth set, please set it to an value!</label>
 			<label index="crawler_im.conf">Configuration records</label>
 			<label index="crawler_im.invalidConfiguration">There is no configuration record selected, please choose at least one or more!</label>
 			<label index="crawler_crawl.name">Crawler Run</label>

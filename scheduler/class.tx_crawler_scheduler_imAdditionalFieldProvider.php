@@ -48,6 +48,32 @@ class tx_crawler_scheduler_imAdditionalFieldProvider implements tx_scheduler_Add
                         }
                 }
 		
+                if (empty($taskInfo['depth'])) {
+                	if ($schedulerModule->CMD == 'add') {
+                                $taskInfo['depth'] = array();
+                        } elseif ($schedulerModule->CMD == 'edit') {
+                                $taskInfo['depth'] = $task->depth;
+                        } else {
+                                $taskInfo['depth'] = $task->depth;
+                        }
+		}
+
+			// input for depth
+		$fieldID = 'task_depth';
+		$fieldCode  = '<select name="tx_scheduler[depth]" id="' . $fieldID . '">';
+		$fieldCode .= "\t" . '<option value="0">' . $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_0') . '</option>';
+		$fieldCode .= "\t" . '<option value="1">' . $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_1') . '</option>';
+		$fieldCode .= "\t" . '<option value="2">' . $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_2') . '</option>';
+		$fieldCode .= "\t" . '<option value="3">' . $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_3') . '</option>';
+		$fieldCode .= "\t" . '<option value="4">' . $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_4') . '</option>';
+		$fieldCode .= "\t" . '<option value="99">' . $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_infi') . '</option>';
+		$fieldCode .= '</select>';
+		$additionalFields[$fieldID] = array(
+                        'code'     => $fieldCode,
+                        'label'    => 'LLL:EXT:crawler/locallang_db.xml:crawler_im.depth'
+                );
+
+			// combobox for configuration records
 		$recordsArray = $this->getCrawlerConfigurationRecords();
 		$fieldID = 'task_configuration';
 		$fieldCode  = '<select name="tx_scheduler[configuration][]" multiple="multiple" id="' . $fieldID . '">';
@@ -122,6 +148,12 @@ class tx_crawler_scheduler_imAdditionalFieldProvider implements tx_scheduler_Add
 			$schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidConfiguration'), t3lib_FlashMessage::ERROR);
 		}
 
+		if ( $submittedData['depth'] >= 0 ) {
+			// we do not need to set the $isValid state
+		} else {
+			$isValid = false;
+			$schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidDepth'), t3lib_FlashMessage::ERROR);
+		}
 		return $isValid; 
 	}
 
@@ -134,6 +166,7 @@ class tx_crawler_scheduler_imAdditionalFieldProvider implements tx_scheduler_Add
 	 */
 	public function saveAdditionalFields(array $submittedData, tx_scheduler_Task $task) {
 
+		$task->depth         = $submittedData['depth'];
 		$task->configuration = $submittedData['configuration'];
 	}
 
