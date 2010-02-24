@@ -1745,11 +1745,11 @@ class tx_crawler_lib {
 
 		if (!$this->getDisabled() && $this->CLI_checkAndAcquireNewProcess($this->CLI_buildProcessId())) {
 
-			$countInARun = $cliObj->cli_argValue('-countInARun') ? intval($cliObj->cli_argValue('-countInARun')) : $this->extensionSettings['countInARun'];
+			$countInARun = $cliObj->cli_argValue('--countInARun') ? intval($cliObj->cli_argValue('--countInARun')) : $this->extensionSettings['countInARun'];
 				//Seconds
-			$sleepAfterFinish = $cliObj->cli_argValue('-sleepAfterFinish') ? intval($cliObj->cli_argValue('-sleepAfterFinish')) : $this->extensionSettings['sleepAfterFinish'];
+			$sleepAfterFinish = $cliObj->cli_argValue('--sleepAfterFinish') ? intval($cliObj->cli_argValue('--sleepAfterFinish')) : $this->extensionSettings['sleepAfterFinish'];
 				//Milliseconds
-			$sleepTime = $cliObj->cli_argValue('-sleepTime') ? intval($cliObj->cli_argValue('-sleepTime')) : $this->extensionSettings['sleepTime'];
+			$sleepTime = $cliObj->cli_argValue('--sleepTime') ? intval($cliObj->cli_argValue('--sleepTime')) : $this->extensionSettings['sleepTime'];
 
 				// Run process:
 			$result = $this->CLI_run($countInARun, $sleepTime, $sleepAfterFinish);
