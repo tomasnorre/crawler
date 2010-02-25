@@ -43,14 +43,14 @@ class tx_crawler_scheduler_im extends tx_scheduler_Task {
 	 * 
 	 * @var integer
 	 */
-	public $depth = 0;
+	public $depth;
 
 	/**
 	 * Configuration to run (comma seperated list)
 	 * 
 	 * @var string
 	 */
-	public $configuration = '';
+	public $configuration;
 	
 	/**
 	 * Function executed from the Scheduler.

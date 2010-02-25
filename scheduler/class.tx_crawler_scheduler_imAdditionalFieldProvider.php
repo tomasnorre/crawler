@@ -36,9 +36,9 @@ class tx_crawler_scheduler_imAdditionalFieldProvider implements tx_scheduler_Add
 	 * @see interfaces/tx_scheduler_AdditionalFieldProvider#getAdditionalFields($taskInfo, $task, $schedulerModule)
 	 */
 	public function getAdditionalFields(array &$taskInfo, $task, tx_scheduler_Module $schedulerModule) {
-
 		$additionalFields = array();
-                if (empty($taskInfo['configuration'])) {
+                 
+		if (empty($taskInfo['configuration'])) {
                         if ($schedulerModule->CMD == 'add') {
                                 $taskInfo['configuration'] = array();
                         } elseif ($schedulerModule->CMD == 'edit') {
@@ -60,13 +60,20 @@ class tx_crawler_scheduler_imAdditionalFieldProvider implements tx_scheduler_Add
 
 			// input for depth
 		$fieldID = 'task_depth';
+		$fieldValueArray = array (
+		    '0'  => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_0'),
+		    '1'  => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_1'),
+		    '2'  => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_2'),
+		    '3'  => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_3'),
+		    '4'  => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_4'),
+		    '99' => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_infi'),
+		);
 		$fieldCode  = '<select name="tx_scheduler[depth]" id="' . $fieldID . '">';
-		$fieldCode .= "\t" . '<option value="0">' . $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_0') . '</option>';
-		$fieldCode .= "\t" . '<option value="1">' . $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_1') . '</option>';
-		$fieldCode .= "\t" . '<option value="2">' . $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_2') . '</option>';
-		$fieldCode .= "\t" . '<option value="3">' . $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_3') . '</option>';
-		$fieldCode .= "\t" . '<option value="4">' . $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_4') . '</option>';
-		$fieldCode .= "\t" . '<option value="99">' . $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_infi') . '</option>';
+
+		foreach ($fieldValueArray as $key => $label) {
+			$fieldCode .= "\t" . '<option value="' . $key . '"' . (($key == $task->depth) ? ' selected="selected"' : '') . '>' . $label . '</option>';
+		}
+
 		$fieldCode .= '</select>';
 		$additionalFields[$fieldID] = array(
                         'code'     => $fieldCode,
@@ -139,21 +146,20 @@ class tx_crawler_scheduler_imAdditionalFieldProvider implements tx_scheduler_Add
 	 * @return	boolean					True if validation was ok (or selected class is not relevant), false otherwise
 	 */
 	public function validateAdditionalFields(array &$submittedData, tx_scheduler_Module $schedulerModule) {
-		//!TODO add validation to validate the $submittedData['configuration'] wich is normally a comma seperated string
 		$isValid = false;
 
+			//!TODO add validation to validate the $submittedData['configuration'] wich is normally a comma seperated string
 		if ( is_array($submittedData['configuration']) ) {
 			$isValid = true;
 		} else {
 			$schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidConfiguration'), t3lib_FlashMessage::ERROR);
 		}
 
-		if ( $submittedData['depth'] >= 0 ) {
-			// we do not need to set the $isValid state
-		} else {
+		if ( $submittedData['depth'] < 0 ) {
 			$isValid = false;
 			$schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidDepth'), t3lib_FlashMessage::ERROR);
 		}
+
 		return $isValid; 
 	}
 
