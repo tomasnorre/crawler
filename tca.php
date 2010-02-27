@@ -72,7 +72,12 @@ $TCA["tx_crawler_configuration"] = array (
                 "size" => 5,
                 "minitems" => 0,
                 "maxitems" => 100,
-            )
+		"wizards" => array (
+			"suggest" => array (
+				"type" => "suggest",
+			),
+		),
+            ),
         ),
 		'begroups' => Array (
 			'exclude' => 1,
@@ -83,8 +88,8 @@ $TCA["tx_crawler_configuration"] = array (
 				'size' => 5,
 				'maxitems' => 20,
 				'exclusiveKeys' => '-1,-2',
-				'foreign_table' => 'be_groups'
-			)
+				'foreign_table' => 'be_groups',
+			),
 		),
 		'fegroups' => Array (
 			'exclude' => 1,
