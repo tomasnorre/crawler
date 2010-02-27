@@ -25,18 +25,71 @@
 /**
  *
  * @author Tolleiv Nietsch <tolleiv.nietsch@aoemedia.de>
+ * @author Michael Klapper <michael.klapper@aoemedia.de>
  * @package
  * @version $Id:$
  */
 class tx_crawler_scheduler_crawlAdditionalFieldProvider implements tx_scheduler_AdditionalFieldProvider {
+
 	/**
 	 * render additional information fields within the scheduler backend
 	 *
 	 * @see interfaces/tx_scheduler_AdditionalFieldProvider#getAdditionalFields($taskInfo, $task, $schedulerModule)
+ 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function getAdditionalFields(array &$taskInfo, $task, tx_scheduler_Module $schedulerModule) {
-
 		$additionalFields = array();
+
+		if (empty($taskInfo['sleepTime'])) {
+                        if ($schedulerModule->CMD == 'add') {
+                                $taskInfo['sleepTime'] = 1000;
+                        } elseif ($schedulerModule->CMD == 'edit') {
+                                $taskInfo['sleepTime'] = $task->sleepTime;
+                        } else {
+                                $taskInfo['sleepTime'] = $task->sleepTime;
+                        }
+		}
+
+		if (empty($taskInfo['sleepAfterFinish'])) {
+                        if ($schedulerModule->CMD == 'add') {
+                                $taskInfo['sleepAfterFinish'] = 10;
+                        } elseif ($schedulerModule->CMD == 'edit') {
+                                $taskInfo['sleepAfterFinish'] = $task->sleepAfterFinish;
+                        } else {
+                                $taskInfo['sleepAfterFinish'] = $task->sleepAfterFinish;
+                        }
+		}
+		if (empty($taskInfo['countInARun'])) {
+                        if ($schedulerModule->CMD == 'add') {
+                                $taskInfo['countInARun'] = 100;
+                        } elseif ($schedulerModule->CMD == 'edit') {
+                                $taskInfo['countInARun'] = $task->countInARun;
+                        } else {
+                                $taskInfo['countInARun'] = $task->countInARun;
+                        }
+		}
+
+			// input for sleepTime 
+		$fieldID = 'task_sleepTime';
+		$fieldCode  = '<input type="text" name="tx_scheduler[sleepTime]" id="' . $fieldID . '" value="' . $task->sleepTime . '" />';
+		$additionalFields[$fieldID] = array(
+                        'code'     => $fieldCode,
+                        'label'    => 'LLL:EXT:crawler/locallang_db.xml:crawler_im.sleepTime'
+                );
+			// input for sleepAfterFinish 
+		$fieldID = 'task_sleepAfterFinish';
+		$fieldCode  = '<input type="text" name="tx_scheduler[sleepAfterFinish]" id="' . $fieldID . '" value="' . $task->sleepAfterFinish . '" />';
+		$additionalFields[$fieldID] = array(
+                        'code'     => $fieldCode,
+                        'label'    => 'LLL:EXT:crawler/locallang_db.xml:crawler_im.sleepAfterFinish'
+                );
+			// input for countInARun 
+		$fieldID = 'task_countInARun';
+		$fieldCode  = '<input type="text" name="tx_scheduler[countInARun]" id="' . $fieldID . '" value="' . $task->countInARun . '" />';
+		$additionalFields[$fieldID] = array(
+                        'code'     => $fieldCode,
+                        'label'    => 'LLL:EXT:crawler/locallang_db.xml:crawler_im.countInARun'
+                );
 
 		return $additionalFields;
 	}
@@ -48,9 +101,28 @@ class tx_crawler_scheduler_crawlAdditionalFieldProvider implements tx_scheduler_
 	 * @param	array					$submittedData: reference to the array containing the data submitted by the user
 	 * @param	tx_scheduler_module1	$parentObject: reference to the calling object (Scheduler's BE module)
 	 * @return	boolean					True if validation was ok (or selected class is not relevant), false otherwise
+ 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	public function validateAdditionalFields(array &$submittedData, tx_scheduler_Module $schedulerModule) {
-		return true;
+		$isValid = false;
+
+		if ( t3lib_div::intval_positive($submittedData['sleepTime']) > 0 ) {
+			$isValid = true;
+		} else {
+			$schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidSleepTime'), t3lib_FlashMessage::ERROR);
+		}
+
+		if ( t3lib_div::intval_positive($submittedData['sleepAfterFinish']) === 0 ) {
+			$isValid = false;
+			$schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidSleepAfterFinish'), t3lib_FlashMessage::ERROR);
+		}
+
+		if ( t3lib_div::intval_positive($submittedData['countInARun']) === 0 ) {
+			$isValid = false;
+			$schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidCountInARun'), t3lib_FlashMessage::ERROR);
+		}
+		
+		return $isValid;
 	}
 
 	/**
@@ -61,6 +133,10 @@ class tx_crawler_scheduler_crawlAdditionalFieldProvider implements tx_scheduler_
 	 * @param	tx_scheduler_Task	$task: reference to the current task object
 	 */
 	public function saveAdditionalFields(array $submittedData, tx_scheduler_Task $task) {
+
+		$task->sleepTime        = $submittedData['sleepTime'];
+		$task->sleepAfterFinish = $submittedData['sleepAfterFinish'];
+		$task->countInARun      = $submittedData['countInARun'];
 	}
 }
 

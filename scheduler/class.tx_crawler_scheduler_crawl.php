@@ -25,10 +25,26 @@
 /**
  *
  * @author Tolleiv Nietsch <tolleiv.nietsch@aoemedia.de>
+ * @author Michael Klapper <michael.klapper@aoemedia.de>
  * @package
  * @version $Id:$
  */
 class tx_crawler_scheduler_crawl extends tx_scheduler_Task {
+
+	/**
+	 * @var integer
+	 */
+	public $sleepTime;
+	
+	/**
+	 * @var integer
+	 */
+	public $sleepAfterFinish;
+
+	/**
+	 * @var integer
+	 */
+	public $countInARun;
 
 	/**
 	 * Function executed from the Scheduler.
@@ -36,10 +52,22 @@ class tx_crawler_scheduler_crawl extends tx_scheduler_Task {
 	 * @return	void
 	 */
 	public function execute() {
+		$this->setCliArguments();
+
 			/* @var $crawlerObj tx_crawler_lib */
 		$crawlerObj = t3lib_div::makeInstance('tx_crawler_lib');
 		$crawlerObj->CLI_main();
 		return true;
+	}
+
+	/**
+	 * Simulate cli call with setting the required options to the $_SERVER['argv']
+	 *
+	 * @access protected
+	 * @return void
+	 */
+        protected function setCliArguments() {
+		$_SERVER['argv'] = array($_SERVER['argv'][0], 'tx_crawler_cli_im', '0', '-ss', '--sleepTime', $this->sleepTime, '--sleepAfterFinish', $this->sleepAfterFinish, '--countInARun', $this->countInARun);
 	}
 }
 
