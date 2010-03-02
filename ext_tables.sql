@@ -18,8 +18,8 @@ CREATE TABLE tx_crawler_queue (
 
   PRIMARY KEY (qid),
   KEY page_id (page_id),
-_ KEY set_id (set_id),
-_ KEY exec_time (exec_time),
+  KEY set_id (set_id),
+  KEY exec_time (exec_time),
   KEY process_id (process_id),
   KEY parameters_hash (parameters_hash),
   KEY configuration_hash (configuration_hash)
