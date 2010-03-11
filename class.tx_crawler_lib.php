@@ -1220,6 +1220,8 @@ class tx_crawler_lib {
 			$cmd .= ' ';
 			$cmd .= escapeshellarg(t3lib_extMgm::extPath('crawler').'cli/bootstrap.php');
 			$cmd .= ' ';
+			$cms .= escapeshellarg(t3lib_div::getIndpEnv('TYPO3_SITE_PATH'));
+			$cmd .= ' ';
 			$cmd .= escapeshellarg($originalUrl);
 			$cmd .= ' ';
 			$cmd .= escapeshellarg(base64_encode(serialize($reqHeaders)));

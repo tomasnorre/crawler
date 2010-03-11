@@ -38,14 +38,14 @@ if ($relativePath) {
 	}
 }
 
-$documentRoot = str_replace('/typo3conf/ext/crawler/cli/bootstrap.php', '', $temp_PATH_thisScript);
+$typo3Root = preg_replace('#typo3conf/ext/crawler/cli/bootstrap.php$#', '', $temp_PATH_thisScript);
 
 
 
 /**
  * Second paramater is a base64 encoded serialzed array of header data
  */
-$additionalHeaders = unserialize(base64_decode($_SERVER['argv'][2]));
+$additionalHeaders = unserialize(base64_decode($_SERVER['argv'][3]));
 if (is_array($additionalHeaders)) {
 	foreach ($additionalHeaders as $additionalHeader) {
 		if (strpos($additionalHeader, ':') !== false) {
@@ -60,7 +60,7 @@ if (is_array($additionalHeaders)) {
 
 
 // put parsed query parts into $_GET array
-$urlParts = parse_url($_SERVER['argv'][1]);
+$urlParts = parse_url($_SERVER['argv'][2]);
 // Populating $_GET
 parse_str($urlParts['query'], $_GET);
 // Populating $_REQUEST
@@ -70,17 +70,30 @@ $_POST = array();
 // Populating $_COOKIE
 $_COOKIE = array();
 
+// Get the TYPO3_SITE_PATH of the website frontend:
+$typo3SitePath = $_SERVER['argv'][1];
+
 // faking the environment
 $_SERVER['ORIG_SCRIPT_FILENAME'] = '';
-$_SERVER['HTTP_HOST'] = $_SERVER['SERVER_NAME'] = $urlParts['host'];
+$_SERVER['DOCUMENT_ROOT'] = preg_replace('#' . preg_quote($typo3SitePath, '#') . '$#', '', $typo3Root);
 $_SERVER['HTTP_USER_AGENT'] = 'CLI Mode';
-$_SERVER['SCRIPT_NAME'] = $_SERVER['PHP_SELF'] = $urlParts['path'];
-$_SERVER['PATH_TRANSLATED'] = $_SERVER['SCRIPT_FILENAME'] = $documentRoot . $_SERVER['SCRIPT_NAME'];
-$_SERVER['QUERY_STRING'] = $urlParts['query'];
-$_SERVER['DOCUMENT_ROOT'] = '';
-$_SERVER['REQUEST_URI'] = $_SERVER['SCRIPT_NAME'] . (empty($_SERVER['QUERY_STRING']) ? '' : '?'.$_SERVER['QUERY_STRING']);
+$_SERVER['HTTP_HOST'] = $_SERVER['SERVER_NAME'] = $urlParts['host'];
+$_SERVER['SCRIPT_NAME'] = $_SERVER['PHP_SELF'] = $typo3SitePath . 'index.php';
+$_SERVER['SCRIPT_FILENAME'] = $_SERVER['PATH_TRANSLATED'] = $typo3Root . 'index.php';
+$_SERVER['QUERY_STRING'] = (isset($urlParts['query']) ? $urlParts['query'] : '');
+$_SERVER['REQUEST_URI'] = $urlParts['path'] . (isset($urlParts['query']) ? '?' . $urlParts['query'] : '');
 
-chdir($documentRoot);
-include($documentRoot . '/index.php');
+// Define a port if used in the URL: 
+if (isset($urlParts['port'])) {
+	$_SERVER['HTTP_HOST'] .= ':' . $urlParts['port'];
+	$_SERVER['SERVER_PORT'] = $urlParts['port'];
+}
+// Define HTTPS disposal:
+if ($urlParts['scheme'] === 'https') {
+	$_SERVER['HTTPS'] = 'on';
+}
+
+chdir($typo3Root);
+include($typo3Root . '/index.php');
 
 ?>
