@@ -1216,11 +1216,13 @@ class tx_crawler_lib {
 
 			// direct request
 		if ($this->extensionSettings['makeDirectRequests']) {
+			$typo3SitePath = '/' . ltrim(t3lib_div::getIndpEnv('TYPO3_SITE_PATH'), '/');
+
 			$cmd = escapeshellcmd($this->extensionSettings['phpPath']);
 			$cmd .= ' ';
 			$cmd .= escapeshellarg(t3lib_extMgm::extPath('crawler').'cli/bootstrap.php');
 			$cmd .= ' ';
-			$cms .= escapeshellarg(t3lib_div::getIndpEnv('TYPO3_SITE_PATH'));
+			$cmd .= escapeshellarg($typo3SitePath);
 			$cmd .= ' ';
 			$cmd .= escapeshellarg($originalUrl);
 			$cmd .= ' ';
