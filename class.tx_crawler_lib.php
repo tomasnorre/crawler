@@ -109,11 +109,21 @@ class tx_crawler_lib {
 		$this->processFilename = PATH_site.'typo3temp/tx_crawler.proc';
 
 		// read ext_em_conf_template settings and set
-		$this->extensionSettings = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['crawler']);
+		$this->setExtensionSettings(unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['crawler']));
 
 		// set defaults:
 		if ($this->extensionSettings['countInARun']=='') $this->extensionSettings['countInARun']=100;
 		$this->extensionSettings['processLimit'] = t3lib_div::intInRange($this->extensionSettings['processLimit'],1,99,1);
+	}
+
+	/**
+	 * Sets the extensions settings (unserialized pendant of $TYPO3_CONF_VARS['EXT']['extConf']['crawler']).
+	 *
+	 * @param array $extensionSettings 
+	 * @return void
+	 */
+	public function setExtensionSettings(array $extensionSettings) {
+		$this->extensionSettings = $extensionSettings;
 	}
 
 	/**
@@ -1229,7 +1239,7 @@ class tx_crawler_lib {
 			$cmd .= escapeshellarg(base64_encode(serialize($reqHeaders)));
 
 			$startTime = microtime(true);
-			$content = shell_exec($cmd);
+			$content = $this->executeShellCommand($cmd);
 			$time = microtime(true) - $startTime;
 
 			$this->log($originalUrl . $time);
@@ -1318,6 +1328,18 @@ class tx_crawler_lib {
 			return $result;
 		}
 	}
+
+	/**
+	 * Executes a shell command and returns the outputted result.
+	 *
+	 * @param string $command Shell command to be executed
+	 * @return string Outputted result of the command execution
+	 */
+	protected function executeShellCommand($command) {
+		$result = shell_exec($command);
+		return $result;
+	}
+
 	/**
 	 * @param message
 	 */
@@ -1328,10 +1350,11 @@ class tx_crawler_lib {
 	}
 
 	/**
+	 * Builds HTTP request headers.
 	 *
 	 * @param $url
 	 * @param $crawlerId
-	 * @return unknown_type
+	 * @return array
 	 */
 	function buildRequestHeaderArray(array $url, $crawlerId) {
 		$reqHeaders = array();
