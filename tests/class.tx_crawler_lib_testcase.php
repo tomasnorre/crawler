@@ -73,9 +73,10 @@ class tx_crawler_lib_testcase extends tx_phpunit_database_testcase {
 	 *
 	 * @test
 	 */
-	public function isRequestUrlWithMakeDirectRequestsProcessedCorrectly() {
+	public function isRequestUrlWithMakeDirectRequestsProcessedCorrectlyWithoutDefinedBasePath() {
 		$extensionSettings = array(
 			'makeDirectRequests' => 1,
+			'frontendBasePath' => '',
 			'phpPath' => 'PHPPATH',
 		);
 		$this->crawlerLibrary->setExtensionSettings($extensionSettings);
@@ -85,11 +86,48 @@ class tx_crawler_lib_testcase extends tx_phpunit_database_testcase {
 		$testHeaderArray = array($testHeader);
 		$testCrawlerId = 13;
 		$testContent = uniqid('Content');
-		$typo3SitePath = '/' . ltrim(t3lib_div::getIndpEnv('TYPO3_SITE_PATH'), '/');
+		$frontendBasePath = t3lib_div::getIndpEnv('TYPO3_SITE_PATH');
 
 		$expectedCommand = escapeshellcmd('PHPPATH') . ' ' .
 			escapeshellarg(t3lib_extMgm::extPath('crawler').'cli/bootstrap.php') . ' ' .
-			escapeshellarg($typo3SitePath) . ' ' .
+			escapeshellarg($frontendBasePath) . ' ' .
+			escapeshellarg($testUrl) . ' ' .
+			escapeshellarg(base64_encode(serialize($testHeaderArray)));
+
+		$this->crawlerLibrary->expects($this->once())->method('buildRequestHeaderArray')
+			->will($this->returnValue($testHeaderArray));
+		$this->crawlerLibrary->expects($this->once())->method('executeShellCommand')
+			->with($expectedCommand)->will($this->returnValue($testContent));
+
+		$result = $this->crawlerLibrary->requestUrl($testUrl, $testCrawlerId);
+
+		$this->assertEquals($testHeader . str_repeat("\r\n", 2), $result['request']);
+		$this->assertEquals($testContent, $result['content']);
+	}
+
+	/**
+	 * Tests whethe the makeDirectRequest feature works properly.
+	 *
+	 * @test
+	 */
+	public function isRequestUrlWithMakeDirectRequestsProcessedCorrectlyWithDefinedBasePath() {
+		$extensionSettings = array(
+			'makeDirectRequests' => 1,
+			'frontendBasePath' => '/cms/',
+			'phpPath' => 'PHPPATH',
+		);
+		$this->crawlerLibrary->setExtensionSettings($extensionSettings);
+
+		$testUrl = 'http://localhost/' . uniqid();
+		$testHeader = 'X-Test: ' . uniqid();
+		$testHeaderArray = array($testHeader);
+		$testCrawlerId = 13;
+		$testContent = uniqid('Content');
+		$frontendBasePath = '/cms/';
+
+		$expectedCommand = escapeshellcmd('PHPPATH') . ' ' .
+			escapeshellarg(t3lib_extMgm::extPath('crawler').'cli/bootstrap.php') . ' ' .
+			escapeshellarg($frontendBasePath) . ' ' .
 			escapeshellarg($testUrl) . ' ' .
 			escapeshellarg(base64_encode(serialize($testHeaderArray)));
 

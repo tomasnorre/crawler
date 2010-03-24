@@ -1226,13 +1226,11 @@ class tx_crawler_lib {
 
 			// direct request
 		if ($this->extensionSettings['makeDirectRequests']) {
-			$typo3SitePath = '/' . ltrim(t3lib_div::getIndpEnv('TYPO3_SITE_PATH'), '/');
-
 			$cmd = escapeshellcmd($this->extensionSettings['phpPath']);
 			$cmd .= ' ';
 			$cmd .= escapeshellarg(t3lib_extMgm::extPath('crawler').'cli/bootstrap.php');
 			$cmd .= ' ';
-			$cmd .= escapeshellarg($typo3SitePath);
+			$cmd .= escapeshellarg($this->getFrontendBasePath());
 			$cmd .= ' ';
 			$cmd .= escapeshellarg($originalUrl);
 			$cmd .= ' ';
@@ -1327,6 +1325,33 @@ class tx_crawler_lib {
 			}
 			return $result;
 		}
+	}
+
+	/**
+	 * Gets the base path of the website frontend.
+	 * (e.g. if you call http://mydomain.com/cms/index.php in
+	 * the browser the base path is "/cms/")
+	 *
+	 * @return string Base path of the website frontend
+	 */
+	protected function getFrontendBasePath() {
+		$frontendBasePath = '/';
+
+		// Get the path from the extension settings:
+		if (isset($this->extensionSettings['frontendBasePath']) && $this->extensionSettings['frontendBasePath']) {
+			$frontendBasePath = $this->extensionSettings['frontendBasePath'];
+		// If not in CLI mode the base path can be determined from $_SERVER environment:
+		} elseif (!defined('TYPO3_cliMode') || !TYPO3_cliMode) {
+			t3lib_div::getIndpEnv('TYPO3_SITE_PATH');
+		}
+
+		// Base path must be '/<pathSegements>/':
+		if ($frontendBasePath != '/') {
+			$frontendBasePath = '/' . ltrim($frontendBasePath, '/');
+			$frontendBasePath = rtrim($frontendBasePath, '/') . '/';
+		}
+
+		return $frontendBasePath;
 	}
 
 	/**
