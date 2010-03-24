@@ -29,7 +29,7 @@
 			<label index="crawler_im.sleepTime">Sleep time</label>
 			<label index="crawler_im.invalidSleepTime">The sleep time must be a positive integer!</label>
 			<label index="crawler_im.sleepAfterFinish">Sleep after finish</label>
-			<label index="crawler_im.invalidSleepTime">The sleep after finish must be a positive integer!</label>
+			<label index="crawler_im.invalidSleepAfterFinish">The sleep after finish must be a positive integer!</label>
 			<label index="crawler_im.countInARun">Count in a run</label>
 			<label index="crawler_im.invalidCountInARun">The count in a run must be a positive integer!</label>
 			<label index="crawler_crawl.name">Crawler Run</label>
