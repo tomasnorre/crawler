@@ -157,7 +157,7 @@ class tx_crawler_domain_process extends tx_crawler_domain_lib_abstract_dbobject 
 			$stage = 'running';
 		} elseif(!$this->getActive() && $this->getProgress() < 100) {
 			$stage = 'cancelled';
-		} elseif(!$this->getActive() && $this->getProgress() >= 100) {
+		} else {
 			$stage = 'completed';
 		}
 		return $stage;
