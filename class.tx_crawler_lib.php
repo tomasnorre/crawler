@@ -115,7 +115,7 @@ class tx_crawler_lib {
 		$this->setExtensionSettings($settings);
 
 		// set defaults:
-		if ($this->extensionSettings['countInARun']=='') $this->extensionSettings['countInARun']=100;
+		if (t3lib_div::intval_positive($this->extensionSettings['countInARun']) == 0) $this->extensionSettings['countInARun']=100;
 		$this->extensionSettings['processLimit'] = t3lib_div::intInRange($this->extensionSettings['processLimit'],1,99,1);
 	}
 
