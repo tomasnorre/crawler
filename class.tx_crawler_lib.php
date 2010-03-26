@@ -108,8 +108,11 @@ class tx_crawler_lib {
 
 		$this->processFilename = PATH_site.'typo3temp/tx_crawler.proc';
 
+		$settings = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['crawler']);
+		$settings = is_array($settings) ? $settings : array();
+
 		// read ext_em_conf_template settings and set
-		$this->setExtensionSettings(unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['crawler']));
+		$this->setExtensionSettings($settings);
 
 		// set defaults:
 		if ($this->extensionSettings['countInARun']=='') $this->extensionSettings['countInARun']=100;
