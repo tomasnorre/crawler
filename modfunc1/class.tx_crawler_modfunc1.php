@@ -880,7 +880,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 
 		$crawler = $this->findCrawler();
 		try {
-			$message = $this->handleProcessOverviewActions();
+			$this->handleProcessOverviewActions();
 		} catch (Exception $e) {
 			$this->addMessage($e->getMessage(), t3lib_FlashMessage::ERROR);
 			$this->isErrorDetected = true;
@@ -912,7 +912,6 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		$listView->setAssignedUnprocessedItemCount($queueRepository->countAllAssignedPendingItems());
 		$listView->setActiveProcessCount($processRepository->countActive());
 		$listView->setMaxActiveProcessCount(t3lib_div::intInRange($this->extensionSettings['processLimit'],1,99,1));
-		$listView->setActionMessage($message);
 		$listView->setMode($mode);
 
 		$paginationView		= new tx_crawler_view_pagination();
@@ -1007,7 +1006,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				if ($handle === false) {
 					throw new Exception($GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.newprocesserror'));
 				}
-				return $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.newprocess');
+				$this->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.newprocess'), t3lib_FlashMessage::NOTICE);
 				break;
 		}
 	}

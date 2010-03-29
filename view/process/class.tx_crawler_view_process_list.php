@@ -60,11 +60,6 @@ class tx_crawler_view_process_list {
 	protected $maxActiveProcessCount;
 
 	/**
-	 * @var string Holds an internal message, when an action has been performed
-	 */
-	protected $actionMessage;
-
-	/**
 	 * @var string Holds the mode state, can be simple or detail
 	 */
 	protected $mode;
@@ -142,21 +137,6 @@ class tx_crawler_view_process_list {
 	 */
 	public function setMode($mode) {
 		$this->mode = $mode;
-	}
-
-
-	/**
-	 * @return string
-	 */
-	public function getActionMessage() {
-		return $this->actionMessage;
-	}
-
-	/**
-	 * @param string $actionMessage
-	 */
-	public function setActionMessage($actionMessage) {
-		$this->actionMessage = $actionMessage;
 	}
 
 

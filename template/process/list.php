@@ -9,12 +9,6 @@
 	<?php echo $this->getModeLink(); ?>
 </span>
 
-<?php if($this->getActionMessage() != ''): ?>
-	<div id="message">
-		<?php echo $this->getActionMessage(); ?>
-	</div>
-<?php endif; ?>
-
 <h2><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.generalinformation'); ?>:</h2>
 <table>
 	<tr>
