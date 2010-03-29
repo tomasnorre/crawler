@@ -93,6 +93,8 @@
             <label index="labels.itemsPerPage.50">limit to 50</label>
             <label index="labels.itemsPerPage.0">no limit</label>
             <label index="labels.itemsPerPage">Items per page</label>
+            <label index="message.noBeUserAvailable">There is no be_user "_cli_crawler" available!</label>
+            <label index="message.noPhpForkAvailable">There is no PHP method "popen" available!</label>
         </languageKey>
     </data>
 </T3locallang>

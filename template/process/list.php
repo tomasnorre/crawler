@@ -1,5 +1,7 @@
 <?php if (!defined('TYPO3_MODE')) die ('Access denied.'); ?>
 
+	<?php $this->getFlashMessages(); ?>
+
 <span style="padding-left: 5px;">
 	<?php echo $this->getRefreshLink(); ?>
 	<?php echo $this->getEnableDisableLink(); ?>

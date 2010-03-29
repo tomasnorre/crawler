@@ -74,6 +74,13 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	protected $extensionSettings = array();
 
 	/**
+	 * Indicate that an flash message with an error is present.
+	 *
+	 * @var boolean
+	 */
+	protected $isErrorDetected = false;
+
+	/**
 	 * Additions to the function menu array
 	 *
 	 * @return	array		Menu array
@@ -265,6 +272,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		$this->duplicateTrack = array();
 		$this->submitCrawlUrls = t3lib_div::_GP('_crawl');
 		$this->downloadCrawlUrls = t3lib_div::_GP('_download');
+		$this->makeCrawlerProcessableChecks();
 
 		switch((string)t3lib_div::_GP('tstamp'))	{
 			case 'midnight':
@@ -868,9 +876,15 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	protected function drawProcessOverviewAction(){
 
 		global $BACK_PATH;
+		$this->makeCrawlerProcessableChecks();
 
 		$crawler = $this->findCrawler();
-		$message = $this->handleProcessOverviewActions();
+		try {
+			$message = $this->handleProcessOverviewActions();
+		} catch (Exception $e) {
+			$this->addMessage($e->getMessage(), t3lib_FlashMessage::ERROR);
+			$this->isErrorDetected = true;
+		}
 
 		$offset 	= intval(t3lib_div::_GP('offset'));
 		$perpage 	= 20;
@@ -893,7 +907,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		$listView->setIconPath($BACK_PATH.'../typo3conf/ext/crawler/template/process/res/img/');
 		$listView->setProcessCollection($allProcesses);
 		$listView->setCliPath($this->getCrawlerCliPath());
-		$listView->setIsCrawlerEnabled(!$crawler->getDisabled());
+		$listView->setIsCrawlerEnabled(!$crawler->getDisabled() && !$this->isErrorDetected);
 		$listView->setTotalUnprocessedItemCount($queueRepository->countAllPendingItems());
 		$listView->setAssignedUnprocessedItemCount($queueRepository->countAllAssignedPendingItems());
 		$listView->setActiveProcessCount($processRepository->countActive());
@@ -913,6 +927,59 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Verify that the crawler is exectuable.
+	 *
+	 * @access protected
+	 * @return void
+	 *
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 */
+	protected function makeCrawlerProcessableChecks() {
+		global $LANG;
+	
+		if ($this->isCrawlerUserAvailable() === false) {
+			$this->addMessage($LANG->sL('LLL:EXT:crawler/modfunc1/locallang.xml:message.noBeUserAvailable'), t3lib_flashMessage::ERROR);
+			$this->isErrorDetected = true;
+		}
+		if ($this->isPhpForkAvailable() === false) {
+			$this->addMessage($LANG->sL('LLL:EXT:crawler/modfunc1/locallang.xml:message.noPhpForkAvailable'), t3lib_flashMessage::ERROR);
+			$this->isErrorDetected = true;
+		}
+	}
+
+	/**
+	 * Indicate that the required PHP method "popen" is 
+	 * available in the system.
+	 *
+	 * @access protected
+	 * @return boolean
+	 *
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 */
+	protected function isPhpForkAvailable() {
+		return method_exists('popen');
+	}
+
+	/**
+	 * Indicate that the required be_user "_cli_crawler" is 
+	 * global available in the system.
+	 *
+	 * @access protected
+	 * @return boolean
+	 *
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 */
+	protected function isCrawlerUserAvailable() {
+		$isAvailable = false;
+		$userArray = t3lib_BEfunc::getRecordsByField('be_users', 'username', '_cli_crawler');
+
+		if (is_array($userArray))
+			$isAvailable = true;
+	
+		return $isAvailable;
 	}
 
 	/**
@@ -979,6 +1046,24 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 * General Helper Functions
 	 *
 	 *****************************/
+
+        /**
+         * This method is used to add a message to the internal queue
+         *
+         * @param       string  the message itself
+         * @param       integer message level (-1 = success (default), 0 = info, 1 = notice, 2 = warning, 3 = error)
+         * @return      void
+         */
+        public function addMessage($message, $severity = t3lib_FlashMessage::OK) {
+                $message = t3lib_div::makeInstance(
+                        't3lib_FlashMessage',
+                        $message,
+                        '',
+                        $severity
+                );
+
+                t3lib_FlashMessageQueue::addMessage($message);
+        }
 
 	/**
 	 * Create selector box

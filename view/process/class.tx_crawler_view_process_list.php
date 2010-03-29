@@ -435,6 +435,21 @@ class tx_crawler_view_process_list {
 	protected function getLLLabel($label) {
 		return $GLOBALS['LANG']->sL($label);
 	}
+
+	/**
+	 * Render all available flash messages for current user.
+	 *
+	 * @see t3lib_FlashMessage
+	 * @access protected
+	 * @return string
+	 *
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 */
+	protected function getFlashMessages() {
+	        $flashMessage = t3lib_div::makeInstance('t3lib_FlashMessage');
+		
+		return $flashMessage->render();
+	}
 }
 
 ?>
