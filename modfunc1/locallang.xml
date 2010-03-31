@@ -95,6 +95,7 @@
             <label index="labels.itemsPerPage">Items per page</label>
             <label index="message.noBeUserAvailable">There is no be_user "_cli_crawler" available!</label>
             <label index="message.noPhpForkAvailable">There is no PHP method "popen" available!</label>
+            <label index="message.beUserIsAdmin">The be_user "_cli_crawler" is not allowed to have admin rights!</label>
         </languageKey>
     </data>
 </T3locallang>

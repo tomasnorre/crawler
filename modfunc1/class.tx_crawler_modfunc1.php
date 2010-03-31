@@ -883,7 +883,6 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 			$this->handleProcessOverviewActions();
 		} catch (Exception $e) {
 			$this->addErrorMessage($e->getMessage());
-			$this->isErrorDetected = true;
 		}
 
 		$offset 	= intval(t3lib_div::_GP('offset'));
@@ -941,11 +940,11 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	
 		if ($this->isCrawlerUserAvailable() === false) {
 			$this->addErrorMessage($LANG->sL('LLL:EXT:crawler/modfunc1/locallang.xml:message.noBeUserAvailable'));
-			$this->isErrorDetected = true;
+		} elseif ($this->isCrawlerUserNotAdmin() === false) {
+			$this->addErrorMessage($LANG->sL('LLL:EXT:crawler/modfunc1/locallang.xml:message.beUserIsAdmin'));
 		}
 		if ($this->isPhpForkAvailable() === false) {
 			$this->addErrorMessage($LANG->sL('LLL:EXT:crawler/modfunc1/locallang.xml:message.noPhpForkAvailable'));
-			$this->isErrorDetected = true;
 		}
 	}
 
@@ -976,6 +975,25 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		$userArray = t3lib_BEfunc::getRecordsByField('be_users', 'username', '_cli_crawler');
 
 		if (is_array($userArray))
+			$isAvailable = true;
+	
+		return $isAvailable;
+	}
+
+	/**
+	 * Indicate that the required be_user "_cli_crawler" is 
+	 * has no admin rights.
+	 *
+	 * @access protected
+	 * @return boolean
+	 *
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 */
+	protected function isCrawlerUserNotAdmin() {
+		$isAvailable = false;
+		$userArray = t3lib_BEfunc::getRecordsByField('be_users', 'username', '_cli_crawler');
+
+		if (is_array($userArray) && $userArray[0]['admin'] == 0)
 			$isAvailable = true;
 	
 		return $isAvailable;
@@ -1083,13 +1101,13 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	protected function addNoticeMessage($message) {
-        	if (version_compare(TYPO3_version,'4.3','>'))
+        	if (version_compare(TYPO3_version,'4.3','>='))
 			$this->addMessage($message, t3lib_FlashMessage::NOTICE);
 	}
 
 	/**
 	 * Add error message to the user interface.
-	 *
+	 * 
 	 * NOTE:
 	 * This method is basesd on TYPO3 4.3 or higher!
 	 *
@@ -1101,7 +1119,9 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	protected function addErrorMessage($message) {
-        	if (version_compare(TYPO3_version,'4.3','>'))
+		$this->isErrorDetected = true;
+
+        	if (version_compare(TYPO3_version,'4.3','>='))
 			$this->addMessage($message, t3lib_FlashMessage::ERROR);
 	}
 

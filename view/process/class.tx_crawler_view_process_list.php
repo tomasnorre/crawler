@@ -431,7 +431,7 @@ class tx_crawler_view_process_list {
 	protected function getFlashMessages() {
 	        $content = '';
 
-		if (version_compare(TYPO3_version,'4.3','>')) {
+		if (version_compare(TYPO3_version,'4.3','>=')) {
 			$flashMessage = t3lib_div::makeInstance('t3lib_FlashMessage');
 			$content = $flashMessage->render();
 		}
