@@ -123,6 +123,7 @@ $TCA["tx_crawler_configuration"] = array (
 		'realurl' => Array (
 			'exclude' => 1,
 			'label' => 'LLL:EXT:crawler/locallang_db.xml:tx_crawler_configuration.realurl',
+			'displayCond' => 'EXT:realurl:LOADED:true',
 			'config' => Array (
 				'type' => 'check',
 			)
