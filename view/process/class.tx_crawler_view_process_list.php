@@ -419,6 +419,9 @@ class tx_crawler_view_process_list {
 	/**
 	 * Render all available flash messages for current user.
 	 *
+	 * NOTE:
+	 * This method is basesd on TYPO3 4.3 or higher!
+	 *
 	 * @see t3lib_FlashMessage
 	 * @access protected
 	 * @return string
@@ -426,9 +429,14 @@ class tx_crawler_view_process_list {
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	protected function getFlashMessages() {
-	        $flashMessage = t3lib_div::makeInstance('t3lib_FlashMessage');
+	        $content = '';
+
+		if (version_compare(TYPO3_version,'4.3','>')) {
+			$flashMessage = t3lib_div::makeInstance('t3lib_FlashMessage');
+			$content = $flashMessage->render();
+		}
 		
-		return $flashMessage->render();
+		return $content;
 	}
 }
 

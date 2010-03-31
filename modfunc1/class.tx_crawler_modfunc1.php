@@ -882,7 +882,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		try {
 			$this->handleProcessOverviewActions();
 		} catch (Exception $e) {
-			$this->addMessage($e->getMessage(), t3lib_FlashMessage::ERROR);
+			$this->addErrorMessage($e->getMessage());
 			$this->isErrorDetected = true;
 		}
 
@@ -940,11 +940,11 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		global $LANG;
 	
 		if ($this->isCrawlerUserAvailable() === false) {
-			$this->addMessage($LANG->sL('LLL:EXT:crawler/modfunc1/locallang.xml:message.noBeUserAvailable'), t3lib_flashMessage::ERROR);
+			$this->addErrorMessage($LANG->sL('LLL:EXT:crawler/modfunc1/locallang.xml:message.noBeUserAvailable'));
 			$this->isErrorDetected = true;
 		}
 		if ($this->isPhpForkAvailable() === false) {
-			$this->addMessage($LANG->sL('LLL:EXT:crawler/modfunc1/locallang.xml:message.noPhpForkAvailable'), t3lib_flashMessage::ERROR);
+			$this->addErrorMessage($LANG->sL('LLL:EXT:crawler/modfunc1/locallang.xml:message.noPhpForkAvailable'));
 			$this->isErrorDetected = true;
 		}
 	}
@@ -1006,7 +1006,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				if ($handle === false) {
 					throw new Exception($GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.newprocesserror'));
 				}
-				$this->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.newprocess'), t3lib_FlashMessage::NOTICE);
+				$this->addNoticeMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.newprocess'));
 				break;
 		}
 	}
@@ -1046,14 +1046,19 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 *
 	 *****************************/
 
-        /**
-         * This method is used to add a message to the internal queue
-         *
-         * @param       string  the message itself
-         * @param       integer message level (-1 = success (default), 0 = info, 1 = notice, 2 = warning, 3 = error)
-         * @return      void
-         */
-        public function addMessage($message, $severity = t3lib_FlashMessage::OK) {
+	/**
+	 * This method is used to add a message to the internal queue
+	 *
+	 * NOTE:
+	 * This method is basesd on TYPO3 4.3 or higher!
+	 *
+	 * @param  string  the message itself
+	 * @param  integer message level (-1 = success (default), 0 = info, 1 = notice, 2 = warning, 3 = error)
+	 *
+	 * @access private
+	 * @return void
+	 */
+        private function addMessage($message, $severity = t3lib_FlashMessage::OK) {
                 $message = t3lib_div::makeInstance(
                         't3lib_FlashMessage',
                         $message,
@@ -1063,6 +1068,42 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 
                 t3lib_FlashMessageQueue::addMessage($message);
         }
+
+	/**
+	 * Add notice message to the user interface.
+	 *
+	 * NOTE:
+	 * This method is basesd on TYPO3 4.3 or higher!
+	 *
+	 * @param string The message
+	 *
+	 * @access protected
+	 * @return void
+	 *
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 */
+	protected function addNoticeMessage($message) {
+        	if (version_compare(TYPO3_version,'4.3','>'))
+			$this->addMessage($message, t3lib_FlashMessage::NOTICE);
+	}
+
+	/**
+	 * Add error message to the user interface.
+	 *
+	 * NOTE:
+	 * This method is basesd on TYPO3 4.3 or higher!
+	 *
+	 * @param string The message
+	 *
+	 * @access protected
+	 * @return void
+	 *
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 */
+	protected function addErrorMessage($message) {
+        	if (version_compare(TYPO3_version,'4.3','>'))
+			$this->addMessage($message, t3lib_FlashMessage::ERROR);
+	}
 
 	/**
 	 * Create selector box
