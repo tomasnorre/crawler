@@ -959,7 +959,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	protected function isPhpForkAvailable() {
-		return method_exists('popen');
+		return function_exists('popen');
 	}
 
 	/**
