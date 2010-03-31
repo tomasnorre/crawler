@@ -1,13 +1,14 @@
 <?php if (!defined('TYPO3_MODE')) die ('Access denied.'); ?>
 
 	<?php $this->getFlashMessages(); ?>
-
-<span style="padding-left: 5px;">
+<br />
+<br />
+<div id="controll-panel">
 	<?php echo $this->getRefreshLink(); ?>
 	<?php echo $this->getEnableDisableLink(); ?>
 	<?php echo $this->getAddLink(); ?>
 	<?php echo $this->getModeLink(); ?>
-</span>
+</div>
 
 <h2><?php echo $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.generalinformation'); ?>:</h2>
 <table>

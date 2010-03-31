@@ -315,7 +315,7 @@ class tx_crawler_view_process_list {
 	 * @return string
 	 */
 	protected function getRefreshLink() {
-		return '<a href="index.php?id='.$this->pageId.'" title="'.$this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.refresh').'">' . $this->getRefreshIcon() . '</a>';
+		return '<input onclick="window.location=\'index.php?id=' . $this->pageId . '\';" type="button" style="padding-left: 20px; background-position: 3px 3px; background-image: url(\'' . $this->getIconPath() . 'arrow_refresh.png' . '\'); background-repeat: no-repeat;" value="' . $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.refresh') . '" />';
 	}
 
 	/**
@@ -334,9 +334,9 @@ class tx_crawler_view_process_list {
 	 */
 	protected function getEnableDisableLink() {
 		if ($this->getIsCrawlerEnabled()) {
-			return '<a href="index.php?id='.$this->pageId.'&action=stopCrawling" title="'.$this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.disablecrawling').'">'.$this->getIcon('control_stop_blue').'</a>';
+			return '<input onclick="window.location=\'index.php?id=' . $this->pageId . '&action=stopCrawling\';" type="button" style="padding-left: 20px; background-position: 3px 3px; background-image: url(\'' . $this->getIconPath() . 'control_stop_blue.png' . '\'); background-repeat: no-repeat;" value="' . $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.disablecrawling') . '" />';
 		} else {
-			return '<a href="index.php?id='.$this->pageId.'&action=resumeCrawling" title="'.$this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.enablecrawling').'">'.$this->getIcon('control_play').'</a>';
+			return '<input onclick="window.location=\'index.php?id=' . $this->pageId . '&action=resumeCrawling\';" type="button" style="padding-left: 20px; background-position: 3px 3px; background-image: url(\'' . $this->getIconPath() . 'control_play.png' . '\'); background-repeat: no-repeat;" value="' . $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.enablecrawling') . '" />';
 		}
 	}
 
@@ -348,9 +348,9 @@ class tx_crawler_view_process_list {
 	 */
 	protected function getModeLink() {
 		if ($this->getMode() == 'detail') {
-			return '<a href="index.php?id='.$this->pageId.'&SET[processListMode]=simple" title="'.$this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.show.running').'">'.$this->getIcon('arrow_in').'</a>';
+			return '<input onclick="window.location=\'index.php?id=' . $this->pageId . '&SET[processListMode]=simple\';" type="button" style="padding-left: 20px; background-position: 3px 3px; background-image: url(\'' . $this->getIconPath() . 'arrow_in.png' . '\'); background-repeat: no-repeat;" value="' . $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.show.running') . '" />';
 		} elseif ($this->getMode() == 'simple') {
-			return '<a href="index.php?id='.$this->pageId.'&SET[processListMode]=detail" title="'.$this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.show.all').'">'.$this->getIcon('arrow_out').'</a>';
+			return '<input onclick="window.location=\'index.php?id=' . $this->pageId . '&SET[processListMode]=detail\';" type="button" style="padding-left: 20px; background-position: 3px 3px; background-image: url(\'' . $this->getIconPath() . 'arrow_out.png' . '\'); background-repeat: no-repeat;" value="' . $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.show.all') . '" />';
 		}
 	}
 
@@ -362,7 +362,7 @@ class tx_crawler_view_process_list {
 	 */
 	protected function getAddLink() {
 		if ($this->getActiveProcessCount() < $this->getMaxActiveProcessCount() && $this->getIsCrawlerEnabled()) {
-			return '<a href="index.php?id='.$this->pageId.'&action=addProcess" title="'.$this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.process.add').'">'.$this->getAddIcon().'</a>';
+			return '<input onclick="window.location=\'index.php?id=' . $this->pageId . '&action=addProcess\';" type="button" style="padding-left: 20px; background-position: 3px 3px; background-image: url(\'' . $this->getIconPath() . 'add.png' . '\'); background-repeat: no-repeat;" value="' . $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.process.add') . '" />';
 		} else {
 			return '';
 		}
