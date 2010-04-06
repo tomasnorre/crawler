@@ -729,8 +729,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				}
 
 					// Result:
-				$resLog = '';
-
+				$resLog = $this->getResultLog($vv);
 
 				$resStatus = $this->getResStatus($vv);
 
@@ -829,9 +828,30 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		return $content;
 	}
 
+        /**
+         * Extract the log information from the current row and retrive it as formatted string.
+         *
+         * @param array $resultRow
+         *
+         * @access protected
+         * @return string
+         *
+         * @author Michael Klapper <michael.klapper@aoemedia.de>
+         */
+        protected function getResultLog($resultRow) {
+                $content = '';
 
+                if (is_array($resultRow) && array_key_exists('result_data', $resultRow)) {
+                        $requestContent = unserialize($resultRow['result_data']);
+                        $requestResult = unserialize($requestContent['content']);
 
+                        if (is_array($requestResult) && array_key_exists('log', $requestResult)) {
+                                $content = implode(chr(10), $requestResult['log']);
+                        }
+                }
 
+                return $content;
+        }
 
 	function getResStatus($vv) {
 		if ($vv['result_data'])	{
