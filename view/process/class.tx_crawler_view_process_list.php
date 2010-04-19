@@ -415,28 +415,6 @@ class tx_crawler_view_process_list {
 	protected function getLLLabel($label) {
 		return $GLOBALS['LANG']->sL($label);
 	}
-
-	/**
-	 * Render all available flash messages for current user.
-	 *
-	 * NOTE:
-	 * This method is basesd on TYPO3 4.3 or higher!
-	 *
-	 * @see t3lib_FlashMessage
-	 * @access protected
-	 * @return string
-	 *
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
-	 */
-	protected function getFlashMessages() {
-	        $content = '';
-
-		if (version_compare(TYPO3_version,'4.3','>=')) {
-			$content = t3lib_FlashMessageQueue::renderFlashMessages();
-		}
-		
-		return $content;
-	}
 }
 
 ?>

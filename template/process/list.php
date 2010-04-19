@@ -1,7 +1,5 @@
 <?php if (!defined('TYPO3_MODE')) die ('Access denied.'); ?>
 
-	<?php $this->getFlashMessages(); ?>
-<br />
 <br />
 <div id="controll-panel">
 	<?php echo $this->getRefreshLink(); ?>
