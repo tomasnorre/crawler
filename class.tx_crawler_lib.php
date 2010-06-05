@@ -1296,7 +1296,7 @@ class tx_crawler_lib {
 						// switch to "content" part if empty row detected - this should not be the first row of the response anyway
 					$part = 'content';
 				} elseif(($part==='headers') && stristr($line,'Content-Length: ')) {
-					$contentLength = intval(str_replace('Content-Length: ','',$line));
+					$contentLength = intval(str_ireplace('Content-Length: ','',$line));
 					if ($this->debugMode) t3lib_div::devlog('crawler - Content-Length detected: '.$contentLength,__FUNCTION__);
 					$d[$part][] = $line;
 				} else {
