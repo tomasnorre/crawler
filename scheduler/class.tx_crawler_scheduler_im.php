@@ -76,6 +76,17 @@ class tx_crawler_scheduler_im extends tx_scheduler_Task {
 
 		$_SERVER['argv'] = array($_SERVER['argv'][0], 'tx_crawler_cli_im','0','-ss', '-d', $this->depth, '-o', self::MODE, '-conf', implode(',', $this->configuration));
 	}
+
+	
+	/**
+	 * Retrieve some details about current scheduler task 
+	 * to make the list view more usefulli.
+	 *
+	 * @return string
+	 */
+	public function getAdditionalInformation() {
+		return implode(',', $this->configuration) . ' (depth: ' . $this->depth . ')';
+	}
 }
 
 ?>
