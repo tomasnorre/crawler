@@ -1057,7 +1057,8 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 */
 	protected function getCrawlerCliPath(){
 		$phpPath 		= $this->crawlerObj->extensionSettings['phpPath'] . ' ';
-		$pathToTypo3 	= t3lib_div::getIndpEnv('TYPO3_DOCUMENT_ROOT');
+		$pathToTypo3 	= rtrim(t3lib_div::getIndpEnv('TYPO3_DOCUMENT_ROOT'), '/');
+		$pathToTypo3 	.= rtrim(t3lib_div::getIndpEnv('TYPO3_SITE_PATH'), '/');
 		$cliPart	 	= '/typo3/cli_dispatch.phpsh crawler';
 		return $phpPath.$pathToTypo3.$cliPart;
 	}
