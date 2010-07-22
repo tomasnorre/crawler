@@ -32,6 +32,7 @@ require_once(PATH_t3lib.'class.t3lib_extobjbase.php');
 
 require_once(t3lib_extMgm::extPath('crawler').'class.tx_crawler_lib.php');
 require_once t3lib_extMgm::extPath('crawler').'domain/process/class.tx_crawler_domain_process_repository.php';
+require_once t3lib_extMgm::extPath('crawler').'domain/process/class.tx_crawler_domain_process_manager.php';
 require_once t3lib_extMgm::extPath('crawler').'view/process/class.tx_crawler_view_process_list.php';
 require_once t3lib_extMgm::extPath('crawler').'view/class.tx_crawler_view_pagination.php';
 
@@ -79,6 +80,14 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 * @var boolean
 	 */
 	protected $isErrorDetected = false;
+	
+	/**
+	 * the constructor
+	 */
+	public function __construct() {
+		$this->processManager = new tx_crawler_domain_process_manager();
+		return parent::__construct();
+	}
 
 	/**
 	 * Additions to the function menu array
@@ -925,7 +934,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		$listView->setPageId($this->pObj->id);
 		$listView->setIconPath($BACK_PATH.'../typo3conf/ext/crawler/template/process/res/img/');
 		$listView->setProcessCollection($allProcesses);
-		$listView->setCliPath($this->getCrawlerCliPath());
+		$listView->setCliPath($this->processManager->getCrawlerCliPath());
 		$listView->setIsCrawlerEnabled(!$crawler->getDisabled() && !$this->isErrorDetected);
 		$listView->setTotalUnprocessedItemCount($queueRepository->countAllPendingItems());
 		$listView->setAssignedUnprocessedItemCount($queueRepository->countAllAssignedPendingItems());
@@ -1039,8 +1048,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				$crawler->setDisabled(false);
 				break;
 			case 'addProcess' :
-				$completePath = 'nohup ' . escapeshellcmd($this->getCrawlerCliPath()) . ' &';
-				$handle = popen($completePath,'r');
+				$handle = $this->processManager->startProcess();
 				if ($handle === false) {
 					throw new Exception($GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.newprocesserror'));
 				}
@@ -1050,18 +1058,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	}
 
 
-	/**
-	 * Returns the path to start the crawler from the command line
-	 *
-	 * @return string
-	 */
-	protected function getCrawlerCliPath(){
-		$phpPath 		= $this->crawlerObj->extensionSettings['phpPath'] . ' ';
-		$pathToTypo3 	= rtrim(t3lib_div::getIndpEnv('TYPO3_DOCUMENT_ROOT'), '/');
-		$pathToTypo3 	.= rtrim(t3lib_div::getIndpEnv('TYPO3_SITE_PATH'), '/');
-		$cliPart	 	= '/typo3/cli_dispatch.phpsh crawler';
-		return $phpPath.$pathToTypo3.$cliPart;
-	}
+	
 
 	/**
 	 * Returns the singleton instance of the crawler.
