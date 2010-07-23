@@ -86,7 +86,6 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 */
 	public function __construct() {
 		$this->processManager = new tx_crawler_domain_process_manager();
-		return parent::__construct();
 	}
 
 	/**
