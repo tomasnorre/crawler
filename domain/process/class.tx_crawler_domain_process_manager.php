@@ -41,48 +41,60 @@ class tx_crawler_domain_process_manager  {
 	 * starts multiple processes 
 	 * 
 	 * @param integer $timeout
+	 * @param boolean $verbose
 	 */
-	public function multiProcess( $timeout=5000 ) {
-		$processLimit = intval($this->crawlerObj->extensionSettings['processLimit']);
+	public function multiProcess( $timeout, $verbose=TRUE ) {
+		$this->crawlerObj->extensionSettings['processLimit'];
 		$pendingItemsStart = $this->queueRepository->countAllPendingItems();
 		$itemReportLimit = 20;
 		$reportItemCount = 	$pendingItemsStart -  $itemReportLimit;
-		echo 'Left items:'.$pendingItemsStart.chr(10);
-		$this->startRequiredProcesses($pendingItemsStart);
+		if ($verbose) {
+			$this->reportItemStatus();
+		}
+		$this->startRequiredProcesses();
 		for ($i=0; $i<$timeout; $i++) {
-			$currentProcessCount = $this->processRepository->countActive();
 			$currentPendingItems = $this->queueRepository->countAllPendingItems();
+			$this->startRequiredProcesses($verbose);
 			if ($currentPendingItems == 0) {
 				echo 'Finished...'.chr(10);
 				break;
 			}
 			if ($currentPendingItems < $reportItemCount) {
-				echo 'Left items:'.$currentPendingItems.chr(10);
+				if ($verbose) {
+					$this->reportItemStatus();
+				}
 				$reportItemCount = $currentPendingItems -  $itemReportLimit;
 			}
 			sleep(1);
 		}		
-		if ($currentPendingItems > 0) {
+		if ($currentPendingItems > 0 && $verbose) {
 			echo 'Stop with timeout'.chr(10);
 		}
+	}
+	
+	/**
+	 * Reports curent Status of queue
+	 */
+	protected function reportItemStatus() {
+		echo 'Pending:'.$this->queueRepository->countAllPendingItems().' / Assigned:'.$this->queueRepository->countAllAssignedPendingItems().chr(10);
 	}
 	
 	/**
 	 * according to the given count of pending items and the countInARun Setting this method
 	 * starts more crawling processes
 	 */
-	private function startRequiredProcesses($currentPendingItems,$verbose=TRUE) {
+	private function startRequiredProcesses($verbose=TRUE) {
 		$countInARun = intval($this->crawlerObj->extensionSettings['countInARun']);
 		$processLimit = intval($this->crawlerObj->extensionSettings['processLimit']);
 		$currentProcesses= $this->processRepository->countActive();
 		$availableProcessesCount = $processLimit-$currentProcesses;
-		$requiredProcessesCount = ceil($currentPendingItems / $countInARun);
+		$requiredProcessesCount = ceil($this->queueRepository->countAllUnassignedPendingItems() / $countInARun);
 		$startProcessCount = min(array($availableProcessesCount,$requiredProcessesCount));
+		if ($startProcessCount <= 0) {
+			return;
+		}		
 		if ($startProcessCount && $verbose) {
-			echo 'Start '.$startProcessCount.' new processes  ';
-		}
-		elseif ($verbose) {
-			echo 'No processes to start. (Running:'.$currentProcesses.')';
+			echo 'Start '.$startProcessCount.' new processes (Running:'.$currentProcesses.')';
 		}
 		for($i=0;$i<$startProcessCount;$i++) {
 			usleep(100);
@@ -90,25 +102,31 @@ class tx_crawler_domain_process_manager  {
 				if ($verbose) {
 					echo '.';
 				}
-			}
-			else {
-				throw new Exception('could not start process');
-			} 		
+			}		
 		}
 		if ($verbose) {
 			echo chr(10);
 		}
 	}
-	
-
-	
+		
 	/**
 	 * starts new process
 	 */
 	public function startProcess() {
-		$completePath = 'nohup ' . escapeshellcmd($this->getCrawlerCliPath()) . ' &';
-		$handle = popen($completePath,'r');
-		return $handle;
+		$current = $this->processRepository->countActive();
+		$completePath = '(' .escapeshellcmd($this->getCrawlerCliPath()) . ' &) > /dev/null';
+		if (system($completePath) === FALSE) {
+			throw new Exception('could not start process!');
+		}
+		else {
+			for ($i=0;$i<10;$i++) {
+				if ($this->processRepository->countActive() > $current) {
+					return true;
+				}
+				sleep(1);
+			}
+			throw new Exception('Something went wrong: process did not appear within 10 seconds.');
+		}		
 	}
 
 	/**

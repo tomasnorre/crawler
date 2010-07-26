@@ -83,7 +83,7 @@ class tx_crawler_domain_process_repository extends tx_crawler_domain_lib_abstrac
 	 * @return int
 	 */
 	public function countActive() {
-		return $this->countByWhere('active=1');
+		return $this->countByWhere('active=1 AND deleted=0');
 	}
 
 	/**
