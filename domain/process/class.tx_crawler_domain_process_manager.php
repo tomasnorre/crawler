@@ -111,16 +111,18 @@ class tx_crawler_domain_process_manager  {
 		
 	/**
 	 * starts new process
+	 * @throws Exception if no crawlerprocess was started
 	 */
 	public function startProcess() {
-		$current = $this->processRepository->countActive();
+		$ttl = (time() + intval($this->crawlerObj->extensionSettings['processMaxRunTime'])-1);
+		$current = $this->processRepository->countNotTimeouted($ttl);
 		$completePath = '(' .escapeshellcmd($this->getCrawlerCliPath()) . ' &) > /dev/null';
 		if (system($completePath) === FALSE) {
 			throw new Exception('could not start process!');
 		}
 		else {
 			for ($i=0;$i<10;$i++) {
-				if ($this->processRepository->countActive() > $current) {
+				if ($this->processRepository->countNotTimeouted($ttl) > $current) {
 					return true;
 				}
 				sleep(1);

@@ -85,6 +85,14 @@ class tx_crawler_domain_process_repository extends tx_crawler_domain_lib_abstrac
 	public function countActive() {
 		return $this->countByWhere('active=1 AND deleted=0');
 	}
+	
+	/**
+	 * Returns the number of processes that live longer than the given timestamp
+	 * @return int
+	 */
+	public function countNotTimeouted($ttl) {
+		return $this->countByWhere('deleted=0 AND ttl>'.intval($ttl));
+	}
 
 	/**
 	 * Get limit clause
