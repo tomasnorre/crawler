@@ -1828,9 +1828,14 @@ class tx_crawler_lib {
 			$sleepAfterFinish = $cliObj->cli_argValue('--sleepAfterFinish') ? intval($cliObj->cli_argValue('--sleepAfterFinish')) : $this->extensionSettings['sleepAfterFinish'];
 				//Milliseconds
 			$sleepTime = $cliObj->cli_argValue('--sleepTime') ? intval($cliObj->cli_argValue('--sleepTime')) : $this->extensionSettings['sleepTime'];
-
+			
+			try {
 				// Run process:
-			$result = $this->CLI_run($countInARun, $sleepTime, $sleepAfterFinish);
+				$result = $this->CLI_run($countInARun, $sleepTime, $sleepAfterFinish);
+			}
+			catch (Exception $e) {
+				$result = self::CLI_STATUS_ABORTED;
+			}
 
 				// Cleanup
 			$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_crawler_process', 'assigned_items_count = 0');
