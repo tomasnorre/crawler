@@ -62,6 +62,21 @@ $TCA["tx_crawler_configuration"] = array (
                 "size" => "30",
             )
         ),
+        'sys_domain_base_url' => array (        
+            'exclude' => 0,        
+            'label' => 'LLL:EXT:crawler/locallang_db.xml:tx_crawler_configuration.sys_domain_base_url',        
+            'config' => array (
+                'type' => 'select',    
+                'items' => array (
+                    array('',0),
+                ),
+                'foreign_table' => 'sys_domain',    
+                'foreign_table_where' => 'ORDER BY pages.uid',    
+                'size' => 1,    
+                'minitems' => 0,
+                'maxitems' => 1,
+            )
+        ),
         "pidsonly" => Array (
             "exclude" => 1,
             "label" => "LLL:EXT:crawler/locallang_db.xml:tx_crawler_configuration.pidsonly",
@@ -146,7 +161,7 @@ $TCA["tx_crawler_configuration"] = array (
 		),
     ),
     "types" => array (
-        "0" => array("showitem" => "name, processing_instruction_filter, configuration, base_url, pidsonly, processing_instruction_parameters_ts,begroups, fegroups, sys_workspace_uid, realurl, chash, exclude")
+        "0" => array("showitem" => "name, processing_instruction_filter, configuration, base_url, sys_domain_base_url, pidsonly, processing_instruction_parameters_ts,begroups, fegroups, sys_workspace_uid, realurl, chash, exclude")
     ),
     "palettes" => array (
         "1" => array("showitem" => "")

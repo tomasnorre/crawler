@@ -515,7 +515,7 @@ class tx_crawler_lib {
 								$subCfg = array(
 									'procInstrFilter' => $configurationRecord['processing_instruction_filter'],
 									'procInstrParams.' => $TSparserObject->setup,
-									'baseUrl' => $configurationRecord['base_url'],
+									'baseUrl' => $this->getBaseUrlForConfigurationRecord($configurationRecord['base_url'], $configurationRecord['sys_domain_base_url']),
 									'realurl' => $configurationRecord['realurl'],
 									'cHash' => $configurationRecord['chash'],
 									'userGroups' => $configurationRecord['fegroups'],
@@ -552,6 +552,29 @@ class tx_crawler_lib {
 		}
 
 		return $res;
+	}
+	
+	/**
+	 * checks if a domain record exist and returns a baseurl based on the record. If not the given baseUrl string is used.
+	 * @param string $baseUrl
+	 * @param integer $sysDomainUid
+	 */
+	protected function getBaseUrlForConfigurationRecord($baseUrl,$sysDomainUid) {
+		$sysDomainUid = intval($sysDomainUid);
+		if ($sysDomainUid > 0) {
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+				'*',
+				'sys_domain',
+				'uid = '.$sysDomainUid .
+				t3lib_BEfunc::BEenableFields('sys_domain') .
+				t3lib_BEfunc::deleteClause('sys_domain')
+			);
+			$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+			if ($row['domainName'] != '') {
+				return 'http://'.$row['domainName'];
+			}
+		}
+		return $baseUrl;
 	}
 
 	function getConfigurationsForBranch($rootid, $depth) {
@@ -2151,6 +2174,7 @@ class tx_crawler_lib {
 				);
 
 			} else {
+				$this->CLI_debug("Processlimit reached (".($processCount)."/".intval($this->extensionSettings['processLimit']).")");
 				$ret = false;
 			}
 
