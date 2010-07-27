@@ -81,7 +81,18 @@ class tx_crawler_domain_process_collection extends ArrayObject {
 		}
 		parent::append($subject);
 	}
-
+	
+	/**
+	 * returns array of process ids of the current collection
+	 * @return array
+	 */
+	public function getProcessIds() {
+		$result=array();
+		foreach ($this->getIterator() as $value) {
+			$result[]=$value->getProcess_id();
+		}
+		return $result;
+	}
 }
 
 

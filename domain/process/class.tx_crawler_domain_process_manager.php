@@ -27,6 +27,34 @@
  *
  */
 class tx_crawler_domain_process_manager  {
+	/**
+	 * @var $timeToLive integer
+	 */
+	private $timeToLive;
+	/**
+	 * @var integer
+	 */
+	private $countInARun;
+	
+	/**
+	 * @var integer
+	 */
+	private $processLimit;
+	
+	/**
+	 * @var $crawlerObj tx_crawler_lib
+	 */
+	private $crawlerObj;
+	
+	/**
+	 * @var $queueRepository tx_crawler_domain_queue_repository
+	 */
+	private $queueRepository;
+	
+	/**
+	 * @var tx_crawler_domain_process_repository
+	 */
+	private $processRepository;
 	
 	/**
 	 * the constructor
@@ -35,6 +63,9 @@ class tx_crawler_domain_process_manager  {
 		$this->processRepository	= new tx_crawler_domain_process_repository();
 		$this->queueRepository	= new tx_crawler_domain_queue_repository();
 		$this->crawlerObj = t3lib_div::makeInstance('tx_crawler_lib');
+		$this->timeToLive = intval($this->crawlerObj->extensionSettings['processMaxRunTime']);
+		$this->countInARun = intval($this->crawlerObj->extensionSettings['countInARun']);
+		$this->processLimit = intval($this->crawlerObj->extensionSettings['processLimit']);
 	}
 	
 	/**
@@ -44,7 +75,6 @@ class tx_crawler_domain_process_manager  {
 	 * @param boolean $verbose
 	 */
 	public function multiProcess( $timeout, $verbose=TRUE ) {
-		$this->crawlerObj->extensionSettings['processLimit'];
 		$pendingItemsStart = $this->queueRepository->countAllPendingItems();
 		$itemReportLimit = 20;
 		$reportItemCount = 	$pendingItemsStart -  $itemReportLimit;
@@ -52,9 +82,12 @@ class tx_crawler_domain_process_manager  {
 			$this->reportItemStatus();
 		}
 		$this->startRequiredProcesses();
+		$nextTimeOut = time() + $this->timeToLive;
 		for ($i=0; $i<$timeout; $i++) {
 			$currentPendingItems = $this->queueRepository->countAllPendingItems();
-			$this->startRequiredProcesses($verbose);
+			if ($this->startRequiredProcesses($verbose)) {
+				$nextTimeOut = time() + $this->timeToLive;
+			}
 			if ($currentPendingItems == 0) {
 				echo 'Finished...'.chr(10);
 				break;
@@ -66,6 +99,14 @@ class tx_crawler_domain_process_manager  {
 				$reportItemCount = $currentPendingItems -  $itemReportLimit;
 			}
 			sleep(1);
+			if ($nextTimeOut < time()) {
+				$timedOutProcesses = $this->processRepository->findAll('','DESC',NULL,0,'ttl >'.$nextTimeOut);
+				$nextTimeOut = time() + $this->timeToLive;
+				if ($verbose) {
+					echo 'Cleanup'.implode(',',$timedOutProcesses->getProcessIds()).chr(10);
+				}
+				$this->crawlerObj->CLI_releaseProcesses($timedOutProcesses->getProcessIds(),true);
+			}
 		}		
 		if ($currentPendingItems > 0 && $verbose) {
 			echo 'Stop with timeout'.chr(10);
@@ -82,13 +123,13 @@ class tx_crawler_domain_process_manager  {
 	/**
 	 * according to the given count of pending items and the countInARun Setting this method
 	 * starts more crawling processes
+	 * @return boolean if processes are started
 	 */
 	private function startRequiredProcesses($verbose=TRUE) {
-		$countInARun = intval($this->crawlerObj->extensionSettings['countInARun']);
-		$processLimit = intval($this->crawlerObj->extensionSettings['processLimit']);
+		$ret=false;
 		$currentProcesses= $this->processRepository->countActive();
-		$availableProcessesCount = $processLimit-$currentProcesses;
-		$requiredProcessesCount = ceil($this->queueRepository->countAllUnassignedPendingItems() / $countInARun);
+		$availableProcessesCount = $this->processLimit-$currentProcesses;
+		$requiredProcessesCount = ceil($this->queueRepository->countAllUnassignedPendingItems() / $this->countInARun);
 		$startProcessCount = min(array($availableProcessesCount,$requiredProcessesCount));
 		if ($startProcessCount <= 0) {
 			return;
@@ -101,12 +142,14 @@ class tx_crawler_domain_process_manager  {
 			if ($this->startProcess()) {
 				if ($verbose) {
 					echo '.';
+					$ret = true;
 				}
 			}		
 		}
 		if ($verbose) {
 			echo chr(10);
 		}
+		return $ret;
 	}
 		
 	/**
@@ -114,7 +157,7 @@ class tx_crawler_domain_process_manager  {
 	 * @throws Exception if no crawlerprocess was started
 	 */
 	public function startProcess() {
-		$ttl = (time() + intval($this->crawlerObj->extensionSettings['processMaxRunTime'])-1);
+		$ttl = (time() + $this->timeToLive -1);
 		$current = $this->processRepository->countNotTimeouted($ttl);
 		$completePath = '(' .escapeshellcmd($this->getCrawlerCliPath()) . ' &) > /dev/null';
 		if (system($completePath) === FALSE) {
