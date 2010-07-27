@@ -1628,7 +1628,7 @@ class tx_crawler_lib {
 
 						// default is "page only" = "depth=0"
 					if (empty($depth)) {
-						$depth = ( stristr($excludeString,'+')) ? 99 : 0;
+						$depth = ( stristr($excludePart,'+')) ? 99 : 0;
 					}
 
 					$pidList[] = $pid;
