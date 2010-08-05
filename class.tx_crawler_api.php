@@ -48,6 +48,11 @@ class tx_crawler_api {
 	 * @var tx_crawler_domain_queue_repository queue repository
 	 */
 	protected $queueRepository;
+	
+	/**
+	 * @var $allowedConfigrations array
+	 */
+	protected $allowedConfigrations = array();
 
 	/**
 	 * Returns an instance of the validator
@@ -71,6 +76,16 @@ class tx_crawler_api {
 	public function overwriteSetId($id) {
 		$id = intval($id);
 		$this->findCrawler()->setID = $id;
+	}
+	
+	/**
+	 * This method is used to limit the configuration selection to
+	 * a set of configurations. 
+	 * 
+	 * @param array $allowedConfigurations
+	 */
+	public function setAllowedConfigurations(array $allowedConfigurations){
+		$this->allowedConfigrations = $allowedConfigurations;
 	}
 
 	/**
@@ -112,6 +127,25 @@ class tx_crawler_api {
 	}
 
 	/**
+	 * This method is used to limit the processing instructions to the processing instructions 
+	 * that are allowed.
+	 * 
+	 * @return array
+	 */
+	protected function filterUnallowedConfigurations($configurations) {
+		if(count($this->allowedConfigrations) > 0){
+			// 	remove configuration that does not match the current selection
+			foreach ($configurations as $confKey => $confArray) {
+				if (!in_array($confKey, $this->allowedConfigrations)) {
+					unset($configurations[$confKey]);
+				}
+			}
+		}		
+		
+		return $configurations;
+	}
+	
+	/**
 	 * Adds a page to the crawlerqueue by uid and sets a
 	 * timestamp when the page should be crawled.
 	 *
@@ -120,19 +154,16 @@ class tx_crawler_api {
 	 */
 	public function addPageToQueueTimed($uid,$time) {
 
-		$uid = intval($uid);
-		$time = intval($time);
+		$uid 		= intval($uid);
+		$time 		= intval($time);
 
-		$crawler 	= $this->findCrawler();
-		$pageData = t3lib_div::makeInstance('t3lib_pageSelect')->getPage($uid);
-		$conf = $crawler->getUrlsForPageRow($pageData);
-
-		//pTestI ist for testing, to check if queue entries exist
-		//pI is for inserting
-		$pI = array(array(),array(),array_keys($this->getCrawlerProcInstructions()));
-
-		if (is_array($conf)) {
-			foreach ($conf as  $cv) {
+		$crawler 			= $this->findCrawler();
+		$pageData 			= t3lib_div::makeInstance('t3lib_pageSelect')->getPage($uid);
+		$configurations 	= $crawler->getUrlsForPageRow($pageData);
+		$configurations 	= $this->filterUnallowedConfigurations($configurations);
+		
+		if (is_array($configurations)) {
+			foreach ($configurations as  $cv) {
 				//enable inserting of entries
 				$crawler->registerQueueEntriesInternallyOnly=false;
 				$crawler->urlListFromUrlArray(
@@ -142,9 +173,9 @@ class tx_crawler_api {
 					300,
 					true,
 					false,
-					$pI[0],
-					$pI[1],
-					$pI[2]
+					array(),
+					array(),
+					array_keys($this->getCrawlerProcInstructions())
 				);
 
 				//reset the queue because the entries have been written to the db
