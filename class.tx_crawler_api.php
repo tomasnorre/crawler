@@ -161,6 +161,8 @@ class tx_crawler_api {
 		$pageData 			= t3lib_div::makeInstance('t3lib_pageSelect')->getPage($uid);
 		$configurations 	= $crawler->getUrlsForPageRow($pageData);
 		$configurations 	= $this->filterUnallowedConfigurations($configurations);
+		$downloadUrls		= array();
+		$duplicateTrack		= array();
 		
 		if (is_array($configurations)) {
 			foreach ($configurations as  $cv) {
@@ -173,8 +175,8 @@ class tx_crawler_api {
 					300,
 					true,
 					false,
-					array(),
-					array(),
+					$duplicateTrack,
+					$downloadUrls,
 					array_keys($this->getCrawlerProcInstructions())
 				);
 
