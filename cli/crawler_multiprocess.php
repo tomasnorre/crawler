@@ -11,7 +11,3 @@ catch (Exception $e) {
 	echo chr(10).$e->getMessage();
 	exit 1;
 }
-
-
-
-?>
