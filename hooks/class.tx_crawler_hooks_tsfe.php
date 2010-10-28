@@ -110,8 +110,10 @@ class tx_crawler_hooks_tsfe {
 				 */
 				if(is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'])) {
 					foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'] as $pollable) {
-						if(empty($params['pObj']->applicationData['tx_crawler']['success'][$pollable])) {
-							$params['pObj']->applicationData['tx_crawler']['errorlog'][] = 'Error: Pollable extension ('.$pollable.') did not complete successfully.';
+						if(in_array($pollable,$params['pObj']->applicationData['tx_crawler']['content']['parameters']['procInstructions'])){
+							if(empty($params['pObj']->applicationData['tx_crawler']['success'][$pollable])) {
+								$params['pObj']->applicationData['tx_crawler']['errorlog'][] = 'Error: Pollable extension ('.$pollable.') did not complete successfully.';
+							}
 						}
 					}
 				}

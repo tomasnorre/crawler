@@ -1155,8 +1155,12 @@ class tx_crawler_lib {
 				//atm there's no need to point to specific pollable extensions
 			if(is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'])) {
 				foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'] as $pollable) {
-					if(!empty($resultData['success'][$pollable]) && $resultData['success'][$pollable]) {
-						$ret |= self::CLI_STATUS_POLLABLE_PROCESSED;
+					// only check the success value if the instruction is runnig
+					// it is important to name the pollSuccess key same as the procInstructions key
+					if(in_array($pollable,$resultData['content']['parameters']['procInstructions'])){
+						if(!empty($resultData['success'][$pollable]) && $resultData['success'][$pollable]) {
+							$ret |= self::CLI_STATUS_POLLABLE_PROCESSED;
+						}
 					}
 				}
 			}
