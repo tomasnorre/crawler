@@ -251,7 +251,6 @@ class tx_crawler_lib {
 	 * @param	array		Array which will be filled with URLS for download if flag is set.
 	 * @param	array		Array of processing instructions
 	 * @return	string		List of URLs (meant for display in backend module)
-	 *
 	 */
 	function urlListFromUrlArray(
 		array $vv,
