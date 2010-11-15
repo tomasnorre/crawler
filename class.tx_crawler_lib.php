@@ -254,15 +254,15 @@ class tx_crawler_lib {
 	 *
 	 */
 	function urlListFromUrlArray(
-	array $vv,
-	array $pageRow,
-	$scheduledTime,
-	$reqMinute,
-	$submitCrawlUrls,
-	$downloadCrawlUrls,
-	array &$duplicateTrack,
-	array &$downloadUrls,
-	array $incomingProcInstructions) {
+		array $vv,
+		array $pageRow,
+		$scheduledTime,
+		$reqMinute,
+		$submitCrawlUrls,
+		$downloadCrawlUrls,
+		array &$duplicateTrack,
+		array &$downloadUrls,
+		array $incomingProcInstructions) {
 
 		// realurl support (thanks to Ingo Renner)
 		if (t3lib_extMgm::isLoaded('realurl') && $vv['subCfg']['realurl']) {
