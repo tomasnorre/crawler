@@ -347,12 +347,12 @@ class tx_crawler_lib {
 						// Submit for crawling!
 						if ($submitCrawlUrls)	{
 							$added = $this->addUrl(
-							$pageRow['uid'],
-							$theUrl,
-							$vv['subCfg'],
-							$scheduledTime,
-							$configurationHash,
-							$skipInnerCheck
+								$pageRow['uid'],
+								$theUrl,
+								$vv['subCfg'],
+								$scheduledTime,
+								$configurationHash,
+								$skipInnerCheck
 							);
 							if ($added === false) {
 								$urlList .= ' (Url already existed)';
