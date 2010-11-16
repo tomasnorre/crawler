@@ -216,12 +216,12 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
 	}
 
 	/**
-	 * Count pending queue entries grouped by configuration key
+	 * Get the timestamps of the last processed entries
 	 *
 	 * @param void
 	 * @return array
 	 * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
-	 * @since 2099-09-03
+	 * @since 2009-09-03
 	 */
 	public function getLastProcessedEntriesTimestamps($limit = 100) {
 		$db = $this->getDB();
@@ -239,7 +239,33 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
 			$rows[] = $row['exec_time'];
 		}
 		return $rows;
+	}
+	
+	/**
+	 * Get the last processed entries
+	 * 
+	 * @param string $selectFields
+	 * @param int $limit
+	 * @return array
+	 * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
+	 * @since 2010-11-16
+	 */
+	public function getLastProcessedEntries($selectFields='*', $limit='100') {
+		$db = $this->getDB();
+		$res = $db->exec_SELECTquery(
+			$selectFields,
+			$this->tableName,
+			'',
+			'',
+			'exec_time desc',
+			$limit
+		);
 
+		$rows = array();
+		while (($row = $db->sql_fetch_assoc($res)) !== false) {
+			$rows[] = $row;
+		}
+		return $rows;
 	}
 
 	/**

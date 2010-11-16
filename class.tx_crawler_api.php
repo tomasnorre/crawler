@@ -422,6 +422,16 @@ class tx_crawler_api {
 		$processRepository = new tx_crawler_domain_process_repository();
 		return $processRepository->countActive();
 	}
+	
+	/**
+	 * Get last processed entries
+	 *
+	 * @param int limit
+	 * @return array
+	 */
+	public function getLastProcessedQueueEntries($limit) {
+		return $this->getQueueRepository()->getLastProcessedEntries('*', $limit);
+	}
 
 	/**
 	 * Get current crawling speed
