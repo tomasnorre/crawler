@@ -82,6 +82,7 @@ $_SERVER['SCRIPT_NAME'] = $_SERVER['PHP_SELF'] = $typo3SitePath . 'index.php';
 $_SERVER['SCRIPT_FILENAME'] = $_SERVER['PATH_TRANSLATED'] = $typo3Root . 'index.php';
 $_SERVER['QUERY_STRING'] = (isset($urlParts['query']) ? $urlParts['query'] : '');
 $_SERVER['REQUEST_URI'] = $urlParts['path'] . (isset($urlParts['query']) ? '?' . $urlParts['query'] : '');
+$_SERVER['REQUEST_METHOD'] = 'GET';
 
 // Define a port if used in the URL: 
 if (isset($urlParts['port'])) {
