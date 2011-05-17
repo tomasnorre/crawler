@@ -1157,8 +1157,8 @@ class tx_crawler_lib {
 				foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'] as $pollable) {
 					// only check the success value if the instruction is runnig
 					// it is important to name the pollSuccess key same as the procInstructions key
-					if(in_array($pollable,$resultData['content']['parameters']['procInstructions'])){
-						if(!empty($resultData['success'][$pollable]) && $resultData['success'][$pollable]) {
+					if(is_array($resultData['parameters']['procInstructions']) && in_array($pollable,$resultData['parameters']['procInstructions'])) {
+						if(is_array($resultData['success']) && !empty($resultData['success'][$pollable]) && $resultData['success'][$pollable]) {
 							$ret |= self::CLI_STATUS_POLLABLE_PROCESSED;
 						}
 					}
