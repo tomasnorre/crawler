@@ -1292,13 +1292,12 @@ class tx_crawler_lib {
 		$host = $rurl['host'];
 		if ($url['scheme'] == 'https') {
 			$host = 'ssl://' . $host;
+			$port = ($rurl['port'] > 0) ? $rurl['port'] : 443;
+		} else {
+			$port = ($rurl['port'] > 0) ? $rurl['port'] : 80;
 		}
 
-
-		$port = ($rurl['port'] > 0) ? $rurl['port'] : 80;
-
 		$startTime = microtime(true);
-
 		$fp = fsockopen($host, $port, $errno, $errstr, $timeout);
 
 		if (!$fp)	{
