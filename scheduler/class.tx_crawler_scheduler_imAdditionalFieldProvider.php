@@ -34,28 +34,32 @@ class tx_crawler_scheduler_imAdditionalFieldProvider implements tx_scheduler_Add
 	 * render additional information fields within the scheduler backend
 	 *
 	 * @see interfaces/tx_scheduler_AdditionalFieldProvider#getAdditionalFields($taskInfo, $task, $schedulerModule)
+	 * @param array $taskInfo
+	 * @param $task
+	 * @param tx_scheduler_Module $schedulerModule
+	 * @return array
 	 */
 	public function getAdditionalFields(array &$taskInfo, $task, tx_scheduler_Module $schedulerModule) {
 		$additionalFields = array();
                  
 		if (empty($taskInfo['configuration'])) {
-                        if ($schedulerModule->CMD == 'add') {
-                                $taskInfo['configuration'] = array();
-                        } elseif ($schedulerModule->CMD == 'edit') {
-                                $taskInfo['configuration'] = $task->configuration;
-                        } else {
-                                $taskInfo['configuration'] = $task->configuration;
-                        }
-                }
-		
-                if (empty($taskInfo['depth'])) {
-                	if ($schedulerModule->CMD == 'add') {
-                                $taskInfo['depth'] = array();
-                        } elseif ($schedulerModule->CMD == 'edit') {
-                                $taskInfo['depth'] = $task->depth;
-                        } else {
-                                $taskInfo['depth'] = $task->depth;
-                        }
+			if ($schedulerModule->CMD == 'add') {
+				$taskInfo['configuration'] = array();
+			} elseif ($schedulerModule->CMD == 'edit') {
+				$taskInfo['configuration'] = $task->configuration;
+			} else {
+				$taskInfo['configuration'] = $task->configuration;
+			}
+		}
+
+		if (empty($taskInfo['depth'])) {
+			if ($schedulerModule->CMD == 'add') {
+				$taskInfo['depth'] = array();
+			} elseif ($schedulerModule->CMD == 'edit') {
+				$taskInfo['depth'] = $task->depth;
+			} else {
+				$taskInfo['depth'] = $task->depth;
+			}
 		}
 
 			// input for depth
@@ -76,9 +80,9 @@ class tx_crawler_scheduler_imAdditionalFieldProvider implements tx_scheduler_Add
 
 		$fieldCode .= '</select>';
 		$additionalFields[$fieldID] = array(
-                        'code'     => $fieldCode,
-                        'label'    => 'LLL:EXT:crawler/locallang_db.xml:crawler_im.depth'
-                );
+			'code'     => $fieldCode,
+			'label'    => 'LLL:EXT:crawler/locallang_db.xml:crawler_im.depth'
+		);
 
 			// combobox for configuration records
 		$recordsArray = $this->getCrawlerConfigurationRecords();
@@ -91,9 +95,9 @@ class tx_crawler_scheduler_imAdditionalFieldProvider implements tx_scheduler_Add
 		$fieldCode .= '</select>';
 
 		$additionalFields[$fieldID] = array(
-                        'code'     => $fieldCode,
-                        'label'    => 'LLL:EXT:crawler/locallang_db.xml:crawler_im.conf'
-                );
+			'code'     => $fieldCode,
+			'label'    => 'LLL:EXT:crawler/locallang_db.xml:crawler_im.conf'
+		);
 
 		return $additionalFields;
 	}
@@ -102,6 +106,8 @@ class tx_crawler_scheduler_imAdditionalFieldProvider implements tx_scheduler_Add
 	 * Mark current value as selected by returning the "selected" attribute
 	 *
 	 * @access protected
+	 * @param $configurationArray
+	 * @param $currentValue
 	 * @return string
 	 */
 	protected function getSelectedState($configurationArray, $currentValue) {
@@ -134,7 +140,7 @@ class tx_crawler_scheduler_imAdditionalFieldProvider implements tx_scheduler_Add
 		$GLOBALS['TYPO3_DB']->sql_free_result($result);
 
 		return $records;
-	} 
+	}
 
 
 	/**
@@ -142,7 +148,9 @@ class tx_crawler_scheduler_imAdditionalFieldProvider implements tx_scheduler_Add
 	 * If the task class is not relevant, the method is expected to return true
 	 *
 	 * @param	array					$submittedData: reference to the array containing the data submitted by the user
-	 * @param	tx_scheduler_module1	$parentObject: reference to the calling object (Scheduler's BE module)
+	 * @param tx_scheduler_Module $schedulerModule
+	 *
+	 * @internal param \tx_scheduler_module1 $parentObject : reference to the calling object (Scheduler's BE module)
 	 * @return	boolean					True if validation was ok (or selected class is not relevant), false otherwise
 	 */
 	public function validateAdditionalFields(array &$submittedData, tx_scheduler_Module $schedulerModule) {
