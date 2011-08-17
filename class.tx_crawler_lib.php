@@ -1287,6 +1287,7 @@ class tx_crawler_lib {
 		if ($GLOBALS['TYPO3_CONF_VARS']['SYS']['curlUse'] && $GLOBALS['TYPO3_CONF_VARS']['SYS']['curlProxyServer']) {
 			$rurl = parse_url($GLOBALS['TYPO3_CONF_VARS']['SYS']['curlProxyServer']);
 			$url['path'] = $url['scheme'] . '://' . $url['host'] . ($url['port'] > 0 ? ':' . $url['port'] : '') . $url['path'];
+			$reqHeaders = $this->buildRequestHeaderArray($url, $crawlerId);
 		}
 
 		$host = $rurl['host'];
