@@ -554,7 +554,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				<br />
 				Current server time: '.date('H:i:s',time()). '<br />' .
 				'Status: ' . $resStatus . '<br />' .
-				t3lib_div::view_array($q_entry);
+				((version_compare(TYPO3_version, '4.5.0', '<')) ? t3lib_div::view_array($q_entry) : t3lib_utility_Debug::viewArray($q_entry));
 		} else {	// Show list:
 
 				// If either id or set id, show list:
@@ -696,7 +696,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 * @param	int			Items per Page setting
 	 * @return	string		HTML <tr> content (one or more)
 	 */
-	function drawLog_addRows($pageRow_setId, $titleString, $itemsPerPage=10)	{
+	function drawLog_addRows($pageRow_setId, $titleString, $itemsPerPage=10) {
 
 			// If Flush button is pressed, flush tables instead of selecting entries:
 
@@ -758,7 +758,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				$rowData['procInstructions'] = is_array($parameters['procInstructions']) ? implode('; ',$parameters['procInstructions']) : '';
 				$rowData['set_id'] = $vv['set_id'];
 
-				if ($this->pObj->MOD_SETTINGS['log_feVars'])	{
+				if ($this->pObj->MOD_SETTINGS['log_feVars']) {
 					$rowData['tsfe_id'] = $requestResult['vars']['id'];
 					$rowData['tsfe_gr_list'] = $requestResult['vars']['gr_list'];
 					$rowData['tsfe_no_cache'] = $requestResult['vars']['no_cache'];
@@ -796,7 +796,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		} else {
 
 				// Compile row:
-			$content.= '
+			$content = '
 				<tr class="bgColor-20">
 					<td>'.$titleString.'</td>
 					<td colspan="'.$colSpan.'"><em>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.noentries').'</em></td>

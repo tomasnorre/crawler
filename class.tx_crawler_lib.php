@@ -1755,7 +1755,7 @@ class tx_crawler_lib {
 							<td>'.$paramExpanded.'</td>
 							<td nowrap="nowrap">'.$urlList.'</td>
 							<td nowrap="nowrap">'.$optionValues.'</td>
-							<td nowrap="nowrap">'.t3lib_div::view_array($confArray['subCfg']['procInstrParams.']).'</td>
+							<td nowrap="nowrap">'.((version_compare(TYPO3_version, '4.5.0', '<')) ? t3lib_div::view_array($confArray['subCfg']['procInstrParams.']) :  t3lib_utility_Debug::viewArray($confArray['subCfg']['procInstrParams.'])).'</td>
 						</tr>';
 				} else {
 
