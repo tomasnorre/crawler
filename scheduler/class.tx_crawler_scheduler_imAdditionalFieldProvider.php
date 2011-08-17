@@ -52,6 +52,17 @@ class tx_crawler_scheduler_imAdditionalFieldProvider implements tx_scheduler_Add
 			}
 		}
 
+		if (empty($taskInfo['startPage'])) {
+			if ($schedulerModule->CMD == 'add') {
+				$taskInfo['startPage'] = 0;
+				$task->startPage = 0;
+			} elseif ($schedulerModule->CMD == 'edit') {
+				$taskInfo['startPage'] = $task->startPage;
+			} else {
+				$taskInfo['startPage'] = $task->startPage;
+			}
+		}
+
 		if (empty($taskInfo['depth'])) {
 			if ($schedulerModule->CMD == 'add') {
 				$taskInfo['depth'] = array();
@@ -61,6 +72,14 @@ class tx_crawler_scheduler_imAdditionalFieldProvider implements tx_scheduler_Add
 				$taskInfo['depth'] = $task->depth;
 			}
 		}
+
+			// input for startPage
+		$fieldID = 'task_startPage';
+		$fieldCode  = '<input name="tx_scheduler[startPage]" type="text" id="' . $fieldID . '" value="' . $task->startPage . '" />';
+		$additionalFields[$fieldID] = array(
+			'code'     => $fieldCode,
+			'label'    => 'LLL:EXT:crawler/locallang_db.xml:crawler_im.startPage'
+		);
 
 			// input for depth
 		$fieldID = 'task_depth';
@@ -168,6 +187,11 @@ class tx_crawler_scheduler_imAdditionalFieldProvider implements tx_scheduler_Add
 			$schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidDepth'), t3lib_FlashMessage::ERROR);
 		}
 
+		if ( !t3lib_div::testInt($submittedData['startPage']) || $submittedData['startPage'] < 0 ) {
+			$isValid = false;
+			$schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidStartPage'), t3lib_FlashMessage::ERROR);
+		}
+
 		return $isValid; 
 	}
 
@@ -182,6 +206,7 @@ class tx_crawler_scheduler_imAdditionalFieldProvider implements tx_scheduler_Add
 
 		$task->depth         = $submittedData['depth'];
 		$task->configuration = $submittedData['configuration'];
+		$task->startPage     = $submittedData['startPage'];
 	}
 
 }
