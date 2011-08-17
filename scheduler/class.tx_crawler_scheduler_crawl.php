@@ -66,7 +66,7 @@ class tx_crawler_scheduler_crawl extends tx_scheduler_Task {
 	 * @access protected
 	 * @return void
 	 */
-        protected function setCliArguments() {
+	protected function setCliArguments() {
 		$_SERVER['argv'] = array($_SERVER['argv'][0], 'tx_crawler_cli_im', '0', '-ss', '--sleepTime', $this->sleepTime, '--sleepAfterFinish', $this->sleepAfterFinish, '--countInARun', $this->countInARun);
 	}
 }
