@@ -53,7 +53,12 @@ class tx_crawler_contextMenu {
 
 		if (!empty($row)) {
 
-			$url  = $backRef->backPath . 'mod/web/info/index.php';
+			if (version_compare(TYPO3_version,'4.5.0','>=')) {
+				$url = t3lib_extMgm::extRelPath('info') . 'mod1/index.php';
+			} else {
+				$url  = $backRef->backPath . 'mod/web/info/index.php';
+			}
+			
 			$url .= '?id=' . intval($row['pid']);
 			$url .= '&SET[function]=tx_crawler_modfunc1';
 			$url .= '&SET[crawlaction]=start';
