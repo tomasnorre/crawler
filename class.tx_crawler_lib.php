@@ -122,7 +122,7 @@ class tx_crawler_lib {
 	/**
 	 * Sets the extensions settings (unserialized pendant of $TYPO3_CONF_VARS['EXT']['extConf']['crawler']).
 	 *
-	 * @param array $extensionSettings 
+	 * @param array $extensionSettings
 	 * @return void
 	 */
 	public function setExtensionSettings(array $extensionSettings) {
@@ -553,7 +553,7 @@ class tx_crawler_lib {
 
 		return $res;
 	}
-	
+
 	/**
 	 * checks if a domain record exist and returns a baseurl based on the record. If not the given baseUrl string is used.
 	 * @param string $baseUrl
@@ -746,8 +746,10 @@ class tx_crawler_lib {
 									$andWhereLanguage = ' AND ' . $GLOBALS['TYPO3_DB']->quoteStr($transOrigPointerField, $subpartParams['_TABLE']) .' <= 0 ';
 								}
 
-								$where = $GLOBALS['TYPO3_DB']->quoteStr($pidField, $subpartParams['_TABLE']) .'='.intval($lookUpPid) . ' ' .
-									$andWhereLanguage . $where;
+								if (!isset($subpartParams['_SKIPPIDCHECK'])) {
+									$where = $GLOBALS['TYPO3_DB']->quoteStr($pidField, $subpartParams['_TABLE']).'='.intval($lookUpPid) . ' ' .
+										$andWhereLanguage . $where;
+								}
 
 								$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 									$fieldName,
@@ -1832,7 +1834,7 @@ class tx_crawler_lib {
 			$sleepAfterFinish = $cliObj->cli_argValue('--sleepAfterFinish') ? intval($cliObj->cli_argValue('--sleepAfterFinish')) : $this->extensionSettings['sleepAfterFinish'];
 				//Milliseconds
 			$sleepTime = $cliObj->cli_argValue('--sleepTime') ? intval($cliObj->cli_argValue('--sleepTime')) : $this->extensionSettings['sleepTime'];
-			
+
 			try {
 				// Run process:
 				$result = $this->CLI_run($countInARun, $sleepTime, $sleepAfterFinish);
