@@ -128,7 +128,7 @@ class tx_crawler_domain_process_manager  {
 	private function startRequiredProcesses($verbose=TRUE) {
 		$ret=false;
 		$currentProcesses= $this->processRepository->countActive();
-		$availableProcessesCount = $this->processLimit;
+		$availableProcessesCount = $this->processLimit-$currentProcesses;
 		$requiredProcessesCount = ceil($this->queueRepository->countAllUnassignedPendingItems() / $this->countInARun);
 		$startProcessCount = min(array($availableProcessesCount,$requiredProcessesCount));
 		if ($startProcessCount <= 0) {
