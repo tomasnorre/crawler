@@ -29,12 +29,15 @@
 			<label index="crawler_im.invalidDepth">There is no depth set, please set it to an value!</label>
 			<label index="crawler_im.conf">Configuration records</label>
 			<label index="crawler_im.invalidConfiguration">There is no configuration record selected, please choose at least one or more!</label>
+			<label index="crawler_im.timeOut">Time out</label>
 			<label index="crawler_im.sleepTime">Sleep time</label>
+			<label index="crawler_im.invalidTimeOut">The time out must be a positive integer!</label>
 			<label index="crawler_im.invalidSleepTime">The sleep time must be a positive integer!</label>
 			<label index="crawler_im.sleepAfterFinish">Sleep after finish</label>
 			<label index="crawler_im.invalidSleepAfterFinish">The sleep after finish must be a positive integer!</label>
 			<label index="crawler_im.countInARun">Count in a run</label>
 			<label index="crawler_im.invalidCountInARun">The count in a run must be a positive integer!</label>
+			<label index="crawler_crawlMultiProcess.name">Crawler Run Multi Process</label>
 			<label index="crawler_crawl.name">Crawler Run</label>
 			<label index="crawler_crawl.description">Running the crawler to extension to process it's queue-entries.</label>
 			<label index="crawler_flush.name">Crawler Queue Flush</label>
