@@ -204,9 +204,9 @@ class tx_crawler_scheduler_imAdditionalFieldProvider implements tx_scheduler_Add
 	 */
 	public function saveAdditionalFields(array $submittedData, tx_scheduler_Task $task) {
 
-		$task->depth         = $submittedData['depth'];
+		$task->depth         = intval($submittedData['depth']);
 		$task->configuration = $submittedData['configuration'];
-		$task->startPage     = $submittedData['startPage'];
+		$task->startPage     = intval($submittedData['startPage']);
 	}
 
 }

@@ -95,7 +95,7 @@ class tx_crawler_scheduler_crawlMultiProcessAdditionalFieldProvider implements t
 	 */
 	public function saveAdditionalFields(array $submittedData, tx_scheduler_Task $task) {
 
-		$task->timeOut = $submittedData['timeOut'];
+		$task->timeOut = intval($submittedData['timeOut']);
 	}
 }
 

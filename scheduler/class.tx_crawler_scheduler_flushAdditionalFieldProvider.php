@@ -37,7 +37,6 @@ class tx_crawler_scheduler_flushAdditionalFieldProvider implements tx_scheduler_
 	public function getAdditionalFields(array &$taskInfo, $task, tx_scheduler_Module $schedulerModule) {
 
 		$additionalFields = array();
-//t3lib_div::debug($taskInfo);
 				// Initialize extra field value
 		if (empty($taskInfo['mode'])) {
 			if ($schedulerModule->CMD == 'add') {
@@ -73,7 +72,6 @@ class tx_crawler_scheduler_flushAdditionalFieldProvider implements tx_scheduler_
 	 * @return	boolean					True if validation was ok (or selected class is not relevant), false otherwise
 	 */
 	public function validateAdditionalFields(array &$submittedData, tx_scheduler_Module $schedulerModule) {
-//t3lib_div::debug($submittedData);
 		return in_array($submittedData['mode'], array('all','pending','finished'));
 	}
 
