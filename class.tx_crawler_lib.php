@@ -951,11 +951,11 @@ class tx_crawler_lib {
 
 			// Compile value array:
 		$fieldArray = array(
-			'page_id' => $page_id,
+			'page_id' => intval($page_id),
 			'parameters' => serialize($params),
-			'scheduled' => $schedule ? $schedule : $this->getCurrentTime(),
+			'scheduled' => intval($schedule) ? intval($schedule) : $this->getCurrentTime(),
 			'exec_time' => 0,
-			'set_id' => $setId,
+			'set_id' => intval($setId),
 			'result_data' => '',
 		);
 
@@ -1021,13 +1021,13 @@ class tx_crawler_lib {
 			// Compile value array:
 		$parameters_serialized = serialize($parameters);
 		$fieldArray = array(
-			'page_id' => $id,
+			'page_id' => intval($id),
 			'parameters' => $parameters_serialized,
 			'parameters_hash' => t3lib_div::shortMD5($parameters_serialized),
 			'configuration_hash' => $configurationHash,
 			'scheduled' => $tstamp,
 			'exec_time' => 0,
-			'set_id' => $this->setID,
+			'set_id' => intval($this->setID),
 			'result_data' => '',
 			'configuration' => $subCfg['key'],
 		);

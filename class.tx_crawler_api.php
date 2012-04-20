@@ -74,8 +74,7 @@ class tx_crawler_api {
 	 * @param int
 	 */
 	public function overwriteSetId($id) {
-		$id = intval($id);
-		$this->findCrawler()->setID = $id;
+		$this->findCrawler()->setID = intval($id);
 	}
 	
 	/**

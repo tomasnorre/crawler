@@ -185,7 +185,7 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
 		);
 		$setIds = array();
 		while ($row = $db->sql_fetch_assoc($res)) {
-			$setIds[] = $row['set_id'];
+			$setIds[] = intval($row['set_id']);
 		}
 		return $setIds;
 	}

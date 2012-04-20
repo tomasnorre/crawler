@@ -207,12 +207,14 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				'index.php'
 			);
 
-			$quiPart = t3lib_div::_GP('qid_details') ? '&qid_details=' . t3lib_div::_GP('qid_details') : '';
+			$quiPart = t3lib_div::_GP('qid_details') ? '&qid_details=' . intval(t3lib_div::_GP('qid_details')) : '';
+
+			$setId = intval(t3lib_div::_GP('setID'));
 
 			$h_func.= '<hr/>'.
-					$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.display').': '.t3lib_BEfunc::getFuncMenu($this->pObj->id,'SET[log_display]',$this->pObj->MOD_SETTINGS['log_display'],$this->pObj->MOD_MENU['log_display'],'index.php','&setID='.t3lib_div::_GP('setID')) . ' - ' .
-					$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.showresultlog').': '.t3lib_BEfunc::getFuncCheck($this->pObj->id,'SET[log_resultLog]',$this->pObj->MOD_SETTINGS['log_resultLog'],'index.php','&setID='.t3lib_div::_GP('setID') . $quiPart) . ' - ' .
-					$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.showfevars').': '.t3lib_BEfunc::getFuncCheck($this->pObj->id,'SET[log_feVars]',$this->pObj->MOD_SETTINGS['log_feVars'],'index.php','&setID='.t3lib_div::_GP('setID') . $quiPart) . ' - ' .
+					$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.display').': '.t3lib_BEfunc::getFuncMenu($this->pObj->id,'SET[log_display]',$this->pObj->MOD_SETTINGS['log_display'],$this->pObj->MOD_MENU['log_display'],'index.php','&setID='.$setId) . ' - ' .
+					$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.showresultlog').': '.t3lib_BEfunc::getFuncCheck($this->pObj->id,'SET[log_resultLog]',$this->pObj->MOD_SETTINGS['log_resultLog'],'index.php','&setID='.$setId . $quiPart) . ' - ' .
+					$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.showfevars').': '.t3lib_BEfunc::getFuncCheck($this->pObj->id,'SET[log_feVars]',$this->pObj->MOD_SETTINGS['log_feVars'],'index.php','&setID='.$setId . $quiPart) . ' - ' .
 					$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.itemsPerPage').': ' .
 					t3lib_BEfunc::getFuncMenu(
 						$this->pObj->id,
@@ -521,11 +523,11 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 
 			// Read URL:
 		if (t3lib_div::_GP('qid_read'))	{
-			$this->crawlerObj->readUrl(t3lib_div::_GP('qid_read'),TRUE);
+			$this->crawlerObj->readUrl(intval(t3lib_div::_GP('qid_read')),TRUE);
 		}
 
 			// Look for set ID sent - if it is, we will display contents of that set:
-		$showSetId = t3lib_div::_GP('setID');
+		$showSetId = intval(t3lib_div::_GP('setID'));
 
 			// Show details:
 		if (t3lib_div::_GP('qid_details'))	{
@@ -764,12 +766,14 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 					$rowData['tsfe_no_cache'] = $requestResult['vars']['no_cache'];
 				}
 
+				$setId = intval(t3lib_div::_GP('setID'));
+
 					// Put rows together:
 				$content.= '
 					<tr class="bgColor'.($c%2 ? '-20':'-10').'">
 						'.$titleClm.'
-						<td><a href="index.php?id='.$this->pObj->id.'&qid_details='.$vv['qid'].'&setID='.t3lib_div::_GP('setID').'">'.htmlspecialchars($vv['qid']).'</a></td>
-						<td><a href="index.php?id='.$this->pObj->id.'&qid_read='.$vv['qid'].'&setID='.t3lib_div::_GP('setID').'"><img src="'.$GLOBALS['BACK_PATH'].'gfx/refresh_n.gif" width="14" hspace="1" vspace="2" height="14" border="0" title="'.htmlspecialchars('Read').'" alt="" /></a></td>';
+						<td><a href="index.php?id='.$this->pObj->id.'&qid_details='.$vv['qid'].'&setID='.$setId.'">'.htmlspecialchars($vv['qid']).'</a></td>
+						<td><a href="index.php?id='.$this->pObj->id.'&qid_read='.$vv['qid'].'&setID='.$setId.'"><img src="'.$GLOBALS['BACK_PATH'].'gfx/refresh_n.gif" width="14" hspace="1" vspace="2" height="14" border="0" title="'.htmlspecialchars('Read').'" alt="" /></a></td>';
 				foreach($rowData as $fKey => $value) {
 
 					if (t3lib_div::inList('url',$fKey))	{
