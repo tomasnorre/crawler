@@ -55,7 +55,7 @@ class tx_crawler_scheduler_crawlMultiProcessAdditionalFieldProvider implements t
 
 		// input for timeOut
 		$fieldID = 'task_timeOut';
-		$fieldCode = '<input type="text" name="tx_scheduler[timeOut]" id="' . $fieldID . '" value="' . $taskInfo['timeOut'] . '" />';
+		$fieldCode = '<input type="text" name="tx_scheduler[timeOut]" id="' . $fieldID . '" value="' . htmlentities($taskInfo['timeOut']) . '" />';
 		$additionalFields[$fieldID] = array(
 			'code' => $fieldCode,
 			'label' => 'LLL:EXT:crawler/locallang_db.xml:crawler_im.timeOut'

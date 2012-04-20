@@ -49,7 +49,7 @@ class tx_crawler_scheduler_flushAdditionalFieldProvider implements tx_scheduler_
 		}
 
 		$fieldID = 'mode';
-		$fieldCode = '<select name="tx_scheduler[mode]" id="' . $fieldID . '" value="' . $taskInfo['mode'] . '">'
+		$fieldCode = '<select name="tx_scheduler[mode]" id="' . $fieldID . '" value="' . htmlentities($taskInfo['mode']) . '">'
 					. '<option value="all"'. ($taskInfo['mode'] == 'all' ? ' selected="selected"' : '') .'>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_flush.modeAll') . '</option>'
 					. '<option value="finished"'. ($taskInfo['mode'] == 'finished' ? ' selected="selected"' : '') .'>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_flush.modeFinished') . '</option>'
 					. '<option value="pending"'. ($taskInfo['mode'] == 'pending' ? ' selected="selected"' : '') .'>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_flush.modePending') . '</option>'
