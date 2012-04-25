@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>database</type>
+		<description>Language labels for database tables/fields belonging to extension 'crawler'</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="moduleFunction.tx_crawler_modfunc1">Site Crawler</label>
+			<label index="tx_crawler_configuration">Crawler Configuration</label>
+			<label index="tx_crawler_configuration.name">Name</label>
+			<label index="tx_crawler_configuration.processing_instruction_filter">Processing instruction filter</label>
+			<label index="tx_crawler_configuration.processing_instruction_parameters_ts">Processing instruction parameters</label>
+			<label index="tx_crawler_configuration.configuration">Configuration</label>
+			<label index="tx_crawler_configuration.base_url">Base url</label>
+			<label index="tx_crawler_configuration.pidsonly">Pids only</label>
+			<label index="tx_crawler_configuration.begroups">Restrict access to</label>
+			<label index="tx_crawler_configuration.fegroups">Crawl with FE usergroups</label>
+			<label index="tx_crawler_configuration.realurl">Use realurl urls</label>
+			<label index="tx_crawler_configuration.chash">Append cHash</label>
+			<label index="tx_crawler_configuration.exclude">Exclude pages</label>
+			<label index="tx_crawler_configuration.sys_workspace_uid">Crawl workspace</label>
+			<label index="tx_crawler_configuration.sys_domain_base_url">Get Baseurl from Domainrecord</label>
+			<label index="crawler_im.name">Crawler queue</label>
+			<label index="crawler_im.description">Running the crawler queue process to collect the relevant entries.</label>
+			<label index="crawler_im.startPage">Start page</label>
+			<label index="crawler_im.depth">Depth</label>
+			<label index="crawler_im.invalidStartPage">Start page must be a positive integer!</label>
+			<label index="crawler_im.invalidDepth">There is no depth set, please set it to an value!</label>
+			<label index="crawler_im.conf">Configuration records</label>
+			<label index="crawler_im.invalidConfiguration">There is no configuration record selected, please choose at least one or more!</label>
+			<label index="crawler_im.timeOut">Time out</label>
+			<label index="crawler_im.sleepTime">Sleep time</label>
+			<label index="crawler_im.invalidTimeOut">The time out must be a positive integer!</label>
+			<label index="crawler_im.invalidSleepTime">The sleep time must be a positive integer!</label>
+			<label index="crawler_im.sleepAfterFinish">Sleep after finish</label>
+			<label index="crawler_im.invalidSleepAfterFinish">The sleep after finish must be a positive integer!</label>
+			<label index="crawler_im.countInARun">Count in a run</label>
+			<label index="crawler_im.invalidCountInARun">The count in a run must be a positive integer!</label>
+			<label index="crawler_crawlMultiProcess.name">Crawler Run Multi Process</label>
+			<label index="crawler_crawl.name">Crawler Run</label>
+			<label index="crawler_crawl.description">Running the crawler to extension to process it's queue-entries.</label>
+			<label index="crawler_flush.name">Crawler Queue Flush</label>
+			<label index="crawler_flush.description">Cleanup the crawler queue and remode unwanted or finished entires.</label>
+			<label index="crawler_flush.mode">Flush mode</label>
+			<label index="crawler_flush.modeAll">Flush all entires</label>
+			<label index="crawler_flush.modeFinished">Flush finished entries</label>
+			<label index="crawler_flush.modePending">Flush pending entires</label>
+		</languageKey>
+	</data>
+</T3locallang>

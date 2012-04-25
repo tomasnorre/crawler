@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+    <meta type="array">
+        <description>Labels for the crawler extension</description>
+        <type>module</type>
+        <csh_table></csh_table>
+        <labelContext type="array">
+        </labelContext>
+    </meta>
+    <data type="array">
+        <languageKey index="default" type="array">
+            <label index="title">Site Crawler</label>
+            <label index="labels.start">Start Crawling</label>
+            <label index="labels.log">Crawler log</label>
+            <label index="labels.multiprocess">Crawling Processes</label>
+            <label index="labels.all">All</label>
+            <label index="labels.pending">Pending</label>
+            <label index="labels.finished">Finished</label>
+            <label index="labels.noPageSelected">Please select a page in the pagetree</label>
+            <label index="labels.noConfigSelected">Please select at least one configuration</label>
+            <label index="labels.configuration">Crawl configuration</label>
+            <label index="labels.triggerUpdate">Update</label>
+            <label index="labels.triggerCrawl">Crawl URLs</label>
+            <label index="labels.triggerDownload">Download URLs</label>
+            <label index="labels.continue">Continue</label>
+            <label index="labels.continueinlog">Continue and show Log</label>
+            <label index="labels.count">Count</label>
+            <label index="labels.time">Time</label>
+            <label index="labels.curtime">Current server time</label>
+            <label index="labels.submitted">URLs submitted</label>
+            <label index="labels.depth">Depth</label>
+            <label index="labels.configurations">Configurations</label>
+            <label index="labels.scheduled">Scheduled</label>
+            <label index="labels.pagetitle">Page title</label>
+            <label index="labels.key">Key</label>
+            <label index="labels.parametercfg">Parameter Cfg</label>
+            <label index="labels.values">Values Expanded</label>
+            <label index="labels.url">URL</label>
+            <label index="labels.urls">URLs</label>
+            <label index="labels.options">Options</label>
+            <label index="labels.parameters">Parameters</label>
+            <label index="labels.back">Back</label>
+            <label index="labels.reloadlist">Reload list</label>
+            <label index="labels.downloadcsv">Download entries as CSV</label>
+            <label index="labels.flushvisiblequeue">Flush visible entries</label>
+            <label index="labels.flushfullqueue">Flush entire queue</label>
+            <label index="labels.confirmyouresure">Are you sure?</label>
+            <label index="labels.setid">Set ID</label>
+            <label index="labels.qid">Queue id</label>
+            <label index="labels.resultlog">Result Log</label>
+            <label index="labels.scheduledtime">Scheduled</label>
+            <label index="labels.runtime">Run-time</label>
+            <label index="labels.status">Status</label>
+            <label index="labels.groups">Groups</label>
+            <label index="labels.procinstr">Proc. Instr.</label>
+            <label index="labels.newprocess">New process has been started, refresh to monitor the state</label>
+            <label index="labels.newprocesserror">Error while starting process</label>
+            <label index="labels.time.now">Now</label>
+            <label index="labels.time.midnight">Midnight</label>
+            <label index="labels.time.4am">4 AM</label>
+            <label index="labels.display">Display</label>
+            <label index="labels.showresultlog">Show Result Log</label>
+            <label index="labels.showfevars">Show FE Vars</label>
+            <label index="labels.noentries">No entries</label>
+            <label index="labels.immediate">immediate</label>
+            <label index="labels.generalinformation">General Information</label>
+            <label index="labels.pendingoverview">Pending Entries (assigned / overall)</label>
+            <label index="labels.processcount">Processes count (running / max)</label>
+            <label index="labels.clipath">CLI-Path</label>
+            <label index="labels.processstates">Process States</label>
+            <label index="labels.state">State</label>
+            <label index="labels.processid">Id</label>
+            <label index="labels.time.first">Time first item</label>
+            <label index="labels.time.last">Time last item</label>
+            <label index="labels.time.duration">Runtime</label>
+            <label index="labels.ttl">TTL</label>
+            <label index="labels.status.current">Processed</label>
+            <label index="labels.status.initial">Initially assigned</label>
+            <label index="labels.status.finally">Finally assigned</label>
+            <label index="labels.status.progress">Progress</label>
+            <label index="labels.process.running">Process running</label>
+            <label index="labels.process.success">Process completed successfully</label>
+            <label index="labels.process.cancelled">Process was cancelled</label>
+            <label index="labels.refresh">Refresh</label>
+            <label index="labels.disablecrawling">Stop all processes and disable crawling</label>
+            <label index="labels.enablecrawling">Enable crawling</label>
+            <label index="labels.show.running">Show only running processes</label>
+            <label index="labels.show.all">Show finished and terminated processes</label>
+            <label index="labels.process.add">Add process</label>
+            <label index="time.detailed">d-m-y H:i:s</label>
+            <label index="labels.itemsPerPage.5">limit to 5</label>
+            <label index="labels.itemsPerPage.10">limit to 10</label>
+            <label index="labels.itemsPerPage.50">limit to 50</label>
+            <label index="labels.itemsPerPage.0">no limit</label>
+            <label index="labels.itemsPerPage">Items per page</label>
+            <label index="message.noBeUserAvailable">There is no be_user "_cli_crawler" available!</label>
+            <label index="message.noPhpForkAvailable">There is no PHP method "popen" available!</label>
+            <label index="message.beUserIsAdmin">The be_user "_cli_crawler" is not allowed to have admin rights!</label>
+        </languageKey>
+    </data>
+</T3locallang>

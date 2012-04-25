@@ -1,0 +1,48 @@
+table.process_states  {
+	margin: 0px;
+	padding: 0px;
+	border-collapse:collapse;
+}
+
+table.processes td {
+	vertical-align: middle;
+	padding: 2px;
+}
+
+table.processes tr.odd {
+	background-color: #fff;
+	margin: 0px;
+	padding: 0px;
+	border: 0px; 
+}
+
+table.processes tr.odd td {
+	background-color: #fff; 
+}
+
+div#message{
+	border: 3px solid #FD792E;
+	padding: 5px;
+	margin: 5px 0; 
+}
+
+div.crawlerprocessprogress {
+	background: white none repeat scroll 0 0;
+	border: 1px solid #CCCCCC;
+	float: left;
+	padding: 1px;
+	position: relative;
+	display: block;
+}
+
+div.crawlerprocessprogress-bar {
+	background-color: #fbab2f;
+	height: 15px;
+	vertical-align: middle;
+}
+
+div.crawlerprocessprogress-label {
+	position: absolute;
+	top: 2px;
+	left: 4px;
+}

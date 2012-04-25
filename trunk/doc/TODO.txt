@@ -1,0 +1,11 @@
+Submitting links to queue (ideas):
+- Re-set crawled entries (crawler)
+- Making URLs from realurl page-cache table? (DS req?)
+- Frontend link generator can also store a URL in the queue!
+	- Only cachable URLs
+		- Either standard params like MP / id / type or cHashed params
+		- Solution:
+			- A hook in linkData() or the like makes it possible for "crawler" to insert a URL in a new table of "visited URLs" which can be (regularily) transferred to the crawler queue (DS req. for P&S section!!)
+- When indexed search would otherwise have indexed a page, simply add it to queue.
+
+- Backend module: XHTML / Skinning
