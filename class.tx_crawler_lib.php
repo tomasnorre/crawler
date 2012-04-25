@@ -122,7 +122,7 @@ class tx_crawler_lib {
 	/**
 	 * Sets the extensions settings (unserialized pendant of $TYPO3_CONF_VARS['EXT']['extConf']['crawler']).
 	 *
-	 * @param array $extensionSettings 
+	 * @param array $extensionSettings
 	 * @return void
 	 */
 	public function setExtensionSettings(array $extensionSettings) {
@@ -528,13 +528,14 @@ class tx_crawler_lib {
 								if (!empty($subCfg['baseUrl']) && substr($subCfg['baseUrl'], -1) != '/') {
 									$subCfg['baseUrl'] .= '/';
 								}
-
-								$res[$key] = array();
-								$res[$key]['subCfg'] = $subCfg;
-								$res[$key]['paramParsed'] = $this->parseParams($configurationRecord['configuration']);
-								$res[$key]['paramExpanded'] = $this->expandParameters($res[$key]['paramParsed'], $id);
-								$res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'], array('?id='.$id. ((abs($subCfg['workspace'])>0)?'&ADMCMD_view=1&ADMCMD_editIcons=0&ADMCMD_previewWS='.$subCfg['workspace']:'')));
-								$res[$key]['origin'] = 'tx_crawler_configuration_'.$configurationRecord['uid'];
+								if (!in_array($id, $this->expandExcludeString($subCfg['exclude']))) {
+									$res[$key] = array();
+									$res[$key]['subCfg'] = $subCfg;
+									$res[$key]['paramParsed'] = $this->parseParams($configurationRecord['configuration']);
+									$res[$key]['paramExpanded'] = $this->expandParameters($res[$key]['paramParsed'], $id);
+									$res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'], array('?id='.$id. ((abs($subCfg['workspace'])>0)?'&ADMCMD_view=1&ADMCMD_editIcons=0&ADMCMD_previewWS='.$subCfg['workspace']:'')));
+									$res[$key]['origin'] = 'tx_crawler_configuration_'.$configurationRecord['uid'];
+								}
 							}
 						}
 					}
@@ -553,7 +554,7 @@ class tx_crawler_lib {
 
 		return $res;
 	}
-	
+
 	/**
 	 * checks if a domain record exist and returns a baseurl based on the record. If not the given baseUrl string is used.
 	 * @param string $baseUrl
@@ -1840,7 +1841,7 @@ class tx_crawler_lib {
 			$sleepAfterFinish = $cliObj->cli_argValue('--sleepAfterFinish') ? intval($cliObj->cli_argValue('--sleepAfterFinish')) : $this->extensionSettings['sleepAfterFinish'];
 				//Milliseconds
 			$sleepTime = $cliObj->cli_argValue('--sleepTime') ? intval($cliObj->cli_argValue('--sleepTime')) : $this->extensionSettings['sleepTime'];
-			
+
 			try {
 				// Run process:
 				$result = $this->CLI_run($countInARun, $sleepTime, $sleepAfterFinish);
