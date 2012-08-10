@@ -25,7 +25,7 @@ processDebug=0
 # cat=basic//10; type=boolean; label= Crawl hidden pages: Crawl hidden pages (By default they won't be crawled) 
 crawlHiddenPages=0
 
-# cat=basic//10; type=string; label= PHP Path: 
+# cat=basic//10; type=string; label= PHP Path: Local path to php binary file (e.g. "/usr/bin/php")
 phpPath=/usr/bin/php
 
 # cat=basic//10; type=boolean; label= Enabled Timeslot for Duplicationcheck: When this option is active items will not be queue twice for the past if theire schedule time is the currenttime +-100 seconds.
