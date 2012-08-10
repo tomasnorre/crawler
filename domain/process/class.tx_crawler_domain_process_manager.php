@@ -75,6 +75,11 @@ class tx_crawler_domain_process_manager  {
 	 * @param boolean $verbose
 	 */
 	public function multiProcess( $timeout, $verbose=TRUE ) {
+
+		if ($this->processLimit <= 1) {
+			throw new RuntimeException('To run crawler in multi process mode you have to configure the processLimit > 1.' . PHP_EOL);
+		}
+
 		$pendingItemsStart = $this->queueRepository->countAllPendingItems();
 		$itemReportLimit = 20;
 		$reportItemCount = 	$pendingItemsStart -  $itemReportLimit;
