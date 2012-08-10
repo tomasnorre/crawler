@@ -50,8 +50,9 @@ $TCA["tx_crawler_configuration"] = array (
             "exclude" => 1,
             "label" => "LLL:EXT:crawler/locallang_db.xml:tx_crawler_configuration.configuration",
             "config" => Array (
-                "type" => "input",
-                "size" => "255",
+                "type" => "text",
+                "cols" => "40",
+                "rows" => "5",
             )
         ),
         "base_url" => Array (

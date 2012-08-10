@@ -53,7 +53,7 @@ CREATE TABLE tx_crawler_configuration (
     name tinytext NOT NULL,
     processing_instruction_filter tinytext NOT NULL,
     processing_instruction_parameters_ts text NOT NULL,
-    configuration tinytext NOT NULL,
+    configuration text NOT NULL,
     base_url tinytext NOT NULL,
     sys_domain_base_url tinytext NOT NULL,
     pidsonly blob NOT NULL,
