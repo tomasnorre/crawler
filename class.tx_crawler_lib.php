@@ -1247,6 +1247,11 @@ class tx_crawler_lib {
 			// Parse URL, checking for scheme:
 		$url = parse_url($originalUrl);
 
+		if($url === FALSE) {
+			if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Could not parse_url() for string "%s"', $url), 'crawler', 4, array('crawlerId' => $crawlerId));
+			return FALSE;
+		}
+
 		if(!in_array($url['scheme'],array('','http','https'))) {
 			if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Scheme does not match for url "%s"', $url), 'crawler', 4, array('crawlerId' => $crawlerId));
 			return FALSE;
