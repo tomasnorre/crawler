@@ -742,6 +742,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				$resLog = $this->getResultLog($vv);
 
 				$resStatus = $this->getResStatus($vv);
+				$resFeVars = $this->getResFeVars($vv);
 
 					// Compile row:
 				$parameters = unserialize($vv['parameters']);
@@ -761,9 +762,9 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				$rowData['set_id'] = $vv['set_id'];
 
 				if ($this->pObj->MOD_SETTINGS['log_feVars']) {
-					$rowData['tsfe_id'] = $requestResult['vars']['id'];
-					$rowData['tsfe_gr_list'] = $requestResult['vars']['gr_list'];
-					$rowData['tsfe_no_cache'] = $requestResult['vars']['no_cache'];
+					$rowData['tsfe_id'] = $resFeVars['id'];
+					$rowData['tsfe_gr_list'] = $resFeVars['gr_list'];
+					$rowData['tsfe_no_cache'] = $resFeVars['no_cache'];
 				}
 
 				$setId = intval(t3lib_div::_GP('setID'));
@@ -808,6 +809,24 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		}
 
 		return $content;
+	}
+
+	/**
+	 * Find Fe vars
+	 *
+	 * @param array $row
+	 * @return array
+	 */
+	function getResFeVars($row) {
+		$feVars = array();
+
+		if ($row['result_data']) {
+			$resultData = unserialize($row['result_data']);
+			$requestResult = unserialize($resultData['content']);
+			$feVars = $requestResult['vars'];
+		}
+
+		return $feVars;
 	}
 
 	/**
