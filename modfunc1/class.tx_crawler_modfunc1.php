@@ -225,7 +225,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 					);
 		}
 
-		$theOutput.= $this->pObj->doc->spacer(5);
+		$theOutput= $this->pObj->doc->spacer(5);
 		$theOutput.= $this->pObj->doc->section($LANG->getLL('title'), $h_func, 0, 1);
 
 
@@ -515,6 +515,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 */
 	function drawLog()	{
 		global $BACK_PATH;
+		$output = '';
 
 			// Init:
 		$this->crawlerObj = t3lib_div::makeInstance('tx_crawler_lib');
@@ -559,7 +560,6 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				((version_compare(TYPO3_version, '4.5.0', '<')) ? t3lib_div::view_array($q_entry) : t3lib_utility_Debug::viewArray($q_entry));
 		} else {	// Show list:
 
-			$output = '';
 				// If either id or set id, show list:
 			if ($this->pObj->id || $showSetId)	{
 				if ($this->pObj->id)	{
