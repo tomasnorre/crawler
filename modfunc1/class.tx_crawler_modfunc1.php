@@ -65,6 +65,14 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	var $crawlerObj;
 
 	var $CSVaccu = array();
+
+	/**
+	 * If true the user requested a CSV export of the queue
+	 *
+	 * @var boolean
+	 */
+	var $CSVExport = FALSE;
+
 	var $downloadUrls = array();
 
 	/**
@@ -522,6 +530,8 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		$this->crawlerObj->setAccessMode('gui');
 		$this->crawlerObj->setID = t3lib_div::md5int(microtime());
 
+		$this->CSVExport = t3lib_div::_POST('_csv');
+
 			// Read URL:
 		if (t3lib_div::_GP('qid_read'))	{
 			$this->crawlerObj->readUrl(intval(t3lib_div::_GP('qid_read')),TRUE);
@@ -658,35 +668,46 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 			}
 		}
 
-			// Output to CSV file:
-		if (t3lib_div::_POST('_csv'))	{
-
-			$csvLines = array();
-
-				// Field names:
-			reset($this->CSVaccu);
-			$fieldNames = array_keys(current($this->CSVaccu));
-			$csvLines[] = t3lib_div::csvValues($fieldNames);
-
-				// Data:
-			foreach($this->CSVaccu as $row)	{
-				$csvLines[] = t3lib_div::csvValues($row);
-			}
-
-				// Creating output header:
-			$mimeType = 'application/octet-stream';
-			Header('Content-Type: '.$mimeType);
-			Header('Content-Disposition: attachment; filename=CrawlerLog.csv');
-
-				// Printing the content of the CSV lines:
-			echo implode(chr(13).chr(10),$csvLines);
-
-				// Exits:
-			exit;
+		if($this->CSVExport) {
+			$this->outputCsvFile();
 		}
 
 			// Return output
 		return 	$output;
+	}
+
+	/**
+	 * Outputs the CSV file and sets the correct headers
+	 */
+	protected function outputCsvFile() {
+
+		if (!count($this->CSVaccu)) {
+			$this->addWarningMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:message.canNotExportEmptyQueueToCsvText'));
+			return;
+		}
+
+		$csvLines = array();
+
+			// Field names:
+		reset($this->CSVaccu);
+		$fieldNames = array_keys(current($this->CSVaccu));
+		$csvLines[] = t3lib_div::csvValues($fieldNames);
+
+			// Data:
+		foreach($this->CSVaccu as $row)	{
+			$csvLines[] = t3lib_div::csvValues($row);
+		}
+
+			// Creating output header:
+		$mimeType = 'application/octet-stream';
+		Header('Content-Type: '.$mimeType);
+		Header('Content-Disposition: attachment; filename=CrawlerLog.csv');
+
+			// Printing the content of the CSV lines:
+		echo implode(chr(13).chr(10),$csvLines);
+
+			// Exits:
+		exit;
 	}
 
 	/**
@@ -789,7 +810,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 					</tr>';
 				$c++;
 
-				if ($doCSV)	{
+				if ($this->CSVExport)	{
 						// Only for CSV (adding qid and scheduled/exec_time if needed):
 					$rowData['result_log'] = implode('// ',explode(chr(10),$resLog));
 					$rowData['qid'] = $vv['qid'];
@@ -1147,7 +1168,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 
 	/**
 	 * Add error message to the user interface.
-	 * 
+	 *
 	 * NOTE:
 	 * This method is basesd on TYPO3 4.3 or higher!
 	 *
@@ -1161,8 +1182,26 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	protected function addErrorMessage($message) {
 		$this->isErrorDetected = true;
 
-        	if (version_compare(TYPO3_version,'4.3','>='))
+		if (version_compare(TYPO3_version,'4.3','>='))
 			$this->addMessage($message, t3lib_FlashMessage::ERROR);
+	}
+
+	/**
+	 * Add error message to the user interface.
+	 *
+	 * NOTE:
+	 * This method is basesd on TYPO3 4.3 or higher!
+	 *
+	 * @param string The message
+	 *
+	 * @access protected
+	 * @return void
+	 *
+	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 */
+	protected function addWarningMessage($message) {
+		if (version_compare(TYPO3_version,'4.3','>='))
+			$this->addMessage($message, t3lib_FlashMessage::WARNING);
 	}
 
 	/**
