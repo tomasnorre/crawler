@@ -1451,7 +1451,7 @@ class tx_crawler_lib {
 	 */
 	function getRequestUrlFrom302Header($headers,$user='',$pass='') {
 		if(!is_array($headers)) return false;
-		if(!(stristr($headers[0],'301 Moved') || stristr($headers[0],'302 Found'))) return false;
+		if(!(stristr($headers[0],'301 Moved') || stristr($headers[0],'302 Found') || stristr($headers[0],'302 Moved'))) return false;
 
 		foreach($headers as $hl) {
 			$tmp = explode(": ",$hl);
