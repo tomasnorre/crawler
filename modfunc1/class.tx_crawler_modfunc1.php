@@ -559,6 +559,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				((version_compare(TYPO3_version, '4.5.0', '<')) ? t3lib_div::view_array($q_entry) : t3lib_utility_Debug::viewArray($q_entry));
 		} else {	// Show list:
 
+			$output = '';
 				// If either id or set id, show list:
 			if ($this->pObj->id || $showSetId)	{
 				if ($this->pObj->id)	{
@@ -599,7 +600,6 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 							);
 				}
 
-				$output = '';
 				if ($code)	{
 
 					$output .= '
