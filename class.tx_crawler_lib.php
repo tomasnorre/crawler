@@ -2032,6 +2032,8 @@ class tx_crawler_lib {
 	 */
 	public function CLI_run($countInARun, $sleepTime, $sleepAfterFinish)	{
 		$result = 0;
+		$counter = 0;
+
 			// First, run hooks:
 		$this->CLI_runHooks();
 
@@ -2095,40 +2097,43 @@ class tx_crawler_lib {
 				$this->CLI_debug("Nothing processed due to multi-process collision (".$this->CLI_buildProcessId().")");
 				return ( $result | self::CLI_STATUS_ABORTED );
 			}
+
+
+
+			foreach($rows as $r)	{
+				$result |= $this->readUrl($r['qid']);
+
+				$counter++;
+				usleep(intval($sleepTime));	// Just to relax the system
+
+					// if during the start and the current read url the cli has been disable we need to return from the function
+					// mark the process NOT as ended.
+				if ($this->getDisabled()) {
+					return ( $result | self::CLI_STATUS_ABORTED );
+				}
+
+				if (!$this->CLI_checkIfProcessIsActive($this->CLI_buildProcessId())) {
+					$this->CLI_debug("conflict / timeout (".$this->CLI_buildProcessId().")");
+
+						//TODO might need an additional returncode
+					$result |= self::CLI_STATUS_ABORTED;
+					break;		//possible timeout
+				}
+			}
+
+			sleep(intval($sleepAfterFinish));
+
+			$msg = 'Rows: '.$counter;
+			$this->CLI_debug($msg." (".$this->CLI_buildProcessId().")");
+
 		} else {
 			$this->CLI_debug("Nothing within queue which needs to be processed (".$this->CLI_buildProcessId().")");
 		}
 
-		$counter = 0;
-		foreach($rows as $r)	{
-			$result |= $this->readUrl($r['qid']);
-
-			$counter++;
-			usleep(intval($sleepTime));	// Just to relax the system
-
-				// if during the start and the current read url the cli has been disable we need to return from the function
-				// mark the process NOT as ended.
-			if ($this->getDisabled()) {
-				return ( $result | self::CLI_STATUS_ABORTED );
-			}
-
-			if (!$this->CLI_checkIfProcessIsActive($this->CLI_buildProcessId())) {
-				$this->CLI_debug("conflict / timeout (".$this->CLI_buildProcessId().")");
-
-					//TODO might need an additional returncode
-				$result |= self::CLI_STATUS_ABORTED;
-				break;		//possible timeout
-			}
-		}
-
-		sleep(intval($sleepAfterFinish));
-
-		$msg = 'Rows: '.$counter;
-		$this->CLI_debug($msg." (".$this->CLI_buildProcessId().")");
-
 		if($counter > 0) {
 			$result |= self::CLI_STATUS_PROCESSED;
 		}
+
 		return $result;
 	}
 
