@@ -10,11 +10,8 @@
 	// Get path to this script
 $temp_PATH_thisScript = isset($_SERVER['argv'][0]) ? $_SERVER['argv'][0] : (isset($_ENV['_']) ? $_ENV['_'] : $_SERVER['_']);
 
-	// Figure out if the path is relative
-$relativePath = t3lib_div::isAbsPath($temp_PATH_thisScript);
-
 	// Resolve path
-if ($relativePath) {
+if (!t3lib_div::isAbsPath($temp_PATH_thisScript)) {
 	$workingDirectory = $_SERVER['PWD'] ? $_SERVER['PWD'] : getcwd();
 	if ($workingDirectory) {
 		$temp_PATH_thisScript =
