@@ -11,18 +11,7 @@
 $temp_PATH_thisScript = isset($_SERVER['argv'][0]) ? $_SERVER['argv'][0] : (isset($_ENV['_']) ? $_ENV['_'] : $_SERVER['_']);
 
 	// Figure out if the path is relative
-$relativePath = FALSE;
-if (stristr(PHP_OS,'win') && !stristr(PHP_OS,'darwin')) {
-		// Windows
-	if (!preg_match('/^([A-Z]:)?\\\/', $temp_PATH_thisScript)) {
-		$relativePath = TRUE;
-	}
-} else {
-		// *nix, et al
-	if ($temp_PATH_thisScript{0} != '/') {
-		$relativePath = TRUE;
-	}
-}
+$relativePath = t3lib_div::isAbsPath($temp_PATH_thisScript);
 
 	// Resolve path
 if ($relativePath) {
