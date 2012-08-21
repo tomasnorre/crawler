@@ -6,12 +6,11 @@
  */
 // echo realpath(dirname(__FILE__).'/../../../..'), "\n";
 
-
 	// Get path to this script
 $temp_PATH_thisScript = isset($_SERVER['argv'][0]) ? $_SERVER['argv'][0] : (isset($_ENV['_']) ? $_ENV['_'] : $_SERVER['_']);
 
 	// Resolve path
-if (!t3lib_div::isAbsPath($temp_PATH_thisScript)) {
+if (!isAbsPath($temp_PATH_thisScript)) {
 	$workingDirectory = $_SERVER['PWD'] ? $_SERVER['PWD'] : getcwd();
 	if ($workingDirectory) {
 		$temp_PATH_thisScript =
@@ -83,4 +82,20 @@ if ($urlParts['scheme'] === 'https') {
 chdir($typo3Root);
 include($typo3Root . '/index.php');
 
+
+/**
+ * Checks if the $path is absolute or relative (detecting either '/' or 'x:/' as first part of string) and returns TRUE if so.
+ *
+ * @param string $path File path to evaluate
+ * @return boolean
+ */
+function isAbsPath($path) {
+	// on Windows also a path starting with a drive letter is absolute: X:/
+	if (stristr(PHP_OS,'win') && substr($path, 1, 2) === ':/') {
+		return TRUE;
+	}
+
+	// path starting with a / is always absolute, on every system
+	return (substr($path, 0, 1) === '/');
+}
 ?>
