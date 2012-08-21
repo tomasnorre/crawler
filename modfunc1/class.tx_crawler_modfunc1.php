@@ -1009,14 +1009,22 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 */
 	protected function makeCrawlerProcessableChecks() {
 		global $LANG;
-	
+
 		if ($this->isCrawlerUserAvailable() === false) {
 			$this->addErrorMessage($LANG->sL('LLL:EXT:crawler/modfunc1/locallang.xml:message.noBeUserAvailable'));
 		} elseif ($this->isCrawlerUserNotAdmin() === false) {
 			$this->addErrorMessage($LANG->sL('LLL:EXT:crawler/modfunc1/locallang.xml:message.beUserIsAdmin'));
 		}
+
 		if ($this->isPhpForkAvailable() === false) {
 			$this->addErrorMessage($LANG->sL('LLL:EXT:crawler/modfunc1/locallang.xml:message.noPhpForkAvailable'));
+		}
+
+		$exitCode = 0;
+		$out = array();
+		exec(escapeshellcmd($this->extensionSettings['phpPath'] . ' -v'), $out, $exitCode);
+		if ($exitCode > 0) {
+			$this->addErrorMessage(sprintf($LANG->sL('LLL:EXT:crawler/modfunc1/locallang.xml:message.phpBinaryNotFound'), htmlspecialchars($this->extensionSettings['phpPath'])));
 		}
 	}
 
