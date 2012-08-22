@@ -47,10 +47,30 @@ class tx_crawler_tcaFunc {
 	public function getProcessingInstructions(array $config) {
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'])) {
 			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'] as $key => $value) {
-				$config['items'][] = array($value.' ['.$key.']', $key);
+				$config['items'][] = array($value.' ['.$key.']', $key, $this->getExtensionIcon($key));
 			}
 		}
 		return $config;
+	}
+
+	/**
+	 * Get path to ext_icon.gif from processing instruction key
+	 *
+	 * @param string $key Like tx_realurl_rebuild
+	 * @return string
+	 */
+	protected function getExtensionIcon($key) {
+		$extIcon = '';
+
+		if (method_exists(t3lib_extMgm, 'getExtensionKeyByPrefix')) {
+			$parts = explode('_', $key);
+			if (is_array($parts) && count($parts) > 2) {
+				$extensionKey = t3lib_extMgm::getExtensionKeyByPrefix('tx_' . $parts[1]);
+				$extIcon = t3lib_extMgm::extRelPath($extensionKey) . 'ext_icon.gif';
+			}
+		}
+
+		return $extIcon;
 	}
 
 }
