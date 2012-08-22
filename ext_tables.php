@@ -41,4 +41,9 @@ $TCA["tx_crawler_configuration"] = array (
     )
 );
 
+if (version_compare(TYPO3_version, '4.5.0','<=')) {
+	t3lib_div::loadTCA("tx_crawler_configuration");
+	$TCA['tx_crawler_configuration']['columns']['sys_workspace_uid']['config']['items'][1] = Array('LLL:EXT:lang/locallang_misc.xml:shortcut_offlineWS',-1);
+}
+
 ?>

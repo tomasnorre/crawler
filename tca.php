@@ -127,8 +127,6 @@ $TCA["tx_crawler_configuration"] = array (
 				'type' => 'select',
 				'items' => Array (
 					Array('LLL:EXT:lang/locallang_misc.xml:shortcut_onlineWS',0),
-					Array('LLL:EXT:lang/locallang_misc.xml:shortcut_offlineWS',-1),
-					Array('',0),
 				),
 				'size' => 1,
 				'maxitems' => 1,
