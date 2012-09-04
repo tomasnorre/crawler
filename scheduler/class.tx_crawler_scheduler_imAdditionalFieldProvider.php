@@ -187,7 +187,7 @@ class tx_crawler_scheduler_imAdditionalFieldProvider implements tx_scheduler_Add
 			$schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidDepth'), t3lib_FlashMessage::ERROR);
 		}
 
-		if ( !t3lib_div::testInt($submittedData['startPage']) || $submittedData['startPage'] < 0 ) {
+		if ( !tx_crawler_api::canBeInterpretedAsInteger($submittedData['startPage']) || $submittedData['startPage'] < 0 ) {
 			$isValid = false;
 			$schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidStartPage'), t3lib_FlashMessage::ERROR);
 		}

@@ -45,7 +45,11 @@ class tx_crawler_cli extends t3lib_cli {
 	function tx_crawler_cli()	{
 
 		// Running parent class constructor
-		parent::t3lib_cli();
+		if (version_compare(TYPO3_version, '4.6.0', '>=')) {
+			parent::__construct();
+		} else {
+			parent::t3lib_cli();
+		}
 
 		$this->cli_options[] = array('-h', 'Show the help', '');
 		$this->cli_options[] = array('--help', 'Same as -h', '');

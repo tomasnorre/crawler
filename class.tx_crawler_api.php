@@ -531,6 +531,56 @@ class tx_crawler_api {
 
 		return $data;
 	}
+
+	/**
+	 * Wrapper to support old and new method to test integer values.
+	 *
+	 * @param integer $value
+	 * @return integer
+	 */
+	static public function convertToPositiveInteger($value) {
+		if (version_compare(TYPO3_version, '4.6.0', '>=')) {
+			$result = t3lib_utility_Math::convertToPositiveInteger($value);
+		} else {
+			$result = t3lib_div::intval_positive($value);
+		}
+
+		return $result;
+	}
+
+
+	/**
+	 * Wrapper to support old an new method to test integer value.
+	 *
+	 * @param integer $value
+	 * @param integer $min
+	 * @param integer $max
+	 * @param integer $default
+	 * @return integer
+	 */
+	static public function forceIntegerInRange($value, $min, $max = 2000000, $default = 0) {
+		if (version_compare(TYPO3_version, '4.6.0', '>=')) {
+			$result = t3lib_utility_Math::forceIntegerInRange($value, $min, $max, $default);
+		} else {
+			$result = t3lib_div::intInRange($value, $min, $max, $default);
+		}
+		return $result;
+	}
+
+	/**
+	 * Wrapper to support old an new method to test integer value.
+	 *
+	 * @param integer $value
+	 * @return bool
+	 */
+	static public function canBeInterpretedAsInteger($value) {
+		if (version_compare(TYPO3_version, '4.6.0', '>=')) {
+			$result = t3lib_utility_Math::canBeInterpretedAsInteger($value);
+		} else {
+			$result = t3lib_div::testInt($value);
+		}
+		return $result;
+	}
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/class.tx_crawler_api.php']) {

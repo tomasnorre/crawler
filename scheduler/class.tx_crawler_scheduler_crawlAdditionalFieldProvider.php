@@ -106,18 +106,18 @@ class tx_crawler_scheduler_crawlAdditionalFieldProvider implements tx_scheduler_
 	public function validateAdditionalFields(array &$submittedData, tx_scheduler_Module $schedulerModule) {
 		$isValid = false;
 
-		if ( t3lib_div::intval_positive($submittedData['sleepTime']) > 0 ) {
+		if ( tx_crawler_api::convertToPositiveInteger($submittedData['sleepTime']) > 0 ) {
 			$isValid = true;
 		} else {
 			$schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidSleepTime'), t3lib_FlashMessage::ERROR);
 		}
 
-		if ( t3lib_div::intval_positive($submittedData['sleepAfterFinish']) === 0 ) {
+		if ( tx_crawler_api::convertToPositiveInteger($submittedData['sleepAfterFinish']) === 0 ) {
 			$isValid = false;
 			$schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidSleepAfterFinish'), t3lib_FlashMessage::ERROR);
 		}
 
-		if ( t3lib_div::intval_positive($submittedData['countInARun']) === 0 ) {
+		if ( tx_crawler_api::convertToPositiveInteger($submittedData['countInARun']) === 0 ) {
 			$isValid = false;
 			$schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidCountInARun'), t3lib_FlashMessage::ERROR);
 		}

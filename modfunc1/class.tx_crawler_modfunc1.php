@@ -982,7 +982,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		$listView->setTotalUnprocessedItemCount($queueRepository->countAllPendingItems());
 		$listView->setAssignedUnprocessedItemCount($queueRepository->countAllAssignedPendingItems());
 		$listView->setActiveProcessCount($processRepository->countActive());
-		$listView->setMaxActiveProcessCount(t3lib_div::intInRange($this->extensionSettings['processLimit'],1,99,1));
+		$listView->setMaxActiveProcessCount(tx_crawler_api::forceIntegerInRange($this->extensionSettings['processLimit'],1,99,1));
 		$listView->setMode($mode);
 
 		$paginationView		= new tx_crawler_view_pagination();

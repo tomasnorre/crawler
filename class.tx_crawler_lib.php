@@ -115,8 +115,10 @@ class tx_crawler_lib {
 		$this->setExtensionSettings($settings);
 
 		// set defaults:
-		if (t3lib_div::intval_positive($this->extensionSettings['countInARun']) == 0) $this->extensionSettings['countInARun']=100;
-		$this->extensionSettings['processLimit'] = t3lib_div::intInRange($this->extensionSettings['processLimit'],1,99,1);
+		if (tx_crawler_api::convertToPositiveInteger($this->extensionSettings['countInARun']) == 0) {
+			$this->extensionSettings['countInARun'] = 100;
+		}
+		$this->extensionSettings['processLimit'] = tx_crawler_api::forceIntegerInRange($this->extensionSettings['processLimit'],1,99,1);
 	}
 
 	/**
@@ -308,12 +310,18 @@ class tx_crawler_lib {
 
 					// Calculate cHash:
 					if ($vv['subCfg']['cHash'])	{
-						$pA = t3lib_div::cHashParams($urlQuery);
-						if (count($pA)>1)	{
-							if (t3lib_div::compat_version ('4.3')) {
-								$urlQuery .= '&cHash=' . t3lib_div::calculateCHash($pA);
-							} else {
-								$urlQuery .= '&cHash='.rawurlencode(t3lib_div::shortMD5(serialize($pA)));
+						if (version_compare(TYPO3_version, '4.7.0', '>=')) {
+							/* @var $cacheHash t3lib_cacheHash */
+							$cacheHash = t3lib_div::makeInstance('t3lib_cacheHash');
+							$urlQuery .= '&cHash=' . $cacheHash->generateForParameters($urlQuery);
+						} else {
+							$pA = t3lib_div::cHashParams($urlQuery);
+							if (count($pA)>1)	{
+								if (t3lib_div::compat_version ('4.3')) {
+									$urlQuery .= '&cHash=' . t3lib_div::calculateCHash($pA);
+								} else {
+									$urlQuery .= '&cHash='.rawurlencode(t3lib_div::shortMD5(serialize($pA)));
+								}
 							}
 						}
 					}
@@ -818,7 +826,7 @@ class tx_crawler_lib {
 				foreach($valueSet as $val)	{
 					$newUrls[] = $url.(strcmp($val,'') ? '&'.rawurlencode($varName).'='.rawurlencode($val) : '');
 
-					if (count($newUrls) >  t3lib_div::intInRange($this->extensionSettings['maxCompileUrls'], 1, 1000000000, 10000))	{
+					if (count($newUrls) >  tx_crawler_api::forceIntegerInRange($this->extensionSettings['maxCompileUrls'], 1, 1000000000, 10000))	{
 						break;
 						break;
 					}
@@ -1896,7 +1904,7 @@ class tx_crawler_lib {
 			$this->registerQueueEntriesInternallyOnly=TRUE;
 		}
 
-		$pageId = t3lib_div::intInRange($cliObj->cli_args['_DEFAULT'][1],0);
+		$pageId = tx_crawler_api::forceIntegerInRange($cliObj->cli_args['_DEFAULT'][1],0);
 
 		$configurationKeys  = $this->getConfigurationKeys($cliObj);
 
@@ -1922,10 +1930,10 @@ class tx_crawler_lib {
 
 		$this->setID = t3lib_div::md5int(microtime());
 		$this->getPageTreeAndUrls(
-			t3lib_div::intInRange($cliObj->cli_args['_DEFAULT'][1],0),
-			t3lib_div::intInRange($cliObj->cli_argValue('-d'),0,99),
+			tx_crawler_api::forceIntegerInRange($cliObj->cli_args['_DEFAULT'][1],0),
+			tx_crawler_api::forceIntegerInRange($cliObj->cli_argValue('-d'),0,99),
 			$this->getCurrentTime(),
-			t3lib_div::intInRange($cliObj->cli_isArg('-n') ? $cliObj->cli_argValue('-n') : 30,1,1000),
+			tx_crawler_api::forceIntegerInRange($cliObj->cli_isArg('-n') ? $cliObj->cli_argValue('-n') : 30,1,1000),
 			$cliObj->cli_argValue('-o')==='queue' || $cliObj->cli_argValue('-o')==='exec',
 			$cliObj->cli_argValue('-o')==='url',
 			t3lib_div::trimExplode(',',$cliObj->cli_argValue('-proc'),1),
@@ -1992,7 +2000,7 @@ class tx_crawler_lib {
 
 		$cliObj->cli_validateArgs();
 
-		$pageId = t3lib_div::intInRange($cliObj->cli_args['_DEFAULT'][1],0);
+		$pageId = tx_crawler_api::forceIntegerInRange($cliObj->cli_args['_DEFAULT'][1],0);
 
 		$fullFlush = ($pageId == 0);
 

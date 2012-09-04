@@ -77,7 +77,7 @@ class tx_crawler_scheduler_crawlMultiProcessAdditionalFieldProvider implements t
 	public function validateAdditionalFields(array &$submittedData, tx_scheduler_Module $schedulerModule) {
 		$isValid = false;
 
-		if (t3lib_div::intval_positive($submittedData['timeOut']) > 0) {
+		if (tx_crawler_api::convertToPositiveInteger($submittedData['timeOut']) > 0) {
 			$isValid = true;
 		} else {
 			$schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidTimeOut'), t3lib_FlashMessage::ERROR);
