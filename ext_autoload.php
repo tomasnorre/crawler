@@ -24,6 +24,7 @@ return array(
 	'tx_crawler_domain_queue_repository' => $extensionPath . 'domain/queue/class.tx_crawler_domain_queue_repository.php',
 	'tx_crawler_domain_reason' => $extensionPath . 'domain/reason/class.tx_crawler_domain_reason.php',
 	'tx_crawler_hooks_tsfe' => $extensionPath . 'hooks/class.tx_crawler_hooks_tsfe.php',
+	'tx_crawler_hooks_staticFileCacheCreateUri' => $extensionPath . 'hooks/class.tx_crawler_hooks_staticFileCacheCreateUri.php',
 	'tx_crawler_modfunc1' => $extensionPath . 'modfunc1/class.tx_crawler_modfunc1.php',
 	'tx_crawler_scheduler_im' => $extensionPath . 'scheduler/class.tx_crawler_scheduler_im.php',
 	'tx_crawler_scheduler_imadditionalfieldprovider' => $extensionPath . 'scheduler/class.tx_crawler_scheduler_imAdditionalFieldProvider.php',
