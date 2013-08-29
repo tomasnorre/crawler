@@ -27,16 +27,6 @@
  * @author	Kasper Skaarhoj <kasperYYYY@typo3.com>
  */
 
-require_once(PATH_t3lib.'class.t3lib_pagetree.php');
-require_once(PATH_t3lib.'class.t3lib_extobjbase.php');
-
-require_once(t3lib_extMgm::extPath('crawler').'class.tx_crawler_lib.php');
-require_once t3lib_extMgm::extPath('crawler').'domain/process/class.tx_crawler_domain_process_repository.php';
-require_once t3lib_extMgm::extPath('crawler').'domain/process/class.tx_crawler_domain_process_manager.php';
-require_once t3lib_extMgm::extPath('crawler').'view/process/class.tx_crawler_view_process_list.php';
-require_once t3lib_extMgm::extPath('crawler').'view/class.tx_crawler_view_pagination.php';
-
-
 /**
  * Crawler backend module
  *

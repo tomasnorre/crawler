@@ -22,9 +22,6 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-require_once t3lib_extMgm::extPath('crawler') . 'class.tx_crawler_lib.php';
-require_once t3lib_extMgm::extPath('crawler') . 'class.tx_crawler_api.php';
-
 /**
  * This test is used to test that the crawler api works correct
  *
@@ -43,7 +40,6 @@ require_once t3lib_extMgm::extPath('crawler') . 'class.tx_crawler_api.php';
  * @subpackage crawler
  * @access public
  */
-
 class tx_crawler_api_testcase extends tx_phpunit_database_testcase {
 	/**
 	 *
