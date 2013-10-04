@@ -38,7 +38,7 @@ class tx_crawler_scheduler_crawlMultiProcess extends tx_scheduler_Task {
 	/**
 	 * Function executed from the Scheduler.
 	 *
-	 * @return	void
+	 * @return bool
 	 */
 	public function execute() {
 
@@ -50,7 +50,7 @@ class tx_crawler_scheduler_crawlMultiProcess extends tx_scheduler_Task {
 		} catch (Exception $e) {
 		}
 
-		return true;
+		return TRUE;
 	}
 }
 

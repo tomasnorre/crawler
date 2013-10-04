@@ -28,11 +28,6 @@
  * @author Kasper Skaarhoej <kasperYYYY@typo3.com>
  */
 
-require_once(PATH_t3lib.'class.t3lib_page.php');
-require_once(PATH_t3lib.'class.t3lib_pagetree.php');
-require_once(PATH_t3lib.'class.t3lib_cli.php');
-require_once(PATH_t3lib.'class.t3lib_tsparser.php');
-
 /**
  * Cli basis:
  *

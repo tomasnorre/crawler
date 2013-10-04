@@ -27,14 +27,6 @@
  * @author Kasper Skaarhoej <kasperYYYY@typo3.com>
  */
 
-require_once(PATH_t3lib.'class.t3lib_page.php');
-require_once(PATH_t3lib.'class.t3lib_pagetree.php');
-require_once(PATH_t3lib.'class.t3lib_cli.php');
-require_once(PATH_t3lib.'class.t3lib_tsparser.php');
-
-require_once t3lib_extMgm::extPath('crawler') . 'domain/events/class.tx_crawler_domain_events_dispatcher.php';
-require_once t3lib_extMgm::extPath('crawler') . 'domain/reason/class.tx_crawler_domain_reason.php';
-
 /**
  * Crawler library
  *
@@ -268,8 +260,8 @@ class tx_crawler_lib {
 
 		// realurl support (thanks to Ingo Renner)
 		if (t3lib_extMgm::isLoaded('realurl') && $vv['subCfg']['realurl']) {
-			require_once(t3lib_extMgm::extPath('realurl') . 'class.tx_realurl.php');
-			/* @var $urlObj tx_realurl */
+
+			/** @var tx_realurl $urlObj */
 			$urlObj = t3lib_div::makeInstance('tx_realurl');
 			$urlObj->setConfig();
 
@@ -343,11 +335,11 @@ class tx_crawler_lib {
 					if (isset($duplicateTrack[$uKey])) {
 
 						//if the url key is registered just display it and do not resubmit is
-						$urlList .= '<em><span class="typo3-dimmed">'.htmlspecialchars($urlQuery).'</span></em><br/>';
+						$urlList = '<em><span class="typo3-dimmed">'.htmlspecialchars($urlQuery).'</span></em><br/>';
 
 					} else {
 
-						$urlList .= '['.date('d.m.y H:i', $schTime).'] '.htmlspecialchars($urlQuery);
+						$urlList = '['.date('d.m.y H:i', $schTime).'] '.htmlspecialchars($urlQuery);
 						$this->urlList[] = '['.date('d.m.y H:i', $schTime).'] '.$urlQuery;
 
 						$theUrl = ($vv['subCfg']['baseUrl'] ? $vv['subCfg']['baseUrl'] : t3lib_div::getIndpEnv('TYPO3_SITE_URL')) . $urlQuery;
@@ -391,7 +383,7 @@ class tx_crawler_lib {
 	function drawURLs_PIfilter($piString, array $incomingProcInstructions)	{
 
 		if (empty($incomingProcInstructions)) {
-			return true;
+			return TRUE;
 		}
 
 		foreach($incomingProcInstructions as $pi) {
@@ -624,7 +616,7 @@ class tx_crawler_lib {
 			t3lib_BEfunc::deleteClause('tx_crawler_configuration').' '.
 			t3lib_BEfunc::versioningPlaceholderClause('tx_crawler_configuration').' '
 		);
-		$rows = array();
+
 		while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 			$configurationsForBranch[] = $row['name'];
 		}
@@ -1140,7 +1132,7 @@ class tx_crawler_lib {
 	 *
 	 * @param	integer		Queue entry id
 	 * @param	boolean		If set, will process even if exec_time has been set!
-	 * @return	void
+	 * @return	int
 	 */
 	function readUrl($queueId, $force=FALSE)	{
 		$ret = 0;
@@ -1186,7 +1178,7 @@ class tx_crawler_lib {
 	 * Read URL for not-yet-inserted log-entry
 	 *
 	 * @param	integer		Queue field array,
-	 * @return	void
+	 * @return	string
 	 */
 	function readUrlFromArray($field_array)	{
 
@@ -1550,7 +1542,6 @@ class tx_crawler_lib {
 		global $BACK_PATH;
 		global $LANG;
 		if (!is_object($LANG)) {
-			require_once(t3lib_extMgm::extPath('lang', 'lang.php'));
 			$LANG = t3lib_div::makeInstance('language');
 			$LANG->init(0);
 		}
@@ -1575,7 +1566,7 @@ class tx_crawler_lib {
 			// Set root row:
 		$tree->tree[] = Array(
 			'row' => $pageinfo,
-			'HTML' => '<img' . t3lib_iconWorks::skinImg($GLOBALS['BACK_PATH'], t3lib_iconWorks::getIcon('pages', $this->pObj->pageinfo)) . ' align="top" class="c-recIcon" alt="" />'
+			'HTML' => t3lib_iconWorks::getSpriteIconForRecord('pages', $pageinfo)
 		);
 
 			// Get branch beneath:
@@ -1973,11 +1964,11 @@ class tx_crawler_lib {
 		}
 	}
 
-
 	/**
 	 * Function executed by crawler_im.php cli script.
 	 *
-	 * @return	void
+	 * @param array $altArgv
+	 * @return bool
 	 */
 	function CLI_main_flush($altArgv=array())	{
 
@@ -2018,7 +2009,7 @@ class tx_crawler_lib {
 				$cliObj->cli_help();
 				$result = false;
 		}
-		return $result!==false;
+		return $result !== false;
 	}
 
 	/**

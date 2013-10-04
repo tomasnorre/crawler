@@ -22,8 +22,6 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-require_once t3lib_extMgm::extPath('crawler') . 'class.tx_crawler_lib.php';
-
 /**
  * This test is used to test that the public interface of the library works correctly
  *
@@ -32,7 +30,6 @@ require_once t3lib_extMgm::extPath('crawler') . 'class.tx_crawler_lib.php';
  * @package TYPO3
  * @subpackage crawler
  */
-
 class tx_crawler_lib_testcase extends tx_phpunit_database_testcase {
 	/**
 	 * @var tx_crawler_lib
@@ -46,11 +43,11 @@ class tx_crawler_lib_testcase extends tx_phpunit_database_testcase {
 	*/
 	public function setUp() {
 		$this->createDatabase();
-		$db = $this->useTestDatabase();
+		$this->useTestDatabase();
 		$this->importStdDB();
 
 		// order of extension-loading is important !!!!
-		$this->importExtensions(array('cms', 'crawler'));
+		$this->importExtensions(array('cms','crawler'));
 
 		$this->crawlerLibrary = $this->getMock('tx_crawler_lib', array('buildRequestHeaderArray', 'executeShellCommand'));
 	}

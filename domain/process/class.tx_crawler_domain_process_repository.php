@@ -22,11 +22,6 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-require_once t3lib_extMgm::extPath('crawler') . 'domain/process/class.tx_crawler_domain_process.php';
-require_once t3lib_extMgm::extPath('crawler') . 'domain/process/class.tx_crawler_domain_process_collection.php';
-require_once t3lib_extMgm::extPath('crawler') . 'domain/lib/class.tx_crawler_domain_lib_abstract_repository.php';
-
-
 class tx_crawler_domain_process_repository extends tx_crawler_domain_lib_abstract_repository {
 
 	/**
@@ -85,7 +80,7 @@ class tx_crawler_domain_process_repository extends tx_crawler_domain_lib_abstrac
 	public function countActive() {
 		return $this->countByWhere('active=1 AND deleted=0');
 	}
-	
+
 	/**
 	 * Returns the number of processes that live longer than the given timestamp
 	 * @return int
