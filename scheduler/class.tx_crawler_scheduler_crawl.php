@@ -35,7 +35,7 @@ class tx_crawler_scheduler_crawl extends tx_scheduler_Task {
 	 * @var integer
 	 */
 	public $sleepTime;
-	
+
 	/**
 	 * @var integer
 	 */
@@ -49,7 +49,7 @@ class tx_crawler_scheduler_crawl extends tx_scheduler_Task {
 	/**
 	 * Function executed from the Scheduler.
 	 *
-	 * @return	void
+	 * @return bool
 	 */
 	public function execute() {
 		$this->setCliArguments();
@@ -57,7 +57,7 @@ class tx_crawler_scheduler_crawl extends tx_scheduler_Task {
 			/* @var $crawlerObj tx_crawler_lib */
 		$crawlerObj = t3lib_div::makeInstance('tx_crawler_lib');
 		$crawlerObj->CLI_main();
-		return true;
+		return TRUE;
 	}
 
 	/**

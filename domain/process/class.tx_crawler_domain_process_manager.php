@@ -35,27 +35,27 @@ class tx_crawler_domain_process_manager  {
 	 * @var integer
 	 */
 	private $countInARun;
-	
+
 	/**
 	 * @var integer
 	 */
 	private $processLimit;
-	
+
 	/**
 	 * @var $crawlerObj tx_crawler_lib
 	 */
 	private $crawlerObj;
-	
+
 	/**
 	 * @var $queueRepository tx_crawler_domain_queue_repository
 	 */
 	private $queueRepository;
-	
+
 	/**
 	 * @var tx_crawler_domain_process_repository
 	 */
 	private $processRepository;
-	
+
 	/**
 	 * the constructor
 	 */
@@ -67,10 +67,10 @@ class tx_crawler_domain_process_manager  {
 		$this->countInARun = intval($this->crawlerObj->extensionSettings['countInARun']);
 		$this->processLimit = intval($this->crawlerObj->extensionSettings['processLimit']);
 	}
-	
+
 	/**
-	 * starts multiple processes 
-	 * 
+	 * starts multiple processes
+	 *
 	 * @param integer $timeout
 	 * @param boolean $verbose
 	 */
@@ -112,33 +112,33 @@ class tx_crawler_domain_process_manager  {
 				}
 				$this->crawlerObj->CLI_releaseProcesses($timedOutProcesses->getProcessIds(),true);
 			}
-		}		
+		}
 		if ($currentPendingItems > 0 && $verbose) {
 			echo 'Stop with timeout'.chr(10);
 		}
 	}
-	
+
 	/**
 	 * Reports curent Status of queue
 	 */
 	protected function reportItemStatus() {
 		echo 'Pending:'.$this->queueRepository->countAllPendingItems().' / Assigned:'.$this->queueRepository->countAllAssignedPendingItems().chr(10);
 	}
-	
+
 	/**
 	 * according to the given count of pending items and the countInARun Setting this method
 	 * starts more crawling processes
 	 * @return boolean if processes are started
 	 */
 	private function startRequiredProcesses($verbose=TRUE) {
-		$ret=false;
+		$ret = FALSE;
 		$currentProcesses= $this->processRepository->countActive();
 		$availableProcessesCount = $this->processLimit-$currentProcesses;
 		$requiredProcessesCount = ceil($this->queueRepository->countAllUnassignedPendingItems() / $this->countInARun);
 		$startProcessCount = min(array($availableProcessesCount,$requiredProcessesCount));
 		if ($startProcessCount <= 0) {
-			return;
-		}		
+			return $ret;
+		}
 		if ($startProcessCount && $verbose) {
 			echo 'Start '.$startProcessCount.' new processes (Running:'.$currentProcesses.')';
 		}
@@ -147,16 +147,16 @@ class tx_crawler_domain_process_manager  {
 			if ($this->startProcess()) {
 				if ($verbose) {
 					echo '.';
-					$ret = true;
+					$ret = TRUE;
 				}
-			}		
+			}
 		}
 		if ($verbose) {
 			echo chr(10);
 		}
 		return $ret;
 	}
-		
+
 	/**
 	 * starts new process
 	 * @throws Exception if no crawlerprocess was started
@@ -176,7 +176,7 @@ class tx_crawler_domain_process_manager  {
 				sleep(1);
 			}
 			throw new Exception('Something went wrong: process did not appear within 10 seconds.');
-		}		
+		}
 	}
 
 	/**
@@ -191,5 +191,5 @@ class tx_crawler_domain_process_manager  {
 		$cliPart	 	= '/typo3/cli_dispatch.phpsh crawler';
 		return $phpPath.$pathToTypo3.$cliPart;
 	}
-	
+
 }

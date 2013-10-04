@@ -22,9 +22,6 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-require_once t3lib_extMgm::extPath('crawler') . 'class.tx_crawler_lib.php';
-require_once t3lib_extMgm::extPath('crawler') . 'class.tx_crawler_api.php';
-
 /**
  * This test is used to test that the crawler api works correct
  *
@@ -43,7 +40,6 @@ require_once t3lib_extMgm::extPath('crawler') . 'class.tx_crawler_api.php';
  * @subpackage crawler
  * @access public
  */
-
 class tx_crawler_api_testcase extends tx_phpunit_database_testcase {
 	/**
 	 *
@@ -57,11 +53,11 @@ class tx_crawler_api_testcase extends tx_phpunit_database_testcase {
 	*/
 	function setUp() {
 		$this->createDatabase();
-		$db = $this->useTestDatabase();
+		$this->useTestDatabase();
 		$this->importStdDB();
 
 		// order of extension-loading is important !!!!
-		$this->importExtensions(array('cms','crawler'));
+		$this->importExtensions(array('cms', 'core', 'crawler', 'frontend', 'workspaces'));
 
 		//restore old rootline
 		$this->oldRootline =   $GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields'];
@@ -188,8 +184,9 @@ class tx_crawler_api_testcase extends tx_phpunit_database_testcase {
 	 */
 	protected function getMockedCrawlerAPI($currentTime) {
 			//created mocked crawler lib which returns a faked timestamp
-		$crawler_lib = $this->getMock('tx_crawler_lib',array('getCurrentTime'));
+		$crawler_lib = $this->getMock('tx_crawler_lib', array('getCurrentTime', 'drawURLs_PIfilter'));
 		$crawler_lib->expects($this->any())->method("getCurrentTime")->will($this->returnValue($currentTime));
+		$crawler_lib->expects($this->any())->method("drawURLs_PIfilter")->will($this->returnValue(TRUE));
 
 		/* @var $crawler_api tx_crawler_api */
 		//create mocked api

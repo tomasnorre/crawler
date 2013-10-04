@@ -22,9 +22,6 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-require_once t3lib_extMgm::extPath('crawler') . 'domain/queue/class.tx_crawler_domain_queue_entry.php';
-require_once t3lib_extMgm::extPath('crawler') . 'domain/lib/class.tx_crawler_domain_lib_abstract_repository.php';
-
 class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_repository {
 
 
@@ -120,7 +117,7 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
 	public function countAllAssignedPendingItems() {
 		return $this->countItemsByWhereClause("exec_time = 0 AND scheduled < ".time()." AND process_id != ''");
 	}
-	
+
 	/**
 	 * This method can be used to count all queue entrys which are
 	 * scheduled for now or a earler date and are not assigned to a process.
@@ -240,10 +237,10 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
 		}
 		return $rows;
 	}
-	
+
 	/**
 	 * Get the last processed entries
-	 * 
+	 *
 	 * @param string $selectFields
 	 * @param int $limit
 	 * @return array

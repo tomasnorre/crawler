@@ -32,44 +32,44 @@
 class tx_crawler_scheduler_im extends tx_scheduler_Task {
 
 	/**
-	 * Define the current mode to process the crawler 
+	 * Define the current mode to process the crawler
 	 *
 	 * @var string
-	 */ 
+	 */
 	const MODE = 'queue';
 
 	/**
 	 * Depth to run the crawler
-	 * 
+	 *
 	 * @var integer
 	 */
 	public $depth;
 
 	/**
 	 * Configuration to run (comma seperated list)
-	 * 
+	 *
 	 * @var string
 	 */
 	public $configuration;
-	
+
 	/**
 	 * Function executed from the Scheduler.
 	 *
-	 * @return	void
+	 * @return bool
 	 */
 	public function execute() {
-		$this->setCliArguments();		
+		$this->setCliArguments();
 
 			/* @var $crawlerObj tx_crawler_lib */
 		$crawlerObj = t3lib_div::makeInstance('tx_crawler_lib');
 		$crawlerObj->CLI_main_im();
-		return true;
+		return TRUE;
 	}
 
 	/**
 	 * Simulate cli call with setting the required options to the $_SERVER['argv']
-	 * 
-	 * @access protected 
+	 *
+	 * @access protected
 	 * @return void
 	 */
 	protected function setCliArguments() {
@@ -77,13 +77,13 @@ class tx_crawler_scheduler_im extends tx_scheduler_Task {
 		if (is_null($this->startPage)) {
 			$this->startPage = 0;
 		}
-		
+
 		$_SERVER['argv'] = array($_SERVER['argv'][0], 'tx_crawler_cli_im', $this->startPage,'-ss', '-d', $this->depth, '-o', self::MODE, '-conf', implode(',', $this->configuration));
 	}
 
-	
+
 	/**
-	 * Retrieve some details about current scheduler task 
+	 * Retrieve some details about current scheduler task
 	 * to make the list view more useful.
 	 *
 	 * @return string

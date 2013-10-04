@@ -48,7 +48,7 @@ class tx_crawler_api {
 	 * @var tx_crawler_domain_queue_repository queue repository
 	 */
 	protected $queueRepository;
-	
+
 	/**
 	 * @var $allowedConfigrations array
 	 */
@@ -76,11 +76,11 @@ class tx_crawler_api {
 	public function overwriteSetId($id) {
 		$this->findCrawler()->setID = intval($id);
 	}
-	
+
 	/**
 	 * This method is used to limit the configuration selection to
-	 * a set of configurations. 
-	 * 
+	 * a set of configurations.
+	 *
 	 * @param array $allowedConfigurations
 	 */
 	public function setAllowedConfigurations(array $allowedConfigurations){
@@ -126,9 +126,9 @@ class tx_crawler_api {
 	}
 
 	/**
-	 * This method is used to limit the processing instructions to the processing instructions 
+	 * This method is used to limit the processing instructions to the processing instructions
 	 * that are allowed.
-	 * 
+	 *
 	 * @return array
 	 */
 	protected function filterUnallowedConfigurations($configurations) {
@@ -139,11 +139,11 @@ class tx_crawler_api {
 					unset($configurations[$confKey]);
 				}
 			}
-		}		
-		
+		}
+
 		return $configurations;
 	}
-	
+
 	/**
 	 * Adds a page to the crawlerqueue by uid and sets a
 	 * timestamp when the page should be crawled.
@@ -162,7 +162,7 @@ class tx_crawler_api {
 		$configurations 	= $this->filterUnallowedConfigurations($configurations);
 		$downloadUrls		= array();
 		$duplicateTrack		= array();
-		
+
 		if (is_array($configurations)) {
 			foreach ($configurations as  $cv) {
 				//enable inserting of entries
@@ -421,7 +421,7 @@ class tx_crawler_api {
 		$processRepository = new tx_crawler_domain_process_repository();
 		return $processRepository->countActive();
 	}
-	
+
 	/**
 	 * Get last processed entries
 	 *

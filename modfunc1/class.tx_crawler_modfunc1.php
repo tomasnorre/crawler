@@ -27,16 +27,6 @@
  * @author	Kasper Skaarhoj <kasperYYYY@typo3.com>
  */
 
-require_once(PATH_t3lib.'class.t3lib_pagetree.php');
-require_once(PATH_t3lib.'class.t3lib_extobjbase.php');
-
-require_once(t3lib_extMgm::extPath('crawler').'class.tx_crawler_lib.php');
-require_once t3lib_extMgm::extPath('crawler').'domain/process/class.tx_crawler_domain_process_repository.php';
-require_once t3lib_extMgm::extPath('crawler').'domain/process/class.tx_crawler_domain_process_manager.php';
-require_once t3lib_extMgm::extPath('crawler').'view/process/class.tx_crawler_view_process_list.php';
-require_once t3lib_extMgm::extPath('crawler').'view/class.tx_crawler_view_pagination.php';
-
-
 /**
  * Crawler backend module
  *
@@ -88,7 +78,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 * @var boolean
 	 */
 	protected $isErrorDetected = false;
-	
+
 	/**
 	 * the constructor
 	 */
@@ -579,7 +569,8 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 					$tree->init('AND '.$perms_clause);
 
 						// Set root row:
-					$HTML = '<img src="'.$BACK_PATH.t3lib_iconWorks::getIcon('pages',$this->pObj->pageinfo).'" width="18" height="16" align="top" class="c-recIcon" alt="" />';
+					$HTML = t3lib_iconWorks::getSpriteIconForRecord('pages', $this->pObj->pageinfo);
+					$HTML = t3lib_iconWorks::getSpriteIconForRecord('pages', $this->pObj->pageinfo);
 					$tree->tree[] = Array(
 						'row' => $this->pObj->pageinfo,
 						'HTML' => $HTML
@@ -595,7 +586,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 					foreach($tree->tree as $data)	{
 						$code .= $this->drawLog_addRows(
 									$data['row'],
-									$data['HTML'].t3lib_BEfunc::getRecordTitle('pages',$data['row'],TRUE),
+									$data['HTML'] . t3lib_BEfunc::getRecordTitle('pages',$data['row'],TRUE),
 									intval($this->pObj->MOD_SETTINGS['itemsPerPage'])
 								);
 						if (++$count == 1000) {
@@ -943,7 +934,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 *
 	 * @author Timo Schmidt
 	 * @param void
-	 * @return void
+	 * @return string
 	 */
 	protected function drawProcessOverviewAction(){
 
@@ -1029,7 +1020,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	}
 
 	/**
-	 * Indicate that the required PHP method "popen" is 
+	 * Indicate that the required PHP method "popen" is
 	 * available in the system.
 	 *
 	 * @access protected
@@ -1042,7 +1033,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	}
 
 	/**
-	 * Indicate that the required be_user "_cli_crawler" is 
+	 * Indicate that the required be_user "_cli_crawler" is
 	 * global available in the system.
 	 *
 	 * @access protected
@@ -1056,12 +1047,12 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 
 		if (is_array($userArray))
 			$isAvailable = true;
-	
+
 		return $isAvailable;
 	}
 
 	/**
-	 * Indicate that the required be_user "_cli_crawler" is 
+	 * Indicate that the required be_user "_cli_crawler" is
 	 * has no admin rights.
 	 *
 	 * @access protected
@@ -1075,7 +1066,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 
 		if (is_array($userArray) && $userArray[0]['admin'] == 0)
 			$isAvailable = true;
-	
+
 		return $isAvailable;
 	}
 
@@ -1109,7 +1100,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	}
 
 
-	
+
 
 	/**
 	 * Returns the singleton instance of the crawler.
