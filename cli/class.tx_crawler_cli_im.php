@@ -42,7 +42,7 @@ class tx_crawler_cli_im extends t3lib_cli {
 	 *
 	 * @return	void
 	 */
-	function tx_crawler_cli_im()	{
+	function tx_crawler_cli_im() {
 
 		// Running parent class constructor
 		if (version_compare(TYPO3_version, '4.6.0', '>=')) {

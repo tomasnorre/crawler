@@ -42,7 +42,7 @@ class tx_crawler_cli extends t3lib_cli {
 	 *
 	 * @return	void
 	 */
-	function tx_crawler_cli()	{
+	function tx_crawler_cli() {
 
 		// Running parent class constructor
 		if (version_compare(TYPO3_version, '4.6.0', '>=')) {
