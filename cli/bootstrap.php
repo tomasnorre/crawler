@@ -57,7 +57,6 @@ $_COOKIE = array();
 $typo3SitePath = $_SERVER['argv'][1];
 
 	// faking the environment
-$_SERVER['ORIG_SCRIPT_FILENAME'] = '';
 $_SERVER['DOCUMENT_ROOT'] = preg_replace('#' . preg_quote($typo3SitePath, '#') . '$#', '', $typo3Root);
 $_SERVER['HTTP_USER_AGENT'] = 'CLI Mode';
 $_SERVER['HTTP_HOST'] = $_SERVER['SERVER_NAME'] = $urlParts['host'];
