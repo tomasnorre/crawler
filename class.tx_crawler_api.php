@@ -279,19 +279,20 @@ class tx_crawler_api {
 	 * at what time the scheduled crawl has been executed. The array also contains items that are
 	 * scheduled but have note been crawled yet.
 	 *
-	 * @param int uid of the page
+	 * @param int $uid uid of the page
+	 * @param bool $limit
 	 * @return array array with the crawlhistory of a page => 0 : scheduled time , 1 : execuded_time, 2 : set_id
 	 */
-	public function getCrawlHistoryForPage($uid,$limit=false) {
+	public function getCrawlHistoryForPage($uid, $limit = FALSE) {
 		$uid = intval($uid);
-		$limit = mysql_real_escape_string($limit);
+		$limit = $GLOBALS['TYPO3_DB']->fullQuoteStr($limit, 'tx_crawler_queue');
 
 		$query = 'scheduled, exec_time, set_id';
-		$where = ' page_id = '.$uid;
+		$where = ' page_id = ' . $uid;
 
-		$limit_query = ($limit) ? $limit : null;
+		$limit_query = ($limit) ? $limit : NULL;
 
-		$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($query, 'tx_crawler_queue', $where, null, null, $limit_query);
+		$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($query, 'tx_crawler_queue', $where, NULL, NULL, $limit_query);
 
 		return $rows;
 	}
