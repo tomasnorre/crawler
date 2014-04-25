@@ -66,6 +66,11 @@ class tx_crawler_lib {
 	 */
 	protected $accessMode;
 
+	/**
+	 * @var t3lib_db
+	 */
+	private $db;
+
 	const CLI_STATUS_NOTHING_PROCCESSED = 0;
 	const CLI_STATUS_REMAIN = 1;	//queue not empty
 	const CLI_STATUS_PROCESSED = 2;	//(some) queue items where processed
@@ -97,19 +102,20 @@ class tx_crawler_lib {
 	 ************************************/
 
 	public function __construct() {
-
+		$this->db = $GLOBALS['TYPO3_DB'];
 		$this->processFilename = PATH_site.'typo3temp/tx_crawler.proc';
 
 		$settings = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['crawler']);
 		$settings = is_array($settings) ? $settings : array();
 
-		// read ext_em_conf_template settings and set
+			// read ext_em_conf_template settings and set
 		$this->setExtensionSettings($settings);
 
-		// set defaults:
+			// set defaults:
 		if (tx_crawler_api::convertToPositiveInteger($this->extensionSettings['countInARun']) == 0) {
 			$this->extensionSettings['countInARun'] = 100;
 		}
+
 		$this->extensionSettings['processLimit'] = tx_crawler_api::forceIntegerInRange($this->extensionSettings['processLimit'],1,99,1);
 	}
 
@@ -135,7 +141,7 @@ class tx_crawler_lib {
 		$skipPage = false;
 		$skipMessage = 'Skipped'; // message will be overwritten later
 
-		// if page is hidden
+			// if page is hidden
 		if (!$this->extensionSettings['crawlHiddenPages']) {
 			if ($pageRow['hidden']) {
 				$skipPage = true;
@@ -163,7 +169,7 @@ class tx_crawler_lib {
 		}
 
 		if (!$skipPage) {
-			// veto hook
+				// veto hook
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pageVeto'])) {
 				foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pageVeto'] as $key => $func)	{
 					$params = array(
@@ -212,21 +218,18 @@ class tx_crawler_lib {
 	}
 
 	/**
-	 * This method is used to count if there are ANY unporocessed queue entrys
-	 * of a given page_id and the configuration wich matches a given hash.
+	 * This method is used to count if there are ANY unprocessed queue entries
+	 * of a given page_id and the configuration which matches a given hash.
 	 * If there if none, we can skip an inner detail check
 	 *
-	 * @param int $uid
-	 * @param string $configurationHash
+	 * @param  int    $uid
+	 * @param  string $configurationHash
 	 * @return boolean
 	 */
-	protected function noUnprocessedQueueEntriesForPageWithConfigurationHashExist($uid,$configurationHash){
-		/* @var $db t3lib_Db*/
-		$db 				= $GLOBALS['TYPO3_DB'];
-		$uid 				= intval($uid);
-		$configurationHash  = $db->fullQuoteStr($configurationHash,'tx_crawler_queue');
-		$res 				= $db->exec_SELECTquery('count(*) as anz','tx_crawler_queue',"page_id=".intval($uid)." AND configuration_hash=".$configurationHash." AND exec_time=0");
-		$row				= $db->sql_fetch_assoc($res);
+	protected function noUnprocessedQueueEntriesForPageWithConfigurationHashExist($uid,$configurationHash) {
+		$configurationHash = $this->db->fullQuoteStr($configurationHash,'tx_crawler_queue');
+		$res = $this->db->exec_SELECTquery('count(*) as anz','tx_crawler_queue',"page_id=".intval($uid)." AND configuration_hash=".$configurationHash." AND exec_time=0");
+		$row = $this->db->sql_fetch_assoc($res);
 
 		return ($row['anz'] == 0);
 	}
@@ -374,14 +377,13 @@ class tx_crawler_lib {
 	}
 
 	/**
-	 * Returns true if input processing instruction is amoung registered ones.
+	 * Returns true if input processing instruction is among registered ones.
 	 *
-	 * @param	string		PI to test
-	 * @param	array		Processing instructions
-	 * @return	boolean		TRUE if found
+	 * @param  string $piString                     PI to test
+	 * @param  array  $incomingProcInstructions     Processing instructions
+	 * @return boolean                              TRUE if found
 	 */
-	function drawURLs_PIfilter($piString, array $incomingProcInstructions)	{
-
+	function drawURLs_PIfilter($piString, array $incomingProcInstructions) {
 		if (empty($incomingProcInstructions)) {
 			return TRUE;
 		}
@@ -420,8 +422,8 @@ class tx_crawler_lib {
 	 * This methods returns an array of configurations.
 	 * And no urls!
 	 *
-	 * @param	integer		Page ID
-	 * @return	array		configurations from pagets and configuration records
+	 * @param  integer $id  Page ID
+	 * @return array        Configurations from pages and configuration records
 	 */
 	protected function getUrlsForPageId($id)	{
 
@@ -479,7 +481,7 @@ class tx_crawler_lib {
 		}
 
 		/**
-		 * Get configutation from tx_crawler_configuration records
+		 * Get configuration from tx_crawler_configuration records
 		 */
 
 			// get records along the rootline
@@ -556,21 +558,24 @@ class tx_crawler_lib {
 	}
 
 	/**
-	 * checks if a domain record exist and returns a baseurl based on the record. If not the given baseUrl string is used.
-	 * @param string $baseUrl
-	 * @param integer $sysDomainUid
+	 * Checks if a domain record exist and returns the base-url based on the record. If not the given baseUrl string is used.
+	 *
+	 * @param  string   $baseUrl
+	 * @param  integer  $sysDomainUid
+	 * @return string
 	 */
-	protected function getBaseUrlForConfigurationRecord($baseUrl,$sysDomainUid) {
+	protected function getBaseUrlForConfigurationRecord($baseUrl, $sysDomainUid) {
 		$sysDomainUid = intval($sysDomainUid);
+
 		if ($sysDomainUid > 0) {
-			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+			$res = $this->db->exec_SELECTquery(
 				'*',
 				'sys_domain',
 				'uid = '.$sysDomainUid .
 				t3lib_BEfunc::BEenableFields('sys_domain') .
 				t3lib_BEfunc::deleteClause('sys_domain')
 			);
-			$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+			$row = $this->db->sql_fetch_assoc($res);
 			if ($row['domainName'] != '') {
 				return 'http://'.$row['domainName'];
 			}
@@ -608,7 +613,7 @@ class tx_crawler_lib {
 			$pids[] = $node['row']['uid'];
 		}
 
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+		$res = $this->db->exec_SELECTquery(
 			'*',
 			'tx_crawler_configuration',
 			'pid IN ('.implode(',', $pids).') '.
@@ -617,10 +622,10 @@ class tx_crawler_lib {
 			t3lib_BEfunc::versioningPlaceholderClause('tx_crawler_configuration').' '
 		);
 
-		while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+		while($row = $this->db->sql_fetch_assoc($res)) {
 			$configurationsForBranch[] = $row['name'];
 		}
-		$GLOBALS['TYPO3_DB']->sql_free_result($res);
+		$this->db->sql_free_result($res);
 		return $configurationsForBranch;
 	}
 
@@ -629,9 +634,9 @@ class tx_crawler_lib {
 	 * (e.g. get the group list of the current logged in user from $GLOBALS['TSFE']->gr_list)
 	 *
 	 * @see	t3lib_pageSelect::getMultipleGroupsWhereClause()
-	 * @param string comma-separated list of (fe_)group uids from a user
-	 * @param string comma-separated list of (fe_)group uids of the item to access
-	 * @return bool true if at least one of the users group uids is in the access list or the access list is empty
+	 * @param  string $groupList    Comma-separated list of (fe_)group UIDs from a user
+	 * @param  string $accessList   Comma-separated list of (fe_)group UIDs of the item to access
+	 * @return bool                 TRUE if at least one of the users group UIDs is in the access list or the access list is empty
 	 * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
 	 * @since 2009-01-19
 	 */
@@ -650,14 +655,14 @@ class tx_crawler_lib {
 	/**
 	 * Parse GET vars of input Query into array with key=>value pairs
 	 *
-	 * @param	string		Input query string
-	 * @return	array		Keys are Get var names, values are the values of the GET vars.
+	 * @param  string  $inputQuery  Input query string
+	 * @return array                Keys are Get var names, values are the values of the GET vars.
 	 */
-	function parseParams($inputQuery)	{
-
+	function parseParams($inputQuery) {
 			// Extract all GET parameters into an ARRAY:
 		$paramKeyValues = array();
 		$GETparams = explode('&', $inputQuery);
+
 		foreach($GETparams as $paramAndValue)	{
 			list($p,$v) = explode('=', $paramAndValue, 2);
 			if (strlen($p))		{
@@ -744,13 +749,13 @@ class tx_crawler_lib {
 								$transOrigPointerField = $TCA[$subpartParams['_TABLE']]['ctrl']['transOrigPointerField'];
 
 								if ($subpartParams['_ENABLELANG'] && $transOrigPointerField) {
-									$andWhereLanguage = ' AND ' . $GLOBALS['TYPO3_DB']->quoteStr($transOrigPointerField, $subpartParams['_TABLE']) .' <= 0 ';
+									$andWhereLanguage = ' AND ' . $this->db->quoteStr($transOrigPointerField, $subpartParams['_TABLE']) .' <= 0 ';
 								}
 
-								$where = $GLOBALS['TYPO3_DB']->quoteStr($pidField, $subpartParams['_TABLE']) .'='.intval($lookUpPid) . ' ' .
+								$where = $this->db->quoteStr($pidField, $subpartParams['_TABLE']) .'='.intval($lookUpPid) . ' ' .
 									$andWhereLanguage . $where;
 
-								$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+								$rows = $this->db->exec_SELECTgetRows(
 									$fieldName,
 									$subpartParams['_TABLE'] . $addTable,
 									$where . t3lib_BEfunc::deleteClause($subpartParams['_TABLE']),
@@ -799,14 +804,13 @@ class tx_crawler_lib {
 	 * Compiling URLs from parameter array (output of expandParameters())
 	 * The number of URLs will be the multiplication of the number of parameter values for each key
 	 *
-	 * @param	array		output of expandParameters(): Array with keys (GET var names) and for each an array of values
-	 * @param	array		URLs accumulated in this array (for recursion)
-	 * @return	array		URLs accumulated, if number of urls exceed 'maxCompileUrls' it will return false as an error!
+	 * @param  array  $paramArray   Output of expandParameters(): Array with keys (GET var names) and for each an array of values
+	 * @param  array  $urls         URLs accumulated in this array (for recursion)
+	 * @return array                URLs accumulated, if number of urls exceed 'maxCompileUrls' it will return false as an error!
 	 */
-	function compileUrls($paramArray, $urls=array())	{
+	function compileUrls($paramArray, $urls = array()) {
 
-		if (count($paramArray) && is_array($urls))	{
-
+		if (count($paramArray) && is_array($urls)) {
 				// shift first off stack:
 			reset($paramArray);
 			$varName = key($paramArray);
@@ -814,11 +818,11 @@ class tx_crawler_lib {
 
 				// Traverse value set:
 			$newUrls = array();
-			foreach($urls as $url)	{
-				foreach($valueSet as $val)	{
+			foreach($urls as $url) {
+				foreach($valueSet as $val) {
 					$newUrls[] = $url.(strcmp($val,'') ? '&'.rawurlencode($varName).'='.rawurlencode($val) : '');
 
-					if (count($newUrls) >  tx_crawler_api::forceIntegerInRange($this->extensionSettings['maxCompileUrls'], 1, 1000000000, 10000))	{
+					if (count($newUrls) >  tx_crawler_api::forceIntegerInRange($this->extensionSettings['maxCompileUrls'], 1, 1000000000, 10000)) {
 						break;
 						break;
 					}
@@ -874,7 +878,7 @@ class tx_crawler_lib {
 			$this->flushQueue( ($doFullFlush?'1=1':('page_id='.intval($id))) .$addWhere);
 			return array();
 		} else {
-			return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*',
+			return $this->db->exec_SELECTgetRows('*',
 				'tx_crawler_queue',
 				'page_id=' . intval($id) . $addWhere, '', 'scheduled DESC',
 				(intval($itemsPerPage)>0 ? intval($itemsPerPage) : ''));
@@ -908,7 +912,7 @@ class tx_crawler_lib {
 			$this->flushQueue($doFullFlush?'':('set_id='.intval($set_id).$addWhere));
 			return array();
 		} else {
-			return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*',
+			return $this->db->exec_SELECTgetRows('*',
 				'tx_crawler_queue',
 				'set_id='.intval($set_id).$addWhere,'','scheduled DESC',
 				(intval($itemsPerPage)>0 ? intval($itemsPerPage) : ''));
@@ -926,13 +930,13 @@ class tx_crawler_lib {
 		$realWhere = strlen($where)>0?$where:'1=1';
 
 		if(tx_crawler_domain_events_dispatcher::getInstance()->hasObserver('queueEntryFlush')) {
-			$groups = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('DISTINCT set_id','tx_crawler_queue',$realWhere);
+			$groups = $this->db->exec_SELECTgetRows('DISTINCT set_id','tx_crawler_queue',$realWhere);
 			foreach($groups as $group) {
-				tx_crawler_domain_events_dispatcher::getInstance()->post('queueEntryFlush',$group['set_id'], $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid, set_id','tx_crawler_queue',$realWhere.' AND set_id="'.$group['set_id'].'"'));
+				tx_crawler_domain_events_dispatcher::getInstance()->post('queueEntryFlush',$group['set_id'], $this->db->exec_SELECTgetRows('uid, set_id','tx_crawler_queue',$realWhere.' AND set_id="'.$group['set_id'].'"'));
 			}
 		}
 
-		$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_crawler_queue', $realWhere);
+		$this->db->exec_DELETEquery('tx_crawler_queue', $realWhere);
 	}
 
 	/**
@@ -945,7 +949,7 @@ class tx_crawler_lib {
 	 * @param	integer		Time at which to activate
 	 * @return	void
 	 */
-	function addQueueEntry_callBack($setId,$params,$callBack,$page_id=0,$schedule=0)	{
+	function addQueueEntry_callBack($setId,$params,$callBack,$page_id=0,$schedule=0) {
 
 		if (!is_array($params))	$params = array();
 		$params['_CALLBACKOBJ'] = $callBack;
@@ -960,7 +964,7 @@ class tx_crawler_lib {
 			'result_data' => '',
 		);
 
-		$GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_crawler_queue',$fieldArray);
+		$this->db->exec_INSERTquery('tx_crawler_queue',$fieldArray);
 	}
 
 
@@ -1044,8 +1048,8 @@ class tx_crawler_lib {
 			}
 
 			if (count($rows) == 0) {
-				$GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_crawler_queue', $fieldArray);
-				$uid = $GLOBALS['TYPO3_DB']->sql_insert_id();
+				$this->db->exec_INSERTquery('tx_crawler_queue', $fieldArray);
+				$uid = $this->db->sql_insert_id();
 				$rows[] = $uid;
 				$urlAdded = true;
 				tx_crawler_domain_events_dispatcher::getInstance()->post('urlAddedToQueue',$this->setID,array('uid' => $uid, 'fieldArray' => $fieldArray));
@@ -1088,14 +1092,14 @@ class tx_crawler_lib {
 		}
 
 		if(!empty($where)){
-			$result = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+			$result = $this->db->exec_SELECTgetRows(
 				'qid',
 				'tx_crawler_queue',
 				$where.
 				' AND NOT exec_time' .
 				' AND NOT process_id '.
 				' AND page_id='.intval($fieldArray['page_id']).
-				' AND parameters_hash = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($fieldArray['parameters_hash'], 'tx_crawler_queue')
+				' AND parameters_hash = ' . $this->db->fullQuoteStr($fieldArray['parameters_hash'], 'tx_crawler_queue')
 			);
 
 			if (is_array($result)) {
@@ -1138,7 +1142,7 @@ class tx_crawler_lib {
 		$ret = 0;
 		if ($this->debugMode) t3lib_div::devlog('crawler-readurl start '.microtime(true),__FUNCTION__);
 			// Get entry:
-		list($queueRec) = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*','tx_crawler_queue','qid='.intval($queueId).($force ? '' : ' AND exec_time=0 AND process_scheduled > 0'));
+		list($queueRec) = $this->db->exec_SELECTgetRows('*','tx_crawler_queue','qid='.intval($queueId).($force ? '' : ' AND exec_time=0 AND process_scheduled > 0'));
 
 		if (is_array($queueRec))	{
 				// Set exec_time to lock record:
@@ -1148,7 +1152,7 @@ class tx_crawler_lib {
 					//if mulitprocessing is used we need to store the id of the process which has handled this entry
 				$field_array['process_id_completed'] = $this->processID;
 			}
-			$GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_crawler_queue','qid='.intval($queueId), $field_array);
+			$this->db->exec_UPDATEquery('tx_crawler_queue','qid='.intval($queueId), $field_array);
 
 			$result = $this->readUrl_exec($queueRec);
 			$resultData = unserialize($result['content']);
@@ -1168,7 +1172,7 @@ class tx_crawler_lib {
 
 				// Set result in log which also denotes the end of the processing of this entry.
 			$field_array = array('result_data' => serialize($result));
-			$GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_crawler_queue','qid='.intval($queueId), $field_array);
+			$this->db->exec_UPDATEquery('tx_crawler_queue','qid='.intval($queueId), $field_array);
 		}
 		if ($this->debugMode) t3lib_div::devlog('crawler-readurl stop '.microtime(true),__FUNCTION__);
 		return $ret;
@@ -1184,14 +1188,14 @@ class tx_crawler_lib {
 
 			// Set exec_time to lock record:
 		$field_array['exec_time'] = $this->getCurrentTime();
-		$GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_crawler_queue', $field_array);
-		$queueId = $field_array['qid'] = $GLOBALS['TYPO3_DB']->sql_insert_id();
+		$this->db->exec_INSERTquery('tx_crawler_queue', $field_array);
+		$queueId = $field_array['qid'] = $this->db->sql_insert_id();
 
 		$result = $this->readUrl_exec($field_array);
 
 			// Set result in log which also denotes the end of the processing of this entry.
 		$field_array = array('result_data' => serialize($result));
-		$GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_crawler_queue','qid='.intval($queueId), $field_array);
+		$this->db->exec_UPDATEquery('tx_crawler_queue','qid='.intval($queueId), $field_array);
 
 		return $result;
 	}
@@ -1233,63 +1237,42 @@ class tx_crawler_lib {
 	}
 
 	/**
-	 * Read the input URL by fsocket
+	 * Gets the content of a URL.
 	 *
-	 * @param	string		URL to read
-	 * @param	string		Crawler ID string (qid + hash to verify)
-	 * @param	integer		Timeout time
-	 * @param	integer		Recursion limiter for 302 redirects
-	 * @return	array		Array with content
+	 * @param  string   $originalUrl    URL to read
+	 * @param  string   $crawlerId      Crawler ID string (qid + hash to verify)
+	 * @param  integer  $timeout        Timeout time
+	 * @param  integer  $recursion      Recursion limiter for 302 redirects
+	 * @return array                    Array with content
 	 */
-	function requestUrl($originalUrl, $crawlerId, $timeout=2, $recursion=10)	{
+	function requestUrl($originalUrl, $crawlerId, $timeout=2, $recursion=10) {
 
-		if(!$recursion) return false;
+		if (!$recursion) return false;
+
 			// Parse URL, checking for scheme:
 		$url = parse_url($originalUrl);
 
-		if($url === FALSE) {
+		if ($url === FALSE) {
 			if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Could not parse_url() for string "%s"', $url), 'crawler', 4, array('crawlerId' => $crawlerId));
 			return FALSE;
 		}
 
-		if(!in_array($url['scheme'],array('','http','https'))) {
+		if (!in_array($url['scheme'], array('','http','https'))) {
 			if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Scheme does not match for url "%s"', $url), 'crawler', 4, array('crawlerId' => $crawlerId));
 			return FALSE;
 		}
 
-		$reqHeaders = $this->buildRequestHeaderArray($url, $crawlerId);
-
-
 			// direct request
 		if ($this->extensionSettings['makeDirectRequests']) {
-			$cmd = escapeshellcmd($this->extensionSettings['phpPath']);
-			$cmd .= ' ';
-			$cmd .= escapeshellarg(t3lib_extMgm::extPath('crawler').'cli/bootstrap.php');
-			$cmd .= ' ';
-			$cmd .= escapeshellarg($this->getFrontendBasePath());
-			$cmd .= ' ';
-			$cmd .= escapeshellarg($originalUrl);
-			$cmd .= ' ';
-			$cmd .= escapeshellarg(base64_encode(serialize($reqHeaders)));
-
-			$startTime = microtime(true);
-			$content = $this->executeShellCommand($cmd);
-			$time = microtime(true) - $startTime;
-
-			$this->log($originalUrl . $time);
-
-			$result = array(
-				'request' => implode("\r\n",$reqHeaders)."\r\n\r\n",
-				'headers' => '',
-				'content' => $content
-			);
-
+			$result = $this->sendDirectRequest($originalUrl, $crawlerId);
 			return $result;
 		}
 
+		$reqHeaders = $this->buildRequestHeaderArray($url, $crawlerId);
 
 			// thanks to Pierrick Caillon for adding proxy support
 		$rurl = $url;
+
 		if ($GLOBALS['TYPO3_CONF_VARS']['SYS']['curlUse'] && $GLOBALS['TYPO3_CONF_VARS']['SYS']['curlProxyServer']) {
 			$rurl = parse_url($GLOBALS['TYPO3_CONF_VARS']['SYS']['curlProxyServer']);
 			$url['path'] = $url['scheme'] . '://' . $url['host'] . ($url['port'] > 0 ? ':' . $url['port'] : '') . $url['path'];
@@ -1297,6 +1280,7 @@ class tx_crawler_lib {
 		}
 
 		$host = $rurl['host'];
+
 		if ($url['scheme'] == 'https') {
 			$host = 'ssl://' . $host;
 			$port = ($rurl['port'] > 0) ? $rurl['port'] : 443;
@@ -1307,46 +1291,19 @@ class tx_crawler_lib {
 		$startTime = microtime(true);
 		$fp = fsockopen($host, $port, $errno, $errstr, $timeout);
 
-		if (!$fp)	{
+		if (!$fp) {
 			if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Error while opening "%s"', $url), 'crawler', 4, array('crawlerId' => $crawlerId));
 			return FALSE;
-		} else {	// Requesting...:
-
+		} else {
 				// Request message:
 			$msg = implode("\r\n",$reqHeaders)."\r\n\r\n";
-
 			fputs ($fp, $msg);
+
 				// Read response:
-			$d = array();
-			$part = 'headers';
-
-			$isFirstLine=TRUE;
-			$contentLength=-1;
-			$blocksize=2048;
-			while (!feof($fp)) {
-				$line = fgets ($fp,$blocksize);
-				if (($part==='headers' && trim($line)==='') && !$isFirstLine)	{
-						// switch to "content" part if empty row detected - this should not be the first row of the response anyway
-					$part = 'content';
-				} elseif(($part==='headers') && stristr($line,'Content-Length: ')) {
-					$contentLength = intval(str_ireplace('Content-Length: ','',$line));
-					if ($this->debugMode) t3lib_div::devlog('crawler - Content-Length detected: '.$contentLength,__FUNCTION__);
-					$d[$part][] = $line;
-				} else {
-					$d[$part][] = $line;
-
-					if(($contentLength != -1) && ($contentLength <= strlen(implode('',(array)$d['content'])))) {
-						if ($this->debugMode) t3lib_div::devlog('crawler -stop reading URL- Content-Length reached',__FUNCTION__);
-						break;
-					}
-
-				}
-				$isFirstLine=FALSE;
-			}
+			$d = $this->getHttpResponseFromStream($fp);
 			fclose ($fp);
 
 			$time = microtime(true) - $startTime;
-
 			$this->log($originalUrl .' '.$time);
 
 				// Implode content and headers:
@@ -1356,10 +1313,10 @@ class tx_crawler_lib {
 				'content' => implode('', (array)$d['content'])
 			);
 
-			if(($this->extensionSettings['follow30x']) && ($newUrl = $this->getRequestUrlFrom302Header($d['headers'],$url['user'],$url['pass']))) {
+			if (($this->extensionSettings['follow30x']) && ($newUrl = $this->getRequestUrlFrom302Header($d['headers'],$url['user'],$url['pass']))) {
 				$result = array_merge(array('parentRequest'=>$result), $this->requestUrl($newUrl, $crawlerId, $recursion--));
-
 				$newRequestUrl = $this->requestUrl($newUrl, $crawlerId, $timeout, --$recursion);
+
 				if (is_array($newRequestUrl)) {
 					$result = array_merge(array('parentRequest'=>$result), $newRequestUrl);
 				} else {
@@ -1367,6 +1324,7 @@ class tx_crawler_lib {
 					return FALSE;
 				}
 			}
+
 			return $result;
 		}
 	}
@@ -1407,6 +1365,37 @@ class tx_crawler_lib {
 	protected function executeShellCommand($command) {
 		$result = shell_exec($command);
 		return $result;
+	}
+
+	/**
+	 * Reads HTTP response from the given stream.
+	 *
+	 * @param  resource $streamPointer  Pointer to connection stream.
+	 * @return array                    Associative array with the following items:
+	 *                                  headers <array> Response headers sent by server.
+	 *                                  content <array> Content, with each line as an array item.
+	 */
+	protected function getHttpResponseFromStream($streamPointer) {
+		$response = array('headers' => array(), 'content' => array());
+
+		if (is_resource($streamPointer)) {
+				// read headers
+			while($line = fgets($streamPointer, '2048')) {
+				$line = trim($line);
+				if ($line !== '') {
+					$response['headers'][] = $line;
+				} else {
+					break;
+				}
+			}
+
+				// read content
+			while($line = fgets($streamPointer, '2048')) {
+				$response['content'][] = $line;
+			}
+		}
+
+		return $response;
 	}
 
 	/**
@@ -1496,7 +1485,7 @@ class tx_crawler_lib {
 			// Authenticate crawler request:
 		if (isset($_SERVER['HTTP_X_T3CRAWLER']))	{
 			list($queueId,$hash) = explode(':', $_SERVER['HTTP_X_T3CRAWLER']);
-			list($queueRec) = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*','tx_crawler_queue','qid='.intval($queueId));
+			list($queueRec) = $this->db->exec_SELECTgetRows('*','tx_crawler_queue','qid='.intval($queueId));
 
 				// If a crawler record was found and hash was matching, set it up:
 			if (is_array($queueRec) && $hash === md5($queueRec['qid'].'|'.$queueRec['set_id'].'|'.$GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']))	{
@@ -1583,7 +1572,7 @@ class tx_crawler_lib {
 
 				// recognize mount points
 			if($data['row']['doktype'] == 7){
-				$mountpage = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'pages', 'uid = '.$data['row']['uid']);
+				$mountpage = $this->db->exec_SELECTgetRows('*', 'pages', 'uid = '.$data['row']['uid']);
 
 					// fetch mounted pages
 				$this->MP = $mountpage[0]['mount_pid'].'-'.$data['row']['uid'];
@@ -1794,7 +1783,7 @@ class tx_crawler_lib {
 	 * @return int
 	 */
 	function getUnprocessedItemsCount() {
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+		$res = $this->db->exec_SELECTquery(
 					'count(*) as num',
 					'tx_crawler_queue',
 					'exec_time=0
@@ -1802,7 +1791,7 @@ class tx_crawler_lib {
 					AND scheduled<='.$this->getCurrentTime()
 		);
 
-		$count = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+		$count = $this->db->sql_fetch_assoc($res);
 		return $count['num'];
 	}
 
@@ -1855,7 +1844,7 @@ class tx_crawler_lib {
 			}
 
 				// Cleanup
-			$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_crawler_process', 'assigned_items_count = 0');
+			$this->db->exec_DELETEquery('tx_crawler_process', 'assigned_items_count = 0');
 
 				//TODO can't we do that in a clean way?
 			$releaseStatus = $this->CLI_releaseProcesses($this->CLI_buildProcessId());
@@ -2015,21 +2004,23 @@ class tx_crawler_lib {
 	/**
 	 * Obtains configuration keys from the CLI arguments
 	 *
-	 * @param	tx_crawler_cli_im	$cliObj	Command line object
-	 * @return	mixed	Array of keys or null if no keys found
+	 * @param  tx_crawler_cli_im $cliObj    Command line object
+	 * @return mixed                        Array of keys or null if no keys found
 	 */
 	protected function getConfigurationKeys(tx_crawler_cli_im &$cliObj) {
 		$parameter = trim($cliObj->cli_argValue('-conf'));
-
 		return ($parameter != '' ? t3lib_div::trimExplode(',', $parameter) : array());
 	}
 
 	/**
 	 * Running the functionality of the CLI (crawling URLs from queue)
 	 *
-	 * @return	string		Status message
+	 * @param  int $countInARun
+	 * @param  int $sleepTime
+	 * @param  int $sleepAfterFinish
+	 * @return string                   Status message
 	 */
-	public function CLI_run($countInARun, $sleepTime, $sleepAfterFinish)	{
+	public function CLI_run($countInARun, $sleepTime, $sleepAfterFinish) {
 		$result = 0;
 		$counter = 0;
 
@@ -2039,7 +2030,7 @@ class tx_crawler_lib {
 			// Clean up the queue
 		if (intval($this->extensionSettings['purgeQueueDays']) > 0) {
 			$purgeDate = $this->getCurrentTime() - 24 * 60 * 60 * intval($this->extensionSettings['purgeQueueDays']);
-			$del = $GLOBALS['TYPO3_DB']->exec_DELETEquery(
+			$del = $this->db->exec_DELETEquery(
 				'tx_crawler_queue',
 				'exec_time!=0 AND exec_time<' . $purgeDate
 			);
@@ -2047,7 +2038,7 @@ class tx_crawler_lib {
 
 			// Select entries:
 			//TODO Shouldn't this reside within the transaction?
-		$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+		$rows = $this->db->exec_SELECTgetRows(
 			'qid,scheduled',
 			'tx_crawler_queue',
 			'exec_time=0
@@ -2068,9 +2059,9 @@ class tx_crawler_lib {
 			$processId = $this->CLI_buildProcessId();
 
 				//reserve queue entrys for process
-			$GLOBALS['TYPO3_DB']->sql_query('BEGIN');
+			$this->db->sql_query('BEGIN');
 				//TODO make sure we're not taking assigned queue-entires
-			$GLOBALS['TYPO3_DB']->exec_UPDATEquery(
+			$this->db->exec_UPDATEquery(
 				'tx_crawler_queue',
 				'qid IN ('.implode(',',$quidList).')',
 				array(
@@ -2080,8 +2071,8 @@ class tx_crawler_lib {
 			);
 
 				//save the number of assigned queue entrys to determine who many have been processed later
-			$numberOfAffectedRows = $GLOBALS['TYPO3_DB']->sql_affected_rows();
-			$GLOBALS['TYPO3_DB']->exec_UPDATEquery(
+			$numberOfAffectedRows = $this->db->sql_affected_rows();
+			$this->db->exec_UPDATEquery(
 				'tx_crawler_process',
 				"process_id = '".$processId."'" ,
 				array(
@@ -2090,9 +2081,9 @@ class tx_crawler_lib {
 			);
 
 			if($numberOfAffectedRows == count($quidList)) {
-				$GLOBALS['TYPO3_DB']->sql_query('COMMIT');
+				$this->db->sql_query('COMMIT');
 			} else  {
-				$GLOBALS['TYPO3_DB']->sql_query('ROLLBACK');
+				$this->db->sql_query('ROLLBACK');
 				$this->CLI_debug("Nothing processed due to multi-process collision (".$this->CLI_buildProcessId().")");
 				return ( $result | self::CLI_STATUS_ABORTED );
 			}
@@ -2154,12 +2145,12 @@ class tx_crawler_lib {
 	}
 
 	/**
-	 * Try to aquire a new process with the given id
+	 * Try to acquire a new process with the given id
 	 * also performs some auto-cleanup for orphan processes
 	 * @todo preemption might not be the most elegant way to clean up
 	 *
-	 * @param string  identification string for the process
-	 * @return boolean determines whether the attempt to get resources was successful
+	 * @param  string    $id  identification string for the process
+	 * @return boolean        determines whether the attempt to get resources was successful
 	 */
 	function CLI_checkAndAcquireNewProcess($id) {
 
@@ -2168,9 +2159,9 @@ class tx_crawler_lib {
 		$processCount = 0;
 		$orphanProcesses = array();
 
-		$GLOBALS['TYPO3_DB']->sql_query('BEGIN');
+		$this->db->sql_query('BEGIN');
 
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+		$res = $this->db->exec_SELECTquery(
 			'process_id,ttl',
 			'tx_crawler_process',
 			'active=1 AND deleted=0'
@@ -2178,7 +2169,7 @@ class tx_crawler_lib {
 
 			$currentTime = $this->getCurrentTime();
 
-			while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))	{
+			while($row = $this->db->sql_fetch_assoc($res))	{
 				if ($row['ttl'] < $currentTime) {
 					$orphanProcesses[] = $row['process_id'];
 				} else {
@@ -2191,7 +2182,7 @@ class tx_crawler_lib {
 				$this->CLI_debug("add ".$this->CLI_buildProcessId()." (".($processCount+1)."/".intval($this->extensionSettings['processLimit']).")");
 
 					// create new process record
-				$GLOBALS['TYPO3_DB']->exec_INSERTquery(
+				$this->db->exec_INSERTquery(
 				'tx_crawler_process',
 				array(
 					'process_id' => $id,
@@ -2207,7 +2198,7 @@ class tx_crawler_lib {
 
 			$this->CLI_releaseProcesses($orphanProcesses, true); // maybe this should be somehow included into the current lock
 
-			$GLOBALS['TYPO3_DB']->sql_query('COMMIT');
+			$this->db->sql_query('COMMIT');
 
 			return $ret;
 	}
@@ -2215,8 +2206,8 @@ class tx_crawler_lib {
 	/**
 	 * Release a process and the required resources
 	 *
-	 * @param  mixed   string with a single process-id or array with multiple process-ids
-	 * @param boolean  show whether the DB-actions are included within an existings lock
+	 * @param  mixed    $releaseIds   string with a single process-id or array with multiple process-ids
+	 * @param  boolean  $withinLock   show whether the DB-actions are included within an existing lock
 	 * @return boolean
 	 */
 	function CLI_releaseProcesses($releaseIds, $withinLock=false) {
@@ -2229,13 +2220,13 @@ class tx_crawler_lib {
 			return false;   //nothing to release
 		}
 
-		if(!$withinLock) $GLOBALS['TYPO3_DB']->sql_query('BEGIN');
+		if(!$withinLock) $this->db->sql_query('BEGIN');
 
 			// some kind of 2nd chance algo - this way you need at least 2 processes to have a real cleanup
 			// this ensures that a single process can't mess up the entire process table
 
 			// mark all processes as deleted which have no "waiting" queue-entires and which are not active
-		$GLOBALS['TYPO3_DB']->exec_UPDATEquery(
+		$this->db->exec_UPDATEquery(
 			'tx_crawler_queue',
 			'process_id IN (SELECT process_id FROM tx_crawler_process WHERE active=0 AND deleted=0)',
 			array(
@@ -2243,7 +2234,7 @@ class tx_crawler_lib {
 			'process_id' => ''
 			)
 		);
-		$GLOBALS['TYPO3_DB']->exec_UPDATEquery(
+		$this->db->exec_UPDATEquery(
 			'tx_crawler_process',
 			'active=0
 			AND NOT EXISTS (
@@ -2256,14 +2247,14 @@ class tx_crawler_lib {
 			)
 		);
 				// mark all requested processes as non-active
-		$GLOBALS['TYPO3_DB']->exec_UPDATEquery(
+		$this->db->exec_UPDATEquery(
 			'tx_crawler_process',
 			'process_id IN (\''.implode('\',\'',$releaseIds).'\') AND deleted=0',
 			array(
 				'active'=>'0'
 			)
 		);
-		$GLOBALS['TYPO3_DB']->exec_UPDATEquery(
+		$this->db->exec_UPDATEquery(
 			'tx_crawler_queue',
 			'exec_time=0 AND process_id IN ("'.implode('","',$releaseIds).'")',
 			array(
@@ -2272,7 +2263,7 @@ class tx_crawler_lib {
 			)
 		);
 
-		if(!$withinLock) $GLOBALS['TYPO3_DB']->sql_query('COMMIT');
+		if(!$withinLock) $this->db->sql_query('COMMIT');
 
 		return true;
 	}
@@ -2282,31 +2273,30 @@ class tx_crawler_lib {
 	 * Used to determine timeouts and to ensure a proper cleanup if there's a timeout
 	 *
 	 * @param  string  identification string for the process
-	 * @return boolean determines if the proccess is still active / has resources
+	 * @return boolean determines if the process is still active / has resources
 	 */
 	function CLI_checkIfProcessIsActive($pid) {
-
 		$ret = false;
-		$GLOBALS['TYPO3_DB']->sql_query('BEGIN');
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+		$this->db->sql_query('BEGIN');
+		$res = $this->db->exec_SELECTquery(
 			'process_id,active,ttl',
 			'tx_crawler_process','process_id = \''.$pid.'\'  AND deleted=0',
 			'',
 			'ttl',
 			'0,1'
 		);
-		if($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))	{
+		if($row = $this->db->sql_fetch_assoc($res))	{
 			$ret = intVal($row['active'])==1;
 		}
-		$GLOBALS['TYPO3_DB']->sql_query('COMMIT');
+		$this->db->sql_query('COMMIT');
 
 		return $ret;
 	}
 
 	/**
-	 *   Create a unique Id for the current process
+	 * Create a unique Id for the current process
 	 *
-	 *   @return string  the ID
+	 * @return string  the ID
 	 */
 	function CLI_buildProcessId() {
 		if(!$this->processID) {
@@ -2316,9 +2306,9 @@ class tx_crawler_lib {
 	}
 
 	/**
-	 *   Prints a message to the stdout (only if debug-mode is enabled)
+	 * Prints a message to the stdout (only if debug-mode is enabled)
 	 *
-	 *   @param  string  the message
+	 * @param  string $msg  the message
 	 */
 	function CLI_debug($msg) {
 		if(intval($this->extensionSettings['processDebug'])) {
@@ -2329,7 +2319,7 @@ class tx_crawler_lib {
 	/**
 	 * Set disabled status to prevent processes from being processed
 	 *
-	 * @param bool disabled (optional, defaults to true)
+	 * @param  bool $disabled (optional, defaults to true)
 	 * @return void
 	 */
 	public function setDisabled($disabled=true) {
@@ -2345,7 +2335,6 @@ class tx_crawler_lib {
 	/**
 	 * Get disable status
 	 *
-	 * @param void
 	 * @return bool true if disabled
 	 */
 	public function getDisabled() {
@@ -2354,6 +2343,39 @@ class tx_crawler_lib {
 		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * Get URL content by making direct request to TYPO3.
+	 *
+	 * @param  string $url          Page URL
+	 * @param  int    $crawlerId    Crawler-ID
+	 * @return array
+	 */
+	protected function sendDirectRequest($url, $crawlerId) {
+		$requestHeaders = $this->buildRequestHeaderArray(parse_url($url), $crawlerId);
+
+		$cmd  = escapeshellcmd($this->extensionSettings['phpPath']);
+		$cmd .= ' ';
+		$cmd .= escapeshellarg(t3lib_extMgm::extPath('crawler') . 'cli/bootstrap.php');
+		$cmd .= ' ';
+		$cmd .= escapeshellarg($this->getFrontendBasePath());
+		$cmd .= ' ';
+		$cmd .= escapeshellarg($url);
+		$cmd .= ' ';
+		$cmd .= escapeshellarg(base64_encode(serialize($requestHeaders)));
+
+		$startTime = microtime(true);
+		$content = $this->executeShellCommand($cmd);
+		$this->log($url . (microtime(true) - $startTime));
+
+		$result = array(
+			'request' => implode("\r\n", $requestHeaders) . "\r\n\r\n",
+			'headers' => '',
+			'content' => $content
+		);
+
+		return $result;
 	}
 }
 
