@@ -2,7 +2,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2009 AOE media (dev@aoemedia.de)
+ *  (c) 2009 AOE media (dev@aoe.com)
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -40,22 +40,20 @@ abstract class tx_crawler_domain_lib_abstract_repository {
 	 * @return  t3lib_DB
 	 */
 	protected function getDB() {
-		return 	$GLOBALS['TYPO3_DB'];
+		return $GLOBALS['TYPO3_DB'];
 	}
 
 	/**
 	 * Counts items by a given where clause
 	 *
-	 * @param unknown_type $where
-	 * @return unknown
+	 * @param  string $where    Where clause
+	 * @return integer
 	 */
 	protected function countByWhere($where) {
-		$db 	= $this->getDB();
-		$rs 	= $db->exec_SELECTquery('count(*) as anz', $this->tableName, $where);
-		$res 	= $db->sql_fetch_assoc($rs);
+		$db  = $this->getDB();
+		$rs  = $db->exec_SELECTquery('count(*) as anz', $this->tableName, $where);
+		$res = $db->sql_fetch_assoc($rs);
 
 		return $res['anz'];
 	}
 }
-
-?>
