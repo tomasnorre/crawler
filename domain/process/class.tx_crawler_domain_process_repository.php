@@ -2,7 +2,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2009 AOE media (dev@aoemedia.de)
+ *  (c) 2009 AOE GmbH (dev@aoe.com)
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -29,84 +29,104 @@ class tx_crawler_domain_process_repository extends tx_crawler_domain_lib_abstrac
 	 */
 	protected $objectClassname = 'tx_crawler_domain_process';
 
+	/**
+	 * @var string
+	 */
 	protected $tableName = 'tx_crawler_process';
 
 	/**
-	 * This method is used to find all cli processes within a limit
-	 *
-	 * @param int $offset
-	 * @param int $limit
-	 * @param string $where
-	 * @param string $orderby
-	 * @return tx_crawler_domain_process_collection a collection of process objects
-	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+	 * This method is used to find all cli processes within a limit.
+	 * 
+	 * @param  string  $orderField
+	 * @param  string  $orderDirection
+	 * @param  integer $itemCount
+	 * @param  integer $offset
+	 * @param  string  $where
+	 * @return tx_crawler_domain_process_collection
 	 */
-	public function findAll($orderField = '',$orderDirection = 'DESC', $itemcount = NULL, $offset = NULL, $where = '') {
+	public function findAll($orderField = '', $orderDirection = 'DESC', $itemCount = NULL, $offset = NULL, $where = '') {
+		/** @var tx_crawler_domain_process_collection $collection */
+		$collection = t3lib_div::makeInstance('tx_crawler_domain_process_collection');
 
-		$limit = self::getLimitFromItemCountAndOffset($itemcount,$offset);
-		$db = $this->getDB();
+		$orderField = trim($orderField);
+		$orderField = empty($orderField) ? 'process_id' : $orderField;
 
-		$orderby 	= htmlspecialchars($orderField).' '.htmlspecialchars($orderDirection);
-		$groupby 	= '';
+		$orderDirection = strtoupper(trim($orderDirection));
+		$orderDirection = in_array($orderDirection, array('ASC', 'DESC')) ? $orderDirection : 'DESC';
 
-		$rows = $db->exec_SELECTgetRows('*',$this->tableName,$where,$groupby,$orderby,$limit);
-		$processes = array();
+		$rows = $this->getDB()->exec_SELECTgetRows(
+			'*',
+			$this->tableName,
+			$where,
+			'',
+			htmlspecialchars($orderField) . ' ' . htmlspecialchars($orderDirection),
+			self::getLimitFromItemCountAndOffset($itemCount, $offset)
+		);
+		$q = $this->getDB()->SELECTquery(
+				'*',
+				$this->tableName,
+				$where,
+				'',
+				htmlspecialchars($orderField) . ' ' . htmlspecialchars($orderDirection),
+				self::getLimitFromItemCountAndOffset($itemCount, $offset)
+		);
+		file_put_contents('/var/www/kestenholz/sandbox/htdocs/typo3temp/phpdebug.log', print_r($q, TRUE)."\n", FILE_APPEND);
 
-		if(is_array($rows)) {
-
+		if (is_array($rows)) {
 			foreach($rows as $row) {
-				$process = new tx_crawler_domain_process($row);
-				$processes[] = $process;
+				file_put_contents('/var/www/kestenholz/sandbox/htdocs/typo3temp/phpdebug.log', print_r('row: ', TRUE)."\n", FILE_APPEND);
+				file_put_contents('/var/www/kestenholz/sandbox/htdocs/typo3temp/phpdebug.log', print_r($row, TRUE)."\n", FILE_APPEND);
+				$collection->append(t3lib_div::makeInstance($this->objectClassname, $row));
 			}
 		}
+		file_put_contents('/var/www/kestenholz/sandbox/htdocs/typo3temp/phpdebug.log', print_r('collection count: '.$collection->count(), TRUE)."\n", FILE_APPEND);
 
-		return new tx_crawler_domain_process_collection($processes);
+		return $collection;
 	}
 
 	/**
-	 * This method is used to count all processes in the process table
+	 * This method is used to count all processes in the process table.
 	 *
-	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
-	 * @return int
+	 * @param  string $where    Where clause
+	 * @return integer
+	 * @author Timo Schmidt <timo.schmidt@aoe.com>
 	 */
-	public function countAll($where = '1=1') {
+	public function countAll($where = '1 = 1') {
 		return $this->countByWhere($where);
 	}
 
 	/**
-	 * Returns the number of active processes
-	 * @return int
+	 * Returns the number of active processes.
+	 *
+	 * @return integer
 	 */
 	public function countActive() {
-		return $this->countByWhere('active=1 AND deleted=0');
+		return $this->countByWhere('active = 1 AND deleted = 0');
 	}
 
 	/**
-	 * Returns the number of processes that live longer than the given timestamp
-	 * @return int
+	 * Returns the number of processes that live longer than the given timestamp.
+	 *
+	 * @param  integer $ttl
+	 * @return integer
 	 */
 	public function countNotTimeouted($ttl) {
-		return $this->countByWhere('deleted=0 AND ttl>'.intval($ttl));
+		return $this->countByWhere('deleted = 0 AND ttl > ' . intval($ttl));
 	}
 
 	/**
 	 * Get limit clause
 	 *
-	 * @param int item count
-	 * @param int offset
-	 * @return string limit clause
-	 * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
+	 * @param  integer $itemCount   Item count
+	 * @param  integer $offset      Offset
+	 * @return string               Limit clause
+	 * @author Fabrizio Branca <fabrizio.branca@aoem.com>
 	 */
-	public static function getLimitFromItemCountAndOffset($itemcount, $offset) {
-		$limit = '';
-		if (!empty($offset)) {
-			$limit .= intval($offset).',';
-		}
-		if (!empty($itemcount)) {
-			$limit .= intval($itemcount);
-		}
+	public static function getLimitFromItemCountAndOffset($itemCount, $offset) {
+		$itemCount = filter_var($itemCount, FILTER_VALIDATE_INT, array('options' => array('min_range' => 1, 'default' => 20)));
+		$offset = filter_var($offset, FILTER_VALIDATE_INT, array('options' => array('min_range' => 0, 'default' => 0)));
+		$limit = $offset . ', ' . $itemCount;
+
 		return $limit;
 	}
 }
-
-?>
