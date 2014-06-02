@@ -71,6 +71,11 @@ class tx_crawler_lib {
 	 */
 	private $db;
 
+	/**
+	 * @var TYPO3\CMS\Core\Authentication\BackendUserAuthentication
+	 */
+	private $backendUser;
+
 	const CLI_STATUS_NOTHING_PROCCESSED = 0;
 	const CLI_STATUS_REMAIN = 1;	//queue not empty
 	const CLI_STATUS_PROCESSED = 2;	//(some) queue items where processed
@@ -103,6 +108,7 @@ class tx_crawler_lib {
 
 	public function __construct() {
 		$this->db = $GLOBALS['TYPO3_DB'];
+		$this->backendUser = $GLOBALS['BE_USER'];
 		$this->processFilename = PATH_site.'typo3temp/tx_crawler.proc';
 
 		$settings = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['crawler']);
@@ -198,12 +204,12 @@ class tx_crawler_lib {
 	 * Wrapper method for getUrlsForPageId()
 	 * It returns an array of configurations and no urls!
 	 *
-	 * @param	array		Page record with at least doktype and uid columns.
-	 * @return	array		Result (see getUrlsForPageId())
+	 * @param  array  $pageRow       Page record with at least dok-type and uid columns.
+	 * @param  string $skipMessage
+	 * @return array                 Result (see getUrlsForPageId())
 	 * @see getUrlsForPageId()
 	 */
-	public function getUrlsForPageRow(array $pageRow, &$skipMessage='') {
-
+	public function getUrlsForPageRow(array $pageRow, &$skipMessage = '') {
 		$message = $this->checkIfPageShouldBeSkipped($pageRow);
 
 		if ($message === false) {
@@ -854,15 +860,15 @@ class tx_crawler_lib {
 	/**
 	 * Return array of records from crawler queue for input page ID
 	 *
-	 * @param	integer		Page ID for which to look up log entries.
-	 * @param	string		Filter: "all" => all entries, "pending" => all that is not yet run, "finished" => all complete ones
-	 * @param	boolean		If TRUE, then entries selected at DELETED(!) instead of selected!
-	 * @param	integer		Limit the amount of entires per page default is 10
-	 * @return	array
+	 * @param  integer $id              Page ID for which to look up log entries.
+	 * @param  string  $filter          Filter: "all" => all entries, "pending" => all that is not yet run, "finished" => all complete ones
+	 * @param  boolean $doFlush         If TRUE, then entries selected at DELETED(!) instead of selected!
+	 * @param  boolean $doFullFlush
+	 * @param  integer $itemsPerPage    Limit the amount of entries per page default is 10
+	 * @return array
 	 */
-	function getLogEntriesForPageId($id,$filter='',$doFlush=FALSE, $doFullFlush=FALSE, $itemsPerPage=10)	{
-
-		switch($filter)	{
+	function getLogEntriesForPageId($id,$filter = '', $doFlush = FALSE, $doFullFlush = FALSE, $itemsPerPage = 10) {
+		switch($filter) {
 			case 'pending':
 				$addWhere = ' AND exec_time=0';
 				break;
@@ -874,7 +880,7 @@ class tx_crawler_lib {
 				break;
 		}
 
-		if ($doFlush)	{
+		if ($doFlush) {
 			$this->flushQueue( ($doFullFlush?'1=1':('page_id='.intval($id))) .$addWhere);
 			return array();
 		} else {
@@ -1606,29 +1612,27 @@ class tx_crawler_lib {
 		return $code;
 	}
 
-
 	/**
-	 * Expand exclude string
+	 * Expands exclude string.
 	 *
-	 * @param string exclude string
-	 * @return array array of page ids
+	 * @param  string $excludeString    Exclude string
+	 * @return array                    Array of page ids.
 	 */
 	public function expandExcludeString($excludeString) {
-
 			// internal static caches;
 		static $expandedExcludeStringCache;
 		static $treeCache;
 
 		if (empty($expandedExcludeStringCache[$excludeString])) {
 			$pidList = array();
-			if (!empty($excludeString)) {
 
-					/* @var $tree t3lib_pageTree */
+			if (!empty($excludeString)) {
+				/* @var $tree t3lib_pageTree */
 				$tree = t3lib_div::makeInstance('t3lib_pageTree');
-				$perms_clause = $GLOBALS['BE_USER']->getPagePermsClause(1);
-				$tree->init('AND ' . $perms_clause);
+				$tree->init('AND ' . $this->backendUser->getPagePermsClause(1));
 
 				$excludeParts = t3lib_div::trimExplode(',', $excludeString);
+
 				foreach ($excludeParts as $excludePart) {
 					list($pid, $depth) = t3lib_div::trimExplode('+', $excludePart);
 
@@ -1641,17 +1645,21 @@ class tx_crawler_lib {
 
 					if ($depth > 0) {
 						if (empty($treeCache[$pid][$depth])) {
+							$tree->reset();
 							$tree->getTree($pid, $depth);
 							$treeCache[$pid][$depth] = $tree->tree;
 						}
+
 						foreach ($treeCache[$pid][$depth] as $data) {
 							$pidList[] = $data['row']['uid'];
 						}
 					}
 				}
 			}
+
 			$expandedExcludeStringCache[$excludeString] = array_unique($pidList);
 		}
+
 		return $expandedExcludeStringCache[$excludeString];
 	}
 
@@ -1814,32 +1822,28 @@ class tx_crawler_lib {
 	 *
 	 * @return	int number of remaining items or false if error
 	 */
-	function CLI_main($altArgv=array())	{
-
+	function CLI_main() {
 		$this->setAccessMode('cli');
 		$result = self::CLI_STATUS_NOTHING_PROCCESSED;
-
 		$cliObj = t3lib_div::makeInstance('tx_crawler_cli');
 
-		if (isset($cliObj->cli_args['-h']) || isset($cliObj->cli_args['--help']))	{
+		if (isset($cliObj->cli_args['-h']) || isset($cliObj->cli_args['--help'])) {
 			$cliObj->cli_validateArgs();
 			$cliObj->cli_help();
 			exit;
 		}
 
 		if (!$this->getDisabled() && $this->CLI_checkAndAcquireNewProcess($this->CLI_buildProcessId())) {
-
 			$countInARun = $cliObj->cli_argValue('--countInARun') ? intval($cliObj->cli_argValue('--countInARun')) : $this->extensionSettings['countInARun'];
-				//Seconds
+				// Seconds
 			$sleepAfterFinish = $cliObj->cli_argValue('--sleepAfterFinish') ? intval($cliObj->cli_argValue('--sleepAfterFinish')) : $this->extensionSettings['sleepAfterFinish'];
-				//Milliseconds
+				// Milliseconds
 			$sleepTime = $cliObj->cli_argValue('--sleepTime') ? intval($cliObj->cli_argValue('--sleepTime')) : $this->extensionSettings['sleepTime'];
 
 			try {
-				// Run process:
+					// Run process:
 				$result = $this->CLI_run($countInARun, $sleepTime, $sleepAfterFinish);
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				$result = self::CLI_STATUS_ABORTED;
 			}
 
@@ -1854,6 +1858,7 @@ class tx_crawler_lib {
 		} else {
 			$result |= self::CLI_STATUS_ABORTED;
 		}
+
 		return $result;
 	}
 
@@ -1868,8 +1873,8 @@ class tx_crawler_lib {
 		$cliObj = t3lib_div::makeInstance('tx_crawler_cli_im');
 
 			// Force user to admin state and set workspace to "Live":
-		$GLOBALS['BE_USER']->user['admin'] = 1;
-		$GLOBALS['BE_USER']->setWorkspace(0);
+		$this->backendUser->user['admin'] = 1;
+		$this->backendUser->setWorkspace(0);
 
 			// Print help
 		if (!isset($cliObj->cli_args['_DEFAULT'][1]))	{
@@ -1931,7 +1936,6 @@ class tx_crawler_lib {
 
 			foreach($this->queueEntries as $queueRec)	{
 				$p = unserialize($queueRec['parameters']);
-				#print_r($p);
 				$cliObj->cli_echo($p['url'].' ('.implode(',',$p['procInstructions']).') => ');
 
 				$result = $this->readUrlFromArray($queueRec);
@@ -1956,35 +1960,29 @@ class tx_crawler_lib {
 	/**
 	 * Function executed by crawler_im.php cli script.
 	 *
-	 * @param array $altArgv
 	 * @return bool
 	 */
-	function CLI_main_flush($altArgv=array())	{
-
-		$result = true;
-
+	function CLI_main_flush() {
 		$this->setAccessMode('cli_flush');
-
 		$cliObj = t3lib_div::makeInstance('tx_crawler_cli_flush');
 
 			// Force user to admin state and set workspace to "Live":
-		$GLOBALS['BE_USER']->user['admin'] = 1;
-		$GLOBALS['BE_USER']->setWorkspace(0);
+		$this->backendUser->user['admin'] = 1;
+		$this->backendUser->setWorkspace(0);
 
 			// Print help
-		if (!isset($cliObj->cli_args['_DEFAULT'][1]))	{
+		if (!isset($cliObj->cli_args['_DEFAULT'][1])) {
 			$cliObj->cli_validateArgs();
 			$cliObj->cli_help();
 			exit;
 		}
 
 		$cliObj->cli_validateArgs();
-
 		$pageId = tx_crawler_api::forceIntegerInRange($cliObj->cli_args['_DEFAULT'][1],0);
-
 		$fullFlush = ($pageId == 0);
 
 		$mode = $cliObj->cli_argValue('-o');
+
 		switch($mode) {
 			case 'all':
 				$result = $this->getLogEntriesForPageId($pageId, '', true, $fullFlush);
@@ -1998,6 +1996,7 @@ class tx_crawler_lib {
 				$cliObj->cli_help();
 				$result = false;
 		}
+
 		return $result !== false;
 	}
 
@@ -2322,7 +2321,7 @@ class tx_crawler_lib {
 	 * @param  bool $disabled (optional, defaults to true)
 	 * @return void
 	 */
-	public function setDisabled($disabled=true) {
+	public function setDisabled($disabled = true) {
 		if ($disabled) {
 			t3lib_div::writeFile($this->processFilename, '');
 		} else {
