@@ -161,7 +161,6 @@ class tx_crawler_lib_testcase extends tx_phpunit_database_testcase {
 
 		$crawlerLibrary = new tx_crawler_lib_proxy();
 		$response = $crawlerLibrary->getHttpResponseFromStream($fp);
-		file_put_contents(PATH_site . 'typo3temp/phpdebug.log', print_r($response, TRUE)."\n", FILE_APPEND);
 
 		$this->assertCount(6, $response['headers']);
 		$this->assertEquals($dummyResponseHeader, $response['headers']);

@@ -62,24 +62,12 @@ class tx_crawler_domain_process_repository extends tx_crawler_domain_lib_abstrac
 			htmlspecialchars($orderField) . ' ' . htmlspecialchars($orderDirection),
 			self::getLimitFromItemCountAndOffset($itemCount, $offset)
 		);
-		$q = $this->getDB()->SELECTquery(
-				'*',
-				$this->tableName,
-				$where,
-				'',
-				htmlspecialchars($orderField) . ' ' . htmlspecialchars($orderDirection),
-				self::getLimitFromItemCountAndOffset($itemCount, $offset)
-		);
-		file_put_contents('/var/www/kestenholz/sandbox/htdocs/typo3temp/phpdebug.log', print_r($q, TRUE)."\n", FILE_APPEND);
 
 		if (is_array($rows)) {
 			foreach($rows as $row) {
-				file_put_contents('/var/www/kestenholz/sandbox/htdocs/typo3temp/phpdebug.log', print_r('row: ', TRUE)."\n", FILE_APPEND);
-				file_put_contents('/var/www/kestenholz/sandbox/htdocs/typo3temp/phpdebug.log', print_r($row, TRUE)."\n", FILE_APPEND);
 				$collection->append(t3lib_div::makeInstance($this->objectClassname, $row));
 			}
 		}
-		file_put_contents('/var/www/kestenholz/sandbox/htdocs/typo3temp/phpdebug.log', print_r('collection count: '.$collection->count(), TRUE)."\n", FILE_APPEND);
 
 		return $collection;
 	}
