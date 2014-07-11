@@ -1,14 +1,16 @@
 <?php
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2009 AOE media (dev@aoemedia.de)
+ *  (c) 2014 AOE GmbH <dev@aoe.com>
+ *
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
+ *  the Free Software Foundation; either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  The GNU General Public License can be found at
@@ -23,12 +25,11 @@
  ***************************************************************/
 
 /**
+ * Class tx_crawler_scheduler_crawlMultiProcess
  *
- * @author Michael Klapper <michael.klapper@aoemedia.de>
- * @package
- * @version $Id:$
+ * @package AOE\Crawler\Task
  */
-class tx_crawler_scheduler_crawlMultiProcess extends tx_scheduler_Task {
+class tx_crawler_scheduler_crawlMultiProcess extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
 
 	/**
 	 * @var integer
@@ -41,7 +42,6 @@ class tx_crawler_scheduler_crawlMultiProcess extends tx_scheduler_Task {
 	 * @return bool
 	 */
 	public function execute() {
-
 		$processManager = new tx_crawler_domain_process_manager();
 		$timeout = is_int($this->timeOut) ? (int)$this->timeOut : 10000;
 
@@ -53,5 +53,3 @@ class tx_crawler_scheduler_crawlMultiProcess extends tx_scheduler_Task {
 		return TRUE;
 	}
 }
-
-?>
