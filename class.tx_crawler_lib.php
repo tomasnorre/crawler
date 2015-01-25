@@ -2235,7 +2235,7 @@ class tx_crawler_lib {
 		);
 		$this->db->exec_UPDATEquery(
 			'tx_crawler_process',
-			'active=0
+			'active=0 and deleted=0
 			AND NOT EXISTS (
 				SELECT * FROM tx_crawler_queue
 				WHERE tx_crawler_queue.process_id = tx_crawler_process.process_id
