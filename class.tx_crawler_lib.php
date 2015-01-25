@@ -1889,7 +1889,7 @@ class tx_crawler_lib {
 			$this->registerQueueEntriesInternallyOnly=TRUE;
 		}
 
-		$pageId = tx_crawler_api::forceIntegerInRange($cliObj->cli_args['_DEFAULT'][1],0);
+		$pageId = tx_crawler_api::forceIntegerInRange($cliObj->cli_args['_DEFAULT'][2], 0);
 
 		$configurationKeys  = $this->getConfigurationKeys($cliObj);
 
@@ -1915,7 +1915,7 @@ class tx_crawler_lib {
 
 		$this->setID = t3lib_div::md5int(microtime());
 		$this->getPageTreeAndUrls(
-			tx_crawler_api::forceIntegerInRange($cliObj->cli_args['_DEFAULT'][1],0),
+			tx_crawler_api::forceIntegerInRange($pageId, 0),
 			tx_crawler_api::forceIntegerInRange($cliObj->cli_argValue('-d'),0,99),
 			$this->getCurrentTime(),
 			tx_crawler_api::forceIntegerInRange($cliObj->cli_isArg('-n') ? $cliObj->cli_argValue('-n') : 30,1,1000),
