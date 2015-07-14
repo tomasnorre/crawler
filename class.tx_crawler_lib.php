@@ -1889,7 +1889,14 @@ class tx_crawler_lib {
 			$this->registerQueueEntriesInternallyOnly=TRUE;
 		}
 
-		$pageId = tx_crawler_api::forceIntegerInRange($cliObj->cli_args['_DEFAULT'][2], 0);
+		if (isset($cliObj->cli_args['_DEFAULT'][2])) {
+			// Crawler is called over TYPO3 BE
+			$pageId = tx_crawler_api::forceIntegerInRange($cliObj->cli_args['_DEFAULT'][2], 0);
+		} else {
+			// Crawler is called over cli
+			$pageId = tx_crawler_api::forceIntegerInRange($cliObj->cli_args['_DEFAULT'][1], 0);
+		}
+
 
 		$configurationKeys  = $this->getConfigurationKeys($cliObj);
 
