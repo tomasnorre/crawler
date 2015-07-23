@@ -3,7 +3,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2014 AOE GmbH <dev@aoe.com>
+ *  (c) 2015 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -78,7 +78,7 @@ class tx_crawler_scheduler_im extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
 			$this->startPage = 0;
 		}
 
-		$_SERVER['argv'] = array($_SERVER['argv'][0], 'tx_crawler_cli_im', $this->startPage,'-ss', '-d', $this->depth, '-o', self::MODE, '-conf', implode(',', $this->configuration));
+		$_SERVER['argv'] = array($_SERVER['argv'][0], $this->startPage,'-ss', '-d', $this->depth, '-o', self::MODE, '-conf', implode(',', $this->configuration));
 	}
 
 
