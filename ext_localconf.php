@@ -33,7 +33,6 @@ t3lib_extMgm::addService(
 		'os' => '',
 		'exec' => '',
 
-		'classFile' => t3lib_extMgm::extPath($_EXTKEY).'class.tx_crawler_auth.php',
 		'className' => 'tx_crawler_auth',
 	)
 );
