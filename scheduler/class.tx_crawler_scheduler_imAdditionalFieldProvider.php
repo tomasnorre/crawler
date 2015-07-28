@@ -55,7 +55,9 @@ class tx_crawler_scheduler_imAdditionalFieldProvider implements tx_scheduler_Add
 		if (empty($taskInfo['startPage'])) {
 			if ($schedulerModule->CMD == 'add') {
 				$taskInfo['startPage'] = 0;
-				$task->startPage = 0;
+				if ($task instanceof \TYPO3\CMS\Scheduler\Task\AbstractTask) {
+					$task->startPage = 0;
+				}
 			} elseif ($schedulerModule->CMD == 'edit') {
 				$taskInfo['startPage'] = $task->startPage;
 			} else {
