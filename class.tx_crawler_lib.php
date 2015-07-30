@@ -272,7 +272,6 @@ class tx_crawler_lib {
 
 			/** @var tx_realurl $urlObj */
 			$urlObj = t3lib_div::makeInstance('tx_realurl');
-			$urlObj->setConfig();
 
 			if (!empty($vv['subCfg']['baseUrl'])) {
 				$urlParts = parse_url($vv['subCfg']['baseUrl']);
@@ -289,7 +288,6 @@ class tx_crawler_lib {
 
 			}
 
-			$urlObj->extConf = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['realurl']['_DEFAULT'];
 			if (!$GLOBALS['TSFE']->sys_page) {
 				$GLOBALS['TSFE']->sys_page = t3lib_div::makeInstance('t3lib_pageSelect');
 			}
@@ -333,8 +331,14 @@ class tx_crawler_lib {
 					// realurl support (thanks to Ingo Renner)
 					$urlQuery = 'index.php' . $urlQuery;
 					if (t3lib_extMgm::isLoaded('realurl') && $vv['subCfg']['realurl']) {
-						$uParts = parse_url($urlQuery);
-						$urlQuery = $urlObj->encodeSpURL_doEncode($uParts['query'], $vv['subCfg']['cHash'], $urlQuery);
+						$params = array(
+							'LD' => array(
+								'totalURL' => $urlQuery
+							),
+							'TCEmainHook' => true
+						);
+						$urlObj->encodeSpURL($params);
+						$urlQuery = $params['LD']['totalURL'];
 					}
 
 					// Scheduled time:
