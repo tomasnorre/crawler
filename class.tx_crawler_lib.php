@@ -1919,6 +1919,10 @@ class tx_crawler_lib {
 			);
 		}
 
+		if ($this->extensionSettings['cleanUpOldQueueEntries']) {
+			$this->cleanUpOldQueueEntries();
+		}
+
 		$this->setID = t3lib_div::md5int(microtime());
 		$this->getPageTreeAndUrls(
 			$pageId,
@@ -2381,6 +2385,22 @@ class tx_crawler_lib {
 		);
 
 		return $result;
+	}
+
+	/**
+	 * Cleans up entries that stayed for too long in the queue. These are:
+	 * - processed entries that are over 1.5 days in age
+	 * - scheduled entries that are over 7 days old
+	 *
+	 * @return void
+	 */
+	protected function cleanUpOldQueueEntries() {
+		$processedAgeInSeconds = $this->extensionSettings['cleanUpProcessedAge'] * 86400; // 24*60*60 Seconds in 24 hours
+		$scheduledAgeInSeconds = $this->extensionSettings['cleanUpScheduledAge'] * 86400;
+
+		$now = time();
+		$condition = '(exec_time<>0 AND exec_time<' . ($now - $processedAgeInSeconds) . ') OR scheduled<=' . ($now - $scheduledAgeInSeconds);
+		$this->flushQueue($condition);
 	}
 }
 
