@@ -42,3 +42,12 @@ makeDirectRequests=0
 
 # cat=basic//10; type=string; label=Frontend website base path: Base path of the website frontend (e.g. if you call http://mydomain.com/cms/index.php in the browser the base path is "/cms/")
 frontendBasePath=/
+
+# cat=basic//10; type=boolean; label=Clean up old queue entries: If checked the older queue entries will be deleted when adding new crawler configurations from CLI.
+cleanUpOldQueueEntries=1
+
+# cat=basic//10; type=int [1- 99]; label=Processed Age: If Clean up old queue entries is checked, then processed entries older than X days are deleted.
+cleanUpProcessedAge=2
+
+# cat=basic//10; type=int [1- 99]; label=Scheduled Age: If Clean up old queue entries is checked, then scheduled entries older than X days are deleted.
+cleanUpScheduledAge=7
