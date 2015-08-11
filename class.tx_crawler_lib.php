@@ -1352,9 +1352,12 @@ class tx_crawler_lib {
 		// Get the path from the extension settings:
 		if (isset($this->extensionSettings['frontendBasePath']) && $this->extensionSettings['frontendBasePath']) {
 			$frontendBasePath = $this->extensionSettings['frontendBasePath'];
+		// If empty, try to use config.absRefPrefix:
+		} elseif (isset($GLOBALS['TSFE']->absRefPrefix) && !empty($GLOBALS['TSFE']->absRefPrefix)) {
+			$frontendBasePath = $GLOBALS['TSFE']->absRefPrefix;
 		// If not in CLI mode the base path can be determined from $_SERVER environment:
 		} elseif (!defined('TYPO3_cliMode') || !TYPO3_cliMode) {
-			t3lib_div::getIndpEnv('TYPO3_SITE_PATH');
+			$frontendBasePath = t3lib_div::getIndpEnv('TYPO3_SITE_PATH');
 		}
 
 		// Base path must be '/<pathSegements>/':
