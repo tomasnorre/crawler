@@ -33,11 +33,11 @@ class tx_crawler_hooks_staticFileCacheCreateUri  implements t3lib_Singleton {
 	/**
 	 * Initializes the variables before starting the processing.
 	 *
-	 * @param	array					$parameters The parameters used in this hook
-	 * @param	tx_ncstaticfilecache	$parent The calling parent object
-	 * @return	void
+	 * @param array $parameters The parameters used in this hook
+	 * @param $parent The calling parent object
+	 * @return void
 	 */
-	public function initialize(array $parameters, tx_ncstaticfilecache $parent) {
+	public function initialize(array $parameters, $parent) {
 		list($parameters['host'], $parameters['uri']) = $this->fixNonSpeakingUri($parameters['host'], $parameters['uri'], $parameters['TSFE']);
 	}
 
@@ -88,4 +88,3 @@ class tx_crawler_hooks_staticFileCacheCreateUri  implements t3lib_Singleton {
 		);
 	}
 }
-

@@ -226,26 +226,28 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		$theOutput= $this->pObj->doc->spacer(5);
 		$theOutput.= $this->pObj->doc->section($LANG->getLL('title'), $h_func, 0, 1);
 
-
 			// Branch based on type:
-		switch((string)$this->pObj->MOD_SETTINGS['crawlaction'])	{
+		switch ((string)$this->pObj->MOD_SETTINGS['crawlaction']) {
 			case 'start':
-
 				if (empty($this->pObj->id)) {
-					$theOutput .= '<br />'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.noPageSelected');
+					$this->addErrorMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.noPageSelected'));
 				} else {
-					$theOutput .= $this->pObj->doc->section('',$this->drawURLs(),0,1);
+					$theOutput .= $this->pObj->doc->section('', $this->drawURLs(), 0, 1);
 				}
-			break;
+				break;
 			case 'log':
-				$theOutput .= $this->pObj->doc->section('',$this->drawLog(),0,1);
-			break;
+				if (empty($this->pObj->id)) {
+					$this->addErrorMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.noPageSelected'));
+				} else {
+					$theOutput .= $this->pObj->doc->section('', $this->drawLog(), 0, 1);
+				}
+				break;
 			case 'cli':
-				$theOutput .= $this->pObj->doc->section('',$this->drawCLIstatus(),0,1);
-			break;
+				$theOutput .= $this->pObj->doc->section('', $this->drawCLIstatus(), 0, 1);
+				break;
 			case 'multiprocess':
-				$theOutput .= $this->pObj->doc->section('',$this->drawProcessOverviewAction(),0,1);
-			break;
+				$theOutput .= $this->pObj->doc->section('', $this->drawProcessOverviewAction(), 0, 1);
+				break;
 		}
 
 		return $theOutput;

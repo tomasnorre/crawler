@@ -1,14 +1,16 @@
 <?php
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2009 AOE media (dev@aoemedia.de)
+ *  (c) 2015 AOE GmbH <dev@aoe.com>
+ *
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
+ *  the Free Software Foundation; either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  The GNU General Public License can be found at
@@ -23,29 +25,27 @@
  ***************************************************************/
 
 /**
+ * Class tx_crawler_scheduler_flush
  *
- * @author Tolleiv Nietsch <tolleiv.nietsch@aoemedia.de>
- * @package
- * @version $Id:$
+ * @package AOE\Crawler\Task
  */
-class tx_crawler_scheduler_flush extends tx_scheduler_Task {
+class tx_crawler_scheduler_flush extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
 
 	/**
-	 * @var	string		$mode
+	 * @var string $mode
 	 */
 	public $mode = 'all';
 
 	/**
 	 * Function executed from the Scheduler.
 	 *
-	 * @return	void
+	 * @return void
 	 */
 	public function execute() {
-		$_SERVER['argv'] = array($_SERVER['argv'][0], 'tx_crawler_cli_flush','0' , '-o', $this->mode);
-			/* @var $crawlerObj tx_crawler_lib */
+		$_SERVER['argv'] = array($_SERVER['argv'][0], '0', '-o', $this->mode);
+		/* @var $crawlerObj tx_crawler_lib */
 		$crawlerObj = t3lib_div::makeInstance('tx_crawler_lib');
+
 		return $crawlerObj->CLI_main_flush();
 	}
 }
-
-?>

@@ -22,20 +22,21 @@ CREATE TABLE tx_crawler_queue (
   KEY exec_time (exec_time),
   KEY process_id (process_id),
   KEY parameters_hash (parameters_hash),
-  KEY configuration_hash (configuration_hash)
+  KEY configuration_hash (configuration_hash),
+  KEY cleanup (exec_time,scheduled)
 ) ENGINE=InnoDB;
 
 #
 # Table structure for table 'tx_crawler_process'
 #
 CREATE TABLE tx_crawler_process (
-    process_id varchar(50) DEFAULT '' NOT NULL,
-    active smallint(6) DEFAULT '0',
-    ttl int(11) DEFAULT '0' NOT NULL,
-	assigned_items_count int(11) DEFAULT '0' NOT NULL,
-    deleted tinyint(4) unsigned DEFAULT '0' NOT NULL,
-    KEY update_key (active,deleted),
-    KEY process_id (process_id)
+  process_id varchar(50) DEFAULT '' NOT NULL,
+  active smallint(6) DEFAULT '0',
+  ttl int(11) DEFAULT '0' NOT NULL,
+  assigned_items_count int(11) DEFAULT '0' NOT NULL,
+  deleted tinyint(4) unsigned DEFAULT '0' NOT NULL,
+  KEY update_key (active,deleted),
+  KEY process_id (process_id)
 ) ENGINE=InnoDB;
 
 
@@ -43,27 +44,27 @@ CREATE TABLE tx_crawler_process (
 # Table structure for table 'tx_crawler_configuration'
 #
 CREATE TABLE tx_crawler_configuration (
-    uid int(11) NOT NULL auto_increment,
-    pid int(11) DEFAULT '0' NOT NULL,
-    tstamp int(11) DEFAULT '0' NOT NULL,
-    crdate int(11) DEFAULT '0' NOT NULL,
-    cruser_id int(11) DEFAULT '0' NOT NULL,
-    deleted tinyint(4) DEFAULT '0' NOT NULL,
-    hidden tinyint(4) DEFAULT '0' NOT NULL,
-    name tinytext NOT NULL,
-    processing_instruction_filter tinytext NOT NULL,
-    processing_instruction_parameters_ts text NOT NULL,
-    configuration text NOT NULL,
-    base_url tinytext NOT NULL,
-    sys_domain_base_url tinytext NOT NULL,
-    pidsonly blob NOT NULL,
-  	begroups varchar(100) DEFAULT '0' NOT NULL,
-  	fegroups varchar(100) DEFAULT '0' NOT NULL,
-  	sys_workspace_uid int(11) DEFAULT '0' NOT NULL,
-  	realurl tinyint(4) DEFAULT '0' NOT NULL,
-  	chash tinyint(4) DEFAULT '0' NOT NULL,
-  	exclude text NOT NULL,
-    
-    PRIMARY KEY (uid),
-    KEY parent (pid)
+  uid int(11) NOT NULL auto_increment,
+  pid int(11) DEFAULT '0' NOT NULL,
+  tstamp int(11) DEFAULT '0' NOT NULL,
+  crdate int(11) DEFAULT '0' NOT NULL,
+  cruser_id int(11) DEFAULT '0' NOT NULL,
+  deleted tinyint(4) DEFAULT '0' NOT NULL,
+  hidden tinyint(4) DEFAULT '0' NOT NULL,
+  name tinytext NOT NULL,
+  processing_instruction_filter tinytext NOT NULL,
+  processing_instruction_parameters_ts text NOT NULL,
+  configuration text NOT NULL,
+  base_url tinytext NOT NULL,
+  sys_domain_base_url tinytext NOT NULL,
+  pidsonly blob NOT NULL,
+  begroups varchar(100) DEFAULT '0' NOT NULL,
+  fegroups varchar(100) DEFAULT '0' NOT NULL,
+  sys_workspace_uid int(11) DEFAULT '0' NOT NULL,
+  realurl tinyint(4) DEFAULT '0' NOT NULL,
+  chash tinyint(4) DEFAULT '0' NOT NULL,
+  exclude text NOT NULL,
+
+  PRIMARY KEY (uid),
+  KEY parent (pid)
 );

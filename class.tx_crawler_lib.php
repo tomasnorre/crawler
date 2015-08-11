@@ -272,7 +272,6 @@ class tx_crawler_lib {
 
 			/** @var tx_realurl $urlObj */
 			$urlObj = t3lib_div::makeInstance('tx_realurl');
-			$urlObj->setConfig();
 
 			if (!empty($vv['subCfg']['baseUrl'])) {
 				$urlParts = parse_url($vv['subCfg']['baseUrl']);
@@ -289,7 +288,6 @@ class tx_crawler_lib {
 
 			}
 
-			$urlObj->extConf = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['realurl']['_DEFAULT'];
 			if (!$GLOBALS['TSFE']->sys_page) {
 				$GLOBALS['TSFE']->sys_page = t3lib_div::makeInstance('t3lib_pageSelect');
 			}
@@ -333,8 +331,14 @@ class tx_crawler_lib {
 					// realurl support (thanks to Ingo Renner)
 					$urlQuery = 'index.php' . $urlQuery;
 					if (t3lib_extMgm::isLoaded('realurl') && $vv['subCfg']['realurl']) {
-						$uParts = parse_url($urlQuery);
-						$urlQuery = $urlObj->encodeSpURL_doEncode($uParts['query'], $vv['subCfg']['cHash'], $urlQuery);
+						$params = array(
+							'LD' => array(
+								'totalURL' => $urlQuery
+							),
+							'TCEmainHook' => true
+						);
+						$urlObj->encodeSpURL($params);
+						$urlQuery = $params['LD']['totalURL'];
 					}
 
 					// Scheduled time:
@@ -1348,9 +1352,12 @@ class tx_crawler_lib {
 		// Get the path from the extension settings:
 		if (isset($this->extensionSettings['frontendBasePath']) && $this->extensionSettings['frontendBasePath']) {
 			$frontendBasePath = $this->extensionSettings['frontendBasePath'];
+		// If empty, try to use config.absRefPrefix:
+		} elseif (isset($GLOBALS['TSFE']->absRefPrefix) && !empty($GLOBALS['TSFE']->absRefPrefix)) {
+			$frontendBasePath = $GLOBALS['TSFE']->absRefPrefix;
 		// If not in CLI mode the base path can be determined from $_SERVER environment:
 		} elseif (!defined('TYPO3_cliMode') || !TYPO3_cliMode) {
-			t3lib_div::getIndpEnv('TYPO3_SITE_PATH');
+			$frontendBasePath = t3lib_div::getIndpEnv('TYPO3_SITE_PATH');
 		}
 
 		// Base path must be '/<pathSegements>/':
@@ -1897,7 +1904,6 @@ class tx_crawler_lib {
 			$pageId = tx_crawler_api::forceIntegerInRange($cliObj->cli_args['_DEFAULT'][1], 0);
 		}
 
-
 		$configurationKeys  = $this->getConfigurationKeys($cliObj);
 
 		if(!is_array($configurationKeys)){
@@ -1914,15 +1920,20 @@ class tx_crawler_lib {
 			$reason = new tx_crawler_domain_reason();
 			$reason->setReason(tx_crawler_domain_reason::REASON_GUI_SUBMIT);
 			$reason->setDetailText('The cli script of the crawler added to the queue');
-			tx_crawler_domain_events_dispatcher::getInstance()->post(	'invokeQueueChange',
+			tx_crawler_domain_events_dispatcher::getInstance()->post(
+				'invokeQueueChange',
 				$this->setID,
 				array(	'reason' => $reason )
 			);
 		}
 
+		if ($this->extensionSettings['cleanUpOldQueueEntries']) {
+			$this->cleanUpOldQueueEntries();
+		}
+
 		$this->setID = t3lib_div::md5int(microtime());
 		$this->getPageTreeAndUrls(
-			tx_crawler_api::forceIntegerInRange($pageId, 0),
+			$pageId,
 			tx_crawler_api::forceIntegerInRange($cliObj->cli_argValue('-d'),0,99),
 			$this->getCurrentTime(),
 			tx_crawler_api::forceIntegerInRange($cliObj->cli_isArg('-n') ? $cliObj->cli_argValue('-n') : 30,1,1000),
@@ -1932,9 +1943,7 @@ class tx_crawler_lib {
 			$configurationKeys
 		);
 
-
-
-		if ($cliObj->cli_argValue('-o')==='url')	{
+		if ($cliObj->cli_argValue('-o')==='url') {
 			$cliObj->cli_echo(implode(chr(10),$this->downloadUrls).chr(10),1);
 		} elseif ($cliObj->cli_argValue('-o')==='exec')	{
 			$cliObj->cli_echo("Executing ".count($this->urlList)." requests right away:\n\n");
@@ -2383,10 +2392,23 @@ class tx_crawler_lib {
 
 		return $result;
 	}
+
+	/**
+	 * Cleans up entries that stayed for too long in the queue. These are:
+	 * - processed entries that are over 1.5 days in age
+	 * - scheduled entries that are over 7 days old
+	 *
+	 * @return void
+	 */
+	protected function cleanUpOldQueueEntries() {
+		$processedAgeInSeconds = $this->extensionSettings['cleanUpProcessedAge'] * 86400; // 24*60*60 Seconds in 24 hours
+		$scheduledAgeInSeconds = $this->extensionSettings['cleanUpScheduledAge'] * 86400;
+
+		$now = time();
+		$condition = '(exec_time<>0 AND exec_time<' . ($now - $processedAgeInSeconds) . ') OR scheduled<=' . ($now - $scheduledAgeInSeconds);
+		$this->flushQueue($condition);
+	}
 }
-
-
-
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/class.tx_crawler_lib.php'])	{
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/class.tx_crawler_lib.php']);

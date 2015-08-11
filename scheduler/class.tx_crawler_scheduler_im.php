@@ -1,14 +1,16 @@
 <?php
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2009 AOE media (dev@aoemedia.de)
+ *  (c) 2015 AOE GmbH <dev@aoe.com>
+ *
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
+ *  the Free Software Foundation; either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  The GNU General Public License can be found at
@@ -23,13 +25,11 @@
  ***************************************************************/
 
 /**
- * Scheduler task to run the queue option of the crawler.
+ * Class tx_crawler_scheduler_im
  *
- * @author Michael Klapper <michael.klapper@aoemedia.de>
- * @package tx_crawler
- * @version $Id:$
+ * @package AOE\Crawler\Task
  */
-class tx_crawler_scheduler_im extends tx_scheduler_Task {
+class tx_crawler_scheduler_im extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
 
 	/**
 	 * Define the current mode to process the crawler
@@ -78,7 +78,7 @@ class tx_crawler_scheduler_im extends tx_scheduler_Task {
 			$this->startPage = 0;
 		}
 
-		$_SERVER['argv'] = array($_SERVER['argv'][0], 'tx_crawler_cli_im', $this->startPage,'-ss', '-d', $this->depth, '-o', self::MODE, '-conf', implode(',', $this->configuration));
+		$_SERVER['argv'] = array($_SERVER['argv'][0], $this->startPage,'-ss', '-d', $this->depth, '-o', self::MODE, '-conf', implode(',', $this->configuration));
 	}
 
 
@@ -94,8 +94,6 @@ class tx_crawler_scheduler_im extends tx_scheduler_Task {
 			$this->startPage = 0;
 		}
 
-		return implode(',', $this->configuration) . ' (depth: ' . $this->depth . ', startPage:' . $this->startPage. ')';
+		return implode(',', $this->configuration) . ' (depth: ' . $this->depth . ', startPage:' . $this->startPage . ')';
 	}
 }
-
-?>

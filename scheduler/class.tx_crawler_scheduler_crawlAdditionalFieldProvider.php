@@ -1,14 +1,16 @@
 <?php
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2009 AOE media (dev@aoemedia.de)
+ *  (c) 2014 AOE GmbH <dev@aoe.com>
+ *
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
+ *  the Free Software Foundation; either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  The GNU General Public License can be found at
@@ -23,102 +25,100 @@
  ***************************************************************/
 
 /**
+ * Class tx_crawler_scheduler_crawlAdditionalFieldProvider
  *
- * @author Tolleiv Nietsch <tolleiv.nietsch@aoemedia.de>
- * @author Michael Klapper <michael.klapper@aoemedia.de>
- * @package
- * @version $Id:$
+ * @package AOE\Crawler\Task
  */
-class tx_crawler_scheduler_crawlAdditionalFieldProvider implements tx_scheduler_AdditionalFieldProvider {
+class tx_crawler_scheduler_crawlAdditionalFieldProvider implements \TYPO3\CMS\Scheduler\AdditionalFieldProviderInterface {
 
 	/**
-	 * render additional information fields within the scheduler backend
+	 * Gets additional fields to render in the form to add/edit a task
 	 *
-	 * @see interfaces/tx_scheduler_AdditionalFieldProvider#getAdditionalFields($taskInfo, $task, $schedulerModule)
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @param array $taskInfo
+	 * @param \TYPO3\CMS\Scheduler\Task\AbstractTask $task
+	 * @param \TYPO3\CMS\Scheduler\Controller\SchedulerModuleController $schedulerModule
+	 * @return array
 	 */
-	public function getAdditionalFields(array &$taskInfo, $task, tx_scheduler_Module $schedulerModule) {
+	public function getAdditionalFields(array &$taskInfo, $task, \TYPO3\CMS\Scheduler\Controller\SchedulerModuleController $schedulerModule) {
 		$additionalFields = array();
 
 		if (empty($taskInfo['sleepTime'])) {
-						if ($schedulerModule->CMD == 'add') {
-								$taskInfo['sleepTime'] = 1000;
-						} elseif ($schedulerModule->CMD == 'edit') {
-								$taskInfo['sleepTime'] = $task->sleepTime;
-						} else {
-								$taskInfo['sleepTime'] = $task->sleepTime;
-						}
+			if ($schedulerModule->CMD == 'add') {
+				$taskInfo['sleepTime'] = 1000;
+			} elseif ($schedulerModule->CMD == 'edit') {
+				$taskInfo['sleepTime'] = $task->sleepTime;
+			} else {
+				$taskInfo['sleepTime'] = $task->sleepTime;
+			}
 		}
 
 		if (empty($taskInfo['sleepAfterFinish'])) {
-						if ($schedulerModule->CMD == 'add') {
-								$taskInfo['sleepAfterFinish'] = 10;
-						} elseif ($schedulerModule->CMD == 'edit') {
-								$taskInfo['sleepAfterFinish'] = $task->sleepAfterFinish;
-						} else {
-								$taskInfo['sleepAfterFinish'] = $task->sleepAfterFinish;
-						}
+			if ($schedulerModule->CMD == 'add') {
+				$taskInfo['sleepAfterFinish'] = 10;
+			} elseif ($schedulerModule->CMD == 'edit') {
+				$taskInfo['sleepAfterFinish'] = $task->sleepAfterFinish;
+			} else {
+				$taskInfo['sleepAfterFinish'] = $task->sleepAfterFinish;
+			}
 		}
 		if (empty($taskInfo['countInARun'])) {
-						if ($schedulerModule->CMD == 'add') {
-								$taskInfo['countInARun'] = 100;
-						} elseif ($schedulerModule->CMD == 'edit') {
-								$taskInfo['countInARun'] = $task->countInARun;
-						} else {
-								$taskInfo['countInARun'] = $task->countInARun;
-						}
+			if ($schedulerModule->CMD == 'add') {
+				$taskInfo['countInARun'] = 100;
+			} elseif ($schedulerModule->CMD == 'edit') {
+				$taskInfo['countInARun'] = $task->countInARun;
+			} else {
+				$taskInfo['countInARun'] = $task->countInARun;
+			}
 		}
 
-			// input for sleepTime
-		$fieldID = 'task_sleepTime';
-		$fieldCode  = '<input type="text" name="tx_scheduler[sleepTime]" id="' . $fieldID . '" value="' . htmlentities($taskInfo['sleepTime']) . '" />';
-		$additionalFields[$fieldID] = array(
-						'code'     => $fieldCode,
-						'label'    => 'LLL:EXT:crawler/locallang_db.xml:crawler_im.sleepTime'
-				);
-			// input for sleepAfterFinish
-		$fieldID = 'task_sleepAfterFinish';
-		$fieldCode  = '<input type="text" name="tx_scheduler[sleepAfterFinish]" id="' . $fieldID . '" value="' . htmlentities($taskInfo['sleepAfterFinish']) . '" />';
-		$additionalFields[$fieldID] = array(
-						'code'     => $fieldCode,
-						'label'    => 'LLL:EXT:crawler/locallang_db.xml:crawler_im.sleepAfterFinish'
-				);
-			// input for countInARun
-		$fieldID = 'task_countInARun';
-		$fieldCode  = '<input type="text" name="tx_scheduler[countInARun]" id="' . $fieldID . '" value="' . htmlentities($taskInfo['countInARun']) . '" />';
-		$additionalFields[$fieldID] = array(
-						'code'     => $fieldCode,
-						'label'    => 'LLL:EXT:crawler/locallang_db.xml:crawler_im.countInARun'
-				);
+		// input for sleepTime
+		$fieldId = 'task_sleepTime';
+		$fieldCode = '<input type="text" name="tx_scheduler[sleepTime]" id="' . $fieldId . '" value="' . htmlentities($taskInfo['sleepTime']) . '" />';
+		$additionalFields[$fieldId] = array(
+			'code' => $fieldCode,
+			'label' => 'LLL:EXT:crawler/locallang_db.xml:crawler_im.sleepTime'
+		);
+		// input for sleepAfterFinish
+		$fieldId = 'task_sleepAfterFinish';
+		$fieldCode = '<input type="text" name="tx_scheduler[sleepAfterFinish]" id="' . $fieldId . '" value="' . htmlentities($taskInfo['sleepAfterFinish']) . '" />';
+		$additionalFields[$fieldId] = array(
+			'code' => $fieldCode,
+			'label' => 'LLL:EXT:crawler/locallang_db.xml:crawler_im.sleepAfterFinish'
+		);
+		// input for countInARun
+		$fieldId = 'task_countInARun';
+		$fieldCode = '<input type="text" name="tx_scheduler[countInARun]" id="' . $fieldId . '" value="' . htmlentities($taskInfo['countInARun']) . '" />';
+		$additionalFields[$fieldId] = array(
+			'code' => $fieldCode,
+			'label' => 'LLL:EXT:crawler/locallang_db.xml:crawler_im.countInARun'
+		);
 
 		return $additionalFields;
 	}
 
 	/**
-	 * This method checks any additional data that is relevant to the specific task
-	 * If the task class is not relevant, the method is expected to return true
+	 * Validates the additional fields' values
 	 *
-	 * @param	array					$submittedData: reference to the array containing the data submitted by the user
-	 * @param	tx_scheduler_module1	$parentObject: reference to the calling object (Scheduler's BE module)
-	 * @return	boolean					True if validation was ok (or selected class is not relevant), false otherwise
-	 * @author Michael Klapper <michael.klapper@aoemedia.de>
+	 * @param array $submittedData
+	 * @param \TYPO3\CMS\Scheduler\Controller\SchedulerModuleController $schedulerModule
+	 * @return bool
 	 */
-	public function validateAdditionalFields(array &$submittedData, tx_scheduler_Module $schedulerModule) {
-		$isValid = false;
+	public function validateAdditionalFields(array &$submittedData, \TYPO3\CMS\Scheduler\Controller\SchedulerModuleController $schedulerModule) {
+		$isValid = FALSE;
 
-		if ( tx_crawler_api::convertToPositiveInteger($submittedData['sleepTime']) > 0 ) {
-			$isValid = true;
+		if (tx_crawler_api::convertToPositiveInteger($submittedData['sleepTime']) > 0) {
+			$isValid = TRUE;
 		} else {
 			$schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidSleepTime'), t3lib_FlashMessage::ERROR);
 		}
 
-		if ( tx_crawler_api::convertToPositiveInteger($submittedData['sleepAfterFinish']) === 0 ) {
-			$isValid = false;
+		if (tx_crawler_api::convertToPositiveInteger($submittedData['sleepAfterFinish']) === 0) {
+			$isValid = FALSE;
 			$schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidSleepAfterFinish'), t3lib_FlashMessage::ERROR);
 		}
 
-		if ( tx_crawler_api::convertToPositiveInteger($submittedData['countInARun']) === 0 ) {
-			$isValid = false;
+		if (tx_crawler_api::convertToPositiveInteger($submittedData['countInARun']) === 0) {
+			$isValid = FALSE;
 			$schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidCountInARun'), t3lib_FlashMessage::ERROR);
 		}
 
@@ -126,22 +126,15 @@ class tx_crawler_scheduler_crawlAdditionalFieldProvider implements tx_scheduler_
 	}
 
 	/**
-	 * This method is used to save any additional input into the current task object
-	 * if the task class matches
+	 * Takes care of saving the additional fields' values in the task's object
 	 *
-	 * @param	array				$submittedData: array containing the data submitted by the user
-	 * @param	tx_scheduler_Task	$task: reference to the current task object
+	 * @param array $submittedData
+	 * @param \TYPO3\CMS\Scheduler\Task\AbstractTask $task
+	 * @return void
 	 */
-	public function saveAdditionalFields(array $submittedData, tx_scheduler_Task $task) {
-
-		$task->sleepTime        = intval($submittedData['sleepTime']);
+	public function saveAdditionalFields(array $submittedData, \TYPO3\CMS\Scheduler\Task\AbstractTask $task) {
+		$task->sleepTime = intval($submittedData['sleepTime']);
 		$task->sleepAfterFinish = intval($submittedData['sleepAfterFinish']);
-		$task->countInARun      = intval($submittedData['countInARun']);
+		$task->countInARun = intval($submittedData['countInARun']);
 	}
 }
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/class.tx_crawler_scheduler_crawlAdditionalFieldProvider.php'])	{
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/class.tx_crawler_scheduler_crawlAdditionalFieldProvider.php']);
-}
-
-?>
