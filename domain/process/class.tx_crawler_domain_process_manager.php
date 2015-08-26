@@ -57,6 +57,11 @@ class tx_crawler_domain_process_manager  {
 	private $processRepository;
 
 	/**
+	 * @var $verbose boolean
+	 */
+	private $verbose;
+
+	/**
 	 * the constructor
 	 */
 	public function __construct() {
@@ -66,15 +71,15 @@ class tx_crawler_domain_process_manager  {
 		$this->timeToLive = intval($this->crawlerObj->extensionSettings['processMaxRunTime']);
 		$this->countInARun = intval($this->crawlerObj->extensionSettings['countInARun']);
 		$this->processLimit = intval($this->crawlerObj->extensionSettings['processLimit']);
+		$this->verbose = intval($this->crawlerObj->extensionSettings['processDebug']);
 	}
 
 	/**
 	 * starts multiple processes
 	 *
 	 * @param integer $timeout
-	 * @param boolean $verbose
 	 */
-	public function multiProcess( $timeout, $verbose=TRUE ) {
+	public function multiProcess( $timeout ) {
 
 		if ($this->processLimit <= 1) {
 			throw new RuntimeException('To run crawler in multi process mode you have to configure the processLimit > 1.' . PHP_EOL);
@@ -83,22 +88,24 @@ class tx_crawler_domain_process_manager  {
 		$pendingItemsStart = $this->queueRepository->countAllPendingItems();
 		$itemReportLimit = 20;
 		$reportItemCount = 	$pendingItemsStart -  $itemReportLimit;
-		if ($verbose) {
+		if ($this->verbose) {
 			$this->reportItemStatus();
 		}
 		$this->startRequiredProcesses();
 		$nextTimeOut = time() + $this->timeToLive;
 		for ($i=0; $i<$timeout; $i++) {
 			$currentPendingItems = $this->queueRepository->countAllPendingItems();
-			if ($this->startRequiredProcesses($verbose)) {
+			if ($this->startRequiredProcesses($this->verbose)) {
 				$nextTimeOut = time() + $this->timeToLive;
 			}
 			if ($currentPendingItems == 0) {
-				echo 'Finished...'.chr(10);
+				if ($this->verbose) {
+					echo 'Finished...'.chr(10);
+				}
 				break;
 			}
 			if ($currentPendingItems < $reportItemCount) {
-				if ($verbose) {
+				if ($this->verbose) {
 					$this->reportItemStatus();
 				}
 				$reportItemCount = $currentPendingItems -  $itemReportLimit;
@@ -107,13 +114,13 @@ class tx_crawler_domain_process_manager  {
 			if ($nextTimeOut < time()) {
 				$timedOutProcesses = $this->processRepository->findAll('','DESC',NULL,0,'ttl >'.$nextTimeOut);
 				$nextTimeOut = time() + $this->timeToLive;
-				if ($verbose) {
+				if ($this->verbose) {
 					echo 'Cleanup'.implode(',',$timedOutProcesses->getProcessIds()).chr(10);
 				}
 				$this->crawlerObj->CLI_releaseProcesses($timedOutProcesses->getProcessIds(),true);
 			}
 		}
-		if ($currentPendingItems > 0 && $verbose) {
+		if ($currentPendingItems > 0 && $this->verbose) {
 			echo 'Stop with timeout'.chr(10);
 		}
 	}
@@ -130,7 +137,7 @@ class tx_crawler_domain_process_manager  {
 	 * starts more crawling processes
 	 * @return boolean if processes are started
 	 */
-	private function startRequiredProcesses($verbose=TRUE) {
+	private function startRequiredProcesses() {
 		$ret = FALSE;
 		$currentProcesses= $this->processRepository->countActive();
 		$availableProcessesCount = $this->processLimit-$currentProcesses;
@@ -139,19 +146,19 @@ class tx_crawler_domain_process_manager  {
 		if ($startProcessCount <= 0) {
 			return $ret;
 		}
-		if ($startProcessCount && $verbose) {
+		if ($startProcessCount && $this->verbose) {
 			echo 'Start '.$startProcessCount.' new processes (Running:'.$currentProcesses.')';
 		}
 		for($i=0;$i<$startProcessCount;$i++) {
 			usleep(100);
 			if ($this->startProcess()) {
-				if ($verbose) {
+				if ($this->verbose) {
 					echo '.';
 					$ret = TRUE;
 				}
 			}
 		}
-		if ($verbose) {
+		if ($this->verbose) {
 			echo chr(10);
 		}
 		return $ret;
