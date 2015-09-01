@@ -1,0 +1,62 @@
+language: php
+
+php:
+  - 5.3
+  - 5.4
+  - 5.5
+  - 5.6
+  - hhvm
+
+env:
+  - TYPO3_BRANCH=master COVERAGE=0
+  - TYPO3_BRANCH=TYPO3_6-2 COVERAGE=0
+
+matrix:
+  exclude:
+    - env: TYPO3_BRANCH=master COVERAGE=0
+      php: 5.3
+    - env: TYPO3_BRANCH=master COVERAGE=0
+      php: 5.4
+  include:
+    - php: 5.5
+      env: TYPO3_BRANCH=TYPO3_6-2 COVERAGE=1
+
+notifications:
+  email:
+    recipients:
+      - tomas.mikkelsen@aoe.com
+    on_success: always
+    on_failure: always
+
+before_script:
+  - sudo apt-get install parallel
+  - composer self-update
+  - cd ..
+  - git clone --single-branch --branch $TYPO3_BRANCH --depth 1 https://github.com/TYPO3/TYPO3.CMS.git typo3_core
+  - mv typo3_core/* .
+  - mkdir -p typo3conf/ext
+  - mv crawler typo3conf/ext/
+  - composer install
+
+script:
+  - >
+    if [[ "$COVERAGE" == "0" ]]; then
+      echo;
+      echo "Running unit tests";
+      ./bin/phpunit --colors -c typo3/sysext/core/Build/UnitTests.xml typo3conf/ext/crawler/tests
+    fi
+  - >
+    if [[ "$COVERAGE" == "1" ]]; then
+      echo;
+      echo "Running unit tests";
+      ./bin/phpunit --coverage-clover=unittest-coverage.clover --colors -c typo3/sysext/core/Build/UnitTests.xml typo3conf/ext/crawler/tests/
+    fi
+  - >
+    echo;
+    echo "Running php lint";
+    /bin/bash -c "
+        if ! find typo3conf/ext/crawler -name \*.php | parallel --gnu 'php -l {}' > /tmp/errors 2>&1; then
+            grep -v \"No syntax errors detected in\" /tmp/errors;
+            exit 99;
+        fi
+    "
