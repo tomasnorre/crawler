@@ -71,7 +71,7 @@ class tx_crawler_domain_process_manager  {
 		$this->timeToLive = intval($this->crawlerObj->extensionSettings['processMaxRunTime']);
 		$this->countInARun = intval($this->crawlerObj->extensionSettings['countInARun']);
 		$this->processLimit = intval($this->crawlerObj->extensionSettings['processLimit']);
-		$this->verbose = intval($this->crawlerObj->extensionSettings['processDebug']);
+		$this->verbose = intval($this->crawlerObj->extensionSettings['processVerbose']);
 	}
 
 	/**

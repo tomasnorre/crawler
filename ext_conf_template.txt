@@ -22,6 +22,9 @@ maxCompileUrls=10000
 # cat=basic//10; type=boolean; label= Debug: Print Multiprocess- processing informations - prints some information whether a process was really executed and which status it has
 processDebug=0
 
+# cat=basic//10; type=boolean; label= Make Multiprocess- processing be verbose while running
+processVerbose=0
+
 # cat=basic//10; type=boolean; label= Crawl hidden pages: Crawl hidden pages (By default they won't be crawled)
 crawlHiddenPages=0
 
