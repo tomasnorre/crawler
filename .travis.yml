@@ -52,6 +52,14 @@ script:
       ./bin/phpunit --coverage-clover=unittest-coverage.clover --colors -c typo3/sysext/core/Build/UnitTests.xml typo3conf/ext/crawler/tests/
     fi
   - >
+    if [[ "$COVERAGE" == "1" ]]; then
+      echo;
+      echo "Uploading code coverage results";
+      wget https://scrutinizer-ci.com/ocular.phar
+      cp -R typo3conf/ext/crawler/.git .
+      php ocular.phar code-coverage:upload --format=php-clover unittest-coverage.clover
+    fi
+  - >
     echo;
     echo "Running php lint";
     /bin/bash -c "
