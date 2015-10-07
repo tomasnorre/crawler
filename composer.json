@@ -1,0 +1,17 @@
+{
+    "name": "aoepeople/crawler",
+    "description": "Crawler extension for TYPO3",
+    "autoload": {
+        "classmap": [
+            "."
+        ]
+    },
+    "license": "GPL-3.0",
+    "type": "typo3-cms-extension",
+    "version": "4.1.0-dev",
+    "authors": [
+    ],
+    "minimum-stability": "dev",
+    "require": {
+    }
+}
