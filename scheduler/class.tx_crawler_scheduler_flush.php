@@ -44,7 +44,7 @@ class tx_crawler_scheduler_flush extends \TYPO3\CMS\Scheduler\Task\AbstractTask 
 	public function execute() {
 		$_SERVER['argv'] = array($_SERVER['argv'][0], '0', '-o', $this->mode);
 		/* @var $crawlerObj tx_crawler_lib */
-		$crawlerObj = t3lib_div::makeInstance('tx_crawler_lib');
+		$crawlerObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_crawler_lib');
 
 		return $crawlerObj->CLI_main_flush();
 	}

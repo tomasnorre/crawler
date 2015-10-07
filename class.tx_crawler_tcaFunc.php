@@ -62,11 +62,11 @@ class tx_crawler_tcaFunc {
 	protected function getExtensionIcon($key) {
 		$extIcon = '';
 
-		if (method_exists(t3lib_extMgm, 'getExtensionKeyByPrefix')) {
+		if (method_exists('\TYPO3\CMS\Core\Utility\ExtensionManagementUtility', 'getExtensionKeyByPrefix')) {
 			$parts = explode('_', $key);
 			if (is_array($parts) && count($parts) > 2) {
-				$extensionKey = t3lib_extMgm::getExtensionKeyByPrefix('tx_' . $parts[1]);
-				$extIcon = t3lib_extMgm::extRelPath($extensionKey) . 'ext_icon.gif';
+				$extensionKey = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getExtensionKeyByPrefix('tx_' . $parts[1]);
+				$extIcon = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($extensionKey) . 'ext_icon.gif';
 			}
 		}
 

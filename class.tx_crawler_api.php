@@ -27,9 +27,9 @@
  * It uses internally the class tx_crawler_lib modify the queue.
  */
 
-require_once t3lib_extMgm::extPath('crawler').'system/class.tx_crawler_system_validator.php';
-require_once t3lib_extMgm::extPath('crawler').'domain/queue/class.tx_crawler_domain_queue_repository.php';
-require_once t3lib_extMgm::extPath('crawler').'domain/process/class.tx_crawler_domain_process_repository.php';
+//require_once \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('crawler').'system/class.tx_crawler_system_validator.php';
+//require_once \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('crawler').'domain/queue/class.tx_crawler_domain_queue_repository.php';
+//require_once \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('crawler').'domain/process/class.tx_crawler_domain_process_repository.php';
 
 
 class tx_crawler_api {
@@ -61,7 +61,7 @@ class tx_crawler_api {
 	 */
 	protected function findValidator() {
 		if(!$this->validator instanceof tx_crawler_system_validator) {
-			$this->validator = t3lib_div::makeInstance('tx_crawler_system_validator');
+			$this->validator = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_crawler_system_validator');
 		}
 
 		return $this->validator;
@@ -103,8 +103,8 @@ class tx_crawler_api {
 	 */
 	protected function findCrawler() {
 		if(!is_object($this->crawlerObj)) {
-			$this->crawlerObj = t3lib_div::makeInstance('tx_crawler_lib');
-			$this->crawlerObj->setID = t3lib_div::md5int(microtime());
+			$this->crawlerObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_crawler_lib');
+			$this->crawlerObj->setID = \TYPO3\CMS\Core\Utility\GeneralUtility::md5int(microtime());
 		}
 
 		if (is_object($this->crawlerObj)) {
@@ -157,7 +157,7 @@ class tx_crawler_api {
 		$time 		= intval($time);
 
 		$crawler 			= $this->findCrawler();
-		$pageData 			= t3lib_div::makeInstance('t3lib_pageSelect')->getPage($uid);
+		$pageData 			= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Frontend\Page\PageRepository')->getPage($uid);
 		$configurations 	= $crawler->getUrlsForPageRow($pageData);
 		$configurations 	= $this->filterUnallowedConfigurations($configurations);
 		$downloadUrls		= array();
@@ -541,9 +541,9 @@ class tx_crawler_api {
 	 */
 	static public function convertToPositiveInteger($value) {
 		if (version_compare(TYPO3_version, '4.6.0', '>=')) {
-			$result = t3lib_utility_Math::convertToPositiveInteger($value);
+			$result = \TYPO3\CMS\Core\Utility\MathUtility::convertToPositiveInteger($value);
 		} else {
-			$result = t3lib_div::intval_positive($value);
+			$result = \TYPO3\CMS\Core\Utility\GeneralUtility::intval_positive($value);
 		}
 
 		return $result;
@@ -561,9 +561,9 @@ class tx_crawler_api {
 	 */
 	static public function forceIntegerInRange($value, $min, $max = 2000000, $default = 0) {
 		if (version_compare(TYPO3_version, '4.6.0', '>=')) {
-			$result = t3lib_utility_Math::forceIntegerInRange($value, $min, $max, $default);
+			$result = \TYPO3\CMS\Core\Utility\MathUtility::forceIntegerInRange($value, $min, $max, $default);
 		} else {
-			$result = t3lib_div::intInRange($value, $min, $max, $default);
+			$result = \TYPO3\CMS\Core\Utility\GeneralUtility::intInRange($value, $min, $max, $default);
 		}
 		return $result;
 	}
@@ -576,9 +576,9 @@ class tx_crawler_api {
 	 */
 	static public function canBeInterpretedAsInteger($value) {
 		if (version_compare(TYPO3_version, '4.6.0', '>=')) {
-			$result = t3lib_utility_Math::canBeInterpretedAsInteger($value);
+			$result = \TYPO3\CMS\Core\Utility\MathUtility::canBeInterpretedAsInteger($value);
 		} else {
-			$result = t3lib_div::testInt($value);
+			$result = \TYPO3\CMS\Core\Utility\GeneralUtility::testInt($value);
 		}
 		return $result;
 	}

@@ -15,7 +15,7 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['nc_staticfilecache/class.tx_ncstaticf
 
 $GLOBALS['TYPO3_CONF_VARS']['SVCONF']['auth']['setup']['BE_alwaysFetchUser'] = true;
 
-t3lib_extMgm::addService(
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addService(
 	$_EXTKEY,
 	'auth' /* sv type */,
 	'tx_crawler_auth' /* sv key */,
@@ -64,5 +64,3 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['tx_crawler_sche
 	'description'      => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:crawler_flush.description',
 	'additionalFields' => 'tx_crawler_scheduler_flushAdditionalFieldProvider'
 );
-
-?>

@@ -46,7 +46,7 @@ class tx_crawler_domain_process_repository extends tx_crawler_domain_lib_abstrac
 	 */
 	public function findAll($orderField = '', $orderDirection = 'DESC', $itemCount = NULL, $offset = NULL, $where = '') {
 		/** @var tx_crawler_domain_process_collection $collection */
-		$collection = t3lib_div::makeInstance('tx_crawler_domain_process_collection');
+		$collection = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_crawler_domain_process_collection');
 
 		$orderField = trim($orderField);
 		$orderField = empty($orderField) ? 'process_id' : $orderField;
@@ -65,7 +65,7 @@ class tx_crawler_domain_process_repository extends tx_crawler_domain_lib_abstrac
 
 		if (is_array($rows)) {
 			foreach($rows as $row) {
-				$collection->append(t3lib_div::makeInstance($this->objectClassname, $row));
+				$collection->append(\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance($this->objectClassname, $row));
 			}
 		}
 

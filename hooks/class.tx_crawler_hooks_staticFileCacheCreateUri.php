@@ -28,7 +28,7 @@
  * @date: 04.04.12
  * @time: 17:27
  */
-class tx_crawler_hooks_staticFileCacheCreateUri  implements t3lib_Singleton {
+class tx_crawler_hooks_staticFileCacheCreateUri  implements \TYPO3\CMS\Core\SingletonInterface {
 
 	/**
 	 * Initializes the variables before starting the processing.
@@ -81,7 +81,7 @@ class tx_crawler_hooks_staticFileCacheCreateUri  implements t3lib_Singleton {
 	 */
 	protected function isCrawlerExtensionRunning(tslib_fe $frontend) {
 		return (
-			t3lib_extMgm::isLoaded('crawler')
+			\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('crawler')
 			&& isset($frontend->applicationData['tx_crawler']['running'])
 			&& isset($frontend->applicationData['tx_crawler']['parameters']['procInstructions'])
 			&& $frontend->applicationData['tx_crawler']['running']

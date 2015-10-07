@@ -397,7 +397,7 @@ class tx_crawler_view_process_list {
 	 */
 	public function render() {
 		ob_start();
-		$this->template = t3lib_div::getFileAbsFileName($this->template);
+		$this->template = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($this->template);
 		include($this->template);
 		$content = ob_get_contents();
 		ob_end_clean();

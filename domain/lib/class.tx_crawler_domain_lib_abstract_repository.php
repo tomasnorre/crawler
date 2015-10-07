@@ -37,7 +37,7 @@ abstract class tx_crawler_domain_lib_abstract_repository {
 	/**
 	 * Returns an instance of the TYPO3 database class.
 	 *
-	 * @return  t3lib_DB
+	 * @return \TYPO3\CMS\Core\Database\DatabaseConnection
 	 */
 	protected function getDB() {
 		return $GLOBALS['TYPO3_DB'];

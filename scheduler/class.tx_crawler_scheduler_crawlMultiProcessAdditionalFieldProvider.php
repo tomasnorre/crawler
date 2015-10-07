@@ -76,7 +76,7 @@ class tx_crawler_scheduler_crawlMultiProcessAdditionalFieldProvider implements \
 		if (tx_crawler_api::convertToPositiveInteger($submittedData['timeOut']) > 0) {
 			$isValid = TRUE;
 		} else {
-			$schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidTimeOut'), t3lib_FlashMessage::ERROR);
+			$schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidTimeOut'), \TYPO3\CMS\Core\Messaging\FlashMessage::ERROR);
 		}
 
 		return $isValid;
