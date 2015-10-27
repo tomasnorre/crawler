@@ -35,7 +35,7 @@
  * @package TYPO3
  * @subpackage tx_crawler
  */
-class tx_crawler_cli_flush extends t3lib_cli {
+class tx_crawler_cli_flush extends \TYPO3\CMS\Core\Controller\CommandLineController {
 
 	/**
 	 * Constructor
@@ -48,7 +48,7 @@ class tx_crawler_cli_flush extends t3lib_cli {
 		if (version_compare(TYPO3_version, '4.6.0', '>=')) {
 			parent::__construct();
 		} else {
-			parent::t3lib_cli();
+			parent::CommandLineController();
 		}
 
 			// Adding options to help archive:

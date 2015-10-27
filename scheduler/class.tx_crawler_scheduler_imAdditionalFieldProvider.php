@@ -153,7 +153,7 @@ class tx_crawler_scheduler_imAdditionalFieldProvider implements \TYPO3\CMS\Sched
 		$result = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 			'*',
 			'tx_crawler_configuration',
-			'1=1' . t3lib_BEfunc::deleteClause('tx_crawler_configuration')
+			'1=1' . \TYPO3\CMS\Backend\Utility\BackendUtility::deleteClause('tx_crawler_configuration')
 		);
 
 		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($result)) {
@@ -178,17 +178,17 @@ class tx_crawler_scheduler_imAdditionalFieldProvider implements \TYPO3\CMS\Sched
 		if (is_array($submittedData['configuration'])) {
 			$isValid = TRUE;
 		} else {
-			$schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidConfiguration'), t3lib_FlashMessage::ERROR);
+			$schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidConfiguration'), \TYPO3\CMS\Core\Messaging\FlashMessage::ERROR);
 		}
 
 		if ($submittedData['depth'] < 0) {
 			$isValid = FALSE;
-			$schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidDepth'), t3lib_FlashMessage::ERROR);
+			$schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidDepth'), \TYPO3\CMS\Core\Messaging\FlashMessage::ERROR);
 		}
 
 		if (!tx_crawler_api::canBeInterpretedAsInteger($submittedData['startPage']) || $submittedData['startPage'] < 0) {
 			$isValid = FALSE;
-			$schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidStartPage'), t3lib_FlashMessage::ERROR);
+			$schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidStartPage'), \TYPO3\CMS\Core\Messaging\FlashMessage::ERROR);
 		}
 
 		return $isValid;

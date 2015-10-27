@@ -37,7 +37,7 @@ require(dirname(PATH_thisScript).'/'.$BACK_PATH.'init.php');
 
 
 # HERE you run your application!
-$crawlerObj = t3lib_div::makeInstance('tx_crawler_lib');
+$crawlerObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_crawler_lib');
 
 exit($crawlerObj->CLI_main());
 

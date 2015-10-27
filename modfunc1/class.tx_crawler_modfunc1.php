@@ -34,8 +34,7 @@
  * @package TYPO3
  * @subpackage tx_crawler
  */
-class tx_crawler_modfunc1 extends t3lib_extobjbase {
-
+class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModule {
 		// Internal, dynamic:
 	var $duplicateTrack = array();
 	var $submitCrawlUrls = FALSE;
@@ -140,7 +139,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 *
 	 * @return	string		HTML output
 	 */
-	function main()	{
+	function main() {
 		global $LANG, $BACK_PATH;
 
 		$this->incLocalLang();
@@ -174,7 +173,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		';
 
 			// Type function menu:
-		$h_func = t3lib_BEfunc::getFuncMenu(
+		$h_func = \TYPO3\CMS\Backend\Utility\BackendUtility::getFuncMenu(
 			$this->pObj->id,
 			'SET[crawlaction]',
 			$this->pObj->MOD_SETTINGS['crawlaction'],
@@ -185,7 +184,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		/*
 			// Showing depth-menu in certain cases:
 		if ($this->pObj->MOD_SETTINGS['crawlaction']!=='cli' && $this->pObj->MOD_SETTINGS['crawlaction']!== 'multiprocess' && ($this->pObj->MOD_SETTINGS['crawlaction']!=='log' || $this->pObj->id))	{
-			$h_func .= t3lib_BEfunc::getFuncMenu(
+			$h_func .= \TYPO3\CMS\Backend\Utility\BackendUtility::getFuncMenu(
 				$this->pObj->id,
 				'SET[depth]',
 				$this->pObj->MOD_SETTINGS['depth'],
@@ -197,7 +196,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 
 			// Additional menus for the log type:
 		if ($this->pObj->MOD_SETTINGS['crawlaction']==='log')	{
-			$h_func .= t3lib_BEfunc::getFuncMenu(
+			$h_func .= \TYPO3\CMS\Backend\Utility\BackendUtility::getFuncMenu(
 				$this->pObj->id,
 				'SET[depth]',
 				$this->pObj->MOD_SETTINGS['depth'],
@@ -205,16 +204,16 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				'index.php'
 			);
 
-			$quiPart = t3lib_div::_GP('qid_details') ? '&qid_details=' . intval(t3lib_div::_GP('qid_details')) : '';
+			$quiPart = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('qid_details') ? '&qid_details=' . intval(\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('qid_details')) : '';
 
-			$setId = intval(t3lib_div::_GP('setID'));
+			$setId = intval(\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('setID'));
 
 			$h_func.= '<hr/>'.
-					$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.display').': '.t3lib_BEfunc::getFuncMenu($this->pObj->id,'SET[log_display]',$this->pObj->MOD_SETTINGS['log_display'],$this->pObj->MOD_MENU['log_display'],'index.php','&setID='.$setId) . ' - ' .
-					$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.showresultlog').': '.t3lib_BEfunc::getFuncCheck($this->pObj->id,'SET[log_resultLog]',$this->pObj->MOD_SETTINGS['log_resultLog'],'index.php','&setID='.$setId . $quiPart) . ' - ' .
-					$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.showfevars').': '.t3lib_BEfunc::getFuncCheck($this->pObj->id,'SET[log_feVars]',$this->pObj->MOD_SETTINGS['log_feVars'],'index.php','&setID='.$setId . $quiPart) . ' - ' .
+					$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.display').': '.\TYPO3\CMS\Backend\Utility\BackendUtility::getFuncMenu($this->pObj->id,'SET[log_display]',$this->pObj->MOD_SETTINGS['log_display'],$this->pObj->MOD_MENU['log_display'],'index.php','&setID='.$setId) . ' - ' .
+					$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.showresultlog').': '.\TYPO3\CMS\Backend\Utility\BackendUtility::getFuncCheck($this->pObj->id,'SET[log_resultLog]',$this->pObj->MOD_SETTINGS['log_resultLog'],'index.php','&setID='.$setId . $quiPart) . ' - ' .
+					$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.showfevars').': '.\TYPO3\CMS\Backend\Utility\BackendUtility::getFuncCheck($this->pObj->id,'SET[log_feVars]',$this->pObj->MOD_SETTINGS['log_feVars'],'index.php','&setID='.$setId . $quiPart) . ' - ' .
 					$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.itemsPerPage').': ' .
-					t3lib_BEfunc::getFuncMenu(
+					\TYPO3\CMS\Backend\Utility\BackendUtility::getFuncMenu(
 						$this->pObj->id,
 						'SET[itemsPerPage]',
 						$this->pObj->MOD_SETTINGS['itemsPerPage'],
@@ -280,11 +279,11 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 
 			// Init:
 		$this->duplicateTrack = array();
-		$this->submitCrawlUrls = t3lib_div::_GP('_crawl');
-		$this->downloadCrawlUrls = t3lib_div::_GP('_download');
+		$this->submitCrawlUrls = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('_crawl');
+		$this->downloadCrawlUrls = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('_download');
 		$this->makeCrawlerProcessableChecks();
 
-		switch((string)t3lib_div::_GP('tstamp'))	{
+		switch((string)\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('tstamp'))	{
 			case 'midnight':
 				$this->scheduledTime = mktime(0,0,0);
 			break;
@@ -296,17 +295,17 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				$this->scheduledTime = time();
 			break;
 		}
-		// $this->reqMinute = t3lib_div::intInRange(t3lib_div::_GP('perminute'),1,10000);
+		// $this->reqMinute = \TYPO3\CMS\Core\Utility\GeneralUtility::intInRange(\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('perminute'),1,10000);
 		// TODO: check relevance
 		$this->reqMinute = 1000;
 
 
-		$this->incomingConfigurationSelection = t3lib_div::_GP('configurationSelection');
+		$this->incomingConfigurationSelection = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('configurationSelection');
 		$this->incomingConfigurationSelection = is_array($this->incomingConfigurationSelection) ? $this->incomingConfigurationSelection : array('');
 
-		$this->crawlerObj = t3lib_div::makeInstance('tx_crawler_lib');
+		$this->crawlerObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_crawler_lib');
 		$this->crawlerObj->setAccessMode('gui');
-		$this->crawlerObj->setID = t3lib_div::md5int(microtime());
+		$this->crawlerObj->setID = \TYPO3\CMS\Core\Utility\GeneralUtility::md5int(microtime());
 
 		if (empty($this->incomingConfigurationSelection)
 			|| (count($this->incomingConfigurationSelection)==1 && empty($this->incomingConfigurationSelection[0]))
@@ -320,7 +319,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				$reason = new tx_crawler_domain_reason();
 				$reason->setReason(tx_crawler_domain_reason::REASON_GUI_SUBMIT);
 
-				if($BE_USER instanceof t3lib_beUserAuth){ $username = $BE_USER->user['username']; }
+				if($BE_USER instanceof \TYPO3\CMS\Core\Authentication\BackendUserAuthentication){ $username = $BE_USER->user['username']; }
 				$reason->setDetailText('The user '.$username.' added pages to the crawler queue manually ');
 
 				tx_crawler_domain_events_dispatcher::getInstance()->post(	'invokeQueueChange',
@@ -428,7 +427,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				'04:00' => $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.time.4am'),
 			),
 			'tstamp',
-			t3lib_div::_POST('tstamp'),
+			\TYPO3\CMS\Core\Utility\GeneralUtility::_POST('tstamp'),
 			0
 		);
 
@@ -518,25 +517,25 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		$output = '';
 
 			// Init:
-		$this->crawlerObj = t3lib_div::makeInstance('tx_crawler_lib');
+		$this->crawlerObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_crawler_lib');
 		$this->crawlerObj->setAccessMode('gui');
-		$this->crawlerObj->setID = t3lib_div::md5int(microtime());
+		$this->crawlerObj->setID = \TYPO3\CMS\Core\Utility\GeneralUtility::md5int(microtime());
 
-		$this->CSVExport = t3lib_div::_POST('_csv');
+		$this->CSVExport = \TYPO3\CMS\Core\Utility\GeneralUtility::_POST('_csv');
 
 			// Read URL:
-		if (t3lib_div::_GP('qid_read'))	{
-			$this->crawlerObj->readUrl(intval(t3lib_div::_GP('qid_read')),TRUE);
+		if (\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('qid_read'))	{
+			$this->crawlerObj->readUrl(intval(\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('qid_read')),TRUE);
 		}
 
 			// Look for set ID sent - if it is, we will display contents of that set:
-		$showSetId = intval(t3lib_div::_GP('setID'));
+		$showSetId = intval(\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('setID'));
 
 			// Show details:
-		if (t3lib_div::_GP('qid_details'))	{
+		if (\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('qid_details'))	{
 
 				// Get entry record:
-			list($q_entry) = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*','tx_crawler_queue','qid='.intval(t3lib_div::_GP('qid_details')));
+			list($q_entry) = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*','tx_crawler_queue','qid='.intval(\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('qid_details')));
 
 				// Explode values:
 				$resStatus = $this->getResStatus($q_entry);
@@ -559,20 +558,20 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				<br />
 				Current server time: '.date('H:i:s',time()). '<br />' .
 				'Status: ' . $resStatus . '<br />' .
-				((version_compare(TYPO3_version, '4.5.0', '<')) ? t3lib_div::view_array($q_entry) : t3lib_utility_Debug::viewArray($q_entry));
+				((version_compare(TYPO3_version, '4.5.0', '<')) ? \TYPO3\CMS\Core\Utility\GeneralUtility::view_array($q_entry) : \TYPO3\CMS\Core\Utility\DebugUtility::viewArray($q_entry));
 		} else {	// Show list:
 
 				// If either id or set id, show list:
 			if ($this->pObj->id || $showSetId)	{
 				if ($this->pObj->id)	{
 						// Drawing tree:
-					$tree = t3lib_div::makeInstance('t3lib_pageTree');
+					$tree = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Backend\Tree\View\PageTreeView');
 					$perms_clause = $GLOBALS['BE_USER']->getPagePermsClause(1);
 					$tree->init('AND '.$perms_clause);
 
 						// Set root row:
-					$HTML = t3lib_iconWorks::getSpriteIconForRecord('pages', $this->pObj->pageinfo);
-					$HTML = t3lib_iconWorks::getSpriteIconForRecord('pages', $this->pObj->pageinfo);
+					$HTML = \TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIconForRecord('pages', $this->pObj->pageinfo);
+					$HTML = \TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIconForRecord('pages', $this->pObj->pageinfo);
 					$tree->tree[] = Array(
 						'row' => $this->pObj->pageinfo,
 						'HTML' => $HTML
@@ -588,7 +587,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 					foreach($tree->tree as $data)	{
 						$code .= $this->drawLog_addRows(
 									$data['row'],
-									$data['HTML'] . t3lib_BEfunc::getRecordTitle('pages',$data['row'],TRUE),
+									$data['HTML'] . \TYPO3\CMS\Backend\Utility\BackendUtility::getRecordTitle('pages',$data['row'],TRUE),
 									intval($this->pObj->MOD_SETTINGS['itemsPerPage'])
 								);
 						if (++$count == 1000) {
@@ -646,7 +645,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 						<tr class="bgColor'.($cc%2 ? '-20':'-10').'">
 							<td><a href="'.htmlspecialchars('index.php?setID='.$set['set_id']).'">'.$set['set_id'].'</a></td>
 							<td>'.$set['count_value'].'</td>
-							<td>'.t3lib_BEfunc::dateTimeAge($set['scheduled']).'</td>
+							<td>'.\TYPO3\CMS\Backend\Utility\BackendUtility::dateTimeAge($set['scheduled']).'</td>
 						</tr>
 					';
 
@@ -684,11 +683,11 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 			// Field names:
 		reset($this->CSVaccu);
 		$fieldNames = array_keys(current($this->CSVaccu));
-		$csvLines[] = t3lib_div::csvValues($fieldNames);
+		$csvLines[] = \TYPO3\CMS\Core\Utility\GeneralUtility::csvValues($fieldNames);
 
 			// Data:
 		foreach($this->CSVaccu as $row)	{
-			$csvLines[] = t3lib_div::csvValues($row);
+			$csvLines[] = \TYPO3\CMS\Core\Utility\GeneralUtility::csvValues($row);
 		}
 
 			// Creating output header:
@@ -716,10 +715,10 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 
 			// If Flush button is pressed, flush tables instead of selecting entries:
 
-		if(t3lib_div::_POST('_flush')) {
+		if(\TYPO3\CMS\Core\Utility\GeneralUtility::_POST('_flush')) {
 			$doFlush = true;
 			$doFullFlush = false;
-		} elseif(t3lib_div::_POST('_flush_all')) {
+		} elseif(\TYPO3\CMS\Core\Utility\GeneralUtility::_POST('_flush_all')) {
 			$doFlush = true;
 			$doFullFlush = true;
 		} else {
@@ -766,10 +765,10 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 				if ($this->pObj->MOD_SETTINGS['log_resultLog'])	{
 					$rowData['result_log'] = $resLog;
 				} else {
-					$rowData['scheduled'] = ($vv['scheduled']> 0) ? t3lib_BEfunc::datetime($vv['scheduled']) : ' '.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.immediate');
-					$rowData['exec_time'] = $vv['exec_time'] ? t3lib_BEfunc::datetime($vv['exec_time']) : '-';
+					$rowData['scheduled'] = ($vv['scheduled']> 0) ? \TYPO3\CMS\Backend\Utility\BackendUtility::datetime($vv['scheduled']) : ' '.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.immediate');
+					$rowData['exec_time'] = $vv['exec_time'] ? \TYPO3\CMS\Backend\Utility\BackendUtility::datetime($vv['exec_time']) : '-';
 				}
-				$rowData['result_status'] = t3lib_div::fixed_lgd_cs($resStatus,50);
+				$rowData['result_status'] = \TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs($resStatus,50);
 				$rowData['url'] = '<a href="'.htmlspecialchars($parameters['url']).'" target="_newWIndow">'.htmlspecialchars($parameters['url']).'</a>';
 				$rowData['feUserGroupList'] = $parameters['feUserGroupList'];
 				$rowData['procInstructions'] = is_array($parameters['procInstructions']) ? implode('; ',$parameters['procInstructions']) : '';
@@ -781,7 +780,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 					$rowData['tsfe_no_cache'] = $resFeVars['no_cache'];
 				}
 
-				$setId = intval(t3lib_div::_GP('setID'));
+				$setId = intval(\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('setID'));
 
 					// Put rows together:
 				$content.= '
@@ -791,7 +790,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 						<td><a href="index.php?id='.$this->pObj->id.'&qid_read='.$vv['qid'].'&setID='.$setId.'"><img src="'.$GLOBALS['BACK_PATH'].'gfx/refresh_n.gif" width="14" hspace="1" vspace="2" height="14" border="0" title="'.htmlspecialchars('Read').'" alt="" /></a></td>';
 				foreach($rowData as $fKey => $value) {
 
-					if (t3lib_div::inList('url',$fKey))	{
+					if (\TYPO3\CMS\Core\Utility\GeneralUtility::inList('url',$fKey))	{
 						$content.= '
 						<td>'.$value.'</td>';
 					} else {
@@ -807,8 +806,8 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 						// Only for CSV (adding qid and scheduled/exec_time if needed):
 					$rowData['result_log'] = implode('// ',explode(chr(10),$resLog));
 					$rowData['qid'] = $vv['qid'];
-					$rowData['scheduled'] = t3lib_BEfunc::datetime($vv['scheduled']);
-					$rowData['exec_time'] = $vv['exec_time'] ? t3lib_BEfunc::datetime($vv['exec_time']) : '-';
+					$rowData['scheduled'] = \TYPO3\CMS\Backend\Utility\BackendUtility::datetime($vv['scheduled']);
+					$rowData['exec_time'] = $vv['exec_time'] ? \TYPO3\CMS\Backend\Utility\BackendUtility::datetime($vv['exec_time']) : '-';
 					$this->CSVaccu[] = $rowData;
 				}
 			}
@@ -950,7 +949,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 			$this->addErrorMessage($e->getMessage());
 		}
 
-		$offset 	= intval(t3lib_div::_GP('offset'));
+		$offset 	= intval(\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('offset'));
 		$perpage 	= 20;
 
 		$processRepository	= new tx_crawler_domain_process_repository();
@@ -1045,7 +1044,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 */
 	protected function isCrawlerUserAvailable() {
 		$isAvailable = false;
-		$userArray = t3lib_BEfunc::getRecordsByField('be_users', 'username', '_cli_crawler');
+		$userArray = \TYPO3\CMS\Backend\Utility\BackendUtility::getRecordsByField('be_users', 'username', '_cli_crawler');
 
 		if (is_array($userArray))
 			$isAvailable = true;
@@ -1064,7 +1063,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 */
 	protected function isCrawlerUserNotAdmin() {
 		$isAvailable = false;
-		$userArray = t3lib_BEfunc::getRecordsByField('be_users', 'username', '_cli_crawler');
+		$userArray = \TYPO3\CMS\Backend\Utility\BackendUtility::getRecordsByField('be_users', 'username', '_cli_crawler');
 
 		if (is_array($userArray) && $userArray[0]['admin'] == 0)
 			$isAvailable = true;
@@ -1082,7 +1081,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 
 		$crawler = $this->findCrawler();
 
-		switch (t3lib_div::_GP('action')) {
+		switch (\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('action')) {
 			case 'stopCrawling' :
 				//set the cli status to disable (all processes will be terminated)
 				$crawler->setDisabled(true);
@@ -1113,7 +1112,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 */
 	protected function findCrawler(){
 		if(!$this->crawlerObj instanceof tx_crawler_lib){
-			$this->crawlerObj = t3lib_div::makeInstance('tx_crawler_lib');
+			$this->crawlerObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_crawler_lib');
 		}
 		return $this->crawlerObj;
 	}
@@ -1138,16 +1137,19 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 * @access private
 	 * @return void
 	 */
-        private function addMessage($message, $severity = t3lib_FlashMessage::OK) {
-                $message = t3lib_div::makeInstance(
-                        't3lib_FlashMessage',
-                        $message,
-                        '',
-                        $severity
-                );
+	private function addMessage($message, $severity = \TYPO3\CMS\Core\Messaging\FlashMessage::OK) {
+		$message = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+			'TYPO3\CMS\Core\Messaging\FlashMessage',
+			$message,
+			'',
+			$severity
+		);
 
-                t3lib_FlashMessageQueue::addMessage($message);
-        }
+		// TODO:
+		/** @var \TYPO3\CMS\Core\Messaging\FlashMessageService $flashMessageService */
+		$flashMessageService = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Messaging\\FlashMessageService');
+		$flashMessageService->getMessageQueueByIdentifier()->addMessage($message);
+	}
 
 	/**
 	 * Add notice message to the user interface.
@@ -1163,8 +1165,8 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	protected function addNoticeMessage($message) {
-        	if (version_compare(TYPO3_version,'4.3','>='))
-			$this->addMessage($message, t3lib_FlashMessage::NOTICE);
+		if (version_compare(TYPO3_version,'4.3','>='))
+		$this->addMessage($message, \TYPO3\CMS\Core\Messaging\FlashMessage::NOTICE);
 	}
 
 	/**
@@ -1184,7 +1186,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 		$this->isErrorDetected = true;
 
 		if (version_compare(TYPO3_version,'4.3','>='))
-			$this->addMessage($message, t3lib_FlashMessage::ERROR);
+			$this->addMessage($message, \TYPO3\CMS\Core\Messaging\FlashMessage::ERROR);
 	}
 
 	/**
@@ -1202,7 +1204,7 @@ class tx_crawler_modfunc1 extends t3lib_extobjbase {
 	 */
 	protected function addWarningMessage($message) {
 		if (version_compare(TYPO3_version,'4.3','>='))
-			$this->addMessage($message, t3lib_FlashMessage::WARNING);
+			$this->addMessage($message, \TYPO3\CMS\Core\Messaging\FlashMessage::WARNING);
 	}
 
 	/**

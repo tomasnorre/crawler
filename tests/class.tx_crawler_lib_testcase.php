@@ -86,7 +86,7 @@ class tx_crawler_lib_testcase extends tx_phpunit_database_testcase {
 		$frontendBasePath = '/';
 
 		$expectedCommand =  escapeshellcmd('PHPPATH') . ' ' .
-							escapeshellarg(t3lib_extMgm::extPath('crawler').'cli/bootstrap.php') . ' ' .
+							escapeshellarg(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('crawler').'cli/bootstrap.php') . ' ' .
 							escapeshellarg($frontendBasePath) . ' ' .
 							escapeshellarg($testUrl) . ' ' .
 							escapeshellarg(base64_encode(serialize($testHeaderArray)));
@@ -122,7 +122,7 @@ class tx_crawler_lib_testcase extends tx_phpunit_database_testcase {
 		$frontendBasePath = '/cms/';
 
 		$expectedCommand =  escapeshellcmd('PHPPATH') . ' ' .
-							escapeshellarg(t3lib_extMgm::extPath('crawler').'cli/bootstrap.php') . ' ' .
+							escapeshellarg(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('crawler').'cli/bootstrap.php') . ' ' .
 							escapeshellarg($frontendBasePath) . ' ' .
 							escapeshellarg($testUrl) . ' ' .
 							escapeshellarg(base64_encode(serialize($testHeaderArray)));

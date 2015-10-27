@@ -67,7 +67,7 @@ class tx_crawler_domain_process_manager  {
 	public function __construct() {
 		$this->processRepository	= new tx_crawler_domain_process_repository();
 		$this->queueRepository	= new tx_crawler_domain_queue_repository();
-		$this->crawlerObj = t3lib_div::makeInstance('tx_crawler_lib');
+		$this->crawlerObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_crawler_lib');
 		$this->timeToLive = intval($this->crawlerObj->extensionSettings['processMaxRunTime']);
 		$this->countInARun = intval($this->crawlerObj->extensionSettings['countInARun']);
 		$this->processLimit = intval($this->crawlerObj->extensionSettings['processLimit']);
@@ -193,8 +193,8 @@ class tx_crawler_domain_process_manager  {
 	 */
 	public function getCrawlerCliPath(){
 		$phpPath 		= $this->crawlerObj->extensionSettings['phpPath'] . ' ';
-		$pathToTypo3 	= rtrim(t3lib_div::getIndpEnv('TYPO3_DOCUMENT_ROOT'), '/');
-		$pathToTypo3 	.= rtrim(t3lib_div::getIndpEnv('TYPO3_SITE_PATH'), '/');
+		$pathToTypo3 	= rtrim(\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_DOCUMENT_ROOT'), '/');
+		$pathToTypo3 	.= rtrim(\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_PATH'), '/');
 		$cliPart	 	= '/typo3/cli_dispatch.phpsh crawler';
 		return $phpPath.$pathToTypo3.$cliPart;
 	}

@@ -55,7 +55,7 @@ class tx_crawler_scheduler_crawl extends \TYPO3\CMS\Scheduler\Task\AbstractTask 
 		$this->setCliArguments();
 
 			/* @var $crawlerObj tx_crawler_lib */
-		$crawlerObj = t3lib_div::makeInstance('tx_crawler_lib');
+		$crawlerObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_crawler_lib');
 		$crawlerObj->CLI_main();
 		return TRUE;
 	}

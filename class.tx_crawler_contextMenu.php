@@ -49,12 +49,12 @@ class tx_crawler_contextMenu {
 
 		$localItems = array();
 
-		$row = t3lib_BEfunc::getRecord($table, $uid, 'pid, name, processing_instruction_filter', '', true);
+		$row = \TYPO3\CMS\Backend\Utility\BackendUtility::getRecord($table, $uid, 'pid, name, processing_instruction_filter', '', true);
 
 		if (!empty($row)) {
 
 			if (version_compare(TYPO3_version,'4.5.0','>=')) {
-				$url = t3lib_extMgm::extRelPath('info') . 'mod1/index.php';
+				$url = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('info') . 'mod1/index.php';
 			} else {
 				$url  = $backRef->backPath . 'mod/web/info/index.php';
 			}
@@ -64,7 +64,7 @@ class tx_crawler_contextMenu {
 			$url .= '&SET[crawlaction]=start';
 			$url .= '&configurationSelection[]=' . $row['name'];
 
-			foreach (t3lib_div::trimExplode(',', $row['processing_instruction_filter']) as $processing_instruction) {
+			foreach (\TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $row['processing_instruction_filter']) as $processing_instruction) {
 				$url .= '&procInstructions[]=' . $processing_instruction;
 			}
 
@@ -73,7 +73,7 @@ class tx_crawler_contextMenu {
 
 			$localItems[] = $backRef->linkItem(
 				'Crawl',
-				$backRef->excludeIcon('<img src="'.$backRef->backPath . t3lib_extMgm::extRelPath('crawler').'icon_tx_crawler_configuration.gif" border="0" align="top" alt="" />'),
+				$backRef->excludeIcon('<img src="'.$backRef->backPath . \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('crawler').'icon_tx_crawler_configuration.gif" border="0" align="top" alt="" />'),
 				$onClick,
 				0
 			);

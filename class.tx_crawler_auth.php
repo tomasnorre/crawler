@@ -26,7 +26,7 @@
 /**
  * Url login authentification service
  */
-class tx_crawler_auth extends tx_sv_authbase {
+class tx_crawler_auth extends \TYPO3\CMS\Sv\AbstractAuthenticationService {
 
 	/**
 	 * Find a user by IP ('REMOTE_ADDR')

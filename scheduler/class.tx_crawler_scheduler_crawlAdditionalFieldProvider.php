@@ -109,17 +109,17 @@ class tx_crawler_scheduler_crawlAdditionalFieldProvider implements \TYPO3\CMS\Sc
 		if (tx_crawler_api::convertToPositiveInteger($submittedData['sleepTime']) > 0) {
 			$isValid = TRUE;
 		} else {
-			$schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidSleepTime'), t3lib_FlashMessage::ERROR);
+			$schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidSleepTime'), \TYPO3\CMS\Core\Messaging\FlashMessage::ERROR);
 		}
 
 		if (tx_crawler_api::convertToPositiveInteger($submittedData['sleepAfterFinish']) === 0) {
 			$isValid = FALSE;
-			$schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidSleepAfterFinish'), t3lib_FlashMessage::ERROR);
+			$schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidSleepAfterFinish'), \TYPO3\CMS\Core\Messaging\FlashMessage::ERROR);
 		}
 
 		if (tx_crawler_api::convertToPositiveInteger($submittedData['countInARun']) === 0) {
 			$isValid = FALSE;
-			$schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidCountInARun'), t3lib_FlashMessage::ERROR);
+			$schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidCountInARun'), \TYPO3\CMS\Core\Messaging\FlashMessage::ERROR);
 		}
 
 		return $isValid;
