@@ -34,13 +34,13 @@ class tx_crawler_contextMenu {
 	/**
 	 * Main function
 	 *
-	 * @param clickMenu reference parent object
+	 * @param \TYPO3\CMS\Backend\ClickMenu\ClickMenu reference parent object
 	 * @param array menutitems for manipultation
 	 * @param string table name
 	 * @param int uid
 	 * @return array manipulated menuitems
 	 */
-	function main(clickMenu $backRef, array $menuItems, $table, $uid) {
+	function main(\TYPO3\CMS\Backend\ClickMenu\ClickMenu $backRef, array $menuItems, $table, $uid) {
 
 		if ($table != 'tx_crawler_configuration') {
 				// early return without doing anything
@@ -53,12 +53,7 @@ class tx_crawler_contextMenu {
 
 		if (!empty($row)) {
 
-			if (version_compare(TYPO3_version,'4.5.0','>=')) {
-				$url = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('info') . 'mod1/index.php';
-			} else {
-				$url  = $backRef->backPath . 'mod/web/info/index.php';
-			}
-			
+			$url = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('info') . 'mod1/index.php';
 			$url .= '?id=' . intval($row['pid']);
 			$url .= '&SET[function]=tx_crawler_modfunc1';
 			$url .= '&SET[crawlaction]=start';
