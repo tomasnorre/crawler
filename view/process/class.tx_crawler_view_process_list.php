@@ -315,7 +315,7 @@ class tx_crawler_view_process_list {
 	 * @return string
 	 */
 	protected function getRefreshLink() {
-		return '<input onclick="window.location=\'index.php?id=' . $this->pageId . '\';" type="button" style="padding:4px 4px 4px 20px; background-position: 3px 3px; background-image: url(\'' . $this->getIconPath() . 'arrow_refresh.png' . '\'); background-repeat: no-repeat;" value="' . $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.refresh') . '" />';
+		return $this->generateButton('arrow_refresh.png', 'refresh');
 	}
 
 	/**
@@ -334,9 +334,9 @@ class tx_crawler_view_process_list {
 	 */
 	protected function getEnableDisableLink() {
 		if ($this->getIsCrawlerEnabled()) {
-			return '<input onclick="window.location=\'index.php?id=' . $this->pageId . '&action=stopCrawling\';" type="button" style="padding:4px 4px 4px 20px; background-position: 3px 3px; background-image: url(\'' . $this->getIconPath() . 'control_stop_blue.png' . '\'); background-repeat: no-repeat;" value="' . $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.disablecrawling') . '" />';
+			return $this->generateButton('control_stop_blue.png', 'disablecrawling', 'action=stopCrawling');
 		} else {
-			return '<input onclick="window.location=\'index.php?id=' . $this->pageId . '&action=resumeCrawling\';" type="button" style="padding:4px 4px 4px 20px; background-position: 3px 3px; background-image: url(\'' . $this->getIconPath() . 'control_play.png' . '\'); background-repeat: no-repeat;" value="' . $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.enablecrawling') . '" />';
+			return $this->generateButton('control_play.png', 'enablecrawling', 'action=resumeCrawling');
 		}
 	}
 
@@ -348,9 +348,9 @@ class tx_crawler_view_process_list {
 	 */
 	protected function getModeLink() {
 		if ($this->getMode() == 'detail') {
-			return '<input onclick="window.location=\'index.php?id=' . $this->pageId . '&SET[processListMode]=simple\';" type="button" style="padding:4px 4px 4px 20px; background-position: 3px 3px; background-image: url(\'' . $this->getIconPath() . 'arrow_in.png' . '\'); background-repeat: no-repeat;" value="' . $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.show.running') . '" />';
+			return $this->generateButton('arrow_in.png', 'show.running', 'SET[processListMode]=simple');
 		} elseif ($this->getMode() == 'simple') {
-			return '<input onclick="window.location=\'index.php?id=' . $this->pageId . '&SET[processListMode]=detail\';" type="button" style="padding:4px 4px 4px 20px; background-position: 3px 3px; background-image: url(\'' . $this->getIconPath() . 'arrow_out.png' . '\'); background-repeat: no-repeat;" value="' . $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.show.all') . '" />';
+			return $this->generateButton('arrow_out.png', 'show.all', 'SET[processListMode]=detail');
 		}
 	}
 
@@ -362,7 +362,7 @@ class tx_crawler_view_process_list {
 	 */
 	protected function getAddLink() {
 		if ($this->getActiveProcessCount() < $this->getMaxActiveProcessCount() && $this->getIsCrawlerEnabled()) {
-			return '<input onclick="window.location=\'index.php?id=' . $this->pageId . '&action=addProcess\';" type="button" style="padding:4px 4px 4px 20px; background-position: 3px 3px; background-image: url(\'' . $this->getIconPath() . 'add.png' . '\'); background-repeat: no-repeat;" value="' . $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.process.add') . '" />';
+			return $this->generateButton('add.png', 'process.add', 'action=addProcess');
 		} else {
 			return '';
 		}
@@ -415,6 +415,31 @@ class tx_crawler_view_process_list {
 	protected function getLLLabel($label) {
 		return $GLOBALS['LANG']->sL($label);
 	}
-}
 
-?>
+	/**
+	 * Get the default link string.
+	 *
+	 * @return string
+	 */
+	protected function getDefaultLink() {
+		return '/typo3/index.php?M=web_info&amp;moduleToken=66643dc95cf1678a812d25ab6e3b58198cf04cb3&amp;id=';
+	}
+
+	/**
+	 * Generate the Link Button, takes TYPO3 Versions into consideration
+	 *
+	 * @param string $icon
+	 * @param string $label
+	 * @param string $parameters
+	 *
+	 * @return string
+	 */
+	protected function generateButton($icon, $label, $parameters = NULL ) {
+		if (version_compare(TYPO3_version, '7.0.0', '>=')) {
+			return '<a class="btn btn-default" href="' . $this->getDefaultLink() . $this->pageId . '&' . $parameters . '"><img src="' . $this->getIconPath() . $icon . '"/> ' . $this->getLLLabel("LLL:EXT:crawler/modfunc1/locallang.xml:labels." . $label ) . '</a>';
+		} else {
+			return '<input onclick="window.location=\'index.php?id=' . $this->pageId . '&' . $parameters . '\';" type="button" style="padding:4px 4px 4px 20px; background-position: 3px 3px; background-image: url(\'' . $this->getIconPath() . $icon . '\'); background-repeat: no-repeat;" value="' . $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.' . $label ) . '" />';
+
+		}
+	}
+}
