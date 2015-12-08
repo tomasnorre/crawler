@@ -1,7 +1,7 @@
 <?php if (!defined('TYPO3_MODE')) die ('Access denied.'); ?>
 
 <br />
-<div id="controll-panel">
+<div id="controll-panel" style="padding-top: 10px;">
 	<?php echo $this->getRefreshLink(); ?>
 	<?php echo $this->getEnableDisableLink(); ?>
 	<?php echo $this->getAddLink(); ?>
