@@ -746,6 +746,10 @@ class tx_crawler_lib {
 
 							// Table exists:
 						if (isset($TCA[$subpartParams['_TABLE']]))	{
+							if (version_compare(TYPO3_version, '7.0.0', '<=')) {
+								\TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA($subpartParams['_TABLE']);
+							}
+
 							$lookUpPid = isset($subpartParams['_PID']) ? intval($subpartParams['_PID']) : $pid;
 							$pidField = isset($subpartParams['_PIDFIELD']) ? trim($subpartParams['_PIDFIELD']) : 'pid';
 							$where = isset($subpartParams['_WHERE']) ? $subpartParams['_WHERE'] : '';
