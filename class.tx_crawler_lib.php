@@ -2174,6 +2174,11 @@ class tx_crawler_lib {
 
 		$ret = true;
 
+		$systemProcessId = getmypid();
+		if ($systemProcessId < 1) {
+			return FALSE;
+		}
+
 		$processCount = 0;
 		$orphanProcesses = array();
 
@@ -2205,7 +2210,8 @@ class tx_crawler_lib {
 				array(
 					'process_id' => $id,
 					'active'=>'1',
-					'ttl' => ($currentTime + intval($this->extensionSettings['processMaxRunTime']))
+					'ttl' => ($currentTime + intval($this->extensionSettings['processMaxRunTime'])),
+					'system_process_id' => $systemProcessId
 				)
 				);
 
@@ -2261,7 +2267,8 @@ class tx_crawler_lib {
 				AND tx_crawler_queue.exec_time = 0
 			)',
 			array(
-				'deleted'=>'1'
+				'deleted'=>'1',
+				'system_process_id' => 0
 			)
 		);
 				// mark all requested processes as non-active

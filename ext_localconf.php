@@ -15,6 +15,9 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['nc_staticfilecache/class.tx_ncstaticf
 
 $GLOBALS['TYPO3_CONF_VARS']['SVCONF']['auth']['setup']['BE_alwaysFetchUser'] = true;
 
+// Activating cli_hooks
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['cli_hooks'][] = 'tx_crawler_hooks_processCleanUp';
+
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addService(
 	$_EXTKEY,
 	'auth' /* sv type */,
