@@ -315,7 +315,7 @@ class tx_crawler_view_process_list {
 	 * @return string
 	 */
 	protected function getRefreshLink() {
-		return '<input onclick="window.location+=\'\';" type="button" style="padding:4px 4px 4px 20px; background-position: 3px 3px; background-image: url(\'' . $this->getIconPath() . 'arrow_refresh.png' . '\'); background-repeat: no-repeat;" value="' . $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.refresh') . '" />';
+		return '<input onclick="window.location=\'' . \TYPO3\CMS\Backend\Utility\BackendUtility::getModuleUrl('web_info') . '&SET[crawlaction]=multiprocess' . '\';" type="button" style="padding:4px 4px 4px 20px; background-position: 3px 3px; background-image: url(\'' . $this->getIconPath() . 'arrow_refresh.png' . '\'); background-repeat: no-repeat;" value="' . $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.refresh') . '" />';
 	}
 
 	/**
