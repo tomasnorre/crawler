@@ -43,13 +43,7 @@ class tx_crawler_cli extends \TYPO3\CMS\Core\Controller\CommandLineController {
 	 * @return	void
 	 */
 	function tx_crawler_cli() {
-
-		// Running parent class constructor
-		if (version_compare(TYPO3_version, '4.6.0', '>=')) {
-			parent::__construct();
-		} else {
-			parent::CommandLineController();
-		}
+		parent::__construct();
 
 		$this->cli_options[] = array('-h', 'Show the help', '');
 		$this->cli_options[] = array('--help', 'Same as -h', '');
@@ -69,5 +63,3 @@ class tx_crawler_cli extends \TYPO3\CMS\Core\Controller\CommandLineController {
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/cli/class.tx_crawler_cli.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/cli/class.tx_crawler_cli.php']);
 }
-
-?>

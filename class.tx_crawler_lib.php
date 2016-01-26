@@ -309,20 +309,9 @@ class tx_crawler_lib {
 
 					// Calculate cHash:
 					if ($vv['subCfg']['cHash'])	{
-						if (version_compare(TYPO3_version, '4.7.0', '>=')) {
-							/* @var $cacheHash \TYPO3\CMS\Frontend\Page\CacheHashCalculator */
-							$cacheHash = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Frontend\Page\CacheHashCalculator');
-							$urlQuery .= '&cHash=' . $cacheHash->generateForParameters($urlQuery);
-						} else {
-							$pA = \TYPO3\CMS\Core\Utility\GeneralUtility::cHashParams($urlQuery);
-							if (count($pA)>1) {
-								if (\TYPO3\CMS\Core\Utility\GeneralUtility::compat_version ('4.3')) {
-									$urlQuery .= '&cHash=' . \TYPO3\CMS\Core\Utility\GeneralUtility::calculateCHash($pA);
-								} else {
-									$urlQuery .= '&cHash='.rawurlencode(\TYPO3\CMS\Core\Utility\GeneralUtility::shortMD5(serialize($pA)));
-								}
-							}
-						}
+						/* @var $cacheHash \TYPO3\CMS\Frontend\Page\CacheHashCalculator */
+						$cacheHash = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Frontend\Page\CacheHashCalculator');
+						$urlQuery .= '&cHash=' . $cacheHash->generateForParameters($urlQuery);
 					}
 
 					// Create key by which to determine unique-ness:
@@ -1760,14 +1749,14 @@ class tx_crawler_lib {
 
 						// Compile row:
 					$content .= '
-						<tr class="bgColor'.($c%2 ? '-20':'-10') . '">
-							'.$titleClm.'
-							<td>'.htmlspecialchars($confKey).'</td>
-							<td>'.nl2br(htmlspecialchars(rawurldecode(trim(str_replace('&',chr(10).'&',\TYPO3\CMS\Core\Utility\GeneralUtility::implodeArrayForUrl('',$confArray['paramParsed'])))))).'</td>
+						<tr class="bgColor' . ($c%2 ? '-20':'-10') . '">
+							' . $titleClm . '
+							<td>' . htmlspecialchars($confKey) . '</td>
+							<td>' . nl2br(htmlspecialchars(rawurldecode(trim(str_replace('&', chr(10) . '&', \TYPO3\CMS\Core\Utility\GeneralUtility::implodeArrayForUrl('', $confArray['paramParsed'])))))) . '</td>
 							<td>'.$paramExpanded.'</td>
-							<td nowrap="nowrap">'.$urlList.'</td>
-							<td nowrap="nowrap">'.$optionValues.'</td>
-							<td nowrap="nowrap">'.((version_compare(TYPO3_version, '4.5.0', '<')) ? \TYPO3\CMS\Core\Utility\GeneralUtility::view_array($confArray['subCfg']['procInstrParams.']) :  \TYPO3\CMS\Core\Utility\DebugUtility::viewArray($confArray['subCfg']['procInstrParams.'])).'</td>
+							<td nowrap="nowrap">' . $urlList . '</td>
+							<td nowrap="nowrap">' . $optionValues . '</td>
+							<td nowrap="nowrap">' . \TYPO3\CMS\Core\Utility\DebugUtility::viewArray($confArray['subCfg']['procInstrParams.']) . '</td>
 						</tr>';
 				} else {
 

@@ -43,13 +43,7 @@ class tx_crawler_cli_im extends \TYPO3\CMS\Core\Controller\CommandLineController
 	 * @return	void
 	 */
 	function tx_crawler_cli_im() {
-
-		// Running parent class constructor
-		if (version_compare(TYPO3_version, '4.6.0', '>=')) {
-			parent::__construct();
-		} else {
-			parent::CommandLineController();
-		}
+		parent::__construct();
 
 		// Adding options to help archive:
 		/**

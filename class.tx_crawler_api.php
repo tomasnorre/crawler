@@ -540,12 +540,7 @@ class tx_crawler_api {
 	 * @return integer
 	 */
 	static public function convertToPositiveInteger($value) {
-		if (version_compare(TYPO3_version, '4.6.0', '>=')) {
-			$result = \TYPO3\CMS\Core\Utility\MathUtility::convertToPositiveInteger($value);
-		} else {
-			$result = \TYPO3\CMS\Core\Utility\GeneralUtility::intval_positive($value);
-		}
-
+		$result = \TYPO3\CMS\Core\Utility\MathUtility::convertToPositiveInteger($value);
 		return $result;
 	}
 
@@ -560,11 +555,7 @@ class tx_crawler_api {
 	 * @return integer
 	 */
 	static public function forceIntegerInRange($value, $min, $max = 2000000, $default = 0) {
-		if (version_compare(TYPO3_version, '4.6.0', '>=')) {
-			$result = \TYPO3\CMS\Core\Utility\MathUtility::forceIntegerInRange($value, $min, $max, $default);
-		} else {
-			$result = \TYPO3\CMS\Core\Utility\GeneralUtility::intInRange($value, $min, $max, $default);
-		}
+		$result = \TYPO3\CMS\Core\Utility\MathUtility::forceIntegerInRange($value, $min, $max, $default);
 		return $result;
 	}
 
@@ -575,11 +566,7 @@ class tx_crawler_api {
 	 * @return bool
 	 */
 	static public function canBeInterpretedAsInteger($value) {
-		if (version_compare(TYPO3_version, '4.6.0', '>=')) {
-			$result = \TYPO3\CMS\Core\Utility\MathUtility::canBeInterpretedAsInteger($value);
-		} else {
-			$result = \TYPO3\CMS\Core\Utility\GeneralUtility::testInt($value);
-		}
+		$result = \TYPO3\CMS\Core\Utility\MathUtility::canBeInterpretedAsInteger($value);
 		return $result;
 	}
 }
@@ -587,5 +574,3 @@ class tx_crawler_api {
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/class.tx_crawler_api.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/class.tx_crawler_api.php']);
 }
-
-?>
