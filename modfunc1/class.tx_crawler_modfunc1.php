@@ -552,13 +552,13 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 				// Print rudimentary details:
 			$output .= '
 				<br /><br />
-				<input type="submit" value="'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.back').'" name="_back" />
-				<input type="hidden" value="'.$this->pObj->id.'" name="id" />
-				<input type="hidden" value="'.$showSetId.'" name="setID" />
+				<input type="submit" value="' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.back') . '" name="_back" />
+				<input type="hidden" value="' . $this->pObj->id . '" name="id" />
+				<input type="hidden" value="' . $showSetId . '" name="setID" />
 				<br />
-				Current server time: '.date('H:i:s',time()). '<br />' .
+				Current server time: ' . date('H:i:s', time()) . '<br />' .
 				'Status: ' . $resStatus . '<br />' .
-				((version_compare(TYPO3_version, '4.5.0', '<')) ? \TYPO3\CMS\Core\Utility\GeneralUtility::view_array($q_entry) : \TYPO3\CMS\Core\Utility\DebugUtility::viewArray($q_entry));
+				\TYPO3\CMS\Core\Utility\DebugUtility::viewArray($q_entry);
 		} else {	// Show list:
 
 				// If either id or set id, show list:
@@ -1165,7 +1165,6 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	protected function addNoticeMessage($message) {
-		if (version_compare(TYPO3_version,'4.3','>='))
 		$this->addMessage($message, \TYPO3\CMS\Core\Messaging\FlashMessage::NOTICE);
 	}
 
@@ -1183,10 +1182,8 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	protected function addErrorMessage($message) {
-		$this->isErrorDetected = true;
-
-		if (version_compare(TYPO3_version,'4.3','>='))
-			$this->addMessage($message, \TYPO3\CMS\Core\Messaging\FlashMessage::ERROR);
+		$this->isErrorDetected = TRUE;
+		$this->addMessage($message, \TYPO3\CMS\Core\Messaging\FlashMessage::ERROR);
 	}
 
 	/**
@@ -1203,8 +1200,7 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 	 * @author Michael Klapper <michael.klapper@aoemedia.de>
 	 */
 	protected function addWarningMessage($message) {
-		if (version_compare(TYPO3_version,'4.3','>='))
-			$this->addMessage($message, \TYPO3\CMS\Core\Messaging\FlashMessage::WARNING);
+		$this->addMessage($message, \TYPO3\CMS\Core\Messaging\FlashMessage::WARNING);
 	}
 
 	/**

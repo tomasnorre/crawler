@@ -140,11 +140,11 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = array (
         /*'sys_workspace_uid' => Array (
             'exclude' => 1,
             'label' => 'LLL:EXT:crawler/locallang_db.xml:tx_crawler_configuration.sys_workspace_uid',
-            'displayCond' => (version_compare(TYPO3_version,'4.5.0','>=') ? 'EXT:workspaces:LOADED:true' : 'EXT:version:LOADED:true'),
+            'displayCond' => 'EXT:workspaces:LOADED:true',
             'config' => Array (
                 'type' => 'select',
                 'items' => Array (
-                    Array('LLL:EXT:lang/locallang_misc.xml:shortcut_onlineWS',0),
+                    Array('LLL:EXT:lang/locallang_misc.xml:shortcut_onlineWS', 0),
                 ),
                 'size' => 1,
                 'maxitems' => 1,
