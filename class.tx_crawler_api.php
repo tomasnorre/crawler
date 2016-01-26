@@ -23,15 +23,11 @@
  ***************************************************************/
 
 /**
- * This api class can be used to add pages to the crawlerqueue.
- * It uses internally the class tx_crawler_lib modify the queue.
+ * Class tx_crawler_api
+ *
+ * This API class can be used to add pages to the crawler queue.
+ * It internally uses the class tx_crawler_lib to modify the queue.
  */
-
-//require_once \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('crawler').'system/class.tx_crawler_system_validator.php';
-//require_once \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('crawler').'domain/queue/class.tx_crawler_domain_queue_repository.php';
-//require_once \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('crawler').'domain/process/class.tx_crawler_domain_process_repository.php';
-
-
 class tx_crawler_api {
 
 	/**
@@ -587,5 +583,3 @@ class tx_crawler_api {
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/class.tx_crawler_api.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/class.tx_crawler_api.php']);
 }
-
-?>
