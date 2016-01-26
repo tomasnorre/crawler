@@ -782,12 +782,17 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 
 				$setId = intval(\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('setID'));
 
+				$refreshIcon = $GLOBALS['BACK_PATH'] . 'gfx/refresh_n.gif';
+				if (version_compare(TYPO3_version,'7.0','>=')) {
+					$refreshIcon = $GLOBALS['BACK_PATH'] . 'sysext/t3skin/extjs/images/grid/refresh.gif';
+				}
+
 					// Put rows together:
 				$content.= '
 					<tr class="bgColor'.($c%2 ? '-20':'-10').'">
 						'.$titleClm.'
 						<td><a href="index.php?id='.$this->pObj->id.'&qid_details='.$vv['qid'].'&setID='.$setId.'">'.htmlspecialchars($vv['qid']).'</a></td>
-						<td><a href="index.php?id='.$this->pObj->id.'&qid_read='.$vv['qid'].'&setID='.$setId.'"><img src="'.$GLOBALS['BACK_PATH'].'gfx/refresh_n.gif" width="14" hspace="1" vspace="2" height="14" border="0" title="'.htmlspecialchars('Read').'" alt="" /></a></td>';
+						<td><a href="index.php?id='.$this->pObj->id.'&qid_read='.$vv['qid'].'&setID='.$setId.'"><img src="' . $refreshIcon . '" width="14" hspace="1" vspace="2" height="14" border="0" title="'.htmlspecialchars('Read').'" alt="" /></a></td>';
 				foreach($rowData as $fKey => $value) {
 
 					if (\TYPO3\CMS\Core\Utility\GeneralUtility::inList('url',$fKey))	{
