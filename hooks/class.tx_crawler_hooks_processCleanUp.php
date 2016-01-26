@@ -73,6 +73,9 @@ class tx_crawler_hooks_processCleanUp {
 			'ttl <= ' . intval(time() - $this->extensionSettings['processMaxRunTime'] - 3600) . ' AND active = 1'
 			);
 
+		if (!is_array($results)) {
+			return;
+		}
 		foreach ($results as $result) {
 			$systemProcessId = (int)$result['system_process_id'];
 			$processId = $result['process_id'];
@@ -83,7 +86,6 @@ class tx_crawler_hooks_processCleanUp {
 				$this->removeProcessFromProcesslist($processId);
 			}
 		}
-
 	}
 
 	/**
@@ -98,6 +100,9 @@ class tx_crawler_hooks_processCleanUp {
 			'ttl <= ' . intval(time() - $this->extensionSettings['processMaxRunTime']) . ' AND active = 1'
 		);
 
+		if (!is_array($results)) {
+			return;
+		}
 		foreach ($results as $result) {
 			$processExists = FALSE;
 			$systemProcessId = (int)$result['system_process_id'];
