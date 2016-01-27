@@ -944,6 +944,8 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 	 */
 	protected function drawProcessOverviewAction(){
 
+		$this->runRefreshHooks();
+
 		global $BACK_PATH;
 		$this->makeCrawlerProcessableChecks();
 
@@ -1228,6 +1230,24 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 		$output = '<select name="'.htmlspecialchars($name.($multiple?'[]':'')).'"'.($multiple ? ' multiple="multiple" size="'.count($options).'"' : '').'>'.implode('',$options).'</select>';
 
 		return $output;
+	}
+
+	/**
+	 * Activate hooks
+	 *
+	 * @return	void
+	 */
+	function runRefreshHooks()	{
+		global $TYPO3_CONF_VARS;
+		$crawlerLib = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_crawler_lib');
+		if (is_array($TYPO3_CONF_VARS['EXTCONF']['crawler']['refresh_hooks']))	{
+			foreach($TYPO3_CONF_VARS['EXTCONF']['crawler']['refresh_hooks'] as $objRef)	{
+				$hookObj = &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj($objRef);
+				if (is_object($hookObj))	{
+					$hookObj->crawler_init($crawlerLib);
+				}
+			}
+		}
 	}
 
 }
