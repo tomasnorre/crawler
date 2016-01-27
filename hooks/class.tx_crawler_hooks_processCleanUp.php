@@ -109,6 +109,9 @@ class tx_crawler_hooks_processCleanUp {
 			$processId = $result['process_id'];
 			if ($systemProcessId > 1) {
 				$dispatcherProcesses = $this->findDispatcherProcesses();
+				if (!is_array($dispatcherProcesses) || empty($dispatcherProcesses)) {
+					return;
+				}
 				foreach ($dispatcherProcesses as $process) {
 					$responseArray = $this->createResponseArray($process);
 					if ($systemProcessId === (int)$responseArray[1]) {
