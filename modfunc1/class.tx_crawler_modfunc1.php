@@ -791,8 +791,8 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 				$content.= '
 					<tr class="bgColor'.($c%2 ? '-20':'-10').'">
 						'.$titleClm.'
-						<td><a href="index.php?id='.$this->pObj->id.'&qid_details='.$vv['qid'].'&setID='.$setId.'">'.htmlspecialchars($vv['qid']).'</a></td>
-						<td><a href="index.php?id='.$this->pObj->id.'&qid_read='.$vv['qid'].'&setID='.$setId.'"><img src="' . $refreshIcon . '" width="14" hspace="1" vspace="2" height="14" border="0" title="'.htmlspecialchars('Read').'" alt="" /></a></td>';
+						<td><a href="' . $this->getModuleUrl(array('qid_details' => $vv['qid'], 'setID' => $setId)) . '">'.htmlspecialchars($vv['qid']).'</a></td>
+						<td><a href="' . $this->getModuleUrl(array('qid_read' => $vv['qid'], 'setID' => $setId)) . '"><img src="' . $refreshIcon . '" width="14" hspace="1" vspace="2" height="14" border="0" title="'.htmlspecialchars('Read').'" alt="" /></a></td>';
 				foreach($rowData as $fKey => $value) {
 
 					if (\TYPO3\CMS\Core\Utility\GeneralUtility::inList('url',$fKey))	{
@@ -1228,6 +1228,22 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 		$output = '<select name="'.htmlspecialchars($name.($multiple?'[]':'')).'"'.($multiple ? ' multiple="multiple" size="'.count($options).'"' : '').'>'.implode('',$options).'</select>';
 
 		return $output;
+	}
+
+	/**
+	 * Returns the URL to the current module, including $_GET['id'].
+	 *
+	 * @param array $urlParameters optional parameters to add to the URL
+	 * @return string
+	 */
+	protected function getModuleUrl(array $urlParameters = array())
+	{
+	    if ($this->pObj->id) {
+	        $urlParameters = array_merge($urlParameters, array(
+                'id' => $this->pObj->id
+            ));
+	    }
+        return \TYPO3\CMS\Backend\Utility\BackendUtility::getModuleUrl(\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('M'), $urlParameters);
 	}
 
 }
