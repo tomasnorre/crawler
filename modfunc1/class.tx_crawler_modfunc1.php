@@ -944,6 +944,8 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 	 */
 	protected function drawProcessOverviewAction(){
 
+		$this->runRefreshHooks();
+
 		global $BACK_PATH;
 		$this->makeCrawlerProcessableChecks();
 
@@ -1231,13 +1233,30 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 	}
 
 	/**
+	 * Activate hooks
+	 *
+	 * @return	void
+	 */
+	function runRefreshHooks() {
+		$crawlerLib = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_crawler_lib');
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['refresh_hooks'])) {
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['refresh_hooks'] as $objRef) {
+				$hookObj = &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj($objRef);
+				if (is_object($hookObj)) {
+					$hookObj->crawler_init($crawlerLib);
+				}
+			}
+		}
+
+	}
+
+	/**
 	 * Returns the URL to the current module, including $_GET['id'].
 	 *
 	 * @param array $urlParameters optional parameters to add to the URL
 	 * @return string
 	 */
-	protected function getModuleUrl(array $urlParameters = array())
-	{
+	protected function getModuleUrl(array $urlParameters = array()) {
 	    if ($this->pObj->id) {
 	        $urlParameters = array_merge($urlParameters, array(
                 'id' => $this->pObj->id
@@ -1245,12 +1264,8 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 	    }
         return \TYPO3\CMS\Backend\Utility\BackendUtility::getModuleUrl(\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('M'), $urlParameters);
 	}
-
 }
-
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/modfunc1/class.tx_crawler_modfunc1.php'])	{
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/modfunc1/class.tx_crawler_modfunc1.php']);
 }
-
-?>
