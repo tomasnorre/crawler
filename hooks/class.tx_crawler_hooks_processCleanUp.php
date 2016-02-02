@@ -110,6 +110,7 @@ class tx_crawler_hooks_processCleanUp {
 			if ($systemProcessId > 1) {
 				$dispatcherProcesses = $this->findDispatcherProcesses();
 				if (!is_array($dispatcherProcesses) || empty($dispatcherProcesses)) {
+					$this->removeProcessFromProcesslist($processId);
 					return;
 				}
 				foreach ($dispatcherProcesses as $process) {
@@ -135,7 +136,7 @@ class tx_crawler_hooks_processCleanUp {
 	private function removeProcessFromProcesslist($processId) {
 		$this->db->exec_DELETEquery(
 			'tx_crawler_process',
-			'process_id = "' . $this->db->fullQuoteStr($processId, 'tx_crawler_process') . '"'
+			'process_id = ' . $this->db->fullQuoteStr($processId, 'tx_crawler_process')
 		);
 	}
 
