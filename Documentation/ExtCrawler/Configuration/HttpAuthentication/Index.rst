@@ -1,4 +1,4 @@
-﻿.. ==================================================
+.. ==================================================
 .. FOR YOUR INFORMATION
 .. --------------------------------------------------
 .. -*- coding: utf-8 -*- with BOM.
@@ -9,15 +9,15 @@
 .. role::   underline
 .. role::   typoscript(code)
 .. role::   ts(typoscript)
-   :class:  typoscript
+:class:  typoscript
 .. role::   php(code)
 
 
-Extension Manager Configuration
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+HTTP Authentication
+^^^^^^^^^^^^^^^^^^^
 
-A lot of options were added to the extension manager configuration,
-that allow settings to improve and enable new crawler features:
+If you want to use HTTP Authentication you  need to configure your base url to contain user:pass
 
-.. image:: /Images/backend_configuration.png
+::
 
+    http://user:pass@www.mydomain.com/

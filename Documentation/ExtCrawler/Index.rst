@@ -24,7 +24,7 @@ Language: en
 
 Keywords: forAdmins, forDevelopers
 
-Copyright 2000-2015, Kasper Skårhøj, Daniel Pötzinger, Fabrizio
+Copyright 2000-2016, Kasper Skårhøj, Daniel Pötzinger, Fabrizio
 Branca, Tolleiv Nietsch, Timo Schmidt, Michael Klapper, Stefan Rotsch,
 Tomas Norre Mikkelsen <dev@aoe.com>
 
@@ -47,4 +47,6 @@ The content of this document is related to TYPO3
    ExecutingTheQueue/Index
    Features/Index
    Faq/Index
+   Aoe/Aoe
+   Links/Links
 
