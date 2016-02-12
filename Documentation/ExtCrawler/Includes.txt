@@ -1,28 +1,21 @@
-﻿.. ==================================================
+.. ==================================================
 .. FOR YOUR INFORMATION
 .. --------------------------------------------------
 .. -*- coding: utf-8 -*- with BOM.
 
+.. This is 'Includes.txt'. It is included at the very top of each and
+   every ReST source file in this documentation project (= manual).
+
+
 .. ==================================================
-.. DEFINE SOME TEXTROLES
+.. DEFINE SOME TEXT ROLES
 .. --------------------------------------------------
-.. role::   underline
+
 .. role::   typoscript(code)
+
 .. role::   ts(typoscript)
    :class:  typoscript
+
 .. role::   php(code)
 
-
-Introduction
-------------
-
-
-.. toctree::
-   :maxdepth: 5
-   :titlesonly:
-   :glob:
-
-   WhatDoesItDo/Index
-   WhatsNew/Index
-   Screenshots/Index
-
+.. highlight:: php

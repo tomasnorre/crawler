@@ -80,6 +80,9 @@ Page TSconfig Reference (tx\_crawler.crawlerCfg)
              - Keyword “ **\_ENABLELANG** ”: Optional flag. If set only the records
                from the current language are fetched.
 
+             - Keyword “ **\_WHERE** ”: Optional flag. This can be use to e.g. if
+               you don't want hidden records to be crawled.
+
            - \- Default: Literal value
 
          **Examples:**
@@ -90,6 +93,17 @@ Page TSconfig Reference (tx\_crawler.crawlerCfg)
 
             &L=[0-3]
 
+         ::
+
+            tx_crawler.crawlerCfg.paramSets {
+               items = &tx_myext[items]=[_TABLE:tt_myext_items;_PID:15, _WHERE: and hidden = 0]
+               items {
+                 pidsOnly = 13
+                 cHash = 1
+                 procInstrFilter = tx_indexedsearch_reindex
+               }
+            }
+            
    Default
 
 

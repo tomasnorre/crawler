@@ -27,4 +27,5 @@ Configuration
    ExtensionManagerConfiguration/Index
    ConfigurationRecords/Index
    PageTsconfigReference(txCrawlercrawlercfg)/Index
+   HttpAuthentication/Index
 
