@@ -73,13 +73,13 @@ script:
     if [[ "$COVERAGE" == "0" ]]; then
       echo;
       echo "Running unit tests";
-      .Build/bin/phpunit --colors -c $UNIT_XML tests/
+      .Build/bin/phpunit --colors -c $UNIT_XML Tests/Unit/
     fi
   - >
     if [[ "$COVERAGE" == "1" ]]; then
       echo;
       echo "Running unit tests";
-      .Build/bin/phpunit --coverage-clover=unittest-coverage.clover --colors -c $UNIT_XML tests/
+      .Build/bin/phpunit --coverage-clover=unittest-coverage.clover --colors -c $UNIT_XML Tests/Unit/
     fi
   - >
     if [[ "$COVERAGE" == "1" ]]; then
