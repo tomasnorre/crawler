@@ -1,6 +1,10 @@
 {
     "name": "aoepeople/crawler",
     "description": "Crawler extension for TYPO3",
+    "homepage": "https://github.com/AOEpeople/crawler",
+    "support": {
+        "issues": "https://github.com/AOEpeople/crawler/issues"
+    },
     "autoload": {
         "classmap": [
             "."
@@ -13,5 +17,35 @@
     ],
     "minimum-stability": "dev",
     "require": {
+        "typo3/cms": ">=6.2.1,<8.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.8.0"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "TYPO3\\CMS\\Core\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/core/Tests/"
+        }
+    },
+    "config": {
+        "vendor-dir": ".Build/vendor",
+        "bin-dir": ".Build/bin"
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "mkdir -p .Build/Web/typo3conf/ext/",
+            "[ -L .Build/Web/typo3conf/ext/crawler ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/crawler",
+            "mkdir -p typo3conf/ext",
+            "[ -L typo3conf/ext/crawler ] || ln -snvf ../../. typo3conf/ext/crawler"
+        ]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        },
+        "typo3/cms": {
+            "cms-package-dir": "{$vendor-dir}/typo3/cms",
+            "web-dir": ".Build/Web"
+        }
     }
 }
