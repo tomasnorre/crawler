@@ -338,7 +338,11 @@ class tx_crawler_api {
 	 * @return unknown
 	 */
 	private function getCrawlerProcInstructions() {
-		return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'];
+		if (isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'])) {
+			return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'];
+		}
+		return array();
+
 	}
 
 	/**

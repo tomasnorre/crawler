@@ -30,10 +30,20 @@
  * @package TYPO3
  * @subpackage crawler
  */
-class tx_crawler_lib_testcase extends tx_phpunit_database_testcase {
+class tx_crawler_lib_testcase extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 
 	/**
-	 * @var tx_crawler_lib
+	 * @var array
+	 */
+	protected $coreExtensionsToLoad = array('cms');
+
+	/**
+	 * @var array
+	 */
+	protected $testExtensionsToLoad = array('typo3conf/ext/crawler');
+
+	/**
+	 * @var \tx_crawler_lib
 	 */
 	protected $crawlerLibrary;
 
@@ -43,14 +53,7 @@ class tx_crawler_lib_testcase extends tx_phpunit_database_testcase {
 	* @return void
 	*/
 	public function setUp() {
-		$this->createDatabase();
-		$this->useTestDatabase();
-		$this->importStdDB();
-
-			// order of extension-loading is important !!!!
-		$this->importExtensions(array('cms','crawler'));
-
-		$this->crawlerLibrary = $this->getMock('tx_crawler_lib', array('buildRequestHeaderArray', 'executeShellCommand'));
+		$this->crawlerLibrary = $this->getMock('\tx_crawler_lib', array('buildRequestHeaderArray', 'executeShellCommand'));
 	}
 
 	/**
@@ -59,10 +62,6 @@ class tx_crawler_lib_testcase extends tx_phpunit_database_testcase {
 	* @return void
 	*/
 	public function tearDown() {
-		$this->cleanDatabase();
-		$this->dropDatabase();
-		$GLOBALS['TYPO3_DB']->sql_select_db(TYPO3_db);
-
 		unset($this->crawlerLibrary);
 	}
 

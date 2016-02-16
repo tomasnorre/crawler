@@ -40,7 +40,19 @@
  * @subpackage crawler
  * @access public
  */
-class tx_crawler_api_testcase extends tx_phpunit_database_testcase {
+class tx_crawler_api_testcase extends \TYPO3\CMS\Core\Tests\FunctionalTestCase {
+
+	/**
+	* @var array
+	*/
+	protected $coreExtensionsToLoad = array('cms', 'core', 'frontend', 'workspaces');
+
+	/**
+	 * @var array
+	 */
+	protected $testExtensionsToLoad = array('typo3conf/ext/crawler');
+
+
 	/**
 	 *
 	 * @var array stores the old rootline
@@ -52,12 +64,7 @@ class tx_crawler_api_testcase extends tx_phpunit_database_testcase {
 	*
 	*/
 	function setUp() {
-		$this->createDatabase();
-		$this->useTestDatabase();
-		$this->importStdDB();
-
-		// order of extension-loading is important !!!!
-		$this->importExtensions(array('cms', 'core', 'crawler', 'frontend', 'workspaces'));
+		parent::setUp();
 
 		//restore old rootline
 		$this->oldRootline =   $GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields'];
@@ -70,9 +77,6 @@ class tx_crawler_api_testcase extends tx_phpunit_database_testcase {
 	* Resets the test enviroment after the test.
 	*/
 	function tearDown() {
-		$this->cleanDatabase();
-   		$this->dropDatabase();
-   		$GLOBALS['TYPO3_DB']->sql_select_db(TYPO3_db);
 
    		//restore rootline
    		$GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields'] = $this->oldRootline;
