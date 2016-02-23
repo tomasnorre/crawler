@@ -29,7 +29,7 @@
  *
  * @package AOE\Crawler\Task
  */
-class tx_crawler_scheduler_im extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
+class tx_crawler_scheduler_im extends tx_scheduler_Task {
 
 	/**
 	 * Define the current mode to process the crawler

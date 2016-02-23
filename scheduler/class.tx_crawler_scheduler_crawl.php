@@ -29,7 +29,7 @@
  *
  * @package AOE\Crawler\Task
  */
-class tx_crawler_scheduler_crawl extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
+class tx_crawler_scheduler_crawl extends tx_scheduler_Task {
 
 	/**
 	 * @var integer

@@ -72,7 +72,7 @@ class tx_crawler_lib {
 	private $db;
 
 	/**
-	 * @var TYPO3\CMS\Core\Authentication\BackendUserAuthentication
+	 * @var t3lib_beUserAuth
 	 */
 	private $backendUser;
 

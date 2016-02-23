@@ -29,17 +29,17 @@
  *
  * @package AOE\Crawler\Task
  */
-class tx_crawler_scheduler_crawlMultiProcessAdditionalFieldProvider implements \TYPO3\CMS\Scheduler\AdditionalFieldProviderInterface {
+class tx_crawler_scheduler_crawlMultiProcessAdditionalFieldProvider implements tx_scheduler_AdditionalFieldProvider {
 
 	/**
 	 * Gets additional fields to render in the form to add/edit a task
 	 *
 	 * @param array $taskInfo
-	 * @param \TYPO3\CMS\Scheduler\Task\AbstractTask $task
-	 * @param \TYPO3\CMS\Scheduler\Controller\SchedulerModuleController $schedulerModule
+	 * @param tx_scheduler_Task $task
+	 * @param tx_scheduler_Module $schedulerModule
 	 * @return array
 	 */
-	public function getAdditionalFields(array &$taskInfo, $task, \TYPO3\CMS\Scheduler\Controller\SchedulerModuleController $schedulerModule) {
+	public function getAdditionalFields(array &$taskInfo, $task, tx_scheduler_Module $schedulerModule) {
 		$additionalFields = array();
 
 		if (empty($taskInfo['timeOut'])) {
@@ -67,10 +67,10 @@ class tx_crawler_scheduler_crawlMultiProcessAdditionalFieldProvider implements \
 	 * Validates the additional fields' values
 	 *
 	 * @param array $submittedData
-	 * @param \TYPO3\CMS\Scheduler\Controller\SchedulerModuleController $schedulerModule
+	 * @param tx_scheduler_Module $schedulerModule
 	 * @return bool
 	 */
-	public function validateAdditionalFields(array &$submittedData, \TYPO3\CMS\Scheduler\Controller\SchedulerModuleController $schedulerModule) {
+	public function validateAdditionalFields(array &$submittedData, tx_scheduler_Module $schedulerModule) {
 		$isValid = FALSE;
 
 		if (tx_crawler_api::convertToPositiveInteger($submittedData['timeOut']) > 0) {
@@ -86,10 +86,10 @@ class tx_crawler_scheduler_crawlMultiProcessAdditionalFieldProvider implements \
 	 * Takes care of saving the additional fields' values in the task's object
 	 *
 	 * @param array $submittedData
-	 * @param \TYPO3\CMS\Scheduler\Task\AbstractTask $task
+	 * @param tx_scheduler_Task $task
 	 * @return void
 	 */
-	public function saveAdditionalFields(array $submittedData, \TYPO3\CMS\Scheduler\Task\AbstractTask $task) {
+	public function saveAdditionalFields(array $submittedData, tx_scheduler_Task $task) {
 		$task->timeOut = intval($submittedData['timeOut']);
 	}
 }
