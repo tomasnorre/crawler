@@ -29,17 +29,17 @@
  *
  * @package AOE\Crawler\Task
  */
-class tx_crawler_scheduler_imAdditionalFieldProvider implements \TYPO3\CMS\Scheduler\AdditionalFieldProviderInterface {
+class tx_crawler_scheduler_imAdditionalFieldProvider implements tx_scheduler_AdditionalFieldProvider {
 
 	/**
 	 * Gets additional fields to render in the form to add/edit a task
 	 *
 	 * @param array $taskInfo
-	 * @param \TYPO3\CMS\Scheduler\Task\AbstractTask $task
-	 * @param \TYPO3\CMS\Scheduler\Controller\SchedulerModuleController $schedulerModule
+	 * @param tx_scheduler_Task $task
+	 * @param tx_scheduler_Module $schedulerModule
 	 * @return array
 	 */
-	public function getAdditionalFields(array &$taskInfo, $task, \TYPO3\CMS\Scheduler\Controller\SchedulerModuleController $schedulerModule) {
+	public function getAdditionalFields(array &$taskInfo, $task, tx_scheduler_Module $schedulerModule) {
 		$additionalFields = array();
 
 		if (empty($taskInfo['configuration'])) {
@@ -55,7 +55,7 @@ class tx_crawler_scheduler_imAdditionalFieldProvider implements \TYPO3\CMS\Sched
 		if (empty($taskInfo['startPage'])) {
 			if ($schedulerModule->CMD == 'add') {
 				$taskInfo['startPage'] = 0;
-				if ($task instanceof \TYPO3\CMS\Scheduler\Task\AbstractTask) {
+				if ($task instanceof tx_scheduler_Task) {
 					$task->startPage = 0;
 				}
 			} elseif ($schedulerModule->CMD == 'edit') {
@@ -168,10 +168,10 @@ class tx_crawler_scheduler_imAdditionalFieldProvider implements \TYPO3\CMS\Sched
 	 * Validates the additional fields' values
 	 *
 	 * @param array $submittedData
-	 * @param \TYPO3\CMS\Scheduler\Controller\SchedulerModuleController $schedulerModule
+	 * @param tx_scheduler_Module $schedulerModule
 	 * @return bool
 	 */
-	public function validateAdditionalFields(array &$submittedData, \TYPO3\CMS\Scheduler\Controller\SchedulerModuleController $schedulerModule) {
+	public function validateAdditionalFields(array &$submittedData, tx_scheduler_Module $schedulerModule) {
 		$isValid = FALSE;
 
 		//!TODO add validation to validate the $submittedData['configuration'] wich is normally a comma seperated string
@@ -198,10 +198,10 @@ class tx_crawler_scheduler_imAdditionalFieldProvider implements \TYPO3\CMS\Sched
 	 * Takes care of saving the additional fields' values in the task's object
 	 *
 	 * @param array $submittedData
-	 * @param \TYPO3\CMS\Scheduler\Task\AbstractTask $task
+	 * @param tx_scheduler_Task $task
 	 * @return void
 	 */
-	public function saveAdditionalFields(array $submittedData, \TYPO3\CMS\Scheduler\Task\AbstractTask $task) {
+	public function saveAdditionalFields(array $submittedData, tx_scheduler_Task $task) {
 		$task->depth = intval($submittedData['depth']);
 		$task->configuration = $submittedData['configuration'];
 		$task->startPage = intval($submittedData['startPage']);

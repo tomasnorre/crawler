@@ -29,17 +29,17 @@
  *
  * @package AOE\Crawler\Task
  */
-class tx_crawler_scheduler_flushAdditionalFieldProvider implements \TYPO3\CMS\Scheduler\AdditionalFieldProviderInterface {
+class tx_crawler_scheduler_flushAdditionalFieldProvider implements tx_scheduler_AdditionalFieldProvider {
 
 	/**
 	 * Gets additional fields to render in the form to add/edit a task
 	 *
 	 * @param array $taskInfo
-	 * @param \TYPO3\CMS\Scheduler\Task\AbstractTask $task
-	 * @param \TYPO3\CMS\Scheduler\Controller\SchedulerModuleController $schedulerModule
+	 * @param tx_scheduler_Task $task
+	 * @param tx_scheduler_Module $schedulerModule
 	 * @return array
 	 */
-	public function getAdditionalFields(array &$taskInfo, $task, \TYPO3\CMS\Scheduler\Controller\SchedulerModuleController $schedulerModule) {
+	public function getAdditionalFields(array &$taskInfo, $task, tx_scheduler_Module $schedulerModule) {
 		$additionalFields = array();
 		// Initialize extra field value
 		if (empty($taskInfo['mode'])) {
@@ -71,10 +71,10 @@ class tx_crawler_scheduler_flushAdditionalFieldProvider implements \TYPO3\CMS\Sc
 	 * Validates the additional fields' values
 	 *
 	 * @param array $submittedData
-	 * @param \TYPO3\CMS\Scheduler\Controller\SchedulerModuleController $schedulerModule
+	 * @param tx_scheduler_Module $schedulerModule
 	 * @return bool
 	 */
-	public function validateAdditionalFields(array &$submittedData, \TYPO3\CMS\Scheduler\Controller\SchedulerModuleController $schedulerModule) {
+	public function validateAdditionalFields(array &$submittedData, tx_scheduler_Module $schedulerModule) {
 		return in_array($submittedData['mode'], array('all', 'pending', 'finished'));
 	}
 
@@ -82,10 +82,10 @@ class tx_crawler_scheduler_flushAdditionalFieldProvider implements \TYPO3\CMS\Sc
 	 * Takes care of saving the additional fields' values in the task's object
 	 *
 	 * @param array $submittedData
-	 * @param \TYPO3\CMS\Scheduler\Task\AbstractTask $task
+	 * @param tx_scheduler_Task $task
 	 * @return void
 	 */
-	public function saveAdditionalFields(array $submittedData, \TYPO3\CMS\Scheduler\Task\AbstractTask $task) {
+	public function saveAdditionalFields(array $submittedData, tx_scheduler_Task $task) {
 		$task->mode = $submittedData['mode'];
 	}
 }
