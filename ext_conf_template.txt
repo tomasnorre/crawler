@@ -54,3 +54,6 @@ cleanUpProcessedAge=2
 
 # cat=basic//10; type=int [1- 99]; label=Scheduled Age: If Clean up old queue entries is checked, then scheduled entries older than X days are deleted.
 cleanUpScheduledAge=7
+
+# cat=basic//10; type=int [1- 500000]; label= Page Uid that contains Root TypoScript Template
+PageUidRootTypoScript=1
