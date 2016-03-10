@@ -12,7 +12,7 @@
     },
     "license": "GPL-3.0",
     "type": "typo3-cms-extension",
-    "version": "5.0.2",
+    "version": "5.0.3",
     "authors": [
     ],
     "minimum-stability": "dev",
@@ -42,7 +42,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.0.x-dev"
+            "dev-master": "5.0.x-dev"
         },
         "typo3/cms": {
             "cms-package-dir": "{$vendor-dir}/typo3/cms",
