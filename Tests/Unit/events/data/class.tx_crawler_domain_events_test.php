@@ -1,5 +1,5 @@
 <?php
-class tx_crawler_domain_events_test implements tx_crawler_domain_events_observer{
+class tx_crawler_domain_events_test implements \tx_crawler_domain_events_observer{
 	
 	public static $called_foo = 0;
 	
@@ -22,7 +22,7 @@ class tx_crawler_domain_events_test implements tx_crawler_domain_events_observer
 	/**
 	 * @param $dispatcher
 	 */
-	public function registerObservers(tx_crawler_domain_events_dispatcher $dispatcher) {
+	public function registerObservers(\tx_crawler_domain_events_dispatcher $dispatcher) {
 		$dispatcher->addObserver($this,'fooFunc','foo');
 		$dispatcher->addObserver($this,'barFunc','bar');
 	}

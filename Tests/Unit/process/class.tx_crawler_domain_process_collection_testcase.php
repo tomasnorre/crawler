@@ -1,6 +1,6 @@
 <?php
 
-class tx_crawler_domain_process_collection_testcase extends tx_phpunit_testcase {
+class tx_crawler_domain_process_collection_testcase extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 
 
 	public function setUp() {
