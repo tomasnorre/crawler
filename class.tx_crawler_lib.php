@@ -116,8 +116,9 @@ class tx_crawler_lib {
 
 			// read ext_em_conf_template settings and set
 		$this->setExtensionSettings($settings);
+		$this->initTSFE($this->extensionSettings['PageUidRootTypoScript']);
 
-			// set defaults:
+		// set defaults:
 		if (tx_crawler_api::convertToPositiveInteger($this->extensionSettings['countInARun']) == 0) {
 			$this->extensionSettings['countInARun'] = 100;
 		}
@@ -2403,6 +2404,34 @@ class tx_crawler_lib {
 		$condition = '(exec_time<>0 AND exec_time<' . ($now - $processedAgeInSeconds) . ') OR scheduled<=' . ($now - $scheduledAgeInSeconds);
 		$this->flushQueue($condition);
 	}
+
+	/**
+	 * Initializes a TypoScript Frontend necessary for using TypoScript and TypoLink functions
+	 *
+	 * @param int $id
+	 * @param int $typeNum
+	 *
+	 * @return void
+	 */
+	protected function initTSFE($id = 1, $typeNum = 0) {
+		\TYPO3\CMS\Frontend\Utility\EidUtility::initTCA();
+		if (!is_object($GLOBALS['TT'])) {
+			$GLOBALS['TT'] = new \TYPO3\CMS\Core\TimeTracker\NullTimeTracker;
+			$GLOBALS['TT']->start();
+		}
+
+		$GLOBALS['TSFE'] = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController',  $GLOBALS['TYPO3_CONF_VARS'], $id, $typeNum);
+		$GLOBALS['TSFE']->sys_page = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Frontend\\Page\\PageRepository');
+		$GLOBALS['TSFE']->sys_page->init(TRUE);
+		$GLOBALS['TSFE']->connectToDB();
+		$GLOBALS['TSFE']->initFEuser();
+		$GLOBALS['TSFE']->determineId();
+		$GLOBALS['TSFE']->initTemplate();
+		$GLOBALS['TSFE']->rootLine = $GLOBALS['TSFE']->sys_page->getRootLine($id, '');
+		$GLOBALS['TSFE']->getConfigArray();
+		\TYPO3\CMS\Frontend\Page\PageGenerator::pagegenInit();
+	}
+
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/class.tx_crawler_lib.php'])	{
