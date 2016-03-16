@@ -49,4 +49,5 @@ The content of this document is related to TYPO3
    Faq/Index
    Aoe/Aoe
    Links/Links
+   Targets
 
