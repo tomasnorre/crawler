@@ -38,6 +38,8 @@ Page TSconfig Reference (tx\_crawler.crawlerCfg)
 .. container:: table-row
 
    Property
+         .. _crawler-tsconfig-paramSets-key:
+
          paramSets.[key]
 
    Data type
@@ -61,26 +63,30 @@ Page TSconfig Reference (tx\_crawler.crawlerCfg)
              between, values included, starting from low to high (max. 1000).
              Example "1-34" or "-40--30"
 
-           - " **\_TABLE** :” in the beginning of string indicates a look up in a
+           - "**\_TABLE:**" in the beginning of string indicates a look up in a
              table. Syntax is a string where [keyword]:[value] pairs are separated
              by semi-colon. Example "\_TABLE:tt\_content; \_PID:123"
 
-             - Keyword “ **\_TABLE”** (mandatory, starting string): Value is table
+             - Keyword " **\_TABLE** ": (mandatory, starting string): Value is table
                name from TCA to look up into.
 
-             - Keyword “ **\_PID** ”: Value is optional page id to look in (default
+             - Keyword " **\_ADDTABLE** ": Additional tables to fetch data from.
+               This value will be appended to "\_TABLE" and used as "FROM"
+               part of SQL query.
+
+             - Keyword " **\_PID** ": Value is optional page id to look in (default
                is current page).
 
-             - Keyword “ **\_FIELD** ”: Value is field name to use for the value
+             - Keyword " **\_FIELD** ": Value is field name to use for the value
                (default is uid).
 
-             - Keyword “ **\_PIDFIELD** ”: Optional value that contains the name of
-               the column containing the pid. By default this is “pid”.
+             - Keyword " **\_PIDFIELD** ": Optional value that contains the name of
+               the column containing the pid. By default this is "pid".
 
-             - Keyword “ **\_ENABLELANG** ”: Optional flag. If set only the records
+             - Keyword " **\_ENABLELANG** ": Optional flag. If set only the records
                from the current language are fetched.
 
-             - Keyword “ **\_WHERE** ”: Optional flag. This can be use to e.g. if
+             - Keyword " **\_WHERE** ": Optional flag. This can be use to e.g. if
                you don't want hidden records to be crawled.
 
            - \- Default: Literal value
@@ -96,8 +102,8 @@ Page TSconfig Reference (tx\_crawler.crawlerCfg)
          ::
 
             tx_crawler.crawlerCfg.paramSets {
-               items = &tx_myext[items]=[_TABLE:tt_myext_items;_PID:15, _WHERE: and hidden = 0]
-               items {
+               myConfigurationKeyName = &tx_myext[items]=[_TABLE:tt_myext_items;_PID:15, _WHERE: and hidden = 0]
+               myConfigurationKeyName {
                  pidsOnly = 13
                  cHash = 1
                  procInstrFilter = tx_indexedsearch_reindex
@@ -110,13 +116,15 @@ Page TSconfig Reference (tx\_crawler.crawlerCfg)
 .. container:: table-row
 
    Property
+         .. _crawler-tsconfig-paramSets-key-procInstrFilter:
+
          paramSets.[key].procInstrFilter
 
    Data type
          string
 
    Description
-         List of processing instructions, eg. “tx\_indexedsearch\_reindex” from
+         List of processing instructions, eg. "tx\_indexedsearch\_reindex" from
          indexed\_searchto send for the request. Processing instructions are
          necessary for the request to perform any meaningful action, since they
          activate third party activity.
@@ -146,6 +154,8 @@ Page TSconfig Reference (tx\_crawler.crawlerCfg)
 .. container:: table-row
 
    Property
+         .. _crawler-tsconfig-paramSets-key-pidsOnly:
+
          paramSets.[key].pidsOnly
 
    Data type
@@ -160,6 +170,8 @@ Page TSconfig Reference (tx\_crawler.crawlerCfg)
 .. container:: table-row
 
    Property
+         .. _crawler-tsconfig-paramSets-key-userGroups:
+
          paramSets.[key].userGroups
 
    Data type
@@ -174,6 +186,8 @@ Page TSconfig Reference (tx\_crawler.crawlerCfg)
 .. container:: table-row
 
    Property
+         .. _crawler-tsconfig-paramSets-key-cHash:
+
          paramSets.[key].cHash
 
    Data type
@@ -188,6 +202,8 @@ Page TSconfig Reference (tx\_crawler.crawlerCfg)
 .. container:: table-row
 
    Property
+         .. _crawler-tsconfig-paramSets-key-baseUrl:
+
          paramSets.[key].baseUrl
 
    Data type
