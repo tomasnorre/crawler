@@ -136,8 +136,7 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = array (
                 'foreign_table' => 'fe_groups'
             )
         ),
-        // displayCond's are broken with 7.5, so disable workspace support for now (#70052)
-        /*'sys_workspace_uid' => Array (
+        'sys_workspace_uid' => Array (
             'exclude' => 1,
             'label' => 'LLL:EXT:crawler/locallang_db.xml:tx_crawler_configuration.sys_workspace_uid',
             'displayCond' => 'EXT:workspaces:LOADED:true',
@@ -151,7 +150,7 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = array (
                 'exclusiveKeys' => '-1,0',
                 'foreign_table' => 'sys_workspace'
             )
-        ),*/
+        ),
         'realurl' => Array (
             'exclude' => 1,
             'label' => 'LLL:EXT:crawler/locallang_db.xml:tx_crawler_configuration.realurl',
