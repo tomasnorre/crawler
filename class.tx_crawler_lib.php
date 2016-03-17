@@ -2207,6 +2207,7 @@ class tx_crawler_lib {
 			}
 
 			$this->CLI_releaseProcesses($orphanProcesses, true); // maybe this should be somehow included into the current lock
+			$this->CLI_deleteProcessesMarkedDeleted();
 
 			$this->db->sql_query('COMMIT');
 
@@ -2241,7 +2242,7 @@ class tx_crawler_lib {
 			'process_id IN (SELECT process_id FROM tx_crawler_process WHERE active=0 AND deleted=0)',
 			array(
 				'process_scheduled' => 0,
-			'process_id' => ''
+				'process_id' => ''
 			)
 		);
 		$this->db->exec_UPDATEquery(
@@ -2277,6 +2278,15 @@ class tx_crawler_lib {
 		if(!$withinLock) $this->db->sql_query('COMMIT');
 
 		return true;
+	}
+
+	/**
+	 * Delete processes marked as deleted
+	 *
+	 * @return void
+	 */
+ 	public function CLI_deleteProcessesMarkedDeleted() {
+		$this->db->exec_DELETEquery('tx_crawler_process', 'deleted = 1');
 	}
 
 	/**

@@ -58,19 +58,14 @@ before_install:
 before_script:
   # Installs TYPO3
   - composer require typo3/cms=$TYPO3_VERSION
-   # If TYPO3_VERSION is NOT 6.2.x
-  - >
-    if [[ "$TYPO3_VERSION" != "^6.2" ]]; then
-      export "TYPO3_PATH_WEB"=$PWD/.Build/Web;
-    else
-      export "TYPO3_PATH_WEB"=$PWD;
-    fi
-  # Restore composer.json
+    # Restore composer.json
   - git checkout composer.json
+  - export "TYPO3_PATH_WEB"=$PWD/.Build/Web;
   # Locating UnitTests.xml
   - export "UNIT_XML"=`find . -name 'UnitTests.xml' -type f`
   # Location FunctionalTests.xml
   - export "FUNCTIONAL_XML"=`find . -name 'FunctionalTests.xml' -type f`
+  - ln -nfs .Build/vendor/typo3/cms/typo3 typo3
 
 script:
   - >
