@@ -70,10 +70,6 @@ class tx_crawler_api_testcase extends \TYPO3\CMS\Core\Tests\FunctionalTestCase {
 		$this->oldRootline =   $GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields'];
 		//clear rootline
 		$GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields'] = '';
-		$GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['crawler'] = 'a:20:{s:9:"sleepTime";s:4:"1000";s:16:"sleepAfterFinish";s:2:"10";s:11:"countInARun";s:2:"20";s:14:"purgeQueueDays";s:2:"14";s:12:"processLimit";s:1:"9";s:17:"processMaxRunTime";s:3:"300";s:14:"maxCompileUrls";s:5:"10000";s:12:"processDebug";s:1:"0";s:14:"processVerbose";s:1:"0";s:16:"crawlHiddenPages";s:1:"1";s:7:"phpPath";s:16:"/usr/bin/php5 -q";s:14:"enableTimeslot";s:1:"1";s:11:"logFileName";s:0:"";s:9:"follow30x";s:1:"0";s:18:"makeDirectRequests";s:1:"1";s:16:"frontendBasePath";s:1:"/";s:22:"cleanUpOldQueueEntries";s:1:"1";s:19:"cleanUpProcessedAge";s:1:"2";s:19:"cleanUpScheduledAge";s:1:"7";s:21:"PageUidRootTypoScript";s:1:"1";}';
-
-		$this->importDataSet(dirname(__FILE__).'/data/pages.xml');
-		$this->importDataSet(dirname(__FILE__).'/data/sys_template.xml');
 
 	}
 
@@ -202,35 +198,6 @@ class tx_crawler_api_testcase extends \TYPO3\CMS\Core\Tests\FunctionalTestCase {
 		$crawler_api->expects($this->any())->method("findCrawler")->will($this->returnValue($crawler_lib));
 
 		return $crawler_api;
-	}
-
-	/**
-	 * @test
-	 */
-	public function canReadHttpResponseFromStream() {
-		require_once __DIR__ . '/../Unit/proxies/class.tx_crawler_lib_proxy.php';
-
-		$dummyContent = 'Lorem ipsum';
-		$dummyResponseHeader =  array(
-			'HTTP/1.1 301 Moved Permanently',
-			'Server: nginx',
-			'Date: Fri, 25 Apr 2014 08:26:15 GMT',
-			'Content-Type: text/html',
-			'Content-Length: 11',
-			'Connection: close'
-		);
-		$dummyServerResponse = array_merge($dummyResponseHeader, array('', $dummyContent));
-
-		$fp = fopen('php://memory', 'rw');
-		fwrite($fp, implode("\n", $dummyServerResponse));
-		rewind($fp);
-
-		$crawlerLibrary = new \tx_crawler_lib_proxy();
-		$response = $crawlerLibrary->getHttpResponseFromStream($fp);
-
-		$this->assertCount(6, $response['headers']);
-		$this->assertEquals($dummyResponseHeader, $response['headers']);
-		$this->assertEquals($dummyContent, $response['content'][0]);
 	}
 
 }
