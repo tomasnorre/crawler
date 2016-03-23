@@ -177,7 +177,7 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = array (
         ),
     ),
     "types" => array (
-        "0" => array("showitem" => "name, processing_instruction_filter, configuration, base_url, sys_domain_base_url, pidsonly, processing_instruction_parameters_ts,begroups, fegroups, sys_workspace_uid, realurl, chash, exclude")
+        "0" => array("showitem" => "hidden, name, processing_instruction_filter, configuration, base_url, sys_domain_base_url, pidsonly, processing_instruction_parameters_ts,begroups, fegroups, sys_workspace_uid, realurl, chash, exclude")
     ),
     "palettes" => array (
         "1" => array("showitem" => "")
