@@ -4,7 +4,12 @@
 <div id="controll-panel">
 	<?php echo $this->getRefreshLink(); ?>
 	<?php echo $this->getEnableDisableLink(); ?>
-	<?php echo $this->getAddLink(); ?>
+	<?php
+		// Check if ActiveProcess is reached
+		if (\TYPO3\CMS\Core\Utility\MathUtility::convertToPositiveInteger($this->getActiveProcessCount()) < \TYPO3\CMS\Core\Utility\MathUtility::convertToPositiveInteger($this->getMaxActiveProcessCount())) {
+			echo $this->getAddLink();
+		}
+	?>
 	<?php echo $this->getModeLink(); ?>
 </div>
 
