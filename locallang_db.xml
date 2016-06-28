@@ -7,6 +7,7 @@
 	<data type="array">
 		<languageKey index="default" type="array">
 			<label index="moduleFunction.tx_crawler_modfunc1">Site Crawler</label>
+
 			<label index="tx_crawler_configuration">Crawler Configuration</label>
 			<label index="tx_crawler_configuration.name">Name</label>
 			<label index="tx_crawler_configuration.processing_instruction_filter">Processing instruction filter</label>
@@ -21,6 +22,7 @@
 			<label index="tx_crawler_configuration.exclude">Exclude pages</label>
 			<label index="tx_crawler_configuration.sys_workspace_uid">Crawl workspace</label>
 			<label index="tx_crawler_configuration.sys_domain_base_url">Get Baseurl from Domainrecord</label>
+
 			<label index="crawler_im.name">Crawler queue</label>
 			<label index="crawler_im.description">Running the crawler queue process to collect the relevant entries.</label>
 			<label index="crawler_im.startPage">Start page</label>
@@ -37,15 +39,20 @@
 			<label index="crawler_im.invalidSleepAfterFinish">The sleep after finish must be a positive integer!</label>
 			<label index="crawler_im.countInARun">Count in a run</label>
 			<label index="crawler_im.invalidCountInARun">The count in a run must be a positive integer!</label>
+
 			<label index="crawler_crawlMultiProcess.name">Crawler Run Multi Process</label>
+
 			<label index="crawler_crawl.name">Crawler Run</label>
 			<label index="crawler_crawl.description">Running the crawler to extension to process it's queue-entries.</label>
+
 			<label index="crawler_flush.name">Crawler Queue Flush</label>
 			<label index="crawler_flush.description">Cleanup the crawler queue and remode unwanted or finished entires.</label>
 			<label index="crawler_flush.mode">Flush mode</label>
 			<label index="crawler_flush.modeAll">Flush all entires</label>
 			<label index="crawler_flush.modeFinished">Flush finished entries</label>
 			<label index="crawler_flush.modePending">Flush pending entires</label>
+
+			<label index="contextMenu.label">Crawl</label>
 		</languageKey>
 	</data>
 </T3locallang>

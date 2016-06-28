@@ -1,14 +1,16 @@
 <?php
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2009 Fabrizio Branca (fabrizio.branca@aoemedia.de)
+ *  (c) 2016 AOE GmbH <dev@aoe.com>
+ *
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
+ *  the Free Software Foundation; either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  The GNU General Public License can be found at
@@ -23,11 +25,7 @@
  ***************************************************************/
 
 /**
- * Context menu processing
- *
- * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
- * @package TYPO3
- * @subpackage crawler
+ * Class tx_crawler_contextMenu
  */
 class tx_crawler_contextMenu {
 
@@ -35,54 +33,58 @@ class tx_crawler_contextMenu {
 	 * Main function
 	 *
 	 * @param \TYPO3\CMS\Backend\ClickMenu\ClickMenu reference parent object
-	 * @param array menutitems for manipultation
-	 * @param string table name
-	 * @param int uid
-	 * @return array manipulated menuitems
+	 * @param array $menuItems
+	 * @param string $tableName
+	 * @param integer $uid
+	 *
+	 * @return array
 	 */
-	function main(\TYPO3\CMS\Backend\ClickMenu\ClickMenu $backRef, array $menuItems, $table, $uid) {
-
-		if ($table != 'tx_crawler_configuration') {
-				// early return without doing anything
+	public function main(\TYPO3\CMS\Backend\ClickMenu\ClickMenu $backRef, array $menuItems, $tableName, $uid) {
+		if ('tx_crawler_configuration' !== $tableName) {
 			return $menuItems;
 		}
 
-		$localItems = array();
+		$crawlerConfiguration = \TYPO3\CMS\Backend\Utility\BackendUtility::getRecord(
+			$tableName,
+			$uid,
+			'pid, name'
+		);
 
-		$row = \TYPO3\CMS\Backend\Utility\BackendUtility::getRecord($table, $uid, 'pid, name, processing_instruction_filter', '', true);
-
-		if (!empty($row)) {
-
-			$url = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('info') . 'mod1/index.php';
-			$url .= '?id=' . intval($row['pid']);
-			$url .= '&SET[function]=tx_crawler_modfunc1';
-			$url .= '&SET[crawlaction]=start';
-			$url .= '&configurationSelection[]=' . $row['name'];
-
-			foreach (\TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $row['processing_instruction_filter']) as $processing_instruction) {
-				$url .= '&procInstructions[]=' . $processing_instruction;
-			}
-
-			// $onClick = $backRef->urlRefForCM($url);
-			$onClick = "top.nextLoadModuleUrl='".$url."';top.goToModule('web_info',1);";
-
-			$localItems[] = $backRef->linkItem(
-				'Crawl',
-				$backRef->excludeIcon('<img src="'.$backRef->backPath . \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('crawler').'icon_tx_crawler_configuration.gif" border="0" align="top" alt="" />'),
-				$onClick,
-				0
-			);
-
+		if (!$crawlerConfiguration) {
+			return $menuItems;
 		}
-		return array_merge($menuItems, $localItems);
+
+		$additionalParameters = array();
+		$additionalParameters[] = 'SET[function]=tx_crawler_modfunc1';
+		$additionalParameters[] = 'SET[crawlaction]=start';
+		$additionalParameters[] = 'configurationSelection[]=' . $crawlerConfiguration['name'];
+
+		$additionalMenuItems = array();
+		$additionalMenuItems[] = $backRef->linkItem(
+			\TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate(
+				'LLL:EXT:crawler/locallang_db.xml:contextMenu.label',
+				'crawler'
+			),
+			$backRef->excludeIcon(
+				$this->getContextMenuIcon()
+			),
+			'top.goToModule(\'web_info\', 1, \'&' . implode('&', $additionalParameters) . '\'); return hideCM();'
+		);
+
+		return array_merge($menuItems, $additionalMenuItems);
 	}
 
+	/**
+	 * Helper function to render the context menu icon
+	 *
+	 * @return string
+	 */
+	private function getContextMenuIcon() {
+		$icon = sprintf(
+			'<img src="%s" border="0" align="top" alt="" />',
+			\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('crawler') . 'icon_tx_crawler_configuration.gif'
+		);
+
+		return $icon;
+	}
 }
-
-
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/class.tx_crawler_contextMenu.php'])	{
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/class.tx_crawler_contextMenu.php']);
-}
-
-?>
