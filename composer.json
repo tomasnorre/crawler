@@ -8,7 +8,10 @@
     "autoload": {
         "classmap": [
             "."
-        ]
+        ],
+        "psr-4": {
+            "TYPO3\\CMS\\Core\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/core/Tests/"
+        }
     },
     "license": "GPL-3.0",
     "type": "typo3-cms-extension",
@@ -35,9 +38,7 @@
     "scripts": {
         "post-autoload-dump": [
             "mkdir -p .Build/Web/typo3conf/ext/",
-            "[ -L .Build/Web/typo3conf/ext/crawler ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/crawler",
-            "mkdir -p typo3conf/ext",
-            "[ -L typo3conf/ext/crawler ] || ln -snvf ../../. typo3conf/ext/crawler"
+            "[ -L .Build/Web/typo3conf/ext/crawler ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/crawler"
         ]
     },
     "extra": {
