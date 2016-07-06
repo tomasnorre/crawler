@@ -15,7 +15,7 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = array (
         'enablecolumns' => array (
             'disabled' => 'hidden',
         ),
-        'iconfile' => 'EXT:crawler:icon_tx_crawler_configuration.gif',
+        'iconfile' => 'EXT:crawler/icon_tx_crawler_configuration.gif',
     ),
     "feInterface" => array (
         "fe_admin_fieldList" => "hidden, name, processing_instruction_filter, processing_instruction_parameters_ts, configuration, base_url, sys_domain_base_url, pidsonly, begroups,fegroups, sys_workspace_uid, realurl, chash, exclude",
