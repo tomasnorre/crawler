@@ -47,7 +47,6 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = array (
             "config" => Array (
                 "type" => "select",
                 'renderType' => 'selectCheckBox',
-                "renderMode" => "checkbox",
                 "itemsProcFunc" => "EXT:crawler/class.tx_crawler_tcaFunc.php:tx_crawler_tcaFunc->getProcessingInstructions",
                 "eval" => "required",
                 "maxitems" => 100
