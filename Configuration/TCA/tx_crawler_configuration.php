@@ -15,7 +15,7 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = array (
         'enablecolumns' => array (
             'disabled' => 'hidden',
         ),
-        'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($_EXTKEY).'icon_tx_crawler_configuration.gif',
+        'iconfile' => 'EXT:crawler/icon_tx_crawler_configuration.gif',
     ),
     "feInterface" => array (
         "fe_admin_fieldList" => "hidden, name, processing_instruction_filter, processing_instruction_parameters_ts, configuration, base_url, sys_domain_base_url, pidsonly, begroups,fegroups, sys_workspace_uid, realurl, chash, exclude",
@@ -46,9 +46,9 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = array (
             "label" => "LLL:EXT:crawler/locallang_db.xml:tx_crawler_configuration.processing_instruction_filter",
             "config" => Array (
                 "type" => "select",
+                'renderType' => 'selectCheckBox',
                 "itemsProcFunc" => "EXT:crawler/class.tx_crawler_tcaFunc.php:tx_crawler_tcaFunc->getProcessingInstructions",
                 "eval" => "required",
-                "renderMode" => "checkbox",
                 "maxitems" => 100
             )
         ),
@@ -85,6 +85,7 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = array (
             'label' => 'LLL:EXT:crawler/locallang_db.xml:tx_crawler_configuration.sys_domain_base_url',
             'config' => array (
                 'type' => 'select',
+                'renderType' => 'selectSingle',
                 'items' => array (
                     array('',0),
                 ),
@@ -118,6 +119,7 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = array (
             'label' => 'LLL:EXT:crawler/locallang_db.xml:tx_crawler_configuration.begroups',
             'config' => Array (
                 'type' => 'select',
+                'renderType' => 'selectMultipleSideBySide',
                 'size' => 5,
                 'maxitems' => 20,
                 'exclusiveKeys' => '-1,-2',
@@ -130,6 +132,7 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = array (
             'label' => 'LLL:EXT:crawler/locallang_db.xml:tx_crawler_configuration.fegroups',
             'config' => Array (
                 'type' => 'select',
+                'renderType' => 'selectMultipleSideBySide',
                 'size' => 5,
                 'maxitems' => 20,
                 'exclusiveKeys' => '-1,-2',
@@ -143,6 +146,7 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = array (
             'displayCond' => 'EXT:workspaces:LOADED:true',
             'config' => Array (
                 'type' => 'select',
+                'renderType' => 'selectSingle',
                 'items' => Array (
                     Array('LLL:EXT:lang/locallang_misc.xml:shortcut_onlineWS', 0),
                 ),
