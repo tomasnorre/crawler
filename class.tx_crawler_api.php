@@ -36,11 +36,6 @@ class tx_crawler_api {
 	private $crawlerObj;
 
 	/**
-	 * @var tx_crawler_system_validator validator
-	 */
-	private $validator;
-
-	/**
 	 * @var tx_crawler_domain_queue_repository queue repository
 	 */
 	protected $queueRepository;
@@ -49,19 +44,6 @@ class tx_crawler_api {
 	 * @var $allowedConfigrations array
 	 */
 	protected $allowedConfigrations = array();
-
-	/**
-	 * Returns an instance of the validator
-	 *
-	 * @return tx_crawler_system_validator
-	 */
-	protected function findValidator() {
-		if(!$this->validator instanceof tx_crawler_system_validator) {
-			$this->validator = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_crawler_system_validator');
-		}
-
-		return $this->validator;
-	}
 
 	/**
 	 * Each crawlerrun has a setid, this facade method delegates
@@ -208,38 +190,46 @@ class tx_crawler_api {
 	}
 
 	/**
-	 * Determines if a page is queued.
+	 * Determines if a page is queued
 	 *
-	 * @param int uid
-	 * @param boolean configure the method, to handle only unprocessed items as queued
+	 * @param $uid
+	 * @param bool $unprocessed_only
+	 * @param bool $timed_only
+	 * @param bool $timestamp
+	 * @return bool
 	 */
-	public function isPageInQueue($uid,$unprocessed_only = true,$timed_only=false,$timestamp=false) {
-		$uid = intval($uid);
-
-		if($timestamp != false) { $timestamp = intval($timestamp);}
-
-		if(!$this->findValidator()->isInt($uid)) { die('wrong parameter type'); }
-
-		$query = 'count(*) as anz';
-		$where = 'page_id = '.$uid;
-
-		if($unprocessed_only) {
-			$where .= ' AND exec_time = 0';
-		}
-		if($timed_only) {
-			$where .= ' AND scheduled != 0';
-		}
-		if($timestamp) {
-			$where .= ' AND scheduled = '.$timestamp;
+	public function isPageInQueue($uid, $unprocessed_only = true, $timed_only = false, $timestamp = false) {
+		if (\TYPO3\CMS\Core\Utility\MathUtility::canBeInterpretedAsInteger($uid)) {
+			throw new \InvalidArgumentException('Invalid parameter type', 1468931945);
 		}
 
-		$rs 	= $GLOBALS['TYPO3_DB']->exec_SELECTquery($query,'tx_crawler_queue',$where);
-		$row 	= $GLOBALS['TYPO3_DB']->sql_fetch_assoc($rs);
-		$entriesInDB = intval($row['anz']);
+		$isPageInQueue = false;
 
-		$is_queued = $entriesInDB > 0;
+		$whereClause = 'page_id = ' . (integer) $uid;
 
-		return $is_queued;
+		if (false !== $unprocessed_only) {
+			$whereClause .= ' AND exec_time = 0';
+		}
+
+		if (false !== $timed_only) {
+			$whereClause .= ' AND scheduled != 0';
+		}
+
+		if (false !== $timestamp) {
+			$whereClause .= ' AND scheduled = ' . (integer) $timestamp;
+		}
+
+		$count = $GLOBALS['TYPO3_DB']->exec_SELECTcountRows(
+			'*',
+			'tx_crawler_queue',
+			$whereClause
+		);
+
+		if (false !== $count && $count > 0) {
+			$isPageInQueue = true;
+		}
+
+		return $isPageInQueue;
 	}
 
 	/**
