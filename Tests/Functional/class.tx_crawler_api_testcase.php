@@ -45,7 +45,7 @@ class tx_crawler_api_testcase extends \TYPO3\CMS\Core\Tests\FunctionalTestCase {
 	/**
 	* @var array
 	*/
-	protected $coreExtensionsToLoad = array('cms', 'core', 'frontend', 'workspaces', 'version', 'lang', 'extensionmanager');
+	protected $coreExtensionsToLoad = array('cms', 'core', 'frontend', 'version', 'lang', 'extensionmanager');
 
 	/**
 	 * @var array
@@ -234,5 +234,3 @@ class tx_crawler_api_testcase extends \TYPO3\CMS\Core\Tests\FunctionalTestCase {
 	}
 
 }
-
-?>

@@ -18,7 +18,7 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = array (
         'iconfile' => 'EXT:crawler/icon_tx_crawler_configuration.gif',
     ),
     "feInterface" => array (
-        "fe_admin_fieldList" => "hidden, name, processing_instruction_filter, processing_instruction_parameters_ts, configuration, base_url, sys_domain_base_url, pidsonly, begroups,fegroups, sys_workspace_uid, realurl, chash, exclude",
+        "fe_admin_fieldList" => "hidden, name, processing_instruction_filter, processing_instruction_parameters_ts, configuration, base_url, sys_domain_base_url, pidsonly, begroups,fegroups, realurl, chash, exclude",
     ),
     "interface" => array (
         "showRecordFieldList" => "hidden,name,processing_instruction_filter,processing_instruction_parameters_ts,configuration,base_url,pidsonly,begroups,realurl,chash, exclude"
@@ -139,23 +139,6 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = array (
                 'foreign_table' => 'fe_groups'
             )
         ),
-        // displayCond's are broken with 7.5, so disable workspace support for now (#70052)
-        /*'sys_workspace_uid' => Array (
-            'exclude' => 1,
-            'label' => 'LLL:EXT:crawler/locallang_db.xml:tx_crawler_configuration.sys_workspace_uid',
-            'displayCond' => 'EXT:workspaces:LOADED:true',
-            'config' => Array (
-                'type' => 'select',
-                'renderType' => 'selectSingle',
-                'items' => Array (
-                    Array('LLL:EXT:lang/locallang_misc.xml:shortcut_onlineWS', 0),
-                ),
-                'size' => 1,
-                'maxitems' => 1,
-                'exclusiveKeys' => '-1,0',
-                'foreign_table' => 'sys_workspace'
-            )
-        ),*/
         'realurl' => Array (
             'exclude' => 1,
             'label' => 'LLL:EXT:crawler/locallang_db.xml:tx_crawler_configuration.realurl',
@@ -182,7 +165,7 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = array (
         ),
     ),
     "types" => array (
-        "0" => array("showitem" => "hidden, name, processing_instruction_filter, configuration, base_url, sys_domain_base_url, pidsonly, processing_instruction_parameters_ts,begroups, fegroups, sys_workspace_uid, realurl, chash, exclude")
+        "0" => array("showitem" => "hidden, name, processing_instruction_filter, configuration, base_url, sys_domain_base_url, pidsonly, processing_instruction_parameters_ts,begroups, fegroups, realurl, chash, exclude")
     ),
     "palettes" => array (
         "1" => array("showitem" => "")

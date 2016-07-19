@@ -522,7 +522,6 @@ class tx_crawler_lib {
 									'cHash' => $configurationRecord['chash'],
 									'userGroups' => $configurationRecord['fegroups'],
 									'exclude' => $configurationRecord['exclude'],
-									'workspace' => $configurationRecord['sys_workspace_uid'],
 									'key' => $key,
 								);
 
@@ -535,7 +534,7 @@ class tx_crawler_lib {
 									$res[$key]['subCfg'] = $subCfg;
 									$res[$key]['paramParsed'] = $this->parseParams($configurationRecord['configuration']);
 									$res[$key]['paramExpanded'] = $this->expandParameters($res[$key]['paramParsed'], $id);
-									$res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'], array('?id='.$id. ((abs($subCfg['workspace'])>0)?'&ADMCMD_view=1&ADMCMD_editIcons=0&ADMCMD_previewWS='.$subCfg['workspace']:'')));
+									$res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'], array('?id=' . $id));
 									$res[$key]['origin'] = 'tx_crawler_configuration_'.$configurationRecord['uid'];
 								}
 							}

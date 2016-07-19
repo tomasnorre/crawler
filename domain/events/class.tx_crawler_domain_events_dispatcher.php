@@ -40,7 +40,6 @@
  * 		$dispatcher->addObserver($this,'urlCrawled','urlCrawled');
  *		$dispatcher->addObserver($this,'invokeQueueChange','invokeQueueChange');
  * 		$dispatcher->addObserver($this,'contentChange','contentChange');
- * 		$dispatcher->addObserver($this,'workspaceChange','workspaceChange');
  *	}
  *
  * The dispatcher is a singleton. The instance can be retrieved by:
@@ -146,5 +145,3 @@ class tx_crawler_domain_events_dispatcher {
 		return self::$instance;
 	}
 }
-
-?>

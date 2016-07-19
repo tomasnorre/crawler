@@ -21,8 +21,6 @@ What's new?
 **Multiprocess support** was added to the crawler to speed up the
 processing of queue entries.
 
-Crawling of  **workspaces** is now possible.
-
 Some parts were rewritten using  **MVC** principles.
 
 Intotroduced “ **pollable processing instructions** ” to enable
