@@ -35,7 +35,6 @@ return array(
 	'tx_crawler_scheduler_crawlmultiprocessadditionalfieldprovider' => $extensionPath . 'scheduler/class.tx_crawler_scheduler_crawlMultiProcessAdditionalFieldProvider.php',
 	'tx_crawler_scheduler_flush' => $extensionPath . 'scheduler/class.tx_crawler_scheduler_flush.php',
 	'tx_crawler_scheduler_flushadditionalfieldprovider' => $extensionPath . 'scheduler/class.tx_crawler_scheduler_flushAdditionalFieldProvider.php',
-	'tx_crawler_system_validator' => $extensionPath . 'system/class.tx_crawler_system_validator.php',
 	'tx_crawler_api_testcase' => $extensionPath . 'tests/class.tx_crawler_api_testcase.php',
 	'tx_crawler_domain_events_dispatcher_testcase' => $extensionPath . 'tests/events/class.tx_crawler_domain_events_dispatcher_testcase.php',
 	'tx_crawler_domain_events_test' => $extensionPath . 'tests/events/data/class.tx_crawler_domain_events_test.php',
