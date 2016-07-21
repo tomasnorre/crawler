@@ -37,9 +37,6 @@ enableTimeslot=1
 # cat=basic//10; type=string; label= Log Filename:
 logFileName=
 
-# cat=basic//10; type=boolean; label= Follow 301 and 302: If checked the crawler will follow the URLs (Location) given in a HTTP 301 and 302 response.
-follow30x=
-
 # cat=basic//10; type=boolean; label= Make direct requests: If checked the crawler will make direct requests by including the index.php file instead of getting the page content via http(s)
 makeDirectRequests=0
 
@@ -49,7 +46,7 @@ frontendBasePath=/
 # cat=basic//10; type=boolean; label=Clean up old queue entries: If checked the older queue entries will be deleted when adding new crawler configurations from CLI.
 cleanUpOldQueueEntries=1
 
-# cat=basic//10; type=int [1- 99]; label=Processed Age: If Clean up old queue entries is checked, then processed entries older than X days are deleted.
+# cat=basic//10; type=int [1- 99]; lab el=Processed Age: If Clean up old queue entries is checked, then processed entries older than X days are deleted.
 cleanUpProcessedAge=2
 
 # cat=basic//10; type=int [1- 99]; label=Scheduled Age: If Clean up old queue entries is checked, then scheduled entries older than X days are deleted.

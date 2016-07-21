@@ -1311,18 +1311,6 @@ class tx_crawler_lib {
 				'content' => implode('', (array)$d['content'])
 			);
 
-			if (($this->extensionSettings['follow30x']) && ($newUrl = $this->getRequestUrlFrom302Header($d['headers'],$url['user'],$url['pass']))) {
-				$result = array_merge(array('parentRequest'=>$result), $this->requestUrl($newUrl, $crawlerId, $recursion--));
-				$newRequestUrl = $this->requestUrl($newUrl, $crawlerId, $timeout, --$recursion);
-
-				if (is_array($newRequestUrl)) {
-					$result = array_merge(array('parentRequest'=>$result), $newRequestUrl);
-				} else {
-					if (TYPO3_DLOG) \TYPO3\CMS\Core\Utility\GeneralUtility::devLog(sprintf('Error while opening "%s"', $url), 'crawler', 4, array('crawlerId' => $crawlerId));
-					return FALSE;
-				}
-			}
-
 			return $result;
 		}
 	}
