@@ -6,7 +6,6 @@ $extensionPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('cr
 return array(
 	'tx_crawler_api' => $extensionPath . 'class.tx_crawler_api.php',
 	'tx_crawler_auth' => $extensionPath . 'class.tx_crawler_auth.php',
-	'tx_crawler_contextmenu' => $extensionPath . 'class.tx_crawler_contextMenu.php',
 	'tx_crawler_lib' => $extensionPath . 'class.tx_crawler_lib.php',
 	'tx_crawler_tcafunc' => $extensionPath . 'class.tx_crawler_tcaFunc.php',
 	'tx_crawler_cli_flush' => $extensionPath . 'cli/class.tx_crawler_cli_flush.php',
