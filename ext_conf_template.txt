@@ -1,53 +1,64 @@
-# cat=basic//10; type=int [0-10000]; label= Sleep time between requests: Time in milliseconds the crawler should sleep beetween requesting urls: low = faster / high = less stress for the server
-sleepTime = 1000
+#########################################################################
+#   Basic options
 
-# cat=basic//10; type=int [0-100]; label= Sleep time after finishing: Time in seconds the crawler should sleep before finishing
-sleepAfterFinish=10
-
-# cat=basic//10; type=int [1-10000]; label= Entries per run: How many queue entries should be processed in a run
-countInARun=100
-
-# cat=basic//10; type=int [1-365]; label= Delete processed items: Delete processed items from the queue after n days (0 will keep the entries forever - the database may grow very large over time!)
-purgeQueueDays=14
-
-# cat=basic//10; type=int [1-99]; label= Maximum processes
-processLimit=1
-
-# cat=basic//10; type=int [1- 86400]; label= Maximal process runtime: in secounds - only necessary if processLimit > 1
-processMaxRunTime=300
-
-# cat=basic//10; type=int [1- 86400]; label= Maximal number of URLs, which can be added to the queue at one time
-maxCompileUrls=10000
-
-# cat=basic//10; type=boolean; label= Debug: Print Multiprocess- processing informations - prints some information whether a process was really executed and which status it has
-processDebug=0
-
-# cat=basic//10; type=boolean; label= Make Multiprocess- processing be verbose while running
-processVerbose=0
-
-# cat=basic//10; type=boolean; label= Crawl hidden pages: Crawl hidden pages (By default they won't be crawled)
-crawlHiddenPages=0
-
-# cat=basic//10; type=string; label= PHP Path: Local path to php binary file (e.g. "/usr/bin/php")
-phpPath=/usr/bin/php
-
-# cat=basic//10; type=boolean; label= Enabled Timeslot for Duplicationcheck: When this option is active items will not be queue twice for the past if theire schedule time is the currenttime +-100 seconds.
-enableTimeslot=1
-
-# cat=basic//10; type=string; label= Log Filename:
-logFileName=
-
-# cat=basic//10; type=string; label=Frontend website base path: Base path of the website frontend (e.g. if you call http://mydomain.com/cms/index.php in the browser the base path is "/cms/"). Leave empty to use the value of config.absRefPrefix instead.
+# cat=basic//a; type=string; label=Frontend base path: Base path of the website frontend (e.g. if you call http://mydomain.com/cms/index.php in the browser, the base path is "/cms/"); leave empty to use the value of config.absRefPrefix instead
 frontendBasePath=/
 
-# cat=basic//10; type=boolean; label=Clean up old queue entries: If checked the older queue entries will be deleted when adding new crawler configurations from CLI.
+# cat=basic//b; type=int [1-500000]; label= Root Page Uid: Page Uid containing the root TypoScript template
+PageUidRootTypoScript=1
+
+# cat=advanced//c; type=int [1-10000]; label= Entries per run: How many queue entries should be processed in a crawler run
+countInARun=100
+
+# cat=basic//d; type=int [1-99]; label= Process limit: Maximum number of concurrent crawler processes
+processLimit=1
+
+# cat=basic//e; type=int [1-86400]; label= Process Timeout: Maximum process runtime in seconds (only necessary if processLimit > 1)
+processMaxRunTime=300
+
+# cat=basic//f; type=boolean; label= Enable duplication check: If active, items will not be queued twice if their scheduled time is the current time +-100 seconds
+enableTimeslot=1
+
+# cat=basic//g; type=boolean; label= Crawl hidden pages: Hidden pages will not be crawled by default
+crawlHiddenPages=0
+
+# cat=basic//h; type=string; label= PHP Path: Local path to php binary file (e.g. "/usr/bin/php")
+phpPath=/usr/bin/php
+
+
+########################################################################
+#  Advanced options
+
+# cat=advanced//a; type=int [1-86400]; label= Maximum compile URLS: Maximum number of URLs to be queued in a single request
+maxCompileUrls=10000
+
+# cat=advanced//b; type=int [0-10000]; label= Sleep time between requests: Time in milliseconds the crawler should sleep between requests
+sleepTime=1000
+
+# cat=advanced//c; type=int [0-100]; label= Sleep time after finishing: Time in seconds a crawler process should sleep before terminating
+sleepAfterFinish=10
+
+# customsubcategory=debug=Debug
+
+# cat=advanced/debug/10; type=string; label= Log filename: Name of the optional log file
+logFileName=
+
+# cat=advanced/debug/20; type=boolean; label= Debug: Prints additional information whether a process was really executed and which status it has terminated
+processDebug=0
+
+# cat=advanced/debug/30; type=boolean; label= Verbose: Make multiprocess processing verbose while running
+processVerbose=0
+
+# customsubcategory=housekeeping=Housekeeping
+
+# cat=advanced/housekeeping/10; type=int [1-365]; label= Delete processed items: Delete processed items from the queue after n days (0 will keep the entries forever - the database may grow very large over time!)
+purgeQueueDays=14
+
+# cat=advanced/housekeeping/20; type=boolean; label = Clean up old queue entries: Enable cleanup of old queue entries when adding new entries from CLI
 cleanUpOldQueueEntries=1
 
-# cat=basic//10; type=int [1- 99]; lab el=Processed Age: If Clean up old queue entries is checked, then processed entries older than X days are deleted.
+# cat=advanced/housekeeping/30; type=int [1-99]; label = Maximum processed age: If cleanup of old entries is enabled, processed entries older than X days will be deleted
 cleanUpProcessedAge=2
 
-# cat=basic//10; type=int [1- 99]; label=Scheduled Age: If Clean up old queue entries is checked, then scheduled entries older than X days are deleted.
+# cat=advanced/housekeeping/40; type=int [1-99]; label = Maximum scheduled age: If cleanup of old entries is enabled, scheduled entries older than X days will be deleted
 cleanUpScheduledAge=7
-
-# cat=basic//10; type=int [1- 500000]; label= Page Uid that contains Root TypoScript Template
-PageUidRootTypoScript=1
