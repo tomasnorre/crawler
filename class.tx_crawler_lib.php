@@ -1224,7 +1224,7 @@ class tx_crawler_lib {
 				$crawlerId = $queueRec['qid'].':'.md5($queueRec['qid'].'|'.$queueRec['set_id'].'|'.$GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']);
 
 					// Get result:
-				$result = $this->requestUrl($parameters['url'],$crawlerId);
+				$result = $this->requestUrl($parameters['url'], $crawlerId);
 
 				tx_crawler_domain_events_dispatcher::getInstance()->post('urlCrawled',$queueRec['set_id'],array('url' => $parameters['url'], 'result' => $result));
 			}
@@ -1235,84 +1235,38 @@ class tx_crawler_lib {
 	}
 
 	/**
-	 * Gets the content of a URL.
+	 * Requests an URL
 	 *
-	 * @param  string   $originalUrl    URL to read
-	 * @param  string   $crawlerId      Crawler ID string (qid + hash to verify)
-	 * @param  integer  $timeout        Timeout time
-	 * @param  integer  $recursion      Recursion limiter for 302 redirects
-	 * @return array                    Array with content
+	 * @param string $originalUrl
+	 * @param string $crawlerId
+	 * @return array|bool
 	 */
-	function requestUrl($originalUrl, $crawlerId, $timeout=2, $recursion=10) {
-
-		if (!$recursion) return false;
-
-			// Parse URL, checking for scheme:
+	function requestUrl($originalUrl, $crawlerId) {
 		$url = parse_url($originalUrl);
+		if (false === $url) {
+			if (TYPO3_DLOG) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::devLog(
+					sprintf('Could not parse_url() for string "%s"', $url), 'crawler', 4,
+					array('crawlerId' => $crawlerId)
+				);
+			}
 
-		if ($url === FALSE) {
-			if (TYPO3_DLOG) \TYPO3\CMS\Core\Utility\GeneralUtility::devLog(sprintf('Could not parse_url() for string "%s"', $url), 'crawler', 4, array('crawlerId' => $crawlerId));
-			return FALSE;
+			return false;
 		}
 
-		if (!in_array($url['scheme'], array('','http','https'))) {
-			if (TYPO3_DLOG) \TYPO3\CMS\Core\Utility\GeneralUtility::devLog(sprintf('Scheme does not match for url "%s"', $url), 'crawler', 4, array('crawlerId' => $crawlerId));
-			return FALSE;
+		if (!in_array($url['scheme'], array('', 'http', 'https'))) {
+			if (TYPO3_DLOG) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::devLog(
+					sprintf('Scheme does not match for url "%s"', $url), 'crawler', 4, array('crawlerId' => $crawlerId)
+				);
+			}
+
+			return false;
 		}
 
-			// direct request
-		if ($this->extensionSettings['makeDirectRequests']) {
-			$result = $this->sendDirectRequest($originalUrl, $crawlerId);
-			return $result;
-		}
+		$result = $this->sendDirectRequest($originalUrl, $crawlerId);
 
-		$reqHeaders = $this->buildRequestHeaderArray($url, $crawlerId);
-
-			// thanks to Pierrick Caillon for adding proxy support
-		$rurl = $url;
-
-		if ($GLOBALS['TYPO3_CONF_VARS']['SYS']['curlUse'] && $GLOBALS['TYPO3_CONF_VARS']['SYS']['curlProxyServer']) {
-			$rurl = parse_url($GLOBALS['TYPO3_CONF_VARS']['SYS']['curlProxyServer']);
-			$url['path'] = $url['scheme'] . '://' . $url['host'] . ($url['port'] > 0 ? ':' . $url['port'] : '') . $url['path'];
-			$reqHeaders = $this->buildRequestHeaderArray($url, $crawlerId);
-		}
-
-		$host = $rurl['host'];
-
-		if ($url['scheme'] == 'https') {
-			$host = 'ssl://' . $host;
-			$port = ($rurl['port'] > 0) ? $rurl['port'] : 443;
-		} else {
-			$port = ($rurl['port'] > 0) ? $rurl['port'] : 80;
-		}
-
-		$startTime = microtime(true);
-		$fp = fsockopen($host, $port, $errno, $errstr, $timeout);
-
-		if (!$fp) {
-			if (TYPO3_DLOG) \TYPO3\CMS\Core\Utility\GeneralUtility::devLog(sprintf('Error while opening "%s"', $url), 'crawler', 4, array('crawlerId' => $crawlerId));
-			return FALSE;
-		} else {
-				// Request message:
-			$msg = implode("\r\n",$reqHeaders)."\r\n\r\n";
-			fputs ($fp, $msg);
-
-				// Read response:
-			$d = $this->getHttpResponseFromStream($fp);
-			fclose ($fp);
-
-			$time = microtime(true) - $startTime;
-			$this->log($originalUrl .' '.$time);
-
-				// Implode content and headers:
-			$result = array(
-				'request' => $msg,
-				'headers' => implode('', $d['headers']),
-				'content' => implode('', (array)$d['content'])
-			);
-
-			return $result;
-		}
+		return $result;
 	}
 
 	/**

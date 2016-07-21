@@ -37,9 +37,6 @@ enableTimeslot=1
 # cat=basic//10; type=string; label= Log Filename:
 logFileName=
 
-# cat=basic//10; type=boolean; label= Make direct requests: If checked the crawler will make direct requests by including the index.php file instead of getting the page content via http(s)
-makeDirectRequests=0
-
 # cat=basic//10; type=string; label=Frontend website base path: Base path of the website frontend (e.g. if you call http://mydomain.com/cms/index.php in the browser the base path is "/cms/"). Leave empty to use the value of config.absRefPrefix instead.
 frontendBasePath=/
 
