@@ -70,3 +70,9 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['tx_crawler_sche
 	'description'      => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:crawler_flush.description',
 	'additionalFields' => 'tx_crawler_scheduler_flushAdditionalFieldProvider'
 );
+
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['AOE\Crawler\Tasks\ProcessCleanupTask'] = array(
+	'extension'        => $_EXTKEY,
+	'title'            => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:crawler_processCleanup.name',
+	'description'      => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:crawler_processCleanup.description',
+);

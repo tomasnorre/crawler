@@ -51,6 +51,9 @@
 			<label index="crawler_flush.modeFinished">Flush finished entries</label>
 			<label index="crawler_flush.modePending">Flush pending entires</label>
 
+			<label index="crawler_processCleanup.name">Remove Processes</label>
+			<label index="crawler_processCleanup.description">Remove Orphan processes and processes that are older than one hour</label>
+
 			<label index="contextMenu.label">Crawl</label>
 		</languageKey>
 	</data>
