@@ -42,7 +42,7 @@ class tx_crawler_cli_flush extends \TYPO3\CMS\Core\Controller\CommandLineControl
 	 *
 	 * @return	void
 	 */
-	function tx_crawler_cli_flush() {
+	function __construct() {
 		parent::__construct();
 
 			// Adding options to help archive:

@@ -42,7 +42,7 @@ class tx_crawler_cli_im extends \TYPO3\CMS\Core\Controller\CommandLineController
 	 *
 	 * @return	void
 	 */
-	function tx_crawler_cli_im() {
+	function __construct() {
 		parent::__construct();
 
 		// Adding options to help archive:

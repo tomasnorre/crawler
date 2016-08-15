@@ -42,7 +42,7 @@ class tx_crawler_cli extends \TYPO3\CMS\Core\Controller\CommandLineController {
 	 *
 	 * @return	void
 	 */
-	function tx_crawler_cli() {
+	function __construct() {
 		parent::__construct();
 
 		$this->cli_options[] = array('-h', 'Show the help', '');
