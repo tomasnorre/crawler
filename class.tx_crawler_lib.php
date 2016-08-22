@@ -116,6 +116,11 @@ class tx_crawler_lib {
 
 			// read ext_em_conf_template settings and set
 		$this->setExtensionSettings($settings);
+		
+		if (!isset($this->extensionSettings['PageUidRootTypoScript']) || !\TYPO3\CMS\Core\Utility\MathUtility::canBeInterpretedAsInteger($this->extensionSettings['PageUidRootTypoScript'])) {
+			throw new Exception('No TypoScript Template found, please set the respected Uid in Crawler Configuration in the Extension Manager', 1471865159);
+		}
+		
 		$this->initTSFE((int)$this->extensionSettings['PageUidRootTypoScript']);
 
 		// set defaults:
