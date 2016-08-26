@@ -1,22 +1,20 @@
 {
     "name": "aoepeople/crawler",
+    "type": "typo3-cms-extension",
     "description": "Crawler extension for TYPO3",
     "homepage": "https://github.com/AOEpeople/crawler",
     "support": {
         "issues": "https://github.com/AOEpeople/crawler/issues"
     },
-    "autoload": {
-        "classmap": [
-            "."
-        ],
-        "psr-4": {
-            "AOE\\Crawler\\": "Classes"
-        }
-    },
-    "license": "GPL-3.0",
-    "type": "typo3-cms-extension",
     "version": "5.0.6",
+    "license": "GPL-3.0",
     "authors": [
+        {
+            "name": "AOEpeople",
+            "email": "dev@aoe.com",
+            "homepage": "https://www.aoe.com/",
+            "role": "Developer"
+        }
     ],
     "minimum-stability": "dev",
     "require": {
@@ -25,6 +23,27 @@
     "require-dev": {
         "phpunit/phpunit": "~4.8.0",
         "mikey179/vfsStream": "1.3.*@dev"
+    },
+    "replace": {
+        "crawler":  "self.version"
+    },
+    "autoload": {
+        "classmap": [
+            "cli",
+            "domain",
+            "hooks",
+            "modfunc1",
+            "scheduler",
+            "template",
+            "view",
+            "class.tx_crawler_api.php",
+            "class.tx_crawler_auth.php",
+            "class.tx_crawler_lib.php",
+            "class.tx_crawler_tcaFunc.php"
+        ],
+        "psr-4": {
+            "AOE\\Crawler\\": "Classes/"
+        }
     },
     "autoload-dev": {
         "psr-4": {
