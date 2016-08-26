@@ -10,7 +10,7 @@
             "."
         ],
         "psr-4": {
-            "TYPO3\\CMS\\Core\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/core/Tests/"
+            "AOE\\Crawler\\": "Classes"
         }
     },
     "license": "GPL-3.0",
