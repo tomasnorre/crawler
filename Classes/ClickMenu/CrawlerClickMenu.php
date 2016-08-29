@@ -75,9 +75,7 @@ class CrawlerClickMenu
                 'LLL:EXT:crawler/locallang_db.xml:contextMenu.label',
                 'crawler'
             ),
-            $backRef->excludeIcon(
-                $this->getContextMenuIcon()
-            ),
+            $this->getContextMenuIcon(),
             'top.goToModule(\'web_info\', 1, \'&' . implode('&', $additionalParameters) . '\'); return hideCM();'
         );
 
