@@ -33,7 +33,6 @@
             "domain",
             "hooks",
             "modfunc1",
-            "scheduler",
             "template",
             "view",
             "class.tx_crawler_api.php",
