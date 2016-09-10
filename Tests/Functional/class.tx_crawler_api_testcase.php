@@ -208,7 +208,7 @@ class tx_crawler_api_testcase extends \TYPO3\CMS\Core\Tests\FunctionalTestCase {
 	 * @test
 	 */
 	public function canReadHttpResponseFromStream() {
-		require_once __DIR__ . '/../Unit/proxies/class.tx_crawler_lib_proxy.php';
+		require_once __DIR__ . '/../Unit/Domain/Model/data/class.tx_crawler_lib_proxy.php';
 
 		$dummyContent = 'Lorem ipsum';
 		$dummyResponseHeader =  array(
