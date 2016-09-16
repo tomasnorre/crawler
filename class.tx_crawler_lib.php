@@ -1154,7 +1154,7 @@ class tx_crawler_lib {
 			\AOE\Crawler\Utility\SignalSlotUtility::emitSignal(
 				__CLASS__,
 				\AOE\Crawler\Utility\SignalSlotUtility::SIGNNAL_QUEUEITEM_PREPROCESS,
-				[$queueId, &$queueRec]
+				array($queueId, &$queueRec)
 			);
 
 			// Set exec_time to lock record:
@@ -1190,7 +1190,7 @@ class tx_crawler_lib {
 			\AOE\Crawler\Utility\SignalSlotUtility::emitSignal(
 				__CLASS__,
 				\AOE\Crawler\Utility\SignalSlotUtility::SIGNNAL_QUEUEITEM_POSTPROCESS,
-				[$queueId, &$field_array]
+				array($queueId, &$field_array)
 			);
 
 			$this->db->exec_UPDATEquery('tx_crawler_queue', 'qid=' . intval($queueId), $field_array);
