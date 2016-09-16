@@ -116,11 +116,11 @@ class tx_crawler_lib {
 
 			// read ext_em_conf_template settings and set
 		$this->setExtensionSettings($settings);
-		
+
 		if (!isset($this->extensionSettings['PageUidRootTypoScript']) || !\TYPO3\CMS\Core\Utility\MathUtility::canBeInterpretedAsInteger($this->extensionSettings['PageUidRootTypoScript'])) {
 			throw new Exception('No TypoScript Template found, please set the respected Uid in Crawler Configuration in the Extension Manager', 1471865159);
 		}
-		
+
 		$this->initTSFE((int)$this->extensionSettings['PageUidRootTypoScript']);
 
 		// set defaults:
@@ -1137,47 +1137,69 @@ class tx_crawler_lib {
 	/**
 	 * Read URL for single queue entry
 	 *
-	 * @param	integer		Queue entry id
-	 * @param	boolean		If set, will process even if exec_time has been set!
-	 * @return	int
+	 * @param integer $queueId
+	 * @param boolean $force If set, will process even if exec_time has been set!
+	 * @return integer
 	 */
-	function readUrl($queueId, $force=FALSE)	{
+	function readUrl($queueId, $force = FALSE) {
 		$ret = 0;
-		if ($this->debugMode) \TYPO3\CMS\Core\Utility\GeneralUtility::devlog('crawler-readurl start '.microtime(true),__FUNCTION__);
-			// Get entry:
-		list($queueRec) = $this->db->exec_SELECTgetRows('*','tx_crawler_queue','qid='.intval($queueId).($force ? '' : ' AND exec_time=0 AND process_scheduled > 0'));
+		if ($this->debugMode) {
+			\TYPO3\CMS\Core\Utility\GeneralUtility::devlog('crawler-readurl start ' . microtime(true), __FUNCTION__);
+		}
+		// Get entry:
+		list($queueRec) = $this->db->exec_SELECTgetRows('*', 'tx_crawler_queue',
+			'qid=' . intval($queueId) . ($force ? '' : ' AND exec_time=0 AND process_scheduled > 0'));
 
-		if (is_array($queueRec))	{
-				// Set exec_time to lock record:
+		if (is_array($queueRec)) {
+			\AOE\Crawler\Utility\SignalSlotUtility::emitSignal(
+				__CLASS__,
+				\AOE\Crawler\Utility\SignalSlotUtility::SIGNNAL_QUEUEITEM_PREPROCESS,
+				[$queueId, &$queueRec]
+			);
+
+			// Set exec_time to lock record:
 			$field_array = array('exec_time' => $this->getCurrentTime());
 
-			if(isset($this->processID)){
-					//if mulitprocessing is used we need to store the id of the process which has handled this entry
+			if (isset($this->processID)) {
+				//if mulitprocessing is used we need to store the id of the process which has handled this entry
 				$field_array['process_id_completed'] = $this->processID;
 			}
-			$this->db->exec_UPDATEquery('tx_crawler_queue','qid='.intval($queueId), $field_array);
+			$this->db->exec_UPDATEquery('tx_crawler_queue', 'qid=' . intval($queueId), $field_array);
 
 			$result = $this->readUrl_exec($queueRec);
 			$resultData = unserialize($result['content']);
 
-				//atm there's no need to point to specific pollable extensions
-			if(is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'])) {
-				foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'] as $pollable) {
+			//atm there's no need to point to specific pollable extensions
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'])) {
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'] as $pollable) {
 					// only check the success value if the instruction is runnig
 					// it is important to name the pollSuccess key same as the procInstructions key
-					if(is_array($resultData['parameters']['procInstructions']) && in_array($pollable,$resultData['parameters']['procInstructions'])){
-						if(!empty($resultData['success'][$pollable]) && $resultData['success'][$pollable]) {
+					if (is_array($resultData['parameters']['procInstructions']) && in_array($pollable,
+							$resultData['parameters']['procInstructions'])
+					) {
+						if (!empty($resultData['success'][$pollable]) && $resultData['success'][$pollable]) {
 							$ret |= self::CLI_STATUS_POLLABLE_PROCESSED;
 						}
 					}
 				}
 			}
 
-				// Set result in log which also denotes the end of the processing of this entry.
+			// Set result in log which also denotes the end of the processing of this entry.
 			$field_array = array('result_data' => serialize($result));
-			$this->db->exec_UPDATEquery('tx_crawler_queue','qid='.intval($queueId), $field_array);
+
+			\AOE\Crawler\Utility\SignalSlotUtility::emitSignal(
+				__CLASS__,
+				\AOE\Crawler\Utility\SignalSlotUtility::SIGNNAL_QUEUEITEM_POSTPROCESS,
+				[$queueId, &$field_array]
+			);
+
+			$this->db->exec_UPDATEquery('tx_crawler_queue', 'qid=' . intval($queueId), $field_array);
 		}
-		if ($this->debugMode) \TYPO3\CMS\Core\Utility\GeneralUtility::devlog('crawler-readurl stop '.microtime(true),__FUNCTION__);
+
+		if ($this->debugMode) {
+			\TYPO3\CMS\Core\Utility\GeneralUtility::devlog('crawler-readurl stop ' . microtime(true), __FUNCTION__);
+		}
+
 		return $ret;
 	}
 
