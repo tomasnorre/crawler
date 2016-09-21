@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataset>
+	<sys_template>
+		<uid>1</uid>
+		<pid>5</pid>
+		<title>Root Template</title>
+		<root>1</root>
+		<config>&lt;INCLUDE_TYPOSCRIPT: source="FILE:EXT:crawler/Tests/Functional/Fixtures/typoscript_setup.txt"&gt;</config>
+		<hidden>0</hidden>
+		<deleted>0</deleted>
+	</sys_template>
+	<sys_template>
+		<uid>2</uid>
+		<pid>5</pid>
+		<title>Not Root Template</title>
+		<root>0</root>
+		<config>&lt;INCLUDE_TYPOSCRIPT: source="FILE:EXT:crawler/Tests/Functional/Fixtures/typoscript_setup.txt"&gt;</config>
+		<hidden>0</hidden>
+		<deleted>0</deleted>
+	</sys_template>
+	<sys_template>
+		<uid>3</uid>
+		<pid>5</pid>
+		<title>Root Template - Hidden</title>
+		<root>1</root>
+		<config>&lt;INCLUDE_TYPOSCRIPT: source="FILE:EXT:crawler/Tests/Functional/Fixtures/typoscript_setup.txt"&gt;</config>
+		<hidden>1</hidden>
+		<deleted>0</deleted>
+	</sys_template>
+	<sys_template>
+		<uid>4</uid>
+		<pid>5</pid>
+		<title>Root Template - Deleted</title>
+		<root>1</root>
+		<config>&lt;INCLUDE_TYPOSCRIPT: source="FILE:EXT:crawler/Tests/Functional/Fixtures/typoscript_setup.txt"&gt;</config>
+		<hidden>0</hidden>
+		<deleted>1</deleted>
+	</sys_template>
+</dataset>
