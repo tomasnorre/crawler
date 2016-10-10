@@ -277,7 +277,7 @@ class tx_crawler_lib {
 		if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('realurl') && $vv['subCfg']['realurl']) {
 
 			/** @var tx_realurl $urlObj */
-			$urlObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_realurl');
+			$urlObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\DmitryDulepov\Realurl\Encoder\UrlEncoder::class);
 
 			if (!empty($vv['subCfg']['baseUrl'])) {
 				$urlParts = parse_url($vv['subCfg']['baseUrl']);
@@ -323,17 +323,25 @@ class tx_crawler_lib {
 					// Create key by which to determine unique-ness:
 					$uKey = $urlQuery.'|'.$vv['subCfg']['userGroups'].'|'.$vv['subCfg']['baseUrl'].'|'.$vv['subCfg']['procInstrFilter'];
 
-					// realurl support (thanks to Ingo Renner)
 					$urlQuery = 'index.php' . $urlQuery;
+					
 					if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('realurl') && $vv['subCfg']['realurl']) {
+						// realurl support (thanks to Ingo Renner)
+						// realurl checks the url including the absRefPrefix, so it's important to add it here 
+						$urlQuery = $GLOBALS['TSFE']->absRefPrefix.'index.php' . $urlQuery;
+
 						$params = array(
 							'LD' => array(
 								'totalURL' => $urlQuery
 							),
 							'TCEmainHook' => true
 						);
-						$urlObj->encodeSpURL($params);
+
+						$urlObj->encodeUrl($params);
 						$urlQuery = $params['LD']['totalURL'];
+						
+						// due to duplicate path segments and slashes the crawler does not check, the absRefPrefix has to be removed after real url encoding 
+						$urlQuery = substr($urlQuery, strlen($GLOBALS['TSFE']->absRefPrefix));
 					}
 
 					// Scheduled time:

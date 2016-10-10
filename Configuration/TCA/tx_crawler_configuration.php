@@ -142,7 +142,6 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = array (
         'realurl' => Array (
             'exclude' => 1,
             'label' => 'LLL:EXT:crawler/locallang_db.xml:tx_crawler_configuration.realurl',
-            'displayCond' => 'FALSE',
             'config' => Array (
                 'type' => 'check',
             )
