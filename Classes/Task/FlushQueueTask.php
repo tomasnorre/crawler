@@ -1,9 +1,10 @@
 <?php
+namespace AOE\Crawler\Task;
 
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2014 AOE GmbH <dev@aoe.com>
+ *  (c) 2016 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -24,32 +25,32 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Scheduler\Task\AbstractTask;
+
 /**
- * Class tx_crawler_scheduler_crawlMultiProcess
+ * Class FlushQueueTask
  *
  * @package AOE\Crawler\Task
  */
-class tx_crawler_scheduler_crawlMultiProcess extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
+class FlushQueueTask extends AbstractTask
+{
+    /**
+     * @var string $mode
+     */
+    public $mode = 'all';
 
-	/**
-	 * @var integer
-	 */
-	public $timeOut;
+    /**
+     * Function executed from the Scheduler.
+     *
+     * @return bool
+     */
+    public function execute()
+    {
+        $_SERVER['argv'] = array($_SERVER['argv'][0], '0', '-o', $this->mode);
+        /* @var $crawlerObject \tx_crawler_lib */
+        $crawlerObject = GeneralUtility::makeInstance('tx_crawler_lib');
 
-	/**
-	 * Function executed from the Scheduler.
-	 *
-	 * @return bool
-	 */
-	public function execute() {
-		$processManager = new tx_crawler_domain_process_manager();
-		$timeout = is_int($this->timeOut) ? (int)$this->timeOut : 10000;
-
-		try {
-			$processManager->multiProcess($timeout);
-		} catch (Exception $e) {
-		}
-
-		return TRUE;
-	}
+        return $crawlerObject->CLI_main_flush();
+    }
 }
