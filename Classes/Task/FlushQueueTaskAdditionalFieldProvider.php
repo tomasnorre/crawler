@@ -60,14 +60,14 @@ class FlushQueueTaskAdditionalFieldProvider implements AdditionalFieldProviderIn
 
         $fieldId = 'mode';
         $fieldCode = '<select name="tx_scheduler[mode]" id="' . $fieldId . '" value="' . htmlentities($taskInfo['mode']) . '">'
-            . '<option value="all"' . ($taskInfo['mode'] == 'all' ? ' selected="selected"' : '') . '>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_flush.modeAll') . '</option>'
-            . '<option value="finished"' . ($taskInfo['mode'] == 'finished' ? ' selected="selected"' : '') . '>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_flush.modeFinished') . '</option>'
-            . '<option value="pending"' . ($taskInfo['mode'] == 'pending' ? ' selected="selected"' : '') . '>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_flush.modePending') . '</option>'
+            . '<option value="all"' . ($taskInfo['mode'] == 'all' ? ' selected="selected"' : '') . '>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_flush.modeAll') . '</option>'
+            . '<option value="finished"' . ($taskInfo['mode'] == 'finished' ? ' selected="selected"' : '') . '>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_flush.modeFinished') . '</option>'
+            . '<option value="pending"' . ($taskInfo['mode'] == 'pending' ? ' selected="selected"' : '') . '>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_flush.modePending') . '</option>'
             . '</select>';
 
         $additionalFields[$fieldId] = array(
             'code' => $fieldCode,
-            'label' => 'LLL:EXT:crawler/locallang_db.xml:crawler_flush.mode'
+            'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_flush.mode'
         );
 
         return $additionalFields;

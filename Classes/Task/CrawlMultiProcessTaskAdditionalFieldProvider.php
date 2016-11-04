@@ -64,7 +64,7 @@ class CrawlMultiProcessTaskAdditionalFieldProvider implements AdditionalFieldPro
         $fieldCode = '<input type="text" name="tx_scheduler[timeOut]" id="' . $fieldId . '" value="' . htmlentities($taskInfo['timeOut']) . '" />';
         $additionalFields[$fieldId] = array(
             'code' => $fieldCode,
-            'label' => 'LLL:EXT:crawler/locallang_db.xml:crawler_im.timeOut'
+            'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_im.timeOut'
         );
 
         return $additionalFields;
@@ -84,7 +84,7 @@ class CrawlMultiProcessTaskAdditionalFieldProvider implements AdditionalFieldPro
         if (\tx_crawler_api::convertToPositiveInteger($submittedData['timeOut']) > 0) {
             $isValid = true;
         } else {
-            $schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidTimeOut'), FlashMessage::ERROR);
+            $schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_im.invalidTimeOut'), FlashMessage::ERROR);
         }
 
         return $isValid;

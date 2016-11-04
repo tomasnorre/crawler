@@ -89,7 +89,7 @@ class CrawlerQueueTaskAdditionalFieldProvider implements AdditionalFieldProvider
         $fieldCode = '<input name="tx_scheduler[startPage]" type="text" id="' . $fieldId . '" value="' . $task->startPage . '" />';
         $additionalFields[$fieldId] = array(
             'code' => $fieldCode,
-            'label' => 'LLL:EXT:crawler/locallang_db.xml:crawler_im.startPage'
+            'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_im.startPage'
         );
 
         // input for depth
@@ -111,7 +111,7 @@ class CrawlerQueueTaskAdditionalFieldProvider implements AdditionalFieldProvider
         $fieldCode .= '</select>';
         $additionalFields[$fieldId] = array(
             'code' => $fieldCode,
-            'label' => 'LLL:EXT:crawler/locallang_db.xml:crawler_im.depth'
+            'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_im.depth'
         );
 
         // combobox for configuration records
@@ -126,7 +126,7 @@ class CrawlerQueueTaskAdditionalFieldProvider implements AdditionalFieldProvider
 
         $additionalFields[$fieldId] = array(
             'code' => $fieldCode,
-            'label' => 'LLL:EXT:crawler/locallang_db.xml:crawler_im.conf'
+            'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_im.conf'
         );
 
         return $additionalFields;
@@ -189,17 +189,17 @@ class CrawlerQueueTaskAdditionalFieldProvider implements AdditionalFieldProvider
         if (is_array($submittedData['configuration'])) {
             $isValid = true;
         } else {
-            $schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidConfiguration'), FlashMessage::ERROR);
+            $schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_im.invalidConfiguration'), FlashMessage::ERROR);
         }
 
         if ($submittedData['depth'] < 0) {
             $isValid = false;
-            $schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidDepth'), FlashMessage::ERROR);
+            $schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_im.invalidDepth'), FlashMessage::ERROR);
         }
 
         if (!\tx_crawler_api::canBeInterpretedAsInteger($submittedData['startPage']) || $submittedData['startPage'] < 0) {
             $isValid = false;
-            $schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidStartPage'), FlashMessage::ERROR);
+            $schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_im.invalidStartPage'), FlashMessage::ERROR);
         }
 
         return $isValid;

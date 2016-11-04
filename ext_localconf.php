@@ -5,12 +5,10 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['GLOBAL']['cliKeys']['crawler_im'] 		=
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['GLOBAL']['cliKeys']['crawler_flush'] 	= array('EXT:crawler/cli/crawler_flush.php','_CLI_crawler');
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['GLOBAL']['cliKeys']['crawler_multiprocess'] 	= array('EXT:crawler/cli/crawler_multiprocess.php','_CLI_crawler');
 
-
 \AOE\Crawler\Utility\HookUtility::registerHooks($_EXTKEY);
 \AOE\Crawler\Utility\SchedulerUtility::registerSchedulerTasks($_EXTKEY);
 
 $GLOBALS['TYPO3_CONF_VARS']['SVCONF']['auth']['setup']['BE_alwaysFetchUser'] = true;
-
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addService(
 	$_EXTKEY,

@@ -72,7 +72,7 @@ class CrawlerClickMenu
         $additionalMenuItems = array();
         $additionalMenuItems[] = $backRef->linkItem(
             LocalizationUtility::translate(
-                'LLL:EXT:crawler/locallang_db.xml:contextMenu.label',
+                'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:contextMenu.label',
                 'crawler'
             ),
             $this->getContextMenuIcon(),
