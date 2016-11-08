@@ -1,8 +1,5 @@
 <?php
-
-if (!defined('TYPO3_MODE')) {
-    die ('Access denied.');
-}
+defined('TYPO3_MODE') or die();
 
 if ('BE' === TYPO3_MODE) {
     \AOE\Crawler\Utility\BackendUtility::registerInfoModuleFunction();
