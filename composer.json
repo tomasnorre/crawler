@@ -31,7 +31,6 @@
         "classmap": [
             "cli",
             "domain",
-            "hooks",
             "modfunc1",
             "template",
             "view",
