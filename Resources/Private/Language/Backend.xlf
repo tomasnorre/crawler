@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+    <file source-language="en" datatype="plaintext" original="messages" date="2016-11-04T16:17:39Z" product-name="crawler">
+        <header/>
+        <body>
+            <trans-unit id="moduleFunction.tx_crawler_modfunc1">
+                <source>Site Crawler</source>
+            </trans-unit>
+            <trans-unit id="tx_crawler_configuration">
+                <source>Crawler Configuration</source>
+            </trans-unit>
+            <trans-unit id="tx_crawler_configuration.name">
+                <source>Name</source>
+            </trans-unit>
+            <trans-unit id="tx_crawler_configuration.processing_instruction_filter">
+                <source>Processing instruction filter</source>
+            </trans-unit>
+            <trans-unit id="tx_crawler_configuration.processing_instruction_parameters_ts">
+                <source>Processing instruction parameters</source>
+            </trans-unit>
+            <trans-unit id="tx_crawler_configuration.configuration">
+                <source>Configuration</source>
+            </trans-unit>
+            <trans-unit id="tx_crawler_configuration.base_url">
+                <source>Base url</source>
+            </trans-unit>
+            <trans-unit id="tx_crawler_configuration.pidsonly">
+                <source>Pids only</source>
+            </trans-unit>
+            <trans-unit id="tx_crawler_configuration.begroups">
+                <source>Restrict access to</source>
+            </trans-unit>
+            <trans-unit id="tx_crawler_configuration.fegroups">
+                <source>Crawl with FE usergroups</source>
+            </trans-unit>
+            <trans-unit id="tx_crawler_configuration.realurl">
+                <source>Use realurl urls</source>
+            </trans-unit>
+            <trans-unit id="tx_crawler_configuration.chash">
+                <source>Append cHash</source>
+            </trans-unit>
+            <trans-unit id="tx_crawler_configuration.exclude">
+                <source>Exclude pages</source>
+            </trans-unit>
+            <trans-unit id="tx_crawler_configuration.sys_domain_base_url">
+                <source>Get Baseurl from Domainrecord</source>
+            </trans-unit>
+
+            <trans-unit id="crawler_im.name">
+                <source>Crawler queue</source>
+            </trans-unit>
+            <trans-unit id="crawler_im.description">
+                <source>Running the crawler queue process to collect the relevant entries.</source>
+            </trans-unit>
+            <trans-unit id="crawler_im.startPage">
+                <source>Start page</source>
+            </trans-unit>
+            <trans-unit id="crawler_im.depth">
+                <source>Depth</source>
+            </trans-unit>
+            <trans-unit id="crawler_im.invalidStartPage">
+                <source>Start page must be a positive integer!</source>
+            </trans-unit>
+            <trans-unit id="crawler_im.invalidDepth">
+                <source>There is no depth set, please set it to an value!</source>
+            </trans-unit>
+            <trans-unit id="crawler_im.conf">
+                <source>Configuration records</source>
+            </trans-unit>
+            <trans-unit id="crawler_im.invalidConfiguration">
+                <source>There is no configuration record selected, please choose at least one or more!</source>
+            </trans-unit>
+            <trans-unit id="crawler_im.timeOut">
+                <source>Time out</source>
+            </trans-unit>
+            <trans-unit id="crawler_im.sleepTime">
+                <source>Sleep time</source>
+            </trans-unit>
+            <trans-unit id="crawler_im.invalidTimeOut">
+                <source>The time out must be a positive integer!</source>
+            </trans-unit>
+            <trans-unit id="crawler_im.invalidSleepTime">
+                <source>The sleep time must be a positive integer!</source>
+            </trans-unit>
+            <trans-unit id="crawler_im.sleepAfterFinish">
+                <source>Sleep after finish</source>
+            </trans-unit>
+            <trans-unit id="crawler_im.invalidSleepAfterFinish">
+                <source>The sleep after finish must be a positive integer!</source>
+            </trans-unit>
+            <trans-unit id="crawler_im.countInARun">
+                <source>Count in a run</source>
+            </trans-unit>
+            <trans-unit id="crawler_im.invalidCountInARun">
+                <source>The count in a run must be a positive integer!</source>
+            </trans-unit>
+
+            <trans-unit id="crawler_crawlMultiProcess.name">
+                <source>Crawler Run Multi Process</source>
+            </trans-unit>
+
+            <trans-unit id="crawler_crawl.name">
+                <source>Crawler Run</source>
+            </trans-unit>
+            <trans-unit id="crawler_crawl.description">
+                <source>Running the crawler to extension to process it's queue-entries.</source>
+            </trans-unit>
+
+            <trans-unit id="crawler_flush.name">
+                <source>Crawler Queue Flush</source>
+            </trans-unit>
+            <trans-unit id="crawler_flush.description">
+                <source>Cleanup the crawler queue and remove unwanted or finished entries.</source>
+            </trans-unit>
+            <trans-unit id="crawler_flush.mode">
+                <source>Flush mode</source>
+            </trans-unit>
+            <trans-unit id="crawler_flush.modeAll">
+                <source>Flush all entries</source>
+            </trans-unit>
+            <trans-unit id="crawler_flush.modeFinished">
+                <source>Flush finished entries</source>
+            </trans-unit>
+            <trans-unit id="crawler_flush.modePending">
+                <source>Flush pending entries</source>
+            </trans-unit>
+
+            <trans-unit id="crawler_processCleanup.name">
+                <source>Remove Processes</source>
+            </trans-unit>
+            <trans-unit id="crawler_processCleanup.description">
+                <source>Remove Orphan processes and processes that are older than one hour</source>
+            </trans-unit>
+
+            <trans-unit id="contextMenu.label">
+                <source>Crawl</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

@@ -84,21 +84,21 @@ class CrawlerTaskAdditionalFieldProvider implements AdditionalFieldProviderInter
         $fieldCode = '<input type="text" name="tx_scheduler[sleepTime]" id="' . $fieldId . '" value="' . htmlentities($taskInfo['sleepTime']) . '" />';
         $additionalFields[$fieldId] = array(
             'code' => $fieldCode,
-            'label' => 'LLL:EXT:crawler/locallang_db.xml:crawler_im.sleepTime'
+            'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_im.sleepTime'
         );
         // input for sleepAfterFinish
         $fieldId = 'task_sleepAfterFinish';
         $fieldCode = '<input type="text" name="tx_scheduler[sleepAfterFinish]" id="' . $fieldId . '" value="' . htmlentities($taskInfo['sleepAfterFinish']) . '" />';
         $additionalFields[$fieldId] = array(
             'code' => $fieldCode,
-            'label' => 'LLL:EXT:crawler/locallang_db.xml:crawler_im.sleepAfterFinish'
+            'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_im.sleepAfterFinish'
         );
         // input for countInARun
         $fieldId = 'task_countInARun';
         $fieldCode = '<input type="text" name="tx_scheduler[countInARun]" id="' . $fieldId . '" value="' . htmlentities($taskInfo['countInARun']) . '" />';
         $additionalFields[$fieldId] = array(
             'code' => $fieldCode,
-            'label' => 'LLL:EXT:crawler/locallang_db.xml:crawler_im.countInARun'
+            'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_im.countInARun'
         );
 
         return $additionalFields;
@@ -118,17 +118,17 @@ class CrawlerTaskAdditionalFieldProvider implements AdditionalFieldProviderInter
         if (\tx_crawler_api::convertToPositiveInteger($submittedData['sleepTime']) > 0) {
             $isValid = true;
         } else {
-            $schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidSleepTime'), FlashMessage::ERROR);
+            $schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_im.invalidSleepTime'), FlashMessage::ERROR);
         }
 
         if (\tx_crawler_api::convertToPositiveInteger($submittedData['sleepAfterFinish']) === 0) {
             $isValid = false;
-            $schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidSleepAfterFinish'), FlashMessage::ERROR);
+            $schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_im.invalidSleepAfterFinish'), FlashMessage::ERROR);
         }
 
         if (\tx_crawler_api::convertToPositiveInteger($submittedData['countInARun']) === 0) {
             $isValid = false;
-            $schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/locallang_db.xml:crawler_im.invalidCountInARun'), FlashMessage::ERROR);
+            $schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_im.invalidCountInARun'), FlashMessage::ERROR);
         }
 
         return $isValid;

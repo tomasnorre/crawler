@@ -40,36 +40,36 @@ class SchedulerUtility
     {
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['\AOE\Crawler\Task\CrawlerQueueTask'] = array(
             'extension'        => $extKey,
-            'title'            => 'LLL:EXT:' . $extKey . '/locallang_db.xml:crawler_im.name',
-            'description'      => 'LLL:EXT:' . $extKey . '/locallang_db.xml:crawler_im.description',
+            'title'            => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_im.name',
+            'description'      => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_im.description',
             'additionalFields' => '\AOE\Crawler\Task\CrawlerQueueTaskAdditionalFieldProvider'
         );
-        
+
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['\AOE\Crawler\Task\CrawlerTask'] = array(
             'extension'        => $extKey,
-            'title'            => 'LLL:EXT:' . $extKey . '/locallang_db.xml:crawler_crawl.name',
-            'description'      => 'LLL:EXT:' . $extKey . '/locallang_db.xml:crawler_crawl.description',
+            'title'            => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_crawl.name',
+            'description'      => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_crawl.description',
             'additionalFields' => '\AOE\Crawler\Task\CrawlerTaskAdditionalFieldProvider'
         );
-        
+
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['\AOE\Crawler\Task\CrawlMultiProcessTask'] = array(
             'extension'        => $extKey,
-            'title'            => 'LLL:EXT:' . $extKey . '/locallang_db.xml:crawler_crawlMultiProcess.name',
-            'description'      => 'LLL:EXT:' . $extKey . '/locallang_db.xml:crawler_crawl.description',
+            'title'            => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_crawlMultiProcess.name',
+            'description'      => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_crawl.description',
             'additionalFields' => '\AOE\Crawler\Task\CrawlMultiProcessTaskAdditionalFieldProvider'
         );
-        
+
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['\AOE\Crawler\Task\FlushQueueTask'] = array(
             'extension'        => $extKey,
-            'title'            => 'LLL:EXT:' . $extKey . '/locallang_db.xml:crawler_flush.name',
-            'description'      => 'LLL:EXT:' . $extKey . '/locallang_db.xml:crawler_flush.description',
+            'title'            => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_flush.name',
+            'description'      => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_flush.description',
             'additionalFields' => '\AOE\Crawler\Task\FlushQueueTaskAdditionalFieldProvider'
         );
-        
+
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['AOE\Crawler\Tasks\ProcessCleanupTask'] = array(
             'extension'        => $extKey,
-            'title'            => 'LLL:EXT:' . $extKey . '/locallang_db.xml:crawler_processCleanup.name',
-            'description'      => 'LLL:EXT:' . $extKey . '/locallang_db.xml:crawler_processCleanup.description',
+            'title'            => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_processCleanup.name',
+            'description'      => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_processCleanup.description',
         );
     }
 }

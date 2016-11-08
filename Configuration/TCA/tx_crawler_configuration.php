@@ -5,7 +5,7 @@ $_EXTKEY = 'crawler';
 
 $GLOBALS['TCA']['tx_crawler_configuration'] = array (
     "ctrl" => array (
-        'title'     => 'LLL:EXT:crawler/locallang_db.xml:tx_crawler_configuration',
+        'title'     => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration',
         'label'     => 'name',
         'tstamp'    => 'tstamp',
         'crdate'    => 'crdate',
@@ -34,7 +34,7 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = array (
         ),
         "name" => Array (
             "exclude" => 1,
-            "label" => "LLL:EXT:crawler/locallang_db.xml:tx_crawler_configuration.name",
+            "label" => "LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.name",
             "config" => Array (
                 "type" => "input",
                 "size" => "30",
@@ -43,7 +43,7 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = array (
         ),
         "processing_instruction_filter" => Array (
             "exclude" => 1,
-            "label" => "LLL:EXT:crawler/locallang_db.xml:tx_crawler_configuration.processing_instruction_filter",
+            "label" => "LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.processing_instruction_filter",
             "config" => Array (
                 "type" => "select",
                 'renderType' => 'selectCheckBox',
@@ -54,7 +54,7 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = array (
         ),
         "processing_instruction_parameters_ts" => Array (
             "exclude" => 1,
-            "label" => "LLL:EXT:crawler/locallang_db.xml:tx_crawler_configuration.processing_instruction_parameters_ts",
+            "label" => "LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.processing_instruction_parameters_ts",
             "config" => Array (
                 "type" => "text",
                 "cols" => "40",
@@ -64,7 +64,7 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = array (
         ),
         "configuration" => Array (
             "exclude" => 1,
-            "label" => "LLL:EXT:crawler/locallang_db.xml:tx_crawler_configuration.configuration",
+            "label" => "LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.configuration",
             "config" => Array (
                 "type" => "text",
                 "cols" => "40",
@@ -73,7 +73,7 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = array (
         ),
         "base_url" => Array (
             "exclude" => 1,
-            "label" => "LLL:EXT:crawler/locallang_db.xml:tx_crawler_configuration.base_url",
+            "label" => "LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.base_url",
             'displayCond' => 'FIELD:sys_domain_base_url:REQ:false',
             "config" => Array (
                 "type" => "input",
@@ -82,7 +82,7 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = array (
         ),
         'sys_domain_base_url' => array (
             'exclude' => 0,
-            'label' => 'LLL:EXT:crawler/locallang_db.xml:tx_crawler_configuration.sys_domain_base_url',
+            'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.sys_domain_base_url',
             'config' => array (
                 'type' => 'select',
                 'renderType' => 'selectSingle',
@@ -98,7 +98,7 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = array (
         ),
         "pidsonly" => Array (
             "exclude" => 1,
-            "label" => "LLL:EXT:crawler/locallang_db.xml:tx_crawler_configuration.pidsonly",
+            "label" => "LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.pidsonly",
             "config" => Array (
                 "type" => "group",
                 "internal_type" => "db",
@@ -116,7 +116,7 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = array (
         'begroups' => Array (
             'exclude' => 1,
             'l10n_mode' => 'mergeIfNotBlank',
-            'label' => 'LLL:EXT:crawler/locallang_db.xml:tx_crawler_configuration.begroups',
+            'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.begroups',
             'config' => Array (
                 'type' => 'select',
                 'renderType' => 'selectMultipleSideBySide',
@@ -129,7 +129,7 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = array (
         'fegroups' => Array (
             'exclude' => 1,
             'l10n_mode' => 'mergeIfNotBlank',
-            'label' => 'LLL:EXT:crawler/locallang_db.xml:tx_crawler_configuration.fegroups',
+            'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.fegroups',
             'config' => Array (
                 'type' => 'select',
                 'renderType' => 'selectMultipleSideBySide',
@@ -141,7 +141,7 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = array (
         ),
         'realurl' => Array (
             'exclude' => 1,
-            'label' => 'LLL:EXT:crawler/locallang_db.xml:tx_crawler_configuration.realurl',
+            'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.realurl',
             'displayCond' => 'FALSE',
             'config' => Array (
                 'type' => 'check',
@@ -149,14 +149,14 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = array (
         ),
         'chash' => Array (
             'exclude' => 1,
-            'label' => 'LLL:EXT:crawler/locallang_db.xml:tx_crawler_configuration.chash',
+            'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.chash',
             'config' => Array (
                 'type' => 'check',
             )
         ),
         'exclude' => Array (
             'exclude' => 1,
-            'label' => 'LLL:EXT:crawler/locallang_db.xml:tx_crawler_configuration.exclude',
+            'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.exclude',
             'config' => Array (
                 'type' => 'text',
                 'cols' => '48',
