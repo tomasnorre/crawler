@@ -52,7 +52,6 @@ class tx_crawler_api_testcase extends \TYPO3\CMS\Core\Tests\FunctionalTestCase {
 	 */
 	protected $testExtensionsToLoad = array('typo3conf/ext/crawler');
 
-
 	/**
 	 *
 	 * @var array stores the old rootline
@@ -81,7 +80,7 @@ class tx_crawler_api_testcase extends \TYPO3\CMS\Core\Tests\FunctionalTestCase {
 	* Resets the test enviroment after the test.
 	*/
 	function tearDown() {
-
+		parent::tearDown();
    		//restore rootline
    		$GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields'] = $this->oldRootline;
 	}

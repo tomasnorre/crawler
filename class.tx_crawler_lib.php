@@ -2,13 +2,14 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2005 Kasper Skaarhoj (kasperYYYY@typo3.com)
+ *  (c) 2016 AOE GmbH <dev@aoe.com>
+ *
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
+ *  the Free Software Foundation; either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  The GNU General Public License can be found at
@@ -21,18 +22,9 @@
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-/**
- * Crawler library, executed in a backend context
- *
- * @author Kasper Skaarhoej <kasperYYYY@typo3.com>
- */
 
 /**
- * Crawler library
- *
- * @author	Kasper Skaarhoj <kasperYYYY@typo3.com>
- * @package TYPO3
- * @subpackage tx_crawler
+ * Class tx_crawler_lib
  */
 class tx_crawler_lib {
 
@@ -114,14 +106,9 @@ class tx_crawler_lib {
 		$settings = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['crawler']);
 		$settings = is_array($settings) ? $settings : array();
 
-			// read ext_em_conf_template settings and set
+		// read ext_em_conf_template settings and set
 		$this->setExtensionSettings($settings);
 
-		if (!isset($this->extensionSettings['PageUidRootTypoScript']) || !\TYPO3\CMS\Core\Utility\MathUtility::canBeInterpretedAsInteger($this->extensionSettings['PageUidRootTypoScript'])) {
-			throw new Exception('No TypoScript Template found, please set the respected Uid in Crawler Configuration in the Extension Manager', 1471865159);
-		}
-
-		$this->initTSFE((int)$this->extensionSettings['PageUidRootTypoScript']);
 
 		// set defaults:
 		if (tx_crawler_api::convertToPositiveInteger($this->extensionSettings['countInARun']) == 0) {
@@ -1150,51 +1137,57 @@ class tx_crawler_lib {
 		list($queueRec) = $this->db->exec_SELECTgetRows('*', 'tx_crawler_queue',
 			'qid=' . intval($queueId) . ($force ? '' : ' AND exec_time=0 AND process_scheduled > 0'));
 
-		if (is_array($queueRec)) {
-			\AOE\Crawler\Utility\SignalSlotUtility::emitSignal(
-				__CLASS__,
-				\AOE\Crawler\Utility\SignalSlotUtility::SIGNNAL_QUEUEITEM_PREPROCESS,
-				array($queueId, &$queueRec)
-			);
+		if (!is_array($queueRec)) {
+			return;
+		}
+			
+		$pageUidRootTypoScript = \AOE\Crawler\Utility\TypoScriptUtility::getPageUidForTypoScriptRootTemplateInRootLine($_REQUEST['id']);
+		$this->initTSFE((int)$pageUidRootTypoScript);
+		
+		\AOE\Crawler\Utility\SignalSlotUtility::emitSignal(
+			__CLASS__,
+			\AOE\Crawler\Utility\SignalSlotUtility::SIGNNAL_QUEUEITEM_PREPROCESS,
+			array($queueId, &$queueRec)
+		);
 
-			// Set exec_time to lock record:
-			$field_array = array('exec_time' => $this->getCurrentTime());
+		// Set exec_time to lock record:
+		$field_array = array('exec_time' => $this->getCurrentTime());
 
-			if (isset($this->processID)) {
-				//if mulitprocessing is used we need to store the id of the process which has handled this entry
-				$field_array['process_id_completed'] = $this->processID;
-			}
-			$this->db->exec_UPDATEquery('tx_crawler_queue', 'qid=' . intval($queueId), $field_array);
+		if (isset($this->processID)) {
+			//if mulitprocessing is used we need to store the id of the process which has handled this entry
+			$field_array['process_id_completed'] = $this->processID;
+		}
+		$this->db->exec_UPDATEquery('tx_crawler_queue', 'qid=' . intval($queueId), $field_array);
 
-			$result = $this->readUrl_exec($queueRec);
-			$resultData = unserialize($result['content']);
+		$result = $this->readUrl_exec($queueRec);
+		$resultData = unserialize($result['content']);
 
-			//atm there's no need to point to specific pollable extensions
-			if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'])) {
-				foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'] as $pollable) {
-					// only check the success value if the instruction is runnig
-					// it is important to name the pollSuccess key same as the procInstructions key
-					if (is_array($resultData['parameters']['procInstructions']) && in_array($pollable,
-							$resultData['parameters']['procInstructions'])
-					) {
-						if (!empty($resultData['success'][$pollable]) && $resultData['success'][$pollable]) {
-							$ret |= self::CLI_STATUS_POLLABLE_PROCESSED;
-						}
+		//atm there's no need to point to specific pollable extensions
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'])) {
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'] as $pollable) {
+				// only check the success value if the instruction is runnig
+				// it is important to name the pollSuccess key same as the procInstructions key
+				if (is_array($resultData['parameters']['procInstructions']) && in_array($pollable,
+						$resultData['parameters']['procInstructions'])
+				) {
+					if (!empty($resultData['success'][$pollable]) && $resultData['success'][$pollable]) {
+						$ret |= self::CLI_STATUS_POLLABLE_PROCESSED;
 					}
 				}
 			}
-
-			// Set result in log which also denotes the end of the processing of this entry.
-			$field_array = array('result_data' => serialize($result));
-
-			\AOE\Crawler\Utility\SignalSlotUtility::emitSignal(
-				__CLASS__,
-				\AOE\Crawler\Utility\SignalSlotUtility::SIGNNAL_QUEUEITEM_POSTPROCESS,
-				array($queueId, &$field_array)
-			);
-
-			$this->db->exec_UPDATEquery('tx_crawler_queue', 'qid=' . intval($queueId), $field_array);
 		}
+
+		// Set result in log which also denotes the end of the processing of this entry.
+		$field_array = array('result_data' => serialize($result));
+
+		\AOE\Crawler\Utility\SignalSlotUtility::emitSignal(
+			__CLASS__,
+			\AOE\Crawler\Utility\SignalSlotUtility::SIGNNAL_QUEUEITEM_POSTPROCESS,
+			array($queueId, &$field_array)
+		);
+
+		$this->db->exec_UPDATEquery('tx_crawler_queue', 'qid=' . intval($queueId), $field_array);
+	
 
 		if ($this->debugMode) {
 			\TYPO3\CMS\Core\Utility\GeneralUtility::devlog('crawler-readurl stop ' . microtime(true), __FUNCTION__);

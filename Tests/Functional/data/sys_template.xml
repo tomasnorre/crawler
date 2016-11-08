@@ -5,5 +5,7 @@
 		<pid>1</pid>
 		<root>1</root>
 		<config>&lt;INCLUDE_TYPOSCRIPT: source="FILE:EXT:crawler/Tests/Functional/data/typoscript_setup.txt"&gt;</config>
+		<hidden>0</hidden>
+		<deleted>0</deleted>
 	</sys_template>
 </dataset>
