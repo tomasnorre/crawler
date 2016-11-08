@@ -290,6 +290,17 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
 		return $rows;
 	}
 
+    /**
+     * This method is used to count all processes in the process table.
+     *
+     * @param  string $where    Where clause
+     * @return integer
+     * @author Timo Schmidt <timo.schmidt@aoe.com>
+     */
+    public function countAll($where = '1 = 1') {
+        return $this->countByWhere($where);
+    }
+
 }
 
 ?>

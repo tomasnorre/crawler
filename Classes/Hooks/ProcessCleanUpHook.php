@@ -34,11 +34,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class ProcessCleanUpHook
 {
     /**
-     * @var \TYPO3\CMS\Core\Database\DatabaseConnection
-     */
-    private $db;
-
-    /**
      * @var \tx_crawler_lib
      */
     private $crawlerLib;
@@ -57,7 +52,6 @@ class ProcessCleanUpHook
      */
     public function crawler_init(\tx_crawler_lib $crawlerLib)
     {
-        $this->db = $GLOBALS['TYPO3_DB'];
         $this->crawlerLib = $crawlerLib;
         $this->extensionSettings = $this->crawlerLib->extensionSettings;
 
@@ -73,7 +67,7 @@ class ProcessCleanUpHook
      */
     private function removeActiveProcessesOlderThanOneHour()
     {
-        $results = $this->db->exec_SELECTgetRows(
+        $results = $this->getDatabaseConnection()->exec_SELECTgetRows(
             'process_id, system_process_id',
             'tx_crawler_process',
             'ttl <= ' . intval(time() - $this->extensionSettings['processMaxRunTime'] - 3600) . ' AND active = 1'
@@ -101,7 +95,7 @@ class ProcessCleanUpHook
      */
     private function removeActiveOrphanProcesses()
     {
-        $results = $this->db->exec_SELECTgetRows(
+        $results = $this->getDatabaseConnection()->exec_SELECTgetRows(
             'process_id, system_process_id',
             'tx_crawler_process',
             'ttl <= ' . intval(time() - $this->extensionSettings['processMaxRunTime']) . ' AND active = 1'
@@ -142,9 +136,15 @@ class ProcessCleanUpHook
      */
     private function removeProcessFromProcesslist($processId)
     {
-        $this->db->exec_DELETEquery(
+        $this->getDatabaseConnection()->exec_DELETEquery(
             'tx_crawler_process',
-            'process_id = ' . $this->db->fullQuoteStr($processId, 'tx_crawler_process')
+            'process_id = ' . $this->getDatabaseConnection()->fullQuoteStr($processId, 'tx_crawler_process')
+        );
+
+        $this->getDatabaseConnection()->exec_UPDATEquery(
+            'tx_crawler_queue',
+            'process_id = ' . $this->getDatabaseConnection()->fullQuoteStr($processId, 'tx_crawler_queue'),
+            array('process_id' => '')
         );
     }
 
@@ -157,7 +157,6 @@ class ProcessCleanUpHook
      *
      * @return array
      *
-     * TODO: Write Unit test
      */
     private function createResponseArray($string)
     {
@@ -238,5 +237,13 @@ class ProcessCleanUpHook
             return true;
         }
         return false;
+    }
+
+    /**
+     * @return \TYPO3\CMS\Core\Database\DatabaseConnection
+     */
+    private function getDatabaseConnection()
+    {
+        return $GLOBALS['TYPO3_DB'];
     }
 }
