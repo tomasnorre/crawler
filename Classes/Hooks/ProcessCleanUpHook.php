@@ -142,9 +142,16 @@ class ProcessCleanUpHook
      */
     private function removeProcessFromProcesslist($processId)
     {
+        // TODO: Write Functional Test to prove functionality
         $this->db->exec_DELETEquery(
             'tx_crawler_process',
             'process_id = ' . $this->db->fullQuoteStr($processId, 'tx_crawler_process')
+        );
+
+        $this->db->exec_UPDATEquery(
+            'tx_crawler_queue',
+            'process_id = ' . $this->db->fullQuoteStr($processId, 'tx_crawler_queue'),
+            array('process_id' => '')
         );
     }
 
