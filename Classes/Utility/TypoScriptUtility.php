@@ -59,6 +59,5 @@ class TypoScriptUtility
 
         throw new \Exception('No TypoScript template found', 1478611016);
 
-
     }
 }
