@@ -1,5 +1,5 @@
 <?php
-namespace AOE\Crawler\Tasks;
+namespace AOE\Crawler\Task;
 
 /***************************************************************
  *  Copyright notice
@@ -25,17 +25,18 @@ namespace AOE\Crawler\Tasks;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Hooks\ProcessCleanUpHook;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Scheduler\Task\AbstractTask;
 
 /**
  * Class ProcessCleanup
  *
- * @package AOE\Crawler\Tasks
+ * @package AOE\Crawler\Task
  */
 class ProcessCleanupTask extends AbstractTask
 {
-    
+
     /**
      * Function execute scheduler task
      *
@@ -43,14 +44,14 @@ class ProcessCleanupTask extends AbstractTask
      */
     public function execute()
     {
-        
+
         /* @var $crawlerObject \tx_crawler_lib */
         $crawlerObject = GeneralUtility::makeInstance('tx_crawler_lib');
-        
-        /** @var $crawlerHookObject \tx_crawler_hooks_processCleanUp */
-        $crawlerHookObject = GeneralUtility::makeInstance('tx_crawler_hooks_processCleanUp');
+
+        /** @var $crawlerHookObject ProcessCleanUpHook */
+        $crawlerHookObject = GeneralUtility::makeInstance('AOE\\Crawler\\Hooks\\ProcessCleanUpHook');
         $crawlerHookObject->crawler_init($crawlerObject);
-        
+
         return true;
     }
 }

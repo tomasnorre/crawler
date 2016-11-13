@@ -42,6 +42,7 @@ class TypoScriptUtility
     public static function getPageUidForTypoScriptRootTemplateInRootLine($pageId)
     {
         $pageRootLine = \TYPO3\CMS\Backend\Utility\BackendUtility::BEgetRootLine($pageId);
+
         foreach ($pageRootLine as $page) {
             $templateUid = $GLOBALS['TYPO3_DB']->exec_SELECTgetSingleRow(
                 '*',
@@ -50,11 +51,13 @@ class TypoScriptUtility
                 \TYPO3\CMS\Backend\Utility\BackendUtility::BEenableFields('sys_template')
             );
 
-            if (null === $templateUid['pid']) {
-                throw new \Exception('Now TypoScript template found', 1478611016);
+            if (null !== $templateUid['pid']) {
+                return $templateUid['pid'];
             }
 
-            return $templateUid['pid'];
         }
+
+        throw new \Exception('No TypoScript template found', 1478611016);
+
     }
 }

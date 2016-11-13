@@ -79,4 +79,18 @@ class TypoScriptUtilityTest extends FunctionalTestCase
             $this->subject->getPageUidForTypoScriptRootTemplateInRootLine($pageUid)
         );
     }
+
+    /**
+     * @test
+     * @expectedException \Exception
+     */
+    public function getPageUidForTypoScriptRootTemplateInRootLineThrowsException()
+    {
+        // PageUid 15, doesn't exist therefore exception thrown.
+        $pageUid = 15;
+        $this->assertEquals(
+            5,
+            $this->subject->getPageUidForTypoScriptRootTemplateInRootLine($pageUid)
+        );
+    }
 }

@@ -66,7 +66,7 @@ class SchedulerUtility
             'additionalFields' => '\AOE\Crawler\Task\FlushQueueTaskAdditionalFieldProvider'
         );
 
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['AOE\Crawler\Tasks\ProcessCleanupTask'] = array(
+        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['AOE\Crawler\Task\ProcessCleanupTask'] = array(
             'extension'        => $extKey,
             'title'            => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_processCleanup.name',
             'description'      => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_processCleanup.description',
