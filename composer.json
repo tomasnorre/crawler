@@ -6,7 +6,7 @@
     "support": {
         "issues": "https://github.com/AOEpeople/crawler/issues"
     },
-    "version": "5.1.0",
+    "version": "5.2.0",
     "license": "GPL-3.0",
     "authors": [
         {
@@ -60,7 +60,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "5.1.x-dev"
+            "dev-master": "5.2.x-dev"
         },
         "typo3/cms": {
             "cms-package-dir": "{$vendor-dir}/typo3/cms",
