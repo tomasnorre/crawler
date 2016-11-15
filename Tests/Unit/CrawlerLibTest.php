@@ -1,5 +1,5 @@
 <?php
-namespace AOE\Crawler\Tests;
+namespace AOE\Crawler\Tests\Unit;
 
 /***************************************************************
  *  Copyright notice

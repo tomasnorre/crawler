@@ -131,7 +131,9 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
 
 	/**
 	 * Internal method to count items by a given where clause
-	 *
+     *
+     * @param string $where
+     * @return mixed
 	 */
 	protected function countItemsByWhereClause($where) {
 		$db 	= $this->getDB();
@@ -144,10 +146,7 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
 	/**
 	 * Count pending queue entries grouped by configuration key
 	 *
-	 * @param void
 	 * @return array
-	 * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
-	 * @since 2099-09-03
 	 */
 	public function countPendingItemsGroupedByConfigurationKey() {
 		$db = $this->getDB();
