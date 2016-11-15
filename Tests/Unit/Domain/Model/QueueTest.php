@@ -1,14 +1,17 @@
 <?php
+namespace AOE\Crawler\Tests\Unit\Domain\Model;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2009 AOE media (dev@aoemedia.de)
+ *  (c) 2016 AOE GmbH <dev@aoe.com>
+ *
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
+ *  the Free Software Foundation; either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  The GNU General Public License can be found at
@@ -22,22 +25,30 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-class tx_crawler_domain_queue_entry extends tx_crawler_domain_lib_abstract_dbobject {
+use TYPO3\CMS\Core\Tests\UnitTestCase;
 
-	/**
-	 * @var string table name
-	 */
-	protected static $tableName = 'tx_crawler_queue';
+/**
+ * Class QueueTest
+ * @package AOE\Crawler\Tests\Unit\Domain\Model
+ */
+class QueueTest extends UnitTestCase
+{
 
-	/**
-	 * Returns the execution time of the record as int value
-	 *
-	 * @return int
-	 */
-	public function getExecutionTime(){
-		return $this->row['exec_time'];
-	}
+    /**
+     * @var \tx_crawler_domain_queue_entry
+     */
+    protected $subject;
 
+    /**
+     * @test
+     */
+    public function getExecutionTime()
+    {
+        $this->subject = new \tx_crawler_domain_queue_entry(array('exec_time' => 123456));
+
+        $this->assertEquals(
+            123456,
+            $this->subject->getExecutionTime()
+        );
+    }
 }
-
-?>

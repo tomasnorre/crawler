@@ -110,7 +110,7 @@ class tx_crawler_view_process_list {
 	/**
 	 * Set the page id
 	 *
-	 * @param int page id
+	 * @param int $pageId page id
 	 */
 	public function setPageId($pageId) {
 		$this->pageId = $pageId;
@@ -269,7 +269,7 @@ class tx_crawler_view_process_list {
 	 * Converts seconds into minutes
 	 *
 	 * @param int $seconds
-	 * @return int
+	 * @return double
 	 */
 	protected function asMinutes($seconds) {
 		return round($seconds / 60);
@@ -409,7 +409,7 @@ class tx_crawler_view_process_list {
 	 * just a wrapper should be done in a cleaner way
 	 * later on
 	 *
-	 * @param $label
+	 * @param string $label
 	 * @return string
 	 */
 	protected function getLLLabel($label) {
