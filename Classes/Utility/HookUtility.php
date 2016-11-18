@@ -32,23 +32,12 @@ namespace AOE\Crawler\Utility;
 class HookUtility
 {
 
-    public static function registerHooks($extKey)
-    {
-        if (TYPO3_MODE == 'BE') {
-            self::registerBackendHooks($extKey);
-        } else {
-            self::registerFrontendHooks($extKey);
-        }
-    }
-
     /**
-     * Registers hooks that are only valid for the backend
-     * Use in ext_localconf.php
-     * @param $extKey
+     * Registers hooks
      *
-     * @return void
+     * @param string $extKey
      */
-    protected static function registerBackendHooks($extKey)
+    public static function registerHooks($extKey)
     {
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['connectToDB']['tx_crawler'] =
             'AOE\\Crawler\\Hooks\\TsfeHook->fe_init';
@@ -58,28 +47,17 @@ class HookUtility
             'AOE\\Crawler\\Hooks\\TsfeHook->fe_isOutputting';
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['hook_eofe']['tx_crawler'] =
             'AOE\\Crawler\\Hooks\\TsfeHook->fe_eofe';
+
+        // Activating NC Static File Cache hook
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['nc_staticfilecache/class.tx_ncstaticfilecache.php']['createFile_initializeVariables']['tx_crawler'] =
             'AOE\\Crawler\\Hooks\\StaticFileCacheCreateUriHook->initialize';
 
-        // Activating cli_hooks
-        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['cli_hooks'][] =
+        // Activating Crawler cli_hooks
+        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['cli_hooks'][] =
             'AOE\\Crawler\\Hooks\\ProcessCleanUpHook';
 
         // Activating refresh hooks
-        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['refresh_hooks'][] =
+        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['refresh_hooks'][] =
             'AOE\\Crawler\\Hooks\\ProcessCleanUpHook';
-    }
-
-    /**
-     * Registers hooks that are only valid for the frontend
-     * Use in ext_localconf.php
-     *
-     * @param $extKey
-     *
-     * @return void
-     */
-    protected static function registerFrontendHooks($extKey)
-    {
-
     }
 }
