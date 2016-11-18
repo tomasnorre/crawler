@@ -38,35 +38,35 @@ class SchedulerUtility
      */
     public static function registerSchedulerTasks($extKey)
     {
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['\AOE\Crawler\Task\CrawlerQueueTask'] = array(
+        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['AOE\\Crawler\\Task\\CrawlerQueueTask'] = array(
             'extension'        => $extKey,
             'title'            => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_im.name',
             'description'      => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_im.description',
-            'additionalFields' => '\AOE\Crawler\Task\CrawlerQueueTaskAdditionalFieldProvider'
+            'additionalFields' => 'AOE\\Crawler\\Task\\CrawlerQueueTaskAdditionalFieldProvider'
         );
 
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['\AOE\Crawler\Task\CrawlerTask'] = array(
+        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['AOE\\Crawler\\Task\\CrawlerTask'] = array(
             'extension'        => $extKey,
             'title'            => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_crawl.name',
             'description'      => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_crawl.description',
-            'additionalFields' => '\AOE\Crawler\Task\CrawlerTaskAdditionalFieldProvider'
+            'additionalFields' => 'AOE\\Crawler\\Task\\CrawlerTaskAdditionalFieldProvider'
         );
 
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['\AOE\Crawler\Task\CrawlMultiProcessTask'] = array(
+        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['AOE\\Crawler\\Task\\CrawlMultiProcessTask'] = array(
             'extension'        => $extKey,
             'title'            => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_crawlMultiProcess.name',
             'description'      => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_crawl.description',
-            'additionalFields' => '\AOE\Crawler\Task\CrawlMultiProcessTaskAdditionalFieldProvider'
+            'additionalFields' => 'AOE\\Crawler\\Task\\CrawlMultiProcessTaskAdditionalFieldProvider'
         );
 
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['\AOE\Crawler\Task\FlushQueueTask'] = array(
+        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['AOE\\Crawler\\Task\\FlushQueueTask'] = array(
             'extension'        => $extKey,
             'title'            => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_flush.name',
             'description'      => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_flush.description',
-            'additionalFields' => '\AOE\Crawler\Task\FlushQueueTaskAdditionalFieldProvider'
+            'additionalFields' => 'AOE\\Crawler\\Task\\FlushQueueTaskAdditionalFieldProvider'
         );
 
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['AOE\Crawler\Task\ProcessCleanupTask'] = array(
+        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['AOE\\Crawler\\Task\\ProcessCleanupTask'] = array(
             'extension'        => $extKey,
             'title'            => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_processCleanup.name',
             'description'      => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_processCleanup.description',
