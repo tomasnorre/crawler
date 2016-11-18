@@ -1140,10 +1140,10 @@ class tx_crawler_lib {
 		if (!is_array($queueRec)) {
 			return;
 		}
-			
-		$pageUidRootTypoScript = \AOE\Crawler\Utility\TypoScriptUtility::getPageUidForTypoScriptRootTemplateInRootLine($_REQUEST['id']);
+
+		$pageUidRootTypoScript = \AOE\Crawler\Utility\TypoScriptUtility::getPageUidForTypoScriptRootTemplateInRootLine((int)$queueRec['page_id']);
 		$this->initTSFE((int)$pageUidRootTypoScript);
-		
+
 		\AOE\Crawler\Utility\SignalSlotUtility::emitSignal(
 			__CLASS__,
 			\AOE\Crawler\Utility\SignalSlotUtility::SIGNNAL_QUEUEITEM_PREPROCESS,
