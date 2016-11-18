@@ -45,7 +45,7 @@ class BackendUtility
             'web_info',
             'tx_crawler_modfunc1',
             null,
-            'LLL:EXT:crawler/locallang_db.php:moduleFunction.tx_crawler_modfunc1'
+            'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:moduleFunction.tx_crawler_modfunc1'
         );
     }
 
