@@ -103,7 +103,7 @@ class tx_crawler_domain_reason extends tx_crawler_domain_lib_abstract_dbobject {
 	 * This method is used to set the uid of the queue entry
 	 * where the reason is relevant for.
 	 *
-	 * @param int $entry_id
+	 * @param int $entry_uid
 	 */
 	public function setQueueEntryUid($entry_uid) {
 		$this->row['queue_entry_uid'] = $entry_uid;

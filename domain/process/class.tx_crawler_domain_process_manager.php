@@ -78,6 +78,8 @@ class tx_crawler_domain_process_manager  {
 	 * starts multiple processes
 	 *
 	 * @param integer $timeout
+     *
+     * @throws RuntimeException
 	 */
 	public function multiProcess( $timeout ) {
 

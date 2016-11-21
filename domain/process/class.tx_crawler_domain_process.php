@@ -24,6 +24,10 @@
 
 class tx_crawler_domain_process extends tx_crawler_domain_lib_abstract_dbobject {
 
+	CONST STATE_RUNNING = 'running';
+	CONST STATE_CANCELLED = 'cancelled';
+	CONST STATE_COMPLETED = 'completed';
+
 	/**
 	 * @var string table name
 	 */
@@ -124,10 +128,14 @@ class tx_crawler_domain_process extends tx_crawler_domain_lib_abstract_dbobject 
 	 */
 	public function getProgress() {
 		$all = $this->countItemsAssigned();
-		if ($all > 0) {
-			$res = round((100 / $all) * $this->countItemsProcessed());
-		} else {
-			$res = 0;
+		if ($all<=0){
+			return 0;
+		}
+
+		$res = round((100 / $all) * $this->countItemsProcessed());
+
+		if($res > 100.0) {
+			return 100.0;
 		}
 		return $res;
 	}
@@ -148,16 +156,13 @@ class tx_crawler_domain_process extends tx_crawler_domain_lib_abstract_dbobject 
 	 * @return string 'running'|'cancelled'|'completed'
 	 */
 	public function getState() {
-		// TODO: use class constants for these states
 		if ($this->getActive() && $this->getProgress() < 100) {
-			$stage = 'running';
+			$stage = tx_crawler_domain_process::STATE_RUNNING;
 		} elseif(!$this->getActive() && $this->getProgress() < 100) {
-			$stage = 'cancelled';
+			$stage = tx_crawler_domain_process::STATE_CANCELLED;
 		} else {
-			$stage = 'completed';
+			$stage = tx_crawler_domain_process::STATE_COMPLETED;
 		}
 		return $stage;
 	}
 }
-
-?>
