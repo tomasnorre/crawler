@@ -25,6 +25,7 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Utility\BackendUtility;
 use TYPO3\CMS\Core\Tests\UnitTestCase;
 
 /**
@@ -32,20 +33,101 @@ use TYPO3\CMS\Core\Tests\UnitTestCase;
  *
  * @package AOE\Crawler\Tests\Unit\Domain\Model
  */
-class ProcessCollectionTest extends UnitTestCase {
-	
-	/**
-	 * @test
-	 */
-	public function canGetUids() {
-		$processes = array();
-		$row1=array('process_id'=>11);
-		$processes[]= new \tx_crawler_domain_process($row1);
-		$row2=array('process_id'=>13);
-		$processes[]= new \tx_crawler_domain_process($row2);
-		$collection = new \tx_crawler_domain_process_collection($processes);
-		
-		$this->assertEquals($collection->getProcessIds(),array('11','13'));
-		
-	}
+class ProcessCollectionTest extends UnitTestCase
+{
+
+    /**
+     * @var \tx_crawler_domain_process_collection
+     */
+    protected $subject;
+
+    public function setUp()
+    {
+        $this->subject = new \tx_crawler_domain_process_collection();
+    }
+
+    /**
+     * @test
+     */
+    public function getProcessIdsReturnsArray()
+    {
+        $row1 = array('process_id' => 11);
+        $row2 = array('process_id' => 13);
+
+        $processes = array();
+        $processes[] = new \tx_crawler_domain_process($row1);
+        $processes[] = new \tx_crawler_domain_process($row2);
+
+        $collection = new \tx_crawler_domain_process_collection($processes);
+
+        $this->assertEquals(
+            array('11', '13'),
+            $collection->getProcessIds()
+        );
+    }
+
+    /**
+     * @test
+     *
+     * @expectedException \InvalidArgumentException
+     */
+    public function appendThrowsException()
+    {
+        $wrongObjectType = new BackendUtility();
+        $this->subject->append($wrongObjectType);
+    }
+
+    /**
+     * @test
+     */
+    public function appendCrawlerDomainObject()
+    {
+        $correctObjectType = new \tx_crawler_domain_process();
+        $this->subject->append($correctObjectType);
+
+        $this->assertEquals(
+            $correctObjectType,
+            $this->subject->offsetGet(0)
+        );
+    }
+
+    /**
+     * @test
+     *
+     * @expectedException \InvalidArgumentException
+     */
+    public function offsetSetThrowsException()
+    {
+        $wrongObjectType = new BackendUtility();
+        $this->subject->offsetSet(100, $wrongObjectType);
+    }
+
+    /**
+     * @test
+     */
+    public function offsetSetAndGet()
+    {
+        $correctObjectType = new \tx_crawler_domain_process();
+        $this->subject->offsetSet(100, $correctObjectType);
+
+        $this->assertEquals(
+            $correctObjectType,
+            $this->subject->offsetGet(100)
+        );
+    }
+
+    /**
+     * @test
+     *
+     * @expectedException \Exception
+     */
+    public function offsetGetThrowsException()
+    {
+        $correctObjectType = new \tx_crawler_domain_process();
+
+        $this->assertEquals(
+            $correctObjectType,
+            $this->subject->offsetGet(100)
+        );
+    }
 }
