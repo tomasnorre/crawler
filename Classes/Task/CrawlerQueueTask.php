@@ -50,6 +50,13 @@ class CrawlerQueueTask extends AbstractTask
     public $depth;
 
     /**
+     * Startpage for the crawler
+     *
+     * @var integer
+     */
+    public $startPage;
+
+    /**
      * Configuration to run (comma separated list)
      *
      * @var string

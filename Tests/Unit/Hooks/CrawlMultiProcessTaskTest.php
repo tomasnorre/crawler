@@ -1,5 +1,5 @@
 <?php
-namespace AOE\Crawler\Task;
+namespace AOE\Crawler\Tests\Unit\Hooks;
 
 /***************************************************************
  *  Copyright notice
@@ -25,32 +25,25 @@ namespace AOE\Crawler\Task;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use AOE\Crawler\Hooks\ProcessCleanUpHook;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Scheduler\Task\AbstractTask;
+use TYPO3\CMS\Core\Tests\UnitTestCase;
 
 /**
- * Class ProcessCleanup
+ * Class CrawlMultiProcessTaskTest
  *
- * @package AOE\Crawler\Task
+ * @package AOE\Crawler\Tests\Unit\Hooks
  */
-class ProcessCleanupTask extends AbstractTask
+class CrawlMultiProcessTaskTest extends UnitTestCase
 {
-
     /**
-     * Function execute scheduler task
-     *
-     * @return bool
+     * @test
      */
-    public function execute()
+    public function ClassAliasMapReturnsNewClassName()
     {
-        /* @var $crawlerObject \tx_crawler_lib */
-        $crawlerObject = GeneralUtility::makeInstance('tx_crawler_lib');
+        $classObject = $this->getMock('tx_crawler_scheduler_crawlMultiProcess', array(), array(), '', false);
 
-        /** @var $crawlerHookObject ProcessCleanUpHook */
-        $crawlerHookObject = GeneralUtility::makeInstance('AOE\\Crawler\\Hooks\\ProcessCleanUpHook');
-        $crawlerHookObject->crawler_init($crawlerObject);
-
-        return true;
+        $this->assertInstanceOf(
+            'AOE\Crawler\Task\CrawlMultiProcessTask',
+            $classObject
+        );
     }
 }
