@@ -123,7 +123,7 @@ class tx_crawler_view_pagination {
 	 * Returns the total number of pages needed to  display all content which
 	 * is paginatable
 	 *
-	 * @return int
+	 * @return double
 	 */
 	public function getTotalPagesCount() {
 	 	return ceil($this->getTotalItemCount() / $this->getPerPage());

@@ -706,10 +706,11 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 	 * Create the rows for display of the page tree
 	 * For each page a number of rows are shown displaying GET variable configuration
 	 *
-	 * @param	array		Page row or set-id
-	 * @param	string		Title string
-	 * @param	int			Items per Page setting
-	 * @return	string		HTML <tr> content (one or more)
+	 * @param array $pageRow_setId Page row or set-id
+	 * @param string $titleString Title string
+	 * @param int $itemsPerPage Items per Page setting
+     *
+	 * @return string HTML <tr> content (one or more)
 	 */
 	function drawLog_addRows($pageRow_setId, $titleString, $itemsPerPage=10) {
 
@@ -1213,10 +1214,11 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 	/**
 	 * Create selector box
 	 *
-	 * @param	array		Options key(value) => label pairs
-	 * @param	string		Selector box name
-	 * @param	string		Selector box value (array for multiple...)
-	 * @param	boolean		If set, will draw multiple box.
+	 * @param	array		$optArray Options key(value) => label pairs
+	 * @param	string		$name Selector box name
+	 * @param	string		$value Selector box value (array for multiple...)
+	 * @param	boolean		$multiple If set, will draw multiple box.
+     *
 	 * @return	string		HTML select element
 	 */
 	function selectorBox($optArray, $name, $value, $multiple)	{
