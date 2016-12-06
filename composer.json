@@ -36,8 +36,7 @@
             "view",
             "class.tx_crawler_api.php",
             "class.tx_crawler_auth.php",
-            "class.tx_crawler_lib.php",
-            "class.tx_crawler_tcaFunc.php"
+            "class.tx_crawler_lib.php"
         ],
         "psr-4": {
             "AOE\\Crawler\\": "Classes/"

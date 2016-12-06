@@ -19,3 +19,8 @@ class tx_crawler_scheduler_crawlMultiProcess extends AOE\Crawler\Task\CrawlMulti
  * @deprecated
  */
 class tx_crawler_scheduler_crawl extends AOE\Crawler\Task\CrawlerTask {}
+
+/**
+ * @deprecated
+ */
+class tx_crawler_tcafunc extends AOE\Crawler\Utility\TcaUtility {}
