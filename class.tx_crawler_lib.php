@@ -1187,7 +1187,7 @@ class tx_crawler_lib {
 		);
 
 		$this->db->exec_UPDATEquery('tx_crawler_queue', 'qid=' . intval($queueId), $field_array);
-	
+
 
 		if ($this->debugMode) {
 			\TYPO3\CMS\Core\Utility\GeneralUtility::devlog('crawler-readurl stop ' . microtime(true), __FUNCTION__);
