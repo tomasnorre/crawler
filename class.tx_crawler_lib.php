@@ -111,11 +111,11 @@ class tx_crawler_lib {
 
 
 		// set defaults:
-		if (tx_crawler_api::convertToPositiveInteger($this->extensionSettings['countInARun']) == 0) {
+		if (\TYPO3\CMS\Core\Utility\MathUtility::convertToPositiveInteger($this->extensionSettings['countInARun']) == 0) {
 			$this->extensionSettings['countInARun'] = 100;
 		}
 
-		$this->extensionSettings['processLimit'] = tx_crawler_api::forceIntegerInRange($this->extensionSettings['processLimit'],1,99,1);
+		$this->extensionSettings['processLimit'] = \AOE\Crawler\Api\CrawlerApi::forceIntegerInRange($this->extensionSettings['processLimit'],1,99,1);
 	}
 
 	/**
@@ -812,7 +812,7 @@ class tx_crawler_lib {
 				foreach($valueSet as $val) {
 					$newUrls[] = $url.(strcmp($val,'') ? '&'.rawurlencode($varName).'='.rawurlencode($val) : '');
 
-					if (count($newUrls) >  tx_crawler_api::forceIntegerInRange($this->extensionSettings['maxCompileUrls'], 1, 1000000000, 10000)) {
+					if (count($newUrls) >  \AOE\Crawler\Api\CrawlerApi::forceIntegerInRange($this->extensionSettings['maxCompileUrls'], 1, 1000000000, 10000)) {
 						break;
 						break;
 					}
@@ -1906,10 +1906,10 @@ class tx_crawler_lib {
 
 		if (isset($cliObj->cli_args['_DEFAULT'][2])) {
 			// Crawler is called over TYPO3 BE
-			$pageId = tx_crawler_api::forceIntegerInRange($cliObj->cli_args['_DEFAULT'][2], 0);
+			$pageId = \AOE\Crawler\Api\CrawlerApi::forceIntegerInRange($cliObj->cli_args['_DEFAULT'][2], 0);
 		} else {
 			// Crawler is called over cli
-			$pageId = tx_crawler_api::forceIntegerInRange($cliObj->cli_args['_DEFAULT'][1], 0);
+			$pageId = \AOE\Crawler\Api\CrawlerApi::forceIntegerInRange($cliObj->cli_args['_DEFAULT'][1], 0);
 		}
 
 		$configurationKeys  = $this->getConfigurationKeys($cliObj);
@@ -1942,9 +1942,9 @@ class tx_crawler_lib {
 		$this->setID = \TYPO3\CMS\Core\Utility\GeneralUtility::md5int(microtime());
 		$this->getPageTreeAndUrls(
 			$pageId,
-			tx_crawler_api::forceIntegerInRange($cliObj->cli_argValue('-d'),0,99),
+			\AOE\Crawler\Api\CrawlerApi::forceIntegerInRange($cliObj->cli_argValue('-d'),0,99),
 			$this->getCurrentTime(),
-			tx_crawler_api::forceIntegerInRange($cliObj->cli_isArg('-n') ? $cliObj->cli_argValue('-n') : 30,1,1000),
+			\AOE\Crawler\Api\CrawlerApi::forceIntegerInRange($cliObj->cli_isArg('-n') ? $cliObj->cli_argValue('-n') : 30,1,1000),
 			$cliObj->cli_argValue('-o')==='queue' || $cliObj->cli_argValue('-o')==='exec',
 			$cliObj->cli_argValue('-o')==='url',
 			\TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',',$cliObj->cli_argValue('-proc'),1),
@@ -2002,7 +2002,7 @@ class tx_crawler_lib {
 		}
 
 		$cliObj->cli_validateArgs();
-		$pageId = tx_crawler_api::forceIntegerInRange($cliObj->cli_args['_DEFAULT'][1],0);
+		$pageId = \AOE\Crawler\Api\CrawlerApi::forceIntegerInRange($cliObj->cli_args['_DEFAULT'][1],0);
 		$fullFlush = ($pageId == 0);
 
 		$mode = $cliObj->cli_argValue('-o');

@@ -26,6 +26,7 @@ namespace AOE\Crawler\Task;
  ***************************************************************/
 
 use TYPO3\CMS\Core\Messaging\FlashMessage;
+use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Scheduler\AdditionalFieldProviderInterface;
 use TYPO3\CMS\Scheduler\Controller\SchedulerModuleController;
 use TYPO3\CMS\Scheduler\Task\AbstractTask;
@@ -81,7 +82,7 @@ class CrawlMultiProcessTaskAdditionalFieldProvider implements AdditionalFieldPro
     {
         $isValid = false;
 
-        if (\tx_crawler_api::convertToPositiveInteger($submittedData['timeOut']) > 0) {
+        if (MathUtility::convertToPositiveInteger($submittedData['timeOut']) > 0) {
             $isValid = true;
         } else {
             $schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_im.invalidTimeOut'), FlashMessage::ERROR);
