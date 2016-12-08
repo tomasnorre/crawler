@@ -568,35 +568,4 @@ class CrawlerApi
 
         return $data;
     }
-
-    /**
-     * Wrapper to support old an new method to test integer value.
-     *
-     * @param integer $value
-     * @param integer $min
-     * @param integer $max
-     * @param integer $default
-     *
-     * @return integer
-     */
-    static public function forceIntegerInRange($value, $min, $max = 2000000, $default = 0)
-    {
-        $result = MathUtility::forceIntegerInRange($value, $min, $max, $default);
-
-        return $result;
-    }
-
-    /**
-     * Wrapper to support old an new method to test integer value.
-     *
-     * @param integer $value
-     *
-     * @return bool
-     */
-    static public function canBeInterpretedAsInteger($value)
-    {
-        $result = MathUtility::canBeInterpretedAsInteger($value);
-
-        return $result;
-    }
 }
