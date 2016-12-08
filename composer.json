@@ -34,7 +34,6 @@
             "modfunc1",
             "template",
             "view",
-            "class.tx_crawler_api.php",
             "class.tx_crawler_auth.php",
             "class.tx_crawler_lib.php"
         ],
