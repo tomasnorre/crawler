@@ -1,12 +1,13 @@
 filter:
     excluded_paths:
         - 'Tests/*'
+        - 'Migration/*'
+        - 'Documentation/*'
     paths:
         - 'Classes/*'
         - 'cli/*'
         - 'domain/*'
         - 'modfunc1/*'
-        - 'system/*'
         - 'template/*'
         - 'view/*'
 
