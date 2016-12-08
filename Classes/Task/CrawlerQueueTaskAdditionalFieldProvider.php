@@ -25,6 +25,7 @@ namespace AOE\Crawler\Task;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Api\CrawlerApi;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Scheduler\AdditionalFieldProviderInterface;
@@ -197,7 +198,7 @@ class CrawlerQueueTaskAdditionalFieldProvider implements AdditionalFieldProvider
             $schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_im.invalidDepth'), FlashMessage::ERROR);
         }
 
-        if (!\tx_crawler_api::canBeInterpretedAsInteger($submittedData['startPage']) || $submittedData['startPage'] < 0) {
+        if (!CrawlerApi::canBeInterpretedAsInteger($submittedData['startPage']) || $submittedData['startPage'] < 0) {
             $isValid = false;
             $schedulerModule->addMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_im.invalidStartPage'), FlashMessage::ERROR);
         }
