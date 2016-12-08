@@ -982,7 +982,7 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 		$listView->setTotalUnprocessedItemCount($queueRepository->countAllPendingItems());
 		$listView->setAssignedUnprocessedItemCount($queueRepository->countAllAssignedPendingItems());
 		$listView->setActiveProcessCount($processRepository->countActive());
-		$listView->setMaxActiveProcessCount(\AOE\Crawler\Api\CrawlerApi::forceIntegerInRange($this->extensionSettings['processLimit'],1,99,1));
+		$listView->setMaxActiveProcessCount(\TYPO3\CMS\Core\Utility\MathUtility::forceIntegerInRange($this->extensionSettings['processLimit'],1,99,1));
 		$listView->setMode($mode);
 
 		$paginationView		= new tx_crawler_view_pagination();
