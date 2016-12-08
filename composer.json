@@ -35,7 +35,6 @@
             "template",
             "view",
             "Tests",
-            "class.tx_crawler_auth.php",
             "class.tx_crawler_lib.php"
         ],
         "psr-4": {

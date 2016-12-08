@@ -3,6 +3,11 @@
 /**
  * @deprecated
  */
+class tx_crawler_auth extends AOE\Crawler\Service\AuthenticationService {}
+
+/**
+ * @deprecated
+ */
 class tx_crawler_scheduler_flush extends AOE\Crawler\Task\FlushQueueTask {}
 
 /**
