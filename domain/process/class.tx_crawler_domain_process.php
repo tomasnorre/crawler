@@ -105,7 +105,7 @@ class tx_crawler_domain_process extends tx_crawler_domain_lib_abstract_dbobject 
 	 */
 	public function countItemsProcessed() {
 		$queueRepository = new tx_crawler_domain_queue_repository();
-		return $queueRepository->countExtecutedItemsByProcess($this);
+		return $queueRepository->countExecutedItemsByProcess($this);
 	}
 
 	/**
