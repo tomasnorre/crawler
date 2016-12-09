@@ -1,4 +1,5 @@
 <?php
+
 /***************************************************************
  *  Copyright notice
  *
@@ -22,99 +23,112 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-class tx_crawler_domain_process_repository extends AOE\Crawler\Domain\Repository\AbstractRepository {
+/**
+ * Class tx_crawler_domain_process_repository
+ */
+class tx_crawler_domain_process_repository extends AOE\Crawler\Domain\Repository\AbstractRepository
+{
 
-	/**
-	 * @var string object class name
-	 */
-	protected $objectClassname = 'tx_crawler_domain_process';
+    /**
+     * @var string object class name
+     */
+    protected $objectClassname = 'tx_crawler_domain_process';
 
-	/**
-	 * @var string
-	 */
-	protected $tableName = 'tx_crawler_process';
+    /**
+     * @var string
+     */
+    protected $tableName = 'tx_crawler_process';
 
-	/**
-	 * This method is used to find all cli processes within a limit.
-	 * 
-	 * @param  string  $orderField
-	 * @param  string  $orderDirection
-	 * @param  integer $itemCount
-	 * @param  integer $offset
-	 * @param  string  $where
-	 * @return tx_crawler_domain_process_collection
-	 */
-	public function findAll($orderField = '', $orderDirection = 'DESC', $itemCount = NULL, $offset = NULL, $where = '') {
-		/** @var tx_crawler_domain_process_collection $collection */
-		$collection = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_crawler_domain_process_collection');
+    /**
+     * This method is used to find all cli processes within a limit.
+     *
+     * @param  string $orderField
+     * @param  string $orderDirection
+     * @param  integer $itemCount
+     * @param  integer $offset
+     * @param  string $where
+     *
+     * @return tx_crawler_domain_process_collection
+     */
+    public function findAll($orderField = '', $orderDirection = 'DESC', $itemCount = null, $offset = null, $where = '')
+    {
+        /** @var \tx_crawler_domain_process_collection $collection */
+        $collection = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_crawler_domain_process_collection');
 
-		$orderField = trim($orderField);
-		$orderField = empty($orderField) ? 'process_id' : $orderField;
+        $orderField = trim($orderField);
+        $orderField = empty($orderField) ? 'process_id' : $orderField;
 
-		$orderDirection = strtoupper(trim($orderDirection));
-		$orderDirection = in_array($orderDirection, array('ASC', 'DESC')) ? $orderDirection : 'DESC';
+        $orderDirection = strtoupper(trim($orderDirection));
+        $orderDirection = in_array($orderDirection, ['ASC', 'DESC']) ? $orderDirection : 'DESC';
 
-		$rows = $this->getDB()->exec_SELECTgetRows(
-			'*',
-			$this->tableName,
-			$where,
-			'',
-			htmlspecialchars($orderField) . ' ' . htmlspecialchars($orderDirection),
-			self::getLimitFromItemCountAndOffset($itemCount, $offset)
-		);
+        $rows = $this->getDB()->exec_SELECTgetRows(
+            '*',
+            $this->tableName,
+            $where,
+            '',
+            htmlspecialchars($orderField) . ' ' . htmlspecialchars($orderDirection),
+            self::getLimitFromItemCountAndOffset($itemCount, $offset)
+        );
 
-		if (is_array($rows)) {
-			foreach($rows as $row) {
-				$collection->append(\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance($this->objectClassname, $row));
-			}
-		}
+        if (is_array($rows)) {
+            foreach ($rows as $row) {
+                $collection->append(\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance($this->objectClassname, $row));
+            }
+        }
 
-		return $collection;
-	}
+        return $collection;
+    }
 
-	/**
-	 * This method is used to count all processes in the process table.
-	 *
-	 * @param  string $where    Where clause
-	 * @return integer
-	 * @author Timo Schmidt <timo.schmidt@aoe.com>
-	 */
-	public function countAll($where = '1 = 1') {
-		return $this->countByWhere($where);
-	}
+    /**
+     * This method is used to count all processes in the process table.
+     *
+     * @param  string $where Where clause
+     *
+     * @return integer
+     * @author Timo Schmidt <timo.schmidt@aoe.com>
+     */
+    public function countAll($where = '1 = 1')
+    {
+        return $this->countByWhere($where);
+    }
 
-	/**
-	 * Returns the number of active processes.
-	 *
-	 * @return integer
-	 */
-	public function countActive() {
-		return $this->countByWhere('active = 1 AND deleted = 0');
-	}
+    /**
+     * Returns the number of active processes.
+     *
+     * @return integer
+     */
+    public function countActive()
+    {
+        return $this->countByWhere('active = 1 AND deleted = 0');
+    }
 
-	/**
-	 * Returns the number of processes that live longer than the given timestamp.
-	 *
-	 * @param  integer $ttl
-	 * @return integer
-	 */
-	public function countNotTimeouted($ttl) {
-		return $this->countByWhere('deleted = 0 AND ttl > ' . intval($ttl));
-	}
+    /**
+     * Returns the number of processes that live longer than the given timestamp.
+     *
+     * @param  integer $ttl
+     *
+     * @return integer
+     */
+    public function countNotTimeouted($ttl)
+    {
+        return $this->countByWhere('deleted = 0 AND ttl > ' . intval($ttl));
+    }
 
-	/**
-	 * Get limit clause
-	 *
-	 * @param  integer $itemCount   Item count
-	 * @param  integer $offset      Offset
-	 * @return string               Limit clause
-	 * @author Fabrizio Branca <fabrizio.branca@aoem.com>
-	 */
-	public static function getLimitFromItemCountAndOffset($itemCount, $offset) {
-		$itemCount = filter_var($itemCount, FILTER_VALIDATE_INT, array('options' => array('min_range' => 1, 'default' => 20)));
-		$offset = filter_var($offset, FILTER_VALIDATE_INT, array('options' => array('min_range' => 0, 'default' => 0)));
-		$limit = $offset . ', ' . $itemCount;
+    /**
+     * Get limit clause
+     *
+     * @param  integer $itemCount
+     * @param  integer $offset
+     *
+     * @return string
+     *
+     */
+    public static function getLimitFromItemCountAndOffset($itemCount, $offset)
+    {
+        $itemCount = filter_var($itemCount, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'default' => 20]]);
+        $offset = filter_var($offset, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0, 'default' => 0]]);
+        $limit = $offset . ', ' . $itemCount;
 
-		return $limit;
-	}
+        return $limit;
+    }
 }
