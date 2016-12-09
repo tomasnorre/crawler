@@ -22,7 +22,7 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-class tx_crawler_domain_process_repository extends tx_crawler_domain_lib_abstract_repository {
+class tx_crawler_domain_process_repository extends AOE\Crawler\Domain\Repository\AbstractRepository {
 
 	/**
 	 * @var string object class name

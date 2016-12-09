@@ -8,7 +8,6 @@ return array(
 	'tx_crawler_domain_events_dispatcher' => $extensionPath . 'domain/events/class.tx_crawler_domain_events_dispatcher.php',
 	'tx_crawler_domain_events_observer' => $extensionPath . 'domain/events/interface.tx_crawler_domain_events_observer.php',
 	'tx_crawler_domain_lib_abstract_dbobject' => $extensionPath . 'domain/lib/class.tx_crawler_domain_lib_abstract_dbobject.php',
-	'tx_crawler_domain_lib_abstract_repository' => $extensionPath . 'domain/lib/class.tx_crawler_domain_lib_abstract_repository.php',
 	'tx_crawler_domain_process_manager' => $extensionPath . 'domain/process/class.tx_crawler_domain_process_manager.php',
 	'tx_crawler_domain_process' => $extensionPath . 'domain/process/class.tx_crawler_domain_process.php',
 	'tx_crawler_domain_process_collection' => $extensionPath . 'domain/process/class.tx_crawler_domain_process_collection.php',
