@@ -67,6 +67,102 @@ class CrawlerLibTest extends UnitTestCase
     }
 
     /**
+     * @test
+     */
+    public function setAndGet()
+    {
+        $accessMode = 'cli';
+        $this->crawlerLibrary->setAccessMode($accessMode);
+
+        $this->assertEquals(
+            $accessMode,
+            $this->crawlerLibrary->getAccessMode()
+        );
+    }
+
+    /**
+     * @test
+     *
+     * @dataProvider setAndGetDisabledDataProvider
+     */
+    public function setAndGetDisabled($disabled, $expected)
+    {
+        $filenameWithPath = tempnam('/tmp', 'test_foo');
+        $this->crawlerLibrary->setProcessFilename($filenameWithPath);
+
+        if (null === $disabled) {
+            $this->crawlerLibrary->setDisabled();
+        } else {
+            $this->crawlerLibrary->setDisabled($disabled);
+        }
+        $this->assertEquals(
+            $expected,
+            $this->crawlerLibrary->getDisabled()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function setAndGetProcessFilename()
+    {
+        $filenameWithPath = tempnam('/tmp', 'test_foo');
+        $this->crawlerLibrary->setProcessFilename($filenameWithPath);
+
+        $this->assertEquals(
+            $filenameWithPath,
+            $this->crawlerLibrary->getProcessFilename()
+        );
+    }
+
+    /**
+     * @test
+     *
+     * @dataProvider drawURLs_PIfilterDataProvider
+     */
+    public function drawURLs_PIfilter($piString, $incomingProcInstructions, $expected)
+    {
+        $this->assertEquals(
+            $expected,
+            $this->crawlerLibrary->drawURLs_PIfilter($piString, $incomingProcInstructions)
+        );
+    }
+
+    /**
+     * @test
+     *
+     * @param $groupList
+     * @param $accessList
+     * @param $expected
+     *
+     * @dataProvider hasGroupAccessDataProvider
+     */
+    public function hasGroupAccess($groupList, $accessList, $expected)
+    {
+        $this->assertEquals(
+            $expected,
+            $this->crawlerLibrary->hasGroupAccess($groupList, $accessList)
+        );
+    }
+
+    /**
+     * @test
+     *
+     * @param $inputQuery
+     * @param $expected
+     *
+     * @dataProvider parseParamsDataProvider
+     */
+    public function parseParams($inputQuery, $expected)
+    {
+        $this->assertEquals(
+            $expected,
+            $this->crawlerLibrary->parseParams($inputQuery)
+        );
+    }
+
+
+    /**
      * Tests whether the makeDirectRequest feature works properly.
      *
      * @test
@@ -79,25 +175,25 @@ class CrawlerLibTest extends UnitTestCase
             'phpPath' => 'PHPPATH',
         ));
 
-        $testUrl = 'http://localhost/' . uniqid();
-        $testHeader = 'X-Test: ' . uniqid();
-        $testHeaderArray = array($testHeader);
-        $testCrawlerId = 13;
-        $testContent = uniqid('Content');
+        $testUrl          = 'http://localhost/' . uniqid();
+        $testHeader       = 'X-Test: ' . uniqid();
+        $testHeaderArray  = array($testHeader);
+        $testCrawlerId    = 13;
+        $testContent      = uniqid('Content');
         $frontendBasePath = '/';
 
         $expectedCommand = escapeshellcmd('PHPPATH') . ' ' .
-            escapeshellarg(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('crawler') . 'cli/bootstrap.php') . ' ' .
-            escapeshellarg($frontendBasePath) . ' ' .
-            escapeshellarg($testUrl) . ' ' .
-            escapeshellarg(base64_encode(serialize($testHeaderArray)));
+                           escapeshellarg(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('crawler') . 'cli/bootstrap.php') . ' ' .
+                           escapeshellarg($frontendBasePath) . ' ' .
+                           escapeshellarg($testUrl) . ' ' .
+                           escapeshellarg(base64_encode(serialize($testHeaderArray)));
 
         $this->crawlerLibrary->expects($this->once())->method('buildRequestHeaderArray')
-            ->will($this->returnValue($testHeaderArray));
+                             ->will($this->returnValue($testHeaderArray));
         $this->crawlerLibrary->expects($this->once())->method('executeShellCommand')
-            ->with($expectedCommand)->will($this->returnValue($testContent));
+                             ->with($expectedCommand)->will($this->returnValue($testContent));
         $this->crawlerLibrary->expects($this->once())->method('getFrontendBasePath')
-            ->will($this->returnValue($frontendBasePath));
+                             ->will($this->returnValue($frontendBasePath));
 
         $result = $this->crawlerLibrary->requestUrl($testUrl, $testCrawlerId);
 
@@ -118,29 +214,550 @@ class CrawlerLibTest extends UnitTestCase
             'phpPath' => 'PHPPATH',
         ));
 
-        $testUrl = 'http://localhost/' . uniqid();
-        $testHeader = 'X-Test: ' . uniqid();
-        $testHeaderArray = array($testHeader);
-        $testCrawlerId = 13;
-        $testContent = uniqid('Content');
+        $testUrl          = 'http://localhost/' . uniqid();
+        $testHeader       = 'X-Test: ' . uniqid();
+        $testHeaderArray  = array($testHeader);
+        $testCrawlerId    = 13;
+        $testContent      = uniqid('Content');
         $frontendBasePath = '/cms/';
 
         $expectedCommand = escapeshellcmd('PHPPATH') . ' ' .
-            escapeshellarg(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('crawler') . 'cli/bootstrap.php') . ' ' .
-            escapeshellarg($frontendBasePath) . ' ' .
-            escapeshellarg($testUrl) . ' ' .
-            escapeshellarg(base64_encode(serialize($testHeaderArray)));
+                           escapeshellarg(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('crawler') . 'cli/bootstrap.php') . ' ' .
+                           escapeshellarg($frontendBasePath) . ' ' .
+                           escapeshellarg($testUrl) . ' ' .
+                           escapeshellarg(base64_encode(serialize($testHeaderArray)));
 
         $this->crawlerLibrary->expects($this->once())->method('buildRequestHeaderArray')
-            ->will($this->returnValue($testHeaderArray));
+                             ->will($this->returnValue($testHeaderArray));
         $this->crawlerLibrary->expects($this->once())->method('executeShellCommand')
-            ->with($expectedCommand)->will($this->returnValue($testContent));
+                             ->with($expectedCommand)->will($this->returnValue($testContent));
         $this->crawlerLibrary->expects($this->once())->method('getFrontendBasePath')
-            ->will($this->returnValue($frontendBasePath));
+                             ->will($this->returnValue($frontendBasePath));
 
         $result = $this->crawlerLibrary->requestUrl($testUrl, $testCrawlerId);
 
         $this->assertEquals($testHeader . str_repeat("\r\n", 2), $result['request']);
         $this->assertEquals($testContent, $result['content']);
+    }
+
+    /**
+     * @test
+     *
+     * @param array $url
+     * @param string $crawlerId
+     * @param array $expected
+     *
+     * @dataProvider buildRequestHeaderArrayDataProvider
+     */
+    public function buildRequestHeaderArray($url, $crawlerId, $expected)
+    {
+        $crawlerLib = $this->getAccessibleMock('\tx_crawler_lib', ['dummy']);
+
+        $this->assertEquals(
+            $expected,
+            $crawlerLib->_call('buildRequestHeaderArray', $url, $crawlerId)
+        );
+    }
+
+    /**
+     * @test
+     *
+     * @param $headers
+     * @param $user
+     * @param $pass
+     * @param $expected
+     *
+     * @dataProvider getRequestUrlFrom302HeaderDataProvider
+     */
+    public function getRequestUrlFrom302Header($headers, $user, $pass, $expected)
+    {
+        $crawlerLib = $this->getAccessibleMock('\tx_crawler_lib', ['dummy']);
+
+        $this->assertEquals(
+            $expected,
+            $crawlerLib->_call('getRequestUrlFrom302Header', $headers, $user, $pass)
+        );
+    }
+
+    /**
+     * @test
+     *
+     * @param $config
+     * @param $expected
+     *
+     * @dataProvider getConfigurationKeysDataProvider
+     */
+    public function getConfigurationKeys($config, $expected)
+    {
+        // FIXME
+        $this->markTestSkipped('Skipped as the cli_getArgIndex is reset $config when parsing...');
+
+        $crawlerLibrary = $this->getAccessibleMock('\tx_crawler_lib', ['dummy']);
+        $_SERVER['argv'] = $config;
+        $cliObject = new \tx_crawler_cli_im();
+
+        $this->assertEquals(
+            $expected,
+            $crawlerLibrary->_callRef('getConfigurationKeys', $cliObject)
+        );
+    }
+
+    /**
+     * @test
+     *
+     * @param $extensionSetting
+     * @param $pageRow
+     * @param $excludeDoktype
+     * @param $expected
+     *
+     * @dataProvider checkIfPageShouldBeSkippedDataProvider
+     */
+    public function checkIfPageShouldBeSkipped($extensionSetting, $pageRow, $excludeDoktype, $expected)
+    {
+        $this->crawlerLibrary->setExtensionSettings($extensionSetting);
+        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['excludeDoktype'] = $excludeDoktype;
+
+        $this->assertEquals(
+            $expected,
+            $this->crawlerLibrary->checkIfPageShouldBeSkipped($pageRow)
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function CLI_buildProcessIdNotSet()
+    {
+        $microtime = '1481397820.81820011138916015625';
+        $expectedMd5Value = '95297a261b';
+
+        $crawlerLibrary = $this->getAccessibleMock('tx_crawler_lib', ['microtime']);
+        $crawlerLibrary->expects($this->once())->method('microtime')->will($this->returnValue($microtime));
+
+        $this->assertEquals(
+            $expectedMd5Value,
+            $crawlerLibrary->_call('CLI_buildProcessId')
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function CLI_buildProcessIdIsSetReturnsValue()
+    {
+        $processId = '12297a261b';
+        $crawlerLibrary = $this->getAccessibleMock('tx_crawler_lib', ['dummy']);
+        $crawlerLibrary->_set('processID', $processId);
+
+        $this->assertEquals(
+            $processId,
+            $crawlerLibrary->_call('CLI_buildProcessId')
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function checkIfPageShouldBeSkippedDataProvider()
+    {
+        return [
+            'Page of doktype 1 - Standand' => [
+                'extensionSetting' => [],
+                'pageRow' => [
+                    'doktype' => 1,
+                    'hidden' => 0
+                ],
+                'excludeDoktype' => [],
+                'expected' => false
+            ],
+            'Extension Setting do not crawl hidden pages and page is hidden' => [
+                'extensionSetting' => ['crawlHiddenPages' => false],
+                'pageRow' => [
+                    'doktype' => 1,
+                    'hidden' => 1
+                ],
+                'excludeDoktype' => [],
+                'expected' => 'Because page is hidden',
+            ],
+            'Page of doktype 3 - External Url' => [
+                'extensionSettings' => [],
+                'pageRow' => [
+                    'doktype' => 3,
+                    'hidden' => 0
+                ],
+                'excludeDoktype' => [],
+                'expected' => 'Because doktype is not allowed'
+            ],
+            'Page of doktype 4 - Shortcut' => [
+                'extensionSettings' => [],
+                'pageRow' => [
+                    'doktype' => 4,
+                    'hidden' => 0
+                ],
+                'excludeDoktype' => [],
+                'expected' => 'Because doktype is not allowed'
+            ],
+            'Page of doktype 155 - Custom' => [
+                'extensionSettings' => [],
+                'pageRow' => [
+                    'doktype' => 155,
+                    'hidden' => 0
+                ],
+                'excludeDoktype' => ['custom' => 155],
+                'expected' => 'Doktype was excluded by "custom"'
+            ],
+            'Page of doktype 255 - Out of allowed range' => [
+                'extensionSettings' => [],
+                'pageRow' => [
+                    'doktype' => 255,
+                    'hidden' => 0
+                ],
+                'excludeDoktype' => [],
+                'expected' => 'Because doktype is not allowed'
+            ]
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getConfigurationKeysDataProvider()
+    {
+        return [
+            'cliObject with no -conf' => [
+                'config' => [(string)'-d' => 4, (string)'-o' => 'url'],
+                'expected' => []
+            ],
+            'cliObject with one -conf' => [
+                'config' => [(string)'-d' => 4, (string)'-o' => 'url', (string)'-conf' =>  'default'],
+                'expected' => ['default']
+            ],
+            'cliObject with two -conf' => [
+                'config' => [(string)'-d' => 4, (string)'-o' => 'url', (string)'-conf' => 'default,news'],
+                'expected' => ['default', 'news']
+            ]
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getRequestUrlFrom302HeaderDataProvider()
+    {
+        return [
+            'Header is now array' => [
+                'headers' => 'no-array',
+                'user' => '',
+                'pass' => '',
+                'expected' => false
+            ],
+            'Header 301 Moved - no Location' => [
+                'headers' => ['HTTP/1.1 301 Moved'],
+                'user' => '',
+                'pass' => '',
+                'expected' => false
+            ],
+            'Header 302 Found - no Location' => [
+                'headers' => ['HTTP/1.1 302 Found'],
+                'user' => '',
+                'pass' => '',
+                'expected' => false
+            ],
+            'Header 302 Moved - no Location' => [
+                'headers' => ['HTTP/1.1 302 Moved'],
+                'user' => '',
+                'pass' => '',
+                'expected' => false
+            ],
+            'Header 304 Not Modified - no Location' => [
+                'headers' => ['HTTP/1.1 304 Not Modified'],
+                'user' => '',
+                'pass' => '',
+                'expected' => false
+            ],
+            'Header 301 Moved - with Location' => [
+                'headers' => [
+                    'HTTP/1.1 301 Moved',
+                    'Location: http://localhost/new-url'
+                ],
+                'user' => '',
+                'pass' => '',
+                'expected' => 'http://localhost/new-url'
+            ],
+            'Header 302 Found - with Location' => [
+                'headers' => [
+                    'HTTP/1.1 302 Found',
+                    'Location: http://localhost/new-url'
+                ],
+                'user' => '',
+                'pass' => '',
+                'expected' => 'http://localhost/new-url'
+            ],
+            'Header 302 Moved - with Location' => [
+                'headers' => [
+                    'HTTP/1.1 302 Moved',
+                    'Location: http://localhost/new-url'
+                ],
+                'user' => '',
+                'pass' => '',
+                'expected' => 'http://localhost/new-url'
+            ],
+            'Header 304 Not Modified - with Location' => [
+                'headers' => [
+                    'HTTP/1.1 304 Not Modified',
+                    'Location: http://localhost/new-url'
+                ]
+                ,
+                'user' => '',
+                'pass' => '',
+                'expected' => false
+            ],
+            'Header 302 Moved - with Location and User credentials' => [
+                'headers' => [
+                    'HTTP/1.1 302 Moved',
+                    'Location: http://localhost/new-url'
+                ],
+                'user' => 'username',
+                'pass' => 'password',
+                'expected' => 'http://username:password@localhost/new-url'
+            ],
+            'Header 302 Moved - with Location and User credentials (https)' => [
+                'headers' => [
+                    'HTTP/1.1 302 Moved',
+                    'Location: https://localhost/new-url'
+                ],
+                'user' => 'username',
+                'pass' => 'password',
+                'expected' => 'https://username:password@localhost/new-url'
+            ],
+            'Header 302 Moved - with non-conform location' => [
+                'headers' => [
+                    'HTTP/1.1 302 Moved',
+                    'Location: http://:80'
+                ],
+                'user' => 'username',
+                'pass' => 'password',
+                'expected' => false
+            ],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function buildRequestHeaderArrayDataProvider()
+    {
+        return [
+            'Request without query, ADMCMD_previewWS nor User Credentials' => [
+                'url' => [
+                    'host' => 'http://localhost',
+                    'path' => '/home/',
+                    'query' => '',
+                ],
+                'crawlerId' => 'qwerty',
+                'expected' => [
+                    'GET /home/ HTTP/1.0',
+                    'Host: http://localhost',
+                    'Connection: close',
+                    'X-T3crawler: qwerty',
+                    'User-Agent: TYPO3 crawler'
+                ]
+            ],
+            'Request with simple query, but without ADMCMD_previewWS and User Credentials' => [
+                'url' => [
+                    'host' => 'http://localhost',
+                    'path' => '/home/',
+                    'query' => 'q=search',
+                ],
+                'crawlerId' => 'qwerty',
+                'expected' => [
+                    'GET /home/?q=search HTTP/1.0',
+                    'Host: http://localhost',
+                    'Connection: close',
+                    'X-T3crawler: qwerty',
+                    'User-Agent: TYPO3 crawler'
+                ]
+            ],
+            'Request with \'complex\' query, but without ADMCMD_previewWS and User credentials' => [
+                'url' => [
+                    'host' => 'http://localhost',
+                    'path' => '/home/',
+                    'query' => 'q=search&page=2',
+                ],
+                'crawlerId' => 'qwerty',
+                'expected' => [
+                    'GET /home/?q=search&page=2 HTTP/1.0',
+                    'Host: http://localhost',
+                    'Connection: close',
+                    'X-T3crawler: qwerty',
+                    'User-Agent: TYPO3 crawler'
+                ]
+            ],
+            'Request without User credentials, but with ADMCMD_previewWS' => [
+                'url' => [
+                    'host' => 'http://localhost',
+                    'path' => '/home/',
+                    'query' => 'ADMCMD_previewWS=345',
+                ],
+                'crawlerId' => 'qwerty',
+                'expected' => [
+                    'GET /home/?ADMCMD_previewWS=345 HTTP/1.0',
+                    'Host: http://localhost',
+                    'Cookie: $Version="1"; be_typo_user="1"; $Path=/',
+                    'Connection: close',
+                    'X-T3crawler: qwerty',
+                    'User-Agent: TYPO3 crawler'
+                ]
+            ],
+            'Request without query and ADMCMD_previewWS, but with User credentials' => [
+                'url' => [
+                    'host' => 'http://localhost',
+                    'path' => '/home/',
+                    'query' => '',
+                    'user' => 'username',
+                    'pass' => 'password'
+                ],
+                'crawlerId' => 'qwerty',
+                'expected' => [
+                    'GET /home/ HTTP/1.0',
+                    'Host: http://localhost',
+                    'Connection: close',
+                    'Authorization: Basic dXNlcm5hbWU6cGFzc3dvcmQ=',
+                    'X-T3crawler: qwerty',
+                    'User-Agent: TYPO3 crawler'
+                ]
+            ],
+            'Request with query, ADMCMD_previewWS and User credentials' => [
+                'url' => [
+                    'host' => 'http://localhost',
+                    'path' => '/home/',
+                    'query' => 'q=search&ADMCMD_previewWS=234',
+                    'user' => 'username',
+                    'pass' => 'password'
+                ],
+                'crawlerId' => 'qwerty',
+                'expected' => [
+                    'GET /home/?q=search&ADMCMD_previewWS=234 HTTP/1.0',
+                    'Host: http://localhost',
+                    'Cookie: $Version="1"; be_typo_user="1"; $Path=/',
+                    'Connection: close',
+                    'Authorization: Basic dXNlcm5hbWU6cGFzc3dvcmQ=',
+                    'X-T3crawler: qwerty',
+                    'User-Agent: TYPO3 crawler'
+                ]
+            ],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function setAndGetDisabledDataProvider()
+    {
+        return [
+            'setDisabled with no param' => [
+                'disabled' => null,
+                'expected' => true
+            ],
+            'setDisabled with true param' => [
+                'disabled' => true,
+                'expected' => true
+            ],
+            'setDisabled with false param' => [
+                'disabled' => false,
+                'expected' => false
+            ],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function drawURLs_PIfilterDataProvider()
+    {
+        return [
+            'Not in list' => [
+                'piString' => 'tx_indexedsearch_reindex,tx_realurl_rebuild,tx_esetcache_clean_main',
+                'incomingProcInstructions' => [
+                    'tx_unknown_extension_instruction'
+                ],
+                'expected' => false
+            ],
+            'In list' => [
+                'piString' => 'tx_indexedsearch_reindex,tx_realurl_rebuild,tx_esetcache_clean_main',
+                'incomingProcInstructions' => [
+                    'tx_indexedsearch_reindex',
+                ],
+                'expected' => true
+            ],
+            'Twice in list' => [
+                'piString' => 'tx_indexedsearch_reindex,tx_realurl_rebuild,tx_esetcache_clean_main',
+                'incomingProcInstructions' => [
+                    'tx_realurl_rebuild',
+                    'tx_realurl_rebuild'
+                ],
+                'expected' => true
+            ],
+            'Empty incomingProcInstructions' => [
+                'piString' => '',
+                'incomingProcInstructions' => [],
+                'expected' => true
+            ],
+            'In list CAPITALIZED' => [
+                'piString' => 'tx_indexedsearch_reindex,tx_realurl_rebuild,tx_esetcache_clean_main',
+                'incomingProcInstructions' => [
+                    'TX_REALURL_REBUILD'
+                ],
+                'expected' => false
+            ],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function hasGroupAccessDataProvider()
+    {
+        return [
+            'Do not have access' => [
+                'groupList' => '1,2,3',
+                'accessList' => '4,5,6',
+                'expected' => false
+            ],
+            'Do have access' => [
+                'groupList' => '1,2,3,4',
+                'accessList' => '4,5,6',
+                'expected' => true
+            ],
+            'Access List empty' => [
+                'groupList' => '1,2,3',
+                'accessList' => '',
+                'expected' => true
+            ]
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function parseParamsDataProvider()
+    {
+        return [
+            'Empty query string' => [
+                'queryString' => '',
+                'expected' => []
+            ],
+            'Query string with one variable' => [
+                'queryString' => 'q=search',
+                'expected' => ['q' => 'search']
+            ],
+            'Query string with two variables' => [
+                'queryString' => 'q=search&page=3',
+                'expected' => [
+                    'q' => 'search',
+                    'page' => 3
+                ]
+            ]
+        ];
     }
 }
