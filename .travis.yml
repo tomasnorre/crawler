@@ -107,10 +107,5 @@ script:
     fi
   - >
     echo;
-    echo "Running php lint";
-    /bin/bash -c "
-        if ! find typo3conf/ext/crawler -name \*.php | parallel --gnu 'php -l {}' > /tmp/errors 2>&1; then
-            grep -v \"No syntax errors detected in\" /tmp/errors;
-            exit 99;
-        fi
-    "
+      echo "Running php lint";
+      find . -name \*.php ! -path "./.Build/*" ! -path "./scripts/*" ! -path "./typo3_src/*" | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \;
