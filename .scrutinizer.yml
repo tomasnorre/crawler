@@ -14,7 +14,7 @@ filter:
 tools:
 
     external_code_coverage:
-        timeout: 700
+        timeout: 750
         runs: 1
 
     php_cpd:
