@@ -65,7 +65,7 @@ before_install:
 before_script:
   # Installs TYPO3
   - composer require typo3/cms=$TYPO3_VERSION
-    # Restore composer.json
+  # Restore composer.json
   - git checkout composer.json
   - export "TYPO3_PATH_WEB"=$PWD/.Build/Web;
   # Locating UnitTests.xml
