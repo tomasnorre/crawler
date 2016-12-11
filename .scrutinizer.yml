@@ -10,6 +10,7 @@ filter:
         - 'modfunc1/*'
         - 'template/*'
         - 'view/*'
+        - '*'
 
 tools:
 
