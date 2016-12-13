@@ -117,26 +117,24 @@ class CrawlerLibTest extends FunctionalTestCase
 
     /**
      * @test
-     *
      */
     public function cleanUpOldQueueEntries()
     {
-        $this->markTestSkipped('This fails with PHP7 & TYPO3 7.6');
-
-        $this->importDataSet(dirname(__FILE__) . '/Fixtures/tx_crawler_queue.xml');
         $queryRepository = new \tx_crawler_domain_queue_repository();
-
 
         $recordsFromFixture       = 9;
         $expectedRemainingRecords = 2;
+
         // Add records to queue repository to ensure we always have records,
         // that will not be deleted with the cleanUpOldQueueEntries-function
         for ($i = 0; $i < $expectedRemainingRecords; $i++) {
-            $this->getDatabaseConnection()->exec_INSERTquery(
+           $this->getDatabaseConnection()->exec_INSERTquery(
                 'tx_crawler_queue',
                 [
                     'exec_time' => time() + (7 * 24 * 60 * 60),
-                    'scheduled' => time() + (7 * 24 * 60 * 60)
+                    'scheduled' => time() + (7 * 24 * 60 * 60),
+                    'parameters' => 'testParams',
+                    'result_data' => ''
                 ]
             );
         }

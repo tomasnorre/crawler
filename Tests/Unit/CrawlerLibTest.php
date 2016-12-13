@@ -26,6 +26,7 @@ namespace AOE\Crawler\Tests\Unit;
  ***************************************************************/
 
 use TYPO3\CMS\Core\Tests\UnitTestCase;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
  * Class CrawlerLibTest
@@ -46,7 +47,7 @@ class CrawlerLibTest extends UnitTestCase
      */
     public function setUp()
     {
-        $this->crawlerLibrary                                    = $this->getMock(
+        $this->crawlerLibrary = $this->getMock(
             '\tx_crawler_lib',
             array('buildRequestHeaderArray', 'executeShellCommand', 'getFrontendBasePath'),
             array(),
@@ -272,25 +273,25 @@ class CrawlerLibTest extends UnitTestCase
             'phpPath' => 'PHPPATH',
         ));
 
-        $testUrl          = 'http://localhost/' . uniqid();
-        $testHeader       = 'X-Test: ' . uniqid();
-        $testHeaderArray  = array($testHeader);
-        $testCrawlerId    = 13;
-        $testContent      = uniqid('Content');
+        $testUrl = 'http://localhost/' . uniqid();
+        $testHeader = 'X-Test: ' . uniqid();
+        $testHeaderArray = array($testHeader);
+        $testCrawlerId = 13;
+        $testContent = uniqid('Content');
         $frontendBasePath = '/';
 
         $expectedCommand = escapeshellcmd('PHPPATH') . ' ' .
-                           escapeshellarg(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('crawler') . 'cli/bootstrap.php') . ' ' .
-                           escapeshellarg($frontendBasePath) . ' ' .
-                           escapeshellarg($testUrl) . ' ' .
-                           escapeshellarg(base64_encode(serialize($testHeaderArray)));
+            escapeshellarg(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('crawler') . 'cli/bootstrap.php') . ' ' .
+            escapeshellarg($frontendBasePath) . ' ' .
+            escapeshellarg($testUrl) . ' ' .
+            escapeshellarg(base64_encode(serialize($testHeaderArray)));
 
         $this->crawlerLibrary->expects($this->once())->method('buildRequestHeaderArray')
-                             ->will($this->returnValue($testHeaderArray));
+            ->will($this->returnValue($testHeaderArray));
         $this->crawlerLibrary->expects($this->once())->method('executeShellCommand')
-                             ->with($expectedCommand)->will($this->returnValue($testContent));
+            ->with($expectedCommand)->will($this->returnValue($testContent));
         $this->crawlerLibrary->expects($this->once())->method('getFrontendBasePath')
-                             ->will($this->returnValue($frontendBasePath));
+            ->will($this->returnValue($frontendBasePath));
 
         $result = $this->crawlerLibrary->requestUrl($testUrl, $testCrawlerId);
 
@@ -311,25 +312,25 @@ class CrawlerLibTest extends UnitTestCase
             'phpPath' => 'PHPPATH',
         ));
 
-        $testUrl          = 'http://localhost/' . uniqid();
-        $testHeader       = 'X-Test: ' . uniqid();
-        $testHeaderArray  = array($testHeader);
-        $testCrawlerId    = 13;
-        $testContent      = uniqid('Content');
+        $testUrl = 'http://localhost/' . uniqid();
+        $testHeader = 'X-Test: ' . uniqid();
+        $testHeaderArray = array($testHeader);
+        $testCrawlerId = 13;
+        $testContent = uniqid('Content');
         $frontendBasePath = '/cms/';
 
         $expectedCommand = escapeshellcmd('PHPPATH') . ' ' .
-                           escapeshellarg(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('crawler') . 'cli/bootstrap.php') . ' ' .
-                           escapeshellarg($frontendBasePath) . ' ' .
-                           escapeshellarg($testUrl) . ' ' .
-                           escapeshellarg(base64_encode(serialize($testHeaderArray)));
+            escapeshellarg(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('crawler') . 'cli/bootstrap.php') . ' ' .
+            escapeshellarg($frontendBasePath) . ' ' .
+            escapeshellarg($testUrl) . ' ' .
+            escapeshellarg(base64_encode(serialize($testHeaderArray)));
 
         $this->crawlerLibrary->expects($this->once())->method('buildRequestHeaderArray')
-                             ->will($this->returnValue($testHeaderArray));
+            ->will($this->returnValue($testHeaderArray));
         $this->crawlerLibrary->expects($this->once())->method('executeShellCommand')
-                             ->with($expectedCommand)->will($this->returnValue($testContent));
+            ->with($expectedCommand)->will($this->returnValue($testContent));
         $this->crawlerLibrary->expects($this->once())->method('getFrontendBasePath')
-                             ->will($this->returnValue($frontendBasePath));
+            ->will($this->returnValue($frontendBasePath));
 
         $result = $this->crawlerLibrary->requestUrl($testUrl, $testCrawlerId);
 
@@ -390,8 +391,9 @@ class CrawlerLibTest extends UnitTestCase
         $this->markTestSkipped('Skipped as the cli_getArgIndex is reset $config when parsing...');
 
         $crawlerLibrary = $this->getAccessibleMock('\tx_crawler_lib', ['dummy']);
-        $_SERVER['argv'] = $config;
         $cliObject = new \tx_crawler_cli_im();
+        $cliObject->cli_setArguments($config);
+
 
         $this->assertEquals(
             $expected,
@@ -450,6 +452,99 @@ class CrawlerLibTest extends UnitTestCase
             $processId,
             $crawlerLibrary->_call('CLI_buildProcessId')
         );
+    }
+
+    /**
+     * @test
+     *
+     * @dataProvider getFrontendBasePathDataProvider
+     */
+    public function getFrontendBasePath($frontendBasePath, $absRefPrefix, $TYPO3_cliMode, $expected)
+    {
+        /** @var \tx_crawler_lib $crawlerLibrary */
+        $crawlerLibrary = $this->getAccessibleMock('\tx_crawler_lib', ['dummy']);
+
+        // Setting up
+        if (!empty($frontendBasePath)) {
+            $crawlerLibrary->setExtensionSettings(['frontendBasePath' => $frontendBasePath]);
+        }
+
+        if (!empty($absRefPrefix)) {
+            /** @var TypoScriptFrontendController $GLOBALS['TSFE'] */
+            $GLOBALS['TSFE'] = $this->getMock('\TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController', ['dummy'], [], '', false);
+            $GLOBALS['TSFE']->setAbsRefPrefix($absRefPrefix);
+        }
+
+        if (!empty($TYPO3_cliMode)) {
+            define('TYPO3_cliMode', 'TYPO3_cliMode');
+            define('TYPO3_SITE_PATH', '/var/www/htdocs/');
+        }
+
+        $this->assertEquals(
+            $expected,
+            $crawlerLibrary->_call('getFrontendBasePath')
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function sendDirectRequestReturnsArray()
+    {
+        $url = 'http://test.domain.tld/index.php?id=123';
+        $crawlerId = 'qwerty';
+
+        $content = 'content-string';
+        $requestHeaders = ['string' => 'value'];
+
+        $expectedArray = [
+            'request' => implode("\r\n", $requestHeaders) . "\r\n\r\n",
+            'headers' => '',
+            'content' => $content
+        ];
+
+        $crawlerLibrary = $this->getAccessibleMock('\tx_crawler_lib', ['executeShellCommand', 'buildRequestHeaderArray'], [], '', false);
+        $crawlerLibrary->expects($this->once())->method('executeShellCommand')->will($this->returnValue($content));
+        $crawlerLibrary->expects($this->once())->method('buildRequestHeaderArray')->will($this->returnValue($requestHeaders));
+
+        $this->assertEquals(
+            $expectedArray,
+            $crawlerLibrary->_call('sendDirectRequest', $url, $crawlerId)
+        );
+
+    }
+
+    /**
+     * @return array
+     */
+    public function getFrontendBasePathDataProvider()
+    {
+        return [
+            'No Settings configured' => [
+                'frontendBasePath' => '',
+                'absRefPrefix' => '',
+                'TYPO3_cliMode' => '',
+                'expected' => '/'
+            ],
+            'Setting frontend basePath' => [
+                'frontendBasePath' => '/cms/',
+                'absRefPrefix' => '',
+                'TYPO3_cliMode' => '',
+                'expected' => '/cms/'
+            ],
+            /*'Setting absRefPrefix :: FIXME' => [
+                'frontendBasePath' => '',
+                'absRefPrefix' => '/absRefPrefix/',
+                'TYPO3_cliMode' => '',
+                'expected' => '/sd/'
+            ],
+            'Setting TYPO3_cliMode :: FIXME' => [
+                'frontendBasePath' => '',
+                'absRefPrefix' => '',
+                'TYPO3_cliMode' => true,
+                'expected' => '/SD'
+            ]*/
+        ];
     }
 
     /**

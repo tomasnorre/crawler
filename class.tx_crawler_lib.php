@@ -180,7 +180,6 @@ class tx_crawler_lib {
      *
      * @param array $pageRow
      * @return false|string false if the page should be crawled (not excluded), true / skipMessage if it should be skipped
-     * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
      */
     public function checkIfPageShouldBeSkipped(array $pageRow) {
 
@@ -284,16 +283,16 @@ class tx_crawler_lib {
      * Creates a list of URLs from input array (and submits them to queue if asked for)
      * See Web > Info module script + "indexed_search"'s crawler hook-client using this!
      *
-     * @param    array        Information about URLs from pageRow to crawl.
-     * @param    array        Page row
-     * @param    integer        Unix time to schedule indexing to, typically time()
-     * @param    integer        Number of requests per minute (creates the interleave between requests)
-     * @param    boolean        If set, submits the URLs to queue
-     * @param    boolean        If set (and submitcrawlUrls is false) will fill $downloadUrls with entries)
-     * @param    array        Array which is passed by reference and contains the an id per url to secure we will not crawl duplicates
-     * @param    array        Array which will be filled with URLS for download if flag is set.
-     * @param    array        Array of processing instructions
-     * @return    string        List of URLs (meant for display in backend module)
+     * @param array $vv Information about URLs from pageRow to crawl.
+     * @param array $pageRow Page row
+     * @param integer $scheduledTime Unix time to schedule indexing to, typically time()
+     * @param integer $reqMinute Number of requests per minute (creates the interleave between requests)
+     * @param boolean $submitCrawlUrls If set, submits the URLs to queue
+     * @param boolean $downloadCrawlUrls If set (and submitcrawlUrls is false) will fill $downloadUrls with entries)
+     * @param array $duplicateTrack Array which is passed by reference and contains the an id per url to secure we will not crawl duplicates
+     * @param array $downloadUrls Array which will be filled with URLS for download if flag is set.
+     * @param array $incomingProcInstructions Array of processing instructions
+     * @return string List of URLs (meant for display in backend module)
      *
      */
     function urlListFromUrlArray(
@@ -418,8 +417,9 @@ class tx_crawler_lib {
     /**
      * Returns true if input processing instruction is among registered ones.
      *
-     * @param  string $piString                     PI to test
-     * @param  array  $incomingProcInstructions     Processing instructions
+     * @param string $piString                     PI to test
+     * @param array $incomingProcInstructions     Processing instructions
+     *
      * @return boolean                              TRUE if found
      */
     public function drawURLs_PIfilter($piString, array $incomingProcInstructions) {
@@ -434,7 +434,11 @@ class tx_crawler_lib {
         }
     }
 
-
+    /**
+     * @param $id
+     *
+     * @return array
+     */
     public function getPageTSconfigForId($id) {
         if(!$this->MP){
             $pageTSconfig = \TYPO3\CMS\Backend\Utility\BackendUtility::getPagesTSconfig($id);
@@ -621,24 +625,28 @@ class tx_crawler_lib {
         return $baseUrl;
     }
 
-    function getConfigurationsForBranch($rootid, $depth) {
+    /**
+     * @param $rootId
+     * @param $depth
+     *
+     * @return array
+     */
+    public function getConfigurationsForBranch($rootId, $depth) {
 
         $configurationsForBranch = array();
 
-        $pageTSconfig = $this->getPageTSconfigForId($rootid);
-        if (is_array($pageTSconfig) && is_array($pageTSconfig['tx_crawler.']['crawlerCfg.']) && is_array($pageTSconfig['tx_crawler.']['crawlerCfg.']['paramSets.']))    {
-
+        $pageTSconfig = $this->getPageTSconfigForId($rootId);
+        if (is_array($pageTSconfig) && is_array($pageTSconfig['tx_crawler.']['crawlerCfg.']) && is_array($pageTSconfig['tx_crawler.']['crawlerCfg.']['paramSets.'])) {
             $sets = $pageTSconfig['tx_crawler.']['crawlerCfg.']['paramSets.'];
             if(is_array($sets)) {
                 foreach($sets as $key=>$value) {
                     if(!is_array($value)) continue;
                     $configurationsForBranch[] = substr($key,-1)=='.'?substr($key,0,-1):$key;
                 }
-
             }
         }
         $pids = array();
-        $rootLine = \TYPO3\CMS\Backend\Utility\BackendUtility::BEgetRootLine($rootid);
+        $rootLine = \TYPO3\CMS\Backend\Utility\BackendUtility::BEgetRootLine($rootId);
         foreach($rootLine as $node) {
             $pids[] = $node['uid'];
         }
@@ -646,7 +654,7 @@ class tx_crawler_lib {
         $tree = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Backend\Tree\View\PageTreeView');
         $perms_clause = $GLOBALS['BE_USER']->getPagePermsClause(1);
         $tree->init('AND ' . $perms_clause);
-        $tree->getTree($rootid, $depth, '');
+        $tree->getTree($rootId, $depth, '');
         foreach($tree->tree as $node) {
             $pids[] = $node['row']['uid'];
         }
@@ -672,13 +680,13 @@ class tx_crawler_lib {
      * (e.g. get the group list of the current logged in user from $GLOBALS['TSFE']->gr_list)
      *
      * @see \TYPO3\CMS\Frontend\Page\PageRepository::getMultipleGroupsWhereClause()
+     *
      * @param  string $groupList    Comma-separated list of (fe_)group UIDs from a user
      * @param  string $accessList   Comma-separated list of (fe_)group UIDs of the item to access
+     *
      * @return bool                 TRUE if at least one of the users group UIDs is in the access list or the access list is empty
-     * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
-     * @since 2009-01-19
      */
-    function hasGroupAccess($groupList, $accessList) {
+    public function hasGroupAccess($groupList, $accessList) {
         if (empty($accessList)) {
             return true;
         }
@@ -696,7 +704,7 @@ class tx_crawler_lib {
      * @param  string  $inputQuery  Input query string
      * @return array                Keys are Get var names, values are the values of the GET vars.
      */
-    function parseParams($inputQuery) {
+    public function parseParams($inputQuery) {
             // Extract all GET parameters into an ARRAY:
         $paramKeyValues = array();
         $GETparams = explode('&', $inputQuery);
@@ -726,7 +734,7 @@ class tx_crawler_lib {
      * @param    integer        Current page ID
      * @return    array        Array with key (GET var name) with the value being an array of all possible values for that key.
      */
-    function expandParameters($paramArray, $pid)    {
+    protected function expandParameters($paramArray, $pid)    {
         global $TCA;
 
             // Traverse parameter names:
@@ -977,7 +985,7 @@ class tx_crawler_lib {
      * @param    integer        Time at which to activate
      * @return    void
      */
-    function addQueueEntry_callBack($setId,$params,$callBack,$page_id=0,$schedule=0) {
+    public function addQueueEntry_callBack($setId,$params,$callBack,$page_id=0,$schedule=0) {
 
         if (!is_array($params))    $params = array();
         $params['_CALLBACKOBJ'] = $callBack;
@@ -994,16 +1002,6 @@ class tx_crawler_lib {
 
         $this->db->exec_INSERTquery('tx_crawler_queue',$fieldArray);
     }
-
-
-
-
-
-
-
-
-
-
 
     /************************************
      *
@@ -1022,7 +1020,7 @@ class tx_crawler_lib {
      * @param     bool        (optional) skip inner duplication check
      * @return    bool        true if the url was added, false if it already existed
      */
-    function addUrl (
+    protected function addUrl (
         $id,
         $url,
         array $subCfg,
@@ -1095,9 +1093,8 @@ class tx_crawler_lib {
      * If the timestamp is in the future it will check, if the queued entry has exactly the same timestamp
      *
      * @param int $tstamp
-     * @param string $parameters
-     * @author Fabrizio Branca
-     * @author Timo Schmidt
+     * @param array $fieldArray
+     *
      * @return array;
      */
     protected function getDuplicateRowsIfExist($tstamp,$fieldArray){
@@ -1144,16 +1141,15 @@ class tx_crawler_lib {
     /**
      * Returns the current system time
      *
-     * @author Timo Schmidt <schmidt@aoemedia.de>
      * @return int
+     *
+     * @codeCoverageIgnore
      */
     public function getCurrentTime(){
         return time();
     }
 
-
-
-    /************************************
+     /************************************
      *
      * URL reading
      *
@@ -1164,9 +1160,10 @@ class tx_crawler_lib {
      *
      * @param integer $queueId
      * @param boolean $force If set, will process even if exec_time has been set!
+     *
      * @return integer
      */
-    function readUrl($queueId, $force = FALSE) {
+    public function readUrl($queueId, $force = FALSE) {
         $ret = 0;
         if ($this->debugMode) {
             \TYPO3\CMS\Core\Utility\GeneralUtility::devlog('crawler-readurl start ' . microtime(true), __FUNCTION__);
@@ -1237,10 +1234,11 @@ class tx_crawler_lib {
     /**
      * Read URL for not-yet-inserted log-entry
      *
-     * @param    integer        Queue field array,
-     * @return    string
+     * @param array $field_array Queue field array,
+     *
+     * @return string
      */
-    function readUrlFromArray($field_array)    {
+    protected function readUrlFromArray($field_array)    {
 
             // Set exec_time to lock record:
         $field_array['exec_time'] = $this->getCurrentTime();
@@ -1249,7 +1247,7 @@ class tx_crawler_lib {
 
         $result = $this->readUrl_exec($field_array);
 
-            // Set result in log which also denotes the end of the processing of this entry.
+        // Set result in log which also denotes the end of the processing of this entry.
         $field_array = array('result_data' => serialize($result));
         $this->db->exec_UPDATEquery('tx_crawler_queue','qid='.intval($queueId), $field_array);
 
@@ -1259,10 +1257,10 @@ class tx_crawler_lib {
     /**
      * Read URL for a queue record
      *
-     * @param    array        Queue record
-     * @return    string        Result output.
+     * @param array $queueRec Queue record
+     * @return string Result output.
      */
-    function readUrl_exec($queueRec)    {
+    protected function readUrl_exec($queueRec)    {
             // Decode parameters:
         $parameters = unserialize($queueRec['parameters']);
         $result = 'ERROR';
@@ -1301,7 +1299,7 @@ class tx_crawler_lib {
      * @param  integer  $recursion      Recursion limiter for 302 redirects
      * @return array                    Array with content
      */
-    function requestUrl($originalUrl, $crawlerId, $timeout=2, $recursion=10) {
+    public function requestUrl($originalUrl, $crawlerId, $timeout=2, $recursion=10) {
 
         if (!$recursion) return false;
 
@@ -1419,7 +1417,10 @@ class tx_crawler_lib {
      * Executes a shell command and returns the outputted result.
      *
      * @param string $command Shell command to be executed
+     *
      * @return string Outputted result of the command execution
+     *
+     * @codeCoverageIgnore
      */
     protected function executeShellCommand($command) {
         $result = shell_exec($command);
@@ -1519,13 +1520,6 @@ class tx_crawler_lib {
         return $newUrl;
     }
 
-
-
-
-
-
-
-
     /**************************
      *
      * tslib_fe hooks:
@@ -1557,8 +1551,6 @@ class tx_crawler_lib {
             }
         }
     }
-
-
 
     /*****************************
      *
@@ -1856,13 +1848,6 @@ class tx_crawler_lib {
         $count = $this->db->sql_fetch_assoc($res);
         return $count['num'];
     }
-
-
-
-
-
-
-
 
     /*****************************
      *
@@ -2379,7 +2364,7 @@ class tx_crawler_lib {
      *
      * @return string  the ID
      */
-    function CLI_buildProcessId() {
+    protected function CLI_buildProcessId() {
         if(!$this->processID) {
             $this->processID= \TYPO3\CMS\Core\Utility\GeneralUtility::shortMD5($this->microtime(true));
         }
@@ -2390,6 +2375,8 @@ class tx_crawler_lib {
      * @param bool $get_as_float
      *
      * @return mixed
+     *
+     * @codeCoverageIgnore
      */
     protected function microtime($get_as_float = false )
     {
@@ -2400,6 +2387,8 @@ class tx_crawler_lib {
      * Prints a message to the stdout (only if debug-mode is enabled)
      *
      * @param  string $msg  the message
+     *
+     * @codeCoverageIgnore
      */
     function CLI_debug($msg) {
         if(intval($this->extensionSettings['processDebug'])) {
@@ -2465,6 +2454,8 @@ class tx_crawler_lib {
      * @param int $typeNum
      *
      * @return void
+     *
+     * @codeCoverageIgnore
      */
     protected function initTSFE($id = 1, $typeNum = 0) {
         \TYPO3\CMS\Frontend\Utility\EidUtility::initTCA();
