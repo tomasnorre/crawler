@@ -18,4 +18,16 @@
         <active>1</active>
         <deleted>0</deleted>
     </tx_crawler_process>
+    <tx_crawler_process>
+        <process_id>1003</process_id>
+        <ttl>20</ttl>
+        <active>0</active>
+        <deleted>1</deleted>
+    </tx_crawler_process>
+    <tx_crawler_process>
+        <process_id>1004</process_id>
+        <ttl>20</ttl>
+        <active>0</active>
+        <deleted>1</deleted>
+    </tx_crawler_process>
 </dataset>

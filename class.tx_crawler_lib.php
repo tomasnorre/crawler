@@ -845,7 +845,7 @@ class tx_crawler_lib {
      * @param  array  $urls         URLs accumulated in this array (for recursion)
      * @return array                URLs accumulated, if number of urls exceed 'maxCompileUrls' it will return false as an error!
      */
-    function compileUrls($paramArray, $urls = array()) {
+    public function compileUrls($paramArray, $urls = array()) {
 
         if (count($paramArray) && is_array($urls)) {
                 // shift first off stack:
@@ -871,16 +871,6 @@ class tx_crawler_lib {
         return $urls;
     }
 
-
-
-
-
-
-
-
-
-
-
     /************************************
      *
      * Crawler log
@@ -897,7 +887,8 @@ class tx_crawler_lib {
      * @param  integer $itemsPerPage    Limit the amount of entries per page default is 10
      * @return array
      */
-    function getLogEntriesForPageId($id,$filter = '', $doFlush = FALSE, $doFullFlush = FALSE, $itemsPerPage = 10) {
+    public function getLogEntriesForPageId($id, $filter = '', $doFlush = FALSE, $doFullFlush = FALSE, $itemsPerPage = 10) {
+        // FIXME: Write Unit tests for Filters
         switch($filter) {
             case 'pending':
                 $addWhere = ' AND exec_time=0';
@@ -910,6 +901,7 @@ class tx_crawler_lib {
                 break;
         }
 
+        // FIXME: Write unit test that ensures that the right records are deleted.
         if ($doFlush) {
             $this->flushQueue( ($doFullFlush?'1=1':('page_id='.intval($id))) .$addWhere);
             return array();
@@ -930,8 +922,8 @@ class tx_crawler_lib {
      * @param    integer        Limit the amount of entires per page default is 10
      * @return    array
      */
-    function getLogEntriesForSetId($set_id,$filter='',$doFlush=FALSE, $doFullFlush=FALSE, $itemsPerPage=10)    {
-
+    public function getLogEntriesForSetId($set_id,$filter='',$doFlush=FALSE, $doFullFlush=FALSE, $itemsPerPage=10)    {
+        // FIXME: Write Unit tests for Filters
         switch($filter)    {
             case 'pending':
                 $addWhere = ' AND exec_time=0';
@@ -943,7 +935,7 @@ class tx_crawler_lib {
                 $addWhere = '';
                 break;
         }
-
+        // FIXME: Write unit test that ensures that the right records are deleted.
         if ($doFlush)    {
             $this->flushQueue($doFullFlush?'':('set_id='.intval($set_id).$addWhere));
             return array();
@@ -2361,6 +2353,8 @@ class tx_crawler_lib {
      *
      * @param  string  identification string for the process
      * @return boolean determines if the process is still active / has resources
+     *
+     * TODO: Why using  $this->db->sql_query('BEGIN'); &  $this->db->sql_query('COMMIT'); on a SELECT Query?
      */
     function CLI_checkIfProcessIsActive($pid) {
         $ret = false;

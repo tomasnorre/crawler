@@ -46,7 +46,7 @@ class CrawlerLibTest extends UnitTestCase
      */
     public function setUp()
     {
-        $this->crawlerLibrary = $this->getMock(
+        $this->crawlerLibrary                                    = $this->getMock(
             '\tx_crawler_lib',
             array('buildRequestHeaderArray', 'executeShellCommand', 'getFrontendBasePath'),
             array(),
@@ -159,6 +159,103 @@ class CrawlerLibTest extends UnitTestCase
             $expected,
             $this->crawlerLibrary->parseParams($inputQuery)
         );
+    }
+
+    /**
+     * @test
+     *
+     * @param $checkIfPageSkipped
+     * @param $getUrlsForPages
+     * @param $pageRow
+     * @param $skipMessage
+     * @param $expected
+     *
+     * @dataProvider getUrlsForPageRowDataProvider
+     */
+    public function getUrlsForPageRow($checkIfPageSkipped, $getUrlsForPages, $pageRow, $skipMessage, $expected)
+    {
+        /** @var \tx_crawler_lib $crawlerLibrary */
+        $crawlerLibrary = $this->getMock('\tx_crawler_lib', ['checkIfPageShouldBeSkipped', 'getUrlsForPageId']);
+        $crawlerLibrary->expects($this->any())->method('checkIfPageShouldBeSkipped')->will($this->returnValue($checkIfPageSkipped));
+        $crawlerLibrary->expects($this->any())->method('getUrlsForPageId')->will($this->returnValue($getUrlsForPages));
+
+        $this->assertEquals(
+            $expected,
+            $crawlerLibrary->getUrlsForPageRow($pageRow, $skipMessage)
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function getUrlsForPageRowDataProvider()
+    {
+        return [
+            'Message equals false, returns Urls from getUrlsForPages()' => [
+                'checkIfPageSkipped' => false,
+                'getUrlsForPages' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
+                'pageRow' => ['uid' => 2001],
+                '$skipMessage' => 'Just variable placeholder, not used in tests as parsed as reference',
+                'expected' => ['index.php?q=search&page=1', 'index.php?q=search&page=2']
+            ],
+            'Message string not empty, returns empty array' => [
+                'checkIfPageSkipped' => 'Because page is hidden',
+                'getUrlsForPages' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
+                'pageRow' => ['uid' => 2001],
+                '$skipMessage' => 'Just variable placeholder, not used in tests as parsed as reference',
+                'expected' => []
+            ],
+        ];
+    }
+
+    /**
+     * @test
+     *
+     * @param $paramArray
+     * @param $urls
+     * @param $expected
+     *
+     * @dataProvider compileUrlsDataProvider
+     */
+    public function compileUrls($paramArray, $urls, $expected)
+    {
+        $this->assertEquals(
+            $expected,
+            $this->crawlerLibrary->compileUrls($paramArray, $urls)
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function compileUrlsDataProvider()
+    {
+        return [
+            'Empty Params array' => [
+                'paramArray' => [],
+                'urls' => ['/home', '/search', '/about'],
+                'expected' => ['/home', '/search', '/about']
+            ],
+            'Empty Urls array' => [
+                'paramArray' => ['pagination' => [1, 2, 3, 4]],
+                'urls' => [],
+                'expected' => []
+            ],
+            'case' => [
+                'paramArray' => ['pagination' => [1, 2, 3, 4]],
+                'urls' => ['index.php?id=10', 'index.php?id=11'],
+                'expected' => [
+                    'index.php?id=10&pagination=1',
+                    'index.php?id=10&pagination=2',
+                    'index.php?id=10&pagination=3',
+                    'index.php?id=10&pagination=4',
+                    'index.php?id=11&pagination=1',
+                    'index.php?id=11&pagination=2',
+                    'index.php?id=11&pagination=3',
+                    'index.php?id=11&pagination=4',
+                ]
+            ]
+        ];
     }
 
 

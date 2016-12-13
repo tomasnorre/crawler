@@ -52,6 +52,7 @@
     </tx_crawler_queue>
     <tx_crawler_queue>
         <qid>6</qid>
+        <page_id>2001</page_id>
         <process_id>1006</process_id>
         <process_id_completed>qwerty</process_id_completed>
         <parameters></parameters>
@@ -60,6 +61,7 @@
         <scheduled>0</scheduled>
         <set_id>123</set_id>
         <configuration>SecondConfiguration</configuration>
+        <configuration_hash>7b6919e533f334550b6f19034dfd2f81</configuration_hash>
     </tx_crawler_queue>
     <tx_crawler_queue>
         <qid>7</qid>
