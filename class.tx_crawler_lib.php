@@ -1318,7 +1318,7 @@ class tx_crawler_lib {
             return FALSE;
         }
 
-            // direct request
+ 	    // direct request
         if ($this->extensionSettings['makeDirectRequests']) {
             $result = $this->sendDirectRequest($originalUrl, $crawlerId);
             return $result;
@@ -2354,7 +2354,7 @@ class tx_crawler_lib {
      * @param  string  identification string for the process
      * @return boolean determines if the process is still active / has resources
      *
-     * TODO: Why using  $this->db->sql_query('BEGIN'); &  $this->db->sql_query('COMMIT'); on a SELECT Query?
+     * FIXME: Please remove Transaction, not needed as only a select query.
      */
     function CLI_checkIfProcessIsActive($pid) {
         $ret = false;

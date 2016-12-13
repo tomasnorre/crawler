@@ -28,6 +28,8 @@ namespace AOE\Crawler\Utility;
 /**
  * Class HookUtility
  * @package AOE\Crawler\Utility
+ *
+ * @codeCoverageIgnore
  */
 class HookUtility
 {

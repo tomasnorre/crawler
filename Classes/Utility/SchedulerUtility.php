@@ -28,6 +28,8 @@ namespace AOE\Crawler\Utility;
 /**
  * Class SchedulerUtility
  * @package AOE\Crawler\Utility
+ *
+ * @codeCoverageIgnore
  */
 class SchedulerUtility
 {

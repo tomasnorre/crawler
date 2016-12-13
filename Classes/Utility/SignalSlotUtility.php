@@ -31,6 +31,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * Class SignalSlotUtility
  *
  * @package AOE\Crawler\Utility
+ *
+ * @codeCoverageIgnore
  */
 class SignalSlotUtility
 {
