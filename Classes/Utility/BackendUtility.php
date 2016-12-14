@@ -31,6 +31,8 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
  * Class BackendUtility
  *
  * @package AOE\Crawler\Utility
+ * 
+ * @codeCoverageIgnore
  */
 class BackendUtility
 {
