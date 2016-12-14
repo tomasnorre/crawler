@@ -33,6 +33,7 @@ use TYPO3\CMS\Scheduler\Task\AbstractTask;
  * Class FlushQueueTaskAdditionalFieldProvider
  *
  * @package AOE\Crawler\Task
+ * @codeCoverageIgnore
  */
 class FlushQueueTaskAdditionalFieldProvider implements AdditionalFieldProviderInterface
 {

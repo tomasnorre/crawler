@@ -32,6 +32,7 @@ use TYPO3\CMS\Scheduler\Task\AbstractTask;
  * Class CrawlerQueueTask
  *
  * @package AOE\Crawler\Task
+ * @codeCoverageIgnore
  */
 class CrawlerQueueTask extends AbstractTask
 {

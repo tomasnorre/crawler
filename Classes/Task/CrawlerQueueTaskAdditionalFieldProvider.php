@@ -36,6 +36,7 @@ use TYPO3\CMS\Scheduler\Task\AbstractTask;
  * Class CrawlerQueueTaskAdditionalFieldProvider
  *
  * @package AOE\Crawler\Task
+ * @codeCoverageIgnore
  */
 class CrawlerQueueTaskAdditionalFieldProvider implements AdditionalFieldProviderInterface
 {
