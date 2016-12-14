@@ -99,4 +99,16 @@ class AuthenticationServiceTest extends UnitTestCase
             $this->authenticationService->authUser($user)
         );
     }
+
+    /**
+     * @test
+     */
+    public function authUserReturnsNotOkCauseHeaderNotSet()
+    {
+        $user['username'] = '_cli_crawler';
+        $this->assertEquals(
+            100,
+            $this->authenticationService->authUser($user)
+        );
+    }
 }
