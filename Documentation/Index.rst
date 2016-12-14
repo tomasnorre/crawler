@@ -23,7 +23,7 @@ EXT: Crawler
       2002-11-01
 
 :Changed:
-      2015-08-03
+      2016-11-24
 
 :Description:
       Libraries and scripts for crawling the TYPO3 page tree. Used for re-caching, re-indexing, publishing applications etc.
