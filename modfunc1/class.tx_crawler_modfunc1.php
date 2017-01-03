@@ -27,6 +27,9 @@
  * @author	Kasper Skaarhoj <kasperYYYY@typo3.com>
  */
 
+use TYPO3\CMS\Core\Imaging\Icon;
+use TYPO3\CMS\Core\Imaging\IconFactory;
+
 /**
  * Crawler backend module
  *
@@ -570,11 +573,12 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 					$tree->init('AND '.$perms_clause);
 
 						// Set root row:
-					$HTML = \TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIconForRecord('pages', $this->pObj->pageinfo);
-					$HTML = \TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIconForRecord('pages', $this->pObj->pageinfo);
+                    /** @var \TYPO3\CMS\Core\Imaging\IconFactory $iconFactory */
+                    $iconFactory = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(IconFactory::class);
+
 					$tree->tree[] = Array(
 						'row' => $this->pObj->pageinfo,
-						'HTML' => $HTML
+						'HTML' => $iconFactory->getIconForRecord('pages', $this->pObj->pageinfo, Icon::SIZE_SMALL)->render()
 					);
 
 						// Get branch beneath:

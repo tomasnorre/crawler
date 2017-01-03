@@ -23,6 +23,9 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Imaging\Icon;
+use TYPO3\CMS\Core\Imaging\IconFactory;
+
 /**
  * Class tx_crawler_lib
  */
@@ -1611,12 +1614,14 @@ class tx_crawler_lib {
         $tree->init('AND ' . $perms_clause);
 
         $pageinfo = \TYPO3\CMS\Backend\Utility\BackendUtility::readPageAccess($id, $perms_clause);
+        /** @var \TYPO3\CMS\Core\Imaging\IconFactory $iconFactory */
+        $iconFactory = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(IconFactory::class);
 
             // Set root row:
-        $tree->tree[] = Array(
+        $tree->tree[] = [
             'row' => $pageinfo,
-            'HTML' => \TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIconForRecord('pages', $pageinfo)
-        );
+            'HTML' => $iconFactory->getIconForRecord('pages', $pageinfo, Icon::SIZE_SMALL)->render()
+        ];
 
             // Get branch beneath:
         if ($depth)    {
