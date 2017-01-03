@@ -225,8 +225,7 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 					);
 		}
 
-		$theOutput= $this->pObj->doc->spacer(5);
-		$theOutput.= $this->pObj->doc->section($LANG->getLL('title'), $h_func, 0, 1);
+		$theOutput = $this->pObj->doc->section($LANG->getLL('title'), $h_func, 0, 1);
 
 			// Branch based on type:
 		switch ((string)$this->pObj->MOD_SETTINGS['crawlaction']) {
