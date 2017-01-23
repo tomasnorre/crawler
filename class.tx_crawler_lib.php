@@ -1405,7 +1405,7 @@ class tx_crawler_lib {
         } elseif (isset($GLOBALS['TSFE']->absRefPrefix) && !empty($GLOBALS['TSFE']->absRefPrefix)) {
             $frontendBasePath = $GLOBALS['TSFE']->absRefPrefix;
         // If not in CLI mode the base path can be determined from $_SERVER environment:
-        } elseif (!defined('TYPO3_cliMode') || !TYPO3_cliMode) {
+        } elseif (!defined('TYPO3_REQUESTTYPE') || !(TYPO3_REQUESTTYPE & TYPO3_REQUESTTYPE_CLI)) {
             $frontendBasePath = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_PATH');
         }
 
