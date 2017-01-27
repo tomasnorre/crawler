@@ -98,12 +98,12 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 
 		return array (
 			'depth' => array(
-				0 => $LANG->sL('LLL:EXT:lang/locallang_core.php:labels.depth_0'),
-				1 => $LANG->sL('LLL:EXT:lang/locallang_core.php:labels.depth_1'),
-				2 => $LANG->sL('LLL:EXT:lang/locallang_core.php:labels.depth_2'),
-				3 => $LANG->sL('LLL:EXT:lang/locallang_core.php:labels.depth_3'),
-				4 => $LANG->sL('LLL:EXT:lang/locallang_core.php:labels.depth_4'),
-				99 => $LANG->sL('LLL:EXT:lang/locallang_core.php:labels.depth_infi'),
+				0 => $LANG->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_0'),
+				1 => $LANG->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_1'),
+				2 => $LANG->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_2'),
+				3 => $LANG->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_3'),
+				4 => $LANG->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_4'),
+				99 => $LANG->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_infi'),
 			),
 			'crawlaction' => array(
 				'start' => $LANG->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.start'),
