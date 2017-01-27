@@ -526,7 +526,7 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 		$this->CSVExport = \TYPO3\CMS\Core\Utility\GeneralUtility::_POST('_csv');
 
 			// Read URL:
-		if (\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('qid_read'))	{
+		if (\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('qid_read')) {
 			$this->crawlerObj->readUrl(intval(\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('qid_read')),TRUE);
 		}
 

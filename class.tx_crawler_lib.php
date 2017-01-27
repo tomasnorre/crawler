@@ -2482,8 +2482,8 @@ class tx_crawler_lib {
         $GLOBALS['TSFE']->sys_page = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Frontend\\Page\\PageRepository');
         $GLOBALS['TSFE']->sys_page->init(TRUE);
         $GLOBALS['TSFE']->connectToDB();
+        $GLOBALS['TSFE']->getPageAndRootline();
         $GLOBALS['TSFE']->initFEuser();
-        $GLOBALS['TSFE']->determineId();
         $GLOBALS['TSFE']->initTemplate();
         $GLOBALS['TSFE']->rootLine = $GLOBALS['TSFE']->sys_page->getRootLine($id, '');
         $GLOBALS['TSFE']->getConfigArray();
