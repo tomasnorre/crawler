@@ -256,7 +256,8 @@ class tx_crawler_lib {
         $message = $this->checkIfPageShouldBeSkipped($pageRow);
 
         if ($message === false) {
-            $res = $this->getUrlsForPageId($pageRow['uid']);
+            $forceSsl = ($pageRow['url_scheme'] === 2) ? true : false;
+            $res = $this->getUrlsForPageId($pageRow['uid'], $forceSsl);
             $skipMessage = '';
         } else {
             $skipMessage = $message;
@@ -464,10 +465,11 @@ class tx_crawler_lib {
      * This methods returns an array of configurations.
      * And no urls!
      *
-     * @param  integer $id  Page ID
+     * @param integer $id  Page ID
+     * @param bool $forceSsl Use https
      * @return array        Configurations from pages and configuration records
      */
-    protected function getUrlsForPageId($id)    {
+    protected function getUrlsForPageId($id, $forceSsl = false) {
 
         /**
          * Get configuration from tsConfig
@@ -559,7 +561,11 @@ class tx_crawler_lib {
                                 $subCfg = array(
                                     'procInstrFilter' => $configurationRecord['processing_instruction_filter'],
                                     'procInstrParams.' => $TSparserObject->setup,
-                                    'baseUrl' => $this->getBaseUrlForConfigurationRecord($configurationRecord['base_url'], $configurationRecord['sys_domain_base_url']),
+                                    'baseUrl' => $this->getBaseUrlForConfigurationRecord(
+                                        $configurationRecord['base_url'],
+                                        $configurationRecord['sys_domain_base_url'],
+                                        $forceSsl
+                                    ),
                                     'realurl' => $configurationRecord['realurl'],
                                     'cHash' => $configurationRecord['chash'],
                                     'userGroups' => $configurationRecord['fegroups'],
@@ -601,12 +607,14 @@ class tx_crawler_lib {
     /**
      * Checks if a domain record exist and returns the base-url based on the record. If not the given baseUrl string is used.
      *
-     * @param  string   $baseUrl
-     * @param  integer  $sysDomainUid
+     * @param string   $baseUrl
+     * @param integer  $sysDomainUid
+     * @param bool     $ssl
      * @return string
      */
-    protected function getBaseUrlForConfigurationRecord($baseUrl, $sysDomainUid) {
+    protected function getBaseUrlForConfigurationRecord($baseUrl, $sysDomainUid, $ssl = false) {
         $sysDomainUid = intval($sysDomainUid);
+        $urlScheme = ($ssl === false) ? 'http' : 'https';
 
         if ($sysDomainUid > 0) {
             $res = $this->db->exec_SELECTquery(
@@ -618,7 +626,7 @@ class tx_crawler_lib {
             );
             $row = $this->db->sql_fetch_assoc($res);
             if ($row['domainName'] != '') {
-                return 'http://'.$row['domainName'];
+                return $urlScheme .'://'. $row['domainName'];
             }
         }
         return $baseUrl;
