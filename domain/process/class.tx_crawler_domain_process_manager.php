@@ -175,8 +175,19 @@ class tx_crawler_domain_process_manager  {
     public function startProcess() {
         $ttl = (time() + $this->timeToLive -1);
         $current = $this->processRepository->countNotTimeouted($ttl);
-        $completePath = '(' .escapeshellcmd($this->getCrawlerCliPath()) . ' &) > /dev/null';
-        if (system($completePath) === FALSE) {
+        // Check whether OS is Windows
+        if (TYPO3_OS === 'WIN') {
+            $sCompletePath = escapeshellcmd('start ' . $this->getCrawlerCliPath());
+            $oFileHandler = popen($sCompletePath, 'r');
+            if ($oFileHandler !== false) {
+                pclose($oFileHandler);
+            }
+        }
+        else {
+            $sCompletePath = '(' .escapeshellcmd($this->getCrawlerCliPath()) . ' &) > /dev/null';
+            $oFileHandler = system($sCompletePath);
+        }
+        if ($oFileHandler === false) {
             throw new Exception('could not start process!');
         }
         else {
@@ -200,6 +211,11 @@ class tx_crawler_domain_process_manager  {
         $pathToTypo3     = rtrim(\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_DOCUMENT_ROOT'), '/');
         $pathToTypo3     .= rtrim(\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_PATH'), '/');
         $cliPart         = '/typo3/cli_dispatch.phpsh crawler';
-        return $phpPath.$pathToTypo3.$cliPart;
+        
+        $scriptPath = $phpPath.$pathToTypo3.$cliPart;
+        if (TYPO3_OS === 'WIN') {
+            $scriptPath = str_replace('/', '\\', $scriptPath);
+        }
+        return $scriptPath;
     }
 }
