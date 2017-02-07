@@ -1,0 +1,59 @@
+{
+    "name": "aoe/crawler",
+    "type": "typo3-cms-extension",
+    "description": "Crawler extension for TYPO3",
+    "homepage": "https://github.com/AOEpeople/crawler",
+    "support": {
+        "issues": "https://github.com/AOEpeople/crawler/issues"
+    },
+    "version": "6.0.0",
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "AOEpeople",
+            "email": "dev@aoe.com",
+            "homepage": "https://www.aoe.com/",
+            "role": "Developer"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "typo3/cms": ">=8.5.0,<8.9.99"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~6.0.0",
+        "mikey179/vfsStream": "1.3.*@dev"
+    },
+    "replace": {
+        "crawler":  "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "AOE\\Crawler\\": "Classes/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "TYPO3\\CMS\\Core\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/core/Tests/"
+        }
+    },
+    "config": {
+        "vendor-dir": ".Build/vendor",
+        "bin-dir": ".Build/bin"
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "mkdir -p .Build/Web/typo3conf/ext/",
+            "[ -L .Build/Web/typo3conf/ext/crawler ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/crawler"
+        ]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "6.0.0-dev"
+        },
+        "typo3/cms": {
+            "cms-package-dir": "{$vendor-dir}/typo3/cms",
+            "web-dir": ".Build/Web"
+        }
+    }
+}
