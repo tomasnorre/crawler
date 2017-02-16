@@ -22,6 +22,9 @@
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 
 /**
  * Class tx_crawler_lib
@@ -1605,10 +1608,18 @@ class tx_crawler_lib {
         $pageinfo = \TYPO3\CMS\Backend\Utility\BackendUtility::readPageAccess($id, $perms_clause);
 
             // Set root row:
-        $tree->tree[] = Array(
-            'row' => $pageinfo,
-            'HTML' => \TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIconForRecord('pages', $pageinfo)
-        );
+        if (VersionNumberUtility::convertVersionNumberToInteger(VersionNumberUtility::getCurrentTypo3Version()) < 8000000) {
+            $tree->tree[] = Array(
+                'row' => $pageinfo,
+                'HTML' => \TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIconForRecord('pages', $pageinfo)
+            );
+        } else {
+            $iconFactory = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Imaging\\IconFactory');
+            $tree->tree[] = Array(
+                'row' => $pageinfo,
+                'HTML' => $iconFactory->getIconForRecord('pages', BackendUtility::getRecord('pages', $id))
+            );
+        }
 
             // Get branch beneath:
         if ($depth)    {
