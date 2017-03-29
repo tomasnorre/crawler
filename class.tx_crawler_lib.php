@@ -1883,6 +1883,7 @@ class tx_crawler_lib {
                     // Run process:
                 $result = $this->CLI_run($countInARun, $sleepTime, $sleepAfterFinish);
             } catch (Exception $e) {
+                $this->CLI_debug(get_class($e) . ': ' . $e->getMessage());
                 $result = self::CLI_STATUS_ABORTED;
             }
 
