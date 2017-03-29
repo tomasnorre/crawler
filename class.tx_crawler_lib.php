@@ -2232,7 +2232,7 @@ class tx_crawler_lib {
 
                 // if there are less than allowed active processes then add a new one
             if ($processCount < intval($this->extensionSettings['processLimit'])) {
-                $this->CLI_debug("add ".$this->CLI_buildProcessId()." (".($processCount+1)."/".intval($this->extensionSettings['processLimit']).")");
+                $this->CLI_debug("add process ".$this->CLI_buildProcessId()." (".($processCount+1)."/".intval($this->extensionSettings['processLimit']).")");
 
                     // create new process record
                 $this->db->exec_INSERTquery(
