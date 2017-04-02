@@ -21,6 +21,10 @@
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
+use TYPO3\CMS\Core\Imaging\Icon;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
+
 /**
  * Module extension (addition to function menu) 'Site Crawler' for the 'crawler' extension.
  *
@@ -95,12 +99,12 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 
 		return array (
 			'depth' => array(
-				0 => $LANG->sL('LLL:EXT:lang/locallang_core.php:labels.depth_0'),
-				1 => $LANG->sL('LLL:EXT:lang/locallang_core.php:labels.depth_1'),
-				2 => $LANG->sL('LLL:EXT:lang/locallang_core.php:labels.depth_2'),
-				3 => $LANG->sL('LLL:EXT:lang/locallang_core.php:labels.depth_3'),
-				4 => $LANG->sL('LLL:EXT:lang/locallang_core.php:labels.depth_4'),
-				99 => $LANG->sL('LLL:EXT:lang/locallang_core.php:labels.depth_infi'),
+				0 => $LANG->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_0'),
+				1 => $LANG->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_1'),
+				2 => $LANG->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_2'),
+				3 => $LANG->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_3'),
+				4 => $LANG->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_4'),
+				99 => $LANG->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_infi'),
 			),
 			'crawlaction' => array(
 				'start' => $LANG->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.start'),
@@ -222,7 +226,7 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 					);
 		}
 
-		$theOutput= $this->pObj->doc->spacer(5);
+//		$theOutput= $this->pObj->doc->spacer(5);
 		$theOutput.= $this->pObj->doc->section($LANG->getLL('title'), $h_func, 0, 1);
 
 			// Branch based on type:
@@ -398,12 +402,12 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 			// depth
 		$cell[] = $this->selectorBox(
 			array(
-				0 => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_0'),
-				1 => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_1'),
-				2 => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_2'),
-				3 => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_3'),
-				4 => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_4'),
-				99 => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_infi'),
+				0 => $GLOBALS['LANG']->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_0'),
+				1 => $GLOBALS['LANG']->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_1'),
+				2 => $GLOBALS['LANG']->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_2'),
+				3 => $GLOBALS['LANG']->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_3'),
+				4 => $GLOBALS['LANG']->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_4'),
+				99 => $GLOBALS['LANG']->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_infi'),
 			),
 			'SET[depth]',
 			$this->pObj->MOD_SETTINGS['depth'],
@@ -570,8 +574,15 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 					$tree->init('AND '.$perms_clause);
 
 						// Set root row:
-					$HTML = \TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIconForRecord('pages', $this->pObj->pageinfo);
-					$HTML = \TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIconForRecord('pages', $this->pObj->pageinfo);
+                    if (VersionNumberUtility::convertVersionNumberToInteger(VersionNumberUtility::getCurrentTypo3Version()) < 8000000) {
+                        $HTML = \TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIconForRecord(
+                            'pages',
+                            $this->pObj->pageinfo
+                        );
+                    } else {
+                        $iconFactory = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Imaging\\IconFactory');
+                        $HTML = $iconFactory->getIconForRecord('pages', $this->pObj->pageinfo, Icon::SIZE_SMALL);
+                    }
 					$tree->tree[] = Array(
 						'row' => $this->pObj->pageinfo,
 						'HTML' => $HTML
