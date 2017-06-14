@@ -21,14 +21,16 @@
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
+use TYPO3\CMS\Core\Imaging\Icon;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
+
 /**
  * Module extension (addition to function menu) 'Site Crawler' for the 'crawler' extension.
  *
  * @author	Kasper Skaarhoj <kasperYYYY@typo3.com>
  */
 
-use TYPO3\CMS\Core\Imaging\Icon;
-use TYPO3\CMS\Core\Imaging\IconFactory;
 
 /**
  * Crawler backend module
@@ -572,12 +574,18 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 					$tree->init('AND '.$perms_clause);
 
 						// Set root row:
-                    /** @var \TYPO3\CMS\Core\Imaging\IconFactory $iconFactory */
-                    $iconFactory = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(IconFactory::class);
-
+                    if (VersionNumberUtility::convertVersionNumberToInteger(VersionNumberUtility::getCurrentTypo3Version()) < 8000000) {
+                        $HTML = \TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIconForRecord(
+                            'pages',
+                            $this->pObj->pageinfo
+                        );
+                    } else {
+                        $iconFactory = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Imaging\\IconFactory');
+                        $HTML = $iconFactory->getIconForRecord('pages', $this->pObj->pageinfo, Icon::SIZE_SMALL)->render();
+                    }
 					$tree->tree[] = Array(
 						'row' => $this->pObj->pageinfo,
-						'HTML' => $iconFactory->getIconForRecord('pages', $this->pObj->pageinfo, Icon::SIZE_SMALL)->render()
+						'HTML' => $HTML
 					);
 
 						// Get branch beneath:
