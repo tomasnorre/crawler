@@ -24,7 +24,8 @@
         "nimut/testing-framework": "^2.0.0"
     },
     "replace": {
-        "crawler":  "self.version"
+        "crawler":  "self.version",
+        "typo3-ter/crawler": "self.version"
     },
     "autoload": {
         "classmap": [
