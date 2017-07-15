@@ -42,7 +42,6 @@ class ItemProvider extends AbstractProvider
             'iconIdentifier' => 'tx-crawler-ext-icon',
             'callbackAction' => 'crawlerAddPageToQueue'
         ],
-
     ];
 
     public function addItems(array $items): array
@@ -69,6 +68,6 @@ class ItemProvider extends AbstractProvider
 
     protected function getAdditionalAttributes(string $itemName): array
     {
-        return ['data-callback-module' => '\AOE\Crawler\ContextMenuActions'];
+        return ['data-callback-module' => 'TYPO3/CMS/Crawler/ContextMenuActions'];
     }
 }

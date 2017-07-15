@@ -26,50 +26,49 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
  ***************************************************************/
 
 use AOE\Crawler\Domain\Model\crawlerQueueItem;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Class crawlerQueueItemTest
+ * Class CrawlerQueueItemTest
  *
  * @package AOE\Crawler\Tests\Unit\Domain\Model
  */
-class crawlerQueueItemTest extends UnitTestCase
+class CrawlerQueueItemTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
 
     /**
-     * @var crawlerQueueItem
+     * @var CrawlerQueueItem
      *
      */
     protected $subject;
 
     public function setUp()
     {
-        $this->subject = GeneralUtility::makeInstance(crawlerQueueItem::class);
+        $this->subject = new CrawlerQueueItem(1001);
     }
 
     /**
      * @test
      */
-    public function getUrlDefaultExpectsEmptyString()
+    public function getPageUidFromConstructor()
     {
         $this->assertEquals(
-            '',
-            $this->subject->getUrl()
+            1001,
+            $this->subject->getPageUid()
         );
     }
 
     /**
      * @test
      */
-    public function setUrlExpectsUrlToBeSet()
+    public function setPageUidExpectsPageUidToBeSet()
     {
-        $url = 'http://crawler.tld/about-crawler';
-        $this->subject->setUrl($url);
+        $pageUid = 1999;
+        $this->subject->setPageUid($pageUid);
 
         $this->assertEquals(
-            $url,
-            $this->subject->getUrl()
+            $pageUid,
+            $this->subject->getPageUid()
         );
     }
 }

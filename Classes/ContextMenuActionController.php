@@ -1,5 +1,5 @@
 <?php
-namespace Crawler;
+namespace AOE\Crawler;
 
 /***************************************************************
  *  Copyright notice
@@ -25,8 +25,14 @@ namespace Crawler;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use TYPO3\CMS\Backend\Tree\Pagetree\PagetreeNode;
+use AOE\Crawler\Domain\Model\CrawlerQueueItem;
+use AOE\Crawler\Domain\Repository\CrawlerQueueItemRepository;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
+
 
 /**
  * Class ContextMenuActionController
@@ -37,18 +43,39 @@ class ContextMenuActionController
 {
 
     /**
-     * Adding giving page to Crawler queue
-     *
-     * @param object $nodeData Tree node
-     *
-     * @return int
+     * @var CrawlerQueueItemRepository
      */
-    public function addPageToQueue($nodeData)
-    {
-        /** @var PagetreeNode $node */
-        $node = GeneralUtility::makeInstance(PagetreeNode::class, (array) $nodeData);
-        $i = $node->getId();
+    protected $crawlerQueueItemRepository;
 
-        return $i;
+    /**
+     * @var PersistenceManager
+     * @inject
+     */
+    protected $persistenceManager;
+
+    /**
+     * ContextMenuActionController constructor.
+     */
+    public function __construct()
+    {
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $this->crawlerQueueItemRepository = $objectManager->get(CrawlerQueueItemRepository::class);
+        $this->persistenceManager = $objectManager->get(PersistenceManager::class);
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     *
+     * @return ResponseInterface
+     */
+    public function addPageToQueue(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
+    {
+        $crawlerQueueItem = new CrawlerQueueItem(123);
+        $this->crawlerQueueItemRepository->add($crawlerQueueItem);
+
+        $this->persistenceManager->persistAll();
+
+        return $response;
     }
 }

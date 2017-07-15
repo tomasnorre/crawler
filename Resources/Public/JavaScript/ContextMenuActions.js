@@ -23,26 +23,32 @@
  ***************************************************************/
 
 /**
- * Module:  \AOE\Crawler\ContextMenuActions
+ * Module:  TYPO3/CMS/Crawler/ContextMenuActions
  *
  * JavaScript to handle Version actions from context menu
- * @exports  \AOE\Crawler\ContextMenuActions
+ * @exports  TYPO3/CMS/Crawler/ContextMenuActions
  */
-define(function () {
+define(['jquery'], function ($) {
     'use strict';
 
     /**
-     * @exports \AOE\Crawler\ContextMenuActions
+     * @exports TYPO3/CMS/Crawler/ContextMenuActions
      */
     var ContextMenuActions = {};
 
     ContextMenuActions.crawlerAddPageToQueue = function (table, uid) {
-        var $anchorElement = $(this);
-        var actionUrl = $anchorElement.data('actionUrl');
-        top.TYPO3.Backend.ContentContainer.setUrl(
-            actionUrl +
-            '&redirect=' + top.rawurlencode(top.list_frame.document.location.pathname + top.list_frame.document.location.search)
-        );
+        if('pages' !== table) {
+            return;
+        }
+        var url = TYPO3.settings.ajaxUrls['crawler_add_page_to_queue'];
+
+        $.ajax({
+            type: "get",
+            url: url,
+            data: {
+                uid: uid
+            }
+        });
     };
 
     return ContextMenuActions;

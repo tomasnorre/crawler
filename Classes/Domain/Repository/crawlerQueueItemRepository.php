@@ -32,7 +32,7 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
  *
  * @package AOE\Crawler\Domain\Repository
  */
-class crawlerQueueItemRepository extends Repository
+class CrawlerQueueItemRepository extends Repository
 {
 
 }

@@ -28,31 +28,41 @@ namespace AOE\Crawler\Domain\Model;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
 /**
- * Class crawlerQueueItem
+ * Class CrawlerQueueItem
  *
  * @package AOE\Crawler\Domain\Model
  */
-class crawlerQueueItem extends AbstractEntity
+class CrawlerQueueItem extends AbstractEntity
 {
     /**
-     * @var string
+     * @var integer
      */
-    protected $url = '';
+    protected $pageUid = '';
 
     /**
-     * @return string
+     * CrawlerQueueItem constructor.
+     * @param $pageUid
      */
-    public function getUrl()
+    public function __construct($pageUid)
     {
-        return $this->url;
+        $this->setPageUid($pageUid);
+    }
+
+
+    /**
+     * @return integer
+     */
+    public function getPageUid()
+    {
+        return $this->pageUid;
     }
 
     /**
-     * @param $url
+     * @param $pageUid
      * @return void
      */
-    public function setUrl($url)
+    public function setPageUid($pageUid)
     {
-        $this->url = $url;
+        $this->pageUid = $pageUid;
     }
 }
