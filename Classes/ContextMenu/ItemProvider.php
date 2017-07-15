@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Crawler\ContextMenu;
 
 /***************************************************************
@@ -34,16 +35,24 @@ use TYPO3\CMS\Backend\ContextMenu\ItemProviders\AbstractProvider;
  */
 class ItemProvider extends AbstractProvider
 {
-
+    /**
+     * @var array
+     */
     protected $itemsConfiguration = [
         'crawler' => [
             'type' => 'item',
-            'label' => 'Add page to crawler queue', //todo: use label
+            'label' => 'Add page to crawler queue', // todo: use label
             'iconIdentifier' => 'tx-crawler-ext-icon',
             'callbackAction' => 'crawlerAddPageToQueue'
         ],
     ];
 
+    /**
+     * Adds the crawlerAddPageToQueue action to the context menu of the TYPO3 page tree
+     *
+     * @param array $items
+     * @return array
+     */
     public function addItems(array $items): array
     {
         $this->initDisabledItems();
@@ -53,19 +62,36 @@ class ItemProvider extends AbstractProvider
         } else {
             $items += $localItems;
         }
+
         return $items;
     }
 
+    /**
+     * Gets the provider priority
+     *
+     * @return integer
+     */
     public function getPriority(): int
     {
         return 70;
     }
 
+    /**
+     * Gets whether the provider can handle the request
+     *
+     * @return boolean
+     */
     public function canHandle(): bool
     {
         return true;
     }
 
+    /**
+     * Gets additional attributes
+     *
+     * @param string $itemName
+     * @return array
+     */
     protected function getAdditionalAttributes(string $itemName): array
     {
         return ['data-callback-module' => 'TYPO3/CMS/Crawler/ContextMenuActions'];

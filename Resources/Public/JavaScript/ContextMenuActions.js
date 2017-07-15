@@ -37,7 +37,7 @@ define(['jquery'], function ($) {
     var ContextMenuActions = {};
 
     ContextMenuActions.crawlerAddPageToQueue = function (table, uid) {
-        if('pages' !== table) {
+        if ('pages' !== table) {
             return;
         }
         var url = TYPO3.settings.ajaxUrls['crawler_add_page_to_queue'];

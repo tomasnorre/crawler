@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Crawler\Domain\Model;
 
 /***************************************************************
@@ -40,14 +41,14 @@ class CrawlerQueueItem extends AbstractEntity
     protected $pageUid = '';
 
     /**
-     * CrawlerQueueItem constructor.
-     * @param $pageUid
+     * CrawlerQueueItem constructor
+     *
+     * @param integer $pageUid
      */
-    public function __construct($pageUid)
+    public function __construct($pageUid = 0)
     {
         $this->setPageUid($pageUid);
     }
-
 
     /**
      * @return integer

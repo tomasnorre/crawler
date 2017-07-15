@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Crawler\Tests\Unit\Domain\Model;
 
 /***************************************************************
@@ -26,7 +27,6 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
  ***************************************************************/
 
 use AOE\Crawler\Domain\Model\crawlerQueueItem;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class CrawlerQueueItemTest
@@ -42,18 +42,21 @@ class CrawlerQueueItemTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCas
      */
     protected $subject;
 
+    /**
+     * Sets up the test case
+     */
     public function setUp()
     {
-        $this->subject = new CrawlerQueueItem(1001);
+        $this->subject = new CrawlerQueueItem();
     }
 
     /**
      * @test
      */
-    public function getPageUidFromConstructor()
+    public function getPageUidShouldReturnDefaultValue()
     {
         $this->assertEquals(
-            1001,
+            0,
             $this->subject->getPageUid()
         );
     }

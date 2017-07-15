@@ -1,5 +1,6 @@
 <?php
-namespace AOE\Crawler;
+
+namespace AOE\Crawler\ContextMenu;
 
 /***************************************************************
  *  Copyright notice
@@ -33,7 +34,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 
-
 /**
  * Class ContextMenuActionController
  *
@@ -49,12 +49,11 @@ class ContextMenuActionController
 
     /**
      * @var PersistenceManager
-     * @inject
      */
     protected $persistenceManager;
 
     /**
-     * ContextMenuActionController constructor.
+     * ContextMenuActionController constructor
      */
     public function __construct()
     {
