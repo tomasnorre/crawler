@@ -53,13 +53,18 @@ class ContextMenuActionController
     protected $persistenceManager;
 
     /**
+     * @var ObjectManager
+     */
+    protected $objectManager;
+
+    /**
      * ContextMenuActionController constructor
      */
     public function __construct()
     {
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->crawlerQueueItemRepository = $objectManager->get(CrawlerQueueItemRepository::class);
-        $this->persistenceManager = $objectManager->get(PersistenceManager::class);
+        $this->objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $this->crawlerQueueItemRepository = $this->objectManager->get(CrawlerQueueItemRepository::class);
+        $this->persistenceManager = $this->objectManager->get(PersistenceManager::class);
     }
 
     /**
@@ -70,7 +75,11 @@ class ContextMenuActionController
      */
     public function addPageToQueue(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
-        $crawlerQueueItem = new CrawlerQueueItem(123);
+        $queryParameters = $request->getQueryParams();
+
+        /** @var CrawlerQueueItem $crawlerQueueItem */
+        $crawlerQueueItem = $this->objectManager->get(CrawlerQueueItem::class);
+        $crawlerQueueItem->setPageUid($queryParameters['uid']);
         $this->crawlerQueueItemRepository->add($crawlerQueueItem);
 
         $this->persistenceManager->persistAll();
