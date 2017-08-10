@@ -25,9 +25,6 @@ namespace AOE\Crawler\Utility;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use TYPO3\CMS\Core\Cache\CacheManager;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-
 /**
  * Class TypoScriptUtility
  *
@@ -37,20 +34,13 @@ class TypoScriptUtility
 {
 
     /**
-     * @param int $pageId
+     * @param $pageId
      *
-     * @return int
+     * @return Int
      * @throws \Exception
      */
     public static function getPageUidForTypoScriptRootTemplateInRootLine($pageId)
     {
-
-        $cacheManager = GeneralUtility::makeInstance(CacheManager::class);
-
-        if ($cacheManager->getCache(CacheUtility::CACHE_ROOTLINE)->has($pageId)) {
-            return $cacheManager->getCache(CacheUtility::CACHE_ROOTLINE)->get($pageId);
-        }
-
         $pageRootLine = \TYPO3\CMS\Backend\Utility\BackendUtility::BEgetRootLine($pageId);
 
         foreach ($pageRootLine as $page) {
@@ -62,7 +52,6 @@ class TypoScriptUtility
             );
 
             if (null !== $templateUid['pid']) {
-                $cacheManager->getCache(CacheUtility::CACHE_ROOTLINE)->set($pageId, $templateUid['pid']);
                 return $templateUid['pid'];
             }
 
