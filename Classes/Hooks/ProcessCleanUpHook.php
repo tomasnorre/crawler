@@ -233,7 +233,7 @@ class ProcessCleanUpHook
      */
     private function isOsWindows()
     {
-        if (TYPO3_OS === '') {
+        if (TYPO3_OS === 'WIN') {
             return true;
         }
         return false;
