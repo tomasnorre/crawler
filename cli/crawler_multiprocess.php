@@ -4,7 +4,7 @@ if (!defined('TYPO3_cliMode')) {
 }
 
 $processManager = new tx_crawler_domain_process_manager();
-$timeout = isset($_SERVER['argv'][1] ) ? intval($_SERVER['argv'][1]) : 10000;
+$timeout = isset($_SERVER['argv'][1] ) ? intval($_SERVER['argv'][1]) : 1800;
 
 try {
 	$processManager->multiProcess($timeout);
