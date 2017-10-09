@@ -1424,7 +1424,7 @@ class tx_crawler_lib {
 	 */
 	protected function log($message) {
 		if (!empty($this->extensionSettings['logFileName'])) {
-			@file_put_contents($this->extensionSettings['logFileName'], date('Ymd His') . $message . "\n", FILE_APPEND);
+			@file_put_contents($this->extensionSettings['logFileName'], date('Ymd His') . ' ' . $message . PHP_EOL, FILE_APPEND);
 		}
 	}
 
@@ -2407,7 +2407,7 @@ class tx_crawler_lib {
 
 		$startTime = microtime(true);
 		$content = $this->executeShellCommand($cmd);
-		$this->log($url . (microtime(true) - $startTime));
+		$this->log($url . ' ' . (microtime(true) - $startTime));
 
 		$result = array(
 			'request' => implode("\r\n", $requestHeaders) . "\r\n\r\n",
