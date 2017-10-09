@@ -1141,8 +1141,7 @@ class tx_crawler_lib {
 			return;
 		}
 
-		$pageUidRootTypoScript = \AOE\Crawler\Utility\TypoScriptUtility::getPageUidForTypoScriptRootTemplateInRootLine((int)$queueRec['page_id']);
-		$this->initTSFE((int)$pageUidRootTypoScript);
+		$this->initTSFE((int)$queueRec['page_id']);
 
 		\AOE\Crawler\Utility\SignalSlotUtility::emitSignal(
 			__CLASS__,
@@ -1187,7 +1186,7 @@ class tx_crawler_lib {
 		);
 
 		$this->db->exec_UPDATEquery('tx_crawler_queue', 'qid=' . intval($queueId), $field_array);
-	
+
 
 		if ($this->debugMode) {
 			\TYPO3\CMS\Core\Utility\GeneralUtility::devlog('crawler-readurl stop ' . microtime(true), __FUNCTION__);
