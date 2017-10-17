@@ -309,8 +309,12 @@ class tx_crawler_lib {
         // realurl support (thanks to Ingo Renner)
         if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('realurl') && $vv['subCfg']['realurl']) {
 
-            /** @var tx_realurl $urlObj */
-            $urlObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_realurl');
+            if ($GLOBALS['TSFE'] === null) {
+                $this->initTSFE((int) $pageRow['uid']);
+            }
+
+            /** @var \DmitryDulepov\Realurl\Encoder\UrlEncoder $urlObj */
+            $urlObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\DmitryDulepov\Realurl\Encoder\UrlEncoder::class);
 
             if (!empty($vv['subCfg']['baseUrl'])) {
                 $urlParts = parse_url($vv['subCfg']['baseUrl']);
@@ -327,15 +331,6 @@ class tx_crawler_lib {
 
             }
 
-            if (!$GLOBALS['TSFE']->sys_page) {
-                $GLOBALS['TSFE']->sys_page = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Frontend\Page\PageRepository');
-            }
-            if (!$GLOBALS['TSFE']->csConvObj) {
-                $GLOBALS['TSFE']->csConvObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Core\Charset\CharsetConverter');
-            }
-            if (!$GLOBALS['TSFE']->tmpl->rootLine[0]['uid']) {
-                $GLOBALS['TSFE']->tmpl->rootLine[0]['uid'] = $urlObj->extConf['pagePath']['rootpage_id'];
-            }
         }
 
         if (is_array($vv['URLs']))    {
@@ -356,17 +351,22 @@ class tx_crawler_lib {
                     // Create key by which to determine unique-ness:
                     $uKey = $urlQuery.'|'.$vv['subCfg']['userGroups'].'|'.$vv['subCfg']['baseUrl'].'|'.$vv['subCfg']['procInstrFilter'];
 
-                    // realurl support (thanks to Ingo Renner)
-                    $urlQuery = 'index.php' . $urlQuery;
                     if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('realurl') && $vv['subCfg']['realurl']) {
+                        // realurl support (thanks to Ingo Renner)
+                        // realurl checks the url including the absRefPrefix, so it's important to add it here
+                        $urlQuery = $GLOBALS['TSFE']->absRefPrefix.'index.php' . $urlQuery;
+
                         $params = array(
                             'LD' => array(
                                 'totalURL' => $urlQuery
                             ),
                             'TCEmainHook' => true
                         );
-                        $urlObj->encodeSpURL($params);
+                        $urlObj->encodeUrl($params);
                         $urlQuery = $params['LD']['totalURL'];
+
+                        // due to duplicate path segments and slashes the crawler does not check, the absRefPrefix has to be removed after real url encoding
+                        $urlQuery = substr($urlQuery, strlen($GLOBALS['TSFE']->absRefPrefix));
                     }
 
                     // Scheduled time:
