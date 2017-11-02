@@ -60,7 +60,7 @@ class FlushQueueTaskAdditionalFieldProvider implements AdditionalFieldProviderIn
         }
 
         $fieldId = 'mode';
-        $fieldCode = '<select name="tx_scheduler[mode]" id="' . $fieldId . '" value="' . htmlentities($taskInfo['mode']) . '">'
+        $fieldCode = '<select name="tx_scheduler[mode]" id="' . $fieldId . '" value="' . htmlentities($taskInfo['mode']) . '" class="form-control">'
             . '<option value="all"' . ($taskInfo['mode'] == 'all' ? ' selected="selected"' : '') . '>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_flush.modeAll') . '</option>'
             . '<option value="finished"' . ($taskInfo['mode'] == 'finished' ? ' selected="selected"' : '') . '>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_flush.modeFinished') . '</option>'
             . '<option value="pending"' . ($taskInfo['mode'] == 'pending' ? ' selected="selected"' : '') . '>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_flush.modePending') . '</option>'
