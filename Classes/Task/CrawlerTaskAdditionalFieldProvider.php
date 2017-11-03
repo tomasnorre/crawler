@@ -81,21 +81,21 @@ class CrawlerTaskAdditionalFieldProvider implements AdditionalFieldProviderInter
 
         // input for sleepTime
         $fieldId = 'task_sleepTime';
-        $fieldCode = '<input type="text" name="tx_scheduler[sleepTime]" id="' . $fieldId . '" value="' . htmlentities($taskInfo['sleepTime']) . '" />';
+        $fieldCode = '<input type="text" name="tx_scheduler[sleepTime]" id="' . $fieldId . '" value="' . htmlentities($taskInfo['sleepTime']) . '" class="form-control" />';
         $additionalFields[$fieldId] = array(
             'code' => $fieldCode,
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_im.sleepTime'
         );
         // input for sleepAfterFinish
         $fieldId = 'task_sleepAfterFinish';
-        $fieldCode = '<input type="text" name="tx_scheduler[sleepAfterFinish]" id="' . $fieldId . '" value="' . htmlentities($taskInfo['sleepAfterFinish']) . '" />';
+        $fieldCode = '<input type="text" name="tx_scheduler[sleepAfterFinish]" id="' . $fieldId . '" value="' . htmlentities($taskInfo['sleepAfterFinish']) . '" class="form-control" />';
         $additionalFields[$fieldId] = array(
             'code' => $fieldCode,
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_im.sleepAfterFinish'
         );
         // input for countInARun
         $fieldId = 'task_countInARun';
-        $fieldCode = '<input type="text" name="tx_scheduler[countInARun]" id="' . $fieldId . '" value="' . htmlentities($taskInfo['countInARun']) . '" />';
+        $fieldCode = '<input type="text" name="tx_scheduler[countInARun]" id="' . $fieldId . '" value="' . htmlentities($taskInfo['countInARun']) . '" class="form-control" />';
         $additionalFields[$fieldId] = array(
             'code' => $fieldCode,
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_im.countInARun'
