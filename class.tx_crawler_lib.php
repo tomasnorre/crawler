@@ -2472,7 +2472,11 @@ class tx_crawler_lib {
             $GLOBALS['TT']->start();
         }
 
-        $GLOBALS['TSFE'] = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController',  $GLOBALS['TYPO3_CONF_VARS'], $id, $typeNum);
+        // Disable page not found handling, so a 404 would not stop the whole process.
+        $typo3_conf_vars = $GLOBALS['TYPO3_CONF_VARS'];
+		$typo3_conf_vars['FE']['pageNotFound_handling'] = 0;
+        
+        $GLOBALS['TSFE'] = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController', $typo3_conf_vars, $id, $typeNum);
         $GLOBALS['TSFE']->sys_page = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Frontend\\Page\\PageRepository');
         $GLOBALS['TSFE']->sys_page->init(TRUE);
         $GLOBALS['TSFE']->connectToDB();
