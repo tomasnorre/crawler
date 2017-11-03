@@ -88,7 +88,7 @@ class CrawlerQueueTaskAdditionalFieldProvider implements AdditionalFieldProvider
 
         // input for startPage
         $fieldId = 'task_startPage';
-        $fieldCode = '<input name="tx_scheduler[startPage]" type="text" id="' . $fieldId . '" value="' . $task->startPage . '" />';
+        $fieldCode = '<input name="tx_scheduler[startPage]" type="text" id="' . $fieldId . '" value="' . $task->startPage . '" class="form-control" />';
         $additionalFields[$fieldId] = array(
             'code' => $fieldCode,
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_im.startPage'
@@ -104,7 +104,7 @@ class CrawlerQueueTaskAdditionalFieldProvider implements AdditionalFieldProvider
             '4' => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_4'),
             '99' => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_infi'),
         );
-        $fieldCode = '<select name="tx_scheduler[depth]" id="' . $fieldId . '">';
+        $fieldCode = '<select name="tx_scheduler[depth]" id="' . $fieldId . '" class="form-control">';
 
         foreach ($fieldValueArray as $key => $label) {
             $fieldCode .= "\t" . '<option value="' . $key . '"' . (($key == $task->depth) ? ' selected="selected"' : '') . '>' . $label . '</option>';
@@ -119,7 +119,7 @@ class CrawlerQueueTaskAdditionalFieldProvider implements AdditionalFieldProvider
         // combobox for configuration records
         $recordsArray = $this->getCrawlerConfigurationRecords();
         $fieldId = 'task_configuration';
-        $fieldCode = '<select name="tx_scheduler[configuration][]" multiple="multiple" id="' . $fieldId . '">';
+        $fieldCode = '<select name="tx_scheduler[configuration][]" multiple="multiple" id="' . $fieldId . '" class="form-control">';
         $fieldCode .= "\t" . '<option value=""></option>';
         for ($i = 0; $i < count($recordsArray); $i++) {
             $fieldCode .= "\t" . '<option ' . $this->getSelectedState($task->configuration, $recordsArray[$i]['name']) . 'value="' . $recordsArray[$i]['name'] . '">' . $recordsArray[$i]['name'] . '</option>';
