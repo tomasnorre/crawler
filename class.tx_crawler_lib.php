@@ -514,6 +514,7 @@ class tx_crawler_lib {
 									'cHash' => $configurationRecord['chash'],
 									'userGroups' => $configurationRecord['fegroups'],
 									'exclude' => $configurationRecord['exclude'],
+									'rootTemplatePid' => $configurationRecord['root_template_pid'],
 									'key' => $key,
 								);
 
