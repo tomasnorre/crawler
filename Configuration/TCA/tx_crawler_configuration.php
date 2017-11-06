@@ -163,9 +163,29 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = array (
                 'rows' => '3',
             )
         ),
+        'root_template_pid' => array(
+            'exclude' => 1,
+            'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.root_template_pid',
+            'config' => array(
+                'type' => 'group',
+                'internal_type' => 'db',
+                'allowed' => 'pages',
+                'size' => '1',
+                "eval" => "required",
+                'maxitems' => '1',
+                'minitems' => '0',
+                'show_thumbs' => '1',
+                'wizards' => array(
+                    'suggest' => array(
+                        'type' => 'suggest'
+                    )
+                ),
+                'default' => 0
+            )
+        )
     ),
     "types" => array (
-        "0" => array("showitem" => "hidden, name, processing_instruction_filter, configuration, base_url, sys_domain_base_url, pidsonly, processing_instruction_parameters_ts,begroups, fegroups, realurl, chash, exclude")
+        "0" => array("showitem" => "hidden, name, processing_instruction_filter, base_url, sys_domain_base_url, root_template_pid, pidsonly, configuration, processing_instruction_parameters_ts,begroups, fegroups, realurl, chash, exclude")
     ),
     "palettes" => array (
         "1" => array("showitem" => "")

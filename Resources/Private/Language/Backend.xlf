@@ -45,6 +45,9 @@
             <trans-unit id="tx_crawler_configuration.sys_domain_base_url">
                 <source>Get Baseurl from Domainrecord</source>
             </trans-unit>
+            <trans-unit id="tx_crawler_configuration.root_template_pid">
+                <source>Page Id of TypoScript root template</source>
+            </trans-unit>
 
             <trans-unit id="crawler_im.name">
                 <source>Crawler queue</source>

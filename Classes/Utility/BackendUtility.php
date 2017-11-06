@@ -60,4 +60,16 @@ class BackendUtility
             'name' => 'AOE\\Crawler\\ClickMenu\\CrawlerClickMenu'
         );
     }
+
+    /**
+     * Registers the context sensitive help for TCA fields
+     *
+     * @return void
+     */
+    public static function registerContextSensitiveHelpForTcaFields(){
+        ExtensionManagementUtility::addLLrefForTCAdescr(
+            'tx_crawler_configuration',
+            'EXT:crawler/Resources/Private/Language/locallang_csh_tx_crawler_configuration.xlf'
+        );
+    }
 }
