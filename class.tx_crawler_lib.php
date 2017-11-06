@@ -1224,6 +1224,13 @@ class tx_crawler_lib {
 
 			// Set result in log which also denotes the end of the processing of this entry.
 		$field_array = array('result_data' => serialize($result));
+
+		\AOE\Crawler\Utility\SignalSlotUtility::emitSignal(
+			__CLASS__,
+			\AOE\Crawler\Utility\SignalSlotUtility::SIGNNAL_QUEUEITEM_POSTPROCESS,
+			array($queueId, &$field_array)
+		);
+
 		$this->db->exec_UPDATEquery('tx_crawler_queue','qid='.intval($queueId), $field_array);
 
 		return $result;
