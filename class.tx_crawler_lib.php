@@ -1013,6 +1013,8 @@ class tx_crawler_lib {
 			$parameters['procInstrParams'] = $subCfg['procInstrParams.'];
 		}
 
+		// Possible TypoScript Template Parents
+		$parameters['rootTemplatePid'] = $subCfg['rootTemplatePid'];
 
 			// Compile value array:
 		$parameters_serialized = serialize($parameters);
@@ -1142,7 +1144,16 @@ class tx_crawler_lib {
 			return;
 		}
 
-		$this->initTSFE((int)$queueRec['page_id']);
+		$parameters = unserialize($queueRec['parameters']);
+		if ($parameters['rootTemplatePid']) {
+			$this->initTSFE((int)$parameters['rootTemplatePid']);
+		} else {
+			\TYPO3\CMS\Core\Utility\GeneralUtility::sysLog(
+				'Page with (' . $queueRec['page_id'] . ') could not be crawled, please check your crawler configuration. Perhaps no Root Template Pid is set',
+				'crawler',
+				\TYPO3\CMS\Core\Utility\GeneralUtility::SYSLOG_SEVERITY_WARNING
+			);
+		}
 
 		\AOE\Crawler\Utility\SignalSlotUtility::emitSignal(
 			__CLASS__,
