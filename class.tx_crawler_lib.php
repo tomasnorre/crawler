@@ -308,29 +308,9 @@ class tx_crawler_lib {
 
         // realurl support (thanks to Ingo Renner)
         if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('realurl') && $vv['subCfg']['realurl']) {
-
             if ($GLOBALS['TSFE'] === null) {
                 $this->initTSFE((int) $pageRow['uid']);
             }
-
-            /** @var \DmitryDulepov\Realurl\Encoder\UrlEncoder $urlObj */
-            $urlObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\DmitryDulepov\Realurl\Encoder\UrlEncoder::class);
-
-            if (!empty($vv['subCfg']['baseUrl'])) {
-                $urlParts = parse_url($vv['subCfg']['baseUrl']);
-                $host = strtolower($urlParts['host']);
-                $urlObj->host = $host;
-
-                // First pass, finding configuration OR pointer string:
-                $urlObj->extConf = isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['realurl'][$urlObj->host]) ? $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['realurl'][$urlObj->host] : $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['realurl']['_DEFAULT'];
-
-                // If it turned out to be a string pointer, then look up the real config:
-                if (is_string($urlObj->extConf)) {
-                    $urlObj->extConf = is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['realurl'][$urlObj->extConf]) ? $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['realurl'][$urlObj->extConf] : $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['realurl']['_DEFAULT'];
-                }
-
-            }
-
         }
 
         if (is_array($vv['URLs']))    {
@@ -362,6 +342,24 @@ class tx_crawler_lib {
                             ),
                             'TCEmainHook' => true
                         );
+
+                        /** @var \DmitryDulepov\Realurl\Encoder\UrlEncoder $urlObj */
+                        $urlObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\DmitryDulepov\Realurl\Encoder\UrlEncoder::class);
+
+                        if (!empty($vv['subCfg']['baseUrl'])) {
+                            $urlParts = parse_url($vv['subCfg']['baseUrl']);
+                            $host = strtolower($urlParts['host']);
+                            $urlObj->host = $host;
+
+                            // First pass, finding configuration OR pointer string:
+                            $urlObj->extConf = isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['realurl'][$urlObj->host]) ? $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['realurl'][$urlObj->host] : $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['realurl']['_DEFAULT'];
+
+                            // If it turned out to be a string pointer, then look up the real config:
+                            if (is_string($urlObj->extConf)) {
+                                $urlObj->extConf = is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['realurl'][$urlObj->extConf]) ? $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['realurl'][$urlObj->extConf] : $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['realurl']['_DEFAULT'];
+                            }
+                        }
+
                         $urlObj->encodeUrl($params);
                         $urlQuery = $params['LD']['totalURL'];
 
@@ -1249,7 +1247,7 @@ class tx_crawler_lib {
 
         // Set result in log which also denotes the end of the processing of this entry.
         $field_array = array('result_data' => serialize($result));
-                
+
         \AOE\Crawler\Utility\SignalSlotUtility::emitSignal(
             __CLASS__,
             \AOE\Crawler\Utility\SignalSlotUtility::SIGNNAL_QUEUEITEM_POSTPROCESS,
