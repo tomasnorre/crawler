@@ -168,14 +168,14 @@ class tx_crawler_api_testcase extends \TYPO3\CMS\Core\Tests\FunctionalTestCase {
 		$crawler_api->addPageToQueueTimed(7,100059);
 
 		$queueItems = $crawler_api->getUnprocessedItems();
-		$assertedParameter = 'a:3:{s:3:"url";s:49:"http://www.testcase.de/index.php?id=7&L=0&S=CRAWL";s:16:"procInstructions";a:1:{i:0;s:20:"tx_staticpub_publish";}s:15:"procInstrParams";a:1:{s:21:"tx_staticpub_publish.";a:1:{s:16:"includeResources";s:7:"relPath";}}}';
+		$assertedParameter = 'a:4:{s:3:"url";s:49:"http://www.testcase.de/index.php?id=7&L=0&S=CRAWL";s:16:"procInstructions";a:1:{i:0;s:20:"tx_staticpub_publish";}s:15:"procInstrParams";a:1:{s:21:"tx_staticpub_publish.";a:1:{s:16:"includeResources";s:7:"relPath";}}s:15:"rootTemplatePid";s:1:"0";}';
 
 		$this->assertEquals($queueItems[0]['page_id'],7);
 		$this->assertEquals($queueItems[0]['scheduled'],100011);
 		$this->assertEquals($queueItems[0]['parameters'],$assertedParameter,'Wrong queue parameters created by crawler lib for configuration record');
 
 
-		$assertedParameter = 'a:3:{s:3:"url";s:49:"http://www.testcase.de/index.php?id=7&L=0&S=CRAWL";s:16:"procInstructions";a:1:{i:0;s:20:"tx_staticpub_publish";}s:15:"procInstrParams";a:1:{s:21:"tx_staticpub_publish.";a:1:{s:16:"includeResources";s:7:"relPath";}}}';
+		$assertedParameter = 'a:4:{s:3:"url";s:49:"http://www.testcase.de/index.php?id=7&L=0&S=CRAWL";s:16:"procInstructions";a:1:{i:0;s:20:"tx_staticpub_publish";}s:15:"procInstrParams";a:1:{s:21:"tx_staticpub_publish.";a:1:{s:16:"includeResources";s:7:"relPath";}}s:15:"rootTemplatePid";s:1:"0";}';
 		$this->assertEquals($queueItems[1]['page_id'],7);
 		$this->assertEquals($queueItems[1]['scheduled'],100059);
 		$this->assertEquals($queueItems[1]['parameters'],$assertedParameter,'Wrong queue parameters created by crawler lib for configuration record');
