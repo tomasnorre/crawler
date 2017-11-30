@@ -571,7 +571,6 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 
 						// Set root row:
 					$HTML = \TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIconForRecord('pages', $this->pObj->pageinfo);
-					$HTML = \TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIconForRecord('pages', $this->pObj->pageinfo);
 					$tree->tree[] = Array(
 						'row' => $this->pObj->pageinfo,
 						'HTML' => $HTML
