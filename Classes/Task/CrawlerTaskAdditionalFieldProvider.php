@@ -48,7 +48,7 @@ class CrawlerTaskAdditionalFieldProvider implements AdditionalFieldProviderInter
      */
     public function getAdditionalFields(array &$taskInfo, $task, SchedulerModuleController $schedulerModule)
     {
-        $additionalFields = array();
+        $additionalFields = [];
 
         if (empty($taskInfo['sleepTime'])) {
             if ($schedulerModule->CMD == 'add') {
@@ -82,24 +82,24 @@ class CrawlerTaskAdditionalFieldProvider implements AdditionalFieldProviderInter
         // input for sleepTime
         $fieldId = 'task_sleepTime';
         $fieldCode = '<input type="text" name="tx_scheduler[sleepTime]" id="' . $fieldId . '" value="' . htmlentities($taskInfo['sleepTime']) . '" class="form-control" />';
-        $additionalFields[$fieldId] = array(
+        $additionalFields[$fieldId] = [
             'code' => $fieldCode,
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_im.sleepTime'
-        );
+        ];
         // input for sleepAfterFinish
         $fieldId = 'task_sleepAfterFinish';
         $fieldCode = '<input type="text" name="tx_scheduler[sleepAfterFinish]" id="' . $fieldId . '" value="' . htmlentities($taskInfo['sleepAfterFinish']) . '" class="form-control" />';
-        $additionalFields[$fieldId] = array(
+        $additionalFields[$fieldId] = [
             'code' => $fieldCode,
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_im.sleepAfterFinish'
-        );
+        ];
         // input for countInARun
         $fieldId = 'task_countInARun';
         $fieldCode = '<input type="text" name="tx_scheduler[countInARun]" id="' . $fieldId . '" value="' . htmlentities($taskInfo['countInARun']) . '" class="form-control" />';
-        $additionalFields[$fieldId] = array(
+        $additionalFields[$fieldId] = [
             'code' => $fieldCode,
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_im.countInARun'
-        );
+        ];
 
         return $additionalFields;
     }
@@ -141,10 +141,10 @@ class CrawlerTaskAdditionalFieldProvider implements AdditionalFieldProviderInter
      * @param AbstractTask $task
      * @return void
      */
-    public function saveAdditionalFields(array $submittedData, AbstractTask $task) {
+    public function saveAdditionalFields(array $submittedData, AbstractTask $task)
+    {
         $task->sleepTime = intval($submittedData['sleepTime']);
         $task->sleepAfterFinish = intval($submittedData['sleepAfterFinish']);
         $task->countInARun = intval($submittedData['countInARun']);
     }
-
 }

@@ -22,47 +22,47 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-abstract class tx_crawler_domain_lib_abstract_dbobject {
+abstract class tx_crawler_domain_lib_abstract_dbobject
+{
 
-	/**
-	 * @var array
-	 */
-	protected $row;
+    /**
+     * @var array
+     */
+    protected $row;
 
-	/**
-	 * @var string table name
-	 */
-	protected static $tableName;
+    /**
+     * @var string table name
+     */
+    protected static $tableName;
 
-	/**
-	 * Constructor
-	 *
-	 * @param array $row optional array with propertys
-	 */
-	public function __construct($row = array()) {
-		$this->row = $row;
-	}
+    /**
+     * Constructor
+     *
+     * @param array $row optional array with propertys
+     */
+    public function __construct($row = [])
+    {
+        $this->row = $row;
+    }
 
-	/**
-	 * Get table name
-	 *
-	 * @param void
-	 * @return string table name
-	 */
-	public static function getTableName(){
-		return self::$tableName;
-	}
+    /**
+     * Get table name
+     *
+     * @param void
+     * @return string table name
+     */
+    public static function getTableName()
+    {
+        return self::$tableName;
+    }
 
-	/**
-	 * Returns the propertys of the object as array
-	 *
-	 * @return array
-	 */
-	public function getRow() {
-		return $this->row;
-	}
-
-
+    /**
+     * Returns the propertys of the object as array
+     *
+     * @return array
+     */
+    public function getRow()
+    {
+        return $this->row;
+    }
 }
-
-?>

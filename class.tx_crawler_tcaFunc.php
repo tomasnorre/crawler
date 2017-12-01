@@ -35,49 +35,49 @@
  * @package TYPO3
  * @subpackage crawler
  */
-class tx_crawler_tcaFunc {
+class tx_crawler_tcaFunc
+{
 
-	/**
-	 * Get crawler processing instructions.
-	 * This function is called as a itemsProcFunc in tx_crawler_configuration.processing_instruction_filter
-	 *
-	 * @param array configuration
-	 * @return array configuration
-	 */
-	public function getProcessingInstructions(array $config) {
-		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'])) {
-			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'] as $key => $value) {
-				$config['items'][] = array($value.' ['.$key.']', $key, $this->getExtensionIcon($key));
-			}
-		}
-		return $config;
-	}
+    /**
+     * Get crawler processing instructions.
+     * This function is called as a itemsProcFunc in tx_crawler_configuration.processing_instruction_filter
+     *
+     * @param array configuration
+     * @return array configuration
+     */
+    public function getProcessingInstructions(array $config)
+    {
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'])) {
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'] as $key => $value) {
+                $config['items'][] = [$value.' ['.$key.']', $key, $this->getExtensionIcon($key)];
+            }
+        }
+        return $config;
+    }
 
-	/**
-	 * Get path to ext_icon.gif from processing instruction key
-	 *
-	 * @param string $key Like tx_realurl_rebuild
-	 * @return string
-	 */
-	protected function getExtensionIcon($key) {
-		$extIcon = '';
+    /**
+     * Get path to ext_icon.gif from processing instruction key
+     *
+     * @param string $key Like tx_realurl_rebuild
+     * @return string
+     */
+    protected function getExtensionIcon($key)
+    {
+        $extIcon = '';
 
-		if (method_exists('\TYPO3\CMS\Core\Utility\ExtensionManagementUtility', 'getExtensionKeyByPrefix')) {
-			$parts = explode('_', $key);
-			if (is_array($parts) && count($parts) > 2) {
-				$extensionKey = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getExtensionKeyByPrefix('tx_' . $parts[1]);
-				$extIcon = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($extensionKey) . 'ext_icon.gif';
-			}
-		}
+        if (method_exists('\TYPO3\CMS\Core\Utility\ExtensionManagementUtility', 'getExtensionKeyByPrefix')) {
+            $parts = explode('_', $key);
+            if (is_array($parts) && count($parts) > 2) {
+                $extensionKey = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getExtensionKeyByPrefix('tx_' . $parts[1]);
+                $extIcon = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($extensionKey) . 'ext_icon.gif';
+            }
+        }
 
-		return $extIcon;
-	}
-
+        return $extIcon;
+    }
 }
 
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/class.tx_crawler_tcaFunc.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/class.tx_crawler_tcaFunc.php']);
+    include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/class.tx_crawler_tcaFunc.php']);
 }
-
-?>

@@ -41,21 +41,21 @@ class TsfeHook
      *
      * TODO: Write Unit test
      */
-    function fe_init(&$params, $ref)
+    public function fe_init(&$params, $ref)
     {
 
         // Authenticate crawler request:
         if (isset($_SERVER['HTTP_X_T3CRAWLER'])) {
             //@todo: ask service to exclude current call for special reasons: for example no relevance because the language version is not affected
 
-            list($queueId,$hash) = explode(':', $_SERVER['HTTP_X_T3CRAWLER']);
-            list($queueRec) = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*','tx_crawler_queue','qid='.intval($queueId));
+            list($queueId, $hash) = explode(':', $_SERVER['HTTP_X_T3CRAWLER']);
+            list($queueRec) = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_crawler_queue', 'qid='.intval($queueId));
 
             // If a crawler record was found and hash was matching, set it up:
             if (is_array($queueRec) && $hash === md5($queueRec['qid'].'|'.$queueRec['set_id'].'|'.$GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'])) {
                 $params['pObj']->applicationData['tx_crawler']['running'] = true;
                 $params['pObj']->applicationData['tx_crawler']['parameters'] = unserialize($queueRec['parameters']);
-                $params['pObj']->applicationData['tx_crawler']['log'] = array();
+                $params['pObj']->applicationData['tx_crawler']['log'] = [];
             } else {
                 die('No crawler entry found!');
             }
@@ -71,12 +71,14 @@ class TsfeHook
      *
      * TODO: Write Unit test
      */
-    function fe_feuserInit(&$params, $ref)
+    public function fe_feuserInit(&$params, $ref)
     {
         if ($params['pObj']->applicationData['tx_crawler']['running']) {
             $grList = $params['pObj']->applicationData['tx_crawler']['parameters']['feUserGroupList'];
             if ($grList) {
-                if (!is_array($params['pObj']->fe_user->user)) $params['pObj']->fe_user->user = array();
+                if (!is_array($params['pObj']->fe_user->user)) {
+                    $params['pObj']->fe_user->user = [];
+                }
                 $params['pObj']->fe_user->user['usergroup'] = $grList;
                 $params['pObj']->applicationData['tx_crawler']['log'][] = 'User Groups: '.$grList;
             }
@@ -92,7 +94,7 @@ class TsfeHook
      *
      * TODO: Write Unit test
      */
-    function fe_isOutputting(&$params, $ref)
+    public function fe_isOutputting(&$params, $ref)
     {
         if ($params['pObj']->applicationData['tx_crawler']['running']) {
             $params['enableOutput'] = false;
@@ -106,23 +108,23 @@ class TsfeHook
      * @param object  TSFE object
      * @return void
      */
-    function fe_eofe(&$params, $ref)
+    public function fe_eofe(&$params, $ref)
     {
         if ($params['pObj']->applicationData['tx_crawler']['running']) {
-            $params['pObj']->applicationData['tx_crawler']['vars'] = array(
+            $params['pObj']->applicationData['tx_crawler']['vars'] = [
                 'id' => $params['pObj']->id,
                 'gr_list' => $params['pObj']->gr_list,
                 'no_cache' => $params['pObj']->no_cache,
-            );
+            ];
 
             /**
              * Required because some extensions (staticpub) might never be requested to run due to some Core side effects
              * and since this is considered as error the crawler should handle it properly
              */
-            if(is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'])) {
-                foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'] as $pollable) {
-                    if(is_array($params['pObj']->applicationData['tx_crawler']['content']['parameters']['procInstructions']) && in_array($pollable,$params['pObj']->applicationData['tx_crawler']['content']['parameters']['procInstructions'])){
-                        if(empty($params['pObj']->applicationData['tx_crawler']['success'][$pollable])) {
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'])) {
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'] as $pollable) {
+                    if (is_array($params['pObj']->applicationData['tx_crawler']['content']['parameters']['procInstructions']) && in_array($pollable, $params['pObj']->applicationData['tx_crawler']['content']['parameters']['procInstructions'])) {
+                        if (empty($params['pObj']->applicationData['tx_crawler']['success'][$pollable])) {
                             $params['pObj']->applicationData['tx_crawler']['errorlog'][] = 'Error: Pollable extension ('.$pollable.') did not complete successfully.';
                         }
                     }

@@ -44,12 +44,11 @@ class ProcessCleanupTask extends AbstractTask
      */
     public function execute()
     {
-
         /* @var $crawlerObject \tx_crawler_lib */
         $crawlerObject = GeneralUtility::makeInstance('tx_crawler_lib');
 
         /** @var $crawlerHookObject ProcessCleanUpHook */
-        $crawlerHookObject = GeneralUtility::makeInstance('AOE\\Crawler\\Hooks\\ProcessCleanUpHook');
+        $crawlerHookObject = GeneralUtility::makeInstance(ProcessCleanUpHook::class);
         $crawlerHookObject->crawler_init($crawlerObject);
 
         return true;

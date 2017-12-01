@@ -56,9 +56,9 @@ class BackendUtility
      */
     public static function registerClickMenuItem()
     {
-        $GLOBALS['TBE_MODULES_EXT']['xMOD_alt_clickmenu']['extendCMclasses'][] = array(
-            'name' => 'AOE\\Crawler\\ClickMenu\\CrawlerClickMenu'
-        );
+        $GLOBALS['TBE_MODULES_EXT']['xMOD_alt_clickmenu']['extendCMclasses'][] = [
+            'name' => \AOE\Crawler\ClickMenu\CrawlerClickMenu::class
+        ];
     }
 
     /**
@@ -66,7 +66,8 @@ class BackendUtility
      *
      * @return void
      */
-    public static function registerContextSensitiveHelpForTcaFields(){
+    public static function registerContextSensitiveHelpForTcaFields()
+    {
         ExtensionManagementUtility::addLLrefForTCAdescr(
             'tx_crawler_configuration',
             'EXT:crawler/Resources/Private/Language/locallang_csh_tx_crawler_configuration.xlf'

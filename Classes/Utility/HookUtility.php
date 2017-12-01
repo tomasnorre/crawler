@@ -25,8 +25,13 @@ namespace AOE\Crawler\Utility;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Hooks\ProcessCleanUpHook;
+use AOE\Crawler\Hooks\StaticFileCacheCreateUriHook;
+use AOE\Crawler\Hooks\TsfeHook;
+
 /**
  * Class HookUtility
+ *
  * @package AOE\Crawler\Utility
  */
 class HookUtility
@@ -40,24 +45,24 @@ class HookUtility
     public static function registerHooks($extKey)
     {
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['connectToDB']['tx_crawler'] =
-            'AOE\\Crawler\\Hooks\\TsfeHook->fe_init';
+            TsfeHook::class . '->fe_init';
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['initFEuser']['tx_crawler'] =
-            'AOE\\Crawler\\Hooks\\TsfeHook->fe_feuserInit';
+            TsfeHook::class . '->fe_feuserInit';
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['isOutputting']['tx_crawler'] =
-            'AOE\\Crawler\\Hooks\\TsfeHook->fe_isOutputting';
+            TsfeHook::class . '->fe_isOutputting';
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['hook_eofe']['tx_crawler'] =
-            'AOE\\Crawler\\Hooks\\TsfeHook->fe_eofe';
+            TsfeHook::class . '->fe_eofe';
 
         // Activating NC Static File Cache hook
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['nc_staticfilecache/class.tx_ncstaticfilecache.php']['createFile_initializeVariables']['tx_crawler'] =
-            'AOE\\Crawler\\Hooks\\StaticFileCacheCreateUriHook->initialize';
+            StaticFileCacheCreateUriHook::class . '->initialize';
 
         // Activating Crawler cli_hooks
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['cli_hooks'][] =
-            'AOE\\Crawler\\Hooks\\ProcessCleanUpHook';
+            ProcessCleanUpHook::class;
 
         // Activating refresh hooks
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['refresh_hooks'][] =
-            'AOE\\Crawler\\Hooks\\ProcessCleanUpHook';
+            ProcessCleanUpHook::class;
     }
 }

@@ -61,12 +61,12 @@ class StaticFileCacheCreateUriHook
      */
     protected function fixNonSpeakingUri($host, $uri, TypoScriptFrontendController $frontend)
     {
-        $matches = array();
+        $matches = [];
 
         if ($this->isCrawlerExtensionRunning($frontend) && preg_match('#^/index.php\?&?id=(\d+)(&.*)?$#', $uri, $matches)) {
-            $speakingUri = $frontend->cObj->typoLink_URL(array('parameter' => $matches[1], 'additionalParams' => $matches[2]));
+            $speakingUri = $frontend->cObj->typoLink_URL(['parameter' => $matches[1], 'additionalParams' => $matches[2]]);
             $speakingUriParts = parse_url($speakingUri);
-            if(false === $speakingUriParts){
+            if (false === $speakingUriParts) {
                 throw new \Exception('Could not parse URI: ' . $speakingUri, 1289915976);
             }
             $speakingUrlPath = '/' . ltrim($speakingUriParts['path'], '/');
@@ -81,7 +81,7 @@ class StaticFileCacheCreateUriHook
             }
         }
 
-        return array($host, $uri);
+        return [$host, $uri];
     }
 
     /**

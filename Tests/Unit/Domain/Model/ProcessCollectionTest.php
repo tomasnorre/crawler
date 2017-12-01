@@ -32,20 +32,21 @@ use TYPO3\CMS\Core\Tests\UnitTestCase;
  *
  * @package AOE\Crawler\Tests\Unit\Domain\Model
  */
-class ProcessCollectionTest extends UnitTestCase {
-	
-	/**
-	 * @test
-	 */
-	public function canGetUids() {
-		$processes = array();
-		$row1=array('process_id'=>11);
-		$processes[]= new \tx_crawler_domain_process($row1);
-		$row2=array('process_id'=>13);
-		$processes[]= new \tx_crawler_domain_process($row2);
-		$collection = new \tx_crawler_domain_process_collection($processes);
-		
-		$this->assertEquals($collection->getProcessIds(),array('11','13'));
-		
-	}
+class ProcessCollectionTest extends UnitTestCase
+{
+    
+    /**
+     * @test
+     */
+    public function canGetUids()
+    {
+        $processes = [];
+        $row1=['process_id'=>11];
+        $processes[]= new \tx_crawler_domain_process($row1);
+        $row2=['process_id'=>13];
+        $processes[]= new \tx_crawler_domain_process($row2);
+        $collection = new \tx_crawler_domain_process_collection($processes);
+        
+        $this->assertEquals($collection->getProcessIds(), ['11','13']);
+    }
 }

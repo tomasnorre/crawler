@@ -84,7 +84,7 @@ class CrawlerQueueTask extends AbstractTask
             $this->startPage = 0;
         }
 
-        $_SERVER['argv'] = array($_SERVER['argv'][0], $this->startPage,'-ss', '-d', $this->depth, '-o', self::MODE, '-conf', implode(',', $this->configuration));
+        $_SERVER['argv'] = [$_SERVER['argv'][0], $this->startPage,'-ss', '-d', $this->depth, '-o', self::MODE, '-conf', implode(',', $this->configuration)];
     }
 
 

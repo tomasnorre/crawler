@@ -144,7 +144,7 @@ class ProcessCleanUpHook
         $this->getDatabaseConnection()->exec_UPDATEquery(
             'tx_crawler_queue',
             'process_id = ' . $this->getDatabaseConnection()->fullQuoteStr($processId, 'tx_crawler_queue'),
-            array('process_id' => '')
+            ['process_id' => '']
         );
     }
 
@@ -215,7 +215,7 @@ class ProcessCleanUpHook
      */
     private function findDispatcherProcesses()
     {
-        $returnArray = array();
+        $returnArray = [];
         if (!$this->isOsWindows()) {
             // Not windows
             exec('ps aux | grep \'cli_dispatcher\'', $returnArray, $returnValue);

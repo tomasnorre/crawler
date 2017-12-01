@@ -26,6 +26,7 @@ namespace AOE\Crawler\Utility;
  ***************************************************************/
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
 /**
  * Class SignalSlotUtility
@@ -48,10 +49,10 @@ class SignalSlotUtility
      * @param array $payload
      * @return void
      */
-    public static function emitSignal($class, $signal, array $payload = array())
+    public static function emitSignal($class, $signal, array $payload = [])
     {
         /** @var \TYPO3\CMS\Extbase\SignalSlot\Dispatcher $signalSlotDispatcher */
-        $signalSlotDispatcher = GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\SignalSlot\\Dispatcher');
+        $signalSlotDispatcher = GeneralUtility::makeInstance(Dispatcher::class);
         $signalSlotDispatcher->dispatch($class, $signal, $payload);
     }
 }

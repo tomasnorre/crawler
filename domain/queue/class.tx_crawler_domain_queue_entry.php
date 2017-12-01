@@ -22,24 +22,23 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-class tx_crawler_domain_queue_entry extends tx_crawler_domain_lib_abstract_dbobject {
+class tx_crawler_domain_queue_entry extends tx_crawler_domain_lib_abstract_dbobject
+{
 
-	/**
-	 * @var string table name
-	 */
-	protected static $tableName = 'tx_crawler_queue';
+    /**
+     * @var string table name
+     */
+    protected static $tableName = 'tx_crawler_queue';
 
-	/**
-	 * Returns the execution time of the record as int value
-	 *
-	 * @param void
-	 * @author Timo Schmidt <timo.schmidt@aoemedia.de>
-	 * @return int
-	 */
-	public function getExecutionTime(){
-		return $this->row['exec_time'];
-	}
-
+    /**
+     * Returns the execution time of the record as int value
+     *
+     * @param void
+     * @author Timo Schmidt <timo.schmidt@aoemedia.de>
+     * @return int
+     */
+    public function getExecutionTime()
+    {
+        return $this->row['exec_time'];
+    }
 }
-
-?>
