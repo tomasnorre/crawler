@@ -780,11 +780,7 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 				}
 
 				$setId = intval(\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('setID'));
-
-				$refreshIcon = $GLOBALS['BACK_PATH'] . 'gfx/refresh_n.gif';
-				if (version_compare(TYPO3_version,'7.0','>=')) {
-					$refreshIcon = $GLOBALS['BACK_PATH'] . 'sysext/t3skin/extjs/images/grid/refresh.gif';
-				}
+                $refreshIcon = $GLOBALS['BACK_PATH'] . 'sysext/t3skin/extjs/images/grid/refresh.gif';
 
 					// Put rows together:
 				$content.= '
