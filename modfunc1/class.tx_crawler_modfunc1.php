@@ -570,7 +570,7 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 					$tree->init('AND '.$perms_clause);
 
 						// Set root row:
-					$HTML = \TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIconForRecord('pages', $this->pObj->pageinfo);
+					$HTML = \AOE\Crawler\Utility\IconUtility::getIconForRecord('pages', $this->pObj->pageinfo);
 					$tree->tree[] = Array(
 						'row' => $this->pObj->pageinfo,
 						'HTML' => $HTML

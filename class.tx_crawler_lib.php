@@ -1594,7 +1594,7 @@ class tx_crawler_lib {
 			// Set root row:
 		$tree->tree[] = Array(
 			'row' => $pageinfo,
-			'HTML' => \TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIconForRecord('pages', $pageinfo)
+			'HTML' => \AOE\Crawler\Utility\IconUtility::getIconForRecord('pages', $pageinfo)
 		);
 
 			// Get branch beneath:
