@@ -20,6 +20,7 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['GLOBAL']['cliKeys']['crawler_multipro
 
 \AOE\Crawler\Utility\HookUtility::registerHooks($_EXTKEY);
 \AOE\Crawler\Utility\SchedulerUtility::registerSchedulerTasks($_EXTKEY);
+\AOE\Crawler\Utility\BackendUtility::registerIcons();
 
 $GLOBALS['TYPO3_CONF_VARS']['SVCONF']['auth']['setup']['BE_alwaysFetchUser'] = true;
 

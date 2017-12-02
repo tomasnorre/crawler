@@ -25,7 +25,10 @@ namespace AOE\Crawler\Utility;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
+use TYPO3\CMS\Core\Imaging\IconRegistry;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class BackendUtility
@@ -52,7 +55,7 @@ class BackendUtility
     }
 
     /**
-     * Registers the crawler clickmenu item
+     * Registers the crawler click menu item
      *
      * @return void
      */
@@ -62,4 +65,49 @@ class BackendUtility
             'name' => 'AOE\\Crawler\\ClickMenu\\CrawlerClickMenu'
         );
     }
+
+    /**
+     * Registers icons for use in the IconFactory
+     *
+     * @return void
+     */
+    public static function registerIcons()
+    {
+        self::registerStartIcon();
+        self::registerStopIcon();
+    }
+
+    /**
+     * Register Start Icon
+     *
+     * @return void
+     */
+    private static function registerStartIcon()
+    {
+        /** @var IconRegistry $iconRegistry */
+        $iconRegistry = GeneralUtility::makeInstance(IconRegistry::class);
+        $iconRegistry->registerIcon(
+            'tx-crawler-start',
+            SvgIconProvider::class,
+            ['source' => 'EXT:crawler/Resources/Private/Icons/crawler_start.svg']
+        );
+    }
+
+    /**
+     * Register Stop Icon
+     *
+     * @return void
+     */
+    private static function registerStopIcon()
+    {
+        /** @var IconRegistry $iconRegistry */
+        $iconRegistry = GeneralUtility::makeInstance(IconRegistry::class);
+        $iconRegistry->registerIcon(
+            'tx-crawler-stop',
+            SvgIconProvider::class,
+            ['source' => 'EXT:crawler/Resources/Private/Icons/crawler_stop.svg']
+        );
+    }
+
+
 }
