@@ -47,7 +47,7 @@ class FlushQueueTask extends AbstractTask
      */
     public function execute()
     {
-        $_SERVER['argv'] = array($_SERVER['argv'][0], '0', '-o', $this->mode);
+        $_SERVER['argv'] = [$_SERVER['argv'][0], '0', '-o', $this->mode];
         /* @var $crawlerObject \tx_crawler_lib */
         $crawlerObject = GeneralUtility::makeInstance('tx_crawler_lib');
 

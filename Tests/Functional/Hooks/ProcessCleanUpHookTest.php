@@ -28,6 +28,7 @@ namespace AOE\Crawler\Tests\Functional\Hooks;
 use AOE\Crawler\Hooks\ProcessCleanUpHook;
 use TYPO3\CMS\Core\Tests\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class ProcessCleanUpHookTest
@@ -60,23 +61,22 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
     /**
      * @var array
      */
-    protected $testExtensionsToLoad = array('typo3conf/ext/crawler');
+    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->objectManager = GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
+        $this->objectManager = GeneralUtility::makeInstance(ObjectManager::class);
 
         /** @var ProcessCleanUpHook subject */
-        $this->subject = $this->objectManager->get('AOE\\Crawler\\Hooks\\ProcessCleanUpHook');
+        $this->subject = $this->objectManager->get(ProcessCleanUpHook::class);
         $this->processRepository = $this->objectManager->get('tx_crawler_domain_process_repository');
         $this->queueRepository = $this->objectManager->get('tx_crawler_domain_queue_repository');
 
         // Include Fixtures
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_process.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
-
     }
 
     public function tearDown()
@@ -93,7 +93,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         $queueCountBefore = $this->queueRepository->countAll();
 
         $notExistingProcessId = 23456;
-        $this->callInaccessibleMethod($this->subject,'removeProcessFromProcesslist', $notExistingProcessId);
+        $this->callInaccessibleMethod($this->subject, 'removeProcessFromProcesslist', $notExistingProcessId);
 
         $processCountAfter = $this->processRepository->countAll();
         $queueCountAfter = $this->queueRepository->countAll();
@@ -121,7 +121,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         $queueCountBefore = $this->queueRepository->countAll();
 
         $existingProcessId = 1000;
-        $this->callInaccessibleMethod($this->subject,'removeProcessFromProcesslist', $existingProcessId);
+        $this->callInaccessibleMethod($this->subject, 'removeProcessFromProcesslist', $existingProcessId);
 
         $processCountAfter = $this->processRepository->countAll();
         $queueCountAfter = $this->queueRepository->countAll();
@@ -148,7 +148,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         $processCountBefore = $this->processRepository->countAll();
         $queueCountBefore = $this->queueRepository->countAll('process_id = ' . $existingProcessId);
 
-        $this->callInaccessibleMethod($this->subject,'removeProcessFromProcesslist', $existingProcessId);
+        $this->callInaccessibleMethod($this->subject, 'removeProcessFromProcesslist', $existingProcessId);
 
         $processCountAfter = $this->processRepository->countAll();
         $queueCountAfter = $this->queueRepository->countAll('process_id = ' . $existingProcessId);
@@ -177,8 +177,8 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         $emptyInputString = '';
 
         $this->assertEquals(
-            array(),
-            $this->callInaccessibleMethod($this->subject,'createResponseArray', $emptyInputString)
+            [],
+            $this->callInaccessibleMethod($this->subject, 'createResponseArray', $emptyInputString)
         );
     }
 
@@ -187,15 +187,13 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
      */
     public function createResponseArrayReturnsArray()
     {
-       // Input string has multiple spacing to ensure we don't end up with an array with empty values
+        // Input string has multiple spacing to ensure we don't end up with an array with empty values
         $inputString = '1   2 2 4 5 6 ';
-        $expectedOutputArray = array('1', '2', '2', '4', '5', '6');
+        $expectedOutputArray = ['1', '2', '2', '4', '5', '6'];
 
         $this->assertEquals(
             $expectedOutputArray,
-            $this->callInaccessibleMethod($this->subject,'createResponseArray', $inputString)
+            $this->callInaccessibleMethod($this->subject, 'createResponseArray', $inputString)
         );
     }
-
-
 }

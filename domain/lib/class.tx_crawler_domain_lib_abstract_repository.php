@@ -22,38 +22,41 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-abstract class tx_crawler_domain_lib_abstract_repository {
+abstract class tx_crawler_domain_lib_abstract_repository
+{
 
-	/**
-	 * @var string object class name
-	 */
-	protected $objectClassname;
+    /**
+     * @var string object class name
+     */
+    protected $objectClassname;
 
-	/**
-	 * @var string table name
-	 */
-	protected $tableName;
+    /**
+     * @var string table name
+     */
+    protected $tableName;
 
-	/**
-	 * Returns an instance of the TYPO3 database class.
-	 *
-	 * @return \TYPO3\CMS\Core\Database\DatabaseConnection
-	 */
-	protected function getDB() {
-		return $GLOBALS['TYPO3_DB'];
-	}
+    /**
+     * Returns an instance of the TYPO3 database class.
+     *
+     * @return \TYPO3\CMS\Core\Database\DatabaseConnection
+     */
+    protected function getDB()
+    {
+        return $GLOBALS['TYPO3_DB'];
+    }
 
-	/**
-	 * Counts items by a given where clause
-	 *
-	 * @param  string $where    Where clause
-	 * @return integer
-	 */
-	protected function countByWhere($where) {
-		$db  = $this->getDB();
-		$rs  = $db->exec_SELECTquery('count(*) as anz', $this->tableName, $where);
-		$res = $db->sql_fetch_assoc($rs);
+    /**
+     * Counts items by a given where clause
+     *
+     * @param  string $where    Where clause
+     * @return integer
+     */
+    protected function countByWhere($where)
+    {
+        $db = $this->getDB();
+        $rs = $db->exec_SELECTquery('count(*) as anz', $this->tableName, $where);
+        $res = $db->sql_fetch_assoc($rs);
 
-		return $res['anz'];
-	}
+        return $res['anz'];
+    }
 }

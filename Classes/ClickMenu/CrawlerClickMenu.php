@@ -64,12 +64,12 @@ class CrawlerClickMenu
             return $menuItems;
         }
 
-        $additionalParameters = array();
+        $additionalParameters = [];
         $additionalParameters[] = 'SET[function]=tx_crawler_modfunc1';
         $additionalParameters[] = 'SET[crawlaction]=start';
         $additionalParameters[] = 'configurationSelection[]=' . $crawlerConfiguration['name'];
 
-        $additionalMenuItems = array();
+        $additionalMenuItems = [];
         $additionalMenuItems[] = $backRef->linkItem(
             LocalizationUtility::translate(
                 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:contextMenu.label',

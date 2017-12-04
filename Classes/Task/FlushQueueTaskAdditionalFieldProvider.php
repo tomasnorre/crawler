@@ -46,7 +46,7 @@ class FlushQueueTaskAdditionalFieldProvider implements AdditionalFieldProviderIn
      */
     public function getAdditionalFields(array &$taskInfo, $task, SchedulerModuleController $schedulerModule)
     {
-        $additionalFields = array();
+        $additionalFields = [];
         // Initialize extra field value
         if (empty($taskInfo['mode'])) {
             if ($schedulerModule->CMD == 'add') {
@@ -65,10 +65,10 @@ class FlushQueueTaskAdditionalFieldProvider implements AdditionalFieldProviderIn
             . '<option value="pending"' . ($taskInfo['mode'] == 'pending' ? ' selected="selected"' : '') . '>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_flush.modePending') . '</option>'
             . '</select>';
 
-        $additionalFields[$fieldId] = array(
+        $additionalFields[$fieldId] = [
             'code' => $fieldCode,
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_flush.mode'
-        );
+        ];
 
         return $additionalFields;
     }
@@ -82,7 +82,7 @@ class FlushQueueTaskAdditionalFieldProvider implements AdditionalFieldProviderIn
      */
     public function validateAdditionalFields(array &$submittedData, SchedulerModuleController $schedulerModule)
     {
-        return in_array($submittedData['mode'], array('all', 'pending', 'finished'));
+        return in_array($submittedData['mode'], ['all', 'pending', 'finished']);
     }
 
     /**

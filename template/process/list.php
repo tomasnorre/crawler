@@ -1,15 +1,17 @@
-<?php if (!defined('TYPO3_MODE')) die ('Access denied.'); ?>
+<?php if (!defined('TYPO3_MODE')) {
+    die('Access denied.');
+} ?>
 
 <br />
 <div id="controll-panel">
 	<?php echo $this->getRefreshLink(); ?>
 	<?php echo $this->getEnableDisableLink(); ?>
 	<?php
-		// Check if ActiveProcess is reached
-		if (\TYPO3\CMS\Core\Utility\MathUtility::convertToPositiveInteger($this->getActiveProcessCount()) < \TYPO3\CMS\Core\Utility\MathUtility::convertToPositiveInteger($this->getMaxActiveProcessCount())) {
-			echo $this->getAddLink();
-		}
-	?>
+        // Check if ActiveProcess is reached
+        if (\TYPO3\CMS\Core\Utility\MathUtility::convertToPositiveInteger($this->getActiveProcessCount()) < \TYPO3\CMS\Core\Utility\MathUtility::convertToPositiveInteger($this->getMaxActiveProcessCount())) {
+            echo $this->getAddLink();
+        }
+    ?>
 	<?php echo $this->getModeLink(); ?>
 </div>
 
@@ -50,17 +52,17 @@
 		</tr>
 	</thead>
 	<tbody>
-		<?php foreach($this->getProcessCollection() as $process): /* @var $process tx_crawler_domain_process */ ?>
+		<?php foreach ($this->getProcessCollection() as $process): /* @var $process tx_crawler_domain_process */ ?>
 			<tr class="<?php echo (++$count % 2 == 0) ? 'odd': 'even' ?>">
 				<td><?php echo $this->getIconForState(htmlspecialchars($process->getState())); ?></td>
 				<td><?php echo htmlspecialchars($process->getProcess_id()); ?></td>
 				<td><?php echo htmlspecialchars($this->asDate($process->getTimeForFirstItem())); ?></td>
 				<td><?php echo htmlspecialchars($this->asDate($process->getTimeForLastItem())); ?></td>
-				<td><?php echo htmlspecialchars(floor($process->getRuntime()/ 60)); ?> min. <?php echo htmlspecialchars($process->getRuntime()) % 60 ?> sec.</td>
+				<td><?php echo htmlspecialchars(floor($process->getRuntime() / 60)); ?> min. <?php echo htmlspecialchars($process->getRuntime()) % 60 ?> sec.</td>
 				<td><?php echo htmlspecialchars($this->asDate($process->getTTL())); ?></td>
 				<td><?php echo htmlspecialchars($process->countItemsProcessed()); ?></td>
 				<td><?php echo htmlspecialchars($process->countItemsAssigned()); ?></td>
-				<td><?php echo htmlspecialchars($process->countItemsToProcess()+$process->countItemsProcessed()); ?></td>
+				<td><?php echo htmlspecialchars($process->countItemsToProcess() + $process->countItemsProcessed()); ?></td>
 				<td>
 				<?php if ($process->getState() == 'running'): ?>
 					<div class="crawlerprocessprogress" style="width: 200px;">

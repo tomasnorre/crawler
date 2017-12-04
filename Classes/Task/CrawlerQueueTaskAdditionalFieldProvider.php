@@ -49,11 +49,11 @@ class CrawlerQueueTaskAdditionalFieldProvider implements AdditionalFieldProvider
      */
     public function getAdditionalFields(array &$taskInfo, $task, SchedulerModuleController $schedulerModule)
     {
-        $additionalFields = array();
+        $additionalFields = [];
 
         if (empty($taskInfo['configuration'])) {
             if ($schedulerModule->CMD == 'add') {
-                $taskInfo['configuration'] = array();
+                $taskInfo['configuration'] = [];
             } elseif ($schedulerModule->CMD == 'edit') {
                 $taskInfo['configuration'] = $task->configuration;
             } else {
@@ -76,7 +76,7 @@ class CrawlerQueueTaskAdditionalFieldProvider implements AdditionalFieldProvider
 
         if (empty($taskInfo['depth'])) {
             if ($schedulerModule->CMD == 'add') {
-                $taskInfo['depth'] = array();
+                $taskInfo['depth'] = [];
             } elseif ($schedulerModule->CMD == 'edit') {
                 $taskInfo['depth'] = $task->depth;
             } else {
@@ -87,21 +87,21 @@ class CrawlerQueueTaskAdditionalFieldProvider implements AdditionalFieldProvider
         // input for startPage
         $fieldId = 'task_startPage';
         $fieldCode = '<input name="tx_scheduler[startPage]" type="text" id="' . $fieldId . '" value="' . $task->startPage . '" class="form-control" />';
-        $additionalFields[$fieldId] = array(
+        $additionalFields[$fieldId] = [
             'code' => $fieldCode,
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_im.startPage'
-        );
+        ];
 
         // input for depth
         $fieldId = 'task_depth';
-        $fieldValueArray = array(
+        $fieldValueArray = [
             '0' => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_0'),
             '1' => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_1'),
             '2' => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_2'),
             '3' => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_3'),
             '4' => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_4'),
             '99' => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_infi'),
-        );
+        ];
         $fieldCode = '<select name="tx_scheduler[depth]" id="' . $fieldId . '" class="form-control">';
 
         foreach ($fieldValueArray as $key => $label) {
@@ -109,10 +109,10 @@ class CrawlerQueueTaskAdditionalFieldProvider implements AdditionalFieldProvider
         }
 
         $fieldCode .= '</select>';
-        $additionalFields[$fieldId] = array(
+        $additionalFields[$fieldId] = [
             'code' => $fieldCode,
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_im.depth'
-        );
+        ];
 
         // combobox for configuration records
         $recordsArray = $this->getCrawlerConfigurationRecords();
@@ -124,10 +124,10 @@ class CrawlerQueueTaskAdditionalFieldProvider implements AdditionalFieldProvider
         }
         $fieldCode .= '</select>';
 
-        $additionalFields[$fieldId] = array(
+        $additionalFields[$fieldId] = [
             'code' => $fieldCode,
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_im.conf'
-        );
+        ];
 
         return $additionalFields;
     }
@@ -159,7 +159,7 @@ class CrawlerQueueTaskAdditionalFieldProvider implements AdditionalFieldProvider
      */
     protected function getCrawlerConfigurationRecords()
     {
-        $records = array();
+        $records = [];
         $result = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
             '*',
             'tx_crawler_configuration',

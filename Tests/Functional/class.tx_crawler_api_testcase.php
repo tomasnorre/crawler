@@ -40,196 +40,202 @@
  * @subpackage crawler
  * @access public
  */
-class tx_crawler_api_testcase extends \TYPO3\CMS\Core\Tests\FunctionalTestCase {
+class tx_crawler_api_testcase extends \TYPO3\CMS\Core\Tests\FunctionalTestCase
+{
 
-	/**
-	* @var array
-	*/
-	protected $coreExtensionsToLoad = array('cms', 'core', 'frontend', 'version', 'lang', 'extensionmanager');
+    /**
+    * @var array
+    */
+    protected $coreExtensionsToLoad = ['cms', 'core', 'frontend', 'version', 'lang', 'extensionmanager'];
 
-	/**
-	 * @var array
-	 */
-	protected $testExtensionsToLoad = array('typo3conf/ext/crawler');
+    /**
+     * @var array
+     */
+    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-	/**
-	 *
-	 * @var array stores the old rootline
-	 */
-	protected $oldRootline;
+    /**
+     *
+     * @var array stores the old rootline
+     */
+    protected $oldRootline;
 
-	/**
-	* Creates the test environment.
-	*
-	*/
-	function setUp() {
-		parent::setUp();
+    /**
+    * Creates the test environment.
+    *
+    */
+    public function setUp()
+    {
+        parent::setUp();
 
-		//restore old rootline
-		$this->oldRootline =   $GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields'];
-		//clear rootline
-		$GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields'] = '';
-		$GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['crawler'] = 'a:19:{s:9:"sleepTime";s:4:"1000";s:16:"sleepAfterFinish";s:2:"10";s:11:"countInARun";s:3:"100";s:14:"purgeQueueDays";s:2:"14";s:12:"processLimit";s:1:"1";s:17:"processMaxRunTime";s:3:"300";s:14:"maxCompileUrls";s:5:"10000";s:12:"processDebug";s:1:"0";s:14:"processVerbose";s:1:"0";s:16:"crawlHiddenPages";s:1:"0";s:7:"phpPath";s:12:"/usr/bin/php";s:14:"enableTimeslot";s:1:"1";s:11:"logFileName";s:0:"";s:9:"follow30x";s:1:"0";s:18:"makeDirectRequests";s:1:"0";s:16:"frontendBasePath";s:1:"/";s:22:"cleanUpOldQueueEntries";s:1:"1";s:19:"cleanUpProcessedAge";s:1:"2";s:19:"cleanUpScheduledAge";s:1:"7";}';
+        //restore old rootline
+        $this->oldRootline = $GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields'];
+        //clear rootline
+        $GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields'] = '';
+        $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['crawler'] = 'a:19:{s:9:"sleepTime";s:4:"1000";s:16:"sleepAfterFinish";s:2:"10";s:11:"countInARun";s:3:"100";s:14:"purgeQueueDays";s:2:"14";s:12:"processLimit";s:1:"1";s:17:"processMaxRunTime";s:3:"300";s:14:"maxCompileUrls";s:5:"10000";s:12:"processDebug";s:1:"0";s:14:"processVerbose";s:1:"0";s:16:"crawlHiddenPages";s:1:"0";s:7:"phpPath";s:12:"/usr/bin/php";s:14:"enableTimeslot";s:1:"1";s:11:"logFileName";s:0:"";s:9:"follow30x";s:1:"0";s:18:"makeDirectRequests";s:1:"0";s:16:"frontendBasePath";s:1:"/";s:22:"cleanUpOldQueueEntries";s:1:"1";s:19:"cleanUpProcessedAge";s:1:"2";s:19:"cleanUpScheduledAge";s:1:"7";}';
 
-		$this->importDataSet(dirname(__FILE__).'/data/pages.xml');
-		$this->importDataSet(dirname(__FILE__).'/data/sys_template.xml');
+        $this->importDataSet(dirname(__FILE__).'/data/pages.xml');
+        $this->importDataSet(dirname(__FILE__).'/data/sys_template.xml');
+    }
 
-	}
+    /**
+    * Resets the test enviroment after the test.
+    */
+    public function tearDown()
+    {
+        parent::tearDown();
+        //restore rootline
+        $GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields'] = $this->oldRootline;
+    }
 
-	/**
-	* Resets the test enviroment after the test.
-	*/
-	function tearDown() {
-		parent::tearDown();
-   		//restore rootline
-   		$GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields'] = $this->oldRootline;
-	}
+    /**
+     * This test is used to check that the api will not create duplicate entries for
+     * two pages which should both be crawled in the past, because it is only needed one times.
+     * The testcase uses a TSConfig crawler configuration.
+     *
+     * @test
+     * @param void
+     * @author Timo Schmidt
+     * @author Fabrizio Branca
+     * @return void
+     */
+    public function canNotCreateDuplicateQueueEntriesForTwoPagesInThePast()
+    {
+        $this->importDataSet(dirname(__FILE__).'/data/canNotAddDuplicatePagesToQueue.xml');
 
-	/**
-	 * This test is used to check that the api will not create duplicate entries for
-	 * two pages which should both be crawled in the past, because it is only needed one times.
-	 * The testcase uses a TSConfig crawler configuration.
-	 *
-	 * @test
-	 * @param void
-	 * @author Timo Schmidt
-	 * @author Fabrizio Branca
-	 * @return void
-	 */
-	public function canNotCreateDuplicateQueueEntriesForTwoPagesInThePast() {
-		$this->importDataSet(dirname(__FILE__).'/data/canNotAddDuplicatePagesToQueue.xml');
+        $crawler_api = $this->getMockedCrawlerAPI(100000);
 
-		$crawler_api = $this->getMockedCrawlerAPI(100000);
+        $crawler_api->addPageToQueueTimed(5, 9998);
+        $crawler_api->addPageToQueueTimed(5, 3422);
 
-		$crawler_api->addPageToQueueTimed(5,9998);
-		$crawler_api->addPageToQueueTimed(5,3422);
+        $this->assertEquals($crawler_api->countUnprocessedItems(), 1);
+    }
 
-		$this->assertEquals($crawler_api->countUnprocessedItems(),1);
-	}
+    /**
+     * This test should check that the api does not create two queue entries for
+     * two pages which should be crawled at the same time in the future.
+     * The testcase uses a TSConfig crawler configuration.
+     *
+     * @test
+     * @param void
+     * @author Timo Schmidt
+     * @author Fabrizio Branca
+     * @return void
+     *
+     */
+    public function canNotCreateDuplicateForTwoPagesInTheFutureWithTheSameTimestamp()
+    {
+        $this->importDataSet(dirname(__FILE__).'/data/canNotAddDuplicatePagesToQueue.xml');
 
-	/**
-	 * This test should check that the api does not create two queue entries for
-	 * two pages which should be crawled at the same time in the future.
-	 * The testcase uses a TSConfig crawler configuration.
-	 *
-	 * @test
-	 * @param void
-	 * @author Timo Schmidt
-	 * @author Fabrizio Branca
-	 * @return void
-	 *
-	 */
-	public function canNotCreateDuplicateForTwoPagesInTheFutureWithTheSameTimestamp() {
-		$this->importDataSet(dirname(__FILE__).'/data/canNotAddDuplicatePagesToQueue.xml');
+        $crawler_api = $this->getMockedCrawlerAPI(100000);
 
-		$crawler_api = $this->getMockedCrawlerAPI(100000);
+        $crawler_api->addPageToQueueTimed(5, 100001);
+        $crawler_api->addPageToQueueTimed(5, 100001);
 
-		$crawler_api->addPageToQueueTimed(5,100001);
-		$crawler_api->addPageToQueueTimed(5,100001);
+        $this->assertEquals($crawler_api->countUnprocessedItems(), 1);
+    }
 
-		$this->assertEquals($crawler_api->countUnprocessedItems(),1);
-	}
+    /**
+     * This test is used to check that the api can be used to schedule one  page two times
+     * for a diffrent timestamp in the future.
+     * The testcase uses a TSConfig crawler configuration.
+     *
+     * @test
+     * @param void
+     * @author Timo Schmidt
+     * @author Fabrizio Branca
+     * @return void
+     */
+    public function canCreateTwoQueueEntriesForDiffrentTimestampsInTheFuture()
+    {
+        $this->importDataSet(dirname(__FILE__).'/data/canNotAddDuplicatePagesToQueue.xml');
 
-	/**
-	 * This test is used to check that the api can be used to schedule one  page two times
-	 * for a diffrent timestamp in the future.
-	 * The testcase uses a TSConfig crawler configuration.
-	 *
-	 * @test
-	 * @param void
-	 * @author Timo Schmidt
-	 * @author Fabrizio Branca
-	 * @return void
-	 */
-	public function canCreateTwoQueueEntriesForDiffrentTimestampsInTheFuture() {
-		$this->importDataSet(dirname(__FILE__).'/data/canNotAddDuplicatePagesToQueue.xml');
+        $crawler_api = $this->getMockedCrawlerAPI(100000);
 
-		$crawler_api = $this->getMockedCrawlerAPI(100000);
+        $crawler_api->addPageToQueueTimed(5, 100011);
+        $crawler_api->addPageToQueueTimed(5, 100014);
 
-		$crawler_api->addPageToQueueTimed(5,100011);
-		$crawler_api->addPageToQueueTimed(5,100014);
+        $this->assertEquals($crawler_api->countUnprocessedItems(), 2);
+    }
 
-		$this->assertEquals($crawler_api->countUnprocessedItems(),2);
-	}
+    /**
+     * This testcase is used to check that pages can be queued in an environment.
+     * Where the crawler is configured using configuration records instead of pagets config.
+     *
+     * @test
+     * @param void
+     * @author Timo Schmidt
+     * @return void
+     */
+    public function canCreateQueueEntrysUsingConfigurationRecord()
+    {
+        $this->importDataSet(dirname(__FILE__).'/data/canCreateQueueEntrysUsingConfigurationRecord.xml');
+        $crawler_api = $this->getMockedCrawlerAPI(100000);
+        $crawler_api->addPageToQueueTimed(7, 100011);
+        $crawler_api->addPageToQueueTimed(7, 100059);
 
-	/**
-	 * This testcase is used to check that pages can be queued in an environment.
-	 * Where the crawler is configured using configuration records instead of pagets config.
-	 *
-	 * @test
-	 * @param void
-	 * @author Timo Schmidt
-	 * @return void
-	 */
-	public function canCreateQueueEntrysUsingConfigurationRecord() {
-		$this->importDataSet(dirname(__FILE__).'/data/canCreateQueueEntrysUsingConfigurationRecord.xml');
-		$crawler_api = $this->getMockedCrawlerAPI(100000);
-		$crawler_api->addPageToQueueTimed(7,100011);
-		$crawler_api->addPageToQueueTimed(7,100059);
+        $queueItems = $crawler_api->getUnprocessedItems();
+        $assertedParameter = 'a:4:{s:3:"url";s:49:"http://www.testcase.de/index.php?id=7&L=0&S=CRAWL";s:16:"procInstructions";a:1:{i:0;s:20:"tx_staticpub_publish";}s:15:"procInstrParams";a:1:{s:21:"tx_staticpub_publish.";a:1:{s:16:"includeResources";s:7:"relPath";}}s:15:"rootTemplatePid";s:1:"0";}';
 
-		$queueItems = $crawler_api->getUnprocessedItems();
-		$assertedParameter = 'a:4:{s:3:"url";s:49:"http://www.testcase.de/index.php?id=7&L=0&S=CRAWL";s:16:"procInstructions";a:1:{i:0;s:20:"tx_staticpub_publish";}s:15:"procInstrParams";a:1:{s:21:"tx_staticpub_publish.";a:1:{s:16:"includeResources";s:7:"relPath";}}s:15:"rootTemplatePid";s:1:"0";}';
+        $this->assertEquals($queueItems[0]['page_id'], 7);
+        $this->assertEquals($queueItems[0]['scheduled'], 100011);
+        $this->assertEquals($queueItems[0]['parameters'], $assertedParameter, 'Wrong queue parameters created by crawler lib for configuration record');
 
-		$this->assertEquals($queueItems[0]['page_id'],7);
-		$this->assertEquals($queueItems[0]['scheduled'],100011);
-		$this->assertEquals($queueItems[0]['parameters'],$assertedParameter,'Wrong queue parameters created by crawler lib for configuration record');
+        $assertedParameter = 'a:4:{s:3:"url";s:49:"http://www.testcase.de/index.php?id=7&L=0&S=CRAWL";s:16:"procInstructions";a:1:{i:0;s:20:"tx_staticpub_publish";}s:15:"procInstrParams";a:1:{s:21:"tx_staticpub_publish.";a:1:{s:16:"includeResources";s:7:"relPath";}}s:15:"rootTemplatePid";s:1:"0";}';
+        $this->assertEquals($queueItems[1]['page_id'], 7);
+        $this->assertEquals($queueItems[1]['scheduled'], 100059);
+        $this->assertEquals($queueItems[1]['parameters'], $assertedParameter, 'Wrong queue parameters created by crawler lib for configuration record');
 
+        $this->assertEquals($crawler_api->countUnprocessedItems(), 2, 'Could not add pages to queue configured by record');
+    }
 
-		$assertedParameter = 'a:4:{s:3:"url";s:49:"http://www.testcase.de/index.php?id=7&L=0&S=CRAWL";s:16:"procInstructions";a:1:{i:0;s:20:"tx_staticpub_publish";}s:15:"procInstrParams";a:1:{s:21:"tx_staticpub_publish.";a:1:{s:16:"includeResources";s:7:"relPath";}}s:15:"rootTemplatePid";s:1:"0";}';
-		$this->assertEquals($queueItems[1]['page_id'],7);
-		$this->assertEquals($queueItems[1]['scheduled'],100059);
-		$this->assertEquals($queueItems[1]['parameters'],$assertedParameter,'Wrong queue parameters created by crawler lib for configuration record');
+    /**
+     * Creates a mocked crawler api with a faked current time state
+     *
+     * @param int $currentTime
+     * @return tx_crawler_api
+     */
+    protected function getMockedCrawlerAPI($currentTime)
+    {
+        //created mocked crawler lib which returns a faked timestamp
+        $crawler_lib = $this->getMock('tx_crawler_lib', ['getCurrentTime', 'drawURLs_PIfilter']);
+        $crawler_lib->expects($this->any())->method("getCurrentTime")->will($this->returnValue($currentTime));
+        $crawler_lib->expects($this->any())->method("drawURLs_PIfilter")->will($this->returnValue(true));
 
-		$this->assertEquals($crawler_api->countUnprocessedItems(),2,'Could not add pages to queue configured by record');
-	}
+        /* @var $crawler_api tx_crawler_api */
+        //create mocked api
+        $crawler_api = $this->getMock('tx_crawler_api', ['findCrawler']);
+        $crawler_api->expects($this->any())->method("findCrawler")->will($this->returnValue($crawler_lib));
 
-	/**
-	 * Creates a mocked crawler api with a faked current time state
-	 *
-	 * @param int $currentTime
-	 * @return tx_crawler_api
-	 */
-	protected function getMockedCrawlerAPI($currentTime) {
-			//created mocked crawler lib which returns a faked timestamp
-		$crawler_lib = $this->getMock('tx_crawler_lib', array('getCurrentTime', 'drawURLs_PIfilter'));
-		$crawler_lib->expects($this->any())->method("getCurrentTime")->will($this->returnValue($currentTime));
-		$crawler_lib->expects($this->any())->method("drawURLs_PIfilter")->will($this->returnValue(TRUE));
+        return $crawler_api;
+    }
 
-		/* @var $crawler_api tx_crawler_api */
-		//create mocked api
-		$crawler_api = $this->getMock('tx_crawler_api',array('findCrawler'));
-		$crawler_api->expects($this->any())->method("findCrawler")->will($this->returnValue($crawler_lib));
+    /**
+     * @test
+     */
+    public function canReadHttpResponseFromStream()
+    {
+        require_once __DIR__ . '/../Unit/Domain/Model/data/class.tx_crawler_lib_proxy.php';
 
-		return $crawler_api;
-	}
+        $dummyContent = 'Lorem ipsum';
+        $dummyResponseHeader = [
+            'HTTP/1.1 301 Moved Permanently',
+            'Server: nginx',
+            'Date: Fri, 25 Apr 2014 08:26:15 GMT',
+            'Content-Type: text/html',
+            'Content-Length: 11',
+            'Connection: close'
+        ];
+        $dummyServerResponse = array_merge($dummyResponseHeader, ['', $dummyContent]);
 
-	/**
-	 * @test
-	 */
-	public function canReadHttpResponseFromStream() {
-		require_once __DIR__ . '/../Unit/Domain/Model/data/class.tx_crawler_lib_proxy.php';
+        $fp = fopen('php://memory', 'rw');
+        fwrite($fp, implode("\n", $dummyServerResponse));
+        rewind($fp);
 
-		$dummyContent = 'Lorem ipsum';
-		$dummyResponseHeader =  array(
-			'HTTP/1.1 301 Moved Permanently',
-			'Server: nginx',
-			'Date: Fri, 25 Apr 2014 08:26:15 GMT',
-			'Content-Type: text/html',
-			'Content-Length: 11',
-			'Connection: close'
-		);
-		$dummyServerResponse = array_merge($dummyResponseHeader, array('', $dummyContent));
+        $crawlerLibrary = new \tx_crawler_lib_proxy();
+        $response = $crawlerLibrary->getHttpResponseFromStream($fp);
 
-		$fp = fopen('php://memory', 'rw');
-		fwrite($fp, implode("\n", $dummyServerResponse));
-		rewind($fp);
-
-		$crawlerLibrary = new \tx_crawler_lib_proxy();
-		$response = $crawlerLibrary->getHttpResponseFromStream($fp);
-
-		$this->assertCount(6, $response['headers']);
-		$this->assertEquals($dummyResponseHeader, $response['headers']);
-		$this->assertEquals($dummyContent, $response['content'][0]);
-	}
-
+        $this->assertCount(6, $response['headers']);
+        $this->assertEquals($dummyResponseHeader, $response['headers']);
+        $this->assertEquals($dummyContent, $response['content'][0]);
+    }
 }

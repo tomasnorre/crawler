@@ -30,34 +30,36 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
  *
  * @package AOE\Crawler\Tests\Unit\Domain\Model
  */
-class EventsHelper implements \tx_crawler_domain_events_observer {
-	
-	public static $called_foo = 0;
-	
-	public static $called_bar = 0;
-	
-	/**
-	 * @return void
-	 */
-	public function fooFunc(){
-		self::$called_foo++;
-	}
-	
-	/**
-	 * @return void
-	 */
-	public function barFunc(){
-		self::$called_bar++;
-	}
-	
-	/**
-	 * @param $dispatcher
-	 *
-	 * @return void
-	 */
-	public function registerObservers(\tx_crawler_domain_events_dispatcher $dispatcher) {
-		$dispatcher->addObserver($this,'fooFunc','foo');
-		$dispatcher->addObserver($this,'barFunc','bar');
-	}
-	
+class EventsHelper implements \tx_crawler_domain_events_observer
+{
+    public static $called_foo = 0;
+    
+    public static $called_bar = 0;
+    
+    /**
+     * @return void
+     */
+    public function fooFunc()
+    {
+        self::$called_foo++;
+    }
+    
+    /**
+     * @return void
+     */
+    public function barFunc()
+    {
+        self::$called_bar++;
+    }
+    
+    /**
+     * @param $dispatcher
+     *
+     * @return void
+     */
+    public function registerObservers(\tx_crawler_domain_events_dispatcher $dispatcher)
+    {
+        $dispatcher->addObserver($this, 'fooFunc', 'foo');
+        $dispatcher->addObserver($this, 'barFunc', 'bar');
+    }
 }

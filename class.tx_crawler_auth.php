@@ -22,43 +22,41 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-
 /**
  * Url login authentification service
  */
-class tx_crawler_auth extends \TYPO3\CMS\Sv\AbstractAuthenticationService {
+class tx_crawler_auth extends \TYPO3\CMS\Sv\AbstractAuthenticationService
+{
 
-	/**
-	 * Find a user by IP ('REMOTE_ADDR')
-	 *
-	 * @return	mixed	user array or false
-	 */
-	public function getUser() {
-		$user = false;
-		if (isset($_SERVER['HTTP_X_T3CRAWLER'])) {
-			$user = $this->fetchUserRecord('_cli_crawler');
-		}
-		return $user;
-	}
+    /**
+     * Find a user by IP ('REMOTE_ADDR')
+     *
+     * @return	mixed	user array or false
+     */
+    public function getUser()
+    {
+        $user = false;
+        if (isset($_SERVER['HTTP_X_T3CRAWLER'])) {
+            $user = $this->fetchUserRecord('_cli_crawler');
+        }
+        return $user;
+    }
 
-	/**
-	 * Authenticate user
-	 *
-	 * @param array user
-	 * @return int 100="don't know", 0="no", 200="yes"
-	 */
-	public function authUser(array $user) {
-		if (isset($_SERVER['HTTP_X_T3CRAWLER']))	{
-			return ($user['username']=='_cli_crawler') ? 200 : 100;
-		}
-		return 100;
-	}
-
+    /**
+     * Authenticate user
+     *
+     * @param array user
+     * @return int 100="don't know", 0="no", 200="yes"
+     */
+    public function authUser(array $user)
+    {
+        if (isset($_SERVER['HTTP_X_T3CRAWLER'])) {
+            return ($user['username'] == '_cli_crawler') ? 200 : 100;
+        }
+        return 100;
+    }
 }
 
-
-if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/aoe_wspreview/service/class.tx_aoewspreview_service_urlLogin.php"])	{
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/aoe_wspreview/service/class.tx_aoewspreview_service_urlLogin.php"]);
+if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/aoe_wspreview/service/class.tx_aoewspreview_service_urlLogin.php"]) {
+    include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/aoe_wspreview/service/class.tx_aoewspreview_service_urlLogin.php"]);
 }
-
-?>

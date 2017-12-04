@@ -39,64 +39,67 @@
  * @subpackage crawler
  * @access public
  */
-class tx_crawler_domain_process_collection extends ArrayObject {
+class tx_crawler_domain_process_collection extends ArrayObject
+{
 
-	/**
-	 * Method to retrieve an element from the collection.
-	 * @access public
- 	 * @throws Exception
-	 * @return tx_crawler_domain_process
-	 */
-	public function offsetGet($index) {
-		if (! parent::offsetExists($index)) {
-			throw new Exception('Index "' . var_export($index, true) . '" for tx_crawler_domain_process are not available');
-		}
-		return parent::offsetGet($index);
-	}
+    /**
+     * Method to retrieve an element from the collection.
+     * @access public
+     * @throws Exception
+     * @return tx_crawler_domain_process
+     */
+    public function offsetGet($index)
+    {
+        if (! parent::offsetExists($index)) {
+            throw new Exception('Index "' . var_export($index, true) . '" for tx_crawler_domain_process are not available');
+        }
+        return parent::offsetGet($index);
+    }
 
-	/**
-	 * Method to add an element to the collection-
-	 *
-	 * @param mixed $index
-	 * @param tx_crawler_domain_process $subject
-	 * @throws InvalidArgumentException
-	 * @return void
-	 */
-	public function offsetSet($index, $subject) {
-		if (! $subject instanceof tx_crawler_domain_process ) {
-			throw new InvalidArgumentException('Wrong parameter type given, "tx_crawler_domain_process" expected!');
-		}
-		parent::offsetSet($index, $subject);
-	}
+    /**
+     * Method to add an element to the collection-
+     *
+     * @param mixed $index
+     * @param tx_crawler_domain_process $subject
+     * @throws InvalidArgumentException
+     * @return void
+     */
+    public function offsetSet($index, $subject)
+    {
+        if (! $subject instanceof tx_crawler_domain_process) {
+            throw new InvalidArgumentException('Wrong parameter type given, "tx_crawler_domain_process" expected!');
+        }
+        parent::offsetSet($index, $subject);
+    }
 
-	/**
-	 * Method to append an element to the collection
-	 * @param tx_crawler_domain_process $subject
-	 * @throws InvalidArgumentException
-	 * @return void
-	 */
-	public function append($subject) {
-		if (! $subject instanceof tx_crawler_domain_process ) {
-			throw new InvalidArgumentException('Wrong parameter type given, "tx_crawler_domain_process" expected!');
-		}
-		parent::append($subject);
-	}
-	
-	/**
-	 * returns array of process ids of the current collection
-	 * @return array
-	 */
-	public function getProcessIds() {
-		$result=array();
-		foreach ($this->getIterator() as $value) {
-			$result[]=$value->getProcess_id();
-		}
-		return $result;
-	}
+    /**
+     * Method to append an element to the collection
+     * @param tx_crawler_domain_process $subject
+     * @throws InvalidArgumentException
+     * @return void
+     */
+    public function append($subject)
+    {
+        if (! $subject instanceof tx_crawler_domain_process) {
+            throw new InvalidArgumentException('Wrong parameter type given, "tx_crawler_domain_process" expected!');
+        }
+        parent::append($subject);
+    }
+    
+    /**
+     * returns array of process ids of the current collection
+     * @return array
+     */
+    public function getProcessIds()
+    {
+        $result = [];
+        foreach ($this->getIterator() as $value) {
+            $result[] = $value->getProcess_id();
+        }
+        return $result;
+    }
 }
-
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/domain/process/class.tx_crawler_domain_process_collection.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/domain/process/class.tx_crawler_domain_process_collection.php']);
+    include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/domain/process/class.tx_crawler_domain_process_collection.php']);
 }
-?>

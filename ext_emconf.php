@@ -1,5 +1,5 @@
 <?php
-$EM_CONF[$_EXTKEY] = array(
+$EM_CONF[$_EXTKEY] = [
     'title' => 'Site Crawler',
     'description' => 'Libraries and scripts for crawling the TYPO3 page tree.',
     'category' => 'module',
@@ -11,11 +11,11 @@ $EM_CONF[$_EXTKEY] = array(
     'author_email' => 'dev@aoe.com',
     'author_company' => 'AOE GmbH',
     'version' => '5.2.1',
-    'constraints' => array(
-        'depends' => array(
+    'constraints' => [
+        'depends' => [
             'typo3' => '6.2.0-7.6.99',
-        ),
-        'conflicts' => array(),
-        'suggests' => array(),
-    )
-);
+        ],
+        'conflicts' => [],
+        'suggests' => [],
+    ]
+];

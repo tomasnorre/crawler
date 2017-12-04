@@ -50,34 +50,36 @@
  *
  * @author Timo Schmidt <timo.schmidt@aoemedia.de>
  */
-class tx_crawler_domain_events_dispatcher {
+class tx_crawler_domain_events_dispatcher
+{
 
-	/**
-	 * @var array of tx_crawler_domain_events_observer objects;
-	 */
-	protected $observers;
+    /**
+     * @var array of tx_crawler_domain_events_observer objects;
+     */
+    protected $observers;
 
-	/**
-	 * @var tx_crawler_domain_events_dispatcher
-	 */
-	protected static $instance;
+    /**
+     * @var tx_crawler_domain_events_dispatcher
+     */
+    protected static $instance;
 
-	/**
-	 * The __constructor is private because the dispatcher is a singleton
-	 *
-	 * @param void
-	 * @return void
-	 */
-    protected function __construct() {
-    	$this->observers = array();
-    	if (is_array ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/domain/events/class.tx_crawler_domain_events_dispatcher.php']['registerObservers'])) {
-			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/domain/events/class.tx_crawler_domain_events_dispatcher.php']['registerObservers'] as $classRef) {
-				$hookObj = &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj($classRef);
-				if (method_exists($hookObj, 'registerObservers')) {
-					$hookObj->registerObservers($this);
-				}
-			}
-		}
+    /**
+     * The __constructor is private because the dispatcher is a singleton
+     *
+     * @param void
+     * @return void
+     */
+    protected function __construct()
+    {
+        $this->observers = [];
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/domain/events/class.tx_crawler_domain_events_dispatcher.php']['registerObservers'])) {
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/domain/events/class.tx_crawler_domain_events_dispatcher.php']['registerObservers'] as $classRef) {
+                $hookObj = &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj($classRef);
+                if (method_exists($hookObj, 'registerObservers')) {
+                    $hookObj->registerObservers($this);
+                }
+            }
+        }
     }
 
     /**
@@ -86,62 +88,66 @@ class tx_crawler_domain_events_dispatcher {
      * @param void
      * @return array array with registered events.
      */
-	protected function getEvents() {
-		return array_keys($this->observers);
-	}
+    protected function getEvents()
+    {
+        return array_keys($this->observers);
+    }
 
-	/**
-	 * This method can be used to add an observer for an event to the dispatcher
-	 *
-	 * @param tx_crawler_domain_events_observer $observer_object
-	 * @param string $observer_method
-	 * @param string $event
-	 * @return void
-	 */
-	public function addObserver(tx_crawler_domain_events_observer $observer_object, $observer_method, $event) {
-		$this->observers[$event][] = array('object' => $observer_object, 'method' => $observer_method);
-	}
+    /**
+     * This method can be used to add an observer for an event to the dispatcher
+     *
+     * @param tx_crawler_domain_events_observer $observer_object
+     * @param string $observer_method
+     * @param string $event
+     * @return void
+     */
+    public function addObserver(tx_crawler_domain_events_observer $observer_object, $observer_method, $event)
+    {
+        $this->observers[$event][] = ['object' => $observer_object, 'method' => $observer_method];
+    }
 
-	/**
-	 * Enables checking whether a certain event is observed by anyone
-	 *
-	 * @param string $event
-	 * @return boolean
-	 */
-	public function hasObserver($event) {
-		return count($this->observers[$event]) > 0;
-	}
+    /**
+     * Enables checking whether a certain event is observed by anyone
+     *
+     * @param string $event
+     * @return boolean
+     */
+    public function hasObserver($event)
+    {
+        return count($this->observers[$event]) > 0;
+    }
 
-	/**
-	 * This method should be used to post a event to the dispatcher. Each
-	 * registered observer will be notified about the event.
-	 *
-	 * @param string $event
-	 * @param string $group
-	 * @param mixed $attachedData
-	 * @return void
-	 */
-	public function post($event, $group, $attachedData) {
-		if(is_array($this->observers[$event])) {
-			foreach($this->observers[$event] as $eventObserver) {
-				call_user_func(array($eventObserver['object'],$eventObserver['method']),$event,$group,$attachedData);
-			}
-		}
-	}
+    /**
+     * This method should be used to post a event to the dispatcher. Each
+     * registered observer will be notified about the event.
+     *
+     * @param string $event
+     * @param string $group
+     * @param mixed $attachedData
+     * @return void
+     */
+    public function post($event, $group, $attachedData)
+    {
+        if (is_array($this->observers[$event])) {
+            foreach ($this->observers[$event] as $eventObserver) {
+                call_user_func([$eventObserver['object'],$eventObserver['method']], $event, $group, $attachedData);
+            }
+        }
+    }
 
-	/**
-	 * Returns the instance of the dispatcher singleton
-	 *
-	 * @param void
-	 * @return tx_crawler_domain_events_dispatcher
-	 */
-	public static function getInstance() {
+    /**
+     * Returns the instance of the dispatcher singleton
+     *
+     * @param void
+     * @return tx_crawler_domain_events_dispatcher
+     */
+    public static function getInstance()
+    {
+        if (!self::$instance instanceof tx_crawler_domain_events_dispatcher) {
+            $dispatcher = new tx_crawler_domain_events_dispatcher();
+            self::$instance = $dispatcher;
+        }
 
-		if(!self::$instance instanceof tx_crawler_domain_events_dispatcher) {
-			$dispatcher = new tx_crawler_domain_events_dispatcher();
-			self::$instance = $dispatcher;
-		}
-
-		return self::$instance;
-	}
+        return self::$instance;
+    }
 }

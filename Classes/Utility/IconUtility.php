@@ -45,7 +45,7 @@ class IconUtility
      */
     public static function getIconForRecord($table, array $row)
     {
-        if (version_compare(TYPO3_version,'7.0','<')) {
+        if (version_compare(TYPO3_version, '7.0', '<')) {
             return \TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIconForRecord($table, $row);
         } else {
             $iconFactory = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconFactory::class);

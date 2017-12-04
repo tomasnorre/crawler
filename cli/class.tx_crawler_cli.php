@@ -27,7 +27,6 @@
  * @author Kasper Skaarhoej <kasperYYYY@typo3.com>
  */
 
-
 /**
  * Cli basis:
  *
@@ -35,31 +34,33 @@
  * @package TYPO3
  * @subpackage tx_crawler
  */
-class tx_crawler_cli extends \TYPO3\CMS\Core\Controller\CommandLineController {
+class tx_crawler_cli extends \TYPO3\CMS\Core\Controller\CommandLineController
+{
 
-	/**
-	 * Constructor
-	 *
-	 * @return	void
-	 */
-	function __construct() {
-		parent::__construct();
+    /**
+     * Constructor
+     *
+     * @return	void
+     */
+    public function __construct()
+    {
+        parent::__construct();
 
-		$this->cli_options[] = array('-h', 'Show the help', '');
-		$this->cli_options[] = array('--help', 'Same as -h', '');
-		$this->cli_options[] = array('--countInARun count', 'Amount of pages', 'How many pages should be crawled during that run.');
-		$this->cli_options[] = array('--sleepTime milliseconds', 'Millisecounds to relax system during crawls', 'Amount of millisecounds which the system should use to relax between crawls.');
-		$this->cli_options[] = array('--sleepAfterFinish seconds', 'Secounds to relax system after all crawls.', 'Amount of secounds which the system should use to relax after all crawls are done.');
+        $this->cli_options[] = ['-h', 'Show the help', ''];
+        $this->cli_options[] = ['--help', 'Same as -h', ''];
+        $this->cli_options[] = ['--countInARun count', 'Amount of pages', 'How many pages should be crawled during that run.'];
+        $this->cli_options[] = ['--sleepTime milliseconds', 'Millisecounds to relax system during crawls', 'Amount of millisecounds which the system should use to relax between crawls.'];
+        $this->cli_options[] = ['--sleepAfterFinish seconds', 'Secounds to relax system after all crawls.', 'Amount of secounds which the system should use to relax after all crawls are done.'];
 
-		// Setting help texts:
-		$this->cli_help['name'] = 'crawler CLI interface -- Crawling the URLs from the queue';
-		$this->cli_help['synopsis'] = '###OPTIONS###';
-		$this->cli_help['description'] = "";
-		$this->cli_help['examples'] = "/.../cli_dispatch.phpsh crawler\nWill trigger the crawler which starts to process the queue entires\n";
-		$this->cli_help['author'] = 'Kasper Skaarhoj, Daniel Poetzinger, Fabrizio Branca, Tolleiv Nietsch, Timo Schmidt - AOE media 2010';
-	}
+        // Setting help texts:
+        $this->cli_help['name'] = 'crawler CLI interface -- Crawling the URLs from the queue';
+        $this->cli_help['synopsis'] = '###OPTIONS###';
+        $this->cli_help['description'] = "";
+        $this->cli_help['examples'] = "/.../cli_dispatch.phpsh crawler\nWill trigger the crawler which starts to process the queue entires\n";
+        $this->cli_help['author'] = 'Kasper Skaarhoj, Daniel Poetzinger, Fabrizio Branca, Tolleiv Nietsch, Timo Schmidt - AOE media 2010';
+    }
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/cli/class.tx_crawler_cli.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/cli/class.tx_crawler_cli.php']);
+    include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/cli/class.tx_crawler_cli.php']);
 }

@@ -74,6 +74,6 @@ class CrawlerTask extends AbstractTask
      */
     protected function setCliArguments()
     {
-        $_SERVER['argv'] = array($_SERVER['argv'][0], '0', '-ss', '--sleepTime', $this->sleepTime, '--sleepAfterFinish', $this->sleepAfterFinish, '--countInARun', $this->countInARun);
+        $_SERVER['argv'] = [$_SERVER['argv'][0], '0', '-ss', '--sleepTime', $this->sleepTime, '--sleepAfterFinish', $this->sleepAfterFinish, '--countInARun', $this->countInARun];
     }
 }
