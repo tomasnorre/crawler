@@ -20,4 +20,5 @@
 .settings
 .TemporaryItems
 .webprj
+.php_cs.cache
 nbproject
