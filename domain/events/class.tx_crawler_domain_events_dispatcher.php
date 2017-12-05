@@ -47,8 +47,6 @@
  * tx_crawler_domain_events_dispatcher::getInstance();
  *
  * Events can be posted by tx_crawler_domain_events_dispatcher::getInstance()->post('myEvent','eventGroup', array('foo' => 'bar'));
- *
- * @author Timo Schmidt <timo.schmidt@aoemedia.de>
  */
 class tx_crawler_domain_events_dispatcher
 {

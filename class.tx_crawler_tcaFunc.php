@@ -25,15 +25,7 @@
  ***************************************************************/
 
 /**
- * Class with tca functions
- *
- * @author	Fabrizio Branca <fabrizio.branca@aoemedia.de>
- * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
- * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
- * @version $Id: $
- * @since 2009-05-28
- * @package TYPO3
- * @subpackage crawler
+ * Class tx_crawler_tcaFunc
  */
 class tx_crawler_tcaFunc
 {

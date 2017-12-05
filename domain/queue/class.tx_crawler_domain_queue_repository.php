@@ -31,7 +31,6 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
     /**
      * This mehtod is used to find the youngest entry for a given process.
      *
-     * @author Timo Schmidt <timo.schmidt@aoemedia.de>
      * @param tx_crawler_domain_process $process
      * @return tx_crawler_domain_queue_entry $entry
      */
@@ -152,8 +151,6 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
      *
      * @param void
      * @return array
-     * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
-     * @since 2099-09-03
      */
     public function countPendingItemsGroupedByConfigurationKey()
     {
@@ -176,8 +173,6 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
      *
      * @param void
      * @return array array of set ids
-     * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
-     * @since 2009-09-03
      */
     public function getSetIdWithUnprocessedEntries()
     {
@@ -200,8 +195,6 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
      *
      * @param array set ids
      * @return array totals by configuration (keys)
-     * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
-     * @since 2009-09-03
      */
     public function getTotalQueueEntriesByConfiguration(array $setIds)
     {
@@ -226,8 +219,6 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
      *
      * @param void
      * @return array
-     * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
-     * @since 2009-09-03
      */
     public function getLastProcessedEntriesTimestamps($limit = 100)
     {
@@ -254,8 +245,6 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
      * @param string $selectFields
      * @param int $limit
      * @return array
-     * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
-     * @since 2010-11-16
      */
     public function getLastProcessedEntries($selectFields = '*', $limit = '100')
     {
@@ -282,8 +271,6 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
      * @param int start timestamp
      * @param int end timestamp
      * @return array performance data
-     * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
-     * @since 2009-09-03
      */
     public function getPerformanceData($start, $end)
     {
@@ -307,7 +294,6 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
      *
      * @param  string $where    Where clause
      * @return integer
-     * @author Timo Schmidt <timo.schmidt@aoe.com>
      */
     public function countAll($where = '1 = 1')
     {

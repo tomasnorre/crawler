@@ -133,7 +133,6 @@ class tx_crawler_lib
      *
      * @param array $pageRow
      * @return false|string false if the page should be crawled (not excluded), true / skipMessage if it should be skipped
-     * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
      */
     public function checkIfPageShouldBeSkipped(array $pageRow)
     {
@@ -629,8 +628,6 @@ class tx_crawler_lib
      * @param  string $groupList    Comma-separated list of (fe_)group UIDs from a user
      * @param  string $accessList   Comma-separated list of (fe_)group UIDs of the item to access
      * @return bool                 TRUE if at least one of the users group UIDs is in the access list or the access list is empty
-     * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
-     * @since 2009-01-19
      */
     public function hasGroupAccess($groupList, $accessList)
     {
@@ -1051,10 +1048,9 @@ class tx_crawler_lib
      * If the timestamp is in the future it will check, if the queued entry has exactly the same timestamp
      *
      * @param int $tstamp
-     * @param string $parameters
-     * @author Fabrizio Branca
-     * @author Timo Schmidt
-     * @return array;
+     * @param $fieldArray
+     * @return array
+     * @internal param string $parameters
      */
     protected function getDuplicateRowsIfExist($tstamp, $fieldArray)
     {
@@ -1100,7 +1096,6 @@ class tx_crawler_lib
     /**
      * Returns the current system time
      *
-     * @author Timo Schmidt <schmidt@aoemedia.de>
      * @return int
      */
     public function getCurrentTime()

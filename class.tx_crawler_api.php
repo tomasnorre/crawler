@@ -367,8 +367,6 @@ class tx_crawler_api
      *
      * @param void
      * @return array array('assignedButUnprocessed' => <>, 'unprocessed' => <>);
-     * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
-     * @since 2009-09-02
      */
     public function getQueueStatistics()
     {
@@ -383,8 +381,6 @@ class tx_crawler_api
      *
      * @param void
      * @return tx_crawler_domain_queue_repository queue repository
-     * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
-     * @since 2009-09-03
      */
     protected function getQueueRepository()
     {
@@ -399,8 +395,6 @@ class tx_crawler_api
      *
      * @param void
      * @return array array of array('configuration' => <>, 'assignedButUnprocessed' => <>, 'unprocessed' => <>)
-     * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
-     * @since 2009-09-02
      */
     public function getQueueStatisticsByConfiguration()
     {
@@ -423,8 +417,6 @@ class tx_crawler_api
      *
      * @param void
      * @return int
-     * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
-     * @since 2009-09-03
      */
     public function getActiveProcessesCount()
     {
@@ -447,8 +439,7 @@ class tx_crawler_api
      * Get current crawling speed
      *
      * @param float|false page speed in pages per minute
-     * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
-     * @since 2009-09-03
+     * @return bool|float
      */
     public function getCurrentCrawlingSpeed()
     {
@@ -493,8 +484,7 @@ class tx_crawler_api
      * @param integer $end
      * @param integer $resolution
      * @return array data
-     * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
-     * @since 2009-09-08
+     * @throws Exception
      */
     public function getPerformanceData($start, $end, $resolution)
     {

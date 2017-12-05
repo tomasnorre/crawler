@@ -1,4 +1,5 @@
 <?php
+
 /***************************************************************
  *  Copyright notice
  *
@@ -21,18 +22,9 @@
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-/**
- * Crawler library, executed in a backend context
- *
- * @author Kasper Skaarhoej <kasperYYYY@typo3.com>
- */
 
 /**
- * Cli basis:
- *
- * @author	Kasper Skaarhoej <kasperYYYY@typo3.com>
- * @package TYPO3
- * @subpackage tx_crawler
+ * Class tx_crawler_cli
  */
 class tx_crawler_cli extends \TYPO3\CMS\Core\Controller\CommandLineController
 {

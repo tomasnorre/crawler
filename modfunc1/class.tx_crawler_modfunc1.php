@@ -1,4 +1,5 @@
 <?php
+
 /***************************************************************
 *  Copyright notice
 *
@@ -21,18 +22,9 @@
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
-/**
- * Module extension (addition to function menu) 'Site Crawler' for the 'crawler' extension.
- *
- * @author	Kasper Skaarhoj <kasperYYYY@typo3.com>
- */
 
 /**
- * Crawler backend module
- *
- * @author	Kasper Skaarhoj <kasperYYYY@typo3.com>
- * @package TYPO3
- * @subpackage tx_crawler
+ * Class tx_crawler_modfunc1
  */
 class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModule
 {
@@ -96,7 +88,7 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
     {
         global $LANG;
 
-        return  [
+        return [
             'depth' => [
                 0 => $LANG->sL('LLL:EXT:lang/locallang_core.php:labels.depth_0'),
                 1 => $LANG->sL('LLL:EXT:lang/locallang_core.php:labels.depth_1'),
@@ -868,10 +860,7 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
      *
      * @param array $resultRow
      *
-     * @access protected
      * @return string
-     *
-     * @author Michael Klapper <michael.klapper@aoemedia.de>
      */
     protected function getResultLog($resultRow)
     {
@@ -919,7 +908,6 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
     /**
      * This method is used to show an overview about the active an the finished crawling processes
      *
-     * @author Timo Schmidt
      * @param void
      * @return string
      */
@@ -982,10 +970,7 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
     /**
      * Verify that the crawler is exectuable.
      *
-     * @access protected
      * @return void
-     *
-     * @author Michael Klapper <michael.klapper@aoemedia.de>
      */
     protected function makeCrawlerProcessableChecks()
     {
@@ -1013,10 +998,7 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
      * Indicate that the required PHP method "popen" is
      * available in the system.
      *
-     * @access protected
      * @return boolean
-     *
-     * @author Michael Klapper <michael.klapper@aoemedia.de>
      */
     protected function isPhpForkAvailable()
     {
@@ -1027,10 +1009,7 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
      * Indicate that the required be_user "_cli_crawler" is
      * global available in the system.
      *
-     * @access protected
      * @return boolean
-     *
-     * @author Michael Klapper <michael.klapper@aoemedia.de>
      */
     protected function isCrawlerUserAvailable()
     {
@@ -1048,10 +1027,7 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
      * Indicate that the required be_user "_cli_crawler" is
      * has no admin rights.
      *
-     * @access protected
      * @return boolean
-     *
-     * @author Michael Klapper <michael.klapper@aoemedia.de>
      */
     protected function isCrawlerUserNotAdmin()
     {
@@ -1068,8 +1044,8 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
     /**
      * Method to handle incomming actions of the process overview
      *
-     * @param void
      * @return void
+     * @throws Exception
      */
     protected function handleProcessOverviewActions()
     {
@@ -1099,7 +1075,6 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
      *
      * @param void
      * @return tx_crawler_lib crawler object
-     * @author Timo Schmidt <schmidt@aoemedia.de>
      */
     protected function findCrawler()
     {
@@ -1124,7 +1099,6 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
      * @param  string  the message itself
      * @param  integer message level (-1 = success (default), 0 = info, 1 = notice, 2 = warning, 3 = error)
      *
-     * @access private
      * @return void
      */
     private function addMessage($message, $severity = \TYPO3\CMS\Core\Messaging\FlashMessage::OK)
@@ -1150,10 +1124,7 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
      *
      * @param string The message
      *
-     * @access protected
      * @return void
-     *
-     * @author Michael Klapper <michael.klapper@aoemedia.de>
      */
     protected function addNoticeMessage($message)
     {
@@ -1168,10 +1139,7 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
      *
      * @param string The message
      *
-     * @access protected
      * @return void
-     *
-     * @author Michael Klapper <michael.klapper@aoemedia.de>
      */
     protected function addErrorMessage($message)
     {
@@ -1187,10 +1155,7 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
      *
      * @param string The message
      *
-     * @access protected
      * @return void
-     *
-     * @author Michael Klapper <michael.klapper@aoemedia.de>
      */
     protected function addWarningMessage($message)
     {
