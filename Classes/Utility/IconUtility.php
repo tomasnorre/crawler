@@ -37,19 +37,13 @@ class IconUtility
     /**
      * Renders the HTML tag to show icons for a database record
      *
-     * Wrapper around core functionality to keep compatibility with TYPO3 6.2
-     *
      * @param $table
      * @param array $row
      * @return string
      */
     public static function getIconForRecord($table, array $row)
     {
-        if (version_compare(TYPO3_version, '7.0', '<')) {
-            return \TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIconForRecord($table, $row);
-        } else {
-            $iconFactory = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconFactory::class);
-            return $iconFactory->getIconForRecord($table, $row, \TYPO3\CMS\Core\Imaging\Icon::SIZE_SMALL)->render();
-        }
+        $iconFactory = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconFactory::class);
+        return $iconFactory->getIconForRecord($table, $row, \TYPO3\CMS\Core\Imaging\Icon::SIZE_SMALL)->render();
     }
 }
