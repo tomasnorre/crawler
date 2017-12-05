@@ -1,4 +1,5 @@
 <?php
+
 /***************************************************************
  *  Copyright notice
  *
@@ -22,7 +23,10 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-class tx_crawler_domain_process_repository extends tx_crawler_domain_lib_abstract_repository
+/**
+ * Class tx_crawler_domain_process_repository
+ */
+class tx_crawler_domain_process_repository extends AOE\Crawler\Domain\Repository\AbstractRepository
 {
 
     /**
@@ -38,11 +42,12 @@ class tx_crawler_domain_process_repository extends tx_crawler_domain_lib_abstrac
     /**
      * This method is used to find all cli processes within a limit.
      *
-     * @param  string  $orderField
-     * @param  string  $orderDirection
+     * @param  string $orderField
+     * @param  string $orderDirection
      * @param  integer $itemCount
      * @param  integer $offset
-     * @param  string  $where
+     * @param  string $where
+     *
      * @return tx_crawler_domain_process_collection
      */
     public function findAll($orderField = '', $orderDirection = 'DESC', $itemCount = null, $offset = null, $where = '')
@@ -77,7 +82,8 @@ class tx_crawler_domain_process_repository extends tx_crawler_domain_lib_abstrac
     /**
      * This method is used to count all processes in the process table.
      *
-     * @param  string $where    Where clause
+     * @param  string $where Where clause
+     *
      * @return integer
      */
     public function countAll($where = '1 = 1')
@@ -99,6 +105,7 @@ class tx_crawler_domain_process_repository extends tx_crawler_domain_lib_abstrac
      * Returns the number of processes that live longer than the given timestamp.
      *
      * @param  integer $ttl
+     *
      * @return integer
      */
     public function countNotTimeouted($ttl)
@@ -109,9 +116,10 @@ class tx_crawler_domain_process_repository extends tx_crawler_domain_lib_abstrac
     /**
      * Get limit clause
      *
-     * @param  integer $itemCount   Item count
-     * @param  integer $offset      Offset
-     * @return string               Limit clause
+     * @param  integer $itemCount
+     * @param  integer $offset
+     *
+     * @return string
      */
     public static function getLimitFromItemCountAndOffset($itemCount, $offset)
     {

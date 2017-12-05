@@ -1,31 +1,29 @@
 <?php
-if (!defined('TYPO3_MODE')) {
-    die('Access denied.');
-}
+defined('TYPO3_MODE') or die();
 
 $_EXTKEY = 'crawler';
 
 $GLOBALS['TCA']['tx_crawler_configuration'] = [
-    "ctrl" => [
+    'ctrl' => [
         'title' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration',
         'label' => 'name',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
         'cruser_id' => 'cruser_id',
-        'default_sortby' => "ORDER BY crdate",
+        'default_sortby' => 'ORDER BY crdate',
         'delete' => 'deleted',
         'enablecolumns' => [
             'disabled' => 'hidden',
         ],
         'iconfile' => 'EXT:crawler/Resources/Private/Icons/icon_tx_crawler_configuration.gif',
     ],
-    "feInterface" => [
-        "fe_admin_fieldList" => "hidden, name, processing_instruction_filter, processing_instruction_parameters_ts, configuration, base_url, sys_domain_base_url, pidsonly, begroups,fegroups, realurl, chash, exclude",
+    'feInterface' => [
+        'fe_admin_fieldList' => 'hidden, name, processing_instruction_filter, processing_instruction_parameters_ts, configuration, base_url, sys_domain_base_url, pidsonly, begroups,fegroups, realurl, chash, exclude',
     ],
-    "interface" => [
-        "showRecordFieldList" => "hidden,name,processing_instruction_filter,processing_instruction_parameters_ts,configuration,base_url,pidsonly,begroups,realurl,chash, exclude"
+    'interface' => [
+        'showRecordFieldList' => 'hidden,name,processing_instruction_filter,processing_instruction_parameters_ts,configuration,base_url,pidsonly,begroups,realurl,chash, exclude'
     ],
-    "columns" => [
+    'columns' => [
         'hidden' => [
             'exclude' => 1,
             'label' => 'LLL:EXT:lang/locallang_general.xml:LGL.hidden',
@@ -34,52 +32,52 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = [
                 'default' => '0'
             ]
         ],
-        "name" => [
-            "exclude" => 1,
-            "label" => "LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.name",
-            "config" => [
-                "type" => "input",
-                "size" => "30",
-                "eval" => "required,trim,lower,alphanum_x",
+        'name' => [
+            'exclude' => 1,
+            'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.name',
+            'config' => [
+                'type' => 'input',
+                'size' => '30',
+                'eval' => 'required,trim,lower,alphanum_x',
             ]
         ],
-        "processing_instruction_filter" => [
-            "exclude" => 1,
-            "label" => "LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.processing_instruction_filter",
-            "config" => [
-                "type" => "select",
+        'processing_instruction_filter' => [
+            'exclude' => 1,
+            'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.processing_instruction_filter',
+            'config' => [
+                'type' => 'select',
                 'renderType' => 'selectCheckBox',
-                "itemsProcFunc" => "EXT:crawler/class.tx_crawler_tcaFunc.php:tx_crawler_tcaFunc->getProcessingInstructions",
-                "eval" => "required",
-                "maxitems" => 100
+                'itemsProcFunc' => 'AOE\\Crawler\\Utility\\TcaUtility->getProcessingInstructions',
+                'eval' => 'required',
+                'maxitems' => 100
             ]
         ],
-        "processing_instruction_parameters_ts" => [
-            "exclude" => 1,
-            "label" => "LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.processing_instruction_parameters_ts",
-            "config" => [
-                "type" => "text",
-                "cols" => "40",
-                "rows" => "5",
+        'processing_instruction_parameters_ts' => [
+            'exclude' => 1,
+            'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.processing_instruction_parameters_ts',
+            'config' => [
+                'type' => 'text',
+                'cols' => '40',
+                'rows' => '5',
             ],
-            "defaultExtras" => "fixed-font : enable-tab",
+            'defaultExtras' => 'fixed-font : enable-tab',
         ],
-        "configuration" => [
-            "exclude" => 1,
-            "label" => "LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.configuration",
-            "config" => [
-                "type" => "text",
-                "cols" => "40",
-                "rows" => "5",
+        'configuration' => [
+            'exclude' => 1,
+            'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.configuration',
+            'config' => [
+                'type' => 'text',
+                'cols' => '40',
+                'rows' => '5',
             ]
         ],
-        "base_url" => [
-            "exclude" => 1,
-            "label" => "LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.base_url",
+        'base_url' => [
+            'exclude' => 1,
+            'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.base_url',
             'displayCond' => 'FIELD:sys_domain_base_url:REQ:false',
-            "config" => [
-                "type" => "input",
-                "size" => "30",
+            'config' => [
+                'type' => 'input',
+                'size' => '30',
             ]
         ],
         'sys_domain_base_url' => [
@@ -89,7 +87,7 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
                 'items' => [
-                    ['',0],
+                    ['', 0],
                 ],
                 'foreign_table' => 'sys_domain',
                 'foreign_table_where' => 'ORDER BY pages.uid',
@@ -98,19 +96,19 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = [
                 'maxitems' => 1,
             ]
         ],
-        "pidsonly" => [
-            "exclude" => 1,
-            "label" => "LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.pidsonly",
-            "config" => [
-                "type" => "group",
-                "internal_type" => "db",
-                "allowed" => "pages",
-                "size" => 5,
-                "minitems" => 0,
-                "maxitems" => 100,
-                "wizards" => [
-                    "suggest" => [
-                        "type" => "suggest",
+        'pidsonly' => [
+            'exclude' => 1,
+            'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.pidsonly',
+            'config' => [
+                'type' => 'group',
+                'internal_type' => 'db',
+                'allowed' => 'pages',
+                'size' => 5,
+                'minitems' => 0,
+                'maxitems' => 100,
+                'wizards' => [
+                    'suggest' => [
+                        'type' => 'suggest',
                     ],
                 ],
             ],
@@ -144,7 +142,6 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = [
         'realurl' => [
             'exclude' => 1,
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.realurl',
-            'displayCond' => 'FALSE',
             'config' => [
                 'type' => 'check',
             ]
@@ -186,10 +183,10 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = [
             ]
         ]
     ],
-    "types" => [
-        "0" => ["showitem" => "hidden, name, processing_instruction_filter, base_url, sys_domain_base_url, root_template_pid, pidsonly, configuration, processing_instruction_parameters_ts,begroups, fegroups, realurl, chash, exclude"]
+    'types' => [
+        '0' => ['showitem' => 'hidden, name, processing_instruction_filter, base_url, sys_domain_base_url, root_template_pid, pidsonly, configuration, processing_instruction_parameters_ts,begroups, fegroups, realurl, chash, exclude']
     ],
-    "palettes" => [
-        "1" => ["showitem" => ""]
+    'palettes' => [
+        '1' => ['showitem' => '']
     ]
 ];

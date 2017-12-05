@@ -10,4 +10,4 @@ Libraries and scripts for crawling the TYPO3 page tree. Used for re-caching, re-
 Please see the [Wiki Pages](https://github.com/AOEpeople/crawler/wiki) for Release notes and Known issues.
 
 ### Documentation
-Please read the [documentation](https://docs.typo3.org/typo3cms/extensions/crawler/)  
+Please read the [documentation](https://docs.typo3.org/typo3cms/extensions/crawler/)

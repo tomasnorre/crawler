@@ -1,19 +1,21 @@
 filter:
     excluded_paths:
-        - 'tests/*'
+        - 'Tests/*'
+        - 'Migration/*'
+        - 'Documentation/*'
     paths:
         - 'Classes/*'
         - 'cli/*'
         - 'domain/*'
         - 'modfunc1/*'
-        - 'system/*'
         - 'template/*'
         - 'view/*'
+        - '*'
 
 tools:
 
     external_code_coverage:
-        timeout: 700
+        timeout: 750
         runs: 1
 
     php_cpd:

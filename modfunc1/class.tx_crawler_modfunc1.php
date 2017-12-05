@@ -90,12 +90,12 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 
         return [
             'depth' => [
-                0 => $LANG->sL('LLL:EXT:lang/locallang_core.php:labels.depth_0'),
-                1 => $LANG->sL('LLL:EXT:lang/locallang_core.php:labels.depth_1'),
-                2 => $LANG->sL('LLL:EXT:lang/locallang_core.php:labels.depth_2'),
-                3 => $LANG->sL('LLL:EXT:lang/locallang_core.php:labels.depth_3'),
-                4 => $LANG->sL('LLL:EXT:lang/locallang_core.php:labels.depth_4'),
-                99 => $LANG->sL('LLL:EXT:lang/locallang_core.php:labels.depth_infi'),
+                0 => $LANG->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_0'),
+                1 => $LANG->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_1'),
+                2 => $LANG->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_2'),
+                3 => $LANG->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_3'),
+                4 => $LANG->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_4'),
+                99 => $LANG->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_infi'),
             ],
             'crawlaction' => [
                 'start' => $LANG->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.start'),
@@ -219,8 +219,7 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
                     );
         }
 
-        $theOutput = $this->pObj->doc->spacer(5);
-        $theOutput .= $this->pObj->doc->section($LANG->getLL('title'), $h_func, 0, 1);
+        $theOutput = $this->pObj->doc->section($LANG->getLL('title'), $h_func, 0, 1);
 
         // Branch based on type:
         switch ((string)$this->pObj->MOD_SETTINGS['crawlaction']) {
@@ -386,12 +385,12 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
             // depth
         $cell[] = $this->selectorBox(
             [
-                0 => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_0'),
-                1 => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_1'),
-                2 => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_2'),
-                3 => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_3'),
-                4 => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_4'),
-                99 => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_infi'),
+                0 => $GLOBALS['LANG']->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_0'),
+                1 => $GLOBALS['LANG']->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_1'),
+                2 => $GLOBALS['LANG']->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_2'),
+                3 => $GLOBALS['LANG']->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_3'),
+                4 => $GLOBALS['LANG']->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_4'),
+                99 => $GLOBALS['LANG']->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_infi'),
             ],
             'SET[depth]',
             $this->pObj->MOD_SETTINGS['depth'],
@@ -683,10 +682,11 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
      * Create the rows for display of the page tree
      * For each page a number of rows are shown displaying GET variable configuration
      *
-     * @param	array		Page row or set-id
-     * @param	string		Title string
-     * @param	int			Items per Page setting
-     * @return	string		HTML <tr> content (one or more)
+     * @param array $pageRow_setId Page row or set-id
+     * @param string $titleString Title string
+     * @param int $itemsPerPage Items per Page setting
+     *
+     * @return string HTML <tr> content (one or more)
      */
     public function drawLog_addRows($pageRow_setId, $titleString, $itemsPerPage = 10)
     {
@@ -759,8 +759,8 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
                 }
 
                 $setId = intval(\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('setID'));
-                $refreshIcon = $GLOBALS['BACK_PATH'] . 'sysext/t3skin/extjs/images/grid/refresh.gif';
-                
+                    $refreshIcon = $GLOBALS['BACK_PATH'] . 'sysext/t3skin/extjs/images/grid/refresh.gif';
+
                 // Put rows together:
                 $content .= '
 					<tr class="bgColor'.($c % 2 ? '-20':'-10').'">
@@ -946,7 +946,7 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
         $listView->setTotalUnprocessedItemCount($queueRepository->countAllPendingItems());
         $listView->setAssignedUnprocessedItemCount($queueRepository->countAllAssignedPendingItems());
         $listView->setActiveProcessCount($processRepository->countActive());
-        $listView->setMaxActiveProcessCount(tx_crawler_api::forceIntegerInRange($this->extensionSettings['processLimit'], 1, 99, 1));
+        $listView->setMaxActiveProcessCount(\TYPO3\CMS\Core\Utility\MathUtility::forceIntegerInRange($this->extensionSettings['processLimit'], 1, 99, 1));
         $listView->setMode($mode);
 
         $paginationView = new tx_crawler_view_pagination();
@@ -1161,10 +1161,11 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
     /**
      * Create selector box
      *
-     * @param	array		Options key(value) => label pairs
-     * @param	string		Selector box name
-     * @param	string		Selector box value (array for multiple...)
-     * @param	boolean		If set, will draw multiple box.
+     * @param	array		$optArray Options key(value) => label pairs
+     * @param	string		$name Selector box name
+     * @param	string		$value Selector box value (array for multiple...)
+     * @param	boolean		$multiple If set, will draw multiple box.
+     *
      * @return	string		HTML select element
      */
     public function selectorBox($optArray, $name, $value, $multiple)

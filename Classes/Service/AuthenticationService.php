@@ -1,14 +1,17 @@
 <?php
+namespace AOE\Crawler\Service;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2009 Tolleiv Nietsch (tolleiv.nietsch@aoemedia.de)
+ *  (c) 2016 AOE GmbH <dev@aoe.com>
+ *
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
+ *  the Free Software Foundation; either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  The GNU General Public License can be found at
@@ -22,16 +25,20 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Sv\AbstractAuthenticationService;
+
 /**
- * Url login authentification service
+ * Class AuthenticationService
+ *
+ * @package AOE\Crawler\Service
  */
-class tx_crawler_auth extends \TYPO3\CMS\Sv\AbstractAuthenticationService
+class AuthenticationService extends AbstractAuthenticationService
 {
 
     /**
-     * Find a user by IP ('REMOTE_ADDR')
+     * Find user by HTTP_X_T3CRAWLER Header
      *
-     * @return	mixed	user array or false
+     * @return mixed user array or false
      */
     public function getUser()
     {
@@ -39,6 +46,7 @@ class tx_crawler_auth extends \TYPO3\CMS\Sv\AbstractAuthenticationService
         if (isset($_SERVER['HTTP_X_T3CRAWLER'])) {
             $user = $this->fetchUserRecord('_cli_crawler');
         }
+
         return $user;
     }
 
@@ -46,6 +54,7 @@ class tx_crawler_auth extends \TYPO3\CMS\Sv\AbstractAuthenticationService
      * Authenticate user
      *
      * @param array user
+     *
      * @return int 100="don't know", 0="no", 200="yes"
      */
     public function authUser(array $user)
@@ -53,10 +62,7 @@ class tx_crawler_auth extends \TYPO3\CMS\Sv\AbstractAuthenticationService
         if (isset($_SERVER['HTTP_X_T3CRAWLER'])) {
             return ($user['username'] == '_cli_crawler') ? 200 : 100;
         }
+
         return 100;
     }
-}
-
-if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/aoe_wspreview/service/class.tx_aoewspreview_service_urlLogin.php"]) {
-    include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/aoe_wspreview/service/class.tx_aoewspreview_service_urlLogin.php"]);
 }

@@ -4,7 +4,7 @@ namespace AOE\Crawler\ClickMenu;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2016 AOE GmbH <dev@aoe.com>
+ *  (c) 2017 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -37,11 +37,10 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
  */
 class CrawlerClickMenu
 {
-
     /**
      * Main function
      *
-     * @param ClickMenu reference parent object
+     * @param ClickMenu $backRef reference parent object
      * @param array $menuItems
      * @param string $tableName
      * @param integer $uid

@@ -17,7 +17,7 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "typo3/cms": ">=7.6.0,<8.0"
+        "typo3/cms": ">=7.6.0,<8.7.99"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.8.0",
@@ -33,10 +33,8 @@
             "modfunc1",
             "template",
             "view",
-            "class.tx_crawler_api.php",
-            "class.tx_crawler_auth.php",
-            "class.tx_crawler_lib.php",
-            "class.tx_crawler_tcaFunc.php"
+            "Tests",
+            "class.tx_crawler_lib.php"
         ],
         "psr-4": {
             "AOE\\Crawler\\": "Classes/"
@@ -59,7 +57,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "5.1.x-dev"
+            "dev-master": "6.0.0-dev"
         },
         "typo3/cms": {
             "cms-package-dir": "{$vendor-dir}/typo3/cms",

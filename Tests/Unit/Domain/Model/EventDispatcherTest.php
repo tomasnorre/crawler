@@ -34,6 +34,10 @@ use TYPO3\CMS\Core\Tests\UnitTestCase;
  */
 class EventDispatcherTest extends UnitTestCase
 {
+
+    /**
+     * @var array
+     */
     protected $oldObservers;
 
     /**
@@ -58,60 +62,15 @@ class EventDispatcherTest extends UnitTestCase
     }
 
     /**
-     * Holds testdata for events and expected calls of the observers
-     *
-     * @return array
-     */
-    public function eventsAndResults()
-    {
-        return [
-            [
-                'events' => [
-                    ['name' => 'foo', 'group' => 111, 'parameters' => ['foo','bar']],
-                ],
-                'expectedFooCalls' => 1,
-                'expectedBarCalls' => 0
-            ],
-            [
-                'events' => [
-                    ['name' => 'bar', 'group' => 111, 'parameters' => ['foo','bar']],
-                ],
-                'expectedFooCalls' => 0,
-                'expectedBarCalls' => 1
-            ],
-            [
-                'events' => [
-                    ['name' => 'bar', 'group' => 111, 'parameters' => ['foo','bar']],
-                    ['name' => 'foo', 'group' => 111, 'parameters' => ['foo','bar']],
-                ],
-                'expectedFooCalls' => 1,
-                'expectedBarCalls' => 1
-            ],
-            [
-                'events' => [
-                    ['name' => 'bar', 'group' => 111, 'parameters' => ['foo','bar']],
-                    ['name' => 'foo', 'group' => 111, 'parameters' => ['foo','bar']],
-                    ['name' => 'foo', 'group' => 111, 'parameters' => ['foo','bar']],
-                    ['name' => 'foo', 'group' => 111, 'parameters' => ['foo','bar']],
-
-                ],
-                'expectedFooCalls' => 3,
-                'expectedBarCalls' => 1
-            ],
-        ];
-    }
-
-    /**
      * This test should test if the dispatcher, dispatches events to the right observers
      * at the right time.
      *
-     * @dataProvider eventsAndResults
      * @test
+     * @dataProvider eventsAndResultsDataProvider
+     *
      */
     public function canDispatcherDispatchEvent($events, $expectedFooCalls, $expectedBarCalls)
     {
-        $this->markTestSkipped('This is skipped atm as it fails with 7.6.x Travis Builds, please check issue on github, https://github.com/AOEpeople/crawler/issues/132');
-
         EventsHelper::$called_foo = 0;
         EventsHelper::$called_bar = 0;
 
@@ -126,5 +85,49 @@ class EventDispatcherTest extends UnitTestCase
 
         $this->assertEquals(EventsHelper::$called_foo, $expectedFooCalls);
         $this->assertEquals(EventsHelper::$called_bar, $expectedBarCalls);
+    }
+
+    /**
+     * Holds testdata for events and expected calls of the observers
+     *
+     * @return array
+     */
+    public function eventsAndResultsDataProvider()
+    {
+        return [
+            [
+                'events' => [
+                    ['name' => 'foo', 'group' => 111, 'parameters' => ['foo', 'bar']],
+                ],
+                'expectedFooCalls' => 1,
+                'expectedBarCalls' => 0
+            ],
+            [
+                'events' => [
+                    ['name' => 'bar', 'group' => 111, 'parameters' => ['foo', 'bar']],
+                ],
+                'expectedFooCalls' => 0,
+                'expectedBarCalls' => 1
+            ],
+            [
+                'events' => [
+                    ['name' => 'bar', 'group' => 111, 'parameters' => ['foo', 'bar']],
+                    ['name' => 'foo', 'group' => 111, 'parameters' => ['foo', 'bar']],
+                ],
+                'expectedFooCalls' => 1,
+                'expectedBarCalls' => 1
+            ],
+            [
+                'events' => [
+                    ['name' => 'bar', 'group' => 111, 'parameters' => ['foo', 'bar']],
+                    ['name' => 'foo', 'group' => 111, 'parameters' => ['foo', 'bar']],
+                    ['name' => 'foo', 'group' => 111, 'parameters' => ['foo', 'bar']],
+                    ['name' => 'foo', 'group' => 111, 'parameters' => ['foo', 'bar']],
+
+                ],
+                'expectedFooCalls' => 3,
+                'expectedBarCalls' => 1
+            ],
+        ];
     }
 }

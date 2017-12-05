@@ -128,7 +128,7 @@ class tx_crawler_view_pagination
      * Returns the total number of pages needed to  display all content which
      * is paginatable
      *
-     * @return int
+     * @return float
      */
     public function getTotalPagesCount()
     {

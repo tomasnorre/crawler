@@ -1,14 +1,16 @@
 <?php
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2009 AOE media (dev@aoemedia.de)
+ *  (c) 2017 AOE GmbH <dev@aoe.com>
+ *
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
+ *  the Free Software Foundation; either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  The GNU General Public License can be found at
@@ -22,6 +24,9 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+/**
+ * Class tx_crawler_view_process_list
+ */
 class tx_crawler_view_process_list
 {
 
@@ -115,7 +120,7 @@ class tx_crawler_view_process_list
     /**
      * Set the page id
      *
-     * @param int page id
+     * @param int $pageId page id
      */
     public function setPageId($pageId)
     {
@@ -198,6 +203,7 @@ class tx_crawler_view_process_list
 
     /**
      * Returns the path to start a cli process from the shell
+     *
      * @return string
      */
     public function getCliPath()
@@ -274,6 +280,7 @@ class tx_crawler_view_process_list
      * Formats a timestamp as date
      *
      * @param int $timestamp
+     *
      * @return string
      */
     protected function asDate($timestamp)
@@ -289,47 +296,12 @@ class tx_crawler_view_process_list
      * Converts seconds into minutes
      *
      * @param int $seconds
-     * @return int
+     *
+     * @return float
      */
     protected function asMinutes($seconds)
     {
         return round($seconds / 60);
-    }
-
-    /**
-     * Returns the state icon for the current job
-     *
-     * @param string $state
-     * @return string icon
-     */
-    protected function getIconForState($state)
-    {
-        switch ($state) {
-            case 'running':
-                $icon = 'bullet_orange';
-                $title = $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.process.running');
-                break;
-            case 'completed':
-                $icon = 'bullet_green';
-                $title = $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.process.success');
-                break;
-            case 'cancelled':
-                $icon = 'bullet_red';
-                $title = $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.process.cancelled');
-                break;
-        }
-
-        return $this->getIcon($icon, $title);
-    }
-
-    /**
-     * Returns a tag for the refresh icon
-     *
-     * @return string
-     */
-    protected function getRefreshIcon()
-    {
-        return $this->getIcon('arrow_refresh');
     }
 
     /**
@@ -339,17 +311,11 @@ class tx_crawler_view_process_list
      */
     protected function getRefreshLink()
     {
-        return '<input onclick="window.location=\'' . \TYPO3\CMS\Backend\Utility\BackendUtility::getModuleUrl('web_info') . '&SET[crawlaction]=multiprocess&id=' . $this->pageId . '\';" type="button" style="padding:4px 4px 4px 20px; background-position: 3px 3px; background-image: url(\'' . $this->getIconPath() . 'arrow_refresh.png' . '\'); background-repeat: no-repeat;" value="' . $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.refresh') . '" />';
-    }
-
-    /**
-     * Returns an icon to stop all processes
-     *
-     * @return string html tag for stop icon
-     */
-    protected function getStopIcon()
-    {
-        return $this->getIcon('stop');
+        return \AOE\Crawler\Utility\ButtonUtility::getLinkButton(
+            'actions-refresh',
+            $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.refresh'),
+            'window.location=\'' . \TYPO3\CMS\Backend\Utility\BackendUtility::getModuleUrl('web_info') . '&SET[crawlaction]=multiprocess&id=' . $this->pageId . '\';'
+        );
     }
 
     /**
@@ -360,9 +326,19 @@ class tx_crawler_view_process_list
     protected function getEnableDisableLink()
     {
         if ($this->getIsCrawlerEnabled()) {
-            return '<input onclick="window.location+=\'&action=stopCrawling\';" type="button" style="padding:4px 4px 4px 20px; background-position: 3px 3px; background-image: url(\'' . $this->getIconPath() . 'control_stop_blue.png' . '\'); background-repeat: no-repeat;" value="' . $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.disablecrawling') . '" />';
+            // TODO: Icon Should be bigger + Perhaps better icon
+            return \AOE\Crawler\Utility\ButtonUtility::getLinkButton(
+                'tx-crawler-stop',
+                $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.disablecrawling'),
+                'window.location+=\'&action=stopCrawling\';'
+            );
         } else {
-            return '<input onclick="window.location+=\'&action=resumeCrawling\';" type="button" style="padding:4px 4px 4px 20px; background-position: 3px 3px; background-image: url(\'' . $this->getIconPath() . 'control_play.png' . '\'); background-repeat: no-repeat;" value="' . $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.enablecrawling') . '" />';
+            // TODO: Icon Should be bigger
+            return \AOE\Crawler\Utility\ButtonUtility::getLinkButton(
+                'tx-crawler-start',
+                $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.enablecrawling'),
+                'window.location+=\'&action=resumeCrawling\';'
+            );
         }
     }
 
@@ -370,14 +346,23 @@ class tx_crawler_view_process_list
      * Get mode link
      *
      * @param void
+     *
      * @return string a-tag
      */
     protected function getModeLink()
     {
         if ($this->getMode() == 'detail') {
-            return '<input onclick="window.location+=\'&SET[processListMode]=simple\';" type="button" style="padding:4px 4px 4px 20px; background-position: 3px 3px; background-image: url(\'' . $this->getIconPath() . 'arrow_in.png' . '\'); background-repeat: no-repeat;" value="' . $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.show.running') . '" />';
+            return \AOE\Crawler\Utility\ButtonUtility::getLinkButton(
+                'actions-document-view',
+                $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.show.running'),
+                'window.location+=\'&SET[processListMode]=simple\';'
+            );
         } elseif ($this->getMode() == 'simple') {
-            return '<input onclick="window.location+=\'&SET[processListMode]=detail\';" type="button" style="padding:4px 4px 4px 20px; background-position: 3px 3px; background-image: url(\'' . $this->getIconPath() . 'arrow_out.png' . '\'); background-repeat: no-repeat;" value="' . $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.show.all') . '" />';
+            return \AOE\Crawler\Utility\ButtonUtility::getLinkButton(
+                'actions-document-view',
+                $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.show.all'),
+                'window.location+=\'&SET[processListMode]=detail\';'
+            );
         }
     }
 
@@ -385,39 +370,20 @@ class tx_crawler_view_process_list
      * Get add link
      *
      * @param void
+     *
      * @return string a-tag
      */
     protected function getAddLink()
     {
         if ($this->getActiveProcessCount() < $this->getMaxActiveProcessCount() && $this->getIsCrawlerEnabled()) {
-            return '<input onclick="window.location+=\'&action=addProcess\';" type="button" style="padding:4px 4px 4px 20px; background-position: 3px 3px; background-image: url(\'' . $this->getIconPath() . 'add.png' . '\'); background-repeat: no-repeat;" value="' . $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.process.add') . '" />';
+            return \AOE\Crawler\Utility\ButtonUtility::getLinkButton(
+                'actions-add',
+                $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.process.add'),
+                'window.location+=\'&action=addProcess\';'
+            );
         } else {
             return '';
         }
-    }
-
-    /**
-     * Returns the icon to add new crawler processes
-     *
-     * @return string html tag for image to add new processes
-     */
-    protected function getAddIcon()
-    {
-        return $this->getIcon('add');
-    }
-
-    /**
-     * Returns an imagetag for an icon
-     *
-     * @param string $icon
-     * @return string html tag for icon
-     */
-    protected function getIcon($icon, $title = '')
-    {
-        if (!empty($title)) {
-            $title = ' title="'.$title.'"';
-        }
-        return '<img src="'.$this->getIconPath().$icon.'.png" ' . $title . ' />';
     }
 
     /**
@@ -432,6 +398,7 @@ class tx_crawler_view_process_list
         include($this->template);
         $content = ob_get_contents();
         ob_end_clean();
+
         return $content;
     }
 
@@ -440,7 +407,8 @@ class tx_crawler_view_process_list
      * just a wrapper should be done in a cleaner way
      * later on
      *
-     * @param $label
+     * @param string $label
+     *
      * @return string
      */
     protected function getLLLabel($label)

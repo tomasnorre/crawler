@@ -32,6 +32,7 @@ class tx_crawler_domain_process_manager
      * @var $timeToLive integer
      */
     private $timeToLive;
+
     /**
      * @var integer
      */
@@ -80,6 +81,8 @@ class tx_crawler_domain_process_manager
      * starts multiple processes
      *
      * @param integer $timeout
+     *
+     * @throws RuntimeException
      */
     public function multiProcess($timeout)
     {
@@ -102,7 +105,7 @@ class tx_crawler_domain_process_manager
             }
             if ($currentPendingItems == 0) {
                 if ($this->verbose) {
-                    echo 'Finished...' . chr(10);
+                    echo 'Finished...'.chr(10);
                 }
                 break;
             }
@@ -114,16 +117,16 @@ class tx_crawler_domain_process_manager
             }
             sleep(1);
             if ($nextTimeOut < time()) {
-                $timedOutProcesses = $this->processRepository->findAll('', 'DESC', null, 0, 'ttl >' . $nextTimeOut);
+                $timedOutProcesses = $this->processRepository->findAll('', 'DESC', null, 0, 'ttl >'.$nextTimeOut);
                 $nextTimeOut = time() + $this->timeToLive;
                 if ($this->verbose) {
-                    echo 'Cleanup' . implode(',', $timedOutProcesses->getProcessIds()) . chr(10);
+                    echo 'Cleanup'.implode(',', $timedOutProcesses->getProcessIds()).chr(10);
                 }
                 $this->crawlerObj->CLI_releaseProcesses($timedOutProcesses->getProcessIds(), true);
             }
         }
         if ($currentPendingItems > 0 && $this->verbose) {
-            echo 'Stop with timeout' . chr(10);
+            echo 'Stop with timeout'.chr(10);
         }
     }
 

@@ -1,5 +1,5 @@
 <?php
-if (!defined('TYPO3_cliMode')) {
+if (!defined('TYPO3_REQUESTTYPE_CLI')) {
     die('You cannot run this script directly!');
 }
 

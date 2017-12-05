@@ -33,6 +33,8 @@ use AOE\Crawler\Hooks\TsfeHook;
  * Class HookUtility
  *
  * @package AOE\Crawler\Utility
+ *
+ * @codeCoverageIgnore
  */
 class HookUtility
 {

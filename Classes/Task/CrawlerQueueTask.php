@@ -32,6 +32,7 @@ use TYPO3\CMS\Scheduler\Task\AbstractTask;
  * Class CrawlerQueueTask
  *
  * @package AOE\Crawler\Task
+ * @codeCoverageIgnore
  */
 class CrawlerQueueTask extends AbstractTask
 {
@@ -48,6 +49,13 @@ class CrawlerQueueTask extends AbstractTask
      * @var integer
      */
     public $depth;
+
+    /**
+     * Startpage for the crawler
+     *
+     * @var integer
+     */
+    public $startPage;
 
     /**
      * Configuration to run (comma separated list)
