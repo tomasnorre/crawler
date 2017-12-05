@@ -306,13 +306,6 @@ class tx_crawler_lib {
     array &$downloadUrls,
     array $incomingProcInstructions) {
 
-        // realurl support (thanks to Ingo Renner)
-        if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('realurl') && $vv['subCfg']['realurl']) {
-            if ($GLOBALS['TSFE'] === null) {
-                $this->initTSFE((int) $pageRow['uid']);
-            }
-        }
-
         if (is_array($vv['URLs']))    {
             $configurationHash     =    md5(serialize($vv));
             $skipInnerCheck     =    $this->noUnprocessedQueueEntriesForPageWithConfigurationHashExist($pageRow['uid'],$configurationHash);
@@ -332,7 +325,10 @@ class tx_crawler_lib {
                     $uKey = $urlQuery.'|'.$vv['subCfg']['userGroups'].'|'.$vv['subCfg']['baseUrl'].'|'.$vv['subCfg']['procInstrFilter'];
 
                     if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('realurl') && $vv['subCfg']['realurl']) {
-                        // realurl support (thanks to Ingo Renner)
+                        if ($GLOBALS['TSFE'] === null) {
+                            $this->initTSFE((int) $pageRow['uid']);
+                        }
+
                         // realurl checks the url including the absRefPrefix, so it's important to add it here
                         $urlQuery = $GLOBALS['TSFE']->absRefPrefix.'index.php' . $urlQuery;
 
@@ -381,7 +377,10 @@ class tx_crawler_lib {
                         $urlList = '['.date('d.m.y H:i', $schTime).'] '.htmlspecialchars($urlQuery);
                         $this->urlList[] = '['.date('d.m.y H:i', $schTime).'] '.$urlQuery;
 
-                        $theUrl = ($vv['subCfg']['baseUrl'] ? $vv['subCfg']['baseUrl'] : \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL')) . $urlQuery;
+                        $theUrl = ($vv['subCfg']['baseUrl']
+                                ? $vv['subCfg']['baseUrl']
+                                : \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL')) .
+                            (($urlQuery != '/') ? $urlQuery : '');
 
                         // Submit for crawling!
                         if ($submitCrawlUrls)    {
@@ -493,22 +492,22 @@ class tx_crawler_lib {
                         }
                         $pidOnlyList = implode(',',\TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',',$subCfg['pidsOnly'],1));
 
-                            // process configuration if it is not page-specific or if the specific page is the current page:
+                        // process configuration if it is not page-specific or if the specific page is the current page:
                         if (!strcmp($subCfg['pidsOnly'],'') || \TYPO3\CMS\Core\Utility\GeneralUtility::inList($pidOnlyList,$id))    {
 
-                                // add trailing slash if not present
+                            // add trailing slash if not present
                             if (!empty($subCfg['baseUrl']) && substr($subCfg['baseUrl'], -1) != '/') {
                                 $subCfg['baseUrl'] .= '/';
                             }
 
-                                // Explode, process etc.:
+                            // Explode, process etc.:
                             $res[$key] = array();
                             $res[$key]['subCfg'] = $subCfg;
                             $res[$key]['paramParsed'] = $this->parseParams($values);
                             $res[$key]['paramExpanded'] = $this->expandParameters($res[$key]['paramParsed'],$id);
                             $res[$key]['origin'] = 'pagets';
 
-                                // recognize MP value
+                            // recognize MP value
                             if(!$this->MP){
                                 $res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'],array('?id='.$id));
                             } else {
@@ -525,7 +524,7 @@ class tx_crawler_lib {
          * Get configuration from tx_crawler_configuration records
          */
 
-            // get records along the rootline
+        // get records along the rootline
         $rootLine = \TYPO3\CMS\Backend\Utility\BackendUtility::BEgetRootLine($id);
 
         foreach ($rootLine as $page) {
@@ -539,19 +538,19 @@ class tx_crawler_lib {
             if (is_array($configurationRecordsForCurrentPage)) {
                 foreach ($configurationRecordsForCurrentPage as $configurationRecord) {
 
-                        // check access to the configuration record
+                    // check access to the configuration record
                     if (empty($configurationRecord['begroups']) || $GLOBALS['BE_USER']->isAdmin() || $this->hasGroupAccess($GLOBALS['BE_USER']->user['usergroup_cached_list'], $configurationRecord['begroups'])) {
 
                         $pidOnlyList = implode(',',\TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',',$configurationRecord['pidsonly'],1));
 
-                            // process configuration if it is not page-specific or if the specific page is the current page:
+                        // process configuration if it is not page-specific or if the specific page is the current page:
                         if (!strcmp($configurationRecord['pidsonly'],'') || \TYPO3\CMS\Core\Utility\GeneralUtility::inList($pidOnlyList,$id)) {
                             $key = $configurationRecord['name'];
 
-                                // don't overwrite previously defined paramSets
+                            // don't overwrite previously defined paramSets
                             if (!isset($res[$key])) {
 
-                                    /* @var $TSparserObject \TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser */
+                                /* @var $TSparserObject \TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser */
                                 $TSparserObject = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser');
                                 $TSparserObject->parse($configurationRecord['processing_instruction_parameters_ts']);
 
@@ -566,7 +565,7 @@ class tx_crawler_lib {
                                     'key' => $key,
                                 );
 
-                                    // add trailing slash if not present
+                                // add trailing slash if not present
                                 if (!empty($subCfg['baseUrl']) && substr($subCfg['baseUrl'], -1) != '/') {
                                     $subCfg['baseUrl'] .= '/';
                                 }
@@ -703,7 +702,7 @@ class tx_crawler_lib {
      * @return array                Keys are Get var names, values are the values of the GET vars.
      */
     public function parseParams($inputQuery) {
-            // Extract all GET parameters into an ARRAY:
+        // Extract all GET parameters into an ARRAY:
         $paramKeyValues = array();
         $GETparams = explode('&', $inputQuery);
 
@@ -735,31 +734,31 @@ class tx_crawler_lib {
     protected function expandParameters($paramArray, $pid)    {
         global $TCA;
 
-            // Traverse parameter names:
+        // Traverse parameter names:
         foreach($paramArray as $p => $v)    {
             $v = trim($v);
 
-                // If value is encapsulated in square brackets it means there are some ranges of values to find, otherwise the value is literal
+            // If value is encapsulated in square brackets it means there are some ranges of values to find, otherwise the value is literal
             if (substr($v,0,1)==='[' && substr($v,-1)===']')    {
-                    // So, find the value inside brackets and reset the paramArray value as an array.
+                // So, find the value inside brackets and reset the paramArray value as an array.
                 $v = substr($v,1,-1);
                 $paramArray[$p] = array();
 
-                    // Explode parts and traverse them:
+                // Explode parts and traverse them:
                 $parts = explode('|',$v);
                 foreach($parts as $pV)    {
 
-                        // Look for integer range: (fx. 1-34 or -40--30 // reads minus 40 to minus 30)
+                    // Look for integer range: (fx. 1-34 or -40--30 // reads minus 40 to minus 30)
                     if (preg_match('/^(-?[0-9]+)\s*-\s*(-?[0-9]+)$/',trim($pV),$reg))    {    // Integer range:
 
-                            // Swap if first is larger than last:
+                        // Swap if first is larger than last:
                         if ($reg[1] > $reg[2])    {
                             $temp = $reg[2];
                             $reg[2] = $reg[1];
                             $reg[1] = $temp;
                         }
 
-                            // Traverse range, add values:
+                        // Traverse range, add values:
                         $runAwayBrake = 1000;    // Limit to size of range!
                         for($a=$reg[1]; $a<=$reg[2];$a++)    {
                             $paramArray[$p][] = $a;
@@ -770,7 +769,7 @@ class tx_crawler_lib {
                         }
                     } elseif (substr(trim($pV),0,7)=='_TABLE:')    {
 
-                            // Parse parameters:
+                        // Parse parameters:
                         $subparts = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(';',$pV);
                         $subpartParams = array();
                         foreach($subparts as $spV)    {
@@ -778,7 +777,7 @@ class tx_crawler_lib {
                             $subpartParams[$pKey] = $pVal;
                         }
 
-                            // Table exists:
+                        // Table exists:
                         if (isset($TCA[$subpartParams['_TABLE']]))    {
                             $lookUpPid = isset($subpartParams['_PID']) ? intval($subpartParams['_PID']) : $pid;
                             $pidField = isset($subpartParams['_PIDFIELD']) ? trim($subpartParams['_PIDFIELD']) : 'pid';
@@ -816,7 +815,7 @@ class tx_crawler_lib {
                     } else {    // Just add value:
                         $paramArray[$p][] = $pV;
                     }
-                        // Hook for processing own expandParameters place holder
+                    // Hook for processing own expandParameters place holder
                     if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/class.tx_crawler_lib.php']['expandParameters'])) {
                         $_params = array(
                             'pObj' => &$this,
@@ -831,11 +830,11 @@ class tx_crawler_lib {
                     }
                 }
 
-                    // Make unique set of values and sort array by key:
+                // Make unique set of values and sort array by key:
                 $paramArray[$p] = array_unique($paramArray[$p]);
                 ksort($paramArray);
             } else {
-                    // Set the literal value as only value in array:
+                // Set the literal value as only value in array:
                 $paramArray[$p] = array($v);
             }
         }
@@ -854,12 +853,12 @@ class tx_crawler_lib {
     public function compileUrls($paramArray, $urls = array()) {
 
         if (count($paramArray) && is_array($urls)) {
-                // shift first off stack:
+            // shift first off stack:
             reset($paramArray);
             $varName = key($paramArray);
             $valueSet = array_shift($paramArray);
 
-                // Traverse value set:
+            // Traverse value set:
             $newUrls = array();
             foreach($urls as $url) {
                 foreach($valueSet as $val) {
@@ -988,7 +987,7 @@ class tx_crawler_lib {
         if (!is_array($params))    $params = array();
         $params['_CALLBACKOBJ'] = $callBack;
 
-            // Compile value array:
+        // Compile value array:
         $fieldArray = array(
             'page_id' => intval($page_id),
             'parameters' => serialize($params),
@@ -1029,25 +1028,25 @@ class tx_crawler_lib {
 
         $urlAdded = false;
 
-            // Creating parameters:
+        // Creating parameters:
         $parameters = array(
             'url' => $url
         );
 
-            // fe user group simulation:
+        // fe user group simulation:
         $uGs = implode(',',array_unique(\TYPO3\CMS\Core\Utility\GeneralUtility::intExplode(',',$subCfg['userGroups'],1)));
         if ($uGs)    {
             $parameters['feUserGroupList'] = $uGs;
         }
 
-            // Setting processing instructions
+        // Setting processing instructions
         $parameters['procInstructions'] = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',',$subCfg['procInstrFilter']);
         if (is_array($subCfg['procInstrParams.']))    {
             $parameters['procInstrParams'] = $subCfg['procInstrParams.'];
         }
 
 
-            // Compile value array:
+        // Compile value array:
         $parameters_serialized = serialize($parameters);
         $fieldArray = array(
             'page_id' => intval($id),
@@ -1062,12 +1061,12 @@ class tx_crawler_lib {
         );
 
         if ($this->registerQueueEntriesInternallyOnly)    {
-                //the entries will only be registered and not stored to the database
+            //the entries will only be registered and not stored to the database
             $this->queueEntries[] = $fieldArray;
         } else {
 
             if(!$skipInnerDuplicationCheck){
-                    // check if there is already an equal entry
+                // check if there is already an equal entry
                 $rows = $this->getDuplicateRowsIfExist($tstamp,$fieldArray);
             }
 
@@ -1100,7 +1099,7 @@ class tx_crawler_lib {
 
         $currentTime = $this->getCurrentTime();
 
-            //if this entry is scheduled with "now"
+        //if this entry is scheduled with "now"
         if ($tstamp <= $currentTime) {
             if($this->extensionSettings['enableTimeslot']){
                 $timeBegin     = $currentTime - 100;
@@ -1110,7 +1109,7 @@ class tx_crawler_lib {
                 $where = 'scheduled <= ' . $currentTime;
             }
         } elseif ($tstamp > $currentTime) {
-                //entry with a timestamp in the future need to have the same schedule time
+            //entry with a timestamp in the future need to have the same schedule time
             $where = 'scheduled = ' . $tstamp ;
         }
 
@@ -1147,7 +1146,7 @@ class tx_crawler_lib {
         return time();
     }
 
-     /************************************
+    /************************************
      *
      * URL reading
      *
@@ -1238,7 +1237,7 @@ class tx_crawler_lib {
      */
     protected function readUrlFromArray($field_array)    {
 
-            // Set exec_time to lock record:
+        // Set exec_time to lock record:
         $field_array['exec_time'] = $this->getCurrentTime();
         $this->db->exec_INSERTquery('tx_crawler_queue', $field_array);
         $queueId = $field_array['qid'] = $this->db->sql_insert_id();
@@ -1266,7 +1265,7 @@ class tx_crawler_lib {
      * @return string Result output.
      */
     protected function readUrl_exec($queueRec)    {
-            // Decode parameters:
+        // Decode parameters:
         $parameters = unserialize($queueRec['parameters']);
         $result = 'ERROR';
         if (is_array($parameters))    {
@@ -1281,10 +1280,10 @@ class tx_crawler_lib {
                 }
             } else {    // Regular FE request:
 
-                    // Prepare:
+                // Prepare:
                 $crawlerId = $queueRec['qid'].':'.md5($queueRec['qid'].'|'.$queueRec['set_id'].'|'.$GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']);
 
-                    // Get result:
+                // Get result:
                 $result = $this->requestUrl($parameters['url'],$crawlerId);
 
                 tx_crawler_domain_events_dispatcher::getInstance()->post('urlCrawled',$queueRec['set_id'],array('url' => $parameters['url'], 'result' => $result));
@@ -1308,7 +1307,7 @@ class tx_crawler_lib {
 
         if (!$recursion) return false;
 
-            // Parse URL, checking for scheme:
+        // Parse URL, checking for scheme:
         $url = parse_url($originalUrl);
 
         if ($url === FALSE) {
@@ -1321,7 +1320,7 @@ class tx_crawler_lib {
             return FALSE;
         }
 
- 	    // direct request
+        // direct request
         if ($this->extensionSettings['makeDirectRequests']) {
             $result = $this->sendDirectRequest($originalUrl, $crawlerId);
             return $result;
@@ -1329,7 +1328,7 @@ class tx_crawler_lib {
 
         $reqHeaders = $this->buildRequestHeaderArray($url, $crawlerId);
 
-            // thanks to Pierrick Caillon for adding proxy support
+        // thanks to Pierrick Caillon for adding proxy support
         $rurl = $url;
 
         if ($GLOBALS['TYPO3_CONF_VARS']['SYS']['curlUse'] && $GLOBALS['TYPO3_CONF_VARS']['SYS']['curlProxyServer']) {
@@ -1354,18 +1353,18 @@ class tx_crawler_lib {
             if (TYPO3_DLOG) \TYPO3\CMS\Core\Utility\GeneralUtility::devLog(sprintf('Error while opening "%s"', $url), 'crawler', 4, array('crawlerId' => $crawlerId));
             return FALSE;
         } else {
-                // Request message:
+            // Request message:
             $msg = implode("\r\n",$reqHeaders)."\r\n\r\n";
             fputs ($fp, $msg);
 
-                // Read response:
+            // Read response:
             $d = $this->getHttpResponseFromStream($fp);
             fclose ($fp);
 
             $time = microtime(true) - $startTime;
             $this->log($originalUrl .' '.$time);
 
-                // Implode content and headers:
+            // Implode content and headers:
             $result = array(
                 'request' => $msg,
                 'headers' => implode('', $d['headers']),
@@ -1401,10 +1400,10 @@ class tx_crawler_lib {
         // Get the path from the extension settings:
         if (isset($this->extensionSettings['frontendBasePath']) && $this->extensionSettings['frontendBasePath']) {
             $frontendBasePath = $this->extensionSettings['frontendBasePath'];
-        // If empty, try to use config.absRefPrefix:
+            // If empty, try to use config.absRefPrefix:
         } elseif (isset($GLOBALS['TSFE']->absRefPrefix) && !empty($GLOBALS['TSFE']->absRefPrefix)) {
             $frontendBasePath = $GLOBALS['TSFE']->absRefPrefix;
-        // If not in CLI mode the base path can be determined from $_SERVER environment:
+            // If not in CLI mode the base path can be determined from $_SERVER environment:
         } elseif (!defined('TYPO3_cliMode') || !TYPO3_cliMode) {
             $frontendBasePath = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_PATH');
         }
@@ -1444,7 +1443,7 @@ class tx_crawler_lib {
         $response = array('headers' => array(), 'content' => array());
 
         if (is_resource($streamPointer)) {
-                // read headers
+            // read headers
             while($line = fgets($streamPointer, '2048')) {
                 $line = trim($line);
                 if ($line !== '') {
@@ -1454,7 +1453,7 @@ class tx_crawler_lib {
                 }
             }
 
-                // read content
+            // read content
             while($line = fgets($streamPointer, '2048')) {
                 $response['content'][] = $line;
             }
@@ -1541,12 +1540,12 @@ class tx_crawler_lib {
      */
     function fe_init(&$params, $ref)    {
 
-            // Authenticate crawler request:
+        // Authenticate crawler request:
         if (isset($_SERVER['HTTP_X_T3CRAWLER']))    {
             list($queueId,$hash) = explode(':', $_SERVER['HTTP_X_T3CRAWLER']);
             list($queueRec) = $this->db->exec_SELECTgetRows('*','tx_crawler_queue','qid='.intval($queueId));
 
-                // If a crawler record was found and hash was matching, set it up:
+            // If a crawler record was found and hash was matching, set it up:
             if (is_array($queueRec) && $hash === md5($queueRec['qid'].'|'.$queueRec['set_id'].'|'.$GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']))    {
                 $params['pObj']->applicationData['tx_crawler']['running'] = TRUE;
                 $params['pObj']->applicationData['tx_crawler']['parameters'] = unserialize($queueRec['parameters']);
@@ -1601,37 +1600,37 @@ class tx_crawler_lib {
         $this->duplicateTrack = array();
         $this->downloadUrls = array();
 
-            // Drawing tree:
-            /* @var $tree \TYPO3\CMS\Backend\Tree\View\PageTreeView */
+        // Drawing tree:
+        /* @var $tree \TYPO3\CMS\Backend\Tree\View\PageTreeView */
         $tree = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Backend\Tree\View\PageTreeView');
         $perms_clause = $GLOBALS['BE_USER']->getPagePermsClause(1);
         $tree->init('AND ' . $perms_clause);
 
         $pageinfo = \TYPO3\CMS\Backend\Utility\BackendUtility::readPageAccess($id, $perms_clause);
 
-            // Set root row:
+        // Set root row:
         $tree->tree[] = Array(
             'row' => $pageinfo,
             'HTML' => \TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIconForRecord('pages', $pageinfo)
         );
 
-            // Get branch beneath:
+        // Get branch beneath:
         if ($depth)    {
             $tree->getTree($id, $depth, '');
         }
 
-            // Traverse page tree:
+        // Traverse page tree:
         $code = '';
 
         foreach ($tree->tree as $data) {
 
             $this->MP = false;
 
-                // recognize mount points
+            // recognize mount points
             if($data['row']['doktype'] == 7){
                 $mountpage = $this->db->exec_SELECTgetRows('*', 'pages', 'uid = '.$data['row']['uid']);
 
-                    // fetch mounted pages
+                // fetch mounted pages
                 $this->MP = $mountpage[0]['mount_pid'].'-'.$data['row']['uid'];
 
                 $mountTree = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Backend\Tree\View\PageTreeView');
@@ -1645,11 +1644,11 @@ class tx_crawler_lib {
                     );
                 }
 
-                    // replace page when mount_pid_ol is enabled
+                // replace page when mount_pid_ol is enabled
                 if($mountpage[0]['mount_pid_ol']){
                     $data['row']['uid'] = $mountpage[0]['mount_pid'];
                 } else {
-                        // if the mount_pid_ol is not set the MP must not be used for the mountpoint page
+                    // if the mount_pid_ol is not set the MP must not be used for the mountpoint page
                     $this->MP = false;
                 }
             }
@@ -1670,7 +1669,7 @@ class tx_crawler_lib {
      * @return array                    Array of page ids.
      */
     public function expandExcludeString($excludeString) {
-            // internal static caches;
+        // internal static caches;
         static $expandedExcludeStringCache;
         static $treeCache;
 
@@ -1687,7 +1686,7 @@ class tx_crawler_lib {
                 foreach ($excludeParts as $excludePart) {
                     list($pid, $depth) = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode('+', $excludePart);
 
-                        // default is "page only" = "depth=0"
+                    // default is "page only" = "depth=0"
                     if (empty($depth)) {
                         $depth = ( stristr($excludePart,'+')) ? 99 : 0;
                     }
@@ -1726,11 +1725,11 @@ class tx_crawler_lib {
 
         $skipMessage = '';
 
-            // Get list of configurations
+        // Get list of configurations
         $configurations = $this->getUrlsForPageRow($pageRow, $skipMessage);
 
         if (count($this->incomingConfigurationSelection) > 0) {
-                //     remove configuration that does not match the current selection
+            //     remove configuration that does not match the current selection
             foreach ($configurations as $confKey => $confArray) {
                 if (!in_array($confKey, $this->incomingConfigurationSelection)) {
                     unset($configurations[$confKey]);
@@ -1738,14 +1737,14 @@ class tx_crawler_lib {
             }
         }
 
-            // Traverse parameter combinations:
+        // Traverse parameter combinations:
         $c = 0;
         $cc = 0;
         $content = '';
         if (count($configurations)) {
             foreach($configurations as $confKey => $confArray)    {
 
-                    // Title column:
+                // Title column:
                 if (!$c) {
                     $titleClm = '<td rowspan="'.count($configurations).'">'.$pageTitleAndIcon.'</td>';
                 } else {
@@ -1755,7 +1754,7 @@ class tx_crawler_lib {
 
                 if (!in_array($pageRow['uid'], $this->expandExcludeString($confArray['subCfg']['exclude']))) {
 
-                        // URL list:
+                    // URL list:
                     $urlList = $this->urlListFromUrlArray(
                         $confArray,
                         $pageRow,
@@ -1768,7 +1767,7 @@ class tx_crawler_lib {
                         $this->incomingProcInstructions // if empty the urls won't be filtered by processing instructions
                     );
 
-                        // Expanded parameters:
+                    // Expanded parameters:
                     $paramExpanded = '';
                     $calcAccu = array();
                     $calcRes = 1;
@@ -1776,8 +1775,8 @@ class tx_crawler_lib {
                         $paramExpanded.= '
                             <tr>
                                 <td class="bgColor4-20">'.htmlspecialchars('&'.$gVar.'=').'<br/>'.
-                                                '('.count($gVal).')'.
-                                                '</td>
+                            '('.count($gVal).')'.
+                            '</td>
                                 <td class="bgColor4" nowrap="nowrap">'.nl2br(htmlspecialchars(implode(chr(10),$gVal))).'</td>
                             </tr>
                         ';
@@ -1787,7 +1786,7 @@ class tx_crawler_lib {
                     $paramExpanded = '<table class="lrPadding c-list param-expanded">'.$paramExpanded.'</table>';
                     $paramExpanded.= 'Comb: '.implode('*',$calcAccu).'='.$calcRes;
 
-                        // Options
+                    // Options
                     $optionValues = '';
                     if ($confArray['subCfg']['userGroups'])    {
                         $optionValues.='User Groups: '.$confArray['subCfg']['userGroups'].'<br/>';
@@ -1799,7 +1798,7 @@ class tx_crawler_lib {
                         $optionValues.='ProcInstr: '.$confArray['subCfg']['procInstrFilter'].'<br/>';
                     }
 
-                        // Compile row:
+                    // Compile row:
                     $content .= '
                         <tr class="bgColor' . ($c%2 ? '-20':'-10') . '">
                             ' . $titleClm . '
@@ -1826,7 +1825,7 @@ class tx_crawler_lib {
         } else {
             $message = !empty($skipMessage) ? ' ('.$skipMessage.')' : '';
 
-                // Compile row:
+            // Compile row:
             $content.= '
                 <tr class="bgColor-20" style="border-bottom: 1px solid black;">
                     <td>'.$pageTitleAndIcon.'</td>
@@ -1843,9 +1842,9 @@ class tx_crawler_lib {
      */
     function getUnprocessedItemsCount() {
         $res = $this->db->exec_SELECTquery(
-                    'count(*) as num',
-                    'tx_crawler_queue',
-                    'exec_time=0
+            'count(*) as num',
+            'tx_crawler_queue',
+            'exec_time=0
                     AND process_scheduled= 0
                     AND scheduled<='.$this->getCurrentTime()
         );
@@ -1879,23 +1878,23 @@ class tx_crawler_lib {
 
         if (!$this->getDisabled() && $this->CLI_checkAndAcquireNewProcess($this->CLI_buildProcessId())) {
             $countInARun = $cliObj->cli_argValue('--countInARun') ? intval($cliObj->cli_argValue('--countInARun')) : $this->extensionSettings['countInARun'];
-                // Seconds
+            // Seconds
             $sleepAfterFinish = $cliObj->cli_argValue('--sleepAfterFinish') ? intval($cliObj->cli_argValue('--sleepAfterFinish')) : $this->extensionSettings['sleepAfterFinish'];
-                // Milliseconds
+            // Milliseconds
             $sleepTime = $cliObj->cli_argValue('--sleepTime') ? intval($cliObj->cli_argValue('--sleepTime')) : $this->extensionSettings['sleepTime'];
 
             try {
-                    // Run process:
+                // Run process:
                 $result = $this->CLI_run($countInARun, $sleepTime, $sleepAfterFinish);
             } catch (Exception $e) {
                 $this->CLI_debug(get_class($e) . ': ' . $e->getMessage());
                 $result = self::CLI_STATUS_ABORTED;
             }
 
-                // Cleanup
+            // Cleanup
             $this->db->exec_DELETEquery('tx_crawler_process', 'assigned_items_count = 0');
 
-                //TODO can't we do that in a clean way?
+            //TODO can't we do that in a clean way?
             $releaseStatus = $this->CLI_releaseProcesses($this->CLI_buildProcessId());
 
             $this->CLI_debug("Unprocessed Items remaining:".$this->getUnprocessedItemsCount()." (".$this->CLI_buildProcessId().")");
@@ -1917,11 +1916,11 @@ class tx_crawler_lib {
 
         $cliObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_crawler_cli_im');
 
-            // Force user to admin state and set workspace to "Live":
+        // Force user to admin state and set workspace to "Live":
         $this->backendUser->user['admin'] = 1;
         $this->backendUser->setWorkspace(0);
 
-            // Print help
+        // Print help
         if (!isset($cliObj->cli_args['_DEFAULT'][1]))    {
             $cliObj->cli_validateArgs();
             $cliObj->cli_help();
@@ -2020,11 +2019,11 @@ class tx_crawler_lib {
         $this->setAccessMode('cli_flush');
         $cliObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_crawler_cli_flush');
 
-            // Force user to admin state and set workspace to "Live":
+        // Force user to admin state and set workspace to "Live":
         $this->backendUser->user['admin'] = 1;
         $this->backendUser->setWorkspace(0);
 
-            // Print help
+        // Print help
         if (!isset($cliObj->cli_args['_DEFAULT'][1])) {
             $cliObj->cli_validateArgs();
             $cliObj->cli_help();
@@ -2077,10 +2076,10 @@ class tx_crawler_lib {
         $result = 0;
         $counter = 0;
 
-            // First, run hooks:
+        // First, run hooks:
         $this->CLI_runHooks();
 
-            // Clean up the queue
+        // Clean up the queue
         if (intval($this->extensionSettings['purgeQueueDays']) > 0) {
             $purgeDate = $this->getCurrentTime() - 24 * 60 * 60 * intval($this->extensionSettings['purgeQueueDays']);
             $del = $this->db->exec_DELETEquery(
@@ -2089,8 +2088,8 @@ class tx_crawler_lib {
             );
         }
 
-            // Select entries:
-            //TODO Shouldn't this reside within the transaction?
+        // Select entries:
+        //TODO Shouldn't this reside within the transaction?
         $rows = $this->db->exec_SELECTgetRows(
             'qid,scheduled',
             'tx_crawler_queue',
@@ -2099,7 +2098,7 @@ class tx_crawler_lib {
                 AND scheduled<='.$this->getCurrentTime(),
             '',
             'scheduled, qid',
-        intval($countInARun)
+            intval($countInARun)
         );
 
         if (count($rows)>0) {
@@ -2111,9 +2110,9 @@ class tx_crawler_lib {
 
             $processId = $this->CLI_buildProcessId();
 
-                //reserve queue entrys for process
+            //reserve queue entrys for process
             $this->db->sql_query('BEGIN');
-                //TODO make sure we're not taking assigned queue-entires
+            //TODO make sure we're not taking assigned queue-entires
             $this->db->exec_UPDATEquery(
                 'tx_crawler_queue',
                 'qid IN ('.implode(',',$quidList).')',
@@ -2123,7 +2122,7 @@ class tx_crawler_lib {
                 )
             );
 
-                //save the number of assigned queue entrys to determine who many have been processed later
+            //save the number of assigned queue entrys to determine who many have been processed later
             $numberOfAffectedRows = $this->db->sql_affected_rows();
             $this->db->exec_UPDATEquery(
                 'tx_crawler_process',
@@ -2149,8 +2148,8 @@ class tx_crawler_lib {
                 $counter++;
                 usleep(intval($sleepTime));    // Just to relax the system
 
-                    // if during the start and the current read url the cli has been disable we need to return from the function
-                    // mark the process NOT as ended.
+                // if during the start and the current read url the cli has been disable we need to return from the function
+                // mark the process NOT as ended.
                 if ($this->getDisabled()) {
                     return ( $result | self::CLI_STATUS_ABORTED );
                 }
@@ -2158,7 +2157,7 @@ class tx_crawler_lib {
                 if (!$this->CLI_checkIfProcessIsActive($this->CLI_buildProcessId())) {
                     $this->CLI_debug("conflict / timeout (".$this->CLI_buildProcessId().")");
 
-                        //TODO might need an additional returncode
+                    //TODO might need an additional returncode
                     $result |= self::CLI_STATUS_ABORTED;
                     break;        //possible timeout
                 }
@@ -2223,24 +2222,24 @@ class tx_crawler_lib {
             'process_id,ttl',
             'tx_crawler_process',
             'active=1 AND deleted=0'
-            );
+        );
 
-            $currentTime = $this->getCurrentTime();
+        $currentTime = $this->getCurrentTime();
 
-            while($row = $this->db->sql_fetch_assoc($res))    {
-                if ($row['ttl'] < $currentTime) {
-                    $orphanProcesses[] = $row['process_id'];
-                } else {
-                    $processCount++;
-                }
+        while($row = $this->db->sql_fetch_assoc($res))    {
+            if ($row['ttl'] < $currentTime) {
+                $orphanProcesses[] = $row['process_id'];
+            } else {
+                $processCount++;
             }
+        }
 
-                // if there are less than allowed active processes then add a new one
-            if ($processCount < intval($this->extensionSettings['processLimit'])) {
-                $this->CLI_debug("add process ".$this->CLI_buildProcessId()." (".($processCount+1)."/".intval($this->extensionSettings['processLimit']).")");
+        // if there are less than allowed active processes then add a new one
+        if ($processCount < intval($this->extensionSettings['processLimit'])) {
+            $this->CLI_debug("add process ".$this->CLI_buildProcessId()." (".($processCount+1)."/".intval($this->extensionSettings['processLimit']).")");
 
-                    // create new process record
-                $this->db->exec_INSERTquery(
+            // create new process record
+            $this->db->exec_INSERTquery(
                 'tx_crawler_process',
                 array(
                     'process_id' => $id,
@@ -2248,19 +2247,19 @@ class tx_crawler_lib {
                     'ttl' => ($currentTime + intval($this->extensionSettings['processMaxRunTime'])),
                     'system_process_id' => $systemProcessId
                 )
-                );
+            );
 
-            } else {
-                $this->CLI_debug("Processlimit reached (".($processCount)."/".intval($this->extensionSettings['processLimit']).")");
-                $ret = false;
-            }
+        } else {
+            $this->CLI_debug("Processlimit reached (".($processCount)."/".intval($this->extensionSettings['processLimit']).")");
+            $ret = false;
+        }
 
-            $this->CLI_releaseProcesses($orphanProcesses, true); // maybe this should be somehow included into the current lock
-            $this->CLI_deleteProcessesMarkedDeleted();
+        $this->CLI_releaseProcesses($orphanProcesses, true); // maybe this should be somehow included into the current lock
+        $this->CLI_deleteProcessesMarkedDeleted();
 
-            $this->db->sql_query('COMMIT');
+        $this->db->sql_query('COMMIT');
 
-            return $ret;
+        return $ret;
     }
 
     /**
@@ -2282,10 +2281,10 @@ class tx_crawler_lib {
 
         if(!$withinLock) $this->db->sql_query('BEGIN');
 
-            // some kind of 2nd chance algo - this way you need at least 2 processes to have a real cleanup
-            // this ensures that a single process can't mess up the entire process table
+        // some kind of 2nd chance algo - this way you need at least 2 processes to have a real cleanup
+        // this ensures that a single process can't mess up the entire process table
 
-            // mark all processes as deleted which have no "waiting" queue-entires and which are not active
+        // mark all processes as deleted which have no "waiting" queue-entires and which are not active
         $this->db->exec_UPDATEquery(
             'tx_crawler_queue',
             'process_id IN (SELECT process_id FROM tx_crawler_process WHERE active=0 AND deleted=0)',
@@ -2307,7 +2306,7 @@ class tx_crawler_lib {
                 'system_process_id' => 0
             )
         );
-                // mark all requested processes as non-active
+        // mark all requested processes as non-active
         $this->db->exec_UPDATEquery(
             'tx_crawler_process',
             'process_id IN (\''.implode('\',\'',$releaseIds).'\') AND deleted=0',
@@ -2334,7 +2333,7 @@ class tx_crawler_lib {
      *
      * @return void
      */
-     public function CLI_deleteProcessesMarkedDeleted() {
+    public function CLI_deleteProcessesMarkedDeleted() {
         $this->db->exec_DELETEquery('tx_crawler_process', 'deleted = 1');
     }
 
