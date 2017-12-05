@@ -102,7 +102,6 @@ class tx_crawler_domain_process extends tx_crawler_domain_lib_abstract_dbobject
     /**
      * Counts the number of items which need to be processed
      *
-     * @author Timo Schmidt <timo.schmidt@aoemedia.de>
      * @param void
      * @return int
      */
@@ -115,7 +114,6 @@ class tx_crawler_domain_process extends tx_crawler_domain_lib_abstract_dbobject
     /**
      * Counts the number of items which still need to be processed
      *
-     * @author Timo Schmidt <timo.schmidt@aoemedia.de>
      * @param void
      * @return int
      */

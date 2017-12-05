@@ -74,7 +74,6 @@ class CrawlerQueueTask extends AbstractTask
     /**
      * Simulate cli call with setting the required options to the $_SERVER['argv']
      *
-     * @access protected
      * @return void
      */
     protected function setCliArguments()

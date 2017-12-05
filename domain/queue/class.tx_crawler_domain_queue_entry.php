@@ -34,7 +34,6 @@ class tx_crawler_domain_queue_entry extends tx_crawler_domain_lib_abstract_dbobj
      * Returns the execution time of the record as int value
      *
      * @param void
-     * @author Timo Schmidt <timo.schmidt@aoemedia.de>
      * @return int
      */
     public function getExecutionTime()

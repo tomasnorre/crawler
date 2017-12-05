@@ -79,7 +79,6 @@ class tx_crawler_domain_process_repository extends tx_crawler_domain_lib_abstrac
      *
      * @param  string $where    Where clause
      * @return integer
-     * @author Timo Schmidt <timo.schmidt@aoe.com>
      */
     public function countAll($where = '1 = 1')
     {
@@ -113,7 +112,6 @@ class tx_crawler_domain_process_repository extends tx_crawler_domain_lib_abstrac
      * @param  integer $itemCount   Item count
      * @param  integer $offset      Offset
      * @return string               Limit clause
-     * @author Fabrizio Branca <fabrizio.branca@aoem.com>
      */
     public static function getLimitFromItemCountAndOffset($itemCount, $offset)
     {

@@ -1,4 +1,5 @@
 <?php
+
 /***************************************************************
  *  Copyright notice
  *
@@ -23,28 +24,14 @@
  ***************************************************************/
 
 /**
- * Process collection
- *
- * class.tx_crawler_domain_process_collection.php
- *
- * @subject tx_crawler_domain_process
- * @author Timo Schmidt <schmidt@aoemedia.de>
- * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
- * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
- * @version $Id: class.tx_crawler_domain_process_collection.php $
- * @date 28.05.2009 11:47:26
- * @see ArrayObject
- * @category database
- * @package TYPO3
- * @subpackage crawler
- * @access public
+ * Class tx_crawler_domain_process_collection
  */
 class tx_crawler_domain_process_collection extends ArrayObject
 {
 
     /**
      * Method to retrieve an element from the collection.
-     * @access public
+     *
      * @throws Exception
      * @return tx_crawler_domain_process
      */
@@ -85,7 +72,7 @@ class tx_crawler_domain_process_collection extends ArrayObject
         }
         parent::append($subject);
     }
-    
+
     /**
      * returns array of process ids of the current collection
      * @return array

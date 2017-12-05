@@ -1,4 +1,5 @@
 <?php
+
 /***************************************************************
  *  Copyright notice
  *
@@ -23,22 +24,7 @@
  ***************************************************************/
 
 /**
- * This test is used to test that the crawler api works correct
- *
- * {@inheritdoc}
- *
- * class.tx_crawler_api_testcase.php
- *
- * @author Timo Schmidt <schmidt@aoemedia.de>
- * @copyright Copyright (c) 2009, AOE media GmbH <dev@aoemedia.de>
- * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
- * @version $Id: class.tx_crawler_api_testcase.php $
- * @date 16.06.2009 16:55:54
- * @seetx_phpunit_database_testcase
- * @category testcase
- * @package TYPO3
- * @subpackage crawler
- * @access public
+ * Class tx_crawler_api_testcase
  */
 class tx_crawler_api_testcase extends \TYPO3\CMS\Core\Tests\FunctionalTestCase
 {
@@ -93,9 +79,6 @@ class tx_crawler_api_testcase extends \TYPO3\CMS\Core\Tests\FunctionalTestCase
      * The testcase uses a TSConfig crawler configuration.
      *
      * @test
-     * @param void
-     * @author Timo Schmidt
-     * @author Fabrizio Branca
      * @return void
      */
     public function canNotCreateDuplicateQueueEntriesForTwoPagesInThePast()
@@ -116,11 +99,7 @@ class tx_crawler_api_testcase extends \TYPO3\CMS\Core\Tests\FunctionalTestCase
      * The testcase uses a TSConfig crawler configuration.
      *
      * @test
-     * @param void
-     * @author Timo Schmidt
-     * @author Fabrizio Branca
      * @return void
-     *
      */
     public function canNotCreateDuplicateForTwoPagesInTheFutureWithTheSameTimestamp()
     {
@@ -140,9 +119,6 @@ class tx_crawler_api_testcase extends \TYPO3\CMS\Core\Tests\FunctionalTestCase
      * The testcase uses a TSConfig crawler configuration.
      *
      * @test
-     * @param void
-     * @author Timo Schmidt
-     * @author Fabrizio Branca
      * @return void
      */
     public function canCreateTwoQueueEntriesForDiffrentTimestampsInTheFuture()
@@ -162,8 +138,6 @@ class tx_crawler_api_testcase extends \TYPO3\CMS\Core\Tests\FunctionalTestCase
      * Where the crawler is configured using configuration records instead of pagets config.
      *
      * @test
-     * @param void
-     * @author Timo Schmidt
      * @return void
      */
     public function canCreateQueueEntrysUsingConfigurationRecord()
