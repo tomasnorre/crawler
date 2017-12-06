@@ -26,7 +26,7 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
  ***************************************************************/
 
 use AOE\Crawler\Utility\BackendUtility;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Nimut\TestingFramework\TestCase\UnitTestCase;
 
 /**
  * Class ProcessCollectionTest

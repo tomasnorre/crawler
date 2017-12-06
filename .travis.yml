@@ -27,6 +27,7 @@ matrix:
   allow_failures:
     - env: TYPO3_VERSION=dev-master COVERAGE=0 FUNCTIONAL=1
     - env: TYPO3_VERSION=dev-master COVERAGE=0 FUNCTIONAL=0
+    - php: 7.2
 
 notifications:
   email:
@@ -58,9 +59,10 @@ before_script:
   - git checkout composer.json
   - export "TYPO3_PATH_WEB"=$PWD/.Build/Web;
   # Locating UnitTests.xml
-  - export "UNIT_XML"=`find . -name 'UnitTests.xml' -type f`
+  - export "UNIT_XML"='.Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml'
   # Location FunctionalTests.xml
-  - export "FUNCTIONAL_XML"=`find . -name 'FunctionalTests.xml' -type f`
+  - export "FUNCTIONAL_XML"='.Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml'
+  # Symlink TYPO3-Core
   - ln -nfs .Build/vendor/typo3/cms/typo3 typo3
 
 script:

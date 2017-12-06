@@ -25,7 +25,7 @@ namespace AOE\Crawler\Tests\Functional;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use TYPO3\CMS\Core\Tests\FunctionalTestCase;
+use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 
 /**
  * Class CrawlerLibTest
@@ -37,7 +37,7 @@ class CrawlerLibTest extends FunctionalTestCase
     /**
      * @var array
      */
-    protected $coreExtensionsToLoad = ['cms', 'core', 'frontend', 'version', 'lang', 'extensionmanager'];
+    protected $coreExtensionsToLoad = ['cms', 'core', 'frontend', 'version', 'lang', 'extensionmanager', 'fluid'];
 
     /**
      * @var array

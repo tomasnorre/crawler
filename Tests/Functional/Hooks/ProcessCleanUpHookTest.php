@@ -26,7 +26,7 @@ namespace AOE\Crawler\Tests\Functional\Hooks;
  ***************************************************************/
 
 use AOE\Crawler\Hooks\ProcessCleanUpHook;
-use TYPO3\CMS\Core\Tests\FunctionalTestCase;
+use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 

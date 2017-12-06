@@ -25,7 +25,7 @@ namespace AOE\Crawler\Tests\Functional\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use TYPO3\CMS\Core\Tests\FunctionalTestCase;
+use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 
 /**
  * Class ProcessTest

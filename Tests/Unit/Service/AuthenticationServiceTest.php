@@ -26,7 +26,7 @@ namespace AOE\Crawler\Tests\Unit\Service;
  ***************************************************************/
 
 use AOE\Crawler\Service\AuthenticationService;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Nimut\TestingFramework\TestCase\UnitTestCase;
 
 /**
  * Class AuthenticationServiceTest

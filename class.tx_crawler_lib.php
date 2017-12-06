@@ -568,7 +568,7 @@ class tx_crawler_lib
                                     'cHash' => $configurationRecord['chash'],
                                     'userGroups' => $configurationRecord['fegroups'],
                                     'exclude' => $configurationRecord['exclude'],
-                                    'rootTemplatePid' => $configurationRecord['root_template_pid'],
+                                    'rootTemplatePid' => (int) $configurationRecord['root_template_pid'],
                                     'key' => $key,
                                 ];
 
@@ -1663,7 +1663,7 @@ class tx_crawler_lib
         $pageinfo = \TYPO3\CMS\Backend\Utility\BackendUtility::readPageAccess($id, $perms_clause);
 
         // Set root row:
-            $tree->tree[] = [
+        $tree->tree[] = [
                 'row' => $pageinfo,
             'HTML' => \AOE\Crawler\Utility\IconUtility::getIconForRecord('pages', $pageinfo)
             ];
