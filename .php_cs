@@ -24,7 +24,14 @@ return PhpCsFixer\Config::create()
         'binary_operator_spaces' => ['default' => 'single_space'],
 
         // general code formatting
+        'concat_space' => ['spacing' => 'one'],
         'no_extra_consecutive_blank_lines' => true,
+        'ternary_operator_spaces' => true,
+
+        // phpdoc
+        'align_multiline_comment' => ['comment_type' => 'phpdocs_only'],
+        'general_phpdoc_annotation_remove' => ['author', 'since'],
+        'no_blank_lines_after_phpdoc' => true,
 
         // use statements
         'no_leading_import_slash' => true,
