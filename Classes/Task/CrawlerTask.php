@@ -56,7 +56,6 @@ class CrawlerTask extends AbstractTask
      *
      * @return bool
      */
-
     public function execute()
     {
         $this->setCliArguments();

@@ -56,7 +56,7 @@ class TcaUtility
     {
         $extIcon = '';
 
-        if (method_exists('TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility', 'getExtensionKeyByPrefix')) {
+        if (method_exists(ExtensionManagementUtility::class, 'getExtensionKeyByPrefix')) {
             $parts = explode('_', $key);
             if (is_array($parts) && count($parts) > 2) {
                 $extensionKey = ExtensionManagementUtility::getExtensionKeyByPrefix('tx_' . $parts[1]);

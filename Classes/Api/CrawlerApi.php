@@ -27,6 +27,7 @@ namespace AOE\Crawler\Api;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
+use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
  * Class CrawlerApi
@@ -91,15 +92,15 @@ class CrawlerApi
      */
     protected function findCrawler()
     {
-        if (! is_object($this->crawlerObj)) {
-            $this->crawlerObj = GeneralUtility::makeInstance('tx_crawler_lib');
+        if (!is_object($this->crawlerObj)) {
+            $this->crawlerObj = GeneralUtility::makeInstance(\tx_crawler_lib::class);
             $this->crawlerObj->setID = GeneralUtility::md5int(microtime());
         }
 
         if (is_object($this->crawlerObj)) {
             return $this->crawlerObj;
         } else {
-            throw new \Exception("no crawler object");
+            throw new \Exception('no crawler object', 1512659759);
         }
     }
 
@@ -126,7 +127,7 @@ class CrawlerApi
         if (count($this->allowedConfigrations) > 0) {
             // 	remove configuration that does not match the current selection
             foreach ($configurations as $confKey => $confArray) {
-                if (! in_array($confKey, $this->allowedConfigrations)) {
+                if (!in_array($confKey, $this->allowedConfigrations)) {
                     unset($configurations[$confKey]);
                 }
             }
@@ -148,7 +149,7 @@ class CrawlerApi
         $time = intval($time);
 
         $crawler = $this->findCrawler();
-        $pageData = GeneralUtility::makeInstance('TYPO3\CMS\Frontend\Page\PageRepository')->getPage($uid);
+        $pageData = GeneralUtility::makeInstance(PageRepository::class)->getPage($uid);
         $configurations = $crawler->getUrlsForPageRow($pageData);
         $configurations = $this->filterUnallowedConfigurations($configurations);
         $downloadUrls = [];
@@ -407,7 +408,7 @@ class CrawlerApi
      */
     protected function getQueueRepository()
     {
-        if (! $this->queueRepository instanceof \tx_crawler_domain_queue_repository) {
+        if (!$this->queueRepository instanceof \tx_crawler_domain_queue_repository) {
             $this->queueRepository = new \tx_crawler_domain_queue_repository();
         }
 
@@ -443,8 +444,6 @@ class CrawlerApi
      * @param void
      *
      * @return int
-     * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
-     * @since 2009-09-03
      */
     public function getActiveProcessesCount()
     {
@@ -529,7 +528,7 @@ class CrawlerApi
         $data['duration'] = $data['end'] - $data['start'];
 
         if ($data['duration'] < 1) {
-            throw new \Exception('End timestamp must be after start timestamp');
+            throw new \Exception('End timestamp must be after start timestamp', 1512659945);
         }
 
         for ($slotStart = $start; $slotStart < $end; $slotStart += $resolution) {

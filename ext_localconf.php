@@ -19,16 +19,12 @@ $GLOBALS['TYPO3_CONF_VARS']['SVCONF']['auth']['setup']['BE_alwaysFetchUser'] = t
     [
         'title' => 'Login for wsPreview',
         'description' => '',
-
         'subtype' => 'getUserBE,authUserBE',
-
         'available' => true,
         'priority' => 80,
         'quality' => 50,
-
         'os' => '',
         'exec' => '',
-
-        'className' => 'AOE\\Crawler\\Service\\AuthenticationService',
+        'className' => \AOE\Crawler\Service\AuthenticationService::class,
     ]
 );
