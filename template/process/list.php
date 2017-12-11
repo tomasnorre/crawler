@@ -53,7 +53,7 @@
 	</thead>
 	<tbody>
 		<?php foreach ($this->getProcessCollection() as $process): /* @var $process tx_crawler_domain_process */ ?>
-			<tr class="<?php echo (++$count % 2 == 0) ? 'odd': 'even' ?>">
+			<tr class="<?php echo (++$count % 2 == 0) ? 'odd' : 'even' ?>">
 				<td><?php echo $this->getIconForState(htmlspecialchars($process->getState())); ?></td>
 				<td><?php echo htmlspecialchars($process->getProcess_id()); ?></td>
 				<td><?php echo htmlspecialchars($this->asDate($process->getTimeForFirstItem())); ?></td>

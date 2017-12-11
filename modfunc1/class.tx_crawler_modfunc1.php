@@ -90,12 +90,12 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 
         return [
             'depth' => [
-                0 => $LANG->sL('LLL:EXT:lang/locallang_core.php:labels.depth_0'),
-                1 => $LANG->sL('LLL:EXT:lang/locallang_core.php:labels.depth_1'),
-                2 => $LANG->sL('LLL:EXT:lang/locallang_core.php:labels.depth_2'),
-                3 => $LANG->sL('LLL:EXT:lang/locallang_core.php:labels.depth_3'),
-                4 => $LANG->sL('LLL:EXT:lang/locallang_core.php:labels.depth_4'),
-                99 => $LANG->sL('LLL:EXT:lang/locallang_core.php:labels.depth_infi'),
+                0 => $LANG->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_0'),
+                1 => $LANG->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_1'),
+                2 => $LANG->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_2'),
+                3 => $LANG->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_3'),
+                4 => $LANG->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_4'),
+                99 => $LANG->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_infi'),
             ],
             'crawlaction' => [
                 'start' => $LANG->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.start'),
@@ -166,7 +166,7 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 				 white-space: nowrap; vertical-align: top;
 			}
 		--></style>
-		<link rel="stylesheet" type="text/css" href="'.$BACK_PATH.'../typo3conf/ext/crawler/template/res.css" />
+		<link rel="stylesheet" type="text/css" href="' . $BACK_PATH . '../typo3conf/ext/crawler/template/res.css" />
 		';
 
         // Type function menu:
@@ -205,11 +205,11 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 
             $setId = intval(\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('setID'));
 
-            $h_func .= '<hr/>'.
-                    $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.display').': '.\TYPO3\CMS\Backend\Utility\BackendUtility::getFuncMenu($this->pObj->id, 'SET[log_display]', $this->pObj->MOD_SETTINGS['log_display'], $this->pObj->MOD_MENU['log_display'], 'index.php', '&setID='.$setId) . ' - ' .
-                    $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.showresultlog').': '.\TYPO3\CMS\Backend\Utility\BackendUtility::getFuncCheck($this->pObj->id, 'SET[log_resultLog]', $this->pObj->MOD_SETTINGS['log_resultLog'], 'index.php', '&setID='.$setId . $quiPart) . ' - ' .
-                    $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.showfevars').': '.\TYPO3\CMS\Backend\Utility\BackendUtility::getFuncCheck($this->pObj->id, 'SET[log_feVars]', $this->pObj->MOD_SETTINGS['log_feVars'], 'index.php', '&setID='.$setId . $quiPart) . ' - ' .
-                    $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.itemsPerPage').': ' .
+            $h_func .= '<hr/>' .
+                    $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.display') . ': ' . \TYPO3\CMS\Backend\Utility\BackendUtility::getFuncMenu($this->pObj->id, 'SET[log_display]', $this->pObj->MOD_SETTINGS['log_display'], $this->pObj->MOD_MENU['log_display'], 'index.php', '&setID=' . $setId) . ' - ' .
+                    $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.showresultlog') . ': ' . \TYPO3\CMS\Backend\Utility\BackendUtility::getFuncCheck($this->pObj->id, 'SET[log_resultLog]', $this->pObj->MOD_SETTINGS['log_resultLog'], 'index.php', '&setID=' . $setId . $quiPart) . ' - ' .
+                    $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.showfevars') . ': ' . \TYPO3\CMS\Backend\Utility\BackendUtility::getFuncCheck($this->pObj->id, 'SET[log_feVars]', $this->pObj->MOD_SETTINGS['log_feVars'], 'index.php', '&setID=' . $setId . $quiPart) . ' - ' .
+                    $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.itemsPerPage') . ': ' .
                     \TYPO3\CMS\Backend\Utility\BackendUtility::getFuncMenu(
                         $this->pObj->id,
                         'SET[itemsPerPage]',
@@ -219,8 +219,7 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
                     );
         }
 
-        $theOutput = $this->pObj->doc->spacer(5);
-        $theOutput .= $this->pObj->doc->section($LANG->getLL('title'), $h_func, 0, 1);
+        $theOutput = $this->pObj->doc->section($LANG->getLL('title'), $h_func, 0, 1);
 
         // Branch based on type:
         switch ((string)$this->pObj->MOD_SETTINGS['crawlaction']) {
@@ -298,7 +297,7 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
             ) {
             $code = '
 			<tr>
-				<td colspan="7"><b>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.noConfigSelected').'</b></td>
+				<td colspan="7"><b>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.noConfigSelected') . '</b></td>
 			</tr>';
         } else {
             if ($this->submitCrawlUrls) {
@@ -308,7 +307,7 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
                 if ($BE_USER instanceof \TYPO3\CMS\Core\Authentication\BackendUserAuthentication) {
                     $username = $BE_USER->user['username'];
                 }
-                $reason->setDetailText('The user '.$username.' added pages to the crawler queue manually ');
+                $reason->setDetailText('The user ' . $username . ' added pages to the crawler queue manually ');
 
                 tx_crawler_domain_events_dispatcher::getInstance()->post(
                     'invokeQueueChange',
@@ -334,25 +333,25 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 
         $output = '';
         if ($code) {
-            $output .= '<h3>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.configuration').':</h3>';
-            $output .= '<input type="hidden" name="id" value="'.intval($this->pObj->id).'" />';
+            $output .= '<h3>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.configuration') . ':</h3>';
+            $output .= '<input type="hidden" name="id" value="' . intval($this->pObj->id) . '" />';
 
             if (!$this->submitCrawlUrls) {
-                $output .= $this->drawURLs_cfgSelectors().'<br />';
-                $output .= '<input type="submit" name="_update" value="'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.triggerUpdate').'" /> ';
-                $output .= '<input type="submit" name="_crawl" value="'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.triggerCrawl').'" /> ';
-                $output .= '<input type="submit" name="_download" value="'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.triggerDownload').'" /><br /><br />';
-                $output .= $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.count').': '.count(array_keys($this->duplicateTrack)).'<br />';
-                $output .= $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.curtime').': '.date('H:i:s', time()).'<br />';
+                $output .= $this->drawURLs_cfgSelectors() . '<br />';
+                $output .= '<input type="submit" name="_update" value="' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.triggerUpdate') . '" /> ';
+                $output .= '<input type="submit" name="_crawl" value="' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.triggerCrawl') . '" /> ';
+                $output .= '<input type="submit" name="_download" value="' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.triggerDownload') . '" /><br /><br />';
+                $output .= $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.count') . ': ' . count(array_keys($this->duplicateTrack)) . '<br />';
+                $output .= $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.curtime') . ': ' . date('H:i:s', time()) . '<br />';
                 $output .= '<br />
-					<table class="lrPadding c-list url-table">'.
-                        $this->drawURLs_printTableHeader().
-                        $code.
+					<table class="lrPadding c-list url-table">' .
+                        $this->drawURLs_printTableHeader() .
+                        $code .
                     '</table>';
             } else {
-                $output .= count(array_keys($this->duplicateTrack)).' '.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.submitted').'. <br /><br />';
-                $output .= '<input type="submit" name="_" value="'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.continue').'" />';
-                $output .= '<input type="submit" onclick="this.form.elements[\'SET[crawlaction]\'].value=\'log\';" value="'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.continueinlog').'" />';
+                $output .= count(array_keys($this->duplicateTrack)) . ' ' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.submitted') . '. <br /><br />';
+                $output .= '<input type="submit" name="_" value="' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.continue') . '" />';
+                $output .= '<input type="submit" onclick="this.form.elements[\'SET[crawlaction]\'].value=\'log\';" value="' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.continueinlog') . '" />';
             }
         }
 
@@ -361,11 +360,11 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 
                 // Creating output header:
             $mimeType = 'application/octet-stream';
-            Header('Content-Type: '.$mimeType);
+            Header('Content-Type: ' . $mimeType);
             Header('Content-Disposition: attachment; filename=CrawlerUrls.txt');
 
             // Printing the content of the CSV lines:
-            echo implode(chr(13).chr(10), $this->downloadUrls);
+            echo implode(chr(13) . chr(10), $this->downloadUrls);
 
             // Exits:
             exit;
@@ -386,22 +385,22 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
             // depth
         $cell[] = $this->selectorBox(
             [
-                0 => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_0'),
-                1 => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_1'),
-                2 => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_2'),
-                3 => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_3'),
-                4 => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_4'),
-                99 => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.php:labels.depth_infi'),
+                0 => $GLOBALS['LANG']->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_0'),
+                1 => $GLOBALS['LANG']->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_1'),
+                2 => $GLOBALS['LANG']->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_2'),
+                3 => $GLOBALS['LANG']->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_3'),
+                4 => $GLOBALS['LANG']->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_4'),
+                99 => $GLOBALS['LANG']->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_infi'),
             ],
             'SET[depth]',
             $this->pObj->MOD_SETTINGS['depth'],
             0
         );
-        $availableConfigurations = $this->crawlerObj->getConfigurationsForBranch($this->pObj->id, $this->pObj->MOD_SETTINGS['depth']?$this->pObj->MOD_SETTINGS['depth']:0);
+        $availableConfigurations = $this->crawlerObj->getConfigurationsForBranch($this->pObj->id, $this->pObj->MOD_SETTINGS['depth'] ? $this->pObj->MOD_SETTINGS['depth'] : 0);
 
         // Configurations
         $cell[] = $this->selectorBox(
-            empty($availableConfigurations)?[]:array_combine($availableConfigurations, $availableConfigurations),
+            empty($availableConfigurations) ? [] : array_combine($availableConfigurations, $availableConfigurations),
             'configurationSelection',
             $this->incomingConfigurationSelection,
             1
@@ -444,13 +443,13 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
         $output = '
 			<table class="lrPadding c-list">
 				<tr class="bgColor5 tableheader">
-					<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.depth').':</td>
-					<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.configurations').':</td>
-					<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.scheduled').':</td>
+					<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.depth') . ':</td>
+					<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.configurations') . ':</td>
+					<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.scheduled') . ':</td>
 				</tr>
 				<tr class="bgColor4">
 					<td valign="top">' . implode('</td>
-					<td valign="top">', $cell).'</td>
+					<td valign="top">', $cell) . '</td>
 				</tr>
 			</table>';
 
@@ -466,13 +465,13 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
     {
         $content = '
 			<tr class="bgColor5 tableheader">
-				<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.pagetitle').':</td>
-				<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.key').':</td>
-				<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.parametercfg').':</td>
-				<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.values').':</td>
-				<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.urls').':</td>
-				<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.options').':</td>
-				<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.parameters').':</td>
+				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.pagetitle') . ':</td>
+				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.key') . ':</td>
+				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.parametercfg') . ':</td>
+				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.values') . ':</td>
+				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.urls') . ':</td>
+				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.options') . ':</td>
+				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.parameters') . ':</td>
 			</tr>';
 
         return $content;
@@ -513,7 +512,7 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
         if (\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('qid_details')) {
 
                 // Get entry record:
-            list($q_entry) = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_crawler_queue', 'qid='.intval(\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('qid_details')));
+            list($q_entry) = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_crawler_queue', 'qid=' . intval(\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('qid_details')));
 
             // Explode values:
             $resStatus = $this->getResStatus($q_entry);
@@ -545,7 +544,7 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
                     // Drawing tree:
                     $tree = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Backend\Tree\View\PageTreeView');
                     $perms_clause = $GLOBALS['BE_USER']->getPagePermsClause(1);
-                    $tree->init('AND '.$perms_clause);
+                    $tree->init('AND ' . $perms_clause);
 
                     // Set root row:
                     $HTML = \AOE\Crawler\Utility\IconUtility::getIconForRecord('pages', $this->pObj->pageinfo);
@@ -576,27 +575,27 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
                     $code = '';
                     $code .= $this->drawLog_addRows(
                                 $showSetId,
-                                'Set ID: '.$showSetId
+                                'Set ID: ' . $showSetId
                             );
                 }
 
                 if ($code) {
                     $output .= '
 						<br /><br />
-						<input type="submit" value="'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.reloadlist').'" name="_reload" />
-						<input type="submit" value="'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.downloadcsv').'" name="_csv" />
-						<input type="submit" value="'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.flushvisiblequeue').'" name="_flush" onclick="return confirm(\''.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.confirmyouresure').'\');" />
-						<input type="submit" value="'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.flushfullqueue').'" name="_flush_all" onclick="return confirm(\''.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.confirmyouresure').'\');" />
-						<input type="hidden" value="'.$this->pObj->id.'" name="id" />
-						<input type="hidden" value="'.$showSetId.'" name="setID" />
+						<input type="submit" value="' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.reloadlist') . '" name="_reload" />
+						<input type="submit" value="' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.downloadcsv') . '" name="_csv" />
+						<input type="submit" value="' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.flushvisiblequeue') . '" name="_flush" onclick="return confirm(\'' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.confirmyouresure') . '\');" />
+						<input type="submit" value="' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.flushfullqueue') . '" name="_flush_all" onclick="return confirm(\'' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.confirmyouresure') . '\');" />
+						<input type="hidden" value="' . $this->pObj->id . '" name="id" />
+						<input type="hidden" value="' . $showSetId . '" name="setID" />
 						<br />
-						'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.curtime').': '.date('H:i:s', time()).'
+						' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.curtime') . ': ' . date('H:i:s', time()) . '
 						<br /><br />
 
 
-						<table class="lrPadding c-list crawlerlog">'.
-                            $this->drawLog_printTableHeader().
-                            $code.
+						<table class="lrPadding c-list crawlerlog">' .
+                            $this->drawLog_printTableHeader() .
+                            $code .
                         '</table>';
                 }
             } else {	// Otherwise show available sets:
@@ -610,19 +609,19 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 
                 $code = '
 					<tr class="bgColor5 tableheader">
-						<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.setid').':</td>
-						<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.count').'t:</td>
-						<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.time').':</td>
+						<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.setid') . ':</td>
+						<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.count') . 't:</td>
+						<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.time') . ':</td>
 					</tr>
 				';
 
                 $cc = 0;
                 foreach ($setList as $set) {
                     $code .= '
-						<tr class="bgColor'.($cc % 2 ? '-20':'-10').'">
-							<td><a href="'.htmlspecialchars('index.php?setID='.$set['set_id']).'">'.$set['set_id'].'</a></td>
-							<td>'.$set['count_value'].'</td>
-							<td>'.\TYPO3\CMS\Backend\Utility\BackendUtility::dateTimeAge($set['scheduled']).'</td>
+						<tr class="bgColor' . ($cc % 2 ? '-20' : '-10') . '">
+							<td><a href="' . htmlspecialchars('index.php?setID=' . $set['set_id']) . '">' . $set['set_id'] . '</a></td>
+							<td>' . $set['count_value'] . '</td>
+							<td>' . \TYPO3\CMS\Backend\Utility\BackendUtility::dateTimeAge($set['scheduled']) . '</td>
 						</tr>
 					';
 
@@ -631,8 +630,8 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 
                 $output .= '
 					<br /><br />
-					<table class="lrPadding c-list">'.
-                        $code.
+					<table class="lrPadding c-list">' .
+                        $code .
                     '</table>';
             }
         }
@@ -669,11 +668,11 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 
         // Creating output header:
         $mimeType = 'application/octet-stream';
-        Header('Content-Type: '.$mimeType);
+        Header('Content-Type: ' . $mimeType);
         Header('Content-Disposition: attachment; filename=CrawlerLog.csv');
 
         // Printing the content of the CSV lines:
-        echo implode(chr(13).chr(10), $csvLines);
+        echo implode(chr(13) . chr(10), $csvLines);
 
         // Exits:
         exit;
@@ -683,10 +682,11 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
      * Create the rows for display of the page tree
      * For each page a number of rows are shown displaying GET variable configuration
      *
-     * @param	array		Page row or set-id
-     * @param	string		Title string
-     * @param	int			Items per Page setting
-     * @return	string		HTML <tr> content (one or more)
+     * @param array $pageRow_setId Page row or set-id
+     * @param string $titleString Title string
+     * @param int $itemsPerPage Items per Page setting
+     *
+     * @return string HTML <tr> content (one or more)
      */
     public function drawLog_addRows($pageRow_setId, $titleString, $itemsPerPage = 10)
     {
@@ -724,7 +724,7 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 
                     // Title column:
                 if (!$c) {
-                    $titleClm = '<td rowspan="'.count($res).'">'.$titleString.'</td>';
+                    $titleClm = '<td rowspan="' . count($res) . '">' . $titleString . '</td>';
                 } else {
                     $titleClm = '';
                 }
@@ -743,11 +743,11 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
                 if ($this->pObj->MOD_SETTINGS['log_resultLog']) {
                     $rowData['result_log'] = $resLog;
                 } else {
-                    $rowData['scheduled'] = ($vv['scheduled'] > 0) ? \TYPO3\CMS\Backend\Utility\BackendUtility::datetime($vv['scheduled']) : ' '.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.immediate');
+                    $rowData['scheduled'] = ($vv['scheduled'] > 0) ? \TYPO3\CMS\Backend\Utility\BackendUtility::datetime($vv['scheduled']) : ' ' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.immediate');
                     $rowData['exec_time'] = $vv['exec_time'] ? \TYPO3\CMS\Backend\Utility\BackendUtility::datetime($vv['exec_time']) : '-';
                 }
                 $rowData['result_status'] = \TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs($resStatus, 50);
-                $rowData['url'] = '<a href="'.htmlspecialchars($parameters['url']).'" target="_newWIndow">'.htmlspecialchars($parameters['url']).'</a>';
+                $rowData['url'] = '<a href="' . htmlspecialchars($parameters['url']) . '" target="_newWIndow">' . htmlspecialchars($parameters['url']) . '</a>';
                 $rowData['feUserGroupList'] = $parameters['feUserGroupList'];
                 $rowData['procInstructions'] = is_array($parameters['procInstructions']) ? implode('; ', $parameters['procInstructions']) : '';
                 $rowData['set_id'] = $vv['set_id'];
@@ -760,20 +760,20 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 
                 $setId = intval(\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('setID'));
                 $refreshIcon = $GLOBALS['BACK_PATH'] . 'sysext/t3skin/extjs/images/grid/refresh.gif';
-                
+
                 // Put rows together:
                 $content .= '
-					<tr class="bgColor'.($c % 2 ? '-20':'-10').'">
-						'.$titleClm.'
-						<td><a href="' . $this->getModuleUrl(['qid_details' => $vv['qid'], 'setID' => $setId]) . '">'.htmlspecialchars($vv['qid']).'</a></td>
-						<td><a href="' . $this->getModuleUrl(['qid_read' => $vv['qid'], 'setID' => $setId]) . '"><img src="' . $refreshIcon . '" width="14" hspace="1" vspace="2" height="14" border="0" title="'.htmlspecialchars('Read').'" alt="" /></a></td>';
+					<tr class="bgColor' . ($c % 2 ? '-20' : '-10') . '">
+						' . $titleClm . '
+						<td><a href="' . $this->getModuleUrl(['qid_details' => $vv['qid'], 'setID' => $setId]) . '">' . htmlspecialchars($vv['qid']) . '</a></td>
+						<td><a href="' . $this->getModuleUrl(['qid_read' => $vv['qid'], 'setID' => $setId]) . '"><img src="' . $refreshIcon . '" width="14" hspace="1" vspace="2" height="14" border="0" title="' . htmlspecialchars('Read') . '" alt="" /></a></td>';
                 foreach ($rowData as $fKey => $value) {
                     if (\TYPO3\CMS\Core\Utility\GeneralUtility::inList('url', $fKey)) {
                         $content .= '
-						<td>'.$value.'</td>';
+						<td>' . $value . '</td>';
                     } else {
                         $content .= '
-						<td>'.nl2br(htmlspecialchars($value)).'</td>';
+						<td>' . nl2br(htmlspecialchars($value)) . '</td>';
                     }
                 }
                 $content .= '
@@ -794,8 +794,8 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
                 // Compile row:
             $content = '
 				<tr class="bgColor-20">
-					<td>'.$titleString.'</td>
-					<td colspan="'.$colSpan.'"><em>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.noentries').'</em></td>
+					<td>' . $titleString . '</td>
+					<td colspan="' . $colSpan . '"><em>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.noentries') . '</em></td>
 				</tr>';
         }
 
@@ -830,22 +830,22 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
     {
         $content = '
 			<tr class="bgColor5 tableheader">
-				<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.pagetitle').':</td>
-				<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.qid').':</td>
-				<td>&nbsp;</td>'.
+				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.pagetitle') . ':</td>
+				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.qid') . ':</td>
+				<td>&nbsp;</td>' .
                 ($this->pObj->MOD_SETTINGS['log_resultLog'] ? '
-				<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.resultlog').':</td>' : '
-				<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.scheduledtime').':</td>
-				<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.runtime').':</td>').'
-				<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.status').':</td>
-				<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.url').':</td>
-				<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.groups').':</td>
-				<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.procinstr').':</td>
-				<td>'.$GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.setid').':</td>'.
+				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.resultlog') . ':</td>' : '
+				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.scheduledtime') . ':</td>
+				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.runtime') . ':</td>') . '
+				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.status') . ':</td>
+				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.url') . ':</td>
+				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.groups') . ':</td>
+				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.procinstr') . ':</td>
+				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/modfunc1/locallang.xml:labels.setid') . ':</td>' .
                 ($this->pObj->MOD_SETTINGS['log_feVars'] ? '
-				<td>'.htmlspecialchars('TSFE->id').'</td>
-				<td>'.htmlspecialchars('TSFE->gr_list').'</td>
-				<td>'.htmlspecialchars('TSFE->no_cache').'</td>' : '').'
+				<td>' . htmlspecialchars('TSFE->id') . '</td>
+				<td>' . htmlspecialchars('TSFE->gr_list') . '</td>
+				<td>' . htmlspecialchars('TSFE->no_cache') . '</td>' : '') . '
 			</tr>';
 
         return $content;
@@ -885,9 +885,9 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
                 } else {
                     $resStatus = implode("\n", $requestResult['errorlog']);
                 }
-                $resLog = is_array($requestResult['log']) ?  implode(chr(10), $requestResult['log']) : '';
+                $resLog = is_array($requestResult['log']) ? implode(chr(10), $requestResult['log']) : '';
             } else {
-                $resStatus = 'Error: '.substr(preg_replace('/\s+/', ' ', strip_tags($requestContent['content'])), 0, 10000).'...';
+                $resStatus = 'Error: ' . substr(preg_replace('/\s+/', ' ', strip_tags($requestContent['content'])), 0, 10000) . '...';
             }
         } else {
             $resStatus = '-';
@@ -939,14 +939,14 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 
         $listView = new tx_crawler_view_process_list();
         $listView->setPageId($this->pObj->id);
-        $listView->setIconPath($BACK_PATH.'../typo3conf/ext/crawler/template/process/res/img/');
+        $listView->setIconPath($BACK_PATH . '../typo3conf/ext/crawler/template/process/res/img/');
         $listView->setProcessCollection($allProcesses);
         $listView->setCliPath($this->processManager->getCrawlerCliPath());
         $listView->setIsCrawlerEnabled(!$crawler->getDisabled() && !$this->isErrorDetected);
         $listView->setTotalUnprocessedItemCount($queueRepository->countAllPendingItems());
         $listView->setAssignedUnprocessedItemCount($queueRepository->countAllAssignedPendingItems());
         $listView->setActiveProcessCount($processRepository->countActive());
-        $listView->setMaxActiveProcessCount(tx_crawler_api::forceIntegerInRange($this->extensionSettings['processLimit'], 1, 99, 1));
+        $listView->setMaxActiveProcessCount(\TYPO3\CMS\Core\Utility\MathUtility::forceIntegerInRange($this->extensionSettings['processLimit'], 1, 99, 1));
         $listView->setMode($mode);
 
         $paginationView = new tx_crawler_view_pagination();
@@ -957,7 +957,7 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
         $output = $listView->render();
 
         if ($paginationView->getTotalPagesCount() > 1) {
-            $output .= ' <br />'.$paginationView->render();
+            $output .= ' <br />' . $paginationView->render();
         }
 
         return $output;
@@ -1161,10 +1161,11 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
     /**
      * Create selector box
      *
-     * @param	array		Options key(value) => label pairs
-     * @param	string		Selector box name
-     * @param	string		Selector box value (array for multiple...)
-     * @param	boolean		If set, will draw multiple box.
+     * @param	array		$optArray Options key(value) => label pairs
+     * @param	string		$name Selector box name
+     * @param	string		$value Selector box value (array for multiple...)
+     * @param	boolean		$multiple If set, will draw multiple box.
+     *
      * @return	string		HTML select element
      */
     public function selectorBox($optArray, $name, $value, $multiple)
@@ -1172,10 +1173,10 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
         $options = [];
         foreach ($optArray as $key => $val) {
             $options[] = '
-				<option value="'.htmlspecialchars($key).'"'.((!$multiple && !strcmp($value, $key)) || ($multiple && in_array($key, (array)$value))?' selected="selected"':'').'>'.htmlspecialchars($val).'</option>';
+				<option value="' . htmlspecialchars($key) . '"' . ((!$multiple && !strcmp($value, $key)) || ($multiple && in_array($key, (array)$value)) ? ' selected="selected"' : '') . '>' . htmlspecialchars($val) . '</option>';
         }
 
-        $output = '<select name="'.htmlspecialchars($name.($multiple?'[]':'')).'"'.($multiple ? ' multiple="multiple" size="'.count($options).'"' : '').'>'.implode('', $options).'</select>';
+        $output = '<select name="' . htmlspecialchars($name . ($multiple ? '[]' : '')) . '"' . ($multiple ? ' multiple="multiple" size="' . count($options) . '"' : '') . '>' . implode('', $options) . '</select>';
 
         return $output;
     }

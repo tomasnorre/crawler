@@ -31,6 +31,7 @@ use TYPO3\CMS\Scheduler\Task\AbstractTask;
  * Class CrawlerTask
  *
  * @package AOE\Crawler\Task
+ * @codeCoverageIgnore
  */
 class CrawlerTask extends AbstractTask
 {
@@ -55,7 +56,6 @@ class CrawlerTask extends AbstractTask
      *
      * @return bool
      */
-
     public function execute()
     {
         $this->setCliArguments();

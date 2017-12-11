@@ -49,10 +49,10 @@ class TsfeHook
             //@todo: ask service to exclude current call for special reasons: for example no relevance because the language version is not affected
 
             list($queueId, $hash) = explode(':', $_SERVER['HTTP_X_T3CRAWLER']);
-            list($queueRec) = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_crawler_queue', 'qid='.intval($queueId));
+            list($queueRec) = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_crawler_queue', 'qid=' . intval($queueId));
 
             // If a crawler record was found and hash was matching, set it up:
-            if (is_array($queueRec) && $hash === md5($queueRec['qid'].'|'.$queueRec['set_id'].'|'.$GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'])) {
+            if (is_array($queueRec) && $hash === md5($queueRec['qid'] . '|' . $queueRec['set_id'] . '|' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'])) {
                 $params['pObj']->applicationData['tx_crawler']['running'] = true;
                 $params['pObj']->applicationData['tx_crawler']['parameters'] = unserialize($queueRec['parameters']);
                 $params['pObj']->applicationData['tx_crawler']['log'] = [];
@@ -80,7 +80,7 @@ class TsfeHook
                     $params['pObj']->fe_user->user = [];
                 }
                 $params['pObj']->fe_user->user['usergroup'] = $grList;
-                $params['pObj']->applicationData['tx_crawler']['log'][] = 'User Groups: '.$grList;
+                $params['pObj']->applicationData['tx_crawler']['log'][] = 'User Groups: ' . $grList;
             }
         }
     }
@@ -125,7 +125,7 @@ class TsfeHook
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'] as $pollable) {
                     if (is_array($params['pObj']->applicationData['tx_crawler']['content']['parameters']['procInstructions']) && in_array($pollable, $params['pObj']->applicationData['tx_crawler']['content']['parameters']['procInstructions'])) {
                         if (empty($params['pObj']->applicationData['tx_crawler']['success'][$pollable])) {
-                            $params['pObj']->applicationData['tx_crawler']['errorlog'][] = 'Error: Pollable extension ('.$pollable.') did not complete successfully.';
+                            $params['pObj']->applicationData['tx_crawler']['errorlog'][] = 'Error: Pollable extension (' . $pollable . ') did not complete successfully.';
                         }
                     }
                 }
@@ -135,7 +135,7 @@ class TsfeHook
             $str = serialize($params['pObj']->applicationData['tx_crawler']);
             //just make sure that no other output distracts this
             ob_clean();
-            header('Content-Length: '.strlen($str));
+            header('Content-Length: ' . strlen($str));
             echo $str;
             // Exit since we don't want anymore output!
             exit;

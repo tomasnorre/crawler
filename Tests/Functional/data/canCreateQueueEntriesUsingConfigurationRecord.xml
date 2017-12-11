@@ -2,8 +2,7 @@
 <dataset>
     <pages uid="7">
         <uid>7</uid>
-        <TSconfig>
-        </TSconfig>
+        <TSconfig></TSconfig>
     </pages>
     <tx_crawler_configuration>
         <uid>7</uid>
@@ -21,5 +20,6 @@
         <sys_domain_base_url></sys_domain_base_url>
         <pidsonly></pidsonly>
         <exclude></exclude>
+        <root_template_pid>1</root_template_pid>
     </tx_crawler_configuration>
 </dataset>

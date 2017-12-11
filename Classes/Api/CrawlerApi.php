@@ -1,14 +1,17 @@
 <?php
+namespace AOE\Crawler\Api;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2009 AOE media (dev@aoemedia.de)
+ *  (c) 2016 AOE GmbH <dev@aoe.com>
+ *
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
+ *  the Free Software Foundation; either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  The GNU General Public License can be found at
@@ -22,22 +25,24 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-/**
- * Class tx_crawler_api
- *
- * This API class can be used to add pages to the crawler queue.
- * It internally uses the class tx_crawler_lib to modify the queue.
- */
-class tx_crawler_api
-{
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\MathUtility;
+use TYPO3\CMS\Frontend\Page\PageRepository;
 
+/**
+ * Class CrawlerApi
+ *
+ * @package AOE\Crawler\Api
+ */
+class CrawlerApi
+{
     /**
-     * @var tx_crawler_lib
+     * @var \tx_crawler_lib
      */
     private $crawlerObj;
 
     /**
-     * @var tx_crawler_domain_queue_repository queue repository
+     * @var \tx_crawler_domain_queue_repository queue repository
      */
     protected $queueRepository;
 
@@ -47,7 +52,7 @@ class tx_crawler_api
     protected $allowedConfigrations = [];
 
     /**
-     * Each crawlerrun has a setid, this facade method delegates
+     * Each crawler run has a setid, this facade method delegates
      * the it to the crawler object
      *
      * @param int
@@ -81,26 +86,28 @@ class tx_crawler_api
     /**
      * Method to get an instance of the internal crawler singleton
      *
-     * @return tx_crawler_lib Instance of the crawler lib
+     * @return \tx_crawler_lib Instance of the crawler lib
+     *
+     * @throws \Exception
      */
     protected function findCrawler()
     {
         if (!is_object($this->crawlerObj)) {
-            $this->crawlerObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_crawler_lib');
-            $this->crawlerObj->setID = \TYPO3\CMS\Core\Utility\GeneralUtility::md5int(microtime());
+            $this->crawlerObj = GeneralUtility::makeInstance(\tx_crawler_lib::class);
+            $this->crawlerObj->setID = GeneralUtility::md5int(microtime());
         }
 
         if (is_object($this->crawlerObj)) {
             return $this->crawlerObj;
         } else {
-            throw new Exception("no crawler object");
+            throw new \Exception('no crawler object', 1512659759);
         }
     }
 
     /**
      * Adds a page to the crawlerqueue by uid
      *
-     * @param int uid
+     * @param int $uid uid
      */
     public function addPageToQueue($uid)
     {
@@ -133,8 +140,8 @@ class tx_crawler_api
      * Adds a page to the crawlerqueue by uid and sets a
      * timestamp when the page should be crawled.
      *
-     * @param int pageid
-     * @param int timestamp
+     * @param int $uid pageid
+     * @param int $time timestamp
      */
     public function addPageToQueueTimed($uid, $time)
     {
@@ -142,14 +149,14 @@ class tx_crawler_api
         $time = intval($time);
 
         $crawler = $this->findCrawler();
-        $pageData = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Frontend\Page\PageRepository')->getPage($uid);
+        $pageData = GeneralUtility::makeInstance(PageRepository::class)->getPage($uid);
         $configurations = $crawler->getUrlsForPageRow($pageData);
         $configurations = $this->filterUnallowedConfigurations($configurations);
         $downloadUrls = [];
         $duplicateTrack = [];
 
         if (is_array($configurations)) {
-            foreach ($configurations as  $cv) {
+            foreach ($configurations as $cv) {
                 //enable inserting of entries
                 $crawler->registerQueueEntriesInternallyOnly = false;
                 $crawler->urlListFromUrlArray(
@@ -176,7 +183,8 @@ class tx_crawler_api
      * Counts all entrys in the database which are scheduled for a given page id and a schedule timestamp.
      *
      * @param int $page_uid
-     * @param int $timestamp
+     * @param int $schedule_timestamp
+     *
      * @return int
      */
     protected function countEntriesInQueueForPageByScheduletime($page_uid, $schedule_timestamp)
@@ -184,15 +192,19 @@ class tx_crawler_api
         //if the same page is scheduled for the same time and has not be executed?
         if ($schedule_timestamp == 0) {
             //untimed elements need an exec_time with 0 because they can occure multiple times
-            $where = 'page_id='.$page_uid.' AND exec_time = 0 AND scheduled='.$schedule_timestamp;
+            $where = 'page_id=' . $page_uid . ' AND exec_time = 0 AND scheduled=' . $schedule_timestamp;
         } else {
             //timed elementes have got a fixed schedule time, if a record with this time
             //exists it is maybe queued for the future, or is has been queue for the past and therefore
             //also been processed.
-            $where = 'page_id='.$page_uid.' AND scheduled='.$schedule_timestamp;
+            $where = 'page_id=' . $page_uid . ' AND scheduled=' . $schedule_timestamp;
         }
 
-        $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($GLOBALS['TYPO3_DB']->exec_SELECTquery('count(*) as cnt', 'tx_crawler_queue', $where));
+        $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($GLOBALS['TYPO3_DB']->exec_SELECTquery(
+            'count(*) as cnt',
+            'tx_crawler_queue',
+            $where
+        ));
 
         return intval($row['cnt']);
     }
@@ -204,17 +216,18 @@ class tx_crawler_api
      * @param bool $unprocessed_only
      * @param bool $timed_only
      * @param bool $timestamp
+     *
      * @return bool
      */
     public function isPageInQueue($uid, $unprocessed_only = true, $timed_only = false, $timestamp = false)
     {
-        if (\TYPO3\CMS\Core\Utility\MathUtility::canBeInterpretedAsInteger($uid)) {
+        if (MathUtility::canBeInterpretedAsInteger($uid)) {
             throw new \InvalidArgumentException('Invalid parameter type', 1468931945);
         }
 
         $isPageInQueue = false;
 
-        $whereClause = 'page_id = ' . (integer) $uid;
+        $whereClause = 'page_id = ' . (integer)$uid;
 
         if (false !== $unprocessed_only) {
             $whereClause .= ' AND exec_time = 0';
@@ -225,7 +238,7 @@ class tx_crawler_api
         }
 
         if (false !== $timestamp) {
-            $whereClause .= ' AND scheduled = ' . (integer) $timestamp;
+            $whereClause .= ' AND scheduled = ' . (integer)$timestamp;
         }
 
         $count = $GLOBALS['TYPO3_DB']->exec_SELECTcountRows(
@@ -244,16 +257,20 @@ class tx_crawler_api
     /**
      * Method to return the latest Crawle Timestamp for a page.
      *
-     * @param uid id of the page
+     * @param int $uid uid id of the page
+     * @param bool $future_crawldates_only
+     * @param bool $unprocessed_only
+     *
+     * @return int
      */
     public function getLatestCrawlTimestampForPage($uid, $future_crawldates_only = false, $unprocessed_only = false)
     {
         $uid = intval($uid);
         $query = 'max(scheduled) as latest';
-        $where = ' page_id = '.$uid;
+        $where = ' page_id = ' . $uid;
 
         if ($future_crawldates_only) {
-            $where .= ' AND scheduled > '.time();
+            $where .= ' AND scheduled > ' . time();
         }
 
         if ($unprocessed_only) {
@@ -277,6 +294,7 @@ class tx_crawler_api
      *
      * @param int $uid uid of the page
      * @param bool $limit
+     *
      * @return array array with the crawlhistory of a page => 0 : scheduled time , 1 : execuded_time, 2 : set_id
      */
     public function getCrawlHistoryForPage($uid, $limit = false)
@@ -327,25 +345,29 @@ class tx_crawler_api
      * Method to check if a page is in the queue which is timed for a
      * date when it should be crawled
      *
-     * @param int uid of the page
-     * @param boolean only respect unprocessed pages
+     * @param int $uid uid of the page
+     * @param boolean $show_unprocessed only respect unprocessed pages
+     *
+     * @return boolean
      */
     public function isPageInQueueTimed($uid, $show_unprocessed = true)
     {
         $uid = intval($uid);
-        return $this->isPageInQueue($uid, $show_unprocessed, show_timed_only);
+
+        return $this->isPageInQueue($uid, $show_unprocessed);
     }
 
     /**
      * Reads the registered processingInstructions of the crawler
      *
-     * @return unknown
+     * @return array
      */
     private function getCrawlerProcInstructions()
     {
         if (isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'])) {
             return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'];
         }
+
         return [];
     }
 
@@ -358,7 +380,7 @@ class tx_crawler_api
     {
         $qid = intval($qid);
         $table = 'tx_crawler_queue';
-        $where = ' qid='.$qid;
+        $where = ' qid=' . $qid;
         $GLOBALS['TYPO3_DB']->exec_DELETEquery($table, $where);
     }
 
@@ -366,6 +388,7 @@ class tx_crawler_api
      * Get queue statistics
      *
      * @param void
+     *
      * @return array array('assignedButUnprocessed' => <>, 'unprocessed' => <>);
      */
     public function getQueueStatistics()
@@ -380,13 +403,15 @@ class tx_crawler_api
      * Get queue repository
      *
      * @param void
-     * @return tx_crawler_domain_queue_repository queue repository
+     *
+     * @return \tx_crawler_domain_queue_repository queue repository
      */
     protected function getQueueRepository()
     {
-        if (!$this->queueRepository instanceof tx_crawler_domain_queue_repository) {
-            $this->queueRepository = new tx_crawler_domain_queue_repository();
+        if (!$this->queueRepository instanceof \tx_crawler_domain_queue_repository) {
+            $this->queueRepository = new \tx_crawler_domain_queue_repository();
         }
+
         return $this->queueRepository;
     }
 
@@ -394,6 +419,7 @@ class tx_crawler_api
      * Get queue statistics by configuration
      *
      * @param void
+     *
      * @return array array of array('configuration' => <>, 'assignedButUnprocessed' => <>, 'unprocessed' => <>)
      */
     public function getQueueStatisticsByConfiguration()
@@ -416,11 +442,13 @@ class tx_crawler_api
      * Get active processes count
      *
      * @param void
+     *
      * @return int
      */
     public function getActiveProcessesCount()
     {
-        $processRepository = new tx_crawler_domain_process_repository();
+        $processRepository = new \tx_crawler_domain_process_repository();
+
         return $processRepository->countActive();
     }
 
@@ -428,6 +456,7 @@ class tx_crawler_api
      * Get last processed entries
      *
      * @param int limit
+     *
      * @return array
      */
     public function getLastProcessedQueueEntries($limit)
@@ -439,7 +468,8 @@ class tx_crawler_api
      * Get current crawling speed
      *
      * @param float|false page speed in pages per minute
-     * @return bool|float
+     *
+     * @return int
      */
     public function getCurrentCrawlingSpeed()
     {
@@ -483,8 +513,10 @@ class tx_crawler_api
      * @param integer $start
      * @param integer $end
      * @param integer $resolution
+     *
      * @return array data
-     * @throws Exception
+     *
+     * @throws \Exception
      */
     public function getPerformanceData($start, $end, $resolution)
     {
@@ -496,7 +528,7 @@ class tx_crawler_api
         $data['duration'] = $data['end'] - $data['start'];
 
         if ($data['duration'] < 1) {
-            throw new Exception('End timestamp must be after start timestamp');
+            throw new \Exception('End timestamp must be after start timestamp', 1512659945);
         }
 
         for ($slotStart = $start; $slotStart < $end; $slotStart += $resolution) {
@@ -535,47 +567,4 @@ class tx_crawler_api
 
         return $data;
     }
-
-    /**
-     * Wrapper to support old and new method to test integer values.
-     *
-     * @param integer $value
-     * @return integer
-     */
-    public static function convertToPositiveInteger($value)
-    {
-        $result = \TYPO3\CMS\Core\Utility\MathUtility::convertToPositiveInteger($value);
-        return $result;
-    }
-
-    /**
-     * Wrapper to support old an new method to test integer value.
-     *
-     * @param integer $value
-     * @param integer $min
-     * @param integer $max
-     * @param integer $default
-     * @return integer
-     */
-    public static function forceIntegerInRange($value, $min, $max = 2000000, $default = 0)
-    {
-        $result = \TYPO3\CMS\Core\Utility\MathUtility::forceIntegerInRange($value, $min, $max, $default);
-        return $result;
-    }
-
-    /**
-     * Wrapper to support old an new method to test integer value.
-     *
-     * @param integer $value
-     * @return bool
-     */
-    public static function canBeInterpretedAsInteger($value)
-    {
-        $result = \TYPO3\CMS\Core\Utility\MathUtility::canBeInterpretedAsInteger($value);
-        return $result;
-    }
-}
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/class.tx_crawler_api.php']) {
-    include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/class.tx_crawler_api.php']);
 }

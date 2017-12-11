@@ -33,6 +33,7 @@ use TYPO3\CMS\Scheduler\Task\AbstractTask;
  * Class ProcessCleanup
  *
  * @package AOE\Crawler\Task
+ * @codeCoverageIgnore
  */
 class ProcessCleanupTask extends AbstractTask
 {

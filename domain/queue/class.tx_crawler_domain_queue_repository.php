@@ -1,4 +1,5 @@
 <?php
+
 /***************************************************************
  *  Copyright notice
  *
@@ -21,8 +22,7 @@
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
-class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_repository
+class tx_crawler_domain_queue_repository extends AOE\Crawler\Domain\Repository\AbstractRepository
 {
     protected $objectClassname = 'tx_crawler_domain_queue_entry';
 
@@ -32,6 +32,7 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
      * This mehtod is used to find the youngest entry for a given process.
      *
      * @param tx_crawler_domain_process $process
+     *
      * @return tx_crawler_domain_queue_entry $entry
      */
     public function findYoungestEntryForProcess(tx_crawler_domain_process $process)
@@ -43,6 +44,7 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
      * This method is used to find the oldest entry for a given process.
      *
      * @param tx_crawler_domain_process $process
+     *
      * @return tx_crawler_domain_queue_entry
      */
     public function findOldestEntryForProcess(tx_crawler_domain_process $process)
@@ -55,13 +57,14 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
      *
      * @param tx_crawler_domain_process $process
      * @param string $orderby first matching item will be returned as object
+     *
      * @return tx_crawler_domain_queue_entry
      */
     protected function getFirstOrLastObjectByProcess($process, $orderby)
     {
         $db = $this->getDB();
-        $where = 'process_id_completed='.$db->fullQuoteStr($process->getProcess_id(), $this->tableName).
-                 ' AND exec_time > 0 ';
+        $where = 'process_id_completed=' . $db->fullQuoteStr($process->getProcess_id(), $this->tableName) .
+                   ' AND exec_time > 0 ';
         $limit = 1;
         $groupby = '';
 
@@ -72,6 +75,7 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
             $first = [];
         }
         $resultObject = new tx_crawler_domain_queue_entry($first);
+
         return $resultObject;
     }
 
@@ -79,22 +83,30 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
      * Counts all executed items of a process.
      *
      * @param tx_crawler_domain_process $process
+     *
      * @return int
      */
-    public function countExtecutedItemsByProcess($process)
+    public function countExecutedItemsByProcess($process)
     {
-        return $this->countItemsByWhereClause('exec_time > 0 AND process_id_completed = '.$this->getDB()->fullQuoteStr($process->getProcess_id(), $this->tableName));
+        return $this->countItemsByWhereClause('exec_time > 0 AND process_id_completed = ' . $this->getDB()->fullQuoteStr(
+            $process->getProcess_id(),
+                $this->tableName
+        ));
     }
 
     /**
      * Counts items of a process which yet have not been processed/executed
      *
      * @param tx_crawler_domain_process $process
+     *
      * @return int
      */
     public function countNonExecutedItemsByProcess($process)
     {
-        return $this->countItemsByWhereClause('exec_time = 0 AND process_id = '.$this->getDB()->fullQuoteStr($process->getProcess_id(), $this->tableName));
+        return $this->countItemsByWhereClause('exec_time = 0 AND process_id = ' . $this->getDB()->fullQuoteStr(
+            $process->getProcess_id(),
+                $this->tableName
+        ));
     }
 
     /**
@@ -102,11 +114,12 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
      * scheduled for now or a earler date.
      *
      * @param void
+     *
      * @return int
      */
     public function countAllPendingItems()
     {
-        return $this->countItemsByWhereClause('exec_time = 0 AND scheduled < '.time());
+        return $this->countItemsByWhereClause('exec_time = 0 AND scheduled < ' . time());
     }
 
     /**
@@ -114,11 +127,12 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
      * scheduled for now or a earler date and are assigned to a process.
      *
      * @param void
+     *
      * @return int
      */
     public function countAllAssignedPendingItems()
     {
-        return $this->countItemsByWhereClause("exec_time = 0 AND scheduled < ".time()." AND process_id != ''");
+        return $this->countItemsByWhereClause("exec_time = 0 AND scheduled < " . time() . " AND process_id != ''");
     }
 
     /**
@@ -126,16 +140,20 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
      * scheduled for now or a earler date and are not assigned to a process.
      *
      * @param void
+     *
      * @return int
      */
     public function countAllUnassignedPendingItems()
     {
-        return $this->countItemsByWhereClause("exec_time = 0 AND scheduled < ".time()." AND process_id = ''");
+        return $this->countItemsByWhereClause("exec_time = 0 AND scheduled < " . time() . " AND process_id = ''");
     }
 
     /**
      * Internal method to count items by a given where clause
      *
+     * @param string $where
+     *
+     * @return mixed
      */
     protected function countItemsByWhereClause($where)
     {
@@ -149,7 +167,6 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
     /**
      * Count pending queue entries grouped by configuration key
      *
-     * @param void
      * @return array
      */
     public function countPendingItemsGroupedByConfigurationKey()
@@ -158,13 +175,14 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
         $res = $db->exec_SELECTquery(
             "configuration, count(*) as unprocessed, sum(process_id != '') as assignedButUnprocessed",
             $this->tableName,
-            'exec_time = 0 AND scheduled < '.time(),
+            'exec_time = 0 AND scheduled < ' . time(),
             'configuration'
         );
         $rows = [];
         while ($row = $db->sql_fetch_assoc($res)) {
             $rows[] = $row;
         }
+
         return $rows;
     }
 
@@ -172,6 +190,7 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
      * Get set id with unprocessed entries
      *
      * @param void
+     *
      * @return array array of set ids
      */
     public function getSetIdWithUnprocessedEntries()
@@ -180,13 +199,14 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
         $res = $db->exec_SELECTquery(
             'set_id',
             $this->tableName,
-            'exec_time = 0 AND scheduled < '.time(),
+            'exec_time = 0 AND scheduled < ' . time(),
             'set_id'
         );
         $setIds = [];
         while ($row = $db->sql_fetch_assoc($res)) {
             $setIds[] = intval($row['set_id']);
         }
+
         return $setIds;
     }
 
@@ -194,6 +214,7 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
      * Get total queue entries by configuration
      *
      * @param array set ids
+     *
      * @return array totals by configuration (keys)
      */
     public function getTotalQueueEntriesByConfiguration(array $setIds)
@@ -204,20 +225,22 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
             $res = $db->exec_SELECTquery(
                 'configuration, count(*) as c',
                 $this->tableName,
-                'set_id in ('. implode(',', $setIds).') AND scheduled < '.time(),
+                'set_id in (' . implode(',', $setIds) . ') AND scheduled < ' . time(),
                 'configuration'
             );
             while ($row = $db->sql_fetch_assoc($res)) {
                 $totals[$row['configuration']] = $row['c'];
             }
         }
+
         return $totals;
     }
 
     /**
      * Get the timestamps of the last processed entries
      *
-     * @param void
+     * @param int
+     *
      * @return array
      */
     public function getLastProcessedEntriesTimestamps($limit = 100)
@@ -236,6 +259,7 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
         while (($row = $db->sql_fetch_assoc($res)) !== false) {
             $rows[] = $row['exec_time'];
         }
+
         return $rows;
     }
 
@@ -244,9 +268,10 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
      *
      * @param string $selectFields
      * @param int $limit
+     *
      * @return array
      */
-    public function getLastProcessedEntries($selectFields = '*', $limit = '100')
+    public function getLastProcessedEntries($selectFields = '*', $limit = 100)
     {
         $db = $this->getDB();
         $res = $db->exec_SELECTquery(
@@ -262,6 +287,7 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
         while (($row = $db->sql_fetch_assoc($res)) !== false) {
             $rows[] = $row;
         }
+
         return $rows;
     }
 
@@ -270,6 +296,7 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
      *
      * @param int start timestamp
      * @param int end timestamp
+     *
      * @return array performance data
      */
     public function getPerformanceData($start, $end)
@@ -278,7 +305,7 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
         $res = $db->exec_SELECTquery(
             'process_id_completed, min(exec_time) as start, max(exec_time) as end, count(*) as urlcount',
             $this->tableName,
-            'exec_time != 0 and exec_time >= '.intval($start). ' and exec_time <= ' . intval($end),
+            'exec_time != 0 and exec_time >= ' . intval($start) . ' and exec_time <= ' . intval($end),
             'process_id_completed'
         );
 
@@ -286,13 +313,15 @@ class tx_crawler_domain_queue_repository extends tx_crawler_domain_lib_abstract_
         while (($row = $db->sql_fetch_assoc($res)) !== false) {
             $rows[$row['process_id_completed']] = $row;
         }
+
         return $rows;
     }
 
     /**
      * This method is used to count all processes in the process table.
      *
-     * @param  string $where    Where clause
+     * @param  string $where Where clause
+     *
      * @return integer
      */
     public function countAll($where = '1 = 1')

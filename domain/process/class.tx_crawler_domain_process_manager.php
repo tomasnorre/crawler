@@ -32,6 +32,7 @@ class tx_crawler_domain_process_manager
      * @var $timeToLive integer
      */
     private $timeToLive;
+
     /**
      * @var integer
      */
@@ -80,6 +81,8 @@ class tx_crawler_domain_process_manager
      * starts multiple processes
      *
      * @param integer $timeout
+     *
+     * @throws RuntimeException
      */
     public function multiProcess($timeout)
     {
@@ -132,7 +135,7 @@ class tx_crawler_domain_process_manager
      */
     protected function reportItemStatus()
     {
-        echo 'Pending:'.$this->queueRepository->countAllPendingItems().' / Assigned:'.$this->queueRepository->countAllAssignedPendingItems().chr(10);
+        echo 'Pending:' . $this->queueRepository->countAllPendingItems() . ' / Assigned:' . $this->queueRepository->countAllAssignedPendingItems() . chr(10);
     }
 
     /**
@@ -151,7 +154,7 @@ class tx_crawler_domain_process_manager
             return $ret;
         }
         if ($startProcessCount && $this->verbose) {
-            echo 'Start '.$startProcessCount.' new processes (Running:'.$currentProcesses.')';
+            echo 'Start ' . $startProcessCount . ' new processes (Running:' . $currentProcesses . ')';
         }
         for ($i = 0;$i < $startProcessCount;$i++) {
             usleep(100);
@@ -176,7 +179,7 @@ class tx_crawler_domain_process_manager
     {
         $ttl = (time() + $this->timeToLive - 1);
         $current = $this->processRepository->countNotTimeouted($ttl);
-        $completePath = '(' .escapeshellcmd($this->getCrawlerCliPath()) . ' &) > /dev/null';
+        $completePath = '(' . escapeshellcmd($this->getCrawlerCliPath()) . ' &) > /dev/null';
         if (system($completePath) === false) {
             throw new Exception('could not start process!');
         } else {
@@ -201,6 +204,6 @@ class tx_crawler_domain_process_manager
         $pathToTypo3 = rtrim(\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_DOCUMENT_ROOT'), '/');
         $pathToTypo3 .= rtrim(\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_PATH'), '/');
         $cliPart = '/typo3/cli_dispatch.phpsh crawler';
-        return $phpPath.$pathToTypo3.$cliPart;
+        return $phpPath . $pathToTypo3 . $cliPart;
     }
 }

@@ -40,11 +40,11 @@ class tx_crawler_cli_im extends \TYPO3\CMS\Core\Controller\CommandLineController
 
         // Adding options to help archive:
         /**
-        * We removed the "proc" option as it seemd not to be working any more. But as the complete handling of the crawler has changed regarding the configuration
-        * this is completely ok. Since configuration records were introduced to configure "what should be done" additionally to page ts the way to setup jobs
-        * has drifted from selecting filtering processing instructions to selecting/filtering configuration keys (you can configure the processing instructions there).
-        * This is also reflected in the backend modules and allows you a much clearer and powerful way to work with the crawler extension.
-        */
+         * We removed the "proc" option as it seemd not to be working any more. But as the complete handling of the crawler has changed regarding the configuration
+         * this is completely ok. Since configuration records were introduced to configure "what should be done" additionally to page ts the way to setup jobs
+         * has drifted from selecting filtering processing instructions to selecting/filtering configuration keys (you can configure the processing instructions there).
+         * This is also reflected in the backend modules and allows you a much clearer and powerful way to work with the crawler extension.
+         */
         // $this->cli_options[] = array('-proc listOfProcInstr', 'Comma list of processing instructions. These are the "actions" carried out when crawling and you must specify at least one. Depends on third-party extensions. Examples are "tx_cachemgm_recache" from "cachemgm" extension (will recache pages), "tx_staticpub_publish" from "staticpub" (publishing pages to static files) or "tx_indexedsearch_reindex" from "indexed_search" (indexes pages).');
         // TODO: cleanup here!
         $this->cli_options[] = ['-d depth', 'Tree depth, 0-99', "How many levels under the 'page_id' to include."];

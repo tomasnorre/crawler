@@ -33,6 +33,8 @@ use AOE\Crawler\Task\CrawlMultiProcessTaskAdditionalFieldProvider;
  * Class SchedulerUtility
  *
  * @package AOE\Crawler\Utility
+ *
+ * @codeCoverageIgnore
  */
 class SchedulerUtility
 {
