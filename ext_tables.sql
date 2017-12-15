@@ -36,6 +36,7 @@ CREATE TABLE tx_crawler_process (
   assigned_items_count int(11) DEFAULT '0' NOT NULL,
   deleted tinyint(4) unsigned DEFAULT '0' NOT NULL,
   system_process_id int(11) DEFAULT '0' NOT NULL,
+
   KEY update_key (active,deleted),
   KEY process_id (process_id)
 ) ENGINE=InnoDB;
@@ -68,4 +69,4 @@ CREATE TABLE tx_crawler_configuration (
 
   PRIMARY KEY (uid),
   KEY parent (pid)
-);
+) ENGINE=InnoDB;
