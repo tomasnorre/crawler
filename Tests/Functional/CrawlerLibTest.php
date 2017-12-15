@@ -25,6 +25,7 @@ namespace AOE\Crawler\Tests\Functional;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 
@@ -102,7 +103,7 @@ class CrawlerLibTest extends FunctionalTestCase
      */
     public function CLI_deleteProcessesMarkedDeleted()
     {
-        $processRepository = new \tx_crawler_domain_process_repository();
+        $processRepository = new ProcessRepository();
 
         $expectedProcessesBeforeDeletion = 5;
         $this->assertEquals(

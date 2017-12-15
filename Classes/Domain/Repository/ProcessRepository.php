@@ -1,15 +1,17 @@
 <?php
+namespace AOE\Crawler\Domain\Repository;
 
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2009 AOE GmbH (dev@aoe.com)
+ *  (c) 2017 AOE GmbH <dev@aoe.com>
+ *
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
+ *  the Free Software Foundation; either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  The GNU General Public License can be found at
@@ -23,10 +25,15 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Domain\Model\Process;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
- * Class tx_crawler_domain_process_repository
+ * Class ProcessRepository
+ *
+ * @package AOE\Crawler\Domain\Repository
  */
-class tx_crawler_domain_process_repository extends AOE\Crawler\Domain\Repository\AbstractRepository
+class ProcessRepository extends AbstractRepository
 {
     /**
      * @var string
@@ -47,7 +54,7 @@ class tx_crawler_domain_process_repository extends AOE\Crawler\Domain\Repository
     public function findAll($orderField = '', $orderDirection = 'DESC', $itemCount = null, $offset = null, $where = '')
     {
         /** @var tx_crawler_domain_process_collection $collection */
-        $collection = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_crawler_domain_process_collection');
+        $collection = GeneralUtility::makeInstance('tx_crawler_domain_process_collection');
 
         $orderField = trim($orderField);
         $orderField = empty($orderField) ? 'process_id' : $orderField;
@@ -66,7 +73,7 @@ class tx_crawler_domain_process_repository extends AOE\Crawler\Domain\Repository
 
         if (is_array($rows)) {
             foreach ($rows as $row) {
-                $collection->append(\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\AOE\Crawler\Domain\Model\Process::class, $row));
+                $collection->append(GeneralUtility::makeInstance(Process::class, $row));
             }
         }
 

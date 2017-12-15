@@ -54,7 +54,7 @@ class tx_crawler_domain_process_manager
     private $queueRepository;
 
     /**
-     * @var tx_crawler_domain_process_repository
+     * @var \AOE\Crawler\Domain\Repository\ProcessRepository
      */
     private $processRepository;
 
@@ -68,7 +68,7 @@ class tx_crawler_domain_process_manager
      */
     public function __construct()
     {
-        $this->processRepository = new tx_crawler_domain_process_repository();
+        $this->processRepository = new \AOE\Crawler\Domain\Repository\ProcessRepository();
         $this->queueRepository = new \AOE\Crawler\Domain\Repository\QueueRepository();
         $this->crawlerObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_crawler_lib');
         $this->timeToLive = intval($this->crawlerObj->extensionSettings['processMaxRunTime']);

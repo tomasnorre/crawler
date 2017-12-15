@@ -25,6 +25,11 @@ namespace AOE\Crawler\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+/**
+ * Class AbstractRepository
+ *
+ * @package AOE\Crawler\Domain\Repository
+ */
 abstract class AbstractRepository
 {
 

@@ -25,6 +25,7 @@ namespace AOE\Crawler\Api;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
@@ -444,7 +445,7 @@ class CrawlerApi
      */
     public function getActiveProcessesCount()
     {
-        $processRepository = new \tx_crawler_domain_process_repository();
+        $processRepository = new ProcessRepository();
 
         return $processRepository->countActive();
     }

@@ -9,7 +9,6 @@ return [
     'tx_crawler_domain_events_observer' => $extensionPath . 'domain/events/interface.tx_crawler_domain_events_observer.php',
     'tx_crawler_domain_process_manager' => $extensionPath . 'domain/process/class.tx_crawler_domain_process_manager.php',
     'tx_crawler_domain_process_collection' => $extensionPath . 'domain/process/class.tx_crawler_domain_process_collection.php',
-    'tx_crawler_domain_process_repository' => $extensionPath . 'domain/process/class.tx_crawler_domain_process_repository.php',
     'tx_crawler_modfunc1' => $extensionPath . 'modfunc1/class.tx_crawler_modfunc1.php',
     'tx_crawler_view_pagination' => $extensionPath . 'view/class.tx_crawler_view_pagination.php',
     'tx_crawler_view_process_list' => $extensionPath . 'view/process/class.tx_crawler_view_process_list.php',

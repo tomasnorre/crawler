@@ -924,7 +924,7 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
         $offset = intval(\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('offset'));
         $perpage = 20;
 
-        $processRepository = new tx_crawler_domain_process_repository();
+        $processRepository = new \AOE\Crawler\Domain\Repository\ProcessRepository();
         $queueRepository = new \AOE\Crawler\Domain\Repository\QueueRepository();
 
         $mode = $this->pObj->MOD_SETTINGS['processListMode'];
