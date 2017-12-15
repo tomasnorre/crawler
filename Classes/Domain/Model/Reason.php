@@ -1,14 +1,17 @@
 <?php
+namespace AOE\Crawler\Domain\Model;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2009 AOE media (dev@aoemedia.de)
+ *  (c) 2017 AOE GmbH <dev@aoe.com>
+ *
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
+ *  the Free Software Foundation; either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  The GNU General Public License can be found at
@@ -22,10 +25,13 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-class tx_crawler_domain_reason extends tx_crawler_domain_lib_abstract_dbobject
+/**
+ * Class Reason
+ *
+ * @package AOE\Crawler\Domain\Model
+ */
+class Reason
 {
-    protected static $tableName = 'tx_crawler_reason';
-
     /**
      * THE CONSTANTS REPRESENT THE KIND OF THE REASON
      *
@@ -34,6 +40,19 @@ class tx_crawler_domain_reason extends tx_crawler_domain_lib_abstract_dbobject
     const REASON_DEFAULT = 'crawler_default_reason';
     const REASON_GUI_SUBMIT = 'crawler_gui_submit_reason';
     const REASON_CLI_SUBMIT = 'crawler_cli_submit_reason';
+
+    /**
+     * @var array
+     */
+    protected $row;
+
+    /**
+     * @param array $row
+     */
+    public function __construct($row = [])
+    {
+        $this->row = $row;
+    }
 
     /**
      * Set uid
@@ -78,6 +97,7 @@ class tx_crawler_domain_reason extends tx_crawler_domain_lib_abstract_dbobject
 
     /**
      * This method returns the attached reason text.
+     *
      * @return string
      */
     public function getReason()
@@ -98,7 +118,6 @@ class tx_crawler_domain_reason extends tx_crawler_domain_lib_abstract_dbobject
     /**
      * Returns the attachet detail text.
      *
-     * @param void
      * @return string
      */
     public function getDetailText()

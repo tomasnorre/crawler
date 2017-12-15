@@ -1,14 +1,17 @@
 <?php
+namespace AOE\Crawler\Domain\Model;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2009 AOE media (dev@aoemedia.de)
+ *  (c) 2017 AOE GmbH <dev@aoe.com>
+ *
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
+ *  the Free Software Foundation; either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  The GNU General Public License can be found at
@@ -22,19 +25,30 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-class tx_crawler_domain_queue_entry extends tx_crawler_domain_lib_abstract_dbobject
+/**
+ * Class Queue
+ *
+ * @package AOE\Crawler\Domain\Model
+ */
+class Queue
 {
+    /**
+     * @var array
+     */
+    protected $row;
 
     /**
-     * @var string table name
+     * @param array $row
      */
-    protected static $tableName = 'tx_crawler_queue';
+    public function __construct($row = [])
+    {
+        $this->row = $row;
+    }
 
     /**
      * Returns the execution time of the record as int value
      *
-     * @param void
-     * @return int
+     * @return integer
      */
     public function getExecutionTime()
     {

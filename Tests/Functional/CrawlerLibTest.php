@@ -25,6 +25,7 @@ namespace AOE\Crawler\Tests\Functional;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Domain\Repository\QueueRepository;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 
 /**
@@ -127,7 +128,7 @@ class CrawlerLibTest extends FunctionalTestCase
         $this->markTestSkipped('This fails with PHP7 & TYPO3 7.6');
 
         $this->importDataSet(dirname(__FILE__) . '/Fixtures/tx_crawler_queue.xml');
-        $queryRepository = new \tx_crawler_domain_queue_repository();
+        $queryRepository = new QueueRepository();
 
         $recordsFromFixture = 9;
         $expectedRemainingRecords = 2;
@@ -168,7 +169,7 @@ class CrawlerLibTest extends FunctionalTestCase
      */
     public function flushQueue($where, $expected)
     {
-        $queryRepository = new \tx_crawler_domain_queue_repository();
+        $queryRepository = new QueueRepository();
         $this->subject->_call('flushQueue', $where);
 
         $this->assertEquals(

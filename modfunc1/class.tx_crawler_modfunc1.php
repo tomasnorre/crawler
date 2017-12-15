@@ -301,8 +301,8 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 			</tr>';
         } else {
             if ($this->submitCrawlUrls) {
-                $reason = new tx_crawler_domain_reason();
-                $reason->setReason(tx_crawler_domain_reason::REASON_GUI_SUBMIT);
+                $reason = new \AOE\Crawler\Domain\Model\Reason();
+                $reason->setReason(\AOE\Crawler\Domain\Model\Reason::REASON_GUI_SUBMIT);
 
                 if ($BE_USER instanceof \TYPO3\CMS\Core\Authentication\BackendUserAuthentication) {
                     $username = $BE_USER->user['username'];
@@ -311,8 +311,8 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
 
                 tx_crawler_domain_events_dispatcher::getInstance()->post(
                     'invokeQueueChange',
-                                                                            $this->findCrawler()->setID,
-                                                                            [	'reason' => $reason ]
+                    $this->findCrawler()->setID,
+                    ['reason' => $reason]
                 );
             }
 
@@ -925,7 +925,7 @@ class tx_crawler_modfunc1 extends \TYPO3\CMS\Backend\Module\AbstractFunctionModu
         $perpage = 20;
 
         $processRepository = new tx_crawler_domain_process_repository();
-        $queueRepository = new tx_crawler_domain_queue_repository();
+        $queueRepository = new \AOE\Crawler\Domain\Repository\QueueRepository();
 
         $mode = $this->pObj->MOD_SETTINGS['processListMode'];
         if ($mode == 'detail') {

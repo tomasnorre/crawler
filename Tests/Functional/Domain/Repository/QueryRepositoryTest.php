@@ -25,6 +25,9 @@ namespace AOE\Crawler\Tests\Functional\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Domain\Model\Process;
+use AOE\Crawler\Domain\Model\Queue;
+use AOE\Crawler\Domain\Repository\QueueRepository;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 
 /**
@@ -46,7 +49,7 @@ class QueryRepositoryTest extends FunctionalTestCase
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     /**
-     * @var \tx_crawler_domain_queue_repository
+     * @var QueueRepository
      */
     protected $subject;
 
@@ -58,7 +61,7 @@ class QueryRepositoryTest extends FunctionalTestCase
     {
         parent::setUp();
         $this->importDataSet(dirname(__FILE__) . '/../../Fixtures/tx_crawler_queue.xml');
-        $this->subject = new \tx_crawler_domain_queue_repository();
+        $this->subject = new QueueRepository();
     }
 
     /**
@@ -68,10 +71,10 @@ class QueryRepositoryTest extends FunctionalTestCase
      */
     public function getFirstOrLastObjectByProcess($processId, $orderBy, $expected)
     {
-        $process = new \tx_crawler_domain_process(['process_id' => $processId]);
+        $process = new Process(['process_id' => $processId]);
 
-        $mockedRepository = $this->getAccessibleMock('\tx_crawler_domain_queue_repository', ['dummy']);
-        /** @var \tx_crawler_domain_queue_entry $result */
+        $mockedRepository = $this->getAccessibleMock(QueueRepository::class, ['dummy']);
+        /** @var Queue $result */
         $result = $mockedRepository->_call('getFirstOrLastObjectByProcess', $process, $orderBy);
 
         $this->assertEquals(
@@ -85,7 +88,7 @@ class QueryRepositoryTest extends FunctionalTestCase
      */
     public function findYoungestEntryForProcessReturnsQueueEntry()
     {
-        $process = new \tx_crawler_domain_process(['process_id' => 'qwerty']);
+        $process = new Process(['process_id' => 'qwerty']);
 
         $this->assertEquals(
             [
@@ -112,7 +115,7 @@ class QueryRepositoryTest extends FunctionalTestCase
      */
     public function findOldestEntryForProcessReturnsQueueEntry()
     {
-        $process = new \tx_crawler_domain_process(['process_id' => 'qwerty']);
+        $process = new Process(['process_id' => 'qwerty']);
 
         $this->assertEquals(
             [
@@ -139,7 +142,7 @@ class QueryRepositoryTest extends FunctionalTestCase
      */
     public function countExecutedItemsByProcessReturnsInteger()
     {
-        $process = new \tx_crawler_domain_process(['process_id' => 'qwerty']);
+        $process = new Process(['process_id' => 'qwerty']);
 
         $this->assertEquals(
             2,
@@ -152,7 +155,7 @@ class QueryRepositoryTest extends FunctionalTestCase
      */
     public function countNonExecutedItemsByProcessReturnsInteger()
     {
-        $process = new \tx_crawler_domain_process(['process_id' => '1007']);
+        $process = new Process(['process_id' => '1007']);
 
         $this->assertEquals(
             2,
@@ -203,7 +206,7 @@ class QueryRepositoryTest extends FunctionalTestCase
      */
     public function countItemsByWhereClause($whereClause, $expected)
     {
-        $mockedRepository = $this->getAccessibleMock('\tx_crawler_domain_queue_repository', ['dummy']);
+        $mockedRepository = $this->getAccessibleMock(QueueRepository::class, ['dummy']);
 
         $this->assertEquals(
             $expected,

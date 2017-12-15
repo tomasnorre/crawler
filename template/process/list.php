@@ -52,7 +52,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<?php foreach ($this->getProcessCollection() as $process): /* @var $process tx_crawler_domain_process */ ?>
+		<?php foreach ($this->getProcessCollection() as $process): /* @var $process \AOE\Crawler\Domain\Model\Process */ ?>
 			<tr class="<?php echo (++$count % 2 == 0) ? 'odd' : 'even' ?>">
 				<td><?php echo $this->getIconForState(htmlspecialchars($process->getState())); ?></td>
 				<td><?php echo htmlspecialchars($process->getProcess_id()); ?></td>

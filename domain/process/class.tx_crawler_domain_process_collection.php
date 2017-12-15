@@ -33,12 +33,12 @@ class tx_crawler_domain_process_collection extends ArrayObject
      * Method to retrieve an element from the collection.
      *
      * @throws Exception
-     * @return tx_crawler_domain_process
+     * @return \AOE\Crawler\Domain\Model\Process
      */
     public function offsetGet($index)
     {
         if (! parent::offsetExists($index)) {
-            throw new Exception('Index "' . var_export($index, true) . '" for tx_crawler_domain_process are not available');
+            throw new Exception('Index "' . var_export($index, true) . '" for \AOE\Crawler\Domain\Model\Process are not available');
         }
         return parent::offsetGet($index);
     }
@@ -47,28 +47,28 @@ class tx_crawler_domain_process_collection extends ArrayObject
      * Method to add an element to the collection-
      *
      * @param mixed $index
-     * @param tx_crawler_domain_process $subject
+     * @param \AOE\Crawler\Domain\Model\Process $subject
      * @throws InvalidArgumentException
      * @return void
      */
     public function offsetSet($index, $subject)
     {
-        if (! $subject instanceof tx_crawler_domain_process) {
-            throw new InvalidArgumentException('Wrong parameter type given, "tx_crawler_domain_process" expected!');
+        if (! $subject instanceof \AOE\Crawler\Domain\Model\Process) {
+            throw new InvalidArgumentException('Wrong parameter type given, "\AOE\Crawler\Domain\Model\Process" expected!');
         }
         parent::offsetSet($index, $subject);
     }
 
     /**
      * Method to append an element to the collection
-     * @param tx_crawler_domain_process $subject
+     * @param \AOE\Crawler\Domain\Model\Process $subject
      * @throws InvalidArgumentException
      * @return void
      */
     public function append($subject)
     {
-        if (! $subject instanceof tx_crawler_domain_process) {
-            throw new InvalidArgumentException('Wrong parameter type given, "tx_crawler_domain_process" expected!');
+        if (! $subject instanceof \AOE\Crawler\Domain\Model\Process) {
+            throw new InvalidArgumentException('Wrong parameter type given, "\AOE\Crawler\Domain\Model\Process" expected!');
         }
         parent::append($subject);
     }

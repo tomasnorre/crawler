@@ -2056,8 +2056,8 @@ class tx_crawler_lib
         }
 
         if ($cliObj->cli_argValue('-o') === 'queue' || $cliObj->cli_argValue('-o') === 'exec') {
-            $reason = new tx_crawler_domain_reason();
-            $reason->setReason(tx_crawler_domain_reason::REASON_GUI_SUBMIT);
+            $reason = new \AOE\Crawler\Domain\Model\Reason();
+            $reason->setReason(\AOE\Crawler\Domain\Model\Reason::REASON_GUI_SUBMIT);
             $reason->setDetailText('The cli script of the crawler added to the queue');
             tx_crawler_domain_events_dispatcher::getInstance()->post(
                 'invokeQueueChange',

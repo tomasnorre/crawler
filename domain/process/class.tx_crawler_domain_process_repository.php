@@ -28,12 +28,6 @@
  */
 class tx_crawler_domain_process_repository extends AOE\Crawler\Domain\Repository\AbstractRepository
 {
-
-    /**
-     * @var string object class name
-     */
-    protected $objectClassname = 'tx_crawler_domain_process';
-
     /**
      * @var string
      */
@@ -72,7 +66,7 @@ class tx_crawler_domain_process_repository extends AOE\Crawler\Domain\Repository
 
         if (is_array($rows)) {
             foreach ($rows as $row) {
-                $collection->append(\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance($this->objectClassname, $row));
+                $collection->append(\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\AOE\Crawler\Domain\Model\Process::class, $row));
             }
         }
 
