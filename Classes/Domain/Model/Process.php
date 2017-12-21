@@ -188,4 +188,14 @@ class Process
         }
         return $stage;
     }
+
+    /**
+     * Returns the properties of the object as array
+     *
+     * @return array
+     */
+    public function getRow()
+    {
+        return $this->row;
+    }
 }

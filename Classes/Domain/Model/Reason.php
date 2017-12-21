@@ -135,4 +135,14 @@ class Reason
     {
         $this->row['queue_entry_uid'] = $entry_uid;
     }
+
+    /**
+     * Returns the properties of the object as array
+     *
+     * @return array
+     */
+    public function getRow()
+    {
+        return $this->row;
+    }
 }

@@ -54,4 +54,14 @@ class Queue
     {
         return $this->row['exec_time'];
     }
+
+    /**
+     * Returns the properties of the object as array
+     *
+     * @return array
+     */
+    public function getRow()
+    {
+        return $this->row;
+    }
 }

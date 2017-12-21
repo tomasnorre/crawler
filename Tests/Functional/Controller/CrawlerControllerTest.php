@@ -1,5 +1,5 @@
 <?php
-namespace AOE\Crawler\Tests\Functional;
+namespace AOE\Crawler\Tests\Functional\Controller;
 
 /***************************************************************
  *  Copyright notice
@@ -31,11 +31,11 @@ use AOE\Crawler\Domain\Repository\QueueRepository;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 
 /**
- * Class CrawlerLibTest
+ * Class CrawlerControllerTest
  *
- * @package AOE\Crawler\Tests\Functional
+ * @package AOE\Crawler\Tests\Functional\Controller
  */
-class CrawlerLibTest extends FunctionalTestCase
+class CrawlerControllerTest extends FunctionalTestCase
 {
     /**
      * @var array
