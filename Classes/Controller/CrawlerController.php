@@ -1,9 +1,10 @@
 <?php
+namespace AOE\Crawler\Controller;
 
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2016 AOE GmbH <dev@aoe.com>
+ *  (c) 2017 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -24,10 +25,33 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Command\CrawlerCommandLineController;
+use AOE\Crawler\Command\FlushCommandLineController;
+use AOE\Crawler\Command\QueueCommandLineController;
+use AOE\Crawler\Domain\Model\Reason;
+use AOE\Crawler\Event\EventDispatcher;
+use AOE\Crawler\Utility\BackendUtility;
+use AOE\Crawler\Utility\IconUtility;
+use AOE\Crawler\Utility\SignalSlotUtility;
+use TYPO3\CMS\Backend\View\PageTreeView;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Database\DatabaseConnection;
+use TYPO3\CMS\Core\TimeTracker\NullTimeTracker;
+use TYPO3\CMS\Core\Utility\DebugUtility;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\MathUtility;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use TYPO3\CMS\Frontend\Page\PageGenerator;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+use TYPO3\CMS\Frontend\Utility\EidUtility;
+
 /**
- * Class tx_crawler_lib
+ * Class CrawlerController
+ * 
+ * @package AOE\Crawler\Controller
  */
-class tx_crawler_lib
+class CrawlerController
 {
     /**
      * @var integer
@@ -112,12 +136,12 @@ class tx_crawler_lib
     protected $accessMode;
 
     /**
-     * @var \TYPO3\CMS\Core\Database\DatabaseConnection
+     * @var DatabaseConnection
      */
     private $db;
 
     /**
-     * @var TYPO3\CMS\Core\Authentication\BackendUserAuthentication
+     * @var BackendUserAuthentication
      */
     private $backendUser;
 
@@ -154,7 +178,7 @@ class tx_crawler_lib
     public function setDisabled($disabled = true)
     {
         if ($disabled) {
-            \TYPO3\CMS\Core\Utility\GeneralUtility::writeFile($this->processFilename, '');
+            GeneralUtility::writeFile($this->processFilename, '');
         } else {
             if (is_file($this->processFilename)) {
                 unlink($this->processFilename);
@@ -213,11 +237,11 @@ class tx_crawler_lib
         $this->setExtensionSettings($settings);
 
         // set defaults:
-        if (\TYPO3\CMS\Core\Utility\MathUtility::convertToPositiveInteger($this->extensionSettings['countInARun']) == 0) {
+        if (MathUtility::convertToPositiveInteger($this->extensionSettings['countInARun']) == 0) {
             $this->extensionSettings['countInARun'] = 100;
         }
 
-        $this->extensionSettings['processLimit'] = \TYPO3\CMS\Core\Utility\MathUtility::forceIntegerInRange($this->extensionSettings['processLimit'], 1, 99, 1);
+        $this->extensionSettings['processLimit'] = MathUtility::forceIntegerInRange($this->extensionSettings['processLimit'], 1, 99, 1);
     }
 
     /**
@@ -251,7 +275,7 @@ class tx_crawler_lib
         }
 
         if (!$skipPage) {
-            if (\TYPO3\CMS\Core\Utility\GeneralUtility::inList('3,4', $pageRow['doktype']) || $pageRow['doktype'] >= 199) {
+            if (GeneralUtility::inList('3,4', $pageRow['doktype']) || $pageRow['doktype'] >= 199) {
                 $skipPage = true;
                 $skipMessage = 'Because doktype is not allowed';
             }
@@ -260,7 +284,7 @@ class tx_crawler_lib
         if (!$skipPage) {
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['excludeDoktype'])) {
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['excludeDoktype'] as $key => $doktypeList) {
-                    if (\TYPO3\CMS\Core\Utility\GeneralUtility::inList($doktypeList, $pageRow['doktype'])) {
+                    if (GeneralUtility::inList($doktypeList, $pageRow['doktype'])) {
                         $skipPage = true;
                         $skipMessage = 'Doktype was excluded by "' . $key . '"';
                         break;
@@ -277,7 +301,7 @@ class tx_crawler_lib
                         'pageRow' => $pageRow
                     ];
                     // expects "false" if page is ok and "true" or a skipMessage if this page should _not_ be crawled
-                    $veto = \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($func, $params, $this);
+                    $veto = GeneralUtility::callUserFunction($func, $params, $this);
                     if ($veto !== false) {
                         $skipPage = true;
                         if (is_string($veto)) {
@@ -367,10 +391,10 @@ class tx_crawler_lib
     ) {
 
         // realurl support (thanks to Ingo Renner)
-        if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('realurl') && $vv['subCfg']['realurl']) {
+        if (ExtensionManagementUtility::isLoaded('realurl') && $vv['subCfg']['realurl']) {
 
             /** @var tx_realurl $urlObj */
-            $urlObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_realurl');
+            $urlObj = GeneralUtility::makeInstance('tx_realurl');
 
             if (!empty($vv['subCfg']['baseUrl'])) {
                 $urlParts = parse_url($vv['subCfg']['baseUrl']);
@@ -387,10 +411,10 @@ class tx_crawler_lib
             }
 
             if (!$GLOBALS['TSFE']->sys_page) {
-                $GLOBALS['TSFE']->sys_page = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Frontend\Page\PageRepository');
+                $GLOBALS['TSFE']->sys_page = GeneralUtility::makeInstance('TYPO3\CMS\Frontend\Page\PageRepository');
             }
             if (!$GLOBALS['TSFE']->csConvObj) {
-                $GLOBALS['TSFE']->csConvObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Core\Charset\CharsetConverter');
+                $GLOBALS['TSFE']->csConvObj = GeneralUtility::makeInstance('TYPO3\CMS\Core\Charset\CharsetConverter');
             }
             if (!$GLOBALS['TSFE']->tmpl->rootLine[0]['uid']) {
                 $GLOBALS['TSFE']->tmpl->rootLine[0]['uid'] = $urlObj->extConf['pagePath']['rootpage_id'];
@@ -407,7 +431,7 @@ class tx_crawler_lib
                     // Calculate cHash:
                     if ($vv['subCfg']['cHash']) {
                         /* @var $cacheHash \TYPO3\CMS\Frontend\Page\CacheHashCalculator */
-                        $cacheHash = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Frontend\Page\CacheHashCalculator');
+                        $cacheHash = GeneralUtility::makeInstance('TYPO3\CMS\Frontend\Page\CacheHashCalculator');
                         $urlQuery .= '&cHash=' . $cacheHash->generateForParameters($urlQuery);
                     }
 
@@ -416,7 +440,7 @@ class tx_crawler_lib
 
                     // realurl support (thanks to Ingo Renner)
                     $urlQuery = 'index.php' . $urlQuery;
-                    if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('realurl') && $vv['subCfg']['realurl']) {
+                    if (ExtensionManagementUtility::isLoaded('realurl') && $vv['subCfg']['realurl']) {
                         $params = [
                             'LD' => [
                                 'totalURL' => $urlQuery
@@ -439,7 +463,7 @@ class tx_crawler_lib
                         $urlList = '[' . date('d.m.y H:i', $schTime) . '] ' . htmlspecialchars($urlQuery);
                         $this->urlList[] = '[' . date('d.m.y H:i', $schTime) . '] ' . $urlQuery;
 
-                        $theUrl = ($vv['subCfg']['baseUrl'] ? $vv['subCfg']['baseUrl'] : \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL')) . $urlQuery;
+                        $theUrl = ($vv['subCfg']['baseUrl'] ? $vv['subCfg']['baseUrl'] : GeneralUtility::getIndpEnv('TYPO3_SITE_URL')) . $urlQuery;
 
                         // Submit for crawling!
                         if ($submitCrawlUrls) {
@@ -484,7 +508,7 @@ class tx_crawler_lib
         }
 
         foreach ($incomingProcInstructions as $pi) {
-            if (\TYPO3\CMS\Core\Utility\GeneralUtility::inList($piString, $pi)) {
+            if (GeneralUtility::inList($piString, $pi)) {
                 return true;
             }
         }
@@ -493,10 +517,10 @@ class tx_crawler_lib
     public function getPageTSconfigForId($id)
     {
         if (!$this->MP) {
-            $pageTSconfig = \TYPO3\CMS\Backend\Utility\BackendUtility::getPagesTSconfig($id);
+            $pageTSconfig = BackendUtility::getPagesTSconfig($id);
         } else {
             list(, $mountPointId) = explode('-', $this->MP);
-            $pageTSconfig = \TYPO3\CMS\Backend\Utility\BackendUtility::getPagesTSconfig($mountPointId);
+            $pageTSconfig = BackendUtility::getPagesTSconfig($mountPointId);
         }
 
         // Call a hook to alter configuration
@@ -506,7 +530,7 @@ class tx_crawler_lib
                 'pageTSConfig' => &$pageTSconfig
             ];
             foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['getPageTSconfigForId'] as $userFunc) {
-                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($userFunc, $params, $this);
+                GeneralUtility::callUserFunction($userFunc, $params, $this);
             }
         }
 
@@ -545,12 +569,12 @@ class tx_crawler_lib
                         $subCfg['key'] = $key;
 
                         if (strcmp($subCfg['procInstrFilter'], '')) {
-                            $subCfg['procInstrFilter'] = implode(',', \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $subCfg['procInstrFilter']));
+                            $subCfg['procInstrFilter'] = implode(',', GeneralUtility::trimExplode(',', $subCfg['procInstrFilter']));
                         }
-                        $pidOnlyList = implode(',', \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $subCfg['pidsOnly'], 1));
+                        $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $subCfg['pidsOnly'], 1));
 
                         // process configuration if it is not page-specific or if the specific page is the current page:
-                        if (!strcmp($subCfg['pidsOnly'], '') || \TYPO3\CMS\Core\Utility\GeneralUtility::inList($pidOnlyList, $id)) {
+                        if (!strcmp($subCfg['pidsOnly'], '') || GeneralUtility::inList($pidOnlyList, $id)) {
 
                                 // add trailing slash if not present
                             if (!empty($subCfg['baseUrl']) && substr($subCfg['baseUrl'], -1) != '/') {
@@ -581,14 +605,14 @@ class tx_crawler_lib
          */
 
         // get records along the rootline
-        $rootLine = \TYPO3\CMS\Backend\Utility\BackendUtility::BEgetRootLine($id);
+        $rootLine = BackendUtility::BEgetRootLine($id);
 
         foreach ($rootLine as $page) {
-            $configurationRecordsForCurrentPage = \TYPO3\CMS\Backend\Utility\BackendUtility::getRecordsByField(
+            $configurationRecordsForCurrentPage = BackendUtility::getRecordsByField(
                 'tx_crawler_configuration',
                 'pid',
                 intval($page['uid']),
-                \TYPO3\CMS\Backend\Utility\BackendUtility::BEenableFields('tx_crawler_configuration') . \TYPO3\CMS\Backend\Utility\BackendUtility::deleteClause('tx_crawler_configuration')
+                BackendUtility::BEenableFields('tx_crawler_configuration') . BackendUtility::deleteClause('tx_crawler_configuration')
             );
 
             if (is_array($configurationRecordsForCurrentPage)) {
@@ -596,17 +620,17 @@ class tx_crawler_lib
 
                         // check access to the configuration record
                     if (empty($configurationRecord['begroups']) || $GLOBALS['BE_USER']->isAdmin() || $this->hasGroupAccess($GLOBALS['BE_USER']->user['usergroup_cached_list'], $configurationRecord['begroups'])) {
-                        $pidOnlyList = implode(',', \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $configurationRecord['pidsonly'], 1));
+                        $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $configurationRecord['pidsonly'], 1));
 
                         // process configuration if it is not page-specific or if the specific page is the current page:
-                        if (!strcmp($configurationRecord['pidsonly'], '') || \TYPO3\CMS\Core\Utility\GeneralUtility::inList($pidOnlyList, $id)) {
+                        if (!strcmp($configurationRecord['pidsonly'], '') || GeneralUtility::inList($pidOnlyList, $id)) {
                             $key = $configurationRecord['name'];
 
                             // don't overwrite previously defined paramSets
                             if (!isset($res[$key])) {
 
                                     /* @var $TSparserObject \TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser */
-                                $TSparserObject = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser');
+                                $TSparserObject = GeneralUtility::makeInstance('TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser');
                                 $TSparserObject->parse($configurationRecord['processing_instruction_parameters_ts']);
 
                                 $subCfg = [
@@ -649,7 +673,7 @@ class tx_crawler_lib
                 $params = [
                     'res' => &$res,
                 ];
-                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($func, $params, $this);
+                GeneralUtility::callUserFunction($func, $params, $this);
             }
         }
 
@@ -674,8 +698,8 @@ class tx_crawler_lib
                 '*',
                 'sys_domain',
                 'uid = ' . $sysDomainUid .
-                \TYPO3\CMS\Backend\Utility\BackendUtility::BEenableFields('sys_domain') .
-                \TYPO3\CMS\Backend\Utility\BackendUtility::deleteClause('sys_domain')
+                BackendUtility::BEenableFields('sys_domain') .
+                BackendUtility::deleteClause('sys_domain')
             );
             $row = $this->db->sql_fetch_assoc($res);
             if ($row['domainName'] != '') {
@@ -702,12 +726,12 @@ class tx_crawler_lib
             }
         }
         $pids = [];
-        $rootLine = \TYPO3\CMS\Backend\Utility\BackendUtility::BEgetRootLine($rootid);
+        $rootLine = BackendUtility::BEgetRootLine($rootid);
         foreach ($rootLine as $node) {
             $pids[] = $node['uid'];
         }
-        /* @var \TYPO3\CMS\Backend\Tree\View\PageTreeView */
-        $tree = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Backend\Tree\View\PageTreeView');
+        /* @var PageTreeView $tree */
+        $tree = GeneralUtility::makeInstance(PageTreeView::class);
         $perms_clause = $GLOBALS['BE_USER']->getPagePermsClause(1);
         $tree->init('AND ' . $perms_clause);
         $tree->getTree($rootid, $depth, '');
@@ -719,9 +743,9 @@ class tx_crawler_lib
             '*',
             'tx_crawler_configuration',
             'pid IN (' . implode(',', $pids) . ') ' .
-            \TYPO3\CMS\Backend\Utility\BackendUtility::BEenableFields('tx_crawler_configuration') .
-            \TYPO3\CMS\Backend\Utility\BackendUtility::deleteClause('tx_crawler_configuration') . ' ' .
-            \TYPO3\CMS\Backend\Utility\BackendUtility::versioningPlaceholderClause('tx_crawler_configuration') . ' '
+            BackendUtility::BEenableFields('tx_crawler_configuration') .
+            BackendUtility::deleteClause('tx_crawler_configuration') . ' ' .
+            BackendUtility::versioningPlaceholderClause('tx_crawler_configuration') . ' '
         );
 
         while ($row = $this->db->sql_fetch_assoc($res)) {
@@ -745,8 +769,8 @@ class tx_crawler_lib
         if (empty($accessList)) {
             return true;
         }
-        foreach (\TYPO3\CMS\Core\Utility\GeneralUtility::intExplode(',', $groupList) as $groupUid) {
-            if (\TYPO3\CMS\Core\Utility\GeneralUtility::inList($accessList, $groupUid)) {
+        foreach (GeneralUtility::intExplode(',', $groupList) as $groupUid) {
+            if (GeneralUtility::inList($accessList, $groupUid)) {
                 return true;
             }
         }
@@ -830,10 +854,10 @@ class tx_crawler_lib
                     } elseif (substr(trim($pV), 0, 7) == '_TABLE:') {
 
                         // Parse parameters:
-                        $subparts = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(';', $pV);
+                        $subparts = GeneralUtility::trimExplode(';', $pV);
                         $subpartParams = [];
                         foreach ($subparts as $spV) {
-                            list($pKey, $pVal) = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(':', $spV);
+                            list($pKey, $pVal) = GeneralUtility::trimExplode(':', $spV);
                             $subpartParams[$pKey] = $pVal;
                         }
 
@@ -859,7 +883,7 @@ class tx_crawler_lib
                                 $rows = $this->db->exec_SELECTgetRows(
                                     $fieldName,
                                     $subpartParams['_TABLE'] . $addTable,
-                                    $where . \TYPO3\CMS\Backend\Utility\BackendUtility::deleteClause($subpartParams['_TABLE']),
+                                    $where . BackendUtility::deleteClause($subpartParams['_TABLE']),
                                     '',
                                     '',
                                     '',
@@ -884,7 +908,7 @@ class tx_crawler_lib
                             'pid' => $pid
                         ];
                         foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/class.tx_crawler_lib.php']['expandParameters'] as $key => $_funcRef) {
-                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($_funcRef, $_params, $this);
+                            GeneralUtility::callUserFunction($_funcRef, $_params, $this);
                         }
                     }
                 }
@@ -923,7 +947,7 @@ class tx_crawler_lib
                 foreach ($valueSet as $val) {
                     $newUrls[] = $url . (strcmp($val, '') ? '&' . rawurlencode($varName) . '=' . rawurlencode($val) : '');
 
-                    if (count($newUrls) > \TYPO3\CMS\Core\Utility\MathUtility::forceIntegerInRange($this->extensionSettings['maxCompileUrls'], 1, 1000000000, 10000)) {
+                    if (count($newUrls) > MathUtility::forceIntegerInRange($this->extensionSettings['maxCompileUrls'], 1, 1000000000, 10000)) {
                         break;
                     }
                 }
@@ -1031,10 +1055,10 @@ class tx_crawler_lib
     {
         $realWhere = strlen($where) > 0 ? $where : '1=1';
 
-        if (tx_crawler_domain_events_dispatcher::getInstance()->hasObserver('queueEntryFlush')) {
+        if (EventDispatcher::getInstance()->hasObserver('queueEntryFlush')) {
             $groups = $this->db->exec_SELECTgetRows('DISTINCT set_id', 'tx_crawler_queue', $realWhere);
             foreach ($groups as $group) {
-                tx_crawler_domain_events_dispatcher::getInstance()->post('queueEntryFlush', $group['set_id'], $this->db->exec_SELECTgetRows('uid, set_id', 'tx_crawler_queue', $realWhere . ' AND set_id="' . $group['set_id'] . '"'));
+                EventDispatcher::getInstance()->post('queueEntryFlush', $group['set_id'], $this->db->exec_SELECTgetRows('uid, set_id', 'tx_crawler_queue', $realWhere . ' AND set_id="' . $group['set_id'] . '"'));
             }
         }
 
@@ -1104,13 +1128,13 @@ class tx_crawler_lib
         ];
 
         // fe user group simulation:
-        $uGs = implode(',', array_unique(\TYPO3\CMS\Core\Utility\GeneralUtility::intExplode(',', $subCfg['userGroups'], 1)));
+        $uGs = implode(',', array_unique(GeneralUtility::intExplode(',', $subCfg['userGroups'], 1)));
         if ($uGs) {
             $parameters['feUserGroupList'] = $uGs;
         }
 
         // Setting processing instructions
-        $parameters['procInstructions'] = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $subCfg['procInstrFilter']);
+        $parameters['procInstructions'] = GeneralUtility::trimExplode(',', $subCfg['procInstrFilter']);
         if (is_array($subCfg['procInstrParams.'])) {
             $parameters['procInstrParams'] = $subCfg['procInstrParams.'];
         }
@@ -1123,7 +1147,7 @@ class tx_crawler_lib
         $fieldArray = [
             'page_id' => intval($id),
             'parameters' => $parameters_serialized,
-            'parameters_hash' => \TYPO3\CMS\Core\Utility\GeneralUtility::shortMD5($parameters_serialized),
+            'parameters_hash' => GeneralUtility::shortMD5($parameters_serialized),
             'configuration_hash' => $configurationHash,
             'scheduled' => $tstamp,
             'exec_time' => 0,
@@ -1146,9 +1170,9 @@ class tx_crawler_lib
                 $uid = $this->db->sql_insert_id();
                 $rows[] = $uid;
                 $urlAdded = true;
-                tx_crawler_domain_events_dispatcher::getInstance()->post('urlAddedToQueue', $this->setID, ['uid' => $uid, 'fieldArray' => $fieldArray]);
+                EventDispatcher::getInstance()->post('urlAddedToQueue', $this->setID, ['uid' => $uid, 'fieldArray' => $fieldArray]);
             } else {
-                tx_crawler_domain_events_dispatcher::getInstance()->post('duplicateUrlInQueue', $this->setID, ['rows' => $rows, 'fieldArray' => $fieldArray]);
+                EventDispatcher::getInstance()->post('duplicateUrlInQueue', $this->setID, ['rows' => $rows, 'fieldArray' => $fieldArray]);
             }
         }
 
@@ -1233,7 +1257,7 @@ class tx_crawler_lib
     {
         $ret = 0;
         if ($this->debugMode) {
-            \TYPO3\CMS\Core\Utility\GeneralUtility::devlog('crawler-readurl start ' . microtime(true), __FUNCTION__);
+            GeneralUtility::devlog('crawler-readurl start ' . microtime(true), __FUNCTION__);
         }
         // Get entry:
         list($queueRec) = $this->db->exec_SELECTgetRows(
@@ -1250,16 +1274,16 @@ class tx_crawler_lib
         if ($parameters['rootTemplatePid']) {
             $this->initTSFE((int)$parameters['rootTemplatePid']);
         } else {
-            \TYPO3\CMS\Core\Utility\GeneralUtility::sysLog(
+            GeneralUtility::sysLog(
                 'Page with (' . $queueRec['page_id'] . ') could not be crawled, please check your crawler configuration. Perhaps no Root Template Pid is set',
                 'crawler',
-                \TYPO3\CMS\Core\Utility\GeneralUtility::SYSLOG_SEVERITY_WARNING
+                GeneralUtility::SYSLOG_SEVERITY_WARNING
             );
         }
 
-        \AOE\Crawler\Utility\SignalSlotUtility::emitSignal(
+        SignalSlotUtility::emitSignal(
             __CLASS__,
-            \AOE\Crawler\Utility\SignalSlotUtility::SIGNNAL_QUEUEITEM_PREPROCESS,
+            SignalSlotUtility::SIGNNAL_QUEUEITEM_PREPROCESS,
             [$queueId, &$queueRec]
         );
 
@@ -1295,16 +1319,16 @@ class tx_crawler_lib
         // Set result in log which also denotes the end of the processing of this entry.
         $field_array = ['result_data' => serialize($result)];
 
-        \AOE\Crawler\Utility\SignalSlotUtility::emitSignal(
+        SignalSlotUtility::emitSignal(
             __CLASS__,
-            \AOE\Crawler\Utility\SignalSlotUtility::SIGNNAL_QUEUEITEM_POSTPROCESS,
+            SignalSlotUtility::SIGNNAL_QUEUEITEM_POSTPROCESS,
             [$queueId, &$field_array]
         );
 
         $this->db->exec_UPDATEquery('tx_crawler_queue', 'qid=' . intval($queueId), $field_array);
 
         if ($this->debugMode) {
-            \TYPO3\CMS\Core\Utility\GeneralUtility::devlog('crawler-readurl stop ' . microtime(true), __FUNCTION__);
+            GeneralUtility::devlog('crawler-readurl stop ' . microtime(true), __FUNCTION__);
         }
 
         return $ret;
@@ -1329,9 +1353,9 @@ class tx_crawler_lib
         // Set result in log which also denotes the end of the processing of this entry.
         $field_array = ['result_data' => serialize($result)];
 
-        \AOE\Crawler\Utility\SignalSlotUtility::emitSignal(
+        SignalSlotUtility::emitSignal(
             __CLASS__,
-            \AOE\Crawler\Utility\SignalSlotUtility::SIGNNAL_QUEUEITEM_POSTPROCESS,
+            SignalSlotUtility::SIGNNAL_QUEUEITEM_POSTPROCESS,
             [$queueId, &$field_array]
         );
 
@@ -1354,7 +1378,7 @@ class tx_crawler_lib
         if (is_array($parameters)) {
             if ($parameters['_CALLBACKOBJ']) { // Calling object:
                 $objRef = $parameters['_CALLBACKOBJ'];
-                $callBackObj = &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj($objRef);
+                $callBackObj = &GeneralUtility::getUserObj($objRef);
                 if (is_object($callBackObj)) {
                     unset($parameters['_CALLBACKOBJ']);
                     $result = ['content' => serialize($callBackObj->crawler_execute($parameters, $this))];
@@ -1369,7 +1393,7 @@ class tx_crawler_lib
                 // Get result:
                 $result = $this->requestUrl($parameters['url'], $crawlerId);
 
-                tx_crawler_domain_events_dispatcher::getInstance()->post('urlCrawled', $queueRec['set_id'], ['url' => $parameters['url'], 'result' => $result]);
+                EventDispatcher::getInstance()->post('urlCrawled', $queueRec['set_id'], ['url' => $parameters['url'], 'result' => $result]);
             }
         }
 
@@ -1396,14 +1420,14 @@ class tx_crawler_lib
 
         if ($url === false) {
             if (TYPO3_DLOG) {
-                \TYPO3\CMS\Core\Utility\GeneralUtility::devLog(sprintf('Could not parse_url() for string "%s"', $url), 'crawler', 4, ['crawlerId' => $crawlerId]);
+                GeneralUtility::devLog(sprintf('Could not parse_url() for string "%s"', $url), 'crawler', 4, ['crawlerId' => $crawlerId]);
             }
             return false;
         }
 
         if (!in_array($url['scheme'], ['','http','https'])) {
             if (TYPO3_DLOG) {
-                \TYPO3\CMS\Core\Utility\GeneralUtility::devLog(sprintf('Scheme does not match for url "%s"', $url), 'crawler', 4, ['crawlerId' => $crawlerId]);
+                GeneralUtility::devLog(sprintf('Scheme does not match for url "%s"', $url), 'crawler', 4, ['crawlerId' => $crawlerId]);
             }
             return false;
         }
@@ -1439,7 +1463,7 @@ class tx_crawler_lib
 
         if (!$fp) {
             if (TYPO3_DLOG) {
-                \TYPO3\CMS\Core\Utility\GeneralUtility::devLog(sprintf('Error while opening "%s"', $url), 'crawler', 4, ['crawlerId' => $crawlerId]);
+                GeneralUtility::devLog(sprintf('Error while opening "%s"', $url), 'crawler', 4, ['crawlerId' => $crawlerId]);
             }
             return false;
         } else {
@@ -1469,7 +1493,7 @@ class tx_crawler_lib
                     $result = array_merge(['parentRequest' => $result], $newRequestUrl);
                 } else {
                     if (TYPO3_DLOG) {
-                        \TYPO3\CMS\Core\Utility\GeneralUtility::devLog(sprintf('Error while opening "%s"', $url), 'crawler', 4, ['crawlerId' => $crawlerId]);
+                        GeneralUtility::devLog(sprintf('Error while opening "%s"', $url), 'crawler', 4, ['crawlerId' => $crawlerId]);
                     }
                     return false;
                 }
@@ -1498,7 +1522,7 @@ class tx_crawler_lib
             $frontendBasePath = $GLOBALS['TSFE']->absRefPrefix;
             // If not in CLI mode the base path can be determined from $_SERVER environment:
         } elseif (!defined('TYPO3_REQUESTTYPE_CLI') || !TYPO3_REQUESTTYPE_CLI) {
-            $frontendBasePath = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_PATH');
+            $frontendBasePath = GeneralUtility::getIndpEnv('TYPO3_SITE_PATH');
         }
 
         // Base path must be '/<pathSegements>/':
@@ -1694,7 +1718,7 @@ class tx_crawler_lib
         global $BACK_PATH;
         global $LANG;
         if (!is_object($LANG)) {
-            $LANG = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('language');
+            $LANG = GeneralUtility::makeInstance('language');
             $LANG->init(0);
         }
         $this->scheduledTime = $scheduledTime;
@@ -1708,17 +1732,17 @@ class tx_crawler_lib
         $this->downloadUrls = [];
 
         // Drawing tree:
-        /* @var $tree \TYPO3\CMS\Backend\Tree\View\PageTreeView */
-        $tree = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Backend\Tree\View\PageTreeView');
+        /* @var PageTreeView $tree */
+        $tree = GeneralUtility::makeInstance(PageTreeView::class);
         $perms_clause = $GLOBALS['BE_USER']->getPagePermsClause(1);
         $tree->init('AND ' . $perms_clause);
 
-        $pageinfo = \TYPO3\CMS\Backend\Utility\BackendUtility::readPageAccess($id, $perms_clause);
+        $pageinfo = BackendUtility::readPageAccess($id, $perms_clause);
 
         // Set root row:
         $tree->tree[] = [
             'row' => $pageinfo,
-            'HTML' => \AOE\Crawler\Utility\IconUtility::getIconForRecord('pages', $pageinfo)
+            'HTML' => IconUtility::getIconForRecord('pages', $pageinfo)
         ];
 
         // Get branch beneath:
@@ -1739,14 +1763,14 @@ class tx_crawler_lib
                 // fetch mounted pages
                 $this->MP = $mountpage[0]['mount_pid'] . '-' . $data['row']['uid'];
 
-                $mountTree = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Backend\Tree\View\PageTreeView');
+                $mountTree = GeneralUtility::makeInstance('TYPO3\CMS\Backend\Tree\View\PageTreeView');
                 $mountTree->init('AND ' . $perms_clause);
                 $mountTree->getTree($mountpage[0]['mount_pid'], $depth, '');
 
                 foreach ($mountTree->tree as $mountData) {
                     $code .= $this->drawURLs_addRowsForPage(
                         $mountData['row'],
-                        $mountData['HTML'] . \TYPO3\CMS\Backend\Utility\BackendUtility::getRecordTitle('pages', $mountData['row'], true)
+                        $mountData['HTML'] . BackendUtility::getRecordTitle('pages', $mountData['row'], true)
                     );
                 }
 
@@ -1761,7 +1785,7 @@ class tx_crawler_lib
 
             $code .= $this->drawURLs_addRowsForPage(
                 $data['row'],
-                $data['HTML'] . \TYPO3\CMS\Backend\Utility\BackendUtility::getRecordTitle('pages', $data['row'], true)
+                $data['HTML'] . BackendUtility::getRecordTitle('pages', $data['row'], true)
             );
         }
 
@@ -1785,13 +1809,13 @@ class tx_crawler_lib
 
             if (!empty($excludeString)) {
                 /* @var $tree \TYPO3\CMS\Backend\Tree\View\PageTreeView */
-                $tree = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Backend\Tree\View\PageTreeView');
+                $tree = GeneralUtility::makeInstance('TYPO3\CMS\Backend\Tree\View\PageTreeView');
                 $tree->init('AND ' . $this->backendUser->getPagePermsClause(1));
 
-                $excludeParts = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $excludeString);
+                $excludeParts = GeneralUtility::trimExplode(',', $excludeString);
 
                 foreach ($excludeParts as $excludePart) {
-                    list($pid, $depth) = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode('+', $excludePart);
+                    list($pid, $depth) = GeneralUtility::trimExplode('+', $excludePart);
 
                     // default is "page only" = "depth=0"
                     if (empty($depth)) {
@@ -1909,11 +1933,11 @@ class tx_crawler_lib
                         <tr class="bgColor' . ($c % 2 ? '-20' : '-10') . '">
                             ' . $titleClm . '
                             <td>' . htmlspecialchars($confKey) . '</td>
-                            <td>' . nl2br(htmlspecialchars(rawurldecode(trim(str_replace('&', chr(10) . '&', \TYPO3\CMS\Core\Utility\GeneralUtility::implodeArrayForUrl('', $confArray['paramParsed'])))))) . '</td>
+                            <td>' . nl2br(htmlspecialchars(rawurldecode(trim(str_replace('&', chr(10) . '&', GeneralUtility::implodeArrayForUrl('', $confArray['paramParsed'])))))) . '</td>
                             <td>' . $paramExpanded . '</td>
                             <td nowrap="nowrap">' . $urlList . '</td>
                             <td nowrap="nowrap">' . $optionValues . '</td>
-                            <td nowrap="nowrap">' . \TYPO3\CMS\Core\Utility\DebugUtility::viewArray($confArray['subCfg']['procInstrParams.']) . '</td>
+                            <td nowrap="nowrap">' . DebugUtility::viewArray($confArray['subCfg']['procInstrParams.']) . '</td>
                         </tr>';
                 } else {
                     $content .= '<tr class="bgColor' . ($c % 2 ? '-20' : '-10') . '">
@@ -1970,7 +1994,7 @@ class tx_crawler_lib
     {
         $this->setAccessMode('cli');
         $result = self::CLI_STATUS_NOTHING_PROCCESSED;
-        $cliObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_crawler_cli');
+        $cliObj = GeneralUtility::makeInstance(CrawlerCommandLineController::class);
 
         if (isset($cliObj->cli_args['-h']) || isset($cliObj->cli_args['--help'])) {
             $cliObj->cli_validateArgs();
@@ -2017,7 +2041,7 @@ class tx_crawler_lib
     {
         $this->setAccessMode('cli_im');
 
-        $cliObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_crawler_cli_im');
+        $cliObj = GeneralUtility::makeInstance(QueueCommandLineController::class);
 
         // Force user to admin state and set workspace to "Live":
         $this->backendUser->user['admin'] = 1;
@@ -2038,10 +2062,10 @@ class tx_crawler_lib
 
         if (isset($cliObj->cli_args['_DEFAULT'][2])) {
             // Crawler is called over TYPO3 BE
-            $pageId = \TYPO3\CMS\Core\Utility\MathUtility::forceIntegerInRange($cliObj->cli_args['_DEFAULT'][2], 0);
+            $pageId = MathUtility::forceIntegerInRange($cliObj->cli_args['_DEFAULT'][2], 0);
         } else {
             // Crawler is called over cli
-            $pageId = \TYPO3\CMS\Core\Utility\MathUtility::forceIntegerInRange($cliObj->cli_args['_DEFAULT'][1], 0);
+            $pageId = MathUtility::forceIntegerInRange($cliObj->cli_args['_DEFAULT'][1], 0);
         }
 
         $configurationKeys = $this->getConfigurationKeys($cliObj);
@@ -2056,10 +2080,10 @@ class tx_crawler_lib
         }
 
         if ($cliObj->cli_argValue('-o') === 'queue' || $cliObj->cli_argValue('-o') === 'exec') {
-            $reason = new \AOE\Crawler\Domain\Model\Reason();
-            $reason->setReason(\AOE\Crawler\Domain\Model\Reason::REASON_GUI_SUBMIT);
+            $reason = new Reason();
+            $reason->setReason(Reason::REASON_GUI_SUBMIT);
             $reason->setDetailText('The cli script of the crawler added to the queue');
-            tx_crawler_domain_events_dispatcher::getInstance()->post(
+            EventDispatcher::getInstance()->post(
                 'invokeQueueChange',
                 $this->setID,
                 ['reason' => $reason]
@@ -2070,15 +2094,15 @@ class tx_crawler_lib
             $this->cleanUpOldQueueEntries();
         }
 
-        $this->setID = \TYPO3\CMS\Core\Utility\GeneralUtility::md5int(microtime());
+        $this->setID = GeneralUtility::md5int(microtime());
         $this->getPageTreeAndUrls(
             $pageId,
-            \TYPO3\CMS\Core\Utility\MathUtility::forceIntegerInRange($cliObj->cli_argValue('-d'), 0, 99),
+            MathUtility::forceIntegerInRange($cliObj->cli_argValue('-d'), 0, 99),
             $this->getCurrentTime(),
-            \TYPO3\CMS\Core\Utility\MathUtility::forceIntegerInRange($cliObj->cli_isArg('-n') ? $cliObj->cli_argValue('-n') : 30, 1, 1000),
+            MathUtility::forceIntegerInRange($cliObj->cli_isArg('-n') ? $cliObj->cli_argValue('-n') : 30, 1, 1000),
             $cliObj->cli_argValue('-o') === 'queue' || $cliObj->cli_argValue('-o') === 'exec',
             $cliObj->cli_argValue('-o') === 'url',
-            \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $cliObj->cli_argValue('-proc'), 1),
+            GeneralUtility::trimExplode(',', $cliObj->cli_argValue('-proc'), 1),
             $configurationKeys
         );
 
@@ -2120,7 +2144,7 @@ class tx_crawler_lib
     public function CLI_main_flush()
     {
         $this->setAccessMode('cli_flush');
-        $cliObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_crawler_cli_flush');
+        $cliObj = GeneralUtility::makeInstance(FlushCommandLineController::class);
 
         // Force user to admin state and set workspace to "Live":
         $this->backendUser->user['admin'] = 1;
@@ -2134,7 +2158,7 @@ class tx_crawler_lib
         }
 
         $cliObj->cli_validateArgs();
-        $pageId = \TYPO3\CMS\Core\Utility\MathUtility::forceIntegerInRange($cliObj->cli_args['_DEFAULT'][1], 0);
+        $pageId = MathUtility::forceIntegerInRange($cliObj->cli_args['_DEFAULT'][1], 0);
         $fullFlush = ($pageId == 0);
 
         $mode = $cliObj->cli_argValue('-o');
@@ -2159,13 +2183,13 @@ class tx_crawler_lib
     /**
      * Obtains configuration keys from the CLI arguments
      *
-     * @param  tx_crawler_cli_im $cliObj    Command line object
+     * @param  QueueCommandLineController $cliObj    Command line object
      * @return mixed                        Array of keys or null if no keys found
      */
-    protected function getConfigurationKeys(tx_crawler_cli_im &$cliObj)
+    protected function getConfigurationKeys(QueueCommandLineController &$cliObj)
     {
         $parameter = trim($cliObj->cli_argValue('-conf'));
-        return ($parameter != '' ? \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $parameter) : []);
+        return ($parameter != '' ? GeneralUtility::trimExplode(',', $parameter) : []);
     }
 
     /**
@@ -2215,7 +2239,7 @@ class tx_crawler_lib
 
             $processId = $this->CLI_buildProcessId();
 
-            //reserve queue entrys for process
+            //reserve queue entries for process
             $this->db->sql_query('BEGIN');
             //TODO make sure we're not taking assigned queue-entires
             $this->db->exec_UPDATEquery(
@@ -2291,7 +2315,7 @@ class tx_crawler_lib
         global $TYPO3_CONF_VARS;
         if (is_array($TYPO3_CONF_VARS['EXTCONF']['crawler']['cli_hooks'])) {
             foreach ($TYPO3_CONF_VARS['EXTCONF']['crawler']['cli_hooks'] as $objRef) {
-                $hookObj = &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj($objRef);
+                $hookObj = &GeneralUtility::getUserObj($objRef);
                 if (is_object($hookObj)) {
                     $hookObj->crawler_init($this);
                 }
@@ -2481,7 +2505,7 @@ class tx_crawler_lib
     public function CLI_buildProcessId()
     {
         if (!$this->processID) {
-            $this->processID = \TYPO3\CMS\Core\Utility\GeneralUtility::shortMD5($this->microtime(true));
+            $this->processID = GeneralUtility::shortMD5($this->microtime(true));
         }
         return $this->processID;
     }
@@ -2522,7 +2546,7 @@ class tx_crawler_lib
 
         $cmd = escapeshellcmd($this->extensionSettings['phpPath']);
         $cmd .= ' ';
-        $cmd .= escapeshellarg(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('crawler') . 'cli/bootstrap.php');
+        $cmd .= escapeshellarg(ExtensionManagementUtility::extPath('crawler') . 'cli/bootstrap.php');
         $cmd .= ' ';
         $cmd .= escapeshellarg($this->getFrontendBasePath());
         $cmd .= ' ';
@@ -2570,14 +2594,14 @@ class tx_crawler_lib
      */
     protected function initTSFE($id = 1, $typeNum = 0)
     {
-        \TYPO3\CMS\Frontend\Utility\EidUtility::initTCA();
+        EidUtility::initTCA();
         if (!is_object($GLOBALS['TT'])) {
-            $GLOBALS['TT'] = new \TYPO3\CMS\Core\TimeTracker\NullTimeTracker;
+            $GLOBALS['TT'] = new NullTimeTracker();
             $GLOBALS['TT']->start();
         }
 
-        $GLOBALS['TSFE'] = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController::class, $GLOBALS['TYPO3_CONF_VARS'], $id, $typeNum);
-        $GLOBALS['TSFE']->sys_page = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Page\PageRepository::class);
+        $GLOBALS['TSFE'] = GeneralUtility::makeInstance(TypoScriptFrontendController::class, $GLOBALS['TYPO3_CONF_VARS'], $id, $typeNum);
+        $GLOBALS['TSFE']->sys_page = GeneralUtility::makeInstance(PageRepository::class);
         $GLOBALS['TSFE']->sys_page->init(true);
         $GLOBALS['TSFE']->connectToDB();
         $GLOBALS['TSFE']->initFEuser();
@@ -2585,6 +2609,6 @@ class tx_crawler_lib
         $GLOBALS['TSFE']->initTemplate();
         $GLOBALS['TSFE']->rootLine = $GLOBALS['TSFE']->sys_page->getRootLine($id, '');
         $GLOBALS['TSFE']->getConfigArray();
-        \TYPO3\CMS\Frontend\Page\PageGenerator::pagegenInit();
+        PageGenerator::pagegenInit();
     }
 }

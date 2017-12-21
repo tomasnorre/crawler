@@ -25,6 +25,7 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Event\EventDispatcher;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
 /**
@@ -75,7 +76,7 @@ class EventDispatcherTest extends UnitTestCase
         EventsHelper::$called_bar = 0;
 
         //we're bypassing the singleton here because we don't want to share data with former testcases. Therefore we mock the protected constructor and create a fresh dispatcher
-        $dispatcher = $this->getMock('tx_crawler_domain_events_dispatcher', ['__construct'], [], '', false);
+        $dispatcher = $this->getMock(EventDispatcher::class, ['__construct'], [], '', false);
         $observer = new EventsHelper();
         $observer->registerObservers($dispatcher);
 

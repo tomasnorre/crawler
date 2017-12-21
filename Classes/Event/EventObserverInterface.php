@@ -1,14 +1,17 @@
 <?php
+namespace AOE\Crawler\Event;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2009 AOE media (dev@aoemedia.de)
+ *  (c) 2017 AOE GmbH <dev@aoe.com>
+ *
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
+ *  the Free Software Foundation; either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  The GNU General Public License can be found at
@@ -22,15 +25,20 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-interface tx_crawler_domain_events_observer
+/**
+ * Interface EventObserverInterface
+ *
+ * @package AOE\Crawler\Event
+ */
+interface EventObserverInterface
 {
 
     /**
      * This method should be implemented by the observer to register events
      * that should be forwarded to the observer
      *
-     * @param tx_crawler_domain_events_dispatcher $dispatcher
+     * @param EventDispatcher $dispatcher
      * @return boolean
      */
-    public function registerObservers(tx_crawler_domain_events_dispatcher $dispatcher);
+    public function registerObservers(EventDispatcher $dispatcher);
 }

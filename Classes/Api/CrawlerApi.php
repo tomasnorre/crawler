@@ -25,6 +25,7 @@ namespace AOE\Crawler\Api;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -39,7 +40,7 @@ use TYPO3\CMS\Frontend\Page\PageRepository;
 class CrawlerApi
 {
     /**
-     * @var \tx_crawler_lib
+     * @var CrawlerController
      */
     private $crawlerObj;
 
@@ -88,14 +89,14 @@ class CrawlerApi
     /**
      * Method to get an instance of the internal crawler singleton
      *
-     * @return \tx_crawler_lib Instance of the crawler lib
+     * @return CrawlerController Instance of the crawler lib
      *
      * @throws \Exception
      */
     protected function findCrawler()
     {
         if (!is_object($this->crawlerObj)) {
-            $this->crawlerObj = GeneralUtility::makeInstance(\tx_crawler_lib::class);
+            $this->crawlerObj = GeneralUtility::makeInstance(CrawlerController::class);
             $this->crawlerObj->setID = GeneralUtility::md5int(microtime());
         }
 

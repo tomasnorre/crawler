@@ -25,6 +25,7 @@ namespace AOE\Crawler\Task;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Hooks\ProcessCleanUpHook;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Scheduler\Task\AbstractTask;
@@ -45,8 +46,8 @@ class ProcessCleanupTask extends AbstractTask
      */
     public function execute()
     {
-        /* @var $crawlerObject \tx_crawler_lib */
-        $crawlerObject = GeneralUtility::makeInstance('tx_crawler_lib');
+        /** @var CrawlerController $crawlerObject */
+        $crawlerObject = GeneralUtility::makeInstance(CrawlerController::class);
 
         /** @var $crawlerHookObject ProcessCleanUpHook */
         $crawlerHookObject = GeneralUtility::makeInstance(ProcessCleanUpHook::class);

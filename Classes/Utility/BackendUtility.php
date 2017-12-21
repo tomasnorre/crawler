@@ -25,6 +25,8 @@ namespace AOE\Crawler\Utility;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Backend\BackendModule;
+use AOE\Crawler\ClickMenu\CrawlerClickMenu;
 use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
 use TYPO3\CMS\Core\Imaging\IconRegistry;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -48,7 +50,7 @@ class BackendUtility
     {
         ExtensionManagementUtility::insertModuleFunction(
             'web_info',
-            'tx_crawler_modfunc1',
+            BackendModule::class,
             null,
             'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:moduleFunction.tx_crawler_modfunc1'
         );
@@ -62,7 +64,7 @@ class BackendUtility
     public static function registerClickMenuItem()
     {
         $GLOBALS['TBE_MODULES_EXT']['xMOD_alt_clickmenu']['extendCMclasses'][] = [
-            'name' => \AOE\Crawler\ClickMenu\CrawlerClickMenu::class
+            'name' => CrawlerClickMenu::class
         ];
     }
 

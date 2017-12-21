@@ -1,4 +1,5 @@
 <?php
+namespace AOE\Crawler\Backend\View;
 
 /***************************************************************
  *  Copyright notice
@@ -24,10 +25,17 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Domain\Model\ProcessCollection;
+use AOE\Crawler\Utility\ButtonUtility;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
- * Class tx_crawler_view_process_list
+ * Class ProcessListView
+ *
+ * @package AOE\Crawler\Backend\View
  */
-class tx_crawler_view_process_list
+class ProcessListView
 {
 
     /**
@@ -259,7 +267,7 @@ class tx_crawler_view_process_list
      * Method to set a collection of process objects to be displayed in
      * the list view.
      *
-     * @param tx_crawler_domain_process_collection $processCollection
+     * @param ProcessCollection $processCollection
      */
     public function setProcessCollection($processCollection)
     {
@@ -269,7 +277,7 @@ class tx_crawler_view_process_list
     /**
      * Returns a collection of processObjects.
      *
-     * @return tx_crawler_domain_process_collection
+     * @return ProcessCollection
      */
     protected function getProcessCollection()
     {
@@ -286,7 +294,7 @@ class tx_crawler_view_process_list
     protected function asDate($timestamp)
     {
         if ($timestamp > 0) {
-            return date($this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:time.detailed'), $timestamp);
+            return date($this->getLLLabel('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:time.detailed'), $timestamp);
         } else {
             return '';
         }
@@ -353,10 +361,10 @@ class tx_crawler_view_process_list
      */
     protected function getRefreshLink()
     {
-        return \AOE\Crawler\Utility\ButtonUtility::getLinkButton(
+        return ButtonUtility::getLinkButton(
             'actions-refresh',
-            $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.refresh'),
-            'window.location=\'' . \TYPO3\CMS\Backend\Utility\BackendUtility::getModuleUrl('web_info') . '&SET[crawlaction]=multiprocess&id=' . $this->pageId . '\';'
+            $this->getLLLabel('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.refresh'),
+            'window.location=\'' . BackendUtility::getModuleUrl('web_info') . '&SET[crawlaction]=multiprocess&id=' . $this->pageId . '\';'
         );
     }
 
@@ -369,16 +377,16 @@ class tx_crawler_view_process_list
     {
         if ($this->getIsCrawlerEnabled()) {
             // TODO: Icon Should be bigger + Perhaps better icon
-            return \AOE\Crawler\Utility\ButtonUtility::getLinkButton(
+            return ButtonUtility::getLinkButton(
                 'tx-crawler-stop',
-                $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.disablecrawling'),
+                $this->getLLLabel('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.disablecrawling'),
                 'window.location+=\'&action=stopCrawling\';'
             );
         } else {
             // TODO: Icon Should be bigger
-            return \AOE\Crawler\Utility\ButtonUtility::getLinkButton(
+            return ButtonUtility::getLinkButton(
                 'tx-crawler-start',
-                $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.enablecrawling'),
+                $this->getLLLabel('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.enablecrawling'),
                 'window.location+=\'&action=resumeCrawling\';'
             );
         }
@@ -394,15 +402,15 @@ class tx_crawler_view_process_list
     protected function getModeLink()
     {
         if ($this->getMode() == 'detail') {
-            return \AOE\Crawler\Utility\ButtonUtility::getLinkButton(
+            return ButtonUtility::getLinkButton(
                 'actions-document-view',
-                $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.show.running'),
+                $this->getLLLabel('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.show.running'),
                 'window.location+=\'&SET[processListMode]=simple\';'
             );
         } elseif ($this->getMode() == 'simple') {
-            return \AOE\Crawler\Utility\ButtonUtility::getLinkButton(
+            return ButtonUtility::getLinkButton(
                 'actions-document-view',
-                $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.show.all'),
+                $this->getLLLabel('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.show.all'),
                 'window.location+=\'&SET[processListMode]=detail\';'
             );
         }
@@ -418,9 +426,9 @@ class tx_crawler_view_process_list
     protected function getAddLink()
     {
         if ($this->getActiveProcessCount() < $this->getMaxActiveProcessCount() && $this->getIsCrawlerEnabled()) {
-            return \AOE\Crawler\Utility\ButtonUtility::getLinkButton(
+            return ButtonUtility::getLinkButton(
                 'actions-add',
-                $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.process.add'),
+                $this->getLLLabel('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.process.add'),
                 'window.location+=\'&action=addProcess\';'
             );
         } else {
@@ -436,7 +444,7 @@ class tx_crawler_view_process_list
     public function render()
     {
         ob_start();
-        $this->template = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($this->template);
+        $this->template = GeneralUtility::getFileAbsFileName($this->template);
         include($this->template);
         $content = ob_get_contents();
         ob_end_clean();

@@ -25,6 +25,7 @@ namespace AOE\Crawler\Task;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Controller\CrawlerController;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Scheduler\Task\AbstractTask;
 
@@ -73,8 +74,8 @@ class CrawlerQueueTask extends AbstractTask
     {
         $this->setCliArguments();
 
-        /* @var $crawlerObject \tx_crawler_lib */
-        $crawlerObject = GeneralUtility::makeInstance('tx_crawler_lib');
+        /** @var CrawlerController $crawlerObject */
+        $crawlerObject = GeneralUtility::makeInstance(CrawlerController::class);
         $crawlerObject->CLI_main_im();
         return true;
     }

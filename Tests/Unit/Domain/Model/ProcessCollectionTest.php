@@ -26,6 +26,7 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
  ***************************************************************/
 
 use AOE\Crawler\Domain\Model\Process;
+use AOE\Crawler\Domain\Model\ProcessCollection;
 use AOE\Crawler\Utility\BackendUtility;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
@@ -38,13 +39,13 @@ class ProcessCollectionTest extends UnitTestCase
 {
 
     /**
-     * @var \tx_crawler_domain_process_collection
+     * @var ProcessCollection
      */
     protected $subject;
 
     public function setUp()
     {
-        $this->subject = new \tx_crawler_domain_process_collection();
+        $this->subject = new ProcessCollection();
     }
 
     /**
@@ -59,7 +60,7 @@ class ProcessCollectionTest extends UnitTestCase
         $processes[] = new Process($row1);
         $processes[] = new Process($row2);
 
-        $collection = new \tx_crawler_domain_process_collection($processes);
+        $collection = new ProcessCollection($processes);
 
         $this->assertEquals(
             ['11', '13'],

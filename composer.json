@@ -28,15 +28,6 @@
         "typo3-ter/crawler": "self.version"
     },
     "autoload": {
-        "classmap": [
-            "cli",
-            "domain",
-            "modfunc1",
-            "template",
-            "view",
-            "Tests",
-            "class.tx_crawler_lib.php"
-        ],
         "psr-4": {
             "AOE\\Crawler\\": "Classes/"
         }

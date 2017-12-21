@@ -1,14 +1,17 @@
 <?php
+namespace AOE\Crawler\Backend\View;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2009 AOE media (dev@aoemedia.de)
+ *  (c) 2017 AOE GmbH <dev@aoe.com>
+ *
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
+ *  the Free Software Foundation; either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  The GNU General Public License can be found at
@@ -22,7 +25,14 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-class tx_crawler_view_pagination
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+/**
+ * Class PaginationView
+ *
+ * @package AOE\Crawler\Backend\View
+ */
+class PaginationView
 {
 
     /**
@@ -58,7 +68,7 @@ class tx_crawler_view_pagination
     public function render()
     {
         ob_start();
-        $this->template = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($this->template);
+        $this->template = GeneralUtility::getFileAbsFileName($this->template);
         include($this->template);
         $content = ob_get_contents();
         ob_end_clean();

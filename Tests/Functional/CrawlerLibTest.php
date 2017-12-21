@@ -25,6 +25,7 @@ namespace AOE\Crawler\Tests\Functional;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
@@ -47,7 +48,7 @@ class CrawlerLibTest extends FunctionalTestCase
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     /**
-     * @var \tx_crawler_lib
+     * @var CrawlerController
      */
     protected $subject;
 
@@ -57,7 +58,7 @@ class CrawlerLibTest extends FunctionalTestCase
         $this->importDataSet(dirname(__FILE__) . '/Fixtures/sys_domain.xml');
         $this->importDataSet(dirname(__FILE__) . '/Fixtures/tx_crawler_queue.xml');
         $this->importDataSet(dirname(__FILE__) . '/Fixtures/tx_crawler_process.xml');
-        $this->subject = $this->getAccessibleMock('\tx_crawler_lib', ['dummy']);
+        $this->subject = $this->getAccessibleMock(CrawlerController::class, ['dummy']);
     }
 
     /**

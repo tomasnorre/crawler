@@ -5,11 +5,7 @@ filter:
         - 'Documentation/*'
     paths:
         - 'Classes/*'
-        - 'cli/*'
-        - 'domain/*'
-        - 'modfunc1/*'
         - 'template/*'
-        - 'view/*'
         - '*'
 
 tools:

@@ -26,6 +26,7 @@ namespace AOE\Crawler\Tests\Functional\Api;
  ***************************************************************/
 
 use AOE\Crawler\Api\CrawlerApi;
+use AOE\Crawler\Controller\CrawlerController;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 
 /**
@@ -195,7 +196,7 @@ class CrawlerApiTest extends FunctionalTestCase
     protected function getMockedCrawlerAPI($currentTime)
     {
         //created mocked crawler lib which returns a faked timestamp
-        $crawler_lib = $this->getMock('tx_crawler_lib', ['getCurrentTime', 'drawURLs_PIfilter']);
+        $crawler_lib = $this->getMock(CrawlerController::class, ['getCurrentTime', 'drawURLs_PIfilter']);
         $crawler_lib->expects($this->any())->method("getCurrentTime")->will($this->returnValue($currentTime));
         $crawler_lib->expects($this->any())->method("drawURLs_PIfilter")->will($this->returnValue(true));
 

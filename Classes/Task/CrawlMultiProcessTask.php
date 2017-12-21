@@ -25,6 +25,7 @@ namespace AOE\Crawler\Task;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Service\ProcessService;
 use TYPO3\CMS\Scheduler\Task\AbstractTask;
 
 /**
@@ -47,7 +48,7 @@ class CrawlMultiProcessTask extends AbstractTask
      */
     public function execute()
     {
-        $processManager = new \tx_crawler_domain_process_manager();
+        $processManager = new ProcessService();
         $timeout = is_int($this->timeOut) ? (int)$this->timeOut : 1800;
 
         try {

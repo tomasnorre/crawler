@@ -25,6 +25,7 @@ namespace AOE\Crawler\Task;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Controller\CrawlerController;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Scheduler\Task\AbstractTask;
 
@@ -49,8 +50,8 @@ class FlushQueueTask extends AbstractTask
     public function execute()
     {
         $_SERVER['argv'] = [$_SERVER['argv'][0], '0', '-o', $this->mode];
-        /* @var $crawlerObject \tx_crawler_lib */
-        $crawlerObject = GeneralUtility::makeInstance('tx_crawler_lib');
+        /** @var CrawlerController $crawlerObject */
+        $crawlerObject = GeneralUtility::makeInstance(CrawlerController::class);
 
         return $crawlerObject->CLI_main_flush();
     }

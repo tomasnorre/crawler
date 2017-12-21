@@ -25,12 +25,15 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Event\EventDispatcher;
+use AOE\Crawler\Event\EventObserverInterface;
+
 /**
  * Class EventsHelper
  *
  * @package AOE\Crawler\Tests\Unit\Domain\Model
  */
-class EventsHelper implements \tx_crawler_domain_events_observer
+class EventsHelper implements EventObserverInterface
 {
     public static $called_foo = 0;
     
@@ -53,11 +56,11 @@ class EventsHelper implements \tx_crawler_domain_events_observer
     }
     
     /**
-     * @param $dispatcher
+     * @param EventDispatcher $dispatcher
      *
      * @return void
      */
-    public function registerObservers(\tx_crawler_domain_events_dispatcher $dispatcher)
+    public function registerObservers(EventDispatcher $dispatcher)
     {
         $dispatcher->addObserver($this, 'fooFunc', 'foo');
         $dispatcher->addObserver($this, 'barFunc', 'bar');

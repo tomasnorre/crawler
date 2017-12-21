@@ -26,6 +26,7 @@ namespace AOE\Crawler\Domain\Repository;
  ***************************************************************/
 
 use AOE\Crawler\Domain\Model\Process;
+use AOE\Crawler\Domain\Model\ProcessCollection;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -49,12 +50,12 @@ class ProcessRepository extends AbstractRepository
      * @param  integer $offset
      * @param  string $where
      *
-     * @return tx_crawler_domain_process_collection
+     * @return ProcessCollection
      */
     public function findAll($orderField = '', $orderDirection = 'DESC', $itemCount = null, $offset = null, $where = '')
     {
-        /** @var tx_crawler_domain_process_collection $collection */
-        $collection = GeneralUtility::makeInstance('tx_crawler_domain_process_collection');
+        /** @var ProcessCollection $collection */
+        $collection = GeneralUtility::makeInstance(ProcessCollection::class);
 
         $orderField = trim($orderField);
         $orderField = empty($orderField) ? 'process_id' : $orderField;
