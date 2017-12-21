@@ -2588,7 +2588,3 @@ class tx_crawler_lib
         \TYPO3\CMS\Frontend\Page\PageGenerator::pagegenInit();
     }
 }
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/class.tx_crawler_lib.php']) {
-    include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/class.tx_crawler_lib.php']);
-}

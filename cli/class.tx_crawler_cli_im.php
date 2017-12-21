@@ -62,7 +62,3 @@ class tx_crawler_cli_im extends \TYPO3\CMS\Core\Controller\CommandLineController
         $this->cli_help['author'] = 'Kasper Skaarhoj, Daniel Poetzinger, Fabrizio Branca, Tolleiv Nietsch, Timo Schmidt - AOE media 2009';
     }
 }
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/cli/class.tx_crawler_cli_im.php']) {
-    include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/cli/class.tx_crawler_cli_im.php']);
-}

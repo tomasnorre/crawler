@@ -86,7 +86,3 @@ class tx_crawler_domain_process_collection extends ArrayObject
         return $result;
     }
 }
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/domain/process/class.tx_crawler_domain_process_collection.php']) {
-    include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/crawler/domain/process/class.tx_crawler_domain_process_collection.php']);
-}
