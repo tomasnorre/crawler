@@ -50,7 +50,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "6.0.0-dev"
+            "dev-master": "6.0.0"
         },
         "typo3/cms": {
             "cms-package-dir": "{$vendor-dir}/typo3/cms",
