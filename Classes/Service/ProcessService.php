@@ -1,14 +1,17 @@
 <?php
+namespace AOE\Crawler\Service;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2009 AOE media (dev@aoemedia.de)
+ *  (c) 2017 AOE GmbH <dev@aoe.com>
+ *
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
+ *  the Free Software Foundation; either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  The GNU General Public License can be found at
@@ -22,11 +25,17 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Controller\CrawlerController;
+use AOE\Crawler\Domain\Repository\ProcessRepository;
+use AOE\Crawler\Domain\Repository\QueueRepository;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
- * Manages cralwer processes and can be used to start a new process or multiple processes
+ * Class ProcessService
  *
+ * @package AOE\Crawler\Service
  */
-class tx_crawler_domain_process_manager
+class ProcessService
 {
     /**
      * @var $timeToLive integer
@@ -44,17 +53,17 @@ class tx_crawler_domain_process_manager
     private $processLimit;
 
     /**
-     * @var $crawlerObj tx_crawler_lib
+     * @var CrawlerController
      */
     private $crawlerObj;
 
     /**
-     * @var $queueRepository tx_crawler_domain_queue_repository
+     * @var \AOE\Crawler\Domain\Repository\QueueRepository
      */
     private $queueRepository;
 
     /**
-     * @var tx_crawler_domain_process_repository
+     * @var \AOE\Crawler\Domain\Repository\ProcessRepository
      */
     private $processRepository;
 
@@ -68,9 +77,9 @@ class tx_crawler_domain_process_manager
      */
     public function __construct()
     {
-        $this->processRepository = new tx_crawler_domain_process_repository();
-        $this->queueRepository = new tx_crawler_domain_queue_repository();
-        $this->crawlerObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_crawler_lib');
+        $this->processRepository = new ProcessRepository();
+        $this->queueRepository = new QueueRepository();
+        $this->crawlerObj = GeneralUtility::makeInstance(CrawlerController::class);
         $this->timeToLive = intval($this->crawlerObj->extensionSettings['processMaxRunTime']);
         $this->countInARun = intval($this->crawlerObj->extensionSettings['countInARun']);
         $this->processLimit = intval($this->crawlerObj->extensionSettings['processLimit']);
@@ -82,12 +91,12 @@ class tx_crawler_domain_process_manager
      *
      * @param integer $timeout
      *
-     * @throws RuntimeException
+     * @throws \RuntimeException
      */
     public function multiProcess($timeout)
     {
         if ($this->processLimit <= 1) {
-            throw new RuntimeException('To run crawler in multi process mode you have to configure the processLimit > 1.' . PHP_EOL);
+            throw new \RuntimeException('To run crawler in multi process mode you have to configure the processLimit > 1.' . PHP_EOL);
         }
 
         $pendingItemsStart = $this->queueRepository->countAllPendingItems();
@@ -141,6 +150,9 @@ class tx_crawler_domain_process_manager
     /**
      * according to the given count of pending items and the countInARun Setting this method
      * starts more crawling processes
+     *
+     * @throws \Exception
+     *
      * @return boolean if processes are started
      */
     private function startRequiredProcesses()
@@ -173,7 +185,7 @@ class tx_crawler_domain_process_manager
 
     /**
      * starts new process
-     * @throws Exception if no crawler process was started
+     * @throws \Exception if no crawler process was started
      */
     public function startProcess()
     {
@@ -189,7 +201,7 @@ class tx_crawler_domain_process_manager
 
         $fileHandler = system($completePath);
         if ($fileHandler === false) {
-            throw new Exception('could not start process!');
+            throw new \Exception('could not start process!');
         } else {
             for ($i = 0;$i < 10;$i++) {
                 if ($this->processRepository->countNotTimeouted($ttl) > $current) {
@@ -197,7 +209,7 @@ class tx_crawler_domain_process_manager
                 }
                 sleep(1);
             }
-            throw new Exception('Something went wrong: process did not appear within 10 seconds.');
+            throw new \Exception('Something went wrong: process did not appear within 10 seconds.');
         }
     }
 
@@ -209,8 +221,8 @@ class tx_crawler_domain_process_manager
     public function getCrawlerCliPath()
     {
         $phpPath = $this->crawlerObj->extensionSettings['phpPath'] . ' ';
-        $pathToTypo3 = rtrim(\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_DOCUMENT_ROOT'), '/');
-        $pathToTypo3 .= rtrim(\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_PATH'), '/');
+        $pathToTypo3 = rtrim(GeneralUtility::getIndpEnv('TYPO3_DOCUMENT_ROOT'), '/');
+        $pathToTypo3 .= rtrim(GeneralUtility::getIndpEnv('TYPO3_SITE_PATH'), '/');
         $cliPart = '/typo3/cli_dispatch.phpsh crawler';
         $scriptPath = $phpPath . $pathToTypo3 . $cliPart;
 

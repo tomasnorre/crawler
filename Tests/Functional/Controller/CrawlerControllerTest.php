@@ -1,5 +1,5 @@
 <?php
-namespace AOE\Crawler\Tests\Functional;
+namespace AOE\Crawler\Tests\Functional\Controller;
 
 /***************************************************************
  *  Copyright notice
@@ -25,14 +25,17 @@ namespace AOE\Crawler\Tests\Functional;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Controller\CrawlerController;
+use AOE\Crawler\Domain\Repository\ProcessRepository;
+use AOE\Crawler\Domain\Repository\QueueRepository;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 
 /**
- * Class CrawlerLibTest
+ * Class CrawlerControllerTest
  *
- * @package AOE\Crawler\Tests\Functional
+ * @package AOE\Crawler\Tests\Functional\Controller
  */
-class CrawlerLibTest extends FunctionalTestCase
+class CrawlerControllerTest extends FunctionalTestCase
 {
     /**
      * @var array
@@ -45,17 +48,17 @@ class CrawlerLibTest extends FunctionalTestCase
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     /**
-     * @var \tx_crawler_lib
+     * @var CrawlerController
      */
     protected $subject;
 
     public function setUp()
     {
         parent::setUp();
-        $this->importDataSet(dirname(__FILE__) . '/Fixtures/sys_domain.xml');
-        $this->importDataSet(dirname(__FILE__) . '/Fixtures/tx_crawler_queue.xml');
-        $this->importDataSet(dirname(__FILE__) . '/Fixtures/tx_crawler_process.xml');
-        $this->subject = $this->getAccessibleMock('\tx_crawler_lib', ['dummy']);
+        $this->importDataSet(dirname(__FILE__) . '/../Fixtures/sys_domain.xml');
+        $this->importDataSet(dirname(__FILE__) . '/../Fixtures/tx_crawler_queue.xml');
+        $this->importDataSet(dirname(__FILE__) . '/../Fixtures/tx_crawler_process.xml');
+        $this->subject = $this->getAccessibleMock(CrawlerController::class, ['dummy']);
     }
 
     /**
@@ -101,7 +104,7 @@ class CrawlerLibTest extends FunctionalTestCase
      */
     public function CLI_deleteProcessesMarkedDeleted()
     {
-        $processRepository = new \tx_crawler_domain_process_repository();
+        $processRepository = new ProcessRepository();
 
         $expectedProcessesBeforeDeletion = 5;
         $this->assertEquals(
@@ -127,7 +130,7 @@ class CrawlerLibTest extends FunctionalTestCase
         $this->markTestSkipped('This fails with PHP7 & TYPO3 7.6');
 
         $this->importDataSet(dirname(__FILE__) . '/Fixtures/tx_crawler_queue.xml');
-        $queryRepository = new \tx_crawler_domain_queue_repository();
+        $queryRepository = new QueueRepository();
 
         $recordsFromFixture = 9;
         $expectedRemainingRecords = 2;
@@ -168,7 +171,7 @@ class CrawlerLibTest extends FunctionalTestCase
      */
     public function flushQueue($where, $expected)
     {
-        $queryRepository = new \tx_crawler_domain_queue_repository();
+        $queryRepository = new QueueRepository();
         $this->subject->_call('flushQueue', $where);
 
         $this->assertEquals(

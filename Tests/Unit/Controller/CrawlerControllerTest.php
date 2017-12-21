@@ -1,5 +1,5 @@
 <?php
-namespace AOE\Crawler\Tests\Unit;
+namespace AOE\Crawler\Tests\Unit\Controller;
 
 /***************************************************************
  *  Copyright notice
@@ -25,6 +25,8 @@ namespace AOE\Crawler\Tests\Unit;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Command\QueueCommandLineController;
+use AOE\Crawler\Controller\CrawlerController;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
 /**
@@ -32,10 +34,10 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
  *
  * @package AOE\Crawler\Tests
  */
-class CrawlerLibTest extends UnitTestCase
+class CrawlerControllerTest extends UnitTestCase
 {
     /**
-     * @var \tx_crawler_lib
+     * @var CrawlerController
      */
     protected $crawlerLibrary;
 
@@ -47,7 +49,7 @@ class CrawlerLibTest extends UnitTestCase
     public function setUp()
     {
         $this->crawlerLibrary = $this->getMock(
-            '\tx_crawler_lib',
+            CrawlerController::class,
             ['buildRequestHeaderArray', 'executeShellCommand', 'getFrontendBasePath'],
             [],
             '',
@@ -174,8 +176,8 @@ class CrawlerLibTest extends UnitTestCase
      */
     public function getUrlsForPageRow($checkIfPageSkipped, $getUrlsForPages, $pageRow, $skipMessage, $expected)
     {
-        /** @var \tx_crawler_lib $crawlerLibrary */
-        $crawlerLibrary = $this->getMock('\tx_crawler_lib', ['checkIfPageShouldBeSkipped', 'getUrlsForPageId']);
+        /** @var CrawlerController $crawlerLibrary */
+        $crawlerLibrary = $this->getMock(CrawlerController::class, ['checkIfPageShouldBeSkipped', 'getUrlsForPageId']);
         $crawlerLibrary->expects($this->any())->method('checkIfPageShouldBeSkipped')->will($this->returnValue($checkIfPageSkipped));
         $crawlerLibrary->expects($this->any())->method('getUrlsForPageId')->will($this->returnValue($getUrlsForPages));
 
@@ -347,7 +349,7 @@ class CrawlerLibTest extends UnitTestCase
      */
     public function buildRequestHeaderArray($url, $crawlerId, $expected)
     {
-        $crawlerLib = $this->getAccessibleMock('\tx_crawler_lib', ['dummy']);
+        $crawlerLib = $this->getAccessibleMock(CrawlerController::class, ['dummy']);
 
         $this->assertEquals(
             $expected,
@@ -367,7 +369,7 @@ class CrawlerLibTest extends UnitTestCase
      */
     public function getRequestUrlFrom302Header($headers, $user, $pass, $expected)
     {
-        $crawlerLib = $this->getAccessibleMock('\tx_crawler_lib', ['dummy']);
+        $crawlerLib = $this->getAccessibleMock(CrawlerController::class, ['dummy']);
 
         $this->assertEquals(
             $expected,
@@ -388,9 +390,9 @@ class CrawlerLibTest extends UnitTestCase
         // FIXME
         $this->markTestSkipped('Skipped as the cli_getArgIndex is reset $config when parsing...');
 
-        $crawlerLibrary = $this->getAccessibleMock('\tx_crawler_lib', ['dummy']);
+        $crawlerLibrary = $this->getAccessibleMock(CrawlerController::class, ['dummy']);
         $_SERVER['argv'] = $config;
-        $cliObject = new \tx_crawler_cli_im();
+        $cliObject = new QueueCommandLineController();
 
         $this->assertEquals(
             $expected,
@@ -427,7 +429,7 @@ class CrawlerLibTest extends UnitTestCase
         $microtime = '1481397820.81820011138916015625';
         $expectedMd5Value = '95297a261b';
 
-        $crawlerLibrary = $this->getAccessibleMock('tx_crawler_lib', ['microtime']);
+        $crawlerLibrary = $this->getAccessibleMock(CrawlerController::class, ['microtime']);
         $crawlerLibrary->expects($this->once())->method('microtime')->will($this->returnValue($microtime));
 
         $this->assertEquals(
@@ -442,7 +444,7 @@ class CrawlerLibTest extends UnitTestCase
     public function CLI_buildProcessIdIsSetReturnsValue()
     {
         $processId = '12297a261b';
-        $crawlerLibrary = $this->getAccessibleMock('tx_crawler_lib', ['dummy']);
+        $crawlerLibrary = $this->getAccessibleMock(CrawlerController::class, ['dummy']);
         $crawlerLibrary->_set('processID', $processId);
 
         $this->assertEquals(

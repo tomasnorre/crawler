@@ -25,6 +25,9 @@ namespace AOE\Crawler\Api;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Controller\CrawlerController;
+use AOE\Crawler\Domain\Repository\ProcessRepository;
+use AOE\Crawler\Domain\Repository\QueueRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Frontend\Page\PageRepository;
@@ -37,12 +40,12 @@ use TYPO3\CMS\Frontend\Page\PageRepository;
 class CrawlerApi
 {
     /**
-     * @var \tx_crawler_lib
+     * @var CrawlerController
      */
     private $crawlerObj;
 
     /**
-     * @var \tx_crawler_domain_queue_repository queue repository
+     * @var QueueRepository
      */
     protected $queueRepository;
 
@@ -86,14 +89,14 @@ class CrawlerApi
     /**
      * Method to get an instance of the internal crawler singleton
      *
-     * @return \tx_crawler_lib Instance of the crawler lib
+     * @return CrawlerController Instance of the crawler lib
      *
      * @throws \Exception
      */
     protected function findCrawler()
     {
         if (!is_object($this->crawlerObj)) {
-            $this->crawlerObj = GeneralUtility::makeInstance(\tx_crawler_lib::class);
+            $this->crawlerObj = GeneralUtility::makeInstance(CrawlerController::class);
             $this->crawlerObj->setID = GeneralUtility::md5int(microtime());
         }
 
@@ -402,14 +405,12 @@ class CrawlerApi
     /**
      * Get queue repository
      *
-     * @param void
-     *
-     * @return \tx_crawler_domain_queue_repository queue repository
+     * @return QueueRepository
      */
     protected function getQueueRepository()
     {
-        if (!$this->queueRepository instanceof \tx_crawler_domain_queue_repository) {
-            $this->queueRepository = new \tx_crawler_domain_queue_repository();
+        if (!$this->queueRepository instanceof QueueRepository) {
+            $this->queueRepository = new QueueRepository();
         }
 
         return $this->queueRepository;
@@ -417,8 +418,6 @@ class CrawlerApi
 
     /**
      * Get queue statistics by configuration
-     *
-     * @param void
      *
      * @return array array of array('configuration' => <>, 'assignedButUnprocessed' => <>, 'unprocessed' => <>)
      */
@@ -447,7 +446,7 @@ class CrawlerApi
      */
     public function getActiveProcessesCount()
     {
-        $processRepository = new \tx_crawler_domain_process_repository();
+        $processRepository = new ProcessRepository();
 
         return $processRepository->countActive();
     }

@@ -1,14 +1,17 @@
 <?php
+namespace AOE\Crawler\Domain\Model;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2009 AOE media (dev@aoemedia.de)
+ *  (c) 2017 AOE GmbH <dev@aoe.com>
+ *
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
+ *  the Free Software Foundation; either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  The GNU General Public License can be found at
@@ -22,16 +25,31 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-class tx_crawler_domain_process extends tx_crawler_domain_lib_abstract_dbobject
+use AOE\Crawler\Domain\Repository\QueueRepository;
+
+/**
+ * Class Process
+ *
+ * @package AOE\Crawler\Domain\Model
+ */
+class Process
 {
     const STATE_RUNNING = 'running';
     const STATE_CANCELLED = 'cancelled';
     const STATE_COMPLETED = 'completed';
 
     /**
-     * @var string table name
+     * @var array
      */
-    protected static $tableName = 'tx_crawler_process';
+    protected $row;
+
+    /**
+     * @param array $row
+     */
+    public function __construct($row = [])
+    {
+        $this->row = $row;
+    }
 
     /**
      * Returns the activity state for this process
@@ -62,7 +80,7 @@ class tx_crawler_domain_process extends tx_crawler_domain_lib_abstract_dbobject
      */
     public function getTimeForFirstItem()
     {
-        $queueRepository = new tx_crawler_domain_queue_repository();
+        $queueRepository = new QueueRepository();
         $entry = $queueRepository->findYoungestEntryForProcess($this);
 
         return $entry->getExecutionTime();
@@ -76,7 +94,7 @@ class tx_crawler_domain_process extends tx_crawler_domain_lib_abstract_dbobject
      */
     public function getTimeForLastItem()
     {
-        $queueRepository = new tx_crawler_domain_queue_repository();
+        $queueRepository = new QueueRepository();
         $entry = $queueRepository->findOldestEntryForProcess($this);
 
         return $entry->getExecutionTime();
@@ -105,31 +123,28 @@ class tx_crawler_domain_process extends tx_crawler_domain_lib_abstract_dbobject
     /**
      * Counts the number of items which need to be processed
      *
-     * @param void
      * @return int
      */
     public function countItemsProcessed()
     {
-        $queueRepository = new tx_crawler_domain_queue_repository();
+        $queueRepository = new QueueRepository();
         return $queueRepository->countExecutedItemsByProcess($this);
     }
 
     /**
      * Counts the number of items which still need to be processed
      *
-     * @param void
      * @return int
      */
     public function countItemsToProcess()
     {
-        $queueRepository = new tx_crawler_domain_queue_repository();
+        $queueRepository = new QueueRepository();
         return $queueRepository->countNonExecutedItemsByProcess($this);
     }
 
     /**
      * Returns the Progress of a crawling process as a percentage value
      *
-     * @param void
      * @return float
      */
     public function getProgress()
@@ -148,7 +163,7 @@ class tx_crawler_domain_process extends tx_crawler_domain_lib_abstract_dbobject
     }
 
     /**
-     * Returns the number of assigned Entrys
+     * Returns the number of assigned entries
      *
      * @return int
      */
@@ -160,18 +175,27 @@ class tx_crawler_domain_process extends tx_crawler_domain_lib_abstract_dbobject
     /**
      * Return the processes current state
      *
-     * @param void
-     * @return string 'running'|'cancelled'|'completed'
+     * @return string
      */
     public function getState()
     {
         if ($this->getActive() && $this->getProgress() < 100) {
-            $stage = tx_crawler_domain_process::STATE_RUNNING;
+            $stage = self::STATE_RUNNING;
         } elseif (!$this->getActive() && $this->getProgress() < 100) {
-            $stage = tx_crawler_domain_process::STATE_CANCELLED;
+            $stage = self::STATE_CANCELLED;
         } else {
-            $stage = tx_crawler_domain_process::STATE_COMPLETED;
+            $stage = self::STATE_COMPLETED;
         }
         return $stage;
+    }
+
+    /**
+     * Returns the properties of the object as array
+     *
+     * @return array
+     */
+    public function getRow()
+    {
+        return $this->row;
     }
 }

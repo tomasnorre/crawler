@@ -25,6 +25,8 @@ namespace AOE\Crawler\Tests\Functional\Hooks;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Domain\Repository\ProcessRepository;
+use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Hooks\ProcessCleanUpHook;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -44,12 +46,12 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
     protected $subject;
 
     /**
-     * @var \tx_crawler_domain_process_repository
+     * @var ProcessRepository
      */
     protected $processRepository;
 
     /**
-     * @var \tx_crawler_domain_queue_repository
+     * @var QueueRepository
      */
     protected $queueRepository;
 
@@ -71,8 +73,8 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
 
         /** @var ProcessCleanUpHook subject */
         $this->subject = $this->objectManager->get(ProcessCleanUpHook::class);
-        $this->processRepository = $this->objectManager->get('tx_crawler_domain_process_repository');
-        $this->queueRepository = $this->objectManager->get('tx_crawler_domain_queue_repository');
+        $this->processRepository = $this->objectManager->get(ProcessRepository::class);
+        $this->queueRepository = $this->objectManager->get(QueueRepository::class);
 
         // Include Fixtures
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_process.xml');

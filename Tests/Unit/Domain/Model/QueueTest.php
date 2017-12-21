@@ -25,6 +25,7 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Domain\Model\Queue;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
 /**
@@ -35,7 +36,7 @@ class QueueTest extends UnitTestCase
 {
 
     /**
-     * @var \tx_crawler_domain_queue_entry
+     * @var Queue
      */
     protected $subject;
 
@@ -44,7 +45,7 @@ class QueueTest extends UnitTestCase
      */
     public function getExecutionTime()
     {
-        $this->subject = new \tx_crawler_domain_queue_entry(['exec_time' => 123456]);
+        $this->subject = new Queue(['exec_time' => 123456]);
 
         $this->assertEquals(
             123456,

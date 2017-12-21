@@ -25,6 +25,7 @@ namespace AOE\Crawler\Hooks;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Controller\CrawlerController;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -34,7 +35,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class ProcessCleanUpHook
 {
     /**
-     * @var \tx_crawler_lib
+     * @var CrawlerController
      */
     private $crawlerLib;
 
@@ -46,11 +47,11 @@ class ProcessCleanUpHook
     /**
      * Main function of process CleanUp Hook.
      *
-     * @param \tx_crawler_lib $crawlerLib Crawler Lib class
+     * @param CrawlerController $crawlerLib Crawler Lib class
      *
      * @return void
      */
-    public function crawler_init(\tx_crawler_lib $crawlerLib)
+    public function crawler_init(CrawlerController $crawlerLib)
     {
         $this->crawlerLib = $crawlerLib;
         $this->extensionSettings = $this->crawlerLib->extensionSettings;

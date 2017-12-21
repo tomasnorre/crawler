@@ -25,6 +25,7 @@ namespace AOE\Crawler\Tests\Unit\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Domain\Repository\ProcessRepository;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
 /**
@@ -44,7 +45,7 @@ class ProcessRepositoryTest extends UnitTestCase
     {
         $this->assertEquals(
             $expected,
-            \tx_crawler_domain_process_repository::getLimitFromItemCountAndOffset($itemCount, $offset)
+            ProcessRepository::getLimitFromItemCountAndOffset($itemCount, $offset)
         );
     }
 

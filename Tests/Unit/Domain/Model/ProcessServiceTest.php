@@ -25,22 +25,25 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Controller\CrawlerController;
+use AOE\Crawler\Service\ProcessService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
 /**
- * Class ProcessManagerTest
+ * Class ProcessServiceTest
+ *
  * @package AOE\Crawler\Tests\Unit\Domain\Model
  */
-class ProcessManagerTest extends UnitTestCase
+class ProcessServiceTest extends UnitTestCase
 {
 
     /**
-     * @var \tx_crawler_lib
+     * @var CrawlerController
      */
     protected $crawlerLibrary;
 
     /**
-     * @var \tx_crawler_domain_process_manager
+     * @var ProcessService
      */
     protected $subject;
 
@@ -51,9 +54,9 @@ class ProcessManagerTest extends UnitTestCase
      */
     public function setUp()
     {
-        $this->subject = new \tx_crawler_domain_process_manager();
+        $this->subject = new ProcessService();
 
-        $this->crawlerLibrary = $this->getMock('\tx_crawler_lib', ['dummyMethod'], [], '', false);
+        $this->crawlerLibrary = $this->getMock(CrawlerController::class, ['dummyMethod'], [], '', false);
 
         define('TYPO3_DOCUMENT_ROOT', '/typo3/document/root/');
         define('TYPO3_SITE_PATH', '/typo3/site/path/');

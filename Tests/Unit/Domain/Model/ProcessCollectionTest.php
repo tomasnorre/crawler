@@ -25,6 +25,8 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Domain\Model\Process;
+use AOE\Crawler\Domain\Model\ProcessCollection;
 use AOE\Crawler\Utility\BackendUtility;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
@@ -37,13 +39,13 @@ class ProcessCollectionTest extends UnitTestCase
 {
 
     /**
-     * @var \tx_crawler_domain_process_collection
+     * @var ProcessCollection
      */
     protected $subject;
 
     public function setUp()
     {
-        $this->subject = new \tx_crawler_domain_process_collection();
+        $this->subject = new ProcessCollection();
     }
 
     /**
@@ -55,10 +57,10 @@ class ProcessCollectionTest extends UnitTestCase
         $row2 = ['process_id' => 13];
 
         $processes = [];
-        $processes[] = new \tx_crawler_domain_process($row1);
-        $processes[] = new \tx_crawler_domain_process($row2);
+        $processes[] = new Process($row1);
+        $processes[] = new Process($row2);
 
-        $collection = new \tx_crawler_domain_process_collection($processes);
+        $collection = new ProcessCollection($processes);
 
         $this->assertEquals(
             ['11', '13'],
@@ -82,7 +84,7 @@ class ProcessCollectionTest extends UnitTestCase
      */
     public function appendCrawlerDomainObject()
     {
-        $correctObjectType = new \tx_crawler_domain_process();
+        $correctObjectType = new Process();
         $this->subject->append($correctObjectType);
 
         $this->assertEquals(
@@ -107,7 +109,7 @@ class ProcessCollectionTest extends UnitTestCase
      */
     public function offsetSetAndGet()
     {
-        $correctObjectType = new \tx_crawler_domain_process();
+        $correctObjectType = new Process();
         $this->subject->offsetSet(100, $correctObjectType);
 
         $this->assertEquals(
@@ -123,7 +125,7 @@ class ProcessCollectionTest extends UnitTestCase
      */
     public function offsetGetThrowsException()
     {
-        $correctObjectType = new \tx_crawler_domain_process();
+        $correctObjectType = new Process();
 
         $this->assertEquals(
             $correctObjectType,

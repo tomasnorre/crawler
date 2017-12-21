@@ -28,22 +28,14 @@
         "typo3-ter/crawler": "self.version"
     },
     "autoload": {
-        "classmap": [
-            "cli",
-            "domain",
-            "modfunc1",
-            "template",
-            "view",
-            "Tests",
-            "class.tx_crawler_lib.php"
-        ],
         "psr-4": {
             "AOE\\Crawler\\": "Classes/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "TYPO3\\CMS\\Core\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/core/Tests/"
+            "TYPO3\\CMS\\Core\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/core/Tests/",
+            "AOE\\Crawler\\Tests\\": "Tests/"
         }
     },
     "config": {

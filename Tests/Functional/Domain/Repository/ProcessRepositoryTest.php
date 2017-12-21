@@ -25,6 +25,7 @@ namespace AOE\Crawler\Tests\Functional\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Domain\Repository\ProcessRepository;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 
 /**
@@ -46,7 +47,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     /**
-     * @var \tx_crawler_domain_process_repository
+     * @var ProcessRepository
      */
     protected $subject;
 
@@ -58,7 +59,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
     {
         parent::setUp();
         $this->importDataSet(dirname(__FILE__) . '/../../Fixtures/tx_crawler_process.xml');
-        $this->subject = new \tx_crawler_domain_process_repository();
+        $this->subject = new ProcessRepository();
     }
 
     /**

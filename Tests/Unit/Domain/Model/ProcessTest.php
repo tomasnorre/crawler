@@ -25,6 +25,7 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Domain\Model\Process;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
 /**
@@ -35,7 +36,7 @@ class ProcessTest extends UnitTestCase
 {
 
     /**
-     * @var \tx_crawler_domain_process
+     * @var Process
      * @inject
      */
     protected $subject;
@@ -48,7 +49,7 @@ class ProcessTest extends UnitTestCase
             'ttl' => '300',
             'assigned_items_count' => '20'
         ];
-        $this->subject = new \tx_crawler_domain_process($processObjectArray);
+        $this->subject = new Process($processObjectArray);
     }
 
     /**
@@ -104,22 +105,22 @@ class ProcessTest extends UnitTestCase
             'Check that state is running, Active and less than 100%' => [
                 'active' => 1,
                 'processes' => 90,
-                'expectedState' => \tx_crawler_domain_process::STATE_RUNNING
+                'expectedState' => Process::STATE_RUNNING
             ],
             'Check that state is cancelled, Inactive and less than 100%' => [
                 'active' => 0,
                 'processes' => 90,
-                'expectedState' => \tx_crawler_domain_process::STATE_CANCELLED
+                'expectedState' => Process::STATE_CANCELLED
             ],
             'Check that state is completed, Active and 100%' => [
                 'active' => 1,
                 'processes' => 100,
-                'expectedState' => \tx_crawler_domain_process::STATE_COMPLETED
+                'expectedState' => Process::STATE_COMPLETED
             ],
             'Check that state is completed, Inactive and 100%' => [
                 'active' => 0,
                 'processes' => 100,
-                'expectedState' => \tx_crawler_domain_process::STATE_COMPLETED
+                'expectedState' => Process::STATE_COMPLETED
             ]
         ];
     }
@@ -135,8 +136,8 @@ class ProcessTest extends UnitTestCase
      */
     public function getStateReturnsExpectedState($active, $processes, $expectedState)
     {
-        /** @var \tx_crawler_domain_process $processMock */
-        $processMock = $this->getAccessibleMock('tx_crawler_domain_process', ['getActive', 'getProgress']);
+        /** @var Process $processMock */
+        $processMock = $this->getAccessibleMock(Process::class, ['getActive', 'getProgress']);
         $processMock->expects($this->any())->method('getActive')->will($this->returnValue($active));
         $processMock->expects($this->any())->method('getProgress')->will($this->returnValue($processes));
 
@@ -156,8 +157,8 @@ class ProcessTest extends UnitTestCase
      */
     public function getProgressReturnsExpectedPercentage($countItemsAssigned, $countItemsProcessed, $expectedProgress)
     {
-        /** @var \tx_crawler_domain_process $processMock */
-        $processMock = $this->getAccessibleMock('tx_crawler_domain_process', ['countItemsAssigned', 'countItemsProcessed']);
+        /** @var Process $processMock */
+        $processMock = $this->getAccessibleMock(Process::class, ['countItemsAssigned', 'countItemsProcessed']);
         $processMock->expects($this->any())->method('countItemsAssigned')->will($this->returnValue($countItemsAssigned));
         $processMock->expects($this->any())->method('countItemsProcessed')->will($this->returnValue($countItemsProcessed));
 
@@ -212,8 +213,8 @@ class ProcessTest extends UnitTestCase
      */
     public function getRuntimeReturnsInteger($getTimeForFirstItem, $getTimeForLastItem, $expected)
     {
-        /** @var \tx_crawler_domain_process $processMock */
-        $processMock = $this->getAccessibleMock('tx_crawler_domain_process', [ 'getTimeForFirstItem', 'getTimeForLastItem']);
+        /** @var Process $processMock */
+        $processMock = $this->getAccessibleMock(Process::class, [ 'getTimeForFirstItem', 'getTimeForLastItem']);
         $processMock->expects($this->any())->method('getTimeForFirstItem')->will($this->returnValue($getTimeForFirstItem));
         $processMock->expects($this->any())->method('getTimeForLastItem')->will($this->returnValue($getTimeForLastItem));
 

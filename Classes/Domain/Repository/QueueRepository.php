@@ -1,15 +1,17 @@
 <?php
+namespace AOE\Crawler\Domain\Repository;
 
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2009 AOE media (dev@aoemedia.de)
+ *  (c) 2017 AOE GmbH <dev@aoe.com>
+ *
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
+ *  the Free Software Foundation; either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  The GNU General Public License can be found at
@@ -22,20 +24,30 @@
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-class tx_crawler_domain_queue_repository extends AOE\Crawler\Domain\Repository\AbstractRepository
-{
-    protected $objectClassname = 'tx_crawler_domain_queue_entry';
 
+use AOE\Crawler\Domain\Model\Process;
+use AOE\Crawler\Domain\Model\Queue;
+
+/**
+ * Class QueueRepository
+ *
+ * @package AOE\Crawler\Domain\Repository
+ */
+class QueueRepository extends AbstractRepository
+{
+    /**
+     * @var string
+     */
     protected $tableName = 'tx_crawler_queue';
 
     /**
-     * This mehtod is used to find the youngest entry for a given process.
+     * This method is used to find the youngest entry for a given process.
      *
-     * @param tx_crawler_domain_process $process
+     * @param Process $process
      *
-     * @return tx_crawler_domain_queue_entry $entry
+     * @return Queue $entry
      */
-    public function findYoungestEntryForProcess(tx_crawler_domain_process $process)
+    public function findYoungestEntryForProcess(Process $process)
     {
         return $this->getFirstOrLastObjectByProcess($process, 'exec_time ASC');
     }
@@ -43,11 +55,11 @@ class tx_crawler_domain_queue_repository extends AOE\Crawler\Domain\Repository\A
     /**
      * This method is used to find the oldest entry for a given process.
      *
-     * @param tx_crawler_domain_process $process
+     * @param Process $process
      *
-     * @return tx_crawler_domain_queue_entry
+     * @return Queue
      */
-    public function findOldestEntryForProcess(tx_crawler_domain_process $process)
+    public function findOldestEntryForProcess(Process $process)
     {
         return $this->getFirstOrLastObjectByProcess($process, 'exec_time DESC');
     }
@@ -55,10 +67,10 @@ class tx_crawler_domain_queue_repository extends AOE\Crawler\Domain\Repository\A
     /**
      * This internal helper method is used to create an instance of an entry object
      *
-     * @param tx_crawler_domain_process $process
+     * @param Process $process
      * @param string $orderby first matching item will be returned as object
      *
-     * @return tx_crawler_domain_queue_entry
+     * @return Queue
      */
     protected function getFirstOrLastObjectByProcess($process, $orderby)
     {
@@ -74,7 +86,7 @@ class tx_crawler_domain_queue_repository extends AOE\Crawler\Domain\Repository\A
         } else {
             $first = [];
         }
-        $resultObject = new tx_crawler_domain_queue_entry($first);
+        $resultObject = new Queue($first);
 
         return $resultObject;
     }
@@ -82,7 +94,7 @@ class tx_crawler_domain_queue_repository extends AOE\Crawler\Domain\Repository\A
     /**
      * Counts all executed items of a process.
      *
-     * @param tx_crawler_domain_process $process
+     * @param Process $process
      *
      * @return int
      */
@@ -97,7 +109,7 @@ class tx_crawler_domain_queue_repository extends AOE\Crawler\Domain\Repository\A
     /**
      * Counts items of a process which yet have not been processed/executed
      *
-     * @param tx_crawler_domain_process $process
+     * @param Process $process
      *
      * @return int
      */
@@ -111,9 +123,7 @@ class tx_crawler_domain_queue_repository extends AOE\Crawler\Domain\Repository\A
 
     /**
      * This method can be used to count all queue entrys which are
-     * scheduled for now or a earler date.
-     *
-     * @param void
+     * scheduled for now or a earlier date.
      *
      * @return int
      */
@@ -124,9 +134,7 @@ class tx_crawler_domain_queue_repository extends AOE\Crawler\Domain\Repository\A
 
     /**
      * This method can be used to count all queue entrys which are
-     * scheduled for now or a earler date and are assigned to a process.
-     *
-     * @param void
+     * scheduled for now or a earlier date and are assigned to a process.
      *
      * @return int
      */
@@ -137,9 +145,7 @@ class tx_crawler_domain_queue_repository extends AOE\Crawler\Domain\Repository\A
 
     /**
      * This method can be used to count all queue entrys which are
-     * scheduled for now or a earler date and are not assigned to a process.
-     *
-     * @param void
+     * scheduled for now or a earlier date and are not assigned to a process.
      *
      * @return int
      */
@@ -213,7 +219,7 @@ class tx_crawler_domain_queue_repository extends AOE\Crawler\Domain\Repository\A
     /**
      * Get total queue entries by configuration
      *
-     * @param array set ids
+     * @param array $setIds
      *
      * @return array totals by configuration (keys)
      */
@@ -239,7 +245,7 @@ class tx_crawler_domain_queue_repository extends AOE\Crawler\Domain\Repository\A
     /**
      * Get the timestamps of the last processed entries
      *
-     * @param int
+     * @param int $limit
      *
      * @return array
      */
@@ -294,8 +300,8 @@ class tx_crawler_domain_queue_repository extends AOE\Crawler\Domain\Repository\A
     /**
      * Get performance statistics data
      *
-     * @param int start timestamp
-     * @param int end timestamp
+     * @param int $start timestamp
+     * @param int $end timestamp
      *
      * @return array performance data
      */
