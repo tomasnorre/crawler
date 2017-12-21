@@ -305,6 +305,48 @@ class tx_crawler_view_process_list
     }
 
     /**
+     * Returns the state icon for the current job
+     *
+     * @param string $state
+     * @return string icon
+     */
+    protected function getIconForState($state)
+    {
+        switch ($state) {
+            case 'running':
+                $icon = 'bullet_orange';
+                $title = $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.process.running');
+                break;
+            case 'completed':
+                $icon = 'bullet_green';
+                $title = $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.process.success');
+                break;
+            case 'cancelled':
+                $icon = 'bullet_red';
+                $title = $this->getLLLabel('LLL:EXT:crawler/modfunc1/locallang.xml:labels.process.cancelled');
+                break;
+        }
+
+        return $this->getIcon($icon, $title);
+    }
+
+    /**
+     * Returns an imagetag for an icon
+     *
+     * @param string $icon
+     * @param string $title
+     *
+     * @return string html tag for icon
+     */
+    protected function getIcon($icon, $title = '')
+    {
+        if (!empty($title)) {
+            $title = ' title="' . $title . '"';
+        }
+        return '<img src="' . $this->getIconPath() . $icon . '.png" ' . $title . ' />';
+    }
+
+    /**
      * Returns a tag for the refresh icon
      *
      * @return string
