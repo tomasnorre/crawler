@@ -55,9 +55,9 @@ class CrawlerControllerTest extends FunctionalTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->importDataSet(dirname(__FILE__) . '/Fixtures/sys_domain.xml');
-        $this->importDataSet(dirname(__FILE__) . '/Fixtures/tx_crawler_queue.xml');
-        $this->importDataSet(dirname(__FILE__) . '/Fixtures/tx_crawler_process.xml');
+        $this->importDataSet(dirname(__FILE__) . '/../Fixtures/sys_domain.xml');
+        $this->importDataSet(dirname(__FILE__) . '/../Fixtures/tx_crawler_queue.xml');
+        $this->importDataSet(dirname(__FILE__) . '/../Fixtures/tx_crawler_process.xml');
         $this->subject = $this->getAccessibleMock(CrawlerController::class, ['dummy']);
     }
 
