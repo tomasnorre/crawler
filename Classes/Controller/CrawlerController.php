@@ -48,7 +48,7 @@ use TYPO3\CMS\Frontend\Utility\EidUtility;
 
 /**
  * Class CrawlerController
- * 
+ *
  * @package AOE\Crawler\Controller
  */
 class CrawlerController

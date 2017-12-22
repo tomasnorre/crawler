@@ -380,14 +380,14 @@ class ProcessListView
             return ButtonUtility::getLinkButton(
                 'tx-crawler-stop',
                 $this->getLLLabel('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.disablecrawling'),
-                'window.location+=\'&action=stopCrawling\';'
+                'window.location=\'' . BackendUtility::getModuleUrl('web_info') . '&action=stopCrawling\';'
             );
         } else {
             // TODO: Icon Should be bigger
             return ButtonUtility::getLinkButton(
                 'tx-crawler-start',
                 $this->getLLLabel('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.enablecrawling'),
-                'window.location+=\'&action=resumeCrawling\';'
+                'window.location=\'' . BackendUtility::getModuleUrl('web_info') . '&action=resumeCrawling\';'
             );
         }
     }
@@ -405,13 +405,13 @@ class ProcessListView
             return ButtonUtility::getLinkButton(
                 'actions-document-view',
                 $this->getLLLabel('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.show.running'),
-                'window.location+=\'&SET[processListMode]=simple\';'
+                'window.location=\'' . BackendUtility::getModuleUrl('web_info') . '&SET[processListMode]=simple\';'
             );
         } elseif ($this->getMode() == 'simple') {
             return ButtonUtility::getLinkButton(
                 'actions-document-view',
                 $this->getLLLabel('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.show.all'),
-                'window.location+=\'&SET[processListMode]=detail\';'
+                'window.location=\'' . BackendUtility::getModuleUrl('web_info') . '&SET[processListMode]=detail\';'
             );
         }
     }
@@ -429,7 +429,7 @@ class ProcessListView
             return ButtonUtility::getLinkButton(
                 'actions-add',
                 $this->getLLLabel('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.process.add'),
-                'window.location+=\'&action=addProcess\';'
+                'window.location=\'' . BackendUtility::getModuleUrl('web_info') . '&action=addProcess\';'
             );
         } else {
             return '';
