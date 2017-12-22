@@ -44,7 +44,7 @@ class CrawlerQueueTaskAdditionalFieldProvider implements AdditionalFieldProvider
      * Gets additional fields to render in the form to add/edit a task
      *
      * @param array $taskInfo
-     * @param AbstractTask $task
+     * @param CrawlerQueueTask $task
      * @param SchedulerModuleController $schedulerModule
      *
      * @return array
