@@ -571,7 +571,7 @@ class CrawlerController
                         if (strcmp($subCfg['procInstrFilter'], '')) {
                             $subCfg['procInstrFilter'] = implode(',', GeneralUtility::trimExplode(',', $subCfg['procInstrFilter']));
                         }
-                        $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $subCfg['pidsOnly'], 1));
+                        $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $subCfg['pidsOnly'], true));
 
                         // process configuration if it is not page-specific or if the specific page is the current page:
                         if (!strcmp($subCfg['pidsOnly'], '') || GeneralUtility::inList($pidOnlyList, $id)) {
@@ -620,7 +620,7 @@ class CrawlerController
 
                         // check access to the configuration record
                     if (empty($configurationRecord['begroups']) || $GLOBALS['BE_USER']->isAdmin() || $this->hasGroupAccess($GLOBALS['BE_USER']->user['usergroup_cached_list'], $configurationRecord['begroups'])) {
-                        $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $configurationRecord['pidsonly'], 1));
+                        $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $configurationRecord['pidsonly'], true));
 
                         // process configuration if it is not page-specific or if the specific page is the current page:
                         if (!strcmp($configurationRecord['pidsonly'], '') || GeneralUtility::inList($pidOnlyList, $id)) {
@@ -1121,6 +1121,7 @@ class CrawlerController
         $skipInnerDuplicationCheck = false
     ) {
         $urlAdded = false;
+        $rows = [];
 
         // Creating parameters:
         $parameters = [
@@ -1128,7 +1129,7 @@ class CrawlerController
         ];
 
         // fe user group simulation:
-        $uGs = implode(',', array_unique(GeneralUtility::intExplode(',', $subCfg['userGroups'], 1)));
+        $uGs = implode(',', array_unique(GeneralUtility::intExplode(',', $subCfg['userGroups'], true)));
         if ($uGs) {
             $parameters['feUserGroupList'] = $uGs;
         }
@@ -1156,7 +1157,7 @@ class CrawlerController
             'configuration' => $subCfg['key'],
         ];
 
-        if ($this->registerQueueEntriesInternallyOnly) {
+        if (!empty($this->registerQueueEntriesInternallyOnly)) {
             //the entries will only be registered and not stored to the database
             $this->queueEntries[] = $fieldArray;
         } else {
@@ -1337,7 +1338,8 @@ class CrawlerController
     /**
      * Read URL for not-yet-inserted log-entry
      *
-     * @param integer $field_array Queue field array,
+     * @param array $field_array Queue field array,
+     *
      * @return string
      */
     public function readUrlFromArray($field_array)
@@ -1623,6 +1625,7 @@ class CrawlerController
      */
     protected function getRequestUrlFrom302Header($headers, $user = '', $pass = '')
     {
+        $header = [];
         if (!is_array($headers)) {
             return false;
         }
@@ -2012,7 +2015,7 @@ class CrawlerController
             try {
                 // Run process:
                 $result = $this->CLI_run($countInARun, $sleepTime, $sleepAfterFinish);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 $this->CLI_debug(get_class($e) . ': ' . $e->getMessage());
                 $result = self::CLI_STATUS_ABORTED;
             }
@@ -2102,12 +2105,12 @@ class CrawlerController
             MathUtility::forceIntegerInRange($cliObj->cli_isArg('-n') ? $cliObj->cli_argValue('-n') : 30, 1, 1000),
             $cliObj->cli_argValue('-o') === 'queue' || $cliObj->cli_argValue('-o') === 'exec',
             $cliObj->cli_argValue('-o') === 'url',
-            GeneralUtility::trimExplode(',', $cliObj->cli_argValue('-proc'), 1),
+            GeneralUtility::trimExplode(',', $cliObj->cli_argValue('-proc'), true),
             $configurationKeys
         );
 
         if ($cliObj->cli_argValue('-o') === 'url') {
-            $cliObj->cli_echo(implode(chr(10), $this->downloadUrls) . chr(10), 1);
+            $cliObj->cli_echo(implode(chr(10), $this->downloadUrls) . chr(10), true);
         } elseif ($cliObj->cli_argValue('-o') === 'exec') {
             $cliObj->cli_echo("Executing " . count($this->urlList) . " requests right away:\n\n");
             $cliObj->cli_echo(implode(chr(10), $this->urlList) . chr(10));
@@ -2132,7 +2135,7 @@ class CrawlerController
             $cliObj->cli_echo(implode(chr(10), $this->urlList) . chr(10));
         } else {
             $cliObj->cli_echo(count($this->urlList) . " entries found for processing. (Use -o to decide action):\n\n", 1);
-            $cliObj->cli_echo(implode(chr(10), $this->urlList) . chr(10), 1);
+            $cliObj->cli_echo(implode(chr(10), $this->urlList) . chr(10), true);
         }
     }
 
