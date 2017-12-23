@@ -121,7 +121,8 @@ class CrawlerQueueTaskAdditionalFieldProvider implements AdditionalFieldProvider
         $fieldId = 'task_configuration';
         $fieldCode = '<select name="tx_scheduler[configuration][]" multiple="multiple" id="' . $fieldId . '" class="form-control">';
         $fieldCode .= "\t" . '<option value=""></option>';
-        for ($i = 0; $i < count($recordsArray); $i++) {
+        $arraySize = count($recordsArray);
+        for ($i = 0; $i < $arraySize; $i++) {
             $fieldCode .= "\t" . '<option ' . $this->getSelectedState($task->configuration, $recordsArray[$i]['name']) . 'value="' . $recordsArray[$i]['name'] . '">' . $recordsArray[$i]['name'] . '</option>';
         }
         $fieldCode .= '</select>';
@@ -145,7 +146,8 @@ class CrawlerQueueTaskAdditionalFieldProvider implements AdditionalFieldProvider
     protected function getSelectedState($configurationArray, $currentValue)
     {
         $selected = '';
-        for ($i = 0; $i < count($configurationArray); $i++) {
+        $arraySize = count($configurationArray);
+        for ($i = 0; $i < $arraySize; $i++) {
             if (strcmp($configurationArray[$i], $currentValue) === 0) {
                 $selected = 'selected="selected" ';
             }
@@ -211,7 +213,8 @@ class CrawlerQueueTaskAdditionalFieldProvider implements AdditionalFieldProvider
      * Takes care of saving the additional fields' values in the task's object
      *
      * @param array $submittedData
-     * @param AbstractTask $task
+     * @param CrawlerQueueTask|AbstractTask $task
+     *
      * @return void
      */
     public function saveAdditionalFields(array $submittedData, AbstractTask $task)
