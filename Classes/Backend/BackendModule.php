@@ -94,6 +94,11 @@ class BackendModule extends AbstractFunctionModule
     protected $isErrorDetected = false;
 
     /**
+     * @var ProcessService
+     */
+    protected $processManager;
+
+    /**
      * the constructor
      */
     public function __construct()
@@ -104,7 +109,7 @@ class BackendModule extends AbstractFunctionModule
     /**
      * Additions to the function menu array
      *
-     * @return	array		Menu array
+     * @return array Menu array
      */
     public function modMenu()
     {
@@ -227,7 +232,7 @@ class BackendModule extends AbstractFunctionModule
                     );
         }
 
-        $theOutput = $this->pObj->doc->section($LANG->getLL('title'), $h_func, 0, 1);
+        $theOutput = $this->pObj->doc->section($LANG->getLL('title'), $h_func, false, true);
 
         // Branch based on type:
         switch ((string)$this->pObj->MOD_SETTINGS['crawlaction']) {
@@ -235,21 +240,22 @@ class BackendModule extends AbstractFunctionModule
                 if (empty($this->pObj->id)) {
                     $this->addErrorMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.noPageSelected'));
                 } else {
-                    $theOutput .= $this->pObj->doc->section('', $this->drawURLs(), 0, 1);
+                    $theOutput .= $this->pObj->doc->section('', $this->drawURLs(), false, true);
                 }
                 break;
             case 'log':
                 if (empty($this->pObj->id)) {
                     $this->addErrorMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.noPageSelected'));
                 } else {
-                    $theOutput .= $this->pObj->doc->section('', $this->drawLog(), 0, 1);
+                    $theOutput .= $this->pObj->doc->section('', $this->drawLog(), false, true);
                 }
                 break;
             case 'cli':
-                $theOutput .= $this->pObj->doc->section('', $this->drawCLIstatus(), 0, 1);
+                // TODO: drawCLIstatus is not defined, why did we refactor it away?
+                $theOutput .= $this->pObj->doc->section('', $this->drawCLIstatus(), false, true);
                 break;
             case 'multiprocess':
-                $theOutput .= $this->pObj->doc->section('', $this->drawProcessOverviewAction(), 0, 1);
+                $theOutput .= $this->pObj->doc->section('', $this->drawProcessOverviewAction(), false, true);
                 break;
         }
 
@@ -271,10 +277,13 @@ class BackendModule extends AbstractFunctionModule
     {
         global $BACK_PATH, $BE_USER;
 
+        $crawlerParameter = GeneralUtility::_GP('_crawl');
+        $downloadParameter = GeneralUtility::_GP('_download');
+
         // Init:
         $this->duplicateTrack = [];
-        $this->submitCrawlUrls = GeneralUtility::_GP('_crawl');
-        $this->downloadCrawlUrls = GeneralUtility::_GP('_download');
+        $this->submitCrawlUrls = isset($crawlerParameter);
+        $this->downloadCrawlUrls = isset($downloadParameter);
         $this->makeCrawlerProcessableChecks();
 
         switch ((string) GeneralUtility::_GP('tstamp')) {
@@ -294,7 +303,7 @@ class BackendModule extends AbstractFunctionModule
         $this->reqMinute = 1000;
 
         $this->incomingConfigurationSelection = GeneralUtility::_GP('configurationSelection');
-        $this->incomingConfigurationSelection = is_array($this->incomingConfigurationSelection) ? $this->incomingConfigurationSelection : [''];
+        $this->incomingConfigurationSelection = is_array($this->incomingConfigurationSelection) ? $this->incomingConfigurationSelection : [];
 
         $this->crawlerObj = GeneralUtility::makeInstance(CrawlerController::class);
         $this->crawlerObj->setAccessMode('gui');
@@ -314,8 +323,8 @@ class BackendModule extends AbstractFunctionModule
 
                 if ($BE_USER instanceof BackendUserAuthentication) {
                     $username = $BE_USER->user['username'];
+                    $reason->setDetailText('The user ' . $username . ' added pages to the crawler queue manually ');
                 }
-                $reason->setDetailText('The user ' . $username . ' added pages to the crawler queue manually ');
 
                 EventDispatcher::getInstance()->post(
                     'invokeQueueChange',
@@ -387,8 +396,9 @@ class BackendModule extends AbstractFunctionModule
      */
     public function drawURLs_cfgSelectors()
     {
+        $cell = [];
 
-            // depth
+        // depth
         $cell[] = $this->selectorBox(
             [
                 0 => $GLOBALS['LANG']->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_0'),
@@ -400,7 +410,7 @@ class BackendModule extends AbstractFunctionModule
             ],
             'SET[depth]',
             $this->pObj->MOD_SETTINGS['depth'],
-            0
+            false
         );
         $availableConfigurations = $this->crawlerObj->getConfigurationsForBranch($this->pObj->id, $this->pObj->MOD_SETTINGS['depth'] ? $this->pObj->MOD_SETTINGS['depth'] : 0);
 
@@ -409,7 +419,7 @@ class BackendModule extends AbstractFunctionModule
             empty($availableConfigurations) ? [] : array_combine($availableConfigurations, $availableConfigurations),
             'configurationSelection',
             $this->incomingConfigurationSelection,
-            1
+            true
         );
 
         // Scheduled time:
@@ -421,7 +431,7 @@ class BackendModule extends AbstractFunctionModule
             ],
             'tstamp',
             GeneralUtility::_POST('tstamp'),
-            0
+            false
         );
 
         $output = '
@@ -482,7 +492,8 @@ class BackendModule extends AbstractFunctionModule
         $this->crawlerObj->setAccessMode('gui');
         $this->crawlerObj->setID = GeneralUtility::md5int(microtime());
 
-        $this->CSVExport = GeneralUtility::_POST('_csv');
+        $csvExport = GeneralUtility::_POST('_csv');
+        $this->CSVExport = isset($csvExport);
 
         // Read URL:
         if (GeneralUtility::_GP('qid_read')) {
@@ -869,7 +880,6 @@ class BackendModule extends AbstractFunctionModule
                 } else {
                     $resStatus = implode("\n", $requestResult['errorlog']);
                 }
-                $resLog = is_array($requestResult['log']) ? implode(chr(10), $requestResult['log']) : '';
             } else {
                 $resStatus = 'Error: ' . substr(preg_replace('/\s+/', ' ', strip_tags($requestContent['content'])), 0, 10000) . '...';
             }
@@ -901,7 +911,7 @@ class BackendModule extends AbstractFunctionModule
         $crawler = $this->findCrawler();
         try {
             $this->handleProcessOverviewActions();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->addErrorMessage($e->getMessage());
         }
 
@@ -912,9 +922,8 @@ class BackendModule extends AbstractFunctionModule
         $queueRepository = new QueueRepository();
 
         $mode = $this->pObj->MOD_SETTINGS['processListMode'];
-        if ($mode == 'detail') {
-            $where = '';
-        } elseif ($mode == 'simple') {
+        $where = '';
+        if ($mode == 'simple') {
             $where = 'active = 1';
         }
 
