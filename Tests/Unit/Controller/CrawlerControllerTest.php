@@ -454,6 +454,73 @@ class CrawlerControllerTest extends UnitTestCase
     }
 
     /**
+     * @test
+     *
+     * @param array $configuration
+     * @param string $expected
+     *
+     * @dataProvider getConfigurationHasReturnsExpectedValueDataProvider
+     */
+    public function getConfigurationHasReturnsExpectedValue(array $configuration, $expected)
+    {
+        $crawlerLib = $this->getAccessibleMock(CrawlerController::class, ['dummy']);
+
+        $this->assertEquals(
+            $expected,
+            $crawlerLib->_call('getConfigurationHash', $configuration)
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function getConfigurationHasReturnsExpectedValueDataProvider()
+    {
+        return [
+            'Configuration with either paramExpanded nor URLs set' => [
+                'configuration' => [
+                    'testKey' => 'testValue',
+                    'paramExpanded' => '',
+                    'URLs' => ''
+                ],
+                'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22'
+            ],
+            'Configuration with only paramExpanded set' => [
+                'configuration' => [
+                    'testKey' => 'testValue',
+                    'paramExpanded' => 'Value not important',
+                    'URLs' => ''
+                ],
+                'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22'
+            ],
+            'Configuration with only URLS set' => [
+                'configuration' => [
+                    'testKey' => 'testValue',
+                    'paramExpanded' => '',
+                    'URLs' => 'Value not important'
+                ],
+                'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22'
+            ],
+            'Configuration with both paramExpanded and URLS set' => [
+                'configuration' => [
+                    'testKey' => 'testValue',
+                    'paramExpanded' => 'Value not important',
+                    'URLs' => 'Value not important'
+                ],
+                'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22'
+            ],
+            'Configuration with both paramExpanded and URLS set, will return same hash' => [
+                'configuration' => [
+                    'testKey' => 'testValue',
+                    'paramExpanded' => 'Value not important, but different than test case before',
+                    'URLs' => 'Value not important, but different than test case before'
+                ],
+                'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22'
+            ],
+        ];
+    }
+
+    /**
      * @return array
      */
     public function checkIfPageShouldBeSkippedDataProvider()
