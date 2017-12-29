@@ -55,7 +55,7 @@ class ProcessService
     /**
      * @var CrawlerController
      */
-    private $crawlerObj;
+    private $crawlerController;
 
     /**
      * @var \AOE\Crawler\Domain\Repository\QueueRepository
@@ -79,11 +79,11 @@ class ProcessService
     {
         $this->processRepository = new ProcessRepository();
         $this->queueRepository = new QueueRepository();
-        $this->crawlerObj = GeneralUtility::makeInstance(CrawlerController::class);
-        $this->timeToLive = intval($this->crawlerObj->extensionSettings['processMaxRunTime']);
-        $this->countInARun = intval($this->crawlerObj->extensionSettings['countInARun']);
-        $this->processLimit = intval($this->crawlerObj->extensionSettings['processLimit']);
-        $this->verbose = intval($this->crawlerObj->extensionSettings['processVerbose']);
+        $this->crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
+        $this->timeToLive = intval($this->crawlerController->extensionSettings['processMaxRunTime']);
+        $this->countInARun = intval($this->crawlerController->extensionSettings['countInARun']);
+        $this->processLimit = intval($this->crawlerController->extensionSettings['processLimit']);
+        $this->verbose = intval($this->crawlerController->extensionSettings['processVerbose']);
     }
 
     /**
@@ -131,7 +131,7 @@ class ProcessService
                 if ($this->verbose) {
                     echo 'Cleanup' . implode(',', $timedOutProcesses->getProcessIds()) . chr(10);
                 }
-                $this->crawlerObj->CLI_releaseProcesses($timedOutProcesses->getProcessIds(), true);
+                $this->crawlerController->CLI_releaseProcesses($timedOutProcesses->getProcessIds(), true);
             }
         }
         if ($currentPendingItems > 0 && $this->verbose) {
@@ -220,7 +220,7 @@ class ProcessService
      */
     public function getCrawlerCliPath()
     {
-        $phpPath = $this->crawlerObj->extensionSettings['phpPath'] . ' ';
+        $phpPath = $this->crawlerController->extensionSettings['phpPath'] . ' ';
         $pathToTypo3 = rtrim(GeneralUtility::getIndpEnv('TYPO3_DOCUMENT_ROOT'), '/');
         $pathToTypo3 .= rtrim(GeneralUtility::getIndpEnv('TYPO3_SITE_PATH'), '/');
         $cliPart = '/typo3/cli_dispatch.phpsh crawler';

@@ -37,7 +37,7 @@ class ProcessCleanUpHook
     /**
      * @var CrawlerController
      */
-    private $crawlerLib;
+    private $crawlerController;
 
     /**
      * @var array
@@ -47,14 +47,14 @@ class ProcessCleanUpHook
     /**
      * Main function of process CleanUp Hook.
      *
-     * @param CrawlerController $crawlerLib Crawler Lib class
+     * @param CrawlerController $crawlerController Crawler Lib class
      *
      * @return void
      */
-    public function crawler_init(CrawlerController $crawlerLib)
+    public function crawler_init(CrawlerController $crawlerController)
     {
-        $this->crawlerLib = $crawlerLib;
-        $this->extensionSettings = $this->crawlerLib->extensionSettings;
+        $this->crawlerController = $crawlerController;
+        $this->extensionSettings = $this->crawlerController->extensionSettings;
 
         // Clean Up
         $this->removeActiveOrphanProcesses();

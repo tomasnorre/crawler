@@ -38,8 +38,8 @@ require(dirname(PATH_thisScript).'/'.$BACK_PATH.'init.php');
 
 
 # HERE you run your application!
-$crawlerObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\AOE\Crawler\Controller\CrawlerController::class);
+$crawlerController = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\AOE\Crawler\Controller\CrawlerController::class);
 
-exit($crawlerObj->CLI_main());
+exit($crawlerController->CLI_main());
 
 ?>

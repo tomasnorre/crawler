@@ -66,7 +66,7 @@ class BackendModule extends AbstractFunctionModule
     /**
      * @var CrawlerController
      */
-    public $crawlerObj;
+    public $crawlerController;
 
     public $CSVaccu = [];
 
@@ -296,9 +296,9 @@ class BackendModule extends AbstractFunctionModule
         $this->incomingConfigurationSelection = GeneralUtility::_GP('configurationSelection');
         $this->incomingConfigurationSelection = is_array($this->incomingConfigurationSelection) ? $this->incomingConfigurationSelection : [''];
 
-        $this->crawlerObj = GeneralUtility::makeInstance(CrawlerController::class);
-        $this->crawlerObj->setAccessMode('gui');
-        $this->crawlerObj->setID = GeneralUtility::md5int(microtime());
+        $this->crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
+        $this->crawlerController->setAccessMode('gui');
+        $this->crawlerController->setID = GeneralUtility::md5int(microtime());
 
         if (empty($this->incomingConfigurationSelection)
             || (count($this->incomingConfigurationSelection) == 1 && empty($this->incomingConfigurationSelection[0]))
@@ -324,7 +324,7 @@ class BackendModule extends AbstractFunctionModule
                 );
             }
 
-            $code = $this->crawlerObj->getPageTreeAndUrls(
+            $code = $this->crawlerController->getPageTreeAndUrls(
                 $this->pObj->id,
                 $this->pObj->MOD_SETTINGS['depth'],
                 $this->scheduledTime,
@@ -336,8 +336,8 @@ class BackendModule extends AbstractFunctionModule
             );
         }
 
-        $this->downloadUrls = $this->crawlerObj->downloadUrls;
-        $this->duplicateTrack = $this->crawlerObj->duplicateTrack;
+        $this->downloadUrls = $this->crawlerController->downloadUrls;
+        $this->duplicateTrack = $this->crawlerController->duplicateTrack;
 
         $output = '';
         if ($code) {
@@ -402,7 +402,7 @@ class BackendModule extends AbstractFunctionModule
             $this->pObj->MOD_SETTINGS['depth'],
             0
         );
-        $availableConfigurations = $this->crawlerObj->getConfigurationsForBranch($this->pObj->id, $this->pObj->MOD_SETTINGS['depth'] ? $this->pObj->MOD_SETTINGS['depth'] : 0);
+        $availableConfigurations = $this->crawlerController->getConfigurationsForBranch($this->pObj->id, $this->pObj->MOD_SETTINGS['depth'] ? $this->pObj->MOD_SETTINGS['depth'] : 0);
 
         // Configurations
         $cell[] = $this->selectorBox(
@@ -478,15 +478,15 @@ class BackendModule extends AbstractFunctionModule
         $output = '';
 
         // Init:
-        $this->crawlerObj = GeneralUtility::makeInstance(CrawlerController::class);
-        $this->crawlerObj->setAccessMode('gui');
-        $this->crawlerObj->setID = GeneralUtility::md5int(microtime());
+        $this->crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
+        $this->crawlerController->setAccessMode('gui');
+        $this->crawlerController->setID = GeneralUtility::md5int(microtime());
 
         $this->CSVExport = GeneralUtility::_POST('_csv');
 
         // Read URL:
         if (GeneralUtility::_GP('qid_read')) {
-            $this->crawlerObj->readUrl(intval(GeneralUtility::_GP('qid_read')), true);
+            $this->crawlerController->readUrl(intval(GeneralUtility::_GP('qid_read')), true);
         }
 
         // Look for set ID sent - if it is, we will display contents of that set:
@@ -690,9 +690,9 @@ class BackendModule extends AbstractFunctionModule
 
         // Get result:
         if (is_array($pageRow_setId)) {
-            $res = $this->crawlerObj->getLogEntriesForPageId($pageRow_setId['uid'], $this->pObj->MOD_SETTINGS['log_display'], $doFlush, $doFullFlush, intval($itemsPerPage));
+            $res = $this->crawlerController->getLogEntriesForPageId($pageRow_setId['uid'], $this->pObj->MOD_SETTINGS['log_display'], $doFlush, $doFullFlush, intval($itemsPerPage));
         } else {
-            $res = $this->crawlerObj->getLogEntriesForSetId($pageRow_setId, $this->pObj->MOD_SETTINGS['log_display'], $doFlush, $doFullFlush, intval($itemsPerPage));
+            $res = $this->crawlerController->getLogEntriesForSetId($pageRow_setId, $this->pObj->MOD_SETTINGS['log_display'], $doFlush, $doFullFlush, intval($itemsPerPage));
         }
 
         // Init var:
@@ -1059,10 +1059,10 @@ class BackendModule extends AbstractFunctionModule
      */
     protected function findCrawler()
     {
-        if (!$this->crawlerObj instanceof CrawlerController) {
-            $this->crawlerObj = GeneralUtility::makeInstance(CrawlerController::class);
+        if (!$this->crawlerController instanceof CrawlerController) {
+            $this->crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
         }
-        return $this->crawlerObj;
+        return $this->crawlerController;
     }
 
     /*****************************
