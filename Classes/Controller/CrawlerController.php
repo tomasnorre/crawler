@@ -443,7 +443,7 @@ class CrawlerController
         }
 
         if (is_array($vv['URLs'])) {
-            $configurationHash = md5(serialize($vv));
+            $configurationHash = $this->getConfigurationHash($vv);
             $skipInnerCheck = $this->noUnprocessedQueueEntriesForPageWithConfigurationHashExist($pageRow['uid'], $configurationHash);
 
             foreach ($vv['URLs'] as $urlQuery) {
@@ -2649,5 +2649,18 @@ class CrawlerController
         $GLOBALS['TSFE']->rootLine = $GLOBALS['TSFE']->sys_page->getRootLine($id, '');
         $GLOBALS['TSFE']->getConfigArray();
         PageGenerator::pagegenInit();
+    }
+
+    /**
+     * Returns a md5 hash generated from a serialized configuration array.
+     *
+     * @param array $configuration
+     *
+     * @return string
+     */
+    protected function getConfigurationHash(array $configuration) {
+        unset($configuration['paramExpanded']);
+        unset($configuration['URLs']);
+        return md5(serialize($configuration));
     }
 }
