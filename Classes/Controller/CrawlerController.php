@@ -36,6 +36,7 @@ use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\View\PageTreeView;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Database\DatabaseConnection;
+use TYPO3\CMS\Core\Log\LogLevel;
 use TYPO3\CMS\Core\TimeTracker\NullTimeTracker;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -53,6 +54,12 @@ use TYPO3\CMS\Frontend\Utility\EidUtility;
  */
 class CrawlerController
 {
+    const CLI_STATUS_NOTHING_PROCCESSED = 0;
+    const CLI_STATUS_REMAIN = 1; //queue not empty
+    const CLI_STATUS_PROCESSED = 2; //(some) queue items where processed
+    const CLI_STATUS_ABORTED = 4; //instance didn't finish
+    const CLI_STATUS_POLLABLE_PROCESSED = 8;
+
     /**
      * @var integer
      */
@@ -92,9 +99,9 @@ class CrawlerController
     public $incomingConfigurationSelection = [];
 
     /**
-     * @var array
+     * @var bool
      */
-    public $registerQueueEntriesInternallyOnly = [];
+    public $registerQueueEntriesInternallyOnly = false;
 
     /**
      * @var array
@@ -145,11 +152,25 @@ class CrawlerController
      */
     private $backendUser;
 
-    const CLI_STATUS_NOTHING_PROCCESSED = 0;
-    const CLI_STATUS_REMAIN = 1; //queue not empty
-    const CLI_STATUS_PROCESSED = 2; //(some) queue items where processed
-    const CLI_STATUS_ABORTED = 4; //instance didn't finish
-    const CLI_STATUS_POLLABLE_PROCESSED = 8;
+    /**
+     * @var integer
+     */
+    private $scheduledTime = 0;
+
+    /**
+     * @var integer
+     */
+    private $reqMinute = 0;
+
+    /**
+     * @var bool
+     */
+    private $submitCrawlUrls = false;
+
+    /**
+     * @var bool
+     */
+    private $downloadCrawlUrls = false;
 
     /**
      * Method to set the accessMode can be gui, cli or cli_im
@@ -389,7 +410,7 @@ class CrawlerController
     array &$downloadUrls,
     array $incomingProcInstructions
     ) {
-
+        $urlList = '';
         // realurl support (thanks to Ingo Renner)
         if (ExtensionManagementUtility::isLoaded('realurl') && $vv['subCfg']['realurl']) {
 
@@ -571,7 +592,7 @@ class CrawlerController
                         if (strcmp($subCfg['procInstrFilter'], '')) {
                             $subCfg['procInstrFilter'] = implode(',', GeneralUtility::trimExplode(',', $subCfg['procInstrFilter']));
                         }
-                        $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $subCfg['pidsOnly'], 1));
+                        $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $subCfg['pidsOnly'], true));
 
                         // process configuration if it is not page-specific or if the specific page is the current page:
                         if (!strcmp($subCfg['pidsOnly'], '') || GeneralUtility::inList($pidOnlyList, $id)) {
@@ -620,7 +641,7 @@ class CrawlerController
 
                         // check access to the configuration record
                     if (empty($configurationRecord['begroups']) || $GLOBALS['BE_USER']->isAdmin() || $this->hasGroupAccess($GLOBALS['BE_USER']->user['usergroup_cached_list'], $configurationRecord['begroups'])) {
-                        $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $configurationRecord['pidsonly'], 1));
+                        $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $configurationRecord['pidsonly'], true));
 
                         // process configuration if it is not page-specific or if the specific page is the current page:
                         if (!strcmp($configurationRecord['pidsonly'], '') || GeneralUtility::inList($pidOnlyList, $id)) {
@@ -1046,7 +1067,7 @@ class CrawlerController
     }
 
     /**
-     * Removes queue entires
+     * Removes queue entries
      *
      * @param string $where SQL related filter for the entries which should be removed
      * @return void
@@ -1057,8 +1078,10 @@ class CrawlerController
 
         if (EventDispatcher::getInstance()->hasObserver('queueEntryFlush')) {
             $groups = $this->db->exec_SELECTgetRows('DISTINCT set_id', 'tx_crawler_queue', $realWhere);
-            foreach ($groups as $group) {
-                EventDispatcher::getInstance()->post('queueEntryFlush', $group['set_id'], $this->db->exec_SELECTgetRows('uid, set_id', 'tx_crawler_queue', $realWhere . ' AND set_id="' . $group['set_id'] . '"'));
+            if (is_array($groups)) {
+                foreach ($groups as $group) {
+                    EventDispatcher::getInstance()->post('queueEntryFlush', $group['set_id'], $this->db->exec_SELECTgetRows('uid, set_id', 'tx_crawler_queue', $realWhere . ' AND set_id="' . $group['set_id'] . '"'));
+                }
             }
         }
 
@@ -1121,6 +1144,7 @@ class CrawlerController
         $skipInnerDuplicationCheck = false
     ) {
         $urlAdded = false;
+        $rows = [];
 
         // Creating parameters:
         $parameters = [
@@ -1128,7 +1152,7 @@ class CrawlerController
         ];
 
         // fe user group simulation:
-        $uGs = implode(',', array_unique(GeneralUtility::intExplode(',', $subCfg['userGroups'], 1)));
+        $uGs = implode(',', array_unique(GeneralUtility::intExplode(',', $subCfg['userGroups'], true)));
         if ($uGs) {
             $parameters['feUserGroupList'] = $uGs;
         }
@@ -1187,7 +1211,7 @@ class CrawlerController
      * @param int $tstamp
      * @param array $fieldArray
      *
-     * @return array;
+     * @return array
      */
     protected function getDuplicateRowsIfExist($tstamp, $fieldArray)
     {
@@ -1337,7 +1361,8 @@ class CrawlerController
     /**
      * Read URL for not-yet-inserted log-entry
      *
-     * @param integer $field_array Queue field array,
+     * @param array $field_array Queue field array,
+     *
      * @return string
      */
     public function readUrlFromArray($field_array)
@@ -1584,7 +1609,10 @@ class CrawlerController
     protected function log($message)
     {
         if (!empty($this->extensionSettings['logFileName'])) {
-            @file_put_contents($this->extensionSettings['logFileName'], date('Ymd His') . ' ' . $message . PHP_EOL, FILE_APPEND);
+            $fileResult = @file_put_contents($this->extensionSettings['logFileName'], date('Ymd His') . ' ' . $message . PHP_EOL, FILE_APPEND);
+            if (!$fileResult) {
+                GeneralUtility::devLog('File "' . $this->extensionSettings['logFileName'] . '" could not be written, please check file permissions.', 'crawler', LogLevel::INFO);
+            }
         }
     }
 
@@ -1619,10 +1647,11 @@ class CrawlerController
      * @param array $headers HTTP Header
      * @param string $user HTTP Auth. User
      * @param string $pass HTTP Auth. Password
-     * @return string
+     * @return bool|string
      */
     protected function getRequestUrlFrom302Header($headers, $user = '', $pass = '')
     {
+        $header = [];
         if (!is_array($headers)) {
             return false;
         }
@@ -1668,14 +1697,16 @@ class CrawlerController
      * @param array $params Parameters from frontend
      * @param object $ref TSFE object (reference under PHP5)
      * @return void
+     *
+     * FIXME: Look like this is not used, in commit 9910d3f40cce15f4e9b7bcd0488bf21f31d53ebc it's added as public,
+     * FIXME: I think this can be removed. (TNM)
      */
     public function fe_init(&$params, $ref)
     {
-
-            // Authenticate crawler request:
+        // Authenticate crawler request:
         if (isset($_SERVER['HTTP_X_T3CRAWLER'])) {
             list($queueId, $hash) = explode(':', $_SERVER['HTTP_X_T3CRAWLER']);
-            list($queueRec) = $this->db->exec_SELECTgetRows('*', 'tx_crawler_queue', 'qid=' . intval($queueId));
+            list($queueRec) = $this->db->exec_SELECTgetSingleRow('*', 'tx_crawler_queue', 'qid=' . intval($queueId));
 
             // If a crawler record was found and hash was matching, set it up:
             if (is_array($queueRec) && $hash === md5($queueRec['qid'] . '|' . $queueRec['set_id'] . '|' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'])) {
@@ -1737,13 +1768,14 @@ class CrawlerController
         $perms_clause = $GLOBALS['BE_USER']->getPagePermsClause(1);
         $tree->init('AND ' . $perms_clause);
 
-        $pageinfo = BackendUtility::readPageAccess($id, $perms_clause);
-
-        // Set root row:
-        $tree->tree[] = [
-            'row' => $pageinfo,
-            'HTML' => IconUtility::getIconForRecord('pages', $pageinfo)
-        ];
+        $pageInfo = BackendUtility::readPageAccess($id, $perms_clause);
+        if (is_array($pageInfo)) {
+            // Set root row:
+            $tree->tree[] = [
+                'row' => $pageInfo,
+                'HTML' => IconUtility::getIconForRecord('pages', $pageInfo)
+            ];
+        }
 
         // Get branch beneath:
         if ($depth) {
@@ -1870,7 +1902,6 @@ class CrawlerController
 
         // Traverse parameter combinations:
         $c = 0;
-        $cc = 0;
         $content = '';
         if (count($configurations)) {
             foreach ($configurations as $confKey => $confArray) {
@@ -2012,7 +2043,7 @@ class CrawlerController
             try {
                 // Run process:
                 $result = $this->CLI_run($countInARun, $sleepTime, $sleepAfterFinish);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 $this->CLI_debug(get_class($e) . ': ' . $e->getMessage());
                 $result = self::CLI_STATUS_ABORTED;
             }
@@ -2094,7 +2125,7 @@ class CrawlerController
             $this->cleanUpOldQueueEntries();
         }
 
-        $this->setID = GeneralUtility::md5int(microtime());
+        $this->setID = (int) GeneralUtility::md5int(microtime());
         $this->getPageTreeAndUrls(
             $pageId,
             MathUtility::forceIntegerInRange($cliObj->cli_argValue('-d'), 0, 99),
@@ -2102,12 +2133,12 @@ class CrawlerController
             MathUtility::forceIntegerInRange($cliObj->cli_isArg('-n') ? $cliObj->cli_argValue('-n') : 30, 1, 1000),
             $cliObj->cli_argValue('-o') === 'queue' || $cliObj->cli_argValue('-o') === 'exec',
             $cliObj->cli_argValue('-o') === 'url',
-            GeneralUtility::trimExplode(',', $cliObj->cli_argValue('-proc'), 1),
+            GeneralUtility::trimExplode(',', $cliObj->cli_argValue('-proc'), true),
             $configurationKeys
         );
 
         if ($cliObj->cli_argValue('-o') === 'url') {
-            $cliObj->cli_echo(implode(chr(10), $this->downloadUrls) . chr(10), 1);
+            $cliObj->cli_echo(implode(chr(10), $this->downloadUrls) . chr(10), true);
         } elseif ($cliObj->cli_argValue('-o') === 'exec') {
             $cliObj->cli_echo("Executing " . count($this->urlList) . " requests right away:\n\n");
             $cliObj->cli_echo(implode(chr(10), $this->urlList) . chr(10));
@@ -2131,8 +2162,8 @@ class CrawlerController
             $cliObj->cli_echo("Putting " . count($this->urlList) . " entries in queue:\n\n");
             $cliObj->cli_echo(implode(chr(10), $this->urlList) . chr(10));
         } else {
-            $cliObj->cli_echo(count($this->urlList) . " entries found for processing. (Use -o to decide action):\n\n", 1);
-            $cliObj->cli_echo(implode(chr(10), $this->urlList) . chr(10), 1);
+            $cliObj->cli_echo(count($this->urlList) . " entries found for processing. (Use -o to decide action):\n\n", true);
+            $cliObj->cli_echo(implode(chr(10), $this->urlList) . chr(10), true);
         }
     }
 
@@ -2215,6 +2246,9 @@ class CrawlerController
                 'tx_crawler_queue',
                 'exec_time!=0 AND exec_time<' . $purgeDate
             );
+            if (false == $del) {
+                GeneralUtility::devLog('Records could not be deleted.', 'crawler', LogLevel::INFO);
+            }
         }
 
         // Select entries:
@@ -2542,7 +2576,12 @@ class CrawlerController
      */
     protected function sendDirectRequest($url, $crawlerId)
     {
-        $requestHeaders = $this->buildRequestHeaderArray(parse_url($url), $crawlerId);
+        $parsedUrl = parse_url($url);
+        if (!is_array($parsedUrl)) {
+            return [];
+        }
+
+        $requestHeaders = $this->buildRequestHeaderArray($parsedUrl, $crawlerId);
 
         $cmd = escapeshellcmd($this->extensionSettings['phpPath']);
         $cmd .= ' ';

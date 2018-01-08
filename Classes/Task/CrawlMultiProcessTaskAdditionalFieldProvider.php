@@ -96,7 +96,7 @@ class CrawlMultiProcessTaskAdditionalFieldProvider implements AdditionalFieldPro
      * Takes care of saving the additional fields' values in the task's object
      *
      * @param array $submittedData
-     * @param AbstractTask $task
+     * @param CrawlMultiProcessTask|AbstractTask $task
      * @return void
      */
     public function saveAdditionalFields(array $submittedData, AbstractTask $task)
