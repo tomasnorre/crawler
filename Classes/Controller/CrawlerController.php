@@ -33,7 +33,7 @@ use AOE\Crawler\Event\EventDispatcher;
 use AOE\Crawler\Utility\IconUtility;
 use AOE\Crawler\Utility\SignalSlotUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
-use TYPO3\CMS\Backend\View\PageTreeView;
+use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Database\DatabaseConnection;
 use TYPO3\CMS\Core\Log\LogLevel;
@@ -1795,7 +1795,7 @@ class CrawlerController
                 // fetch mounted pages
                 $this->MP = $mountpage[0]['mount_pid'] . '-' . $data['row']['uid'];
 
-                $mountTree = GeneralUtility::makeInstance('TYPO3\CMS\Backend\Tree\View\PageTreeView');
+                $mountTree = GeneralUtility::makeInstance(PageTreeView::class);
                 $mountTree->init('AND ' . $perms_clause);
                 $mountTree->getTree($mountpage[0]['mount_pid'], $depth, '');
 
@@ -1840,8 +1840,8 @@ class CrawlerController
             $pidList = [];
 
             if (!empty($excludeString)) {
-                /* @var $tree \TYPO3\CMS\Backend\Tree\View\PageTreeView */
-                $tree = GeneralUtility::makeInstance('TYPO3\CMS\Backend\Tree\View\PageTreeView');
+                /** @var PageTreeView $tree */
+                $tree = GeneralUtility::makeInstance(PageTreeView::class);
                 $tree->init('AND ' . $this->backendUser->getPagePermsClause(1));
 
                 $excludeParts = GeneralUtility::trimExplode(',', $excludeString);
