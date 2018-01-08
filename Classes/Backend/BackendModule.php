@@ -35,6 +35,7 @@ use AOE\Crawler\Event\EventDispatcher;
 use AOE\Crawler\Service\ProcessService;
 use AOE\Crawler\Utility\IconUtility;
 use TYPO3\CMS\Backend\Module\AbstractFunctionModule;
+use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
@@ -538,7 +539,7 @@ class BackendModule extends AbstractFunctionModule
             if ($this->pObj->id || $showSetId) {
                 if ($this->pObj->id) {
                     // Drawing tree:
-                    $tree = GeneralUtility::makeInstance('TYPO3\CMS\Backend\Tree\View\PageTreeView');
+                    $tree = GeneralUtility::makeInstance(PageTreeView::class);
                     $perms_clause = $GLOBALS['BE_USER']->getPagePermsClause(1);
                     $tree->init('AND ' . $perms_clause);
 
