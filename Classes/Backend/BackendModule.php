@@ -312,6 +312,7 @@ class BackendModule extends AbstractFunctionModule
         if (empty($this->incomingConfigurationSelection)
             || (count($this->incomingConfigurationSelection) == 1 && empty($this->incomingConfigurationSelection[0]))
             ) {
+            $this->addWarningMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.noConfigSelected'));
             $code = '
 			<tr>
 				<td colspan="7"><b>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.noConfigSelected') . '</b></td>
