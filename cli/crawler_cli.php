@@ -3,6 +3,6 @@ if (!defined('TYPO3_REQUESTTYPE_CLI')) {
     die('You cannot run this script directly!');
 }
 
-$crawlerObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\AOE\Crawler\Controller\CrawlerController::class);
+$crawlerController = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\AOE\Crawler\Controller\CrawlerController::class);
 
-exit($crawlerObj->CLI_main());
+exit($crawlerController->CLI_main());

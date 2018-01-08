@@ -94,12 +94,12 @@ class CrawlerApiTest extends FunctionalTestCase
     {
         $this->importDataSet(dirname(__FILE__) . '/../data/canNotAddDuplicatePagesToQueue.xml');
 
-        $crawler_api = $this->getMockedCrawlerAPI(100000);
+        $crawlerApi = $this->getMockedCrawlerAPI(100000);
 
-        $crawler_api->addPageToQueueTimed(5, 9998);
-        $crawler_api->addPageToQueueTimed(5, 3422);
+        $crawlerApi->addPageToQueueTimed(5, 9998);
+        $crawlerApi->addPageToQueueTimed(5, 3422);
 
-        $this->assertEquals($crawler_api->countUnprocessedItems(), 1);
+        $this->assertEquals($crawlerApi->countUnprocessedItems(), 1);
     }
 
     /**
@@ -115,12 +115,12 @@ class CrawlerApiTest extends FunctionalTestCase
     {
         $this->importDataSet(dirname(__FILE__) . '/../data/canNotAddDuplicatePagesToQueue.xml');
 
-        $crawler_api = $this->getMockedCrawlerAPI(100000);
+        $crawlerApi = $this->getMockedCrawlerAPI(100000);
 
-        $crawler_api->addPageToQueueTimed(5, 100001);
-        $crawler_api->addPageToQueueTimed(5, 100001);
+        $crawlerApi->addPageToQueueTimed(5, 100001);
+        $crawlerApi->addPageToQueueTimed(5, 100001);
 
-        $this->assertEquals($crawler_api->countUnprocessedItems(), 1);
+        $this->assertEquals($crawlerApi->countUnprocessedItems(), 1);
     }
 
     /**
@@ -136,12 +136,12 @@ class CrawlerApiTest extends FunctionalTestCase
     {
         $this->importDataSet(dirname(__FILE__) . '/../data/canNotAddDuplicatePagesToQueue.xml');
 
-        $crawler_api = $this->getMockedCrawlerAPI(100000);
+        $crawlerApi = $this->getMockedCrawlerAPI(100000);
 
-        $crawler_api->addPageToQueueTimed(5, 100011);
-        $crawler_api->addPageToQueueTimed(5, 100014);
+        $crawlerApi->addPageToQueueTimed(5, 100011);
+        $crawlerApi->addPageToQueueTimed(5, 100014);
 
-        $this->assertEquals($crawler_api->countUnprocessedItems(), 2);
+        $this->assertEquals($crawlerApi->countUnprocessedItems(), 2);
     }
 
     /**
@@ -157,11 +157,11 @@ class CrawlerApiTest extends FunctionalTestCase
         $expectedParameter = 'a:4:{s:3:"url";s:49:"http://www.testcase.de/index.php?id=7&L=0&S=CRAWL";s:16:"procInstructions";a:1:{i:0;s:20:"tx_staticpub_publish";}s:15:"procInstrParams";a:1:{s:21:"tx_staticpub_publish.";a:1:{s:16:"includeResources";s:7:"relPath";}}s:15:"rootTemplatePid";i:1;}';
 
         $this->importDataSet(dirname(__FILE__) . '/../data/canCreateQueueEntriesUsingConfigurationRecord.xml');
-        $crawler_api = $this->getMockedCrawlerAPI(100000);
-        $crawler_api->addPageToQueueTimed(7, 100011);
-        $crawler_api->addPageToQueueTimed(7, 100059);
+        $crawlerApi = $this->getMockedCrawlerAPI(100000);
+        $crawlerApi->addPageToQueueTimed(7, 100011);
+        $crawlerApi->addPageToQueueTimed(7, 100059);
 
-        $queueItems = $crawler_api->getUnprocessedItems();
+        $queueItems = $crawlerApi->getUnprocessedItems();
 
         $this->assertEquals($queueItems[0]['page_id'], 7);
         $this->assertEquals($queueItems[0]['scheduled'], 100011);
@@ -180,7 +180,7 @@ class CrawlerApiTest extends FunctionalTestCase
         );
 
         $this->assertEquals(
-            $crawler_api->countUnprocessedItems(),
+            $crawlerApi->countUnprocessedItems(),
             2,
             'Could not add pages to queue configured by record'
         );
@@ -195,17 +195,17 @@ class CrawlerApiTest extends FunctionalTestCase
      */
     protected function getMockedCrawlerAPI($currentTime)
     {
-        //created mocked crawler lib which returns a faked timestamp
-        $crawler_lib = $this->getMock(CrawlerController::class, ['getCurrentTime', 'drawURLs_PIfilter']);
-        $crawler_lib->expects($this->any())->method("getCurrentTime")->will($this->returnValue($currentTime));
-        $crawler_lib->expects($this->any())->method("drawURLs_PIfilter")->will($this->returnValue(true));
+        //created mocked crawler controller which returns a faked timestamp
+        $crawlerController = $this->getMock(CrawlerController::class, ['getCurrentTime', 'drawURLs_PIfilter']);
+        $crawlerController->expects($this->any())->method("getCurrentTime")->will($this->returnValue($currentTime));
+        $crawlerController->expects($this->any())->method("drawURLs_PIfilter")->will($this->returnValue(true));
 
-        /* @var CrawlerApi $crawler_api */
+        /* @var CrawlerApi $crawlerApi */
         //create mocked api
-        $crawler_api = $this->getMock(CrawlerApi::class, ['findCrawler']);
-        $crawler_api->expects($this->any())->method("findCrawler")->will($this->returnValue($crawler_lib));
+        $crawlerApi = $this->getMock(CrawlerApi::class, ['findCrawler']);
+        $crawlerApi->expects($this->any())->method("findCrawler")->will($this->returnValue($crawlerController));
 
-        return $crawler_api;
+        return $crawlerApi;
     }
 
     /**

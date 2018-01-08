@@ -39,7 +39,7 @@ class CrawlerControllerTest extends UnitTestCase
     /**
      * @var CrawlerController
      */
-    protected $crawlerLibrary;
+    protected $crawlerController;
 
     /**
      * Creates the test environment.
@@ -48,7 +48,7 @@ class CrawlerControllerTest extends UnitTestCase
      */
     public function setUp()
     {
-        $this->crawlerLibrary = $this->getMock(
+        $this->crawlerController = $this->getMock(
             CrawlerController::class,
             ['buildRequestHeaderArray', 'executeShellCommand', 'getFrontendBasePath'],
             [],
@@ -65,7 +65,7 @@ class CrawlerControllerTest extends UnitTestCase
      */
     public function tearDown()
     {
-        unset($this->crawlerLibrary);
+        unset($this->crawlerController);
     }
 
     /**
@@ -74,11 +74,11 @@ class CrawlerControllerTest extends UnitTestCase
     public function setAndGet()
     {
         $accessMode = 'cli';
-        $this->crawlerLibrary->setAccessMode($accessMode);
+        $this->crawlerController->setAccessMode($accessMode);
 
         $this->assertEquals(
             $accessMode,
-            $this->crawlerLibrary->getAccessMode()
+            $this->crawlerController->getAccessMode()
         );
     }
 
@@ -90,16 +90,16 @@ class CrawlerControllerTest extends UnitTestCase
     public function setAndGetDisabled($disabled, $expected)
     {
         $filenameWithPath = tempnam('/tmp', 'test_foo');
-        $this->crawlerLibrary->setProcessFilename($filenameWithPath);
+        $this->crawlerController->setProcessFilename($filenameWithPath);
 
         if (null === $disabled) {
-            $this->crawlerLibrary->setDisabled();
+            $this->crawlerController->setDisabled();
         } else {
-            $this->crawlerLibrary->setDisabled($disabled);
+            $this->crawlerController->setDisabled($disabled);
         }
         $this->assertEquals(
             $expected,
-            $this->crawlerLibrary->getDisabled()
+            $this->crawlerController->getDisabled()
         );
     }
 
@@ -109,11 +109,11 @@ class CrawlerControllerTest extends UnitTestCase
     public function setAndGetProcessFilename()
     {
         $filenameWithPath = tempnam('/tmp', 'test_foo');
-        $this->crawlerLibrary->setProcessFilename($filenameWithPath);
+        $this->crawlerController->setProcessFilename($filenameWithPath);
 
         $this->assertEquals(
             $filenameWithPath,
-            $this->crawlerLibrary->getProcessFilename()
+            $this->crawlerController->getProcessFilename()
         );
     }
 
@@ -126,7 +126,7 @@ class CrawlerControllerTest extends UnitTestCase
     {
         $this->assertEquals(
             $expected,
-            $this->crawlerLibrary->drawURLs_PIfilter($piString, $incomingProcInstructions)
+            $this->crawlerController->drawURLs_PIfilter($piString, $incomingProcInstructions)
         );
     }
 
@@ -143,7 +143,7 @@ class CrawlerControllerTest extends UnitTestCase
     {
         $this->assertEquals(
             $expected,
-            $this->crawlerLibrary->hasGroupAccess($groupList, $accessList)
+            $this->crawlerController->hasGroupAccess($groupList, $accessList)
         );
     }
 
@@ -159,7 +159,7 @@ class CrawlerControllerTest extends UnitTestCase
     {
         $this->assertEquals(
             $expected,
-            $this->crawlerLibrary->parseParams($inputQuery)
+            $this->crawlerController->parseParams($inputQuery)
         );
     }
 
@@ -176,14 +176,14 @@ class CrawlerControllerTest extends UnitTestCase
      */
     public function getUrlsForPageRow($checkIfPageSkipped, $getUrlsForPages, $pageRow, $skipMessage, $expected)
     {
-        /** @var CrawlerController $crawlerLibrary */
-        $crawlerLibrary = $this->getMock(CrawlerController::class, ['checkIfPageShouldBeSkipped', 'getUrlsForPageId']);
-        $crawlerLibrary->expects($this->any())->method('checkIfPageShouldBeSkipped')->will($this->returnValue($checkIfPageSkipped));
-        $crawlerLibrary->expects($this->any())->method('getUrlsForPageId')->will($this->returnValue($getUrlsForPages));
+        /** @var CrawlerController $crawlerController */
+        $crawlerController = $this->getMock(CrawlerController::class, ['checkIfPageShouldBeSkipped', 'getUrlsForPageId']);
+        $crawlerController->expects($this->any())->method('checkIfPageShouldBeSkipped')->will($this->returnValue($checkIfPageSkipped));
+        $crawlerController->expects($this->any())->method('getUrlsForPageId')->will($this->returnValue($getUrlsForPages));
 
         $this->assertEquals(
             $expected,
-            $crawlerLibrary->getUrlsForPageRow($pageRow, $skipMessage)
+            $crawlerController->getUrlsForPageRow($pageRow, $skipMessage)
         );
     }
 
@@ -223,7 +223,7 @@ class CrawlerControllerTest extends UnitTestCase
     {
         $this->assertEquals(
             $expected,
-            $this->crawlerLibrary->compileUrls($paramArray, $urls)
+            $this->crawlerController->compileUrls($paramArray, $urls)
         );
     }
 
@@ -267,7 +267,7 @@ class CrawlerControllerTest extends UnitTestCase
      */
     public function isRequestUrlWithMakeDirectRequestsProcessedCorrectlyWithoutDefinedBasePath()
     {
-        $this->crawlerLibrary->setExtensionSettings([
+        $this->crawlerController->setExtensionSettings([
             'makeDirectRequests' => 1,
             'frontendBasePath' => '',
             'phpPath' => 'PHPPATH',
@@ -286,14 +286,14 @@ class CrawlerControllerTest extends UnitTestCase
                            escapeshellarg($testUrl) . ' ' .
                            escapeshellarg(base64_encode(serialize($testHeaderArray)));
 
-        $this->crawlerLibrary->expects($this->once())->method('buildRequestHeaderArray')
+        $this->crawlerController->expects($this->once())->method('buildRequestHeaderArray')
                              ->will($this->returnValue($testHeaderArray));
-        $this->crawlerLibrary->expects($this->once())->method('executeShellCommand')
+        $this->crawlerController->expects($this->once())->method('executeShellCommand')
                              ->with($expectedCommand)->will($this->returnValue($testContent));
-        $this->crawlerLibrary->expects($this->once())->method('getFrontendBasePath')
+        $this->crawlerController->expects($this->once())->method('getFrontendBasePath')
                              ->will($this->returnValue($frontendBasePath));
 
-        $result = $this->crawlerLibrary->requestUrl($testUrl, $testCrawlerId);
+        $result = $this->crawlerController->requestUrl($testUrl, $testCrawlerId);
 
         $this->assertEquals($testHeader . str_repeat("\r\n", 2), $result['request']);
         $this->assertEquals($testContent, $result['content']);
@@ -306,7 +306,7 @@ class CrawlerControllerTest extends UnitTestCase
      */
     public function isRequestUrlWithMakeDirectRequestsProcessedCorrectlyWithDefinedBasePath()
     {
-        $this->crawlerLibrary->setExtensionSettings([
+        $this->crawlerController->setExtensionSettings([
             'makeDirectRequests' => 1,
             'frontendBasePath' => '/cms/',
             'phpPath' => 'PHPPATH',
@@ -325,14 +325,14 @@ class CrawlerControllerTest extends UnitTestCase
                            escapeshellarg($testUrl) . ' ' .
                            escapeshellarg(base64_encode(serialize($testHeaderArray)));
 
-        $this->crawlerLibrary->expects($this->once())->method('buildRequestHeaderArray')
+        $this->crawlerController->expects($this->once())->method('buildRequestHeaderArray')
                              ->will($this->returnValue($testHeaderArray));
-        $this->crawlerLibrary->expects($this->once())->method('executeShellCommand')
+        $this->crawlerController->expects($this->once())->method('executeShellCommand')
                              ->with($expectedCommand)->will($this->returnValue($testContent));
-        $this->crawlerLibrary->expects($this->once())->method('getFrontendBasePath')
+        $this->crawlerController->expects($this->once())->method('getFrontendBasePath')
                              ->will($this->returnValue($frontendBasePath));
 
-        $result = $this->crawlerLibrary->requestUrl($testUrl, $testCrawlerId);
+        $result = $this->crawlerController->requestUrl($testUrl, $testCrawlerId);
 
         $this->assertEquals($testHeader . str_repeat("\r\n", 2), $result['request']);
         $this->assertEquals($testContent, $result['content']);
@@ -390,13 +390,13 @@ class CrawlerControllerTest extends UnitTestCase
         // FIXME
         $this->markTestSkipped('Skipped as the cli_getArgIndex is reset $config when parsing...');
 
-        $crawlerLibrary = $this->getAccessibleMock(CrawlerController::class, ['dummy']);
+        $crawlerController = $this->getAccessibleMock(CrawlerController::class, ['dummy']);
         $_SERVER['argv'] = $config;
         $cliObject = new QueueCommandLineController();
 
         $this->assertEquals(
             $expected,
-            $crawlerLibrary->_callRef('getConfigurationKeys', $cliObject)
+            $crawlerController->_callRef('getConfigurationKeys', $cliObject)
         );
     }
 
@@ -412,12 +412,12 @@ class CrawlerControllerTest extends UnitTestCase
      */
     public function checkIfPageShouldBeSkipped($extensionSetting, $pageRow, $excludeDoktype, $expected)
     {
-        $this->crawlerLibrary->setExtensionSettings($extensionSetting);
+        $this->crawlerController->setExtensionSettings($extensionSetting);
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['excludeDoktype'] = $excludeDoktype;
 
         $this->assertEquals(
             $expected,
-            $this->crawlerLibrary->checkIfPageShouldBeSkipped($pageRow)
+            $this->crawlerController->checkIfPageShouldBeSkipped($pageRow)
         );
     }
 
@@ -429,12 +429,12 @@ class CrawlerControllerTest extends UnitTestCase
         $microtime = '1481397820.81820011138916015625';
         $expectedMd5Value = '95297a261b';
 
-        $crawlerLibrary = $this->getAccessibleMock(CrawlerController::class, ['microtime']);
-        $crawlerLibrary->expects($this->once())->method('microtime')->will($this->returnValue($microtime));
+        $crawlerController = $this->getAccessibleMock(CrawlerController::class, ['microtime']);
+        $crawlerController->expects($this->once())->method('microtime')->will($this->returnValue($microtime));
 
         $this->assertEquals(
             $expectedMd5Value,
-            $crawlerLibrary->_call('CLI_buildProcessId')
+            $crawlerController->_call('CLI_buildProcessId')
         );
     }
 
@@ -444,12 +444,12 @@ class CrawlerControllerTest extends UnitTestCase
     public function CLI_buildProcessIdIsSetReturnsValue()
     {
         $processId = '12297a261b';
-        $crawlerLibrary = $this->getAccessibleMock(CrawlerController::class, ['dummy']);
-        $crawlerLibrary->_set('processID', $processId);
+        $crawlerController = $this->getAccessibleMock(CrawlerController::class, ['dummy']);
+        $crawlerController->_set('processID', $processId);
 
         $this->assertEquals(
             $processId,
-            $crawlerLibrary->_call('CLI_buildProcessId')
+            $crawlerController->_call('CLI_buildProcessId')
         );
     }
 

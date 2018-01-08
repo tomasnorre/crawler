@@ -42,7 +42,7 @@ class CrawlerApi
     /**
      * @var CrawlerController
      */
-    private $crawlerObj;
+    private $crawlerController;
 
     /**
      * @var QueueRepository
@@ -50,9 +50,9 @@ class CrawlerApi
     protected $queueRepository;
 
     /**
-     * @var $allowedConfigrations array
+     * @var $allowedConfigurations array
      */
-    protected $allowedConfigrations = [];
+    protected $allowedConfigurations = [];
 
     /**
      * Each crawler run has a setid, this facade method delegates
@@ -73,7 +73,7 @@ class CrawlerApi
      */
     public function setAllowedConfigurations(array $allowedConfigurations)
     {
-        $this->allowedConfigrations = $allowedConfigurations;
+        $this->allowedConfigurations = $allowedConfigurations;
     }
 
     /**
@@ -95,13 +95,13 @@ class CrawlerApi
      */
     protected function findCrawler()
     {
-        if (!is_object($this->crawlerObj)) {
-            $this->crawlerObj = GeneralUtility::makeInstance(CrawlerController::class);
-            $this->crawlerObj->setID = GeneralUtility::md5int(microtime());
+        if (!is_object($this->crawlerController)) {
+            $this->crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
+            $this->crawlerController->setID = GeneralUtility::md5int(microtime());
         }
 
-        if (is_object($this->crawlerObj)) {
-            return $this->crawlerObj;
+        if (is_object($this->crawlerController)) {
+            return $this->crawlerController;
         } else {
             throw new \Exception('no crawler object', 1512659759);
         }
@@ -127,10 +127,10 @@ class CrawlerApi
      */
     protected function filterUnallowedConfigurations($configurations)
     {
-        if (count($this->allowedConfigrations) > 0) {
+        if (count($this->allowedConfigurations) > 0) {
             // 	remove configuration that does not match the current selection
             foreach ($configurations as $confKey => $confArray) {
-                if (!in_array($confKey, $this->allowedConfigrations)) {
+                if (!in_array($confKey, $this->allowedConfigurations)) {
                     unset($configurations[$confKey]);
                 }
             }
