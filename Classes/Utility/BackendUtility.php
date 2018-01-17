@@ -104,7 +104,7 @@ class BackendUtility
         $iconRegistry->registerIcon(
             'tx-crawler-start',
             SvgIconProvider::class,
-            ['source' => 'EXT:crawler/Resources/Private/Icons/crawler_start.svg']
+            ['source' => 'EXT:crawler/Resources/Public/Icons/crawler_start.svg']
         );
     }
 
@@ -120,7 +120,7 @@ class BackendUtility
         $iconRegistry->registerIcon(
             'tx-crawler-stop',
             SvgIconProvider::class,
-            ['source' => 'EXT:crawler/Resources/Private/Icons/crawler_stop.svg']
+            ['source' => 'EXT:crawler/Resources/Public/Icons/crawler_stop.svg']
         );
     }
 }
