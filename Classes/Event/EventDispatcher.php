@@ -116,7 +116,7 @@ class EventDispatcher
      */
     public function hasObserver($event)
     {
-        return count($this->observers[$event]) > 0;
+        return isset($this->observers[$event]) && count($this->observers[$event]) > 0;
     }
 
     /**
