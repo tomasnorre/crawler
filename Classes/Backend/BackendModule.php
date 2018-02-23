@@ -4,7 +4,7 @@ namespace AOE\Crawler\Backend;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2017 AOE GmbH <dev@aoe.com>
+ *  (c) 2018 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -38,6 +38,7 @@ use TYPO3\CMS\Backend\Module\AbstractFunctionModule;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Utility\DebugUtility;
@@ -756,14 +757,14 @@ class BackendModule extends AbstractFunctionModule
                 }
 
                 $setId = intval(GeneralUtility::_GP('setID'));
-                $refreshIcon = $GLOBALS['BACK_PATH'] . 'sysext/t3skin/extjs/images/grid/refresh.gif';
+                $refreshIcon = IconUtility::getIcon('actions-system-refresh', Icon::SIZE_SMALL);
 
                 // Put rows together:
                 $content .= '
 					<tr class="bgColor' . ($c % 2 ? '-20' : '-10') . '">
 						' . $titleClm . '
 						<td><a href="' . $this->getModuleUrl(['qid_details' => $vv['qid'], 'setID' => $setId]) . '">' . htmlspecialchars($vv['qid']) . '</a></td>
-						<td><a href="' . $this->getModuleUrl(['qid_read' => $vv['qid'], 'setID' => $setId]) . '"><img src="' . $refreshIcon . '" width="14" hspace="1" vspace="2" height="14" border="0" title="' . htmlspecialchars('Read') . '" alt="" /></a></td>';
+						<td><a href="' . $this->getModuleUrl(['qid_read' => $vv['qid'], 'setID' => $setId]) . '">' . $refreshIcon . '</a></td>';
                 foreach ($rowData as $fKey => $value) {
                     if (GeneralUtility::inList('url', $fKey)) {
                         $content .= '
