@@ -21,7 +21,7 @@
     },
     "require-dev": {
         "typo3/cms": "^7.6",
-        "nimut/testing-framework": "^2.0.0"
+        "nimut/testing-framework": "^2.0"
     },
     "replace": {
         "crawler":  "self.version",
