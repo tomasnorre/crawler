@@ -146,10 +146,12 @@ class CrawlerQueueTaskAdditionalFieldProvider implements AdditionalFieldProvider
     protected function getSelectedState($configurationArray, $currentValue)
     {
         $selected = '';
-        $arraySize = count($configurationArray);
-        for ($i = 0; $i < $arraySize; $i++) {
-            if (strcmp($configurationArray[$i], $currentValue) === 0) {
-                $selected = 'selected="selected" ';
+        if (is_array($configurationArray)) {
+            $arraySize = count($configurationArray);
+            for ($i = 0; $i < $arraySize; ++$i) {
+                if (strcmp($configurationArray[$i], $currentValue) === 0) {
+                    $selected = 'selected="selected" ';
+                }
             }
         }
 
