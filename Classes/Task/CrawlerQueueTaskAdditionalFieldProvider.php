@@ -53,37 +53,16 @@ class CrawlerQueueTaskAdditionalFieldProvider implements AdditionalFieldProvider
     {
         $additionalFields = [];
 
-        if (empty($taskInfo['configuration'])) {
-            if ($schedulerModule->CMD == 'add') {
-                $taskInfo['configuration'] = [];
-            } elseif ($schedulerModule->CMD == 'edit') {
-                $taskInfo['configuration'] = $task->configuration;
-            } else {
-                $taskInfo['configuration'] = $task->configuration;
-            }
+        if ($schedulerModule->CMD == 'add') {
+            $task->startPage = $taskInfo['startPage'];
+            $task->configuration  = $taskInfo['configuration'];
+            $task->depth = $taskInfo['depth'] ? $taskInfo['depth'] : 0;
         }
 
-        if (empty($taskInfo['startPage'])) {
-            if ($schedulerModule->CMD == 'add') {
-                $taskInfo['startPage'] = 0;
-                if ($task instanceof \TYPO3\CMS\Scheduler\Task\AbstractTask) {
-                    $task->startPage = 0;
-                }
-            } elseif ($schedulerModule->CMD == 'edit') {
-                $taskInfo['startPage'] = $task->startPage;
-            } else {
-                $taskInfo['startPage'] = $task->startPage;
-            }
-        }
-
-        if (empty($taskInfo['depth'])) {
-            if ($schedulerModule->CMD == 'add') {
-                $taskInfo['depth'] = [];
-            } elseif ($schedulerModule->CMD == 'edit') {
-                $taskInfo['depth'] = $task->depth;
-            } else {
-                $taskInfo['depth'] = $task->depth;
-            }
+        if ($schedulerModule->CMD == 'edit') {
+            $taskInfo['startPage'] = $task->startPage;
+            $taskInfo['configuration'] = $task->configuration;
+            $taskInfo['depth'] = $task->depth;
         }
 
         // input for startPage
