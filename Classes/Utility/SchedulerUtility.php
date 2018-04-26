@@ -28,6 +28,7 @@ namespace AOE\Crawler\Utility;
 use AOE\Crawler\Task\CrawlerQueueTaskAdditionalFieldProvider;
 use AOE\Crawler\Task\CrawlerTaskAdditionalFieldProvider;
 use AOE\Crawler\Task\CrawlMultiProcessTaskAdditionalFieldProvider;
+use AOE\Crawler\Task\FlushQueueTaskAdditionalFieldProvider;
 
 /**
  * Class SchedulerUtility

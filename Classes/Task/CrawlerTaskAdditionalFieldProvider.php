@@ -52,33 +52,16 @@ class CrawlerTaskAdditionalFieldProvider implements AdditionalFieldProviderInter
     {
         $additionalFields = [];
 
-        if (empty($taskInfo['sleepTime'])) {
-            if ($schedulerModule->CMD == 'add') {
-                $taskInfo['sleepTime'] = 1000;
-            } elseif ($schedulerModule->CMD == 'edit') {
-                $taskInfo['sleepTime'] = $task->sleepTime;
-            } else {
-                $taskInfo['sleepTime'] = $task->sleepTime;
-            }
+        if ($schedulerModule->CMD == 'add') {
+            $task->sleepTime = $taskInfo['sleepTime'] ? $taskInfo['sleepTime'] : 1000;
+            $task->sleepAfterFinish = $taskInfo['sleepAfterFinish'] ? $taskInfo['sleepAfterFinish'] : 10;
+            $task->countInARun = $taskInfo['countInARun'] ? $taskInfo['countInARun'] : 100;
         }
 
-        if (empty($taskInfo['sleepAfterFinish'])) {
-            if ($schedulerModule->CMD == 'add') {
-                $taskInfo['sleepAfterFinish'] = 10;
-            } elseif ($schedulerModule->CMD == 'edit') {
-                $taskInfo['sleepAfterFinish'] = $task->sleepAfterFinish;
-            } else {
-                $taskInfo['sleepAfterFinish'] = $task->sleepAfterFinish;
-            }
-        }
-        if (empty($taskInfo['countInARun'])) {
-            if ($schedulerModule->CMD == 'add') {
-                $taskInfo['countInARun'] = 100;
-            } elseif ($schedulerModule->CMD == 'edit') {
-                $taskInfo['countInARun'] = $task->countInARun;
-            } else {
-                $taskInfo['countInARun'] = $task->countInARun;
-            }
+        if ($schedulerModule->CMD == 'edit') {
+            $taskInfo['sleepTime'] = $task->sleepTime;
+            $taskInfo['sleepAfterFinish'] = $task->sleepAfterFinish;
+            $taskInfo['countInARun'] = $task->countInARun;
         }
 
         // input for sleepTime

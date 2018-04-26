@@ -51,14 +51,12 @@ class CrawlMultiProcessTaskAdditionalFieldProvider implements AdditionalFieldPro
     {
         $additionalFields = [];
 
-        if (empty($taskInfo['timeOut'])) {
-            if ($schedulerModule->CMD == 'add') {
-                $taskInfo['timeOut'] = 10000;
-            } elseif ($schedulerModule->CMD == 'edit') {
-                $taskInfo['timeOut'] = $task->timeOut;
-            } else {
-                $taskInfo['timeOut'] = $task->timeOut;
-            }
+        if ($schedulerModule->CMD == 'add') {
+            $task->timeOut = $taskInfo['timeOut'] ? $taskInfo['timeOut'] : 10000;
+        }
+
+        if ($schedulerModule->CMD == 'edit') {
+            $taskInfo['timeOut'] = $task->timeOut;
         }
 
         // input for timeOut
