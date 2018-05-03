@@ -50,7 +50,7 @@ class FlushQueueTaskAdditionalFieldProvider implements AdditionalFieldProviderIn
         $additionalFields = [];
 
         if ($schedulerModule->CMD == 'add') {
-            $task->mode = $taskInfo['mode'] ? $taskInfo['mode'] : 'finished';
+            $taskInfo['mode'] = $taskInfo['mode'] ?: 'finished';
         }
 
         if ($schedulerModule->CMD == 'edit') {

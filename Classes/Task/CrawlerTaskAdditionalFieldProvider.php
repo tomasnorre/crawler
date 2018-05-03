@@ -53,9 +53,9 @@ class CrawlerTaskAdditionalFieldProvider implements AdditionalFieldProviderInter
         $additionalFields = [];
 
         if ($schedulerModule->CMD == 'add') {
-            $task->sleepTime = $taskInfo['sleepTime'] ? $taskInfo['sleepTime'] : 1000;
-            $task->sleepAfterFinish = $taskInfo['sleepAfterFinish'] ? $taskInfo['sleepAfterFinish'] : 10;
-            $task->countInARun = $taskInfo['countInARun'] ? $taskInfo['countInARun'] : 100;
+            $taskInfo['sleepTime'] = $taskInfo['sleepTime'] ?: 3000;
+            $taskInfo['sleepAfterFinish'] = $taskInfo['sleepAfterFinish'] ?: 10;
+            $taskInfo['countInARun'] = $taskInfo['countInARun'] ?: 100;
         }
 
         if ($schedulerModule->CMD == 'edit') {
