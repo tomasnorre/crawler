@@ -40,8 +40,9 @@ class IconUtility
     /**
      * Renders the HTML tag to show icons for a database record
      *
-     * @param $table
+     * @param string $table
      * @param array $row
+     *
      * @return string
      */
     public static function getIconForRecord($table, array $row)
@@ -52,10 +53,10 @@ class IconUtility
     }
 
     /**
-     * @param $identifier
-     * @param $size
-     * @param null $overlayIdentifier
-     * @param IconState|null $state
+     * @param string $identifier
+     * @param string $size "large", "small" or "default", see the constants of the Icon class
+     * @param string $overlayIdentifier
+     * @param IconState $state
      *
      * @return \TYPO3\CMS\Core\Imaging\Icon
      */
