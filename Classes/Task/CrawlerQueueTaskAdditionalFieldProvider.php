@@ -54,9 +54,9 @@ class CrawlerQueueTaskAdditionalFieldProvider implements AdditionalFieldProvider
         $additionalFields = [];
 
         if ($schedulerModule->CMD == 'add') {
-            $task->startPage = $taskInfo['startPage'];
-            $task->configuration  = $taskInfo['configuration'];
-            $task->depth = $taskInfo['depth'] ? $taskInfo['depth'] : 0;
+            $taskInfo['startPage'] = $taskInfo['startPage'] ?: 0;
+            $taskInfo['configuration'] = $taskInfo['configuration'] ?: [];
+            $taskInfo['depth'] = $taskInfo['depth'] ?: 0;
         }
 
         if ($schedulerModule->CMD == 'edit') {
@@ -117,12 +117,12 @@ class CrawlerQueueTaskAdditionalFieldProvider implements AdditionalFieldProvider
     /**
      * Mark current value as selected by returning the "selected" attribute
      *
-     * @param $configurationArray
-     * @param $currentValue
+     * @param array $configurationArray
+     * @param string $currentValue
      *
      * @return string
      */
-    protected function getSelectedState($configurationArray, $currentValue)
+    protected function getSelectedState(array $configurationArray, $currentValue)
     {
         $selected = '';
         $arraySize = count($configurationArray);
