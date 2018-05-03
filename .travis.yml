@@ -1,4 +1,4 @@
-language: php
+$language: php
 
 php:
   - 5.6
@@ -86,7 +86,7 @@ script:
       export typo3DatabaseHost="localhost";
       export typo3DatabaseUsername="root";
       export typo3DatabasePassword="";
-      find 'Tests/Functional' -wholename '*Test.php' | parallel --gnu 'echo; echo "Running functional test suite {}"; .Build/bin/phpunit --coverage-clover={}functionaltest-coverage.clover --colors  -c $FUNCTIONAL_XML {}'
+      find 'Tests/Functional' -wholename '*Test.php' | parallel --gnu 'echo; echo "Running functional test suite {}"; .Build/bin/phpunit --whitelist Classes/ --coverage-clover={}functionaltest-coverage.clover --colors  -c $FUNCTIONAL_XML {}'
     fi
   - >
     if [[ "$COVERAGE" == "1" ]]; then
