@@ -4,7 +4,7 @@ namespace AOE\Crawler\Utility;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2017 AOE GmbH <dev@aoe.com>
+ *  (c) 2018 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -25,6 +25,9 @@ namespace AOE\Crawler\Utility;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Imaging\Icon;
+use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Type\Icon\IconState;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -37,13 +40,30 @@ class IconUtility
     /**
      * Renders the HTML tag to show icons for a database record
      *
-     * @param $table
+     * @param string $table
      * @param array $row
+     *
      * @return string
      */
     public static function getIconForRecord($table, array $row)
     {
+        /** @var IconFactory $iconFactory */
         $iconFactory = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconFactory::class);
         return $iconFactory->getIconForRecord($table, $row, \TYPO3\CMS\Core\Imaging\Icon::SIZE_SMALL)->render();
+    }
+
+    /**
+     * @param string $identifier
+     * @param string $size "large", "small" or "default", see the constants of the Icon class
+     * @param string $overlayIdentifier
+     * @param IconState $state
+     *
+     * @return \TYPO3\CMS\Core\Imaging\Icon
+     */
+    public static function getIcon($identifier, $size = Icon::SIZE_DEFAULT, $overlayIdentifier = null, IconState $state = null)
+    {
+        /** @var IconFactory $iconFactory */
+        $iconFactory = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconFactory::class);
+        return $iconFactory->getIcon($identifier, $size, $overlayIdentifier, $state);
     }
 }
