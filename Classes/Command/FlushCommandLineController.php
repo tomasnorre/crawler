@@ -31,6 +31,7 @@ use TYPO3\CMS\Core\Controller\CommandLineController;
  * Class FlushCommandLineController
  *
  * @package AOE\Crawler\Command
+ * @codeCoverageIgnore
  */
 class FlushCommandLineController extends CommandLineController
 {

@@ -31,6 +31,7 @@ use TYPO3\CMS\Core\Controller\CommandLineController;
  * Class CrawlerCommandLineController
  *
  * @package AOE\Crawler\Command
+ * @codeCoverageIgnore
  */
 class CrawlerCommandLineController extends CommandLineController
 {
