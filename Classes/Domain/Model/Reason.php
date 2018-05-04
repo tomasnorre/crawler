@@ -28,7 +28,6 @@ namespace AOE\Crawler\Domain\Model;
 /**
  * Class Reason
  *
- * @package AOE\Crawler\Domain\Model
  */
 class Reason
 {
@@ -66,6 +65,14 @@ class Reason
     }
 
     /**
+     * @return int
+     */
+    public function getUid()
+    {
+        return $this->row['uid'];
+    }
+
+    /**
      * Method to set a timestamp for the creation time of this record
      *
      * @param int $time
@@ -73,6 +80,14 @@ class Reason
     public function setCreationDate($time)
     {
         $this->row['crdate'] = $time;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCreationDate()
+    {
+        return $this->row['crdate'];
     }
 
     /**
@@ -85,6 +100,13 @@ class Reason
         $this->row['cruser_id'] = $user_id;
     }
 
+    /**
+     * @return int
+     */
+    public function getBackendUserId()
+    {
+        return $this->row['cruser_id'];
+    }
     /**
      * Method to set the type of the reason for this reason instance (see constances)
      *
@@ -134,6 +156,14 @@ class Reason
     public function setQueueEntryUid($entry_uid)
     {
         $this->row['queue_entry_uid'] = $entry_uid;
+    }
+
+    /**
+     * @return int
+     */
+    public function getQueueEntryUid()
+    {
+        return $this->row['queue_entry_uid'];
     }
 
     /**
