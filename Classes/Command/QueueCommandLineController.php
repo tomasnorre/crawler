@@ -31,6 +31,7 @@ use TYPO3\CMS\Core\Controller\CommandLineController;
  * Class QueueCommandLineController
  *
  * @package AOE\Crawler\Command
+ * @codeCoverageIgnore
  */
 class QueueCommandLineController extends CommandLineController
 {
