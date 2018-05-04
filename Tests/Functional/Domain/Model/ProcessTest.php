@@ -25,7 +25,12 @@ namespace AOE\Crawler\Tests\Functional\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Domain\Model\Process;
+use AOE\Crawler\Domain\Model\Queue;
+use AOE\Crawler\Domain\Repository\QueueRepository;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class ProcessTest
@@ -33,12 +38,42 @@ use Nimut\TestingFramework\TestCase\FunctionalTestCase;
  */
 class ProcessTest extends FunctionalTestCase
 {
+
+    /**
+     * @var Process
+     */
+    protected $subject;
+
+    /**
+     * @var ObjectManager
+     */
+    protected $objectManger;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->objectManger = GeneralUtility::makeInstance(ObjectManager::class);
+        $this->subject = $this->objectManger->get(Process::class);
+    }
+
     /**
      * @test
      */
     public function getTimeForFirstItem()
     {
-        $this->markTestSkipped('Please implements the missing test');
+        $mockedQueueObject = new Queue(['exec_time' => 20]);
+        $mockedQueueRepository = $this->getAccessibleMock(QueueRepository::class, ['findYoungestEntryForProcess'], [], '', true);
+        $mockedQueueRepository
+            ->expects($this->any())
+            ->method('findYoungestEntryForProcess')
+            ->will($this->returnValue($mockedQueueObject));
+
+        $this->inject($this->subject,'queueRepository', $mockedQueueRepository);
+
+        $this->assertEquals(
+            20,
+            $this->subject->getTimeForFirstItem()
+        );
     }
 
     /**
@@ -46,7 +81,19 @@ class ProcessTest extends FunctionalTestCase
      */
     public function getTimeForLastItem()
     {
-        $this->markTestSkipped('Please implements the missing test');
+        $mockedQueueObject = new Queue(['exec_time' => 30]);
+        $mockedQueueRepository = $this->getAccessibleMock(QueueRepository::class, ['findOldestEntryForProcess'], [], '', true);
+        $mockedQueueRepository
+            ->expects($this->any())
+            ->method('findOldestEntryForProcess')
+            ->will($this->returnValue($mockedQueueObject));
+
+        $this->inject($this->subject,'queueRepository', $mockedQueueRepository);
+
+        $this->assertEquals(
+            30,
+            $this->subject->getTimeForLastItem()
+        );
     }
 
     /**
