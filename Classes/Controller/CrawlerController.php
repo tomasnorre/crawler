@@ -998,7 +998,6 @@ class CrawlerController
      */
     public function getLogEntriesForPageId($id, $filter = '', $doFlush = false, $doFullFlush = false, $itemsPerPage = 10)
     {
-        // FIXME: Write Unit tests for Filters
         switch ($filter) {
             case 'pending':
                 $addWhere = ' AND exec_time=0';

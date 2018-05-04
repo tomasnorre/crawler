@@ -297,7 +297,22 @@ class CrawlerControllerTest extends FunctionalTestCase
                     'configuration' => 'ThirdConfiguration'
                 ]]
             ],
-
+            'Do Flush Pending' => [
+                'setId' => 456,
+                'filter' => 'pending',
+                'doFlush' => true,
+                'doFullFlush' => false,
+                'itemsPerPage' => 5,
+                'expected' => []
+            ],
+            'Do Flush Finished' => [
+                'setId' => 456,
+                'filter' => 'finished',
+                'doFlush' => true,
+                'doFullFlush' => false,
+                'itemsPerPage' => 5,
+                'expected' => []
+            ],
         ];
     }
 
