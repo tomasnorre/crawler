@@ -56,9 +56,17 @@ class ProcessCollectionTest extends UnitTestCase
         $row1 = ['process_id' => 11];
         $row2 = ['process_id' => 13];
 
+        /** @var Process $processOne */
+        $processOne = $this->getMock(Process::class, ['dummy'], [], '', false);
+        $processOne->setRow($row1);
+
+        /** @var Process $processTwo */
+        $processTwo = $this->getMock(Process::class, ['dummy'], [], '', false);
+        $processTwo->setRow($row2);
+
         $processes = [];
-        $processes[] = new Process($row1);
-        $processes[] = new Process($row2);
+        $processes[] = $processOne;
+        $processes[] = $processTwo;
 
         $collection = new ProcessCollection($processes);
 
@@ -84,7 +92,7 @@ class ProcessCollectionTest extends UnitTestCase
      */
     public function appendCrawlerDomainObject()
     {
-        $correctObjectType = new Process();
+        $correctObjectType = $this->getMock(Process::class, ['dummy'], [], '', false);
         $this->subject->append($correctObjectType);
 
         $this->assertEquals(
@@ -109,7 +117,7 @@ class ProcessCollectionTest extends UnitTestCase
      */
     public function offsetSetAndGet()
     {
-        $correctObjectType = new Process();
+        $correctObjectType = $this->getMock(Process::class, ['dummy'], [], '', false);
         $this->subject->offsetSet(100, $correctObjectType);
 
         $this->assertEquals(
@@ -125,7 +133,7 @@ class ProcessCollectionTest extends UnitTestCase
      */
     public function offsetGetThrowsException()
     {
-        $correctObjectType = new Process();
+        $correctObjectType = $this->getMock(Process::class, ['dummy'], [], '', false);
 
         $this->assertEquals(
             $correctObjectType,
