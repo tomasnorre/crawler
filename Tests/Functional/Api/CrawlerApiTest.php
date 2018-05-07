@@ -140,7 +140,7 @@ class CrawlerApiTest extends FunctionalTestCase
      */
     public function isPageInQueueThrowInvalidArgumentException()
     {
-        $this->subject->addPageToQueue('Cannot be intrepeted as integer');
+        $this->subject->isPageInQueue('Cannot be intrepeted as integer');
     }
 
     /**
@@ -165,41 +165,40 @@ class CrawlerApiTest extends FunctionalTestCase
     }
 
     /**
-     * @return array
+     * @test
      */
-    public function isPageInQueueDataProvider()
+    public function isPageInQueueTimed()
     {
-        return [
-            'Unprocessed Only' => [
-                'uid' => 15,
-                'unprocessed_only' => true,
-                'timed_only' => false,
-                'timestamp' => false,
-                'expected' => true
-            ],
-            'Timed Only' => [
-                'uid' => 16,
-                'unprocessed_only' => false,
-                'timed_only' => true,
-                'timestamp' => false,
-                'expected' => true
-            ],
-            'Timestamp Only' => [
-                'uid' => 17,
-                'unprocessed_only' => false,
-                'timed_only' => false,
-                'timestamp' => 4321,
-                'expected' => true
-            ],
-            'Not existing page' => [
-                'uid' => 40000,
-                'unprocessed_only' => false,
-                'timed_only' => false,
-                'timestamp' => false,
-                'expected' => false
-            ],
-        ];
+        $this->markTestSkipped('Please implement');
     }
+
+    /**
+     * @test
+     */
+    public function countEntriesInQueueForPageByScheduletime()
+    {
+        $this->markTestSkipped('Please implement');
+    }
+
+    /**
+     * @test
+     */
+    public function getLatestCrawlTimestampForPage()
+    {
+        $this->markTestSkipped('Please implement');
+    }
+
+    /**
+     * @test
+     */
+    public function getCrawlHistoryForPage()
+    {
+        $this->markTestSkipped('Please implement');
+    }
+
+
+
+
 
     /**
      * This test is used to check that the api will not create duplicate entries for
@@ -356,5 +355,42 @@ class CrawlerApiTest extends FunctionalTestCase
         $this->assertCount(6, $response['headers']);
         $this->assertEquals($dummyResponseHeader, $response['headers']);
         $this->assertEquals($dummyContent, $response['content'][0]);
+    }
+
+    /**
+     * @return array
+     */
+    public function isPageInQueueDataProvider()
+    {
+        return [
+            'Unprocessed Only' => [
+                'uid' => 15,
+                'unprocessed_only' => true,
+                'timed_only' => false,
+                'timestamp' => false,
+                'expected' => true
+            ],
+            'Timed Only' => [
+                'uid' => 16,
+                'unprocessed_only' => false,
+                'timed_only' => true,
+                'timestamp' => false,
+                'expected' => true
+            ],
+            'Timestamp Only' => [
+                'uid' => 17,
+                'unprocessed_only' => false,
+                'timed_only' => false,
+                'timestamp' => 4321,
+                'expected' => true
+            ],
+            'Not existing page' => [
+                'uid' => 40000,
+                'unprocessed_only' => false,
+                'timed_only' => false,
+                'timestamp' => false,
+                'expected' => false
+            ],
+        ];
     }
 }
