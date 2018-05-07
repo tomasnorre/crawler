@@ -4,7 +4,7 @@ namespace AOE\Crawler\Utility;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2016 AOE GmbH <dev@aoe.com>
+ *  (c) 2018 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -30,8 +30,6 @@ use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
 /**
  * Class SignalSlotUtility
- *
- * @package AOE\Crawler\Utility
  *
  * @codeCoverageIgnore
  */

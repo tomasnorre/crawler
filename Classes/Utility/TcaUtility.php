@@ -4,7 +4,7 @@ namespace AOE\Crawler\Utility;
 /*
  * Copyright notice
  *
- * (c) 2016 AOE GmbH <dev@aoe.com>
+ * (c) 2018 AOE GmbH <dev@aoe.com>
  *
  * All rights reserved
  * This file is part of the TYPO3 CMS project.
@@ -24,7 +24,7 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 /**
  * Class TcaUtility
  *
- * @package AOE\Crawler\Utility
+ * @codeCoverageIgnore
  */
 class TcaUtility
 {
