@@ -169,7 +169,7 @@ class QueryRepositoryTest extends FunctionalTestCase
     public function countAllPendingItems()
     {
         $this->assertEquals(
-            4,
+            5,
             $this->subject->countAllPendingItems()
         );
     }
@@ -191,7 +191,7 @@ class QueryRepositoryTest extends FunctionalTestCase
     public function countAllUnassignedPendingItems()
     {
         $this->assertEquals(
-            1,
+            2,
             $this->subject->countAllUnassignedPendingItems()
         );
     }
@@ -222,7 +222,7 @@ class QueryRepositoryTest extends FunctionalTestCase
         $expectedArray = [
             0 => [
                 'configuration' => 'FirstConfiguration',
-                'unprocessed' => 1,
+                'unprocessed' => 2,
                 'assignedButUnprocessed' => 0
             ],
             1 => [
@@ -286,8 +286,8 @@ class QueryRepositoryTest extends FunctionalTestCase
     {
         $expectedArray = [
             '0' => 20,
-            '1' => 18,
-            '2' => 12
+            '1' => 20,
+            '2' => 18
         ];
 
         $this->assertEquals(
@@ -302,11 +302,11 @@ class QueryRepositoryTest extends FunctionalTestCase
     public function getLastProcessedEntries()
     {
         $expectedArray = [
-            ['qid' => 3],
-            ['qid' => 5]
+            ['qid' => '17'],
+            ['qid' => '3']
         ];
 
-        $this->assertEquals(
+        $this->assertSame(
             $expectedArray,
             $this->subject->getLastProcessedEntries('qid', 2)
         );
@@ -329,6 +329,12 @@ class QueryRepositoryTest extends FunctionalTestCase
                 'start' => 10,
                 'end' => 20,
                 'urlcount' => 2
+            ],
+            'dvorak' => [
+                'process_id_completed' => 'dvorak',
+                'start' => 10,
+                'end' => 20,
+                'urlcount' => 2
             ]
         ];
 
@@ -344,7 +350,7 @@ class QueryRepositoryTest extends FunctionalTestCase
     public function countAll()
     {
         $this->assertEquals(
-            9,
+            12,
             $this->subject->countAll()
         );
     }
@@ -409,7 +415,7 @@ class QueryRepositoryTest extends FunctionalTestCase
         return [
             'Empty where clause, expected to return all records' => [
                 'whereClause' => '',
-                'expected' => 9
+                'expected' => 12
             ],
             'Where Clause on process_id_completed' => [
                 'whereClause' => 'process_id_completed = \'qwerty\'',

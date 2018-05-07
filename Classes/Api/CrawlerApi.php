@@ -77,6 +77,14 @@ class CrawlerApi
     }
 
     /**
+     * @return array
+     */
+    public function getAllowedConfigurations()
+    {
+        return $this->allowedConfigurations;
+    }
+
+    /**
      * Returns the setID of the crawler
      *
      * @return int
@@ -224,7 +232,7 @@ class CrawlerApi
      */
     public function isPageInQueue($uid, $unprocessed_only = true, $timed_only = false, $timestamp = false)
     {
-        if (MathUtility::canBeInterpretedAsInteger($uid)) {
+        if (!MathUtility::canBeInterpretedAsInteger($uid)) {
             throw new \InvalidArgumentException('Invalid parameter type', 1468931945);
         }
 
