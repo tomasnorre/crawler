@@ -4,7 +4,7 @@ namespace AOE\Crawler\Utility;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2017 AOE GmbH <dev@aoe.com>
+ *  (c) 2018 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -35,8 +35,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  *
  * For button icons available see
  * https://github.com/TYPO3/TYPO3.Icons
- *
- * @package AOE\Crawler\Utility
  *
  * @codeCoverageIgnore
  */

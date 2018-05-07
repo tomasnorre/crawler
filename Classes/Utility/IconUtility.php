@@ -33,7 +33,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Class IconUtility
  *
- * @package AOE\Crawler\Utility
+ * @codeCoverageIgnore
  */
 class IconUtility
 {
