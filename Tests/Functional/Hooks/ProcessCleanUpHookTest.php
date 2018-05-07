@@ -107,7 +107,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
      */
     public function doProcessStillExists()
     {
-        $this->markTestSkipped('Please Implement');
+        $this->markTestSkipped('Skipped due to differences between windows and *nix');
     }
 
     /**
@@ -115,7 +115,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
      */
     public function killProcess()
     {
-        $this->markTestSkipped('Please Implement');
+        $this->markTestSkipped('Skipped due to differences between windows and *nix');
     }
 
     /**
@@ -123,7 +123,41 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
      */
     public function findDispatcherProcesses()
     {
-        $this->markTestSkipped('Please Implement');
+        $this->markTestSkipped('Skipped due to differences between windows and *nix');
+    }
+
+    /**
+     * @test
+     */
+    public function getActiveProcessesOlderThanOneOHour()
+    {
+        $expected = [
+            ['process_id' => '1000', 'system_process_id' => '0'],
+            ['process_id' => '1001', 'system_process_id' => '0'],
+            ['process_id' => '1002', 'system_process_id' => '0']
+        ];
+
+        $this->assertSame(
+            $expected,
+            $this->callInaccessibleMethod($this->subject, 'getActiveProcessesOlderThanOneOHour')
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function getActiveOrphanProcesses()
+    {
+        $expected = [
+            ['process_id' => '1000', 'system_process_id' => '0'],
+            ['process_id' => '1001', 'system_process_id' => '0'],
+            ['process_id' => '1002', 'system_process_id' => '0']
+        ];
+
+        $this->assertSame(
+            $expected,
+            $this->callInaccessibleMethod($this->subject, 'getActiveOrphanProcesses')
+        );
     }
     
     /**
