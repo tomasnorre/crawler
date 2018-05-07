@@ -89,6 +89,46 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
     /**
      * @test
      */
+    public function removeActiveProcessesOlderThanOneHour()
+    {
+        $this->markTestSkipped('Please Implement');
+    }
+
+    /**
+     * @test
+     */
+    public function removeActiveOrphanProcesses()
+    {
+        $this->markTestSkipped('Please Implement');
+    }
+
+    /**
+     * @test
+     */
+    public function doProcessStillExists()
+    {
+        $this->markTestSkipped('Please Implement');
+    }
+
+    /**
+     * @test
+     */
+    public function killProcess()
+    {
+        $this->markTestSkipped('Please Implement');
+    }
+
+    /**
+     * @test
+     */
+    public function findDispatcherProcesses()
+    {
+        $this->markTestSkipped('Please Implement');
+    }
+    
+    /**
+     * @test
+     */
     public function removeProcessFromProcesslistCalledWithProcessThatDoesNotExist()
     {
         $processCountBefore = $this->processRepository->countAll();

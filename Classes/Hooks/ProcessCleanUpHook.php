@@ -231,6 +231,7 @@ class ProcessCleanUpHook
      * Check if OS is Windows
      *
      * @return bool
+     * @codeCoverageIgnore
      */
     private function isOsWindows()
     {
@@ -242,6 +243,7 @@ class ProcessCleanUpHook
 
     /**
      * @return \TYPO3\CMS\Core\Database\DatabaseConnection
+     * @codeCoverageIgnore
      */
     private function getDatabaseConnection()
     {
