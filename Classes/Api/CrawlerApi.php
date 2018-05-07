@@ -4,7 +4,7 @@ namespace AOE\Crawler\Api;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2016 AOE GmbH <dev@aoe.com>
+ *  (c) 2018 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -198,14 +198,14 @@ class CrawlerApi
      *
      * @return int
      */
-    protected function countEntriesInQueueForPageByScheduletime($page_uid, $schedule_timestamp)
+    protected function countEntriesInQueueForPageByScheduleTime($page_uid, $schedule_timestamp)
     {
         //if the same page is scheduled for the same time and has not be executed?
         if ($schedule_timestamp == 0) {
-            //untimed elements need an exec_time with 0 because they can occure multiple times
+            //un-timed elements need an exec_time with 0 because they can occur multiple times
             $where = 'page_id=' . $page_uid . ' AND exec_time = 0 AND scheduled=' . $schedule_timestamp;
         } else {
-            //timed elementes have got a fixed schedule time, if a record with this time
+            //timed elements have got a fixed schedule time, if a record with this time
             //exists it is maybe queued for the future, or is has been queue for the past and therefore
             //also been processed.
             $where = 'page_id=' . $page_uid . ' AND scheduled=' . $schedule_timestamp;
@@ -306,12 +306,12 @@ class CrawlerApi
      * @param int $uid uid of the page
      * @param bool $limit
      *
-     * @return array array with the crawlhistory of a page => 0 : scheduled time , 1 : execuded_time, 2 : set_id
+     * @return array array with the crawl-history of a page => 0 : scheduled time , 1 : executed_time, 2 : set_id
      */
-    public function getCrawlHistoryForPage($uid, $limit = false)
+    public function getCrawlHistoryForPage($uid, $limit = 0)
     {
         $uid = intval($uid);
-        $limit = $GLOBALS['TYPO3_DB']->fullQuoteStr($limit, 'tx_crawler_queue');
+        $limit = intval($limit);
 
         $query = 'scheduled, exec_time, set_id';
         $where = ' page_id = ' . $uid;
@@ -319,7 +319,6 @@ class CrawlerApi
         $limit_query = ($limit) ? $limit : null;
 
         $rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($query, 'tx_crawler_queue', $where, null, null, $limit_query);
-
         return $rows;
     }
 
@@ -462,7 +461,7 @@ class CrawlerApi
     /**
      * Get last processed entries
      *
-     * @param int limit
+     * @param int $limit
      *
      * @return array
      */

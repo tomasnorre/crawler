@@ -4,7 +4,7 @@ namespace AOE\Crawler\Tests\Functional\Api;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2016 AOE GmbH <dev@aoe.com>
+ *  (c) 2018 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -27,6 +27,7 @@ namespace AOE\Crawler\Tests\Functional\Api;
 
 use AOE\Crawler\Api\CrawlerApi;
 use AOE\Crawler\Controller\CrawlerController;
+use AOE\Crawler\Domain\Repository\QueueRepository;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 
 /**
@@ -136,11 +137,11 @@ class CrawlerApiTest extends FunctionalTestCase
 
     /**
      * @test
-     * @throws \InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function isPageInQueueThrowInvalidArgumentException()
     {
-        $this->subject->isPageInQueue('Cannot be intrepeted as integer');
+        $this->subject->isPageInQueue('Cannot be interpreted as integer');
     }
 
     /**
@@ -169,15 +170,26 @@ class CrawlerApiTest extends FunctionalTestCase
      */
     public function isPageInQueueTimed()
     {
-        $this->markTestSkipped('Please implement');
+        $this->importDataSet(dirname(__FILE__) . '/../Fixtures/tx_crawler_queue.xml');
+        $this->assertTrue($this->subject->isPageInQueueTimed(15));
     }
 
     /**
      * @test
      */
-    public function countEntriesInQueueForPageByScheduletime()
+    public function countEntriesInQueueForPageByScheduleTime()
     {
-        $this->markTestSkipped('Please implement');
+        $this->importDataSet(dirname(__FILE__) . '/../Fixtures/tx_crawler_queue.xml');
+
+        $this->assertSame(
+            1,
+            $this->callInaccessibleMethod($this->subject, 'countEntriesInQueueForPageByScheduleTime', 15, 0)
+        );
+
+        $this->assertSame(
+            1,
+            $this->callInaccessibleMethod($this->subject, 'countEntriesInQueueForPageByScheduleTime', 17, 4321)
+        );
     }
 
     /**
@@ -185,7 +197,12 @@ class CrawlerApiTest extends FunctionalTestCase
      */
     public function getLatestCrawlTimestampForPage()
     {
-        $this->markTestSkipped('Please implement');
+        $this->importDataSet(dirname(__FILE__) . '/../Fixtures/tx_crawler_queue.xml');
+
+        $this->assertSame(
+            '4321',
+            $this->subject->getLatestCrawlTimestampForPage(17)
+        );
     }
 
     /**
@@ -193,12 +210,46 @@ class CrawlerApiTest extends FunctionalTestCase
      */
     public function getCrawlHistoryForPage()
     {
-        $this->markTestSkipped('Please implement');
+        $this->importDataSet(dirname(__FILE__) . '/../Fixtures/tx_crawler_queue.xml');
+
+        $this->assertSame(
+            [
+                [
+                    'scheduled' => '4321',
+                    'exec_time' => '20',
+                    'set_id' => '0'
+                ]
+            ],
+            $this->subject->getCrawlHistoryForPage(17, 1)
+        );
     }
 
+    /**
+     * @test
+     */
+    public function getQueueStatistics()
+    {
+        $this->importDataSet(dirname(__FILE__) . '/../Fixtures/tx_crawler_queue.xml');
 
+        $this->assertSame(
+            [
+                'assignedButUnprocessed' => '3',
+                'unprocessed' => '5'
+            ],
+            $this->subject->getQueueStatistics()
+        );
+    }
 
-
+    /**
+     * @test
+     */
+    public function getQueueRepository()
+    {
+        $this->assertInstanceOf(
+            QueueRepository::class,
+            $this->callInaccessibleMethod($this->subject, 'getQueueRepository')
+        );
+    }
 
     /**
      * This test is used to check that the api will not create duplicate entries for
