@@ -101,7 +101,7 @@ class ProcessTest extends FunctionalTestCase
      */
     public function countItemsProcessed()
     {
-        $this->markTestSkipped('Please implements the missing test');
+        $this->markTestSkipped('Skipped as the CountItemsProcessed() is only calling a function on the queueRepository');
     }
 
     /**
@@ -109,6 +109,6 @@ class ProcessTest extends FunctionalTestCase
      */
     public function countItemsToProcess()
     {
-        $this->markTestSkipped('Please implements the missing test');
+        $this->markTestSkipped('Skipped as the CountItemsProcessed() is only calling a function on the queueRepository');
     }
 }

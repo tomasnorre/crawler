@@ -134,6 +134,7 @@ class Process
      * Counts the number of items which need to be processed
      *
      * @return int
+     * @codeCoverageIgnore
      */
     public function countItemsProcessed()
     {
@@ -144,6 +145,7 @@ class Process
      * Counts the number of items which still need to be processed
      *
      * @return int
+     * @codeCoverageIgnore
      */
     public function countItemsToProcess()
     {
@@ -205,5 +207,15 @@ class Process
     public function getRow()
     {
         return $this->row;
+    }
+
+    /**
+     * @param array $row
+     *
+     * @return void
+     */
+    public function setRow(array $row)
+    {
+        $this->row = $row;
     }
 }
