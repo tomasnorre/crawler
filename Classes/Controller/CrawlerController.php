@@ -654,13 +654,16 @@ class CrawlerController
                                 $TSparserObject = GeneralUtility::makeInstance('TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser');
                                 $TSparserObject->parse($configurationRecord['processing_instruction_parameters_ts']);
 
+                                // Check Crawler Configurations forceSsl if false use the Page url_scheme.
+                                $crawlerWithSsl = $configurationRecord['force_ssl'] ?: $forceSsl;
+
                                 $subCfg = [
                                     'procInstrFilter' => $configurationRecord['processing_instruction_filter'],
                                     'procInstrParams.' => $TSparserObject->setup,
                                     'baseUrl' => $this->getBaseUrlForConfigurationRecord(
                                         $configurationRecord['base_url'],
                                         $configurationRecord['sys_domain_base_url'],
-                                        $forceSsl
+                                        $crawlerWithSsl
                                     ),
                                     'realurl' => $configurationRecord['realurl'],
                                     'cHash' => $configurationRecord['chash'],
@@ -668,6 +671,7 @@ class CrawlerController
                                     'exclude' => $configurationRecord['exclude'],
                                     'rootTemplatePid' => (int) $configurationRecord['root_template_pid'],
                                     'key' => $key,
+                                    'force_ssl' => $configurationRecord['force_ssl'],
                                 ];
 
                                 // add trailing slash if not present

@@ -12,6 +12,9 @@
             <trans-unit id="tx_crawler_configuration.name">
                 <source>Name</source>
             </trans-unit>
+            <trans-unit id="tx_crawler_configuration.force_ssl">
+                <source>Force SSL for Crawling</source>
+            </trans-unit>
             <trans-unit id="tx_crawler_configuration.processing_instruction_filter">
                 <source>Processing instruction filter</source>
             </trans-unit>
