@@ -122,6 +122,16 @@ class QueueRepository extends AbstractRepository
     }
 
     /**
+     * Count items which have not been processed yet
+     * 
+     * @return int
+     */
+    public function countUnprocessedItems()
+    {
+        return $this->countItemsByWhereClause("exec_time=0 AND process_scheduled=0 AND scheduled<=" . time());
+    }
+
+    /**
      * This method can be used to count all queue entrys which are
      * scheduled for now or a earlier date.
      *

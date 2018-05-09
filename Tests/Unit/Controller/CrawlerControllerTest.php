@@ -177,7 +177,7 @@ class CrawlerControllerTest extends UnitTestCase
     public function getUrlsForPageRow($checkIfPageSkipped, $getUrlsForPages, $pageRow, $skipMessage, $expected)
     {
         /** @var CrawlerController $crawlerController */
-        $crawlerController = $this->getMock(CrawlerController::class, ['checkIfPageShouldBeSkipped', 'getUrlsForPageId']);
+        $crawlerController = $this->getMock(CrawlerController::class, ['checkIfPageShouldBeSkipped', 'getUrlsForPageId'], [], '', false);
         $crawlerController->expects($this->any())->method('checkIfPageShouldBeSkipped')->will($this->returnValue($checkIfPageSkipped));
         $crawlerController->expects($this->any())->method('getUrlsForPageId')->will($this->returnValue($getUrlsForPages));
 
@@ -349,7 +349,7 @@ class CrawlerControllerTest extends UnitTestCase
      */
     public function buildRequestHeaderArray($url, $crawlerId, $expected)
     {
-        $crawlerLib = $this->getAccessibleMock(CrawlerController::class, ['dummy']);
+        $crawlerLib = $this->getAccessibleMock(CrawlerController::class, ['dummy'], [], '', false);
 
         $this->assertEquals(
             $expected,
@@ -369,7 +369,7 @@ class CrawlerControllerTest extends UnitTestCase
      */
     public function getRequestUrlFrom302Header($headers, $user, $pass, $expected)
     {
-        $crawlerLib = $this->getAccessibleMock(CrawlerController::class, ['dummy']);
+        $crawlerLib = $this->getAccessibleMock(CrawlerController::class, ['dummy'], [], '', false);
 
         $this->assertEquals(
             $expected,
@@ -439,7 +439,7 @@ class CrawlerControllerTest extends UnitTestCase
         // FIXME
         $this->markTestSkipped('Skipped as the cli_getArgIndex is reset $config when parsing...');
 
-        $crawlerController = $this->getAccessibleMock(CrawlerController::class, ['dummy']);
+        $crawlerController = $this->getAccessibleMock(CrawlerController::class, ['dummy'], [], '', false);
         $_SERVER['argv'] = $config;
         $cliObject = new QueueCommandLineController();
 
@@ -478,7 +478,7 @@ class CrawlerControllerTest extends UnitTestCase
         $microtime = '1481397820.81820011138916015625';
         $expectedMd5Value = '95297a261b';
 
-        $crawlerController = $this->getAccessibleMock(CrawlerController::class, ['microtime']);
+        $crawlerController = $this->getAccessibleMock(CrawlerController::class, ['microtime'], [], '', false);
         $crawlerController->expects($this->once())->method('microtime')->will($this->returnValue($microtime));
 
         $this->assertEquals(
@@ -493,7 +493,7 @@ class CrawlerControllerTest extends UnitTestCase
     public function CLI_buildProcessIdIsSetReturnsValue()
     {
         $processId = '12297a261b';
-        $crawlerController = $this->getAccessibleMock(CrawlerController::class, ['dummy']);
+        $crawlerController = $this->getAccessibleMock(CrawlerController::class, ['dummy'], [], '', false);
         $crawlerController->_set('processID', $processId);
 
         $this->assertEquals(
@@ -512,7 +512,7 @@ class CrawlerControllerTest extends UnitTestCase
      */
     public function getConfigurationHasReturnsExpectedValue(array $configuration, $expected)
     {
-        $crawlerLib = $this->getAccessibleMock(CrawlerController::class, ['dummy']);
+        $crawlerLib = $this->getAccessibleMock(CrawlerController::class, ['dummy'], [], '', false);
 
         $this->assertEquals(
             $expected,
