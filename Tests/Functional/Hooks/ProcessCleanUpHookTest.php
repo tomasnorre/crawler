@@ -89,6 +89,80 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
     /**
      * @test
      */
+    public function removeActiveProcessesOlderThanOneHour()
+    {
+        $this->markTestSkipped('Please Implement');
+    }
+
+    /**
+     * @test
+     */
+    public function removeActiveOrphanProcesses()
+    {
+        $this->markTestSkipped('Please Implement');
+    }
+
+    /**
+     * @test
+     */
+    public function doProcessStillExists()
+    {
+        $this->markTestSkipped('Skipped due to differences between windows and *nix');
+    }
+
+    /**
+     * @test
+     */
+    public function killProcess()
+    {
+        $this->markTestSkipped('Skipped due to differences between windows and *nix');
+    }
+
+    /**
+     * @test
+     */
+    public function findDispatcherProcesses()
+    {
+        $this->markTestSkipped('Skipped due to differences between windows and *nix');
+    }
+
+    /**
+     * @test
+     */
+    public function getActiveProcessesOlderThanOneOHour()
+    {
+        $expected = [
+            ['process_id' => '1000', 'system_process_id' => '0'],
+            ['process_id' => '1001', 'system_process_id' => '0'],
+            ['process_id' => '1002', 'system_process_id' => '0']
+        ];
+
+        $this->assertSame(
+            $expected,
+            $this->callInaccessibleMethod($this->subject, 'getActiveProcessesOlderThanOneOHour')
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function getActiveOrphanProcesses()
+    {
+        $expected = [
+            ['process_id' => '1000', 'system_process_id' => '0'],
+            ['process_id' => '1001', 'system_process_id' => '0'],
+            ['process_id' => '1002', 'system_process_id' => '0']
+        ];
+
+        $this->assertSame(
+            $expected,
+            $this->callInaccessibleMethod($this->subject, 'getActiveOrphanProcesses')
+        );
+    }
+    
+    /**
+     * @test
+     */
     public function removeProcessFromProcesslistCalledWithProcessThatDoesNotExist()
     {
         $processCountBefore = $this->processRepository->countAll();
