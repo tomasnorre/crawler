@@ -11,3 +11,6 @@ Please see the [Wiki Pages](https://github.com/AOEpeople/crawler/wiki) for Relea
 
 ### Documentation
 Please read the [documentation](https://docs.typo3.org/typo3cms/extensions/crawler/)
+
+To render the documentation locally, please use the official TYPO3 Documentation rendering Docker Tool.
+<https://github.com/t3docs/docker-render-documentation>
