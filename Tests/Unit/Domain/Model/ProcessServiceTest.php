@@ -54,7 +54,7 @@ class ProcessServiceTest extends UnitTestCase
      */
     public function setUp()
     {
-        $this->subject = new ProcessService();
+        $this->subject = $this->getMock(ProcessService::class, ['dummyMethod'], [], '', false);
 
         $this->crawlerController = $this->getMock(CrawlerController::class, ['dummyMethod'], [], '', false);
 

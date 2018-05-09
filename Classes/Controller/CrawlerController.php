@@ -29,6 +29,7 @@ use AOE\Crawler\Command\CrawlerCommandLineController;
 use AOE\Crawler\Command\FlushCommandLineController;
 use AOE\Crawler\Command\QueueCommandLineController;
 use AOE\Crawler\Domain\Model\Reason;
+use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\EventDispatcher;
 use AOE\Crawler\Utility\IconUtility;
 use AOE\Crawler\Utility\SignalSlotUtility;
@@ -42,6 +43,7 @@ use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\CMS\Frontend\Page\PageGenerator;
 use TYPO3\CMS\Frontend\Page\PageRepository;
@@ -173,6 +175,11 @@ class CrawlerController
     private $downloadCrawlUrls = false;
 
     /**
+     * @var QueueRepository
+     */
+    protected  $queueRepository;
+
+    /**
      * Method to set the accessMode can be gui, cli or cli_im
      *
      * @return string
@@ -247,6 +254,9 @@ class CrawlerController
 
     public function __construct()
     {
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $this->queueRepository = $objectManager->get(QueueRepository::class);
+
         $this->db = $GLOBALS['TYPO3_DB'];
         $this->backendUser = $GLOBALS['BE_USER'];
         $this->processFilename = PATH_site . 'typo3temp/tx_crawler.proc';
@@ -1993,21 +2003,6 @@ class CrawlerController
         return $content;
     }
 
-    /**
-     * @return int
-     */
-    public function getUnprocessedItemsCount()
-    {
-        $res = $this->db->exec_SELECTquery(
-            'count(*) as num',
-            'tx_crawler_queue',
-            'exec_time=0 AND process_scheduled=0 AND scheduled<=' . $this->getCurrentTime()
-        );
-
-        $count = $this->db->sql_fetch_assoc($res);
-        return $count['num'];
-    }
-
     /*****************************
      *
      * CLI functions
@@ -2053,8 +2048,8 @@ class CrawlerController
             //TODO can't we do that in a clean way?
             $releaseStatus = $this->CLI_releaseProcesses($this->CLI_buildProcessId());
 
-            $this->CLI_debug("Unprocessed Items remaining:" . $this->getUnprocessedItemsCount() . " (" . $this->CLI_buildProcessId() . ")");
-            $result |= ($this->getUnprocessedItemsCount() > 0 ? self::CLI_STATUS_REMAIN : self::CLI_STATUS_NOTHING_PROCCESSED);
+            $this->CLI_debug("Unprocessed Items remaining:" . $this->queueRepository->countUnprocessedItems() . " (" . $this->CLI_buildProcessId() . ")");
+            $result |= ($this->queueRepository->countUnprocessedItems() > 0 ? self::CLI_STATUS_REMAIN : self::CLI_STATUS_NOTHING_PROCCESSED);
         } else {
             $result |= self::CLI_STATUS_ABORTED;
         }

@@ -166,6 +166,17 @@ class QueryRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
+    public function countUnprocessedItems()
+    {
+        $this->assertEquals(
+            4,
+            $this->subject->countUnprocessedItems()
+        );
+    }
+
+    /**
+     * @test
+     */
     public function countAllPendingItems()
     {
         $this->assertEquals(
