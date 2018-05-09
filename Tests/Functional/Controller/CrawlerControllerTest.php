@@ -4,7 +4,7 @@ namespace AOE\Crawler\Tests\Functional\Controller;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2016 AOE GmbH <dev@aoe.com>
+ *  (c) 2018 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -186,7 +186,7 @@ class CrawlerControllerTest extends FunctionalTestCase
     public function getUnprocessedItemsCount()
     {
         $this->assertEquals(
-            4,
+            5,
             $this->subject->getUnprocessedItemsCount()
         );
     }
@@ -398,15 +398,15 @@ class CrawlerControllerTest extends FunctionalTestCase
             ],
             'Flush Queue with specific configuration' => [
                 'where' => 'configuration = \'SecondConfiguration\'',
-                'expected' => 6
+                'expected' => 9
             ],
             'Flush Queue for specific process id' => [
                 'where' => 'process_id = \'1007\'',
-                'expected' => 6
+                'expected' => 9
             ],
             'Flush Queue for where that does not exist' => [
                 'where' => 'uid > 100000',
-                'expected' => 9
+                'expected' => 12
             ]
         ];
     }
