@@ -169,7 +169,7 @@ class QueryRepositoryTest extends FunctionalTestCase
     public function countUnprocessedItems()
     {
         $this->assertEquals(
-            4,
+            5,
             $this->subject->countUnprocessedItems()
         );
     }

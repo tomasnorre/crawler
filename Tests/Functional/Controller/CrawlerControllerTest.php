@@ -182,17 +182,6 @@ class CrawlerControllerTest extends FunctionalTestCase
 
     /**
      * @test
-     */
-    public function getUnprocessedItemsCount()
-    {
-        $this->assertEquals(
-            5,
-            $this->subject->getUnprocessedItemsCount()
-        );
-    }
-
-    /**
-     * @test
      *
      * @param $id
      * @param $filter
