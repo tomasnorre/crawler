@@ -49,7 +49,29 @@ class ProcessTest extends UnitTestCase
             'ttl' => '300',
             'assigned_items_count' => '20'
         ];
-        $this->subject = new Process($processObjectArray);
+        $this->subject = $this->getMock(Process::class, ['dummy'], [], '', false);
+        $this->subject->setRow($processObjectArray);
+    }
+
+    /**
+     * @test
+     */
+    public function setAndGetRowDoAsExpected()
+    {
+        $expected = [
+            'active' => 1,
+            'process_id' => 4567,
+            'ttl' => 600,
+            'assigned_items_count' => 30
+        ];
+
+        $this->subject->setRow($expected);
+
+        $this->assertSame(
+            $expected,
+            $this->subject->getRow()
+        );
+
     }
 
     /**
@@ -137,7 +159,7 @@ class ProcessTest extends UnitTestCase
     public function getStateReturnsExpectedState($active, $processes, $expectedState)
     {
         /** @var Process $processMock */
-        $processMock = $this->getAccessibleMock(Process::class, ['getActive', 'getProgress']);
+        $processMock = $this->getAccessibleMock(Process::class, ['getActive', 'getProgress'], [], '', false);
         $processMock->expects($this->any())->method('getActive')->will($this->returnValue($active));
         $processMock->expects($this->any())->method('getProgress')->will($this->returnValue($processes));
 
@@ -158,7 +180,7 @@ class ProcessTest extends UnitTestCase
     public function getProgressReturnsExpectedPercentage($countItemsAssigned, $countItemsProcessed, $expectedProgress)
     {
         /** @var Process $processMock */
-        $processMock = $this->getAccessibleMock(Process::class, ['countItemsAssigned', 'countItemsProcessed']);
+        $processMock = $this->getAccessibleMock(Process::class, ['countItemsAssigned', 'countItemsProcessed'], [], '', false);
         $processMock->expects($this->any())->method('countItemsAssigned')->will($this->returnValue($countItemsAssigned));
         $processMock->expects($this->any())->method('countItemsProcessed')->will($this->returnValue($countItemsProcessed));
 
@@ -214,7 +236,7 @@ class ProcessTest extends UnitTestCase
     public function getRuntimeReturnsInteger($getTimeForFirstItem, $getTimeForLastItem, $expected)
     {
         /** @var Process $processMock */
-        $processMock = $this->getAccessibleMock(Process::class, [ 'getTimeForFirstItem', 'getTimeForLastItem']);
+        $processMock = $this->getAccessibleMock(Process::class, [ 'getTimeForFirstItem', 'getTimeForLastItem'], [], '', false);
         $processMock->expects($this->any())->method('getTimeForFirstItem')->will($this->returnValue($getTimeForFirstItem));
         $processMock->expects($this->any())->method('getTimeForLastItem')->will($this->returnValue($getTimeForLastItem));
 

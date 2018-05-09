@@ -26,6 +26,8 @@ namespace AOE\Crawler\Domain\Model;
  ***************************************************************/
 
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class Process
@@ -44,11 +46,18 @@ class Process
     protected $row;
 
     /**
+     * @var QueueRepository
+     */
+    protected $queueRepository;
+
+    /**
      * @param array $row
      */
     public function __construct($row = [])
     {
         $this->row = $row;
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $this->queueRepository = $objectManager->get(QueueRepository::class);
     }
 
     /**
@@ -80,9 +89,7 @@ class Process
      */
     public function getTimeForFirstItem()
     {
-        $queueRepository = new QueueRepository();
-        $entry = $queueRepository->findYoungestEntryForProcess($this);
-
+        $entry = $this->queueRepository->findYoungestEntryForProcess($this);
         return $entry->getExecutionTime();
     }
 
@@ -94,9 +101,7 @@ class Process
      */
     public function getTimeForLastItem()
     {
-        $queueRepository = new QueueRepository();
-        $entry = $queueRepository->findOldestEntryForProcess($this);
-
+        $entry = $this->queueRepository->findOldestEntryForProcess($this);
         return $entry->getExecutionTime();
     }
 
@@ -124,22 +129,22 @@ class Process
      * Counts the number of items which need to be processed
      *
      * @return int
+     * @codeCoverageIgnore
      */
     public function countItemsProcessed()
     {
-        $queueRepository = new QueueRepository();
-        return $queueRepository->countExecutedItemsByProcess($this);
+        return $this->queueRepository->countExecutedItemsByProcess($this);
     }
 
     /**
      * Counts the number of items which still need to be processed
      *
      * @return int
+     * @codeCoverageIgnore
      */
     public function countItemsToProcess()
     {
-        $queueRepository = new QueueRepository();
-        return $queueRepository->countNonExecutedItemsByProcess($this);
+        return $this->queueRepository->countNonExecutedItemsByProcess($this);
     }
 
     /**
@@ -197,5 +202,15 @@ class Process
     public function getRow()
     {
         return $this->row;
+    }
+
+    /**
+     * @param array $row
+     *
+     * @return void
+     */
+    public function setRow(array $row)
+    {
+        $this->row = $row;
     }
 }
