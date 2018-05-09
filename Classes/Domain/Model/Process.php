@@ -51,18 +51,13 @@ class Process
     protected $queueRepository;
 
     /**
-     * @var ObjectManager
-     */
-    protected $objectManager;
-
-    /**
      * @param array $row
      */
     public function __construct($row = [])
     {
         $this->row = $row;
-        $this->objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->queueRepository = $this->objectManager->get(QueueRepository::class);
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $this->queueRepository = $objectManager->get(QueueRepository::class);
     }
 
     /**

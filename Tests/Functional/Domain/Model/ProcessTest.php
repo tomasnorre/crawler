@@ -44,16 +44,11 @@ class ProcessTest extends FunctionalTestCase
      */
     protected $subject;
 
-    /**
-     * @var ObjectManager
-     */
-    protected $objectManger;
-
     public function setUp()
     {
         parent::setUp();
-        $this->objectManger = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->subject = $this->objectManger->get(Process::class);
+        $objectManger = GeneralUtility::makeInstance(ObjectManager::class);
+        $this->subject = $objectManger->get(Process::class);
     }
 
     /**
