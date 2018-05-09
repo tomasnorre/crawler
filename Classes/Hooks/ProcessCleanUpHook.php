@@ -68,11 +68,7 @@ class ProcessCleanUpHook
      */
     private function removeActiveProcessesOlderThanOneHour()
     {
-        $results = $this->getDatabaseConnection()->exec_SELECTgetRows(
-            'process_id, system_process_id',
-            'tx_crawler_process',
-            'ttl <= ' . intval(time() - $this->extensionSettings['processMaxRunTime'] - 3600) . ' AND active = 1'
-        );
+        $results = $this->getActiveProcessesOlderThanOneOHour();
 
         if (!is_array($results)) {
             return;
@@ -96,11 +92,7 @@ class ProcessCleanUpHook
      */
     private function removeActiveOrphanProcesses()
     {
-        $results = $this->getDatabaseConnection()->exec_SELECTgetRows(
-            'process_id, system_process_id',
-            'tx_crawler_process',
-            'ttl <= ' . intval(time() - $this->extensionSettings['processMaxRunTime']) . ' AND active = 1'
-        );
+        $results = $this->getActiveOrphanProcesses();
 
         if (!is_array($results)) {
             return;
@@ -172,6 +164,7 @@ class ProcessCleanUpHook
      * @param int $pid Process id to be checked.
      *
      * @return bool
+     * @codeCoverageIgnore
      */
     private function doProcessStillExists($pid)
     {
@@ -197,6 +190,7 @@ class ProcessCleanUpHook
      * @param int $pid Process id to kill
      *
      * @return void
+     * @codeCoverageIgnore
      */
     private function killProcess($pid)
     {
@@ -213,6 +207,7 @@ class ProcessCleanUpHook
      * Find dispatcher processes
      *
      * @return array
+     * @codeCoverageIgnore
      */
     private function findDispatcherProcesses()
     {
@@ -231,6 +226,7 @@ class ProcessCleanUpHook
      * Check if OS is Windows
      *
      * @return bool
+     * @codeCoverageIgnore
      */
     private function isOsWindows()
     {
@@ -242,9 +238,38 @@ class ProcessCleanUpHook
 
     /**
      * @return \TYPO3\CMS\Core\Database\DatabaseConnection
+     * @codeCoverageIgnore
      */
     private function getDatabaseConnection()
     {
         return $GLOBALS['TYPO3_DB'];
+    }
+
+    /**
+     * @return array|null
+     */
+    private function getActiveProcessesOlderThanOneOHour()
+    {
+        $results = $this->getDatabaseConnection()->exec_SELECTgetRows(
+            'process_id, system_process_id',
+            'tx_crawler_process',
+            'ttl <= ' . intval(time() - $this->extensionSettings['processMaxRunTime'] - 3600) . ' AND active = 1'
+        );
+
+        return $results;
+    }
+
+    /**
+     * @return array|null
+     */
+    private function getActiveOrphanProcesses()
+    {
+        $results = $this->getDatabaseConnection()->exec_SELECTgetRows(
+            'process_id, system_process_id',
+            'tx_crawler_process',
+            'ttl <= ' . intval(time() - $this->extensionSettings['processMaxRunTime']) . ' AND active = 1'
+        );
+
+        return $results;
     }
 }
