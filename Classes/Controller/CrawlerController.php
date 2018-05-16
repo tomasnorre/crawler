@@ -2687,6 +2687,5 @@ class CrawlerController
             default:
                 return false;
         }
-
     }
 }
