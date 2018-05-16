@@ -376,9 +376,13 @@ class CrawlerControllerTest extends UnitTestCase
             $crawlerLib->_call('getRequestUrlFrom302Header', $headers, $user, $pass)
         );
     }
-
+    
     /**
      * @test
+     *
+     * @param $crawlerConfiguration
+     * @param $pageConfiguration
+     * @param $expected
      *
      * @dataProvider isCrawlingProtocolHttpsDataProvider
      */
