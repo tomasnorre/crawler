@@ -43,10 +43,15 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = [
         ],
         'force_ssl' => [
             'exclude' => 1,
-            'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.force_ssl',
+            'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.crawling_protocol',
             'config' => [
-                'type' => 'check',
-                'default' => '0'
+                'type' => 'select',
+                'maxitems' => 1,
+                'items' => array(
+                    array('LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.crawling_protocol.http', -1),
+                    array('LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.crawling_protocol.page_config', 0),
+                    array('LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.crawling_protocol.https', 1),
+                )
             ]
         ],
         'processing_instruction_filter' => [
