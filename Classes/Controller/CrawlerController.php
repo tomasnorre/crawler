@@ -2677,13 +2677,10 @@ class CrawlerController
         switch($crawlerConfiguration) {
             case -1:
                 return false;
-                break;
             case 0:
                 return $pageConfiguration;
-                break;
             case 1:
                 return true;
-                break;
             default:
                 return false;
         }
