@@ -1,56 +1,80 @@
-# cat=basic//10; type=int [0-10000]; label= Sleep time between requests: Time in milliseconds the crawler should sleep beetween requesting urls: low = faster / high = less stress for the server
-sleepTime = 1000
+#########
+## Settings
+#########
 
-# cat=basic//10; type=int [0-100]; label= Sleep time after finishing: Time in seconds the crawler should sleep before finishing
-sleepAfterFinish=10
-
-# cat=basic//10; type=int [1-10000]; label= Entries per run: How many queue entries should be processed in a run
-countInARun=100
-
-# cat=basic//10; type=int [1-365]; label= Delete processed items: Delete processed items from the queue after n days (0 will keep the entries forever - the database may grow very large over time!)
-purgeQueueDays=14
-
-# cat=basic//10; type=int [1-99]; label= Maximum processes
-processLimit=1
-
-# cat=basic//10; type=int [1- 86400]; label= Maximal process runtime: in secounds - only necessary if processLimit > 1
-processMaxRunTime=300
-
-# cat=basic//10; type=int [1- 86400]; label= Maximal number of URLs, which can be added to the queue at one time
-maxCompileUrls=10000
-
-# cat=basic//10; type=boolean; label= Debug: Print Multiprocess- processing informations - prints some information whether a process was really executed and which status it has
-processDebug=0
-
-# cat=basic//10; type=boolean; label= Make Multiprocess- processing be verbose while running
-processVerbose=0
-
-# cat=basic//10; type=boolean; label= Crawl hidden pages: Crawl hidden pages (By default they won't be crawled)
-crawlHiddenPages=0
-
-# cat=basic//10; type=string; label= PHP Path: Local path to php binary file (e.g. "/usr/bin/php")
-phpPath=/usr/bin/php
-
-# cat=basic//10; type=boolean; label= Enabled Timeslot for Duplicationcheck: When this option is active items will not be queue twice for the past if theire schedule time is the currenttime +-100 seconds.
-enableTimeslot=1
-
-# cat=basic//10; type=string; label= Log Filename:
-logFileName=
-
-# cat=basic//10; type=boolean; label= Follow 301 and 302: If checked the crawler will follow the URLs (Location) given in a HTTP 301 and 302 response.
-follow30x=
-
-# cat=basic//10; type=boolean; label= Make direct requests: If checked the crawler will make direct requests by including the index.php file instead of getting the page content via http(s)
-makeDirectRequests=0
-
-# cat=basic//10; type=string; label=Frontend website base path: Base path of the website frontend (e.g. if you call http://mydomain.com/cms/index.php in the browser the base path is "/cms/"). Leave empty to use the value of config.absRefPrefix instead.
+# cat=Settings; type=string; label=Frontend website base path: Base path of the website frontend (e.g. if you call http://mydomain.com/cms/index.php in the browser the base path is "/cms/"). Leave empty to use the value of config.absRefPrefix instead.
 frontendBasePath=/
 
-# cat=basic//10; type=boolean; label=Clean up old queue entries: If checked the older queue entries will be deleted when adding new crawler configurations from CLI.
+# cat=Settings; type=boolean; label= Follow 301 and 302: If checked the crawler will follow the URLs (Location) given in a HTTP 301 and 302 response.
+follow30x=
+
+# cat=Settings; type=boolean; label= Crawl hidden pages: Crawl hidden pages (By default they won't be crawled)
+crawlHiddenPages=0
+
+# cat=Settings; type=boolean; label= Make direct requests: If checked the crawler will make direct requests by including the index.php file instead of getting the page content via http(s)
+makeDirectRequests=0
+
+#########
+## Queue
+#########
+
+# cat=Queue; type=int [1- 86400]; label= Maximal number of URLs, which can be added to the queue at one time
+maxCompileUrls=10000
+
+# cat=Queue; type=boolean; label= Enabled Timeslot for Duplicationcheck: When this option is active items will not be queue twice for the past if theire schedule time is the currenttime +-100 seconds.
+enableTimeslot=1
+
+#########
+## Processing
+#########
+
+# cat=Processing; type=int [0-10000]; label= Sleep time between requests: Time in milliseconds the crawler should sleep beetween requesting urls: low = faster / high = less stress for the server
+sleepTime = 1000
+
+# cat=Processing; type=int [0-100]; label= Sleep time after finishing: Time in seconds the crawler should sleep before finishing
+sleepAfterFinish=10
+
+# cat=Processing; type=int [1-10000]; label= Entries per run: How many queue entries should be processed in a run
+countInARun=100
+
+# cat=Processing; type=int [1-99]; label= Maximum processes
+processLimit=1
+
+# cat=Processing; type=int [1- 86400]; label= Maximal process runtime: in secounds - only necessary if processLimit > 1
+processMaxRunTime=300
+
+#########
+## Cleanup
+#########
+
+# cat=Cleanup; type=boolean; label=Clean up old queue entries: If checked the older queue entries will be deleted when adding new crawler configurations from CLI.
 cleanUpOldQueueEntries=1
 
-# cat=basic//10; type=int [1- 99]; label=Processed Age: If Clean up old queue entries is checked, then processed entries older than X days are deleted.
+# cat=Cleanup; type=int [1- 99]; label=Processed Age: If Clean up old queue entries is checked, then processed entries older than X days are deleted.
 cleanUpProcessedAge=2
 
-# cat=basic//10; type=int [1- 99]; label=Scheduled Age: If Clean up old queue entries is checked, then scheduled entries older than X days are deleted.
+# cat=Cleanup; type=int [1- 99]; label=Scheduled Age: If Clean up old queue entries is checked, then scheduled entries older than X days are deleted.
 cleanUpScheduledAge=7
+
+# cat=Cleanup; type=int [1-365]; label= Delete processed items: Delete processed items from the queue after n days (0 will keep the entries forever - the database may grow very large over time!)
+purgeQueueDays=14
+
+#########
+## System
+#########
+
+# cat=System; type=string; label= PHP Path: Local path to php binary file (e.g. "/usr/bin/php")
+phpPath=/usr/bin/php
+
+# cat=System; type=string; label= Log Filename:
+logFileName=
+
+#########
+## Debug
+#########
+
+# cat=Debug; type=boolean; label= Debug: Print Multiprocess- processing informations - prints some information whether a process was really executed and which status it has
+processDebug=0
+
+# cat=Debug; type=boolean; label= Make Multiprocess- processing be verbose while running
+processVerbose=0
