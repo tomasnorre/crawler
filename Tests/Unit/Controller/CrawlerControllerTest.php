@@ -384,7 +384,7 @@ class CrawlerControllerTest extends UnitTestCase
      */
     public function isCrawlingProtocolHttps($crawlerConfiguration, $pageConfiguration, $expected)
     {
-        $crawlerLib = $this->getAccessibleMock(CrawlerController::class, ['dummy']);
+        $crawlerLib = $this->getAccessibleMock(CrawlerController::class, ['dummy'], [], '', false);
 
         $this->assertEquals(
             $expected,
