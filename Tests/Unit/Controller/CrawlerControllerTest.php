@@ -376,6 +376,59 @@ class CrawlerControllerTest extends UnitTestCase
             $crawlerLib->_call('getRequestUrlFrom302Header', $headers, $user, $pass)
         );
     }
+    
+    /**
+     * @test
+     *
+     * @param $crawlerConfiguration
+     * @param $pageConfiguration
+     * @param $expected
+     *
+     * @dataProvider isCrawlingProtocolHttpsDataProvider
+     */
+    public function isCrawlingProtocolHttps($crawlerConfiguration, $pageConfiguration, $expected)
+    {
+        $crawlerLib = $this->getAccessibleMock(CrawlerController::class, ['dummy'], [], '', false);
+
+        $this->assertEquals(
+            $expected,
+            $crawlerLib->_call('isCrawlingProtocolHttps', $crawlerConfiguration, $pageConfiguration, $expected)
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function isCrawlingProtocolHttpsDataProvider()
+    {
+        return [
+            'Crawler configuration is -1 (Force http)' => [
+                'crawlerConfiguration' => -1,
+                'pageConfiguration' => true,
+                'expected' => false
+            ],
+            'Crawler configuration is 0 (Respect Page), Page is true' => [
+                'crawlerConfiguration' => 0,
+                'pageConfiguration' => true,
+                'expected' => true
+            ],
+            'Crawler configuration is 0 (Respect Page), Page is false' => [
+                'crawlerConfiguration' => 0,
+                'pageConfiguration' => false,
+                'expected' => false
+            ],
+            'Crawler configuration is 1 (Force https)' => [
+                'crawlerConfiguration' => 1,
+                'pageConfiguration' => false,
+                'expected' => true
+            ],
+            'Crawler configuration is not expected value -1, 0 or 1' => [
+                'crawlerConfiguration' => 32,
+                'pageConfiguration' => false,
+                'expected' => false
+            ],
+        ];
+    }
 
     /**
      * @test

@@ -664,20 +664,22 @@ class CrawlerController
                                 $TSparserObject = GeneralUtility::makeInstance('TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser');
                                 $TSparserObject->parse($configurationRecord['processing_instruction_parameters_ts']);
 
+                                $isCrawlingProtocolHttps = $this->isCrawlingProtocolHttps($configurationRecord['force_ssl'], $forceSsl);
+
                                 $subCfg = [
                                     'procInstrFilter' => $configurationRecord['processing_instruction_filter'],
                                     'procInstrParams.' => $TSparserObject->setup,
                                     'baseUrl' => $this->getBaseUrlForConfigurationRecord(
                                         $configurationRecord['base_url'],
                                         $configurationRecord['sys_domain_base_url'],
-                                        $forceSsl
+                                        $isCrawlingProtocolHttps
                                     ),
                                     'realurl' => $configurationRecord['realurl'],
                                     'cHash' => $configurationRecord['chash'],
                                     'userGroups' => $configurationRecord['fegroups'],
                                     'exclude' => $configurationRecord['exclude'],
                                     'rootTemplatePid' => (int) $configurationRecord['root_template_pid'],
-                                    'key' => $key,
+                                    'key' => $key
                                 ];
 
                                 // add trailing slash if not present
@@ -2656,5 +2658,26 @@ class CrawlerController
         unset($configuration['paramExpanded']);
         unset($configuration['URLs']);
         return md5(serialize($configuration));
+    }
+
+    /**
+     * Check whether the Crawling Protocol should be http or https
+     *
+     * @param $crawlerConfiguration
+     * @param $pageConfiguration
+     *
+     * @return bool
+     */
+    protected function isCrawlingProtocolHttps($crawlerConfiguration, $pageConfiguration) {
+        switch($crawlerConfiguration) {
+            case -1:
+                return false;
+            case 0:
+                return $pageConfiguration;
+            case 1:
+                return true;
+            default:
+                return false;
+        }
     }
 }

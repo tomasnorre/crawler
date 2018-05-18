@@ -12,6 +12,18 @@
             <trans-unit id="tx_crawler_configuration.name">
                 <source>Name</source>
             </trans-unit>
+            <trans-unit id="tx_crawler_configuration.crawling_protocol">
+                <source>Protocol for crawling</source>
+            </trans-unit>
+            <trans-unit id="tx_crawler_configuration.crawling_protocol.http">
+                <source>Force HTTP for all pages</source>
+            </trans-unit>
+            <trans-unit id="tx_crawler_configuration.crawling_protocol.page_config">
+                <source>Keeps page configured protocol</source>
+            </trans-unit>
+            <trans-unit id="tx_crawler_configuration.crawling_protocol.https">
+                <source>Force HTTPS for all pages</source>
+            </trans-unit>
             <trans-unit id="tx_crawler_configuration.processing_instruction_filter">
                 <source>Processing instruction filter</source>
             </trans-unit>
