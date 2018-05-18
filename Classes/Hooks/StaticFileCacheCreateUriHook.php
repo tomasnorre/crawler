@@ -41,6 +41,7 @@ class StaticFileCacheCreateUriHook
      * @param \SFC\NcStaticfilecache\StaticFileCache $parent The calling parent object
      *
      * @throws \Exception
+     * @return void
      */
     public function initialize(array $parameters, \SFC\NcStaticfilecache\StaticFileCache $parent)
     {
