@@ -13,6 +13,7 @@
 .. role::   ts(typoscript)
    :class:  typoscript
 .. role::   php(code)
+.. |year|   date:: %Y
 
 
 EXT: Crawler
@@ -24,7 +25,7 @@ Language: en
 
 Keywords: forAdmins, forDevelopers
 
-Copyright 2000-2016, Kasper Skårhøj, Daniel Pötzinger, Fabrizio
+Copyright 2000-|year|, Kasper Skårhøj, Daniel Pötzinger, Fabrizio
 Branca, Tolleiv Nietsch, Timo Schmidt, Michael Klapper, Stefan Rotsch,
 Tomas Norre Mikkelsen <dev@aoe.com>
 
