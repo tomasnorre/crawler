@@ -611,7 +611,11 @@ class CrawlerController
 
             if (\is_array($crawlerCfg['paramSets.'])) {
                 foreach ($crawlerCfg['paramSets.'] as $key => $values) {
-
+                    if (!\is_array($values)) {
+                        // Sub configuration for a single configuration string:
+                        $subCfg = (array)$crawlerCfg['paramSets.'][$key . '.'];
+                        $subCfg['key'] = $key;
+                    }
                     $key = str_replace('.', '', $key);
                     // Sub configuration for a single configuration string:
                     $subCfg = (array)$crawlerCfg['paramSets.'][$key . '.'];
@@ -641,12 +645,44 @@ class CrawlerController
 
                             $res[$key]['subCfg'] = $subCfg;
                             $res[$key]['origin'] = 'pagets';
-
                             // recognize MP value
                             if (!$this->MP) {
                                 $res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'], ['?id=' . $id]);
                             } else {
                                 $res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'], ['?id=' . $id . '&MP=' . $this->MP]);
+                            }
+                        }
+                    } else {
+                        $key = str_replace('.', '', $key);
+                        if (!isset($res[$key])) {
+                            // only processing instructions
+                            $subCfg = $values;
+                            $subCfg['key'] = $key;
+
+                            if (strcmp($subCfg['procInstrFilter'], '')) {
+                                $subCfg['procInstrFilter'] = implode(',', GeneralUtility::trimExplode(',', $subCfg['procInstrFilter']));
+                            }
+                            $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $subCfg['pidsOnly'], true));
+
+                            // process configuration if it is not page-specific or if the specific page is the current page:
+                            if (!strcmp($subCfg['pidsOnly'], '') || GeneralUtility::inList($pidOnlyList, $id)) {
+
+                                    // add trailing slash if not present
+                                if (!empty($subCfg['baseUrl']) && substr($subCfg['baseUrl'], -1) != '/') {
+                                    $subCfg['baseUrl'] .= '/';
+                                }
+
+                                // Explode, process etc.:
+                                $res[$key] = [];
+                                $res[$key]['subCfg'] = $subCfg;
+                                $res[$key]['paramParsed'] = [];
+                                $res[$key]['origin'] = 'pagets';
+                                // recognize MP value
+                                if (!$this->MP) {
+                                    $res[$key]['URLs'] = ['?id=' . $id];
+                                } else {
+                                    $res[$key]['URLs'] = ['?id=' . $id . '&MP=' . $this->MP];
+                                }
                             }
                         }
                     }
@@ -927,7 +963,7 @@ class CrawlerController
                                 if ($subpartParams['_ENABLELANG'] && $transOrigPointerField) {
                                     $andWhereLanguage = ' AND ' . $this->db->quoteStr($transOrigPointerField, $subpartParams['_TABLE']) . ' <= 0 ';
                                 }
-								
+
                                 if($recursiveDepth > 0) {
                                     /** @var \TYPO3\CMS\Core\Database\QueryGenerator $queryGenerator */
                                     $queryGenerator = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\QueryGenerator::class);
