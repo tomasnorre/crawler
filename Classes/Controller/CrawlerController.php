@@ -899,15 +899,21 @@ class CrawlerController
                             $lookUpPid = isset($subpartParams['_PID']) ? intval($subpartParams['_PID']) : $pid;
                             $pidField = isset($subpartParams['_PIDFIELD']) ? trim($subpartParams['_PIDFIELD']) : 'pid';
                             $where = isset($subpartParams['_WHERE']) ? $subpartParams['_WHERE'] : '';
-                            $addTable = isset($subpartParams['_ADDTABLE']) ? $subpartParams['_ADDTABLE'] : '';
+                            $addTable = isset($subpartParams['_ADDTABLE']) ? ' ' . $subpartParams['_ADDTABLE'] : '';
 
                             $fieldName = $subpartParams['_FIELD'] ? $subpartParams['_FIELD'] : 'uid';
-                            if ($fieldName === 'uid' || $TCA[$subpartParams['_TABLE']]['columns'][$fieldName]) {
+                            $fieldNameParts = GeneralUtility::trimExplode('.', $fieldName);
+                            if ($fieldName === 'uid'
+                                || in_array('uid', $fieldNameParts)
+                                || $TCA[$subpartParams['_TABLE']]['columns'][$fieldName]) {
                                 $andWhereLanguage = '';
                                 $transOrigPointerField = $TCA[$subpartParams['_TABLE']]['ctrl']['transOrigPointerField'];
 
                                 if ($subpartParams['_ENABLELANG'] && $transOrigPointerField) {
-                                    $andWhereLanguage = ' AND ' . $this->db->quoteStr($transOrigPointerField, $subpartParams['_TABLE']) . ' <= 0 ';
+                                    $andWhereLanguage = ' AND '
+                                        . $subpartParams['_TABLE'] . '.'
+                                        . $this->db->quoteStr($transOrigPointerField, $subpartParams['_TABLE'])
+                                        . ' <= 0 ';
                                 }
 
                                 $where = $this->db->quoteStr($pidField, $subpartParams['_TABLE']) . '=' . intval($lookUpPid) . ' ' .
@@ -920,7 +926,7 @@ class CrawlerController
                                     '',
                                     '',
                                     '',
-                                    $fieldName
+                                    \count($fieldNameParts) > 1 ? $fieldNameParts[1] : $fieldName
                                 );
 
                                 if (is_array($rows)) {
