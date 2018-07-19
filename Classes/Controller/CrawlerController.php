@@ -605,7 +605,6 @@ class CrawlerController
         $pageTSconfig = $this->getPageTSconfigForId($id);
 
         $res = [];
-
         if (\is_array($pageTSconfig) && \is_array($pageTSconfig['tx_crawler.']['crawlerCfg.'])) {
             $crawlerCfg = $pageTSconfig['tx_crawler.']['crawlerCfg.'];
 
@@ -652,37 +651,35 @@ class CrawlerController
                                 $res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'], ['?id=' . $id . '&MP=' . $this->MP]);
                             }
                         }
-                    } else if (!isset($res[str_replace('.', '', $key)])){
+                    } else if (!isset($res[str_replace('.', '', $key)])) {
                         $key = str_replace('.', '', $key);
-                        if (!isset($res[$key])) {
-                            // only processing instructions
-                            $subCfg = $values;
-                            $subCfg['key'] = $key;
+                        // only processing instructions
+                        $subCfg = $values;
+                        $subCfg['key'] = $key;
 
-                            if (strcmp($subCfg['procInstrFilter'], '')) {
-                                $subCfg['procInstrFilter'] = implode(',', GeneralUtility::trimExplode(',', $subCfg['procInstrFilter']));
+                        if (strcmp($subCfg['procInstrFilter'], '')) {
+                            $subCfg['procInstrFilter'] = implode(',', GeneralUtility::trimExplode(',', $subCfg['procInstrFilter']));
+                        }
+                        $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $subCfg['pidsOnly'], true));
+
+                        // process configuration if it is not page-specific or if the specific page is the current page:
+                        if (!strcmp($subCfg['pidsOnly'], '') || GeneralUtility::inList($pidOnlyList, $id)) {
+
+                                // add trailing slash if not present
+                            if (!empty($subCfg['baseUrl']) && substr($subCfg['baseUrl'], -1) != '/') {
+                                $subCfg['baseUrl'] .= '/';
                             }
-                            $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $subCfg['pidsOnly'], true));
 
-                            // process configuration if it is not page-specific or if the specific page is the current page:
-                            if (!strcmp($subCfg['pidsOnly'], '') || GeneralUtility::inList($pidOnlyList, $id)) {
-
-                                    // add trailing slash if not present
-                                if (!empty($subCfg['baseUrl']) && substr($subCfg['baseUrl'], -1) != '/') {
-                                    $subCfg['baseUrl'] .= '/';
-                                }
-
-                                // Explode, process etc.:
-                                $res[$key] = [];
-                                $res[$key]['subCfg'] = $subCfg;
-                                $res[$key]['paramParsed'] = [];
-                                $res[$key]['origin'] = 'pagets';
-                                // recognize MP value
-                                if (!$this->MP) {
-                                    $res[$key]['URLs'] = ['?id=' . $id];
-                                } else {
-                                    $res[$key]['URLs'] = ['?id=' . $id . '&MP=' . $this->MP];
-                                }
+                            // Explode, process etc.:
+                            $res[$key] = [];
+                            $res[$key]['subCfg'] = $subCfg;
+                            $res[$key]['paramParsed'] = [];
+                            $res[$key]['origin'] = 'pagets';
+                            // recognize MP value
+                            if (!$this->MP) {
+                                $res[$key]['URLs'] = ['?id=' . $id];
+                            } else {
+                                $res[$key]['URLs'] = ['?id=' . $id . '&MP=' . $this->MP];
                             }
                         }
                     }
