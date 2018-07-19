@@ -652,7 +652,7 @@ class CrawlerController
                                 $res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'], ['?id=' . $id . '&MP=' . $this->MP]);
                             }
                         }
-                    } else {
+                    } else if (!isset($res[str_replace('.', '', $key)])){
                         $key = str_replace('.', '', $key);
                         if (!isset($res[$key])) {
                             // only processing instructions
