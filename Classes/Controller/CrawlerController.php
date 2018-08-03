@@ -615,7 +615,7 @@ class CrawlerController
                             // Explode, process etc.:
                             $res[$key] = [];
                             $res[$key]['subCfg'] = $subCfg;
-                            $res[$key]['paramParsed'] = $this->parseParams($values);
+                            $res[$key]['paramParsed'] = $this->parseParams($crawlerCfg['paramSets.'][$key]);
                             $res[$key]['paramExpanded'] = $this->expandParameters($res[$key]['paramParsed'], $id);
                             $res[$key]['origin'] = 'pagets';
 
