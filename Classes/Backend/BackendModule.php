@@ -33,6 +33,7 @@ use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\EventDispatcher;
 use AOE\Crawler\Service\ProcessService;
+use AOE\Crawler\Utility\CsvUtility;
 use AOE\Crawler\Utility\IconUtility;
 use TYPO3\CMS\Backend\Module\AbstractFunctionModule;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
@@ -657,11 +658,11 @@ class BackendModule extends AbstractFunctionModule
         // Field names:
         reset($this->CSVaccu);
         $fieldNames = array_keys(current($this->CSVaccu));
-        $csvLines[] = GeneralUtility::csvValues($fieldNames);
+        $csvLines[] = CsvUtility::csvValues($fieldNames);
 
         // Data:
         foreach ($this->CSVaccu as $row) {
-            $csvLines[] = GeneralUtility::csvValues($row);
+            $csvLines[] = CsvUtility::csvValues($row);
         }
 
         // Creating output header:
