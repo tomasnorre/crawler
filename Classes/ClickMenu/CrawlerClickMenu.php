@@ -28,6 +28,7 @@ namespace AOE\Crawler\ClickMenu;
 use TYPO3\CMS\Backend\ClickMenu\ClickMenu;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\PathUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
@@ -90,7 +91,7 @@ class CrawlerClickMenu
     {
         $icon = sprintf(
             '<img src="%s" border="0" align="top" alt="" />',
-            ExtensionManagementUtility::extRelPath('crawler') . 'Resources/Public/Icons/icon_tx_crawler_configuration.gif'
+            PathUtility::stripPathSitePrefix(ExtensionManagementUtility::extPath('crawler')) . 'Resources/Public/Icons/icon_tx_crawler_configuration.gif'
         );
 
         return $icon;
