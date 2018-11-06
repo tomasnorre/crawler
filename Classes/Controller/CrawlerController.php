@@ -48,6 +48,7 @@ use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\CMS\Frontend\Page\PageGenerator;
 use TYPO3\CMS\Frontend\Page\PageRepository;
 use TYPO3\CMS\Frontend\Utility\EidUtility;
+use TYPO3\CMS\Lang\LanguageService;
 
 /**
  * Class CrawlerController
@@ -1760,7 +1761,7 @@ class CrawlerController
         global $BACK_PATH;
         global $LANG;
         if (!is_object($LANG)) {
-            $LANG = GeneralUtility::makeInstance('language');
+            $LANG = GeneralUtility::makeInstance(LanguageService::class);
             $LANG->init(0);
         }
         $this->scheduledTime = $scheduledTime;
