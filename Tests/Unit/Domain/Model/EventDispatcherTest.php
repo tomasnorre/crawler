@@ -76,7 +76,7 @@ class EventDispatcherTest extends UnitTestCase
         EventsHelper::$called_bar = 0;
 
         //we're bypassing the singleton here because we don't want to share data with former testcases. Therefore we mock the protected constructor and create a fresh dispatcher
-        $dispatcher = $this->getMock(EventDispatcher::class, ['__construct'], [], '', false);
+        $dispatcher = $this->createMock(EventDispatcher::class, ['__construct'], [], '', false);
         $observer = new EventsHelper();
         $observer->registerObservers($dispatcher);
 

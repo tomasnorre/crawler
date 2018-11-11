@@ -39,7 +39,7 @@ class ProcessCleanupTaskTest extends UnitTestCase
      */
     public function ClassAliasMapReturnsNewClassName()
     {
-        $classObject = $this->getMock('\AOE\Crawler\Tasks\ProcessCleanupTask', [], [], '', false);
+        $classObject = $this->createMock('\AOE\Crawler\Tasks\ProcessCleanupTask', [], [], '', false);
 
         $this->assertInstanceOf(
             'AOE\Crawler\Task\ProcessCleanupTask',

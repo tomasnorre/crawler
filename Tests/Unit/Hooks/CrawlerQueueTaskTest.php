@@ -40,7 +40,7 @@ class CrawlerQueueTaskTest extends UnitTestCase
      */
     public function ClassAliasMapReturnsNewClassName()
     {
-        $classObject = $this->getMock('tx_crawler_scheduler_im', [], [], '', false);
+        $classObject = $this->createMock('tx_crawler_scheduler_im', [], [], '', false);
 
         $this->assertInstanceOf(
             'AOE\Crawler\Task\CrawlerQueueTask',

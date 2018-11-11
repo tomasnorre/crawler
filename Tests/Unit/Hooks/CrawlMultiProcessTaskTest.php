@@ -39,7 +39,7 @@ class CrawlMultiProcessTaskTest extends UnitTestCase
      */
     public function ClassAliasMapReturnsNewClassName()
     {
-        $classObject = $this->getMock('tx_crawler_scheduler_crawlMultiProcess', [], [], '', false);
+        $classObject = $this->createMock('tx_crawler_scheduler_crawlMultiProcess', [], [], '', false);
 
         $this->assertInstanceOf(
             'AOE\Crawler\Task\CrawlMultiProcessTask',

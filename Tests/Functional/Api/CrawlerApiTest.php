@@ -366,13 +366,13 @@ class CrawlerApiTest extends FunctionalTestCase
     protected function getMockedCrawlerAPI($currentTime)
     {
         //created mocked crawler controller which returns a faked timestamp
-        $crawlerController = $this->getMock(CrawlerController::class, ['getCurrentTime', 'drawURLs_PIfilter']);
+        $crawlerController = $this->createMock(CrawlerController::class, ['getCurrentTime', 'drawURLs_PIfilter']);
         $crawlerController->expects($this->any())->method("getCurrentTime")->will($this->returnValue($currentTime));
         $crawlerController->expects($this->any())->method("drawURLs_PIfilter")->will($this->returnValue(true));
 
         /* @var CrawlerApi $crawlerApi */
         //create mocked api
-        $crawlerApi = $this->getMock(CrawlerApi::class, ['findCrawler']);
+        $crawlerApi = $this->createMock(CrawlerApi::class, ['findCrawler']);
         $crawlerApi->expects($this->any())->method("findCrawler")->will($this->returnValue($crawlerController));
 
         return $crawlerApi;

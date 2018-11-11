@@ -54,9 +54,9 @@ class ProcessServiceTest extends UnitTestCase
      */
     public function setUp()
     {
-        $this->subject = $this->getMock(ProcessService::class, ['dummyMethod'], [], '', false);
+        $this->subject = $this->createMock(ProcessService::class, ['dummyMethod'], [], '', false);
 
-        $this->crawlerController = $this->getMock(CrawlerController::class, ['dummyMethod'], [], '', false);
+        $this->crawlerController = $this->createMock(CrawlerController::class, ['dummyMethod'], [], '', false);
 
         define('TYPO3_DOCUMENT_ROOT', '/typo3/document/root/');
         define('TYPO3_SITE_PATH', '/typo3/site/path/');
@@ -80,15 +80,17 @@ class ProcessServiceTest extends UnitTestCase
 
     /**
      * @test
-     *
-     * @expectedException \RuntimeException
      */
     public function multiProcessThrowsException()
     {
+
+        $this->expectException(\RuntimeException::class);
+
         $timeOut = 1;
         $this->crawlerController->setExtensionSettings([
             'processLimit' => 1,
         ]);
         $this->subject->multiProcess($timeOut);
+
     }
 }

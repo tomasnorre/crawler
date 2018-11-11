@@ -43,7 +43,7 @@ class AuthenticationServiceTest extends UnitTestCase
 
     public function setUp()
     {
-        $this->authenticationService = $this->getMock(AuthenticationService::class, ['fetchUserRecord'], [], '', false);
+        $this->authenticationService = $this->createMock(AuthenticationService::class, ['fetchUserRecord'], [], '', false);
     }
 
     /**
