@@ -25,6 +25,9 @@ namespace AOE\Crawler\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+
+
 /**
  * Class AbstractRepository
  *
@@ -39,19 +42,24 @@ abstract class AbstractRepository
     protected $tableName;
 
     /**
-     * Counts items by a given where clause
-     *
-     * @param  string $where
+     * @var QueryBuilder
+     */
+    protected $queryBuilder = QueryBuilder::class;
+
+    /**
+     * Counts all in repository
      *
      * @return integer
      */
-    protected function countByWhere($where)
+    public function countAll()
     {
-        $db = $this->getDB();
-        $rs = $db->exec_SELECTquery('count(*) as anz', $this->tableName, $where);
-        $res = $db->sql_fetch_assoc($rs);
+        $count = $this->queryBuilder
+            ->count('*')
+            ->from($this->tableName)
+            ->execute()
+            ->fetchColumn(0);
 
-        return $res['anz'];
+        return $count;
     }
 
     /**

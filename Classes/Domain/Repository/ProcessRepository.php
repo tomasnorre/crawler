@@ -27,6 +27,8 @@ namespace AOE\Crawler\Domain\Repository;
 
 use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Domain\Model\ProcessCollection;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -40,6 +42,19 @@ class ProcessRepository extends AbstractRepository
      * @var string
      */
     protected $tableName = 'tx_crawler_process';
+
+    /**
+     * @var QueryBuilder
+     */
+    protected $queryBuilder = QueryBuilder::class;
+
+    /**
+     * QueueRepository constructor.
+     */
+    public function __construct()
+    {
+        $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+    }
 
     /**
      * This method is used to find all cli processes within a limit.
@@ -82,25 +97,23 @@ class ProcessRepository extends AbstractRepository
     }
 
     /**
-     * This method is used to count all processes in the process table.
-     *
-     * @param  string $where Where clause
-     *
-     * @return integer
-     */
-    public function countAll($where = '1 = 1')
-    {
-        return $this->countByWhere($where);
-    }
-
-    /**
      * Returns the number of active processes.
      *
      * @return integer
      */
     public function countActive()
     {
-        return $this->countByWhere('active = 1 AND deleted = 0');
+        $count = $this->queryBuilder
+            ->count('*')
+            ->from($this->tableName)
+            ->where(
+                $this->queryBuilder->expr()->eq('active', 1),
+                $this->queryBuilder->expr()->eq('deleted', 0)
+            )
+            ->execute()
+            ->fetchColumn(0);
+
+        return $count;
     }
 
     /**
@@ -112,7 +125,17 @@ class ProcessRepository extends AbstractRepository
      */
     public function countNotTimeouted($ttl)
     {
-        return $this->countByWhere('deleted = 0 AND ttl > ' . intval($ttl));
+        $count = $this->queryBuilder
+            ->count('*')
+            ->from($this->tableName)
+            ->where(
+                $this->queryBuilder->expr()->eq('deleted', 0),
+                $this->queryBuilder->expr()->gt('ttl', intval($ttl))
+            )
+            ->execute()
+            ->fetchColumn(0);
+
+        return $count;
     }
 
     /**

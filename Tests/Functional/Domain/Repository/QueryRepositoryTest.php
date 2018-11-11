@@ -301,7 +301,7 @@ class QueryRepositoryTest extends FunctionalTestCase
 
         $this->assertSame(
             $expectedArray,
-            $this->subject->getLastProcessedEntries(2)
+            $this->subject->getLastProcessedEntries('qid', 2)
         );
     }
 

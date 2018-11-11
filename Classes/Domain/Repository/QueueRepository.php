@@ -46,7 +46,7 @@ class QueueRepository extends AbstractRepository
     /**
      * @var QueryBuilder
      */
-    protected $queryBuilder = \Doctrine\DBAL\Query\QueryBuilder::class;
+    protected $queryBuilder = QueryBuilder::class;
 
     /**
      * QueueRepository constructor.
@@ -360,6 +360,7 @@ class QueueRepository extends AbstractRepository
     /**
      * Get the last processed entries
      *
+     * @param string $selectFields
      * @param int $limit
      *
      * @return array
@@ -408,17 +409,5 @@ class QueueRepository extends AbstractRepository
         }
 
         return $rows;
-    }
-
-    /**
-     * This method is used to count all processes in the process table.
-     *
-     * @param  string $where Where clause
-     *
-     * @return integer
-     */
-    public function countAll($where = '1 = 1')
-    {
-        return $this->countByWhere($where);
     }
 }
