@@ -17,10 +17,12 @@
     ],
     "require": {
         "php": ">=5.5",
-        "typo3/cms-core": "^7.6 || ^8.7 || ^9.5"
+        "typo3/cms-core": "^8.7"
     },
     "require-dev": {
-        "nimut/testing-framework": "^2.0 || ^4.0"
+        "typo3/cms": "^8.7",
+        "nimut/testing-framework": "^2.0 || ^4.0",
+        "helhum/typo3-console": "*"
     },
     "replace": {
         "crawler":  "self.version",
@@ -39,12 +41,23 @@
     },
     "config": {
         "vendor-dir": ".Build/vendor",
-        "bin-dir": ".Build/bin"
+        "bin-dir": ".Build/bin",
+        "process-timeout": 0
     },
     "scripts": {
         "post-autoload-dump": [
             "mkdir -p .Build/Web/typo3conf/ext/",
-            "[ -L .Build/Web/typo3conf/ext/crawler ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/crawler"
+            "[ -L .Build/Web/typo3conf/ext/crawler ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/crawler",
+            "[ -e .Build/bin/typo3console ] &&  .Build/bin/typo3cms install:generatepackagestates || echo 'TYPO3 Console is not installed'",
+            "export TYPO3_PATH_WEB=$PWD/.Build/Web"
+        ],
+        "test:unit": [
+            "[ -e .Build/bin/phpunit ] || composer update",
+            "TYPO3_PATH_WEB=.Build/Web .Build/bin/phpunit --colors -c .Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/Unit"
+        ],
+        "test:functional": [
+            "[ -e .Build/bin/phpunit ] || composer update",
+            "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseName=database typo3DatabaseHost=localhost typo3DatabaseUsername=root typo3DatabasePassword=root .Build/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml Tests/Functional"
         ]
     },
     "extra": {
