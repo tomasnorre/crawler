@@ -174,7 +174,7 @@ class CrawlerControllerTest extends UnitTestCase
     public function getUrlsForPageRow($checkIfPageSkipped, $getUrlsForPages, $pageRow, $skipMessage, $expected)
     {
         /** @var CrawlerController $crawlerController */
-        $crawlerController = $this->createMock(CrawlerController::class, ['checkIfPageShouldBeSkipped', 'getUrlsForPageId'], [], '', false);
+        $crawlerController = $this->createPartialMock(CrawlerController::class, ['checkIfPageShouldBeSkipped', 'getUrlsForPageId']);
         $crawlerController->expects($this->any())->method('checkIfPageShouldBeSkipped')->will($this->returnValue($checkIfPageSkipped));
         $crawlerController->expects($this->any())->method('getUrlsForPageId')->will($this->returnValue($getUrlsForPages));
 
