@@ -12,6 +12,7 @@ env:
   - TYPO3_VERSION=dev-master COVERAGE=0 FUNCTIONAL=0
 
 matrix:
+  fast_finish: true
   exclude:
     - env: TYPO3_VERSION=dev-master COVERAGE=0 FUNCTIONAL=0
       php: 5.6
