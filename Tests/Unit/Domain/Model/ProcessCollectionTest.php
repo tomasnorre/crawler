@@ -57,11 +57,11 @@ class ProcessCollectionTest extends UnitTestCase
         $row2 = ['process_id' => 13];
 
         /** @var Process $processOne */
-        $processOne = $this->createMock(Process::class, ['dummy'], [], '', false);
+        $processOne = $this->createPartialMock(Process::class, ['dummy']);
         $processOne->setRow($row1);
 
         /** @var Process $processTwo */
-        $processTwo = $this->createMock(Process::class, ['dummy'], [], '', false);
+        $processTwo = $this->createPartialMock(Process::class, ['dummy']);
         $processTwo->setRow($row2);
 
         $processes = [];
