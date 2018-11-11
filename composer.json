@@ -20,7 +20,6 @@
         "typo3/cms-core": "^7.6 || ^8.7 || ^9.5"
     },
     "require-dev": {
-        "typo3/cms": "^7.6",
         "nimut/testing-framework": "^2.0 || ^4.0"
     },
     "replace": {
