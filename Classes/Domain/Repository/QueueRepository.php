@@ -27,6 +27,9 @@ namespace AOE\Crawler\Domain\Repository;
 
 use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Domain\Model\Queue;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class QueueRepository
@@ -41,6 +44,19 @@ class QueueRepository extends AbstractRepository
     protected $tableName = 'tx_crawler_queue';
 
     /**
+     * @var QueryBuilder
+     */
+    protected $queryBuilder = \Doctrine\DBAL\Query\QueryBuilder::class;
+
+    /**
+     * QueueRepository constructor.
+     */
+    public function __construct()
+    {
+        $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+    }
+
+    /**
      * This method is used to find the youngest entry for a given process.
      *
      * @param Process $process
@@ -49,7 +65,7 @@ class QueueRepository extends AbstractRepository
      */
     public function findYoungestEntryForProcess(Process $process)
     {
-        return $this->getFirstOrLastObjectByProcess($process, 'exec_time ASC');
+        return $this->getFirstOrLastObjectByProcess($process, 'exec_time');
     }
 
     /**
@@ -61,32 +77,36 @@ class QueueRepository extends AbstractRepository
      */
     public function findOldestEntryForProcess(Process $process)
     {
-        return $this->getFirstOrLastObjectByProcess($process, 'exec_time DESC');
+        return $this->getFirstOrLastObjectByProcess($process, 'exec_time', 'DESC');
     }
 
     /**
      * This internal helper method is used to create an instance of an entry object
      *
      * @param Process $process
-     * @param string $orderby first matching item will be returned as object
+     * @param string $orderByField first matching item will be returned as object
+     * @param string $orderBySorting sorting direction
      *
      * @return Queue
      */
-    protected function getFirstOrLastObjectByProcess($process, $orderby)
+    protected function getFirstOrLastObjectByProcess($process, $orderByField, $orderBySorting = 'ASC')
     {
-        $db = $this->getDB();
-        $where = 'process_id_completed=' . $db->fullQuoteStr($process->getProcess_id(), $this->tableName) .
-                   ' AND exec_time > 0 ';
-        $limit = 1;
-        $groupby = '';
 
-        $res = $db->exec_SELECTgetRows('*', 'tx_crawler_queue', $where, $groupby, $orderby, $limit);
-        if ($res) {
-            $first = $res[0];
-        } else {
-            $first = [];
+        $resultObject = new \stdClass();
+        $first = $this->queryBuilder
+            ->select('*')
+            ->from($this->tableName)
+            ->where(
+                $this->queryBuilder->expr()->eq('process_id_completed', $this->queryBuilder->createNamedParameter($process->getProcess_id())),
+                $this->queryBuilder->expr()->gt('exec_time', 0)
+            )
+            ->setMaxResults(1)
+            ->addOrderBy($orderByField, $orderBySorting)
+            ->execute();
+
+        while ($row = $first->fetch()) {
+            $resultObject = new Queue($row);
         }
-        $resultObject = new Queue($first);
 
         return $resultObject;
     }
@@ -100,10 +120,17 @@ class QueueRepository extends AbstractRepository
      */
     public function countExecutedItemsByProcess($process)
     {
-        return $this->countItemsByWhereClause('exec_time > 0 AND process_id_completed = ' . $this->getDB()->fullQuoteStr(
-            $process->getProcess_id(),
-                $this->tableName
-        ));
+        $count = $this->queryBuilder
+            ->count('*')
+            ->from($this->tableName)
+            ->where(
+                $this->queryBuilder->expr()->eq('process_id_completed', $this->queryBuilder->createNamedParameter($process->getProcess_id())),
+                $this->queryBuilder->expr()->gt('exec_time', 0)
+            )
+            ->execute()
+            ->fetchColumn(0);
+
+        return $count;
     }
 
     /**
@@ -115,10 +142,17 @@ class QueueRepository extends AbstractRepository
      */
     public function countNonExecutedItemsByProcess($process)
     {
-        return $this->countItemsByWhereClause('exec_time = 0 AND process_id = ' . $this->getDB()->fullQuoteStr(
-            $process->getProcess_id(),
-                $this->tableName
-        ));
+        $count = $this->queryBuilder
+            ->count('*')
+            ->from($this->tableName)
+            ->where(
+                $this->queryBuilder->expr()->eq('process_id', $this->queryBuilder->createNamedParameter($process->getProcess_id())),
+                $this->queryBuilder->expr()->eq('exec_time', 0)
+            )
+            ->execute()
+            ->fetchColumn(0);
+
+        return $count;
     }
 
     /**
@@ -128,7 +162,18 @@ class QueueRepository extends AbstractRepository
      */
     public function countUnprocessedItems()
     {
-        return $this->countItemsByWhereClause("exec_time=0 AND process_scheduled=0 AND scheduled<=" . time());
+        $count = $this->queryBuilder
+            ->count('*')
+            ->from($this->tableName)
+            ->where(
+                $this->queryBuilder->expr()->eq('process_scheduled', 0),
+                $this->queryBuilder->expr()->eq('exec_time', 0),
+                $this->queryBuilder->expr()->lte('scheduled', 0)
+            )
+            ->execute()
+            ->fetchColumn(0);
+
+        return $count;
     }
 
     /**
@@ -139,7 +184,18 @@ class QueueRepository extends AbstractRepository
      */
     public function countAllPendingItems()
     {
-        return $this->countItemsByWhereClause('exec_time = 0 AND scheduled < ' . time());
+        $count = $this->queryBuilder
+            ->count('*')
+            ->from($this->tableName)
+            ->where(
+                $this->queryBuilder->expr()->eq('process_scheduled', 0),
+                $this->queryBuilder->expr()->eq('exec_time', 0),
+                $this->queryBuilder->expr()->lte('scheduled', time())
+            )
+            ->execute()
+            ->fetchColumn(0);
+
+        return $count;
     }
 
     /**
@@ -150,7 +206,18 @@ class QueueRepository extends AbstractRepository
      */
     public function countAllAssignedPendingItems()
     {
-        return $this->countItemsByWhereClause("exec_time = 0 AND scheduled < " . time() . " AND process_id != ''");
+        $count = $this->queryBuilder
+            ->count('*')
+            ->from($this->tableName)
+            ->where(
+                $this->queryBuilder->expr()->neq('process_id', '""'),
+                $this->queryBuilder->expr()->eq('exec_time', 0),
+                $this->queryBuilder->expr()->lte('scheduled', time())
+            )
+            ->execute()
+            ->fetchColumn(0);
+
+        return $count;
     }
 
     /**
@@ -161,23 +228,18 @@ class QueueRepository extends AbstractRepository
      */
     public function countAllUnassignedPendingItems()
     {
-        return $this->countItemsByWhereClause("exec_time = 0 AND scheduled < " . time() . " AND process_id = ''");
-    }
+        $count = $this->queryBuilder
+            ->count('*')
+            ->from($this->tableName)
+            ->where(
+                $this->queryBuilder->expr()->eq('process_id', '""'),
+                $this->queryBuilder->expr()->eq('exec_time', 0),
+                $this->queryBuilder->expr()->lte('scheduled', time())
+            )
+            ->execute()
+            ->fetchColumn(0);
 
-    /**
-     * Internal method to count items by a given where clause
-     *
-     * @param string $where
-     *
-     * @return mixed
-     */
-    protected function countItemsByWhereClause($where)
-    {
-        $db = $this->getDB();
-        $rs = $db->exec_SELECTquery('count(*) as anz', $this->tableName, $where);
-        $res = $db->sql_fetch_assoc($rs);
-
-        return $res['anz'];
+        return $count;
     }
 
     /**
@@ -187,6 +249,7 @@ class QueueRepository extends AbstractRepository
      */
     public function countPendingItemsGroupedByConfigurationKey()
     {
+
         $db = $this->getDB();
         $res = $db->exec_SELECTquery(
             "configuration, count(*) as unprocessed, sum(process_id != '') as assignedButUnprocessed",
@@ -200,6 +263,21 @@ class QueueRepository extends AbstractRepository
         }
 
         return $rows;
+
+/**
+        $count = $this->queryBuilder
+            ->count('*')
+            ->from($this->tableName)
+            ->where(
+                $this->queryBuilder->expr()->eq('exec_time', 0),
+                $this->queryBuilder->expr()->lte('scheduled', time())
+            )
+            ->addGroupBy(['configuration'])
+            ->execute()
+            ->fetchColumn(0);
+
+        return $count;
+**/
     }
 
     /**
@@ -211,15 +289,18 @@ class QueueRepository extends AbstractRepository
      */
     public function getSetIdWithUnprocessedEntries()
     {
-        $db = $this->getDB();
-        $res = $db->exec_SELECTquery(
-            'set_id',
-            $this->tableName,
-            'exec_time = 0 AND scheduled < ' . time(),
-            'set_id'
-        );
+        $statement = $this->queryBuilder
+            ->select('set_id')
+            ->from($this->tableName)
+            ->where(
+                $this->queryBuilder->expr()->lt('scheduled', time()),
+                $this->queryBuilder->expr()->eq('exec_time', 0)
+            )
+            ->addGroupBy('set_id')
+            ->execute();
+
         $setIds = [];
-        while ($row = $db->sql_fetch_assoc($res)) {
+        while ($row = $statement->fetch()) {
             $setIds[] = intval($row['set_id']);
         }
 
@@ -261,18 +342,15 @@ class QueueRepository extends AbstractRepository
      */
     public function getLastProcessedEntriesTimestamps($limit = 100)
     {
-        $db = $this->getDB();
-        $res = $db->exec_SELECTquery(
-            'exec_time',
-            $this->tableName,
-            '',
-            '',
-            'exec_time desc',
-            $limit
-        );
+        $statement = $this->queryBuilder
+            ->select('exec_time')
+            ->from($this->tableName)
+            ->addOrderBy('exec_time', 'desc')
+            ->setMaxResults($limit)
+            ->execute();
 
         $rows = [];
-        while (($row = $db->sql_fetch_assoc($res)) !== false) {
+        while ($row = $statement->fetch()) {
             $rows[] = $row['exec_time'];
         }
 
@@ -282,7 +360,6 @@ class QueueRepository extends AbstractRepository
     /**
      * Get the last processed entries
      *
-     * @param string $selectFields
      * @param int $limit
      *
      * @return array

@@ -69,13 +69,13 @@ class QueryRepositoryTest extends FunctionalTestCase
      *
      * @dataProvider getFirstOrLastObjectByProcessDataProvider
      */
-    public function getFirstOrLastObjectByProcess($processId, $orderBy, $expected)
+    public function getFirstOrLastObjectByProcess($processId, $orderByField, $orderBySorting, $expected)
     {
         $process = new Process(['process_id' => $processId]);
 
         $mockedRepository = $this->getAccessibleMock(QueueRepository::class, ['dummy']);
         /** @var Queue $result */
-        $result = $mockedRepository->_call('getFirstOrLastObjectByProcess', $process, $orderBy);
+        $result = $mockedRepository->_call('getFirstOrLastObjectByProcess', $process, $orderByField, $orderBySorting);
 
         $this->assertEquals(
             $expected,
@@ -209,24 +209,6 @@ class QueryRepositoryTest extends FunctionalTestCase
 
     /**
      * @test
-     *
-     * @param string
-     * @param int
-     *
-     * @dataProvider countItemsByWhereClauseDataProvider
-     */
-    public function countItemsByWhereClause($whereClause, $expected)
-    {
-        $mockedRepository = $this->getAccessibleMock(QueueRepository::class, ['dummy']);
-
-        $this->assertEquals(
-            $expected,
-            $mockedRepository->_call('countItemsByWhereClause', $whereClause)
-        );
-    }
-
-    /**
-     * @test
      */
     public function countPendingItemsGroupedByConfigurationKey()
     {
@@ -319,7 +301,7 @@ class QueryRepositoryTest extends FunctionalTestCase
 
         $this->assertSame(
             $expectedArray,
-            $this->subject->getLastProcessedEntries('qid', 2)
+            $this->subject->getLastProcessedEntries(2)
         );
     }
 
@@ -374,7 +356,8 @@ class QueryRepositoryTest extends FunctionalTestCase
         return [
             'Know process_id, get first' => [
                 'processId' => 'qwerty',
-                'orderBy' => 'process_id ASC',
+                'orderByField' => 'process_id',
+                'orderBySorting' => '',
                 'expected' => [
                     'qid' => '2',
                     'page_id' => '0',
@@ -393,7 +376,8 @@ class QueryRepositoryTest extends FunctionalTestCase
             ],
             'Know process_id, get last' => [
                 'processId' => 'qwerty',
-                'orderBy' => 'process_id DESC',
+                'orderByField' => 'process_id',
+                'orderBySorting' => 'DESC',
                 'expected' => [
                     'qid' => '3',
                     'page_id' => '0',
@@ -410,28 +394,16 @@ class QueryRepositoryTest extends FunctionalTestCase
                     'configuration' => 'FirstConfiguration'
                 ]
             ],
-            'Unknow process_id' => [
+
+            // TODO: Adds Tests back for unknown id
+            /*
+             'Unknow process_id' => [
                 'processId' => 'unknown_id',
-                'orderBy' => '',
+                'orderByField' => '',
+                'orderBySorting' => '',
                 'expected' => []
             ]
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function countItemsByWhereClauseDataProvider()
-    {
-        return [
-            'Empty where clause, expected to return all records' => [
-                'whereClause' => '',
-                'expected' => 12
-            ],
-            'Where Clause on process_id_completed' => [
-                'whereClause' => 'process_id_completed = \'qwerty\'',
-                'expected' => 3
-            ]
+            */
         ];
     }
 }
