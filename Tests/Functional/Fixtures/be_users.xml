@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataset>
+	<be_users>
+		<uid>1</uid>
+		<pid>0</pid>
+		<username>_cli_crawler</username>
+		<admin>0</admin>
+	</be_users>
+</dataset>

@@ -17,7 +17,10 @@
     ],
     "require": {
         "php": ">=5.5",
-        "typo3/cms-core": "^8.7"
+        "typo3/cms-core": "^8.7",
+        "typo3/cms-beuser": "*",
+        "typo3/cms-frontend": "*",
+        "typo3/cms-extensionmanager": "*"
     },
     "require-dev": {
         "typo3/cms": "^8.7",

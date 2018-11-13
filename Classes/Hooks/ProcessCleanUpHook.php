@@ -26,7 +26,10 @@ namespace AOE\Crawler\Hooks;
  ***************************************************************/
 
 use AOE\Crawler\Controller\CrawlerController;
+use AOE\Crawler\Domain\Repository\ProcessRepository;
+use AOE\Crawler\Domain\Repository\QueueRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class ProcessCleanUpHook
@@ -43,6 +46,23 @@ class ProcessCleanUpHook
      * @var array
      */
     private $extensionSettings;
+
+    /**
+     * @var ProcessRepository
+     */
+    protected $processRepository;
+
+    /**
+     * @var QueueRepository
+     */
+    protected $queueRepository;
+
+    public function __construct()
+    {
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $this->processRepository = $objectManager->get(ProcessRepository::class);
+        $this->queueRepository = $objectManager->get(QueueRepository::class);
+    }
 
     /**
      * Main function of process CleanUp Hook.
@@ -68,7 +88,7 @@ class ProcessCleanUpHook
      */
     private function removeActiveProcessesOlderThanOneHour()
     {
-        $results = $this->getActiveProcessesOlderThanOneOHour();
+        $results = $this->processRepository->getActiveProcessesOlderThanOneHour();
 
         if (!is_array($results)) {
             return;
@@ -92,7 +112,7 @@ class ProcessCleanUpHook
      */
     private function removeActiveOrphanProcesses()
     {
-        $results = $this->getActiveOrphanProcesses();
+        $results = $this->processRepository->getActiveOrphanProcesses();
 
         if (!is_array($results)) {
             return;
@@ -129,16 +149,8 @@ class ProcessCleanUpHook
      */
     private function removeProcessFromProcesslist($processId)
     {
-        $this->getDatabaseConnection()->exec_DELETEquery(
-            'tx_crawler_process',
-            'process_id = ' . $this->getDatabaseConnection()->fullQuoteStr($processId, 'tx_crawler_process')
-        );
-
-        $this->getDatabaseConnection()->exec_UPDATEquery(
-            'tx_crawler_queue',
-            'process_id = ' . $this->getDatabaseConnection()->fullQuoteStr($processId, 'tx_crawler_queue'),
-            ['process_id' => '']
-        );
+        $this->processRepository->removeByProcessId($processId);
+        $this->queueRepository->unsetQueueProcessId($processId);
     }
 
     /**
@@ -234,42 +246,5 @@ class ProcessCleanUpHook
             return true;
         }
         return false;
-    }
-
-    /**
-     * @return \TYPO3\CMS\Core\Database\DatabaseConnection
-     * @codeCoverageIgnore
-     */
-    private function getDatabaseConnection()
-    {
-        return $GLOBALS['TYPO3_DB'];
-    }
-
-    /**
-     * @return array|null
-     */
-    private function getActiveProcessesOlderThanOneOHour()
-    {
-        $results = $this->getDatabaseConnection()->exec_SELECTgetRows(
-            'process_id, system_process_id',
-            'tx_crawler_process',
-            'ttl <= ' . intval(time() - $this->extensionSettings['processMaxRunTime'] - 3600) . ' AND active = 1'
-        );
-
-        return $results;
-    }
-
-    /**
-     * @return array|null
-     */
-    private function getActiveOrphanProcesses()
-    {
-        $results = $this->getDatabaseConnection()->exec_SELECTgetRows(
-            'process_id, system_process_id',
-            'tx_crawler_process',
-            'ttl <= ' . intval(time() - $this->extensionSettings['processMaxRunTime']) . ' AND active = 1'
-        );
-
-        return $results;
     }
 }

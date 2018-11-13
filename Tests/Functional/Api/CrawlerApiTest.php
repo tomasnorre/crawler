@@ -29,6 +29,8 @@ use AOE\Crawler\Api\CrawlerApi;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class CrawlerApiTest
@@ -46,7 +48,7 @@ class CrawlerApiTest extends FunctionalTestCase
     /**
      * @var array
      */
-    protected $coreExtensionsToLoad = ['cms', 'core', 'frontend', 'version', 'lang', 'extensionmanager', 'fluid'];
+    //protected $coreExtensionsToLoad = ['cms', 'core', 'frontend', 'version', 'lang', 'extensionmanager', 'fluid'];
 
     /**
      * @var array
@@ -60,6 +62,11 @@ class CrawlerApiTest extends FunctionalTestCase
     protected $oldRootline;
 
     /**
+     * @var QueueRepository
+     */
+    protected $queueRepository;
+
+    /**
      * Creates the test environment.
      *
      */
@@ -67,13 +74,16 @@ class CrawlerApiTest extends FunctionalTestCase
     {
         parent::setUp();
 
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+
         //restore old rootline
         $this->oldRootline = $GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields'];
         //clear rootline
         $GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields'] = '';
         $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['crawler'] = 'a:19:{s:9:"sleepTime";s:4:"1000";s:16:"sleepAfterFinish";s:2:"10";s:11:"countInARun";s:3:"100";s:14:"purgeQueueDays";s:2:"14";s:12:"processLimit";s:1:"1";s:17:"processMaxRunTime";s:3:"300";s:14:"maxCompileUrls";s:5:"10000";s:12:"processDebug";s:1:"0";s:14:"processVerbose";s:1:"0";s:16:"crawlHiddenPages";s:1:"0";s:7:"phpPath";s:12:"/usr/bin/php";s:14:"enableTimeslot";s:1:"1";s:11:"logFileName";s:0:"";s:9:"follow30x";s:1:"0";s:18:"makeDirectRequests";s:1:"0";s:16:"frontendBasePath";s:1:"/";s:22:"cleanUpOldQueueEntries";s:1:"1";s:19:"cleanUpProcessedAge";s:1:"2";s:19:"cleanUpScheduledAge";s:1:"7";}';
 
-        $this->subject = new CrawlerApi();
+        $this->subject = $objectManager->get(CrawlerApi::class);
+        $this->queueRepository = $objectManager->get(QueueRepository::class);
 
         $this->importDataSet(dirname(__FILE__) . '/../data/pages.xml');
         $this->importDataSet(dirname(__FILE__) . '/../data/sys_template.xml');
@@ -137,45 +147,6 @@ class CrawlerApiTest extends FunctionalTestCase
 
     /**
      * @test
-     * @expectedException \InvalidArgumentException
-     */
-    public function isPageInQueueThrowInvalidArgumentException()
-    {
-        $this->subject->isPageInQueue('Cannot be interpreted as integer');
-    }
-
-    /**
-     * @test
-     *
-     * @param $uid
-     * @param $unprocessed_only
-     * @param $timed_only
-     * @param $timestamp
-     * @param $expected
-     *
-     * @dataProvider isPageInQueueDataProvider
-     */
-    public function isPageInQueue($uid, $unprocessed_only, $timed_only, $timestamp, $expected)
-    {
-        $this->importDataSet(dirname(__FILE__) . '/../Fixtures/tx_crawler_queue.xml');
-
-        $this->assertSame(
-            $expected,
-            $this->subject->isPageInQueue($uid, $unprocessed_only, $timed_only, $timestamp)
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function isPageInQueueTimed()
-    {
-        $this->importDataSet(dirname(__FILE__) . '/../Fixtures/tx_crawler_queue.xml');
-        $this->assertTrue($this->subject->isPageInQueueTimed(15));
-    }
-
-    /**
-     * @test
      */
     public function countEntriesInQueueForPageByScheduleTime()
     {
@@ -233,8 +204,8 @@ class CrawlerApiTest extends FunctionalTestCase
 
         $this->assertSame(
             [
-                'assignedButUnprocessed' => '3',
-                'unprocessed' => '5'
+                'assignedButUnprocessed' => 3,
+                'unprocessed' => 5
             ],
             $this->subject->getQueueStatistics()
         );
@@ -269,7 +240,7 @@ class CrawlerApiTest extends FunctionalTestCase
         $crawlerApi->addPageToQueueTimed(5, 9998);
         $crawlerApi->addPageToQueueTimed(5, 3422);
 
-        $this->assertEquals($crawlerApi->countUnprocessedItems(), 1);
+        $this->assertEquals($this->queueRepository->countUnprocessedItems(), 1);
     }
 
     /**
@@ -290,7 +261,7 @@ class CrawlerApiTest extends FunctionalTestCase
         $crawlerApi->addPageToQueueTimed(5, 100001);
         $crawlerApi->addPageToQueueTimed(5, 100001);
 
-        $this->assertEquals($crawlerApi->countUnprocessedItems(), 1);
+        $this->assertEquals($this->queueRepository->countUnprocessedItems(), 1);
     }
 
     /**
@@ -311,7 +282,7 @@ class CrawlerApiTest extends FunctionalTestCase
         $crawlerApi->addPageToQueueTimed(5, 100011);
         $crawlerApi->addPageToQueueTimed(5, 100014);
 
-        $this->assertEquals($crawlerApi->countUnprocessedItems(), 2);
+        $this->assertEquals($this->queueRepository->countUnprocessedItems(), 2);
     }
 
     /**
@@ -331,7 +302,8 @@ class CrawlerApiTest extends FunctionalTestCase
         $crawlerApi->addPageToQueueTimed(7, 100011);
         $crawlerApi->addPageToQueueTimed(7, 100059);
 
-        $queueItems = $crawlerApi->getUnprocessedItems();
+        $queueItems = $this->queueRepository->getUnprocessedItems();
+        //$queueItems = $crawlerApi->getUnprocessedItems();
 
         $this->assertEquals($queueItems[0]['page_id'], 7);
         $this->assertEquals($queueItems[0]['scheduled'], 100011);
@@ -350,7 +322,7 @@ class CrawlerApiTest extends FunctionalTestCase
         );
 
         $this->assertEquals(
-            $crawlerApi->countUnprocessedItems(),
+            $this->queueRepository->countUnprocessedItems(),
             2,
             'Could not add pages to queue configured by record'
         );
@@ -406,42 +378,5 @@ class CrawlerApiTest extends FunctionalTestCase
         $this->assertCount(6, $response['headers']);
         $this->assertEquals($dummyResponseHeader, $response['headers']);
         $this->assertEquals($dummyContent, $response['content'][0]);
-    }
-
-    /**
-     * @return array
-     */
-    public function isPageInQueueDataProvider()
-    {
-        return [
-            'Unprocessed Only' => [
-                'uid' => 15,
-                'unprocessed_only' => true,
-                'timed_only' => false,
-                'timestamp' => false,
-                'expected' => true
-            ],
-            'Timed Only' => [
-                'uid' => 16,
-                'unprocessed_only' => false,
-                'timed_only' => true,
-                'timestamp' => false,
-                'expected' => true
-            ],
-            'Timestamp Only' => [
-                'uid' => 17,
-                'unprocessed_only' => false,
-                'timed_only' => false,
-                'timestamp' => 4321,
-                'expected' => true
-            ],
-            'Not existing page' => [
-                'uid' => 40000,
-                'unprocessed_only' => false,
-                'timed_only' => false,
-                'timestamp' => false,
-                'expected' => false
-            ],
-        ];
     }
 }

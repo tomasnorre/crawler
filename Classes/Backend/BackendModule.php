@@ -34,17 +34,25 @@ use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\EventDispatcher;
 use AOE\Crawler\Service\ProcessService;
 use AOE\Crawler\Utility\CsvUtility;
+use AOE\Crawler\Utility\ExtensionSettingUtility;
 use AOE\Crawler\Utility\IconUtility;
 use TYPO3\CMS\Backend\Module\AbstractFunctionModule;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Beuser\Domain\Model\BackendUser;
+use TYPO3\CMS\Beuser\Domain\Model\Demand;
+use TYPO3\CMS\Beuser\Domain\Repository\BackendUserRepository;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
 
 /**
  * Class BackendModule
@@ -102,11 +110,18 @@ class BackendModule extends AbstractFunctionModule
     protected $processManager;
 
     /**
+     * @var BackendUserRepository
+     */
+    protected $backendUserRepository;
+
+    /**
      * the constructor
      */
     public function __construct()
     {
+        $objectManger = GeneralUtility::makeInstance(ObjectManager::class);
         $this->processManager = new ProcessService();
+        $this->backendUserRepository = $objectManger->get(BackendUserRepository::class);
     }
 
     /**
@@ -153,10 +168,17 @@ class BackendModule extends AbstractFunctionModule
      * Load extension settings
      *
      * @return void
+     *
+     * @deprecated since crawler v7.0.0, will be removed in crawler v8.0.0.
      */
     protected function loadExtensionSettings()
     {
-        $this->extensionSettings = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['crawler']);
+        $isVersionLowerThan9 = \TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 9000000;
+        if ($isVersionLowerThan9) {
+            $this->extensionSettings = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['crawler']);
+        } else {
+            $this->extensionSettings = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('crawler');
+        }
     }
 
     /**
@@ -170,7 +192,7 @@ class BackendModule extends AbstractFunctionModule
 
         $this->incLocalLang();
 
-        $this->loadExtensionSettings();
+        $this->extensionSettings = ExtensionSettingUtility::loadExtensionSettings();
         if (empty($this->pObj->MOD_SETTINGS['processListMode'])) {
             $this->pObj->MOD_SETTINGS['processListMode'] = 'simple';
         }
@@ -971,7 +993,7 @@ class BackendModule extends AbstractFunctionModule
 
         if ($this->isCrawlerUserAvailable() === false) {
             $this->addErrorMessage($LANG->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:message.noBeUserAvailable'));
-        } elseif ($this->isCrawlerUserNotAdmin() === false) {
+        } elseif ($this->isCrawlerUserAdmin() === true) {
             $this->addErrorMessage($LANG->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:message.beUserIsAdmin'));
         }
 
@@ -1007,9 +1029,12 @@ class BackendModule extends AbstractFunctionModule
     protected function isCrawlerUserAvailable()
     {
         $isAvailable = false;
-        $userArray = BackendUtility::getRecordsByField('be_users', 'username', '_cli_crawler');
 
-        if (is_array($userArray)) {
+        $username = '_cli_crawler';
+        /** @var QueryResult $user */
+        $user = $this->backendUserRepository->findByUsername($username);
+
+        if ($user->getFirst() instanceof BackendUser ) {
             $isAvailable = true;
         }
 
@@ -1017,21 +1042,22 @@ class BackendModule extends AbstractFunctionModule
     }
 
     /**
-     * Indicate that the required be_user "_cli_crawler" is
-     * has no admin rights.
+     * Check is the Crawler user has admin rights or not
      *
      * @return boolean
      */
-    protected function isCrawlerUserNotAdmin()
+    protected function isCrawlerUserAdmin()
     {
-        $isAvailable = false;
-        $userArray = BackendUtility::getRecordsByField('be_users', 'username', '_cli_crawler');
+        $isAdmin = false;
 
-        if (is_array($userArray) && $userArray[0]['admin'] == 0) {
-            $isAvailable = true;
+        $username = '_cli_crawler';
+        /** @var QueryResult $user */
+        $user = $this->backendUserRepository->findByUsername($username);
+        if ($user->getFirst() instanceof BackendUser && $user->getFirst()->getIsAdministrator()) {
+            $isAdmin = true;
         }
 
-        return $isAvailable;
+        return $isAdmin;
     }
 
     /**

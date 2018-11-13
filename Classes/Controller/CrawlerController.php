@@ -387,9 +387,9 @@ class CrawlerController
      */
     protected function noUnprocessedQueueEntriesForPageWithConfigurationHashExist($uid, $configurationHash)
     {
-        $configurationHash = $this->db->fullQuoteStr($configurationHash, 'tx_crawler_queue');
-        $res = $this->db->exec_SELECTquery('count(*) as anz', 'tx_crawler_queue', "page_id=" . intval($uid) . " AND configuration_hash=" . $configurationHash . " AND exec_time=0");
-        $row = $this->db->sql_fetch_assoc($res);
+        $configurationHash = $GLOBALS['TYPO3_DB']->fullQuoteStr($configurationHash, 'tx_crawler_queue');
+        $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('count(*) as anz', 'tx_crawler_queue', "page_id=" . intval($uid) . " AND configuration_hash=" . $configurationHash . " AND exec_time=0");
+        $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 
         return ($row['anz'] == 0);
     }
@@ -728,14 +728,14 @@ class CrawlerController
         $urlScheme = ($ssl === false) ? 'http' : 'https';
 
         if ($sysDomainUid > 0) {
-            $res = $this->db->exec_SELECTquery(
+            $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
                 '*',
                 'sys_domain',
                 'uid = ' . $sysDomainUid .
                 BackendUtility::BEenableFields('sys_domain') .
                 BackendUtility::deleteClause('sys_domain')
             );
-            $row = $this->db->sql_fetch_assoc($res);
+            $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
             if ($row['domainName'] != '') {
                 return $urlScheme . '://' . $row['domainName'];
             }
@@ -773,7 +773,7 @@ class CrawlerController
             $pids[] = $node['row']['uid'];
         }
 
-        $res = $this->db->exec_SELECTquery(
+        $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
             '*',
             'tx_crawler_configuration',
             'pid IN (' . implode(',', $pids) . ') ' .
@@ -782,10 +782,10 @@ class CrawlerController
             BackendUtility::versioningPlaceholderClause('tx_crawler_configuration') . ' '
         );
 
-        while ($row = $this->db->sql_fetch_assoc($res)) {
+        while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
             $configurationsForBranch[] = $row['name'];
         }
-        $this->db->sql_free_result($res);
+        $GLOBALS['TYPO3_DB']->sql_free_result($res);
         return $configurationsForBranch;
     }
 
@@ -908,13 +908,13 @@ class CrawlerController
                                 $transOrigPointerField = $TCA[$subpartParams['_TABLE']]['ctrl']['transOrigPointerField'];
 
                                 if ($subpartParams['_ENABLELANG'] && $transOrigPointerField) {
-                                    $andWhereLanguage = ' AND ' . $this->db->quoteStr($transOrigPointerField, $subpartParams['_TABLE']) . ' <= 0 ';
+                                    $andWhereLanguage = ' AND ' . $GLOBALS['TYPO3_DB']->quoteStr($transOrigPointerField, $subpartParams['_TABLE']) . ' <= 0 ';
                                 }
 
-                                $where = $this->db->quoteStr($pidField, $subpartParams['_TABLE']) . '=' . intval($lookUpPid) . ' ' .
+                                $where = $GLOBALS['TYPO3_DB']->quoteStr($pidField, $subpartParams['_TABLE']) . '=' . intval($lookUpPid) . ' ' .
                                     $andWhereLanguage . $where;
 
-                                $rows = $this->db->exec_SELECTgetRows(
+                                $rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
                                     $fieldName,
                                     $subpartParams['_TABLE'] . $addTable,
                                     $where . BackendUtility::deleteClause($subpartParams['_TABLE']),
@@ -1028,7 +1028,7 @@ class CrawlerController
             $this->flushQueue(($doFullFlush ? '1=1' : ('page_id=' . intval($id))) . $addWhere);
             return [];
         } else {
-            return $this->db->exec_SELECTgetRows(
+            return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
                 '*',
                 'tx_crawler_queue',
                 'page_id=' . intval($id) . $addWhere,
@@ -1067,7 +1067,7 @@ class CrawlerController
             $this->flushQueue($doFullFlush ? '' : ('set_id=' . intval($set_id) . $addWhere));
             return [];
         } else {
-            return $this->db->exec_SELECTgetRows(
+            return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
                 '*',
                 'tx_crawler_queue',
                 'set_id=' . intval($set_id) . $addWhere,
@@ -1089,15 +1089,15 @@ class CrawlerController
         $realWhere = strlen($where) > 0 ? $where : '1=1';
 
         if (EventDispatcher::getInstance()->hasObserver('queueEntryFlush')) {
-            $groups = $this->db->exec_SELECTgetRows('DISTINCT set_id', 'tx_crawler_queue', $realWhere);
+            $groups = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('DISTINCT set_id', 'tx_crawler_queue', $realWhere);
             if (is_array($groups)) {
                 foreach ($groups as $group) {
-                    EventDispatcher::getInstance()->post('queueEntryFlush', $group['set_id'], $this->db->exec_SELECTgetRows('uid, set_id', 'tx_crawler_queue', $realWhere . ' AND set_id="' . $group['set_id'] . '"'));
+                    EventDispatcher::getInstance()->post('queueEntryFlush', $group['set_id'], $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid, set_id', 'tx_crawler_queue', $realWhere . ' AND set_id="' . $group['set_id'] . '"'));
                 }
             }
         }
 
-        $this->db->exec_DELETEquery('tx_crawler_queue', $realWhere);
+        $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_crawler_queue', $realWhere);
     }
 
     /**
@@ -1127,7 +1127,7 @@ class CrawlerController
             'result_data' => '',
         ];
 
-        $this->db->exec_INSERTquery('tx_crawler_queue', $fieldArray);
+        $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_crawler_queue', $fieldArray);
     }
 
     /************************************
@@ -1202,8 +1202,8 @@ class CrawlerController
             }
 
             if (count($rows) == 0) {
-                $this->db->exec_INSERTquery('tx_crawler_queue', $fieldArray);
-                $uid = $this->db->sql_insert_id();
+                $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_crawler_queue', $fieldArray);
+                $uid = $GLOBALS['TYPO3_DB']->sql_insert_id();
                 $rows[] = $uid;
                 $urlAdded = true;
                 EventDispatcher::getInstance()->post('urlAddedToQueue', $this->setID, ['uid' => $uid, 'fieldArray' => $fieldArray]);
@@ -1246,14 +1246,14 @@ class CrawlerController
         }
 
         if (!empty($where)) {
-            $result = $this->db->exec_SELECTgetRows(
+            $result = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
                 'qid',
                 'tx_crawler_queue',
                 $where .
                 ' AND NOT exec_time' .
                 ' AND NOT process_id ' .
                 ' AND page_id=' . intval($fieldArray['page_id']) .
-                ' AND parameters_hash = ' . $this->db->fullQuoteStr($fieldArray['parameters_hash'], 'tx_crawler_queue')
+                ' AND parameters_hash = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($fieldArray['parameters_hash'], 'tx_crawler_queue')
             );
 
             if (is_array($result)) {
@@ -1296,7 +1296,7 @@ class CrawlerController
             GeneralUtility::devlog('crawler-readurl start ' . microtime(true), __FUNCTION__);
         }
         // Get entry:
-        list($queueRec) = $this->db->exec_SELECTgetRows(
+        list($queueRec) = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
             '*',
             'tx_crawler_queue',
             'qid=' . intval($queueId) . ($force ? '' : ' AND exec_time=0 AND process_scheduled > 0')
@@ -1330,7 +1330,7 @@ class CrawlerController
             //if mulitprocessing is used we need to store the id of the process which has handled this entry
             $field_array['process_id_completed'] = $this->processID;
         }
-        $this->db->exec_UPDATEquery('tx_crawler_queue', 'qid=' . intval($queueId), $field_array);
+        $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_crawler_queue', 'qid=' . intval($queueId), $field_array);
 
         $result = $this->readUrl_exec($queueRec);
         $resultData = unserialize($result['content']);
@@ -1361,7 +1361,7 @@ class CrawlerController
             [$queueId, &$field_array]
         );
 
-        $this->db->exec_UPDATEquery('tx_crawler_queue', 'qid=' . intval($queueId), $field_array);
+        $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_crawler_queue', 'qid=' . intval($queueId), $field_array);
 
         if ($this->debugMode) {
             GeneralUtility::devlog('crawler-readurl stop ' . microtime(true), __FUNCTION__);
@@ -1382,8 +1382,8 @@ class CrawlerController
 
             // Set exec_time to lock record:
         $field_array['exec_time'] = $this->getCurrentTime();
-        $this->db->exec_INSERTquery('tx_crawler_queue', $field_array);
-        $queueId = $field_array['qid'] = $this->db->sql_insert_id();
+        $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_crawler_queue', $field_array);
+        $queueId = $field_array['qid'] = $GLOBALS['TYPO3_DB']->sql_insert_id();
 
         $result = $this->readUrl_exec($field_array);
 
@@ -1396,7 +1396,7 @@ class CrawlerController
             [$queueId, &$field_array]
         );
 
-        $this->db->exec_UPDATEquery('tx_crawler_queue', 'qid=' . intval($queueId), $field_array);
+        $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_crawler_queue', 'qid=' . intval($queueId), $field_array);
 
         return $result;
     }
@@ -1718,7 +1718,7 @@ class CrawlerController
         // Authenticate crawler request:
         if (isset($_SERVER['HTTP_X_T3CRAWLER'])) {
             list($queueId, $hash) = explode(':', $_SERVER['HTTP_X_T3CRAWLER']);
-            list($queueRec) = $this->db->exec_SELECTgetSingleRow('*', 'tx_crawler_queue', 'qid=' . intval($queueId));
+            list($queueRec) = $GLOBALS['TYPO3_DB']->exec_SELECTgetSingleRow('*', 'tx_crawler_queue', 'qid=' . intval($queueId));
 
             // If a crawler record was found and hash was matching, set it up:
             if (is_array($queueRec) && $hash === md5($queueRec['qid'] . '|' . $queueRec['set_id'] . '|' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'])) {
@@ -1802,7 +1802,7 @@ class CrawlerController
 
             // recognize mount points
             if ($data['row']['doktype'] == 7) {
-                $mountpage = $this->db->exec_SELECTgetRows('*', 'pages', 'uid = ' . $data['row']['uid']);
+                $mountpage = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'pages', 'uid = ' . $data['row']['uid']);
 
                 // fetch mounted pages
                 $this->MP = $mountpage[0]['mount_pid'] . '-' . $data['row']['uid'];
@@ -2046,7 +2046,7 @@ class CrawlerController
             }
 
             // Cleanup
-            $this->db->exec_DELETEquery('tx_crawler_process', 'assigned_items_count = 0');
+            $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_crawler_process', 'assigned_items_count = 0');
 
             //TODO can't we do that in a clean way?
             $releaseStatus = $this->CLI_releaseProcesses($this->CLI_buildProcessId());
@@ -2239,7 +2239,7 @@ class CrawlerController
         // Clean up the queue
         if (intval($this->extensionSettings['purgeQueueDays']) > 0) {
             $purgeDate = $this->getCurrentTime() - 24 * 60 * 60 * intval($this->extensionSettings['purgeQueueDays']);
-            $del = $this->db->exec_DELETEquery(
+            $del = $GLOBALS['TYPO3_DB']->exec_DELETEquery(
                 'tx_crawler_queue',
                 'exec_time!=0 AND exec_time<' . $purgeDate
             );
@@ -2250,7 +2250,7 @@ class CrawlerController
 
         // Select entries:
         //TODO Shouldn't this reside within the transaction?
-        $rows = $this->db->exec_SELECTgetRows(
+        $rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
             'qid,scheduled',
             'tx_crawler_queue',
             'exec_time=0
@@ -2271,9 +2271,9 @@ class CrawlerController
             $processId = $this->CLI_buildProcessId();
 
             //reserve queue entries for process
-            $this->db->sql_query('BEGIN');
+            $GLOBALS['TYPO3_DB']->sql_query('BEGIN');
             //TODO make sure we're not taking assigned queue-entires
-            $this->db->exec_UPDATEquery(
+            $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
                 'tx_crawler_queue',
                 'qid IN (' . implode(',', $quidList) . ')',
                 [
@@ -2283,8 +2283,8 @@ class CrawlerController
             );
 
             //save the number of assigned queue entrys to determine who many have been processed later
-            $numberOfAffectedRows = $this->db->sql_affected_rows();
-            $this->db->exec_UPDATEquery(
+            $numberOfAffectedRows = $GLOBALS['TYPO3_DB']->sql_affected_rows();
+            $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
                 'tx_crawler_process',
                 "process_id = '" . $processId . "'",
                 [
@@ -2293,9 +2293,9 @@ class CrawlerController
             );
 
             if ($numberOfAffectedRows == count($quidList)) {
-                $this->db->sql_query('COMMIT');
+                $GLOBALS['TYPO3_DB']->sql_query('COMMIT');
             } else {
-                $this->db->sql_query('ROLLBACK');
+                $GLOBALS['TYPO3_DB']->sql_query('ROLLBACK');
                 $this->CLI_debug("Nothing processed due to multi-process collision (" . $this->CLI_buildProcessId() . ")");
                 return ($result | self::CLI_STATUS_ABORTED);
             }
@@ -2374,9 +2374,9 @@ class CrawlerController
         $processCount = 0;
         $orphanProcesses = [];
 
-        $this->db->sql_query('BEGIN');
+        $GLOBALS['TYPO3_DB']->sql_query('BEGIN');
 
-        $res = $this->db->exec_SELECTquery(
+        $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
             'process_id,ttl',
             'tx_crawler_process',
             'active=1 AND deleted=0'
@@ -2384,7 +2384,7 @@ class CrawlerController
 
         $currentTime = $this->getCurrentTime();
 
-        while ($row = $this->db->sql_fetch_assoc($res)) {
+        while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
             if ($row['ttl'] < $currentTime) {
                 $orphanProcesses[] = $row['process_id'];
             } else {
@@ -2397,7 +2397,7 @@ class CrawlerController
             $this->CLI_debug("add process " . $this->CLI_buildProcessId() . " (" . ($processCount + 1) . "/" . intval($this->extensionSettings['processLimit']) . ")");
 
             // create new process record
-            $this->db->exec_INSERTquery(
+            $GLOBALS['TYPO3_DB']->exec_INSERTquery(
                 'tx_crawler_process',
                 [
                     'process_id' => $id,
@@ -2414,7 +2414,7 @@ class CrawlerController
         $this->CLI_releaseProcesses($orphanProcesses, true); // maybe this should be somehow included into the current lock
         $this->CLI_deleteProcessesMarkedDeleted();
 
-        $this->db->sql_query('COMMIT');
+        $GLOBALS['TYPO3_DB']->sql_query('COMMIT');
 
         return $ret;
     }
@@ -2437,14 +2437,14 @@ class CrawlerController
         }
 
         if (!$withinLock) {
-            $this->db->sql_query('BEGIN');
+            $GLOBALS['TYPO3_DB']->sql_query('BEGIN');
         }
 
         // some kind of 2nd chance algo - this way you need at least 2 processes to have a real cleanup
         // this ensures that a single process can't mess up the entire process table
 
         // mark all processes as deleted which have no "waiting" queue-entires and which are not active
-        $this->db->exec_UPDATEquery(
+        $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
             'tx_crawler_queue',
             'process_id IN (SELECT process_id FROM tx_crawler_process WHERE active=0 AND deleted=0)',
             [
@@ -2452,7 +2452,7 @@ class CrawlerController
                 'process_id' => ''
             ]
         );
-        $this->db->exec_UPDATEquery(
+        $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
             'tx_crawler_process',
             'active=0 AND deleted=0
             AND NOT EXISTS (
@@ -2466,14 +2466,14 @@ class CrawlerController
             ]
         );
         // mark all requested processes as non-active
-        $this->db->exec_UPDATEquery(
+        $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
             'tx_crawler_process',
             'process_id IN (\'' . implode('\',\'', $releaseIds) . '\') AND deleted=0',
             [
                 'active' => '0'
             ]
         );
-        $this->db->exec_UPDATEquery(
+        $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
             'tx_crawler_queue',
             'exec_time=0 AND process_id IN ("' . implode('","', $releaseIds) . '")',
             [
@@ -2483,7 +2483,7 @@ class CrawlerController
         );
 
         if (!$withinLock) {
-            $this->db->sql_query('COMMIT');
+            $GLOBALS['TYPO3_DB']->sql_query('COMMIT');
         }
 
         return true;
@@ -2496,7 +2496,7 @@ class CrawlerController
      */
     public function CLI_deleteProcessesMarkedDeleted()
     {
-        $this->db->exec_DELETEquery('tx_crawler_process', 'deleted = 1');
+        $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_crawler_process', 'deleted = 1');
     }
 
     /**
@@ -2511,8 +2511,8 @@ class CrawlerController
     public function CLI_checkIfProcessIsActive($pid)
     {
         $ret = false;
-        $this->db->sql_query('BEGIN');
-        $res = $this->db->exec_SELECTquery(
+        $GLOBALS['TYPO3_DB']->sql_query('BEGIN');
+        $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
             'process_id,active,ttl',
             'tx_crawler_process',
             'process_id = \'' . $pid . '\'  AND deleted=0',
@@ -2520,10 +2520,10 @@ class CrawlerController
             'ttl',
             '0,1'
         );
-        if ($row = $this->db->sql_fetch_assoc($res)) {
+        if ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
             $ret = intVal($row['active']) == 1;
         }
-        $this->db->sql_query('COMMIT');
+        $GLOBALS['TYPO3_DB']->sql_query('COMMIT');
 
         return $ret;
     }

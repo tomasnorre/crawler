@@ -129,40 +129,6 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function getActiveProcessesOlderThanOneOHour()
-    {
-        $expected = [
-            ['process_id' => '1000', 'system_process_id' => '0'],
-            ['process_id' => '1001', 'system_process_id' => '0'],
-            ['process_id' => '1002', 'system_process_id' => '0']
-        ];
-
-        $this->assertSame(
-            $expected,
-            $this->callInaccessibleMethod($this->subject, 'getActiveProcessesOlderThanOneOHour')
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function getActiveOrphanProcesses()
-    {
-        $expected = [
-            ['process_id' => '1000', 'system_process_id' => '0'],
-            ['process_id' => '1001', 'system_process_id' => '0'],
-            ['process_id' => '1002', 'system_process_id' => '0']
-        ];
-
-        $this->assertSame(
-            $expected,
-            $this->callInaccessibleMethod($this->subject, 'getActiveOrphanProcesses')
-        );
-    }
-    
-    /**
-     * @test
-     */
     public function removeProcessFromProcesslistCalledWithProcessThatDoesNotExist()
     {
         $processCountBefore = $this->processRepository->countAll();
@@ -222,12 +188,12 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         $expectedProcessesToBeRemoved = 1;
 
         $processCountBefore = $this->processRepository->countAll();
-        $queueCountBefore = $this->queueRepository->countAll('process_id = ' . $existingProcessId);
+        $queueCountBefore = $this->queueRepository->countAllByProcessId($existingProcessId);
 
         $this->callInaccessibleMethod($this->subject, 'removeProcessFromProcesslist', $existingProcessId);
 
         $processCountAfter = $this->processRepository->countAll();
-        $queueCountAfter = $this->queueRepository->countAll('process_id = ' . $existingProcessId);
+        $queueCountAfter = $this->queueRepository->countAllByProcessId($existingProcessId);
 
         $this->assertEquals(
             $processCountBefore - $expectedProcessesToBeRemoved,

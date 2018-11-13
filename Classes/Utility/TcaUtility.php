@@ -20,6 +20,7 @@ namespace AOE\Crawler\Utility;
  */
 
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\PathUtility;
 
 /**
  * Class TcaUtility
@@ -56,12 +57,10 @@ class TcaUtility
     {
         $extIcon = '';
 
-        if (method_exists(ExtensionManagementUtility::class, 'getExtensionKeyByPrefix')) {
-            $parts = explode('_', $key);
-            if (is_array($parts) && count($parts) > 2) {
-                $extensionKey = ExtensionManagementUtility::getExtensionKeyByPrefix('tx_' . $parts[1]);
-                $extIcon = ExtensionManagementUtility::siteRelPath($extensionKey) . 'ext_icon.gif';
-            }
+        $parts = explode('_', $key);
+        if (is_array($parts) && count($parts) > 2) {
+            $extensionKey = $parts[1];
+            $extIcon = PathUtility::stripPathSitePrefix(ExtensionManagementUtility::extPath($extensionKey)) . 'ext_icon.gif';
         }
 
         return $extIcon;

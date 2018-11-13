@@ -28,8 +28,11 @@ namespace AOE\Crawler\Api;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
@@ -53,6 +56,24 @@ class CrawlerApi
      * @var $allowedConfigurations array
      */
     protected $allowedConfigurations = [];
+
+    /**
+     * @var QueryBuilder
+     */
+    protected $queryBuilder;
+
+    /**
+     * @var string
+     */
+    protected $tableName = 'tx_crawler_queue';
+
+    public function __construct()
+    {
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+
+        $this->crawlerController = $objectManager->get(CrawlerController::class);
+    }
 
     /**
      * Each crawler run has a setid, this facade method delegates
@@ -200,24 +221,30 @@ class CrawlerApi
      */
     protected function countEntriesInQueueForPageByScheduleTime($page_uid, $schedule_timestamp)
     {
+
+        $count = $this->queryBuilder
+            ->select('*')
+            ->from($this->tableName);
+
         //if the same page is scheduled for the same time and has not be executed?
+        //un-timed elements need an exec_time with 0 because they can occur multiple times
         if ($schedule_timestamp == 0) {
-            //un-timed elements need an exec_time with 0 because they can occur multiple times
-            $where = 'page_id=' . $page_uid . ' AND exec_time = 0 AND scheduled=' . $schedule_timestamp;
+            $count->where(
+                $this->queryBuilder->expr()->eq('page_id', $page_uid),
+                $this->queryBuilder->expr()->eq('exec_time', 0),
+                $this->queryBuilder->expr()->eq('scheduled', $schedule_timestamp)
+            );
         } else {
             //timed elements have got a fixed schedule time, if a record with this time
             //exists it is maybe queued for the future, or is has been queue for the past and therefore
             //also been processed.
-            $where = 'page_id=' . $page_uid . ' AND scheduled=' . $schedule_timestamp;
+            $count->where(
+                $this->queryBuilder->expr()->eq('page_id', $page_uid),
+                $this->queryBuilder->expr()->eq('scheduled', $schedule_timestamp)
+            );
         }
 
-        $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($GLOBALS['TYPO3_DB']->exec_SELECTquery(
-            'count(*) as cnt',
-            'tx_crawler_queue',
-            $where
-        ));
-
-        return intval($row['cnt']);
+        return $count->execute()->rowCount();
     }
 
     /**
@@ -229,6 +256,8 @@ class CrawlerApi
      * @param bool $timestamp
      *
      * @return bool
+     *
+     * @deprecated since crawler v7.0.0, will be removed in crawler v8.0.0.
      */
     public function isPageInQueue($uid, $unprocessed_only = true, $timed_only = false, $timestamp = false)
     {
@@ -326,6 +355,8 @@ class CrawlerApi
      * Method to determine unprocessed Items in the crawler queue.
      *
      * @return array
+     *
+     * @deprecated since crawler v7.0.0, will be removed in crawler v8.0.0.
      */
     public function getUnprocessedItems()
     {
@@ -340,6 +371,8 @@ class CrawlerApi
      * Method to get the number of unprocessed items in the crawler
      *
      * @param int number of unprocessed items in the queue
+     *
+     * @deprecated since crawler v7.0.0, will be removed in crawler v8.0.0.
      */
     public function countUnprocessedItems()
     {
@@ -359,11 +392,12 @@ class CrawlerApi
      * @param boolean $show_unprocessed only respect unprocessed pages
      *
      * @return boolean
+     *
+     * @deprecated since crawler v7.0.0, will be removed in crawler v8.0.0.
      */
     public function isPageInQueueTimed($uid, $show_unprocessed = true)
     {
         $uid = intval($uid);
-
         return $this->isPageInQueue($uid, $show_unprocessed);
     }
 
@@ -385,6 +419,8 @@ class CrawlerApi
      * Removes an queue entry with a given queue id
      *
      * @param int $qid
+     *
+     * @deprecated since crawler v7.0.0, will be removed in crawler v8.0.0.
      */
     public function removeQueueEntrie($qid)
     {

@@ -1,10 +1,10 @@
 <?php
-namespace AOE\Crawler\Service;
+namespace AOE\Crawler\Utility;
 
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2016 AOE GmbH <dev@aoe.com>
+ *  (c) 2018 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -25,44 +25,31 @@ namespace AOE\Crawler\Service;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use TYPO3\CMS\Core\Authentication\AbstractAuthenticationService;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 
 /**
- * Class AuthenticationService
- *
- * @package AOE\Crawler\Service
+ * Class ExtensionSettingUtility
  */
-class AuthenticationService extends AbstractAuthenticationService
+class ExtensionSettingUtility
 {
-
     /**
-     * Find user by HTTP_X_T3CRAWLER Header
+     * Load extension settings
      *
-     * @return mixed user array or false
+     * @return array
      */
-    public function getUser()
+    public static function loadExtensionSettings()
     {
-        $user = false;
-        if (isset($_SERVER['HTTP_X_T3CRAWLER'])) {
-            $user = $this->fetchUserRecord('_cli_crawler');
+        $isVersionLowerThan9 = VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 9000000;
+        if ($isVersionLowerThan9) {
+            $extensionSettings = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['crawler']);
+        } else {
+            $extensionSettings = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('crawler');
         }
 
-        return $user;
+        return $extensionSettings;
     }
 
-    /**
-     * Authenticate user
-     *
-     * @param array user
-     *
-     * @return int 100="don't know", 0="no", 200="yes"
-     */
-    public function authUser(array $user)
-    {
-        if (isset($_SERVER['HTTP_X_T3CRAWLER'])) {
-            return ($user['username'] == '_cli_crawler') ? 200 : 100;
-        }
 
-        return 100;
-    }
 }

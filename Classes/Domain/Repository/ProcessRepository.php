@@ -27,6 +27,7 @@ namespace AOE\Crawler\Domain\Repository;
 
 use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Domain\Model\ProcessCollection;
+use AOE\Crawler\Utility\ExtensionSettingUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -49,11 +50,17 @@ class ProcessRepository extends AbstractRepository
     protected $queryBuilder = QueryBuilder::class;
 
     /**
+     * @var array
+     */
+    protected $extensionSettings = [];
+
+    /**
      * QueueRepository constructor.
      */
     public function __construct()
     {
         $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $this->extensionSettings = ExtensionSettingUtility::loadExtensionSettings();
     }
 
     /**
@@ -117,6 +124,59 @@ class ProcessRepository extends AbstractRepository
     }
 
     /**
+     * @return array|null
+     *
+     * Function is moved from ProcessCleanUpHook
+     * TODO: Check why we need both getActiveProcessesOlderThanOneHour and getActiveOrphanProcesses, the get getActiveOrphanProcesses does not really check for Orphan in this implementation.
+     */
+    public function getActiveProcessesOlderThanOneHour()
+    {
+        $activeProcesses = [];
+        $statement = $this->queryBuilder
+            ->select('process_id', 'system_process_id')
+            ->from($this->tableName)
+            ->where(
+                $this->queryBuilder->expr()->lte('ttl', intval(time() - $this->extensionSettings['processMaxRunTime'] - 3600 )),
+                $this->queryBuilder->expr()->eq('active', 1)
+            )
+            ->execute();
+
+        while ($row = $statement->fetch()) {
+            $activeProcesses[] = $row;
+        }
+
+        return $activeProcesses;
+    }
+
+    /**
+     * Function is moved from ProcessCleanUpHook
+     *
+     * @see getActiveProcessesOlderThanOneHour
+     * @return array
+     *
+     */
+    public function getActiveOrphanProcesses()
+    {
+        $activeProcesses = [];
+
+        $statement = $this->queryBuilder
+            ->select('process_id', 'system_process_id')
+            ->from($this->tableName)
+            ->where(
+                $this->queryBuilder->expr()->lte('ttl', intval(time() - $this->extensionSettings['processMaxRunTime'])),
+                $this->queryBuilder->expr()->eq('active', 1)
+            )
+            ->execute()->fetchAll();
+
+        /*while ($row = $statement->fetch()) {
+            var_dump($row);
+            $activeProcesses[] = $row;
+        }*/
+
+        return $statement;
+    }
+
+    /**
      * Returns the number of processes that live longer than the given timestamp.
      *
      * @param  integer $ttl
@@ -153,5 +213,15 @@ class ProcessRepository extends AbstractRepository
         $limit = $offset . ', ' . $itemCount;
 
         return $limit;
+    }
+
+    /**
+     * Returns an instance of the TYPO3 database class.
+     *
+     * @return \TYPO3\CMS\Core\Database\DatabaseConnection
+     */
+    protected function getDB()
+    {
+        return $GLOBALS['TYPO3_DB'];
     }
 }

@@ -25,8 +25,12 @@ namespace AOE\Crawler\Tests\Functional\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Domain\Model\Process;
+use AOE\Crawler\Domain\Model\ProcessCollection;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class ProcessRepositoryTest
@@ -39,7 +43,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
     /**
      * @var array
      */
-    protected $coreExtensionsToLoad = ['cms', 'core', 'frontend', 'version', 'lang', 'extensionmanager', 'fluid'];
+    //protected $coreExtensionsToLoad = ['cms', 'core', 'frontend', 'version', 'lang', 'extensionmanager', 'fluid'];
 
     /**
      * @var array
@@ -58,8 +62,11 @@ class ProcessRepositoryTest extends FunctionalTestCase
     public function setUp()
     {
         parent::setUp();
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+
+        $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['crawler'] = 'a:19:{s:9:"sleepTime";s:4:"1000";s:16:"sleepAfterFinish";s:2:"10";s:11:"countInARun";s:3:"100";s:14:"purgeQueueDays";s:2:"14";s:12:"processLimit";s:1:"1";s:17:"processMaxRunTime";s:3:"300";s:14:"maxCompileUrls";s:5:"10000";s:12:"processDebug";s:1:"0";s:14:"processVerbose";s:1:"0";s:16:"crawlHiddenPages";s:1:"0";s:7:"phpPath";s:12:"/usr/bin/php";s:14:"enableTimeslot";s:1:"1";s:11:"logFileName";s:0:"";s:9:"follow30x";s:1:"0";s:18:"makeDirectRequests";s:1:"0";s:16:"frontendBasePath";s:1:"/";s:22:"cleanUpOldQueueEntries";s:1:"1";s:19:"cleanUpProcessedAge";s:1:"2";s:19:"cleanUpScheduledAge";s:1:"7";}';
         $this->importDataSet(dirname(__FILE__) . '/../../Fixtures/tx_crawler_process.xml');
-        $this->subject = new ProcessRepository();
+        $this->subject = $objectManager->get(ProcessRepository::class);
     }
 
     /**
@@ -81,6 +88,29 @@ class ProcessRepositoryTest extends FunctionalTestCase
         $this->assertEquals(
             $expected,
             $actual->getProcessIds()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function removeByProcessId()
+    {
+        $this->assertInstanceOf(
+            ProcessCollection::class,
+            $this->subject->findAll('', '', '', '', 'process_id = 1002')
+        );
+
+        $this->assertEquals(
+            5,
+            $this->subject->findAll()->count()
+        );
+
+        $this->subject->removeByProcessId(1002);
+
+        $this->assertEquals(
+            4,
+            $this->subject->findAll()->count()
         );
     }
 
@@ -179,6 +209,40 @@ class ProcessRepositoryTest extends FunctionalTestCase
         $this->assertEquals(
             5,
             $this->subject->countAll()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function getActiveProcessesOlderThanOneOHour()
+    {
+        $expected = [
+            ['process_id' => '1000', 'system_process_id' => 0],
+            ['process_id' => '1001', 'system_process_id' => 0],
+            ['process_id' => '1002', 'system_process_id' => 0]
+        ];
+
+        $this->assertSame(
+            $expected,
+            $this->subject->getActiveProcessesOlderThanOneHour()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function getActiveOrphanProcesses()
+    {
+        $expected = [
+            ['process_id' => '1000', 'system_process_id' => 0],
+            ['process_id' => '1001', 'system_process_id' => 0],
+            ['process_id' => '1002', 'system_process_id' => 0]
+        ];
+
+        $this->assertSame(
+            $expected,
+            $this->subject->getActiveOrphanProcesses()
         );
     }
 }

@@ -41,7 +41,7 @@ class QueryRepositoryTest extends FunctionalTestCase
     /**
      * @var array
      */
-    protected $coreExtensionsToLoad = ['cms', 'core', 'frontend', 'version', 'lang', 'extensionmanager', 'fluid'];
+    //protected $coreExtensionsToLoad = ['cms', 'core', 'frontend', 'version', 'lang', 'extensionmanager', 'fluid'];
 
     /**
      * @var array
@@ -104,7 +104,7 @@ class QueryRepositoryTest extends FunctionalTestCase
                 'process_scheduled' => '0',
                 'process_id' => '1002',
                 'process_id_completed' => 'qwerty',
-                'configuration' => 'ThirdConfiguration'
+                'configuration' => 'ThirdConfiguration',
             ],
             $this->subject->findYoungestEntryForProcess($process)->getRow()
         );
@@ -131,10 +131,92 @@ class QueryRepositoryTest extends FunctionalTestCase
                 'process_scheduled' => '0',
                 'process_id' => '1003',
                 'process_id_completed' => 'qwerty',
-                'configuration' => 'FirstConfiguration'
+                'configuration' => 'FirstConfiguration',
             ],
             $this->subject->findOldestEntryForProcess($process)->getRow()
         );
+    }
+
+    /**
+     * @test
+     */
+    public function getAvailableSets()
+    {
+        $this->assertSame(
+            $this->getExpectedSetsForGetAvailableSets(),
+            $this->subject->getAvailableSets()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function isPageInQueueThrowInvalidArgumentException()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionCode(1468931945);
+        $this->subject->isPageInQueue('Cannot be interpreted as integer');
+    }
+
+    /**
+     * @test
+     *
+     * @param $uid
+     * @param $unprocessed_only
+     * @param $timed_only
+     * @param $timestamp
+     * @param $expected
+     *
+     * @dataProvider isPageInQueueDataProvider
+     */
+    public function isPageInQueue($uid, $unprocessed_only, $timed_only, $timestamp, $expected)
+    {
+        $this->assertSame(
+            $expected,
+            $this->subject->isPageInQueue($uid, $unprocessed_only, $timed_only, $timestamp)
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function isPageInQueueTimed()
+    {
+        $this->assertTrue($this->subject->isPageInQueueTimed(15));
+    }
+
+    /**
+     * @return array
+     */
+    private function getExpectedSetsForGetAvailableSets()
+    {
+        return [
+            [
+                'set_id' => 0,
+                'count_value' => 0,
+                'scheduled' => 4321
+            ],
+            [
+                'set_id' => 0,
+                'count_value' => 0,
+                'scheduled' => 0
+            ],
+            [
+                'set_id' => 123,
+                'count_value' => 0,
+                'scheduled' => 0
+            ],
+            [
+                'set_id' => 456,
+                'count_value' => 0,
+                'scheduled' => 0
+            ],
+            [
+                'set_id' => 789,
+                'count_value' => 0,
+                'scheduled' => 0
+            ]
+        ];
     }
 
     /**
@@ -161,6 +243,26 @@ class QueryRepositoryTest extends FunctionalTestCase
             2,
             $this->subject->countNonExecutedItemsByProcess($process)
         );
+    }
+
+    /**
+     * @test
+     */
+    public function getUnprocessedItems()
+    {
+        $expected = [ 4, 6, 8, 9, 15];
+
+        // We only compare on qid to make the comparison easier
+        $actually = [];
+        foreach($this->subject->getUnprocessedItems() as $item) {
+            $actually[] = $item['qid'];
+        }
+
+         $this->assertSame(
+             $expected,
+             $actually
+         );
+
     }
 
     /**
@@ -216,18 +318,18 @@ class QueryRepositoryTest extends FunctionalTestCase
             0 => [
                 'configuration' => 'FirstConfiguration',
                 'unprocessed' => 2,
-                'assignedButUnprocessed' => 0
+                'assignedButUnprocessed' => 0,
             ],
             1 => [
                 'configuration' => 'SecondConfiguration',
                 'unprocessed' => 1,
-                'assignedButUnprocessed' => 1
+                'assignedButUnprocessed' => 1,
             ],
             2 => [
                 'configuration' => 'ThirdConfiguration',
                 'unprocessed' => 2,
-                'assignedButUnprocessed' => 2
-            ]
+                'assignedButUnprocessed' => 2,
+            ],
         ];
 
         $this->assertEquals(
@@ -245,7 +347,7 @@ class QueryRepositoryTest extends FunctionalTestCase
             0 => 0,
             1 => 123,
             2 => 456,
-            3 => 789
+            3 => 789,
         ];
 
         $this->assertEquals(
@@ -263,7 +365,7 @@ class QueryRepositoryTest extends FunctionalTestCase
 
         $expected = [
             'ThirdConfiguration' => 1,
-            'SecondConfiguration' => 2
+            'SecondConfiguration' => 2,
         ];
 
         $this->assertEquals(
@@ -280,7 +382,7 @@ class QueryRepositoryTest extends FunctionalTestCase
         $expectedArray = [
             '0' => 20,
             '1' => 20,
-            '2' => 18
+            '2' => 18,
         ];
 
         $this->assertEquals(
@@ -296,7 +398,7 @@ class QueryRepositoryTest extends FunctionalTestCase
     {
         $expectedArray = [
             ['qid' => '17'],
-            ['qid' => '3']
+            ['qid' => '3'],
         ];
 
         $this->assertSame(
@@ -315,20 +417,20 @@ class QueryRepositoryTest extends FunctionalTestCase
                 'process_id_completed' => 'asdfgh',
                 'start' => 10,
                 'end' => 18,
-                'urlcount' => 3
+                'urlcount' => 3,
             ],
             'qwerty' => [
                 'process_id_completed' => 'qwerty',
                 'start' => 10,
                 'end' => 20,
-                'urlcount' => 2
+                'urlcount' => 2,
             ],
             'dvorak' => [
                 'process_id_completed' => 'dvorak',
                 'start' => 10,
                 'end' => 20,
-                'urlcount' => 2
-            ]
+                'urlcount' => 2,
+            ],
         ];
 
         $this->assertEquals(
@@ -372,7 +474,7 @@ class QueryRepositoryTest extends FunctionalTestCase
                     'process_id' => '1002',
                     'process_id_completed' => 'qwerty',
                     'configuration' => 'ThirdConfiguration',
-                ]
+                ],
             ],
             'Know process_id, get last' => [
                 'processId' => 'qwerty',
@@ -391,8 +493,8 @@ class QueryRepositoryTest extends FunctionalTestCase
                     'process_scheduled' => '0',
                     'process_id' => '1003',
                     'process_id_completed' => 'qwerty',
-                    'configuration' => 'FirstConfiguration'
-                ]
+                    'configuration' => 'FirstConfiguration',
+                ],
             ],
 
             // TODO: Adds Tests back for unknown id
@@ -404,6 +506,43 @@ class QueryRepositoryTest extends FunctionalTestCase
                 'expected' => []
             ]
             */
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function isPageInQueueDataProvider()
+    {
+        return [
+            'Unprocessed Only' => [
+                'uid' => 15,
+                'unprocessed_only' => true,
+                'timed_only' => false,
+                'timestamp' => false,
+                'expected' => true
+            ],
+            'Timed Only' => [
+                'uid' => 16,
+                'unprocessed_only' => false,
+                'timed_only' => true,
+                'timestamp' => false,
+                'expected' => true
+            ],
+            'Timestamp Only' => [
+                'uid' => 17,
+                'unprocessed_only' => false,
+                'timed_only' => false,
+                'timestamp' => 4321,
+                'expected' => true
+            ],
+            'Not existing page' => [
+                'uid' => 40000,
+                'unprocessed_only' => false,
+                'timed_only' => false,
+                'timestamp' => false,
+                'expected' => false
+            ],
         ];
     }
 }

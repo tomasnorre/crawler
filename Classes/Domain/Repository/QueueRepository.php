@@ -29,7 +29,10 @@ use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Domain\Model\Queue;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Core\Exception;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\MathUtility;
+use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
 
 /**
  * Class QueueRepository
@@ -54,6 +57,20 @@ class QueueRepository extends AbstractRepository
     public function __construct()
     {
         $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+    }
+
+    /**
+     * @param $processId
+     */
+    public function unsetQueueProcessId($processId)
+    {
+        $this->queryBuilder
+            ->update($this->tableName)
+            ->where(
+                $this->queryBuilder->expr()->eq('process_id', $this->queryBuilder->createNamedParameter($processId))
+            )
+            ->set('process_id', '')
+            ->execute();
     }
 
     /**
@@ -156,24 +173,31 @@ class QueueRepository extends AbstractRepository
     }
 
     /**
+     * get items which have not been processed yet
+     *
+     * @return array
+     */
+    public function getUnprocessedItems()
+    {
+        $unprocessedItems = $this->queryBuilder
+            ->select('*')
+            ->from($this->tableName)
+            ->where(
+                $this->queryBuilder->expr()->eq('exec_time', 0)
+            )
+            ->execute()->fetchAll();
+
+        return $unprocessedItems;
+    }
+
+    /**
      * Count items which have not been processed yet
      * 
      * @return int
      */
     public function countUnprocessedItems()
     {
-        $count = $this->queryBuilder
-            ->count('*')
-            ->from($this->tableName)
-            ->where(
-                $this->queryBuilder->expr()->eq('process_scheduled', 0),
-                $this->queryBuilder->expr()->eq('exec_time', 0),
-                $this->queryBuilder->expr()->lte('scheduled', 0)
-            )
-            ->execute()
-            ->fetchColumn(0);
-
-        return $count;
+        return count($this->getUnprocessedItems());
     }
 
     /**
@@ -406,6 +430,98 @@ class QueueRepository extends AbstractRepository
         $rows = [];
         while (($row = $db->sql_fetch_assoc($res)) !== false) {
             $rows[$row['process_id_completed']] = $row;
+        }
+
+        return $rows;
+    }
+
+    /**
+     * Determines if a page is queued
+     *
+     * @param $uid
+     * @param bool $unprocessed_only
+     * @param bool $timed_only
+     * @param bool $timestamp
+     *
+     * @return bool
+     */
+    public function isPageInQueue($uid, $unprocessed_only = true, $timed_only = false, $timestamp = false)
+    {
+        if (!MathUtility::canBeInterpretedAsInteger($uid)) {
+            throw new \InvalidArgumentException('Invalid parameter type', 1468931945);
+        }
+
+        $isPageInQueue = false;
+
+        $statement  = $this->queryBuilder
+            ->count('*')
+            ->from($this->tableName)
+            ->where(
+                $this->queryBuilder->expr()->eq('page_id', $this->queryBuilder->createNamedParameter($uid))
+            );
+
+        if (false !== $unprocessed_only) {
+            $statement->andWhere(
+                $this->queryBuilder->expr()->eq('exec_time', 0)
+            );
+        }
+
+        if (false !== $timed_only) {
+            $statement->andWhere(
+                $this->queryBuilder->expr()->neq('scheduled', 0)
+            );
+        }
+
+        if (false !== $timestamp) {
+            $statement->andWhere(
+                $this->queryBuilder->expr()->eq('scheduled', $this->queryBuilder->createNamedParameter($timestamp))
+            );
+        }
+
+        // TODO: Currently it's not working if page doesn't exists. See tests
+        $statement
+            ->execute()
+            ->fetchColumn(0);
+
+        if (false !== $statement && $statement > 0) {
+            $isPageInQueue = true;
+        }
+
+        return $isPageInQueue;
+    }
+
+    /**
+     * Method to check if a page is in the queue which is timed for a
+     * date when it should be crawled
+     *
+     * @param int $uid uid of the page
+     * @param boolean $show_unprocessed only respect unprocessed pages
+     *
+     * @return boolean
+     *
+     */
+    public function isPageInQueueTimed($uid, $show_unprocessed = true)
+    {
+        $uid = intval($uid);
+        return $this->isPageInQueue($uid, $show_unprocessed);
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getAvailableSets()
+    {
+        $statement = $this->queryBuilder
+            ->select('set_id', 'scheduled')
+            ->from($this->tableName)
+            ->orderBy('scheduled', 'desc')
+            ->groupBy('set_id', 'scheduled')
+            ->execute();
+
+        $rows = [];
+        while ($row = $statement->fetch()) {
+            $rows[] = $row;
         }
 
         return $rows;
