@@ -23,7 +23,6 @@
         "typo3/cms-extensionmanager": "*"
     },
     "require-dev": {
-        "typo3/cms": "^8.7",
         "nimut/testing-framework": "^2.0 || ^4.0",
         "helhum/typo3-console": "*"
     },
