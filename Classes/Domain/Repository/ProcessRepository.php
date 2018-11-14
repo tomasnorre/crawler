@@ -157,8 +157,6 @@ class ProcessRepository extends AbstractRepository
      */
     public function getActiveOrphanProcesses()
     {
-        $activeProcesses = [];
-
         $statement = $this->queryBuilder
             ->select('process_id', 'system_process_id')
             ->from($this->tableName)
@@ -167,11 +165,6 @@ class ProcessRepository extends AbstractRepository
                 $this->queryBuilder->expr()->eq('active', 1)
             )
             ->execute()->fetchAll();
-
-        /*while ($row = $statement->fetch()) {
-            var_dump($row);
-            $activeProcesses[] = $row;
-        }*/
 
         return $statement;
     }

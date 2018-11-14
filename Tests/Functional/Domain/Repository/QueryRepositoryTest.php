@@ -192,30 +192,35 @@ class QueryRepositoryTest extends FunctionalTestCase
     {
         return [
             [
+                'count_value' => 1,
                 'set_id' => 0,
-                'count_value' => 0,
                 'scheduled' => 4321
             ],
             [
+                'count_value' => 1,
                 'set_id' => 0,
-                'count_value' => 0,
+                'scheduled' => 1245
+            ],
+            [
+                'count_value' => 6,
+                'set_id' => 0,
                 'scheduled' => 0
             ],
             [
+                'count_value' => 2,
                 'set_id' => 123,
-                'count_value' => 0,
                 'scheduled' => 0
             ],
             [
+                'count_value' => 1,
                 'set_id' => 456,
-                'count_value' => 0,
                 'scheduled' => 0
             ],
             [
+                'count_value' => 1,
                 'set_id' => 789,
-                'count_value' => 0,
                 'scheduled' => 0
-            ]
+            ],
         ];
     }
 

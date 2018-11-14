@@ -513,7 +513,8 @@ class QueueRepository extends AbstractRepository
     public function getAvailableSets()
     {
         $statement = $this->queryBuilder
-            ->select('set_id', 'scheduled')
+            ->selectLiteral('count(*) as count_value')
+            ->addSelect('set_id', 'scheduled')
             ->from($this->tableName)
             ->orderBy('scheduled', 'desc')
             ->groupBy('set_id', 'scheduled')
