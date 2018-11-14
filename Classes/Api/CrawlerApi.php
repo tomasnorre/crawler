@@ -306,19 +306,27 @@ class CrawlerApi
     public function getLatestCrawlTimestampForPage($uid, $future_crawldates_only = false, $unprocessed_only = false)
     {
         $uid = intval($uid);
-        $query = 'max(scheduled) as latest';
-        $where = ' page_id = ' . $uid;
+        $query = $this->queryBuilder
+            ->from($this->tableName)
+            ->selectLiteral('max(scheduled) as latest')
+            ->where(
+                $this->queryBuilder->expr()->eq('page_id', $this->queryBuilder->createNamedParameter($uid))
+            );
 
         if ($future_crawldates_only) {
-            $where .= ' AND scheduled > ' . time();
+            $query->andWhere(
+                $this->queryBuilder->expr()->gt('scheduled', time())
+            );
         }
 
         if ($unprocessed_only) {
-            $where .= ' AND exec_time = 0';
+            $query->andWhere(
+                $this->queryBuilder->expr()->eq('exec_time', 0)
+            );
         }
 
-        $rs = $GLOBALS['TYPO3_DB']->exec_SELECTquery($query, 'tx_crawler_queue', $where);
-        if ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($rs)) {
+        $row = $query->execute()->fetch(0);
+        if ($row['latest']) {
             $res = $row['latest'];
         } else {
             $res = 0;
@@ -342,12 +350,17 @@ class CrawlerApi
         $uid = intval($uid);
         $limit = intval($limit);
 
-        $query = 'scheduled, exec_time, set_id';
-        $where = ' page_id = ' . $uid;
+        $statement = $this->queryBuilder
+            ->from($this->tableName)
+            ->select('scheduled', 'exec_time', 'set_id')
+            ->where(
+                $this->queryBuilder->expr()->eq('page_id', $this->queryBuilder->createNamedParameter($uid))
+            );
+        if($limit) {
+            $statement->setMaxResults($limit);
+        }
 
-        $limit_query = ($limit) ? $limit : null;
-
-        $rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($query, 'tx_crawler_queue', $where, null, null, $limit_query);
+        $rows = $statement->execute()->fetchAll();
         return $rows;
     }
 
@@ -503,7 +516,7 @@ class CrawlerApi
      */
     public function getLastProcessedQueueEntries($limit)
     {
-        return $this->getQueueRepository()->getLastProcessedEntries('*', $limit);
+        return $this->getQueueRepository()->getLastProcessedEntries($limit);
     }
 
     /**

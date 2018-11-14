@@ -171,7 +171,7 @@ class CrawlerApiTest extends FunctionalTestCase
         $this->importDataSet(dirname(__FILE__) . '/../Fixtures/tx_crawler_queue.xml');
 
         $this->assertSame(
-            '4321',
+            4321,
             $this->subject->getLatestCrawlTimestampForPage(17)
         );
     }
@@ -186,9 +186,9 @@ class CrawlerApiTest extends FunctionalTestCase
         $this->assertSame(
             [
                 [
-                    'scheduled' => '4321',
-                    'exec_time' => '20',
-                    'set_id' => '0'
+                    'scheduled' => 4321,
+                    'exec_time' => 20,
+                    'set_id' => 0
                 ]
             ],
             $this->subject->getCrawlHistoryForPage(17, 1)

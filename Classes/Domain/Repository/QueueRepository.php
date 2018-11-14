@@ -384,25 +384,21 @@ class QueueRepository extends AbstractRepository
     /**
      * Get the last processed entries
      *
-     * @param string $selectFields
      * @param int $limit
      *
      * @return array
      */
-    public function getLastProcessedEntries($selectFields = '*', $limit = 100)
+    public function getLastProcessedEntries($limit = 100)
     {
-        $db = $this->getDB();
-        $res = $db->exec_SELECTquery(
-            $selectFields,
-            $this->tableName,
-            '',
-            '',
-            'exec_time desc',
-            $limit
-        );
+        $statement = $this->queryBuilder
+            ->from($this->tableName)
+            ->select('*')
+            ->orderBy('exec_time', 'desc')
+            ->setMaxResults($limit)
+            ->execute();
 
         $rows = [];
-        while (($row = $db->sql_fetch_assoc($res)) !== false) {
+        while (($row = $statement->fetch()) !== false) {
             $rows[] = $row;
         }
 
@@ -419,16 +415,20 @@ class QueueRepository extends AbstractRepository
      */
     public function getPerformanceData($start, $end)
     {
-        $db = $this->getDB();
-        $res = $db->exec_SELECTquery(
-            'process_id_completed, min(exec_time) as start, max(exec_time) as end, count(*) as urlcount',
-            $this->tableName,
-            'exec_time != 0 and exec_time >= ' . intval($start) . ' and exec_time <= ' . intval($end),
-            'process_id_completed'
-        );
+        $statement = $this->queryBuilder
+            ->from($this->tableName)
+            ->selectLiteral('min(exec_time) as start', 'max(exec_time) as end', 'count(*) as urlcount')
+            ->addSelect('process_id_completed')
+            ->where(
+                $this->queryBuilder->expr()->neq('exec_time', 0),
+                $this->queryBuilder->expr()->gte('exec_time', $this->queryBuilder->createNamedParameter($start)),
+                $this->queryBuilder->expr()->lte('exec_time', $this->queryBuilder->createNamedParameter($end))
+            )
+            ->groupBy('process_id_completed')
+            ->execute();
 
         $rows = [];
-        while (($row = $db->sql_fetch_assoc($res)) !== false) {
+        while ($row = $statement->fetch()) {
             $rows[$row['process_id_completed']] = $row;
         }
 
@@ -454,8 +454,8 @@ class QueueRepository extends AbstractRepository
         $isPageInQueue = false;
 
         $statement  = $this->queryBuilder
-            ->count('*')
             ->from($this->tableName)
+            ->count('*')
             ->where(
                 $this->queryBuilder->expr()->eq('page_id', $this->queryBuilder->createNamedParameter($uid))
             );

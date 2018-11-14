@@ -44,6 +44,8 @@ use TYPO3\CMS\Beuser\Domain\Model\Demand;
 use TYPO3\CMS\Beuser\Domain\Repository\BackendUserRepository;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
@@ -115,6 +117,16 @@ class BackendModule extends AbstractFunctionModule
     protected $backendUserRepository;
 
     /**
+     * @var QueryBuilder
+     */
+    protected $queryBuilder;
+
+    /**
+     * @var QueueRepository
+     */
+    protected $queueRepository;
+
+    /**
      * the constructor
      */
     public function __construct()
@@ -122,6 +134,8 @@ class BackendModule extends AbstractFunctionModule
         $objectManger = GeneralUtility::makeInstance(ObjectManager::class);
         $this->processManager = new ProcessService();
         $this->backendUserRepository = $objectManger->get(BackendUserRepository::class);
+        $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tx_crawler_queue');
+        $this->queueRepository = $objectManger->get(QueueRepository::class);
     }
 
     /**
@@ -533,7 +547,15 @@ class BackendModule extends AbstractFunctionModule
         if (GeneralUtility::_GP('qid_details')) {
 
                 // Get entry record:
-            list($q_entry) = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_crawler_queue', 'qid=' . intval(GeneralUtility::_GP('qid_details')));
+            //list($q_entry) = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_crawler_queue', 'qid=' . intval(GeneralUtility::_GP('qid_details')));
+            list($q_entry) = $this->queryBuilder
+                ->from('tx_crawler_queue')
+                ->select('*')
+                ->where(
+                    $this->queryBuilder->expr()->eq('qid', $this->queryBuilder->createNamedParameter(GeneralUtility::_GP('qid_details')))
+                )
+                ->execute()
+                ->fetchAll();
 
             // Explode values:
             $resStatus = $this->getResStatus($q_entry);
@@ -620,13 +642,16 @@ class BackendModule extends AbstractFunctionModule
                         '</table>';
                 }
             } else {	// Otherwise show available sets:
-                $setList = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+                /*
+                 $setList = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
                                 'set_id, count(*) as count_value, scheduled',
                                 'tx_crawler_queue',
                                 '',
                                 'set_id, scheduled',
                                 'scheduled DESC'
                             );
+                */
+                $setList = $this->queueRepository->getAvailableSets();
 
                 $code = '
 					<tr class="bgColor5 tableheader">

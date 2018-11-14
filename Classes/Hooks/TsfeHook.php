@@ -24,6 +24,9 @@ namespace AOE\Crawler\Hooks;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class TsfeHook
@@ -31,6 +34,12 @@ namespace AOE\Crawler\Hooks;
  */
 class TsfeHook
 {
+
+    /**
+     * @var QueryBuilder
+     */
+    protected $queryBuilder;
+
     /**
      * Initialization hook (called after database connection)
      * Takes the "HTTP_X_T3CRAWLER" header and looks up queue record and verifies if the session comes from the system (by comparing hashes)
@@ -44,12 +53,23 @@ class TsfeHook
     public function fe_init(&$params, $ref)
     {
 
+        $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tx_crawler_queue');
+
         // Authenticate crawler request:
         if (isset($_SERVER['HTTP_X_T3CRAWLER'])) {
             //@todo: ask service to exclude current call for special reasons: for example no relevance because the language version is not affected
 
             list($queueId, $hash) = explode(':', $_SERVER['HTTP_X_T3CRAWLER']);
-            list($queueRec) = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_crawler_queue', 'qid=' . intval($queueId));
+            //list($queueRec) = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_crawler_queue', 'qid=' . intval($queueId));
+            list($queueRec) = $this->queryBuilder
+                ->from('tx_crawler_queue')
+                ->select('*')
+                ->where(
+                    $this->queryBuilder->expr()->eq('qid', $this->queryBuilder->createNamedParameter($queueId))
+                )
+                ->execute()
+                ->fetchAll();
+
 
             // If a crawler record was found and hash was matching, set it up:
             if (is_array($queueRec) && $hash === md5($queueRec['qid'] . '|' . $queueRec['set_id'] . '|' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'])) {
