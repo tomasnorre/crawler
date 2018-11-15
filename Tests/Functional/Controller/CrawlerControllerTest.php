@@ -72,7 +72,7 @@ class CrawlerControllerTest extends FunctionalTestCase
      */
     public function getBaseUrlForConfigurationRecord($baseUrl, $sysDomainUid, $expected)
     {
-        $this->assertEquals(
+        $this->assertSame(
             $expected,
             $this->subject->_call('getBaseUrlForConfigurationRecord', $baseUrl, $sysDomainUid)
         );
@@ -89,7 +89,7 @@ class CrawlerControllerTest extends FunctionalTestCase
      */
     public function noUnprocessedQueueEntriesForPageWithConfigurationHashExist($uid, $configurationHash, $expected)
     {
-        $this->assertEquals(
+        $this->assertSame(
             $expected,
             $this->subject->_call(
                 'noUnprocessedQueueEntriesForPageWithConfigurationHashExist',
@@ -217,6 +217,20 @@ class CrawlerControllerTest extends FunctionalTestCase
         $this->assertEquals(
             $expected,
             $this->subject->getLogEntriesForSetId($setId, $filter, $doFlush, $doFullFlush, $itemsPerPage)
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function CLI_checkIfProcessIsActive()
+    {
+        $this->assertTrue(
+            $this->subject->CLI_checkIfProcessIsActive(1002)
+        );
+
+        $this->assertFalse(
+            $this->subject->CLI_checkIfProcessIsActive(1003)
         );
     }
 

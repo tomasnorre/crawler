@@ -29,6 +29,7 @@ use AOE\Crawler\Command\CrawlerCommandLineController;
 use AOE\Crawler\Command\FlushCommandLineController;
 use AOE\Crawler\Command\QueueCommandLineController;
 use AOE\Crawler\Domain\Model\Reason;
+use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\EventDispatcher;
 use AOE\Crawler\Utility\IconUtility;
@@ -36,7 +37,9 @@ use AOE\Crawler\Utility\SignalSlotUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\DatabaseConnection;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Log\LogLevel;
 use TYPO3\CMS\Core\TimeTracker\NullTimeTracker;
 use TYPO3\CMS\Core\Utility\DebugUtility;
@@ -181,6 +184,21 @@ class CrawlerController
     protected  $queueRepository;
 
     /**
+     * @var ProcessRepository
+     */
+    protected $processRepository;
+
+    /**
+     * @var string
+     */
+    protected $tableName = 'tx_crawler_queue';
+
+    /**
+     * @var QueryBuilder
+     */
+    protected $queryBuilder = QueryBuilder::class;
+
+    /**
      * Method to set the accessMode can be gui, cli or cli_im
      *
      * @return string
@@ -257,6 +275,7 @@ class CrawlerController
     {
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->queueRepository = $objectManager->get(QueueRepository::class);
+        $this->processRepository = $objectManager->get(ProcessRepository::class);
 
         $this->db = $GLOBALS['TYPO3_DB'];
         $this->backendUser = $GLOBALS['BE_USER'];
@@ -274,6 +293,7 @@ class CrawlerController
         }
 
         $this->extensionSettings['processLimit'] = MathUtility::forceIntegerInRange($this->extensionSettings['processLimit'], 1, 99, 1);
+        $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
     }
 
     /**
@@ -387,10 +407,17 @@ class CrawlerController
      */
     protected function noUnprocessedQueueEntriesForPageWithConfigurationHashExist($uid, $configurationHash)
     {
-        $configurationHash = $GLOBALS['TYPO3_DB']->fullQuoteStr($configurationHash, 'tx_crawler_queue');
-        $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('count(*) as anz', 'tx_crawler_queue', "page_id=" . intval($uid) . " AND configuration_hash=" . $configurationHash . " AND exec_time=0");
-        $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+        $statement = $this->queryBuilder
+            ->from($this->tableName)
+            ->selectLiteral('count(*) as anz')
+            ->where(
+                $this->queryBuilder->expr()->eq('page_id', intval($uid)),
+                $this->queryBuilder->expr()->eq('configuration_hash', $this->queryBuilder->createNamedParameter($configurationHash)),
+                $this->queryBuilder->expr()->eq('exec_time', 0)
+            )
+            ->execute();
 
+        $row = $statement->fetch(0);
         return ($row['anz'] == 0);
     }
 
@@ -728,14 +755,15 @@ class CrawlerController
         $urlScheme = ($ssl === false) ? 'http' : 'https';
 
         if ($sysDomainUid > 0) {
-            $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-                '*',
-                'sys_domain',
-                'uid = ' . $sysDomainUid .
-                BackendUtility::BEenableFields('sys_domain') .
-                BackendUtility::deleteClause('sys_domain')
-            );
-            $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+            $statement = $this->queryBuilder
+                ->from('sys_domain')
+                ->select('*')
+                ->where(
+                    $this->queryBuilder->expr()->eq('uid', intval($sysDomainUid))
+                )
+                ->execute();
+
+            $row = $statement->fetch(0);
             if ($row['domainName'] != '') {
                 return $urlScheme . '://' . $row['domainName'];
             }
@@ -743,6 +771,13 @@ class CrawlerController
         return $baseUrl;
     }
 
+    /**
+     * @param $rootid
+     * @param $depth
+     * @return array
+     *
+     * TODO: Write Functional Tests
+     */
     public function getConfigurationsForBranch($rootid, $depth)
     {
         $configurationsForBranch = [];
@@ -847,6 +882,8 @@ class CrawlerController
      * @param array $paramArray Array with key (GET var name) and values (value of GET var which is configuration for expansion)
      * @param integer $pid Current page ID
      * @return array
+     *
+     * TODO: Write Functional Tests
      */
     public function expandParameters($paramArray, $pid)
     {
@@ -1224,6 +1261,8 @@ class CrawlerController
      * @param array $fieldArray
      *
      * @return array
+     *
+     * TODO: Write Functional Tests
      */
     protected function getDuplicateRowsIfExist($tstamp, $fieldArray)
     {
@@ -2046,7 +2085,7 @@ class CrawlerController
             }
 
             // Cleanup
-            $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_crawler_process', 'assigned_items_count = 0');
+            $this->processRepository->deleteProcessesWithoutItemsAssigned();
 
             //TODO can't we do that in a clean way?
             $releaseStatus = $this->CLI_releaseProcesses($this->CLI_buildProcessId());
@@ -2493,6 +2532,9 @@ class CrawlerController
      * Delete processes marked as deleted
      *
      * @return void
+     *
+     * @deprecated since crawler v7.0.0, will be removed in crawler v8.0.0.
+     * Please Consider using $this->processRepository->deleteProcessesMarkedAsDeleted()
      */
     public function CLI_deleteProcessesMarkedDeleted()
     {
@@ -2506,24 +2548,24 @@ class CrawlerController
      * @param  string  identification string for the process
      * @return boolean determines if the process is still active / has resources
      *
-     * FIXME: Please remove Transaction, not needed as only a select query.
+     * TODO: Please consider moving this to Domain Model for Process or in ProcessRepository
      */
     public function CLI_checkIfProcessIsActive($pid)
     {
         $ret = false;
-        $GLOBALS['TYPO3_DB']->sql_query('BEGIN');
-        $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-            'process_id,active,ttl',
-            'tx_crawler_process',
-            'process_id = \'' . $pid . '\'  AND deleted=0',
-            '',
-            'ttl',
-            '0,1'
-        );
-        if ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+
+        $statement = $this->queryBuilder
+            ->from('tx_crawler_process')
+            ->select('active')
+            ->where(
+                $this->queryBuilder->expr()->eq('process_id', intval($pid))
+            )
+            ->orderBy('ttl')
+            ->execute();
+
+        if ($row = $statement->fetch(0)) {
             $ret = intVal($row['active']) == 1;
         }
-        $GLOBALS['TYPO3_DB']->sql_query('COMMIT');
 
         return $ret;
     }

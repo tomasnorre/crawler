@@ -91,7 +91,7 @@ class ProcessRepository extends AbstractRepository
             $where,
             '',
             htmlspecialchars($orderField) . ' ' . htmlspecialchars($orderDirection),
-            self::getLimitFromItemCountAndOffset($itemCount, $offset)
+            $this->getLimitFromItemCountAndOffset($itemCount, $offset)
         );
 
         if (is_array($rows)) {
@@ -136,7 +136,7 @@ class ProcessRepository extends AbstractRepository
             ->select('process_id', 'system_process_id')
             ->from($this->tableName)
             ->where(
-                $this->queryBuilder->expr()->lte('ttl', intval(time() - $this->extensionSettings['processMaxRunTime'] - 3600 )),
+                $this->queryBuilder->expr()->lte('ttl', intval(time() - $this->extensionSettings['processMaxRunTime'] - 3600)),
                 $this->queryBuilder->expr()->eq('active', 1)
             )
             ->execute();
@@ -199,13 +199,36 @@ class ProcessRepository extends AbstractRepository
      *
      * @return string
      */
-    public static function getLimitFromItemCountAndOffset($itemCount, $offset)
+    private function getLimitFromItemCountAndOffset($itemCount, $offset)
     {
         $itemCount = filter_var($itemCount, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'default' => 20]]);
         $offset = filter_var($offset, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0, 'default' => 0]]);
         $limit = $offset . ', ' . $itemCount;
 
         return $limit;
+    }
+
+    /**
+     * @return void
+     */
+    public function deleteProcessesWithoutItemsAssigned()
+    {
+        $this->queryBuilder
+            ->delete($this->tableName)
+            ->where(
+                $this->queryBuilder->expr()->eq('assigned_items_count', 0)
+            )
+            ->execute();
+    }
+
+    public function deleteProcessesMarkedAsDeleted()
+    {
+        $this->queryBuilder
+            ->delete($this->tableName)
+            ->where(
+                $this->queryBuilder->expr()->eq('deleted', 1)
+            )
+            ->execute();
     }
 
     /**
