@@ -24,7 +24,8 @@
     },
     "require-dev": {
         "nimut/testing-framework": "^2.0 || ^4.0",
-        "helhum/typo3-console": "*"
+        "helhum/typo3-console": "*",
+        "nimut/typo3-complete": "^9.5"
     },
     "replace": {
         "crawler":  "self.version",

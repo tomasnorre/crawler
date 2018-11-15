@@ -274,34 +274,19 @@ class QueueRepository extends AbstractRepository
     public function countPendingItemsGroupedByConfigurationKey()
     {
 
-        $db = $this->getDB();
-        $res = $db->exec_SELECTquery(
-            "configuration, count(*) as unprocessed, sum(process_id != '') as assignedButUnprocessed",
-            $this->tableName,
-            'exec_time = 0 AND scheduled < ' . time(),
-            'configuration'
-        );
-        $rows = [];
-        while ($row = $db->sql_fetch_assoc($res)) {
-            $rows[] = $row;
-        }
-
-        return $rows;
-
-/**
-        $count = $this->queryBuilder
-            ->count('*')
+        $statement = $this->queryBuilder
             ->from($this->tableName)
+            ->selectLiteral('count(*) as unprocessed', 'sum(process_id != \'\') as assignedButUnprocessed')
+            ->addSelect('configuration')
             ->where(
                 $this->queryBuilder->expr()->eq('exec_time', 0),
-                $this->queryBuilder->expr()->lte('scheduled', time())
+                $this->queryBuilder->expr()->lt('scheduled', time())
             )
-            ->addGroupBy(['configuration'])
-            ->execute()
-            ->fetchColumn(0);
+            ->groupBy('configuration')
+            ->execute();
 
-        return $count;
-**/
+        return $statement->fetchAll();
+
     }
 
     /**
@@ -340,8 +325,20 @@ class QueueRepository extends AbstractRepository
      */
     public function getTotalQueueEntriesByConfiguration(array $setIds)
     {
+
         $totals = [];
         if (count($setIds) > 0) {
+            $statement = $this->queryBuilder
+                ->from($this->tableName)
+                ->selectLiteral('count(*) as c')
+                ->addSelect('configuration')
+                ->where(
+                    $this->queryBuilder->expr()->in('set_id', implode(',', $setIds)),
+                    $this->queryBuilder->expr()->lt('scheduled', time())
+                )
+                ->groupBy('configuration')
+                ->execute();
+            /*
             $db = $this->getDB();
             $res = $db->exec_SELECTquery(
                 'configuration, count(*) as c',
@@ -349,7 +346,8 @@ class QueueRepository extends AbstractRepository
                 'set_id in (' . implode(',', $setIds) . ') AND scheduled < ' . time(),
                 'configuration'
             );
-            while ($row = $db->sql_fetch_assoc($res)) {
+            */
+            while ($row = $statement->fetch()) {
                 $totals[$row['configuration']] = $row['c'];
             }
         }

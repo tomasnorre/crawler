@@ -85,7 +85,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
     {
         $actual = $this->subject->findAll($orderField, $orderDirection, $itemCount, $offset, $where);
 
-        $this->assertEquals(
+        $this->assertSame(
             $expected,
             $actual->getProcessIds()
         );

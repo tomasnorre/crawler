@@ -85,7 +85,15 @@ class ProcessRepository extends AbstractRepository
         $orderDirection = strtoupper(trim($orderDirection));
         $orderDirection = in_array($orderDirection, ['ASC', 'DESC']) ? $orderDirection : 'DESC';
 
-        $rows = $this->getDB()->exec_SELECTgetRows(
+        $statement = $this->queryBuilder
+            ->from($this->tableName)
+            ->select('*')
+            ->orderBy($orderField, $orderDirection)
+            ->setMaxResults(self::getLimitFromItemCountAndOffset($itemCount, $offset))
+            ->execute();
+
+        /**
+         $rows = $this->getDB()->exec_SELECTgetRows(
             '*',
             $this->tableName,
             $where,
@@ -93,11 +101,10 @@ class ProcessRepository extends AbstractRepository
             htmlspecialchars($orderField) . ' ' . htmlspecialchars($orderDirection),
             $this->getLimitFromItemCountAndOffset($itemCount, $offset)
         );
+        */
 
-        if (is_array($rows)) {
-            foreach ($rows as $row) {
-                $collection->append(GeneralUtility::makeInstance(Process::class, $row));
-            }
+        while ($row = $statement->fetch()) {
+            $collection->append(GeneralUtility::makeInstance(Process::class, $row));
         }
 
         return $collection;
