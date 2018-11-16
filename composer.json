@@ -22,7 +22,8 @@
     },
     "require-dev": {
         "typo3/cms": "^7.6",
-        "nimut/testing-framework": "*"
+        "nimut/testing-framework": "*",
+        "phpunit/phpunit": "4.8.36"
     },
     "replace": {
         "crawler":  "self.version",

@@ -76,8 +76,6 @@ class CrawlerCommandController extends CommandController
                 $crawlerController->getLogEntriesForPageId($pageId, '', true, $fullFlush);
                 break;
             case 'finished':
-                $crawlerController->getLogEntriesForPageId($pageId, $mode, true, $fullFlush);
-                break;
             case 'pending':
                 $crawlerController->getLogEntriesForPageId($pageId, $mode, true, $fullFlush);
                 break;
