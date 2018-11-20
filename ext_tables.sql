@@ -60,7 +60,7 @@ CREATE TABLE tx_crawler_configuration (
   configuration text NOT NULL,
   base_url tinytext NOT NULL,
   sys_domain_base_url tinytext NOT NULL,
-  pidsonly blob NOT NULL,
+  pidsonly blob,
   begroups varchar(100) DEFAULT '0' NOT NULL,
   fegroups varchar(100) DEFAULT '0' NOT NULL,
   realurl tinyint(4) DEFAULT '0' NOT NULL,
