@@ -76,7 +76,7 @@ class Configuration extends AbstractEntity
     /**
      * @var string
      */
-    protected $beGoups = '';
+    protected $beGroups = '';
 
     /**
      * @var string
