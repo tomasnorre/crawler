@@ -41,6 +41,11 @@ class ConfigurationRepositoryTest extends FunctionalTestCase
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     /**
+     * @var array
+     */
+    protected $coreExtensionsToLoad = ['cms', 'core', 'frontend', 'version', 'lang', 'extensionmanager', 'fluid'];
+
+    /**
      * @var ConfigurationRepository
      */
     protected $subject;
@@ -52,8 +57,8 @@ class ConfigurationRepositoryTest extends FunctionalTestCase
     {
         parent::setUp();
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->importDataSet(dirname(__FILE__) . '/../../Fixtures/tx_crawler_configuration.xml');
         $this->subject = $objectManager->get(ConfigurationRepository::class);
+        $this->importDataSet(dirname(__FILE__) . '/../../Fixtures/tx_crawler_configuration.xml');
     }
 
     /**
@@ -62,10 +67,25 @@ class ConfigurationRepositoryTest extends FunctionalTestCase
     public function getCrawlerConfigurationRecords()
     {
         $this->assertSame(
-            5,
-            count($this->subject->countAll())
+            1,
+            $this->subject->countAll()
         );
     }
 
+    /**
+     * @test
+     */
+    public function getConfigurationRecordsPageUid()
+    {
+        $this->assertSame(
+            2,
+            $this->subject->getConfigurationRecordsPageUid(5)->count()
+        );
 
+        $this->assertSame(
+            "Not hidden or deleted",
+            $this->subject->getConfigurationRecordsPageUid(5)->getFirst()->getName()
+        );
+
+    }
 }

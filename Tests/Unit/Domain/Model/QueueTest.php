@@ -43,13 +43,94 @@ class QueueTest extends UnitTestCase
     /**
      * @test
      */
-    public function getExecutionTime()
+    public function getterAndSettersTest()
     {
-        $this->subject = new Queue(['exec_time' => 123456]);
+        $execTime = 123456;
+        $configuration = 'Test Configuration';
+        $configurationHash = sha1($configuration);
+        $processId = '124';
+        $pageId = 543;
+        $parameters = 'ParameterOne, ParameterTwo';
+        $parametersHash = sha1($parameters);
+        $qid = 9838247;
+        $isScheduler = false;
+        $isProcessScheduled = true;
+        $setId = 1234324;
+        $resultData = '{row: success}';
+        $processIdCompleted = 'as234sa';
+
+        /** @var Queue subject */
+        $this->subject = new Queue();
+        $this->subject->setExecTime($execTime);
+        $this->subject->setConfiguration($configuration);
+        $this->subject->setConfigurationHash($configurationHash);
+        $this->subject->setProcessId($processId);
+        $this->subject->setPageId($pageId);
+        $this->subject->setParameters($parameters);
+        $this->subject->setParametersHash($parametersHash);
+        $this->subject->setQid($qid);
+        $this->subject->setScheduled($isScheduler);
+        $this->subject->setProcessScheduled($isProcessScheduled);
+        $this->subject->setSetId($setId);
+        $this->subject->setResultData($resultData);
+        $this->subject->setProcessIdCompleted($processIdCompleted);
 
         $this->assertEquals(
-            123456,
-            $this->subject->getExecutionTime()
+            $execTime,
+            $this->subject->getExecTime()
+        );
+
+        $this->assertSame(
+            $configuration,
+            $this->subject->getConfiguration()
+        );
+
+        $this->assertSame(
+            $configurationHash,
+            $this->subject->getConfigurationHash()
+        );
+
+        $this->assertSame(
+            $processId,
+            $this->subject->getProcessId()
+        );
+
+        $this->assertSame(
+            $pageId,
+            $this->subject->getPageId()
+        );
+
+        $this->assertSame(
+            $parameters,
+            $this->subject->getParameters()
+        );
+
+        $this->assertSame(
+            $parametersHash,
+            $this->subject->getParametersHash()
+        );
+
+        $this->assertSame(
+            $qid,
+            $this->subject->getQid()
+        );
+
+        $this->assertFalse($this->subject->isScheduled());
+        $this->assertTrue($this->subject->isProcessScheduled());
+
+        $this->assertSame(
+            $setId,
+            $this->subject->getSetId()
+        );
+
+        $this->assertSame(
+            $resultData,
+            $this->subject->getResultData()
+        );
+
+        $this->assertSame(
+            $processIdCompleted,
+            $this->subject->getProcessIdCompleted()
         );
     }
 }

@@ -53,16 +53,13 @@ class ProcessCollectionTest extends UnitTestCase
      */
     public function getProcessIdsReturnsArray()
     {
-        $row1 = ['process_id' => 11];
-        $row2 = ['process_id' => 13];
-
         /** @var Process $processOne */
-        $processOne = $this->getAccessibleMock(Process::class, ['dummy'], [], '', false);
-        $processOne->setRow($row1);
+        $processOne = $this->getMock(Process::class, ['dummy'], [], '', false);
+        $processOne->setProcessId(11);
 
         /** @var Process $processTwo */
-        $processTwo = $this->getAccessibleMock(Process::class, ['dummy'], [], '', false);
-        $processTwo->setRow($row2);
+        $processTwo = $this->getMock(Process::class, ['dummy'], [], '', false);
+        $processTwo->setProcessId(13);
 
         $processes = [];
         $processes[] = $processOne;

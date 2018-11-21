@@ -85,7 +85,7 @@ class ProcessCollection extends \ArrayObject
     {
         $result = [];
         foreach ($this->getIterator() as $value) {
-            $result[] = $value->getProcess_id();
+            $result[] = $value->getProcessId();
         }
         return $result;
     }

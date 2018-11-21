@@ -82,10 +82,50 @@
 	</tx_crawler_configuration>
 	<tx_crawler_configuration>
 		<uid>5</uid>
-		<pid>0</pid>
+		<pid>5</pid>
 		<deleted>0</deleted>
 		<hidden>0</hidden>
 		<name>Not hidden or deleted</name>
+		<force_ssl>1</force_ssl>
+		<processing_instruction_filter></processing_instruction_filter>
+		<processing_instruction_parameters_ts></processing_instruction_parameters_ts>
+		<configuration></configuration>
+		<base_url></base_url>
+		<sys_domain_base_url></sys_domain_base_url>
+		<pidsonly></pidsonly>
+		<begroups></begroups>
+		<fegroups></fegroups>
+		<realurl>0</realurl>
+		<chash>0</chash>
+		<exclude>0</exclude>
+		<root_template_pid>0</root_template_pid>
+	</tx_crawler_configuration>
+	<tx_crawler_configuration>
+		<uid>6</uid>
+		<pid>5</pid>
+		<deleted>0</deleted>
+		<hidden>0</hidden>
+		<name>Not hidden or deleted - uid 6</name>
+		<force_ssl>1</force_ssl>
+		<processing_instruction_filter></processing_instruction_filter>
+		<processing_instruction_parameters_ts></processing_instruction_parameters_ts>
+		<configuration></configuration>
+		<base_url></base_url>
+		<sys_domain_base_url></sys_domain_base_url>
+		<pidsonly></pidsonly>
+		<begroups></begroups>
+		<fegroups></fegroups>
+		<realurl>0</realurl>
+		<chash>0</chash>
+		<exclude>0</exclude>
+		<root_template_pid>0</root_template_pid>
+	</tx_crawler_configuration>
+	<tx_crawler_configuration>
+		<uid>7</uid>
+		<pid>5</pid>
+		<deleted>0</deleted>
+		<hidden>1</hidden>
+		<name>hidden or deleted - uid 7</name>
 		<force_ssl>1</force_ssl>
 		<processing_instruction_filter></processing_instruction_filter>
 		<processing_instruction_parameters_ts></processing_instruction_parameters_ts>

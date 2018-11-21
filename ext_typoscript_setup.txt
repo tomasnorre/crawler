@@ -7,4 +7,14 @@ config.tx_extbase.persistence.classes {
             tableName = tx_crawler_configuration
         }
     }
+    AOE\Crawler\Domain\Model\Process {
+        mapping {
+            tableName = tx_crawler_process
+        }
+    }
+    AOE\Crawler\Domain\Model\Queue {
+        mapping {
+            tableName = tx_crawler_queue
+        }
+    }
 }

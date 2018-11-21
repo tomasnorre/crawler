@@ -74,7 +74,9 @@ class ProcessRepository extends AbstractRepository
 
         if (is_array($rows)) {
             foreach ($rows as $row) {
-                $collection->append(GeneralUtility::makeInstance(Process::class, $row));
+                $process = new Process();
+                $process->setProcessId($row['process_id']);
+                $collection->append($process);
             }
         }
 

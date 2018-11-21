@@ -33,5 +33,19 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
 class ConfigurationRepository extends Repository
 {
 
+    /**
+     * @param int $pageUid
+     * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
+     */
+    public function getConfigurationRecordsPageUid($pageUid = 0)
+    {
+        $query = $this->createQuery();
+        $querySettings = $query->getQuerySettings();
+        $querySettings->setRespectStoragePage(false);
+        $querySettings->setIgnoreEnableFields(false);
+        $query->setQuerySettings($querySettings);
+        $query->matching($query->equals('pid', intval($pageUid)));
+        return $query->execute();
+    }
 
 }
