@@ -599,7 +599,7 @@ class CrawlerController
                     // Sub configuration for a single configuration string:
                     $subCfg = (array)$crawlerCfg['paramSets.'][$key . '.'];
                     $subCfg['key'] = $key;
-                    $res[$key] = $res[$key] ?? [];
+                    $res[$key] = isset($res[$key]) ? $res[$key] : [];
 
                     if (!\is_array($values)) {
                         $res[$key]['paramParsed'] = $this->parseParams($values);
