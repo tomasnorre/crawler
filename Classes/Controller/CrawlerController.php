@@ -589,17 +589,24 @@ class CrawlerController
 
         $res = [];
 
-        if (is_array($pageTSconfig) && is_array($pageTSconfig['tx_crawler.']['crawlerCfg.'])) {
+        if (\is_array($pageTSconfig) && \is_array($pageTSconfig['tx_crawler.']['crawlerCfg.'])) {
             $crawlerCfg = $pageTSconfig['tx_crawler.']['crawlerCfg.'];
 
-            if (is_array($crawlerCfg['paramSets.'])) {
+            if (\is_array($crawlerCfg['paramSets.'])) {
                 foreach ($crawlerCfg['paramSets.'] as $key => $values) {
-                    if (is_array($values)) {
-                        $key = str_replace('.', '', $key);
-                        // Sub configuration for a single configuration string:
-                        $subCfg = (array)$crawlerCfg['paramSets.'][$key . '.'];
-                        $subCfg['key'] = $key;
 
+                    $key = str_replace('.', '', $key);
+                    // Sub configuration for a single configuration string:
+                    $subCfg = (array)$crawlerCfg['paramSets.'][$key . '.'];
+                    $subCfg['key'] = $key;
+                    $res[$key] = $res[$key] ?? [];
+
+                    if (!\is_array($values)) {
+                        $res[$key]['paramParsed'] = $this->parseParams($values);
+                        $res[$key]['paramExpanded'] = $this->expandParameters($res[$key]['paramParsed'], $id);
+                    }
+
+                    if (\is_array($values)) {
                         if (strcmp($subCfg['procInstrFilter'], '')) {
                             $subCfg['procInstrFilter'] = implode(',', GeneralUtility::trimExplode(',', $subCfg['procInstrFilter']));
                         }
@@ -609,15 +616,13 @@ class CrawlerController
                         if (!strcmp($subCfg['pidsOnly'], '') || GeneralUtility::inList($pidOnlyList, $id)) {
 
                                 // add trailing slash if not present
-                            if (!empty($subCfg['baseUrl']) && substr($subCfg['baseUrl'], -1) != '/') {
+                            if (!empty($subCfg['baseUrl']) && substr($subCfg['baseUrl'], -1) !== '/') {
                                 $subCfg['baseUrl'] .= '/';
                             }
 
                             // Explode, process etc.:
-                            $res[$key] = [];
+
                             $res[$key]['subCfg'] = $subCfg;
-                            $res[$key]['paramParsed'] = $this->parseParams($crawlerCfg['paramSets.'][$key]);
-                            $res[$key]['paramExpanded'] = $this->expandParameters($res[$key]['paramParsed'], $id);
                             $res[$key]['origin'] = 'pagets';
 
                             // recognize MP value
