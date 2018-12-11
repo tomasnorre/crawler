@@ -103,7 +103,7 @@ class Queue extends AbstractEntity
     protected $configuration = '';
 
     /**
-     * @param array $ro
+     * @param array $row
      */
     public function __construct($row = [])
     {
