@@ -34,6 +34,7 @@ use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\EventDispatcher;
 use AOE\Crawler\Service\ProcessService;
 use AOE\Crawler\Utility\IconUtility;
+use AOE\Crawler\Utility\SignalSlotUtility;
 use TYPO3\CMS\Backend\Module\AbstractFunctionModule;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -329,9 +330,17 @@ class BackendModule extends AbstractFunctionModule
                     $reason->setDetailText('The user ' . $username . ' added pages to the crawler queue manually ');
                 }
 
+                // The event dispatcher is deprecated since crawler v6.3.0, will be removed in crawler v7.0.0.
+                // Please use the Signal instead.
                 EventDispatcher::getInstance()->post(
                     'invokeQueueChange',
                     $this->findCrawler()->setID,
+                    ['reason' => $reason]
+                );
+
+                SignalSlotUtility::emitSignal(
+                    __CLASS__,
+                    SignalSlotUtility::SIGNAL_INVOKE_QUEUE_CHANGE,
                     ['reason' => $reason]
                 );
             }

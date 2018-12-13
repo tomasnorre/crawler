@@ -69,6 +69,8 @@ class EventDispatcher
      * The __constructor is private because the dispatcher is a singleton
      *
      * @return void
+     *
+     * @deprecated since crawler v6.3.0, will be removed in crawler v7.0.0.
      */
     protected function __construct()
     {
