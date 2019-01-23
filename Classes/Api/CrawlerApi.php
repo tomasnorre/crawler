@@ -191,15 +191,20 @@ class CrawlerApi
     }
 
     /**
-     * Counts all entrys in the database which are scheduled for a given page id and a schedule timestamp.
+     * Counts all entries in the database which are scheduled for a given page id and a schedule timestamp.
      *
      * @param int $page_uid
      * @param int $schedule_timestamp
      *
      * @return int
+     *
+     * @deprecated since crawler v6.2.0, will be removed in crawler v7.0.0.
      */
     protected function countEntriesInQueueForPageByScheduleTime($page_uid, $schedule_timestamp)
     {
+        $page_uid = intval($page_uid);
+        $schedule_timestamp = intval($schedule_timestamp);
+
         //if the same page is scheduled for the same time and has not be executed?
         if ($schedule_timestamp == 0) {
             //un-timed elements need an exec_time with 0 because they can occur multiple times
