@@ -15,7 +15,6 @@
             "role": "Developer"
         }
     ],
-    "minimum-stability": "dev",
     "require": {
         "typo3/cms-core": ">=7.6.0,<8.7.99"
     },
