@@ -499,7 +499,7 @@ class CrawlerApi
         $pages = 0;
 
         reset($lastProcessedEntries);
-        while (list($key, $timestamp) = each($lastProcessedEntries)) {
+        foreach ($lastProcessedEntries as $key => $timestamp) {
             if ($compareValue - $timestamp > $tooOldDelta) {
                 break;
             }

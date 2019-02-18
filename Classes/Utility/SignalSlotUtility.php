@@ -49,7 +49,7 @@ class SignalSlotUtility
      * @param array $payload
      * @return void
      */
-    public static function emitSignal($class, $signal, array $payload = [])
+    public static function emitSignal($class, $signal, array &$payload = [])
     {
         /** @var \TYPO3\CMS\Extbase\SignalSlot\Dispatcher $signalSlotDispatcher */
         $signalSlotDispatcher = GeneralUtility::makeInstance(Dispatcher::class);
