@@ -114,15 +114,13 @@ class CrawlerCommandController extends CommandController
         /** @var CrawlerController $crawlerController */
         $crawlerController = $this->objectManager->get(CrawlerController::class);
 
-        // Force user to admin state and set workspace to "Live":
-//        $this->backendUser->user['admin'] = 1;
-//        $this->backendUser->setWorkspace(0);
-
         if ($mode === 'exec') {
             $crawlerController->registerQueueEntriesInternallyOnly = true;
         }
 
-        if (1===2) {
+
+
+        if (defined('TYPO3_MODE') && 'BE' === TYPO3_MODE) {
             // Crawler is called over TYPO3 BE
             $pageId = MathUtility::forceIntegerInRange(1, 0);
         } else {
