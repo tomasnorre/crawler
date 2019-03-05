@@ -80,7 +80,7 @@ class CrawlerCommandController extends CommandController
                 $crawlerController->getLogEntriesForPageId($pageId, $mode, true, $fullFlush);
                 break;
             default:
-                $this->outputLine("<info>No matching parameters found." . chr(10) . "Try 'typo3cms help crawler:flushqueue' to see your options</info>");
+                $this->outputLine('<info>No matching parameters found.' . PHP_EOL . 'Try "typo3cms help crawler:flushqueue" to see your options</info>');
                 break;
 
         }
@@ -118,11 +118,9 @@ class CrawlerCommandController extends CommandController
             $crawlerController->registerQueueEntriesInternallyOnly = true;
         }
 
-
-
         if (defined('TYPO3_MODE') && 'BE' === TYPO3_MODE) {
             // Crawler is called over TYPO3 BE
-            $pageId = MathUtility::forceIntegerInRange(1, 0);
+            $pageId = 1;
         } else {
             // Crawler is called over cli
             $pageId = MathUtility::forceIntegerInRange($startpage, 0);
@@ -167,31 +165,31 @@ class CrawlerCommandController extends CommandController
         );
 
         if ($mode === 'url') {
-            $this->outputLine("<info>" . implode(chr(10), $crawlerController->downloadUrls) . chr(10) . "</info>");
+            $this->outputLine('<info>' . implode(PHP_EOL, $crawlerController->downloadUrls) . PHP_EOL . '</info>');
         } elseif ($mode === 'exec') {
-            $this->outputLine("<info>Executing " . count($crawlerController->urlList) . " requests right away:</info>");
-            $this->outputLine("<info>" . implode(chr(10), $crawlerController->urlList) . "</info>" .chr(10));
-            $this->outputLine("<info>Processing</info>" . chr(10));
+            $this->outputLine('<info>Executing ' . count($crawlerController->urlList) . ' requests right away:</info>');
+            $this->outputLine('<info>' . implode(PHP_EOL, $crawlerController->urlList) . '</info>' . PHP_EOL);
+            $this->outputLine('<info>Processing</info>' . PHP_EOL);
 
             foreach ($crawlerController->queueEntries as $queueRec) {
                 $p = unserialize($queueRec['parameters']);
-                $this->outputLine("<info>" . $p['url'] . " (" . implode(',', $p['procInstructions']) . ") => " . "</info>" . chr(10));
+                $this->outputLine('<info>' . $p['url'] . ' (' . implode(',', $p['procInstructions']) . ') => ' . '</info>' . PHP_EOL);
                 $result = $crawlerController->readUrlFromArray($queueRec);
 
                 $requestResult = unserialize($result['content']);
                 if (is_array($requestResult)) {
-                    $resLog = is_array($requestResult['log']) ? chr(10) . chr(9) . chr(9) . implode(chr(10) . chr(9) . chr(9), $requestResult['log']) : '';
-                    $this->outputLine("<info>OK: " . $resLog . "</info>" . chr(10));
+                    $resLog = is_array($requestResult['log']) ? PHP_EOL . chr(9) . chr(9) . implode(PHP_EOL . chr(9) . chr(9), $requestResult['log']) : '';
+                    $this->outputLine('<info>OK: ' . $resLog . '</info>' . PHP_EOL);
                 } else {
-                    $this->outputLine("<errror>Error checking Crawler Result:  " . substr(preg_replace('/\s+/', ' ', strip_tags($result['content'])), 0, 30000) . '...' . chr(10) . "</errror>" . chr(10));
+                    $this->outputLine('<errror>Error checking Crawler Result:  ' . substr(preg_replace('/\s+/', ' ', strip_tags($result['content'])), 0, 30000) . '...' . PHP_EOL . '</errror>' . PHP_EOL);
                 }
             }
         } elseif ($mode === 'queue') {
-            $this->outputLine("<info>Putting " . count($crawlerController->urlList) . " entries in queue:</info>" . chr(10));
-            $this->outputLine("<info>" . implode(chr(10), $crawlerController->urlList) . "</info>" . chr(10));
+            $this->outputLine('<info>Putting ' . count($crawlerController->urlList) . ' entries in queue:</info>' . PHP_EOL);
+            $this->outputLine('<info>' . implode(PHP_EOL, $crawlerController->urlList) . '</info>' . PHP_EOL);
         } else {
-            $this->outputLine("<info>" . count($crawlerController->urlList) . " entries found for processing. (Use --mode to decide action):</info>" . chr(10));
-            $this->outputLine("<info>" . implode(chr(10), $crawlerController->urlList) . "</info>" . chr(10));
+            $this->outputLine('<info>' . count($crawlerController->urlList) . ' entries found for processing. (Use --mode to decide action):</info>' . PHP_EOL);
+            $this->outputLine('<info>' . implode(PHP_EOL, $crawlerController->urlList) . '</info>' . PHP_EOL);
         }
     }
 
@@ -215,6 +213,7 @@ class CrawlerCommandController extends CommandController
 
         /** @var CrawlerController $crawlerController */
         $crawlerController = $this->objectManager->get(CrawlerController::class);
+        /** @var QueueRepository $queueRepository */
         $queueRepository = $this->objectManager->get(QueueRepository::class);
 
         $settings = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['crawler']);
@@ -230,7 +229,7 @@ class CrawlerCommandController extends CommandController
                 // Run process:
                 $result = $crawlerController->CLI_run($countInARun, $sleepTime, $sleepAfterFinish);
             } catch (\Exception $e) {
-                $this->outputLine("<warning>". get_class($e) . ': ' . $e->getMessage() . "</warning>");
+                $this->outputLine('<warning>'. get_class($e) . ': ' . $e->getMessage() . '</warning>');
                 $result = self::CLI_STATUS_ABORTED;
             }
 
@@ -238,7 +237,7 @@ class CrawlerCommandController extends CommandController
             $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_crawler_process', 'assigned_items_count = 0');
             $crawlerController->CLI_releaseProcesses($crawlerController->CLI_buildProcessId());
 
-            $this->outputLine("<info>Unprocessed Items remaining:" . $queueRepository->countUnprocessedItems() . " (" . $crawlerController->CLI_buildProcessId() . ")</info>");
+            $this->outputLine('<info>Unprocessed Items remaining:' . $queueRepository->countUnprocessedItems() . ' (' . $crawlerController->CLI_buildProcessId() . ')</info>');
             $result |= ($queueRepository->countUnprocessedItems() > 0 ? self::CLI_STATUS_REMAIN : self::CLI_STATUS_NOTHING_PROCCESSED);
         } else {
             $result |= self::CLI_STATUS_ABORTED;
