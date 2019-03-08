@@ -45,7 +45,21 @@
     "scripts": {
         "post-autoload-dump": [
             "mkdir -p .Build/Web/typo3conf/ext/",
-            "[ -L .Build/Web/typo3conf/ext/crawler ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/crawler"
+            "[ -L .Build/Web/typo3conf/ext/crawler ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/crawler",
+            "[ -e .Build/bin/typo3console ] &&  .Build/bin/typo3cms install:generatepackagestates || echo 'TYPO3 Console is not installed'",
+            "export TYPO3_PATH_WEB=$PWD/.Build/Web"
+        ],
+        "test:unit": [
+            "[ -e .Build/bin/phpunit ] || composer update",
+            "TYPO3_PATH_WEB=.Build/Web .Build/bin/phpunit --colors -c .Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/Unit"
+        ],
+        "test:functional": [
+            "[ -e .Build/bin/phpunit ] || composer update",
+            "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseName=crawler typo3DatabaseHost=127.0.0.1 typo3DatabaseUsername=root typo3DatabasePassword=root .Build/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml Tests/Functional"
+        ],
+        "test:all": [
+            "@test:unit",
+            "@test:functional"
         ]
     },
     "extra": {
