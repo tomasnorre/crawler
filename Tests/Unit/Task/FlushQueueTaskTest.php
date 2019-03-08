@@ -1,5 +1,5 @@
 <?php
-namespace AOE\Crawler\Tests\Unit\Hooks;
+namespace AOE\Crawler\Tests\Unit\Task;
 
 /***************************************************************
  *  Copyright notice
@@ -28,21 +28,21 @@ namespace AOE\Crawler\Tests\Unit\Hooks;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
 /**
- * Class CrawlerTaskTest
+ * Class FlushQueueTaskTest
  *
  * @package AOE\Crawler\Tests\Unit\Hooks
  */
-class CrawlerTaskTest extends UnitTestCase
+class FlushQueueTaskTest extends UnitTestCase
 {
     /**
      * @test
      */
     public function ClassAliasMapReturnsNewClassName()
     {
-        $classObject = $this->getMock('tx_crawler_scheduler_crawl', [], [], '', false);
+        $classObject = $this->getMock('tx_crawler_scheduler_flush', [], [], '', false);
 
         $this->assertInstanceOf(
-            'AOE\Crawler\Task\CrawlerTask',
+            'AOE\Crawler\Task\FlushQueueTask',
             $classObject
         );
     }
