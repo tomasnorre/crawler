@@ -1,5 +1,5 @@
 <?php
-namespace AOE\Crawler\Tests\Unit\Hooks;
+namespace AOE\Crawler\Tests\Unit\Task;
 
 /***************************************************************
  *  Copyright notice
