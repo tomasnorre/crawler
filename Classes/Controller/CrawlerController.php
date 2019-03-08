@@ -576,8 +576,10 @@ class CrawlerController
      * @param integer $id Page ID
      * @param bool $forceSsl Use https
      * @return array
+     *
+     * TODO: Should be switched back to protected - TNM 2018-11-16
      */
-    protected function getUrlsForPageId($id, $forceSsl = false)
+    public function getUrlsForPageId($id, $forceSsl = false)
     {
 
         /**
@@ -1089,15 +1091,15 @@ class CrawlerController
         $realWhere = strlen($where) > 0 ? $where : '1=1';
 
         if (EventDispatcher::getInstance()->hasObserver('queueEntryFlush')) {
-            $groups = $this->db->exec_SELECTgetRows('DISTINCT set_id', 'tx_crawler_queue', $realWhere);
+            $groups = $GLOBALS['TYPO3_DB']>exec_SELECTgetRows('DISTINCT set_id', 'tx_crawler_queue', $realWhere);
             if (is_array($groups)) {
                 foreach ($groups as $group) {
-                    EventDispatcher::getInstance()->post('queueEntryFlush', $group['set_id'], $this->db->exec_SELECTgetRows('uid, set_id', 'tx_crawler_queue', $realWhere . ' AND set_id="' . $group['set_id'] . '"'));
+                    EventDispatcher::getInstance()->post('queueEntryFlush', $group['set_id'], $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid, set_id', 'tx_crawler_queue', $realWhere . ' AND set_id="' . $group['set_id'] . '"'));
                 }
             }
         }
 
-        $this->db->exec_DELETEquery('tx_crawler_queue', $realWhere);
+        $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_crawler_queue', $realWhere);
     }
 
     /**
@@ -2211,12 +2213,14 @@ class CrawlerController
     /**
      * Obtains configuration keys from the CLI arguments
      *
-     * @param  QueueCommandLineController $cliObj    Command line object
-     * @return mixed                        Array of keys or null if no keys found
+     * @param string $conf
+     * @return array
+     *
+     * @deprecated since crawler v6.2.1, will be removed in crawler v7.0.0.
      */
-    protected function getConfigurationKeys(QueueCommandLineController &$cliObj)
+    protected function getConfigurationKeys($conf)
     {
-        $parameter = trim($cliObj->cli_argValue('-conf'));
+        $parameter = trim($conf);
         return ($parameter != '' ? GeneralUtility::trimExplode(',', $parameter) : []);
     }
 
@@ -2609,8 +2613,10 @@ class CrawlerController
      * - scheduled entries that are over 7 days old
      *
      * @return void
+     *
+     * TODO: Should be switched back to protected - TNM 2018-11-16
      */
-    protected function cleanUpOldQueueEntries()
+    public function cleanUpOldQueueEntries()
     {
         $processedAgeInSeconds = $this->extensionSettings['cleanUpProcessedAge'] * 86400; // 24*60*60 Seconds in 24 hours
         $scheduledAgeInSeconds = $this->extensionSettings['cleanUpScheduledAge'] * 86400;

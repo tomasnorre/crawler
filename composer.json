@@ -16,7 +16,8 @@
         }
     ],
     "require": {
-        "typo3/cms-core": ">=7.6.0,<8.7.99"
+        "typo3/cms-core": ">=7.6.0,<8.7.99",
+        "helhum/typo3-console": "^4.0"
     },
     "require-dev": {
         "typo3/cms": "^7.6",
