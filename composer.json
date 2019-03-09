@@ -22,7 +22,7 @@
     },
     "require-dev": {
         "nimut/typo3-complete": "^8.7",
-        "nimut/testing-framework": "^4.1"
+        "nimut/testing-framework": "^2.0 || ^4.1"
     },
     "replace": {
         "crawler":  "self.version",
