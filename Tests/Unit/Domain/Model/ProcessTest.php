@@ -49,7 +49,7 @@ class ProcessTest extends UnitTestCase
             'ttl' => '300',
             'assigned_items_count' => '20'
         ];
-        $this->subject = $this->getMock(Process::class, ['dummy'], [], '', false);
+        $this->subject = $this->getAccessibleMock(Process::class, ['dummy'], [], '', false);
         $this->subject->setRow($processObjectArray);
     }
 
