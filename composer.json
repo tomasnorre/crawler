@@ -17,12 +17,12 @@
     ],
     "require": {
         "php": ">= 5.6, < 7.3",
-        "typo3/cms-core": ">=7.6.0,<8.7.99",
+        "typo3/cms-core": ">=7.6.0",
         "helhum/typo3-console": "^4.0"
     },
     "require-dev": {
-        "typo3/cms": "^7.6",
-        "nimut/testing-framework": "^2.0"
+        "nimut/typo3-complete": "^8.7",
+        "nimut/testing-framework": "^2.0 || ^4.1"
     },
     "replace": {
         "crawler":  "self.version",
@@ -35,7 +35,6 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "TYPO3\\CMS\\Core\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/core/Tests/",
             "AOE\\Crawler\\Tests\\": "Tests/"
         }
     },

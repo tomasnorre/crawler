@@ -5,6 +5,7 @@ php:
   - 7.0
   - 7.1
   - 7.2
+  - 7.3
 
 env:
   - TYPO3_VERSION=^7.6 COVERAGE=0 FUNCTIONAL=0
@@ -12,6 +13,7 @@ env:
   - TYPO3_VERSION=dev-master COVERAGE=0 FUNCTIONAL=0
 
 matrix:
+  fast_finish: true
   exclude:
     - env: TYPO3_VERSION=dev-master COVERAGE=0 FUNCTIONAL=0
       php: 5.6
@@ -24,10 +26,16 @@ matrix:
       php: 7.1
     - env: TYPO3_VERSION=dev-master COVERAGE=0 FUNCTIONAL=1
       php: 7.1
+    - env: TYPO3_VERSION=^9.5 COVERAGE=0 FUNCTIONAL=1
+      php: 7.2
+    - env: TYPO3_VERSION=dev-master COVERAGE=0 FUNCTIONAL=1
+      php: 7.2
   allow_failures:
+    - env: TYPO3_VERSION=^9.5 COVERAGE=0 FUNCTIONAL=1
+    - env: TYPO3_VERSION=^9.5 COVERAGE=0 FUNCTIONAL=0
     - env: TYPO3_VERSION=dev-master COVERAGE=0 FUNCTIONAL=1
     - env: TYPO3_VERSION=dev-master COVERAGE=0 FUNCTIONAL=0
-    - php: 7.2
+    - php: 7.3
 
 notifications:
   email:
@@ -53,10 +61,11 @@ before_install:
   - composer --version
 
 before_script:
-  # Installs TYPO3
-  - composer require typo3/cms=$TYPO3_VERSION
-  # Restore composer.json
-  - git checkout composer.json
+  # Enables us to test dev-master
+  - composer config minimum-stability dev
+  - composer config prefer-stable true
+  # Installs nimut/typo3-complete
+  - travis_wait 30 composer require --dev nimut/typo3-complete=$TYPO3_VERSION
   - export "TYPO3_PATH_WEB"=$PWD/.Build/Web;
   # Locating UnitTests.xml
   - export "UNIT_XML"='.Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml'
