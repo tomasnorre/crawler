@@ -18,7 +18,7 @@
     "require": {
         "php": ">= 5.6, < 7.3",
         "typo3/cms-core": ">=7.6.0",
-        "helhum/typo3-console": "^4.0"
+        "helhum/typo3-console": ">= 4.0"
     },
     "require-dev": {
         "nimut/typo3-complete": "^8.7",
