@@ -2213,14 +2213,14 @@ class CrawlerController
     /**
      * Obtains configuration keys from the CLI arguments
      *
-     * @param string $conf
+     * @param QueueCommandLineController $cliObj
      * @return array
      *
      * @deprecated since crawler v6.3.0, will be removed in crawler v7.0.0.
      */
-    protected function getConfigurationKeys($conf)
+    protected function getConfigurationKeys(QueueCommandLineController $cliObj)
     {
-        $parameter = trim($conf);
+        $parameter = trim($cliObj->cli_argValue('-conf'));
         return ($parameter != '' ? GeneralUtility::trimExplode(',', $parameter) : []);
     }
 
