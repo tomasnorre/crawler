@@ -38,7 +38,7 @@ use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Database\DatabaseConnection;
 use TYPO3\CMS\Core\Log\LogLevel;
-use TYPO3\CMS\Core\TimeTracker\NullTimeTracker;
+use TYPO3\CMS\Core\TimeTracker\TimeTracker;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -2632,15 +2632,15 @@ class CrawlerController
      * @param int $id
      * @param int $typeNum
      *
+     * @throws \TYPO3\CMS\Core\Error\Http\ServiceUnavailableException
+     *
      * @return void
      */
     protected function initTSFE($id = 1, $typeNum = 0)
     {
         EidUtility::initTCA();
-        if (!is_object($GLOBALS['TT'])) {
-            $GLOBALS['TT'] = new NullTimeTracker();
-            $GLOBALS['TT']->start();
-        }
+        $timeTracker = GeneralUtility::makeInstance(TimeTracker::class);
+        $timeTracker->start();
 
         $GLOBALS['TSFE'] = GeneralUtility::makeInstance(TypoScriptFrontendController::class, $GLOBALS['TYPO3_CONF_VARS'], $id, $typeNum);
         $GLOBALS['TSFE']->sys_page = GeneralUtility::makeInstance(PageRepository::class);
