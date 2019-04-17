@@ -547,7 +547,6 @@ class BackendModule extends AbstractFunctionModule
         if (GeneralUtility::_GP('qid_details')) {
 
                 // Get entry record:
-            //list($q_entry) = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_crawler_queue', 'qid=' . intval(GeneralUtility::_GP('qid_details')));
             list($q_entry) = $this->queryBuilder
                 ->from('tx_crawler_queue')
                 ->select('*')

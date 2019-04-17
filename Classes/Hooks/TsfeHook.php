@@ -60,7 +60,6 @@ class TsfeHook
             //@todo: ask service to exclude current call for special reasons: for example no relevance because the language version is not affected
 
             list($queueId, $hash) = explode(':', $_SERVER['HTTP_X_T3CRAWLER']);
-            //list($queueRec) = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_crawler_queue', 'qid=' . intval($queueId));
             list($queueRec) = $this->queryBuilder
                 ->from('tx_crawler_queue')
                 ->select('*')
