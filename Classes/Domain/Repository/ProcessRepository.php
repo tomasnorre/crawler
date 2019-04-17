@@ -242,6 +242,7 @@ class ProcessRepository extends AbstractRepository
      * Returns an instance of the TYPO3 database class.
      *
      * @return \TYPO3\CMS\Core\Database\DatabaseConnection
+     * @deprecated since crawler v7.0.0, will be removed in crawler v8.0.0.
      */
     protected function getDB()
     {
