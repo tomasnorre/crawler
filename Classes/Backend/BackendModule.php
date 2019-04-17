@@ -547,14 +547,14 @@ class BackendModule extends AbstractFunctionModule
         if (GeneralUtility::_GP('qid_details')) {
 
                 // Get entry record:
-            list($q_entry) = $this->queryBuilder
+            $q_entry = $this->queryBuilder
                 ->from('tx_crawler_queue')
                 ->select('*')
                 ->where(
                     $this->queryBuilder->expr()->eq('qid', $this->queryBuilder->createNamedParameter(GeneralUtility::_GP('qid_details')))
                 )
                 ->execute()
-                ->fetchAll();
+                ->fetch();
 
             // Explode values:
             $resStatus = $this->getResStatus($q_entry);
