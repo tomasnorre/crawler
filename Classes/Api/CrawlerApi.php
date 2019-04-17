@@ -267,25 +267,26 @@ class CrawlerApi
 
         $isPageInQueue = false;
 
-        $whereClause = 'page_id = ' . (integer)$uid;
+        $this->queryBuilder
+            ->count('*')
+            ->from($this->tableName)
+            ->where(
+                $this->queryBuilder->expr()->eq('page_id', $this->queryBuilder->createNamedParameter($uid, \PDO::PARAM_INT))
+            );
 
         if (false !== $unprocessed_only) {
-            $whereClause .= ' AND exec_time = 0';
+            $this->queryBuilder->andWhere($this->queryBuilder->expr()->eq('exec_time', 0));
         }
 
         if (false !== $timed_only) {
-            $whereClause .= ' AND scheduled != 0';
+            $this->queryBuilder->andWhere($this->queryBuilder->expr()->neq('scheduled', 0));
         }
 
         if (false !== $timestamp) {
-            $whereClause .= ' AND scheduled = ' . (integer)$timestamp;
+            $this->queryBuilder->andWhere($this->queryBuilder->expr()->neq('scheduled', $this->queryBuilder->createNamedParameter($timestamp, \PDO::PARAM_INT)));
         }
 
-        $count = $GLOBALS['TYPO3_DB']->exec_SELECTcountRows(
-            '*',
-            'tx_crawler_queue',
-            $whereClause
-        );
+        $count = $this->queryBuilder->execute()->fetchColumn(0);
 
         if (false !== $count && $count > 0) {
             $isPageInQueue = true;
@@ -373,11 +374,16 @@ class CrawlerApi
      */
     public function getUnprocessedItems()
     {
-        $query = '*';
-        $where = 'exec_time = 0';
-        $rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($query, 'tx_crawler_queue', $where, '', 'page_id, scheduled');
-
-        return $rows;
+        return $this->queryBuilder
+            ->select('*')
+            ->from($this->tableName)
+            ->where(
+                $queryBuilder->expr()->eq('exec_time', 0)
+            )
+            ->orderBy('page_id')
+            ->addOrderBy('scheduled')
+            ->execute()
+            ->fetchAll();
     }
 
     /**
@@ -389,12 +395,14 @@ class CrawlerApi
      */
     public function countUnprocessedItems()
     {
-        $query = 'count(page_id) as anz';
-        $where = 'exec_time = 0';
-        $rs = $GLOBALS['TYPO3_DB']->exec_SELECTquery($query, 'tx_crawler_queue', $where);
-        $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($rs);
-
-        return $row['anz'];
+        return $this->queryBuilder
+            ->count('page_id')
+            ->from($this->tableName)
+            ->where(
+                $this->queryBuilder->expr()->eq('exec_time', 0)
+            )
+            ->execute()
+            ->fetchColumn(0);
     }
 
     /**
@@ -437,10 +445,13 @@ class CrawlerApi
      */
     public function removeQueueEntrie($qid)
     {
-        $qid = intval($qid);
-        $table = 'tx_crawler_queue';
-        $where = ' qid=' . $qid;
-        $GLOBALS['TYPO3_DB']->exec_DELETEquery($table, $where);
+        $this->queryBuilder
+            ->delete()
+            ->from($this->tableName)
+            ->where(
+                $this->queryBuilder->expr()->eq('qid', $this->queryBuilder->createNamedParameter($qid, \PDO::PARAM_INT))
+            )
+            ->execute();
     }
 
     /**
