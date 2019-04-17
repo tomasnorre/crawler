@@ -149,11 +149,6 @@ class CrawlerController
     protected $accessMode;
 
     /**
-     * @var DatabaseConnection
-     */
-    private $db;
-
-    /**
      * @var BackendUserAuthentication
      */
     private $backendUser;
@@ -277,7 +272,6 @@ class CrawlerController
         $this->queueRepository = $objectManager->get(QueueRepository::class);
         $this->processRepository = $objectManager->get(ProcessRepository::class);
 
-        $this->db = $GLOBALS['TYPO3_DB'];
         $this->backendUser = $GLOBALS['BE_USER'];
         $this->processFilename = PATH_site . 'typo3temp/tx_crawler.proc';
 
