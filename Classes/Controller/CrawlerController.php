@@ -811,7 +811,7 @@ class CrawlerController
             ->removeAll()
             ->add(GeneralUtility::makeInstance(DeletedRestriction::class))
             ->add(GeneralUtility::makeInstance(StartTimeRestriction::class))
-            ->add(GeneralUtility::makeInstance(EndTimeRestriction::class))
+            ->add(GeneralUtility::makeInstance(EndTimeRestriction::class));
 
         $statement = $queryBuilder
             ->select('name')
@@ -1133,7 +1133,7 @@ class CrawlerController
             ->select('*')
             ->from($this->tableName)
             ->where(
-                $this->queryBuilder->expr()->eq('set_id', $this->queryBuilder->createNamedParameter($set_id, \PDO::PARAM_INT)
+                $this->queryBuilder->expr()->eq('set_id', $this->queryBuilder->createNamedParameter($set_id, \PDO::PARAM_INT))
             )
             ->orderBy('scheduled', 'DESC');
 
@@ -1425,7 +1425,7 @@ class CrawlerController
             ->select('*')
             ->from('tx_crawler_queue')
             ->where(
-                $this->queryBuilder->expr()->eq('qid', $this->queryBuilder->createNamedParameter($queueId, \PDO::PARAM_INT)),
+                $this->queryBuilder->expr()->eq('qid', $this->queryBuilder->createNamedParameter($queueId, \PDO::PARAM_INT))
             );
         if(!$force) {
             $this->queryBuilder
@@ -1529,7 +1529,7 @@ class CrawlerController
             'tx_crawler_queue',
             $field_array
         );
-        $queueId = $field_array['qid'] = = $connectionForCrawlerQueue->lastInsertId('tx_crawler_queue', 'qid');
+        $queueId = $field_array['qid'] = $connectionForCrawlerQueue->lastInsertId('tx_crawler_queue', 'qid');
 
         $result = $this->readUrl_exec($field_array);
 
