@@ -90,7 +90,7 @@ class CrawlerClickMenu
     {
         $icon = sprintf(
             '<img src="%s" border="0" align="top" alt="" />',
-            ExtensionManagementUtility::extRelPath('crawler') . 'Resources/Public/Icons/icon_tx_crawler_configuration.gif'
+            ExtensionManagementUtility::extPath('crawler') . 'Resources/Public/Icons/icon_tx_crawler_configuration.gif'
         );
 
         return $icon;
