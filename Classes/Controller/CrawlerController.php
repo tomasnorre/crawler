@@ -37,6 +37,7 @@ use AOE\Crawler\Utility\SignalSlotUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\DatabaseConnection;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
@@ -383,7 +384,6 @@ class CrawlerController
     public function getUrlsForPageRow(array $pageRow, &$skipMessage = '')
     {
         $message = $this->checkIfPageShouldBeSkipped($pageRow);
-
         if ($message === false) {
             $forceSsl = ($pageRow['url_scheme'] === 2) ? true : false;
             $res = $this->getUrlsForPageId($pageRow['uid'], $forceSsl);
@@ -666,13 +666,20 @@ class CrawlerController
         // get records along the rootline
         $rootLine = BackendUtility::BEgetRootLine($id);
 
+
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tx_crawler_configuration');
+        $queryBuilder->getRestrictions()->removeAll()->add(GeneralUtility::makeInstance(DeletedRestriction::class));
+
         foreach ($rootLine as $page) {
-            $configurationRecordsForCurrentPage = BackendUtility::getRecordsByField(
-                'tx_crawler_configuration',
-                'pid',
-                intval($page['uid']),
-                BackendUtility::BEenableFields('tx_crawler_configuration') . BackendUtility::deleteClause('tx_crawler_configuration')
-            );
+            $configurationRecordsForCurrentPage = $queryBuilder
+                ->select('*')
+                ->from('tx_crawler_configuration')
+                ->where(
+                    $queryBuilder->expr()->eq('pid', $page['uid']),
+                    substr(BackendUtility::BEenableFields('tx_crawler_configuration'), 4) . BackendUtility::deleteClause('tx_crawler_configuration')
+                )
+                ->execute()
+                ->fetchAll();
 
             if (is_array($configurationRecordsForCurrentPage)) {
                 foreach ($configurationRecordsForCurrentPage as $configurationRecord) {
@@ -689,7 +696,7 @@ class CrawlerController
                             if (!isset($res[$key])) {
 
                                     /* @var $TSparserObject \TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser */
-                                $TSparserObject = GeneralUtility::makeInstance('TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser');
+                                $TSparserObject = GeneralUtility::makeInstance(TypoScriptParser::class);
                                 $TSparserObject->parse($configurationRecord['processing_instruction_parameters_ts']);
 
                                 $isCrawlingProtocolHttps = $this->isCrawlingProtocolHttps($configurationRecord['force_ssl'], $forceSsl);
@@ -854,6 +861,7 @@ class CrawlerController
      */
     public function parseParams($inputQuery)
     {
+        //echo '<pre>', var_dump($inputQuery), '</pre>';
         // Extract all GET parameters into an ARRAY:
         $paramKeyValues = [];
         $GETparams = explode('&', $inputQuery);
