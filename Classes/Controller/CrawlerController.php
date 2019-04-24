@@ -389,7 +389,7 @@ class CrawlerController
     {
         $message = $this->checkIfPageShouldBeSkipped($pageRow);
         if ($message === false) {
-            $forceSsl = ($pageRow['url_scheme'] === 2) ? true : false;
+            $forceSsl = $pageRow['url_scheme'] === 2;
             $res = $this->getUrlsForPageId($pageRow['uid'], $forceSsl);
             $skipMessage = '';
         } else {
