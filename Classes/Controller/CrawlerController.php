@@ -196,15 +196,12 @@ class CrawlerController
      * @var QueryBuilder
      */
     protected $queryBuilder = QueryBuilder::class;
+
     /**
      * @var array
      */
     private $cliArgs;
 
-    /**
-     * @var CrawlerCommandController
-     */
-    private $parent;
 
     /**
      * Method to set the accessMode can be gui, cli or cli_im
@@ -297,8 +294,6 @@ class CrawlerController
 
         $this->extensionSettings['processLimit'] = MathUtility::forceIntegerInRange($this->extensionSettings['processLimit'], 1, 99, 1);
         $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
-
-        $this->parent = $parent;
     }
 
     /**
@@ -388,6 +383,7 @@ class CrawlerController
     public function getUrlsForPageRow(array $pageRow, &$skipMessage = '')
     {
         $message = $this->checkIfPageShouldBeSkipped($pageRow);
+
         if ($message === false) {
             $forceSsl = ($pageRow['url_scheme'] === 2) ? true : false;
             $res = $this->getUrlsForPageId($pageRow['uid'], $forceSsl);
@@ -1106,11 +1102,11 @@ class CrawlerController
         $addWhere = '';
         switch ($filter) {
             case 'pending':
-                $this->queryBuilder->addWhere($this->queryBuilder->expr()->eq('exec_time', 0));
+                $this->queryBuilder->andWhere($this->queryBuilder->expr()->eq('exec_time', 0));
                 $addWhere = $query->add($expressionBuilder->eq('exec_time', 0));
                 break;
             case 'finished':
-                $this->queryBuilder->addWhere($this->queryBuilder->expr()->gt('exec_time', 0));
+                $this->queryBuilder->andWhere($this->queryBuilder->expr()->gt('exec_time', 0));
                 $addWhere = $query->add($expressionBuilder->gt('exec_time', 0));
                 break;
         }
@@ -1158,11 +1154,11 @@ class CrawlerController
         $addWhere = '';
         switch ($filter) {
             case 'pending':
-                $this->queryBuilder->addWhere($queryBuilder->expr()->eq('exec_time', 0));
+                $this->queryBuilder->andWhere($queryBuilder->expr()->eq('exec_time', 0));
                 $addWhere = $query->add($expressionBuilder->eq('exec_time', 0));
                 break;
             case 'finished':
-                $this->queryBuilder->addWhere($queryBuilder->expr()->gt('exec_time', 0));
+                $this->queryBuilder->andWhere($queryBuilder->expr()->gt('exec_time', 0));
                 $addWhere = $query->add($expressionBuilder->gt('exec_time', 0));
                 break;
         }
@@ -1215,8 +1211,6 @@ class CrawlerController
                 }
             }
         }
-
-        $queryBuilder->reset();
 
         $queryBuilder
             ->delete()
@@ -1726,7 +1720,7 @@ class CrawlerController
         }
 
         // Base path must be '/<pathSegements>/':
-        if ($frontendBasePath != '/') {
+        if ($frontendBasePath !== '/') {
             $frontendBasePath = '/' . ltrim($frontendBasePath, '/');
             $frontendBasePath = rtrim($frontendBasePath, '/') . '/';
         }
@@ -1742,8 +1736,7 @@ class CrawlerController
      */
     protected function executeShellCommand($command)
     {
-        $result = shell_exec($command);
-        return $result;
+        return shell_exec($command);
     }
 
     /**
@@ -2257,11 +2250,11 @@ class CrawlerController
 
     /**
      * Set cli args
-     * 
+     *
      * This is a copy from the CommandLineController from TYPO3 < v9
-     * 
+     *
      * TODO: Rework
-     * 
+     *
      * @param array $argv
      */
     private function setCliArgs(array $argv) {
@@ -2283,10 +2276,10 @@ class CrawlerController
                 $cli_options[$index][] = $token;
             }
         }
-        
+
         $this->cliArgs = $cli_options;
     }
-    
+
 
 
     /**
@@ -2301,7 +2294,7 @@ class CrawlerController
         if(!empty($args)) {
             $this->setCliArgs($args);
         }
-        
+
         // Force user to admin state and set workspace to "Live":
         $this->backendUser->user['admin'] = 1;
         $this->backendUser->setWorkspace(0);
@@ -2488,7 +2481,7 @@ class CrawlerController
 
             //reserve queue entries for process
 
-            $this->queryBuilder->getConnection()->executeQuery('BEGIN');
+            //$this->queryBuilder->getConnection()->executeQuery('BEGIN');
             //TODO make sure we're not taking assigned queue-entires
 
             //save the number of assigned queue entrys to determine who many have been processed later
@@ -2510,9 +2503,9 @@ class CrawlerController
                 );
 
             if ($numberOfAffectedRows == count($quidList)) {
-                $this->queryBuilder->getConnection()->executeQuery('COMMIT');
+                //$this->queryBuilder->getConnection()->executeQuery('COMMIT');
             } else {
-                $this->queryBuilder->getConnection()->executeQuery('ROLLBACK');
+                //$this->queryBuilder->getConnection()->executeQuery('ROLLBACK');
                 $this->CLI_debug("Nothing processed due to multi-process collision (" . $this->CLI_buildProcessId() . ")");
                 return ($result | self::CLI_STATUS_ABORTED);
             }
@@ -2591,7 +2584,7 @@ class CrawlerController
         $processCount = 0;
         $orphanProcesses = [];
 
-        $this->queryBuilder->getConnection()->executeQuery('BEGIN');
+        //$this->queryBuilder->getConnection()->executeQuery('BEGIN');
 
         $statement = $this->queryBuilder
             ->select('process_id', 'ttl')
@@ -2632,7 +2625,7 @@ class CrawlerController
         $this->CLI_releaseProcesses($orphanProcesses, true); // maybe this should be somehow included into the current lock
         $this->CLI_deleteProcessesMarkedDeleted();
 
-        $this->queryBuilder->getConnection()->executeQuery('COMMIT');
+        //$this->queryBuilder->getConnection()->executeQuery('COMMIT');
 
         return $ret;
     }
@@ -2655,7 +2648,7 @@ class CrawlerController
         }
 
         if (!$withinLock) {
-            $this->queryBuilder->getConnection()->executeQuery('BEGIN');
+            //$this->queryBuilder->getConnection()->executeQuery('BEGIN');
         }
 
         // some kind of 2nd chance algo - this way you need at least 2 processes to have a real cleanup
@@ -2734,7 +2727,7 @@ class CrawlerController
             ->execute();
 
         if (!$withinLock) {
-            $this->queryBuilder->getConnection()->executeQuery('COMMIT');
+            //$this->queryBuilder->getConnection()->executeQuery('COMMIT');
         }
 
         return true;
