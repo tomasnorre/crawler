@@ -563,10 +563,10 @@ class BackendModule extends AbstractFunctionModule
             $q_entry['result_data'] = unserialize($q_entry['result_data']);
             if (is_array($q_entry['result_data'])) {
                 $q_entry['result_data']['content'] = unserialize($q_entry['result_data']['content']);
-            }
 
-            if (!$this->pObj->MOD_SETTINGS['log_resultLog']) {
-                unset($q_entry['result_data']['content']['log']);
+                if (!$this->pObj->MOD_SETTINGS['log_resultLog']) {
+                    unset($q_entry['result_data']['content']['log']);
+                }
             }
 
             // Print rudimentary details:

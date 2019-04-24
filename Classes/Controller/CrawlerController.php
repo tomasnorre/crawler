@@ -240,11 +240,7 @@ class CrawlerController
      */
     public function getDisabled()
     {
-        if (is_file($this->processFilename)) {
-            return true;
-        } else {
-            return false;
-        }
+        return is_file($this->processFilename);
     }
 
     /**
@@ -385,7 +381,7 @@ class CrawlerController
         $message = $this->checkIfPageShouldBeSkipped($pageRow);
 
         if ($message === false) {
-            $forceSsl = ($pageRow['url_scheme'] === 2) ? true : false;
+            $forceSsl = $pageRow['url_scheme'] === 2;
             $res = $this->getUrlsForPageId($pageRow['uid'], $forceSsl);
             $skipMessage = '';
         } else {
@@ -407,18 +403,16 @@ class CrawlerController
      */
     protected function noUnprocessedQueueEntriesForPageWithConfigurationHashExist($uid, $configurationHash)
     {
-        $statement = $this->queryBuilder
+        return $this->queryBuilder
+            ->count()
             ->from($this->tableName)
-            ->selectLiteral('count(*) as anz')
             ->where(
                 $this->queryBuilder->expr()->eq('page_id', intval($uid)),
                 $this->queryBuilder->expr()->eq('configuration_hash', $this->queryBuilder->createNamedParameter($configurationHash)),
                 $this->queryBuilder->expr()->eq('exec_time', 0)
             )
-            ->execute();
-
-        $row = $statement->fetch(0);
-        return ($row['anz'] == 0);
+            ->execute()
+            ->fetchColumn();
     }
 
     /**
