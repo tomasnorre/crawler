@@ -38,10 +38,12 @@ class StaticFileCacheCreateUriHook
      * Initializes the variables before starting the processing.
      *
      * @param array $parameters The parameters used in this hook
-     * @param $parent The calling parent object
+     * @param \SFC\NcStaticfilecache\StaticFileCache $parent The calling parent object
+     *
+     * @throws \Exception
      * @return void
      */
-    public function initialize(array $parameters, $parent)
+    public function initialize(array $parameters, \SFC\NcStaticfilecache\StaticFileCache $parent)
     {
         list($parameters['host'], $parameters['uri']) = $this->fixNonSpeakingUri($parameters['host'], $parameters['uri'], $parameters['TSFE']);
     }

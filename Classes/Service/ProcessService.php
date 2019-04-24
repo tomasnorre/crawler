@@ -224,7 +224,7 @@ class ProcessService
         $phpPath = $this->crawlerController->extensionSettings['phpPath'] . ' ';
         $pathToTypo3 = rtrim(GeneralUtility::getIndpEnv('TYPO3_DOCUMENT_ROOT'), '/');
         $pathToTypo3 .= rtrim(GeneralUtility::getIndpEnv('TYPO3_SITE_PATH'), '/');
-        $cliPart = '/typo3/cli_dispatch.phpsh crawler';
+        $cliPart = 'typo3cms crawler:crawlqueue';
         $scriptPath = $phpPath . $pathToTypo3 . $cliPart;
 
         if (TYPO3_OS === 'WIN') {
