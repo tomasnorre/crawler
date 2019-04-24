@@ -212,7 +212,7 @@ class CrawlerApi
     }
 
     /**
-     * Counts all entrys in the database which are scheduled for a given page id and a schedule timestamp.
+     * Counts all entries in the database which are scheduled for a given page id and a schedule timestamp.
      *
      * @param int $page_uid
      * @param int $schedule_timestamp
@@ -223,7 +223,7 @@ class CrawlerApi
     {
 
         $count = $this->queryBuilder
-            ->select('*')
+            ->count('*')
             ->from($this->tableName);
 
         //if the same page is scheduled for the same time and has not be executed?
@@ -361,8 +361,7 @@ class CrawlerApi
             $statement->setMaxResults($limit);
         }
 
-        $rows = $statement->execute()->fetchAll();
-        return $rows;
+        return $statement->execute()->fetchAll();
     }
 
     /**
@@ -419,6 +418,7 @@ class CrawlerApi
     public function isPageInQueueTimed($uid, $show_unprocessed = true)
     {
         $uid = intval($uid);
+
         return $this->isPageInQueue($uid, $show_unprocessed);
     }
 
@@ -527,7 +527,7 @@ class CrawlerApi
      */
     public function getLastProcessedQueueEntries($limit)
     {
-        return $this->getQueueRepository()->getLastProcessedEntries($limit);
+        return $this->getQueueRepository()->getLastProcessedEntries('*', $limit);
     }
 
     /**

@@ -32,6 +32,8 @@ use TYPO3\CMS\Core\Controller\CommandLineController;
  *
  * @package AOE\Crawler\Command
  * @codeCoverageIgnore
+ *
+ * @deprecated since crawler v6.2.1, will be removed in crawler v7.0.0.
  */
 class QueueCommandLineController extends CommandLineController
 {
@@ -39,7 +41,7 @@ class QueueCommandLineController extends CommandLineController
     /**
      * Constructor
      *
-     * @return	void
+     * @deprecated since crawler v6.2.1, will be removed in crawler v7.0.0.
      */
     public function __construct()
     {

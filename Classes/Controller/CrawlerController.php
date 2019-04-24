@@ -196,6 +196,15 @@ class CrawlerController
      * @var QueryBuilder
      */
     protected $queryBuilder = QueryBuilder::class;
+    /**
+     * @var array
+     */
+    private $cliArgs;
+
+    /**
+     * @var CrawlerCommandController
+     */
+    private $parent;
 
     /**
      * Method to set the accessMode can be gui, cli or cli_im
@@ -239,11 +248,7 @@ class CrawlerController
      */
     public function getDisabled()
     {
-        if (is_file($this->processFilename)) {
-            return true;
-        } else {
-            return false;
-        }
+        return is_file($this->processFilename);
     }
 
     /**
@@ -292,6 +297,8 @@ class CrawlerController
 
         $this->extensionSettings['processLimit'] = MathUtility::forceIntegerInRange($this->extensionSettings['processLimit'], 1, 99, 1);
         $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+
+        $this->parent = $parent;
     }
 
     /**
@@ -404,18 +411,16 @@ class CrawlerController
      */
     protected function noUnprocessedQueueEntriesForPageWithConfigurationHashExist($uid, $configurationHash)
     {
-        $statement = $this->queryBuilder
+        return $this->queryBuilder
+            ->count('*')
             ->from($this->tableName)
-            ->selectLiteral('count(*) as anz')
             ->where(
                 $this->queryBuilder->expr()->eq('page_id', intval($uid)),
                 $this->queryBuilder->expr()->eq('configuration_hash', $this->queryBuilder->createNamedParameter($configurationHash)),
                 $this->queryBuilder->expr()->eq('exec_time', 0)
             )
-            ->execute();
-
-        $row = $statement->fetch(0);
-        return ($row['anz'] == 0);
+            ->execute()
+            ->fetchColumn();
     }
 
     /**
@@ -601,7 +606,7 @@ class CrawlerController
      * @param bool $forceSsl Use https
      * @return array
      */
-    protected function getUrlsForPageId($id, $forceSsl = false)
+    public function getUrlsForPageId($id, $forceSsl = false)
     {
 
         /**
@@ -2193,24 +2198,19 @@ class CrawlerController
      *
      * @return int number of remaining items or false if error
      */
-    public function CLI_main()
+    public function CLI_main($args)
     {
+        $this->setCliArgs($args);
         $this->setAccessMode('cli');
         $result = self::CLI_STATUS_NOTHING_PROCCESSED;
         $cliObj = GeneralUtility::makeInstance(CrawlerCommandLineController::class);
 
-        if (isset($cliObj->cli_args['-h']) || isset($cliObj->cli_args['--help'])) {
-            $cliObj->cli_validateArgs();
-            $cliObj->cli_help();
-            exit;
-        }
-
         if (!$this->getDisabled() && $this->CLI_checkAndAcquireNewProcess($this->CLI_buildProcessId())) {
-            $countInARun = $cliObj->cli_argValue('--countInARun') ? intval($cliObj->cli_argValue('--countInARun')) : $this->extensionSettings['countInARun'];
+            $countInARun = $this->cli_argValue('--countInARun') ? intval($this->cli_argValue('--countInARun')) : $this->extensionSettings['countInARun'];
             // Seconds
-            $sleepAfterFinish = $cliObj->cli_argValue('--sleepAfterFinish') ? intval($cliObj->cli_argValue('--sleepAfterFinish')) : $this->extensionSettings['sleepAfterFinish'];
+            $sleepAfterFinish = $this->cli_argValue('--sleepAfterFinish') ? intval($this->cli_argValue('--sleepAfterFinish')) : $this->extensionSettings['sleepAfterFinish'];
             // Milliseconds
-            $sleepTime = $cliObj->cli_argValue('--sleepTime') ? intval($cliObj->cli_argValue('--sleepTime')) : $this->extensionSettings['sleepTime'];
+            $sleepTime = $this->cli_argValue('--sleepTime') ? intval($this->cli_argValue('--sleepTime')) : $this->extensionSettings['sleepTime'];
 
             try {
                 // Run process:
@@ -2236,30 +2236,77 @@ class CrawlerController
     }
 
     /**
+     * Helper function
+     *
+     * @param string $option Option string, eg. "-s
+     * @param int $idx Value index, default is 0 (zero) = the first one...
+     * @return string
+     */
+    private function cli_argValue($option, $idx) {
+        return is_array($this->cli_args[$option]) ? $this->cli_args[$option][$idx] : '';
+    }
+
+    /**
+     * Helper function
+     *
+     * @param string $string The string to output
+     */
+    private function cli_echo($string) {
+        $this->outputLine($string);
+    }
+
+    /**
+     * Set cli args
+     * 
+     * This is a copy from the CommandLineController from TYPO3 < v9
+     * 
+     * TODO: Rework
+     * 
+     * @param array $argv
+     */
+    private function setCliArgs(array $argv) {
+        $cli_options = [];
+        $index = '_DEFAULT';
+        foreach ($argv as $token) {
+            // Options starting with a number is invalid - they could be negative values!
+            if ($token[0] === '-' && !MathUtility::canBeInterpretedAsInteger($token[1])) {
+                list($index, $opt) = explode('=', $token, 2);
+                if (isset($cli_options[$index])) {
+                    echo 'ERROR: Option ' . $index . ' was used twice!' . LF;
+                    die;
+                }
+                $cli_options[$index] = [];
+                if (isset($opt)) {
+                    $cli_options[$index][] = $opt;
+                }
+            } else {
+                $cli_options[$index][] = $token;
+            }
+        }
+        
+        $this->cliArgs = $cli_options;
+    }
+    
+
+
+    /**
      * Function executed by crawler_im.php cli script.
      *
      * @return void
      */
-    public function CLI_main_im()
+    public function CLI_main_im($args = [])
     {
         $this->setAccessMode('cli_im');
 
-        $cliObj = GeneralUtility::makeInstance(QueueCommandLineController::class);
-
+        if(!empty($args)) {
+            $this->setCliArgs($args);
+        }
+        
         // Force user to admin state and set workspace to "Live":
         $this->backendUser->user['admin'] = 1;
         $this->backendUser->setWorkspace(0);
 
-        // Print help
-        if (!isset($cliObj->cli_args['_DEFAULT'][1])) {
-            $cliObj->cli_validateArgs();
-            $cliObj->cli_help();
-            exit;
-        }
-
-        $cliObj->cli_validateArgs();
-
-        if ($cliObj->cli_argValue('-o') === 'exec') {
+        if ($this->cli_argValue('-o') === 'exec') {
             $this->registerQueueEntriesInternallyOnly = true;
         }
 
@@ -2282,7 +2329,7 @@ class CrawlerController
             }
         }
 
-        if ($cliObj->cli_argValue('-o') === 'queue' || $cliObj->cli_argValue('-o') === 'exec') {
+        if ($this->cli_argValue('-o') === 'queue' || $this->cli_argValue('-o') === 'exec') {
             $reason = new Reason();
             $reason->setReason(Reason::REASON_GUI_SUBMIT);
             $reason->setDetailText('The cli script of the crawler added to the queue');
@@ -2300,42 +2347,42 @@ class CrawlerController
         $this->setID = (int) GeneralUtility::md5int(microtime());
         $this->getPageTreeAndUrls(
             $pageId,
-            MathUtility::forceIntegerInRange($cliObj->cli_argValue('-d'), 0, 99),
+            MathUtility::forceIntegerInRange($this->cli_argValue('-d'), 0, 99),
             $this->getCurrentTime(),
-            MathUtility::forceIntegerInRange($cliObj->cli_isArg('-n') ? $cliObj->cli_argValue('-n') : 30, 1, 1000),
-            $cliObj->cli_argValue('-o') === 'queue' || $cliObj->cli_argValue('-o') === 'exec',
-            $cliObj->cli_argValue('-o') === 'url',
-            GeneralUtility::trimExplode(',', $cliObj->cli_argValue('-proc'), true),
+            MathUtility::forceIntegerInRange($cliObj->cli_isArg('-n') ? $this->cli_argValue('-n') : 30, 1, 1000),
+            $this->cli_argValue('-o') === 'queue' || $this->cli_argValue('-o') === 'exec',
+            $this->cli_argValue('-o') === 'url',
+            GeneralUtility::trimExplode(',', $this->cli_argValue('-proc'), true),
             $configurationKeys
         );
 
-        if ($cliObj->cli_argValue('-o') === 'url') {
-            $cliObj->cli_echo(implode(chr(10), $this->downloadUrls) . chr(10), true);
-        } elseif ($cliObj->cli_argValue('-o') === 'exec') {
-            $cliObj->cli_echo("Executing " . count($this->urlList) . " requests right away:\n\n");
-            $cliObj->cli_echo(implode(chr(10), $this->urlList) . chr(10));
-            $cliObj->cli_echo("\nProcessing:\n");
+        if ($this->cli_argValue('-o') === 'url') {
+            $this->cli_echo(implode(chr(10), $this->downloadUrls) . chr(10), true);
+        } elseif ($this->cli_argValue('-o') === 'exec') {
+            $this->cli_echo("Executing " . count($this->urlList) . " requests right away:\n\n");
+            $this->cli_echo(implode(chr(10), $this->urlList) . chr(10));
+            $this->cli_echo("\nProcessing:\n");
 
             foreach ($this->queueEntries as $queueRec) {
                 $p = unserialize($queueRec['parameters']);
-                $cliObj->cli_echo($p['url'] . ' (' . implode(',', $p['procInstructions']) . ') => ');
+                $this->cli_echo($p['url'] . ' (' . implode(',', $p['procInstructions']) . ') => ');
 
                 $result = $this->readUrlFromArray($queueRec);
 
                 $requestResult = unserialize($result['content']);
                 if (is_array($requestResult)) {
                     $resLog = is_array($requestResult['log']) ? chr(10) . chr(9) . chr(9) . implode(chr(10) . chr(9) . chr(9), $requestResult['log']) : '';
-                    $cliObj->cli_echo('OK: ' . $resLog . chr(10));
+                    $this->cli_echo('OK: ' . $resLog . chr(10));
                 } else {
-                    $cliObj->cli_echo('Error checking Crawler Result: ' . substr(preg_replace('/\s+/', ' ', strip_tags($result['content'])), 0, 30000) . '...' . chr(10));
+                    $this->cli_echo('Error checking Crawler Result: ' . substr(preg_replace('/\s+/', ' ', strip_tags($result['content'])), 0, 30000) . '...' . chr(10));
                 }
             }
-        } elseif ($cliObj->cli_argValue('-o') === 'queue') {
-            $cliObj->cli_echo("Putting " . count($this->urlList) . " entries in queue:\n\n");
-            $cliObj->cli_echo(implode(chr(10), $this->urlList) . chr(10));
+        } elseif ($this->cli_argValue('-o') === 'queue') {
+            $this->cli_echo("Putting " . count($this->urlList) . " entries in queue:\n\n");
+            $this->cli_echo(implode(chr(10), $this->urlList) . chr(10));
         } else {
-            $cliObj->cli_echo(count($this->urlList) . " entries found for processing. (Use -o to decide action):\n\n", true);
-            $cliObj->cli_echo(implode(chr(10), $this->urlList) . chr(10), true);
+            $this->cli_echo(count($this->urlList) . " entries found for processing. (Use -o to decide action):\n\n", true);
+            $this->cli_echo(implode(chr(10), $this->urlList) . chr(10), true);
         }
     }
 
@@ -2353,18 +2400,10 @@ class CrawlerController
         $this->backendUser->user['admin'] = 1;
         $this->backendUser->setWorkspace(0);
 
-        // Print help
-        if (!isset($cliObj->cli_args['_DEFAULT'][1])) {
-            $cliObj->cli_validateArgs();
-            $cliObj->cli_help();
-            exit;
-        }
-
-        $cliObj->cli_validateArgs();
         $pageId = MathUtility::forceIntegerInRange($cliObj->cli_args['_DEFAULT'][1], 0);
         $fullFlush = ($pageId == 0);
 
-        $mode = $cliObj->cli_argValue('-o');
+        $mode = $this->cli_argValue('-o');
 
         switch ($mode) {
             case 'all':
@@ -2375,9 +2414,6 @@ class CrawlerController
                 $result = $this->getLogEntriesForPageId($pageId, $mode, true, $fullFlush);
                 break;
             default:
-                $cliObj->cli_validateArgs();
-                $cliObj->cli_help();
-                $result = false;
         }
 
         return $result !== false;
@@ -2386,12 +2422,11 @@ class CrawlerController
     /**
      * Obtains configuration keys from the CLI arguments
      *
-     * @param  QueueCommandLineController $cliObj    Command line object
      * @return mixed                        Array of keys or null if no keys found
      */
-    protected function getConfigurationKeys(QueueCommandLineController &$cliObj)
+    protected function getConfigurationKeys()
     {
-        $parameter = trim($cliObj->cli_argValue('-conf'));
+        $parameter = trim($this->cli_argValue('-conf'));
         return ($parameter != '' ? GeneralUtility::trimExplode(',', $parameter) : []);
     }
 
@@ -2832,7 +2867,7 @@ class CrawlerController
      *
      * @return void
      */
-    protected function cleanUpOldQueueEntries()
+    public function cleanUpOldQueueEntries()
     {
         $processedAgeInSeconds = $this->extensionSettings['cleanUpProcessedAge'] * 86400; // 24*60*60 Seconds in 24 hours
         $scheduledAgeInSeconds = $this->extensionSettings['cleanUpScheduledAge'] * 86400;

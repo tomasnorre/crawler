@@ -28,3 +28,5 @@ $GLOBALS['TYPO3_CONF_VARS']['SVCONF']['auth']['setup']['BE_alwaysFetchUser'] = t
         'className' => \AOE\Crawler\Service\AuthenticationService::class,
     ]
 );
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers']['crawler-CrawlerCommandController'] =
+    \AOE\Crawler\Command\CrawlerCommandController::class;

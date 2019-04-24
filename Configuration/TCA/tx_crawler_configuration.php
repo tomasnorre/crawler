@@ -17,9 +17,6 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = [
         ],
         'iconfile' => 'EXT:crawler/Resources/Public/Icons/icon_tx_crawler_configuration.gif',
     ],
-    'feInterface' => [
-        'fe_admin_fieldList' => 'hidden, name, force_ssl, processing_instruction_filter, processing_instruction_parameters_ts, configuration, base_url, sys_domain_base_url, pidsonly, begroups,fegroups, realurl, chash, exclude',
-    ],
     'interface' => [
         'showRecordFieldList' => 'hidden,name,force_ssl,processing_instruction_filter,processing_instruction_parameters_ts,configuration,base_url,pidsonly,begroups,realurl,chash, exclude'
     ],

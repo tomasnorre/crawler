@@ -71,6 +71,11 @@ class BackendModule extends AbstractFunctionModule
     public $scheduledTime = 0;
     public $reqMinute = 0;
 
+    const STATUS_ICON_ERROR = 3;
+    const STATUS_ICON_WARNING = 2;
+    const STATUS_ICON_NOTIFICATION = 1;
+    const STATUS_ICON_OK = -1;
+
     /**
      * @var array holds the selection of configuration from the configuration selector box
      */
@@ -204,7 +209,7 @@ class BackendModule extends AbstractFunctionModule
     {
         global $LANG, $BACK_PATH;
 
-        $this->incLocalLang();
+        //$this->incLocalLang();
 
         $this->extensionSettings = ExtensionSettingUtility::loadExtensionSettings();
         if (empty($this->pObj->MOD_SETTINGS['processListMode'])) {
@@ -271,7 +276,7 @@ class BackendModule extends AbstractFunctionModule
                     );
         }
 
-        $theOutput = $this->pObj->doc->section($LANG->getLL('title'), $h_func, false, true);
+        $theOutput = $this->section($LANG->getLL('title'), $h_func, false, true);
 
         // Branch based on type:
         switch ((string)$this->pObj->MOD_SETTINGS['crawlaction']) {
@@ -279,22 +284,22 @@ class BackendModule extends AbstractFunctionModule
                 if (empty($this->pObj->id)) {
                     $this->addErrorMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.noPageSelected'));
                 } else {
-                    $theOutput .= $this->pObj->doc->section('', $this->drawURLs(), false, true);
+                    $theOutput .= $this->section('', $this->drawURLs(), false, true);
                 }
                 break;
             case 'log':
                 if (empty($this->pObj->id)) {
                     $this->addErrorMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.noPageSelected'));
                 } else {
-                    $theOutput .= $this->pObj->doc->section('', $this->drawLog(), false, true);
+                    $theOutput .= $this->section('', $this->drawLog(), false, true);
                 }
                 break;
             case 'cli':
                 // TODO: drawCLIstatus is not defined, why did we refactor it away?
-                $theOutput .= $this->pObj->doc->section('', $this->drawCLIstatus(), false, true);
+                $theOutput .= $this->section('', $this->drawCLIstatus(), false, true);
                 break;
             case 'multiprocess':
-                $theOutput .= $this->pObj->doc->section('', $this->drawProcessOverviewAction(), false, true);
+                $theOutput .= $this->section('', $this->drawProcessOverviewAction(), false, true);
                 break;
         }
 
@@ -511,6 +516,159 @@ class BackendModule extends AbstractFunctionModule
         return $content;
     }
 
+
+
+    /**
+     * Begins an output section and sets header and content
+     *
+     * @param string $label The header
+     * @param string $text The HTML-content
+     * @param bool $nostrtoupper	A flag that will prevent the header from being converted to uppercase
+     * @param bool $sH Defines the type of header (if set, "<h3>" rather than the default "h4")
+     * @param int $type The number of an icon to show with the header (see the icon-function). -1,1,2,3
+     * @param bool $allowHTMLinHeader If set, HTML tags are allowed in $label (otherwise this value is by default htmlspecialchars()'ed)
+     * @return string HTML content
+     * @see icons(), sectionHeader()
+     */
+    public function section($label, $text, $nostrtoupper = false, $sH = false, $type = 0, $allowHTMLinHeader = false)
+    {
+        $str = '';
+        // Setting header
+        if ($label) {
+            if (!$allowHTMLinHeader) {
+                $label = htmlspecialchars($label);
+            }
+            $str .= $this->sectionHeader($this->icons($type) . $label, $sH, $nostrtoupper ? '' : ' class="uppercase"');
+        }
+        // Setting content
+        $str .= '
+
+	<!-- Section content -->
+' . $text;
+        return $this->sectionBegin() . $str;
+    }
+
+    /**
+     * Inserts a divider image
+     * Ends a section (if open) before inserting the image
+     *
+     * @param int $dist The margin-top/-bottom of the <hr> ruler.
+     * @return string HTML content
+     */
+    public function divider($dist)
+    {
+        $dist = (int)$dist;
+        $str = '
+
+	<!-- DIVIDER -->
+	<hr style="margin-top: ' . $dist . 'px; margin-bottom: ' . $dist . 'px;" />
+';
+        return $this->sectionEnd() . $str;
+    }
+
+    /**
+     * Make a section header.
+     * Begins a section if not already open.
+     *
+     * @param string $label The label between the <h3> or <h4> tags. (Allows HTML)
+     * @param bool $sH If set, <h3> is used, otherwise <h4>
+     * @param string $addAttrib Additional attributes to h-tag, eg. ' class=""'
+     * @return string HTML content
+     */
+    public function sectionHeader($label, $sH = false, $addAttrib = '')
+    {
+        $tag = $sH ? 'h2' : 'h3';
+        if ($addAttrib && $addAttrib[0] !== ' ') {
+            $addAttrib = ' ' . $addAttrib;
+        }
+        $str = '
+
+	<!-- Section header -->
+	<' . $tag . $addAttrib . '>' . $label . '</' . $tag . '>
+';
+        return $this->sectionBegin() . $str;
+    }
+
+    /**
+     * Begins an output section.
+     * Returns the <div>-begin tag AND sets the ->sectionFlag TRUE (if the ->sectionFlag is not already set!)
+     * You can call this function even if a section is already begun since the function will only return something if the sectionFlag is not already set!
+     *
+     * @return string HTML content
+     */
+    public function sectionBegin()
+    {
+        if (!$this->sectionFlag) {
+            $this->sectionFlag = 1;
+            $str = '
+
+	<!-- ***********************
+	      Begin output section.
+	     *********************** -->
+	<div>
+';
+            return $str;
+        }
+        return '';
+    }
+
+    /**
+     * Ends and output section
+     * Returns the </div>-end tag AND clears the ->sectionFlag (but does so only IF the sectionFlag is set - that is a section is 'open')
+     * See sectionBegin() also.
+     *
+     * @return string HTML content
+     */
+    public function sectionEnd()
+    {
+        if ($this->sectionFlag) {
+            $this->sectionFlag = 0;
+            return '
+	</div>
+	<!-- *********************
+	      End output section.
+	     ********************* -->
+';
+        }
+        return '';
+    }
+
+    /**
+     * Returns an image-tag with an 18x16 icon of the following types:
+     *
+     * $type:
+     * -1:	OK icon (Check-mark)
+     * 1:	Notice (Speach-bubble)
+     * 2:	Warning (Yellow triangle)
+     * 3:	Fatal error (Red stop sign)
+     *
+     * @param int $type See description
+     * @param string $styleAttribValue Value for style attribute
+     * @return string HTML image tag (if applicable)
+     */
+    public function icons($type, $styleAttribValue = '')
+    {
+        switch ($type) {
+            case self::STATUS_ICON_ERROR:
+                $icon = 'status-dialog-error';
+                break;
+            case self::STATUS_ICON_WARNING:
+                $icon = 'status-dialog-warning';
+                break;
+            case self::STATUS_ICON_NOTIFICATION:
+                $icon = 'status-dialog-notification';
+                break;
+            case self::STATUS_ICON_OK:
+                $icon = 'status-dialog-ok';
+                break;
+            default:
+                // Do nothing
+        }
+        if ($icon) {
+            return $this->iconFactory->getIcon($icon, Icon::SIZE_SMALL)->render();
+        }
+    }
+
     /*******************************
      *
      * Shows log of indexed URLs
@@ -562,10 +720,10 @@ class BackendModule extends AbstractFunctionModule
             $q_entry['result_data'] = unserialize($q_entry['result_data']);
             if (is_array($q_entry['result_data'])) {
                 $q_entry['result_data']['content'] = unserialize($q_entry['result_data']['content']);
-            }
 
-            if (!$this->pObj->MOD_SETTINGS['log_resultLog']) {
-                unset($q_entry['result_data']['content']['log']);
+                if (!$this->pObj->MOD_SETTINGS['log_resultLog']) {
+                    unset($q_entry['result_data']['content']['log']);
+                }
             }
 
             // Print rudimentary details:
@@ -1015,11 +1173,11 @@ class BackendModule extends AbstractFunctionModule
     {
         global $LANG;
 
-        if ($this->isCrawlerUserAvailable() === false) {
+        /*if ($this->isCrawlerUserAvailable() === false) {
             $this->addErrorMessage($LANG->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:message.noBeUserAvailable'));
         } elseif ($this->isCrawlerUserAdmin() === true) {
             $this->addErrorMessage($LANG->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:message.beUserIsAdmin'));
-        }
+        }*/
 
         if ($this->isPhpForkAvailable() === false) {
             $this->addErrorMessage($LANG->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:message.noPhpForkAvailable'));
