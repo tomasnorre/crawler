@@ -466,9 +466,7 @@ class CrawlerController
             if (!$GLOBALS['TSFE']->sys_page) {
                 $GLOBALS['TSFE']->sys_page = GeneralUtility::makeInstance('TYPO3\CMS\Frontend\Page\PageRepository');
             }
-            if (!$GLOBALS['TSFE']->csConvObj) {
-                $GLOBALS['TSFE']->csConvObj = GeneralUtility::makeInstance('TYPO3\CMS\Core\Charset\CharsetConverter');
-            }
+
             if (!$GLOBALS['TSFE']->tmpl->rootLine[0]['uid']) {
                 $GLOBALS['TSFE']->tmpl->rootLine[0]['uid'] = $urlObj->extConf['pagePath']['rootpage_id'];
             }
