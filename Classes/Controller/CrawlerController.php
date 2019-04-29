@@ -1321,7 +1321,7 @@ class CrawlerController
 
         SignalSlotUtility::emitSignal(
             __CLASS__,
-            SignalSlotUtility::SIGNNAL_QUEUEITEM_PREPROCESS,
+            SignalSlotUtility::SIGNAL_QUEUEITEM_PREPROCESS,
             [$queueId, $queueRec]
         );
 
@@ -1359,7 +1359,7 @@ class CrawlerController
 
         SignalSlotUtility::emitSignal(
             __CLASS__,
-            SignalSlotUtility::SIGNNAL_QUEUEITEM_POSTPROCESS,
+            SignalSlotUtility::SIGNAL_QUEUEITEM_POSTPROCESS,
             [$queueId, $field_array]
         );
 
@@ -1394,7 +1394,7 @@ class CrawlerController
 
         SignalSlotUtility::emitSignal(
             __CLASS__,
-            SignalSlotUtility::SIGNNAL_QUEUEITEM_POSTPROCESS,
+            SignalSlotUtility::SIGNAL_QUEUEITEM_POSTPROCESS,
             [$queueId, $field_array]
         );
 
