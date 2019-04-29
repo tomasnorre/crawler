@@ -1322,7 +1322,7 @@ class CrawlerController
         SignalSlotUtility::emitSignal(
             __CLASS__,
             SignalSlotUtility::SIGNNAL_QUEUEITEM_PREPROCESS,
-            [$queueId, &$queueRec]
+            [$queueId, $queueRec]
         );
 
         // Set exec_time to lock record:
@@ -1360,7 +1360,7 @@ class CrawlerController
         SignalSlotUtility::emitSignal(
             __CLASS__,
             SignalSlotUtility::SIGNNAL_QUEUEITEM_POSTPROCESS,
-            [$queueId, &$field_array]
+            [$queueId, $field_array]
         );
 
         $this->db->exec_UPDATEquery('tx_crawler_queue', 'qid=' . intval($queueId), $field_array);
@@ -1395,7 +1395,7 @@ class CrawlerController
         SignalSlotUtility::emitSignal(
             __CLASS__,
             SignalSlotUtility::SIGNNAL_QUEUEITEM_POSTPROCESS,
-            [$queueId, &$field_array]
+            [$queueId, $field_array]
         );
 
         $this->db->exec_UPDATEquery('tx_crawler_queue', 'qid=' . intval($queueId), $field_array);
