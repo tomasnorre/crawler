@@ -330,7 +330,7 @@ class BackendModule extends AbstractFunctionModule
                     $reason->setDetailText('The user ' . $username . ' added pages to the crawler queue manually ');
                 }
 
-                // The event dispatcher is deprecated since crawler v6.3.0, will be removed in crawler v7.0.0.
+                // The event dispatcher is deprecated since crawler v6.4.0, will be removed in crawler v7.0.0.
                 // Please use the Signal instead.
                 EventDispatcher::getInstance()->post(
                     'invokeQueueChange',

@@ -1095,7 +1095,7 @@ class CrawlerController
             if (is_array($groups)) {
                 foreach ($groups as $group) {
 
-                    // The event dispatcher is deprecated since crawler v6.3.0, will be removed in crawler v7.0.0.
+                    // The event dispatcher is deprecated since crawler v6.4.0, will be removed in crawler v7.0.0.
                     // Please use the Signal instead.
                     if (EventDispatcher::getInstance()->hasObserver('queueEntryFlush')) {
                         EventDispatcher::getInstance()->post(
@@ -1227,7 +1227,7 @@ class CrawlerController
                 $rows[] = $uid;
                 $urlAdded = true;
 
-                // The event dispatcher is deprecated since crawler v6.3.0, will be removed in crawler v7.0.0.
+                // The event dispatcher is deprecated since crawler v6.4.0, will be removed in crawler v7.0.0.
                 // Please use the Signal instead.
                 EventDispatcher::getInstance()->post('urlAddedToQueue', $this->setID, ['uid' => $uid, 'fieldArray' => $fieldArray]);
 
@@ -1238,7 +1238,7 @@ class CrawlerController
                 );
 
             } else {
-                // The event dispatcher is deprecated since crawler v6.3.0, will be removed in crawler v7.0.0.
+                // The event dispatcher is deprecated since crawler v6.4.0, will be removed in crawler v7.0.0.
                 // Please use the Signal instead.
                 EventDispatcher::getInstance()->post('duplicateUrlInQueue', $this->setID, ['rows' => $rows, 'fieldArray' => $fieldArray]);
 
@@ -1468,7 +1468,7 @@ class CrawlerController
                 // Get result:
                 $result = $this->requestUrl($parameters['url'], $crawlerId);
 
-                // The event dispatcher is deprecated since crawler v6.3.0, will be removed in crawler v7.0.0.
+                // The event dispatcher is deprecated since crawler v6.4.0, will be removed in crawler v7.0.0.
                 // Please use the Signal instead.
                 EventDispatcher::getInstance()->post('urlCrawled', $queueRec['set_id'], ['url' => $parameters['url'], 'result' => $result]);
 
@@ -2158,7 +2158,7 @@ class CrawlerController
             $reason->setReason(Reason::REASON_GUI_SUBMIT);
             $reason->setDetailText('The cli script of the crawler added to the queue');
 
-            // The event dispatcher is deprecated since crawler v6.3.0, will be removed in crawler v7.0.0.
+            // The event dispatcher is deprecated since crawler v6.4.0, will be removed in crawler v7.0.0.
             // Please use the Signal instead.
             EventDispatcher::getInstance()->post(
                 'invokeQueueChange',
