@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Crawler\Utility;
 
 /***************************************************************
@@ -27,6 +28,7 @@ namespace AOE\Crawler\Utility;
 
 use AOE\Crawler\Backend\BackendModule;
 use AOE\Crawler\ClickMenu\CrawlerClickMenu;
+use AOE\Crawler\ContextMenu\ItemProvider;
 use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
 use TYPO3\CMS\Core\Imaging\IconRegistry;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -61,9 +63,14 @@ class BackendUtility
      */
     public static function registerClickMenuItem()
     {
-        $GLOBALS['TBE_MODULES_EXT']['xMOD_alt_clickmenu']['extendCMclasses'][] = [
-            'name' => CrawlerClickMenu::class
-        ];
+        // Use old Click Menu for versions smaller than TYPO3 8.6
+        // https://docs.typo3.org/typo3cms/extensions/core/Changelog/8.6/Breaking-78192-RefactorClickMenuContextMenu.html
+        $versionSmallerThanEightSix = \TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 8006000;
+        if ($versionSmallerThanEightSix) {
+            $GLOBALS['TBE_MODULES_EXT']['xMOD_alt_clickmenu']['extendCMclasses'][] = [
+                'name' => CrawlerClickMenu::class,
+            ];
+        }
     }
 
     /**

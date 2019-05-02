@@ -41,9 +41,11 @@ use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
+use TYPO3\CMS\Core\Utility\CsvUtility;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 
 /**
  * Class BackendModule
@@ -161,13 +163,19 @@ class BackendModule extends AbstractFunctionModule
     /**
      * Main function
      *
-     * @return	string		HTML output
+     * @return    string        HTML output
      */
     public function main()
     {
         global $LANG, $BACK_PATH;
 
-        $this->incLocalLang();
+        // TODO
+        // Start: Remove when support for 7 LTS is dropped
+        $isVersionLowerThanEightSeven = VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 8007000;
+        if ($isVersionLowerThanEightSeven) {
+            $this->incLocalLang();
+        }
+        // END: Remove
 
         $this->loadExtensionSettings();
         if (empty($this->pObj->MOD_SETTINGS['processListMode'])) {
@@ -657,11 +665,11 @@ class BackendModule extends AbstractFunctionModule
         // Field names:
         reset($this->CSVaccu);
         $fieldNames = array_keys(current($this->CSVaccu));
-        $csvLines[] = GeneralUtility::csvValues($fieldNames);
+        $csvLines[] = CsvUtility::csvValues($fieldNames);
 
         // Data:
         foreach ($this->CSVaccu as $row) {
-            $csvLines[] = GeneralUtility::csvValues($row);
+            $csvLines[] = CsvUtility::csvValues($row);
         }
 
         // Creating output header:
