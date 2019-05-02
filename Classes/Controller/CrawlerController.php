@@ -1088,11 +1088,29 @@ class CrawlerController
     {
         $realWhere = strlen($where) > 0 ? $where : '1=1';
 
-        if (EventDispatcher::getInstance()->hasObserver('queueEntryFlush')) {
-            $groups = $GLOBALS['TYPO3_DB']>exec_SELECTgetRows('DISTINCT set_id', 'tx_crawler_queue', $realWhere);
+        if (EventDispatcher::getInstance()->hasObserver('queueEntryFlush') || SignalSlotUtility::hasSignal(__CLASS__, SignalSlotUtility::SIGNAL_QUEUE_ENTRY_FLUSH)) {
+            $groups = $this->db->exec_SELECTgetRows('DISTINCT set_id', 'tx_crawler_queue', $realWhere);
             if (is_array($groups)) {
                 foreach ($groups as $group) {
-                    EventDispatcher::getInstance()->post('queueEntryFlush', $group['set_id'], $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid, set_id', 'tx_crawler_queue', $realWhere . ' AND set_id="' . $group['set_id'] . '"'));
+
+                    // The event dispatcher is deprecated since crawler v6.4.0, will be removed in crawler v7.0.0.
+                    // Please use the Signal instead.
+                    if (EventDispatcher::getInstance()->hasObserver('queueEntryFlush')) {
+                        EventDispatcher::getInstance()->post(
+                            'queueEntryFlush',
+                            $group['set_id'],
+                            $this->db->exec_SELECTgetRows('uid, set_id', 'tx_crawler_queue', $realWhere . ' AND set_id="' . $group['set_id'] . '"')
+                        );
+                    }
+
+                    if (SignalSlotUtility::hasSignal(__CLASS__, SignalSlotUtility::SIGNAL_QUEUE_ENTRY_FLUSH)) {
+                        $signalInputArray = $this->db->exec_SELECTgetRows('uid, set_id', 'tx_crawler_queue', $realWhere . ' AND set_id="' . $group['set_id'] . '"');
+                        SignalSlotUtility::emitSignal(
+                            __CLASS__,
+                            SignalSlotUtility::SIGNAL_QUEUE_ENTRY_FLUSH,
+                            $signalInputArray
+                        );
+                    }
                 }
             }
         }
@@ -1206,9 +1224,29 @@ class CrawlerController
                 $uid = $this->db->sql_insert_id();
                 $rows[] = $uid;
                 $urlAdded = true;
+
+                // The event dispatcher is deprecated since crawler v6.4.0, will be removed in crawler v7.0.0.
+                // Please use the Signal instead.
                 EventDispatcher::getInstance()->post('urlAddedToQueue', $this->setID, ['uid' => $uid, 'fieldArray' => $fieldArray]);
+
+                $signalPayload = ['uid' => $uid, 'fieldArray' => $fieldArray];
+                SignalSlotUtility::emitSignal(
+                    __CLASS__,
+                    SignalSlotUtility::SIGNAL_URL_ADDED_TO_QUEUE,
+                    $signalPayload
+                );
+
             } else {
+                // The event dispatcher is deprecated since crawler v6.4.0, will be removed in crawler v7.0.0.
+                // Please use the Signal instead.
                 EventDispatcher::getInstance()->post('duplicateUrlInQueue', $this->setID, ['rows' => $rows, 'fieldArray' => $fieldArray]);
+
+                $signalPayload = ['rows' => $rows, 'fieldArray' => $fieldArray];
+                SignalSlotUtility::emitSignal(
+                    __CLASS__,
+                    SignalSlotUtility::SIGNAL_DUPLICATE_URL_IN_QUEUE,
+                    $signalPayload
+                );
             }
         }
 
@@ -1317,10 +1355,11 @@ class CrawlerController
             );
         }
 
+        $signalPayload = [$queueId, $queueRec];
         SignalSlotUtility::emitSignal(
             __CLASS__,
             SignalSlotUtility::SIGNAL_QUEUEITEM_PREPROCESS,
-            [$queueId, $queueRec]
+            $signalPayload
         );
 
         // Set exec_time to lock record:
@@ -1355,10 +1394,11 @@ class CrawlerController
         // Set result in log which also denotes the end of the processing of this entry.
         $field_array = ['result_data' => serialize($result)];
 
+        $signalPayload = [$queueId, $field_array];
         SignalSlotUtility::emitSignal(
             __CLASS__,
             SignalSlotUtility::SIGNAL_QUEUEITEM_POSTPROCESS,
-            [$queueId, $field_array]
+            $signalPayload
         );
 
         $this->db->exec_UPDATEquery('tx_crawler_queue', 'qid=' . intval($queueId), $field_array);
@@ -1390,10 +1430,11 @@ class CrawlerController
         // Set result in log which also denotes the end of the processing of this entry.
         $field_array = ['result_data' => serialize($result)];
 
+        $signalPayload = [$queueId, $field_array];
         SignalSlotUtility::emitSignal(
             __CLASS__,
             SignalSlotUtility::SIGNAL_QUEUEITEM_POSTPROCESS,
-            [$queueId, $field_array]
+            $signalPayload
         );
 
         $this->db->exec_UPDATEquery('tx_crawler_queue', 'qid=' . intval($queueId), $field_array);
@@ -1430,7 +1471,16 @@ class CrawlerController
                 // Get result:
                 $result = $this->requestUrl($parameters['url'], $crawlerId);
 
+                // The event dispatcher is deprecated since crawler v6.4.0, will be removed in crawler v7.0.0.
+                // Please use the Signal instead.
                 EventDispatcher::getInstance()->post('urlCrawled', $queueRec['set_id'], ['url' => $parameters['url'], 'result' => $result]);
+
+                $signalPayload = ['url' => $parameters['url'], 'result' => $result];
+                SignalSlotUtility::emitSignal(
+                    __CLASS__,
+                    SignalSlotUtility::SIGNAL_URL_CRAWLED,
+                    $signalPayload
+                );
             }
         }
 
@@ -2111,11 +2161,22 @@ class CrawlerController
             $reason = new Reason();
             $reason->setReason(Reason::REASON_GUI_SUBMIT);
             $reason->setDetailText('The cli script of the crawler added to the queue');
+
+            // The event dispatcher is deprecated since crawler v6.4.0, will be removed in crawler v7.0.0.
+            // Please use the Signal instead.
             EventDispatcher::getInstance()->post(
                 'invokeQueueChange',
                 $this->setID,
                 ['reason' => $reason]
             );
+
+            $signalPayload = ['reason' => $reason];
+            SignalSlotUtility::emitSignal(
+                __CLASS__,
+                SignalSlotUtility::SIGNAL_INVOKE_QUEUE_CHANGE,
+                $signalPayload
+            );
+
         }
 
         if ($this->extensionSettings['cleanUpOldQueueEntries']) {
