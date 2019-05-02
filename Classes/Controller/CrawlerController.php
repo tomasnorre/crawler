@@ -1231,10 +1231,11 @@ class CrawlerController
                 // Please use the Signal instead.
                 EventDispatcher::getInstance()->post('urlAddedToQueue', $this->setID, ['uid' => $uid, 'fieldArray' => $fieldArray]);
 
+                $signalPayload = ['uid' => $uid, 'fieldArray' => $fieldArray];
                 SignalSlotUtility::emitSignal(
                     __CLASS__,
                     SignalSlotUtility::SIGNAL_URL_ADDED_TO_QUEUE,
-                    ['uid' => $uid, 'fieldArray' => $fieldArray]
+                    $signalPayload
                 );
 
             } else {
@@ -1242,10 +1243,11 @@ class CrawlerController
                 // Please use the Signal instead.
                 EventDispatcher::getInstance()->post('duplicateUrlInQueue', $this->setID, ['rows' => $rows, 'fieldArray' => $fieldArray]);
 
+                $signalPayload = ['rows' => $rows, 'fieldArray' => $fieldArray];
                 SignalSlotUtility::emitSignal(
                     __CLASS__,
                     SignalSlotUtility::SIGNAL_DUPLICATE_URL_IN_QUEUE,
-                    ['rows' => $rows, 'fieldArray' => $fieldArray]
+                    $signalPayload
                 );
             }
         }
@@ -1355,10 +1357,11 @@ class CrawlerController
             );
         }
 
+        $signalPayload = [$queueId, $queueRec];
         SignalSlotUtility::emitSignal(
             __CLASS__,
             SignalSlotUtility::SIGNAL_QUEUEITEM_PREPROCESS,
-            [$queueId, $queueRec]
+            $signalPayload
         );
 
         // Set exec_time to lock record:
@@ -1393,10 +1396,11 @@ class CrawlerController
         // Set result in log which also denotes the end of the processing of this entry.
         $field_array = ['result_data' => serialize($result)];
 
+        $signalPayload = [$queueId, $field_array];
         SignalSlotUtility::emitSignal(
             __CLASS__,
             SignalSlotUtility::SIGNAL_QUEUEITEM_POSTPROCESS,
-            [$queueId, $field_array]
+            $signalPayload
         );
 
         $this->db->exec_UPDATEquery('tx_crawler_queue', 'qid=' . intval($queueId), $field_array);
@@ -1428,10 +1432,11 @@ class CrawlerController
         // Set result in log which also denotes the end of the processing of this entry.
         $field_array = ['result_data' => serialize($result)];
 
+        $signalPayload = [$queueId, $field_array];
         SignalSlotUtility::emitSignal(
             __CLASS__,
             SignalSlotUtility::SIGNAL_QUEUEITEM_POSTPROCESS,
-            [$queueId, $field_array]
+            $signalPayload
         );
 
         $this->db->exec_UPDATEquery('tx_crawler_queue', 'qid=' . intval($queueId), $field_array);
@@ -1472,10 +1477,11 @@ class CrawlerController
                 // Please use the Signal instead.
                 EventDispatcher::getInstance()->post('urlCrawled', $queueRec['set_id'], ['url' => $parameters['url'], 'result' => $result]);
 
+                $signalPayload = ['url' => $parameters['url'], 'result' => $result];
                 SignalSlotUtility::emitSignal(
                     __CLASS__,
                     SignalSlotUtility::SIGNAL_URL_CRAWLED,
-                    ['url' => $parameters['url'], 'result' => $result]
+                    $signalPayload
                 );
             }
         }
@@ -2166,10 +2172,11 @@ class CrawlerController
                 ['reason' => $reason]
             );
 
+            $signalPayload = ['reason' => $reason];
             SignalSlotUtility::emitSignal(
                 __CLASS__,
                 SignalSlotUtility::SIGNAL_INVOKE_QUEUE_CHANGE,
-                ['reason' => $reason]
+                $signalPayload
             );
 
         }

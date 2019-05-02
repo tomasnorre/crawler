@@ -338,10 +338,11 @@ class BackendModule extends AbstractFunctionModule
                     ['reason' => $reason]
                 );
 
+                $signalPayload = ['reason' => $reason];
                 SignalSlotUtility::emitSignal(
                     __CLASS__,
                     SignalSlotUtility::SIGNAL_INVOKE_QUEUE_CHANGE,
-                    ['reason' => $reason]
+                    $signalPayload
                 );
             }
 
