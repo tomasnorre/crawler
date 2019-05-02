@@ -14,6 +14,12 @@ crawlHiddenPages=0
 # cat=Settings; type=boolean; label= Make direct requests: If checked the crawler will make direct requests by including the index.php file instead of getting the page content via http(s)
 makeDirectRequests=0
 
+# cat=Settings; type=boolean; label= If checked cUrl will be used
+curlUse=0
+
+# cat=Settings; type=string; label= URL of proxy server. Important: Will only be used is curlUse is active
+curlProxyServer=
+
 #########
 ## Queue
 #########

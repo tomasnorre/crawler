@@ -38,7 +38,7 @@ use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Database\DatabaseConnection;
 use TYPO3\CMS\Core\Log\LogLevel;
-use TYPO3\CMS\Core\TimeTracker\NullTimeTracker;
+use TYPO3\CMS\Core\TimeTracker\TimeTracker;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -445,9 +445,7 @@ class CrawlerController
             if (!$GLOBALS['TSFE']->sys_page) {
                 $GLOBALS['TSFE']->sys_page = GeneralUtility::makeInstance('TYPO3\CMS\Frontend\Page\PageRepository');
             }
-            if (!$GLOBALS['TSFE']->csConvObj) {
-                $GLOBALS['TSFE']->csConvObj = GeneralUtility::makeInstance('TYPO3\CMS\Core\Charset\CharsetConverter');
-            }
+
             if (!$GLOBALS['TSFE']->tmpl->rootLine[0]['uid']) {
                 $GLOBALS['TSFE']->tmpl->rootLine[0]['uid'] = $urlObj->extConf['pagePath']['rootpage_id'];
             }
@@ -1532,8 +1530,8 @@ class CrawlerController
         // thanks to Pierrick Caillon for adding proxy support
         $rurl = $url;
 
-        if ($GLOBALS['TYPO3_CONF_VARS']['SYS']['curlUse'] && $GLOBALS['TYPO3_CONF_VARS']['SYS']['curlProxyServer']) {
-            $rurl = parse_url($GLOBALS['TYPO3_CONF_VARS']['SYS']['curlProxyServer']);
+        if ($this->extensionSettings['curlUse'] && $this->extensionSettings['curlProxyServer']) {
+            $rurl = parse_url($this->extensionSettings['curlProxyServer']);
             $url['path'] = $url['scheme'] . '://' . $url['host'] . ($url['port'] > 0 ? ':' . $url['port'] : '') . $url['path'];
             $reqHeaders = $this->buildRequestHeaderArray($url, $crawlerId);
         }
@@ -2693,15 +2691,15 @@ class CrawlerController
      * @param int $id
      * @param int $typeNum
      *
+     * @throws \TYPO3\CMS\Core\Error\Http\ServiceUnavailableException
+     *
      * @return void
      */
     protected function initTSFE($id = 1, $typeNum = 0)
     {
         EidUtility::initTCA();
-        if (!is_object($GLOBALS['TT'])) {
-            $GLOBALS['TT'] = new NullTimeTracker();
-            $GLOBALS['TT']->start();
-        }
+        $timeTracker = GeneralUtility::makeInstance(TimeTracker::class);
+        $timeTracker->start();
 
         $GLOBALS['TSFE'] = GeneralUtility::makeInstance(TypoScriptFrontendController::class, $GLOBALS['TYPO3_CONF_VARS'], $id, $typeNum);
         $GLOBALS['TSFE']->sys_page = GeneralUtility::makeInstance(PageRepository::class);
