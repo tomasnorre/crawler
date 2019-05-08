@@ -2586,7 +2586,7 @@ class CrawlerController
 
         $statement = $this->queryBuilder
             ->select('process_id', 'ttl')
-            ->from('tx_crawler_queue')
+            ->from('tx_crawler_process')
             ->where(
                 'active = 1 AND deleted = 0'
             )
@@ -2606,8 +2606,8 @@ class CrawlerController
         if ($processCount < intval($this->extensionSettings['processLimit'])) {
             $this->CLI_debug("add process " . $this->CLI_buildProcessId() . " (" . ($processCount + 1) . "/" . intval($this->extensionSettings['processLimit']) . ")");
 
-            GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('tx_crawler_queue')->insert(
-                'tx_crawler_queue',
+            GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('tx_crawler_process')->insert(
+                'tx_crawler_process',
                 [
                     'process_id' => $id,
                     'active' => 1,
@@ -2656,15 +2656,8 @@ class CrawlerController
 
         $this->queryBuilder
         ->update('tx_crawler_queue', 'q')
-        ->join(
-            'q',
-            'tx_crawler_process',
-            'p',
-            'q.process_id = p.process_id'
-        )
         ->where(
-            $this->queryBuilder->expr()->eq('p.active', 0),
-            $this->queryBuilder->expr()->eq('p.deleted', 0)
+            'q.process_id IN(SELECT p.process_id FROM tx_crawler_process as p WHERE p.active = 0 and p.deleted = 0)'
         )
         ->set('q.process_scheduled', 0)
         ->set('q.process_id', '')
@@ -2673,17 +2666,10 @@ class CrawlerController
         // FIXME: Not entirely sure that this is equivalent to the previous version
         $this->queryBuilder
             ->update('tx_crawler_process', 'p')
-            ->leftJoin(
-                'p',
-                'tx_crawler_queue',
-                'q',
-                'q.process_id = p.process_id'
-            )
             ->where(
                 $this->queryBuilder->expr()->eq('p.active', 0),
                 $this->queryBuilder->expr()->eq('p.deleted', 0),
-                $this->queryBuilder->expr()->eq('q.exec_time', 0),
-                $this->queryBuilder->expr()->isNull('q.exec_time', 0)
+                'p.process_id IN(SELECT q.process_id FROM tx_crawler_queue as q WHERE q.exec_time = 0)'
             )
             ->set('p.deleted', 1)
             ->set('p.system_process_id', 0)
