@@ -2664,6 +2664,8 @@ class CrawlerController
         ->execute();
 
         // FIXME: Not entirely sure that this is equivalent to the previous version
+        $this->queryBuilder->resetQueryPart('set');
+
         $this->queryBuilder
             ->update('tx_crawler_process', 'p')
             ->where(
@@ -2693,17 +2695,22 @@ class CrawlerController
         $this->queryBuilder
             ->update('tx_crawler_process')
             ->where(
-                $this->queryBuilder->expr()->eq('exec_time', 0),
-                $this->queryBuilder->expr()->in('process_id', $releaseIds),
+                'NOT EXISTS (
+                SELECT * FROM tx_crawler_queue
+                    WHERE tx_crawler_queue.process_id = tx_crawler_process.process_id
+                    AND tx_crawler_queue.exec_time = 0
+                )',
+                $this->queryBuilder->expr()->in('process_id', $this->queryBuilder->createNamedParameter($releaseIds, Connection::PARAM_STR_ARRAY)),
                 $this->queryBuilder->expr()->eq('deleted', 0)
             )
             ->set('active', 0)
             ->execute();
+        $this->queryBuilder->resetQueryPart('set');
         $this->queryBuilder
             ->update('tx_crawler_queue')
             ->where(
                 $this->queryBuilder->expr()->eq('exec_time', 0),
-                $this->queryBuilder->expr()->in('process_id', $releaseIds),
+                $this->queryBuilder->expr()->in('process_id', $this->queryBuilder->createNamedParameter($releaseIds, Connection::PARAM_STR_ARRAY)),
                 $this->queryBuilder->expr()->eq('deleted', 0)
             )
             ->set('process_scheduled', 0)
