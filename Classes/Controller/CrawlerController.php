@@ -56,6 +56,7 @@ use TYPO3\CMS\Lang\LanguageService;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\StartTimeRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\EndTimeRestriction;
+use TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser;
 
 /**
  * Class CrawlerController
@@ -1211,8 +1212,7 @@ class CrawlerController
         }
 
         $queryBuilder
-            ->delete()
-            ->from($this->tableName)
+            ->delete($this->tableName)
             ->where($realWhere)
             ->execute();
     }
