@@ -2443,8 +2443,7 @@ class CrawlerController
             $purgeDate = $this->getCurrentTime() - 24 * 60 * 60 * intval($this->extensionSettings['purgeQueueDays']);
 
             $del = $this->queryBuilder
-                ->delete()
-                ->from('tx_crawler_queue')
+                ->delete('tx_crawler_queue')
                 ->where(
                     'exec_time != 0 AND exec_time < ' . $purgeDate
                 );
@@ -2736,8 +2735,7 @@ class CrawlerController
     public function CLI_deleteProcessesMarkedDeleted()
     {
         $this->queryBuilder
-            ->delete()
-            ->from('tx_crawler_process')
+            ->delete('tx_crawler_process')
             ->where('deleted = 1');
     }
 
