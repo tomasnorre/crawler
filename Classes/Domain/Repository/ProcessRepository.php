@@ -206,7 +206,7 @@ class ProcessRepository extends AbstractRepository
      *
      * @return string
      */
-    private function getLimitFromItemCountAndOffset($itemCount, $offset)
+    public function getLimitFromItemCountAndOffset($itemCount, $offset)
     {
         $itemCount = filter_var($itemCount, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'default' => 20]]);
         $offset = filter_var($offset, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0, 'default' => 0]]);
