@@ -38,11 +38,13 @@ use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Database\DatabaseConnection;
 use TYPO3\CMS\Core\Log\LogLevel;
+use TYPO3\CMS\Core\TimeTracker\NullTimeTracker;
 use TYPO3\CMS\Core\TimeTracker\TimeTracker;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\CMS\Frontend\Page\PageGenerator;
@@ -2698,8 +2700,16 @@ class CrawlerController
     protected function initTSFE($id = 1, $typeNum = 0)
     {
         EidUtility::initTCA();
-        $timeTracker = GeneralUtility::makeInstance(TimeTracker::class);
-        $timeTracker->start();
+
+        $isVersion7 = VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 8000000;
+        if ($isVersion7 && !is_object($GLOBALS['TT'])) {
+            /** @var NullTimeTracker $GLOBALS['TT'] */
+            $GLOBALS['TT'] = new NullTimeTracker();
+            $GLOBALS['TT']->start();
+        } else {
+            $timeTracker = GeneralUtility::makeInstance(TimeTracker::class);
+            $timeTracker->start();
+        }
 
         $GLOBALS['TSFE'] = GeneralUtility::makeInstance(TypoScriptFrontendController::class, $GLOBALS['TYPO3_CONF_VARS'], $id, $typeNum);
         $GLOBALS['TSFE']->sys_page = GeneralUtility::makeInstance(PageRepository::class);
