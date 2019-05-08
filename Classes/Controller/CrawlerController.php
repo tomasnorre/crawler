@@ -1385,9 +1385,9 @@ class CrawlerController
 
         $statement = $this->queryBuilder
             ->andWhere('exec_time != 0')
-            ->addWhere('process_id != 0')
-            ->addWhere($this->queryBuilder->expr()->eq('page_id', $this->queryBuilder->createNamedParameter($fieldArray['page_id'], \PDO::PARAM_INT)))
-            ->addWhere($this->queryBuilder->expr()->eq('parameters_hash', $this->queryBuilder->createNamedParameter($fieldArray['parameters_hash'], \PDO::PARAM_STR)));
+            ->andWhere('process_id != 0')
+            ->andWhere($this->queryBuilder->expr()->eq('page_id', $this->queryBuilder->createNamedParameter($fieldArray['page_id'], \PDO::PARAM_INT)))
+            ->andWhere($this->queryBuilder->expr()->eq('parameters_hash', $this->queryBuilder->createNamedParameter($fieldArray['parameters_hash'], \PDO::PARAM_STR)));
 
         while($row = $statement->fetch()) {
             $rows[] = $row['qid'];
