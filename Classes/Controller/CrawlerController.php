@@ -2670,10 +2670,8 @@ class CrawlerController
             ->update('tx_crawler_process', 'p')
             ->where(
                 $this->queryBuilder->expr()->eq('p.active', 0),
-                $this->queryBuilder->expr()->eq('p.deleted', 0),
                 'p.process_id IN(SELECT q.process_id FROM tx_crawler_queue as q WHERE q.exec_time = 0)'
             )
-            ->set('p.deleted', 1)
             ->set('p.system_process_id', 0)
             ->execute();
         // previous version for reference
