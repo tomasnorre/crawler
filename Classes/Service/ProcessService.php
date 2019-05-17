@@ -223,7 +223,7 @@ class ProcessService
     {
         $composerRootDir = getenv('TYPO3_PATH_COMPOSER_ROOT') . '/';
         $jsonDecoded = json_decode(file_get_contents($composerRootDir . 'composer.json'), true);
-        $binDir = $jsonDecoded['config']['bin-dir'] ?? 'vendor/bin';
+        $binDir = $jsonDecoded['config']['bin-dir'] ?: 'vendor/bin';
 
         $phpPath = $this->crawlerController->extensionSettings['phpPath'] . ' ';
         $cliPart = '/typo3cms crawler:crawlqueue';
