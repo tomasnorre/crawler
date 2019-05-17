@@ -221,11 +221,13 @@ class ProcessService
      */
     public function getCrawlerCliPath()
     {
+        $composerRootDir = getenv('TYPO3_PATH_COMPOSER_ROOT') . '/';
+        $jsonDecoded = json_decode(file_get_contents($composerRootDir . 'composer.json'), true);
+        $binDir = $jsonDecoded['config']['bin-dir'] ?? 'vendor/bin';
+
         $phpPath = $this->crawlerController->extensionSettings['phpPath'] . ' ';
-        $pathToTypo3 = rtrim(GeneralUtility::getIndpEnv('TYPO3_DOCUMENT_ROOT'), '/');
-        $pathToTypo3 .= rtrim(GeneralUtility::getIndpEnv('TYPO3_SITE_PATH'), '/');
-        $cliPart = 'typo3cms crawler:crawlqueue';
-        $scriptPath = $phpPath . $pathToTypo3 . $cliPart;
+        $cliPart = '/typo3cms crawler:crawlqueue';
+        $scriptPath =  $phpPath . $composerRootDir . $binDir . $cliPart;
 
         if (TYPO3_OS === 'WIN') {
             $scriptPath = str_replace('/', '\\', $scriptPath);
