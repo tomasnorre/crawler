@@ -4,7 +4,7 @@ namespace AOE\Crawler\Service;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2017 AOE GmbH <dev@aoe.com>
+ *  (c) 2019 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -233,6 +233,6 @@ class ProcessService
             $scriptPath = str_replace('/', '\\', $scriptPath);
         }
 
-        return $scriptPath;
+        return ltrim($scriptPath);
     }
 }
