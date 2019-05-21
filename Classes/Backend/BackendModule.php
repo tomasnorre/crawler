@@ -1388,7 +1388,7 @@ class BackendModule extends AbstractFunctionModule
         $crawlerLib = GeneralUtility::makeInstance(CrawlerController::class);
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['refresh_hooks'])) {
             foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['refresh_hooks'] as $objRef) {
-                $hookObj = &GeneralUtility::getUserObj($objRef);
+                $hookObj = GeneralUtility::makeInstance($objRef);
                 if (is_object($hookObj)) {
                     $hookObj->crawler_init($crawlerLib);
                 }
@@ -1409,6 +1409,7 @@ class BackendModule extends AbstractFunctionModule
                 'id' => $this->pObj->id
             ]);
         }
+
         return BackendUtility::getModuleUrl(GeneralUtility::_GP('M'), $urlParameters);
     }
 }
