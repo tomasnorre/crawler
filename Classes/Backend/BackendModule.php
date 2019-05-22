@@ -1410,6 +1410,6 @@ class BackendModule extends AbstractFunctionModule
             ]);
         }
 
-        return BackendUtility::getModuleUrl(GeneralUtility::_GP('M'), $urlParameters);
+        return BackendUtility::getModuleUrl(GeneralUtility::_GP('route'), $urlParameters);
     }
 }
