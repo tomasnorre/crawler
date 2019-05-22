@@ -209,8 +209,6 @@ class BackendModule extends AbstractFunctionModule
     {
         global $LANG, $BACK_PATH;
 
-        //$this->incLocalLang();
-
         $this->extensionSettings = ExtensionSettingUtility::loadExtensionSettings();
         if (empty($this->pObj->MOD_SETTINGS['processListMode'])) {
             $this->pObj->MOD_SETTINGS['processListMode'] = 'simple';
@@ -1172,12 +1170,6 @@ class BackendModule extends AbstractFunctionModule
     protected function makeCrawlerProcessableChecks()
     {
         global $LANG;
-
-        /*if ($this->isCrawlerUserAvailable() === false) {
-            $this->addErrorMessage($LANG->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:message.noBeUserAvailable'));
-        } elseif ($this->isCrawlerUserAdmin() === true) {
-            $this->addErrorMessage($LANG->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:message.beUserIsAdmin'));
-        }*/
 
         if ($this->isPhpForkAvailable() === false) {
             $this->addErrorMessage($LANG->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:message.noPhpForkAvailable'));
