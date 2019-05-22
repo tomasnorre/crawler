@@ -56,6 +56,7 @@ use TYPO3\CMS\Lang\LanguageService;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\StartTimeRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\EndTimeRestriction;
+use TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser;
 
 /**
  * Class CrawlerController
@@ -1211,8 +1212,7 @@ class CrawlerController
         }
 
         $queryBuilder
-            ->delete()
-            ->from($this->tableName)
+            ->delete($this->tableName)
             ->where($realWhere)
             ->execute();
     }
@@ -1385,9 +1385,10 @@ class CrawlerController
 
         $statement = $this->queryBuilder
             ->andWhere('exec_time != 0')
-            ->addWhere('process_id != 0')
-            ->addWhere($this->queryBuilder->expr()->eq('page_id', $this->queryBuilder->createNamedParameter($fieldArray['page_id'], \PDO::PARAM_INT)))
-            ->addWhere($this->queryBuilder->expr()->eq('parameters_hash', $this->queryBuilder->createNamedParameter($fieldArray['parameters_hash'], \PDO::PARAM_STR)));
+            ->andWhere('process_id != 0')
+            ->andWhere($this->queryBuilder->expr()->eq('page_id', $this->queryBuilder->createNamedParameter($fieldArray['page_id'], \PDO::PARAM_INT)))
+            ->andWhere($this->queryBuilder->expr()->eq('parameters_hash', $this->queryBuilder->createNamedParameter($fieldArray['parameters_hash'], \PDO::PARAM_STR)))
+            ->execute();
 
         while($row = $statement->fetch()) {
             $rows[] = $row['qid'];
@@ -2442,8 +2443,7 @@ class CrawlerController
             $purgeDate = $this->getCurrentTime() - 24 * 60 * 60 * intval($this->extensionSettings['purgeQueueDays']);
 
             $del = $this->queryBuilder
-                ->delete()
-                ->from('tx_crawler_queue')
+                ->delete('tx_crawler_queue')
                 ->where(
                     'exec_time != 0 AND exec_time < ' . $purgeDate
                 );
@@ -2586,7 +2586,7 @@ class CrawlerController
 
         $statement = $this->queryBuilder
             ->select('process_id', 'ttl')
-            ->from('tx_crawler_queue')
+            ->from('tx_crawler_process')
             ->where(
                 'active = 1 AND deleted = 0'
             )
@@ -2606,8 +2606,8 @@ class CrawlerController
         if ($processCount < intval($this->extensionSettings['processLimit'])) {
             $this->CLI_debug("add process " . $this->CLI_buildProcessId() . " (" . ($processCount + 1) . "/" . intval($this->extensionSettings['processLimit']) . ")");
 
-            GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('tx_crawler_queue')->insert(
-                'tx_crawler_queue',
+            GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('tx_crawler_process')->insert(
+                'tx_crawler_process',
                 [
                     'process_id' => $id,
                     'active' => 1,
@@ -2656,34 +2656,22 @@ class CrawlerController
 
         $this->queryBuilder
         ->update('tx_crawler_queue', 'q')
-        ->join(
-            'q',
-            'tx_crawler_process',
-            'p',
-            'q.process_id = p.process_id'
-        )
         ->where(
-            $this->queryBuilder->expr()->eq('p.active', 0),
-            $this->queryBuilder->expr()->eq('p.deleted', 0)
+            'q.process_id IN(SELECT p.process_id FROM tx_crawler_process as p WHERE p.active = 0 and p.deleted = 0)'
         )
         ->set('q.process_scheduled', 0)
         ->set('q.process_id', '')
         ->execute();
 
         // FIXME: Not entirely sure that this is equivalent to the previous version
+        $this->queryBuilder->resetQueryPart('set');
+
         $this->queryBuilder
             ->update('tx_crawler_process', 'p')
-            ->leftJoin(
-                'p',
-                'tx_crawler_queue',
-                'q',
-                'q.process_id = p.process_id'
-            )
             ->where(
                 $this->queryBuilder->expr()->eq('p.active', 0),
                 $this->queryBuilder->expr()->eq('p.deleted', 0),
-                $this->queryBuilder->expr()->eq('q.exec_time', 0),
-                $this->queryBuilder->expr()->isNull('q.exec_time', 0)
+                'p.process_id IN(SELECT q.process_id FROM tx_crawler_queue as q WHERE q.exec_time = 0)'
             )
             ->set('p.deleted', 1)
             ->set('p.system_process_id', 0)
@@ -2707,17 +2695,22 @@ class CrawlerController
         $this->queryBuilder
             ->update('tx_crawler_process')
             ->where(
-                $this->queryBuilder->expr()->eq('exec_time', 0),
-                $this->queryBuilder->expr()->in('process_id', $releaseIds),
+                'NOT EXISTS (
+                SELECT * FROM tx_crawler_queue
+                    WHERE tx_crawler_queue.process_id = tx_crawler_process.process_id
+                    AND tx_crawler_queue.exec_time = 0
+                )',
+                $this->queryBuilder->expr()->in('process_id', $this->queryBuilder->createNamedParameter($releaseIds, Connection::PARAM_STR_ARRAY)),
                 $this->queryBuilder->expr()->eq('deleted', 0)
             )
             ->set('active', 0)
             ->execute();
+        $this->queryBuilder->resetQueryPart('set');
         $this->queryBuilder
             ->update('tx_crawler_queue')
             ->where(
                 $this->queryBuilder->expr()->eq('exec_time', 0),
-                $this->queryBuilder->expr()->in('process_id', $releaseIds),
+                $this->queryBuilder->expr()->in('process_id', $this->queryBuilder->createNamedParameter($releaseIds, Connection::PARAM_STR_ARRAY)),
                 $this->queryBuilder->expr()->eq('deleted', 0)
             )
             ->set('process_scheduled', 0)
@@ -2742,8 +2735,7 @@ class CrawlerController
     public function CLI_deleteProcessesMarkedDeleted()
     {
         $this->queryBuilder
-            ->delete()
-            ->from('tx_crawler_process')
+            ->delete('tx_crawler_process')
             ->where('deleted = 1');
     }
 
