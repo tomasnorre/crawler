@@ -1410,8 +1410,6 @@ class BackendModule extends AbstractFunctionModule
             ]);
         }
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
-        return $uriBuilder->buildUriFromRoute('info', $uriParameters);
-
-        return BackendUtility::getModuleUrl(GeneralUtility::_GP('route'), $urlParameters);
+        return $uriBuilder->buildUriFromRoute('info', $urlParameters);
     }
 }
