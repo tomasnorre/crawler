@@ -55,6 +55,7 @@ use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
+use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 
 /**
  * Class BackendModule
@@ -1399,17 +1400,17 @@ class BackendModule extends AbstractFunctionModule
     /**
      * Returns the URL to the current module, including $_GET['id'].
      *
-     * @param array $urlParameters optional parameters to add to the URL
+     * @param array $uriParameters optional parameters to add to the URL
      * @return string
      */
-    protected function getModuleUrl(array $urlParameters = [])
+    protected function getModuleUrl(array $uriParameters = [])
     {
-        if ($this->pObj->id) {
-            $urlParameters = array_merge($urlParameters, [
-                'id' => $this->pObj->id
+        if (GeneralUtility::_GP('id')) {
+            $uriParameters = array_merge($uriParameters, [
+                'id' => GeneralUtility::_GP('id')
             ]);
         }
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
-        return $uriBuilder->buildUriFromRoute('info', $urlParameters);
+        return $uriBuilder->buildUriFromRoute('info', $uriParameters);
     }
 }
