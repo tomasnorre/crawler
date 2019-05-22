@@ -1594,7 +1594,7 @@ class CrawlerController
         if (is_array($parameters)) {
             if ($parameters['_CALLBACKOBJ']) { // Calling object:
                 $objRef = $parameters['_CALLBACKOBJ'];
-                $callBackObj = &GeneralUtility::getUserObj($objRef);
+                $callBackObj = GeneralUtility::makeInstance($objRef);
                 if (is_object($callBackObj)) {
                     unset($parameters['_CALLBACKOBJ']);
                     $result = ['content' => serialize($callBackObj->crawler_execute($parameters, $this))];
@@ -2593,7 +2593,7 @@ class CrawlerController
         global $TYPO3_CONF_VARS;
         if (is_array($TYPO3_CONF_VARS['EXTCONF']['crawler']['cli_hooks'])) {
             foreach ($TYPO3_CONF_VARS['EXTCONF']['crawler']['cli_hooks'] as $objRef) {
-                $hookObj = &GeneralUtility::getUserObj($objRef);
+                $hookObj = GeneralUtility::makeInstance($objRef);
                 if (is_object($hookObj)) {
                     $hookObj->crawler_init($this);
                 }
