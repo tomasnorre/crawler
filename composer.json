@@ -17,7 +17,7 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "php": ">=5.6",
+        "php": ">=7.2",
         "typo3/cms-core": "^7.6 || ^8.7 || ^9.5",
         "typo3/cms-beuser": "*",
         "typo3/cms-frontend": "*",
