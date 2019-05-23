@@ -6,4 +6,5 @@ Adding the name to the list is optional, email as well if you want your name on 
 Thanks for helping out.
 
 * Tomas Norre Mikkelsen <tomasnorre@gmail.com>
+* Tizian Schmidlin <tizian.schmidlin@gmail.com>
 
