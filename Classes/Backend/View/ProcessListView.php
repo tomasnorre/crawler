@@ -29,6 +29,7 @@ use AOE\Crawler\Domain\Model\ProcessCollection;
 use AOE\Crawler\Utility\ButtonUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 
 /**
  * Class ProcessListView
@@ -364,7 +365,7 @@ class ProcessListView
         return ButtonUtility::getLinkButton(
             'actions-refresh',
             $this->getLLLabel('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.refresh'),
-            'window.location=\'' . BackendUtility::getModuleUrl('web_info') . '&SET[crawlaction]=multiprocess&id=' . $this->pageId . '\';'
+            'window.location=\'' . $this->getModuleUrl('web_info') . '&SET[crawlaction]=multiprocess&id=' . $this->pageId . '\';'
         );
     }
 
@@ -380,14 +381,14 @@ class ProcessListView
             return ButtonUtility::getLinkButton(
                 'tx-crawler-stop',
                 $this->getLLLabel('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.disablecrawling'),
-                'window.location=\'' . BackendUtility::getModuleUrl('web_info') . '&action=stopCrawling\';'
+                'window.location=\'' . $this->getModuleUrl('web_info') . '&action=stopCrawling\';'
             );
         } else {
             // TODO: Icon Should be bigger
             return ButtonUtility::getLinkButton(
                 'tx-crawler-start',
                 $this->getLLLabel('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.enablecrawling'),
-                'window.location=\'' . BackendUtility::getModuleUrl('web_info') . '&action=resumeCrawling\';'
+                'window.location=\'' . $this->getModuleUrl('web_info') . '&action=resumeCrawling\';'
             );
         }
     }
@@ -405,13 +406,13 @@ class ProcessListView
             return ButtonUtility::getLinkButton(
                 'actions-document-view',
                 $this->getLLLabel('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.show.running'),
-                'window.location=\'' . BackendUtility::getModuleUrl('web_info') . '&SET[processListMode]=simple\';'
+                'window.location=\'' . $this->getModuleUrl('web_info') . '&SET[processListMode]=simple\';'
             );
         } elseif ($this->getMode() == 'simple') {
             return ButtonUtility::getLinkButton(
                 'actions-document-view',
                 $this->getLLLabel('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.show.all'),
-                'window.location=\'' . BackendUtility::getModuleUrl('web_info') . '&SET[processListMode]=detail\';'
+                'window.location=\'' . $this->getModuleUrl('web_info') . '&SET[processListMode]=detail\';'
             );
         }
     }
@@ -429,7 +430,7 @@ class ProcessListView
             return ButtonUtility::getLinkButton(
                 'actions-add',
                 $this->getLLLabel('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.process.add'),
-                'window.location=\'' . BackendUtility::getModuleUrl('web_info') . '&action=addProcess\';'
+                'window.location=\'' . $this->getModuleUrl('web_info') . '&action=addProcess\';'
             );
         } else {
             return '';
@@ -464,5 +465,22 @@ class ProcessListView
     protected function getLLLabel($label)
     {
         return $GLOBALS['LANG']->sL($label);
+    }
+
+    /**
+     * Generate module url
+     *
+     * @param string $route The route to generate the url to
+     * @param array $uriParameters Additional parameters for the uri
+     * @return string
+     */
+    private function getModuleUrl($route, $uriParameters = [])
+    {
+        if (GeneralUtility::_GP('id')) {
+            $uriParameters = array_merge($uriParameters, [
+                'id' => GeneralUtility::_GP('id')
+            ]);
+        }
+        return GeneralUtility::makeInstance(UriBuilder::class)->buildUriFromRoute('info', $uriParameters);
     }
 }
