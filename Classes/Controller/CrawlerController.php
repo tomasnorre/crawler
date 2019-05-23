@@ -41,8 +41,10 @@ use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\DatabaseConnection;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Core\Log\Logger;
 use TYPO3\CMS\Core\Log\LogLevel;
 use TYPO3\CMS\Core\TimeTracker\NullTimeTracker;
+use TYPO3\CMS\Core\TimeTracker\TimeTracker;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -205,6 +207,11 @@ class CrawlerController
 
 
     /**
+     * @var Logger
+     */
+    private $logger;
+
+    /**
      * Method to set the accessMode can be gui, cli or cli_im
      *
      * @return string
@@ -265,6 +272,16 @@ class CrawlerController
     public function getProcessFilename()
     {
         return $this->processFilename;
+    }
+
+    /**
+     * @return Logger
+     */
+    private function getLogger(): Logger {
+        if($this->logger === null) {
+            $this->logger = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Log\LogManager::class)->getLogger(__CLASS__);
+        }
+        return $this->logger;
     }
 
     /************************************
@@ -1424,7 +1441,10 @@ class CrawlerController
     {
         $ret = 0;
         if ($this->debugMode) {
-            GeneralUtility::devlog('crawler-readurl start ' . microtime(true), __FUNCTION__);
+            $this->getLogger()->log(
+                LogLevel::DEBUG,
+                'crawler-readurl start ' . microtime(true)
+            );
         }
         // Get entry:
         $this->queryBuilder
@@ -1512,7 +1532,10 @@ class CrawlerController
             );
 
         if ($this->debugMode) {
-            GeneralUtility::devlog('crawler-readurl stop ' . microtime(true), __FUNCTION__);
+            $this->getLogger()->log(
+                LogLevel::DEBUG,
+                'crawler-readurl stop ' . microtime(true)
+            );
         }
 
         return $ret;
@@ -1571,7 +1594,7 @@ class CrawlerController
         if (is_array($parameters)) {
             if ($parameters['_CALLBACKOBJ']) { // Calling object:
                 $objRef = $parameters['_CALLBACKOBJ'];
-                $callBackObj = &GeneralUtility::getUserObj($objRef);
+                $callBackObj = GeneralUtility::makeInstance($objRef);
                 if (is_object($callBackObj)) {
                     unset($parameters['_CALLBACKOBJ']);
                     $result = ['content' => serialize($callBackObj->crawler_execute($parameters, $this))];
@@ -1600,7 +1623,7 @@ class CrawlerController
      * @param string $crawlerId Crawler ID string (qid + hash to verify)
      * @param integer $timeout Timeout time
      * @param integer $recursion Recursion limiter for 302 redirects
-     * @return array
+     * @return array|boolean
      */
     public function requestUrl($originalUrl, $crawlerId, $timeout = 2, $recursion = 10)
     {
@@ -1612,16 +1635,20 @@ class CrawlerController
         $url = parse_url($originalUrl);
 
         if ($url === false) {
-            if (TYPO3_DLOG) {
-                GeneralUtility::devLog(sprintf('Could not parse_url() for string "%s"', $url), 'crawler', 4, ['crawlerId' => $crawlerId]);
-            }
+            $this->getLogger()->log(
+                LogLevel::DEBUG,
+                sprintf('Could not parse_url() for string "%s"', $url),
+                ['crawlerId' => $crawlerId]
+            );
             return false;
         }
 
         if (!in_array($url['scheme'], ['','http','https'])) {
-            if (TYPO3_DLOG) {
-                GeneralUtility::devLog(sprintf('Scheme does not match for url "%s"', $url), 'crawler', 4, ['crawlerId' => $crawlerId]);
-            }
+            $this->getLogger()->log(
+                LogLevel::DEBUG,
+                sprintf('Scheme does not match for url "%s"', $url),
+                ['crawlerId' => $crawlerId]
+            );
             return false;
         }
 
@@ -1655,9 +1682,11 @@ class CrawlerController
         $fp = fsockopen($host, $port, $errno, $errstr, $timeout);
 
         if (!$fp) {
-            if (TYPO3_DLOG) {
-                GeneralUtility::devLog(sprintf('Error while opening "%s"', $url), 'crawler', 4, ['crawlerId' => $crawlerId]);
-            }
+            $this->getLogger()->log(
+                LogLevel::DEBUG,
+                sprintf('Error while opening "%s"', $url),
+                ['crawlerId' => $crawlerId]
+            );
             return false;
         } else {
             // Request message:
@@ -1685,9 +1714,11 @@ class CrawlerController
                 if (is_array($newRequestUrl)) {
                     $result = array_merge(['parentRequest' => $result], $newRequestUrl);
                 } else {
-                    if (TYPO3_DLOG) {
-                        GeneralUtility::devLog(sprintf('Error while opening "%s"', $url), 'crawler', 4, ['crawlerId' => $crawlerId]);
-                    }
+                    $this->getLogger()->log(
+                        LogLevel::DEBUG,
+                        sprintf('Error while opening "%s"', $url),
+                        ['crawlerId' => $crawlerId]
+                    );
                     return false;
                 }
             }
@@ -1778,7 +1809,11 @@ class CrawlerController
         if (!empty($this->extensionSettings['logFileName'])) {
             $fileResult = @file_put_contents($this->extensionSettings['logFileName'], date('Ymd His') . ' ' . $message . PHP_EOL, FILE_APPEND);
             if (!$fileResult) {
-                GeneralUtility::devLog('File "' . $this->extensionSettings['logFileName'] . '" could not be written, please check file permissions.', 'crawler', LogLevel::INFO);
+
+                $this->getLogger()->log(
+                    LogLevel::INFO,
+                    sprintf('File "%s" could not be written, please check file permissions.', $this->extensionSettings['logFileName'])
+                );
             }
         }
     }
@@ -2448,7 +2483,11 @@ class CrawlerController
                     'exec_time != 0 AND exec_time < ' . $purgeDate
                 );
             if (false == $del) {
-                GeneralUtility::devLog('Records could not be deleted.', 'crawler', LogLevel::INFO);
+
+                $this->getLogger()->log(
+                    LogLevel::INFO,
+                    'Records could not be deleted.'
+                );
             }
         }
 
@@ -2554,7 +2593,7 @@ class CrawlerController
         global $TYPO3_CONF_VARS;
         if (is_array($TYPO3_CONF_VARS['EXTCONF']['crawler']['cli_hooks'])) {
             foreach ($TYPO3_CONF_VARS['EXTCONF']['crawler']['cli_hooks'] as $objRef) {
-                $hookObj = &GeneralUtility::getUserObj($objRef);
+                $hookObj = GeneralUtility::makeInstance($objRef);
                 if (is_object($hookObj)) {
                     $hookObj->crawler_init($this);
                 }
@@ -2670,10 +2709,8 @@ class CrawlerController
             ->update('tx_crawler_process', 'p')
             ->where(
                 $this->queryBuilder->expr()->eq('p.active', 0),
-                $this->queryBuilder->expr()->eq('p.deleted', 0),
                 'p.process_id IN(SELECT q.process_id FROM tx_crawler_queue as q WHERE q.exec_time = 0)'
             )
-            ->set('p.deleted', 1)
             ->set('p.system_process_id', 0)
             ->execute();
         // previous version for reference
@@ -2872,20 +2909,18 @@ class CrawlerController
     {
         EidUtility::initTCA();
         if (!is_object($GLOBALS['TT'])) {
-            $GLOBALS['TT'] = new NullTimeTracker();
+            $GLOBALS['TT'] = new TimeTracker(false);
             $GLOBALS['TT']->start();
         }
 
         $GLOBALS['TSFE'] = GeneralUtility::makeInstance(TypoScriptFrontendController::class, $GLOBALS['TYPO3_CONF_VARS'], $id, $typeNum);
         $GLOBALS['TSFE']->sys_page = GeneralUtility::makeInstance(PageRepository::class);
         $GLOBALS['TSFE']->sys_page->init(true);
-        $GLOBALS['TSFE']->connectToDB();
         $GLOBALS['TSFE']->initFEuser();
         $GLOBALS['TSFE']->determineId();
         $GLOBALS['TSFE']->initTemplate();
         $GLOBALS['TSFE']->rootLine = $GLOBALS['TSFE']->sys_page->getRootLine($id, '');
         $GLOBALS['TSFE']->getConfigArray();
-        PageGenerator::pagegenInit();
     }
 
     /**
