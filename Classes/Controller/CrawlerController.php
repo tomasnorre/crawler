@@ -205,11 +205,11 @@ class CrawlerController
      */
     private $cliArgs;
 
+
     /**
      * @var Logger
      */
     private $logger;
-
 
     /**
      * Method to set the accessMode can be gui, cli or cli_im
