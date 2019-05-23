@@ -76,7 +76,7 @@ class CrawlerQueueTask extends AbstractTask
 
         /** @var CrawlerController $crawlerObject */
         $crawlerObject = GeneralUtility::makeInstance(CrawlerController::class);
-        $crawlerObject->CLI_main_im();
+        $crawlerObject->CLI_main_im($_SERVER['argv']);
         return true;
     }
 
