@@ -4,7 +4,7 @@ namespace AOE\Crawler\Tests\Functional\Domain\Repository;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2016 AOE GmbH <dev@aoe.com>
+ *  (c) 2019 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -71,23 +71,23 @@ class ProcessRepositoryTest extends FunctionalTestCase
 
     /**
      * @test
-     *
-     * @param $orderField
-     * @param $orderDirection
-     * @param $itemCount
-     * @param $offset
-     * @param $where
-     * @param $expected
-     *
-     * @dataProvider findAllDataProvider
      */
-    public function findAll($orderField, $orderDirection, $itemCount, $offset, $where, $expected)
+    public function findAllReturnsAll(): void
     {
-        $actual = $this->subject->findAll($orderField, $orderDirection, $itemCount, $offset, $where);
-
         $this->assertSame(
-            $expected,
-            $actual->getProcessIds()
+            5,
+            $this->subject->findAll()->count()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function findAllActiveReturnsActive(): void
+    {
+        $this->assertSame(
+            3,
+            $this->subject->findAllActive()->count()
         );
     }
 
@@ -96,87 +96,17 @@ class ProcessRepositoryTest extends FunctionalTestCase
      */
     public function removeByProcessId()
     {
-        $this->assertInstanceOf(
-            ProcessCollection::class,
-            $this->subject->findAll('', '', '', '', 'process_id = 1002')
-        );
-
-        $this->assertEquals(
+        $this->assertSame(
             5,
             $this->subject->findAll()->count()
         );
 
         $this->subject->removeByProcessId(1002);
 
-        $this->assertEquals(
+        $this->assertSame(
             4,
             $this->subject->findAll()->count()
         );
-    }
-
-    /**
-     * @return array
-     */
-    public function findAllDataProvider()
-    {
-        return [
-            'No Values set, all defaults will be used' => [
-                'orderField' => '',
-                'oderDirection' => '',
-                'itemCount' => '',
-                'offset' => '',
-                'where' => '',
-                'expected' => [1004,1003,1002, 1001, 1000]
-            ],
-            'OrderField is set, rest of fields will be using default values' => [
-                'orderField' => 'ttl',
-                'oderDirection' => '',
-                'itemCount' => '',
-                'offset' => '',
-                'where' => '',
-                'expected' => [1001, 1002, 1003, 1004, 1000]
-            ],
-            'OrderDirection is set, rest of fields will be using default values' => [
-                'orderField' => '',
-                'oderDirection' => 'ASC',
-                'itemCount' => '',
-                'offset' => '',
-                'where' => '',
-                'expected' => [1000, 1001, 1002, 1003, 1004]
-            ],
-            'ItemCount is set, rest of fields will be using default values' => [
-                'orderField' => '',
-                'oderDirection' => '',
-                'itemCount' => '2',
-                'offset' => '',
-                'where' => '',
-                'expected' => [1004, 1003]
-            ],
-            'Offset is set, rest of fields will be using default values' => [
-                'orderField' => '',
-                'oderDirection' => '',
-                'itemCount' => '',
-                'offset' => '1',
-                'where' => '',
-                'expected' => [1003, 1002, 1001, 1000]
-            ],
-            'where is set, rest of fields will be using default values' => [
-                'orderField' => '',
-                'oderDirection' => '',
-                'itemCount' => '',
-                'offset' => '',
-                'where' => 'ttl < 20',
-                'expected' => [1000]
-            ],
-            'All fields are set' => [
-                'orderField' => 'process_id',
-                'oderDirection' => 'ASC',
-                'itemCount' => '1',
-                'offset' => '1',
-                'where' => 'process_id > 1000',
-                'expected' => [1002]
-            ],
-        ];
     }
 
     /**
@@ -184,7 +114,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
      */
     public function countActive()
     {
-        $this->assertEquals(
+        $this->assertSame(
             3,
             $this->subject->countActive()
         );
@@ -195,7 +125,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
      */
     public function countNotTimeouted()
     {
-        $this->assertEquals(
+        $this->assertSame(
             2,
             $this->subject->countNotTimeouted(11)
         );
@@ -206,7 +136,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
      */
     public function countAll()
     {
-        $this->assertEquals(
+        $this->assertSame(
             5,
             $this->subject->countAll()
         );
