@@ -1468,10 +1468,9 @@ class CrawlerController
         if ($parameters['rootTemplatePid']) {
             $this->initTSFE((int)$parameters['rootTemplatePid']);
         } else {
-            GeneralUtility::sysLog(
-                'Page with (' . $queueRec['page_id'] . ') could not be crawled, please check your crawler configuration. Perhaps no Root Template Pid is set',
-                'crawler',
-                GeneralUtility::SYSLOG_SEVERITY_WARNING
+            $this->getLogger()->log(
+                LogLevel::WARNING,
+                'Page with (' . $queueRec['page_id'] . ') could not be crawled, please check your crawler configuration. Perhaps no Root Template Pid is set'
             );
         }
 
