@@ -10,10 +10,10 @@ $EM_CONF[$_EXTKEY] = [
     'author' => 'Kasper Skaarhoj, Daniel Poetzinger, Fabrizio Branca, Tolleiv Nietsch, Timo Schmidt, Michael Klapper, Stefan Rotsch, Tomas Norre Mikkelsen',
     'author_email' => 'dev@aoe.com',
     'author_company' => 'AOE GmbH',
-    'version' => '6.3.0-dev',
+    'version' => '9.0.0-dev',
     'constraints' => [
         'depends' => [
-            'typo3' => '8.7.99-9.5.99',
+            'typo3' => '9.5.0-9.5.99',
         ],
         'conflicts' => [],
         'suggests' => [],
