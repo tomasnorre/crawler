@@ -70,8 +70,6 @@ class CrawlerApi
     public function __construct()
     {
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
-
         $this->crawlerController = $objectManager->get(CrawlerController::class);
     }
 
@@ -222,7 +220,8 @@ class CrawlerApi
     protected function countEntriesInQueueForPageByScheduleTime($page_uid, $schedule_timestamp)
     {
 
-        $count = $this->queryBuilder
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $count = $queryBuilder
             ->count('*')
             ->from($this->tableName);
 
@@ -230,17 +229,17 @@ class CrawlerApi
         //un-timed elements need an exec_time with 0 because they can occur multiple times
         if ($schedule_timestamp == 0) {
             $count->where(
-                $this->queryBuilder->expr()->eq('page_id', $page_uid),
-                $this->queryBuilder->expr()->eq('exec_time', 0),
-                $this->queryBuilder->expr()->eq('scheduled', $schedule_timestamp)
+                $queryBuilder->expr()->eq('page_id', $page_uid),
+                $queryBuilder->expr()->eq('exec_time', 0),
+                $queryBuilder->expr()->eq('scheduled', $schedule_timestamp)
             );
         } else {
             //timed elements have got a fixed schedule time, if a record with this time
             //exists it is maybe queued for the future, or is has been queue for the past and therefore
             //also been processed.
             $count->where(
-                $this->queryBuilder->expr()->eq('page_id', $page_uid),
-                $this->queryBuilder->expr()->eq('scheduled', $schedule_timestamp)
+                $queryBuilder->expr()->eq('page_id', $page_uid),
+                $queryBuilder->expr()->eq('scheduled', $schedule_timestamp)
             );
         }
 
@@ -267,26 +266,27 @@ class CrawlerApi
 
         $isPageInQueue = false;
 
-        $this->queryBuilder
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $queryBuilder
             ->count('*')
             ->from($this->tableName)
             ->where(
-                $this->queryBuilder->expr()->eq('page_id', $this->queryBuilder->createNamedParameter($uid, \PDO::PARAM_INT))
+                $queryBuilder->expr()->eq('page_id', $queryBuilder->createNamedParameter($uid, \PDO::PARAM_INT))
             );
 
         if (false !== $unprocessed_only) {
-            $this->queryBuilder->andWhere($this->queryBuilder->expr()->eq('exec_time', 0));
+            $queryBuilder->andWhere($queryBuilder->expr()->eq('exec_time', 0));
         }
 
         if (false !== $timed_only) {
-            $this->queryBuilder->andWhere($this->queryBuilder->expr()->neq('scheduled', 0));
+            $queryBuilder->andWhere($queryBuilder->expr()->neq('scheduled', 0));
         }
 
         if (false !== $timestamp) {
-            $this->queryBuilder->andWhere($this->queryBuilder->expr()->neq('scheduled', $this->queryBuilder->createNamedParameter($timestamp, \PDO::PARAM_INT)));
+            $queryBuilder->andWhere($queryBuilder->expr()->neq('scheduled', $queryBuilder->createNamedParameter($timestamp, \PDO::PARAM_INT)));
         }
 
-        $count = $this->queryBuilder->execute()->fetchColumn(0);
+        $count = $queryBuilder->execute()->fetchColumn(0);
 
         if (false !== $count && $count > 0) {
             $isPageInQueue = true;
@@ -307,22 +307,24 @@ class CrawlerApi
     public function getLatestCrawlTimestampForPage($uid, $future_crawldates_only = false, $unprocessed_only = false)
     {
         $uid = intval($uid);
-        $query = $this->queryBuilder
+
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $query = $queryBuilder
             ->from($this->tableName)
             ->selectLiteral('max(scheduled) as latest')
             ->where(
-                $this->queryBuilder->expr()->eq('page_id', $this->queryBuilder->createNamedParameter($uid))
+                $queryBuilder->expr()->eq('page_id', $queryBuilder->createNamedParameter($uid))
             );
 
         if ($future_crawldates_only) {
             $query->andWhere(
-                $this->queryBuilder->expr()->gt('scheduled', time())
+                $queryBuilder->expr()->gt('scheduled', time())
             );
         }
 
         if ($unprocessed_only) {
             $query->andWhere(
-                $this->queryBuilder->expr()->eq('exec_time', 0)
+                $queryBuilder->expr()->eq('exec_time', 0)
             );
         }
 
@@ -351,11 +353,12 @@ class CrawlerApi
         $uid = intval($uid);
         $limit = intval($limit);
 
-        $statement = $this->queryBuilder
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $statement = $queryBuilder
             ->from($this->tableName)
             ->select('scheduled', 'exec_time', 'set_id')
             ->where(
-                $this->queryBuilder->expr()->eq('page_id', $this->queryBuilder->createNamedParameter($uid))
+                $queryBuilder->expr()->eq('page_id', $queryBuilder->createNamedParameter($uid, \PDO::PARAM_INT))
             );
         if($limit) {
             $statement->setMaxResults($limit);
@@ -373,7 +376,8 @@ class CrawlerApi
      */
     public function getUnprocessedItems()
     {
-        return $this->queryBuilder
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        return $queryBuilder
             ->select('*')
             ->from($this->tableName)
             ->where(
@@ -394,11 +398,12 @@ class CrawlerApi
      */
     public function countUnprocessedItems()
     {
-        return $this->queryBuilder
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        return $queryBuilder
             ->count('page_id')
             ->from($this->tableName)
             ->where(
-                $this->queryBuilder->expr()->eq('exec_time', 0)
+                $queryBuilder->expr()->eq('exec_time', 0)
             )
             ->execute()
             ->fetchColumn(0);
@@ -445,11 +450,12 @@ class CrawlerApi
      */
     public function removeQueueEntrie($qid)
     {
-        $this->queryBuilder
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $queryBuilder
             ->delete()
             ->from($this->tableName)
             ->where(
-                $this->queryBuilder->expr()->eq('qid', $this->queryBuilder->createNamedParameter($qid, \PDO::PARAM_INT))
+                $queryBuilder->expr()->eq('qid', $queryBuilder->createNamedParameter($qid, \PDO::PARAM_INT))
             )
             ->execute();
     }
