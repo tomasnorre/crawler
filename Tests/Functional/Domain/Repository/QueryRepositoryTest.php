@@ -141,7 +141,7 @@ class QueryRepositoryTest extends FunctionalTestCase
      */
     public function getAvailableSets()
     {
-        $this->assertSame(
+        $this->assertEquals(
             $this->getExpectedSetsForGetAvailableSets(),
             $this->subject->getAvailableSets()
         );
