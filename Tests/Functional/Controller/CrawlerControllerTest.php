@@ -4,7 +4,7 @@ namespace AOE\Crawler\Tests\Functional\Controller;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2018 AOE GmbH <dev@aoe.com>
+ *  (c) 2019 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -107,7 +107,7 @@ class CrawlerControllerTest extends FunctionalTestCase
         $processRepository = new ProcessRepository();
 
         $expectedProcessesBeforeDeletion = 5;
-        $this->assertEquals(
+        $this->assertSame(
             $expectedProcessesBeforeDeletion,
             $processRepository->countAll()
         );
@@ -115,7 +115,7 @@ class CrawlerControllerTest extends FunctionalTestCase
         $this->subject->CLI_deleteProcessesMarkedDeleted();
 
         $expectedProcessesAfterDeletion = 3;
-        $this->assertEquals(
+        $this->assertSame(
             $expectedProcessesAfterDeletion,
             $processRepository->countAll()
         );
@@ -406,10 +406,6 @@ class CrawlerControllerTest extends FunctionalTestCase
             'Flush Queue for specific process id' => [
                 'where' => 'process_id = \'1007\'',
                 'expected' => 9
-            ],
-            'Flush Queue for where that does not exist' => [
-                'where' => 'uid > 100000',
-                'expected' => 12
             ]
         ];
     }

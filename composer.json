@@ -18,18 +18,17 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=7.2",
-        "typo3/cms-core": "^8.7 || ^9.5",
+        "typo3/cms-core": "^9.5",
         "typo3/cms-beuser": "*",
         "typo3/cms-frontend": "*",
         "typo3/cms-extensionmanager": "*"
     },
     "require-dev": {
-        "nimut/testing-framework": "^2.0 || ^4.0",
-        "helhum/typo3-console": "*",
+        "nimut/testing-framework": "^4.1",
+        "helhum/typo3-console": "^5.6",
         "nimut/typo3-complete": "^9.5"
     },
     "replace": {
-        "crawler":  "self.version",
         "typo3-ter/crawler": "self.version"
     },
     "autoload": {
@@ -39,7 +38,6 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "TYPO3\\CMS\\Core\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/core/Tests/",
             "AOE\\Crawler\\Tests\\": "Tests/"
         }
     },
@@ -66,7 +64,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "6.3.x-dev"
+            "dev-typo3v9": "9.0.0-dev"
         },
         "typo3/cms": {
             "cms-package-dir": "{$vendor-dir}/typo3/cms",

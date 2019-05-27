@@ -80,28 +80,4 @@ abstract class AbstractRepository
 
         return $count;
     }
-
-    /**
-     * @param int $processId
-     */
-    public function removeByProcessId($processId)
-    {
-        $this->queryBuilder
-            ->delete($this->tableName)
-            ->where(
-                $this->queryBuilder->expr()->eq('process_id', $this->queryBuilder->createNamedParameter($processId))
-            )
-            ->execute();
-    }
-
-    /**
-     * Returns an instance of the TYPO3 database class.
-     *
-     * @return \TYPO3\CMS\Core\Database\DatabaseConnection
-     * @deprecated since crawler v7.0.0, will be removed in crawler v8.0.0.
-     */
-    protected function getDB()
-    {
-        return $GLOBALS['TYPO3_DB'];
-    }
 }
