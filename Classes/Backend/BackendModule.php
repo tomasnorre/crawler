@@ -33,6 +33,7 @@ use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\EventDispatcher;
 use AOE\Crawler\Service\ProcessService;
+use AOE\Crawler\Utility\BackendModuleUtility;
 use AOE\Crawler\Utility\CsvUtility;
 use AOE\Crawler\Utility\ExtensionSettingUtility;
 use AOE\Crawler\Utility\IconUtility;
@@ -969,8 +970,8 @@ class BackendModule extends AbstractFunctionModule
                 $content .= '
 					<tr class="bgColor' . ($c % 2 ? '-20' : '-10') . '">
 						' . $titleClm . '
-						<td><a href="' . $this->getModuleUrl(['qid_details' => $vv['qid'], 'setID' => $setId]) . '">' . htmlspecialchars($vv['qid']) . '</a></td>
-						<td><a href="' . $this->getModuleUrl(['qid_read' => $vv['qid'], 'setID' => $setId]) . '">' . $refreshIcon . '</a></td>';
+						<td><a href="' . BackendModuleUtility::getInfoModuleUrl(['qid_details' => $vv['qid'], 'setID' => $setId]) . '">' . htmlspecialchars($vv['qid']) . '</a></td>
+						<td><a href="' . BackendModuleUtility::getInfoModuleUrl(['qid_read' => $vv['qid'], 'setID' => $setId]) . '">' . $refreshIcon . '</a></td>';
                 foreach ($rowData as $fKey => $value) {
                     if (GeneralUtility::inList('url', $fKey)) {
                         $content .= '
@@ -1395,22 +1396,5 @@ class BackendModule extends AbstractFunctionModule
                 }
             }
         }
-    }
-
-    /**
-     * Returns the URL to the current module, including $_GET['id'].
-     *
-     * @param array $uriParameters optional parameters to add to the URL
-     * @return string
-     */
-    protected function getModuleUrl(array $uriParameters = [])
-    {
-        if (GeneralUtility::_GP('id')) {
-            $uriParameters = array_merge($uriParameters, [
-                'id' => GeneralUtility::_GP('id')
-            ]);
-        }
-        $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
-        return $uriBuilder->buildUriFromRoute('web_info', $uriParameters);
     }
 }
