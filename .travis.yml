@@ -7,6 +7,9 @@ php:
   - 7.2
   - 7.3
 
+services:
+  - mysql
+
 env:
   - TYPO3_VERSION=^7.6 COVERAGE=0 FUNCTIONAL=0
   - TYPO3_VERSION=^8.7 COVERAGE=0 FUNCTIONAL=0
