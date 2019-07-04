@@ -30,6 +30,7 @@ use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\EventDispatcher;
 use Helhum\Typo3Console\Mvc\Controller\CommandController;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
@@ -44,6 +45,11 @@ class CrawlerCommandController extends CommandController
     const CLI_STATUS_PROCESSED = 2; //(some) queue items where processed
     const CLI_STATUS_ABORTED = 4; //instance didn't finish
     const CLI_STATUS_POLLABLE_PROCESSED = 8;
+
+    /**
+     * @var string
+     */
+    protected $tableCrawlerProcess = 'tx_crawler_process';
 
     /**
      * Crawler Command - Cleaning up the queue.
@@ -234,7 +240,14 @@ class CrawlerCommandController extends CommandController
             }
 
             // Cleanup
-            $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_crawler_process', 'assigned_items_count = 0');
+            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableCrawlerProcess);
+            $queryBuilder
+                ->delete($this->tableCrawlerProcess)
+                ->where(
+                    $queryBuilder->expr()->eq('assigned_item_count', 0)
+                )
+                ->execute();
+
             $crawlerController->CLI_releaseProcesses($crawlerController->CLI_buildProcessId());
 
             $this->outputLine('<info>Unprocessed Items remaining:' . $queueRepository->countUnprocessedItems() . ' (' . $crawlerController->CLI_buildProcessId() . ')</info>');
