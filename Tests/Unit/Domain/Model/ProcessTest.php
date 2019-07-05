@@ -43,7 +43,7 @@ class ProcessTest extends UnitTestCase
 
     public function setUp()
     {
-        $this->subject = $this->getMock(Process::class, ['dummy'], [], '', false);
+        $this->subject = $this->createPartialMock(Process::class, ['dummy']);
         $this->subject->setActive(true);
         $this->subject->setProcessId('1234');
         $this->subject->setTtl('300');

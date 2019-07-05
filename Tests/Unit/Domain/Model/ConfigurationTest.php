@@ -43,8 +43,7 @@ class ConfigurationTest extends UnitTestCase
     {
         parent::setUp();
         /** @var Configuration subject */
-        $this->subject = $this->createMock(Configuration::class);
-
+        $this->subject = $this->createPartialMock(Configuration::class, ['dummy']);
     }
 
     /**
