@@ -56,7 +56,8 @@ class ProcessTest extends FunctionalTestCase
      */
     public function getTimeForFirstItem()
     {
-        $mockedQueueObject = new Queue(['exec_time' => 20]);
+        $mockedQueueObject = new Queue();
+        $mockedQueueObject->setExecTime(20);
         $mockedQueueRepository = $this->getAccessibleMock(QueueRepository::class, ['findYoungestEntryForProcess'], [], '', true);
         $mockedQueueRepository
             ->expects($this->any())
@@ -76,7 +77,8 @@ class ProcessTest extends FunctionalTestCase
      */
     public function getTimeForLastItem()
     {
-        $mockedQueueObject = new Queue(['exec_time' => 30]);
+        $mockedQueueObject = new Queue();
+        $mockedQueueObject->setExecTime(30);
         $mockedQueueRepository = $this->getAccessibleMock(QueueRepository::class, ['findOldestEntryForProcess'], [], '', true);
         $mockedQueueRepository
             ->expects($this->any())

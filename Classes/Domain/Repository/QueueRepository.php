@@ -75,7 +75,7 @@ class QueueRepository extends AbstractRepository
     protected function getFirstOrLastObjectByProcess($process, $orderby)
     {
         $db = $this->getDB();
-        $where = 'process_id_completed=' . $db->fullQuoteStr($process->getProcess_id(), $this->tableName) .
+        $where = 'process_id_completed=' . $db->fullQuoteStr($process->getProcessId(), $this->tableName) .
                    ' AND exec_time > 0 ';
         $limit = 1;
         $groupby = '';
@@ -101,7 +101,7 @@ class QueueRepository extends AbstractRepository
     public function countExecutedItemsByProcess($process)
     {
         return $this->countItemsByWhereClause('exec_time > 0 AND process_id_completed = ' . $this->getDB()->fullQuoteStr(
-            $process->getProcess_id(),
+            $process->getProcessId(),
                 $this->tableName
         ));
     }
@@ -116,7 +116,7 @@ class QueueRepository extends AbstractRepository
     public function countNonExecutedItemsByProcess($process)
     {
         return $this->countItemsByWhereClause('exec_time = 0 AND process_id = ' . $this->getDB()->fullQuoteStr(
-            $process->getProcess_id(),
+            $process->getProcessId(),
                 $this->tableName
         ));
     }
@@ -273,7 +273,7 @@ class QueueRepository extends AbstractRepository
 
         $rows = [];
         while (($row = $db->sql_fetch_assoc($res)) !== false) {
-            $rows[] = $row['exec_time'];
+            $rows[] = intval($row['exec_time']);
         }
 
         return $rows;

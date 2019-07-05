@@ -78,7 +78,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
     {
         $actual = $this->subject->findAll($orderField, $orderDirection, $itemCount, $offset, $where);
 
-        $this->assertEquals(
+        $this->assertSame(
             $expected,
             $actual->getProcessIds()
         );
@@ -96,7 +96,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
                 'itemCount' => '',
                 'offset' => '',
                 'where' => '',
-                'expected' => [1004,1003,1002, 1001, 1000]
+                'expected' => ['1004', '1003', '1002', '1001', '1000']
             ],
             'OrderField is set, rest of fields will be using default values' => [
                 'orderField' => 'ttl',
@@ -104,7 +104,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
                 'itemCount' => '',
                 'offset' => '',
                 'where' => '',
-                'expected' => [1001, 1002, 1003, 1004, 1000]
+                'expected' => ['1001', '1002', '1003', '1004', '1000']
             ],
             'OrderDirection is set, rest of fields will be using default values' => [
                 'orderField' => '',
@@ -112,7 +112,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
                 'itemCount' => '',
                 'offset' => '',
                 'where' => '',
-                'expected' => [1000, 1001, 1002, 1003, 1004]
+                'expected' => ['1000', '1001', '1002', '1003', '1004']
             ],
             'ItemCount is set, rest of fields will be using default values' => [
                 'orderField' => '',
@@ -120,7 +120,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
                 'itemCount' => '2',
                 'offset' => '',
                 'where' => '',
-                'expected' => [1004, 1003]
+                'expected' => ['1004', '1003']
             ],
             'Offset is set, rest of fields will be using default values' => [
                 'orderField' => '',
@@ -128,7 +128,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
                 'itemCount' => '',
                 'offset' => '1',
                 'where' => '',
-                'expected' => [1003, 1002, 1001, 1000]
+                'expected' => ['1003', '1002', '1001', '1000']
             ],
             'where is set, rest of fields will be using default values' => [
                 'orderField' => '',
@@ -136,7 +136,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
                 'itemCount' => '',
                 'offset' => '',
                 'where' => 'ttl < 20',
-                'expected' => [1000]
+                'expected' => ['1000']
             ],
             'All fields are set' => [
                 'orderField' => 'process_id',
@@ -144,7 +144,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
                 'itemCount' => '1',
                 'offset' => '1',
                 'where' => 'process_id > 1000',
-                'expected' => [1002]
+                'expected' => ['1002']
             ],
         ];
     }

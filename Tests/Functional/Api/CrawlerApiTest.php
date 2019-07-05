@@ -324,7 +324,7 @@ class CrawlerApiTest extends FunctionalTestCase
      */
     public function canCreateQueueEntriesUsingConfigurationRecord()
     {
-        $expectedParameter = 'a:4:{s:3:"url";s:49:"http://www.testcase.de/index.php?id=7&L=0&S=CRAWL";s:16:"procInstructions";a:1:{i:0;s:20:"tx_staticpub_publish";}s:15:"procInstrParams";a:1:{s:21:"tx_staticpub_publish.";a:1:{s:16:"includeResources";s:7:"relPath";}}s:15:"rootTemplatePid";i:1;}';
+        $expectedParameter = 'a:4:{s:3:"url";s:49:"http://www.testcase.de/index.php?id=7&L=0&S=CRAWL";s:16:"procInstructions";a:1:{i:0;s:20:"tx_staticpub_publish";}s:15:"procInstrParams";a:0:{}s:15:"rootTemplatePid";i:1;}';
 
         $this->importDataSet(dirname(__FILE__) . '/../data/canCreateQueueEntriesUsingConfigurationRecord.xml');
         $crawlerApi = $this->getMockedCrawlerAPI(100000);
@@ -332,26 +332,26 @@ class CrawlerApiTest extends FunctionalTestCase
         $crawlerApi->addPageToQueueTimed(7, 100059);
 
         $queueItems = $crawlerApi->getUnprocessedItems();
+        $this->assertSame($queueItems[0]['page_id'], '7');
+        $this->assertSame($queueItems[0]['scheduled'], '100011');
 
-        $this->assertEquals($queueItems[0]['page_id'], 7);
-        $this->assertEquals($queueItems[0]['scheduled'], 100011);
         $this->assertEquals(
             $expectedParameter,
             $queueItems[0]['parameters'],
             'Wrong queue parameters created by crawler lib for configuration record'
         );
+        $this->assertSame($queueItems[1]['page_id'], '7');
+        $this->assertSame($queueItems[1]['scheduled'], '100059');
 
-        $this->assertEquals($queueItems[1]['page_id'], 7);
-        $this->assertEquals($queueItems[1]['scheduled'], 100059);
-        $this->assertEquals(
+        $this->assertSame(
             $expectedParameter,
             $queueItems[1]['parameters'],
             'Wrong queue parameters created by crawler lib for configuration record'
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             $crawlerApi->countUnprocessedItems(),
-            2,
+            '2',
             'Could not add pages to queue configured by record'
         );
     }

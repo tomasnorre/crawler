@@ -153,6 +153,8 @@ class CrawlerApi
      *
      * @param int $uid pageid
      * @param int $time timestamp
+     *
+     * @throws \Exception
      */
     public function addPageToQueueTimed($uid, $time)
     {
@@ -334,9 +336,13 @@ class CrawlerApi
      */
     public function getUnprocessedItems()
     {
-        $query = '*';
-        $where = 'exec_time = 0';
-        $rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($query, 'tx_crawler_queue', $where, '', 'page_id, scheduled');
+        $rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+            '*',
+            'tx_crawler_queue',
+            'exec_time = 0',
+            '',
+            'page_id, scheduled'
+        );
 
         return $rows;
     }

@@ -71,13 +71,15 @@ class QueryRepositoryTest extends FunctionalTestCase
      */
     public function getFirstOrLastObjectByProcess($processId, $orderBy, $expected)
     {
-        $process = new Process(['process_id' => $processId]);
+        /** @var Process $process */
+        $process = new Process();
+        $process->setProcessId($processId);
 
         $mockedRepository = $this->getAccessibleMock(QueueRepository::class, ['dummy']);
         /** @var Queue $result */
         $result = $mockedRepository->_call('getFirstOrLastObjectByProcess', $process, $orderBy);
 
-        $this->assertEquals(
+        $this->assertSame(
             $expected,
             $result->getRow()
         );
@@ -88,7 +90,8 @@ class QueryRepositoryTest extends FunctionalTestCase
      */
     public function findYoungestEntryForProcessReturnsQueueEntry()
     {
-        $process = new Process(['process_id' => 'qwerty']);
+        $process = new Process();
+        $process->setProcessId('qwerty');
 
         $this->assertEquals(
             [
@@ -115,7 +118,8 @@ class QueryRepositoryTest extends FunctionalTestCase
      */
     public function findOldestEntryForProcessReturnsQueueEntry()
     {
-        $process = new Process(['process_id' => 'qwerty']);
+        $process = new Process();
+        $process->setProcessId('qwerty');
 
         $this->assertEquals(
             [
@@ -142,11 +146,12 @@ class QueryRepositoryTest extends FunctionalTestCase
      */
     public function countExecutedItemsByProcessReturnsInteger()
     {
-        $process = new Process(['process_id' => 'qwerty']);
+        $process = new Process();
+        $process->setProcessId('qwerty');
 
-        $this->assertEquals(
+        $this->assertSame(
             2,
-            $this->subject->countExecutedItemsByProcess($process)
+            intval($this->subject->countExecutedItemsByProcess($process))
         );
     }
 
@@ -155,7 +160,8 @@ class QueryRepositoryTest extends FunctionalTestCase
      */
     public function countNonExecutedItemsByProcessReturnsInteger()
     {
-        $process = new Process(['process_id' => '1007']);
+        $process = new Process();
+        $process->setProcessId('1007');
 
         $this->assertEquals(
             2,
@@ -233,22 +239,22 @@ class QueryRepositoryTest extends FunctionalTestCase
         $expectedArray = [
             0 => [
                 'configuration' => 'FirstConfiguration',
-                'unprocessed' => 2,
-                'assignedButUnprocessed' => 0
+                'unprocessed' => '2',
+                'assignedButUnprocessed' => '0'
             ],
             1 => [
                 'configuration' => 'SecondConfiguration',
-                'unprocessed' => 1,
-                'assignedButUnprocessed' => 1
+                'unprocessed' => '1',
+                'assignedButUnprocessed' => '1'
             ],
             2 => [
                 'configuration' => 'ThirdConfiguration',
-                'unprocessed' => 2,
-                'assignedButUnprocessed' => 2
+                'unprocessed' => '2',
+                'assignedButUnprocessed' => '2'
             ]
         ];
 
-        $this->assertEquals(
+        $this->assertSame(
             $expectedArray,
             $this->subject->countPendingItemsGroupedByConfigurationKey()
         );
@@ -266,7 +272,7 @@ class QueryRepositoryTest extends FunctionalTestCase
             3 => 789
         ];
 
-        $this->assertEquals(
+        $this->assertSame(
             $expectedArray,
             $this->subject->getSetIdWithUnprocessedEntries()
         );
@@ -280,11 +286,11 @@ class QueryRepositoryTest extends FunctionalTestCase
         $setIds = [123,789];
 
         $expected = [
-            'ThirdConfiguration' => 1,
-            'SecondConfiguration' => 2
+            'SecondConfiguration' => '2',
+            'ThirdConfiguration' => '1'
         ];
 
-        $this->assertEquals(
+        $this->assertSame(
             $expected,
             $this->subject->getTotalQueueEntriesByConfiguration($setIds)
         );
@@ -301,7 +307,7 @@ class QueryRepositoryTest extends FunctionalTestCase
             '2' => 18
         ];
 
-        $this->assertEquals(
+        $this->assertSame(
             $expectedArray,
             $this->subject->getLastProcessedEntriesTimestamps(3)
         );
