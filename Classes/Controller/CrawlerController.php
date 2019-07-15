@@ -4,7 +4,7 @@ namespace AOE\Crawler\Controller;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2017 AOE GmbH <dev@aoe.com>
+ *  (c) 2019 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -196,11 +196,6 @@ class CrawlerController
     protected $tableName = 'tx_crawler_queue';
 
     /**
-     * @var QueryBuilder
-     */
-    protected $queryBuilder = QueryBuilder::class;
-
-    /**
      * @var array
      */
     private $cliArgs;
@@ -311,7 +306,6 @@ class CrawlerController
         }
 
         $this->extensionSettings['processLimit'] = MathUtility::forceIntegerInRange($this->extensionSettings['processLimit'], 1, 99, 1);
-        $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
     }
 
     /**
@@ -425,16 +419,25 @@ class CrawlerController
      */
     protected function noUnprocessedQueueEntriesForPageWithConfigurationHashExist($uid, $configurationHash)
     {
-        return $this->queryBuilder
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $noUnprocessedQueueEntriesFound = true;
+
+        $result = $queryBuilder
             ->count('*')
             ->from($this->tableName)
             ->where(
-                $this->queryBuilder->expr()->eq('page_id', intval($uid)),
-                $this->queryBuilder->expr()->eq('configuration_hash', $this->queryBuilder->createNamedParameter($configurationHash)),
-                $this->queryBuilder->expr()->eq('exec_time', 0)
+                $queryBuilder->expr()->eq('page_id', intval($uid)),
+                $queryBuilder->expr()->eq('configuration_hash', $queryBuilder->createNamedParameter($configurationHash)),
+                $queryBuilder->expr()->eq('exec_time', 0)
             )
             ->execute()
             ->fetchColumn();
+
+        if ($result) {
+            $noUnprocessedQueueEntriesFound = false;
+        }
+
+        return $noUnprocessedQueueEntriesFound;
     }
 
     /**
@@ -772,15 +775,16 @@ class CrawlerController
      */
     protected function getBaseUrlForConfigurationRecord($baseUrl, $sysDomainUid, $ssl = false)
     {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
         $sysDomainUid = intval($sysDomainUid);
         $urlScheme = ($ssl === false) ? 'http' : 'https';
 
         if ($sysDomainUid > 0) {
-            $statement = $this->queryBuilder
+            $statement = $queryBuilder
                 ->from('sys_domain')
                 ->select('*')
                 ->where(
-                    $this->queryBuilder->expr()->eq('uid', intval($sysDomainUid))
+                    $queryBuilder->expr()->eq('uid', intval($sysDomainUid))
                 )
                 ->execute();
 
@@ -1102,12 +1106,12 @@ class CrawlerController
      */
     public function getLogEntriesForPageId($id, $filter = '', $doFlush = false, $doFullFlush = false, $itemsPerPage = 10)
     {
-
-        $this->queryBuilder
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $queryBuilder
             ->select('*')
             ->from($this->tableName)
             ->where(
-                $this->queryBuilder->expr()->eq('page_id', $this->queryBuilder->createNamedParameter($id, \PDO::PARAM_INT))
+                $queryBuilder->expr()->eq('page_id', $queryBuilder->createNamedParameter($id, \PDO::PARAM_INT))
             )
             ->orderBy('scheduled', 'DESC');
 
@@ -1115,30 +1119,34 @@ class CrawlerController
             ->getConnectionForTable($this->tableName)
             ->getExpressionBuilder();
         $query = $expressionBuilder->andX();
+        // PHPStorm adds the highlight that the $addWhere is immediately overwritten,
+        // but the $query = $expressionBuilder->andX() ensures that the $addWhere is written correctly with AND
+        // between the statements, it's not a mistake in the code.
         $addWhere = '';
         switch ($filter) {
             case 'pending':
-                $this->queryBuilder->andWhere($this->queryBuilder->expr()->eq('exec_time', 0));
-                $addWhere = $query->add($expressionBuilder->eq('exec_time', 0));
+                $queryBuilder->andWhere($queryBuilder->expr()->eq('exec_time', 0));
+                $addWhere = ' AND ' . $query->add($expressionBuilder->eq('exec_time', 0));
                 break;
             case 'finished':
-                $this->queryBuilder->andWhere($this->queryBuilder->expr()->gt('exec_time', 0));
-                $addWhere = $query->add($expressionBuilder->gt('exec_time', 0));
+                $queryBuilder->andWhere($queryBuilder->expr()->gt('exec_time', 0));
+                $addWhere = ' AND ' . $query->add($expressionBuilder->gt('exec_time', 0));
                 break;
         }
 
         // FIXME: Write unit test that ensures that the right records are deleted.
         if ($doFlush) {
-            $this->flushQueue(($doFullFlush ? '1=1' : ('page_id=' . intval($id))) . $addWhere);
+            $addWhere = $query->add($expressionBuilder->eq('page_id', intval($id)));
+            $this->flushQueue($doFullFlush ? '1=1' : $addWhere);
             return [];
         } else {
 
             if($itemsPerPage > 0) {
-                $this->queryBuilder
+                $queryBuilder
                     ->setMaxResults((int)$itemsPerPage);
             }
 
-            return $this->queryBuilder->execute()->fetchAll();
+            return $queryBuilder->execute()->fetchAll();
         }
     }
 
@@ -1153,12 +1161,12 @@ class CrawlerController
      */
     public function getLogEntriesForSetId($set_id, $filter = '', $doFlush = false, $doFullFlush = false, $itemsPerPage = 10)
     {
-
-        $this->queryBuilder
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $queryBuilder
             ->select('*')
             ->from($this->tableName)
             ->where(
-                $this->queryBuilder->expr()->eq('set_id', $this->queryBuilder->createNamedParameter($set_id, \PDO::PARAM_INT))
+                $queryBuilder->expr()->eq('set_id', $queryBuilder->createNamedParameter($set_id, \PDO::PARAM_INT))
             )
             ->orderBy('scheduled', 'DESC');
 
@@ -1167,28 +1175,32 @@ class CrawlerController
             ->getExpressionBuilder();
         $query = $expressionBuilder->andX();
         // FIXME: Write Unit tests for Filters
+        // PHPStorm adds the highlight that the $addWhere is immediately overwritten,
+        // but the $query = $expressionBuilder->andX() ensures that the $addWhere is written correctly with AND
+        // between the statements, it's not a mistake in the code.
         $addWhere = '';
         switch ($filter) {
             case 'pending':
-                $this->queryBuilder->andWhere($queryBuilder->expr()->eq('exec_time', 0));
+                $queryBuilder->andWhere($queryBuilder->expr()->eq('exec_time', 0));
                 $addWhere = $query->add($expressionBuilder->eq('exec_time', 0));
                 break;
             case 'finished':
-                $this->queryBuilder->andWhere($queryBuilder->expr()->gt('exec_time', 0));
+                $queryBuilder->andWhere($queryBuilder->expr()->gt('exec_time', 0));
                 $addWhere = $query->add($expressionBuilder->gt('exec_time', 0));
                 break;
         }
         // FIXME: Write unit test that ensures that the right records are deleted.
         if ($doFlush) {
-            $this->flushQueue($doFullFlush ? '' : ('set_id=' . intval($set_id) . $addWhere));
+            $addWhere = $query->add($expressionBuilder->eq('set_id', intval($set_id)));
+            $this->flushQueue($doFullFlush ? '' : $addWhere);
             return [];
         } else {
             if($itemsPerPage > 0) {
-                $this->queryBuilder
+                $queryBuilder
                     ->setMaxResults((int)$itemsPerPage);
             }
 
-            return $this->queryBuilder->execute()->fetchAll();
+            return $queryBuilder->execute()->fetchAll();
         }
     }
 
@@ -1371,7 +1383,9 @@ class CrawlerController
         $rows = [];
 
         $currentTime = $this->getCurrentTime();
-        $this->queryBuilder
+
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $queryBuilder
             ->select('qid')
             ->from('tx_crawler_queue');
         //if this entry is scheduled with "now"
@@ -1379,32 +1393,32 @@ class CrawlerController
             if ($this->extensionSettings['enableTimeslot']) {
                 $timeBegin = $currentTime - 100;
                 $timeEnd = $currentTime + 100;
-                $this->queryBuilder
+                $queryBuilder
                     ->where(
                         'scheduled BETWEEN ' . $timeBegin . ' AND ' . $timeEnd . ''
                     )
                     ->orWhere(
-                        $this->queryBuilder->expr()->lte('scheduled', $currentTime)
+                        $queryBuilder->expr()->lte('scheduled', $currentTime)
                     );
             } else {
-                $this->queryBuilder
+                $queryBuilder
                     ->where(
-                        $this->queryBuilder->expr()->lte('scheduled', $currentTime)
+                        $queryBuilder->expr()->lte('scheduled', $currentTime)
                     );
             }
         } elseif ($tstamp > $currentTime) {
             //entry with a timestamp in the future need to have the same schedule time
-            $this->queryBuilder
+            $queryBuilder
                 ->where(
-                    $this->queryBuilder->expr()->eq('scheduled', $tstamp)
+                    $queryBuilder->expr()->eq('scheduled', $tstamp)
                 );
         }
 
-        $statement = $this->queryBuilder
+        $statement = $queryBuilder
             ->andWhere('exec_time != 0')
             ->andWhere('process_id != 0')
-            ->andWhere($this->queryBuilder->expr()->eq('page_id', $this->queryBuilder->createNamedParameter($fieldArray['page_id'], \PDO::PARAM_INT)))
-            ->andWhere($this->queryBuilder->expr()->eq('parameters_hash', $this->queryBuilder->createNamedParameter($fieldArray['parameters_hash'], \PDO::PARAM_STR)))
+            ->andWhere($queryBuilder->expr()->eq('page_id', $queryBuilder->createNamedParameter($fieldArray['page_id'], \PDO::PARAM_INT)))
+            ->andWhere($queryBuilder->expr()->eq('parameters_hash', $queryBuilder->createNamedParameter($fieldArray['parameters_hash'], \PDO::PARAM_STR)))
             ->execute();
 
         while($row = $statement->fetch()) {
@@ -1439,6 +1453,7 @@ class CrawlerController
      */
     public function readUrl($queueId, $force = false)
     {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
         $ret = 0;
         if ($this->debugMode) {
             $this->getLogger()->log(
@@ -1447,18 +1462,18 @@ class CrawlerController
             );
         }
         // Get entry:
-        $this->queryBuilder
+        $queryBuilder
             ->select('*')
             ->from('tx_crawler_queue')
             ->where(
-                $this->queryBuilder->expr()->eq('qid', $this->queryBuilder->createNamedParameter($queueId, \PDO::PARAM_INT))
+                $queryBuilder->expr()->eq('qid', $queryBuilder->createNamedParameter($queueId, \PDO::PARAM_INT))
             );
         if(!$force) {
-            $this->queryBuilder
+            $queryBuilder
                 ->andWhere('exec_time = 0')
                 ->andWhere('process_scheduled > 0');
         }
-        $queueRec = $this->queryBuilder->execute()->fetch();
+        $queueRec = $queryBuilder->execute()->fetch();
 
         if (!is_array($queueRec)) {
             return;
@@ -1468,10 +1483,9 @@ class CrawlerController
         if ($parameters['rootTemplatePid']) {
             $this->initTSFE((int)$parameters['rootTemplatePid']);
         } else {
-            GeneralUtility::sysLog(
-                'Page with (' . $queueRec['page_id'] . ') could not be crawled, please check your crawler configuration. Perhaps no Root Template Pid is set',
-                'crawler',
-                GeneralUtility::SYSLOG_SEVERITY_WARNING
+            $this->getLogger()->log(
+                LogLevel::WARNING,
+                'Page with (' . $queueRec['page_id'] . ') could not be crawled, please check your crawler configuration. Perhaps no Root Template Pid is set'
             );
         }
 
@@ -1488,8 +1502,8 @@ class CrawlerController
             //if mulitprocessing is used we need to store the id of the process which has handled this entry
             $field_array['process_id_completed'] = $this->processID;
         }
-        GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('tx_crawler_queue')
-            ->update(
+
+        $queryBuilder->update(
                 'tx_crawler_queue',
                 $field_array,
                 [ 'qid' => (int) $queueI]
@@ -1907,13 +1921,14 @@ class CrawlerController
     {
         // Authenticate crawler request:
         if (isset($_SERVER['HTTP_X_T3CRAWLER'])) {
+            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
             list($queueId, $hash) = explode(':', $_SERVER['HTTP_X_T3CRAWLER']);
 
-            $queueRec = $this->queryBuilder
+            $queueRec = $queryBuilder
                 ->select('*')
                 ->from('tx_crawler_queue')
                 ->where(
-                    $this->queryBuilder->expr()->eq('qid', $this->queryBuilder->createNamedParameter($queueId, \PDO::PARAM_INT))
+                    $queryBuilder->expr()->eq('qid', $queryBuilder->createNamedParameter($queueId, \PDO::PARAM_INT))
                 )
                 ->execute()
                 ->fetch();
@@ -2000,16 +2015,17 @@ class CrawlerController
 
             // recognize mount points
             if ($data['row']['doktype'] == 7) {
-                $this->queryBuilder->getRestrictions()->removeAll()->add(GeneralUtility::makeInstance(DeletedRestriction::class));
-                $mountpage = $this->queryBuilder
+                $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+                $queryBuilder->getRestrictions()->removeAll()->add(GeneralUtility::makeInstance(DeletedRestriction::class));
+                $mountpage = $queryBuilder
                     ->select('*')
                     ->from('pages')
                     ->where(
-                        $this->queryBuilder->expr()->eq('uid', $this->queryBuilder->createNamedParameter($data['row']['uid'], \PDO::PARAM_INT))
+                        $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($data['row']['uid'], \PDO::PARAM_INT))
                     )
                     ->execute()
                     ->fetchAll();
-                $this->queryBuilder->getRestrictions()->reset();
+                $queryBuilder->getRestrictions()->reset();
 
                 // fetch mounted pages
                 $this->MP = $mountpage[0]['mount_pid'] . '-' . $data['row']['uid'];
@@ -2467,8 +2483,11 @@ class CrawlerController
      */
     public function CLI_run($countInARun, $sleepTime, $sleepAfterFinish)
     {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
         $result = 0;
         $counter = 0;
+
+
 
         // First, run hooks:
         $this->CLI_runHooks();
@@ -2477,8 +2496,8 @@ class CrawlerController
         if (intval($this->extensionSettings['purgeQueueDays']) > 0) {
             $purgeDate = $this->getCurrentTime() - 24 * 60 * 60 * intval($this->extensionSettings['purgeQueueDays']);
 
-            $del = $this->queryBuilder
-                ->delete('tx_crawler_queue')
+            $del = $queryBuilder
+                ->delete($this->tableName)
                 ->where(
                     'exec_time != 0 AND exec_time < ' . $purgeDate
                 );
@@ -2493,13 +2512,13 @@ class CrawlerController
 
         // Select entries:
         //TODO Shouldn't this reside within the transaction?
-        $rows = $this->queryBuilder
+        $rows = $queryBuilder
             ->select('qid', 'scheduled')
             ->from('tx_crawler_queue')
             ->where(
-                $this->queryBuilder->expr()->eq('exec_time', 0),
-                $this->queryBuilder->expr()->eq('process_scheduled', 0),
-                $this->queryBuilder->expr()->lte('scheduled',  $this->getCurrentTime())
+                $queryBuilder->expr()->eq('exec_time', 0),
+                $queryBuilder->expr()->eq('process_scheduled', 0),
+                $queryBuilder->expr()->lte('scheduled',  $this->getCurrentTime())
             )
             ->orderBy('scheduled')
             ->addOrderBy('qid')
@@ -2522,12 +2541,12 @@ class CrawlerController
             //TODO make sure we're not taking assigned queue-entires
 
             //save the number of assigned queue entrys to determine who many have been processed later
-            $numberOfAffectedRows = $this->queryBuilder
+            $numberOfAffectedRows = $queryBuilder
                 ->update('tx_crawler_queue')
                 ->where(
-                    $this->queryBuilder->expr()->in('qid', $quidList)
+                    $queryBuilder->expr()->in('qid', $quidList)
                 )
-                ->set('process_scheduled', $this->queryBuilder->createNamedParamter($this->getCurrentTime(), \PDO::PARAM_INT))
+                ->set('process_scheduled', $queryBuilder->createNamedParamter($this->getCurrentTime(), \PDO::PARAM_INT))
                 ->set('process_id', $processId)
                 ->execute();
 
@@ -2611,6 +2630,7 @@ class CrawlerController
      */
     public function CLI_checkAndAcquireNewProcess($id)
     {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
         $ret = true;
 
         $systemProcessId = getmypid();
@@ -2623,7 +2643,7 @@ class CrawlerController
 
         //$this->queryBuilder->getConnection()->executeQuery('BEGIN');
 
-        $statement = $this->queryBuilder
+        $statement = $queryBuilder
             ->select('process_id', 'ttl')
             ->from('tx_crawler_process')
             ->where(
@@ -2676,6 +2696,8 @@ class CrawlerController
      */
     public function CLI_releaseProcesses($releaseIds, $withinLock = false)
     {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+
         if (!is_array($releaseIds)) {
             $releaseIds = [$releaseIds];
         }
@@ -2693,25 +2715,25 @@ class CrawlerController
 
         // mark all processes as deleted which have no "waiting" queue-entires and which are not active
 
-        $this->queryBuilder
+        $queryBuilder
         ->update('tx_crawler_queue', 'q')
         ->where(
-            'q.process_id IN(SELECT p.process_id FROM tx_crawler_process as p WHERE p.active = 0 and p.deleted = 0)'
+            'q.process_id IN(SELECT p.process_id FROM tx_crawler_process as p WHERE p.active = 0)'
         )
         ->set('q.process_scheduled', 0)
         ->set('q.process_id', '')
         ->execute();
 
         // FIXME: Not entirely sure that this is equivalent to the previous version
-        $this->queryBuilder->resetQueryPart('set');
+        $queryBuilder->resetQueryPart('set');
 
-        $this->queryBuilder
-            ->update('tx_crawler_process', 'p')
+        $queryBuilder
+            ->update('tx_crawler_process')
             ->where(
-                $this->queryBuilder->expr()->eq('p.active', 0),
-                'p.process_id IN(SELECT q.process_id FROM tx_crawler_queue as q WHERE q.exec_time = 0)'
+                $queryBuilder->expr()->eq('active', 0),
+                'process_id IN(SELECT q.process_id FROM tx_crawler_queue as q WHERE q.exec_time = 0)'
             )
-            ->set('p.system_process_id', 0)
+            ->set('system_process_id', 0)
             ->execute();
         // previous version for reference
         /*
@@ -2729,7 +2751,7 @@ class CrawlerController
             ]
         );*/
         // mark all requested processes as non-active
-        $this->queryBuilder
+        $queryBuilder
             ->update('tx_crawler_process')
             ->where(
                 'NOT EXISTS (
@@ -2737,18 +2759,18 @@ class CrawlerController
                     WHERE tx_crawler_queue.process_id = tx_crawler_process.process_id
                     AND tx_crawler_queue.exec_time = 0
                 )',
-                $this->queryBuilder->expr()->in('process_id', $this->queryBuilder->createNamedParameter($releaseIds, Connection::PARAM_STR_ARRAY)),
-                $this->queryBuilder->expr()->eq('deleted', 0)
+                $queryBuilder->expr()->in('process_id', $queryBuilder->createNamedParameter($releaseIds, Connection::PARAM_STR_ARRAY)),
+                $queryBuilder->expr()->eq('deleted', 0)
             )
             ->set('active', 0)
             ->execute();
-        $this->queryBuilder->resetQueryPart('set');
-        $this->queryBuilder
+        $queryBuilder->resetQueryPart('set');
+        $queryBuilder
             ->update('tx_crawler_queue')
             ->where(
-                $this->queryBuilder->expr()->eq('exec_time', 0),
-                $this->queryBuilder->expr()->in('process_id', $this->queryBuilder->createNamedParameter($releaseIds, Connection::PARAM_STR_ARRAY)),
-                $this->queryBuilder->expr()->eq('deleted', 0)
+                $queryBuilder->expr()->eq('exec_time', 0),
+                $queryBuilder->expr()->in('process_id', $queryBuilder->createNamedParameter($releaseIds, Connection::PARAM_STR_ARRAY)),
+                $queryBuilder->expr()->eq('deleted', 0)
             )
             ->set('process_scheduled', 0)
             ->set('process_id', '')
@@ -2771,9 +2793,11 @@ class CrawlerController
      */
     public function CLI_deleteProcessesMarkedDeleted()
     {
-        $this->queryBuilder
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $queryBuilder
             ->delete('tx_crawler_process')
-            ->where('deleted = 1');
+            ->where('deleted = 1')
+            ->execute();
     }
 
     /**
@@ -2787,13 +2811,14 @@ class CrawlerController
      */
     public function CLI_checkIfProcessIsActive($pid)
     {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
         $ret = false;
 
-        $statement = $this->queryBuilder
+        $statement = $queryBuilder
             ->from('tx_crawler_process')
             ->select('active')
             ->where(
-                $this->queryBuilder->expr()->eq('process_id', intval($pid))
+                $queryBuilder->expr()->eq('process_id', intval($pid))
             )
             ->orderBy('ttl')
             ->execute();
