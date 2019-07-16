@@ -1126,11 +1126,11 @@ class CrawlerController
         switch ($filter) {
             case 'pending':
                 $queryBuilder->andWhere($queryBuilder->expr()->eq('exec_time', 0));
-                $addWhere = $query->add($expressionBuilder->eq('exec_time', 0));
+                $addWhere = ' AND ' . $query->add($expressionBuilder->eq('exec_time', 0));
                 break;
             case 'finished':
                 $queryBuilder->andWhere($queryBuilder->expr()->gt('exec_time', 0));
-                $addWhere = $query->add($expressionBuilder->gt('exec_time', 0));
+                $addWhere = ' AND ' . $query->add($expressionBuilder->gt('exec_time', 0));
                 break;
         }
 
@@ -2718,7 +2718,7 @@ class CrawlerController
         $queryBuilder
         ->update('tx_crawler_queue', 'q')
         ->where(
-            'q.process_id IN(SELECT p.process_id FROM tx_crawler_process as p WHERE p.active = 0 and p.deleted = 0)'
+            'q.process_id IN(SELECT p.process_id FROM tx_crawler_process as p WHERE p.active = 0)'
         )
         ->set('q.process_scheduled', 0)
         ->set('q.process_id', '')
@@ -2728,12 +2728,12 @@ class CrawlerController
         $queryBuilder->resetQueryPart('set');
 
         $queryBuilder
-            ->update('tx_crawler_process', 'p')
+            ->update('tx_crawler_process')
             ->where(
-                $queryBuilder->expr()->eq('p.active', 0),
-                'p.process_id IN(SELECT q.process_id FROM tx_crawler_queue as q WHERE q.exec_time = 0)'
+                $queryBuilder->expr()->eq('active', 0),
+                'process_id IN(SELECT q.process_id FROM tx_crawler_queue as q WHERE q.exec_time = 0)'
             )
-            ->set('p.system_process_id', 0)
+            ->set('system_process_id', 0)
             ->execute();
         // previous version for reference
         /*
