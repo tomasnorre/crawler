@@ -58,7 +58,7 @@ class ConfigurationRepositoryTest extends FunctionalTestCase
         parent::setUp();
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->subject = $objectManager->get(ConfigurationRepository::class);
-        $this->importDataSet(dirname(__FILE__) . '/../../Fixtures/tx_crawler_configuration.xml');
+        $this->importDataSet(__DIR__ . '/../../Fixtures/tx_crawler_configuration.xml');
     }
 
     /**
@@ -83,7 +83,7 @@ class ConfigurationRepositoryTest extends FunctionalTestCase
         );
 
         $this->assertSame(
-            "Not hidden or deleted",
+            "Not hidden or deleted - uid 5",
             $this->subject->getConfigurationRecordsPageUid(5)->getFirst()->getName()
         );
 

@@ -85,7 +85,7 @@
 		<pid>5</pid>
 		<deleted>0</deleted>
 		<hidden>0</hidden>
-		<name>Not hidden or deleted</name>
+		<name>Not hidden or deleted - uid 5</name>
 		<force_ssl>1</force_ssl>
 		<processing_instruction_filter></processing_instruction_filter>
 		<processing_instruction_parameters_ts></processing_instruction_parameters_ts>

@@ -175,7 +175,7 @@ class QueryRepositoryTest extends FunctionalTestCase
     public function countUnprocessedItems()
     {
         $this->assertEquals(
-            5,
+            7,
             $this->subject->countUnprocessedItems()
         );
     }
@@ -186,7 +186,7 @@ class QueryRepositoryTest extends FunctionalTestCase
     public function countAllPendingItems()
     {
         $this->assertEquals(
-            5,
+            7,
             $this->subject->countAllPendingItems()
         );
     }
@@ -208,7 +208,7 @@ class QueryRepositoryTest extends FunctionalTestCase
     public function countAllUnassignedPendingItems()
     {
         $this->assertEquals(
-            2,
+            4,
             $this->subject->countAllUnassignedPendingItems()
         );
     }
@@ -244,7 +244,7 @@ class QueryRepositoryTest extends FunctionalTestCase
             ],
             1 => [
                 'configuration' => 'SecondConfiguration',
-                'unprocessed' => '1',
+                'unprocessed' => '3',
                 'assignedButUnprocessed' => '1'
             ],
             2 => [
@@ -367,7 +367,7 @@ class QueryRepositoryTest extends FunctionalTestCase
     public function countAll()
     {
         $this->assertEquals(
-            12,
+            14,
             $this->subject->countAll()
         );
     }
@@ -432,7 +432,7 @@ class QueryRepositoryTest extends FunctionalTestCase
         return [
             'Empty where clause, expected to return all records' => [
                 'whereClause' => '',
-                'expected' => 12
+                'expected' => 14
             ],
             'Where Clause on process_id_completed' => [
                 'whereClause' => 'process_id_completed = \'qwerty\'',
