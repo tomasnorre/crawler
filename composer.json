@@ -17,7 +17,6 @@
     ],
     "require": {
         "php": ">= 5.6, < 7.4",
-        "ext-posix": "*",
         "ext-filter": "*",
         "typo3/cms-core": ">=7.6.0",
         "typo3/cms-backend": "*",
@@ -33,6 +32,9 @@
     },
     "replace": {
         "typo3-ter/crawler": "self.version"
+    },
+    "suggest": {
+        "ext-posix": "Extension to enable software compatibility with variants of Unix, used for shell commands in crawler"
     },
     "autoload": {
         "psr-4": {
