@@ -104,7 +104,7 @@
         <parameters></parameters>
         <result_data></result_data>
         <exec_time>0</exec_time>
-        <scheduled>0</scheduled>
+        <scheduled>12</scheduled>
         <configuration>FirstConfiguration</configuration>
     </tx_crawler_queue>
     <tx_crawler_queue>
@@ -128,5 +128,28 @@
         <exec_time>20</exec_time>
         <scheduled>4321</scheduled>
         <configuration>FirstConfiguration</configuration>
+    </tx_crawler_queue>
+    <tx_crawler_queue>
+        <qid>18</qid>
+        <page_id>15</page_id>
+        <process_id></process_id>
+        <process_id_completed>dvorak</process_id_completed>
+        <parameters></parameters>
+        <result_data></result_data>
+        <exec_time>0</exec_time>
+        <scheduled>0</scheduled>
+        <configuration>SecondConfiguration</configuration>
+    </tx_crawler_queue>
+    <tx_crawler_queue>
+        <qid>19</qid>
+        <page_id>15</page_id>
+        <process_id></process_id>
+        <process_id_completed>dvorak</process_id_completed>
+        <parameters></parameters>
+        <parameters_hash>NotReallyAHashButWillDoForTesting</parameters_hash>
+        <result_data></result_data>
+        <exec_time>0</exec_time>
+        <scheduled>12</scheduled>
+        <configuration>SecondConfiguration</configuration>
     </tx_crawler_queue>
 </dataset>

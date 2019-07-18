@@ -4,7 +4,7 @@ namespace AOE\Crawler\Tests\Functional\Api;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2018 AOE GmbH <dev@aoe.com>
+ *  (c) 2019 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -25,10 +25,13 @@ namespace AOE\Crawler\Tests\Functional\Api;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use Aoe\CongstarXmlsitemap\Scheduler\GenerateSitemapTask;
 use AOE\Crawler\Api\CrawlerApi;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class CrawlerApiTest
@@ -60,12 +63,20 @@ class CrawlerApiTest extends FunctionalTestCase
     protected $oldRootline;
 
     /**
+     * @var
+     */
+    protected $queueRepository;
+
+    /**
      * Creates the test environment.
      *
      */
     public function setUp()
     {
         parent::setUp();
+
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $this->queueRepository = $objectManager->get(QueueRepository::class);
 
         //restore old rootline
         $this->oldRootline = $GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields'];
@@ -75,8 +86,8 @@ class CrawlerApiTest extends FunctionalTestCase
 
         $this->subject = new CrawlerApi();
 
-        $this->importDataSet(dirname(__FILE__) . '/../data/pages.xml');
-        $this->importDataSet(dirname(__FILE__) . '/../data/sys_template.xml');
+        $this->importDataSet(__DIR__ . '/../data/pages.xml');
+        $this->importDataSet(__DIR__ . '/../data/sys_template.xml');
     }
 
     /**
@@ -157,7 +168,7 @@ class CrawlerApiTest extends FunctionalTestCase
      */
     public function isPageInQueue($uid, $unprocessed_only, $timed_only, $timestamp, $expected)
     {
-        $this->importDataSet(dirname(__FILE__) . '/../Fixtures/tx_crawler_queue.xml');
+        $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
 
         $this->assertSame(
             $expected,
@@ -170,7 +181,7 @@ class CrawlerApiTest extends FunctionalTestCase
      */
     public function isPageInQueueTimed()
     {
-        $this->importDataSet(dirname(__FILE__) . '/../Fixtures/tx_crawler_queue.xml');
+        $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
         $this->assertTrue($this->subject->isPageInQueueTimed(15));
     }
 
@@ -179,7 +190,7 @@ class CrawlerApiTest extends FunctionalTestCase
      */
     public function countEntriesInQueueForPageByScheduleTime()
     {
-        $this->importDataSet(dirname(__FILE__) . '/../Fixtures/tx_crawler_queue.xml');
+        $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
 
         $this->assertSame(
             1,
@@ -197,10 +208,10 @@ class CrawlerApiTest extends FunctionalTestCase
      */
     public function getLatestCrawlTimestampForPage()
     {
-        $this->importDataSet(dirname(__FILE__) . '/../Fixtures/tx_crawler_queue.xml');
+        $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
 
         $this->assertSame(
-            '4321',
+            4321,
             $this->subject->getLatestCrawlTimestampForPage(17)
         );
     }
@@ -210,14 +221,14 @@ class CrawlerApiTest extends FunctionalTestCase
      */
     public function getCrawlHistoryForPage()
     {
-        $this->importDataSet(dirname(__FILE__) . '/../Fixtures/tx_crawler_queue.xml');
+        $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
 
-        $this->assertSame(
+        $this->assertEquals(
             [
                 [
-                    'scheduled' => '4321',
-                    'exec_time' => '20',
-                    'set_id' => '0'
+                    'scheduled' => 4321,
+                    'exec_time' => 20,
+                    'set_id' => 0
                 ]
             ],
             $this->subject->getCrawlHistoryForPage(17, 1)
@@ -229,12 +240,12 @@ class CrawlerApiTest extends FunctionalTestCase
      */
     public function getQueueStatistics()
     {
-        $this->importDataSet(dirname(__FILE__) . '/../Fixtures/tx_crawler_queue.xml');
+        $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
 
-        $this->assertSame(
+        $this->assertEquals(
             [
                 'assignedButUnprocessed' => '3',
-                'unprocessed' => '5'
+                'unprocessed' => '7'
             ],
             $this->subject->getQueueStatistics()
         );
@@ -257,19 +268,22 @@ class CrawlerApiTest extends FunctionalTestCase
      * The testcase uses a TSConfig crawler configuration.
      *
      * @test
-     *
-     * @return void
      */
     public function canNotCreateDuplicateQueueEntriesForTwoPagesInThePast()
     {
-        $this->importDataSet(dirname(__FILE__) . '/../data/canNotAddDuplicatePagesToQueue.xml');
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $queueRepository = $objectManager->get(QueueRepository::class);
+        $this->importDataSet(__DIR__ . '/../data/canNotAddDuplicatePagesToQueue.xml');
 
         $crawlerApi = $this->getMockedCrawlerAPI(100000);
 
         $crawlerApi->addPageToQueueTimed(5, 9998);
         $crawlerApi->addPageToQueueTimed(5, 3422);
 
-        $this->assertEquals($crawlerApi->countUnprocessedItems(), 1);
+        $this->assertEquals(
+            1,
+            $queueRepository->countUnprocessedItems()
+        );
     }
 
     /**
@@ -279,11 +293,10 @@ class CrawlerApiTest extends FunctionalTestCase
      *
      * @test
      *
-     * @return void
      */
     public function canNotCreateDuplicateForTwoPagesInTheFutureWithTheSameTimestamp()
     {
-        $this->importDataSet(dirname(__FILE__) . '/../data/canNotAddDuplicatePagesToQueue.xml');
+        $this->importDataSet(__DIR__ . '/../data/canNotAddDuplicatePagesToQueue.xml');
 
         $crawlerApi = $this->getMockedCrawlerAPI(100000);
 
@@ -300,11 +313,10 @@ class CrawlerApiTest extends FunctionalTestCase
      *
      * @test
      *
-     * @return void
      */
     public function canCreateTwoQueueEntriesForDiffrentTimestampsInTheFuture()
     {
-        $this->importDataSet(dirname(__FILE__) . '/../data/canNotAddDuplicatePagesToQueue.xml');
+        $this->importDataSet(__DIR__ . '/../data/canNotAddDuplicatePagesToQueue.xml');
 
         $crawlerApi = $this->getMockedCrawlerAPI(100000);
 
@@ -320,13 +332,12 @@ class CrawlerApiTest extends FunctionalTestCase
      *
      * @test
      *
-     * @return void
      */
     public function canCreateQueueEntriesUsingConfigurationRecord()
     {
         $expectedParameter = 'a:4:{s:3:"url";s:49:"http://www.testcase.de/index.php?id=7&L=0&S=CRAWL";s:16:"procInstructions";a:1:{i:0;s:20:"tx_staticpub_publish";}s:15:"procInstrParams";a:0:{}s:15:"rootTemplatePid";i:1;}';
 
-        $this->importDataSet(dirname(__FILE__) . '/../data/canCreateQueueEntriesUsingConfigurationRecord.xml');
+        $this->importDataSet(__DIR__ . '/../data/canCreateQueueEntriesUsingConfigurationRecord.xml');
         $crawlerApi = $this->getMockedCrawlerAPI(100000);
         $crawlerApi->addPageToQueueTimed(7, 100011);
         $crawlerApi->addPageToQueueTimed(7, 100059);

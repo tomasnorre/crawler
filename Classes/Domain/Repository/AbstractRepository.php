@@ -51,7 +51,7 @@ abstract class AbstractRepository
         $rs = $db->exec_SELECTquery('count(*) as anz', $this->tableName, $where);
         $res = $db->sql_fetch_assoc($rs);
 
-        return $res['anz'];
+        return intval($res['anz']);
     }
 
     /**
