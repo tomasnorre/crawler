@@ -1,45 +1,25 @@
-﻿.. ==================================================
-.. FOR YOUR INFORMATION
-.. --------------------------------------------------
-.. -*- coding: utf-8 -*- with BOM.
+﻿.. include:: Includes.txt
 
-.. ==================================================
-.. DEFINE SOME TEXTROLES
-.. --------------------------------------------------
-.. role::   underline
-.. role::   typoscript(code)
-.. role::   ts(typoscript)
-   :class:  typoscript
-.. role::   php(code)
+.. _start:
 
-============
-EXT: Crawler
-============
+=============
+TYPO3 Console
+=============
 
-:Author:
-      Kasper Skårhøj
+:Classification:  typo3_console
+:Version:         |release|
+:Language:        en
+:Description:     Libraries and scripts for crawling the TYPO3 page tree. Used for re-caching, re-indexing, publishing applications etc.
+:Keywords:        crawling, cache
+:Copyright:       2019
+:Author:          Kasper Skårhøj, Daniel Pötzinger, Fabrizio Branca, Tolleiv Nietsch, Timo Schmidt, Michael Klapper, Stefan Rotsch, Tomas Norre Mikkelsen
+:Email:           dev@aoe.com
+:License:         This document is published under the Open Content License available from
+                  http://www.opencontent.org/opl.shtml
+:Rendered:        |today|
 
-:Created:
-      2002-11-01
-
-:Changed:
-      2016-11-24
-
-:Description:
-      Libraries and scripts for crawling the TYPO3 page tree. Used for re-caching, re-indexing, publishing applications etc.
-
-:Keywords:
-      forAdmins, forDevelopers
-
-:Author:
-      Kasper Skårhøj, Daniel Pötzinger, Fabrizio Branca, Tolleiv Nietsch, Timo Schmidt, Michael Klapper, Stefan Rotsch, Tomas Norre Mikkelsen
-
-:Email:
-      dev@aoe.com
-
-:Language:
-      en
-
+The content of this document is related to TYPO3, a GNU/GPL CMS/Framework available from
+https://typo3.org/.
 
 .. toctree::
    :maxdepth: 5
