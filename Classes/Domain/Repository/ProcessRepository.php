@@ -133,4 +133,12 @@ class ProcessRepository extends AbstractRepository
 
         return $limit;
     }
+
+    /**
+     * @return void
+     */
+    public function deleteProcessesMarkedAsDeleted()
+    {
+        $this->getDB()->exec_DELETEquery('tx_crawler_process', 'deleted = 1');
+    }
 }

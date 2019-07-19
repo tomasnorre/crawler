@@ -58,6 +58,7 @@ abstract class AbstractRepository
      * Returns an instance of the TYPO3 database class.
      *
      * @return \TYPO3\CMS\Core\Database\DatabaseConnection
+     * @deprecated since crawler v6.5.1, will be removed in crawler v9.0.0.
      */
     protected function getDB()
     {
