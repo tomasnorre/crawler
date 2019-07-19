@@ -22,9 +22,7 @@ The content of this document is related to TYPO3, a GNU/GPL CMS/Framework availa
 https://typo3.org/.
 
 .. toctree::
-   :maxdepth: 5
-   :titlesonly:
-   :glob:
+   :hidden:
 
    ExtCrawler/Index
 
