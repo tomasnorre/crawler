@@ -373,6 +373,80 @@ class QueryRepositoryTest extends FunctionalTestCase
     }
 
     /**
+     * @test
+     */
+    public function isPageInQueueThrowInvalidArgumentException()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionCode(1468931945);
+        $this->subject->isPageInQueue('Cannot be interpreted as integer');
+    }
+
+    /**
+     * @test
+     *
+     * @param $uid
+     * @param $unprocessed_only
+     * @param $timed_only
+     * @param $timestamp
+     * @param $expected
+     *
+     * @dataProvider isPageInQueueDataProvider
+     */
+    public function isPageInQueue($uid, $unprocessed_only, $timed_only, $timestamp, $expected)
+    {
+        $this->assertSame(
+            $expected,
+            $this->subject->isPageInQueue($uid, $unprocessed_only, $timed_only, $timestamp)
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function isPageInQueueTimed()
+    {
+        $this->assertTrue($this->subject->isPageInQueueTimed(15));
+    }
+
+    /**
+     * @return array
+     */
+    public function isPageInQueueDataProvider()
+    {
+        return [
+            'Unprocessed Only' => [
+                'uid' => 15,
+                'unprocessed_only' => true,
+                'timed_only' => false,
+                'timestamp' => false,
+                'expected' => true,
+            ],
+            'Timed Only' => [
+                'uid' => 16,
+                'unprocessed_only' => false,
+                'timed_only' => true,
+                'timestamp' => false,
+                'expected' => true,
+            ],
+            'Timestamp Only' => [
+                'uid' => 17,
+                'unprocessed_only' => false,
+                'timed_only' => false,
+                'timestamp' => 4321,
+                'expected' => true,
+            ],
+            'Not existing page' => [
+                'uid' => 40000,
+                'unprocessed_only' => false,
+                'timed_only' => false,
+                'timestamp' => false,
+                'expected' => false
+            ],
+        ];
+    }
+
+    /**
      * @return array
      */
     public function getFirstOrLastObjectByProcessDataProvider()

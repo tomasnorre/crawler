@@ -31,6 +31,7 @@ use AOE\Crawler\Command\QueueCommandLineController;
 use AOE\Crawler\Domain\Model\Configuration;
 use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
+use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\EventDispatcher;
 use AOE\Crawler\Utility\IconUtility;
@@ -185,6 +186,11 @@ class CrawlerController
     protected  $queueRepository;
 
     /**
+     * @var ProcessRepository
+     */
+    protected $processRepository;
+
+    /**
      * @var ConfigurationRepository
      */
     protected $configurationRepository;
@@ -267,6 +273,7 @@ class CrawlerController
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->queueRepository = $objectManager->get(QueueRepository::class);
         $this->configurationRepository = $objectManager->get(ConfigurationRepository::class);
+        $this->processRepository = $objectManager->get(ProcessRepository::class);
 
         $this->db = $GLOBALS['TYPO3_DB'];
         $this->backendUser = $GLOBALS['BE_USER'];
@@ -2382,7 +2389,8 @@ class CrawlerController
                     return ($result | self::CLI_STATUS_ABORTED);
                 }
 
-                if (!$this->CLI_checkIfProcessIsActive($this->CLI_buildProcessId())) {
+                $process = $this->processRepository->findByUid($this->CLI_buildProcessId());
+                if (!$process->isActive()) {
                     $this->CLI_debug("conflict / timeout (" . $this->CLI_buildProcessId() . ")");
 
                     //TODO might need an additional returncode
@@ -2495,6 +2503,8 @@ class CrawlerController
      * @param  mixed    $releaseIds   string with a single process-id or array with multiple process-ids
      * @param  boolean  $withinLock   show whether the DB-actions are included within an existing lock
      * @return boolean
+     *
+     * @deprecated since crawler v6.5.1, will be removed in crawler v9.0.0.
      */
     public function CLI_releaseProcesses($releaseIds, $withinLock = false)
     {
@@ -2563,6 +2573,8 @@ class CrawlerController
      * Delete processes marked as deleted
      *
      * @return void
+     *
+     * @deprecated since crawler v6.5.1, will be removed in crawler v9.0.0.
      */
     public function CLI_deleteProcessesMarkedDeleted()
     {
@@ -2575,6 +2587,8 @@ class CrawlerController
      *
      * @param  string  identification string for the process
      * @return boolean determines if the process is still active / has resources
+     *
+     * @deprecated since crawler v6.5.1, will be removed in crawler v9.0.0.
      *
      * FIXME: Please remove Transaction, not needed as only a select query.
      */

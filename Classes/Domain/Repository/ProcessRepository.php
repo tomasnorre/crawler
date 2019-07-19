@@ -133,4 +133,23 @@ class ProcessRepository extends AbstractRepository
 
         return $limit;
     }
+
+    /**
+     * @return void
+     */
+    public function deleteProcessesMarkedAsDeleted()
+    {
+        $this->getDB()->exec_DELETEquery('tx_crawler_process', 'deleted = 1');
+    }
+
+    /**
+     * Returns an instance of the TYPO3 database class.
+     *
+     * @return \TYPO3\CMS\Core\Database\DatabaseConnection
+     * @deprecated since crawler v6.5.1, will be removed in crawler v9.0.0.
+     */
+    protected function getDB()
+    {
+        return $GLOBALS['TYPO3_DB'];
+    }
 }
