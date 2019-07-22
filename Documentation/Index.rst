@@ -6,7 +6,7 @@
 TYPO3 Console
 =============
 
-:Classification:  typo3_console
+:Classification:  crawler
 :Version:         |release|
 :Language:        en
 :Description:     Libraries and scripts for crawling the TYPO3 page tree. Used for re-caching, re-indexing, publishing applications etc.
