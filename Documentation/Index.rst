@@ -2,9 +2,9 @@
 
 .. _start:
 
-=============
-TYPO3 Console
-=============
+=======
+Crawler
+=======
 
 :Classification:  crawler
 :Version:         |release|
@@ -24,5 +24,11 @@ https://typo3.org/.
 .. toctree::
    :hidden:
 
-   ExtCrawler/Index
+   Introduction/Index
+   Configuration/Index
+   ExecutingTheQueue/Index
+   Features/Index
+   Faq/Index
+   Aoe/Aoe
+   Links/Links
 
