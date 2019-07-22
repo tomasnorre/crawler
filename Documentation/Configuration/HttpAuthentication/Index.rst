@@ -3,19 +3,22 @@
 .. --------------------------------------------------
 .. -*- coding: utf-8 -*- with BOM.
 
-.. This is 'Includes.txt'. It is included at the very top of each and
-   every ReST source file in this documentation project (= manual).
-
-
 .. ==================================================
-.. DEFINE SOME TEXT ROLES
+.. DEFINE SOME TEXTROLES
 .. --------------------------------------------------
-
+.. role::   underline
 .. role::   typoscript(code)
-
 .. role::   ts(typoscript)
-   :class:  typoscript
 
+:class:  typoscript
 .. role::   php(code)
 
-.. highlight:: php
+
+HTTP Authentication
+^^^^^^^^^^^^^^^^^^^
+
+If you want to use HTTP Authentication you  need to configure your base url to contain user:pass
+
+::
+
+    http://user:pass@www.mydomain.com/
