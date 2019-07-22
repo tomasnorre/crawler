@@ -31,4 +31,5 @@ https://typo3.org/.
    Faq/Index
    Aoe/Aoe
    Links/Links
+   Targets
 

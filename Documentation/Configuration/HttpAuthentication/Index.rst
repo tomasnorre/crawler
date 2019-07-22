@@ -9,6 +9,7 @@
 .. role::   underline
 .. role::   typoscript(code)
 .. role::   ts(typoscript)
+
 :class:  typoscript
 .. role::   php(code)
 
