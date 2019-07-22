@@ -346,6 +346,54 @@ class CrawlerControllerTest extends FunctionalTestCase
         );
     }
 
+    /**
+     * @test
+     * @dataProvider expandParametersDataProvider
+     */
+    public function expandParameters($paramArray, $pid, $expected)
+    {
+        $output = $this->subject->expandParameters($paramArray, $pid);
+
+        $this->assertEquals(
+            $expected,
+            $output
+        );
+    }
+
+    public function expandParametersDataProvider()
+    {
+        return [
+            'Parameters with range' => [
+                'paramArray' => ['range' => '[1-5]'],
+                'pid' => 1,
+                'expected' => [
+                    'range' => [1,2,3,4,5]
+                ]
+            ],
+            'Parameters with _TABLE _PID & _WHERE (hidden = 0)'=> [
+                'paramArray' => ['table' => '[_TABLE:pages;_PID:5;_WHERE: and hidden = 0]'],
+                'pid' => 1,
+                'expected' => [
+                    'table' => [7]
+                ]
+            ],
+            'Parameters with _TABLE _PID & _WHERE (hidden = 1)' => [
+                'paramArray' => ['table' => '[_TABLE:pages;_PID:5:_WHERE: and hidden = 1]'],
+                'pid' => 1,
+                'expected' => [
+                    'table' => [7,8]
+                ]
+            ],
+            'Parameters with _TABLE no _PID, then pid from input is used' => [
+                'paramArray' => ['table' => '[_TABLE:pages]'],
+                'pid' => 1,
+                'expected' => [
+                    'table' => [2,3,4,5]
+                ]
+            ]
+        ];
+    }
+
     public function addUrlDataProvider()
     {
         return [
