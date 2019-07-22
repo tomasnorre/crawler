@@ -18,8 +18,7 @@ Crawler
                   http://www.opencontent.org/opl.shtml
 :Rendered:        |today|
 
-The content of this document is related to TYPO3, a GNU/GPL CMS/Framework available from
-https://typo3.org/.
+The content of this document is related to TYPO3, a GNU/GPL CMS/Framework available from https://typo3.org/.
 
 .. toctree::
    :hidden:
