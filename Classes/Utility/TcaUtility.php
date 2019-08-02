@@ -60,7 +60,11 @@ class TcaUtility
         $parts = explode('_', $key);
         if (is_array($parts) && count($parts) > 2) {
             $extensionKey = $parts[1];
-            $extIcon = PathUtility::stripPathSitePrefix(ExtensionManagementUtility::extPath($extensionKey)) . 'ext_icon.gif';
+            if ('indexedsearch' === $extensionKey) {
+                $extensionKey = 'indexed_search';
+            }
+            
+            $extIcon = ExtensionManagementUtility::getExtensionIcon(ExtensionManagementUtility::extPath($extensionKey), 1);
         }
 
         return $extIcon;

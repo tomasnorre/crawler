@@ -1503,10 +1503,11 @@ class CrawlerController
             $field_array['process_id_completed'] = $this->processID;
         }
 
-        $queryBuilder->update(
+        GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('tx_crawler_queue')
+            ->update(
                 'tx_crawler_queue',
                 $field_array,
-                [ 'qid' => (int) $queueI]
+                [ 'qid' => (int)$queueId ]
             );
 
         $result = $this->readUrl_exec($queueRec);

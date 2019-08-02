@@ -4,7 +4,7 @@ namespace AOE\Crawler\Domain\Repository;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2017 AOE GmbH <dev@aoe.com>
+ *  (c) 2019 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -66,42 +66,19 @@ class ProcessRepository extends AbstractRepository
     /**
      * This method is used to find all cli processes within a limit.
      *
-     * @param  string $orderField
-     * @param  string $orderDirection
-     * @param  integer $itemCount
-     * @param  integer $offset
-     * @param  string $where
-     *
      * @return ProcessCollection
      */
-    public function findAll($orderField = '', $orderDirection = 'DESC', $itemCount = null, $offset = null, $where = '')
+    public function findAll(): ProcessCollection
     {
         /** @var ProcessCollection $collection */
         $collection = GeneralUtility::makeInstance(ProcessCollection::class);
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
 
-        $orderField = trim($orderField);
-        $orderField = empty($orderField) ? 'process_id' : $orderField;
-
-        $orderDirection = strtoupper(trim($orderDirection));
-        $orderDirection = in_array($orderDirection, ['ASC', 'DESC']) ? $orderDirection : 'DESC';
-
-        $statement = $this->queryBuilder
-            ->from($this->tableName)
+        $statement = $queryBuilder
             ->select('*')
-            ->orderBy($orderField, $orderDirection)
-            ->setMaxResults(self::getLimitFromItemCountAndOffset($itemCount, $offset))
+            ->from($this->tableName)
+            ->orderBy('ttl', 'DESC')
             ->execute();
-
-        /**
-         $rows = $this->getDB()->exec_SELECTgetRows(
-            '*',
-            $this->tableName,
-            $where,
-            '',
-            htmlspecialchars($orderField) . ' ' . htmlspecialchars($orderDirection),
-            $this->getLimitFromItemCountAndOffset($itemCount, $offset)
-        );
-        */
 
         while ($row = $statement->fetch()) {
             $collection->append(GeneralUtility::makeInstance(Process::class, $row));
@@ -111,18 +88,61 @@ class ProcessRepository extends AbstractRepository
     }
 
     /**
+     * @return ProcessCollection
+     */
+    public function findAllActive(): ProcessCollection
+    {
+        /** @var ProcessCollection $collection */
+        $collection = GeneralUtility::makeInstance(ProcessCollection::class);
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+
+        $statement = $queryBuilder
+            ->select('*')
+            ->from($this->tableName)
+            ->where(
+                $queryBuilder->expr()->eq('active', 1),
+                $queryBuilder->expr()->eq('deleted', 0)
+            )
+            ->orderBy('ttl', 'DESC')
+            ->execute();
+
+        while ($row = $statement->fetch()) {
+            $collection->append(GeneralUtility::makeInstance(Process::class, $row));
+        }
+
+        return $collection;
+    }
+
+    /**
+     * @param int $processId
+     *
+     * @return void
+     */
+    public function removeByProcessId($processId): void
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+
+        $queryBuilder
+            ->delete($this->tableName)
+            ->where(
+                $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId))
+            )->execute();
+    }
+
+    /**
      * Returns the number of active processes.
      *
      * @return integer
      */
     public function countActive()
     {
-        $count = $this->queryBuilder
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $count = $queryBuilder
             ->count('*')
             ->from($this->tableName)
             ->where(
-                $this->queryBuilder->expr()->eq('active', 1),
-                $this->queryBuilder->expr()->eq('deleted', 0)
+                $queryBuilder->expr()->eq('active', 1),
+                $queryBuilder->expr()->eq('deleted', 0)
             )
             ->execute()
             ->fetchColumn(0);
@@ -138,13 +158,14 @@ class ProcessRepository extends AbstractRepository
      */
     public function getActiveProcessesOlderThanOneHour()
     {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
         $activeProcesses = [];
-        $statement = $this->queryBuilder
+        $statement = $queryBuilder
             ->select('process_id', 'system_process_id')
             ->from($this->tableName)
             ->where(
-                $this->queryBuilder->expr()->lte('ttl', intval(time() - $this->extensionSettings['processMaxRunTime'] - 3600)),
-                $this->queryBuilder->expr()->eq('active', 1)
+                $queryBuilder->expr()->lte('ttl', intval(time() - $this->extensionSettings['processMaxRunTime'] - 3600)),
+                $queryBuilder->expr()->eq('active', 1)
             )
             ->execute();
 
@@ -164,12 +185,13 @@ class ProcessRepository extends AbstractRepository
      */
     public function getActiveOrphanProcesses()
     {
-        $statement = $this->queryBuilder
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $statement = $queryBuilder
             ->select('process_id', 'system_process_id')
             ->from($this->tableName)
             ->where(
-                $this->queryBuilder->expr()->lte('ttl', intval(time() - $this->extensionSettings['processMaxRunTime'])),
-                $this->queryBuilder->expr()->eq('active', 1)
+                $queryBuilder->expr()->lte('ttl', intval(time() - $this->extensionSettings['processMaxRunTime'])),
+                $queryBuilder->expr()->eq('active', 1)
             )
             ->execute()->fetchAll();
 
@@ -185,12 +207,13 @@ class ProcessRepository extends AbstractRepository
      */
     public function countNotTimeouted($ttl)
     {
-        $count = $this->queryBuilder
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $count = $queryBuilder
             ->count('*')
             ->from($this->tableName)
             ->where(
-                $this->queryBuilder->expr()->eq('deleted', 0),
-                $this->queryBuilder->expr()->gt('ttl', intval($ttl))
+                $queryBuilder->expr()->eq('deleted', 0),
+                $queryBuilder->expr()->gt('ttl', intval($ttl))
             )
             ->execute()
             ->fetchColumn(0);
@@ -206,7 +229,7 @@ class ProcessRepository extends AbstractRepository
      *
      * @return string
      */
-    public function getLimitFromItemCountAndOffset($itemCount, $offset)
+    public static function getLimitFromItemCountAndOffset($itemCount, $offset): string
     {
         $itemCount = filter_var($itemCount, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'default' => 20]]);
         $offset = filter_var($offset, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0, 'default' => 0]]);
@@ -220,20 +243,22 @@ class ProcessRepository extends AbstractRepository
      */
     public function deleteProcessesWithoutItemsAssigned()
     {
-        $this->queryBuilder
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $queryBuilder
             ->delete($this->tableName)
             ->where(
-                $this->queryBuilder->expr()->eq('assigned_items_count', 0)
+                $queryBuilder->expr()->eq('assigned_items_count', 0)
             )
             ->execute();
     }
 
     public function deleteProcessesMarkedAsDeleted()
     {
-        $this->queryBuilder
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $queryBuilder
             ->delete($this->tableName)
             ->where(
-                $this->queryBuilder->expr()->eq('deleted', 1)
+                $queryBuilder->expr()->eq('deleted', 1)
             )
             ->execute();
     }

@@ -26,6 +26,7 @@ namespace AOE\Crawler\Backend\View;
  ***************************************************************/
 
 use AOE\Crawler\Domain\Model\ProcessCollection;
+use AOE\Crawler\Utility\BackendModuleUtility;
 use AOE\Crawler\Utility\ButtonUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -365,7 +366,7 @@ class ProcessListView
         return ButtonUtility::getLinkButton(
             'actions-refresh',
             $this->getLLLabel('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.refresh'),
-            'window.location=\'' . $this->getModuleUrl('web_info') . '&SET[crawlaction]=multiprocess&id=' . $this->pageId . '\';'
+            'window.location=\'' . BackendModuleUtility::getInfoModuleUrl(['SET[\'crawleraction\']' => 'crawleraction', 'id' => $this->pageId]) . '\';'
         );
     }
 
@@ -381,14 +382,14 @@ class ProcessListView
             return ButtonUtility::getLinkButton(
                 'tx-crawler-stop',
                 $this->getLLLabel('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.disablecrawling'),
-                'window.location=\'' . $this->getModuleUrl('web_info') . '&action=stopCrawling\';'
+                'window.location=\'' . BackendModuleUtility::getInfoModuleUrl(['action' => 'stopCrawling']) . '\';'
             );
         } else {
             // TODO: Icon Should be bigger
             return ButtonUtility::getLinkButton(
                 'tx-crawler-start',
                 $this->getLLLabel('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.enablecrawling'),
-                'window.location=\'' . $this->getModuleUrl('web_info') . '&action=resumeCrawling\';'
+                'window.location=\'' . BackendModuleUtility::getInfoModuleUrl(['action' => 'resumeCrawling']) . '\';'
             );
         }
     }
@@ -406,13 +407,13 @@ class ProcessListView
             return ButtonUtility::getLinkButton(
                 'actions-document-view',
                 $this->getLLLabel('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.show.running'),
-                'window.location=\'' . $this->getModuleUrl('web_info') . '&SET[processListMode]=simple\';'
+                'window.location=\'' . BackendModuleUtility::getInfoModuleUrl(['SET[\'processListMode\']' => 'simple']) . '\';'
             );
         } elseif ($this->getMode() == 'simple') {
             return ButtonUtility::getLinkButton(
                 'actions-document-view',
                 $this->getLLLabel('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.show.all'),
-                'window.location=\'' . $this->getModuleUrl('web_info') . '&SET[processListMode]=detail\';'
+                'window.location=\'' . BackendModuleUtility::getInfoModuleUrl(['SET[\'processListMode\']' => 'detail']) . '\';'
             );
         }
     }
@@ -430,7 +431,7 @@ class ProcessListView
             return ButtonUtility::getLinkButton(
                 'actions-add',
                 $this->getLLLabel('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.process.add'),
-                'window.location=\'' . $this->getModuleUrl('web_info') . '&action=addProcess\';'
+                'window.location=\'' . BackendModuleUtility::getInfoModuleUrl(['action' => 'addProcess']) . '\';'
             );
         } else {
             return '';
@@ -465,22 +466,5 @@ class ProcessListView
     protected function getLLLabel($label)
     {
         return $GLOBALS['LANG']->sL($label);
-    }
-
-    /**
-     * Generate module url
-     *
-     * @param string $route The route to generate the url to
-     * @param array $uriParameters Additional parameters for the uri
-     * @return string
-     */
-    private function getModuleUrl($route, $uriParameters = [])
-    {
-        if (GeneralUtility::_GP('id')) {
-            $uriParameters = array_merge($uriParameters, [
-                'id' => GeneralUtility::_GP('id')
-            ]);
-        }
-        return GeneralUtility::makeInstance(UriBuilder::class)->buildUriFromRoute('info', $uriParameters);
     }
 }
