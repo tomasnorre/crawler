@@ -49,7 +49,7 @@ Fields and their pageTS equivalents
 
 - **Append cHash** - :ref:`paramSets.[key].cHash <crawler-tsconfig-paramSets-key-cHash>`
 
-- **Exclude pages** - comma separated list of page ids which should not be crawled
+- **Exclude pages** - comma separated list of page ids which should not be crawled. Add "+" and an integer to defined the depth of the recursiveness. Example: "2+99" takes the page 2 and 99 levels down.
 
 .. image:: /Images/backend_configurationrecord.png
 
