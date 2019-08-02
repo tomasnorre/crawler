@@ -2770,8 +2770,7 @@ class CrawlerController
             ->update('tx_crawler_queue')
             ->where(
                 $queryBuilder->expr()->eq('exec_time', 0),
-                $queryBuilder->expr()->in('process_id', $queryBuilder->createNamedParameter($releaseIds, Connection::PARAM_STR_ARRAY)),
-                $queryBuilder->expr()->eq('deleted', 0)
+                $queryBuilder->expr()->in('process_id', $queryBuilder->createNamedParameter($releaseIds, Connection::PARAM_STR_ARRAY))
             )
             ->set('process_scheduled', 0)
             ->set('process_id', '')
