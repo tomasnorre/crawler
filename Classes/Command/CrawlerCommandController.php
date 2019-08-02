@@ -244,7 +244,7 @@ class CrawlerCommandController extends CommandController
             $queryBuilder
                 ->delete($this->tableCrawlerProcess)
                 ->where(
-                    $queryBuilder->expr()->eq('assigned_item_count', 0)
+                    $queryBuilder->expr()->eq('assigned_items_count', 0)
                 )
                 ->execute();
 
