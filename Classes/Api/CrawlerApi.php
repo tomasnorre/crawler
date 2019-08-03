@@ -432,13 +432,16 @@ class CrawlerApi
      *
      * @return array
      */
-    private function getCrawlerProcInstructions()
+    private function getCrawlerProcInstructions(): array
     {
-        if (isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'])) {
-            return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'];
+        $crawlerProcInstructions = [];
+        if (!empty($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'])) {
+            foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'] as $configuration) {
+                $crawlerProcInstructions[$configuration['key']] = $configuration['value']
+            }
         }
 
-        return [];
+        return $crawlerProcInstructions;
     }
 
     /**

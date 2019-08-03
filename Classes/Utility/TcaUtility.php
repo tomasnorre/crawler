@@ -38,9 +38,11 @@ class TcaUtility
      */
     public function getProcessingInstructions(array $configuration)
     {
+
+        $configuration = $configuration ?? ['items' => []];
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'])) {
-            foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'] as $key => $value) {
-                $configuration['items'][] = [$value . ' [' . $key . ']', $key, $this->getExtensionIcon($key)];
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'] as $extensionKey => $extensionConfiguration) {
+                $configuration['items'][] = [$extensionConfiguration['value'] . ' [' . $extensionConfiguration['key'] . ']', $extensionConfiguration['key'], $this->getExtensionIcon($extensionKey)];
             }
         }
 
@@ -50,23 +52,11 @@ class TcaUtility
     /**
      * Get path to ext_icon.gif from processing instruction key
      *
-     * @param string $key Like tx_realurl_rebuild
+     * @param string $extensionKey Like staticfilecache or indexed_search
      * @return string
      */
-    protected function getExtensionIcon($key)
+    protected function getExtensionIcon($extensionKey)
     {
-        $extIcon = '';
-
-        $parts = explode('_', $key);
-        if (is_array($parts) && count($parts) > 2) {
-            $extensionKey = $parts[1];
-            if ('indexedsearch' === $extensionKey) {
-                $extensionKey = 'indexed_search';
-            }
-            
-            $extIcon = ExtensionManagementUtility::getExtensionIcon(ExtensionManagementUtility::extPath($extensionKey), 1);
-        }
-
-        return $extIcon;
+        return ExtensionManagementUtility::getExtensionIcon(ExtensionManagementUtility::extPath($extensionKey), 1);
     }
 }
