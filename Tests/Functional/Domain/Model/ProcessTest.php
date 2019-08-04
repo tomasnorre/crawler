@@ -4,7 +4,7 @@ namespace AOE\Crawler\Tests\Functional\Domain\Model;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2016 AOE GmbH <dev@aoe.com>
+ *  (c) 2019 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -44,11 +44,16 @@ class ProcessTest extends FunctionalTestCase
      */
     protected $subject;
 
+    /**
+     * @var ObjectManager
+     */
+    protected $objectManager;
+
     public function setUp()
     {
         parent::setUp();
-        $objectManger = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->subject = $objectManger->get(Process::class);
+        $this->objectManger = GeneralUtility::makeInstance(ObjectManager::class);
+        $this->subject = $this->objectManger->get(Process::class);
     }
 
     /**
@@ -56,8 +61,10 @@ class ProcessTest extends FunctionalTestCase
      */
     public function getTimeForFirstItem()
     {
-        $mockedQueueObject = new Queue(['exec_time' => 20]);
-        $mockedQueueRepository = $this->getAccessibleMock(QueueRepository::class, ['findYoungestEntryForProcess'], [], '', true);
+        $mockedQueueObject = new Queue();
+        $mockedQueueObject->setExecTime(20);
+        $mockedQueueRepository = $this->getAccessibleMock(QueueRepository::class, ['findYoungestEntryForProcess'], [], '', false);
+
         $mockedQueueRepository
             ->expects($this->any())
             ->method('findYoungestEntryForProcess')
@@ -76,8 +83,9 @@ class ProcessTest extends FunctionalTestCase
      */
     public function getTimeForLastItem()
     {
-        $mockedQueueObject = new Queue(['exec_time' => 30]);
-        $mockedQueueRepository = $this->getAccessibleMock(QueueRepository::class, ['findOldestEntryForProcess'], [], '', true);
+        $mockedQueueObject = new Queue();
+        $mockedQueueObject->setExecTime(30);
+        $mockedQueueRepository = $this->getAccessibleMock(QueueRepository::class, ['findOldestEntryForProcess'], [], '', false);
         $mockedQueueRepository
             ->expects($this->any())
             ->method('findOldestEntryForProcess')

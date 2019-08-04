@@ -28,7 +28,10 @@ namespace AOE\Crawler\Controller;
 use AOE\Crawler\Command\CrawlerCommandLineController;
 use AOE\Crawler\Command\FlushCommandLineController;
 use AOE\Crawler\Command\QueueCommandLineController;
+use AOE\Crawler\Domain\Model\Configuration;
 use AOE\Crawler\Domain\Model\Reason;
+use AOE\Crawler\Domain\Repository\ConfigurationRepository;
+use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\EventDispatcher;
 use AOE\Crawler\Utility\IconUtility;
@@ -183,6 +186,16 @@ class CrawlerController
     protected  $queueRepository;
 
     /**
+     * @var ProcessRepository
+     */
+    protected $processRepository;
+
+    /**
+     * @var ConfigurationRepository
+     */
+    protected $configurationRepository;
+
+    /**
      * Method to set the accessMode can be gui, cli or cli_im
      *
      * @return string
@@ -259,6 +272,8 @@ class CrawlerController
     {
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->queueRepository = $objectManager->get(QueueRepository::class);
+        $this->configurationRepository = $objectManager->get(ConfigurationRepository::class);
+        $this->processRepository = $objectManager->get(ProcessRepository::class);
 
         $this->db = $GLOBALS['TYPO3_DB'];
         $this->backendUser = $GLOBALS['BE_USER'];
@@ -332,7 +347,7 @@ class CrawlerController
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pageVeto'])) {
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pageVeto'] as $key => $func) {
                     $params = [
-                        'pageRow' => $pageRow
+                        'pageRow' => $pageRow,
                     ];
                     // expects "false" if page is ok and "true" or a skipMessage if this page should _not_ be crawled
                     $veto = GeneralUtility::callUserFunction($func, $params, $this);
@@ -475,9 +490,9 @@ class CrawlerController
                     if (ExtensionManagementUtility::isLoaded('realurl') && $vv['subCfg']['realurl']) {
                         $params = [
                             'LD' => [
-                                'totalURL' => $urlQuery
+                                'totalURL' => $urlQuery,
                             ],
-                            'TCEmainHook' => true
+                            'TCEmainHook' => true,
                         ];
                         $urlObj->encodeSpURL($params);
                         $urlQuery = $params['LD']['totalURL'];
@@ -559,7 +574,7 @@ class CrawlerController
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['getPageTSconfigForId'])) {
             $params = [
                 'pageId' => $id,
-                'pageTSConfig' => &$pageTSconfig
+                'pageTSConfig' => &$pageTSconfig,
             ];
             foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['getPageTSconfigForId'] as $userFunc) {
                 GeneralUtility::callUserFunction($userFunc, $params, $this);
@@ -642,47 +657,44 @@ class CrawlerController
         $rootLine = BackendUtility::BEgetRootLine($id);
 
         foreach ($rootLine as $page) {
-            $configurationRecordsForCurrentPage = BackendUtility::getRecordsByField(
-                'tx_crawler_configuration',
-                'pid',
-                intval($page['uid']),
-                BackendUtility::BEenableFields('tx_crawler_configuration') . BackendUtility::deleteClause('tx_crawler_configuration')
-            );
+            $configurationRecordsForCurrentPage = $this->configurationRepository->getConfigurationRecordsPageUid($page['uid'])->toArray();
 
             if (is_array($configurationRecordsForCurrentPage)) {
+                /** @var Configuration $configurationRecord */
                 foreach ($configurationRecordsForCurrentPage as $configurationRecord) {
 
                         // check access to the configuration record
-                    if (empty($configurationRecord['begroups']) || $GLOBALS['BE_USER']->isAdmin() || $this->hasGroupAccess($GLOBALS['BE_USER']->user['usergroup_cached_list'], $configurationRecord['begroups'])) {
-                        $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $configurationRecord['pidsonly'], true));
+                    if (empty($configurationRecord->getBeGroups()) || $GLOBALS['BE_USER']->isAdmin() || $this->hasGroupAccess($GLOBALS['BE_USER']->user['usergroup_cached_list'], $configurationRecord->getBeGroups())) {
+                        $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $configurationRecord->getPidsOnly(), true));
 
                         // process configuration if it is not page-specific or if the specific page is the current page:
-                        if (!strcmp($configurationRecord['pidsonly'], '') || GeneralUtility::inList($pidOnlyList, $id)) {
-                            $key = $configurationRecord['name'];
+                        if (!strcmp($configurationRecord->getPidsOnly(), '') || GeneralUtility::inList($pidOnlyList, $id)) {
+                            $key = $configurationRecord->getName();
 
                             // don't overwrite previously defined paramSets
                             if (!isset($res[$key])) {
 
                                     /* @var $TSparserObject \TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser */
                                 $TSparserObject = GeneralUtility::makeInstance('TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser');
-                                $TSparserObject->parse($configurationRecord['processing_instruction_parameters_ts']);
+                                // Todo: Check where the field processing_instructions_parameters_ts comes from.
+                                $TSparserObject->parse($configurationRecord->getProcessingInstructionFilter()); //['processing_instruction_parameters_ts']);
 
-                                $isCrawlingProtocolHttps = $this->isCrawlingProtocolHttps($configurationRecord['force_ssl'], $forceSsl);
+                                $isCrawlingProtocolHttps = $this->isCrawlingProtocolHttps($configurationRecord->isForceSsl(), $forceSsl);
 
                                 $subCfg = [
-                                    'procInstrFilter' => $configurationRecord['processing_instruction_filter'],
+                                    'procInstrFilter' => $configurationRecord->getProcessingInstructionFilter(),
                                     'procInstrParams.' => $TSparserObject->setup,
                                     'baseUrl' => $this->getBaseUrlForConfigurationRecord(
-                                        $configurationRecord['base_url'],
-                                        $configurationRecord['sys_domain_base_url'],
+                                        $configurationRecord->getBaseUrl(),
+                                        $configurationRecord->getSysDomainBaseUrl(),
                                         $isCrawlingProtocolHttps
                                     ),
-                                    'realurl' => $configurationRecord['realurl'],
-                                    'cHash' => $configurationRecord['chash'],
-                                    'userGroups' => $configurationRecord['fegroups'],
-                                    'exclude' => $configurationRecord['exclude'],
-                                    'rootTemplatePid' => (int) $configurationRecord['root_template_pid'],
-                                    'key' => $key
+                                    'realurl' => $configurationRecord->getRealUrl(),
+                                    'cHash' => $configurationRecord->getCHash(),
+                                    'userGroups' => $configurationRecord->getFeGroups(),
+                                    'exclude' => $configurationRecord->getExcludeText(),
+                                    'rootTemplatePid' => (int) $configurationRecord->getRootTemplatePid(),
+                                    'key' => $key,
                                 ];
 
                                 // add trailing slash if not present
@@ -692,10 +704,10 @@ class CrawlerController
                                 if (!in_array($id, $this->expandExcludeString($subCfg['exclude']))) {
                                     $res[$key] = [];
                                     $res[$key]['subCfg'] = $subCfg;
-                                    $res[$key]['paramParsed'] = $this->parseParams($configurationRecord['configuration']);
+                                    $res[$key]['paramParsed'] = $this->parseParams($configurationRecord->getConfiguration());
                                     $res[$key]['paramExpanded'] = $this->expandParameters($res[$key]['paramParsed'], $id);
                                     $res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'], ['?id=' . $id]);
-                                    $res[$key]['origin'] = 'tx_crawler_configuration_' . $configurationRecord['uid'];
+                                    $res[$key]['origin'] = 'tx_crawler_configuration_' . $configurationRecord->getUid();
                                 }
                             }
                         }
@@ -941,7 +953,7 @@ class CrawlerController
                             'paramArray' => &$paramArray,
                             'currentKey' => $p,
                             'currentValue' => $pV,
-                            'pid' => $pid
+                            'pid' => $pid,
                         ];
                         foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/class.tx_crawler_lib.php']['expandParameters'] as $key => $_funcRef) {
                             GeneralUtility::callUserFunction($_funcRef, $_params, $this);
@@ -1180,7 +1192,7 @@ class CrawlerController
 
         // Creating parameters:
         $parameters = [
-            'url' => $url
+            'url' => $url,
         ];
 
         // fe user group simulation:
@@ -1571,7 +1583,7 @@ class CrawlerController
             $result = [
                 'request' => $msg,
                 'headers' => implode('', $d['headers']),
-                'content' => implode('', (array)$d['content'])
+                'content' => implode('', (array)$d['content']),
             ];
 
             if (($this->extensionSettings['follow30x']) && ($newUrl = $this->getRequestUrlFrom302Header($d['headers'], $url['user'], $url['pass']))) {
@@ -1837,7 +1849,7 @@ class CrawlerController
             // Set root row:
             $tree->tree[] = [
                 'row' => $pageInfo,
-                'HTML' => IconUtility::getIconForRecord('pages', $pageInfo)
+                'HTML' => IconUtility::getIconForRecord('pages', $pageInfo),
             ];
         }
 
@@ -2343,7 +2355,7 @@ class CrawlerController
                 'qid IN (' . implode(',', $quidList) . ')',
                 [
                     'process_scheduled' => intval($this->getCurrentTime()),
-                    'process_id' => $processId
+                    'process_id' => $processId,
                 ]
             );
 
@@ -2353,7 +2365,7 @@ class CrawlerController
                 'tx_crawler_process',
                 "process_id = '" . $processId . "'",
                 [
-                    'assigned_items_count' => intval($numberOfAffectedRows)
+                    'assigned_items_count' => intval($numberOfAffectedRows),
                 ]
             );
 
@@ -2377,7 +2389,8 @@ class CrawlerController
                     return ($result | self::CLI_STATUS_ABORTED);
                 }
 
-                if (!$this->CLI_checkIfProcessIsActive($this->CLI_buildProcessId())) {
+                $process = $this->processRepository->findByUid($this->CLI_buildProcessId());
+                if (!$process->isActive()) {
                     $this->CLI_debug("conflict / timeout (" . $this->CLI_buildProcessId() . ")");
 
                     //TODO might need an additional returncode
@@ -2468,7 +2481,7 @@ class CrawlerController
                     'process_id' => $id,
                     'active' => '1',
                     'ttl' => ($currentTime + intval($this->extensionSettings['processMaxRunTime'])),
-                    'system_process_id' => $systemProcessId
+                    'system_process_id' => $systemProcessId,
                 ]
                 );
         } else {
@@ -2490,6 +2503,8 @@ class CrawlerController
      * @param  mixed    $releaseIds   string with a single process-id or array with multiple process-ids
      * @param  boolean  $withinLock   show whether the DB-actions are included within an existing lock
      * @return boolean
+     *
+     * @deprecated since crawler v6.5.1, will be removed in crawler v9.0.0.
      */
     public function CLI_releaseProcesses($releaseIds, $withinLock = false)
     {
@@ -2514,7 +2529,7 @@ class CrawlerController
             'process_id IN (SELECT process_id FROM tx_crawler_process WHERE active=0 AND deleted=0)',
             [
                 'process_scheduled' => 0,
-                'process_id' => ''
+                'process_id' => '',
             ]
         );
         $this->db->exec_UPDATEquery(
@@ -2527,7 +2542,7 @@ class CrawlerController
             )',
             [
                 'deleted' => '1',
-                'system_process_id' => 0
+                'system_process_id' => 0,
             ]
         );
         // mark all requested processes as non-active
@@ -2535,7 +2550,7 @@ class CrawlerController
             'tx_crawler_process',
             'process_id IN (\'' . implode('\',\'', $releaseIds) . '\') AND deleted=0',
             [
-                'active' => '0'
+                'active' => '0',
             ]
         );
         $this->db->exec_UPDATEquery(
@@ -2543,7 +2558,7 @@ class CrawlerController
             'exec_time=0 AND process_id IN ("' . implode('","', $releaseIds) . '")',
             [
                 'process_scheduled' => 0,
-                'process_id' => ''
+                'process_id' => '',
             ]
         );
 
@@ -2558,6 +2573,8 @@ class CrawlerController
      * Delete processes marked as deleted
      *
      * @return void
+     *
+     * @deprecated since crawler v6.5.1, will be removed in crawler v9.0.0.
      */
     public function CLI_deleteProcessesMarkedDeleted()
     {
@@ -2570,6 +2587,8 @@ class CrawlerController
      *
      * @param  string  identification string for the process
      * @return boolean determines if the process is still active / has resources
+     *
+     * @deprecated since crawler v6.5.1, will be removed in crawler v9.0.0.
      *
      * FIXME: Please remove Transaction, not needed as only a select query.
      */
@@ -2662,7 +2681,7 @@ class CrawlerController
         $result = [
             'request' => implode("\r\n", $requestHeaders) . "\r\n\r\n",
             'headers' => '',
-            'content' => $content
+            'content' => $content,
         ];
 
         return $result;

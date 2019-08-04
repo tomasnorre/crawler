@@ -27,6 +27,7 @@ namespace AOE\Crawler\Domain\Repository;
 
 use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Domain\Model\Queue;
+use TYPO3\CMS\Core\Utility\MathUtility;
 
 /**
  * Class QueueRepository
@@ -75,7 +76,7 @@ class QueueRepository extends AbstractRepository
     protected function getFirstOrLastObjectByProcess($process, $orderby)
     {
         $db = $this->getDB();
-        $where = 'process_id_completed=' . $db->fullQuoteStr($process->getProcess_id(), $this->tableName) .
+        $where = 'process_id_completed=' . $db->fullQuoteStr($process->getProcessId(), $this->tableName) .
                    ' AND exec_time > 0 ';
         $limit = 1;
         $groupby = '';
@@ -101,7 +102,7 @@ class QueueRepository extends AbstractRepository
     public function countExecutedItemsByProcess($process)
     {
         return $this->countItemsByWhereClause('exec_time > 0 AND process_id_completed = ' . $this->getDB()->fullQuoteStr(
-            $process->getProcess_id(),
+            $process->getProcessId(),
                 $this->tableName
         ));
     }
@@ -116,19 +117,37 @@ class QueueRepository extends AbstractRepository
     public function countNonExecutedItemsByProcess($process)
     {
         return $this->countItemsByWhereClause('exec_time = 0 AND process_id = ' . $this->getDB()->fullQuoteStr(
-            $process->getProcess_id(),
+            $process->getProcessId(),
                 $this->tableName
         ));
     }
 
     /**
+     * Method to determine unprocessed Items in the crawler queue.
+     *
+     * @return array
+     */
+    public function getUnprocessedItems()
+    {
+        $rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+            '*',
+            'tx_crawler_queue',
+            'exec_time = 0',
+            '',
+            'page_id, scheduled'
+        );
+
+        return $rows;
+    }
+
+    /**
      * Count items which have not been processed yet
-     * 
+     *
      * @return int
      */
     public function countUnprocessedItems()
     {
-        return $this->countItemsByWhereClause("exec_time=0 AND process_scheduled=0 AND scheduled<=" . time());
+        return count($this->getUnprocessedItems());
     }
 
     /**
@@ -273,7 +292,7 @@ class QueueRepository extends AbstractRepository
 
         $rows = [];
         while (($row = $db->sql_fetch_assoc($res)) !== false) {
-            $rows[] = $row['exec_time'];
+            $rows[] = intval($row['exec_time']);
         }
 
         return $rows;
@@ -331,6 +350,66 @@ class QueueRepository extends AbstractRepository
         }
 
         return $rows;
+    }
+
+    /**
+     * Determines if a page is queued
+     *
+     * @param $uid
+     * @param bool $unprocessed_only
+     * @param bool $timed_only
+     * @param bool $timestamp
+     *
+     * @return bool
+     */
+    public function isPageInQueue($uid, $unprocessed_only = true, $timed_only = false, $timestamp = false)
+    {
+        if (!MathUtility::canBeInterpretedAsInteger($uid)) {
+            throw new \InvalidArgumentException('Invalid parameter type', 1468931945);
+        }
+
+        $isPageInQueue = false;
+
+        $whereClause = 'page_id = ' . (integer)$uid;
+
+        if (false !== $unprocessed_only) {
+            $whereClause .= ' AND exec_time = 0';
+        }
+
+        if (false !== $timed_only) {
+            $whereClause .= ' AND scheduled != 0';
+        }
+
+        if (false !== $timestamp) {
+            $whereClause .= ' AND scheduled = ' . (integer)$timestamp;
+        }
+
+        $count = $GLOBALS['TYPO3_DB']->exec_SELECTcountRows(
+            '*',
+            'tx_crawler_queue',
+            $whereClause
+        );
+
+        if (false !== $count && $count > 0) {
+            $isPageInQueue = true;
+        }
+
+        return $isPageInQueue;
+    }
+
+    /**
+     * Method to check if a page is in the queue which is timed for a
+     * date when it should be crawled
+     *
+     * @param int $uid uid of the page
+     *
+     * @return boolean
+     *
+     */
+    public function isPageInQueueTimed($uid)
+    {
+        $uid = intval($uid);
+        return $this->isPageInQueue($uid, true);
     }
 
     /**

@@ -71,13 +71,15 @@ class QueryRepositoryTest extends FunctionalTestCase
      */
     public function getFirstOrLastObjectByProcess($processId, $orderBy, $expected)
     {
-        $process = new Process(['process_id' => $processId]);
+        /** @var Process $process */
+        $process = new Process();
+        $process->setProcessId($processId);
 
         $mockedRepository = $this->getAccessibleMock(QueueRepository::class, ['dummy']);
         /** @var Queue $result */
         $result = $mockedRepository->_call('getFirstOrLastObjectByProcess', $process, $orderBy);
 
-        $this->assertEquals(
+        $this->assertSame(
             $expected,
             $result->getRow()
         );
@@ -88,7 +90,8 @@ class QueryRepositoryTest extends FunctionalTestCase
      */
     public function findYoungestEntryForProcessReturnsQueueEntry()
     {
-        $process = new Process(['process_id' => 'qwerty']);
+        $process = new Process();
+        $process->setProcessId('qwerty');
 
         $this->assertEquals(
             [
@@ -115,7 +118,8 @@ class QueryRepositoryTest extends FunctionalTestCase
      */
     public function findOldestEntryForProcessReturnsQueueEntry()
     {
-        $process = new Process(['process_id' => 'qwerty']);
+        $process = new Process();
+        $process->setProcessId('qwerty');
 
         $this->assertEquals(
             [
@@ -142,11 +146,12 @@ class QueryRepositoryTest extends FunctionalTestCase
      */
     public function countExecutedItemsByProcessReturnsInteger()
     {
-        $process = new Process(['process_id' => 'qwerty']);
+        $process = new Process();
+        $process->setProcessId('qwerty');
 
-        $this->assertEquals(
+        $this->assertSame(
             2,
-            $this->subject->countExecutedItemsByProcess($process)
+            intval($this->subject->countExecutedItemsByProcess($process))
         );
     }
 
@@ -155,7 +160,8 @@ class QueryRepositoryTest extends FunctionalTestCase
      */
     public function countNonExecutedItemsByProcessReturnsInteger()
     {
-        $process = new Process(['process_id' => '1007']);
+        $process = new Process();
+        $process->setProcessId('1007');
 
         $this->assertEquals(
             2,
@@ -169,7 +175,7 @@ class QueryRepositoryTest extends FunctionalTestCase
     public function countUnprocessedItems()
     {
         $this->assertEquals(
-            5,
+            7,
             $this->subject->countUnprocessedItems()
         );
     }
@@ -180,7 +186,7 @@ class QueryRepositoryTest extends FunctionalTestCase
     public function countAllPendingItems()
     {
         $this->assertEquals(
-            5,
+            7,
             $this->subject->countAllPendingItems()
         );
     }
@@ -202,7 +208,7 @@ class QueryRepositoryTest extends FunctionalTestCase
     public function countAllUnassignedPendingItems()
     {
         $this->assertEquals(
-            2,
+            4,
             $this->subject->countAllUnassignedPendingItems()
         );
     }
@@ -233,22 +239,22 @@ class QueryRepositoryTest extends FunctionalTestCase
         $expectedArray = [
             0 => [
                 'configuration' => 'FirstConfiguration',
-                'unprocessed' => 2,
-                'assignedButUnprocessed' => 0
+                'unprocessed' => '2',
+                'assignedButUnprocessed' => '0'
             ],
             1 => [
                 'configuration' => 'SecondConfiguration',
-                'unprocessed' => 1,
-                'assignedButUnprocessed' => 1
+                'unprocessed' => '3',
+                'assignedButUnprocessed' => '1'
             ],
             2 => [
                 'configuration' => 'ThirdConfiguration',
-                'unprocessed' => 2,
-                'assignedButUnprocessed' => 2
+                'unprocessed' => '2',
+                'assignedButUnprocessed' => '2'
             ]
         ];
 
-        $this->assertEquals(
+        $this->assertSame(
             $expectedArray,
             $this->subject->countPendingItemsGroupedByConfigurationKey()
         );
@@ -266,7 +272,7 @@ class QueryRepositoryTest extends FunctionalTestCase
             3 => 789
         ];
 
-        $this->assertEquals(
+        $this->assertSame(
             $expectedArray,
             $this->subject->getSetIdWithUnprocessedEntries()
         );
@@ -280,11 +286,11 @@ class QueryRepositoryTest extends FunctionalTestCase
         $setIds = [123,789];
 
         $expected = [
-            'ThirdConfiguration' => 1,
-            'SecondConfiguration' => 2
+            'SecondConfiguration' => '2',
+            'ThirdConfiguration' => '1'
         ];
 
-        $this->assertEquals(
+        $this->assertSame(
             $expected,
             $this->subject->getTotalQueueEntriesByConfiguration($setIds)
         );
@@ -301,7 +307,7 @@ class QueryRepositoryTest extends FunctionalTestCase
             '2' => 18
         ];
 
-        $this->assertEquals(
+        $this->assertSame(
             $expectedArray,
             $this->subject->getLastProcessedEntriesTimestamps(3)
         );
@@ -361,9 +367,83 @@ class QueryRepositoryTest extends FunctionalTestCase
     public function countAll()
     {
         $this->assertEquals(
-            12,
+            14,
             $this->subject->countAll()
         );
+    }
+
+    /**
+     * @test
+     */
+    public function isPageInQueueThrowInvalidArgumentException()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionCode(1468931945);
+        $this->subject->isPageInQueue('Cannot be interpreted as integer');
+    }
+
+    /**
+     * @test
+     *
+     * @param $uid
+     * @param $unprocessed_only
+     * @param $timed_only
+     * @param $timestamp
+     * @param $expected
+     *
+     * @dataProvider isPageInQueueDataProvider
+     */
+    public function isPageInQueue($uid, $unprocessed_only, $timed_only, $timestamp, $expected)
+    {
+        $this->assertSame(
+            $expected,
+            $this->subject->isPageInQueue($uid, $unprocessed_only, $timed_only, $timestamp)
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function isPageInQueueTimed()
+    {
+        $this->assertTrue($this->subject->isPageInQueueTimed(15));
+    }
+
+    /**
+     * @return array
+     */
+    public function isPageInQueueDataProvider()
+    {
+        return [
+            'Unprocessed Only' => [
+                'uid' => 15,
+                'unprocessed_only' => true,
+                'timed_only' => false,
+                'timestamp' => false,
+                'expected' => true,
+            ],
+            'Timed Only' => [
+                'uid' => 16,
+                'unprocessed_only' => false,
+                'timed_only' => true,
+                'timestamp' => false,
+                'expected' => true,
+            ],
+            'Timestamp Only' => [
+                'uid' => 17,
+                'unprocessed_only' => false,
+                'timed_only' => false,
+                'timestamp' => 4321,
+                'expected' => true,
+            ],
+            'Not existing page' => [
+                'uid' => 40000,
+                'unprocessed_only' => false,
+                'timed_only' => false,
+                'timestamp' => false,
+                'expected' => false
+            ],
+        ];
     }
 
     /**
@@ -426,7 +506,7 @@ class QueryRepositoryTest extends FunctionalTestCase
         return [
             'Empty where clause, expected to return all records' => [
                 'whereClause' => '',
-                'expected' => 12
+                'expected' => 14
             ],
             'Where Clause on process_id_completed' => [
                 'whereClause' => 'process_id_completed = \'qwerty\'',

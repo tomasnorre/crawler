@@ -55,7 +55,7 @@ CREATE TABLE tx_crawler_configuration (
   hidden tinyint(4) DEFAULT '0' NOT NULL,
   name tinytext NOT NULL,
   force_ssl tinyint(4) DEFAULT '0' NOT NULL,
-  processing_instruction_filter tinytext NOT NULL,
+  processing_instruction_filter tinytext,
   processing_instruction_parameters_ts text NOT NULL,
   configuration text NOT NULL,
   base_url tinytext NOT NULL,

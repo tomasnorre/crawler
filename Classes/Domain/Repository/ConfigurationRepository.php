@@ -4,7 +4,7 @@ namespace AOE\Crawler\Domain\Repository;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2016 AOE GmbH <dev@aoe.com>
+ *  (c) 2018 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -25,43 +25,27 @@ namespace AOE\Crawler\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Extbase\Persistence\Repository;
+
 /**
- * Class AbstractRepository
- *
- * @package AOE\Crawler\Domain\Repository
+ * Class ConfigurationRepository
  */
-abstract class AbstractRepository
+class ConfigurationRepository extends Repository
 {
 
     /**
-     * @var string table name
+     * @param int $pageUid
+     * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
      */
-    protected $tableName;
-
-    /**
-     * Counts items by a given where clause
-     *
-     * @param  string $where
-     *
-     * @return integer
-     */
-    protected function countByWhere($where)
+    public function getConfigurationRecordsPageUid($pageUid = 0)
     {
-        $db = $this->getDB();
-        $rs = $db->exec_SELECTquery('count(*) as anz', $this->tableName, $where);
-        $res = $db->sql_fetch_assoc($rs);
-
-        return intval($res['anz']);
+        $query = $this->createQuery();
+        $querySettings = $query->getQuerySettings();
+        $querySettings->setRespectStoragePage(false);
+        $querySettings->setIgnoreEnableFields(false);
+        $query->setQuerySettings($querySettings);
+        $query->matching($query->equals('pid', intval($pageUid)));
+        return $query->execute();
     }
 
-    /**
-     * Returns an instance of the TYPO3 database class.
-     *
-     * @return \TYPO3\CMS\Core\Database\DatabaseConnection
-     * @deprecated since crawler v6.5.1, will be removed in crawler v9.0.0.
-     */
-    protected function getDB()
-    {
-        return $GLOBALS['TYPO3_DB'];
-    }
 }

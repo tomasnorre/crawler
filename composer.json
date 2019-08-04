@@ -16,9 +16,15 @@
         }
     ],
     "require": {
-        "php": ">= 5.6, < 7.3",
+        "php": ">= 5.6, < 7.4",
+        "ext-filter": "*",
         "ext-json": "*",
         "typo3/cms-core": ">=7.6.0",
+        "typo3/cms-backend": "*",
+        "typo3/cms-extbase": "*",
+        "typo3/cms-frontend": "*",
+        "typo3/cms-lang": "*",
+        "typo3/cms-scheduler": "*",
         "helhum/typo3-console": ">=4.0"
     },
     "require-dev": {
@@ -26,8 +32,10 @@
         "nimut/testing-framework": "^2.0 || ^4.1"
     },
     "replace": {
-        "crawler":  "self.version",
         "typo3-ter/crawler": "self.version"
+    },
+    "suggest": {
+        "ext-posix": "Extension to enable software compatibility with variants of Unix, used for shell commands in crawler"
     },
     "autoload": {
         "psr-4": {
@@ -65,7 +73,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "6.4.x-dev"
+            "dev-master": "6.5.x-dev"
         },
         "typo3/cms": {
             "cms-package-dir": "{$vendor-dir}/typo3/cms",

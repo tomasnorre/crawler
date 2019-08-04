@@ -30,6 +30,7 @@ use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
@@ -94,6 +95,12 @@ class CrawlerApi
         return $this->findCrawler()->setID;
     }
 
+    public function __construct()
+    {
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $this->queueRepository = $objectManager->get(QueueRepository::class);
+    }
+
     /**
      * Method to get an instance of the internal crawler singleton
      *
@@ -153,6 +160,8 @@ class CrawlerApi
      *
      * @param int $uid pageid
      * @param int $time timestamp
+     *
+     * @throws \Exception
      */
     public function addPageToQueueTimed($uid, $time)
     {
@@ -233,6 +242,8 @@ class CrawlerApi
      * @param bool $timed_only
      * @param bool $timestamp
      *
+     * @deprecated since crawler v6.5.1, will be removed in crawler v9.0.0.
+     *
      * @return bool
      */
     public function isPageInQueue($uid, $unprocessed_only = true, $timed_only = false, $timestamp = false)
@@ -271,7 +282,7 @@ class CrawlerApi
     }
 
     /**
-     * Method to return the latest Crawle Timestamp for a page.
+     * Method to return the latest Crawler Timestamp for a page.
      *
      * @param int $uid uid id of the page
      * @param bool $future_crawldates_only
@@ -300,7 +311,7 @@ class CrawlerApi
             $res = 0;
         }
 
-        return $res;
+        return intval($res);
     }
 
     /**
@@ -330,13 +341,19 @@ class CrawlerApi
     /**
      * Method to determine unprocessed Items in the crawler queue.
      *
+     * @deprecated since crawler v6.5.1, will be removed in crawler v9.0.0.
+     *
      * @return array
      */
     public function getUnprocessedItems()
     {
-        $query = '*';
-        $where = 'exec_time = 0';
-        $rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($query, 'tx_crawler_queue', $where, '', 'page_id, scheduled');
+        $rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+            '*',
+            'tx_crawler_queue',
+            'exec_time = 0',
+            '',
+            'page_id, scheduled'
+        );
 
         return $rows;
     }
@@ -345,6 +362,8 @@ class CrawlerApi
      * Method to get the number of unprocessed items in the crawler
      *
      * @param int number of unprocessed items in the queue
+     * @deprecated since crawler v6.5.1, will be removed in crawler v9.0.0.
+     *
      */
     public function countUnprocessedItems()
     {
@@ -363,13 +382,14 @@ class CrawlerApi
      * @param int $uid uid of the page
      * @param boolean $show_unprocessed only respect unprocessed pages
      *
+     * @deprecated since crawler v6.5.1, will be removed in crawler v9.0.0.
+     *
      * @return boolean
      */
     public function isPageInQueueTimed($uid, $show_unprocessed = true)
     {
         $uid = intval($uid);
-
-        return $this->isPageInQueue($uid, $show_unprocessed);
+        return $this->queueRepository->isPageInQueue($uid, $show_unprocessed);
     }
 
     /**
@@ -390,6 +410,7 @@ class CrawlerApi
      * Removes an queue entry with a given queue id
      *
      * @param int $qid
+     * @deprecated since crawler v6.5.1, will be removed in crawler v9.0.0. Please use the QueueRepository instead
      */
     public function removeQueueEntrie($qid)
     {
