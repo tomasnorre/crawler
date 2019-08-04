@@ -18,6 +18,7 @@
     "require": {
         "php": ">= 5.6, < 7.4",
         "ext-filter": "*",
+        "ext-json": "*",
         "typo3/cms-core": ">=7.6.0",
         "typo3/cms-backend": "*",
         "typo3/cms-extbase": "*",

@@ -1,10 +1,10 @@
 <?php
-namespace AOE\Crawler\Tests\Unit\Domain\Model;
+namespace AOE\Crawler\Tests\Unit\Service;
 
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2016 AOE GmbH <dev@aoe.com>
+ *  (c) 2019 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -55,15 +55,12 @@ class ProcessServiceTest extends UnitTestCase
     public function setUp()
     {
         $this->subject = $this->getAccessibleMock(ProcessService::class, ['dummyMethod'], [], '', false);
-
         $this->crawlerController = $this->getAccessibleMock(CrawlerController::class, ['dummyMethod'], [], '', false);
 
-        define('TYPO3_DOCUMENT_ROOT', '/typo3/document/root/');
-        define('TYPO3_SITE_PATH', '/typo3/site/path/');
-
-        $this->crawlerController->setExtensionSettings([
-            'phpPath' => '/path/to/php',
-        ]);
+        // The getcwd() will return the directory from where the tests are called,
+        // that would be the ext/crawler folder, so we are validating against
+        // the composer.json of the crawler extension, and no dummy fixture.
+        define('TYPO3_PATH_COMPOSER_ROOT', getcwd());
     }
 
     /**
@@ -71,9 +68,8 @@ class ProcessServiceTest extends UnitTestCase
      */
     public function getCrawlerCliPathReturnsString()
     {
-        $this->markTestSkipped('Test is failed, talk about define() and setExtensionSettings()-context');
         $this->assertEquals(
-            '/path/to/php /typo3/document/root/typo3/site/path/typo3/cli_dispatch.phpsh crawler',
+            getcwd() . '/.Build/bin/typo3cms crawler:crawlqueue',
             $this->subject->getCrawlerCliPath()
         );
     }
