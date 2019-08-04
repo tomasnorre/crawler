@@ -434,10 +434,11 @@ class CrawlerApi
      */
     private function getCrawlerProcInstructions(): array
     {
+
         $crawlerProcInstructions = [];
         if (!empty($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'])) {
             foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'] as $configuration) {
-                $crawlerProcInstructions[$configuration['key']] = $configuration['value']
+                $crawlerProcInstructions[$configuration['key']] = $configuration['value'];
             }
         }
 
