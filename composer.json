@@ -28,7 +28,8 @@
     },
     "require-dev": {
         "nimut/testing-framework": "^4.1",
-        "nimut/typo3-complete": "^9.5"
+        "nimut/typo3-complete": "^9.5",
+        "friendsofphp/php-cs-fixer": "^2.15"
     },
     "replace": {
         "typo3-ter/crawler": "self.version"
@@ -61,6 +62,11 @@
         "test:functional": [
             "[ -e .Build/bin/phpunit ] || composer update",
             "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseName=crawler typo3DatabaseHost=127.0.0.1 typo3DatabaseUsername=root typo3DatabasePassword=root .Build/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml Tests/Functional"
+        ],
+        "cs-fix": [
+            "[ -e .Build/bin/php-cs-fixer ] || composer update",
+            "./.Build/bin/php-cs-fixer fix Classes/",
+            "./.Build/bin/php-cs-fixer fix Tests/"
         ]
     },
     "extra": {
