@@ -123,12 +123,11 @@ class CrawlerCommandController extends CommandController
             $crawlerController->registerQueueEntriesInternallyOnly = true;
         }
 
-        if (defined('TYPO3_MODE') && 'BE' === TYPO3_MODE) {
-            // Crawler is called over TYPO3 BE
-            $pageId = 1;
-        } else {
-            // Crawler is called over cli
+        if ($this->request instanceof \TYPO3\CMS\Extbase\Mvc\Cli\Request) {
             $pageId = MathUtility::forceIntegerInRange($startpage, 0);
+        } else {
+            // Crawler is called over Backend
+            $pageId = 1;
         }
 
         $configurationKeys = $this->getConfigurationKeys($conf);
