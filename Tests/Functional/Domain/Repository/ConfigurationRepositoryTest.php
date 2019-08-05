@@ -63,6 +63,4 @@ class ConfigurationRepositoryTest extends FunctionalTestCase
             count($this->subject->getCrawlerConfigurationRecords())
         );
     }
-
-
 }

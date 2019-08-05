@@ -25,36 +25,32 @@ namespace AOE\Crawler\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\EventDispatcher;
 use AOE\Crawler\Utility\IconUtility;
 use AOE\Crawler\Utility\SignalSlotUtility;
-use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Database\DatabaseConnection;
+use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
+use TYPO3\CMS\Core\Database\Query\Restriction\EndTimeRestriction;
+use TYPO3\CMS\Core\Database\Query\Restriction\StartTimeRestriction;
 use TYPO3\CMS\Core\Log\Logger;
 use TYPO3\CMS\Core\Log\LogLevel;
-use TYPO3\CMS\Core\TimeTracker\NullTimeTracker;
 use TYPO3\CMS\Core\TimeTracker\TimeTracker;
+use TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
-use TYPO3\CMS\Frontend\Page\PageGenerator;
 use TYPO3\CMS\Frontend\Page\PageRepository;
 use TYPO3\CMS\Frontend\Utility\EidUtility;
 use TYPO3\CMS\Lang\LanguageService;
-use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
-use TYPO3\CMS\Core\Database\Query\Restriction\StartTimeRestriction;
-use TYPO3\CMS\Core\Database\Query\Restriction\EndTimeRestriction;
-use TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser;
 
 /**
  * Class CrawlerController
@@ -179,7 +175,7 @@ class CrawlerController
     /**
      * @var QueueRepository
      */
-    protected  $queueRepository;
+    protected $queueRepository;
 
     /**
      * @var ProcessRepository
@@ -195,7 +191,6 @@ class CrawlerController
      * @var array
      */
     private $cliArgs;
-
 
     /**
      * @var Logger
@@ -268,8 +263,9 @@ class CrawlerController
     /**
      * @return Logger
      */
-    private function getLogger(): Logger {
-        if($this->logger === null) {
+    private function getLogger(): Logger
+    {
+        if ($this->logger === null) {
             $this->logger = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Log\LogManager::class)->getLogger(__CLASS__);
         }
         return $this->logger;
@@ -453,15 +449,15 @@ class CrawlerController
      *
      */
     public function urlListFromUrlArray(
-    array $vv,
-    array $pageRow,
-    $scheduledTime,
-    $reqMinute,
-    $submitCrawlUrls,
-    $downloadCrawlUrls,
-    array &$duplicateTrack,
-    array &$downloadUrls,
-    array $incomingProcInstructions
+        array $vv,
+        array $pageRow,
+        $scheduledTime,
+        $reqMinute,
+        $submitCrawlUrls,
+        $downloadCrawlUrls,
+        array &$duplicateTrack,
+        array &$downloadUrls,
+        array $incomingProcInstructions
     ) {
         $urlList = '';
         // realurl support (thanks to Ingo Renner)
@@ -540,12 +536,12 @@ class CrawlerController
                         // Submit for crawling!
                         if ($submitCrawlUrls) {
                             $added = $this->addUrl(
-                            $pageRow['uid'],
-                            $theUrl,
-                            $vv['subCfg'],
-                            $scheduledTime,
-                            $configurationHash,
-                            $skipInnerCheck
+                                $pageRow['uid'],
+                                $theUrl,
+                                $vv['subCfg'],
+                                $scheduledTime,
+                                $configurationHash,
+                                $skipInnerCheck
                             );
                             if ($added === false) {
                                 $urlList .= ' (Url already existed)';
@@ -678,7 +674,6 @@ class CrawlerController
 
         // get records along the rootline
         $rootLine = BackendUtility::BEgetRootLine($id);
-
 
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tx_crawler_configuration');
         $queryBuilder->getRestrictions()->removeAll()->add(GeneralUtility::makeInstance(DeletedRestriction::class));
@@ -845,7 +840,7 @@ class CrawlerController
             )
         ->execute();
 
-        while($row = $statement->fetch()) {
+        while ($row = $statement->fetch()) {
             $configurationsForBranch[] = $row['name'];
         }
 
@@ -858,8 +853,8 @@ class CrawlerController
      * @param string $table
      * @return \TYPO3\CMS\Core\Database\Query\QueryBuilder
      */
-    private function getQueryBuilder(string $table) {
-
+    private function getQueryBuilder(string $table)
+    {
         return GeneralUtility::makeInstance(ConnectionPool::class)
             ->getConnectionForTable($table)
             ->createQueryBuilder();
@@ -1003,7 +998,8 @@ class CrawlerController
                                 if ($subpartParams['_ENABLELANG'] && $transOrigPointerField) {
                                     $queryBuilder->andWhere(
                                         $queryBuilder->expr()->lte(
-                                            $queryBuilder->quoteIdentifier($transOrigPointerField), 0
+                                            $queryBuilder->quoteIdentifier($transOrigPointerField),
+                                            0
                                         )
                                     );
                                 }
@@ -1011,7 +1007,7 @@ class CrawlerController
                                 $statement = $queryBuilder->execute();
 
                                 $rows = [];
-                                while($row = $statement->fetch()) {
+                                while ($row = $statement->fetch()) {
                                     $rows[$fieldName] = $row;
                                 }
 
@@ -1136,8 +1132,7 @@ class CrawlerController
             $this->flushQueue($doFullFlush ? '1=1' : $addWhere);
             return [];
         } else {
-
-            if($itemsPerPage > 0) {
+            if ($itemsPerPage > 0) {
                 $queryBuilder
                     ->setMaxResults((int)$itemsPerPage);
             }
@@ -1191,7 +1186,7 @@ class CrawlerController
             $this->flushQueue($doFullFlush ? '' : $addWhere);
             return [];
         } else {
-            if($itemsPerPage > 0) {
+            if ($itemsPerPage > 0) {
                 $queryBuilder
                     ->setMaxResults((int)$itemsPerPage);
             }
@@ -1213,7 +1208,6 @@ class CrawlerController
         $queryBuilder = $this->getQueryBuilder($this->tableName);
 
         if (EventDispatcher::getInstance()->hasObserver('queueEntryFlush')) {
-
             $groups = $queryBuilder
                 ->select('DISTINCT set_id')
                 ->from($this->tableName)
@@ -1347,9 +1341,9 @@ class CrawlerController
             if (count($rows) == 0) {
                 $connectionForCrawlerQueue = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('tx_crawler_queue');
                 $connectionForCrawlerQueue->insert(
-                        'tx_crawler_queue',
-                        $fieldArray
-                    );
+                    'tx_crawler_queue',
+                    $fieldArray
+                );
                 $uid = $connectionForCrawlerQueue->lastInsertId('tx_crawler_queue', 'qid');
                 $rows[] = $uid;
                 $urlAdded = true;
@@ -1417,7 +1411,7 @@ class CrawlerController
             ->andWhere($queryBuilder->expr()->eq('parameters_hash', $queryBuilder->createNamedParameter($fieldArray['parameters_hash'], \PDO::PARAM_STR)))
             ->execute();
 
-        while($row = $statement->fetch()) {
+        while ($row = $statement->fetch()) {
             $rows[] = $row['qid'];
         }
 
@@ -1464,7 +1458,7 @@ class CrawlerController
             ->where(
                 $queryBuilder->expr()->eq('qid', $queryBuilder->createNamedParameter($queueId, \PDO::PARAM_INT))
             );
-        if(!$force) {
+        if (!$force) {
             $queryBuilder
                 ->andWhere('exec_time = 0')
                 ->andWhere('process_scheduled > 0');
@@ -1516,7 +1510,7 @@ class CrawlerController
                 // it is important to name the pollSuccess key same as the procInstructions key
                 if (is_array($resultData['parameters']['procInstructions']) && in_array(
                     $pollable,
-                        $resultData['parameters']['procInstructions']
+                    $resultData['parameters']['procInstructions']
                 )
                 ) {
                     if (!empty($resultData['success'][$pollable]) && $resultData['success'][$pollable]) {
@@ -1752,10 +1746,10 @@ class CrawlerController
         // Get the path from the extension settings:
         if (isset($this->extensionSettings['frontendBasePath']) && $this->extensionSettings['frontendBasePath']) {
             $frontendBasePath = $this->extensionSettings['frontendBasePath'];
-            // If empty, try to use config.absRefPrefix:
+        // If empty, try to use config.absRefPrefix:
         } elseif (isset($GLOBALS['TSFE']->absRefPrefix) && !empty($GLOBALS['TSFE']->absRefPrefix)) {
             $frontendBasePath = $GLOBALS['TSFE']->absRefPrefix;
-            // If not in CLI mode the base path can be determined from $_SERVER environment:
+        // If not in CLI mode the base path can be determined from $_SERVER environment:
         } elseif (!defined('TYPO3_REQUESTTYPE_CLI') || !TYPO3_REQUESTTYPE_CLI) {
             $frontendBasePath = GeneralUtility::getIndpEnv('TYPO3_SITE_PATH');
         }
@@ -1820,7 +1814,6 @@ class CrawlerController
         if (!empty($this->extensionSettings['logFileName'])) {
             $fileResult = @file_put_contents($this->extensionSettings['logFileName'], date('Ymd His') . ' ' . $message . PHP_EOL, FILE_APPEND);
             if (!$fileResult) {
-
                 $this->getLogger()->log(
                     LogLevel::INFO,
                     sprintf('File "%s" could not be written, please check file permissions.', $this->extensionSettings['logFileName'])
@@ -2239,7 +2232,8 @@ class CrawlerController
      * @param int $idx Value index, default is 0 (zero) = the first one...
      * @return string
      */
-    private function cli_argValue($option, $idx) {
+    private function cli_argValue($option, $idx)
+    {
         return is_array($this->cli_args[$option]) ? $this->cli_args[$option][$idx] : '';
     }
 
@@ -2248,7 +2242,8 @@ class CrawlerController
      *
      * @param string $string The string to output
      */
-    private function cli_echo($string) {
+    private function cli_echo($string)
+    {
         $this->outputLine($string);
     }
 
@@ -2261,7 +2256,8 @@ class CrawlerController
      *
      * @param array $argv
      */
-    private function setCliArgs(array $argv) {
+    private function setCliArgs(array $argv)
+    {
         $cli_options = [];
         $index = '_DEFAULT';
         foreach ($argv as $token) {
@@ -2309,8 +2305,6 @@ class CrawlerController
         $result = 0;
         $counter = 0;
 
-
-
         // First, run hooks:
         $this->CLI_runHooks();
 
@@ -2324,7 +2318,6 @@ class CrawlerController
                     'exec_time != 0 AND exec_time < ' . $purgeDate
                 );
             if (false == $del) {
-
                 $this->getLogger()->log(
                     LogLevel::INFO,
                     'Records could not be deleted.'
@@ -2340,7 +2333,7 @@ class CrawlerController
             ->where(
                 $queryBuilder->expr()->eq('exec_time', 0),
                 $queryBuilder->expr()->eq('process_scheduled', 0),
-                $queryBuilder->expr()->lte('scheduled',  $this->getCurrentTime())
+                $queryBuilder->expr()->lte('scheduled', $this->getCurrentTime())
             )
             ->orderBy('scheduled')
             ->addOrderBy('qid')
@@ -2371,7 +2364,6 @@ class CrawlerController
                 ->set('process_scheduled', $queryBuilder->createNamedParamter($this->getCurrentTime(), \PDO::PARAM_INT))
                 ->set('process_id', $processId)
                 ->execute();
-
 
             GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('tx_crawler_process')
                 ->update(
@@ -2776,7 +2768,8 @@ class CrawlerController
      *
      * @return string
      */
-    protected function getConfigurationHash(array $configuration) {
+    protected function getConfigurationHash(array $configuration)
+    {
         unset($configuration['paramExpanded']);
         unset($configuration['URLs']);
         return md5(serialize($configuration));
@@ -2790,8 +2783,9 @@ class CrawlerController
      *
      * @return bool
      */
-    protected function isCrawlingProtocolHttps($crawlerConfiguration, $pageConfiguration) {
-        switch($crawlerConfiguration) {
+    protected function isCrawlingProtocolHttps($crawlerConfiguration, $pageConfiguration)
+    {
+        switch ($crawlerConfiguration) {
             case -1:
                 return false;
             case 0:

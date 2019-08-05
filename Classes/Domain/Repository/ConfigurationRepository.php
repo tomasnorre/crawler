@@ -27,7 +27,6 @@ namespace AOE\Crawler\Domain\Repository;
 
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
-use TYPO3\CMS\Core\Resource\Utility\BackendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -70,6 +69,4 @@ class ConfigurationRepository extends AbstractRepository
 
         return $records;
     }
-
-
 }

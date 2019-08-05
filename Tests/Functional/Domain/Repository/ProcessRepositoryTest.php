@@ -25,8 +25,6 @@ namespace AOE\Crawler\Tests\Functional\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use AOE\Crawler\Domain\Model\Process;
-use AOE\Crawler\Domain\Model\ProcessCollection;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -188,7 +186,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
         // TODO: Fix the count all
         $this->assertSame(
             3, //$this->subject->countAll(),
-            $countBeforeDelete-$expectedProcessesToBeDeleted
+            $countBeforeDelete - $expectedProcessesToBeDeleted
         );
     }
 
@@ -204,7 +202,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
         // TODO: Fix the count all
         $this->assertSame(
             3, //$this->subject->countAll(),
-            $countBeforeDelete-$expectedProcessesToBeDeleted
+            $countBeforeDelete - $expectedProcessesToBeDeleted
         );
     }
 }

@@ -29,10 +29,8 @@ use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Domain\Model\Queue;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
-use TYPO3\CMS\Core\Exception;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
-use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
 
 /**
  * Class QueueRepository
@@ -108,7 +106,6 @@ class QueueRepository extends AbstractRepository
      */
     protected function getFirstOrLastObjectByProcess($process, $orderByField, $orderBySorting = 'ASC')
     {
-
         $resultObject = new \stdClass();
         $first = $this->queryBuilder
             ->select('*')
@@ -192,7 +189,7 @@ class QueueRepository extends AbstractRepository
 
     /**
      * Count items which have not been processed yet
-     * 
+     *
      * @return int
      */
     public function countUnprocessedItems()
@@ -273,7 +270,6 @@ class QueueRepository extends AbstractRepository
      */
     public function countPendingItemsGroupedByConfigurationKey()
     {
-
         $statement = $this->queryBuilder
             ->from($this->tableName)
             ->selectLiteral('count(*) as unprocessed', 'sum(process_id != \'\') as assignedButUnprocessed')
@@ -286,7 +282,6 @@ class QueueRepository extends AbstractRepository
             ->execute();
 
         return $statement->fetchAll();
-
     }
 
     /**
@@ -325,7 +320,6 @@ class QueueRepository extends AbstractRepository
      */
     public function getTotalQueueEntriesByConfiguration(array $setIds)
     {
-
         $totals = [];
         if (count($setIds) > 0) {
             $statement = $this->queryBuilder
@@ -451,7 +445,7 @@ class QueueRepository extends AbstractRepository
 
         $isPageInQueue = false;
 
-        $statement  = $this->queryBuilder
+        $statement = $this->queryBuilder
             ->from($this->tableName)
             ->count('*')
             ->where(
@@ -503,7 +497,6 @@ class QueueRepository extends AbstractRepository
         $uid = intval($uid);
         return $this->isPageInQueue($uid, $show_unprocessed);
     }
-
 
     /**
      * @return array

@@ -219,7 +219,6 @@ class CrawlerApi
      */
     protected function countEntriesInQueueForPageByScheduleTime($page_uid, $schedule_timestamp)
     {
-
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
         $count = $queryBuilder
             ->count('*')
@@ -360,7 +359,7 @@ class CrawlerApi
             ->where(
                 $queryBuilder->expr()->eq('page_id', $queryBuilder->createNamedParameter($uid, \PDO::PARAM_INT))
             );
-        if($limit) {
+        if ($limit) {
             $statement->setMaxResults($limit);
         }
 
@@ -434,10 +433,9 @@ class CrawlerApi
      */
     private function getCrawlerProcInstructions(): array
     {
-
         $crawlerProcInstructions = [];
         if (!empty($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'])) {
-            foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'] as $configuration) {
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'] as $configuration) {
                 $crawlerProcInstructions[$configuration['key']] = $configuration['value'];
             }
         }
@@ -564,7 +562,7 @@ class CrawlerApi
         $pages = 0;
 
         reset($lastProcessedEntries);
-        foreach($lastProcessedEntries as $key => $timestamp) {
+        foreach ($lastProcessedEntries as $key => $timestamp) {
             if ($compareValue - $timestamp > $tooOldDelta) {
                 break;
             }

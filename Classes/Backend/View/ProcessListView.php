@@ -28,9 +28,7 @@ namespace AOE\Crawler\Backend\View;
 use AOE\Crawler\Domain\Model\ProcessCollection;
 use AOE\Crawler\Utility\BackendModuleUtility;
 use AOE\Crawler\Utility\ButtonUtility;
-use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 
 /**
  * Class ProcessListView

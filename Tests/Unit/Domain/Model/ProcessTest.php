@@ -71,7 +71,6 @@ class ProcessTest extends UnitTestCase
             $expected,
             $this->subject->getRow()
         );
-
     }
 
     /**
