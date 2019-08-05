@@ -328,6 +328,4 @@ class Queue extends AbstractEntity
     {
         $this->configuration = $configuration;
     }
-
-
 }

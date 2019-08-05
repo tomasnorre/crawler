@@ -227,7 +227,7 @@ class ProcessService
 
         $phpPath = $this->crawlerController->extensionSettings['phpPath'] . ' ';
         $cliPart = '/typo3cms crawler:crawlqueue';
-        $scriptPath =  $phpPath . $composerRootDir . $binDir . $cliPart;
+        $scriptPath = $phpPath . $composerRootDir . $binDir . $cliPart;
 
         if (TYPO3_OS === 'WIN') {
             $scriptPath = str_replace('/', '\\', $scriptPath);

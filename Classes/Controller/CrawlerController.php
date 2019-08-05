@@ -36,8 +36,8 @@ use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\EventDispatcher;
 use AOE\Crawler\Utility\IconUtility;
 use AOE\Crawler\Utility\SignalSlotUtility;
-use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Database\DatabaseConnection;
 use TYPO3\CMS\Core\Log\LogLevel;
@@ -183,7 +183,7 @@ class CrawlerController
     /**
      * @var QueueRepository
      */
-    protected  $queueRepository;
+    protected $queueRepository;
 
     /**
      * @var ProcessRepository
@@ -428,15 +428,15 @@ class CrawlerController
      *
      */
     public function urlListFromUrlArray(
-    array $vv,
-    array $pageRow,
-    $scheduledTime,
-    $reqMinute,
-    $submitCrawlUrls,
-    $downloadCrawlUrls,
-    array &$duplicateTrack,
-    array &$downloadUrls,
-    array $incomingProcInstructions
+        array $vv,
+        array $pageRow,
+        $scheduledTime,
+        $reqMinute,
+        $submitCrawlUrls,
+        $downloadCrawlUrls,
+        array &$duplicateTrack,
+        array &$downloadUrls,
+        array $incomingProcInstructions
     ) {
         $urlList = '';
         // realurl support (thanks to Ingo Renner)
@@ -515,12 +515,12 @@ class CrawlerController
                         // Submit for crawling!
                         if ($submitCrawlUrls) {
                             $added = $this->addUrl(
-                            $pageRow['uid'],
-                            $theUrl,
-                            $vv['subCfg'],
-                            $scheduledTime,
-                            $configurationHash,
-                            $skipInnerCheck
+                                $pageRow['uid'],
+                                $theUrl,
+                                $vv['subCfg'],
+                                $scheduledTime,
+                                $configurationHash,
+                                $skipInnerCheck
                             );
                             if ($added === false) {
                                 $urlList .= ' (Url already existed)';
@@ -1249,7 +1249,6 @@ class CrawlerController
                     SignalSlotUtility::SIGNAL_URL_ADDED_TO_QUEUE,
                     $signalPayload
                 );
-
             } else {
                 // The event dispatcher is deprecated since crawler v6.4.0, will be removed in crawler v7.0.0.
                 // Please use the Signal instead.
@@ -1395,7 +1394,7 @@ class CrawlerController
                 // it is important to name the pollSuccess key same as the procInstructions key
                 if (is_array($resultData['parameters']['procInstructions']) && in_array(
                     $pollable,
-                        $resultData['parameters']['procInstructions']
+                    $resultData['parameters']['procInstructions']
                 )
                 ) {
                     if (!empty($resultData['success'][$pollable]) && $resultData['success'][$pollable]) {
@@ -1618,10 +1617,10 @@ class CrawlerController
         // Get the path from the extension settings:
         if (isset($this->extensionSettings['frontendBasePath']) && $this->extensionSettings['frontendBasePath']) {
             $frontendBasePath = $this->extensionSettings['frontendBasePath'];
-            // If empty, try to use config.absRefPrefix:
+        // If empty, try to use config.absRefPrefix:
         } elseif (isset($GLOBALS['TSFE']->absRefPrefix) && !empty($GLOBALS['TSFE']->absRefPrefix)) {
             $frontendBasePath = $GLOBALS['TSFE']->absRefPrefix;
-            // If not in CLI mode the base path can be determined from $_SERVER environment:
+        // If not in CLI mode the base path can be determined from $_SERVER environment:
         } elseif (!defined('TYPO3_REQUESTTYPE_CLI') || !TYPO3_REQUESTTYPE_CLI) {
             $frontendBasePath = GeneralUtility::getIndpEnv('TYPO3_SITE_PATH');
         }
@@ -2190,7 +2189,6 @@ class CrawlerController
                 SignalSlotUtility::SIGNAL_INVOKE_QUEUE_CHANGE,
                 $signalPayload
             );
-
         }
 
         if ($this->extensionSettings['cleanUpOldQueueEntries']) {
@@ -2335,7 +2333,7 @@ class CrawlerController
                 AND scheduled<=' . $this->getCurrentTime(),
             '',
             'scheduled, qid',
-        intval($countInARun)
+            intval($countInARun)
         );
 
         if (count($rows) > 0) {
@@ -2749,7 +2747,8 @@ class CrawlerController
      *
      * @return string
      */
-    protected function getConfigurationHash(array $configuration) {
+    protected function getConfigurationHash(array $configuration)
+    {
         unset($configuration['paramExpanded']);
         unset($configuration['URLs']);
         return md5(serialize($configuration));
@@ -2763,8 +2762,9 @@ class CrawlerController
      *
      * @return bool
      */
-    protected function isCrawlingProtocolHttps($crawlerConfiguration, $pageConfiguration) {
-        switch($crawlerConfiguration) {
+    protected function isCrawlingProtocolHttps($crawlerConfiguration, $pageConfiguration)
+    {
+        switch ($crawlerConfiguration) {
             case -1:
                 return false;
             case 0:

@@ -86,6 +86,5 @@ class ConfigurationRepositoryTest extends FunctionalTestCase
             "Not hidden or deleted - uid 5",
             $this->subject->getConfigurationRecordsPageUid(5)->getFirst()->getName()
         );
-
     }
 }

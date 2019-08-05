@@ -25,7 +25,6 @@ namespace AOE\Crawler\Tests\Functional\Api;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use Aoe\CongstarXmlsitemap\Scheduler\GenerateSitemapTask;
 use AOE\Crawler\Api\CrawlerApi;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\QueueRepository;

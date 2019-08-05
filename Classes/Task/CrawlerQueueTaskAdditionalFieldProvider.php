@@ -107,7 +107,6 @@ class CrawlerQueueTaskAdditionalFieldProvider implements AdditionalFieldProvider
                 $fieldCode .= $this->getSelectedState($task->configuration, $recordsArray[$i]['name']);
             }
             $fieldCode .= ' value="' . $recordsArray[$i]['name'] . '">' . $recordsArray[$i]['name'] . '</option>';
-
         }
         $fieldCode .= '</select>';
 

@@ -28,7 +28,6 @@ namespace AOE\Crawler\Utility;
 
 use AOE\Crawler\Backend\BackendModule;
 use AOE\Crawler\ClickMenu\CrawlerClickMenu;
-use AOE\Crawler\ContextMenu\ItemProvider;
 use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
 use TYPO3\CMS\Core\Imaging\IconRegistry;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;

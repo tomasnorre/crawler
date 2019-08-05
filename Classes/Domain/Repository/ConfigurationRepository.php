@@ -47,5 +47,4 @@ class ConfigurationRepository extends Repository
         $query->matching($query->equals('pid', intval($pageUid)));
         return $query->execute();
     }
-
 }

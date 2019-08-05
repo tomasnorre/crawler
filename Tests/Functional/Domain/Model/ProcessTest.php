@@ -70,7 +70,7 @@ class ProcessTest extends FunctionalTestCase
             ->method('findYoungestEntryForProcess')
             ->will($this->returnValue($mockedQueueObject));
 
-        $this->inject($this->subject,'queueRepository', $mockedQueueRepository);
+        $this->inject($this->subject, 'queueRepository', $mockedQueueRepository);
 
         $this->assertEquals(
             20,
@@ -91,7 +91,7 @@ class ProcessTest extends FunctionalTestCase
             ->method('findOldestEntryForProcess')
             ->will($this->returnValue($mockedQueueObject));
 
-        $this->inject($this->subject,'queueRepository', $mockedQueueRepository);
+        $this->inject($this->subject, 'queueRepository', $mockedQueueRepository);
 
         $this->assertEquals(
             30,

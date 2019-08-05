@@ -103,7 +103,7 @@ class QueueRepository extends AbstractRepository
     {
         return $this->countItemsByWhereClause('exec_time > 0 AND process_id_completed = ' . $this->getDB()->fullQuoteStr(
             $process->getProcessId(),
-                $this->tableName
+            $this->tableName
         ));
     }
 
@@ -118,7 +118,7 @@ class QueueRepository extends AbstractRepository
     {
         return $this->countItemsByWhereClause('exec_time = 0 AND process_id = ' . $this->getDB()->fullQuoteStr(
             $process->getProcessId(),
-                $this->tableName
+            $this->tableName
         ));
     }
 

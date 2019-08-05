@@ -89,7 +89,6 @@ class ProcessTest extends UnitTestCase
             $systemProcessId,
             $this->subject->getSystemProcessId()
         );
-
     }
 
     /**

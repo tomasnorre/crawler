@@ -579,9 +579,9 @@ class BackendModule extends AbstractFunctionModule
                     $count = 0;
                     foreach ($tree->tree as $data) {
                         $code .= $this->drawLog_addRows(
-                                    $data['row'],
-                                    $data['HTML'] . BackendUtility::getRecordTitle('pages', $data['row'], true),
-                                    intval($this->pObj->MOD_SETTINGS['itemsPerPage'])
+                            $data['row'],
+                            $data['HTML'] . BackendUtility::getRecordTitle('pages', $data['row'], true),
+                            intval($this->pObj->MOD_SETTINGS['itemsPerPage'])
                                 );
                         if (++$count == 1000) {
                             break;
@@ -590,8 +590,8 @@ class BackendModule extends AbstractFunctionModule
                 } else {
                     $code = '';
                     $code .= $this->drawLog_addRows(
-                                $showSetId,
-                                'Set ID: ' . $showSetId
+                        $showSetId,
+                        'Set ID: ' . $showSetId
                             );
                 }
 
@@ -616,11 +616,11 @@ class BackendModule extends AbstractFunctionModule
                 }
             } else {	// Otherwise show available sets:
                 $setList = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-                                'set_id, count(*) as count_value, scheduled',
-                                'tx_crawler_queue',
-                                '',
-                                'set_id, scheduled',
-                                'scheduled DESC'
+                    'set_id, count(*) as count_value, scheduled',
+                    'tx_crawler_queue',
+                    '',
+                    'set_id, scheduled',
+                    'scheduled DESC'
                             );
 
                 $code = '

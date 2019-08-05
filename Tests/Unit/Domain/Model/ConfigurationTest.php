@@ -38,7 +38,6 @@ class ConfigurationTest extends UnitTestCase
      */
     protected $subject;
 
-
     public function setUp()
     {
         parent::setUp();

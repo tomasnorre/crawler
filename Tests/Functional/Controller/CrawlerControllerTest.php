@@ -26,17 +26,13 @@ namespace AOE\Crawler\Tests\Functional\Controller;
  ***************************************************************/
 
 use AOE\Crawler\Controller\CrawlerController;
-use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Domain\Model\Queue;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
-use Doctrine\DBAL\Query\QueryBuilder;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
-use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 
 /**
  * Class CrawlerControllerTest
@@ -284,7 +280,7 @@ class CrawlerControllerTest extends FunctionalTestCase
             ->setMethods(['isAdmin'])
             ->getMock();
 
-        $configurationsForBranch = $this->subject->getConfigurationsForBranch(5,99);
+        $configurationsForBranch = $this->subject->getConfigurationsForBranch(5, 99);
 
         $this->assertNotEmpty($configurationsForBranch);
         $this->assertCount(
@@ -308,14 +304,12 @@ class CrawlerControllerTest extends FunctionalTestCase
      */
     public function getDuplicateRowsIfExist($timeslotActive, $tstamp, $current, $fieldArray, $expected)
     {
-
         $mockedCrawlerController = $this->getAccessibleMock(CrawlerController::class, ['getCurrentTime']);
         $mockedCrawlerController->expects($this->any())->method('getCurrentTime')->willReturn($current);
 
         $mockedCrawlerController->setExtensionSettings([
             'enableTimeslot' => $timeslotActive,
         ]);
-
 
         $this->assertEquals(
             $expected,
@@ -370,7 +364,7 @@ class CrawlerControllerTest extends FunctionalTestCase
                     'range' => [1,2,3,4,5]
                 ]
             ],
-            'Parameters with _TABLE _PID & _WHERE (hidden = 0)'=> [
+            'Parameters with _TABLE _PID & _WHERE (hidden = 0)' => [
                 'paramArray' => ['table' => '[_TABLE:pages;_PID:5;_WHERE: and hidden = 0]'],
                 'pid' => 1,
                 'expected' => [
@@ -418,7 +412,7 @@ class CrawlerControllerTest extends FunctionalTestCase
             'Queue entry is NOT added, due to duplication check return not empty array (mocked)' => [
                 'id' => 0,
                 'url' => '',
-                'subCfg' =>  ['key' => 'some-key'],
+                'subCfg' => ['key' => 'some-key'],
                 'tstamp' => 1563287062,
                 'configurationHash' => '',
                 'skipInnerDuplicationCheck' => false,
@@ -429,7 +423,7 @@ class CrawlerControllerTest extends FunctionalTestCase
             'Queue entry is added, due to duplication is ignored' => [
                 'id' => 0,
                 'url' => '',
-                'subCfg' =>  ['key' => 'some-key'],
+                'subCfg' => ['key' => 'some-key'],
                 'tstamp' => 1563287062,
                 'configurationHash' => '',
                 'skipInnerDuplicationCheck' => true,
@@ -440,7 +434,7 @@ class CrawlerControllerTest extends FunctionalTestCase
             'Queue entry is NOT added, due to registerQueueEntriesInternalOnly' => [
                 'id' => 0,
                 'url' => '',
-                'subCfg' =>  ['key' => 'some-key'],
+                'subCfg' => ['key' => 'some-key'],
                 'tstamp' => 1563287062,
                 'configurationHash' => '',
                 'skipInnerDuplicationCheck' => true,
@@ -506,7 +500,6 @@ class CrawlerControllerTest extends FunctionalTestCase
             ],
         ];
     }
-
 
     /**
      * @return array
