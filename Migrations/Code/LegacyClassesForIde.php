@@ -17,27 +17,6 @@ class tx_crawler_auth extends AOE\Crawler\Service\AuthenticationService
 /**
  * @deprecated
  */
-class tx_crawler_cli extends AOE\Crawler\Command\CrawlerCommandLineController
-{
-}
-
-/**
- * @deprecated
- */
-class tx_crawler_cli_flush extends AOE\Crawler\Command\FlushCommandLineController
-{
-}
-
-/**
- * @deprecated
- */
-class tx_crawler_cli_im extends AOE\Crawler\Command\QueueCommandLineController
-{
-}
-
-/**
- * @deprecated
- */
 class tx_crawler_domain_events_dispatcher extends AOE\Crawler\Event\EventDispatcher
 {
 }

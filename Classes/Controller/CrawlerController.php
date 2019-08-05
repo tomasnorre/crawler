@@ -25,9 +25,6 @@ namespace AOE\Crawler\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use AOE\Crawler\Command\CrawlerCommandLineController;
-use AOE\Crawler\Command\FlushCommandLineController;
-use AOE\Crawler\Command\QueueCommandLineController;
 use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
@@ -40,7 +37,6 @@ use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\DatabaseConnection;
-use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Log\Logger;
 use TYPO3\CMS\Core\Log\LogLevel;
 use TYPO3\CMS\Core\TimeTracker\NullTimeTracker;
@@ -2237,49 +2233,6 @@ class CrawlerController
      *****************************/
 
     /**
-     * Main function for running from Command Line PHP script (cron job)
-     * See ext/crawler/cli/crawler_cli.phpsh for details
-     *
-     * @return int number of remaining items or false if error
-     */
-    public function CLI_main($args)
-    {
-        $this->setCliArgs($args);
-        $this->setAccessMode('cli');
-        $result = self::CLI_STATUS_NOTHING_PROCCESSED;
-        $cliObj = GeneralUtility::makeInstance(CrawlerCommandLineController::class);
-
-        if (!$this->getDisabled() && $this->CLI_checkAndAcquireNewProcess($this->CLI_buildProcessId())) {
-            $countInARun = $this->cli_argValue('--countInARun') ? intval($this->cli_argValue('--countInARun')) : $this->extensionSettings['countInARun'];
-            // Seconds
-            $sleepAfterFinish = $this->cli_argValue('--sleepAfterFinish') ? intval($this->cli_argValue('--sleepAfterFinish')) : $this->extensionSettings['sleepAfterFinish'];
-            // Milliseconds
-            $sleepTime = $this->cli_argValue('--sleepTime') ? intval($this->cli_argValue('--sleepTime')) : $this->extensionSettings['sleepTime'];
-
-            try {
-                // Run process:
-                $result = $this->CLI_run($countInARun, $sleepTime, $sleepAfterFinish);
-            } catch (\Exception $e) {
-                $this->CLI_debug(get_class($e) . ': ' . $e->getMessage());
-                $result = self::CLI_STATUS_ABORTED;
-            }
-
-            // Cleanup
-            $this->processRepository->deleteProcessesWithoutItemsAssigned();
-
-            //TODO can't we do that in a clean way?
-            $releaseStatus = $this->CLI_releaseProcesses($this->CLI_buildProcessId());
-
-            $this->CLI_debug("Unprocessed Items remaining:" . $this->queueRepository->countUnprocessedItems() . " (" . $this->CLI_buildProcessId() . ")");
-            $result |= ($this->queueRepository->countUnprocessedItems() > 0 ? self::CLI_STATUS_REMAIN : self::CLI_STATUS_NOTHING_PROCCESSED);
-        } else {
-            $result |= self::CLI_STATUS_ABORTED;
-        }
-
-        return $result;
-    }
-
-    /**
      * Helper function
      *
      * @param string $option Option string, eg. "-s
@@ -2329,138 +2282,6 @@ class CrawlerController
         }
 
         $this->cliArgs = $cli_options;
-    }
-
-
-
-    /**
-     * Function executed by crawler_im.php cli script.
-     *
-     * @return void
-     */
-    public function CLI_main_im($args = [])
-    {
-        $this->setAccessMode('cli_im');
-
-        if(!empty($args)) {
-            $this->setCliArgs($args);
-        }
-
-        // Force user to admin state and set workspace to "Live":
-        $this->backendUser->user['admin'] = 1;
-        $this->backendUser->setWorkspace(0);
-
-        if ($this->cli_argValue('-o') === 'exec') {
-            $this->registerQueueEntriesInternallyOnly = true;
-        }
-
-        if (isset($cliObj->cli_args['_DEFAULT'][2])) {
-            // Crawler is called over TYPO3 BE
-            $pageId = MathUtility::forceIntegerInRange($cliObj->cli_args['_DEFAULT'][2], 0);
-        } else {
-            // Crawler is called over cli
-            $pageId = MathUtility::forceIntegerInRange($cliObj->cli_args['_DEFAULT'][1], 0);
-        }
-
-        $configurationKeys = $this->getConfigurationKeys($cliObj);
-
-        if (!is_array($configurationKeys)) {
-            $configurations = $this->getUrlsForPageId($pageId);
-            if (is_array($configurations)) {
-                $configurationKeys = array_keys($configurations);
-            } else {
-                $configurationKeys = [];
-            }
-        }
-
-        if ($this->cli_argValue('-o') === 'queue' || $this->cli_argValue('-o') === 'exec') {
-            $reason = new Reason();
-            $reason->setReason(Reason::REASON_GUI_SUBMIT);
-            $reason->setDetailText('The cli script of the crawler added to the queue');
-            EventDispatcher::getInstance()->post(
-                'invokeQueueChange',
-                $this->setID,
-                ['reason' => $reason]
-            );
-        }
-
-        if ($this->extensionSettings['cleanUpOldQueueEntries']) {
-            $this->cleanUpOldQueueEntries();
-        }
-
-        $this->setID = (int) GeneralUtility::md5int(microtime());
-        $this->getPageTreeAndUrls(
-            $pageId,
-            MathUtility::forceIntegerInRange($this->cli_argValue('-d'), 0, 99),
-            $this->getCurrentTime(),
-            MathUtility::forceIntegerInRange($cliObj->cli_isArg('-n') ? $this->cli_argValue('-n') : 30, 1, 1000),
-            $this->cli_argValue('-o') === 'queue' || $this->cli_argValue('-o') === 'exec',
-            $this->cli_argValue('-o') === 'url',
-            GeneralUtility::trimExplode(',', $this->cli_argValue('-proc'), true),
-            $configurationKeys
-        );
-
-        if ($this->cli_argValue('-o') === 'url') {
-            $this->cli_echo(implode(chr(10), $this->downloadUrls) . chr(10), true);
-        } elseif ($this->cli_argValue('-o') === 'exec') {
-            $this->cli_echo("Executing " . count($this->urlList) . " requests right away:\n\n");
-            $this->cli_echo(implode(chr(10), $this->urlList) . chr(10));
-            $this->cli_echo("\nProcessing:\n");
-
-            foreach ($this->queueEntries as $queueRec) {
-                $p = unserialize($queueRec['parameters']);
-                $this->cli_echo($p['url'] . ' (' . implode(',', $p['procInstructions']) . ') => ');
-
-                $result = $this->readUrlFromArray($queueRec);
-
-                $requestResult = unserialize($result['content']);
-                if (is_array($requestResult)) {
-                    $resLog = is_array($requestResult['log']) ? chr(10) . chr(9) . chr(9) . implode(chr(10) . chr(9) . chr(9), $requestResult['log']) : '';
-                    $this->cli_echo('OK: ' . $resLog . chr(10));
-                } else {
-                    $this->cli_echo('Error checking Crawler Result: ' . substr(preg_replace('/\s+/', ' ', strip_tags($result['content'])), 0, 30000) . '...' . chr(10));
-                }
-            }
-        } elseif ($this->cli_argValue('-o') === 'queue') {
-            $this->cli_echo("Putting " . count($this->urlList) . " entries in queue:\n\n");
-            $this->cli_echo(implode(chr(10), $this->urlList) . chr(10));
-        } else {
-            $this->cli_echo(count($this->urlList) . " entries found for processing. (Use -o to decide action):\n\n", true);
-            $this->cli_echo(implode(chr(10), $this->urlList) . chr(10), true);
-        }
-    }
-
-    /**
-     * Function executed by crawler_im.php cli script.
-     *
-     * @return bool
-     */
-    public function CLI_main_flush()
-    {
-        $this->setAccessMode('cli_flush');
-        $cliObj = GeneralUtility::makeInstance(FlushCommandLineController::class);
-
-        // Force user to admin state and set workspace to "Live":
-        $this->backendUser->user['admin'] = 1;
-        $this->backendUser->setWorkspace(0);
-
-        $pageId = MathUtility::forceIntegerInRange($cliObj->cli_args['_DEFAULT'][1], 0);
-        $fullFlush = ($pageId == 0);
-
-        $mode = $this->cli_argValue('-o');
-
-        switch ($mode) {
-            case 'all':
-                $result = $this->getLogEntriesForPageId($pageId, '', true, $fullFlush);
-                break;
-            case 'finished':
-            case 'pending':
-                $result = $this->getLogEntriesForPageId($pageId, $mode, true, $fullFlush);
-                break;
-            default:
-        }
-
-        return $result !== false;
     }
 
     /**
