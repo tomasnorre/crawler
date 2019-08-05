@@ -92,7 +92,7 @@ class BackendModuleTest extends FunctionalTestCase
      *
      * @return mixed Method return.
      */
-    private function invokeMethod(&$object, $methodName, array $parameters = array())
+    private function invokeMethod(&$object, $methodName, array $parameters = [])
     {
         $reflection = new \ReflectionClass(get_class($object));
         $method = $reflection->getMethod($methodName);
@@ -100,5 +100,4 @@ class BackendModuleTest extends FunctionalTestCase
 
         return $method->invokeArgs($object, $parameters);
     }
-
 }

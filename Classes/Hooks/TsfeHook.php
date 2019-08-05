@@ -52,7 +52,6 @@ class TsfeHook
      */
     public function fe_init(&$params, $ref)
     {
-
         $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tx_crawler_queue');
 
         // Authenticate crawler request:
@@ -68,7 +67,6 @@ class TsfeHook
                 )
                 ->execute()
                 ->fetch();
-
 
             // If a crawler record was found and hash was matching, set it up:
             if (is_array($queueRec) && $hash === md5($queueRec['qid'] . '|' . $queueRec['set_id'] . '|' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'])) {

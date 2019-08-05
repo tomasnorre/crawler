@@ -258,15 +258,14 @@ class QueryRepositoryTest extends FunctionalTestCase
 
         // We only compare on qid to make the comparison easier
         $actually = [];
-        foreach($this->subject->getUnprocessedItems() as $item) {
+        foreach ($this->subject->getUnprocessedItems() as $item) {
             $actually[] = $item['qid'];
         }
 
-         $this->assertSame(
+        $this->assertSame(
              $expected,
              $actually
          );
-
     }
 
     /**
@@ -404,7 +403,7 @@ class QueryRepositoryTest extends FunctionalTestCase
 
         $processedEntries = $this->subject->getLastProcessedEntries(2);
         $actually = [];
-        foreach($processedEntries as $processedEntry) {
+        foreach ($processedEntries as $processedEntry) {
             $actually[] = $processedEntry['qid'];
         }
 

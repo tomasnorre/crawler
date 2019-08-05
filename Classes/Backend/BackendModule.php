@@ -41,7 +41,6 @@ use TYPO3\CMS\Backend\Module\AbstractFunctionModule;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Beuser\Domain\Model\BackendUser;
-use TYPO3\CMS\Beuser\Domain\Model\Demand;
 use TYPO3\CMS\Beuser\Domain\Repository\BackendUserRepository;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
@@ -53,10 +52,8 @@ use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
-use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
-use TYPO3\CMS\Backend\Routing\UriBuilder;
 
 /**
  * Class BackendModule
@@ -518,8 +515,6 @@ class BackendModule extends AbstractFunctionModule
         return $content;
     }
 
-
-
     /**
      * Begins an output section and sets header and content
      *
@@ -765,10 +760,10 @@ class BackendModule extends AbstractFunctionModule
                     $count = 0;
                     foreach ($tree->tree as $data) {
                         $code .= $this->drawLog_addRows(
-                                    $data['row'],
-                                    $data['HTML'] . BackendUtility::getRecordTitle('pages', $data['row'], true),
-                                    intval($this->pObj->MOD_SETTINGS['itemsPerPage'])
-                                );
+                            $data['row'],
+                            $data['HTML'] . BackendUtility::getRecordTitle('pages', $data['row'], true),
+                            intval($this->pObj->MOD_SETTINGS['itemsPerPage'])
+                        );
                         if (++$count == 1000) {
                             break;
                         }
@@ -776,9 +771,9 @@ class BackendModule extends AbstractFunctionModule
                 } else {
                     $code = '';
                     $code .= $this->drawLog_addRows(
-                                $showSetId,
-                                'Set ID: ' . $showSetId
-                            );
+                        $showSetId,
+                        'Set ID: ' . $showSetId
+                    );
                 }
 
                 if ($code) {
@@ -1218,7 +1213,7 @@ class BackendModule extends AbstractFunctionModule
         /** @var QueryResult $user */
         $user = $this->backendUserRepository->findByUsername($username);
 
-        if ($user->getFirst() instanceof BackendUser ) {
+        if ($user->getFirst() instanceof BackendUser) {
             $isAvailable = true;
         }
 

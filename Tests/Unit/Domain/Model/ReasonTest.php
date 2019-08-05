@@ -27,15 +27,12 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
 
 use AOE\Crawler\Domain\Model\Reason;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class ReasonTest
  */
 class ReasonTest extends UnitTestCase
 {
-
     public function setUp()
     {
         parent::setUp();
@@ -51,7 +48,6 @@ class ReasonTest extends UnitTestCase
      */
     public function expectsConstructorToSetPropertiesFromArray()
     {
-
         $propertiesArray = [
             'uid' => 209
         ];

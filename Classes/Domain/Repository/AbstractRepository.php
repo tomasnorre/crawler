@@ -27,7 +27,6 @@ namespace AOE\Crawler\Domain\Repository;
 
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 
-
 /**
  * Class AbstractRepository
  *

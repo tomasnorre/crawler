@@ -20,7 +20,6 @@ namespace AOE\Crawler\Utility;
  */
 
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Core\Utility\PathUtility;
 
 /**
  * Class TcaUtility
@@ -38,7 +37,6 @@ class TcaUtility
      */
     public function getProcessingInstructions(array $configuration)
     {
-
         $configuration = $configuration ?? ['items' => []];
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'])) {
             foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'] as $extensionKey => $extensionConfiguration) {

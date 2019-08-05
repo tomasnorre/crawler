@@ -50,6 +50,4 @@ class ExtensionSettingUtility
 
         return $extensionSettings;
     }
-
-
 }

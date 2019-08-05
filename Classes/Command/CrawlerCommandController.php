@@ -33,7 +33,6 @@ use Helhum\Typo3Console\Mvc\Controller\CommandController;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class CrawlerCommandController
@@ -235,7 +234,7 @@ class CrawlerCommandController extends CommandController
                 // Run process:
                 $result = $crawlerController->CLI_run($countInARun, $sleepTime, $sleepAfterFinish);
             } catch (\Exception $e) {
-                $this->outputLine('<warning>'. get_class($e) . ': ' . $e->getMessage() . '</warning>');
+                $this->outputLine('<warning>' . get_class($e) . ': ' . $e->getMessage() . '</warning>');
                 $result = self::CLI_STATUS_ABORTED;
             }
 
@@ -244,7 +243,7 @@ class CrawlerCommandController extends CommandController
             $queryBuilder
                 ->delete($this->tableCrawlerProcess)
                 ->where(
-                    $queryBuilder->expr()->eq('assigned_item_count', 0)
+                    $queryBuilder->expr()->eq('assigned_items_count', 0)
                 )
                 ->execute();
 
@@ -257,7 +256,6 @@ class CrawlerCommandController extends CommandController
         }
 
         return $result;
-
     }
 
     /**

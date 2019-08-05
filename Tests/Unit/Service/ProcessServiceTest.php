@@ -81,7 +81,6 @@ class ProcessServiceTest extends UnitTestCase
      */
     public function multiProcessThrowsException()
     {
-
         $this->expectException(\RuntimeException::class);
 
         $timeOut = 1;
@@ -89,6 +88,5 @@ class ProcessServiceTest extends UnitTestCase
             'processLimit' => 1,
         ]);
         $this->subject->multiProcess($timeOut);
-
     }
 }
