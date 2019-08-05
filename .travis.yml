@@ -94,9 +94,6 @@ jobs:
       env: TYPO3_VERSION=^7.6 COVERAGE=0 FUNCTIONAL=1
       php: 7.2
     - stage: test
-      env: TYPO3_VERSION=^7.6 COVERAGE=0 FUNCTIONAL=1
-      php: 7.3
-    - stage: test
       env: TYPO3_VERSION=^8.7 COVERAGE=0 FUNCTIONAL=1
       php: 7.0
     - stage: test
@@ -108,3 +105,23 @@ jobs:
     - stage: test
       env: TYPO3_VERSION=^8.7 COVERAGE=0 FUNCTIONAL=1
       php: 7.3
+
+    - stage: ship to ter
+      if: tag IS present
+      php: 7.0
+      install: skip
+      before_script: skip
+      script:
+        - |
+          if [ -n "$TYPO3_ORG_USERNAME" ] && [ -n "$TYPO3_ORG_PASSWORD" ]; then
+            echo -e "Preparing upload of release ${TRAVIS_TAG} to TER\n";
+            # Install ter client
+            composer global require helhum/ter-client
+            # Build extension files
+            composer extension-release
+            # Upload
+            TAG_MESSAGE=`git log -1 --pretty=%B`
+            echo "Tag-Message: ${TAG_MESSAGE}"
+            echo "Uploading release ${TRAVIS_TAG} to TER"
+            #$HOME/.composer/vendor/bin/ter-client upload typo3_console . -u "$TYPO3_ORG_USERNAME" -p "$TYPO3_ORG_PASSWORD" -m "$TAG_MESSAGE"
+          fi;
