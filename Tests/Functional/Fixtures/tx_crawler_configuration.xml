@@ -15,7 +15,6 @@
         <pidsonly></pidsonly>
         <begroups></begroups>
         <fegroups></fegroups>
-        <realurl>0</realurl>
         <chash>0</chash>
         <exclude>0</exclude>
         <root_template_pid>0</root_template_pid>
@@ -35,7 +34,6 @@
         <pidsonly></pidsonly>
         <begroups></begroups>
         <fegroups></fegroups>
-        <realurl>0</realurl>
         <chash>0</chash>
         <exclude>0</exclude>
         <root_template_pid>0</root_template_pid>
@@ -55,7 +53,6 @@
         <pidsonly></pidsonly>
         <begroups></begroups>
         <fegroups></fegroups>
-        <realurl>0</realurl>
         <chash>0</chash>
         <exclude>0</exclude>
         <root_template_pid>0</root_template_pid>
@@ -75,7 +72,6 @@
         <pidsonly></pidsonly>
         <begroups></begroups>
         <fegroups></fegroups>
-        <realurl>0</realurl>
         <chash>0</chash>
         <exclude>0</exclude>
         <root_template_pid>0</root_template_pid>
@@ -95,7 +91,6 @@
         <pidsonly></pidsonly>
         <begroups></begroups>
         <fegroups></fegroups>
-        <realurl>0</realurl>
         <chash>0</chash>
         <exclude>0</exclude>
         <root_template_pid>0</root_template_pid>

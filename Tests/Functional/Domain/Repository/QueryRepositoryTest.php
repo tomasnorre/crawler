@@ -263,9 +263,9 @@ class QueryRepositoryTest extends FunctionalTestCase
         }
 
         $this->assertSame(
-             $expected,
-             $actually
-         );
+            $expected,
+            $actually
+        );
     }
 
     /**

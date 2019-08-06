@@ -892,24 +892,24 @@ class CrawlerControllerTest extends UnitTestCase
     {
         return [
             'Not in list' => [
-                'piString' => 'tx_indexedsearch_reindex,tx_realurl_rebuild,tx_esetcache_clean_main',
+                'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
                 'incomingProcInstructions' => [
                     'tx_unknown_extension_instruction'
                 ],
                 'expected' => false
             ],
             'In list' => [
-                'piString' => 'tx_indexedsearch_reindex,tx_realurl_rebuild,tx_esetcache_clean_main',
+                'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
                 'incomingProcInstructions' => [
                     'tx_indexedsearch_reindex',
                 ],
                 'expected' => true
             ],
             'Twice in list' => [
-                'piString' => 'tx_indexedsearch_reindex,tx_realurl_rebuild,tx_esetcache_clean_main',
+                'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
                 'incomingProcInstructions' => [
-                    'tx_realurl_rebuild',
-                    'tx_realurl_rebuild'
+                    'tx_indexedsearch_reindex',
+                    'tx_indexedsearch_reindex'
                 ],
                 'expected' => true
             ],
@@ -919,9 +919,9 @@ class CrawlerControllerTest extends UnitTestCase
                 'expected' => true
             ],
             'In list CAPITALIZED' => [
-                'piString' => 'tx_indexedsearch_reindex,tx_realurl_rebuild,tx_esetcache_clean_main',
+                'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
                 'incomingProcInstructions' => [
-                    'TX_REALURL_REBUILD'
+                    'TX_INDEXEDSEARCH_REINDES'
                 ],
                 'expected' => false
             ],

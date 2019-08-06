@@ -45,9 +45,6 @@
             <trans-unit id="tx_crawler_configuration.fegroups">
                 <source>Crawl with FE usergroups</source>
             </trans-unit>
-            <trans-unit id="tx_crawler_configuration.realurl">
-                <source>Use realurl urls</source>
-            </trans-unit>
             <trans-unit id="tx_crawler_configuration.chash">
                 <source>Append cHash</source>
             </trans-unit>

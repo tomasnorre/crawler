@@ -18,7 +18,7 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = [
         'iconfile' => 'EXT:crawler/Resources/Public/Icons/icon_tx_crawler_configuration.gif',
     ],
     'interface' => [
-        'showRecordFieldList' => 'hidden,name,force_ssl,processing_instruction_filter,processing_instruction_parameters_ts,configuration,base_url,pidsonly,begroups,realurl,chash, exclude'
+        'showRecordFieldList' => 'hidden,name,force_ssl,processing_instruction_filter,processing_instruction_parameters_ts,configuration,base_url,pidsonly,begroups,chash, exclude'
     ],
     'columns' => [
         'hidden' => [
@@ -149,13 +149,6 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = [
                 'foreign_table' => 'fe_groups'
             ]
         ],
-        'realurl' => [
-            'exclude' => 1,
-            'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.realurl',
-            'config' => [
-                'type' => 'check',
-            ]
-        ],
         'chash' => [
             'exclude' => 1,
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.chash',
@@ -194,7 +187,7 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = [
         ]
     ],
     'types' => [
-        '0' => ['showitem' => 'hidden, name, force_ssl, processing_instruction_filter, base_url, sys_domain_base_url, root_template_pid, pidsonly, configuration, processing_instruction_parameters_ts,begroups, fegroups, realurl, chash, exclude']
+        '0' => ['showitem' => 'hidden, name, force_ssl, processing_instruction_filter, base_url, sys_domain_base_url, root_template_pid, pidsonly, configuration, processing_instruction_parameters_ts,begroups, fegroups, chash, exclude']
     ],
     'palettes' => [
         '1' => ['showitem' => '']
