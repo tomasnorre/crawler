@@ -460,34 +460,6 @@ class CrawlerController
         array $incomingProcInstructions
     ) {
         $urlList = '';
-        // realurl support (thanks to Ingo Renner)
-        if (ExtensionManagementUtility::isLoaded('realurl') && $vv['subCfg']['realurl']) {
-
-            /** @var tx_realurl $urlObj */
-            $urlObj = GeneralUtility::makeInstance('tx_realurl');
-
-            if (!empty($vv['subCfg']['baseUrl'])) {
-                $urlParts = parse_url($vv['subCfg']['baseUrl']);
-                $host = strtolower($urlParts['host']);
-                $urlObj->host = $host;
-
-                // First pass, finding configuration OR pointer string:
-                $urlObj->extConf = isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['realurl'][$urlObj->host]) ? $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['realurl'][$urlObj->host] : $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['realurl']['_DEFAULT'];
-
-                // If it turned out to be a string pointer, then look up the real config:
-                if (is_string($urlObj->extConf)) {
-                    $urlObj->extConf = is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['realurl'][$urlObj->extConf]) ? $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['realurl'][$urlObj->extConf] : $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['realurl']['_DEFAULT'];
-                }
-            }
-
-            if (!$GLOBALS['TSFE']->sys_page) {
-                $GLOBALS['TSFE']->sys_page = GeneralUtility::makeInstance('TYPO3\CMS\Frontend\Page\PageRepository');
-            }
-
-            if (!$GLOBALS['TSFE']->tmpl->rootLine[0]['uid']) {
-                $GLOBALS['TSFE']->tmpl->rootLine[0]['uid'] = $urlObj->extConf['pagePath']['rootpage_id'];
-            }
-        }
 
         if (is_array($vv['URLs'])) {
             $configurationHash = $this->getConfigurationHash($vv);
@@ -505,19 +477,7 @@ class CrawlerController
 
                     // Create key by which to determine unique-ness:
                     $uKey = $urlQuery . '|' . $vv['subCfg']['userGroups'] . '|' . $vv['subCfg']['baseUrl'] . '|' . $vv['subCfg']['procInstrFilter'];
-
-                    // realurl support (thanks to Ingo Renner)
                     $urlQuery = 'index.php' . $urlQuery;
-                    if (ExtensionManagementUtility::isLoaded('realurl') && $vv['subCfg']['realurl']) {
-                        $params = [
-                            'LD' => [
-                                'totalURL' => $urlQuery
-                            ],
-                            'TCEmainHook' => true
-                        ];
-                        $urlObj->encodeSpURL($params);
-                        $urlQuery = $params['LD']['totalURL'];
-                    }
 
                     // Scheduled time:
                     $schTime = $scheduledTime + round(count($duplicateTrack) * (60 / $reqMinute));
@@ -717,7 +677,6 @@ class CrawlerController
                                         $configurationRecord['sys_domain_base_url'],
                                         $isCrawlingProtocolHttps
                                     ),
-                                    'realurl' => $configurationRecord['realurl'],
                                     'cHash' => $configurationRecord['chash'],
                                     'userGroups' => $configurationRecord['fegroups'],
                                     'exclude' => $configurationRecord['exclude'],
