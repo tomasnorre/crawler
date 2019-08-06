@@ -249,55 +249,6 @@ class CrawlerApi
     }
 
     /**
-     * Determines if a page is queued
-     *
-     * @param int $uid
-     * @param bool $unprocessed_only
-     * @param bool $timed_only
-     * @param bool $timestamp
-     *
-     * @return bool
-     *
-     * @deprecated since crawler v7.0.0, will be removed in crawler v8.0.0.
-     */
-    public function isPageInQueue($uid, $unprocessed_only = true, $timed_only = false, $timestamp = false)
-    {
-        if (!MathUtility::canBeInterpretedAsInteger($uid)) {
-            throw new \InvalidArgumentException('Invalid parameter type', 1468931945);
-        }
-
-        $isPageInQueue = false;
-
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
-        $queryBuilder
-            ->count('*')
-            ->from($this->tableName)
-            ->where(
-                $queryBuilder->expr()->eq('page_id', $queryBuilder->createNamedParameter($uid, \PDO::PARAM_INT))
-            );
-
-        if (false !== $unprocessed_only) {
-            $queryBuilder->andWhere($queryBuilder->expr()->eq('exec_time', 0));
-        }
-
-        if (false !== $timed_only) {
-            $queryBuilder->andWhere($queryBuilder->expr()->neq('scheduled', 0));
-        }
-
-        if (false !== $timestamp) {
-            $queryBuilder->andWhere($queryBuilder->expr()->neq('scheduled', $queryBuilder->createNamedParameter($timestamp, \PDO::PARAM_INT)));
-        }
-
-        $count = $queryBuilder->execute()->fetchColumn(0);
-
-        if (false !== $count && $count > 0) {
-            $isPageInQueue = true;
-        }
-
-        return $isPageInQueue;
-    }
-
-    /**
      * Method to return the latest Crawle Timestamp for a page.
      *
      * @param int $uid uid id of the page
@@ -370,64 +321,6 @@ class CrawlerApi
     }
 
     /**
-     * Method to determine unprocessed Items in the crawler queue.
-     *
-     * @return array
-     *
-     * @deprecated since crawler v7.0.0, will be removed in crawler v8.0.0.
-     */
-    public function getUnprocessedItems()
-    {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
-        return $queryBuilder
-            ->select('*')
-            ->from($this->tableName)
-            ->where(
-                $queryBuilder->expr()->eq('exec_time', 0)
-            )
-            ->orderBy('page_id')
-            ->addOrderBy('scheduled')
-            ->execute()
-            ->fetchAll();
-    }
-
-    /**
-     * Method to get the number of unprocessed items in the crawler
-     *
-     * @deprecated since crawler v7.0.0, will be removed in crawler v8.0.0.
-     */
-    public function countUnprocessedItems()
-    {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
-        return $queryBuilder
-            ->count('page_id')
-            ->from($this->tableName)
-            ->where(
-                $queryBuilder->expr()->eq('exec_time', 0)
-            )
-            ->execute()
-            ->fetchColumn(0);
-    }
-
-    /**
-     * Method to check if a page is in the queue which is timed for a
-     * date when it should be crawled
-     *
-     * @param int $uid uid of the page
-     * @param boolean $show_unprocessed only respect unprocessed pages
-     *
-     * @return boolean
-     *
-     * @deprecated since crawler v7.0.0, will be removed in crawler v8.0.0.
-     */
-    public function isPageInQueueTimed($uid, $show_unprocessed = true)
-    {
-        $uid = intval($uid);
-
-        return $this->isPageInQueue($uid, $show_unprocessed);
-    }
-
-    /**
      * Reads the registered processingInstructions of the crawler
      *
      * @return array
@@ -442,25 +335,6 @@ class CrawlerApi
         }
 
         return $crawlerProcInstructions;
-    }
-
-    /**
-     * Removes an queue entry with a given queue id
-     *
-     * @param int $qid
-     *
-     * @deprecated since crawler v7.0.0, will be removed in crawler v8.0.0.
-     */
-    public function removeQueueEntrie($qid)
-    {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
-        $queryBuilder
-            ->delete()
-            ->from($this->tableName)
-            ->where(
-                $queryBuilder->expr()->eq('qid', $queryBuilder->createNamedParameter($qid, \PDO::PARAM_INT))
-            )
-            ->execute();
     }
 
     /**

@@ -183,23 +183,6 @@ class BackendModule extends AbstractFunctionModule
     }
 
     /**
-     * Load extension settings
-     *
-     * @return void
-     *
-     * @deprecated since crawler v7.0.0, will be removed in crawler v8.0.0.
-     */
-    protected function loadExtensionSettings()
-    {
-        $isVersionLowerThan9 = \TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 9000000;
-        if ($isVersionLowerThan9) {
-            $this->extensionSettings = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['crawler']);
-        } else {
-            $this->extensionSettings = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('crawler');
-        }
-    }
-
-    /**
      * Main function
      *
      * @return	string		HTML output

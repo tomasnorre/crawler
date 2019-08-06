@@ -2452,10 +2452,9 @@ class CrawlerController
             $ret = false;
         }
 
+        $this->processRepository->deleteProcessesMarkedAsDeleted();
+        $this->processRepository->deleteProcessesWithoutItemsAssigned();
         $this->CLI_releaseProcesses($orphanProcesses, true); // maybe this should be somehow included into the current lock
-        $this->CLI_deleteProcessesMarkedDeleted();
-
-        //$this->queryBuilder->getConnection()->executeQuery('COMMIT');
 
         return $ret;
     }
@@ -2553,23 +2552,6 @@ class CrawlerController
         }
 
         return true;
-    }
-
-    /**
-     * Delete processes marked as deleted
-     *
-     * @return void
-     *
-     * @deprecated since crawler v7.0.0, will be removed in crawler v8.0.0.
-     * Please Consider using $this->processRepository->deleteProcessesMarkedAsDeleted()
-     */
-    public function CLI_deleteProcessesMarkedDeleted()
-    {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
-        $queryBuilder
-            ->delete('tx_crawler_process')
-            ->where('deleted = 1')
-            ->execute();
     }
 
     /**
