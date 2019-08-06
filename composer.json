@@ -67,6 +67,16 @@
             "[ -e .Build/bin/php-cs-fixer ] || composer update",
             "./.Build/bin/php-cs-fixer fix Classes/",
             "./.Build/bin/php-cs-fixer fix Tests/"
+        ],
+        "test:all": [
+            "@test:unit",
+            "@test:functional"
+        ],
+        "extension-release": [
+            "rm -rf Tests/",
+            "rm .gitignore",
+            "rm .scrutinizer.yml",
+            "rm .travis.yml"
         ]
     },
     "extra": {
