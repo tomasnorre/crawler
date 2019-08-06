@@ -55,6 +55,6 @@ class TcaUtility
      */
     protected function getExtensionIcon($extensionKey)
     {
-        return ExtensionManagementUtility::getExtensionIcon(ExtensionManagementUtility::extPath($extensionKey), 1);
+        return ExtensionManagementUtility::getExtensionIcon(ExtensionManagementUtility::extPath($extensionKey), true);
     }
 }

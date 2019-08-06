@@ -43,7 +43,7 @@ use TYPO3\CMS\Frontend\Page\PageRepository;
 class CrawlerApi
 {
     /**
-     * @var CrawlerController
+     * @var CrawlerController|Object
      */
     private $crawlerController;
 
@@ -53,7 +53,7 @@ class CrawlerApi
     protected $queueRepository;
 
     /**
-     * @var $allowedConfigurations array
+     * @var array
      */
     protected $allowedConfigurations = [];
 
@@ -69,6 +69,7 @@ class CrawlerApi
 
     public function __construct()
     {
+        /** @var ObjectManager $objectManager */
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->crawlerController = $objectManager->get(CrawlerController::class);
     }
@@ -77,11 +78,12 @@ class CrawlerApi
      * Each crawler run has a setid, this facade method delegates
      * the it to the crawler object
      *
-     * @param int
+     * @param int $id
+     * @throws \Exception
      */
-    public function overwriteSetId($id)
+    public function overwriteSetId(int $id)
     {
-        $this->findCrawler()->setID = intval($id);
+        $this->findCrawler()->setID = $id;
     }
 
     /**
@@ -172,6 +174,9 @@ class CrawlerApi
      *
      * @param int $uid pageid
      * @param int $time timestamp
+     *
+     * @throws \Exception
+     * @return void
      */
     public function addPageToQueueTimed($uid, $time)
     {
@@ -204,8 +209,6 @@ class CrawlerApi
                 //reset the queue because the entries have been written to the db
                 unset($crawler->queueEntries);
             }
-        } else {
-            //no configuration found
         }
     }
 
@@ -248,7 +251,7 @@ class CrawlerApi
     /**
      * Determines if a page is queued
      *
-     * @param $uid
+     * @param int $uid
      * @param bool $unprocessed_only
      * @param bool $timed_only
      * @param bool $timestamp
@@ -390,8 +393,6 @@ class CrawlerApi
 
     /**
      * Method to get the number of unprocessed items in the crawler
-     *
-     * @param int number of unprocessed items in the queue
      *
      * @deprecated since crawler v7.0.0, will be removed in crawler v8.0.0.
      */

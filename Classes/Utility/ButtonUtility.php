@@ -48,7 +48,7 @@ class ButtonUtility
      * @param string $href
      * @param array $attributes
      *
-     * @return $this
+     * @return \TYPO3\CMS\Backend\Template\Components\Buttons\LinkButton
      */
     public static function getLinkButton($icon = '', $title = '', $onClick = '', $iconSize = Icon::SIZE_SMALL, $href = '#', $attributes = [])
     {

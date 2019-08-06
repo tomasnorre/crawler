@@ -47,6 +47,7 @@ class BackendModuleUtility
                 'id' => GeneralUtility::_GP('id')
             ]);
         }
+        /** @var UriBuilder $uriBuilder */
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
         return $uriBuilder->buildUriFromRoute('web_info', $uriParameters);
     }

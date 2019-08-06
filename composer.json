@@ -29,7 +29,8 @@
     "require-dev": {
         "nimut/testing-framework": "^4.1",
         "nimut/typo3-complete": "^9.5",
-        "friendsofphp/php-cs-fixer": "^2.15"
+        "friendsofphp/php-cs-fixer": "^2.15",
+        "phpstan/phpstan": "^0.11.4"
     },
     "replace": {
         "typo3-ter/crawler": "self.version"
@@ -68,6 +69,7 @@
             "./.Build/bin/php-cs-fixer fix Classes/",
             "./.Build/bin/php-cs-fixer fix Tests/"
         ],
+        "analyse": "phpstan analyse --no-progress",
         "test:all": [
             "@test:unit",
             "@test:functional"
