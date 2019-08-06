@@ -38,38 +38,17 @@ use AOE\Crawler\Task\FlushQueueTaskAdditionalFieldProvider;
 class SchedulerUtility
 {
     /**
-     * @param $extKey
+     * @param string $extKey
      *
      * @return void
      */
     public static function registerSchedulerTasks($extKey)
     {
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['AOE\\Crawler\\Task\\CrawlerQueueTask'] = [
-            'extension' => $extKey,
-            'title' => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_im.name',
-            'description' => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_im.description',
-            'additionalFields' => CrawlerQueueTaskAdditionalFieldProvider::class
-        ];
-
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['AOE\\Crawler\\Task\\CrawlerTask'] = [
-            'extension' => $extKey,
-            'title' => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_crawl.name',
-            'description' => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_crawl.description',
-            'additionalFields' => CrawlerTaskAdditionalFieldProvider::class
-        ];
-
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['AOE\\Crawler\\Task\\CrawlMultiProcessTask'] = [
             'extension' => $extKey,
             'title' => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_crawlMultiProcess.name',
             'description' => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_crawl.description',
             'additionalFields' => CrawlMultiProcessTaskAdditionalFieldProvider::class
-        ];
-
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['AOE\\Crawler\\Task\\FlushQueueTask'] = [
-            'extension' => $extKey,
-            'title' => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_flush.name',
-            'description' => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_flush.description',
-            'additionalFields' => FlushQueueTaskAdditionalFieldProvider::class
         ];
 
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['AOE\\Crawler\\Task\\ProcessCleanupTask'] = [
