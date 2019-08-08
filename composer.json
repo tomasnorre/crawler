@@ -56,7 +56,6 @@
         "post-autoload-dump": [
             "mkdir -p .Build/Web/typo3conf/ext/",
             "[ -L .Build/Web/typo3conf/ext/crawler ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/crawler",
-            "[ -e .Build/bin/typo3cms ] &&  .Build/bin/typo3cms install:generatepackagestates || echo 'TYPO3 Console is not installed'",
             "export TYPO3_PATH_WEB=$PWD/.Build/Web"
         ],
         "test:unit": [

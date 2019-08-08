@@ -51,6 +51,11 @@ class CrawlerApi
     protected $queueRepository;
 
     /**
+     * @var ProcessRepository
+     */
+    protected $processRepository;
+
+    /**
      * @var $allowedConfigurations array
      */
     protected $allowedConfigurations = [];
@@ -99,6 +104,7 @@ class CrawlerApi
     {
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->queueRepository = $objectManager->get(QueueRepository::class);
+        $this->processRepository = $objectManager->get(ProcessRepository::class);
     }
 
     /**
@@ -443,7 +449,8 @@ class CrawlerApi
     protected function getQueueRepository()
     {
         if (!$this->queueRepository instanceof QueueRepository) {
-            $this->queueRepository = new QueueRepository();
+            $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+            $this->queueRepository = $objectManager->get(QueueRepository::class);
         }
 
         return $this->queueRepository;
@@ -479,9 +486,7 @@ class CrawlerApi
      */
     public function getActiveProcessesCount()
     {
-        $processRepository = new ProcessRepository();
-
-        return $processRepository->countActive();
+        return $$this->processRepository->countActive();
     }
 
     /**
