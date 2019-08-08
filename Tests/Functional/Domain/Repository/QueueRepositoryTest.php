@@ -29,13 +29,15 @@ use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Domain\Model\Queue;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class QueryRepositoryTest
  *
  * @package AOE\Crawler\Tests\Functional\Domain\Repository
  */
-class QueryRepositoryTest extends FunctionalTestCase
+class QueueRepositoryTest extends FunctionalTestCase
 {
 
     /**
@@ -60,8 +62,9 @@ class QueryRepositoryTest extends FunctionalTestCase
     public function setUp()
     {
         parent::setUp();
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->importDataSet(dirname(__FILE__) . '/../../Fixtures/tx_crawler_queue.xml');
-        $this->subject = new QueueRepository();
+        $this->subject = $objectManager->get(QueueRepository::class);
     }
 
     /**
@@ -75,7 +78,7 @@ class QueryRepositoryTest extends FunctionalTestCase
         $process = new Process();
         $process->setProcessId($processId);
 
-        $mockedRepository = $this->getAccessibleMock(QueueRepository::class, ['dummy']);
+        $mockedRepository = $this->getAccessibleMock(QueueRepository::class, ['dummy'], [], '', false);
         /** @var Queue $result */
         $result = $mockedRepository->_call('getFirstOrLastObjectByProcess', $process, $orderBy);
 
@@ -223,7 +226,7 @@ class QueryRepositoryTest extends FunctionalTestCase
      */
     public function countItemsByWhereClause($whereClause, $expected)
     {
-        $mockedRepository = $this->getAccessibleMock(QueueRepository::class, ['dummy']);
+        $mockedRepository = $this->getAccessibleMock(QueueRepository::class, ['dummy'], [], '', false);
 
         $this->assertEquals(
             $expected,

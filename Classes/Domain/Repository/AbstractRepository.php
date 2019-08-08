@@ -4,7 +4,7 @@ namespace AOE\Crawler\Domain\Repository;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2016 AOE GmbH <dev@aoe.com>
+ *  (c) 2019 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -25,12 +25,14 @@ namespace AOE\Crawler\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Extbase\Persistence\Repository;
+
 /**
  * Class AbstractRepository
  *
  * @package AOE\Crawler\Domain\Repository
  */
-abstract class AbstractRepository
+abstract class AbstractRepository extends Repository
 {
 
     /**

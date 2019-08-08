@@ -47,6 +47,7 @@ use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Core\Utility\VersionNumberUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class BackendModule
@@ -939,8 +940,9 @@ class BackendModule extends AbstractFunctionModule
         $offset = intval(GeneralUtility::_GP('offset'));
         $perpage = 20;
 
-        $processRepository = new ProcessRepository();
-        $queueRepository = new QueueRepository();
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $processRepository = $objectManager->get(ProcessRepository::class);
+        $queueRepository = $objectManager->get(QueueRepository::class);
 
         $mode = $this->pObj->MOD_SETTINGS['processListMode'];
         $where = '';

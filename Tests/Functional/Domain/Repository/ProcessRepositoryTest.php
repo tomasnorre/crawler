@@ -27,6 +27,8 @@ namespace AOE\Crawler\Tests\Functional\Domain\Repository;
 
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class ProcessRepositoryTest
@@ -58,8 +60,9 @@ class ProcessRepositoryTest extends FunctionalTestCase
     public function setUp()
     {
         parent::setUp();
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->importDataSet(dirname(__FILE__) . '/../../Fixtures/tx_crawler_process.xml');
-        $this->subject = new ProcessRepository();
+        $this->subject = $objectManager->get(ProcessRepository::class);
     }
 
     /**

@@ -29,6 +29,7 @@ use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class ProcessService
@@ -77,9 +78,10 @@ class ProcessService
      */
     public function __construct()
     {
-        $this->processRepository = new ProcessRepository();
-        $this->queueRepository = new QueueRepository();
-        $this->crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $this->processRepository = $objectManager->get(ProcessRepository::class);
+        $this->queueRepository = $objectManager->get(QueueRepository::class);
+        $this->crawlerController = $objectManager->get(CrawlerController::class);
         $this->timeToLive = intval($this->crawlerController->extensionSettings['processMaxRunTime']);
         $this->countInARun = intval($this->crawlerController->extensionSettings['countInARun']);
         $this->processLimit = intval($this->crawlerController->extensionSettings['processLimit']);
