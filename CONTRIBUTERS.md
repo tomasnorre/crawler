@@ -7,4 +7,5 @@ Thanks for helping out.
 
 * Tomas Norre Mikkelsen <tomasnorre@gmail.com>
 * Tizian Schmidlin <tizian.schmidlin@gmail.com>
+* Tobias Stahn <hello@tstahn.io>
 

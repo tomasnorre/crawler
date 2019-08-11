@@ -27,6 +27,7 @@ namespace AOE\Crawler\Backend;
 
 use AOE\Crawler\Backend\View\PaginationView;
 use AOE\Crawler\Backend\View\ProcessListView;
+use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
@@ -34,7 +35,6 @@ use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\EventDispatcher;
 use AOE\Crawler\Service\ProcessService;
 use AOE\Crawler\Utility\BackendModuleUtility;
-use AOE\Crawler\Utility\ExtensionSettingUtility;
 use AOE\Crawler\Utility\IconUtility;
 use TYPO3\CMS\Backend\Module\AbstractFunctionModule;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
@@ -42,7 +42,6 @@ use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Beuser\Domain\Model\BackendUser;
 use TYPO3\CMS\Beuser\Domain\Repository\BackendUserRepository;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
-use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Imaging\Icon;
@@ -97,7 +96,7 @@ class BackendModule extends AbstractFunctionModule
     public $downloadUrls = [];
 
     /**
-     * Holds the configuration from ext_conf_template loaded by loadExtensionSettings()
+     * Holds the configuration from ext_conf_template loaded by getExtensionConfiguration()
      *
      * @var array
      */
@@ -183,23 +182,6 @@ class BackendModule extends AbstractFunctionModule
     }
 
     /**
-     * Load extension settings
-     *
-     * @return void
-     *
-     * @deprecated since crawler v7.0.0, will be removed in crawler v8.0.0.
-     */
-    protected function loadExtensionSettings()
-    {
-        $isVersionLowerThan9 = \TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 9000000;
-        if ($isVersionLowerThan9) {
-            $this->extensionSettings = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['crawler']);
-        } else {
-            $this->extensionSettings = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('crawler');
-        }
-    }
-
-    /**
      * Main function
      *
      * @return	string		HTML output
@@ -210,7 +192,10 @@ class BackendModule extends AbstractFunctionModule
 
         //$this->incLocalLang();
 
-        $this->extensionSettings = ExtensionSettingUtility::loadExtensionSettings();
+        /** @var ExtensionConfigurationProvider $configurationProvider */
+        $configurationProvider = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
+        $this->extensionSettings = $configurationProvider->getExtensionConfiguration();
+
         if (empty($this->pObj->MOD_SETTINGS['processListMode'])) {
             $this->pObj->MOD_SETTINGS['processListMode'] = 'simple';
         }

@@ -25,6 +25,7 @@ namespace AOE\Crawler\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\EventDispatcher;
@@ -286,7 +287,9 @@ class CrawlerController
         $this->backendUser = $GLOBALS['BE_USER'];
         $this->processFilename = PATH_site . 'typo3temp/tx_crawler.proc';
 
-        $settings = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['crawler']);
+        /** @var ExtensionConfigurationProvider $configurationProvider */
+        $configurationProvider = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
+        $settings = $configurationProvider->getExtensionConfiguration();
         $settings = is_array($settings) ? $settings : [];
 
         // read ext_em_conf_template settings and set
