@@ -7,7 +7,6 @@ use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotCon
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 
 /***************************************************************
  *  Copyright notice
@@ -45,15 +44,7 @@ class ExtensionConfigurationProvider implements LoggerAwareInterface
     public function getExtensionConfiguration()
     {
         try {
-            $isVersionLowerThan9 = VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 9000000;
-            if ($isVersionLowerThan9) {
-                $extensionConfiguration = unserialize(
-                    $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['crawler'],
-                    ['allowed_classes' => false]
-                );
-            } else {
-                $extensionConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('crawler');
-            }
+            $extensionConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('crawler');
             return $extensionConfiguration;
         } catch (ExtensionConfigurationExtensionNotConfiguredException $e) {
             $this->logger->error($e->getMessage());
