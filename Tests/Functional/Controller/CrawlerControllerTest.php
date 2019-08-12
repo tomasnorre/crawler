@@ -101,28 +101,6 @@ class CrawlerControllerTest extends FunctionalTestCase
 
     /**
      * @test
-     */
-    public function CLI_deleteProcessesMarkedDeleted()
-    {
-        $processRepository = new ProcessRepository();
-
-        $expectedProcessesBeforeDeletion = 5;
-        $this->assertSame(
-            $expectedProcessesBeforeDeletion,
-            $processRepository->countAll()
-        );
-
-        $this->subject->CLI_deleteProcessesMarkedDeleted();
-
-        $expectedProcessesAfterDeletion = 3;
-        $this->assertSame(
-            $expectedProcessesAfterDeletion,
-            $processRepository->countAll()
-        );
-    }
-
-    /**
-     * @test
      *
      */
     public function cleanUpOldQueueEntries()
