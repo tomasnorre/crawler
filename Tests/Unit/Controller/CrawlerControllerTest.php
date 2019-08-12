@@ -76,7 +76,7 @@ class CrawlerControllerTest extends UnitTestCase
             'cleanUpProcessedAge' => '2',
             'cleanUpScheduledAge' => '7',
         ];
-        $extensionConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class)->set('crawler', '', $configuration);
+        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = $configuration;
     }
 
     /**

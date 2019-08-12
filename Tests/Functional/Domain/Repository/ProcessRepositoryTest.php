@@ -84,7 +84,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
             'cleanUpProcessedAge' => '2',
             'cleanUpScheduledAge' => '7',
         ];
-        $extensionConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class)->set('crawler', '', $configuration);
+        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = $configuration;
 
         $this->importDataSet(dirname(__FILE__) . '/../../Fixtures/tx_crawler_process.xml');
         $this->subject = $objectManager->get(ProcessRepository::class);

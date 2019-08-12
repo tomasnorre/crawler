@@ -103,7 +103,7 @@ class CrawlerApiTest extends FunctionalTestCase
             'cleanUpProcessedAge' => '2',
             'cleanUpScheduledAge' => '7',
         ];
-        $extensionConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class)->set('crawler', '', $configuration);
+        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = $configuration;
 
         $this->subject = $objectManager->get(CrawlerApi::class);
         $this->queueRepository = $objectManager->get(QueueRepository::class);
