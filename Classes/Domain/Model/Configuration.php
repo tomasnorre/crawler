@@ -4,7 +4,7 @@ namespace AOE\Crawler\Domain\Model;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2018 AOE GmbH <dev@aoe.com>
+ *  (c) 2019 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -51,7 +51,7 @@ class Configuration extends AbstractEntity
     /**
      * @var string
      */
-    protected $proceessingInstructionParameters = '';
+    protected $processingInstructionParameters = '';
 
     /**
      * @var string
@@ -71,32 +71,32 @@ class Configuration extends AbstractEntity
     /**
      * $var string
      */
-    protected $pidsOnly = '';
+    protected $pidsonly = '';
 
     /**
      * @var string
      */
-    protected $beGroups = '';
+    protected $begroups = '';
 
     /**
      * @var string
      */
-    protected $feGroups = '';
+    protected $fegroups = '';
 
     /**
      * @var int
      */
-    protected $realUrl = 0;
+    protected $realurl = 0;
 
     /**
      * @var int
      */
-    protected $cHash = 0;
+    protected $chash = 0;
 
     /**
      * @var string
      */
-    protected $excludeText = '';
+    protected $exclude = '';
 
     /**
      * @var int
@@ -154,17 +154,17 @@ class Configuration extends AbstractEntity
     /**
      * @return string
      */
-    public function getProceessingInstructionParameters()
+    public function getProcessingInstructionParameters()
     {
-        return $this->proceessingInstructionParameters;
+        return $this->processingInstructionParameters;
     }
 
     /**
-     * @param string $proceessingInstructionParameters
+     * @param string $processingInstructionParameters
      */
-    public function setProceessingInstructionParameters($proceessingInstructionParameters)
+    public function setProcessingInstructionParameters($processingInstructionParameters)
     {
-        $this->proceessingInstructionParameters = $proceessingInstructionParameters;
+        $this->processingInstructionParameters = $processingInstructionParameters;
     }
 
     /**
@@ -220,7 +220,7 @@ class Configuration extends AbstractEntity
      */
     public function getPidsOnly()
     {
-        return $this->pidsOnly;
+        return $this->pidsonly;
     }
 
     /**
@@ -228,7 +228,7 @@ class Configuration extends AbstractEntity
      */
     public function setPidsOnly($pidsOnly)
     {
-        $this->pidsOnly = $pidsOnly;
+        $this->pidsonly = $pidsOnly;
     }
 
     /**
@@ -236,7 +236,7 @@ class Configuration extends AbstractEntity
      */
     public function getBeGroups()
     {
-        return $this->beGroups;
+        return $this->begroups;
     }
 
     /**
@@ -244,7 +244,7 @@ class Configuration extends AbstractEntity
      */
     public function setBeGroups($beGroups)
     {
-        $this->beGroups = $beGroups;
+        $this->begroups = $beGroups;
     }
 
     /**
@@ -252,7 +252,7 @@ class Configuration extends AbstractEntity
      */
     public function getFeGroups()
     {
-        return $this->feGroups;
+        return $this->fegroups;
     }
 
     /**
@@ -260,7 +260,7 @@ class Configuration extends AbstractEntity
      */
     public function setFeGroups($feGroups)
     {
-        $this->feGroups = $feGroups;
+        $this->fegroups = $feGroups;
     }
 
     /**
@@ -268,7 +268,7 @@ class Configuration extends AbstractEntity
      */
     public function getRealUrl()
     {
-        return $this->realUrl;
+        return $this->realurl;
     }
 
     /**
@@ -276,7 +276,7 @@ class Configuration extends AbstractEntity
      */
     public function setRealUrl($realUrl)
     {
-        $this->realUrl = $realUrl;
+        $this->realurl = $realUrl;
     }
 
     /**
@@ -284,7 +284,7 @@ class Configuration extends AbstractEntity
      */
     public function getCHash()
     {
-        return $this->cHash;
+        return $this->chash;
     }
 
     /**
@@ -292,23 +292,23 @@ class Configuration extends AbstractEntity
      */
     public function setCHash($cHash)
     {
-        $this->cHash = $cHash;
+        $this->chash = $cHash;
     }
 
     /**
      * @return string
      */
-    public function getExcludeText()
+    public function getExclude()
     {
-        return $this->excludeText;
+        return $this->exclude;
     }
 
     /**
-     * @param string $excludeText
+     * @param string $exclude
      */
-    public function setExcludeText($excludeText)
+    public function setExclude($exclude)
     {
-        $this->excludeText = $excludeText;
+        $this->exclude = $exclude;
     }
 
     /**
