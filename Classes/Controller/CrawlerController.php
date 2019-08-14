@@ -38,6 +38,7 @@ use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\EndTimeRestriction;
+use TYPO3\CMS\Core\Database\Query\Restriction\HiddenRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\StartTimeRestriction;
 use TYPO3\CMS\Core\Log\Logger;
 use TYPO3\CMS\Core\Log\LogLevel;
@@ -639,15 +640,17 @@ class CrawlerController
         $rootLine = BackendUtility::BEgetRootLine($id);
 
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tx_crawler_configuration');
-        $queryBuilder->getRestrictions()->removeAll()->add(GeneralUtility::makeInstance(DeletedRestriction::class));
+        $queryBuilder
+            ->getRestrictions()->removeAll()
+            ->add(GeneralUtility::makeInstance(DeletedRestriction::class))
+            ->add(GeneralUtility::makeInstance(HiddenRestriction::class));
 
         foreach ($rootLine as $page) {
             $configurationRecordsForCurrentPage = $queryBuilder
                 ->select('*')
                 ->from('tx_crawler_configuration')
                 ->where(
-                    $queryBuilder->expr()->eq('pid', $page['uid']),
-                    substr(BackendUtility::BEenableFields('tx_crawler_configuration'), 4) . BackendUtility::deleteClause('tx_crawler_configuration')
+                    $queryBuilder->expr()->eq('pid', $page['uid'])
                 )
                 ->execute()
                 ->fetchAll();
