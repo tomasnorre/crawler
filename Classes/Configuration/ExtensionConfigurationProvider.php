@@ -1,10 +1,10 @@
 <?php
-namespace AOE\Crawler\Utility;
+namespace AOE\Crawler\Configuration;
 
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2018 AOE GmbH <dev@aoe.com>
+ *  (c) 2019 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -25,29 +25,31 @@ namespace AOE\Crawler\Utility;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 
-/**
- * Class ExtensionSettingUtility
- */
-class ExtensionSettingUtility
+class ExtensionConfigurationProvider implements LoggerAwareInterface
 {
-    /**
-     * Load extension settings
-     *
-     * @return array
-     */
-    public static function loadExtensionSettings()
-    {
-        $isVersionLowerThan9 = VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 9000000;
-        if ($isVersionLowerThan9) {
-            $extensionSettings = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['crawler']);
-        } else {
-            $extensionSettings = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('crawler');
-        }
+    use LoggerAwareTrait;
 
-        return $extensionSettings;
+    /**
+     * Return full extension configuration array.
+     *
+     * @return array $extensionConfiguration
+     */
+    public function getExtensionConfiguration()
+    {
+        try {
+            $extensionConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('crawler');
+            return $extensionConfiguration;
+        } catch (ExtensionConfigurationExtensionNotConfiguredException $e) {
+            $this->logger->error($e->getMessage());
+        } catch (ExtensionConfigurationPathDoesNotExistException $e) {
+            $this->logger->error($e->getMessage());
+        }
     }
 }

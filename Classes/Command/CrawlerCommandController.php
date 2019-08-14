@@ -25,6 +25,7 @@ namespace AOE\Crawler\Command;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Domain\Repository\QueueRepository;
@@ -220,7 +221,9 @@ class CrawlerCommandController extends CommandController
         /** @var QueueRepository $queueRepository */
         $queueRepository = $this->objectManager->get(QueueRepository::class);
 
-        $settings = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['crawler']);
+        /** @var ExtensionConfigurationProvider $configurationProvider */
+        $configurationProvider = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
+        $settings = $configurationProvider->getExtensionConfiguration();
         $settings = is_array($settings) ? $settings : [];
         $crawlerController->setExtensionSettings($settings);
 
