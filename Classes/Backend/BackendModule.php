@@ -190,8 +190,6 @@ class BackendModule extends AbstractFunctionModule
     {
         global $LANG, $BACK_PATH;
 
-        //$this->incLocalLang();
-
         /** @var ExtensionConfigurationProvider $configurationProvider */
         $configurationProvider = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
         $this->extensionSettings = $configurationProvider->getExtensionConfiguration();
