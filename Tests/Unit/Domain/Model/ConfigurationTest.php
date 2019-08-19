@@ -101,10 +101,10 @@ class ConfigurationTest extends UnitTestCase
     public function setAndGetProcessingInstructionParameters()
     {
         $processingInstructionParameters = 'Process Instructions Parameters';
-        $this->subject->setProceessingInstructionParameters($processingInstructionParameters);
+        $this->subject->setProcessingInstructionParameters($processingInstructionParameters);
         $this->assertSame(
             $processingInstructionParameters,
-            $this->subject->getProceessingInstructionParameters()
+            $this->subject->getProcessingInstructionParameters()
         );
     }
 
@@ -215,13 +215,13 @@ class ConfigurationTest extends UnitTestCase
     /**
      * @test
      */
-    public function getAndSetExcludeText()
+    public function getAndSetExclude()
     {
         $excludeText = 'Excluded:1234';
-        $this->subject->setExcludeText($excludeText);
+        $this->subject->setExclude($excludeText);
         $this->assertSame(
             $excludeText,
-            $this->subject->getExcludeText()
+            $this->subject->getExclude()
         );
     }
 

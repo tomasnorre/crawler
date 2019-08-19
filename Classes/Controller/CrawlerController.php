@@ -655,60 +655,57 @@ class CrawlerController
 
         // get records along the rootline
         $rootLine = BackendUtility::BEgetRootLine($id);
-
         foreach ($rootLine as $page) {
             $configurationRecordsForCurrentPage = $this->configurationRepository->getConfigurationRecordsPageUid($page['uid'])->toArray();
 
-            if (is_array($configurationRecordsForCurrentPage)) {
-                /** @var Configuration $configurationRecord */
-                foreach ($configurationRecordsForCurrentPage as $configurationRecord) {
+            /** @var Configuration $configurationRecord */
+            foreach ($configurationRecordsForCurrentPage as $configurationRecord) {
 
-                        // check access to the configuration record
-                    if (empty($configurationRecord->getBeGroups()) || $GLOBALS['BE_USER']->isAdmin() || $this->hasGroupAccess($GLOBALS['BE_USER']->user['usergroup_cached_list'], $configurationRecord->getBeGroups())) {
-                        $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $configurationRecord->getPidsOnly(), true));
+                // check access to the configuration record
+                if (empty($configurationRecord->getBeGroups()) || $GLOBALS['BE_USER']->isAdmin() || $this->hasGroupAccess($GLOBALS['BE_USER']->user['usergroup_cached_list'], $configurationRecord->getBeGroups())) {
+                    $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $configurationRecord->getPidsOnly(), true));
 
-                        // process configuration if it is not page-specific or if the specific page is the current page:
-                        if (!strcmp($configurationRecord->getPidsOnly(), '') || GeneralUtility::inList($pidOnlyList, $id)) {
-                            $key = $configurationRecord->getName();
+                    // process configuration if it is not page-specific or if the specific page is the current page:
+                    if (!strcmp($configurationRecord->getPidsOnly(), '') || GeneralUtility::inList($pidOnlyList, $id)) {
+                        $key = $configurationRecord->getName();
 
-                            // don't overwrite previously defined paramSets
-                            if (!isset($res[$key])) {
+                        // don't overwrite previously defined paramSets
+                        if (!isset($res[$key])) {
 
-                                    /* @var $TSparserObject \TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser */
-                                $TSparserObject = GeneralUtility::makeInstance('TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser');
-                                // Todo: Check where the field processing_instructions_parameters_ts comes from.
-                                $TSparserObject->parse($configurationRecord->getProcessingInstructionFilter()); //['processing_instruction_parameters_ts']);
+                            /* @var $TSparserObject \TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser */
+                            $TSparserObject = GeneralUtility::makeInstance('TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser');
+                            // Todo: Check where the field processing_instructions_parameters_ts comes from.
+                            $TSparserObject->parse($configurationRecord->getProcessingInstructionFilter()); //['processing_instruction_parameters_ts']);
 
-                                $isCrawlingProtocolHttps = $this->isCrawlingProtocolHttps($configurationRecord->isForceSsl(), $forceSsl);
+                            $isCrawlingProtocolHttps = $this->isCrawlingProtocolHttps($configurationRecord->isForceSsl(), $forceSsl);
 
-                                $subCfg = [
-                                    'procInstrFilter' => $configurationRecord->getProcessingInstructionFilter(),
-                                    'procInstrParams.' => $TSparserObject->setup,
-                                    'baseUrl' => $this->getBaseUrlForConfigurationRecord(
-                                        $configurationRecord->getBaseUrl(),
-                                        $configurationRecord->getSysDomainBaseUrl(),
-                                        $isCrawlingProtocolHttps
-                                    ),
-                                    'realurl' => $configurationRecord->getRealUrl(),
-                                    'cHash' => $configurationRecord->getCHash(),
-                                    'userGroups' => $configurationRecord->getFeGroups(),
-                                    'exclude' => $configurationRecord->getExcludeText(),
-                                    'rootTemplatePid' => (int) $configurationRecord->getRootTemplatePid(),
-                                    'key' => $key,
-                                ];
+                            $subCfg = [
+                                'procInstrFilter' => $configurationRecord->getProcessingInstructionFilter(),
+                                'procInstrParams.' => $TSparserObject->setup,
+                                'baseUrl' => $this->getBaseUrlForConfigurationRecord(
+                                    $configurationRecord->getBaseUrl(),
+                                    $configurationRecord->getSysDomainBaseUrl(),
+                                    $isCrawlingProtocolHttps
+                                ),
+                                'realurl' => $configurationRecord->getRealUrl(),
+                                'cHash' => $configurationRecord->getCHash(),
+                                'userGroups' => $configurationRecord->getFeGroups(),
+                                'exclude' => $configurationRecord->getExclude(),
+                                'rootTemplatePid' => (int)$configurationRecord->getRootTemplatePid(),
+                                'key' => $key,
+                            ];
 
-                                // add trailing slash if not present
-                                if (!empty($subCfg['baseUrl']) && substr($subCfg['baseUrl'], -1) != '/') {
-                                    $subCfg['baseUrl'] .= '/';
-                                }
-                                if (!in_array($id, $this->expandExcludeString($subCfg['exclude']))) {
-                                    $res[$key] = [];
-                                    $res[$key]['subCfg'] = $subCfg;
-                                    $res[$key]['paramParsed'] = $this->parseParams($configurationRecord->getConfiguration());
-                                    $res[$key]['paramExpanded'] = $this->expandParameters($res[$key]['paramParsed'], $id);
-                                    $res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'], ['?id=' . $id]);
-                                    $res[$key]['origin'] = 'tx_crawler_configuration_' . $configurationRecord->getUid();
-                                }
+                            // add trailing slash if not present
+                            if (!empty($subCfg['baseUrl']) && substr($subCfg['baseUrl'], -1) != '/') {
+                                $subCfg['baseUrl'] .= '/';
+                            }
+                            if (!in_array($id, $this->expandExcludeString($subCfg['exclude']))) {
+                                $res[$key] = [];
+                                $res[$key]['subCfg'] = $subCfg;
+                                $res[$key]['paramParsed'] = $this->parseParams($configurationRecord->getConfiguration());
+                                $res[$key]['paramExpanded'] = $this->expandParameters($res[$key]['paramParsed'], $id);
+                                $res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'], ['?id=' . $id]);
+                                $res[$key]['origin'] = 'tx_crawler_configuration_' . $configurationRecord->getUid();
                             }
                         }
                     }
