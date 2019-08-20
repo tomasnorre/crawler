@@ -727,9 +727,13 @@ class BackendModule extends AbstractFunctionModule
                     $tree->init('AND ' . $perms_clause);
 
                     // Set root row:
-                    $HTML = IconUtility::getIconForRecord('pages', $this->pObj->pageinfo);
+                    $pageinfo = BackendUtility::readPageAccess(
+                        $this->pObj->id,
+                        $perms_clause
+                    );
+                    $HTML = IconUtility::getIconForRecord('pages', $pageinfo);
                     $tree->tree[] = [
-                        'row' => $this->pObj->pageinfo,
+                        'row' => $pageinfo,
                         'HTML' => $HTML
                     ];
 
