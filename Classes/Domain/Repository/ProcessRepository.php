@@ -84,6 +84,21 @@ class ProcessRepository extends AbstractRepository
     }
 
     /**
+     * @param $processId
+     * @return object
+     */
+    public function findByProcessId($processId)
+    {
+        $query = $this->createQuery();
+        $querySettings = $query->getQuerySettings();
+        $querySettings->setRespectStoragePage(false);
+        $querySettings->setIgnoreEnableFields(false);
+        $query->setQuerySettings($querySettings);
+        $query->matching($query->equals('process_id', $processId));
+        return $query->execute()->getFirst();
+    }
+
+    /**
      * This method is used to count all processes in the process table.
      *
      * @param  string $where Where clause
