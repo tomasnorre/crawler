@@ -620,10 +620,10 @@ class CrawlerController
                         if (strcmp($subCfg['procInstrFilter'], '')) {
                             $subCfg['procInstrFilter'] = implode(',', GeneralUtility::trimExplode(',', $subCfg['procInstrFilter']));
                         }
-                        $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $subCfg['pidsOnly'], true));
+                        $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $subCfg['pidsonly'], true));
 
                         // process configuration if it is not page-specific or if the specific page is the current page:
-                        if (!strcmp($subCfg['pidsOnly'], '') || GeneralUtility::inList($pidOnlyList, $id)) {
+                        if (!strcmp($subCfg['pidsonly'], '') || GeneralUtility::inList($pidOnlyList, $id)) {
 
                                 // add trailing slash if not present
                             if (!empty($subCfg['baseUrl']) && substr($subCfg['baseUrl'], -1) != '/') {

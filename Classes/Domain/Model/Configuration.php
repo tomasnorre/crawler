@@ -69,7 +69,7 @@ class Configuration extends AbstractEntity
     protected $sysDomainBaseUrl = '';
 
     /**
-     * $var string
+     * @var string
      */
     protected $pidsonly = '';
 

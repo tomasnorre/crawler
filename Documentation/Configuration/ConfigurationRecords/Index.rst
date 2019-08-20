@@ -39,7 +39,7 @@ Fields and their pageTS equivalents
 
 - **Get Baseurl from Domainrecord** - :ref:`paramSets.[key].baseUrl <crawler-tsconfig-paramSets-key-baseUrl>`
 
-- **Pids only** - :ref:`paramSets.[key].pidsOnly <crawler-tsconfig-paramSets-key-pidsOnly>`
+- **Pids only** - :ref:`paramSets.[key].pidsonly <crawler-tsconfig-paramSets-key-pidsonly>`
 
 - **Processing instruction parameters**
 
