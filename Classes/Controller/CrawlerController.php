@@ -2384,7 +2384,7 @@ class CrawlerController
                     return ($result | self::CLI_STATUS_ABORTED);
                 }
 
-                $process = $this->processRepository->findByUid($this->CLI_buildProcessId());
+                $process = $this->processRepository->findByProcessId($this->CLI_buildProcessId());
                 if (!$process->isActive()) {
                     $this->CLI_debug("conflict / timeout (" . $this->CLI_buildProcessId() . ")");
 
