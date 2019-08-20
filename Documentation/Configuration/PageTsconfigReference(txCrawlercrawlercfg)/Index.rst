@@ -104,8 +104,8 @@ Page TSconfig Reference (tx\_crawler.crawlerCfg)
             tx_crawler.crawlerCfg.paramSets {
                myConfigurationKeyName = &tx_myext[items]=[_TABLE:tt_myext_items;_PID:15;_WHERE: and hidden = 0]
                myConfigurationKeyName {
-                 pidsOnly = 13
-                 cHash = 1
+                 pidsonly = 13
+                 chash = 1
                  procInstrFilter = tx_indexedsearch_reindex
                }
             }
@@ -156,7 +156,7 @@ Page TSconfig Reference (tx\_crawler.crawlerCfg)
    Property
          .. _crawler-tsconfig-paramSets-key-pidsOnly:
 
-         paramSets.[key].pidsOnly
+         paramSets.[key].pidsonly
 
    Data type
          list of integers (pages uid)

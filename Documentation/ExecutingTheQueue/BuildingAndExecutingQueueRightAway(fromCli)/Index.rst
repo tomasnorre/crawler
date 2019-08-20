@@ -26,7 +26,7 @@ The script to use is this:
 
 ::
 
-   [pathToYourTYPO3Installation]/typo3/cli_dispatch.phpsh crawler_im
+   [pathToYourTYPO3Installation-composer-bin-dir]/typo3cms crawler:buildqueue
 
 If you run it you will see a list of options which explains usage.
 
@@ -35,22 +35,21 @@ If you run it you will see a list of options which explains usage.
 .. container:: table-row
 
    Property
-         Property:
+         --startpage <startpage>
 
    Data type
-         Data type:
+         integer
 
    Description
-         Description:
+         Page Id of the page to use as starting point for crawling.
 
    Default
-         Default:
-
+         n/a
 
 .. container:: table-row
 
    Property
-         -conf configurationKeys
+         --conf <configurationKeys>
 
    Data type
          string
@@ -58,8 +57,8 @@ If you run it you will see a list of options which explains usage.
    Description
          Configurationkey:
 
-         Commaseperated list of your crawler configurations. If you use the
-         crwaler configuration records you have to use the “title” if your
+         Comma separated list of your crawler configurations. If you use the
+         crwaler configuration records you have to use the “name” if you're
          still using the old TypoScript based configuration you have to use the
          configuration key which is also a string.
 
@@ -67,7 +66,7 @@ If you run it you will see a list of options which explains usage.
 
          ::
 
-            -conf re-crawle-pages,re-crawle-news
+            -conf re-crawl-pages,re-crawl-news
 
    Default
          n/a
@@ -76,7 +75,7 @@ If you run it you will see a list of options which explains usage.
 .. container:: table-row
 
    Property
-         -n number
+         --number <number>
 
    Data type
          integer
@@ -92,7 +91,7 @@ If you run it you will see a list of options which explains usage.
 .. container:: table-row
 
    Property
-         -o mode
+         --mode <mode>
 
    Data type
          string
@@ -113,7 +112,7 @@ If you run it you will see a list of options which explains usage.
 .. container:: table-row
 
    Property
-         -d depth
+         --depth <depth>
 
    Data type
          integer
@@ -145,7 +144,7 @@ To do the same with the CLI script you run this:
 
 ::
 
-   [pathToYourTYPO3Installation]/typo3/cli_dispatch.phpsh crawler_im 3 -d 1 -conf tx_staticpub_publish
+   [pathToYourTYPO3Installation-composer-bin-dir]/typo3cms crawler:buildqueue --startpage 3 --depth 1 --conf tx_staticpub_publish
 
 And this is the output:
 
@@ -164,12 +163,12 @@ At this point you have three options for “action”:
   useful if you would like to submit a job to the cron script based
   crawler everyday.
 
-  - Add “-o queue”
+  - Add “--mode queue”
 
 - List full URLs for use with wget or similar. Corresponds to pressing
   the “Download URLs” button in the backend module.
 
-  - Add “-o url”
+  - Add “--mode url”
 
 .. image:: /Images/cli_addtoque.png
 
@@ -179,7 +178,7 @@ At this point you have three options for “action”:
   feels much more like the “command-line-way” of things. And the status
   output is more immediate than in the queue.
 
-  - Add “-o exec”
+  - Add “--mode exec”
 
 .. image:: /Images/cli_processque.png
 

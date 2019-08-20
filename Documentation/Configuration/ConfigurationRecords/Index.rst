@@ -33,13 +33,21 @@ Fields and their pageTS equivalents
 - **Name** - corresponds to the "key" part in the pageTS setup
   e.g. tx_crawler.crawlerCfg.paramSets.myConfigurationKeyName
 
+- **Protocol for crawling** - force HTTP, HTTPS or keep the configured protocol
+
 - **Processing instruction filter** - :ref:`paramSets.[key].procInstrFilter <crawler-tsconfig-paramSets-key-procInstrFilter>`
+
+- **Baseurl** - set baseUrl (most likely the same as the entry point configured in your site configuration)
+
+- **Baseurl from Domainrecord** - :ref:`paramSets.[key].baseUrl <crawler-tsconfig-paramSets-key-baseUrl>`
 
 - **Configuration** - :ref:`paramSets.[key] <crawler-tsconfig-paramSets-key>`
 
-- **Get Baseurl from Domainrecord** - :ref:`paramSets.[key].baseUrl <crawler-tsconfig-paramSets-key-baseUrl>`
+- **Page Id of TypoScript root template**
 
-- **Pids only** - :ref:`paramSets.[key].pidsOnly <crawler-tsconfig-paramSets-key-pidsOnly>`
+- **Pids only** - :ref:`paramSets.[key].pidsonly <crawler-tsconfig-paramSets-key-pidsonly>`
+
+- **Configuration**
 
 - **Processing instruction parameters**
 
@@ -49,7 +57,7 @@ Fields and their pageTS equivalents
 
 - **Append cHash** - :ref:`paramSets.[key].cHash <crawler-tsconfig-paramSets-key-cHash>`
 
-- **Exclude pages** - comma separated list of page ids which should not be crawled. Add a "+" and an integer after the page id to define the recursiveness. Example: "2+99" will take all pages, 99 levels deep, under page id 2.
+- **Exclude pages** - comma separated list of page ids which should not be crawled
 
 .. image:: /Images/backend_configurationrecord.png
 
