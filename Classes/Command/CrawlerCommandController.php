@@ -241,7 +241,7 @@ class CrawlerCommandController extends CommandController
             $result |= self::CLI_STATUS_ABORTED;
         }
 
-        return $result;
+        return $this->outputLine($result);
     }
 
     /**
