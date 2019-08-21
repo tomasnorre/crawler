@@ -1,0 +1,64 @@
+<f:layout name="BackendModule" />
+
+<f:section name="Headline">
+	<f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.log" />
+</f:section>
+
+<f:section name="Content">
+	<input type="hidden" name="id" value="{currentPageId}">
+	<input type="hidden" value="{setId}" name="setID" />
+	<f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.curtime" />: <f:format.date format="H:i:s">now</f:format.date>
+	<br>
+	<f:if condition="{queueId}">
+		<f:then>
+			<p>
+				<br>
+				<input type="submit" class="btn btn-default" value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.back')}" name="_back">
+				<br>
+				Status: {queueStatus}<br>
+				{queueDetails -> f:format.raw()}
+			</p>
+		</f:then>
+		<f:else>
+			<input type="submit" class="btn btn-default" value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.back')}" name="_back">
+			<input type="submit" class="btn btn-default" value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.reloadlist')}" name="_reload" />
+			<input type="submit" class="btn btn-default" value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.downloadcsv')}" name="_csv" />
+			<input type="submit" class="btn btn-default" value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.flushvisiblequeue')}" name="_flush" onclick="return confirm('{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.confirmyouresure')}');" />
+			<input type="submit" class="btn btn-default" value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.flushfullqueue')}" name="_flush_all" onclick="return confirm('{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.confirmyouresure')}');" />
+			<br>
+			<br>
+			<table class="table table-striped table-hover">
+				<thead>
+				<tr>
+					<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.pagetitle" /></th>
+					<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.qid" /></th>
+					<th>&nbsp;</th>
+					<f:if condition="{showResultLog}">
+						<f:then>
+							<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.resultlog" /></th>
+						</f:then>
+						<f:else>
+							<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.scheduledtime" /></th>
+							<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.runtime" /></th>
+						</f:else>
+					</f:if>
+					<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.status" /></th>
+					<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.url" /></th>
+					<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.groups" /></th>
+					<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.procinstr" /></th>
+					<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.setid" /></th>
+					<f:if condition="{showFeVars}">
+						<th>TSFE->id</th>
+						<th>TSFE->gr_list</th>
+						<th>TSFE->no_cache</th>
+					</f:if>
+				</tr>
+				</thead>
+				<tbody>
+					{code -> f:format.raw()}
+				</tbody>
+			</table>
+		</f:else>
+	</f:if>
+</f:section>
+

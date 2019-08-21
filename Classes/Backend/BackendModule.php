@@ -25,8 +25,6 @@ namespace AOE\Crawler\Backend;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use AOE\Crawler\Backend\View\PaginationView;
-use AOE\Crawler\Backend\View\ProcessListView;
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Model\Reason;
@@ -35,16 +33,14 @@ use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\EventDispatcher;
 use AOE\Crawler\Service\ProcessService;
 use AOE\Crawler\Utility\BackendModuleUtility;
+use AOE\Crawler\Utility\ButtonUtility;
 use AOE\Crawler\Utility\IconUtility;
-use TYPO3\CMS\Backend\Module\AbstractFunctionModule;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
-use TYPO3\CMS\Beuser\Domain\Model\BackendUser;
-use TYPO3\CMS\Beuser\Domain\Repository\BackendUserRepository;
-use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Imaging\Icon;
+use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Utility\CsvUtility;
@@ -52,48 +48,62 @@ use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
+use TYPO3\CMS\Fluid\View\StandaloneView;
+use TYPO3\CMS\Info\Controller\InfoModuleController;
 
 /**
- * Class BackendModule
- *
- * @package AOE\Crawler\Backend
+ * Function for Info module, containing three main actions:
+ * - List of all queued items
+ * - Log functionality
+ * - Process overview
  */
-class BackendModule extends AbstractFunctionModule
+class BackendModule
 {
+    /**
+     * @var InfoModuleController Contains a reference to the parent calling object
+     */
+    protected $pObj;
+
+    /**
+     * The current page ID
+     * @var int
+     */
+    protected $id;
+
     // Internal, dynamic:
-    public $duplicateTrack = [];
-    public $submitCrawlUrls = false;
-    public $downloadCrawlUrls = false;
+    protected $duplicateTrack = [];
+    protected $submitCrawlUrls = false;
+    protected $downloadCrawlUrls = false;
 
-    public $scheduledTime = 0;
-    public $reqMinute = 0;
-
-    const STATUS_ICON_ERROR = 3;
-    const STATUS_ICON_WARNING = 2;
-    const STATUS_ICON_NOTIFICATION = 1;
-    const STATUS_ICON_OK = -1;
+    protected $scheduledTime = 0;
+    protected $reqMinute = 1000;
 
     /**
      * @var array holds the selection of configuration from the configuration selector box
      */
-    public $incomingConfigurationSelection = [];
+    protected $incomingConfigurationSelection = [];
 
     /**
      * @var CrawlerController
      */
-    public $crawlerController;
+    protected $crawlerController;
 
-    public $CSVaccu = [];
+    /**
+     * @var array
+     */
+    protected $CSVaccu = [];
 
     /**
      * If true the user requested a CSV export of the queue
      *
      * @var boolean
      */
-    public $CSVExport = false;
+    protected $CSVExport = false;
 
-    public $downloadUrls = [];
+    /**
+     * @var array
+     */
+    protected $downloadUrls = [];
 
     /**
      * Holds the configuration from ext_conf_template loaded by getExtensionConfiguration()
@@ -115,11 +125,6 @@ class BackendModule extends AbstractFunctionModule
     protected $processManager;
 
     /**
-     * @var BackendUserRepository
-     */
-    protected $backendUserRepository;
-
-    /**
      * @var QueryBuilder
      */
     protected $queryBuilder;
@@ -130,15 +135,30 @@ class BackendModule extends AbstractFunctionModule
     protected $queueRepository;
 
     /**
-     * the constructor
+     * @var StandaloneView
      */
+    protected $view;
+
     public function __construct()
     {
         $objectManger = GeneralUtility::makeInstance(ObjectManager::class);
         $this->processManager = new ProcessService();
-        $this->backendUserRepository = $objectManger->get(BackendUserRepository::class);
         $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tx_crawler_queue');
         $this->queueRepository = $objectManger->get(QueueRepository::class);
+        $this->initializeView();
+        $this->extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
+    }
+
+    /**
+     * Called by the InfoModuleController
+     * @param InfoModuleController $pObj
+     */
+    public function init(InfoModuleController $pObj): void
+    {
+        $this->pObj = $pObj;
+        $this->id = (int)GeneralUtility::_GP('id');
+        // Setting MOD_MENU items as we need them for logging:
+        $this->pObj->MOD_MENU = array_merge($this->pObj->MOD_MENU, $this->modMenu());
     }
 
     /**
@@ -146,142 +166,110 @@ class BackendModule extends AbstractFunctionModule
      *
      * @return array Menu array
      */
-    public function modMenu()
+    public function modMenu(): array
     {
-        global $LANG;
-
         return [
             'depth' => [
-                0 => $LANG->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_0'),
-                1 => $LANG->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_1'),
-                2 => $LANG->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_2'),
-                3 => $LANG->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_3'),
-                4 => $LANG->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_4'),
-                99 => $LANG->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_infi'),
+                0 => $this->getLanguageService()->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_0'),
+                1 => $this->getLanguageService()->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_1'),
+                2 => $this->getLanguageService()->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_2'),
+                3 => $this->getLanguageService()->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_3'),
+                4 => $this->getLanguageService()->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_4'),
+                99 => $this->getLanguageService()->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_infi'),
             ],
             'crawlaction' => [
-                'start' => $LANG->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.start'),
-                'log' => $LANG->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.log'),
-                'multiprocess' => $LANG->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.multiprocess')
+                'start' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.start'),
+                'log' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.log'),
+                'multiprocess' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.multiprocess')
             ],
             'log_resultLog' => '',
             'log_feVars' => '',
             'processListMode' => '',
             'log_display' => [
-                'all' => $LANG->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.all'),
-                'pending' => $LANG->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.pending'),
-                'finished' => $LANG->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.finished')
+                'all' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.all'),
+                'pending' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.pending'),
+                'finished' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.finished')
             ],
             'itemsPerPage' => [
-                '5' => $LANG->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.itemsPerPage.5'),
-                '10' => $LANG->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.itemsPerPage.10'),
-                '50' => $LANG->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.itemsPerPage.50'),
-                '0' => $LANG->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.itemsPerPage.0')
+                '5' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.itemsPerPage.5'),
+                '10' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.itemsPerPage.10'),
+                '50' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.itemsPerPage.50'),
+                '0' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.itemsPerPage.0')
             ]
         ];
     }
 
-    /**
-     * Main function
-     *
-     * @return	string		HTML output
-     */
-    public function main()
+    public function main(): string
     {
-        global $LANG, $BACK_PATH;
-
-        /** @var ExtensionConfigurationProvider $configurationProvider */
-        $configurationProvider = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
-        $this->extensionSettings = $configurationProvider->getExtensionConfiguration();
-
         if (empty($this->pObj->MOD_SETTINGS['processListMode'])) {
             $this->pObj->MOD_SETTINGS['processListMode'] = 'simple';
         }
+        $this->view->assign('currentPageId', $this->id);
 
-        // Set CSS styles specific for this document:
-        $this->pObj->content = str_replace('/*###POSTCSSMARKER###*/', '
-			TABLE.c-list TR TD { white-space: nowrap; vertical-align: top; }
-		', $this->pObj->content);
-
-        $this->pObj->content .= '<style type="text/css"><!--
-			table.url-table,
-			table.param-expanded,
-			table.crawlerlog {
-				border-bottom: 1px solid grey;
-				border-spacing: 0;
-				border-collapse: collapse;
-			}
-			table.crawlerlog td,
-			table.url-table td {
-				border: 1px solid lightgrey;
-				border-bottom: 1px solid grey;
-				 white-space: nowrap; vertical-align: top;
-			}
-		--></style>
-		<link rel="stylesheet" type="text/css" href="' . $BACK_PATH . '../typo3conf/ext/crawler/template/res.css" />
-		';
+        $selectedAction = (string)$this->pObj->MOD_SETTINGS['crawlaction'] ?? 'start';
 
         // Type function menu:
-        $h_func = BackendUtility::getFuncMenu(
-            $this->pObj->id,
+        $actionDropdown = BackendUtility::getFuncMenu(
+            $this->id,
             'SET[crawlaction]',
-            $this->pObj->MOD_SETTINGS['crawlaction'],
-            $this->pObj->MOD_MENU['crawlaction'],
-            'index.php'
+            $selectedAction,
+            $this->pObj->MOD_MENU['crawlaction']
         );
 
-        // Additional menus for the log type:
-        if ($this->pObj->MOD_SETTINGS['crawlaction'] === 'log') {
-            $h_func .= BackendUtility::getFuncMenu(
-                $this->pObj->id,
-                'SET[depth]',
-                $this->pObj->MOD_SETTINGS['depth'],
-                $this->pObj->MOD_MENU['depth'],
-                'index.php'
-            );
-
-            $quiPart = GeneralUtility::_GP('qid_details') ? '&qid_details=' . intval(GeneralUtility::_GP('qid_details')) : '';
-
-            $setId = intval(GeneralUtility::_GP('setID'));
-
-            $h_func .= '<hr/>' .
-                    $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.display') . ': ' . BackendUtility::getFuncMenu($this->pObj->id, 'SET[log_display]', $this->pObj->MOD_SETTINGS['log_display'], $this->pObj->MOD_MENU['log_display'], 'index.php', '&setID=' . $setId) . ' - ' .
-                    $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.showresultlog') . ': ' . BackendUtility::getFuncCheck($this->pObj->id, 'SET[log_resultLog]', $this->pObj->MOD_SETTINGS['log_resultLog'], 'index.php', '&setID=' . $setId . $quiPart) . ' - ' .
-                    $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.showfevars') . ': ' . BackendUtility::getFuncCheck($this->pObj->id, 'SET[log_feVars]', $this->pObj->MOD_SETTINGS['log_feVars'], 'index.php', '&setID=' . $setId . $quiPart) . ' - ' .
-                    $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.itemsPerPage') . ': ' .
-                    BackendUtility::getFuncMenu(
-                        $this->pObj->id,
-                        'SET[itemsPerPage]',
-                        $this->pObj->MOD_SETTINGS['itemsPerPage'],
-                        $this->pObj->MOD_MENU['itemsPerPage'],
-                        'index.php'
-                    );
-        }
-
-        $theOutput = $this->section($LANG->getLL('title'), $h_func, false, true);
+        $theOutput = '<h2>' . htmlspecialchars($this->getLanguageService()->getLL('title')) . '</h2>' . $actionDropdown;
 
         // Branch based on type:
-        switch ((string)$this->pObj->MOD_SETTINGS['crawlaction']) {
+        switch ($selectedAction) {
             case 'start':
-                if (empty($this->pObj->id)) {
-                    $this->addErrorMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.noPageSelected'));
-                } else {
-                    $theOutput .= $this->section('', $this->drawURLs(), false, true);
-                }
+                $theOutput .= $this->showCrawlerInformationAction();
                 break;
             case 'log':
-                if (empty($this->pObj->id)) {
-                    $this->addErrorMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.noPageSelected'));
-                } else {
-                    $theOutput .= $this->section('', $this->drawLog(), false, true);
-                }
-                break;
-            case 'cli':
-                // TODO: drawCLIstatus is not defined, why did we refactor it away?
-                $theOutput .= $this->section('', $this->drawCLIstatus(), false, true);
+
+                // Additional menus for the log type:
+                $theOutput .= BackendUtility::getFuncMenu(
+                    $this->id,
+                    'SET[depth]',
+                    $this->pObj->MOD_SETTINGS['depth'],
+                    $this->pObj->MOD_MENU['depth']
+                );
+
+                $quiPart = GeneralUtility::_GP('qid_details') ? '&qid_details=' . (int)GeneralUtility::_GP('qid_details') : '';
+                $setId = (int)GeneralUtility::_GP('setID');
+
+                $theOutput .= '<br><br>' .
+                    $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.display') . ': ' . BackendUtility::getFuncMenu(
+                        $this->id,
+                        'SET[log_display]',
+                        $this->pObj->MOD_SETTINGS['log_display'],
+                        $this->pObj->MOD_MENU['log_display'],
+                        'index.php',
+                        '&setID=' . $setId
+                    ) . ' ' .
+                    $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.showresultlog') . ': ' . BackendUtility::getFuncCheck(
+                        $this->id,
+                        'SET[log_resultLog]',
+                        $this->pObj->MOD_SETTINGS['log_resultLog'],
+                        'index.php',
+                        '&setID=' . $setId . $quiPart
+                    ) . ' ' .
+                    $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.showfevars') . ': ' . BackendUtility::getFuncCheck(
+                        $this->id,
+                        'SET[log_feVars]',
+                        $this->pObj->MOD_SETTINGS['log_feVars'],
+                        'index.php',
+                        '&setID=' . $setId . $quiPart
+                    ) . ' ' .
+                    $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.itemsPerPage') . ': ' .
+                    BackendUtility::getFuncMenu(
+                        $this->id,
+                        'SET[itemsPerPage]',
+                        $this->pObj->MOD_SETTINGS['itemsPerPage'],
+                        $this->pObj->MOD_MENU['itemsPerPage']
+                    );
+                $theOutput .= $this->showLogAction();
                 break;
             case 'multiprocess':
-                $theOutput .= $this->section('', $this->drawProcessOverviewAction(), false, true);
+                $theOutput .= $this->processOverviewAction();
                 break;
         }
 
@@ -295,154 +283,119 @@ class BackendModule extends AbstractFunctionModule
      ******************************/
 
     /**
-     * Produces a table with overview of the URLs to be crawled for each page
-     *
-     * @return	string		HTML output
+     * Show a list of URLs to be crawled for each page
+     * @return string
      */
-    public function drawURLs()
+    protected function showCrawlerInformationAction(): string
     {
-        global $BACK_PATH, $BE_USER;
-
-        $crawlerParameter = GeneralUtility::_GP('_crawl');
-        $downloadParameter = GeneralUtility::_GP('_download');
-
-        // Init:
-        $this->duplicateTrack = [];
-        $this->submitCrawlUrls = isset($crawlerParameter);
-        $this->downloadCrawlUrls = isset($downloadParameter);
-        $this->makeCrawlerProcessableChecks();
-
-        switch ((string) GeneralUtility::_GP('tstamp')) {
-            case 'midnight':
-                $this->scheduledTime = mktime(0, 0, 0);
-            break;
-            case '04:00':
-                $this->scheduledTime = mktime(0, 0, 0) + 4 * 3600;
-            break;
-            case 'now':
-            default:
-                $this->scheduledTime = time();
-            break;
-        }
-        // $this->reqMinute = \TYPO3\CMS\Core\Utility\GeneralUtility::intInRange(\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('perminute'),1,10000);
-        // TODO: check relevance
-        $this->reqMinute = 1000;
-
-        $this->incomingConfigurationSelection = GeneralUtility::_GP('configurationSelection');
-        $this->incomingConfigurationSelection = is_array($this->incomingConfigurationSelection) ? $this->incomingConfigurationSelection : [];
-
-        $this->crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
-        $this->crawlerController->setAccessMode('gui');
-        $this->crawlerController->setID = GeneralUtility::md5int(microtime());
-
-        if (empty($this->incomingConfigurationSelection)
-            || (count($this->incomingConfigurationSelection) == 1 && empty($this->incomingConfigurationSelection[0]))
-            ) {
-            $this->addWarningMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.noConfigSelected'));
-            $code = '
-			<tr>
-				<td colspan="7"><b>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.noConfigSelected') . '</b></td>
-			</tr>';
+        $this->view->setTemplate('ShowCrawlerInformation');
+        if (empty($this->id)) {
+            $this->addErrorMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.noPageSelected'));
         } else {
-            if ($this->submitCrawlUrls) {
-                $reason = new Reason();
-                $reason->setReason(Reason::REASON_GUI_SUBMIT);
+            $crawlerParameter = GeneralUtility::_GP('_crawl');
+            $downloadParameter = GeneralUtility::_GP('_download');
 
-                if ($BE_USER instanceof BackendUserAuthentication) {
-                    $username = $BE_USER->user['username'];
-                    $reason->setDetailText('The user ' . $username . ' added pages to the crawler queue manually ');
+            $this->duplicateTrack = [];
+            $this->submitCrawlUrls = isset($crawlerParameter);
+            $this->downloadCrawlUrls = isset($downloadParameter);
+            $this->makeCrawlerProcessableChecks();
+
+            switch ((string) GeneralUtility::_GP('tstamp')) {
+                case 'midnight':
+                    $this->scheduledTime = mktime(0, 0, 0);
+                    break;
+                case '04:00':
+                    $this->scheduledTime = mktime(0, 0, 0) + 4 * 3600;
+                    break;
+                case 'now':
+                default:
+                    $this->scheduledTime = time();
+                    break;
+            }
+
+            $this->incomingConfigurationSelection = GeneralUtility::_GP('configurationSelection');
+            $this->incomingConfigurationSelection = is_array($this->incomingConfigurationSelection) ? $this->incomingConfigurationSelection : [];
+
+            $this->crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
+            $this->crawlerController->setAccessMode('gui');
+            $this->crawlerController->setID = GeneralUtility::md5int(microtime());
+
+            $code = '';
+            $noConfigurationSelected = empty($this->incomingConfigurationSelection)
+                || (count($this->incomingConfigurationSelection) == 1 && empty($this->incomingConfigurationSelection[0]));
+            if ($noConfigurationSelected) {
+                $this->addWarningMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.noConfigSelected'));
+            } else {
+                if ($this->submitCrawlUrls) {
+                    $reason = new Reason();
+                    $reason->setReason(Reason::REASON_GUI_SUBMIT);
+                    $reason->setDetailText('The user ' . $GLOBALS['BE_USER']->user['username'] . ' added pages to the crawler queue manually');
+
+                    EventDispatcher::getInstance()->post(
+                        'invokeQueueChange',
+                        $this->findCrawler()->setID,
+                        ['reason' => $reason]
+                    );
                 }
 
-                EventDispatcher::getInstance()->post(
-                    'invokeQueueChange',
-                    $this->findCrawler()->setID,
-                    ['reason' => $reason]
+                $code = $this->crawlerController->getPageTreeAndUrls(
+                    $this->id,
+                    $this->pObj->MOD_SETTINGS['depth'],
+                    $this->scheduledTime,
+                    $this->reqMinute,
+                    $this->submitCrawlUrls,
+                    $this->downloadCrawlUrls,
+                    [], // Do not filter any processing instructions
+                    $this->incomingConfigurationSelection
                 );
             }
 
-            $code = $this->crawlerController->getPageTreeAndUrls(
-                $this->pObj->id,
-                $this->pObj->MOD_SETTINGS['depth'],
-                $this->scheduledTime,
-                $this->reqMinute,
-                $this->submitCrawlUrls,
-                $this->downloadCrawlUrls,
-                [], // Do not filter any processing instructions
-                $this->incomingConfigurationSelection
-            );
-        }
+            $this->downloadUrls = $this->crawlerController->downloadUrls;
+            $this->duplicateTrack = $this->crawlerController->duplicateTrack;
 
-        $this->downloadUrls = $this->crawlerController->downloadUrls;
-        $this->duplicateTrack = $this->crawlerController->duplicateTrack;
+            $this->view->assign('noConfigurationSelected', $noConfigurationSelected);
+            $this->view->assign('submitCrawlUrls', $this->submitCrawlUrls);
+            $this->view->assign('amountOfUrls', count(array_keys($this->duplicateTrack)));
+            $this->view->assign('selectors', $this->generateConfigurationSelectors());
+            $this->view->assign('code', $code);
 
-        $output = '';
-        if ($code) {
-            $output .= '<h3>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.configuration') . ':</h3>';
-            $output .= '<input type="hidden" name="id" value="' . intval($this->pObj->id) . '" />';
+            // Download Urls to crawl:
+            if ($this->downloadCrawlUrls) {
+                // Creating output header:
+                header('Content-Type: application/octet-stream');
+                header('Content-Disposition: attachment; filename=CrawlerUrls.txt');
 
-            if (!$this->submitCrawlUrls) {
-                $output .= $this->drawURLs_cfgSelectors() . '<br />';
-                $output .= '<input type="submit" name="_update" value="' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.triggerUpdate') . '" /> ';
-                $output .= '<input type="submit" name="_crawl" value="' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.triggerCrawl') . '" /> ';
-                $output .= '<input type="submit" name="_download" value="' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.triggerDownload') . '" /><br /><br />';
-                $output .= $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.count') . ': ' . count(array_keys($this->duplicateTrack)) . '<br />';
-                $output .= $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.curtime') . ': ' . date('H:i:s', time()) . '<br />';
-                $output .= '<br />
-					<table class="lrPadding c-list url-table">' .
-                        $this->drawURLs_printTableHeader() .
-                        $code .
-                    '</table>';
-            } else {
-                $output .= count(array_keys($this->duplicateTrack)) . ' ' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.submitted') . '. <br /><br />';
-                $output .= '<input type="submit" name="_" value="' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.continue') . '" />';
-                $output .= '<input type="submit" onclick="this.form.elements[\'SET[crawlaction]\'].value=\'log\';" value="' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.continueinlog') . '" />';
+                // Printing the content of the CSV lines:
+                echo implode(chr(13) . chr(10), $this->downloadUrls);
+                exit;
             }
         }
-
-        // Download Urls to crawl:
-        if ($this->downloadCrawlUrls) {
-
-                // Creating output header:
-            $mimeType = 'application/octet-stream';
-            Header('Content-Type: ' . $mimeType);
-            Header('Content-Disposition: attachment; filename=CrawlerUrls.txt');
-
-            // Printing the content of the CSV lines:
-            echo implode(chr(13) . chr(10), $this->downloadUrls);
-
-            exit;
-        }
-
-        return 	$output;
+        return $this->view->render();
     }
 
     /**
-     * Draws the configuration selectors for compiling URLs:
-     *
-     * @return	string		HTML table
+     * Generates the configuration selectors for compiling URLs:
      */
-    public function drawURLs_cfgSelectors()
+    protected function generateConfigurationSelectors(): array
     {
-        $cell = [];
-
-        // depth
-        $cell[] = $this->selectorBox(
+        $selectors = [];
+        $selectors['depth'] = $this->selectorBox(
             [
-                0 => $GLOBALS['LANG']->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_0'),
-                1 => $GLOBALS['LANG']->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_1'),
-                2 => $GLOBALS['LANG']->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_2'),
-                3 => $GLOBALS['LANG']->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_3'),
-                4 => $GLOBALS['LANG']->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_4'),
-                99 => $GLOBALS['LANG']->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_infi'),
+                0 => $this->getLanguageService()->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_0'),
+                1 => $this->getLanguageService()->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_1'),
+                2 => $this->getLanguageService()->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_2'),
+                3 => $this->getLanguageService()->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_3'),
+                4 => $this->getLanguageService()->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_4'),
+                99 => $this->getLanguageService()->sL('LLL:EXT:lang/Resources/Private/Language/locallang_core.xlf:labels.depth_infi'),
             ],
             'SET[depth]',
             $this->pObj->MOD_SETTINGS['depth'],
             false
         );
-        $availableConfigurations = $this->crawlerController->getConfigurationsForBranch($this->pObj->id, $this->pObj->MOD_SETTINGS['depth'] ? $this->pObj->MOD_SETTINGS['depth'] : 0);
 
         // Configurations
-        $cell[] = $this->selectorBox(
+        $availableConfigurations = $this->crawlerController->getConfigurationsForBranch($this->id, $this->pObj->MOD_SETTINGS['depth'] ? $this->pObj->MOD_SETTINGS['depth'] : 0);
+        $selectors['configurations'] = $this->selectorBox(
             empty($availableConfigurations) ? [] : array_combine($availableConfigurations, $availableConfigurations),
             'configurationSelection',
             $this->incomingConfigurationSelection,
@@ -450,203 +403,18 @@ class BackendModule extends AbstractFunctionModule
         );
 
         // Scheduled time:
-        $cell[] = $this->selectorBox(
+        $selectors['scheduled'] = $this->selectorBox(
             [
-                'now' => $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.time.now'),
-                'midnight' => $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.time.midnight'),
-                '04:00' => $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.time.4am'),
+                'now' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.time.now'),
+                'midnight' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.time.midnight'),
+                '04:00' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.time.4am'),
             ],
             'tstamp',
             GeneralUtility::_POST('tstamp'),
             false
         );
 
-        $output = '
-			<table class="lrPadding c-list">
-				<tr class="bgColor5 tableheader">
-					<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.depth') . ':</td>
-					<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.configurations') . ':</td>
-					<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.scheduled') . ':</td>
-				</tr>
-				<tr class="bgColor4">
-					<td valign="top">' . implode('</td>
-					<td valign="top">', $cell) . '</td>
-				</tr>
-			</table>';
-
-        return $output;
-    }
-
-    /**
-     * Create Table header row for URL display
-     *
-     * @return	string		Table header
-     */
-    public function drawURLs_printTableHeader()
-    {
-        $content = '
-			<tr class="bgColor5 tableheader">
-				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.pagetitle') . ':</td>
-				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.key') . ':</td>
-				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.parametercfg') . ':</td>
-				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.values') . ':</td>
-				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.urls') . ':</td>
-				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.options') . ':</td>
-				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.parameters') . ':</td>
-			</tr>';
-
-        return $content;
-    }
-
-    /**
-     * Begins an output section and sets header and content
-     *
-     * @param string $label The header
-     * @param string $text The HTML-content
-     * @param bool $nostrtoupper	A flag that will prevent the header from being converted to uppercase
-     * @param bool $sH Defines the type of header (if set, "<h3>" rather than the default "h4")
-     * @param int $type The number of an icon to show with the header (see the icon-function). -1,1,2,3
-     * @param bool $allowHTMLinHeader If set, HTML tags are allowed in $label (otherwise this value is by default htmlspecialchars()'ed)
-     * @return string HTML content
-     * @see icons(), sectionHeader()
-     */
-    public function section($label, $text, $nostrtoupper = false, $sH = false, $type = 0, $allowHTMLinHeader = false)
-    {
-        $str = '';
-        // Setting header
-        if ($label) {
-            if (!$allowHTMLinHeader) {
-                $label = htmlspecialchars($label);
-            }
-            $str .= $this->sectionHeader($this->icons($type) . $label, $sH, $nostrtoupper ? '' : ' class="uppercase"');
-        }
-        // Setting content
-        $str .= '
-
-	<!-- Section content -->
-' . $text;
-        return $this->sectionBegin() . $str;
-    }
-
-    /**
-     * Inserts a divider image
-     * Ends a section (if open) before inserting the image
-     *
-     * @param int $dist The margin-top/-bottom of the <hr> ruler.
-     * @return string HTML content
-     */
-    public function divider($dist)
-    {
-        $dist = (int)$dist;
-        $str = '
-
-	<!-- DIVIDER -->
-	<hr style="margin-top: ' . $dist . 'px; margin-bottom: ' . $dist . 'px;" />
-';
-        return $this->sectionEnd() . $str;
-    }
-
-    /**
-     * Make a section header.
-     * Begins a section if not already open.
-     *
-     * @param string $label The label between the <h3> or <h4> tags. (Allows HTML)
-     * @param bool $sH If set, <h3> is used, otherwise <h4>
-     * @param string $addAttrib Additional attributes to h-tag, eg. ' class=""'
-     * @return string HTML content
-     */
-    public function sectionHeader($label, $sH = false, $addAttrib = '')
-    {
-        $tag = $sH ? 'h2' : 'h3';
-        if ($addAttrib && $addAttrib[0] !== ' ') {
-            $addAttrib = ' ' . $addAttrib;
-        }
-        $str = '
-
-	<!-- Section header -->
-	<' . $tag . $addAttrib . '>' . $label . '</' . $tag . '>
-';
-        return $this->sectionBegin() . $str;
-    }
-
-    /**
-     * Begins an output section.
-     * Returns the <div>-begin tag AND sets the ->sectionFlag TRUE (if the ->sectionFlag is not already set!)
-     * You can call this function even if a section is already begun since the function will only return something if the sectionFlag is not already set!
-     *
-     * @return string HTML content
-     */
-    public function sectionBegin()
-    {
-        if (!$this->sectionFlag) {
-            $this->sectionFlag = 1;
-            $str = '
-
-	<!-- ***********************
-	      Begin output section.
-	     *********************** -->
-	<div>
-';
-            return $str;
-        }
-        return '';
-    }
-
-    /**
-     * Ends and output section
-     * Returns the </div>-end tag AND clears the ->sectionFlag (but does so only IF the sectionFlag is set - that is a section is 'open')
-     * See sectionBegin() also.
-     *
-     * @return string HTML content
-     */
-    public function sectionEnd()
-    {
-        if ($this->sectionFlag) {
-            $this->sectionFlag = 0;
-            return '
-	</div>
-	<!-- *********************
-	      End output section.
-	     ********************* -->
-';
-        }
-        return '';
-    }
-
-    /**
-     * Returns an image-tag with an 18x16 icon of the following types:
-     *
-     * $type:
-     * -1:	OK icon (Check-mark)
-     * 1:	Notice (Speach-bubble)
-     * 2:	Warning (Yellow triangle)
-     * 3:	Fatal error (Red stop sign)
-     *
-     * @param int $type See description
-     * @param string $styleAttribValue Value for style attribute
-     * @return string HTML image tag (if applicable)
-     */
-    public function icons($type, $styleAttribValue = '')
-    {
-        switch ($type) {
-            case self::STATUS_ICON_ERROR:
-                $icon = 'status-dialog-error';
-                break;
-            case self::STATUS_ICON_WARNING:
-                $icon = 'status-dialog-warning';
-                break;
-            case self::STATUS_ICON_NOTIFICATION:
-                $icon = 'status-dialog-notification';
-                break;
-            case self::STATUS_ICON_OK:
-                $icon = 'status-dialog-ok';
-                break;
-            default:
-                // Do nothing
-        }
-        if ($icon) {
-            return $this->iconFactory->getIcon($icon, Icon::SIZE_SMALL)->render();
-        }
+        return $selectors;
     }
 
     /*******************************
@@ -655,192 +423,132 @@ class BackendModule extends AbstractFunctionModule
      *
      ******************************/
 
-    /**
-     * Shows the log of indexed URLs
-     *
-     * @return	string		HTML output
-     */
-    public function drawLog()
+    protected function showLogAction(): string
     {
-        global $BACK_PATH;
-        $output = '';
+        $this->view->setTemplate('ShowLog');
+        if (empty($this->id)) {
+            $this->addErrorMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.noPageSelected'));
+        } else {
+            $this->crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
+            $this->crawlerController->setAccessMode('gui');
+            $this->crawlerController->setID = GeneralUtility::md5int(microtime());
 
-        // Init:
-        $this->crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
-        $this->crawlerController->setAccessMode('gui');
-        $this->crawlerController->setID = GeneralUtility::md5int(microtime());
+            $csvExport = GeneralUtility::_POST('_csv');
+            $this->CSVExport = isset($csvExport);
 
-        $csvExport = GeneralUtility::_POST('_csv');
-        $this->CSVExport = isset($csvExport);
+            // Read URL:
+            if (GeneralUtility::_GP('qid_read')) {
+                $this->crawlerController->readUrl((int)GeneralUtility::_GP('qid_read'), true);
+            }
 
-        // Read URL:
-        if (GeneralUtility::_GP('qid_read')) {
-            $this->crawlerController->readUrl(intval(GeneralUtility::_GP('qid_read')), true);
-        }
+            // Look for set ID sent - if it is, we will display contents of that set:
+            $showSetId = (int)GeneralUtility::_GP('setID');
 
-        // Look for set ID sent - if it is, we will display contents of that set:
-        $showSetId = intval(GeneralUtility::_GP('setID'));
-
-        // Show details:
-        if (GeneralUtility::_GP('qid_details')) {
-
+            $queueId = GeneralUtility::_GP('qid_details');
+            $this->view->assign('queueId', $queueId);
+            $this->view->assign('setId', $showSetId);
+            // Show details:
+            if ($queueId) {
                 // Get entry record:
-            $q_entry = $this->queryBuilder
-                ->from('tx_crawler_queue')
-                ->select('*')
-                ->where(
-                    $this->queryBuilder->expr()->eq('qid', $this->queryBuilder->createNamedParameter(GeneralUtility::_GP('qid_details')))
-                )
-                ->execute()
-                ->fetch();
+                $q_entry = $this->queryBuilder
+                    ->from('tx_crawler_queue')
+                    ->select('*')
+                    ->where(
+                        $this->queryBuilder->expr()->eq('qid', $this->queryBuilder->createNamedParameter($queueId))
+                    )
+                    ->execute()
+                    ->fetch();
 
-            // Explode values:
-            $resStatus = $this->getResStatus($q_entry);
-            $q_entry['parameters'] = unserialize($q_entry['parameters']);
-            $q_entry['result_data'] = unserialize($q_entry['result_data']);
-            if (is_array($q_entry['result_data'])) {
-                $q_entry['result_data']['content'] = unserialize($q_entry['result_data']['content']);
-
-                if (!$this->pObj->MOD_SETTINGS['log_resultLog']) {
-                    unset($q_entry['result_data']['content']['log']);
+                // Explode values
+                $q_entry['parameters'] = unserialize($q_entry['parameters']);
+                $q_entry['result_data'] = unserialize($q_entry['result_data']);
+                $resStatus = $this->getResStatus($q_entry['result_data']);
+                if (is_array($q_entry['result_data'])) {
+                    $q_entry['result_data']['content'] = unserialize($q_entry['result_data']['content']);
+                    if (!$this->pObj->MOD_SETTINGS['log_resultLog']) {
+                        unset($q_entry['result_data']['content']['log']);
+                    }
                 }
-            }
 
-            // Print rudimentary details:
-            $output .= '
-				<br /><br />
-				<input type="submit" value="' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.back') . '" name="_back" />
-				<input type="hidden" value="' . $this->pObj->id . '" name="id" />
-				<input type="hidden" value="' . $showSetId . '" name="setID" />
-				<br />
-				Current server time: ' . date('H:i:s', time()) . '<br />' .
-                'Status: ' . $resStatus . '<br />' .
-                DebugUtility::viewArray($q_entry);
-        } else {	// Show list:
+                $this->view->assign('queueStatus', $resStatus);
+                $this->view->assign('queueDetails', DebugUtility::viewArray($q_entry));
+            } else {
+                // Show list
+                // Drawing tree:
+                $tree = GeneralUtility::makeInstance(PageTreeView::class);
+                $perms_clause = $GLOBALS['BE_USER']->getPagePermsClause(1);
+                $tree->init('AND ' . $perms_clause);
 
-            // If either id or set id, show list:
-            if ($this->pObj->id || $showSetId) {
-                if ($this->pObj->id) {
-                    // Drawing tree:
-                    $tree = GeneralUtility::makeInstance(PageTreeView::class);
-                    $perms_clause = $GLOBALS['BE_USER']->getPagePermsClause(1);
-                    $tree->init('AND ' . $perms_clause);
+                // Set root row:
+                $pageinfo = BackendUtility::readPageAccess(
+                    $this->id,
+                    $perms_clause
+                );
+                $HTML = IconUtility::getIconForRecord('pages', $pageinfo);
+                $tree->tree[] = [
+                    'row' => $pageinfo,
+                    'HTML' => $HTML
+                ];
 
-                    // Set root row:
-                    $pageinfo = BackendUtility::readPageAccess(
-                        $this->pObj->id,
-                        $perms_clause
-                    );
-                    $HTML = IconUtility::getIconForRecord('pages', $pageinfo);
-                    $tree->tree[] = [
-                        'row' => $pageinfo,
-                        'HTML' => $HTML
-                    ];
+                // Get branch beneath:
+                if ($this->pObj->MOD_SETTINGS['depth']) {
+                    $tree->getTree($this->id, $this->pObj->MOD_SETTINGS['depth']);
+                }
 
-                    // Get branch beneath:
-                    if ($this->pObj->MOD_SETTINGS['depth']) {
-                        $tree->getTree($this->pObj->id, $this->pObj->MOD_SETTINGS['depth'], '');
-                    }
-
-                    // Traverse page tree:
-                    $code = '';
-                    $count = 0;
-                    foreach ($tree->tree as $data) {
-                        $code .= $this->drawLog_addRows(
-                            $data['row'],
-                            $data['HTML'] . BackendUtility::getRecordTitle('pages', $data['row'], true),
-                            intval($this->pObj->MOD_SETTINGS['itemsPerPage'])
-                        );
-                        if (++$count == 1000) {
-                            break;
-                        }
-                    }
+                // If Flush button is pressed, flush tables instead of selecting entries:
+                if (GeneralUtility::_POST('_flush')) {
+                    $doFlush = true;
+                    $doFullFlush = false;
+                } elseif (GeneralUtility::_POST('_flush_all')) {
+                    $doFlush = true;
+                    $doFullFlush = true;
                 } else {
-                    $code = '';
-                    $code .= $this->drawLog_addRows(
-                        $showSetId,
-                        'Set ID: ' . $showSetId
+                    $doFlush = false;
+                    $doFullFlush = false;
+                }
+                $itemsPerPage = (int)$this->pObj->MOD_SETTINGS['itemsPerPage'];
+                // Traverse page tree:
+                $code = '';
+                $count = 0;
+                foreach ($tree->tree as $data) {
+                    // Get result:
+                    $logEntriesOfPage = $this->crawlerController->getLogEntriesForPageId(
+                        (int)$data['row']['uid'],
+                        $this->pObj->MOD_SETTINGS['log_display'],
+                        $doFlush,
+                        $doFullFlush,
+                        $itemsPerPage
                     );
+
+                    $code .= $this->drawLog_addRows(
+                        $logEntriesOfPage,
+                        $data['HTML'] . BackendUtility::getRecordTitle('pages', $data['row'], true)
+                    );
+                    if (++$count === 1000) {
+                        break;
+                    }
                 }
+                $this->view->assign('code', $code);
+            }
 
-                if ($code) {
-                    $output .= '
-						<br /><br />
-						<input type="submit" value="' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.reloadlist') . '" name="_reload" />
-						<input type="submit" value="' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.downloadcsv') . '" name="_csv" />
-						<input type="submit" value="' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.flushvisiblequeue') . '" name="_flush" onclick="return confirm(\'' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.confirmyouresure') . '\');" />
-						<input type="submit" value="' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.flushfullqueue') . '" name="_flush_all" onclick="return confirm(\'' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.confirmyouresure') . '\');" />
-						<input type="hidden" value="' . $this->pObj->id . '" name="id" />
-						<input type="hidden" value="' . $showSetId . '" name="setID" />
-						<br />
-						' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.curtime') . ': ' . date('H:i:s', time()) . '
-						<br /><br />
-
-
-						<table class="lrPadding c-list crawlerlog">' .
-                            $this->drawLog_printTableHeader() .
-                            $code .
-                        '</table>';
-                }
-            } else {	// Otherwise show available sets:
-                /*
-                 $setList = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-                                'set_id, count(*) as count_value, scheduled',
-                                'tx_crawler_queue',
-                                '',
-                                'set_id, scheduled',
-                                'scheduled DESC'
-                            );
-                */
-                $setList = $this->queueRepository->getAvailableSets();
-
-                $code = '
-					<tr class="bgColor5 tableheader">
-						<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.setid') . ':</td>
-						<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.count') . 't:</td>
-						<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.time') . ':</td>
-					</tr>
-				';
-
-                $cc = 0;
-                foreach ($setList as $set) {
-                    $code .= '
-						<tr class="bgColor' . ($cc % 2 ? '-20' : '-10') . '">
-							<td><a href="' . htmlspecialchars('index.php?setID=' . $set['set_id']) . '">' . $set['set_id'] . '</a></td>
-							<td>' . $set['count_value'] . '</td>
-							<td>' . BackendUtility::dateTimeAge($set['scheduled']) . '</td>
-						</tr>
-					';
-
-                    $cc++;
-                }
-
-                $output .= '
-					<br /><br />
-					<table class="lrPadding c-list">' .
-                        $code .
-                    '</table>';
+            if ($this->CSVExport) {
+                $this->outputCsvFile();
             }
         }
-
-        if ($this->CSVExport) {
-            $this->outputCsvFile();
-        }
-
-        // Return output
-        return 	$output;
+        $this->view->assign('showResultLog', (bool)$this->pObj->MOD_SETTINGS['log_resultLog']);
+        $this->view->assign('showFeVars', (bool)$this->pObj->MOD_SETTINGS['log_feVars']);
+        return $this->view->render();
     }
 
     /**
      * Outputs the CSV file and sets the correct headers
      */
-    protected function outputCsvFile()
+    protected function outputCsvFile(): void
     {
         if (!count($this->CSVaccu)) {
-            $this->addWarningMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:message.canNotExportEmptyQueueToCsvText'));
+            $this->addWarningMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:message.canNotExportEmptyQueueToCsvText'));
             return;
         }
-
         $csvLines = [];
 
         // Field names:
@@ -854,14 +562,11 @@ class BackendModule extends AbstractFunctionModule
         }
 
         // Creating output header:
-        $mimeType = 'application/octet-stream';
-        Header('Content-Type: ' . $mimeType);
-        Header('Content-Disposition: attachment; filename=CrawlerLog.csv');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename=CrawlerLog.csv');
 
         // Printing the content of the CSV lines:
         echo implode(chr(13) . chr(10), $csvLines);
-
-        // Exits:
         exit;
     }
 
@@ -869,49 +574,27 @@ class BackendModule extends AbstractFunctionModule
      * Create the rows for display of the page tree
      * For each page a number of rows are shown displaying GET variable configuration
      *
-     * @param array $pageRow_setId Page row or set-id
+     * @param array $logEntriesOfPage Log items of one page
      * @param string $titleString Title string
-     * @param int $itemsPerPage Items per Page setting
-     *
      * @return string HTML <tr> content (one or more)
+     * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
      */
-    public function drawLog_addRows($pageRow_setId, $titleString, $itemsPerPage = 10)
+    protected function drawLog_addRows(array $logEntriesOfPage, string $titleString): string
     {
-
-            // If Flush button is pressed, flush tables instead of selecting entries:
-
-        if (GeneralUtility::_POST('_flush')) {
-            $doFlush = true;
-            $doFullFlush = false;
-        } elseif (GeneralUtility::_POST('_flush_all')) {
-            $doFlush = true;
-            $doFullFlush = true;
-        } else {
-            $doFlush = false;
-            $doFullFlush = false;
-        }
-
-        // Get result:
-        if (is_array($pageRow_setId)) {
-            $res = $this->crawlerController->getLogEntriesForPageId($pageRow_setId['uid'], $this->pObj->MOD_SETTINGS['log_display'], $doFlush, $doFullFlush, intval($itemsPerPage));
-        } else {
-            $res = $this->crawlerController->getLogEntriesForSetId($pageRow_setId, $this->pObj->MOD_SETTINGS['log_display'], $doFlush, $doFullFlush, intval($itemsPerPage));
-        }
-
-        // Init var:
         $colSpan = 9
                 + ($this->pObj->MOD_SETTINGS['log_resultLog'] ? -1 : 0)
                 + ($this->pObj->MOD_SETTINGS['log_feVars'] ? 3 : 0);
 
-        if (count($res)) {
+        if (!empty($logEntriesOfPage)) {
+            $setId = (int)GeneralUtility::_GP('setID');
+            $refreshIcon = IconUtility::getIcon('actions-system-refresh', Icon::SIZE_SMALL);
             // Traverse parameter combinations:
             $c = 0;
             $content = '';
-            foreach ($res as $kk => $vv) {
-
-                    // Title column:
+            foreach ($logEntriesOfPage as $kk => $vv) {
+                // Title column:
                 if (!$c) {
-                    $titleClm = '<td rowspan="' . count($res) . '">' . $titleString . '</td>';
+                    $titleClm = '<td rowspan="' . count($logEntriesOfPage) . '">' . $titleString . '</td>';
                 } else {
                     $titleClm = '';
                 }
@@ -919,8 +602,8 @@ class BackendModule extends AbstractFunctionModule
                 // Result:
                 $resLog = $this->getResultLog($vv);
 
-                $resStatus = $this->getResStatus($vv);
-                $resFeVars = $this->getResFeVars($vv);
+                $resultData = $vv['result_data'] ? unserialize($vv['result_data']) : [];
+                $resStatus = $this->getResStatus($resultData);
 
                 // Compile row:
                 $parameters = unserialize($vv['parameters']);
@@ -930,7 +613,7 @@ class BackendModule extends AbstractFunctionModule
                 if ($this->pObj->MOD_SETTINGS['log_resultLog']) {
                     $rowData['result_log'] = $resLog;
                 } else {
-                    $rowData['scheduled'] = ($vv['scheduled'] > 0) ? BackendUtility::datetime($vv['scheduled']) : ' ' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.immediate');
+                    $rowData['scheduled'] = ($vv['scheduled'] > 0) ? BackendUtility::datetime($vv['scheduled']) : ' ' . $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.immediate');
                     $rowData['exec_time'] = $vv['exec_time'] ? BackendUtility::datetime($vv['exec_time']) : '-';
                 }
                 $rowData['result_status'] = GeneralUtility::fixed_lgd_cs($resStatus, 50);
@@ -940,31 +623,26 @@ class BackendModule extends AbstractFunctionModule
                 $rowData['set_id'] = $vv['set_id'];
 
                 if ($this->pObj->MOD_SETTINGS['log_feVars']) {
+                    $resFeVars = $this->getResFeVars($resultData ?: []);
                     $rowData['tsfe_id'] = $resFeVars['id'];
                     $rowData['tsfe_gr_list'] = $resFeVars['gr_list'];
                     $rowData['tsfe_no_cache'] = $resFeVars['no_cache'];
                 }
 
-                $setId = intval(GeneralUtility::_GP('setID'));
-                $refreshIcon = IconUtility::getIcon('actions-system-refresh', Icon::SIZE_SMALL);
-
                 // Put rows together:
                 $content .= '
-					<tr class="bgColor' . ($c % 2 ? '-20' : '-10') . '">
+					<tr>
 						' . $titleClm . '
 						<td><a href="' . BackendModuleUtility::getInfoModuleUrl(['qid_details' => $vv['qid'], 'setID' => $setId]) . '">' . htmlspecialchars($vv['qid']) . '</a></td>
 						<td><a href="' . BackendModuleUtility::getInfoModuleUrl(['qid_read' => $vv['qid'], 'setID' => $setId]) . '">' . $refreshIcon . '</a></td>';
                 foreach ($rowData as $fKey => $value) {
-                    if (GeneralUtility::inList('url', $fKey)) {
-                        $content .= '
-						<td>' . $value . '</td>';
+                    if ($fKey === 'url') {
+                        $content .= '<td>' . $value . '</td>';
                     } else {
-                        $content .= '
-						<td>' . nl2br(htmlspecialchars($value)) . '</td>';
+                        $content .= '<td>' . nl2br(htmlspecialchars($value)) . '</td>';
                     }
                 }
-                $content .= '
-					</tr>';
+                $content .= '</tr>';
                 $c++;
 
                 if ($this->CSVExport) {
@@ -977,12 +655,11 @@ class BackendModule extends AbstractFunctionModule
                 }
             }
         } else {
-
-                // Compile row:
+            // Compile row:
             $content = '
-				<tr class="bgColor-20">
+				<tr>
 					<td>' . $titleString . '</td>
-					<td colspan="' . $colSpan . '"><em>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.noentries') . '</em></td>
+					<td colspan="' . $colSpan . '"><em>' . $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.noentries') . '</em></td>
 				</tr>';
         }
 
@@ -992,63 +669,27 @@ class BackendModule extends AbstractFunctionModule
     /**
      * Find Fe vars
      *
-     * @param array $row
+     * @param array $resultData
      * @return array
      */
-    public function getResFeVars($row)
+    protected function getResFeVars(array $resultData): array
     {
-        $feVars = [];
-
-        if ($row['result_data']) {
-            $resultData = unserialize($row['result_data']);
-            $requestResult = unserialize($resultData['content']);
-            $feVars = $requestResult['vars'];
+        if (empty($resultData)) {
+            return [];
         }
-
-        return $feVars;
-    }
-
-    /**
-     * Create Table header row (log)
-     *
-     * @return	string		Table header
-     */
-    public function drawLog_printTableHeader()
-    {
-        $content = '
-			<tr class="bgColor5 tableheader">
-				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.pagetitle') . ':</td>
-				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.qid') . ':</td>
-				<td>&nbsp;</td>' .
-                ($this->pObj->MOD_SETTINGS['log_resultLog'] ? '
-				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.resultlog') . ':</td>' : '
-				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.scheduledtime') . ':</td>
-				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.runtime') . ':</td>') . '
-				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.status') . ':</td>
-				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.url') . ':</td>
-				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.groups') . ':</td>
-				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.procinstr') . ':</td>
-				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.setid') . ':</td>' .
-                ($this->pObj->MOD_SETTINGS['log_feVars'] ? '
-				<td>' . htmlspecialchars('TSFE->id') . '</td>
-				<td>' . htmlspecialchars('TSFE->gr_list') . '</td>
-				<td>' . htmlspecialchars('TSFE->no_cache') . '</td>' : '') . '
-			</tr>';
-
-        return $content;
+        $requestResult = unserialize($resultData['content']);
+        return $requestResult['vars'];
     }
 
     /**
      * Extract the log information from the current row and retrive it as formatted string.
      *
      * @param array $resultRow
-     *
      * @return string
      */
     protected function getResultLog($resultRow)
     {
         $content = '';
-
         if (is_array($resultRow) && array_key_exists('result_data', $resultRow)) {
             $requestContent = unserialize($resultRow['result_data']);
             $requestResult = unserialize($requestContent['content']);
@@ -1057,183 +698,191 @@ class BackendModule extends AbstractFunctionModule
                 $content = implode(chr(10), $requestResult['log']);
             }
         }
-
         return $content;
     }
 
-    public function getResStatus($vv)
+    protected function getResStatus($requestContent): string
     {
-        if ($vv['result_data']) {
-            $requestContent = unserialize($vv['result_data']);
-            $requestResult = unserialize($requestContent['content']);
-            if (is_array($requestResult)) {
-                if (empty($requestResult['errorlog'])) {
-                    $resStatus = 'OK';
-                } else {
-                    $resStatus = implode("\n", $requestResult['errorlog']);
-                }
-            } else {
-                $resStatus = 'Error: ' . substr(preg_replace('/\s+/', ' ', strip_tags($requestContent['content'])), 0, 10000) . '...';
-            }
-        } else {
-            $resStatus = '-';
+        if (empty($requestContent)) {
+            return '-';
         }
-        return $resStatus;
+        $requestResult = unserialize($requestContent['content']);
+        if (is_array($requestResult)) {
+            if (empty($requestResult['errorlog'])) {
+                return 'OK';
+            } else {
+                return implode("\n", $requestResult['errorlog']);
+            }
+        }
+        return 'Error: ' . substr(preg_replace('/\s+/', ' ', strip_tags($requestContent['content'])), 0, 10000) . '...';
     }
-
-    /*****************************
-     *
-     * CLI status display
-     *
-     *****************************/
 
     /**
      * This method is used to show an overview about the active an the finished crawling processes
      *
-     * @param void
      * @return string
      */
-    protected function drawProcessOverviewAction()
+    protected function processOverviewAction()
     {
+        $this->view->setTemplate('ProcessOverview');
         $this->runRefreshHooks();
-
-        global $BACK_PATH;
         $this->makeCrawlerProcessableChecks();
 
-        $crawler = $this->findCrawler();
         try {
             $this->handleProcessOverviewActions();
         } catch (\Exception $e) {
             $this->addErrorMessage($e->getMessage());
         }
 
-        $offset = intval(GeneralUtility::_GP('offset'));
-        $perpage = 20;
-
         $processRepository = new ProcessRepository();
         $queueRepository = new QueueRepository();
 
         $mode = $this->pObj->MOD_SETTINGS['processListMode'];
-        $where = '';
         if ($mode == 'simple') {
-            $where = 'active = 1';
+            $allProcesses = $processRepository->findAllActive();
+        } else {
+            $allProcesses = $processRepository->findAll();
         }
+        $isCrawlerEnabled = !$this->findCrawler()->getDisabled() && !$this->isErrorDetected;
+        $currentActiveProcesses = $processRepository->countActive();
+        $maxActiveProcesses = MathUtility::forceIntegerInRange($this->extensionSettings['processLimit'], 1, 99, 1);
+        $this->view->assignMultiple([
+            'pageId' => (int)$this->id,
+            'refreshLink' => $this->getRefreshLink(),
+            'addLink' => $this->getAddLink($currentActiveProcesses, $maxActiveProcesses, $isCrawlerEnabled),
+            'modeLink' => $this->getModeLink($mode),
+            'enableDisableToggle' => $this->getEnableDisableLink($isCrawlerEnabled),
+            'processCollection' => $allProcesses,
+            'cliPath' => $this->processManager->getCrawlerCliPath(),
+            'isCrawlerEnabled' => $isCrawlerEnabled,
+            'totalUnprocessedItemCount' => $queueRepository->countAllPendingItems(),
+            'assignedUnprocessedItemCount' => $queueRepository->countAllAssignedPendingItems(),
+            'activeProcessCount' => $currentActiveProcesses,
+            'maxActiveProcessCount' => $maxActiveProcesses,
+            'mode' => $mode
+        ]);
 
-        $allProcesses = $processRepository->findAll('ttl', 'DESC', $perpage, $offset, $where);
-        $allCount = $processRepository->countAll($where);
-
-        $listView = new ProcessListView();
-        $listView->setPageId($this->pObj->id);
-        $listView->setIconPath($BACK_PATH . '../typo3conf/ext/crawler/template/process/res/img/');
-        $listView->setProcessCollection($allProcesses);
-        $listView->setCliPath($this->processManager->getCrawlerCliPath());
-        $listView->setIsCrawlerEnabled(!$crawler->getDisabled() && !$this->isErrorDetected);
-        $listView->setTotalUnprocessedItemCount($queueRepository->countAllPendingItems());
-        $listView->setAssignedUnprocessedItemCount($queueRepository->countAllAssignedPendingItems());
-        $listView->setActiveProcessCount($processRepository->countActive());
-        $listView->setMaxActiveProcessCount(MathUtility::forceIntegerInRange($this->extensionSettings['processLimit'], 1, 99, 1));
-        $listView->setMode($mode);
-
-        $paginationView = new PaginationView();
-        $paginationView->setCurrentOffset($offset);
-        $paginationView->setPerPage($perpage);
-        $paginationView->setTotalItemCount($allCount);
-
-        $output = $listView->render();
-
-        if ($paginationView->getTotalPagesCount() > 1) {
-            $output .= ' <br />' . $paginationView->render();
-        }
-
-        return $output;
+        return $this->view->render();
     }
 
     /**
-     * Verify that the crawler is exectuable.
+     * Returns a tag for the refresh icon
      *
-     * @return void
+     * @return string
+     * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
      */
-    protected function makeCrawlerProcessableChecks()
+    protected function getRefreshLink(): string
     {
-        global $LANG;
+        return ButtonUtility::getLinkButton(
+            'actions-refresh',
+            $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.refresh'),
+            'window.location=\'' . BackendModuleUtility::getInfoModuleUrl(['SET[\'crawleraction\']' => 'crawleraction', 'id' => $this->id]) . '\';'
+        );
+    }
 
-        /*if ($this->isCrawlerUserAvailable() === false) {
-            $this->addErrorMessage($LANG->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:message.noBeUserAvailable'));
-        } elseif ($this->isCrawlerUserAdmin() === true) {
-            $this->addErrorMessage($LANG->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:message.beUserIsAdmin'));
-        }*/
+    /**
+     * Returns a link for the panel to enable or disable the crawler
+     *
+     * @param bool $isCrawlerEnabled
+     * @return string
+     * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
+     */
+    protected function getEnableDisableLink(bool $isCrawlerEnabled): string
+    {
+        if ($isCrawlerEnabled) {
+            // TODO: Icon Should be bigger + Perhaps better icon
+            return ButtonUtility::getLinkButton(
+                'tx-crawler-stop',
+                $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.disablecrawling'),
+                'window.location=\'' . BackendModuleUtility::getInfoModuleUrl(['action' => 'stopCrawling']) . '\';'
+            );
+        } else {
+            // TODO: Icon Should be bigger
+            return ButtonUtility::getLinkButton(
+                'tx-crawler-start',
+                $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.enablecrawling'),
+                'window.location=\'' . BackendModuleUtility::getInfoModuleUrl(['action' => 'resumeCrawling']) . '\';'
+            );
+        }
+    }
 
-        if ($this->isPhpForkAvailable() === false) {
-            $this->addErrorMessage($LANG->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:message.noPhpForkAvailable'));
+    /**
+     * @param string $mode
+     * @return string
+     * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
+     */
+    protected function getModeLink(string $mode): string
+    {
+        if ($mode === 'detail') {
+            return ButtonUtility::getLinkButton(
+                'actions-document-view',
+                $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.show.running'),
+                'window.location=\'' . BackendModuleUtility::getInfoModuleUrl(['SET[\'processListMode\']' => 'simple']) . '\';'
+            );
+        } elseif ($mode === 'simple') {
+            return ButtonUtility::getLinkButton(
+                'actions-document-view',
+                $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.show.all'),
+                'window.location=\'' . BackendModuleUtility::getInfoModuleUrl(['SET[\'processListMode\']' => 'detail']) . '\';'
+            );
+        }
+        return '';
+    }
+
+    /**
+     * @param $currentActiveProcesses
+     * @param $maxActiveProcesses
+     * @param $isCrawlerEnabled
+     * @return string
+     * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
+     */
+    protected function getAddLink($currentActiveProcesses, $maxActiveProcesses, $isCrawlerEnabled): string
+    {
+        if (!$isCrawlerEnabled) {
+            return '';
+        }
+        if (MathUtility::convertToPositiveInteger($currentActiveProcesses) >= MathUtility::convertToPositiveInteger($maxActiveProcesses)) {
+            return '';
+        }
+        return ButtonUtility::getLinkButton(
+            'actions-add',
+            $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.process.add'),
+            'window.location=\'' . BackendModuleUtility::getInfoModuleUrl(['action' => 'addProcess']) . '\';'
+        );
+    }
+
+    /**
+     * Verify that the crawler is executable.
+     */
+    protected function makeCrawlerProcessableChecks(): void
+    {
+        if (!$this->isPhpForkAvailable()) {
+            $this->addErrorMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:message.noPhpForkAvailable'));
         }
 
         $exitCode = 0;
         $out = [];
         exec(escapeshellcmd($this->extensionSettings['phpPath'] . ' -v'), $out, $exitCode);
         if ($exitCode > 0) {
-            $this->addErrorMessage(sprintf($LANG->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:message.phpBinaryNotFound'), htmlspecialchars($this->extensionSettings['phpPath'])));
+            $this->addErrorMessage(sprintf($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:message.phpBinaryNotFound'), htmlspecialchars($this->extensionSettings['phpPath'])));
         }
     }
 
     /**
      * Indicate that the required PHP method "popen" is
      * available in the system.
-     *
-     * @return boolean
      */
-    protected function isPhpForkAvailable()
+    protected function isPhpForkAvailable(): bool
     {
         return function_exists('popen');
-    }
-
-    /**
-     * Indicate that the required be_user "_cli_crawler" is
-     * global available in the system.
-     *
-     * @return boolean
-     */
-    protected function isCrawlerUserAvailable()
-    {
-        $isAvailable = false;
-
-        $username = '_cli_crawler';
-        /** @var QueryResult $user */
-        $user = $this->backendUserRepository->findByUsername($username);
-
-        if ($user->getFirst() instanceof BackendUser) {
-            $isAvailable = true;
-        }
-
-        return $isAvailable;
-    }
-
-    /**
-     * Check is the Crawler user has admin rights or not
-     *
-     * @return boolean
-     */
-    protected function isCrawlerUserAdmin()
-    {
-        $isAdmin = false;
-
-        $username = '_cli_crawler';
-        /** @var QueryResult $user */
-        $user = $this->backendUserRepository->findByUsername($username);
-        if ($user->getFirst() instanceof BackendUser && $user->getFirst()->getIsAdministrator()) {
-            $isAdmin = true;
-        }
-
-        return $isAdmin;
     }
 
     /**
      * Method to handle incomming actions of the process overview
      *
      * @throws \Exception
-     *
-     * @return void
      */
-    protected function handleProcessOverviewActions()
+    protected function handleProcessOverviewActions(): void
     {
         $crawler = $this->findCrawler();
 
@@ -1247,22 +896,18 @@ class BackendModule extends AbstractFunctionModule
                 $crawler->setDisabled(false);
                 break;
             case 'addProcess':
-                $handle = $this->processManager->startProcess();
-                if ($handle === false) {
-                    throw new \Exception($GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.newprocesserror'));
+                if ($this->processManager->startProcess() === false) {
+                    throw new \Exception($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.newprocesserror'));
                 }
-                $this->addNoticeMessage($GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.newprocess'));
+                $this->addNoticeMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.newprocess'));
                 break;
         }
     }
 
     /**
      * Returns the singleton instance of the crawler.
-     *
-     * @param void
-     * @return CrawlerController crawler object
      */
-    protected function findCrawler()
+    protected function findCrawler(): CrawlerController
     {
         if (!$this->crawlerController instanceof CrawlerController) {
             $this->crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
@@ -1281,10 +926,8 @@ class BackendModule extends AbstractFunctionModule
      *
      * @param  string  the message itself
      * @param  integer message level (-1 = success (default), 0 = info, 1 = notice, 2 = warning, 3 = error)
-     *
-     * @return void
      */
-    private function addMessage($message, $severity = FlashMessage::OK)
+    protected function addMessage($message, $severity = FlashMessage::OK): void
     {
         $message = GeneralUtility::makeInstance(
             FlashMessage::class,
@@ -1303,10 +946,8 @@ class BackendModule extends AbstractFunctionModule
      * Add notice message to the user interface.
      *
      * @param string The message
-     *
-     * @return void
      */
-    protected function addNoticeMessage($message)
+    protected function addNoticeMessage(string $message): void
     {
         $this->addMessage($message, FlashMessage::NOTICE);
     }
@@ -1315,10 +956,8 @@ class BackendModule extends AbstractFunctionModule
      * Add error message to the user interface.
      *
      * @param string The message
-     *
-     * @return void
      */
-    protected function addErrorMessage($message)
+    protected function addErrorMessage(string $message): void
     {
         $this->isErrorDetected = true;
         $this->addMessage($message, FlashMessage::ERROR);
@@ -1327,14 +966,9 @@ class BackendModule extends AbstractFunctionModule
     /**
      * Add error message to the user interface.
      *
-     * NOTE:
-     * This method is basesd on TYPO3 4.3 or higher!
-     *
      * @param string The message
-     *
-     * @return void
      */
-    protected function addWarningMessage($message)
+    protected function addWarningMessage(string $message): void
     {
         $this->addMessage($message, FlashMessage::WARNING);
     }
@@ -1344,39 +978,49 @@ class BackendModule extends AbstractFunctionModule
      *
      * @param	array		$optArray Options key(value) => label pairs
      * @param	string		$name Selector box name
-     * @param	string		$value Selector box value (array for multiple...)
+     * @param	string|array		$value Selector box value (array for multiple...)
      * @param	boolean		$multiple If set, will draw multiple box.
      *
      * @return	string		HTML select element
      */
-    public function selectorBox($optArray, $name, $value, $multiple)
+    protected function selectorBox($optArray, $name, $value, bool $multiple): string
     {
         $options = [];
         foreach ($optArray as $key => $val) {
+            $selected = (!$multiple && !strcmp($value, $key)) || ($multiple && in_array($key, (array)$value));
             $options[] = '
-				<option value="' . htmlspecialchars($key) . '"' . ((!$multiple && !strcmp($value, $key)) || ($multiple && in_array($key, (array)$value)) ? ' selected="selected"' : '') . '>' . htmlspecialchars($val) . '</option>';
+				<option value="' . htmlspecialchars($key) . '"' . ($selected ? ' selected="selected"' : '') . '>' . htmlspecialchars($val) . '</option>';
         }
 
-        $output = '<select name="' . htmlspecialchars($name . ($multiple ? '[]' : '')) . '"' . ($multiple ? ' multiple="multiple" size="' . count($options) . '"' : '') . '>' . implode('', $options) . '</select>';
-
-        return $output;
+        return '<select class="form-control" name="' . htmlspecialchars($name . ($multiple ? '[]' : '')) . '"' . ($multiple ? ' multiple' : '') . '>' . implode('', $options) . '</select>';
     }
 
     /**
      * Activate hooks
-     *
-     * @return	void
      */
-    public function runRefreshHooks()
+    protected function runRefreshHooks(): void
     {
         $crawlerLib = GeneralUtility::makeInstance(CrawlerController::class);
-        if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['refresh_hooks'])) {
-            foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['refresh_hooks'] as $objRef) {
-                $hookObj = GeneralUtility::makeInstance($objRef);
-                if (is_object($hookObj)) {
-                    $hookObj->crawler_init($crawlerLib);
-                }
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['refresh_hooks'] ?? [] as $objRef) {
+            $hookObj = GeneralUtility::makeInstance($objRef);
+            if (is_object($hookObj)) {
+                $hookObj->crawler_init($crawlerLib);
             }
         }
+    }
+
+    protected function initializeView(): void
+    {
+        $view = GeneralUtility::makeInstance(StandaloneView::class);
+        $view->setLayoutRootPaths(['EXT:crawler/Resources/Private/Layouts']);
+        $view->setPartialRootPaths(['EXT:crawler/Resources/Private/Partials']);
+        $view->setTemplateRootPaths(['EXT:crawler/Resources/Private/Templates/Backend']);
+        $view->getRequest()->setControllerExtensionName('Crawler');
+        $this->view = $view;
+    }
+
+    protected function getLanguageService(): LanguageService
+    {
+        return $GLOBALS['LANG'];
     }
 }
