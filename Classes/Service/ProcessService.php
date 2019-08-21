@@ -28,6 +28,7 @@ namespace AOE\Crawler\Service;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -152,9 +153,9 @@ class ProcessService
      * according to the given count of pending items and the countInARun Setting this method
      * starts more crawling processes
      *
+     * @return boolean if processes are started
      * @throws \Exception
      *
-     * @return boolean if processes are started
      */
     private function startRequiredProcesses()
     {
@@ -162,14 +163,14 @@ class ProcessService
         $currentProcesses = $this->processRepository->countActive();
         $availableProcessesCount = $this->processLimit - $currentProcesses;
         $requiredProcessesCount = ceil($this->queueRepository->countAllUnassignedPendingItems() / $this->countInARun);
-        $startProcessCount = min([$availableProcessesCount,$requiredProcessesCount]);
+        $startProcessCount = min([$availableProcessesCount, $requiredProcessesCount]);
         if ($startProcessCount <= 0) {
             return $ret;
         }
         if ($startProcessCount && $this->verbose) {
             echo 'Start ' . $startProcessCount . ' new processes (Running:' . $currentProcesses . ')';
         }
-        for ($i = 0;$i < $startProcessCount;$i++) {
+        for ($i = 0; $i < $startProcessCount; $i++) {
             usleep(100);
             if ($this->startProcess()) {
                 if ($this->verbose) {
@@ -200,11 +201,11 @@ class ProcessService
             $completePath = '(' . escapeshellcmd($this->getCrawlerCliPath()) . ' &) > /dev/null';
         }
 
-        $fileHandler = system($completePath);
+        $fileHandler = CommandUtility::exec($completePath);
         if ($fileHandler === false) {
             throw new \Exception('could not start process!');
         } else {
-            for ($i = 0;$i < 10;$i++) {
+            for ($i = 0; $i < 10; $i++) {
                 if ($this->processRepository->countNotTimeouted($ttl) > $current) {
                     return true;
                 }
@@ -223,7 +224,14 @@ class ProcessService
     {
         $composerRootDir = getenv('TYPO3_PATH_COMPOSER_ROOT') . '/';
         $jsonDecoded = json_decode(file_get_contents($composerRootDir . 'composer.json'), true);
-        $binDir = $jsonDecoded['config']['bin-dir'] ?: 'vendor/bin';
+
+        if (isset($jsonDecoded['config']['bin-dir'])) {
+            $binDir = $jsonDecoded['config']['bin-dir'];
+        } elseif (isset($jsonDecoded['config']['vendor-dir'])) {
+            $binDir = $jsonDecoded['config']['vendor-dir'] . '/bin';
+        } else {
+            $binDir = 'vendor/bin';
+        }
 
         $phpPath = $this->crawlerController->extensionSettings['phpPath'] . ' ';
         $cliPart = '/typo3cms crawler:crawlqueue';
