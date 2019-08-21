@@ -1,3 +1,5 @@
+﻿
+
 .. ==================================================
 .. FOR YOUR INFORMATION
 .. --------------------------------------------------
@@ -9,15 +11,19 @@
 .. role::   underline
 .. role::   typoscript(code)
 .. role::   ts(typoscript)
-:class:  typoscript
+   :class:  typoscript
 .. role::   php(code)
 
 
-HTTP Authentication
-^^^^^^^^^^^^^^^^^^^
+FAQ
+---
 
-If you want to use HTTP Authentication you  need to configure your base url to contain user:pass
+The crawler won't process all entrys at command-line-way. This might
+happened because the php run into an time out, to avoid this you can
+call the crawler like:
 
 ::
 
-    http://user:pass@www.mydomain.com/
+   php -d max_execution_time=512 [pathToYourTYPO3Installation-composer-bin-dir]/typo3cms crawler:buildqueue
+
+

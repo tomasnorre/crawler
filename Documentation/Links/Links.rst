@@ -13,7 +13,7 @@ Links
 -----
 
 :TER:
-    	https://typo3.org/extensions/repository/view/crawler
+    	https://extensions.typo3.org/extension/crawler/
 
 :Bug Tracker:
     	https://github.com/AOEpeople/crawler/issues

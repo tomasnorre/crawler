@@ -26,14 +26,17 @@ like this:
 
 ::
 
-   * * * * * [pathToYourTYPO3Installation]/typo3/cli_dispatch.phpsh crawler > /dev/null
+   * * * * * [pathToYourTYPO3Installation-composer-bin-dir]/typo3cms crawler:buildqueue > /dev/null
 
 This will run the script every minute. You should try to run the
 script on the command line first to make sure it runs without any
 errors. If it doesn't output anything it was successful.
 
-You will have to add a user called “\_cli\_crawler” and you must have
-PHP installed as a CGI script as well in /usr/bin/
+You will need to have a user called “\_cli\_” and you must have PHP installed
+as a CGI script as well in /usr/bin/.
+
+The user “\_cli\_” is created by the framework on demand if it does not exist
+at the first command line call.
 
 In the “CLI status” menu of the Site Crawler info module you can see
 the status:
