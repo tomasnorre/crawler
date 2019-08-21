@@ -1926,7 +1926,6 @@ class CrawlerController
         array $incomingProcInstructions,
         array $configurationSelection
     ) {
-        global $BACK_PATH;
         global $LANG;
         if (!is_object($LANG)) {
             $LANG = GeneralUtility::makeInstance(LanguageService::class);

@@ -1,0 +1,13 @@
+<f:if condition="{currentPageId} == 0">
+	<f:then>
+		<h3>
+			<f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.noPageSelected" />
+		</h3>
+	</f:then>
+	<f:else>
+		<h3>
+			<f:render section="Headline" />
+		</h3>
+		<f:render section="Content" />
+	</f:else>
+</f:if>
