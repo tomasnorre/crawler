@@ -7,7 +7,7 @@ Thanks for helping out.
 
 PS: Please add in alphabetical order.
 
-* Benni Mack
+* Benni Mack <benni@typo3.org>
 * Tizian Schmidlin <tizian.schmidlin@gmail.com>
 * Tobias Stahn <hello@tstahn.io>
 * Tomas Norre Mikkelsen <tomasnorre@gmail.com>
