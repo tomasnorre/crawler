@@ -2141,7 +2141,6 @@ class CrawlerController implements LoggerAwareInterface
      */
     public function CLI_run($countInARun, $sleepTime, $sleepAfterFinish)
     {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
         $result = 0;
         $counter = 0;
 
@@ -2152,12 +2151,14 @@ class CrawlerController implements LoggerAwareInterface
         if (intval($this->extensionSettings['purgeQueueDays']) > 0) {
             $purgeDate = $this->getCurrentTime() - 24 * 60 * 60 * intval($this->extensionSettings['purgeQueueDays']);
 
-            $del = $queryBuilder
+            $queryBuilderDelete = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+            $del = $queryBuilderDelete
                 ->delete($this->tableName)
                 ->where(
                     'exec_time != 0 AND exec_time < ' . $purgeDate
-                );
-            if (false == $del) {
+                )->execute();
+
+            if (false === $del) {
                 $this->logger->info(
                     'Records could not be deleted.'
                 );
@@ -2166,13 +2167,14 @@ class CrawlerController implements LoggerAwareInterface
 
         // Select entries:
         //TODO Shouldn't this reside within the transaction?
-        $rows = $queryBuilder
+        $queryBuilderSelect = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $rows = $queryBuilderSelect
             ->select('qid', 'scheduled')
             ->from('tx_crawler_queue')
             ->where(
-                $queryBuilder->expr()->eq('exec_time', 0),
-                $queryBuilder->expr()->eq('process_scheduled', 0),
-                $queryBuilder->expr()->lte('scheduled', $this->getCurrentTime())
+                $queryBuilderSelect->expr()->eq('exec_time', 0),
+                $queryBuilderSelect->expr()->eq('process_scheduled', 0),
+                $queryBuilderSelect->expr()->lte('scheduled', $this->getCurrentTime())
             )
             ->orderBy('scheduled')
             ->addOrderBy('qid')
@@ -2195,13 +2197,14 @@ class CrawlerController implements LoggerAwareInterface
             //TODO make sure we're not taking assigned queue-entires
 
             //save the number of assigned queue entrys to determine who many have been processed later
-            $numberOfAffectedRows = $queryBuilder
+            $queryBuilderUpdate = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+            $numberOfAffectedRows = $queryBuilderUpdate
                 ->update('tx_crawler_queue')
                 ->where(
-                    $queryBuilder->expr()->in('qid', $quidList)
+                    $queryBuilderUpdate->expr()->in('qid', $quidList)
                 )
-                ->set('process_scheduled', $queryBuilder->createNamedParameter($this->getCurrentTime(), \PDO::PARAM_INT))
-                ->set('process_id', $processId)
+                ->set('process_scheduled', $this->getCurrentTime())
+                ->set('process_id', $queryBuilderUpdate->createNamedParameter($processId, \PDO::PARAM_STR))
                 ->execute();
 
             GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('tx_crawler_process')
