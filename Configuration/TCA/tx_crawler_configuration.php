@@ -1,9 +1,7 @@
 <?php
 defined('TYPO3_MODE') or die();
 
-$_EXTKEY = 'crawler';
-
-$GLOBALS['TCA']['tx_crawler_configuration'] = [
+return [
     'ctrl' => [
         'title' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration',
         'label' => 'name',
@@ -15,14 +13,16 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = [
         'enablecolumns' => [
             'disabled' => 'hidden',
         ],
-        'iconfile' => 'EXT:crawler/Resources/Public/Icons/icon_tx_crawler_configuration.gif',
+        'typeicon_classes' => [
+            'default' => 'tx-crawler'
+        ],
     ],
     'interface' => [
         'showRecordFieldList' => 'hidden,name,force_ssl,processing_instruction_filter,processing_instruction_parameters_ts,configuration,base_url,pidsonly,begroups,chash, exclude'
     ],
     'columns' => [
         'hidden' => [
-            'exclude' => 1,
+            'exclude' => true,
             'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.hidden',
             'config' => [
                 'type' => 'check',
@@ -30,29 +30,38 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = [
             ]
         ],
         'name' => [
-            'exclude' => 1,
+            'exclude' => true,
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.name',
             'config' => [
                 'type' => 'input',
-                'size' => '30',
+                'size' => 30,
                 'eval' => 'required,trim,lower,alphanum_x',
             ]
         ],
         'force_ssl' => [
-            'exclude' => 1,
+            'exclude' => true,
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.crawling_protocol',
             'config' => [
                 'type' => 'select',
                 'maxitems' => 1,
-                'items' => array(
-                    array('LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.crawling_protocol.http', -1),
-                    array('LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.crawling_protocol.page_config', 0),
-                    array('LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.crawling_protocol.https', 1),
-                )
+                'items' => [
+                    [
+                        'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.crawling_protocol.http',
+                        -1
+                    ],
+                    [
+                        'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.crawling_protocol.page_config',
+                        0
+                    ],
+                    [
+                        'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.crawling_protocol.https',
+                        1
+                    ],
+                ]
             ]
         ],
         'processing_instruction_filter' => [
-            'exclude' => 1,
+            'exclude' => true,
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.processing_instruction_filter',
             'config' => [
                 'type' => 'select',
@@ -63,31 +72,30 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = [
             ]
         ],
         'processing_instruction_parameters_ts' => [
-            'exclude' => 1,
+            'exclude' => true,
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.processing_instruction_parameters_ts',
             'config' => [
                 'type' => 'text',
-                'cols' => '40',
-                'rows' => '5',
+                'cols' => 40,
+                'rows' => 5,
             ],
-            'defaultExtras' => 'fixed-font : enable-tab',
         ],
         'configuration' => [
-            'exclude' => 1,
+            'exclude' => true,
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.configuration',
             'config' => [
                 'type' => 'text',
-                'cols' => '40',
-                'rows' => '5',
+                'cols' => 40,
+                'rows' => 5,
             ]
         ],
         'base_url' => [
-            'exclude' => 1,
+            'exclude' => true,
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.base_url',
             'displayCond' => 'FIELD:sys_domain_base_url:REQ:false',
             'config' => [
                 'type' => 'input',
-                'size' => '30',
+                'size' => 30,
             ]
         ],
         'sys_domain_base_url' => [
@@ -107,7 +115,7 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = [
             ]
         ],
         'pidsonly' => [
-            'exclude' => 1,
+            'exclude' => true,
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.pidsonly',
             'config' => [
                 'type' => 'group',
@@ -116,29 +124,21 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = [
                 'size' => 5,
                 'minitems' => 0,
                 'maxitems' => 100,
-                'wizards' => [
-                    'suggest' => [
-                        'type' => 'suggest',
-                    ],
-                ],
             ],
         ],
         'begroups' => [
-            'exclude' => 1,
-            'l10n_mode' => 'mergeIfNotBlank',
+            'exclude' => true,
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.begroups',
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectMultipleSideBySide',
                 'size' => 5,
                 'maxitems' => 20,
-                'exclusiveKeys' => '-1,-2',
                 'foreign_table' => 'be_groups',
             ],
         ],
         'fegroups' => [
-            'exclude' => 1,
-            'l10n_mode' => 'mergeIfNotBlank',
+            'exclude' => true,
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.fegroups',
             'config' => [
                 'type' => 'select',
@@ -150,38 +150,32 @@ $GLOBALS['TCA']['tx_crawler_configuration'] = [
             ]
         ],
         'chash' => [
-            'exclude' => 1,
+            'exclude' => true,
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.chash',
             'config' => [
                 'type' => 'check',
             ]
         ],
         'exclude' => [
-            'exclude' => 1,
+            'exclude' => true,
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.exclude',
             'config' => [
                 'type' => 'text',
-                'cols' => '48',
-                'rows' => '3',
+                'cols' => 48,
+                'rows' => 3,
             ]
         ],
         'root_template_pid' => [
-            'exclude' => 1,
+            'exclude' => true,
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.root_template_pid',
             'config' => [
                 'type' => 'group',
                 'internal_type' => 'db',
                 'allowed' => 'pages',
-                'size' => '1',
-                "eval" => "required",
-                'maxitems' => '1',
-                'minitems' => '0',
-                'show_thumbs' => '1',
-                'wizards' => [
-                    'suggest' => [
-                        'type' => 'suggest'
-                    ]
-                ],
+                'size' => 1,
+                'maxitems' => 1,
+                'minitems' => 0,
+                'show_thumbs' => 1,
                 'default' => 0
             ]
         ]

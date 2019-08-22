@@ -25,7 +25,6 @@ namespace AOE\Crawler\Command;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Domain\Repository\QueueRepository;
@@ -220,12 +219,6 @@ class CrawlerCommandController extends CommandController
         $crawlerController = $this->objectManager->get(CrawlerController::class);
         /** @var QueueRepository $queueRepository */
         $queueRepository = $this->objectManager->get(QueueRepository::class);
-
-        /** @var ExtensionConfigurationProvider $configurationProvider */
-        $configurationProvider = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
-        $settings = $configurationProvider->getExtensionConfiguration();
-        $settings = is_array($settings) ? $settings : [];
-        $crawlerController->setExtensionSettings($settings);
 
         if (!$crawlerController->getDisabled() && $crawlerController->CLI_checkAndAcquireNewProcess($crawlerController->CLI_buildProcessId())) {
             $countInARun = $amount ? intval($amount) : $crawlerController->extensionSettings['countInARun'];

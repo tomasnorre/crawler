@@ -78,14 +78,6 @@ class CrawlerController implements LoggerAwareInterface
     public $processID = '';
 
     /**
-     * One hour is max stalled time for the CLI
-     * If the process had the status "start" for 3600 seconds, it will be regarded stalled and a new process is started
-     *
-     * @var integer
-     */
-    public $max_CLI_exec_time = 3600;
-
-    /**
      * @var array
      */
     public $duplicateTrack = [];
@@ -265,10 +257,7 @@ class CrawlerController implements LoggerAwareInterface
         /** @var ExtensionConfigurationProvider $configurationProvider */
         $configurationProvider = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
         $settings = $configurationProvider->getExtensionConfiguration();
-        $settings = is_array($settings) ? $settings : [];
-
-        // read ext_em_conf_template settings and set
-        $this->setExtensionSettings($settings);
+        $this->extensionSettings = is_array($settings) ? $settings : [];
 
         // set defaults:
         if (MathUtility::convertToPositiveInteger($this->extensionSettings['countInARun']) == 0) {
@@ -363,8 +352,7 @@ class CrawlerController implements LoggerAwareInterface
         $message = $this->checkIfPageShouldBeSkipped($pageRow);
 
         if ($message === false) {
-            $forceSsl = ($pageRow['url_scheme'] === 2) ? true : false;
-            $res = $this->getUrlsForPageId($pageRow['uid'], $forceSsl);
+            $res = $this->getUrlsForPageId($pageRow['uid']);
             $skipMessage = '';
         } else {
             $skipMessage = $message;
@@ -545,10 +533,9 @@ class CrawlerController implements LoggerAwareInterface
      * And no urls!
      *
      * @param integer $id Page ID
-     * @param bool $forceSsl Use https
      * @return array
      */
-    public function getUrlsForPageId($id, $forceSsl = false)
+    public function getUrlsForPageId($id)
     {
 
         /**
@@ -643,15 +630,13 @@ class CrawlerController implements LoggerAwareInterface
                             $TSparserObject = GeneralUtility::makeInstance(TypoScriptParser::class);
                             $TSparserObject->parse($configurationRecord['processing_instruction_parameters_ts']);
 
-                            $isCrawlingProtocolHttps = $this->isCrawlingProtocolHttps($configurationRecord['force_ssl'], $forceSsl);
-
                             $subCfg = [
                                 'procInstrFilter' => $configurationRecord['processing_instruction_filter'],
                                 'procInstrParams.' => $TSparserObject->setup,
                                 'baseUrl' => $this->getBaseUrlForConfigurationRecord(
                                     $configurationRecord['base_url'],
-                                    $configurationRecord['sys_domain_base_url'],
-                                    $isCrawlingProtocolHttps
+                                    (int)$configurationRecord['sys_domain_base_url'],
+                                    (bool)($configurationRecord['force_ssl'] > 0)
                                 ),
                                 'cHash' => $configurationRecord['chash'],
                                 'userGroups' => $configurationRecord['fegroups'],
@@ -695,24 +680,21 @@ class CrawlerController implements LoggerAwareInterface
      * @param bool $ssl
      * @return string
      */
-    protected function getBaseUrlForConfigurationRecord($baseUrl, $sysDomainUid, $ssl = false)
+    protected function getBaseUrlForConfigurationRecord(string $baseUrl, int $sysDomainUid, bool $ssl = false): string
     {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
-        $sysDomainUid = intval($sysDomainUid);
-        $urlScheme = ($ssl === false) ? 'http' : 'https';
-
         if ($sysDomainUid > 0) {
-            $statement = $queryBuilder
+            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('sys_domain');
+            $domainName = $queryBuilder
+                ->select('domainName')
                 ->from('sys_domain')
-                ->select('*')
                 ->where(
-                    $queryBuilder->expr()->eq('uid', intval($sysDomainUid))
+                    $queryBuilder->expr()->eq('uid', $sysDomainUid)
                 )
-                ->execute();
+                ->execute()
+                ->fetchColumn();
 
-            $row = $statement->fetch(0);
-            if ($row['domainName'] != '') {
-                return $urlScheme . '://' . $row['domainName'];
+            if (!empty($domainName)) {
+                $baseUrl = ($ssl ? 'https' : 'http') . '://' . $domainName;
             }
         }
         return $baseUrl;
@@ -2592,27 +2574,5 @@ class CrawlerController implements LoggerAwareInterface
         unset($configuration['paramExpanded']);
         unset($configuration['URLs']);
         return md5(serialize($configuration));
-    }
-
-    /**
-     * Check whether the Crawling Protocol should be http or https
-     *
-     * @param $crawlerConfiguration
-     * @param $pageConfiguration
-     *
-     * @return bool
-     */
-    protected function isCrawlingProtocolHttps($crawlerConfiguration, $pageConfiguration)
-    {
-        switch ($crawlerConfiguration) {
-            case -1:
-                return false;
-            case 0:
-                return $pageConfiguration;
-            case 1:
-                return true;
-            default:
-                return false;
-        }
     }
 }
