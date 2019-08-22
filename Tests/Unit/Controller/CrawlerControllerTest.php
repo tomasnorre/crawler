@@ -28,6 +28,7 @@ namespace AOE\Crawler\Tests\Unit\Controller;
 use AOE\Crawler\Command\QueueCommandLineController;
 use AOE\Crawler\Controller\CrawlerController;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use Psr\Log\NullLogger;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -54,6 +55,7 @@ class CrawlerControllerTest extends UnitTestCase
             CrawlerController::class,
             ['buildRequestHeaderArray', 'executeShellCommand', 'getFrontendBasePath']
         );
+        $this->crawlerController->setLogger(new NullLogger());
 
         $configuration = [
             'sleepTime' => '1000',
