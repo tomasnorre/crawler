@@ -63,7 +63,6 @@ class Process
     /**
      * Returns the activity state for this process
      *
-     * @param void
      * @return boolean
      */
     public function getActive()

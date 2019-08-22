@@ -117,7 +117,7 @@ class ProcessRepository extends AbstractRepository
     }
 
     /**
-     * @param int $processId
+     * @param string $processId
      *
      * @return void
      */

@@ -56,7 +56,7 @@ class Reason
     /**
      * Set uid
      *
-     * @param int uid
+     * @param int $uid
      * @return void
      */
     public function setUid($uid)

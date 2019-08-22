@@ -69,7 +69,10 @@
             "./.Build/bin/php-cs-fixer fix Classes/",
             "./.Build/bin/php-cs-fixer fix Tests/"
         ],
-        "analyse": "phpstan analyse --no-progress",
+        "analyse": [
+            "[ -e .Build/bin/phpstan ] || composer update",
+            ".Build/bin/phpstan analyse --no-progress"
+        ],
         "test:all": [
             "@test:unit",
             "@test:functional"
