@@ -31,6 +31,8 @@ use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\EventDispatcher;
 use AOE\Crawler\Utility\IconUtility;
 use AOE\Crawler\Utility\SignalSlotUtility;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
@@ -40,8 +42,6 @@ use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\EndTimeRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\HiddenRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\StartTimeRestriction;
-use TYPO3\CMS\Core\Log\Logger;
-use TYPO3\CMS\Core\Log\LogLevel;
 use TYPO3\CMS\Core\TimeTracker\TimeTracker;
 use TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser;
 use TYPO3\CMS\Core\Utility\DebugUtility;
@@ -59,8 +59,10 @@ use TYPO3\CMS\Lang\LanguageService;
  *
  * @package AOE\Crawler\Controller
  */
-class CrawlerController
+class CrawlerController implements LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     const CLI_STATUS_NOTHING_PROCCESSED = 0;
     const CLI_STATUS_REMAIN = 1; //queue not empty
     const CLI_STATUS_PROCESSED = 2; //(some) queue items where processed
@@ -119,11 +121,6 @@ class CrawlerController
      * @var array
      */
     public $urlList = [];
-
-    /**
-     * @var boolean
-     */
-    public $debugMode = false;
 
     /**
      * @var array
@@ -195,11 +192,6 @@ class CrawlerController
     private $cliArgs;
 
     /**
-     * @var Logger
-     */
-    private $logger;
-
-    /**
      * Method to set the accessMode can be gui, cli or cli_im
      *
      * @return string
@@ -260,17 +252,6 @@ class CrawlerController
     public function getProcessFilename()
     {
         return $this->processFilename;
-    }
-
-    /**
-     * @return Logger
-     */
-    private function getLogger(): Logger
-    {
-        if ($this->logger === null) {
-            $this->logger = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Log\LogManager::class)->getLogger(__CLASS__);
-        }
-        return $this->logger;
     }
 
     /************************************
@@ -1410,12 +1391,7 @@ class CrawlerController
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
         $ret = 0;
-        if ($this->debugMode) {
-            $this->getLogger()->log(
-                LogLevel::DEBUG,
-                'crawler-readurl start ' . microtime(true)
-            );
-        }
+        $this->logger->debug('crawler-readurl start ' . microtime(true));
         // Get entry:
         $queryBuilder
             ->select('*')
@@ -1438,8 +1414,7 @@ class CrawlerController
         if ($parameters['rootTemplatePid']) {
             $this->initTSFE((int)$parameters['rootTemplatePid']);
         } else {
-            $this->getLogger()->log(
-                LogLevel::WARNING,
+            $this->logger->warning(
                 'Page with (' . $queueRec['page_id'] . ') could not be crawled, please check your crawler configuration. Perhaps no Root Template Pid is set'
             );
         }
@@ -1501,13 +1476,7 @@ class CrawlerController
                 [ 'qid' => (int)$queueId ]
             );
 
-        if ($this->debugMode) {
-            $this->getLogger()->log(
-                LogLevel::DEBUG,
-                'crawler-readurl stop ' . microtime(true)
-            );
-        }
-
+        $this->logger->debug('crawler-readurl stop ' . microtime(true));
         return $ret;
     }
 
@@ -1605,8 +1574,7 @@ class CrawlerController
         $url = parse_url($originalUrl);
 
         if ($url === false) {
-            $this->getLogger()->log(
-                LogLevel::DEBUG,
+            $this->logger->debug(
                 sprintf('Could not parse_url() for string "%s"', $url),
                 ['crawlerId' => $crawlerId]
             );
@@ -1614,8 +1582,7 @@ class CrawlerController
         }
 
         if (!in_array($url['scheme'], ['','http','https'])) {
-            $this->getLogger()->log(
-                LogLevel::DEBUG,
+            $this->logger->debug(
                 sprintf('Scheme does not match for url "%s"', $url),
                 ['crawlerId' => $crawlerId]
             );
@@ -1652,8 +1619,7 @@ class CrawlerController
         $fp = fsockopen($host, $port, $errno, $errstr, $timeout);
 
         if (!$fp) {
-            $this->getLogger()->log(
-                LogLevel::DEBUG,
+            $this->logger->debug(
                 sprintf('Error while opening "%s"', $url),
                 ['crawlerId' => $crawlerId]
             );
@@ -1684,8 +1650,7 @@ class CrawlerController
                 if (is_array($newRequestUrl)) {
                     $result = array_merge(['parentRequest' => $result], $newRequestUrl);
                 } else {
-                    $this->getLogger()->log(
-                        LogLevel::DEBUG,
+                    $this->logger->debug(
                         sprintf('Error while opening "%s"', $url),
                         ['crawlerId' => $crawlerId]
                     );
@@ -1772,19 +1737,17 @@ class CrawlerController
     }
 
     /**
-     * @param message
+     * In the future this setting "logFileName" should be removed in favor of using the TYPO3 Logging Framework
+     * @param string the message string to log
      */
-    protected function log($message)
+    protected function log(string $message): void
     {
         if (!empty($this->extensionSettings['logFileName'])) {
-            $fileResult = @file_put_contents($this->extensionSettings['logFileName'], date('Ymd His') . ' ' . $message . PHP_EOL, FILE_APPEND);
-            if (!$fileResult) {
-                $this->getLogger()->log(
-                    LogLevel::INFO,
-                    sprintf('File "%s" could not be written, please check file permissions.', $this->extensionSettings['logFileName'])
-                );
-            }
+            @file_put_contents($this->extensionSettings['logFileName'], date('Ymd His') . ' ' . $message . PHP_EOL, FILE_APPEND);
         }
+        $this->logger->info(
+            sprintf('File "%s" could not be written, please check file permissions.', $this->extensionSettings['logFileName'])
+        );
     }
 
     /**
@@ -2282,8 +2245,7 @@ class CrawlerController
                     'exec_time != 0 AND exec_time < ' . $purgeDate
                 );
             if (false == $del) {
-                $this->getLogger()->log(
-                    LogLevel::INFO,
+                $this->logger->info(
                     'Records could not be deleted.'
                 );
             }
