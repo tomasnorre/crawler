@@ -25,10 +25,9 @@ namespace AOE\Crawler\Utility;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use AOE\Crawler\Task\CrawlerQueueTaskAdditionalFieldProvider;
-use AOE\Crawler\Task\CrawlerTaskAdditionalFieldProvider;
+use AOE\Crawler\Task\CrawlMultiProcessTask;
 use AOE\Crawler\Task\CrawlMultiProcessTaskAdditionalFieldProvider;
-use AOE\Crawler\Task\FlushQueueTaskAdditionalFieldProvider;
+use AOE\Crawler\Task\ProcessCleanupTask;
 
 /**
  * Class SchedulerUtility
@@ -44,14 +43,14 @@ class SchedulerUtility
      */
     public static function registerSchedulerTasks($extKey)
     {
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['AOE\\Crawler\\Task\\CrawlMultiProcessTask'] = [
+        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks'][CrawlMultiProcessTask::class] = [
             'extension' => $extKey,
             'title' => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_crawlMultiProcess.name',
             'description' => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_crawl.description',
             'additionalFields' => CrawlMultiProcessTaskAdditionalFieldProvider::class
         ];
 
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['AOE\\Crawler\\Task\\ProcessCleanupTask'] = [
+        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks'][ProcessCleanupTask::class] = [
             'extension' => $extKey,
             'title' => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_processCleanup.name',
             'description' => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_processCleanup.description',
