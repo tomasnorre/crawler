@@ -1600,7 +1600,7 @@ class CrawlerController implements LoggerAwareInterface
             fclose($fp);
 
             $time = microtime(true) - $startTime;
-            $this->log($originalUrl . ' ' . $time);
+            $this->logger->info($originalUrl . ' ' . $time);
 
             // Implode content and headers:
             $result = [
@@ -1700,20 +1700,6 @@ class CrawlerController implements LoggerAwareInterface
         }
 
         return $response;
-    }
-
-    /**
-     * In the future this setting "logFileName" should be removed in favor of using the TYPO3 Logging Framework
-     * @param string the message string to log
-     */
-    protected function log(string $message): void
-    {
-        if (!empty($this->extensionSettings['logFileName'])) {
-            @file_put_contents($this->extensionSettings['logFileName'], date('Ymd His') . ' ' . $message . PHP_EOL, FILE_APPEND);
-        }
-        $this->logger->info(
-            sprintf('File "%s" could not be written, please check file permissions.', $this->extensionSettings['logFileName'])
-        );
     }
 
     /**
@@ -2510,7 +2496,7 @@ class CrawlerController implements LoggerAwareInterface
 
         $startTime = microtime(true);
         $content = $this->executeShellCommand($cmd);
-        $this->log($url . ' ' . (microtime(true) - $startTime));
+        $this->logger->info($url . ' ' . (microtime(true) - $startTime));
 
         $result = [
             'request' => implode("\r\n", $requestHeaders) . "\r\n\r\n",
