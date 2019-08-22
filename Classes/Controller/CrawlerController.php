@@ -327,7 +327,7 @@ class CrawlerController implements LoggerAwareInterface
 
         if (!$skipPage) {
             // veto hook
-            foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pageVeto'] ?? []as $key => $func) {
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pageVeto'] ?? [] as $key => $func) {
                 $params = [
                     'pageRow' => $pageRow
                 ];
@@ -626,7 +626,7 @@ class CrawlerController implements LoggerAwareInterface
                 ->execute()
                 ->fetchAll();
 
-            foreach ($configurationRecordsForCurrentPage ?? []as $configurationRecord) {
+            foreach ($configurationRecordsForCurrentPage ?? [] as $configurationRecord) {
 
                     // check access to the configuration record
                 if (empty($configurationRecord['begroups']) || $GLOBALS['BE_USER']->isAdmin() || $this->hasGroupAccess($GLOBALS['BE_USER']->user['usergroup_cached_list'], $configurationRecord['begroups'])) {
