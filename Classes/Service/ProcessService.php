@@ -28,6 +28,7 @@ namespace AOE\Crawler\Service;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -198,10 +199,10 @@ class ProcessService
         $current = $this->processRepository->countNotTimeouted($ttl);
 
         // Check whether OS is Windows
-        if (TYPO3_OS === 'WIN') {
-            $completePath = escapeshellcmd('start ' . $this->getCrawlerCliPath());
+        if (Environment::isWindows()) {
+            $completePath = CommandUtility::escapeShellArgument('start ' . $this->getCrawlerCliPath());
         } else {
-            $completePath = '(' . escapeshellcmd($this->getCrawlerCliPath()) . ' &) > /dev/null';
+            $completePath = '(' . CommandUtility::escapeShellArgument($this->getCrawlerCliPath()) . ' &) > /dev/null';
         }
 
         $fileHandler = CommandUtility::exec($completePath);
@@ -230,7 +231,7 @@ class ProcessService
         $typo3BinaryPath = ExtensionManagementUtility::extPath('core') . 'bin/';
         $scriptPath = $phpPath . $typo3BinaryPath . $cliPart;
 
-        if (TYPO3_OS === 'WIN') {
+        if (Environment::isWindows()) {
             $scriptPath = str_replace('/', '\\', $scriptPath);
         }
 

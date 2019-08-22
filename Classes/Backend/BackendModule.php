@@ -43,6 +43,7 @@ use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
+use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\CsvUtility;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -862,7 +863,11 @@ class BackendModule
 
         $exitCode = 0;
         $out = [];
-        exec(escapeshellcmd($this->extensionSettings['phpPath'] . ' -v'), $out, $exitCode);
+        CommandUtility::exec(
+            CommandUtility::escapeShellArgument($this->extensionSettings['phpPath'] . ' -v'),
+            $out,
+            $exitCode
+        );
         if ($exitCode > 0) {
             $this->addErrorMessage(sprintf($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:message.phpBinaryNotFound'), htmlspecialchars($this->extensionSettings['phpPath'])));
         }
