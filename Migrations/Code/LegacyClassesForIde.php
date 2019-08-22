@@ -146,17 +146,3 @@ class tx_crawler_scheduler_im extends AOE\Crawler\Task\CrawlerQueueTask
 class tx_crawler_tcafunc extends AOE\Crawler\Utility\TcaUtility
 {
 }
-
-/**
- * @deprecated
- */
-class tx_crawler_view_pagination extends AOE\Crawler\Backend\View\PaginationView
-{
-}
-
-/**
- * @deprecated
- */
-class tx_crawler_view_process_list extends AOE\Crawler\Backend\View\ProcessListView
-{
-}
