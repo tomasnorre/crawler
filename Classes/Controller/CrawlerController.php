@@ -2246,8 +2246,7 @@ class CrawlerController implements LoggerAwareInterface
                 )->execute();
 
             if (false === $del) {
-                $this->getLogger()->log(
-                    LogLevel::INFO,
+                $this->logger->info(
                     'Records could not be deleted.'
                 );
             }
