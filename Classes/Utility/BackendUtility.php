@@ -26,7 +26,6 @@ namespace AOE\Crawler\Utility;
  ***************************************************************/
 
 use AOE\Crawler\Backend\BackendModule;
-use TYPO3\CMS\Core\Imaging\IconProvider\BitmapIconProvider;
 use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
 use TYPO3\CMS\Core\Imaging\IconRegistry;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -117,8 +116,8 @@ class BackendUtility
         $iconRegistry = GeneralUtility::makeInstance(IconRegistry::class);
         $iconRegistry->registerIcon(
             'tx-crawler',
-            BitmapIconProvider::class,
-            ['source' => 'EXT:crawler/Resources/Public/Icons/icon_tx_crawler_configuration.gif']
+            SvgIconProvider::class,
+            ['source' => 'EXT:crawler/Resources/Public/Icons/crawler_configuration.svg']
         );
     }
 }
