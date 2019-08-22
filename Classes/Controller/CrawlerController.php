@@ -2325,7 +2325,7 @@ class CrawlerController
                 ->where(
                     $queryBuilder->expr()->in('qid', $quidList)
                 )
-                ->set('process_scheduled', $queryBuilder->createNamedParamter($this->getCurrentTime(), \PDO::PARAM_INT))
+                ->set('process_scheduled', $queryBuilder->createNamedParameter($this->getCurrentTime(), \PDO::PARAM_INT))
                 ->set('process_id', $processId)
                 ->execute();
 
