@@ -66,9 +66,6 @@ purgeQueueDays=14
 # cat=System; type=string; label= PHP Path: Local path to php binary file (e.g. "/usr/bin/php")
 phpPath=/usr/bin/php
 
-# cat=System; type=string; label= Log Filename:
-logFileName=
-
 #########
 ## Debug
 #########

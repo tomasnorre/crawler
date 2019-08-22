@@ -95,7 +95,6 @@ class CrawlerApiTest extends FunctionalTestCase
             'crawlHiddenPages' => '0',
             'phpPath' => '/usr/bin/php',
             'enableTimeslot' => '1',
-            'logFileName' => '',
             'follow30x' => '0',
             'makeDirectRequests' => '0',
             'frontendBasePath' => '/',
