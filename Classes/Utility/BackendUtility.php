@@ -26,7 +26,7 @@ namespace AOE\Crawler\Utility;
  ***************************************************************/
 
 use AOE\Crawler\Backend\BackendModule;
-use AOE\Crawler\ClickMenu\CrawlerClickMenu;
+use TYPO3\CMS\Core\Imaging\IconProvider\BitmapIconProvider;
 use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
 use TYPO3\CMS\Core\Imaging\IconRegistry;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -55,18 +55,6 @@ class BackendUtility
     }
 
     /**
-     * Registers the crawler click menu item
-     *
-     * @return void
-     */
-    public static function registerClickMenuItem()
-    {
-        $GLOBALS['TBE_MODULES_EXT']['xMOD_alt_clickmenu']['extendCMclasses'][] = [
-            'name' => CrawlerClickMenu::class
-        ];
-    }
-
-    /**
      * Registers the context sensitive help for TCA fields
      *
      * @return void
@@ -86,6 +74,7 @@ class BackendUtility
      */
     public static function registerIcons()
     {
+        self::registerCrawlerIcon();
         self::registerStartIcon();
         self::registerStopIcon();
     }
@@ -119,6 +108,17 @@ class BackendUtility
             'tx-crawler-stop',
             SvgIconProvider::class,
             ['source' => 'EXT:crawler/Resources/Public/Icons/crawler_stop.svg']
+        );
+    }
+
+    private static function registerCrawlerIcon(): void
+    {
+        /** @var IconRegistry $iconRegistry */
+        $iconRegistry = GeneralUtility::makeInstance(IconRegistry::class);
+        $iconRegistry->registerIcon(
+            'tx-crawler',
+            BitmapIconProvider::class,
+            ['source' => 'EXT:crawler/Resources/Public/Icons/icon_tx_crawler_configuration.gif']
         );
     }
 }
