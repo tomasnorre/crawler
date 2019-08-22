@@ -2385,7 +2385,7 @@ class CrawlerController
                 }
 
                 $process = $this->processRepository->findByProcessId($this->CLI_buildProcessId());
-                if (!$process->isActive()) {
+                if (!$process[0]['active']) {
                     $this->CLI_debug("conflict / timeout (" . $this->CLI_buildProcessId() . ")");
 
                     //TODO might need an additional returncode

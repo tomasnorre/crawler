@@ -76,6 +76,11 @@ class ProcessRepository extends AbstractRepository
             foreach ($rows as $row) {
                 $process = new Process();
                 $process->setProcessId($row['process_id']);
+                $process->setActive($row['active']);
+                $process->setTtl($row['ttl']);
+                $process->setAssignedItemsCount($row['assigned_items_count']);
+                $process->setDeleted($row['deleted']);
+                $process->setSystemProcessId($row['system_process_id']);
                 $collection->append($process);
             }
         }
@@ -85,9 +90,9 @@ class ProcessRepository extends AbstractRepository
 
     /**
      * @param $processId
-     * @return object
+     * @return array
      */
-    public function findByProcessId($processId)
+    public function findByProcessId($processId): array
     {
         $query = $this->createQuery();
         $querySettings = $query->getQuerySettings();
@@ -95,7 +100,7 @@ class ProcessRepository extends AbstractRepository
         $querySettings->setIgnoreEnableFields(false);
         $query->setQuerySettings($querySettings);
         $query->matching($query->equals('process_id', $processId));
-        return $query->execute()->getFirst();
+        return $query->execute(true);
     }
 
     /**

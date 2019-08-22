@@ -94,6 +94,11 @@ class ProcessListView
     protected $assignedUnprocessedItemCount;
 
     /**
+     * @var ProcessCollection
+     */
+    protected $processCollection;
+
+    /**
      * @return int
      */
     public function getAssignedUnprocessedItemCount()
