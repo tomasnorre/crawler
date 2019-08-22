@@ -23,6 +23,4 @@ return [
     'tx_crawler_scheduler_flush' => \AOE\Crawler\Task\FlushQueueTask::class,
     'tx_crawler_scheduler_im' => \AOE\Crawler\Task\CrawlerQueueTask::class,
     'tx_crawler_tcafunc' => \AOE\Crawler\Utility\TcaUtility::class,
-    'tx_crawler_view_pagination' => \AOE\Crawler\Backend\View\PaginationView::class,
-    'tx_crawler_view_process_list' => \AOE\Crawler\Backend\View\ProcessListView::class,
 ];
