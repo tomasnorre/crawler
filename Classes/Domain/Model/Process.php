@@ -4,7 +4,7 @@ namespace AOE\Crawler\Domain\Model;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2017 AOE GmbH <dev@aoe.com>
+ *  (c) 2019 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -27,6 +27,7 @@ namespace AOE\Crawler\Domain\Model;
 
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
@@ -34,7 +35,7 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  *
  * @package AOE\Crawler\Domain\Model
  */
-class Process
+class Process extends AbstractEntity
 {
     const STATE_RUNNING = 'running';
     const STATE_CANCELLED = 'cancelled';
@@ -46,62 +47,140 @@ class Process
     protected $row;
 
     /**
+     * @var string
+     */
+    protected $processId = '';
+
+    /**
+     * @var bool
+     */
+    protected $active = false;
+
+    /**
+     * @var int
+     */
+    protected $ttl = 0;
+
+    /**
+     * @var int
+     */
+    protected $assignedItemsCount = 0;
+
+    /**
+     * @var bool
+     */
+    protected $deleted = false;
+
+    /**
+     * @var string
+     */
+    protected $systemProcessId = '';
+
+    /**
      * @var QueueRepository
      */
     protected $queueRepository;
 
-    /**
-     * @param array $row
-     */
-    public function __construct($row = [])
+    public function __construct()
     {
-        $this->row = $row;
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->queueRepository = $objectManager->get(QueueRepository::class);
     }
 
     /**
-     * Returns the activity state for this process
-     *
-     * @return boolean
-     */
-    public function getActive()
-    {
-        return $this->row['active'];
-    }
-
-    /**
-     * Returns the identifier for the process
-     *
      * @return string
      */
-    public function getProcess_id()
+    public function getProcessId()
     {
-        return $this->row['process_id'];
+        return $this->processId;
     }
 
     /**
-     * Returns the timestamp of the exectime for the first relevant queue item.
-     * This can be used to determine the runtime
-     *
-     * @return int
+     * @param string $processId
      */
-    public function getTimeForFirstItem()
+    public function setProcessId($processId)
     {
-        $entry = $this->queueRepository->findYoungestEntryForProcess($this);
-        return $entry->getExecutionTime();
+        $this->processId = $processId;
     }
 
     /**
-     * Returns the timestamp of the exectime for the last relevant queue item.
-     * This can be used to determine the runtime
-     *
+     * @return bool
+     */
+    public function isActive()
+    {
+        return $this->active;
+    }
+
+    /**
+     * @param bool $active
+     */
+    public function setActive($active)
+    {
+        $this->active = $active;
+    }
+
+    /**
      * @return int
      */
-    public function getTimeForLastItem()
+    public function getTtl()
     {
-        $entry = $this->queueRepository->findOldestEntryForProcess($this);
-        return $entry->getExecutionTime();
+        return $this->ttl;
+    }
+
+    /**
+     * @param int $ttl
+     */
+    public function setTtl($ttl)
+    {
+        $this->ttl = $ttl;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAssignedItemsCount()
+    {
+        return $this->assignedItemsCount;
+    }
+
+    /**
+     * @param int $assignedItemsCount
+     */
+    public function setAssignedItemsCount($assignedItemsCount)
+    {
+        $this->assignedItemsCount = $assignedItemsCount;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDeleted()
+    {
+        return $this->deleted;
+    }
+
+    /**
+     * @param bool $deleted
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSystemProcessId()
+    {
+        return $this->systemProcessId;
+    }
+
+    /**
+     * @param string $systemProcessId
+     */
+    public function setSystemProcessId($systemProcessId)
+    {
+        $this->systemProcessId = $systemProcessId;
     }
 
     /**
@@ -112,16 +191,6 @@ class Process
     public function getRuntime()
     {
         return $this->getTimeForLastItem() - $this->getTimeForFirstItem();
-    }
-
-    /**
-     * Returns the ttl of the process
-     *
-     * @return int
-     */
-    public function getTTL()
-    {
-        return $this->row['ttl'];
     }
 
     /**
@@ -153,7 +222,7 @@ class Process
      */
     public function getProgress()
     {
-        $all = $this->countItemsAssigned();
+        $all = $this->getAssignedItemsCount();
         if ($all <= 0) {
             return 0;
         }
@@ -167,49 +236,19 @@ class Process
     }
 
     /**
-     * Returns the number of assigned entries
-     *
-     * @return int
-     */
-    public function countItemsAssigned()
-    {
-        return $this->row['assigned_items_count'];
-    }
-
-    /**
      * Return the processes current state
      *
      * @return string
      */
     public function getState()
     {
-        if ($this->getActive() && $this->getProgress() < 100) {
+        if ($this->isActive() && $this->getProgress() < 100) {
             $stage = self::STATE_RUNNING;
-        } elseif (!$this->getActive() && $this->getProgress() < 100) {
+        } elseif (!$this->isActive() && $this->getProgress() < 100) {
             $stage = self::STATE_CANCELLED;
         } else {
             $stage = self::STATE_COMPLETED;
         }
         return $stage;
-    }
-
-    /**
-     * Returns the properties of the object as array
-     *
-     * @return array
-     */
-    public function getRow()
-    {
-        return $this->row;
-    }
-
-    /**
-     * @param array $row
-     *
-     * @return void
-     */
-    public function setRow(array $row)
-    {
-        $this->row = $row;
     }
 }

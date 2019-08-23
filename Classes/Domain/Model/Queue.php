@@ -4,7 +4,7 @@ namespace AOE\Crawler\Domain\Model;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2017 AOE GmbH <dev@aoe.com>
+ *  (c) 2019 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -25,12 +25,12 @@ namespace AOE\Crawler\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+
 /**
  * Class Queue
- *
- * @package AOE\Crawler\Domain\Model
  */
-class Queue
+class Queue extends AbstractEntity
 {
     /**
      * @var array
@@ -38,30 +38,275 @@ class Queue
     protected $row;
 
     /**
-     * @param array $row
+     * @var int
      */
-    public function __construct($row = [])
+    protected $qid = 0;
+
+    /**
+     * @var int
+     */
+    protected $pageId = 0;
+
+    /**
+     * @var string
+     */
+    protected $parameters = '';
+
+    /**
+     * @var string
+     */
+    protected $parametersHash = '';
+
+    /**
+     * @var string
+     */
+    protected $configurationHash = '';
+
+    /**
+     * @var bool
+     */
+    protected $scheduled = false;
+
+    /**
+     * @var int
+     */
+    protected $execTime = 0;
+
+    /**
+     * @var int
+     */
+    protected $setId = 0;
+
+    /**
+     * @var string
+     */
+    protected $resultData = '';
+
+    /**
+     * @var bool
+     */
+    protected $processScheduled = false;
+
+    /**
+     * @var string
+     */
+    protected $processId = '';
+
+    /**
+     * @var string
+     */
+    protected $processIdCompleted = '';
+
+    /**
+     * @var string
+     */
+    protected $configuration = '';
+
+    /**
+     * @return int
+     */
+    public function getQid()
     {
-        $this->row = $row;
+        return $this->qid;
     }
 
     /**
-     * Returns the execution time of the record as int value
-     *
-     * @return integer
+     * @param int $qid
      */
-    public function getExecutionTime()
+    public function setQid($qid)
     {
-        return $this->row['exec_time'];
+        $this->qid = $qid;
     }
 
     /**
-     * Returns the properties of the object as array
-     *
-     * @return array
+     * @return int
      */
-    public function getRow()
+    public function getPageId()
     {
-        return $this->row;
+        return $this->pageId;
+    }
+
+    /**
+     * @param int $pageId
+     */
+    public function setPageId($pageId)
+    {
+        $this->pageId = $pageId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * @param string $parameters
+     */
+    public function setParameters($parameters)
+    {
+        $this->parameters = $parameters;
+    }
+
+    /**
+     * @return string
+     */
+    public function getParametersHash()
+    {
+        return $this->parametersHash;
+    }
+
+    /**
+     * @param string $parametersHash
+     */
+    public function setParametersHash($parametersHash)
+    {
+        $this->parametersHash = $parametersHash;
+    }
+
+    /**
+     * @return string
+     */
+    public function getConfigurationHash()
+    {
+        return $this->configurationHash;
+    }
+
+    /**
+     * @param string $configurationHash
+     */
+    public function setConfigurationHash($configurationHash)
+    {
+        $this->configurationHash = $configurationHash;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isScheduled()
+    {
+        return $this->scheduled;
+    }
+
+    /**
+     * @param bool $scheduled
+     */
+    public function setScheduled($scheduled)
+    {
+        $this->scheduled = $scheduled;
+    }
+
+    /**
+     * @return int
+     */
+    public function getExecTime()
+    {
+        return $this->execTime;
+    }
+
+    /**
+     * @param int $execTime
+     */
+    public function setExecTime($execTime)
+    {
+        $this->execTime = $execTime;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSetId()
+    {
+        return $this->setId;
+    }
+
+    /**
+     * @param int $setId
+     */
+    public function setSetId($setId)
+    {
+        $this->setId = $setId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getResultData()
+    {
+        return $this->resultData;
+    }
+
+    /**
+     * @param string $resultData
+     */
+    public function setResultData($resultData)
+    {
+        $this->resultData = $resultData;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isProcessScheduled()
+    {
+        return $this->processScheduled;
+    }
+
+    /**
+     * @param bool $processScheduled
+     */
+    public function setProcessScheduled($processScheduled)
+    {
+        $this->processScheduled = $processScheduled;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProcessId()
+    {
+        return $this->processId;
+    }
+
+    /**
+     * @param string $processId
+     */
+    public function setProcessId($processId)
+    {
+        $this->processId = $processId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProcessIdCompleted()
+    {
+        return $this->processIdCompleted;
+    }
+
+    /**
+     * @param string $processIdCompleted
+     */
+    public function setProcessIdCompleted($processIdCompleted)
+    {
+        $this->processIdCompleted = $processIdCompleted;
+    }
+
+    /**
+     * @return string
+     */
+    public function getConfiguration()
+    {
+        return $this->configuration;
+    }
+
+    /**
+     * @param string $configuration
+     */
+    public function setConfiguration($configuration)
+    {
+        $this->configuration = $configuration;
     }
 }

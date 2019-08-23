@@ -72,6 +72,7 @@ class CrawlerApi
         /** @var ObjectManager $objectManager */
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->crawlerController = $objectManager->get(CrawlerController::class);
+        $this->queueRepository = $objectManager->get(QueueRepository::class);
     }
 
     /**
@@ -347,23 +348,9 @@ class CrawlerApi
     public function getQueueStatistics()
     {
         return [
-            'assignedButUnprocessed' => $this->getQueueRepository()->countAllAssignedPendingItems(),
-            'unprocessed' => $this->getQueueRepository()->countAllPendingItems()
+            'assignedButUnprocessed' => $this->queueRepository->countAllAssignedPendingItems(),
+            'unprocessed' => $this->queueRepository->countAllPendingItems()
         ];
-    }
-
-    /**
-     * Get queue repository
-     *
-     * @return QueueRepository
-     */
-    protected function getQueueRepository()
-    {
-        if (!$this->queueRepository instanceof QueueRepository) {
-            $this->queueRepository = new QueueRepository();
-        }
-
-        return $this->queueRepository;
     }
 
     /**
@@ -373,11 +360,9 @@ class CrawlerApi
      */
     public function getQueueStatisticsByConfiguration()
     {
-        $statistics = $this->getQueueRepository()->countPendingItemsGroupedByConfigurationKey();
-
-        $setIds = $this->getQueueRepository()->getSetIdWithUnprocessedEntries();
-
-        $totals = $this->getQueueRepository()->getTotalQueueEntriesByConfiguration($setIds);
+        $statistics = $this->queueRepository->countPendingItemsGroupedByConfigurationKey();
+        $setIds = $this->queueRepository->getSetIdWithUnprocessedEntries();
+        $totals = $this->queueRepository->getTotalQueueEntriesByConfiguration($setIds);
 
         // "merge" arrays
         foreach ($statistics as $key => &$value) {
@@ -410,7 +395,7 @@ class CrawlerApi
      */
     public function getLastProcessedQueueEntries($limit)
     {
-        return $this->getQueueRepository()->getLastProcessedEntries('*', $limit);
+        return $this->queueRepository->getLastProcessedEntries('*', $limit);
     }
 
     /**
@@ -422,7 +407,7 @@ class CrawlerApi
      */
     public function getCurrentCrawlingSpeed()
     {
-        $lastProcessedEntries = $this->getQueueRepository()->getLastProcessedEntriesTimestamps();
+        $lastProcessedEntries = $this->queueRepository->getLastProcessedEntriesTimestamps();
 
         if (count($lastProcessedEntries) < 10) {
             // not enough information
@@ -482,7 +467,7 @@ class CrawlerApi
 
         for ($slotStart = $start; $slotStart < $end; $slotStart += $resolution) {
             $slotEnd = min($slotStart + $resolution - 1, $end);
-            $slotData = $this->getQueueRepository()->getPerformanceData($slotStart, $slotEnd);
+            $slotData = $this->queueRepository->getPerformanceData($slotStart, $slotEnd);
 
             $slotUrlCount = 0;
             foreach ($slotData as $processId => &$processData) {

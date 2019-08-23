@@ -85,7 +85,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
         ];
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = $configuration;
 
-        $this->importDataSet(dirname(__FILE__) . '/../../Fixtures/tx_crawler_process.xml');
+        $this->importDataSet(__DIR__ . '/../../Fixtures/tx_crawler_process.xml');
         $this->subject = $objectManager->get(ProcessRepository::class);
     }
 

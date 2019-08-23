@@ -91,6 +91,23 @@ class ProcessRepository extends AbstractRepository
     }
 
     /**
+     * @param string $processId
+     * @return mixed
+     */
+    public function findByProcessId($processId)
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $process = $queryBuilder
+            ->select('*')
+            ->from($this->tableName)
+            ->where(
+                $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId, \PDO::PARAM_STR))
+            )->execute()->fetch(0);
+
+        return $process;
+    }
+
+    /**
      * @return ProcessCollection
      */
     public function findAllActive(): ProcessCollection
@@ -128,7 +145,7 @@ class ProcessRepository extends AbstractRepository
         $queryBuilder
             ->delete($this->tableName)
             ->where(
-                $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId))
+                $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId, \PDO::PARAM_STR))
             )->execute();
     }
 
