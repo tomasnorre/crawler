@@ -92,7 +92,7 @@ class ProcessRepository extends AbstractRepository
      * @param $processId
      * @return array
      */
-    public function findByProcessId($processId): array
+    public function findByProcessId($processId)
     {
         $query = $this->createQuery();
         $querySettings = $query->getQuerySettings();
