@@ -54,16 +54,16 @@
 		<tbody>
 		<f:for each="{processCollection}" as="process">
 			<tr>
-				<td>
+				<td style="text-align: center">
 					<f:switch expression="{process.state}">
 						<f:case value="running">
-							<img src="{f:uri.resource(path: 'Icons/bullet_orange.png', extensionName: 'crawler')}" alt="" title="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.process.running')}" />
+							<img width="20px" src="{f:uri.resource(path: 'Icons/bullet_orange.svg', extensionName: 'crawler')}" alt="" title="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.process.running')}" />
 						</f:case>
 						<f:case value="cancelled">
-							<img src="{f:uri.resource(path: 'Icons/bullet_red.png', extensionName: 'crawler')}" alt="" title="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.process.cancelled')}" />
+							<img width="20px" src="{f:uri.resource(path: 'Icons/bullet_red.svg', extensionName: 'crawler')}" alt="" title="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.process.cancelled')}" />
 						</f:case>
 						<f:case value="completed">
-							<img src="{f:uri.resource(path: 'Icons/bullet_green.png', extensionName: 'crawler')}" alt="" title="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.process.success')}" />
+							<img width="20px" src="{f:uri.resource(path: 'Icons/bullet_green.svg', extensionName: 'crawler')}" alt="" title="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.process.success')}" />
 						</f:case>
 					</f:switch>
 				</td>
