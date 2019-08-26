@@ -68,19 +68,18 @@
 					</f:switch>
 				</td>
 				<td>{process.processId}</td>
-				<td><f:format.date>{process.timeForFirstItem}</f:format.date></td>
-				<td><f:format.date>{process.timeForLastItem}</f:format.date></td>
-				<td>TODO: <?php echo htmlspecialchars(floor($process->getRuntime() / 60)); ?> min. <?php echo htmlspecialchars($process->getRuntime()) % 60 ?> sec.</td>
-				<td><f:format.date>{process.ttl}</f:format.date></td>
-				<td>{process.countItemsProcessed}</td>
+				<td><f:format.date format="d.m.Y - H:i:s">{process.timeForFirstItem}</f:format.date></td>
+				<td><f:format.date format="d.m.Y - H:i:s">{process.timeForLastItem}</f:format.date></td>
+				<td>{process.runTime}</td>
+				<td><f:format.date format="d.m.Y - H:i:s">{process.ttl}</f:format.date></td>
+				<td>{process.itemsProcessed}</td>
 				<td>{process.assignedItemsCount}</td>
-				<td>{process.countItemsToProcess} + {process.countItemsProcessed}</td>
+				<td>{process.finallyAssigned}</td>
 				<td>
 					<f:switch expression="{process.state}">
 						<f:case value="running">
-							<div class="crawlerprocessprogress" style="width: 200px;">
-								<div class="crawlerprocessprogress-bar" style="width: {process.progress}%" ></div>
-								<div class="crawlerprocessprogress-label">{process.progress} %</div>
+							<div class="crawlerprocessprogress progress" style="width: 200px; margin-bottom: 0px !important;">
+								<div class="progress-bar crawlerprocessprogress-bar" role="progressbar" style="width: {process.progress}%" aria-valuenow="{process.progress}" aria-valuemin="0" aria-valuemax="100">{process.progress} %</div>
 							</div>
 						</f:case>
 						<f:case value="cancelled">

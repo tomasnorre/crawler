@@ -84,7 +84,14 @@ class ProcessRepository extends AbstractRepository
             ->execute();
 
         while ($row = $statement->fetch()) {
-            $collection->append(GeneralUtility::makeInstance(Process::class, $row));
+            $process = new Process();
+            $process->setProcessId($row['process_id']);
+            $process->setActive($row['active']);
+            $process->setTtl($row['ttl']);
+            $process->setAssignedItemsCount($row['assigned_items_count']);
+            $process->setDeleted($row['deleted']);
+            $process->setSystemProcessId($row['system_process_id']);
+            $collection->append($process);
         }
 
         return $collection;
@@ -127,7 +134,14 @@ class ProcessRepository extends AbstractRepository
             ->execute();
 
         while ($row = $statement->fetch()) {
-            $collection->append(GeneralUtility::makeInstance(Process::class, $row));
+            $process = new Process();
+            $process->setProcessId($row['process_id']);
+            $process->setActive($row['active']);
+            $process->setTtl($row['ttl']);
+            $process->setAssignedItemsCount($row['assigned_items_count']);
+            $process->setDeleted($row['deleted']);
+            $process->setSystemProcessId($row['system_process_id']);
+            $collection->append($process);
         }
 
         return $collection;

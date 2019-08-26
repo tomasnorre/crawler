@@ -194,12 +194,30 @@ class Process extends AbstractEntity
     }
 
     /**
+     * @return int
+     */
+    public function getTimeForLastItem(): int
+    {
+        $entry = $this->queueRepository->findOldestEntryForProcess($this);
+        return $entry['exec_time'];
+    }
+
+    /**
+     * @return int
+     */
+    public function getTimeForFirstItem(): int
+    {
+        $entry = $this->queueRepository->findYoungestEntryForProcess($this);
+        return $entry['exec_time'];
+    }
+
+    /**
      * Counts the number of items which need to be processed
      *
      * @return int
      * @codeCoverageIgnore
      */
-    public function countItemsProcessed()
+    public function getItemsProcessed()
     {
         return $this->queueRepository->countExecutedItemsByProcess($this);
     }
@@ -210,9 +228,17 @@ class Process extends AbstractEntity
      * @return int
      * @codeCoverageIgnore
      */
-    public function countItemsToProcess()
+    public function getItemsToProcess()
     {
         return $this->queueRepository->countNonExecutedItemsByProcess($this);
+    }
+
+    /**
+     * @return int
+     */
+    public function getFinallyAssigned(): int
+    {
+        return $this->getItemsToProcess() + $this->getItemsProcessed();
     }
 
     /**
@@ -227,7 +253,7 @@ class Process extends AbstractEntity
             return 0;
         }
 
-        $res = round((100 / $all) * $this->countItemsProcessed());
+        $res = round((100 / $all) * $this->getItemsProcessed());
 
         if ($res > 100.0) {
             return 100.0;
