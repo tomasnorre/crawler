@@ -990,8 +990,6 @@ class BackendModule extends AbstractFunctionModule
 
         if ($this->isCrawlerUserAvailable() === false) {
             $this->addErrorMessage($LANG->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:message.noBeUserAvailable'));
-        } elseif ($this->isCrawlerUserNotAdmin() === false) {
-            $this->addErrorMessage($LANG->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:message.beUserIsAdmin'));
         }
 
         if ($this->isPhpForkAvailable() === false) {
@@ -1035,25 +1033,6 @@ class BackendModule extends AbstractFunctionModule
         return $isAvailable;
     }
 
-    /**
-     * Indicate that the required be_user "_cli_crawler" is
-     * has no admin rights.
-     *
-     * @return boolean
-     */
-    protected function isCrawlerUserNotAdmin()
-    {
-        $isAvailable = false;
-        $userArray = BackendUtility::getRecordsByField('be_users', 'username', '_cli_crawler');
-
-        if (is_array($userArray) && $userArray[0]['admin'] == 0) {
-            $isAvailable = true;
-        }
-
-        return $isAvailable;
-    }
-
-    /**
      * Method to handle incomming actions of the process overview
      *
      * @throws \Exception
