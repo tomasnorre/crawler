@@ -93,7 +93,7 @@
             <label index="labels.itemsPerPage.50">limit to 50</label>
             <label index="labels.itemsPerPage.0">no limit</label>
             <label index="labels.itemsPerPage">Items per page</label>
-            <label index="message.noBeUserAvailable">There is no be_user "_cli_crawler" available!</label>
+            <label index="message.noBeUserAvailable">There is no be_user "_cli_" available!</label>
             <label index="message.noPhpForkAvailable">There is no PHP method "popen" available!</label>
             <label index="message.canNotExportEmptyQueueToCsvText">An empty queue can not be exported to CSV.</label>
             <label index="message.phpBinaryNotFound">No php binary found in '%s'. Please update value for 'phpPath' in crawler extension setup.</label>

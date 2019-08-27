@@ -44,7 +44,7 @@ class AuthenticationService extends AbstractAuthenticationService
     {
         $user = false;
         if (isset($_SERVER['HTTP_X_T3CRAWLER'])) {
-            $user = $this->fetchUserRecord('_cli_crawler');
+            $user = $this->fetchUserRecord('_cli_');
         }
 
         return $user;
@@ -60,7 +60,7 @@ class AuthenticationService extends AbstractAuthenticationService
     public function authUser(array $user)
     {
         if (isset($_SERVER['HTTP_X_T3CRAWLER'])) {
-            return ($user['username'] == '_cli_crawler') ? 200 : 100;
+            return ($user['username'] == '_cli_') ? 200 : 100;
         }
 
         return 100;

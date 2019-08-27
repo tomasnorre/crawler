@@ -1016,7 +1016,7 @@ class BackendModule extends AbstractFunctionModule
     }
 
     /**
-     * Indicate that the required be_user "_cli_crawler" is
+     * Indicate that the required be_user "_cli_" is
      * global available in the system.
      *
      * @return boolean
@@ -1024,7 +1024,7 @@ class BackendModule extends AbstractFunctionModule
     protected function isCrawlerUserAvailable()
     {
         $isAvailable = false;
-        $userArray = BackendUtility::getRecordsByField('be_users', 'username', '_cli_crawler');
+        $userArray = BackendUtility::getRecordsByField('be_users', 'username', '_cli_');
 
         if (is_array($userArray)) {
             $isAvailable = true;

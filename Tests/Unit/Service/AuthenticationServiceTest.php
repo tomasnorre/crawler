@@ -62,7 +62,7 @@ class AuthenticationServiceTest extends UnitTestCase
     public function getUserReturnsUserObject()
     {
         $_SERVER['HTTP_X_T3CRAWLER'] = 'DummyValue';
-        $user = ['username' => '_cli_crawler'];
+        $user = ['username' => '_cli_'];
 
         $this->authenticationService->expects($this->once())->method('fetchUserRecord')->will($this->returnValue($user));
         $this->assertEquals(
@@ -77,7 +77,7 @@ class AuthenticationServiceTest extends UnitTestCase
     public function authUserReturnsOk200()
     {
         $_SERVER['HTTP_X_T3CRAWLER'] = 'DummyValue';
-        $user['username'] = '_cli_crawler';
+        $user['username'] = '_cli_';
 
         $this->assertEquals(
             200,
@@ -104,7 +104,7 @@ class AuthenticationServiceTest extends UnitTestCase
      */
     public function authUserReturnsNotOkCauseHeaderNotSet()
     {
-        $user['username'] = '_cli_crawler';
+        $user['username'] = '_cli_';
         $this->assertEquals(
             100,
             $this->authenticationService->authUser($user)
