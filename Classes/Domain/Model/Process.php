@@ -217,7 +217,7 @@ class Process extends AbstractEntity
      * @return int
      * @codeCoverageIgnore
      */
-    public function getItemsProcessed()
+    public function getAmountOfItemsProcessed()
     {
         return $this->queueRepository->countExecutedItemsByProcess($this);
     }
@@ -238,7 +238,7 @@ class Process extends AbstractEntity
      */
     public function getFinallyAssigned(): int
     {
-        return $this->getItemsToProcess() + $this->getItemsProcessed();
+        return $this->getItemsToProcess() + $this->getAmountOfItemsProcessed();
     }
 
     /**
@@ -253,7 +253,7 @@ class Process extends AbstractEntity
             return 0;
         }
 
-        $res = round((100 / $all) * $this->getItemsProcessed());
+        $res = round((100 / $all) * $this->getAmountOfItemsProcessed());
 
         if ($res > 100.0) {
             return 100.0;

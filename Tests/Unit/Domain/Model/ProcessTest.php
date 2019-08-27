@@ -153,9 +153,9 @@ class ProcessTest extends UnitTestCase
     public function getProgressReturnsExpectedPercentage($countItemsAssigned, $countItemsProcessed, $expectedProgress)
     {
         /** @var Process $processMock */
-        $processMock = $this->getAccessibleMock(Process::class, ['getAssignedItemsCount', 'countItemsProcessed'], [], '', false);
+        $processMock = $this->getAccessibleMock(Process::class, ['getAssignedItemsCount', 'getAmountOfItemsProcessed'], [], '', false);
         $processMock->expects($this->any())->method('getAssignedItemsCount')->will($this->returnValue($countItemsAssigned));
-        $processMock->expects($this->any())->method('countItemsProcessed')->will($this->returnValue($countItemsProcessed));
+        $processMock->expects($this->any())->method('getAmountOfItemsProcessed')->will($this->returnValue($countItemsProcessed));
 
         $this->assertEquals(
             $expectedProgress,
