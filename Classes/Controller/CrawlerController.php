@@ -1370,7 +1370,7 @@ class CrawlerController
             );
         }
 
-        $signalPayload = [$queueId, $queueRec];
+        $signalPayload = [$queueId, &$queueRec];
         SignalSlotUtility::emitSignal(
             __CLASS__,
             SignalSlotUtility::SIGNAL_QUEUEITEM_PREPROCESS,
@@ -1409,7 +1409,7 @@ class CrawlerController
         // Set result in log which also denotes the end of the processing of this entry.
         $field_array = ['result_data' => serialize($result)];
 
-        $signalPayload = [$queueId, $field_array];
+        $signalPayload = [$queueId, &$field_array];
         SignalSlotUtility::emitSignal(
             __CLASS__,
             SignalSlotUtility::SIGNAL_QUEUEITEM_POSTPROCESS,
@@ -1445,7 +1445,7 @@ class CrawlerController
         // Set result in log which also denotes the end of the processing of this entry.
         $field_array = ['result_data' => serialize($result)];
 
-        $signalPayload = [$queueId, $field_array];
+        $signalPayload = [$queueId, &$field_array];
         SignalSlotUtility::emitSignal(
             __CLASS__,
             SignalSlotUtility::SIGNAL_QUEUEITEM_POSTPROCESS,
