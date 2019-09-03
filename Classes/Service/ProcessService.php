@@ -228,7 +228,7 @@ class ProcessService
         $composerRootDir = getenv('TYPO3_PATH_COMPOSER_ROOT') . '/';
         $composerFile = $composerRootDir . 'composer.json';
         $phpPath = $this->crawlerController->extensionSettings['phpPath'] . ' ';
-        $cliPart = '/typo3cms crawler:crawlqueue';
+        $cliPart = 'typo3cms crawler:crawlqueue';
 
         if (file_exists($composerFile)) {
             $jsonDecoded = json_decode(file_get_contents($composerRootDir . 'composer.json'), true);
@@ -240,7 +240,7 @@ class ProcessService
             } else {
                 $binDir = 'vendor/bin';
             }
-            $scriptPath = $phpPath . $composerRootDir . $binDir . $cliPart;
+            $scriptPath = $phpPath . $composerRootDir . $binDir . '/' . $cliPart;
         } else {
             $typo3ConsolePath = ExtensionManagementUtility::extPath('typo3_console');
             $scriptPath = $phpPath . $typo3ConsolePath . $cliPart;
