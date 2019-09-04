@@ -55,13 +55,7 @@ class ProcessServiceTest extends UnitTestCase
     public function setUp()
     {
         $this->subject = $this->createPartialMock(ProcessService::class, ['dummyMethod']);
-
         $this->crawlerController = $this->createPartialMock(CrawlerController::class, ['dummyMethod']);
-
-        // The getcwd() will return the directory from where the tests are called,
-        // that would be the ext/crawler folder, so we are validating against
-        // the composer.json of the crawler extension, and no dummy fixture.
-        define('TYPO3_PATH_COMPOSER_ROOT', getcwd());
     }
 
     /**
@@ -69,9 +63,8 @@ class ProcessServiceTest extends UnitTestCase
      */
     public function getCrawlerCliPathReturnsString()
     {
-        $this->markTestSkipped('Test is failed, talk about define() and setExtensionSettings()-context');
-        $this->assertEquals(
-            getcwd() . '/.Build/bin/typo3cms crawler:crawlqueue',
+        $this->assertContains(
+            '/typo3/sysext/core/bin/typo3 crawler:processQueue',
             $this->subject->getCrawlerCliPath()
         );
     }

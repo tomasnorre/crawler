@@ -24,7 +24,7 @@
         "typo3/cms-frontend": "*",
         "typo3/cms-info": "*",
         "typo3/cms-extensionmanager": "*",
-        "helhum/typo3-console": "^5.6"
+        "symfony/console": "~4.3"
     },
     "require-dev": {
         "nimut/testing-framework": "^4.1",
