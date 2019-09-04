@@ -23,6 +23,5 @@
         <base_url>http://www.testcase.de/</base_url>
         <pidsonly></pidsonly>
         <exclude></exclude>
-        <root_template_pid>1</root_template_pid>
     </tx_crawler_configuration>
 </dataset>

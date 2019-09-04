@@ -55,7 +55,6 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\CMS\Frontend\Page\CacheHashCalculator;
 use TYPO3\CMS\Frontend\Page\PageRepository;
 
@@ -617,7 +616,6 @@ class CrawlerController implements LoggerAwareInterface
                             'force_ssl' => (int)$configurationRecord['force_ssl'],
                             'userGroups' => $configurationRecord['fegroups'],
                             'exclude' => $configurationRecord['exclude'],
-                            'rootTemplatePid' => (int)$configurationRecord['root_template_pid'],
                             'key' => $key
                         ];
 
@@ -1133,9 +1131,6 @@ class CrawlerController implements LoggerAwareInterface
             $parameters['procInstrParams'] = $subCfg['procInstrParams.'];
         }
 
-        // Possible TypoScript Template Parents
-        $parameters['rootTemplatePid'] = $subCfg['rootTemplatePid'];
-
         // Compile value array:
         $parameters_serialized = serialize($parameters);
         $fieldArray = [
@@ -1283,15 +1278,6 @@ class CrawlerController implements LoggerAwareInterface
 
         if (!is_array($queueRec)) {
             return;
-        }
-
-        $parameters = unserialize($queueRec['parameters']);
-        if ($parameters['rootTemplatePid']) {
-            $this->initTSFE((int)$parameters['rootTemplatePid']);
-        } else {
-            $this->logger->warning(
-                'Page with (' . $queueRec['page_id'] . ') could not be crawled, please check your crawler configuration. Perhaps no Root Template Pid is set'
-            );
         }
 
         SignalSlotUtility::emitSignal(
@@ -2427,30 +2413,6 @@ class CrawlerController implements LoggerAwareInterface
         $now = time();
         $condition = '(exec_time<>0 AND exec_time<' . ($now - $processedAgeInSeconds) . ') OR scheduled<=' . ($now - $scheduledAgeInSeconds);
         $this->flushQueue($condition);
-    }
-
-    /**
-     * Initializes a TypoScript Frontend necessary for using TypoScript and TypoLink functions
-     *
-     * @param int $pageId
-     * @return void
-     * @throws \TYPO3\CMS\Core\Error\Http\ServiceUnavailableException
-     * @throws \TYPO3\CMS\Core\Http\ImmediateResponseException
-     */
-    protected function initTSFE(int $pageId): void
-    {
-        $GLOBALS['TSFE'] = GeneralUtility::makeInstance(
-            TypoScriptFrontendController::class,
-            null,
-            $pageId,
-            0
-        );
-        $GLOBALS['TSFE']->initFEuser();
-        $GLOBALS['TSFE']->determineId();
-        $GLOBALS['TSFE']->getConfigArray();
-        $GLOBALS['TSFE']->settingLanguage();
-        $GLOBALS['TSFE']->settingLocale();
-        $GLOBALS['TSFE']->newCObj();
     }
 
     /**

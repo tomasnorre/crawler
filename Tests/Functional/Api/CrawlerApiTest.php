@@ -339,8 +339,7 @@ class CrawlerApiTest extends FunctionalTestCase
                 'tx_staticpub_publish.' => [
                     'includeResources' => 'relPath'
                 ]
-            ],
-            'rootTemplatePid' => 1
+            ]
         ];
         $expectedParameter = serialize($expectedParameterData);
 

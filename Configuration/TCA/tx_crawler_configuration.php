@@ -140,24 +140,10 @@ return [
                 'cols' => 48,
                 'rows' => 3,
             ]
-        ],
-        'root_template_pid' => [
-            'exclude' => true,
-            'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.root_template_pid',
-            'config' => [
-                'type' => 'group',
-                'internal_type' => 'db',
-                'allowed' => 'pages',
-                'size' => 1,
-                'maxitems' => 1,
-                'minitems' => 0,
-                'show_thumbs' => 1,
-                'default' => 0
-            ]
         ]
     ],
     'types' => [
-        '0' => ['showitem' => 'hidden, name, force_ssl, processing_instruction_filter, base_url, root_template_pid, pidsonly, configuration, processing_instruction_parameters_ts,begroups, fegroups, exclude']
+        '0' => ['showitem' => 'hidden, name, force_ssl, processing_instruction_filter, base_url, pidsonly, configuration, processing_instruction_parameters_ts,begroups, fegroups, exclude']
     ],
     'palettes' => [
         '1' => ['showitem' => '']

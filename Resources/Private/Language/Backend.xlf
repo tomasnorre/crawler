@@ -48,10 +48,6 @@
             <trans-unit id="tx_crawler_configuration.exclude">
                 <source>Exclude pages</source>
             </trans-unit>
-            <trans-unit id="tx_crawler_configuration.root_template_pid">
-                <source>Page Id of TypoScript root template</source>
-            </trans-unit>
-
             <trans-unit id="crawler_im.name">
                 <source>Crawler queue</source>
             </trans-unit>
