@@ -27,6 +27,8 @@ namespace AOE\Crawler\Tests\Functional\Domain\Repository;
 
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class ConfigurationRepositoryTest
@@ -39,6 +41,11 @@ class ConfigurationRepositoryTest extends FunctionalTestCase
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     /**
+     * @var array
+     */
+    protected $coreExtensionsToLoad = ['cms', 'core', 'frontend', 'version', 'lang', 'extensionmanager', 'fluid'];
+
+    /**
      * @var ConfigurationRepository
      */
     protected $subject;
@@ -49,8 +56,9 @@ class ConfigurationRepositoryTest extends FunctionalTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->importDataSet(dirname(__FILE__) . '/../../Fixtures/tx_crawler_configuration.xml');
-        $this->subject = new ConfigurationRepository();
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $this->subject = $objectManager->get(ConfigurationRepository::class);
+        $this->importDataSet(__DIR__ . '/../../Fixtures/tx_crawler_configuration.xml');
     }
 
     /**

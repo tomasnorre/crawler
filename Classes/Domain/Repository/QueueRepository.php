@@ -4,7 +4,7 @@ namespace AOE\Crawler\Domain\Repository;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2017 AOE GmbH <dev@aoe.com>
+ *  (c) 2019 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -44,28 +44,21 @@ class QueueRepository extends AbstractRepository
      */
     protected $tableName = 'tx_crawler_queue';
 
-    /**
-     * @var QueryBuilder
-     */
-    protected $queryBuilder = QueryBuilder::class;
-
-    /**
-     * QueueRepository constructor.
-     */
     public function __construct()
     {
-        $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        // Left empty intentional
     }
 
     /**
      * @param $processId
      */
-    public function unsetQueueProcessId($processId)
+    public function unsetQueueProcessId($processId): void
     {
-        $this->queryBuilder
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $queryBuilder
             ->update($this->tableName)
             ->where(
-                $this->queryBuilder->expr()->eq('process_id', $this->queryBuilder->createNamedParameter($processId))
+                $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId))
             )
             ->set('process_id', '')
             ->execute();
@@ -76,9 +69,9 @@ class QueueRepository extends AbstractRepository
      *
      * @param Process $process
      *
-     * @return Queue $entry
+     * @return array
      */
-    public function findYoungestEntryForProcess(Process $process)
+    public function findYoungestEntryForProcess(Process $process): array
     {
         return $this->getFirstOrLastObjectByProcess($process, 'exec_time');
     }
@@ -88,9 +81,9 @@ class QueueRepository extends AbstractRepository
      *
      * @param Process $process
      *
-     * @return Queue
+     * @return array
      */
-    public function findOldestEntryForProcess(Process $process)
+    public function findOldestEntryForProcess(Process $process): array
     {
         return $this->getFirstOrLastObjectByProcess($process, 'exec_time', 'DESC');
     }
@@ -102,27 +95,23 @@ class QueueRepository extends AbstractRepository
      * @param string $orderByField first matching item will be returned as object
      * @param string $orderBySorting sorting direction
      *
-     * @return Queue
+     * @return array
      */
-    protected function getFirstOrLastObjectByProcess($process, $orderByField, $orderBySorting = 'ASC')
+    protected function getFirstOrLastObjectByProcess($process, $orderByField, $orderBySorting = 'ASC'): array
     {
-        $resultObject = new \stdClass();
-        $first = $this->queryBuilder
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $first = $queryBuilder
             ->select('*')
             ->from($this->tableName)
             ->where(
-                $this->queryBuilder->expr()->eq('process_id_completed', $this->queryBuilder->createNamedParameter($process->getProcess_id())),
-                $this->queryBuilder->expr()->gt('exec_time', 0)
+                $queryBuilder->expr()->eq('process_id_completed', $queryBuilder->createNamedParameter($process->getProcessId())),
+                $queryBuilder->expr()->gt('exec_time', 0)
             )
             ->setMaxResults(1)
             ->addOrderBy($orderByField, $orderBySorting)
-            ->execute();
+            ->execute()->fetch(0);
 
-        while ($row = $first->fetch()) {
-            $resultObject = new Queue($row);
-        }
-
-        return $resultObject;
+        return $first ?: [];
     }
 
     /**
@@ -132,14 +121,15 @@ class QueueRepository extends AbstractRepository
      *
      * @return int
      */
-    public function countExecutedItemsByProcess($process)
+    public function countExecutedItemsByProcess($process): int
     {
-        $count = $this->queryBuilder
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $count = $queryBuilder
             ->count('*')
             ->from($this->tableName)
             ->where(
-                $this->queryBuilder->expr()->eq('process_id_completed', $this->queryBuilder->createNamedParameter($process->getProcess_id())),
-                $this->queryBuilder->expr()->gt('exec_time', 0)
+                $queryBuilder->expr()->eq('process_id_completed', $queryBuilder->createNamedParameter($process->getProcessId())),
+                $queryBuilder->expr()->gt('exec_time', 0)
             )
             ->execute()
             ->fetchColumn(0);
@@ -154,14 +144,15 @@ class QueueRepository extends AbstractRepository
      *
      * @return int
      */
-    public function countNonExecutedItemsByProcess($process)
+    public function countNonExecutedItemsByProcess($process): int
     {
-        $count = $this->queryBuilder
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $count = $queryBuilder
             ->count('*')
             ->from($this->tableName)
             ->where(
-                $this->queryBuilder->expr()->eq('process_id', $this->queryBuilder->createNamedParameter($process->getProcess_id())),
-                $this->queryBuilder->expr()->eq('exec_time', 0)
+                $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($process->getProcessId())),
+                $queryBuilder->expr()->eq('exec_time', 0)
             )
             ->execute()
             ->fetchColumn(0);
@@ -174,13 +165,14 @@ class QueueRepository extends AbstractRepository
      *
      * @return array
      */
-    public function getUnprocessedItems()
+    public function getUnprocessedItems(): array
     {
-        $unprocessedItems = $this->queryBuilder
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $unprocessedItems = $queryBuilder
             ->select('*')
             ->from($this->tableName)
             ->where(
-                $this->queryBuilder->expr()->eq('exec_time', 0)
+                $queryBuilder->expr()->eq('exec_time', 0)
             )
             ->execute()->fetchAll();
 
@@ -192,7 +184,7 @@ class QueueRepository extends AbstractRepository
      *
      * @return int
      */
-    public function countUnprocessedItems()
+    public function countUnprocessedItems(): int
     {
         return count($this->getUnprocessedItems());
     }
@@ -203,15 +195,16 @@ class QueueRepository extends AbstractRepository
      *
      * @return int
      */
-    public function countAllPendingItems()
+    public function countAllPendingItems(): int
     {
-        $count = $this->queryBuilder
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $count = $queryBuilder
             ->count('*')
             ->from($this->tableName)
             ->where(
-                $this->queryBuilder->expr()->eq('process_scheduled', 0),
-                $this->queryBuilder->expr()->eq('exec_time', 0),
-                $this->queryBuilder->expr()->lte('scheduled', time())
+                $queryBuilder->expr()->eq('process_scheduled', 0),
+                $queryBuilder->expr()->eq('exec_time', 0),
+                $queryBuilder->expr()->lte('scheduled', time())
             )
             ->execute()
             ->fetchColumn(0);
@@ -225,15 +218,16 @@ class QueueRepository extends AbstractRepository
      *
      * @return int
      */
-    public function countAllAssignedPendingItems()
+    public function countAllAssignedPendingItems(): int
     {
-        $count = $this->queryBuilder
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $count = $queryBuilder
             ->count('*')
             ->from($this->tableName)
             ->where(
-                $this->queryBuilder->expr()->neq('process_id', '""'),
-                $this->queryBuilder->expr()->eq('exec_time', 0),
-                $this->queryBuilder->expr()->lte('scheduled', time())
+                $queryBuilder->expr()->neq('process_id', '""'),
+                $queryBuilder->expr()->eq('exec_time', 0),
+                $queryBuilder->expr()->lte('scheduled', time())
             )
             ->execute()
             ->fetchColumn(0);
@@ -247,15 +241,16 @@ class QueueRepository extends AbstractRepository
      *
      * @return int
      */
-    public function countAllUnassignedPendingItems()
+    public function countAllUnassignedPendingItems(): int
     {
-        $count = $this->queryBuilder
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $count = $queryBuilder
             ->count('*')
             ->from($this->tableName)
             ->where(
-                $this->queryBuilder->expr()->eq('process_id', '""'),
-                $this->queryBuilder->expr()->eq('exec_time', 0),
-                $this->queryBuilder->expr()->lte('scheduled', time())
+                $queryBuilder->expr()->eq('process_id', '""'),
+                $queryBuilder->expr()->eq('exec_time', 0),
+                $queryBuilder->expr()->lte('scheduled', time())
             )
             ->execute()
             ->fetchColumn(0);
@@ -268,15 +263,16 @@ class QueueRepository extends AbstractRepository
      *
      * @return array
      */
-    public function countPendingItemsGroupedByConfigurationKey()
+    public function countPendingItemsGroupedByConfigurationKey(): array
     {
-        $statement = $this->queryBuilder
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $statement = $queryBuilder
             ->from($this->tableName)
             ->selectLiteral('count(*) as unprocessed', 'sum(process_id != \'\') as assignedButUnprocessed')
             ->addSelect('configuration')
             ->where(
-                $this->queryBuilder->expr()->eq('exec_time', 0),
-                $this->queryBuilder->expr()->lt('scheduled', time())
+                $queryBuilder->expr()->eq('exec_time', 0),
+                $queryBuilder->expr()->lt('scheduled', time())
             )
             ->groupBy('configuration')
             ->execute();
@@ -287,18 +283,17 @@ class QueueRepository extends AbstractRepository
     /**
      * Get set id with unprocessed entries
      *
-     * @param void
-     *
      * @return array array of set ids
      */
-    public function getSetIdWithUnprocessedEntries()
+    public function getSetIdWithUnprocessedEntries(): array
     {
-        $statement = $this->queryBuilder
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $statement = $queryBuilder
             ->select('set_id')
             ->from($this->tableName)
             ->where(
-                $this->queryBuilder->expr()->lt('scheduled', time()),
-                $this->queryBuilder->expr()->eq('exec_time', 0)
+                $queryBuilder->expr()->lt('scheduled', time()),
+                $queryBuilder->expr()->eq('exec_time', 0)
             )
             ->addGroupBy('set_id')
             ->execute();
@@ -318,29 +313,22 @@ class QueueRepository extends AbstractRepository
      *
      * @return array totals by configuration (keys)
      */
-    public function getTotalQueueEntriesByConfiguration(array $setIds)
+    public function getTotalQueueEntriesByConfiguration(array $setIds): array
     {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
         $totals = [];
         if (count($setIds) > 0) {
-            $statement = $this->queryBuilder
+            $statement = $queryBuilder
                 ->from($this->tableName)
                 ->selectLiteral('count(*) as c')
                 ->addSelect('configuration')
                 ->where(
-                    $this->queryBuilder->expr()->in('set_id', implode(',', $setIds)),
-                    $this->queryBuilder->expr()->lt('scheduled', time())
+                    $queryBuilder->expr()->in('set_id', implode(',', $setIds)),
+                    $queryBuilder->expr()->lt('scheduled', time())
                 )
                 ->groupBy('configuration')
                 ->execute();
-            /*
-            $db = $this->getDB();
-            $res = $db->exec_SELECTquery(
-                'configuration, count(*) as c',
-                $this->tableName,
-                'set_id in (' . implode(',', $setIds) . ') AND scheduled < ' . time(),
-                'configuration'
-            );
-            */
+
             while ($row = $statement->fetch()) {
                 $totals[$row['configuration']] = $row['c'];
             }
@@ -356,9 +344,10 @@ class QueueRepository extends AbstractRepository
      *
      * @return array
      */
-    public function getLastProcessedEntriesTimestamps($limit = 100)
+    public function getLastProcessedEntriesTimestamps($limit = 100): array
     {
-        $statement = $this->queryBuilder
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $statement = $queryBuilder
             ->select('exec_time')
             ->from($this->tableName)
             ->addOrderBy('exec_time', 'desc')
@@ -380,9 +369,10 @@ class QueueRepository extends AbstractRepository
      *
      * @return array
      */
-    public function getLastProcessedEntries($limit = 100)
+    public function getLastProcessedEntries($limit = 100): array
     {
-        $statement = $this->queryBuilder
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $statement = $queryBuilder
             ->from($this->tableName)
             ->select('*')
             ->orderBy('exec_time', 'desc')
@@ -405,16 +395,17 @@ class QueueRepository extends AbstractRepository
      *
      * @return array performance data
      */
-    public function getPerformanceData($start, $end)
+    public function getPerformanceData($start, $end): array
     {
-        $statement = $this->queryBuilder
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $statement = $queryBuilder
             ->from($this->tableName)
             ->selectLiteral('min(exec_time) as start', 'max(exec_time) as end', 'count(*) as urlcount')
             ->addSelect('process_id_completed')
             ->where(
-                $this->queryBuilder->expr()->neq('exec_time', 0),
-                $this->queryBuilder->expr()->gte('exec_time', $this->queryBuilder->createNamedParameter($start)),
-                $this->queryBuilder->expr()->lte('exec_time', $this->queryBuilder->createNamedParameter($end))
+                $queryBuilder->expr()->neq('exec_time', 0),
+                $queryBuilder->expr()->gte('exec_time', $queryBuilder->createNamedParameter($start, \PDO::PARAM_INT)),
+                $queryBuilder->expr()->lte('exec_time', $queryBuilder->createNamedParameter($end, \PDO::PARAM_INT))
             )
             ->groupBy('process_id_completed')
             ->execute();
@@ -437,7 +428,7 @@ class QueueRepository extends AbstractRepository
      *
      * @return bool
      */
-    public function isPageInQueue($uid, $unprocessed_only = true, $timed_only = false, $timestamp = false)
+    public function isPageInQueue($uid, $unprocessed_only = true, $timed_only = false, $timestamp = false): bool
     {
         if (!MathUtility::canBeInterpretedAsInteger($uid)) {
             throw new \InvalidArgumentException('Invalid parameter type', 1468931945);
@@ -445,37 +436,38 @@ class QueueRepository extends AbstractRepository
 
         $isPageInQueue = false;
 
-        $statement = $this->queryBuilder
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $statement = $queryBuilder
             ->from($this->tableName)
             ->count('*')
             ->where(
-                $this->queryBuilder->expr()->eq('page_id', $this->queryBuilder->createNamedParameter($uid))
+                $queryBuilder->expr()->eq('page_id', $queryBuilder->createNamedParameter($uid, \PDO::PARAM_INT))
             );
 
         if (false !== $unprocessed_only) {
             $statement->andWhere(
-                $this->queryBuilder->expr()->eq('exec_time', 0)
+                $queryBuilder->expr()->eq('exec_time', 0)
             );
         }
 
         if (false !== $timed_only) {
             $statement->andWhere(
-                $this->queryBuilder->expr()->neq('scheduled', 0)
+                $queryBuilder->expr()->neq('scheduled', 0)
             );
         }
 
         if (false !== $timestamp) {
             $statement->andWhere(
-                $this->queryBuilder->expr()->eq('scheduled', $this->queryBuilder->createNamedParameter($timestamp))
+                $queryBuilder->expr()->eq('scheduled', $queryBuilder->createNamedParameter($timestamp, \PDO::PARAM_INT))
             );
         }
 
         // TODO: Currently it's not working if page doesn't exists. See tests
-        $statement
+        $count = $statement
             ->execute()
             ->fetchColumn(0);
 
-        if (false !== $statement && $statement > 0) {
+        if (false !== $count && $count > 0) {
             $isPageInQueue = true;
         }
 
@@ -489,10 +481,10 @@ class QueueRepository extends AbstractRepository
      * @param int $uid uid of the page
      * @param boolean $show_unprocessed only respect unprocessed pages
      *
-     * @return boolean
+     * @return bool
      *
      */
-    public function isPageInQueueTimed($uid, $show_unprocessed = true)
+    public function isPageInQueueTimed($uid, $show_unprocessed = true): bool
     {
         $uid = intval($uid);
         return $this->isPageInQueue($uid, $show_unprocessed);
@@ -501,9 +493,10 @@ class QueueRepository extends AbstractRepository
     /**
      * @return array
      */
-    public function getAvailableSets()
+    public function getAvailableSets(): array
     {
-        $statement = $this->queryBuilder
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $statement = $queryBuilder
             ->selectLiteral('count(*) as count_value')
             ->addSelect('set_id', 'scheduled')
             ->from($this->tableName)

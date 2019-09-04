@@ -4,7 +4,7 @@ namespace AOE\Crawler\Domain\Model;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2017 AOE GmbH <dev@aoe.com>
+ *  (c) 2019 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -85,7 +85,7 @@ class ProcessCollection extends \ArrayObject
     {
         $result = [];
         foreach ($this->getIterator() as $value) {
-            $result[] = $value->getProcess_id();
+            $result[] = $value->getProcessId();
         }
         return $result;
     }

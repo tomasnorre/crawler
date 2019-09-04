@@ -4,7 +4,7 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2016 AOE GmbH <dev@aoe.com>
+ *  (c) 2019 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -53,16 +53,19 @@ class ProcessCollectionTest extends UnitTestCase
      */
     public function getProcessIdsReturnsArray()
     {
-        $row1 = ['process_id' => 11];
-        $row2 = ['process_id' => 13];
-
         /** @var Process $processOne */
-        $processOne = $this->createPartialMock(Process::class, ['dummy']);
-        $processOne->setRow($row1);
+        $processOne = $this->getMockBuilder(Process::class)
+            ->setMethods(['dummy'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $processOne->setProcessId(11);
 
         /** @var Process $processTwo */
-        $processTwo = $this->createPartialMock(Process::class, ['dummy']);
-        $processTwo->setRow($row2);
+        $processTwo = $this->getMockBuilder(Process::class)
+            ->setMethods(['dummy'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $processTwo->setProcessId(13);
 
         $processes = [];
         $processes[] = $processOne;
@@ -92,7 +95,7 @@ class ProcessCollectionTest extends UnitTestCase
      */
     public function appendCrawlerDomainObject()
     {
-        $correctObjectType = $this->createMock(Process::class, ['dummy'], [], '', false);
+        $correctObjectType = $this->getAccessibleMock(Process::class, ['dummy'], [], '', false);
         $this->subject->append($correctObjectType);
 
         $this->assertEquals(
@@ -117,7 +120,7 @@ class ProcessCollectionTest extends UnitTestCase
      */
     public function offsetSetAndGet()
     {
-        $correctObjectType = $this->createMock(Process::class, ['dummy'], [], '', false);
+        $correctObjectType = $this->getAccessibleMock(Process::class, ['dummy'], [], '', false);
         $this->subject->offsetSet(100, $correctObjectType);
 
         $this->assertEquals(
@@ -133,7 +136,7 @@ class ProcessCollectionTest extends UnitTestCase
      */
     public function offsetGetThrowsException()
     {
-        $correctObjectType = $this->createMock(Process::class, ['dummy'], [], '', false);
+        $correctObjectType = $this->getAccessibleMock(Process::class, ['dummy'], [], '', false);
 
         $this->assertEquals(
             $correctObjectType,

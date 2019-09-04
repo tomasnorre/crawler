@@ -29,6 +29,8 @@ use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class CrawlerControllerTest
@@ -55,9 +57,9 @@ class CrawlerControllerTest extends FunctionalTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->importDataSet(dirname(__FILE__) . '/../Fixtures/sys_domain.xml');
-        $this->importDataSet(dirname(__FILE__) . '/../Fixtures/tx_crawler_queue.xml');
-        $this->importDataSet(dirname(__FILE__) . '/../Fixtures/tx_crawler_process.xml');
+        $this->importDataSet(__DIR__ . '/../Fixtures/sys_domain.xml');
+        $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
+        $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_process.xml');
         $this->subject = $this->getAccessibleMock(CrawlerController::class, ['dummy']);
     }
 
@@ -107,7 +109,7 @@ class CrawlerControllerTest extends FunctionalTestCase
     {
         $this->markTestSkipped('This fails with PHP7 & TYPO3 7.6');
 
-        $this->importDataSet(dirname(__FILE__) . '/Fixtures/tx_crawler_queue.xml');
+        $this->importDataSet(__DIR__ . '/Fixtures/tx_crawler_queue.xml');
         $queryRepository = new QueueRepository();
 
         $recordsFromFixture = 9;
@@ -149,7 +151,8 @@ class CrawlerControllerTest extends FunctionalTestCase
      */
     public function flushQueue($where, $expected)
     {
-        $queryRepository = new QueueRepository();
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $queryRepository = $objectManager->get(QueueRepository::class);
         $this->subject->_call('flushQueue', $where);
 
         $this->assertEquals(

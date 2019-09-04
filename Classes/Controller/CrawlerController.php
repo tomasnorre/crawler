@@ -2112,14 +2112,14 @@ class CrawlerController implements LoggerAwareInterface
                     $queryBuilderUpdate->expr()->in('qid', $quidList)
                 )
                 ->set('process_scheduled', $this->getCurrentTime())
-                ->set('process_id', $queryBuilderUpdate->createNamedParameter($processId, \PDO::PARAM_STR))
+                ->set('process_id', $processId)
                 ->execute();
 
             GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('tx_crawler_process')
                 ->update(
                     'tx_crawler_process',
                     [ 'assigned_items_count' => (int)$numberOfAffectedRows ],
-                    [ 'process_id' => (int) $processId ]
+                    [ 'process_id' => $processId ]
                 );
 
             if ($numberOfAffectedRows == count($quidList)) {
@@ -2241,7 +2241,6 @@ class CrawlerController implements LoggerAwareInterface
         }
 
         $this->processRepository->deleteProcessesMarkedAsDeleted();
-        $this->processRepository->deleteProcessesWithoutItemsAssigned();
         $this->CLI_releaseProcesses($orphanProcesses, true); // maybe this should be somehow included into the current lock
 
         return $ret;

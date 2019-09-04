@@ -84,10 +84,34 @@ class ProcessRepository extends AbstractRepository
             ->execute();
 
         while ($row = $statement->fetch()) {
-            $collection->append(GeneralUtility::makeInstance(Process::class, $row));
+            $process = GeneralUtility::makeInstance(Process::class);
+            $process->setProcessId($row['process_id']);
+            $process->setActive($row['active']);
+            $process->setTtl($row['ttl']);
+            $process->setAssignedItemsCount($row['assigned_items_count']);
+            $process->setDeleted($row['deleted']);
+            $process->setSystemProcessId($row['system_process_id']);
+            $collection->append($process);
         }
 
         return $collection;
+    }
+
+    /**
+     * @param string $processId
+     * @return mixed
+     */
+    public function findByProcessId($processId)
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $process = $queryBuilder
+            ->select('*')
+            ->from($this->tableName)
+            ->where(
+                $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId, \PDO::PARAM_STR))
+            )->execute()->fetch(0);
+
+        return $process;
     }
 
     /**
@@ -110,7 +134,14 @@ class ProcessRepository extends AbstractRepository
             ->execute();
 
         while ($row = $statement->fetch()) {
-            $collection->append(GeneralUtility::makeInstance(Process::class, $row));
+            $process = new Process();
+            $process->setProcessId($row['process_id']);
+            $process->setActive($row['active']);
+            $process->setTtl($row['ttl']);
+            $process->setAssignedItemsCount($row['assigned_items_count']);
+            $process->setDeleted($row['deleted']);
+            $process->setSystemProcessId($row['system_process_id']);
+            $collection->append($process);
         }
 
         return $collection;
@@ -128,7 +159,7 @@ class ProcessRepository extends AbstractRepository
         $queryBuilder
             ->delete($this->tableName)
             ->where(
-                $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId))
+                $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId, \PDO::PARAM_STR))
             )->execute();
     }
 

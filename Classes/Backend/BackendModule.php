@@ -142,7 +142,7 @@ class BackendModule
     public function __construct()
     {
         $objectManger = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->processManager = new ProcessService();
+        $this->processManager = $objectManger->get(ProcessService::class);
         $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tx_crawler_queue');
         $this->queueRepository = $objectManger->get(QueueRepository::class);
         $this->initializeView();
