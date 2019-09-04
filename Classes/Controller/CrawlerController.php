@@ -26,6 +26,7 @@ namespace AOE\Crawler\Controller;
  ***************************************************************/
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
+use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\EventDispatcher;
@@ -172,6 +173,11 @@ class CrawlerController implements LoggerAwareInterface
     protected $processRepository;
 
     /**
+     * @var ConfigurationRepository
+     */
+    protected $configurationRepository;
+
+    /**
      * @var string
      */
     protected $tableName = 'tx_crawler_queue';
@@ -256,6 +262,7 @@ class CrawlerController implements LoggerAwareInterface
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->queueRepository = $objectManager->get(QueueRepository::class);
         $this->processRepository = $objectManager->get(ProcessRepository::class);
+        $this->configurationRepository = $objectManager->get(ConfigurationRepository::class);
 
         $this->backendUser = $GLOBALS['BE_USER'];
         $this->processFilename = Environment::getVarPath() . '/locks/tx_crawler.proc';
@@ -589,7 +596,7 @@ class CrawlerController implements LoggerAwareInterface
         }
 
         // Get configuration from tx_crawler_configuration records up the rootline
-        $crawlerConfigurations = $this->getCrawlerConfigurationRecordsFromRootLine($pageId);
+        $crawlerConfigurations = $this->configurationRepository->getCrawlerConfigurationRecordsFromRootLine($pageId);
         foreach ($crawlerConfigurations as $configurationRecord) {
 
                 // check access to the configuration record
@@ -2502,35 +2509,5 @@ class CrawlerController implements LoggerAwareInterface
         unset($configuration['paramExpanded']);
         unset($configuration['URLs']);
         return md5(serialize($configuration));
-    }
-
-    /**
-     * Traverses up the rootline of a page and fetches all crawler records
-     * @param int $pageId
-     * @return array
-     */
-    protected function getCrawlerConfigurationRecordsFromRootLine(int $pageId): array
-    {
-        $rootLine = BackendUtility::BEgetRootLine($pageId);
-
-        $pageIdsInRootLine = [];
-        foreach ($rootLine as $pageInRootLine) {
-            $pageIdsInRootLine[] = (int)$pageInRootLine['uid'];
-        }
-
-        $queryBuilder = $this->getQueryBuilder('tx_crawler_configuration');
-        $queryBuilder
-            ->getRestrictions()->removeAll()
-            ->add(GeneralUtility::makeInstance(DeletedRestriction::class))
-            ->add(GeneralUtility::makeInstance(HiddenRestriction::class));
-        $configurationRecordsForCurrentPage = $queryBuilder
-            ->select('*')
-            ->from('tx_crawler_configuration')
-            ->where(
-                $queryBuilder->expr()->in('pid', $queryBuilder->createNamedParameter($pageIdsInRootLine, Connection::PARAM_INT_ARRAY))
-            )
-            ->execute()
-            ->fetchAll();
-        return is_array($configurationRecordsForCurrentPage) ? $configurationRecordsForCurrentPage : [];
     }
 }
