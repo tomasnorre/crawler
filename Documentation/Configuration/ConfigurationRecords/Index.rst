@@ -55,8 +55,6 @@ Fields and their pageTS equivalents
 
 - **Crawl with FE usergroups** - :ref:`paramSets.[key].userGroups <crawler-tsconfig-paramSets-key-userGroups>`
 
-- **Append cHash** - :ref:`paramSets.[key].cHash <crawler-tsconfig-paramSets-key-cHash>`
-
 - **Exclude pages** - comma separated list of page ids which should not be crawled
 
 .. image:: /Images/backend_configurationrecord.png

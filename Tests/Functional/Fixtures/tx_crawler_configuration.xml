@@ -15,7 +15,6 @@
         <pidsonly></pidsonly>
         <begroups></begroups>
         <fegroups></fegroups>
-        <chash>0</chash>
         <exclude>0</exclude>
         <root_template_pid>0</root_template_pid>
     </tx_crawler_configuration>
@@ -34,7 +33,6 @@
         <pidsonly></pidsonly>
         <begroups></begroups>
         <fegroups></fegroups>
-        <chash>0</chash>
         <exclude>0</exclude>
         <root_template_pid>0</root_template_pid>
     </tx_crawler_configuration>
@@ -53,7 +51,6 @@
         <pidsonly></pidsonly>
         <begroups></begroups>
         <fegroups></fegroups>
-        <chash>0</chash>
         <exclude>0</exclude>
         <root_template_pid>0</root_template_pid>
     </tx_crawler_configuration>
@@ -72,7 +69,6 @@
         <pidsonly></pidsonly>
         <begroups></begroups>
         <fegroups></fegroups>
-        <chash>0</chash>
         <exclude>0</exclude>
         <root_template_pid>0</root_template_pid>
     </tx_crawler_configuration>
@@ -91,7 +87,6 @@
         <pidsonly></pidsonly>
         <begroups></begroups>
         <fegroups></fegroups>
-        <chash>0</chash>
         <exclude>0</exclude>
         <root_template_pid>0</root_template_pid>
     </tx_crawler_configuration>

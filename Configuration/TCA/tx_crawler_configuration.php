@@ -18,7 +18,7 @@ return [
         ],
     ],
     'interface' => [
-        'showRecordFieldList' => 'hidden,name,force_ssl,processing_instruction_filter,processing_instruction_parameters_ts,configuration,base_url,pidsonly,begroups,chash, exclude'
+        'showRecordFieldList' => 'hidden,name,force_ssl,processing_instruction_filter,processing_instruction_parameters_ts,configuration,base_url,pidsonly,begroups,exclude'
     ],
     'columns' => [
         'hidden' => [
@@ -149,13 +149,6 @@ return [
                 'foreign_table' => 'fe_groups'
             ]
         ],
-        'chash' => [
-            'exclude' => true,
-            'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.chash',
-            'config' => [
-                'type' => 'check',
-            ]
-        ],
         'exclude' => [
             'exclude' => true,
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.exclude',
@@ -181,7 +174,7 @@ return [
         ]
     ],
     'types' => [
-        '0' => ['showitem' => 'hidden, name, force_ssl, processing_instruction_filter, base_url, sys_domain_base_url, root_template_pid, pidsonly, configuration, processing_instruction_parameters_ts,begroups, fegroups, chash, exclude']
+        '0' => ['showitem' => 'hidden, name, force_ssl, processing_instruction_filter, base_url, sys_domain_base_url, root_template_pid, pidsonly, configuration, processing_instruction_parameters_ts,begroups, fegroups, exclude']
     ],
     'palettes' => [
         '1' => ['showitem' => '']

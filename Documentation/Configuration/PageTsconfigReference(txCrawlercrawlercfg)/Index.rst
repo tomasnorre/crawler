@@ -105,7 +105,6 @@ Page TSconfig Reference (tx\_crawler.crawlerCfg)
                myConfigurationKeyName = &tx_myext[items]=[_TABLE:tt_myext_items;_PID:15;_WHERE: and hidden = 0]
                myConfigurationKeyName {
                  pidsonly = 13
-                 chash = 1
                  procInstrFilter = tx_indexedsearch_reindex
                }
             }
@@ -179,22 +178,6 @@ Page TSconfig Reference (tx\_crawler.crawlerCfg)
 
    Description
          User groups to set for the request.
-
-   Default
-
-
-.. container:: table-row
-
-   Property
-         .. _crawler-tsconfig-paramSets-key-cHash:
-
-         paramSets.[key].cHash
-
-   Data type
-         boolean
-
-   Description
-         If set, a cHash value is calculated and added to the URLs.
 
    Default
 
