@@ -231,7 +231,7 @@ class ProcessService
         $cliPart = 'typo3cms crawler:crawlqueue';
 
         if (file_exists($composerFile)) {
-            $jsonDecoded = json_decode(file_get_contents($composerRootDir . 'composer.json'), true);
+            $jsonDecoded = json_decode(file_get_contents($composerFile), true);
 
             if (isset($jsonDecoded['config']['bin-dir'])) {
                 $binDir = $jsonDecoded['config']['bin-dir'];
