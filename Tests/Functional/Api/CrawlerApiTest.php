@@ -28,8 +28,8 @@ namespace AOE\Crawler\Tests\Functional\Api;
 use AOE\Crawler\Api\CrawlerApi;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Tests\Functional\SiteBasedTestTrait;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
-use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
@@ -40,6 +40,7 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  */
 class CrawlerApiTest extends FunctionalTestCase
 {
+    use SiteBasedTestTrait;
 
     /**
      * @var CrawlerApi
@@ -66,6 +67,12 @@ class CrawlerApiTest extends FunctionalTestCase
      * @var QueueRepository
      */
     protected $queueRepository;
+
+    protected const LANGUAGE_PRESETS = [
+        'EN' => ['id' => 0, 'title' => 'English', 'locale' => 'en_US.UTF8', 'iso' => 'en', 'hrefLang' => 'en-US', 'direction' => ''],
+        'FR' => ['id' => 1, 'title' => 'French', 'locale' => 'fr_FR.UTF8', 'iso' => 'fr', 'hrefLang' => 'fr-FR', 'direction' => ''],
+        'FR-CA' => ['id' => 2, 'title' => 'Franco-Canadian', 'locale' => 'fr_CA.UTF8', 'iso' => 'fr', 'hrefLang' => 'fr-CA', 'direction' => ''],
+    ];
 
     /**
      * Creates the test environment.
@@ -109,6 +116,16 @@ class CrawlerApiTest extends FunctionalTestCase
 
         $this->importDataSet(dirname(__FILE__) . '/../data/pages.xml');
         $this->importDataSet(dirname(__FILE__) . '/../data/sys_template.xml');
+
+        $this->writeSiteConfiguration(
+            'acme-com',
+            $this->buildSiteConfiguration(1, 'https://acme.com/'),
+            [
+                $this->buildDefaultLanguageConfiguration('EN', 'https://acme.us/'),
+                $this->buildLanguageConfiguration('FR', 'https://acme.fr/', ['EN']),
+                $this->buildLanguageConfiguration('FR-CA', 'https://acme.ca/', ['FR', 'EN']),
+            ]
+        );
     }
 
     /**
@@ -325,7 +342,19 @@ class CrawlerApiTest extends FunctionalTestCase
      */
     public function canCreateQueueEntriesUsingConfigurationRecord()
     {
-        $expectedParameter = 'a:4:{s:3:"url";s:49:"http://www.testcase.de/index.php?id=7&L=0&S=CRAWL";s:16:"procInstructions";a:1:{i:0;s:20:"tx_staticpub_publish";}s:15:"procInstrParams";a:1:{s:21:"tx_staticpub_publish.";a:1:{s:16:"includeResources";s:7:"relPath";}}s:15:"rootTemplatePid";i:1;}';
+        $expectedParameterData = [
+            'url' => 'http://www.testcase.de/index.php?id=7&L=0&S=CRAWL&cHash=966b79fa43675d725b45415c54ea0cb7',
+            'procInstructions' => [
+                0 => 'tx_staticpub_publish'
+            ],
+            'procInstrParams' => [
+                'tx_staticpub_publish.' => [
+                    'includeResources' => 'relPath'
+                ]
+            ],
+            'rootTemplatePid' => 1
+        ];
+        $expectedParameter = serialize($expectedParameterData);
 
         $this->importDataSet(dirname(__FILE__) . '/../data/canCreateQueueEntriesUsingConfigurationRecord.xml');
         $crawlerApi = $this->getMockedCrawlerAPI(100000);

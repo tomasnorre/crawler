@@ -6,12 +6,18 @@
 		<title>Root</title>
 		<deleted>0</deleted>
 		<is_siteroot>1</is_siteroot>
+		<slug>/</slug>
+		<sys_language_uid>0</sys_language_uid>
+		<l10n_parent>0</l10n_parent>
 	</pages>
 	<pages>
 		<uid>2</uid>
 		<pid>1</pid>
 		<title>Archived</title>
 		<deleted>0</deleted>
+		<slug>/archived</slug>
 		<is_siteroot>0</is_siteroot>
+		<sys_language_uid>0</sys_language_uid>
+		<l10n_parent>0</l10n_parent>
 	</pages>
 </dataset>
