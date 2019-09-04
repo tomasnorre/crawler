@@ -50,10 +50,10 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             '
             Examples:
               --- Re-cache pages from page 7 and two levels down, executed immediately
-              $ typo3 crawler:buildQueue --startpage 7 --depth 2 --conf defaultConfiguration --mode exec
+              $ typo3 crawler:buildQueue --page 7 --depth 2 --conf defaultConfiguration --mode exec
              
               --- Put entries for re-caching pages from page 7 into queue, 4 every minute.
-              $ typo3 crawler:buildQueue --startpage 7 --depth 0 --conf defaultConfiguration --mode queue --number 4
+              $ typo3 crawler:buildQueue --page 7 --depth 0 --conf defaultConfiguration --mode queue --number 4
             '
         );
 
@@ -65,8 +65,8 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
         );
 
         $this->addOption(
-            'startpage',
-            's',
+            'page',
+            'p',
             InputOption::VALUE_OPTIONAL,
             'The page from where the queue building should start',
             0
@@ -107,11 +107,11 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
      * Examples:
      *
      * --- Re-cache pages from page 7 and two levels down, executed immediately
-     * $ typo3 crawler:buildQueue --startpage 7 --depth 2 --conf defaultConfiguration --mode exec
+     * $ typo3 crawler:buildQueue --page 7 --depth 2 --conf defaultConfiguration --mode exec
 
      *
      * --- Put entries for re-caching pages from page 7 into queue, 4 every minute.
-     * $ typo3 crawler:buildQueue --startpage 7 --depth 0 --conf defaultConfiguration --mode queue --number 4
+     * $ typo3 crawler:buildQueue --page 7 --depth 0 --conf defaultConfiguration --mode queue --number 4
      *
      */
     protected function execute(InputInterface $input, OutputInterface $output)
