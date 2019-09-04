@@ -26,6 +26,7 @@ namespace AOE\Crawler\Controller;
  ***************************************************************/
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
+use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\EventDispatcher;
@@ -172,9 +173,20 @@ class CrawlerController implements LoggerAwareInterface
     protected $processRepository;
 
     /**
+     * @var ConfigurationRepository
+     */
+    protected $configurationRepository;
+
+    /**
      * @var string
      */
     protected $tableName = 'tx_crawler_queue';
+
+
+    /**
+     * @var int
+     */
+    protected $maximumUrlsToCompile = 10000;
 
     /**
      * Method to set the accessMode can be gui, cli or cli_im
@@ -250,6 +262,7 @@ class CrawlerController implements LoggerAwareInterface
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->queueRepository = $objectManager->get(QueueRepository::class);
         $this->processRepository = $objectManager->get(ProcessRepository::class);
+        $this->configurationRepository = $objectManager->get(ConfigurationRepository::class);
 
         $this->backendUser = $GLOBALS['BE_USER'];
         $this->processFilename = Environment::getVarPath() . '/locks/tx_crawler.proc';
@@ -265,6 +278,7 @@ class CrawlerController implements LoggerAwareInterface
         }
 
         $this->extensionSettings['processLimit'] = MathUtility::forceIntegerInRange($this->extensionSettings['processLimit'], 1, 99, 1);
+        $this->maximumUrlsToCompile = MathUtility::forceIntegerInRange($this->extensionSettings['maxCompileUrls'], 1, 1000000000, 10000);
     }
 
     /**
@@ -510,7 +524,7 @@ class CrawlerController implements LoggerAwareInterface
         if (!$this->MP) {
             $pageTSconfig = BackendUtility::getPagesTSconfig($id);
         } else {
-            list(, $mountPointId) = explode('-', $this->MP);
+            [, $mountPointId] = explode('-', $this->MP);
             $pageTSconfig = BackendUtility::getPagesTSconfig($mountPointId);
         }
 
@@ -524,7 +538,6 @@ class CrawlerController implements LoggerAwareInterface
                 GeneralUtility::callUserFunction($userFunc, $params, $this);
             }
         }
-
         return $pageTSconfig;
     }
 
@@ -535,128 +548,98 @@ class CrawlerController implements LoggerAwareInterface
      * @param integer $id Page ID
      * @return array
      */
-    public function getUrlsForPageId($id)
+    public function getUrlsForPageId($pageId)
     {
-
-        /**
-         * Get configuration from tsConfig
-         */
-
-        // Get page TSconfig for page ID:
-        $pageTSconfig = $this->getPageTSconfigForId($id);
+        // Get page TSconfig for page ID
+        $pageTSconfig = $this->getPageTSconfigForId($pageId);
 
         $res = [];
 
-        if (is_array($pageTSconfig) && is_array($pageTSconfig['tx_crawler.']['crawlerCfg.'])) {
-            $crawlerCfg = $pageTSconfig['tx_crawler.']['crawlerCfg.'];
+        // Fetch Crawler Configuration from pageTSconfig
+        $crawlerCfg = $pageTSconfig['tx_crawler.']['crawlerCfg.']['paramSets.'] ?? [];
+        foreach ($crawlerCfg as $key => $values) {
+            if (!is_array($values)) {
+                continue;
+            }
+            $key = str_replace('.', '', $key);
+            // Sub configuration for a single configuration string:
+            $subCfg = (array)$crawlerCfg[$key . '.'];
+            $subCfg['key'] = $key;
 
-            if (is_array($crawlerCfg['paramSets.'])) {
-                foreach ($crawlerCfg['paramSets.'] as $key => $values) {
-                    if (is_array($values)) {
-                        $key = str_replace('.', '', $key);
-                        // Sub configuration for a single configuration string:
-                        $subCfg = (array)$crawlerCfg['paramSets.'][$key . '.'];
-                        $subCfg['key'] = $key;
+            if (strcmp($subCfg['procInstrFilter'], '')) {
+                $subCfg['procInstrFilter'] = implode(',', GeneralUtility::trimExplode(',', $subCfg['procInstrFilter']));
+            }
+            $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $subCfg['pidsOnly'], true));
 
-                        if (strcmp($subCfg['procInstrFilter'], '')) {
-                            $subCfg['procInstrFilter'] = implode(',', GeneralUtility::trimExplode(',', $subCfg['procInstrFilter']));
-                        }
-                        $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $subCfg['pidsOnly'], true));
+            // process configuration if it is not page-specific or if the specific page is the current page:
+            if (!strcmp($subCfg['pidsOnly'], '') || GeneralUtility::inList($pidOnlyList, $pageId)) {
 
-                        // process configuration if it is not page-specific or if the specific page is the current page:
-                        if (!strcmp($subCfg['pidsOnly'], '') || GeneralUtility::inList($pidOnlyList, $id)) {
+                    // add trailing slash if not present
+                if (!empty($subCfg['baseUrl']) && substr($subCfg['baseUrl'], -1) != '/') {
+                    $subCfg['baseUrl'] .= '/';
+                }
 
-                                // add trailing slash if not present
-                            if (!empty($subCfg['baseUrl']) && substr($subCfg['baseUrl'], -1) != '/') {
-                                $subCfg['baseUrl'] .= '/';
-                            }
+                // Explode, process etc.:
+                $res[$key] = [];
+                $res[$key]['subCfg'] = $subCfg;
+                $res[$key]['paramParsed'] = GeneralUtility::explodeUrl2Array($crawlerCfg[$key]);
+                $res[$key]['paramExpanded'] = $this->expandParameters($res[$key]['paramParsed'], $pageId);
+                $res[$key]['origin'] = 'pagets';
 
-                            // Explode, process etc.:
-                            $res[$key] = [];
-                            $res[$key]['subCfg'] = $subCfg;
-                            $res[$key]['paramParsed'] = $this->parseParams($crawlerCfg['paramSets.'][$key]);
-                            $res[$key]['paramExpanded'] = $this->expandParameters($res[$key]['paramParsed'], $id);
-                            $res[$key]['origin'] = 'pagets';
-
-                            // recognize MP value
-                            if (!$this->MP) {
-                                $res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'], ['?id=' . $id]);
-                            } else {
-                                $res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'], ['?id=' . $id . '&MP=' . $this->MP]);
-                            }
-                        }
-                    }
+                // recognize MP value
+                if (!$this->MP) {
+                    $res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'], ['?id=' . $pageId]);
+                } else {
+                    $res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'], ['?id=' . $pageId . '&MP=' . $this->MP]);
                 }
             }
         }
 
-        /**
-         * Get configuration from tx_crawler_configuration records
-         */
+        // Get configuration from tx_crawler_configuration records up the rootline
+        $crawlerConfigurations = $this->configurationRepository->getCrawlerConfigurationRecordsFromRootLine($pageId);
+        foreach ($crawlerConfigurations as $configurationRecord) {
 
-        // get records along the rootline
-        $rootLine = BackendUtility::BEgetRootLine($id);
+                // check access to the configuration record
+            if (empty($configurationRecord['begroups']) || $GLOBALS['BE_USER']->isAdmin() || $this->hasGroupAccess($GLOBALS['BE_USER']->user['usergroup_cached_list'], $configurationRecord['begroups'])) {
+                $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $configurationRecord['pidsonly'], true));
 
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tx_crawler_configuration');
-        $queryBuilder
-            ->getRestrictions()->removeAll()
-            ->add(GeneralUtility::makeInstance(DeletedRestriction::class))
-            ->add(GeneralUtility::makeInstance(HiddenRestriction::class));
+                // process configuration if it is not page-specific or if the specific page is the current page:
+                if (!strcmp($configurationRecord['pidsonly'], '') || GeneralUtility::inList($pidOnlyList, $pageId)) {
+                    $key = $configurationRecord['name'];
 
-        foreach ($rootLine as $page) {
-            $configurationRecordsForCurrentPage = $queryBuilder
-                ->select('*')
-                ->from('tx_crawler_configuration')
-                ->where(
-                    $queryBuilder->expr()->eq('pid', $page['uid'])
-                )
-                ->execute()
-                ->fetchAll();
+                    // don't overwrite previously defined paramSets
+                    if (!isset($res[$key])) {
 
-            foreach ($configurationRecordsForCurrentPage ?? [] as $configurationRecord) {
+                            /* @var $TSparserObject \TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser */
+                        $TSparserObject = GeneralUtility::makeInstance(TypoScriptParser::class);
+                        $TSparserObject->parse($configurationRecord['processing_instruction_parameters_ts']);
 
-                    // check access to the configuration record
-                if (empty($configurationRecord['begroups']) || $GLOBALS['BE_USER']->isAdmin() || $this->hasGroupAccess($GLOBALS['BE_USER']->user['usergroup_cached_list'], $configurationRecord['begroups'])) {
-                    $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $configurationRecord['pidsonly'], true));
+                        $subCfg = [
+                            'procInstrFilter' => $configurationRecord['processing_instruction_filter'],
+                            'procInstrParams.' => $TSparserObject->setup,
+                            'baseUrl' => $this->getBaseUrlForConfigurationRecord(
+                                $configurationRecord['base_url'],
+                                (int)$configurationRecord['sys_domain_base_url'],
+                                (bool)($configurationRecord['force_ssl'] > 0)
+                            ),
+                            'cHash' => $configurationRecord['chash'],
+                            'userGroups' => $configurationRecord['fegroups'],
+                            'exclude' => $configurationRecord['exclude'],
+                            'rootTemplatePid' => (int) $configurationRecord['root_template_pid'],
+                            'key' => $key
+                        ];
 
-                    // process configuration if it is not page-specific or if the specific page is the current page:
-                    if (!strcmp($configurationRecord['pidsonly'], '') || GeneralUtility::inList($pidOnlyList, $id)) {
-                        $key = $configurationRecord['name'];
-
-                        // don't overwrite previously defined paramSets
-                        if (!isset($res[$key])) {
-
-                                /* @var $TSparserObject \TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser */
-                            $TSparserObject = GeneralUtility::makeInstance(TypoScriptParser::class);
-                            $TSparserObject->parse($configurationRecord['processing_instruction_parameters_ts']);
-
-                            $subCfg = [
-                                'procInstrFilter' => $configurationRecord['processing_instruction_filter'],
-                                'procInstrParams.' => $TSparserObject->setup,
-                                'baseUrl' => $this->getBaseUrlForConfigurationRecord(
-                                    $configurationRecord['base_url'],
-                                    (int)$configurationRecord['sys_domain_base_url'],
-                                    (bool)($configurationRecord['force_ssl'] > 0)
-                                ),
-                                'cHash' => $configurationRecord['chash'],
-                                'userGroups' => $configurationRecord['fegroups'],
-                                'exclude' => $configurationRecord['exclude'],
-                                'rootTemplatePid' => (int) $configurationRecord['root_template_pid'],
-                                'key' => $key
-                            ];
-
-                            // add trailing slash if not present
-                            if (!empty($subCfg['baseUrl']) && substr($subCfg['baseUrl'], -1) != '/') {
-                                $subCfg['baseUrl'] .= '/';
-                            }
-                            if (!in_array($id, $this->expandExcludeString($subCfg['exclude']))) {
-                                $res[$key] = [];
-                                $res[$key]['subCfg'] = $subCfg;
-                                $res[$key]['paramParsed'] = $this->parseParams($configurationRecord['configuration']);
-                                $res[$key]['paramExpanded'] = $this->expandParameters($res[$key]['paramParsed'], $id);
-                                $res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'], ['?id=' . $id]);
-                                $res[$key]['origin'] = 'tx_crawler_configuration_' . $configurationRecord['uid'];
-                            }
+                        // add trailing slash if not present
+                        if (!empty($subCfg['baseUrl']) && substr($subCfg['baseUrl'], -1) != '/') {
+                            $subCfg['baseUrl'] .= '/';
+                        }
+                        if (!in_array($pageId, $this->expandExcludeString($subCfg['exclude']))) {
+                            $res[$key] = [];
+                            $res[$key]['subCfg'] = $subCfg;
+                            $res[$key]['paramParsed'] = GeneralUtility::explodeUrl2Array($configurationRecord['configuration']);
+                            $res[$key]['paramExpanded'] = $this->expandParameters($res[$key]['paramParsed'], $pageId);
+                            $res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'], ['?id=' . $pageId]);
+                            $res[$key]['origin'] = 'tx_crawler_configuration_' . $configurationRecord['uid'];
                         }
                     }
                 }
@@ -701,27 +684,24 @@ class CrawlerController implements LoggerAwareInterface
     }
 
     /**
-     * @param $rootid
+     * Find all configurations of subpages of a page
+     *
+     * @param int $rootid
      * @param $depth
      * @return array
      *
      * TODO: Write Functional Tests
      */
-    public function getConfigurationsForBranch($rootid, $depth)
+    public function getConfigurationsForBranch(int $rootid, $depth)
     {
         $configurationsForBranch = [];
-
         $pageTSconfig = $this->getPageTSconfigForId($rootid);
-        if (is_array($pageTSconfig) && is_array($pageTSconfig['tx_crawler.']['crawlerCfg.']) && is_array($pageTSconfig['tx_crawler.']['crawlerCfg.']['paramSets.'])) {
-            $sets = $pageTSconfig['tx_crawler.']['crawlerCfg.']['paramSets.'];
-            if (is_array($sets)) {
-                foreach ($sets as $key => $value) {
-                    if (!is_array($value)) {
-                        continue;
-                    }
-                    $configurationsForBranch[] = substr($key, -1) == '.' ? substr($key, 0, -1) : $key;
-                }
+        $sets = $pageTSconfig['tx_crawler.']['crawlerCfg.']['paramSets.'] ?? [];
+        foreach ($sets as $key => $value) {
+            if (!is_array($value)) {
+                continue;
             }
+            $configurationsForBranch[] = substr($key, -1) == '.' ? substr($key, 0, -1) : $key;
         }
         $pids = [];
         $rootLine = BackendUtility::BEgetRootLine($rootid);
@@ -741,9 +721,7 @@ class CrawlerController implements LoggerAwareInterface
 
         $queryBuilder->getRestrictions()
             ->removeAll()
-            ->add(GeneralUtility::makeInstance(DeletedRestriction::class))
-            ->add(GeneralUtility::makeInstance(StartTimeRestriction::class))
-            ->add(GeneralUtility::makeInstance(EndTimeRestriction::class));
+            ->add(GeneralUtility::makeInstance(DeletedRestriction::class));
 
         $statement = $queryBuilder
             ->select('name')
@@ -751,12 +729,11 @@ class CrawlerController implements LoggerAwareInterface
             ->where(
                 $queryBuilder->expr()->in('pid', $queryBuilder->createNamedParameter($pids, Connection::PARAM_INT_ARRAY))
             )
-        ->execute();
+            ->execute();
 
         while ($row = $statement->fetch()) {
             $configurationsForBranch[] = $row['name'];
         }
-
         return $configurationsForBranch;
     }
 
@@ -768,9 +745,7 @@ class CrawlerController implements LoggerAwareInterface
      */
     private function getQueryBuilder(string $table)
     {
-        return GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getConnectionForTable($table)
-            ->createQueryBuilder();
+        return GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($table);
     }
 
     /**
@@ -793,29 +768,6 @@ class CrawlerController implements LoggerAwareInterface
             }
         }
         return false;
-    }
-
-    /**
-     * Parse GET vars of input Query into array with key=>value pairs
-     *
-     * @param string $inputQuery Input query string
-     * @return array
-     */
-    public function parseParams($inputQuery)
-    {
-        //echo '<pre>', var_dump($inputQuery), '</pre>';
-        // Extract all GET parameters into an ARRAY:
-        $paramKeyValues = [];
-        $GETparams = explode('&', $inputQuery);
-
-        foreach ($GETparams as $paramAndValue) {
-            list($p, $v) = explode('=', $paramAndValue, 2);
-            if (strlen($p)) {
-                $paramKeyValues[rawurldecode($p)] = rawurldecode($v);
-            }
-        }
-
-        return $paramKeyValues;
     }
 
     /**
@@ -965,31 +917,28 @@ class CrawlerController implements LoggerAwareInterface
      * @param array $urls URLs accumulated in this array (for recursion)
      * @return array
      */
-    public function compileUrls($paramArray, $urls = [])
+    public function compileUrls($paramArray, array $urls)
     {
-        if (!empty($paramArray) && is_array($urls)) {
-            // shift first off stack:
-            reset($paramArray);
-            $varName = key($paramArray);
-            $valueSet = array_shift($paramArray);
+        if (empty($paramArray)) {
+            return $urls;
+        }
+        // shift first off stack:
+        reset($paramArray);
+        $varName = key($paramArray);
+        $valueSet = array_shift($paramArray);
 
-            // Traverse value set:
-            $newUrls = [];
-            $maxCompileUrls = MathUtility::forceIntegerInRange($this->extensionSettings['maxCompileUrls'], 1, 1000000000, 10000);
-            foreach ($urls as $url) {
-                foreach ($valueSet as $val) {
-                    $newUrls[] = $url . (strcmp($val, '') ? '&' . rawurlencode($varName) . '=' . rawurlencode($val) : '');
+        // Traverse value set:
+        $newUrls = [];
+        foreach ($urls as $url) {
+            foreach ($valueSet as $val) {
+                $newUrls[] = $url . (strcmp($val, '') ? '&' . rawurlencode($varName) . '=' . rawurlencode($val) : '');
 
-                    if (count($newUrls) > $maxCompileUrls) {
-                        break;
-                    }
+                if (count($newUrls) > $this->maximumUrlsToCompile) {
+                    break;
                 }
             }
-            $urls = $newUrls;
-            $urls = $this->compileUrls($paramArray, $urls);
         }
-
-        return $urls;
+        return $this->compileUrls($paramArray, $newUrls);
     }
 
     /************************************

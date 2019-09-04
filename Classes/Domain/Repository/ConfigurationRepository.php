@@ -25,8 +25,12 @@ namespace AOE\Crawler\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
+use TYPO3\CMS\Core\Database\Query\Restriction\HiddenRestriction;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -40,27 +44,15 @@ class ConfigurationRepository extends AbstractRepository
     protected $tableName = 'tx_crawler_configuration';
 
     /**
-     * @var QueryBuilder
-     */
-    protected $queryBuilder = QueryBuilder::class;
-
-    /**
-     * QueueRepository constructor.
-     */
-    public function __construct()
-    {
-        $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
-    }
-
-    /**
      * @return array
      */
-    public function getCrawlerConfigurationRecords()
+    public function getCrawlerConfigurationRecords(): array
     {
         $records = [];
-        $statement = $this->queryBuilder
-            ->from($this->tableName)
+        $queryBuilder = $this->createQueryBuilder();
+        $statement = $queryBuilder
             ->select('*')
+            ->from($this->tableName)
             ->execute();
 
         while ($row = $statement->fetch()) {
@@ -68,5 +60,42 @@ class ConfigurationRepository extends AbstractRepository
         }
 
         return $records;
+    }
+
+
+    /**
+     * Traverses up the rootline of a page and fetches all crawler records.
+     *
+     * @param int $pageId
+     * @return array
+     */
+    public function getCrawlerConfigurationRecordsFromRootLine(int $pageId): array
+    {
+        $pageIdsInRootLine = [];
+        $rootLine = BackendUtility::BEgetRootLine($pageId);
+
+        foreach ($rootLine as $pageInRootLine) {
+            $pageIdsInRootLine[] = (int)$pageInRootLine['uid'];
+        }
+
+        $queryBuilder = $this->createQueryBuilder();
+        $queryBuilder
+            ->getRestrictions()->removeAll()
+            ->add(GeneralUtility::makeInstance(DeletedRestriction::class))
+            ->add(GeneralUtility::makeInstance(HiddenRestriction::class));
+        $configurationRecordsForCurrentPage = $queryBuilder
+            ->select('*')
+            ->from($this->tableName)
+            ->where(
+                $queryBuilder->expr()->in('pid', $queryBuilder->createNamedParameter($pageIdsInRootLine, Connection::PARAM_INT_ARRAY))
+            )
+            ->execute()
+            ->fetchAll();
+        return is_array($configurationRecordsForCurrentPage) ? $configurationRecordsForCurrentPage : [];
+    }
+
+    protected function createQueryBuilder(): QueryBuilder
+    {
+        return GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
     }
 }
