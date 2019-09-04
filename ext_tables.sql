@@ -63,7 +63,6 @@ CREATE TABLE tx_crawler_configuration (
   pidsonly blob,
   begroups varchar(100) DEFAULT '0' NOT NULL,
   fegroups varchar(100) DEFAULT '0' NOT NULL,
-  chash tinyint(4) DEFAULT '0' NOT NULL,
   exclude text NOT NULL,
   root_template_pid int(11) DEFAULT '0' NOT NULL,
 

@@ -32,6 +32,7 @@ use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\EventDispatcher;
 use AOE\Crawler\Utility\IconUtility;
 use AOE\Crawler\Utility\SignalSlotUtility;
+use Psr\Http\Message\UriInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
@@ -44,6 +45,10 @@ use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\EndTimeRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\HiddenRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\StartTimeRestriction;
+use TYPO3\CMS\Core\Http\Uri;
+use TYPO3\CMS\Core\Routing\SiteMatcher;
+use TYPO3\CMS\Core\Site\Entity\Site;
+use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -51,6 +56,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use TYPO3\CMS\Frontend\Page\CacheHashCalculator;
 use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
@@ -443,47 +449,36 @@ class CrawlerController implements LoggerAwareInterface
 
             foreach ($vv['URLs'] as $urlQuery) {
                 if ($this->drawURLs_PIfilter($vv['subCfg']['procInstrFilter'], $incomingProcInstructions)) {
-
-                    // Calculate cHash:
-                    if ($vv['subCfg']['cHash']) {
-                        /* @var $cacheHash \TYPO3\CMS\Frontend\Page\CacheHashCalculator */
-                        $cacheHash = GeneralUtility::makeInstance('TYPO3\CMS\Frontend\Page\CacheHashCalculator');
-                        $urlQuery .= '&cHash=' . $cacheHash->generateForParameters($urlQuery);
-                    }
+                    $url = (string)$this->getUrlFromPageAndQueryParameters((int)$pageRow['uid'], $urlQuery, $vv['subCfg']['baseUrl'] ?: null);
 
                     // Create key by which to determine unique-ness:
-                    $uKey = $urlQuery . '|' . $vv['subCfg']['userGroups'] . '|' . $vv['subCfg']['baseUrl'] . '|' . $vv['subCfg']['procInstrFilter'];
-                    $urlQuery = 'index.php' . $urlQuery;
-
+                    $uKey = $url . '|' . $vv['subCfg']['userGroups'] . '|' . $vv['subCfg']['procInstrFilter'];
                     // Scheduled time:
                     $schTime = $scheduledTime + round(count($duplicateTrack) * (60 / $reqMinute));
                     $schTime = floor($schTime / 60) * 60;
 
                     if (isset($duplicateTrack[$uKey])) {
-
                         //if the url key is registered just display it and do not resubmit is
-                        $urlList = '<em><span class="typo3-dimmed">' . htmlspecialchars($urlQuery) . '</span></em><br/>';
+                        $urlList = '<em><span class="typo3-dimmed">' . htmlspecialchars($url) . '</span></em><br/>';
                     } else {
-                        $urlList = '[' . date('d.m.y H:i', $schTime) . '] ' . htmlspecialchars($urlQuery);
-                        $this->urlList[] = '[' . date('d.m.y H:i', $schTime) . '] ' . $urlQuery;
-
-                        $theUrl = ($vv['subCfg']['baseUrl'] ? $vv['subCfg']['baseUrl'] : GeneralUtility::getIndpEnv('TYPO3_SITE_URL')) . $urlQuery;
+                        $urlList = '[' . date('d.m.y H:i', $schTime) . '] ' . htmlspecialchars($url);
+                        $this->urlList[] = '[' . date('d.m.y H:i', $schTime) . '] ' . $url;
 
                         // Submit for crawling!
                         if ($submitCrawlUrls) {
                             $added = $this->addUrl(
                                 $pageRow['uid'],
-                                $theUrl,
+                                $url,
                                 $vv['subCfg'],
                                 $scheduledTime,
                                 $configurationHash,
                                 $skipInnerCheck
                             );
                             if ($added === false) {
-                                $urlList .= ' (Url already existed)';
+                                $urlList .= ' (URL already existed)';
                             }
                         } elseif ($downloadCrawlUrls) {
-                            $downloadUrls[$theUrl] = $theUrl;
+                            $downloadUrls[$url] = $url;
                         }
 
                         $urlList .= '<br />';
@@ -622,7 +617,6 @@ class CrawlerController implements LoggerAwareInterface
                                 (int)$configurationRecord['sys_domain_base_url'],
                                 (bool)($configurationRecord['force_ssl'] > 0)
                             ),
-                            'cHash' => $configurationRecord['chash'],
                             'userGroups' => $configurationRecord['fegroups'],
                             'exclude' => $configurationRecord['exclude'],
                             'rootTemplatePid' => (int) $configurationRecord['root_template_pid'],
@@ -2000,9 +1994,6 @@ class CrawlerController implements LoggerAwareInterface
                     if ($confArray['subCfg']['userGroups']) {
                         $optionValues .= 'User Groups: ' . $confArray['subCfg']['userGroups'] . '<br/>';
                     }
-                    if ($confArray['subCfg']['baseUrl']) {
-                        $optionValues .= 'Base Url: ' . $confArray['subCfg']['baseUrl'] . '<br/>';
-                    }
                     if ($confArray['subCfg']['procInstrFilter']) {
                         $optionValues .= 'ProcInstr: ' . $confArray['subCfg']['procInstrFilter'] . '<br/>';
                     }
@@ -2509,5 +2500,51 @@ class CrawlerController implements LoggerAwareInterface
         unset($configuration['paramExpanded']);
         unset($configuration['URLs']);
         return md5(serialize($configuration));
+    }
+
+    /**
+     * Build a URL from a Page and the Query String. If the page has a Site configuration, it can be built by using
+     * the Site instance.
+     *
+     * @param int $pageId
+     * @param string $queryString
+     * @param string|null $alternativeBaseUrl
+     * @return UriInterface
+     * @throws \TYPO3\CMS\Core\Exception\SiteNotFoundException
+     * @throws \TYPO3\CMS\Core\Routing\InvalidRouteArgumentsException
+     */
+    protected function getUrlFromPageAndQueryParameters(int $pageId, string $queryString, ?string $alternativeBaseUrl): UriInterface
+    {
+        $site = GeneralUtility::makeInstance(SiteMatcher::class)->matchByPageId((int)$pageId);
+        if ($site instanceof Site) {
+            $queryString = ltrim($queryString, '?&');
+            $queryParts = [];
+            parse_str($queryString, $queryParts);
+            unset($queryParts['id']);
+            // workaround as long as we don't have native language support in crawler configurations
+            if (isset($queryParts['L'])) {
+                $queryParts['_language'] = $queryParts['L'];
+                unset($queryParts['L']);
+                $siteLanguage = $site->getLanguageById((int)$queryParts['_language']);
+            } else {
+                $siteLanguage = $site->getDefaultLanguage();
+            }
+            $url = $site->getRouter()->generateUri($pageId, $queryParts);
+            if (!empty($alternativeBaseUrl)) {
+                $alternativeBaseUrl = new Uri($alternativeBaseUrl);
+                $url = $url->withHost($alternativeBaseUrl->getHost());
+                $url = $url->withScheme($alternativeBaseUrl->getScheme());
+                $url = $url->withPort($alternativeBaseUrl->getPort());
+            }
+        } else {
+            // Technically this is not possible with site handling, but kept for backwards-compatibility reasons
+            // Once EXT:crawler is v10-only compatible, this should be removed completely
+            $baseUrl = ($alternativeBaseUrl ?: GeneralUtility::getIndpEnv('TYPO3_SITE_URL'));
+            $cacheHashCalculator = GeneralUtility::makeInstance(CacheHashCalculator::class);
+            $queryString .= '&cHash=' . $cacheHashCalculator->generateForParameters($queryString);
+            $url = rtrim($baseUrl, '/') . '/index.php' . $queryString;
+            $url = new Uri($url);
+        }
+        return $url;
     }
 }
