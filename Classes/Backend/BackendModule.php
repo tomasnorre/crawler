@@ -394,7 +394,7 @@ class BackendModule
         );
 
         // Configurations
-        $availableConfigurations = $this->crawlerController->getConfigurationsForBranch($this->id, $this->pObj->MOD_SETTINGS['depth'] ? $this->pObj->MOD_SETTINGS['depth'] : 0);
+        $availableConfigurations = $this->crawlerController->getConfigurationsForBranch((int)$this->id, $this->pObj->MOD_SETTINGS['depth'] ?: 0);
         $selectors['configurations'] = $this->selectorBox(
             empty($availableConfigurations) ? [] : array_combine($availableConfigurations, $availableConfigurations),
             'configurationSelection',

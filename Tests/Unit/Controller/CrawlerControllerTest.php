@@ -172,22 +172,6 @@ class CrawlerControllerTest extends UnitTestCase
     /**
      * @test
      *
-     * @param $inputQuery
-     * @param $expected
-     *
-     * @dataProvider parseParamsDataProvider
-     */
-    public function parseParams($inputQuery, $expected)
-    {
-        $this->assertEquals(
-            $expected,
-            $this->crawlerController->parseParams($inputQuery)
-        );
-    }
-
-    /**
-     * @test
-     *
      * @param $checkIfPageSkipped
      * @param $getUrlsForPages
      * @param $pageRow
@@ -897,30 +881,6 @@ class CrawlerControllerTest extends UnitTestCase
                 'groupList' => '1,2,3',
                 'accessList' => '',
                 'expected' => true
-            ]
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function parseParamsDataProvider()
-    {
-        return [
-            'Empty query string' => [
-                'queryString' => '',
-                'expected' => []
-            ],
-            'Query string with one variable' => [
-                'queryString' => 'q=search',
-                'expected' => ['q' => 'search']
-            ],
-            'Query string with two variables' => [
-                'queryString' => 'q=search&page=3',
-                'expected' => [
-                    'q' => 'search',
-                    'page' => 3
-                ]
             ]
         ];
     }
