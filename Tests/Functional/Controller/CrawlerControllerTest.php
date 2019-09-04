@@ -26,7 +26,6 @@ namespace AOE\Crawler\Tests\Functional\Controller;
  ***************************************************************/
 
 use AOE\Crawler\Controller\CrawlerController;
-use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 
@@ -55,27 +54,9 @@ class CrawlerControllerTest extends FunctionalTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->importDataSet(dirname(__FILE__) . '/../Fixtures/sys_domain.xml');
         $this->importDataSet(dirname(__FILE__) . '/../Fixtures/tx_crawler_queue.xml');
         $this->importDataSet(dirname(__FILE__) . '/../Fixtures/tx_crawler_process.xml');
         $this->subject = $this->getAccessibleMock(CrawlerController::class, ['dummy']);
-    }
-
-    /**
-     * @test
-     *
-     * @param $baseUrl
-     * @param $sysDomainUid
-     * @param $expected
-     *
-     * @dataProvider getBaseUrlForConfigurationRecordDataProvider
-     */
-    public function getBaseUrlForConfigurationRecord($baseUrl, $sysDomainUid, $expected)
-    {
-        $this->assertSame(
-            $expected,
-            $this->subject->_call('getBaseUrlForConfigurationRecord', $baseUrl, $sysDomainUid)
-        );
     }
 
     /**
@@ -384,30 +365,6 @@ class CrawlerControllerTest extends FunctionalTestCase
             'Flush Queue for specific process id' => [
                 'where' => 'process_id = \'1007\'',
                 'expected' => 9
-            ]
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function getBaseUrlForConfigurationRecordDataProvider()
-    {
-        return [
-            'With existing sys_domain' => [
-                'baseUrl' => 'www.baseurl-domain.tld',
-                'sysDomainUid' => 1,
-                'expected' => 'http://www.domain-one.tld'
-            ],
-            'Without exting sys_domain' => [
-                'baseUrl' => 'www.baseurl-domain.tld',
-                'sysDomainUid' => 2000,
-                'expected' => 'www.baseurl-domain.tld'
-            ],
-            'With sys_domain uid with negative value' => [
-                'baseUrl' => 'www.baseurl-domain.tld',
-                'sysDomainUid' => -1,
-                'expected' => 'www.baseurl-domain.tld'
             ]
         ];
     }

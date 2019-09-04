@@ -21,7 +21,6 @@
         <processing_instruction_parameters_ts>tx_staticpub_publish.includeResources=relPath</processing_instruction_parameters_ts>
         <configuration>&amp;S=CRAWL&amp;L=[0]</configuration>
         <base_url>http://www.testcase.de/</base_url>
-        <sys_domain_base_url></sys_domain_base_url>
         <pidsonly></pidsonly>
         <exclude></exclude>
         <root_template_pid>1</root_template_pid>
