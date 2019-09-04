@@ -24,6 +24,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Frontend\Controller\ErrorController;
 
 /**
@@ -57,7 +58,7 @@ class CrawlerInitialization implements MiddlewareInterface
     public function __construct(Context $context = null)
     {
         $this->context = $context ?? GeneralUtility::makeInstance(Context::class);
-        $this->queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
+        $this->queueRepository = GeneralUtility::makeInstance(ObjectManager::class)->get(QueueRepository::class);
     }
 
     /**
@@ -114,7 +115,9 @@ class CrawlerInitialization implements MiddlewareInterface
 
         // Output log data for crawler (serialized content):
         $content = serialize($GLOBALS['TSFE']->applicationData['tx_crawler']);
-        return new Response($content, 200);
+        $response = new Response();
+        $response->getBody()->write($content);
+        return $response;
     }
 
     protected function isRequestHashMatchingQueueRecord(?array $queueRec, string $hash): bool

@@ -514,11 +514,12 @@ class QueueRepository extends AbstractRepository
 
     public function findByQueueId(string $queueId): ?array
     {
-        $queueRec = $this->queryBuilder
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $queueRec = $queryBuilder
             ->select('*')
             ->from($this->tableName)
             ->where(
-                $this->queryBuilder->expr()->eq('qid', $this->queryBuilder->createNamedParameter($queueId))
+                $queryBuilder->expr()->eq('qid', $queryBuilder->createNamedParameter($queueId))
             )
             ->execute()
             ->fetch();
