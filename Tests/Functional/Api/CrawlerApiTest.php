@@ -102,7 +102,6 @@ class CrawlerApiTest extends FunctionalTestCase
             'crawlHiddenPages' => '0',
             'phpPath' => '/usr/bin/php',
             'enableTimeslot' => '1',
-            'follow30x' => '0',
             'makeDirectRequests' => '0',
             'frontendBasePath' => '/',
             'cleanUpOldQueueEntries' => '1',
@@ -395,35 +394,5 @@ class CrawlerApiTest extends FunctionalTestCase
         $crawlerApi->expects($this->any())->method("findCrawler")->will($this->returnValue($crawlerController));
 
         return $crawlerApi;
-    }
-
-    /**
-     * @test
-     */
-    public function canReadHttpResponseFromStream()
-    {
-        require_once __DIR__ . '/../../Unit/Domain/Model/data/class.tx_crawler_lib_proxy.php';
-
-        $dummyContent = 'Lorem ipsum';
-        $dummyResponseHeader = [
-            'HTTP/1.1 301 Moved Permanently',
-            'Server: nginx',
-            'Date: Fri, 25 Apr 2014 08:26:15 GMT',
-            'Content-Type: text/html',
-            'Content-Length: 11',
-            'Connection: close',
-        ];
-        $dummyServerResponse = array_merge($dummyResponseHeader, ['', $dummyContent]);
-
-        $fp = fopen('php://memory', 'rw');
-        fwrite($fp, implode("\n", $dummyServerResponse));
-        rewind($fp);
-
-        $crawlerLibrary = new \tx_crawler_lib_proxy();
-        $response = $crawlerLibrary->getHttpResponseFromStream($fp);
-
-        $this->assertCount(6, $response['headers']);
-        $this->assertEquals($dummyResponseHeader, $response['headers']);
-        $this->assertEquals($dummyContent, $response['content'][0]);
     }
 }

@@ -25,6 +25,7 @@ namespace AOE\Crawler\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\QueueExecutor;
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
@@ -42,16 +43,11 @@ use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
-use TYPO3\CMS\Core\Database\Query\Restriction\EndTimeRestriction;
-use TYPO3\CMS\Core\Database\Query\Restriction\HiddenRestriction;
-use TYPO3\CMS\Core\Database\Query\Restriction\StartTimeRestriction;
 use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Routing\SiteMatcher;
 use TYPO3\CMS\Core\Site\Entity\Site;
-use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser;
 use TYPO3\CMS\Core\Utility\DebugUtility;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
@@ -188,6 +184,10 @@ class CrawlerController implements LoggerAwareInterface
      */
     protected $tableName = 'tx_crawler_queue';
 
+    /**
+     * @var QueueExecutor
+     */
+    protected $queueExecutor;
 
     /**
      * @var int
@@ -269,6 +269,7 @@ class CrawlerController implements LoggerAwareInterface
         $this->queueRepository = $objectManager->get(QueueRepository::class);
         $this->processRepository = $objectManager->get(ProcessRepository::class);
         $this->configurationRepository = $objectManager->get(ConfigurationRepository::class);
+        $this->queueExecutor = $objectManager->get(QueueExecutor::class);
 
         $this->backendUser = $GLOBALS['BE_USER'];
         $this->processFilename = Environment::getVarPath() . '/locks/tx_crawler.proc';
@@ -1315,7 +1316,7 @@ class CrawlerController implements LoggerAwareInterface
                 [ 'qid' => (int)$queueId ]
             );
 
-        $result = $this->readUrl_exec($queueRec);
+        $result = $this->queueExecutor->executeQueueItem($queueRec, $this);
         $resultData = unserialize($result['content']);
 
         //atm there's no need to point to specific pollable extensions
@@ -1364,7 +1365,6 @@ class CrawlerController implements LoggerAwareInterface
      */
     public function readUrlFromArray($field_array)
     {
-
             // Set exec_time to lock record:
         $field_array['exec_time'] = $this->getCurrentTime();
         $connectionForCrawlerQueue = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('tx_crawler_queue');
@@ -1374,7 +1374,7 @@ class CrawlerController implements LoggerAwareInterface
         );
         $queueId = $field_array['qid'] = $connectionForCrawlerQueue->lastInsertId('tx_crawler_queue', 'qid');
 
-        $result = $this->readUrl_exec($field_array);
+        $result = $this->queueExecutor->executeQueueItem($field_array, $this);
 
         // Set result in log which also denotes the end of the processing of this entry.
         $field_array = ['result_data' => serialize($result)];
@@ -1392,335 +1392,6 @@ class CrawlerController implements LoggerAwareInterface
         );
 
         return $result;
-    }
-
-    /**
-     * Read URL for a queue record
-     *
-     * @param array $queueRec Queue record
-     * @return string
-     */
-    public function readUrl_exec($queueRec)
-    {
-        // Decode parameters:
-        $parameters = unserialize($queueRec['parameters']);
-        $result = 'ERROR';
-        if (is_array($parameters)) {
-            if ($parameters['_CALLBACKOBJ']) { // Calling object:
-                $objRef = $parameters['_CALLBACKOBJ'];
-                $callBackObj = GeneralUtility::makeInstance($objRef);
-                if (is_object($callBackObj)) {
-                    unset($parameters['_CALLBACKOBJ']);
-                    $result = ['content' => serialize($callBackObj->crawler_execute($parameters, $this))];
-                } else {
-                    $result = ['content' => 'No object: ' . $objRef];
-                }
-            } else { // Regular FE request:
-
-                // Prepare:
-                $crawlerId = $queueRec['qid'] . ':' . md5($queueRec['qid'] . '|' . $queueRec['set_id'] . '|' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']);
-
-                // Get result:
-                $result = $this->requestUrl($parameters['url'], $crawlerId);
-
-                EventDispatcher::getInstance()->post('urlCrawled', $queueRec['set_id'], ['url' => $parameters['url'], 'result' => $result]);
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Gets the content of a URL.
-     *
-     * @param string $originalUrl URL to read
-     * @param string $crawlerId Crawler ID string (qid + hash to verify)
-     * @param integer $timeout Timeout time
-     * @param integer $recursion Recursion limiter for 302 redirects
-     * @return array|boolean
-     */
-    public function requestUrl($originalUrl, $crawlerId, $timeout = 2, $recursion = 10)
-    {
-        if (!$recursion) {
-            return false;
-        }
-
-        // Parse URL, checking for scheme:
-        $url = parse_url($originalUrl);
-
-        if ($url === false) {
-            $this->logger->debug(
-                sprintf('Could not parse_url() for string "%s"', $url),
-                ['crawlerId' => $crawlerId]
-            );
-            return false;
-        }
-
-        if (!in_array($url['scheme'], ['','http','https'])) {
-            $this->logger->debug(
-                sprintf('Scheme does not match for url "%s"', $url),
-                ['crawlerId' => $crawlerId]
-            );
-            return false;
-        }
-
-        // direct request
-        if ($this->extensionSettings['makeDirectRequests']) {
-            $result = $this->sendDirectRequest($originalUrl, $crawlerId);
-            return $result;
-        }
-
-        $reqHeaders = $this->buildRequestHeaderArray($url, $crawlerId);
-
-        // thanks to Pierrick Caillon for adding proxy support
-        $rurl = $url;
-
-        if ($GLOBALS['TYPO3_CONF_VARS']['SYS']['curlUse'] && $GLOBALS['TYPO3_CONF_VARS']['SYS']['curlProxyServer']) {
-            $rurl = parse_url($GLOBALS['TYPO3_CONF_VARS']['SYS']['curlProxyServer']);
-            $url['path'] = $url['scheme'] . '://' . $url['host'] . ($url['port'] > 0 ? ':' . $url['port'] : '') . $url['path'];
-            $reqHeaders = $this->buildRequestHeaderArray($url, $crawlerId);
-        }
-
-        $host = $rurl['host'];
-
-        if ($url['scheme'] == 'https') {
-            $host = 'ssl://' . $host;
-            $port = ($rurl['port'] > 0) ? $rurl['port'] : 443;
-        } else {
-            $port = ($rurl['port'] > 0) ? $rurl['port'] : 80;
-        }
-
-        $startTime = microtime(true);
-        $fp = fsockopen($host, $port, $errno, $errstr, $timeout);
-
-        if (!$fp) {
-            $this->logger->debug(
-                sprintf('Error while opening "%s"', $url),
-                ['crawlerId' => $crawlerId]
-            );
-            return false;
-        } else {
-            // Request message:
-            $msg = implode("\r\n", $reqHeaders) . "\r\n\r\n";
-            fputs($fp, $msg);
-
-            // Read response:
-            $d = $this->getHttpResponseFromStream($fp);
-            fclose($fp);
-
-            $time = microtime(true) - $startTime;
-            $this->logger->info($originalUrl . ' ' . $time);
-
-            // Implode content and headers:
-            $result = [
-                'request' => $msg,
-                'headers' => implode('', $d['headers']),
-                'content' => implode('', (array)$d['content'])
-            ];
-
-            if (($this->extensionSettings['follow30x']) && ($newUrl = $this->getRequestUrlFrom302Header($d['headers'], $url['user'], $url['pass']))) {
-                $result = array_merge(['parentRequest' => $result], $this->requestUrl($newUrl, $crawlerId, $recursion--));
-                $newRequestUrl = $this->requestUrl($newUrl, $crawlerId, $timeout, --$recursion);
-
-                if (is_array($newRequestUrl)) {
-                    $result = array_merge(['parentRequest' => $result], $newRequestUrl);
-                } else {
-                    $this->logger->debug(
-                        sprintf('Error while opening "%s"', $url),
-                        ['crawlerId' => $crawlerId]
-                    );
-                    return false;
-                }
-            }
-
-            return $result;
-        }
-    }
-
-    /**
-     * Gets the base path of the website frontend.
-     * (e.g. if you call http://mydomain.com/cms/index.php in
-     * the browser the base path is "/cms/")
-     *
-     * @return string Base path of the website frontend
-     */
-    protected function getFrontendBasePath()
-    {
-        $frontendBasePath = '/';
-
-        // Get the path from the extension settings:
-        if (isset($this->extensionSettings['frontendBasePath']) && $this->extensionSettings['frontendBasePath']) {
-            $frontendBasePath = $this->extensionSettings['frontendBasePath'];
-        // If empty, try to use config.absRefPrefix:
-        } elseif (isset($GLOBALS['TSFE']->absRefPrefix) && !empty($GLOBALS['TSFE']->absRefPrefix)) {
-            $frontendBasePath = $GLOBALS['TSFE']->absRefPrefix;
-        // If not in CLI mode the base path can be determined from $_SERVER environment:
-        } elseif (!Environment::isCli()) {
-            $frontendBasePath = GeneralUtility::getIndpEnv('TYPO3_SITE_PATH');
-        }
-
-        // Base path must be '/<pathSegements>/':
-        if ($frontendBasePath !== '/') {
-            $frontendBasePath = '/' . ltrim($frontendBasePath, '/');
-            $frontendBasePath = rtrim($frontendBasePath, '/') . '/';
-        }
-
-        return $frontendBasePath;
-    }
-
-    /**
-     * Executes a shell command and returns the outputted result.
-     *
-     * @param string $command Shell command to be executed
-     * @return string Outputted result of the command execution
-     */
-    protected function executeShellCommand($command)
-    {
-        return shell_exec($command);
-    }
-
-    /**
-     * Reads HTTP response from the given stream.
-     *
-     * @param  resource $streamPointer  Pointer to connection stream.
-     * @return array                    Associative array with the following items:
-     *                                  headers <array> Response headers sent by server.
-     *                                  content <array> Content, with each line as an array item.
-     */
-    protected function getHttpResponseFromStream($streamPointer)
-    {
-        $response = ['headers' => [], 'content' => []];
-
-        if (is_resource($streamPointer)) {
-            // read headers
-            while ($line = fgets($streamPointer, '2048')) {
-                $line = trim($line);
-                if ($line !== '') {
-                    $response['headers'][] = $line;
-                } else {
-                    break;
-                }
-            }
-
-            // read content
-            while ($line = fgets($streamPointer, '2048')) {
-                $response['content'][] = $line;
-            }
-        }
-
-        return $response;
-    }
-
-    /**
-     * Builds HTTP request headers.
-     *
-     * @param array $url
-     * @param string $crawlerId
-     *
-     * @return array
-     */
-    protected function buildRequestHeaderArray(array $url, $crawlerId)
-    {
-        $reqHeaders = [];
-        $reqHeaders[] = 'GET ' . $url['path'] . ($url['query'] ? '?' . $url['query'] : '') . ' HTTP/1.0';
-        $reqHeaders[] = 'Host: ' . $url['host'];
-        if (stristr($url['query'], 'ADMCMD_previewWS')) {
-            $reqHeaders[] = 'Cookie: $Version="1"; be_typo_user="1"; $Path=/';
-        }
-        $reqHeaders[] = 'Connection: close';
-        if ($url['user'] != '') {
-            $reqHeaders[] = 'Authorization: Basic ' . base64_encode($url['user'] . ':' . $url['pass']);
-        }
-        $reqHeaders[] = 'X-T3crawler: ' . $crawlerId;
-        $reqHeaders[] = 'User-Agent: TYPO3 crawler';
-        return $reqHeaders;
-    }
-
-    /**
-     * Check if the submitted HTTP-Header contains a redirect location and built new crawler-url
-     *
-     * @param array $headers HTTP Header
-     * @param string $user HTTP Auth. User
-     * @param string $pass HTTP Auth. Password
-     * @return bool|string
-     */
-    protected function getRequestUrlFrom302Header($headers, $user = '', $pass = '')
-    {
-        $header = [];
-        if (!is_array($headers)) {
-            return false;
-        }
-        if (!(stristr($headers[0], '301 Moved') || stristr($headers[0], '302 Found') || stristr($headers[0], '302 Moved'))) {
-            return false;
-        }
-
-        foreach ($headers as $hl) {
-            $tmp = explode(": ", $hl);
-            $header[trim($tmp[0])] = trim($tmp[1]);
-            if (trim($tmp[0]) == 'Location') {
-                break;
-            }
-        }
-        if (!array_key_exists('Location', $header)) {
-            return false;
-        }
-
-        if ($user != '') {
-            if (!($tmp = parse_url($header['Location']))) {
-                return false;
-            }
-            $newUrl = $tmp['scheme'] . '://' . $user . ':' . $pass . '@' . $tmp['host'] . $tmp['path'];
-            if ($tmp['query'] != '') {
-                $newUrl .= '?' . $tmp['query'];
-            }
-        } else {
-            $newUrl = $header['Location'];
-        }
-        return $newUrl;
-    }
-
-    /**************************
-     *
-     * tslib_fe hooks:
-     *
-     **************************/
-
-    /**
-     * Initialization hook (called after database connection)
-     * Takes the "HTTP_X_T3CRAWLER" header and looks up queue record and verifies if the session comes from the system (by comparing hashes)
-     *
-     * @param array $params Parameters from frontend
-     * @param object $ref TSFE object (reference under PHP5)
-     * @return void
-     *
-     * FIXME: Look like this is not used, in commit 9910d3f40cce15f4e9b7bcd0488bf21f31d53ebc it's added as public,
-     * FIXME: I think this can be removed. (TNM)
-     */
-    public function fe_init(&$params, $ref)
-    {
-        // Authenticate crawler request:
-        if (isset($_SERVER['HTTP_X_T3CRAWLER'])) {
-            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
-            list($queueId, $hash) = explode(':', $_SERVER['HTTP_X_T3CRAWLER']);
-
-            $queueRec = $queryBuilder
-                ->select('*')
-                ->from('tx_crawler_queue')
-                ->where(
-                    $queryBuilder->expr()->eq('qid', $queryBuilder->createNamedParameter($queueId, \PDO::PARAM_INT))
-                )
-                ->execute()
-                ->fetch();
-
-            // If a crawler record was found and hash was matching, set it up:
-            if (is_array($queueRec) && $hash === md5($queueRec['qid'] . '|' . $queueRec['set_id'] . '|' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'])) {
-                $params['pObj']->applicationData['tx_crawler']['running'] = true;
-                $params['pObj']->applicationData['tx_crawler']['parameters'] = unserialize($queueRec['parameters']);
-                $params['pObj']->applicationData['tx_crawler']['log'] = [];
-            } else {
-                die('No crawler entry found!');
-            }
-        }
     }
 
     /*****************************
@@ -2371,45 +2042,6 @@ class CrawlerController implements LoggerAwareInterface
             echo $msg . "\n";
             flush();
         }
-    }
-
-    /**
-     * Get URL content by making direct request to TYPO3.
-     *
-     * @param  string $url          Page URL
-     * @param  int    $crawlerId    Crawler-ID
-     * @return array
-     */
-    protected function sendDirectRequest($url, $crawlerId)
-    {
-        $parsedUrl = parse_url($url);
-        if (!is_array($parsedUrl)) {
-            return [];
-        }
-
-        $requestHeaders = $this->buildRequestHeaderArray($parsedUrl, $crawlerId);
-
-        $cmd = escapeshellcmd($this->extensionSettings['phpPath']);
-        $cmd .= ' ';
-        $cmd .= escapeshellarg(ExtensionManagementUtility::extPath('crawler') . 'cli/bootstrap.php');
-        $cmd .= ' ';
-        $cmd .= escapeshellarg($this->getFrontendBasePath());
-        $cmd .= ' ';
-        $cmd .= escapeshellarg($url);
-        $cmd .= ' ';
-        $cmd .= escapeshellarg(base64_encode(serialize($requestHeaders)));
-
-        $startTime = microtime(true);
-        $content = $this->executeShellCommand($cmd);
-        $this->logger->info($url . ' ' . (microtime(true) - $startTime));
-
-        $result = [
-            'request' => implode("\r\n", $requestHeaders) . "\r\n\r\n",
-            'headers' => '',
-            'content' => $content
-        ];
-
-        return $result;
     }
 
     /**

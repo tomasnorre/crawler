@@ -5,9 +5,6 @@
 # cat=Settings; type=string; label=Frontend website base path: Base path of the website frontend (e.g. if you call http://mydomain.com/cms/index.php in the browser the base path is "/cms/"). Leave empty to use the value of config.absRefPrefix instead.
 frontendBasePath=/
 
-# cat=Settings; type=boolean; label= Follow 301 and 302: If checked the crawler will follow the URLs (Location) given in a HTTP 301 and 302 response.
-follow30x=
-
 # cat=Settings; type=boolean; label= Crawl hidden pages: Crawl hidden pages (By default they won't be crawled)
 crawlHiddenPages=0
 
