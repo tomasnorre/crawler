@@ -84,7 +84,7 @@ class ProcessRepository extends AbstractRepository
             ->execute();
 
         while ($row = $statement->fetch()) {
-            $process = new Process();
+            $process = GeneralUtility::makeInstance(Process::class);
             $process->setProcessId($row['process_id']);
             $process->setActive($row['active']);
             $process->setTtl($row['ttl']);

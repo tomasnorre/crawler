@@ -51,7 +51,6 @@ class QueueRepository extends AbstractRepository
 
     /**
      * @param $processId
-     * @
      */
     public function unsetQueueProcessId($processId): void
     {
@@ -405,8 +404,8 @@ class QueueRepository extends AbstractRepository
             ->addSelect('process_id_completed')
             ->where(
                 $queryBuilder->expr()->neq('exec_time', 0),
-                $queryBuilder->expr()->gte('exec_time', $queryBuilder->createNamedParameter($start)),
-                $queryBuilder->expr()->lte('exec_time', $queryBuilder->createNamedParameter($end))
+                $queryBuilder->expr()->gte('exec_time', $queryBuilder->createNamedParameter($start, \PDO::PARAM_INT)),
+                $queryBuilder->expr()->lte('exec_time', $queryBuilder->createNamedParameter($end, \PDO::PARAM_INT))
             )
             ->groupBy('process_id_completed')
             ->execute();
@@ -459,7 +458,7 @@ class QueueRepository extends AbstractRepository
 
         if (false !== $timestamp) {
             $statement->andWhere(
-                $queryBuilder->expr()->eq('scheduled', $queryBuilder->createNamedParameter($timestamp))
+                $queryBuilder->expr()->eq('scheduled', $queryBuilder->createNamedParameter($timestamp, \PDO::PARAM_INT))
             );
         }
 
