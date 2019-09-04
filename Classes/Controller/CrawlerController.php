@@ -463,16 +463,17 @@ class CrawlerController implements LoggerAwareInterface
 
             // Create key by which to determine unique-ness:
             $uKey = $url . '|' . $vv['subCfg']['userGroups'] . '|' . $vv['subCfg']['procInstrFilter'];
-            // Scheduled time:
-            $schTime = $scheduledTime + round(count($duplicateTrack) * (60 / $reqMinute));
-            $schTime = floor($schTime / 60) * 60;
 
             if (isset($duplicateTrack[$uKey])) {
                 //if the url key is registered just display it and do not resubmit is
                 $urlLog[] = '<em><span class="text-muted">' . htmlspecialchars($url) . '</span></em>';
             } else {
-                $urlList = '[' . date('d.m.y H:i', $schTime) . '] ' . htmlspecialchars($url);
-                $this->urlList[] = '[' . date('d.m.y H:i', $schTime) . '] ' . $url;
+                // Scheduled time:
+                $schTime = $scheduledTime + round(count($duplicateTrack) * (60 / $reqMinute));
+                $schTime = floor($schTime / 60) * 60;
+                $formattedDate = BackendUtility::datetime($schTime);
+                $this->urlList[] = '[' . $formattedDate . '] ' . $url;
+                $urlList = '[' . $formattedDate . '] ' . htmlspecialchars($url);
 
                 // Submit for crawling!
                 if ($submitCrawlUrls) {
@@ -490,13 +491,12 @@ class CrawlerController implements LoggerAwareInterface
                 } elseif ($downloadCrawlUrls) {
                     $downloadUrls[$url] = $url;
                 }
-
                 $urlLog[] = $urlList;
             }
             $duplicateTrack[$uKey] = true;
         }
 
-        return implode('<br>', $urlList);
+        return implode('<br>', $urlLog);
     }
 
     /**
