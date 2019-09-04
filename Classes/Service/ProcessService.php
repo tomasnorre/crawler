@@ -29,6 +29,7 @@ use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use TYPO3\CMS\Core\Utility\CommandUtility;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -223,19 +224,25 @@ class ProcessService
     public function getCrawlerCliPath()
     {
         $composerRootDir = getenv('TYPO3_PATH_COMPOSER_ROOT') . '/';
-        $jsonDecoded = json_decode(file_get_contents($composerRootDir . 'composer.json'), true);
-
-        if (isset($jsonDecoded['config']['bin-dir'])) {
-            $binDir = $jsonDecoded['config']['bin-dir'];
-        } elseif (isset($jsonDecoded['config']['vendor-dir'])) {
-            $binDir = $jsonDecoded['config']['vendor-dir'] . '/bin';
-        } else {
-            $binDir = 'vendor/bin';
-        }
-
+        $composerFile = $composerRootDir . 'composer.json';
         $phpPath = $this->crawlerController->extensionSettings['phpPath'] . ' ';
-        $cliPart = '/typo3cms crawler:crawlqueue';
-        $scriptPath = $phpPath . $composerRootDir . $binDir . $cliPart;
+        $cliPart = 'typo3cms crawler:crawlqueue';
+
+        if (file_exists($composerFile)) {
+            $jsonDecoded = json_decode(file_get_contents($composerFile), true);
+
+            if (isset($jsonDecoded['config']['bin-dir'])) {
+                $binDir = $jsonDecoded['config']['bin-dir'];
+            } elseif (isset($jsonDecoded['config']['vendor-dir'])) {
+                $binDir = $jsonDecoded['config']['vendor-dir'] . '/bin';
+            } else {
+                $binDir = 'vendor/bin';
+            }
+            $scriptPath = $phpPath . $composerRootDir . $binDir . '/' . $cliPart;
+        } else {
+            $typo3ConsolePath = ExtensionManagementUtility::extPath('typo3_console');
+            $scriptPath = $phpPath . $typo3ConsolePath . $cliPart;
+        }
 
         if (TYPO3_OS === 'WIN') {
             $scriptPath = str_replace('/', '\\', $scriptPath);
