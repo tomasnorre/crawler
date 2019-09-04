@@ -27,7 +27,6 @@ namespace AOE\Crawler\Utility;
 
 use AOE\Crawler\Hooks\ProcessCleanUpHook;
 use AOE\Crawler\Hooks\StaticFileCacheCreateUriHook;
-use AOE\Crawler\Hooks\TsfeHook;
 
 /**
  * Class HookUtility
@@ -44,15 +43,6 @@ class HookUtility
      */
     public static function registerHooks($extKey)
     {
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['connectToDB']['tx_crawler'] =
-            TsfeHook::class . '->fe_init';
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['initFEuser']['tx_crawler'] =
-            TsfeHook::class . '->fe_feuserInit';
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['isOutputting']['tx_crawler'] =
-            TsfeHook::class . '->fe_isOutputting';
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['hook_eofe']['tx_crawler'] =
-            TsfeHook::class . '->fe_eofe';
-
         // Activating NC Static File Cache hook
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['nc_staticfilecache/class.tx_ncstaticfilecache.php']['createFile_initializeVariables']['tx_crawler'] =
             StaticFileCacheCreateUriHook::class . '->initialize';

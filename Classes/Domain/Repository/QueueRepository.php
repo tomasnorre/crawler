@@ -511,4 +511,17 @@ class QueueRepository extends AbstractRepository
 
         return $rows;
     }
+
+    public function findByQueueId(string $queueId): ?array
+    {
+        $queueRec = $this->queryBuilder
+            ->select('*')
+            ->from($this->tableName)
+            ->where(
+                $this->queryBuilder->expr()->eq('qid', $this->queryBuilder->createNamedParameter($queueId))
+            )
+            ->execute()
+            ->fetch();
+        return is_array($queueRec) ? $queueRec : null;
+    }
 }
