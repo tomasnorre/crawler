@@ -441,56 +441,62 @@ class CrawlerController implements LoggerAwareInterface
         array &$downloadUrls,
         array $incomingProcInstructions
     ) {
-        $urlList = '';
 
-        if (is_array($vv['URLs'])) {
-            $configurationHash = $this->getConfigurationHash($vv);
-            $skipInnerCheck = $this->noUnprocessedQueueEntriesForPageWithConfigurationHashExist($pageRow['uid'], $configurationHash);
+        if (!is_array($vv['URLs'])) {
+            return 'ERROR - no URL generated';
+        }
+        $urlLog = [];
+        $pageId = (int)$pageRow['uid'];
+        $configurationHash = $this->getConfigurationHash($vv);
+        $skipInnerCheck = $this->noUnprocessedQueueEntriesForPageWithConfigurationHashExist($pageId, $configurationHash);
 
-            foreach ($vv['URLs'] as $urlQuery) {
-                if ($this->drawURLs_PIfilter($vv['subCfg']['procInstrFilter'], $incomingProcInstructions)) {
-                    $url = (string)$this->getUrlFromPageAndQueryParameters((int)$pageRow['uid'], $urlQuery, $vv['subCfg']['baseUrl'] ?: null);
-
-                    // Create key by which to determine unique-ness:
-                    $uKey = $url . '|' . $vv['subCfg']['userGroups'] . '|' . $vv['subCfg']['procInstrFilter'];
-                    // Scheduled time:
-                    $schTime = $scheduledTime + round(count($duplicateTrack) * (60 / $reqMinute));
-                    $schTime = floor($schTime / 60) * 60;
-
-                    if (isset($duplicateTrack[$uKey])) {
-                        //if the url key is registered just display it and do not resubmit is
-                        $urlList = '<em><span class="typo3-dimmed">' . htmlspecialchars($url) . '</span></em><br/>';
-                    } else {
-                        $urlList = '[' . date('d.m.y H:i', $schTime) . '] ' . htmlspecialchars($url);
-                        $this->urlList[] = '[' . date('d.m.y H:i', $schTime) . '] ' . $url;
-
-                        // Submit for crawling!
-                        if ($submitCrawlUrls) {
-                            $added = $this->addUrl(
-                                $pageRow['uid'],
-                                $url,
-                                $vv['subCfg'],
-                                $scheduledTime,
-                                $configurationHash,
-                                $skipInnerCheck
-                            );
-                            if ($added === false) {
-                                $urlList .= ' (URL already existed)';
-                            }
-                        } elseif ($downloadCrawlUrls) {
-                            $downloadUrls[$url] = $url;
-                        }
-
-                        $urlList .= '<br />';
-                    }
-                    $duplicateTrack[$uKey] = true;
-                }
+        foreach ($vv['URLs'] as $urlQuery) {
+            if (!$this->drawURLs_PIfilter($vv['subCfg']['procInstrFilter'], $incomingProcInstructions)) {
+                continue;
             }
-        } else {
-            $urlList = 'ERROR - no URL generated';
+            $url = (string)$this->getUrlFromPageAndQueryParameters(
+                $pageId,
+                $urlQuery,
+                $vv['subCfg']['baseUrl'] ?? null,
+                $vv['subCfg']['force_ssl'] ?? 0
+            );
+
+            // Create key by which to determine unique-ness:
+            $uKey = $url . '|' . $vv['subCfg']['userGroups'] . '|' . $vv['subCfg']['procInstrFilter'];
+
+            if (isset($duplicateTrack[$uKey])) {
+                //if the url key is registered just display it and do not resubmit is
+                $urlLog[] = '<em><span class="text-muted">' . htmlspecialchars($url) . '</span></em>';
+            } else {
+                // Scheduled time:
+                $schTime = $scheduledTime + round(count($duplicateTrack) * (60 / $reqMinute));
+                $schTime = floor($schTime / 60) * 60;
+                $formattedDate = BackendUtility::datetime($schTime);
+                $this->urlList[] = '[' . $formattedDate . '] ' . $url;
+                $urlList = '[' . $formattedDate . '] ' . htmlspecialchars($url);
+
+                // Submit for crawling!
+                if ($submitCrawlUrls) {
+                    $added = $this->addUrl(
+                        $pageId,
+                        $url,
+                        $vv['subCfg'],
+                        $scheduledTime,
+                        $configurationHash,
+                        $skipInnerCheck
+                    );
+                    if ($added === false) {
+                        $urlList .= ' (URL already existed)';
+                    }
+                } elseif ($downloadCrawlUrls) {
+                    $downloadUrls[$url] = $url;
+                }
+                $urlLog[] = $urlList;
+            }
+            $duplicateTrack[$uKey] = true;
         }
 
-        return $urlList;
+        return implode('<br>', $urlLog);
     }
 
     /**
@@ -569,11 +575,6 @@ class CrawlerController implements LoggerAwareInterface
             // process configuration if it is not page-specific or if the specific page is the current page:
             if (!strcmp($subCfg['pidsOnly'], '') || GeneralUtility::inList($pidOnlyList, $pageId)) {
 
-                    // add trailing slash if not present
-                if (!empty($subCfg['baseUrl']) && substr($subCfg['baseUrl'], -1) != '/') {
-                    $subCfg['baseUrl'] .= '/';
-                }
-
                 // Explode, process etc.:
                 $res[$key] = [];
                 $res[$key]['subCfg'] = $subCfg;
@@ -612,21 +613,14 @@ class CrawlerController implements LoggerAwareInterface
                         $subCfg = [
                             'procInstrFilter' => $configurationRecord['processing_instruction_filter'],
                             'procInstrParams.' => $TSparserObject->setup,
-                            'baseUrl' => $this->getBaseUrlForConfigurationRecord(
-                                $configurationRecord['base_url'],
-                                (int)$configurationRecord['sys_domain_base_url'],
-                                (bool)($configurationRecord['force_ssl'] > 0)
-                            ),
+                            'baseUrl' => $configurationRecord['base_url'],
+                            'force_ssl' => (int)$configurationRecord['force_ssl'],
                             'userGroups' => $configurationRecord['fegroups'],
                             'exclude' => $configurationRecord['exclude'],
-                            'rootTemplatePid' => (int) $configurationRecord['root_template_pid'],
+                            'rootTemplatePid' => (int)$configurationRecord['root_template_pid'],
                             'key' => $key
                         ];
 
-                        // add trailing slash if not present
-                        if (!empty($subCfg['baseUrl']) && substr($subCfg['baseUrl'], -1) != '/') {
-                            $subCfg['baseUrl'] .= '/';
-                        }
                         if (!in_array($pageId, $this->expandExcludeString($subCfg['exclude']))) {
                             $res[$key] = [];
                             $res[$key]['subCfg'] = $subCfg;
@@ -647,34 +641,6 @@ class CrawlerController implements LoggerAwareInterface
             GeneralUtility::callUserFunction($func, $params, $this);
         }
         return $res;
-    }
-
-    /**
-     * Checks if a domain record exist and returns the base-url based on the record. If not the given baseUrl string is used.
-     *
-     * @param string $baseUrl
-     * @param integer $sysDomainUid
-     * @param bool $ssl
-     * @return string
-     */
-    protected function getBaseUrlForConfigurationRecord(string $baseUrl, int $sysDomainUid, bool $ssl = false): string
-    {
-        if ($sysDomainUid > 0) {
-            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('sys_domain');
-            $domainName = $queryBuilder
-                ->select('domainName')
-                ->from('sys_domain')
-                ->where(
-                    $queryBuilder->expr()->eq('uid', $sysDomainUid)
-                )
-                ->execute()
-                ->fetchColumn();
-
-            if (!empty($domainName)) {
-                $baseUrl = ($ssl ? 'https' : 'http') . '://' . $domainName;
-            }
-        }
-        return $baseUrl;
     }
 
     /**
@@ -1173,7 +1139,7 @@ class CrawlerController implements LoggerAwareInterface
         // Compile value array:
         $parameters_serialized = serialize($parameters);
         $fieldArray = [
-            'page_id' => intval($id),
+            'page_id' => (int)$id,
             'parameters' => $parameters_serialized,
             'parameters_hash' => GeneralUtility::shortMD5($parameters_serialized),
             'configuration_hash' => $configurationHash,
@@ -2508,11 +2474,12 @@ class CrawlerController implements LoggerAwareInterface
      * @param int $pageId
      * @param string $queryString
      * @param string|null $alternativeBaseUrl
+     * @param int $httpsOrHttp see tx_crawler_configuration.force_ssl
      * @return UriInterface
      * @throws \TYPO3\CMS\Core\Exception\SiteNotFoundException
      * @throws \TYPO3\CMS\Core\Routing\InvalidRouteArgumentsException
      */
-    protected function getUrlFromPageAndQueryParameters(int $pageId, string $queryString, ?string $alternativeBaseUrl): UriInterface
+    protected function getUrlFromPageAndQueryParameters(int $pageId, string $queryString, ?string $alternativeBaseUrl, int $httpsOrHttp): UriInterface
     {
         $site = GeneralUtility::makeInstance(SiteMatcher::class)->matchByPageId((int)$pageId);
         if ($site instanceof Site) {
@@ -2544,6 +2511,13 @@ class CrawlerController implements LoggerAwareInterface
             $url = rtrim($baseUrl, '/') . '/index.php' . $queryString;
             $url = new Uri($url);
         }
+
+        if ($httpsOrHttp === -1) {
+            $url = $url->withScheme('http');
+        } elseif ($httpsOrHttp === 1) {
+            $url = $url->withScheme('https');
+        }
+
         return $url;
     }
 }

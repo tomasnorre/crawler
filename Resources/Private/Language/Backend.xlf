@@ -34,7 +34,7 @@
                 <source>Configuration</source>
             </trans-unit>
             <trans-unit id="tx_crawler_configuration.base_url">
-                <source>Base url</source>
+                <source>Base URL (leave empty for fetching the Base URL from the Site Configuration)</source>
             </trans-unit>
             <trans-unit id="tx_crawler_configuration.pidsonly">
                 <source>Pids only</source>
@@ -47,9 +47,6 @@
             </trans-unit>
             <trans-unit id="tx_crawler_configuration.exclude">
                 <source>Exclude pages</source>
-            </trans-unit>
-            <trans-unit id="tx_crawler_configuration.sys_domain_base_url">
-                <source>Get Baseurl from Domainrecord</source>
             </trans-unit>
             <trans-unit id="tx_crawler_configuration.root_template_pid">
                 <source>Page Id of TypoScript root template</source>

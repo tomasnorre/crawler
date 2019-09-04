@@ -29,8 +29,6 @@ use AOE\Crawler\Command\QueueCommandLineController;
 use AOE\Crawler\Controller\CrawlerController;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Psr\Log\NullLogger;
-use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class CrawlerLibTest

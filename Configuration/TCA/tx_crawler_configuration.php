@@ -92,26 +92,9 @@ return [
         'base_url' => [
             'exclude' => true,
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.base_url',
-            'displayCond' => 'FIELD:sys_domain_base_url:REQ:false',
             'config' => [
                 'type' => 'input',
                 'size' => 30,
-            ]
-        ],
-        'sys_domain_base_url' => [
-            'exclude' => 0,
-            'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.sys_domain_base_url',
-            'config' => [
-                'type' => 'select',
-                'renderType' => 'selectSingle',
-                'items' => [
-                    ['', 0],
-                ],
-                'foreign_table' => 'sys_domain',
-                'foreign_table_where' => 'ORDER BY pages.uid',
-                'size' => 1,
-                'minitems' => 0,
-                'maxitems' => 1,
             ]
         ],
         'pidsonly' => [
@@ -174,7 +157,7 @@ return [
         ]
     ],
     'types' => [
-        '0' => ['showitem' => 'hidden, name, force_ssl, processing_instruction_filter, base_url, sys_domain_base_url, root_template_pid, pidsonly, configuration, processing_instruction_parameters_ts,begroups, fegroups, exclude']
+        '0' => ['showitem' => 'hidden, name, force_ssl, processing_instruction_filter, base_url, root_template_pid, pidsonly, configuration, processing_instruction_parameters_ts,begroups, fegroups, exclude']
     ],
     'palettes' => [
         '1' => ['showitem' => '']
