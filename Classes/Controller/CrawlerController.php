@@ -180,7 +180,7 @@ class CrawlerController implements LoggerAwareInterface
     /**
      * @var int
      */
-    protected $maximumUrlsToCompile;
+    protected $maximumUrlsToCompile = 10000;
 
     /**
      * Method to set the accessMode can be gui, cli or cli_im
