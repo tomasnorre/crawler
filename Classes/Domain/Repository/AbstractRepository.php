@@ -25,14 +25,16 @@ namespace AOE\Crawler\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Persistence\Repository;
 
 /**
  * Class AbstractRepository
  *
  * @package AOE\Crawler\Domain\Repository
  */
-abstract class AbstractRepository
+abstract class AbstractRepository extends Repository
 {
 
     /**
@@ -41,18 +43,14 @@ abstract class AbstractRepository
     protected $tableName;
 
     /**
-     * @var QueryBuilder
-     */
-    protected $queryBuilder = QueryBuilder::class;
-
-    /**
      * Counts all in repository
      *
      * @return integer
      */
     public function countAll()
     {
-        $count = $this->queryBuilder
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $count = $queryBuilder
             ->count('*')
             ->from($this->tableName)
             ->execute()
@@ -62,17 +60,18 @@ abstract class AbstractRepository
     }
 
     /**
-     * @param $processId
+     * @param string $processId
      *
      * @return bool|string
      */
     public function countAllByProcessId($processId)
     {
-        $count = $this->queryBuilder
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $count = $queryBuilder
             ->count('*')
             ->from($this->tableName)
             ->where(
-                $this->queryBuilder->expr()->eq('process_id', $this->queryBuilder->createNamedParameter($processId))
+                $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId, \PDO::PARAM_STR))
             )
             ->execute()
             ->fetchColumn(0);

@@ -4,7 +4,7 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2016 AOE GmbH <dev@aoe.com>
+ *  (c) 2019 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -43,14 +43,11 @@ class ProcessTest extends UnitTestCase
 
     public function setUp()
     {
-        $processObjectArray = [
-            'active' => '1',
-            'process_id' => '1234',
-            'ttl' => '300',
-            'assigned_items_count' => '20'
-        ];
         $this->subject = $this->createPartialMock(Process::class, ['dummy']);
-        $this->subject->setRow($processObjectArray);
+        $this->subject->setActive(true);
+        $this->subject->setProcessId('1234');
+        $this->subject->setTtl('300');
+        $this->subject->setAssignedItemsCount('20');
     }
 
     /**
@@ -58,62 +55,39 @@ class ProcessTest extends UnitTestCase
      */
     public function setAndGetRowDoAsExpected()
     {
-        $expected = [
-            'active' => 1,
-            'process_id' => 4567,
-            'ttl' => 600,
-            'assigned_items_count' => 30
-        ];
+        $processId = 4567;
+        $ttl = 600;
+        $assignedItemsCount = 30;
+        $systemProcessId = sha1('processId');
 
-        $this->subject->setRow($expected);
+        $this->subject->setDeleted(false);
+        $this->subject->setActive(true);
+        $this->subject->setProcessId($processId);
+        $this->subject->setTtl($ttl);
+        $this->subject->setAssignedItemsCount($assignedItemsCount);
+        $this->subject->setSystemProcessId($systemProcessId);
+
+        $this->assertFalse($this->subject->isDeleted());
+        $this->assertTrue($this->subject->isActive());
 
         $this->assertSame(
-            $expected,
-            $this->subject->getRow()
+            $processId,
+            $this->subject->getProcessId()
         );
-    }
 
-    /**
-     * @test
-     */
-    public function getActiveReturnsInteger()
-    {
-        $this->assertEquals(
-            1,
-            $this->subject->getActive()
+        $this->assertSame(
+            $ttl,
+            $this->subject->getTtl()
         );
-    }
 
-    /**
-     * @test
-     */
-    public function getProcessIdReturnsInteger()
-    {
-        $this->assertEquals(
-            1234,
-            $this->subject->getProcess_id()
+        $this->assertSame(
+            $assignedItemsCount,
+            $this->subject->getAssignedItemsCount()
         );
-    }
 
-    /**
-     * @test
-     */
-    public function getTTLReturnsInteger()
-    {
-        $this->assertEquals(
-            300,
-            $this->subject->getTTL()
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function countItemsAssignedReturnsInteger()
-    {
-        $this->assertEquals(
-            20,
-            $this->subject->countItemsAssigned()
+        $this->assertSame(
+            $systemProcessId,
+            $this->subject->getSystemProcessId()
         );
     }
 
@@ -158,8 +132,8 @@ class ProcessTest extends UnitTestCase
     public function getStateReturnsExpectedState($active, $processes, $expectedState)
     {
         /** @var Process $processMock */
-        $processMock = $this->getAccessibleMock(Process::class, ['getActive', 'getProgress'], [], '', false);
-        $processMock->expects($this->any())->method('getActive')->will($this->returnValue($active));
+        $processMock = $this->getAccessibleMock(Process::class, ['isActive', 'getProgress'], [], '', false);
+        $processMock->expects($this->any())->method('isActive')->will($this->returnValue($active));
         $processMock->expects($this->any())->method('getProgress')->will($this->returnValue($processes));
 
         $this->assertEquals(
@@ -179,9 +153,9 @@ class ProcessTest extends UnitTestCase
     public function getProgressReturnsExpectedPercentage($countItemsAssigned, $countItemsProcessed, $expectedProgress)
     {
         /** @var Process $processMock */
-        $processMock = $this->getAccessibleMock(Process::class, ['countItemsAssigned', 'countItemsProcessed'], [], '', false);
-        $processMock->expects($this->any())->method('countItemsAssigned')->will($this->returnValue($countItemsAssigned));
-        $processMock->expects($this->any())->method('countItemsProcessed')->will($this->returnValue($countItemsProcessed));
+        $processMock = $this->getAccessibleMock(Process::class, ['getAssignedItemsCount', 'getAmountOfItemsProcessed'], [], '', false);
+        $processMock->expects($this->any())->method('getAssignedItemsCount')->will($this->returnValue($countItemsAssigned));
+        $processMock->expects($this->any())->method('getAmountOfItemsProcessed')->will($this->returnValue($countItemsProcessed));
 
         $this->assertEquals(
             $expectedProgress,
