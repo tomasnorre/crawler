@@ -511,4 +511,18 @@ class QueueRepository extends AbstractRepository
 
         return $rows;
     }
+
+    public function findByQueueId(string $queueId): ?array
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $queueRec = $queryBuilder
+            ->select('*')
+            ->from($this->tableName)
+            ->where(
+                $queryBuilder->expr()->eq('qid', $queryBuilder->createNamedParameter($queueId))
+            )
+            ->execute()
+            ->fetch();
+        return is_array($queueRec) ? $queueRec : null;
+    }
 }
