@@ -223,28 +223,12 @@ class ProcessService
      *
      * @return string
      */
-    public function getCrawlerCliPath()
+    public function getCrawlerCliPath(): string
     {
-        $composerRootDir = getenv('TYPO3_PATH_COMPOSER_ROOT') . '/';
-        $composerFile = $composerRootDir . 'composer.json';
         $phpPath = $this->crawlerController->extensionSettings['phpPath'] . ' ';
-        $cliPart = 'typo3cms crawler:crawlqueue';
-
-        if (file_exists($composerFile)) {
-            $jsonDecoded = json_decode(file_get_contents($composerFile), true);
-
-            if (isset($jsonDecoded['config']['bin-dir'])) {
-                $binDir = $jsonDecoded['config']['bin-dir'];
-            } elseif (isset($jsonDecoded['config']['vendor-dir'])) {
-                $binDir = $jsonDecoded['config']['vendor-dir'] . '/bin';
-            } else {
-                $binDir = 'vendor/bin';
-            }
-            $scriptPath = $phpPath . $composerRootDir . $binDir . '/' . $cliPart;
-        } else {
-            $typo3ConsolePath = ExtensionManagementUtility::extPath('typo3_console');
-            $scriptPath = $phpPath . $typo3ConsolePath . $cliPart;
-        }
+        $cliPart = 'typo3 crawler:processQueue';
+        $typo3BinaryPath = ExtensionManagementUtility::extPath('core') . 'bin/';
+        $scriptPath = $phpPath . $typo3BinaryPath . $cliPart;
 
         if (TYPO3_OS === 'WIN') {
             $scriptPath = str_replace('/', '\\', $scriptPath);
