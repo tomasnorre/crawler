@@ -7,13 +7,13 @@ $EM_CONF[$_EXTKEY] = [
     'uploadfolder' => 0,
     'createDirs' => '',
     'clearCacheOnLoad' => 0,
-    'author' => 'Kasper Skaarhoj, Daniel Poetzinger, Fabrizio Branca, Tolleiv Nietsch, Timo Schmidt, Michael Klapper, Stefan Rotsch, Tomas Norre Mikkelsen',
+    'author' => 'Kasper Skaarhoj, Daniel Poetzinger, Fabrizio Branca, Tolleiv Nietsch, Timo Schmidt, Michael Klapper, Stefan Rotsch, Tomas Norre Mikkelsen, Tizian Schmidlin',
     'author_email' => 'dev@aoe.com',
     'author_company' => 'AOE GmbH',
     'version' => '9.0.0-dev',
     'constraints' => [
         'depends' => [
-            'typo3' => '9.5.9-9.5.99',
+            'typo3' => '9.5.9-10.4.99',
         ],
         'conflicts' => [],
         'suggests' => [],

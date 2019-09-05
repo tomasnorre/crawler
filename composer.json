@@ -19,7 +19,7 @@
     "require": {
         "php": ">=7.2",
         "ext-json": "*",
-        "typo3/cms-core": "~9.5.9",
+        "typo3/cms-core": "~9.5.9 || ^10",
         "typo3/cms-beuser": "*",
         "typo3/cms-frontend": "*",
         "typo3/cms-info": "*",
