@@ -15,6 +15,7 @@ namespace AOEPeople\Crawler\Worker;
  */
 
 use AOE\Crawler\Controller\CrawlerController;
+use AOEPeople\Crawler\Hooks\IndexedSearchCrawlerFilesHook;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\TimeTracker\TimeTracker;
 use TYPO3\CMS\IndexedSearch\Worker\WorkerInterface;
@@ -49,7 +50,7 @@ class CrawlerWorker implements WorkerInterface
 
         unset($params['conf']['content']);
 
-        $crawler->addQueueEntry_callBack(0, $params, \TYPO3\CMS\IndexedSearch\Hook\CrawlerFilesHook::class, $conf['id']);
+        $crawler->addQueueEntry_callBack(0, $params, IndexedSearchCrawlerFilesHook::class, $conf['id']);
 
         GeneralUtility::makeInstance(TimeTracker::class)->setTSlogMessage('media "' . $params['document'] . '" added to "crawler" queue.', 1);
     }

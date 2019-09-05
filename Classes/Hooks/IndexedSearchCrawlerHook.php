@@ -29,7 +29,7 @@ use TYPO3\CMS\Core\Utility\RootlineUtility;
  * Crawler hook for indexed search. Works with the "crawler" extension
  * @internal this is a TYPO3-internal hook implementation and not part of TYPO3's Core API.
  */
-class CrawlerHook
+class IndexedSearchCrawlerHook
 {
     /**
      * Number of seconds to use as interval between queued indexing operations of URLs / files (types 2 & 3)
