@@ -183,20 +183,6 @@ class CrawlerControllerTest extends FunctionalTestCase
     }
 
     /**
-     * @test
-     */
-    public function CLI_checkIfProcessIsActive()
-    {
-        $this->assertTrue(
-            $this->subject->CLI_checkIfProcessIsActive(1002)
-        );
-
-        $this->assertFalse(
-            $this->subject->CLI_checkIfProcessIsActive(1003)
-        );
-    }
-
-    /**
      * @return array
      */
     public function getLogEntriesForSetIdDataProvider()

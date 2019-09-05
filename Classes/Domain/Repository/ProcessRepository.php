@@ -296,4 +296,20 @@ class ProcessRepository extends AbstractRepository
             )
             ->execute();
     }
+
+    public function isProcessActive(int $processId): bool
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $isActive = $queryBuilder
+            ->select('active')
+            ->from('tx_crawler_process')
+            ->where(
+                $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId, \PDO::PARAM_INT))
+            )
+            ->orderBy('ttl')
+            ->execute()
+            ->fetchColumn(0);
+
+        return (bool)$isActive;
+    }
 }
