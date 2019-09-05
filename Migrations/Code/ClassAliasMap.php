@@ -2,7 +2,6 @@
 return [
     'AOE\Crawler\Tasks\ProcessCleanupTask' => \AOE\Crawler\Task\ProcessCleanupTask::class,
     'tx_crawler_api' => \AOE\Crawler\Api\CrawlerApi::class,
-    'tx_crawler_auth' => \AOE\Crawler\Service\AuthenticationService::class,
     'tx_crawler_domain_events_dispatcher' => \AOE\Crawler\Event\EventDispatcher::class,
     'tx_crawler_domain_events_observer' => \AOE\Crawler\Event\EventObserverInterface::class,
     'tx_crawler_domain_lib_abstract_repository' => \AOE\Crawler\Domain\Repository\AbstractRepository::class,

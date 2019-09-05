@@ -99,9 +99,6 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface
         $reqHeaders = [];
         $reqHeaders[] = 'GET ' . $url['path'] . ($url['query'] ? '?' . $url['query'] : '') . ' HTTP/1.0';
         $reqHeaders[] = 'Host: ' . $url['host'];
-        if (stristr($url['query'], 'ADMCMD_previewWS')) {
-            $reqHeaders[] = 'Cookie: $Version="1"; be_typo_user="1"; $Path=/';
-        }
         $reqHeaders[] = 'Connection: close';
         if ($url['user'] != '') {
             $reqHeaders[] = 'Authorization: Basic ' . base64_encode($url['user'] . ':' . $url['pass']);

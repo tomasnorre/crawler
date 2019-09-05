@@ -10,13 +10,6 @@ class tx_crawler_api extends AOE\Crawler\Api\CrawlerApi
 /**
  * @deprecated
  */
-class tx_crawler_auth extends AOE\Crawler\Service\AuthenticationService
-{
-}
-
-/**
- * @deprecated
- */
 class tx_crawler_domain_events_dispatcher extends AOE\Crawler\Event\EventDispatcher
 {
 }
