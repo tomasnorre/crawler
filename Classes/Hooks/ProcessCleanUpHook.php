@@ -28,6 +28,7 @@ namespace AOE\Crawler\Hooks;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
@@ -181,7 +182,7 @@ class ProcessCleanUpHook
     private function doProcessStillExists($pid)
     {
         $doProcessStillExists = false;
-        if (!$this->isOsWindows()) {
+        if (!Environment::isWindows()) {
             // Not windows
             if (file_exists('/proc/' . $pid)) {
                 $doProcessStillExists = true;
@@ -206,7 +207,7 @@ class ProcessCleanUpHook
      */
     private function killProcess($pid)
     {
-        if (!$this->isOsWindows()) {
+        if (!Environment::isWindows()) {
             // Not windows
             posix_kill($pid, 9);
         } else {
@@ -224,7 +225,7 @@ class ProcessCleanUpHook
     private function findDispatcherProcesses()
     {
         $returnArray = [];
-        if (!$this->isOsWindows()) {
+        if (!Environment::isWindows()) {
             // Not windows
             exec('ps aux | grep \'cli_dispatcher\'', $returnArray, $returnValue);
         } else {
@@ -232,19 +233,5 @@ class ProcessCleanUpHook
             exec('tasklist | find \'cli_dispatcher\'', $returnArray, $returnValue);
         }
         return $returnArray;
-    }
-
-    /**
-     * Check if OS is Windows
-     *
-     * @return bool
-     * @codeCoverageIgnore
-     */
-    private function isOsWindows()
-    {
-        if (TYPO3_OS === 'WIN') {
-            return true;
-        }
-        return false;
     }
 }

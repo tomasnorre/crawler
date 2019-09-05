@@ -20,6 +20,7 @@ use Psr\Http\Message\UriInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use TYPO3\CMS\Core\Core\Environment;
+use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -77,15 +78,15 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface
 
         $requestHeaders = $this->buildRequestHeaders($parsedUrl, $crawlerId);
 
+        $commandParts = [
+            ExtensionManagementUtility::extPath('crawler') . 'cli/bootstrap.php',
+            $this->getFrontendBasePath(),
+            $url,
+            base64_encode(serialize($requestHeaders))
+        ];
+        $commandParts = CommandUtility::escapeShellArguments($commandParts);
         $cmd = escapeshellcmd($this->extensionSettings['phpPath']);
-        $cmd .= ' ';
-        $cmd .= escapeshellarg(ExtensionManagementUtility::extPath('crawler') . 'cli/bootstrap.php');
-        $cmd .= ' ';
-        $cmd .= escapeshellarg($this->getFrontendBasePath());
-        $cmd .= ' ';
-        $cmd .= escapeshellarg($url);
-        $cmd .= ' ';
-        $cmd .= escapeshellarg(base64_encode(serialize($requestHeaders)));
+        $cmd .= ' ' . implode(' ', $commandParts);
 
         $startTime = microtime(true);
         $content = $this->executeShellCommand($cmd);
