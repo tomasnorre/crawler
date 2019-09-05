@@ -15,7 +15,6 @@
         <begroups></begroups>
         <fegroups></fegroups>
         <exclude>0</exclude>
-        <root_template_pid>0</root_template_pid>
     </tx_crawler_configuration>
     <tx_crawler_configuration>
         <uid>2</uid>
@@ -32,7 +31,6 @@
         <begroups></begroups>
         <fegroups></fegroups>
         <exclude>0</exclude>
-        <root_template_pid>0</root_template_pid>
     </tx_crawler_configuration>
     <tx_crawler_configuration>
         <uid>3</uid>
@@ -49,7 +47,6 @@
         <begroups></begroups>
         <fegroups></fegroups>
         <exclude>0</exclude>
-        <root_template_pid>0</root_template_pid>
     </tx_crawler_configuration>
     <tx_crawler_configuration>
         <uid>4</uid>
@@ -66,7 +63,6 @@
         <begroups></begroups>
         <fegroups></fegroups>
         <exclude>0</exclude>
-        <root_template_pid>0</root_template_pid>
     </tx_crawler_configuration>
     <tx_crawler_configuration>
         <uid>5</uid>
@@ -83,6 +79,5 @@
         <begroups></begroups>
         <fegroups></fegroups>
         <exclude>0</exclude>
-        <root_template_pid>0</root_template_pid>
     </tx_crawler_configuration>
 </dataset>

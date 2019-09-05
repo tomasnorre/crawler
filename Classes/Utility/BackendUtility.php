@@ -54,19 +54,6 @@ class BackendUtility
     }
 
     /**
-     * Registers the context sensitive help for TCA fields
-     *
-     * @return void
-     */
-    public static function registerContextSensitiveHelpForTcaFields()
-    {
-        ExtensionManagementUtility::addLLrefForTCAdescr(
-            'tx_crawler_configuration',
-            'EXT:crawler/Resources/Private/Language/locallang_csh_tx_crawler_configuration.xlf'
-        );
-    }
-
-    /**
      * Registers icons for use in the IconFactory
      *
      * @return void

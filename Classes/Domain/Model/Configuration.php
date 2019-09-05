@@ -66,11 +66,6 @@ class Configuration extends AbstractEntity
     /**
      * @var string
      */
-    protected $sysDomainBaseUrl = '';
-
-    /**
-     * @var string
-     */
     protected $pidsonly = '';
 
     /**
@@ -84,24 +79,9 @@ class Configuration extends AbstractEntity
     protected $fegroups = '';
 
     /**
-     * @var int
-     */
-    protected $realurl = 0;
-
-    /**
-     * @var int
-     */
-    protected $chash = 0;
-
-    /**
      * @var string
      */
     protected $exclude = '';
-
-    /**
-     * @var int
-     */
-    protected $rootTemplatePid = 0;
 
     /**
      * @return string
@@ -200,22 +180,6 @@ class Configuration extends AbstractEntity
     }
 
     /**
-     * @return string
-     */
-    public function getSysDomainBaseUrl()
-    {
-        return $this->sysDomainBaseUrl;
-    }
-
-    /**
-     * @param string $sysDomainBaseUrl
-     */
-    public function setSysDomainBaseUrl($sysDomainBaseUrl)
-    {
-        $this->sysDomainBaseUrl = $sysDomainBaseUrl;
-    }
-
-    /**
      * @return mixed
      */
     public function getPidsOnly()
@@ -264,38 +228,6 @@ class Configuration extends AbstractEntity
     }
 
     /**
-     * @return int
-     */
-    public function getRealUrl()
-    {
-        return $this->realurl;
-    }
-
-    /**
-     * @param int $realUrl
-     */
-    public function setRealUrl($realUrl)
-    {
-        $this->realurl = $realUrl;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCHash()
-    {
-        return $this->chash;
-    }
-
-    /**
-     * @param int $cHash
-     */
-    public function setCHash($cHash)
-    {
-        $this->chash = $cHash;
-    }
-
-    /**
      * @return string
      */
     public function getExclude()
@@ -309,22 +241,6 @@ class Configuration extends AbstractEntity
     public function setExclude($exclude)
     {
         $this->exclude = $exclude;
-    }
-
-    /**
-     * @return int
-     */
-    public function getRootTemplatePid()
-    {
-        return $this->rootTemplatePid;
-    }
-
-    /**
-     * @param int $rootTemplatePid
-     */
-    public function setRootTemplatePid($rootTemplatePid)
-    {
-        $this->rootTemplatePid = $rootTemplatePid;
     }
 }
 
