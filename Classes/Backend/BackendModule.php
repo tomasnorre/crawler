@@ -32,14 +32,16 @@ use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\EventDispatcher;
 use AOE\Crawler\Service\ProcessService;
-use AOE\Crawler\Utility\BackendModuleUtility;
-use AOE\Crawler\Utility\ButtonUtility;
-use AOE\Crawler\Utility\IconUtility;
+use Psr\Http\Message\UriInterface;
+use TYPO3\CMS\Backend\Routing\UriBuilder;
+use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Imaging\Icon;
+use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
@@ -139,6 +141,11 @@ class BackendModule
      */
     protected $view;
 
+    /**
+     * @var IconFactory
+     */
+    protected $iconFactory;
+
     public function __construct()
     {
         $objectManger = GeneralUtility::makeInstance(ObjectManager::class);
@@ -147,6 +154,7 @@ class BackendModule
         $this->queueRepository = $objectManger->get(QueueRepository::class);
         $this->initializeView();
         $this->extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
+        $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
     }
 
     /**
@@ -484,7 +492,7 @@ class BackendModule
                     $this->id,
                     $perms_clause
                 );
-                $HTML = IconUtility::getIconForRecord('pages', $pageinfo);
+                $HTML = $this->iconFactory->getIconForRecord('pages', $pageinfo, Icon::SIZE_SMALL)->render();
                 $tree->tree[] = [
                     'row' => $pageinfo,
                     'HTML' => $HTML
@@ -587,7 +595,7 @@ class BackendModule
 
         if (!empty($logEntriesOfPage)) {
             $setId = (int)GeneralUtility::_GP('setID');
-            $refreshIcon = IconUtility::getIcon('actions-system-refresh', Icon::SIZE_SMALL);
+            $refreshIcon = $this->iconFactory->getIcon('actions-system-refresh', Icon::SIZE_SMALL);
             // Traverse parameter combinations:
             $c = 0;
             $content = '';
@@ -633,8 +641,8 @@ class BackendModule
                 $content .= '
 					<tr>
 						' . $titleClm . '
-						<td><a href="' . BackendModuleUtility::getInfoModuleUrl(['qid_details' => $vv['qid'], 'setID' => $setId]) . '">' . htmlspecialchars($vv['qid']) . '</a></td>
-						<td><a href="' . BackendModuleUtility::getInfoModuleUrl(['qid_read' => $vv['qid'], 'setID' => $setId]) . '">' . $refreshIcon . '</a></td>';
+						<td><a href="' . $this->getInfoModuleUrl(['qid_details' => $vv['qid'], 'setID' => $setId]) . '">' . htmlspecialchars($vv['qid']) . '</a></td>
+						<td><a href="' . $this->getInfoModuleUrl(['qid_read' => $vv['qid'], 'setID' => $setId]) . '">' . $refreshIcon . '</a></td>';
                 foreach ($rowData as $fKey => $value) {
                     if ($fKey === 'url') {
                         $content .= '<td>' . $value . '</td>';
@@ -773,10 +781,10 @@ class BackendModule
      */
     protected function getRefreshLink(): string
     {
-        return ButtonUtility::getLinkButton(
+        return $this->getLinkButton(
             'actions-refresh',
             $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.refresh'),
-            'window.location=\'' . BackendModuleUtility::getInfoModuleUrl(['SET[\'crawleraction\']' => 'crawleraction', 'id' => $this->id]) . '\';'
+            $this->getInfoModuleUrl(['SET[\'crawleraction\']' => 'crawleraction', 'id' => $this->id])
         );
     }
 
@@ -791,17 +799,17 @@ class BackendModule
     {
         if ($isCrawlerEnabled) {
             // TODO: Icon Should be bigger + Perhaps better icon
-            return ButtonUtility::getLinkButton(
+            return $this->getLinkButton(
                 'tx-crawler-stop',
                 $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.disablecrawling'),
-                'window.location=\'' . BackendModuleUtility::getInfoModuleUrl(['action' => 'stopCrawling']) . '\';'
+                $this->getInfoModuleUrl(['action' => 'stopCrawling'])
             );
         } else {
             // TODO: Icon Should be bigger
-            return ButtonUtility::getLinkButton(
+            return $this->getLinkButton(
                 'tx-crawler-start',
                 $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.enablecrawling'),
-                'window.location=\'' . BackendModuleUtility::getInfoModuleUrl(['action' => 'resumeCrawling']) . '\';'
+                $this->getInfoModuleUrl(['action' => 'resumeCrawling'])
             );
         }
     }
@@ -814,16 +822,16 @@ class BackendModule
     protected function getModeLink(string $mode): string
     {
         if ($mode === 'detail') {
-            return ButtonUtility::getLinkButton(
+            return $this->getLinkButton(
                 'actions-document-view',
                 $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.show.running'),
-                'window.location=\'' . BackendModuleUtility::getInfoModuleUrl(['SET[\'processListMode\']' => 'simple']) . '\';'
+                $this->getInfoModuleUrl(['SET[\'processListMode\']' => 'simple'])
             );
         } elseif ($mode === 'simple') {
-            return ButtonUtility::getLinkButton(
+            return $this->getLinkButton(
                 'actions-document-view',
                 $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.show.all'),
-                'window.location=\'' . BackendModuleUtility::getInfoModuleUrl(['SET[\'processListMode\']' => 'detail']) . '\';'
+                $this->getInfoModuleUrl(['SET[\'processListMode\']' => 'detail'])
             );
         }
         return '';
@@ -844,10 +852,10 @@ class BackendModule
         if (MathUtility::convertToPositiveInteger($currentActiveProcesses) >= MathUtility::convertToPositiveInteger($maxActiveProcesses)) {
             return '';
         }
-        return ButtonUtility::getLinkButton(
+        return $this->getLinkButton(
             'actions-add',
             $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.process.add'),
-            'window.location=\'' . BackendModuleUtility::getInfoModuleUrl(['action' => 'addProcess']) . '\';'
+            $this->getInfoModuleUrl(['action' => 'addProcess'])
         );
     }
 
@@ -1022,5 +1030,42 @@ class BackendModule
     protected function getLanguageService(): LanguageService
     {
         return $GLOBALS['LANG'];
+    }
+
+    /**
+     * @param string $iconIdentifier
+     * @param string $title
+     * @param UriInterface $href
+     * @return string
+     */
+    protected function getLinkButton(string $iconIdentifier, string $title, UriInterface $href): string
+    {
+        $moduleTemplate = GeneralUtility::makeInstance(ModuleTemplate::class);
+        $buttonBar = $moduleTemplate->getDocHeaderComponent()->getButtonBar();
+        return (string)$buttonBar->makeLinkButton()
+            ->setHref((string)$href)
+            ->setIcon($this->iconFactory->getIcon($iconIdentifier, Icon::SIZE_SMALL))
+            ->setTitle($title)
+            ->setShowLabelText(true);
+    }
+
+    /**
+     * Returns the URL to the current module, including $_GET['id'].
+     *
+     * @param array $uriParameters optional parameters to add to the URL
+     * @return Uri
+     *
+     * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
+     */
+    protected function getInfoModuleUrl(array $uriParameters = []): Uri
+    {
+        if (GeneralUtility::_GP('id')) {
+            $uriParameters = array_merge($uriParameters, [
+                'id' => GeneralUtility::_GP('id')
+            ]);
+        }
+        /** @var UriBuilder $uriBuilder */
+        $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
+        return $uriBuilder->buildUriFromRoute('web_info', $uriParameters);
     }
 }

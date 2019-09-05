@@ -31,7 +31,6 @@ use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\EventDispatcher;
-use AOE\Crawler\Utility\IconUtility;
 use AOE\Crawler\Utility\SignalSlotUtility;
 use Psr\Http\Message\UriInterface;
 use Psr\Log\LoggerAwareInterface;
@@ -44,6 +43,8 @@ use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Http\Uri;
+use TYPO3\CMS\Core\Imaging\Icon;
+use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Routing\SiteMatcher;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser;
@@ -194,6 +195,11 @@ class CrawlerController implements LoggerAwareInterface
     protected $maximumUrlsToCompile = 10000;
 
     /**
+     * @var IconFactory
+     */
+    protected $iconFactory;
+
+    /**
      * Method to set the accessMode can be gui, cli or cli_im
      *
      * @return string
@@ -269,6 +275,7 @@ class CrawlerController implements LoggerAwareInterface
         $this->processRepository = $objectManager->get(ProcessRepository::class);
         $this->configurationRepository = $objectManager->get(ConfigurationRepository::class);
         $this->queueExecutor = $objectManager->get(QueueExecutor::class);
+        $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
 
         $this->backendUser = $GLOBALS['BE_USER'];
         $this->processFilename = Environment::getVarPath() . '/locks/tx_crawler.proc';
@@ -1428,7 +1435,7 @@ class CrawlerController implements LoggerAwareInterface
             // Set root row:
             $tree->tree[] = [
                 'row' => $pageInfo,
-                'HTML' => IconUtility::getIconForRecord('pages', $pageInfo)
+                'HTML' => $this->iconFactory->getIconForRecord('pages', $pageInfo, Icon::SIZE_SMALL)
             ];
         }
 
