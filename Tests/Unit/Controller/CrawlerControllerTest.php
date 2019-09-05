@@ -287,23 +287,6 @@ class CrawlerControllerTest extends UnitTestCase
     /**
      * @test
      */
-    public function CLI_buildProcessIdNotSet()
-    {
-        $microtime = '1481397820.81820011138916015625';
-        $expectedMd5Value = '95297a261b';
-
-        $crawlerController = $this->getAccessibleMock(CrawlerController::class, ['microtime'], [], '', false);
-        $crawlerController->expects($this->once())->method('microtime')->will($this->returnValue($microtime));
-
-        $this->assertEquals(
-            $expectedMd5Value,
-            $crawlerController->_call('CLI_buildProcessId')
-        );
-    }
-
-    /**
-     * @test
-     */
     public function CLI_buildProcessIdIsSetReturnsValue()
     {
         $processId = '12297a261b';
