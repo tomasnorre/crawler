@@ -47,6 +47,7 @@ use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Routing\SiteMatcher;
 use TYPO3\CMS\Core\Site\Entity\Site;
+use TYPO3\CMS\Core\Type\Bitmask\Permission;
 use TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -407,7 +408,7 @@ class CrawlerController implements LoggerAwareInterface
             ->count('*')
             ->from($this->tableName)
             ->where(
-                $queryBuilder->expr()->eq('page_id', intval($uid)),
+                $queryBuilder->expr()->eq('page_id', (int)$uid),
                 $queryBuilder->expr()->eq('configuration_hash', $queryBuilder->createNamedParameter($configurationHash)),
                 $queryBuilder->expr()->eq('exec_time', 0)
             )
@@ -603,7 +604,7 @@ class CrawlerController implements LoggerAwareInterface
         foreach ($crawlerConfigurations as $configurationRecord) {
 
                 // check access to the configuration record
-            if (empty($configurationRecord['begroups']) || $GLOBALS['BE_USER']->isAdmin() || $this->hasGroupAccess($GLOBALS['BE_USER']->user['usergroup_cached_list'], $configurationRecord['begroups'])) {
+            if (empty($configurationRecord['begroups']) || $this->backendUser->isAdmin() || $this->hasGroupAccess($this->backendUser->user['usergroup_cached_list'], $configurationRecord['begroups'])) {
                 $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $configurationRecord['pidsonly'], true));
 
                 // process configuration if it is not page-specific or if the specific page is the current page:
@@ -676,7 +677,7 @@ class CrawlerController implements LoggerAwareInterface
         }
         /* @var PageTreeView $tree */
         $tree = GeneralUtility::makeInstance(PageTreeView::class);
-        $perms_clause = $GLOBALS['BE_USER']->getPagePermsClause(1);
+        $perms_clause = $this->backendUser->getPagePermsClause(Permission::PAGE_SHOW);
         $tree->init('AND ' . $perms_clause);
         $tree->getTree($rootid, $depth, '');
         foreach ($tree->tree as $node) {
@@ -800,7 +801,7 @@ class CrawlerController implements LoggerAwareInterface
 
                         // Table exists:
                         if (isset($GLOBALS['TCA'][$subpartParams['_TABLE']])) {
-                            $lookUpPid = isset($subpartParams['_PID']) ? intval($subpartParams['_PID']) : $pid;
+                            $lookUpPid = isset($subpartParams['_PID']) ? (int)$subpartParams['_PID'] : $pid;
                             $pidField = isset($subpartParams['_PIDFIELD']) ? trim($subpartParams['_PIDFIELD']) : 'pid';
                             $where = isset($subpartParams['_WHERE']) ? $subpartParams['_WHERE'] : '';
                             $addTable = isset($subpartParams['_ADDTABLE']) ? $subpartParams['_ADDTABLE'] : '';
@@ -955,7 +956,7 @@ class CrawlerController implements LoggerAwareInterface
 
         // FIXME: Write unit test that ensures that the right records are deleted.
         if ($doFlush) {
-            $addWhere = $query->add($expressionBuilder->eq('page_id', intval($id)));
+            $addWhere = $query->add($expressionBuilder->eq('page_id', (int)$id));
             $this->flushQueue($doFullFlush ? '1=1' : $addWhere);
             return [];
         } else {
@@ -1009,7 +1010,7 @@ class CrawlerController implements LoggerAwareInterface
         }
         // FIXME: Write unit test that ensures that the right records are deleted.
         if ($doFlush) {
-            $addWhere = $query->add($expressionBuilder->eq('set_id', intval($set_id)));
+            $addWhere = $query->add($expressionBuilder->eq('set_id', (int)$set_id));
             $this->flushQueue($doFullFlush ? '' : $addWhere);
             return [];
         } else {
@@ -1084,11 +1085,11 @@ class CrawlerController implements LoggerAwareInterface
             ->insert(
                 'tx_crawler_queue',
                 [
-                    'page_id' => intval($page_id),
+                    'page_id' => (int)$page_id,
                     'parameters' => serialize($params),
-                    'scheduled' => intval($schedule) ? intval($schedule) : $this->getCurrentTime(),
+                    'scheduled' => (int)$schedule ?: $this->getCurrentTime(),
                     'exec_time' => 0,
-                    'set_id' => intval($setId),
+                    'set_id' => (int)$setId,
                     'result_data' => '',
                 ]
             );
@@ -1148,7 +1149,7 @@ class CrawlerController implements LoggerAwareInterface
             'configuration_hash' => $configurationHash,
             'scheduled' => $tstamp,
             'exec_time' => 0,
-            'set_id' => intval($this->setID),
+            'set_id' => (int)$this->setID,
             'result_data' => '',
             'configuration' => $subCfg['key'],
         ];
@@ -1360,12 +1361,12 @@ class CrawlerController implements LoggerAwareInterface
     {
             // Set exec_time to lock record:
         $field_array['exec_time'] = $this->getCurrentTime();
-        $connectionForCrawlerQueue = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('tx_crawler_queue');
+        $connectionForCrawlerQueue = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable($this->tableName);
         $connectionForCrawlerQueue->insert(
-            'tx_crawler_queue',
+            $this->tableName,
             $field_array
         );
-        $queueId = $field_array['qid'] = $connectionForCrawlerQueue->lastInsertId('tx_crawler_queue', 'qid');
+        $queueId = $field_array['qid'] = $connectionForCrawlerQueue->lastInsertId($this->tableName, 'qid');
 
         $result = $this->queueExecutor->executeQueueItem($field_array, $this);
 
@@ -1379,7 +1380,7 @@ class CrawlerController implements LoggerAwareInterface
         );
 
         $connectionForCrawlerQueue->update(
-            'tx_crawler_queue',
+            $this->tableName,
             $field_array,
             ['qid' => $queueId]
         );
@@ -1427,7 +1428,7 @@ class CrawlerController implements LoggerAwareInterface
         // Drawing tree:
         /* @var PageTreeView $tree */
         $tree = GeneralUtility::makeInstance(PageTreeView::class);
-        $perms_clause = $GLOBALS['BE_USER']->getPagePermsClause(1);
+        $perms_clause = $this->backendUser->getPagePermsClause(Permission::PAGE_SHOW);
         $tree->init('AND ' . $perms_clause);
 
         $pageInfo = BackendUtility::readPageAccess($id, $perms_clause);
@@ -1462,7 +1463,7 @@ class CrawlerController implements LoggerAwareInterface
                     )
                     ->execute()
                     ->fetchAll();
-                $queryBuilder->getRestrictions()->reset();
+                $queryBuilder->resetRestrictions();
 
                 // fetch mounted pages
                 $this->MP = $mountpage[0]['mount_pid'] . '-' . $data['row']['uid'];
@@ -1514,7 +1515,7 @@ class CrawlerController implements LoggerAwareInterface
             if (!empty($excludeString)) {
                 /** @var PageTreeView $tree */
                 $tree = GeneralUtility::makeInstance(PageTreeView::class);
-                $tree->init('AND ' . $this->backendUser->getPagePermsClause(1));
+                $tree->init('AND ' . $this->backendUser->getPagePermsClause(Permission::PAGE_SHOW));
 
                 $excludeParts = GeneralUtility::trimExplode(',', $excludeString);
 
@@ -1607,16 +1608,16 @@ class CrawlerController implements LoggerAwareInterface
                     foreach ($confArray['paramExpanded'] as $gVar => $gVal) {
                         $paramExpanded .= '
                             <tr>
-                                <td class="bgColor4-20">' . htmlspecialchars('&' . $gVar . '=') . '<br/>' .
-                                                '(' . count($gVal) . ')' .
-                                                '</td>
-                                <td class="bgColor4" nowrap="nowrap">' . nl2br(htmlspecialchars(implode(chr(10), $gVal))) . '</td>
+                                <td>' . htmlspecialchars('&' . $gVar . '=') . '<br/>' .
+                                '(' . count($gVal) . ')' .
+                                '</td>
+                                <td nowrap="nowrap">' . nl2br(htmlspecialchars(implode(chr(10), $gVal))) . '</td>
                             </tr>
                         ';
                         $calcRes *= count($gVal);
                         $calcAccu[] = count($gVal);
                     }
-                    $paramExpanded = '<table class="lrPadding c-list param-expanded">' . $paramExpanded . '</table>';
+                    $paramExpanded = '<table>' . $paramExpanded . '</table>';
                     $paramExpanded .= 'Comb: ' . implode('*', $calcAccu) . '=' . $calcRes;
 
                     // Options
@@ -1630,7 +1631,7 @@ class CrawlerController implements LoggerAwareInterface
 
                     // Compile row:
                     $content .= '
-                        <tr class="bgColor' . ($c % 2 ? '-20' : '-10') . '">
+                        <tr>
                             ' . $titleClm . '
                             <td>' . htmlspecialchars($confKey) . '</td>
                             <td>' . nl2br(htmlspecialchars(rawurldecode(trim(str_replace('&', chr(10) . '&', GeneralUtility::implodeArrayForUrl('', $confArray['paramParsed'])))))) . '</td>
@@ -1640,7 +1641,7 @@ class CrawlerController implements LoggerAwareInterface
                             <td nowrap="nowrap">' . DebugUtility::viewArray($confArray['subCfg']['procInstrParams.']) . '</td>
                         </tr>';
                 } else {
-                    $content .= '<tr class="bgColor' . ($c % 2 ? '-20' : '-10') . '">
+                    $content .= '<tr>
                             ' . $titleClm . '
                             <td>' . htmlspecialchars($confKey) . '</td>
                             <td colspan="5"><em>No entries</em> (Page is excluded in this configuration)</td>
@@ -1654,7 +1655,7 @@ class CrawlerController implements LoggerAwareInterface
 
             // Compile row:
             $content .= '
-                <tr class="bgColor-20" style="border-bottom: 1px solid black;">
+                <tr>
                     <td>' . $pageTitleAndIcon . '</td>
                     <td colspan="6"><em>No entries</em>' . $message . '</td>
                 </tr>';
@@ -1686,8 +1687,8 @@ class CrawlerController implements LoggerAwareInterface
         $this->CLI_runHooks();
 
         // Clean up the queue
-        if (intval($this->extensionSettings['purgeQueueDays']) > 0) {
-            $purgeDate = $this->getCurrentTime() - 24 * 60 * 60 * intval($this->extensionSettings['purgeQueueDays']);
+        if ((int)$this->extensionSettings['purgeQueueDays'] > 0) {
+            $purgeDate = $this->getCurrentTime() - 24 * 60 * 60 * (int)$this->extensionSettings['purgeQueueDays'];
 
             $queryBuilderDelete = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
             $del = $queryBuilderDelete
@@ -1708,7 +1709,7 @@ class CrawlerController implements LoggerAwareInterface
         $queryBuilderSelect = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
         $rows = $queryBuilderSelect
             ->select('qid', 'scheduled')
-            ->from('tx_crawler_queue')
+            ->from($this->tableName)
             ->where(
                 $queryBuilderSelect->expr()->eq('exec_time', 0),
                 $queryBuilderSelect->expr()->eq('process_scheduled', 0),
@@ -1737,7 +1738,7 @@ class CrawlerController implements LoggerAwareInterface
             //save the number of assigned queue entrys to determine who many have been processed later
             $queryBuilderUpdate = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
             $numberOfAffectedRows = $queryBuilderUpdate
-                ->update('tx_crawler_queue')
+                ->update($this->tableName)
                 ->where(
                     $queryBuilderUpdate->expr()->in('qid', $quidList)
                 )
@@ -1764,7 +1765,7 @@ class CrawlerController implements LoggerAwareInterface
                 $result |= $this->readUrl($r['qid']);
 
                 $counter++;
-                usleep(intval($sleepTime)); // Just to relax the system
+                usleep((int)$sleepTime); // Just to relax the system
 
                 // if during the start and the current read url the cli has been disable we need to return from the function
                 // mark the process NOT as ended.
@@ -1772,7 +1773,7 @@ class CrawlerController implements LoggerAwareInterface
                     return ($result | self::CLI_STATUS_ABORTED);
                 }
 
-                if (!$this->CLI_checkIfProcessIsActive($this->CLI_buildProcessId())) {
+                if (!$this->processRepository->isProcessActive($this->CLI_buildProcessId())) {
                     $this->CLI_debug("conflict / timeout (" . $this->CLI_buildProcessId() . ")");
 
                     //TODO might need an additional returncode
@@ -1781,7 +1782,7 @@ class CrawlerController implements LoggerAwareInterface
                 }
             }
 
-            sleep(intval($sleepAfterFinish));
+            sleep((int)$sleepAfterFinish);
 
             $msg = 'Rows: ' . $counter;
             $this->CLI_debug($msg . " (" . $this->CLI_buildProcessId() . ")");
@@ -1853,8 +1854,8 @@ class CrawlerController implements LoggerAwareInterface
         }
 
         // if there are less than allowed active processes then add a new one
-        if ($processCount < intval($this->extensionSettings['processLimit'])) {
-            $this->CLI_debug("add process " . $this->CLI_buildProcessId() . " (" . ($processCount + 1) . "/" . intval($this->extensionSettings['processLimit']) . ")");
+        if ($processCount < (int)$this->extensionSettings['processLimit']) {
+            $this->CLI_debug("add process " . $this->CLI_buildProcessId() . " (" . ($processCount + 1) . "/" . (int)$this->extensionSettings['processLimit'] . ")");
 
             GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('tx_crawler_process')->insert(
                 'tx_crawler_process',
@@ -1866,7 +1867,7 @@ class CrawlerController implements LoggerAwareInterface
                 ]
             );
         } else {
-            $this->CLI_debug("Processlimit reached (" . ($processCount) . "/" . intval($this->extensionSettings['processLimit']) . ")");
+            $this->CLI_debug("Processlimit reached (" . ($processCount) . "/" . (int)$this->extensionSettings['processLimit'] . ")");
             $ret = false;
         }
 
@@ -1905,7 +1906,7 @@ class CrawlerController implements LoggerAwareInterface
         // mark all processes as deleted which have no "waiting" queue-entires and which are not active
 
         $queryBuilder
-        ->update('tx_crawler_queue', 'q')
+        ->update($this->tableName, 'q')
         ->where(
             'q.process_id IN(SELECT p.process_id FROM tx_crawler_process as p WHERE p.active = 0)'
         )
@@ -1955,7 +1956,7 @@ class CrawlerController implements LoggerAwareInterface
             ->execute();
         $queryBuilder->resetQueryPart('set');
         $queryBuilder
-            ->update('tx_crawler_queue')
+            ->update($this->tableName)
             ->where(
                 $queryBuilder->expr()->eq('exec_time', 0),
                 $queryBuilder->expr()->in('process_id', $queryBuilder->createNamedParameter($releaseIds, Connection::PARAM_STR_ARRAY))
@@ -1972,36 +1973,6 @@ class CrawlerController implements LoggerAwareInterface
     }
 
     /**
-     * Check if there are still resources left for the process with the given id
-     * Used to determine timeouts and to ensure a proper cleanup if there's a timeout
-     *
-     * @param  string  identification string for the process
-     * @return boolean determines if the process is still active / has resources
-     *
-     * TODO: Please consider moving this to Domain Model for Process or in ProcessRepository
-     */
-    public function CLI_checkIfProcessIsActive($pid)
-    {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
-        $ret = false;
-
-        $statement = $queryBuilder
-            ->from('tx_crawler_process')
-            ->select('active')
-            ->where(
-                $queryBuilder->expr()->eq('process_id', intval($pid))
-            )
-            ->orderBy('ttl')
-            ->execute();
-
-        if ($row = $statement->fetch(0)) {
-            $ret = intVal($row['active']) == 1;
-        }
-
-        return $ret;
-    }
-
-    /**
      * Create a unique Id for the current process
      *
      * @return string  the ID
@@ -2009,19 +1980,9 @@ class CrawlerController implements LoggerAwareInterface
     public function CLI_buildProcessId()
     {
         if (!$this->processID) {
-            $this->processID = GeneralUtility::shortMD5($this->microtime(true));
+            $this->processID = GeneralUtility::shortMD5(microtime(true));
         }
         return $this->processID;
-    }
-
-    /**
-     * @param bool $get_as_float
-     *
-     * @return mixed
-     */
-    protected function microtime($get_as_float = false)
-    {
-        return microtime($get_as_float);
     }
 
     /**
@@ -2031,7 +1992,7 @@ class CrawlerController implements LoggerAwareInterface
      */
     public function CLI_debug($msg)
     {
-        if (intval($this->extensionSettings['processDebug'])) {
+        if ((int)$this->extensionSettings['processDebug']) {
             echo $msg . "\n";
             flush();
         }
