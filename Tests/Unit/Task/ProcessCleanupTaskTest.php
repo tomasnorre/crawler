@@ -41,7 +41,7 @@ class ProcessCleanupTaskTest extends UnitTestCase
     {
         $classObject = $this->createMock('\AOE\Crawler\Tasks\ProcessCleanupTask', [], [], '', false);
 
-        $this->assertInstanceOf(
+        self::assertInstanceOf(
             'AOE\Crawler\Task\ProcessCleanupTask',
             $classObject
         );

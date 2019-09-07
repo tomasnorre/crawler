@@ -75,60 +75,60 @@ class QueueTest extends UnitTestCase
         $this->subject->setResultData($resultData);
         $this->subject->setProcessIdCompleted($processIdCompleted);
 
-        $this->assertEquals(
+        self::assertEquals(
             $execTime,
             $this->subject->getExecTime()
         );
 
-        $this->assertSame(
+        self::assertSame(
             $configuration,
             $this->subject->getConfiguration()
         );
 
-        $this->assertSame(
+        self::assertSame(
             $configurationHash,
             $this->subject->getConfigurationHash()
         );
 
-        $this->assertSame(
+        self::assertSame(
             $processId,
             $this->subject->getProcessId()
         );
 
-        $this->assertSame(
+        self::assertSame(
             $pageId,
             $this->subject->getPageId()
         );
 
-        $this->assertSame(
+        self::assertSame(
             $parameters,
             $this->subject->getParameters()
         );
 
-        $this->assertSame(
+        self::assertSame(
             $parametersHash,
             $this->subject->getParametersHash()
         );
 
-        $this->assertSame(
+        self::assertSame(
             $qid,
             $this->subject->getQid()
         );
 
-        $this->assertFalse($this->subject->isScheduled());
-        $this->assertTrue($this->subject->isProcessScheduled());
+        self::assertFalse($this->subject->isScheduled());
+        self::assertTrue($this->subject->isProcessScheduled());
 
-        $this->assertSame(
+        self::assertSame(
             $setId,
             $this->subject->getSetId()
         );
 
-        $this->assertSame(
+        self::assertSame(
             $resultData,
             $this->subject->getResultData()
         );
 
-        $this->assertSame(
+        self::assertSame(
             $processIdCompleted,
             $this->subject->getProcessIdCompleted()
         );

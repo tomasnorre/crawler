@@ -43,7 +43,7 @@ class ProcessRepositoryTest extends UnitTestCase
      */
     public function getLimitFromItemCountAndOffset($itemCount, $offset, $expected)
     {
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             ProcessRepository::getLimitFromItemCountAndOffset($itemCount, $offset)
         );

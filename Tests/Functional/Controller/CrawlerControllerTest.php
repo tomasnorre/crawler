@@ -72,7 +72,7 @@ class CrawlerControllerTest extends FunctionalTestCase
      */
     public function noUnprocessedQueueEntriesForPageWithConfigurationHashExist($uid, $configurationHash, $expected)
     {
-        $this->assertSame(
+        self::assertSame(
             $expected,
             $this->subject->_call(
                 'noUnprocessedQueueEntriesForPageWithConfigurationHashExist',
@@ -108,7 +108,7 @@ class CrawlerControllerTest extends FunctionalTestCase
         }
 
         // Check total entries before cleanup
-        $this->assertEquals(
+        self::assertEquals(
             $recordsFromFixture + $expectedRemainingRecords,
             $queryRepository->countAll()
         );
@@ -116,7 +116,7 @@ class CrawlerControllerTest extends FunctionalTestCase
         $this->subject->_call('cleanUpOldQueueEntries');
 
         // Check total entries after cleanup
-        $this->assertEquals(
+        self::assertEquals(
             $expectedRemainingRecords,
             $queryRepository->countAll()
         );
@@ -136,7 +136,7 @@ class CrawlerControllerTest extends FunctionalTestCase
         $queryRepository = $objectManager->get(QueueRepository::class);
         $this->subject->_call('flushQueue', $where);
 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $queryRepository->countAll()
         );
@@ -156,7 +156,7 @@ class CrawlerControllerTest extends FunctionalTestCase
      */
     public function getLogEntriesForPageId($id, $filter, $doFlush, $doFullFlush, $itemsPerPage, $expected)
     {
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $this->subject->getLogEntriesForPageId($id, $filter, $doFlush, $doFullFlush, $itemsPerPage)
         );
@@ -176,7 +176,7 @@ class CrawlerControllerTest extends FunctionalTestCase
      */
     public function getLogEntriesForSetId($setId, $filter, $doFlush, $doFullFlush, $itemsPerPage, $expected)
     {
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $this->subject->getLogEntriesForSetId($setId, $filter, $doFlush, $doFullFlush, $itemsPerPage)
         );

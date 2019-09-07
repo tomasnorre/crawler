@@ -93,7 +93,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
      */
     public function findAllReturnsAll(): void
     {
-        $this->assertSame(
+        self::assertSame(
             5,
             $this->subject->findAll()->count()
         );
@@ -104,7 +104,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
      */
     public function findAllActiveReturnsActive(): void
     {
-        $this->assertSame(
+        self::assertSame(
             3,
             $this->subject->findAllActive()->count()
         );
@@ -115,14 +115,14 @@ class ProcessRepositoryTest extends FunctionalTestCase
      */
     public function removeByProcessId()
     {
-        $this->assertSame(
+        self::assertSame(
             5,
             $this->subject->findAll()->count()
         );
 
         $this->subject->removeByProcessId(1002);
 
-        $this->assertSame(
+        self::assertSame(
             4,
             $this->subject->findAll()->count()
         );
@@ -133,7 +133,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
      */
     public function countActive()
     {
-        $this->assertSame(
+        self::assertSame(
             3,
             $this->subject->countActive()
         );
@@ -144,7 +144,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
      */
     public function countNotTimeouted()
     {
-        $this->assertSame(
+        self::assertSame(
             2,
             $this->subject->countNotTimeouted(11)
         );
@@ -155,7 +155,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
      */
     public function countAll()
     {
-        $this->assertSame(
+        self::assertSame(
             5,
             $this->subject->countAll()
         );
@@ -172,7 +172,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
             ['process_id' => '1002', 'system_process_id' => 0]
         ];
 
-        $this->assertSame(
+        self::assertSame(
             $expected,
             $this->subject->getActiveProcessesOlderThanOneHour()
         );
@@ -189,7 +189,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
             ['process_id' => '1002', 'system_process_id' => 0]
         ];
 
-        $this->assertSame(
+        self::assertSame(
             $expected,
             $this->subject->getActiveOrphanProcesses()
         );
@@ -205,7 +205,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
         $this->subject->deleteProcessesWithoutItemsAssigned();
 
         // TODO: Fix the count all
-        $this->assertSame(
+        self::assertSame(
             3, //$this->subject->countAll(),
             $countBeforeDelete - $expectedProcessesToBeDeleted
         );
@@ -221,7 +221,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
         $this->subject->deleteProcessesMarkedAsDeleted();
 
         // TODO: Fix the count all
-        $this->assertSame(
+        self::assertSame(
             3, //$this->subject->countAll(),
             $countBeforeDelete - $expectedProcessesToBeDeleted
         );

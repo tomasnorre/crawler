@@ -84,8 +84,8 @@ class EventDispatcherTest extends UnitTestCase
             $dispatcher->post($event['name'], $event['group'], $event['parameters']);
         }
 
-        $this->assertEquals(EventsHelper::$called_foo, $expectedFooCalls);
-        $this->assertEquals(EventsHelper::$called_bar, $expectedBarCalls);
+        self::assertEquals(EventsHelper::$called_foo, $expectedFooCalls);
+        self::assertEquals(EventsHelper::$called_bar, $expectedBarCalls);
     }
 
     /**

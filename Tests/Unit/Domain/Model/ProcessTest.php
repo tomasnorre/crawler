@@ -67,25 +67,25 @@ class ProcessTest extends UnitTestCase
         $this->subject->setAssignedItemsCount($assignedItemsCount);
         $this->subject->setSystemProcessId($systemProcessId);
 
-        $this->assertFalse($this->subject->isDeleted());
-        $this->assertTrue($this->subject->isActive());
+        self::assertFalse($this->subject->isDeleted());
+        self::assertTrue($this->subject->isActive());
 
-        $this->assertSame(
+        self::assertSame(
             $processId,
             $this->subject->getProcessId()
         );
 
-        $this->assertSame(
+        self::assertSame(
             $ttl,
             $this->subject->getTtl()
         );
 
-        $this->assertSame(
+        self::assertSame(
             $assignedItemsCount,
             $this->subject->getAssignedItemsCount()
         );
 
-        $this->assertSame(
+        self::assertSame(
             $systemProcessId,
             $this->subject->getSystemProcessId()
         );
@@ -136,7 +136,7 @@ class ProcessTest extends UnitTestCase
         $processMock->expects($this->any())->method('isActive')->will($this->returnValue($active));
         $processMock->expects($this->any())->method('getProgress')->will($this->returnValue($processes));
 
-        $this->assertEquals(
+        self::assertEquals(
             $expectedState,
             $processMock->getState()
         );
@@ -157,7 +157,7 @@ class ProcessTest extends UnitTestCase
         $processMock->expects($this->any())->method('getAssignedItemsCount')->will($this->returnValue($countItemsAssigned));
         $processMock->expects($this->any())->method('getAmountOfItemsProcessed')->will($this->returnValue($countItemsProcessed));
 
-        $this->assertEquals(
+        self::assertEquals(
             $expectedProgress,
             $processMock->getProgress()
         );
@@ -213,7 +213,7 @@ class ProcessTest extends UnitTestCase
         $processMock->expects($this->any())->method('getTimeForFirstItem')->will($this->returnValue($getTimeForFirstItem));
         $processMock->expects($this->any())->method('getTimeForLastItem')->will($this->returnValue($getTimeForLastItem));
 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $processMock->getRuntime()
         );

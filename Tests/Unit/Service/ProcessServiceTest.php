@@ -63,7 +63,7 @@ class ProcessServiceTest extends UnitTestCase
      */
     public function getCrawlerCliPathReturnsString()
     {
-        $this->assertContains(
+        self::assertContains(
             '/typo3/sysext/core/bin/typo3 crawler:processQueue',
             $this->subject->getCrawlerCliPath()
         );

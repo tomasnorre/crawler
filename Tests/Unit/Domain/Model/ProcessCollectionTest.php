@@ -73,7 +73,7 @@ class ProcessCollectionTest extends UnitTestCase
 
         $collection = new ProcessCollection($processes);
 
-        $this->assertEquals(
+        self::assertEquals(
             ['11', '13'],
             $collection->getProcessIds()
         );
@@ -98,7 +98,7 @@ class ProcessCollectionTest extends UnitTestCase
         $correctObjectType = $this->getAccessibleMock(Process::class, ['dummy'], [], '', false);
         $this->subject->append($correctObjectType);
 
-        $this->assertEquals(
+        self::assertEquals(
             $correctObjectType,
             $this->subject->offsetGet(0)
         );
@@ -123,7 +123,7 @@ class ProcessCollectionTest extends UnitTestCase
         $correctObjectType = $this->getAccessibleMock(Process::class, ['dummy'], [], '', false);
         $this->subject->offsetSet(100, $correctObjectType);
 
-        $this->assertEquals(
+        self::assertEquals(
             $correctObjectType,
             $this->subject->offsetGet(100)
         );
@@ -138,7 +138,7 @@ class ProcessCollectionTest extends UnitTestCase
     {
         $correctObjectType = $this->getAccessibleMock(Process::class, ['dummy'], [], '', false);
 
-        $this->assertEquals(
+        self::assertEquals(
             $correctObjectType,
             $this->subject->offsetGet(100)
         );

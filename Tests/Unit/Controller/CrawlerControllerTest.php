@@ -95,7 +95,7 @@ class CrawlerControllerTest extends UnitTestCase
         $accessMode = 'cli';
         $this->crawlerController->setAccessMode($accessMode);
 
-        $this->assertEquals(
+        self::assertEquals(
             $accessMode,
             $this->crawlerController->getAccessMode()
         );
@@ -116,7 +116,7 @@ class CrawlerControllerTest extends UnitTestCase
         } else {
             $this->crawlerController->setDisabled($disabled);
         }
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $this->crawlerController->getDisabled()
         );
@@ -130,7 +130,7 @@ class CrawlerControllerTest extends UnitTestCase
         $filenameWithPath = tempnam('/tmp', 'test_foo');
         $this->crawlerController->setProcessFilename($filenameWithPath);
 
-        $this->assertEquals(
+        self::assertEquals(
             $filenameWithPath,
             $this->crawlerController->getProcessFilename()
         );
@@ -143,7 +143,7 @@ class CrawlerControllerTest extends UnitTestCase
      */
     public function drawURLs_PIfilter($piString, $incomingProcInstructions, $expected)
     {
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $this->crawlerController->drawURLs_PIfilter($piString, $incomingProcInstructions)
         );
@@ -160,7 +160,7 @@ class CrawlerControllerTest extends UnitTestCase
      */
     public function hasGroupAccess($groupList, $accessList, $expected)
     {
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $this->crawlerController->hasGroupAccess($groupList, $accessList)
         );
@@ -184,7 +184,7 @@ class CrawlerControllerTest extends UnitTestCase
         $crawlerController->expects($this->any())->method('checkIfPageShouldBeSkipped')->will($this->returnValue($checkIfPageSkipped));
         $crawlerController->expects($this->any())->method('getUrlsForPageId')->will($this->returnValue($getUrlsForPages));
 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $crawlerController->getUrlsForPageRow($pageRow, $skipMessage)
         );
@@ -224,7 +224,7 @@ class CrawlerControllerTest extends UnitTestCase
      */
     public function compileUrls($paramArray, $urls, $expected)
     {
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $this->crawlerController->compileUrls($paramArray, $urls)
         );
@@ -278,7 +278,7 @@ class CrawlerControllerTest extends UnitTestCase
         $this->crawlerController->setExtensionSettings($extensionSetting);
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['excludeDoktype'] = $excludeDoktype;
 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $this->crawlerController->checkIfPageShouldBeSkipped($pageRow)
         );
@@ -293,7 +293,7 @@ class CrawlerControllerTest extends UnitTestCase
         $crawlerController = $this->getAccessibleMock(CrawlerController::class, ['dummy'], [], '', false);
         $crawlerController->_set('processID', $processId);
 
-        $this->assertEquals(
+        self::assertEquals(
             $processId,
             $crawlerController->_call('CLI_buildProcessId')
         );
@@ -311,7 +311,7 @@ class CrawlerControllerTest extends UnitTestCase
     {
         $crawlerLib = $this->getAccessibleMock(CrawlerController::class, ['dummy'], [], '', false);
 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $crawlerLib->_call('getConfigurationHash', $configuration)
         );

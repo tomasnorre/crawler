@@ -53,7 +53,7 @@ class ReasonTest extends UnitTestCase
         ];
         $reason = new Reason($propertiesArray);
 
-        $this->assertSame(
+        self::assertSame(
             $propertiesArray,
             $reason->getRow()
         );
@@ -82,7 +82,7 @@ class ReasonTest extends UnitTestCase
             'queue_entry_uid' => $reason->getQueueEntryUid()
         ];
 
-        $this->assertSame(
+        self::assertSame(
             $expectedArray,
             $reason->getRow()
         );

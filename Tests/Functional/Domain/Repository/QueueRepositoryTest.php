@@ -80,7 +80,7 @@ class QueueRepositoryTest extends FunctionalTestCase
         $mockedRepository = $this->getAccessibleMock(QueueRepository::class, ['dummy'], [], '', false);
         $result = $mockedRepository->_call('getFirstOrLastObjectByProcess', $process, $orderBy, $orderDirection);
 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $result
         );
@@ -94,7 +94,7 @@ class QueueRepositoryTest extends FunctionalTestCase
         $process = new Process();
         $process->setProcessId('qwerty');
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 'qid' => '2',
                 'page_id' => '0',
@@ -122,7 +122,7 @@ class QueueRepositoryTest extends FunctionalTestCase
         $process = new Process();
         $process->setProcessId('qwerty');
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 'qid' => '3',
                 'page_id' => '0',
@@ -150,7 +150,7 @@ class QueueRepositoryTest extends FunctionalTestCase
         $process = new Process();
         $process->setProcessId('qwerty');
 
-        $this->assertSame(
+        self::assertSame(
             2,
             intval($this->subject->countExecutedItemsByProcess($process))
         );
@@ -164,7 +164,7 @@ class QueueRepositoryTest extends FunctionalTestCase
         $process = new Process();
         $process->setProcessId('1007');
 
-        $this->assertEquals(
+        self::assertEquals(
             2,
             $this->subject->countNonExecutedItemsByProcess($process)
         );
@@ -175,7 +175,7 @@ class QueueRepositoryTest extends FunctionalTestCase
      */
     public function countUnprocessedItems()
     {
-        $this->assertEquals(
+        self::assertEquals(
             5,
             $this->subject->countUnprocessedItems()
         );
@@ -186,7 +186,7 @@ class QueueRepositoryTest extends FunctionalTestCase
      */
     public function countAllPendingItems()
     {
-        $this->assertEquals(
+        self::assertEquals(
             5,
             $this->subject->countAllPendingItems()
         );
@@ -197,7 +197,7 @@ class QueueRepositoryTest extends FunctionalTestCase
      */
     public function countAllAssignedPendingItems()
     {
-        $this->assertEquals(
+        self::assertEquals(
             3,
             $this->subject->countAllAssignedPendingItems()
         );
@@ -208,7 +208,7 @@ class QueueRepositoryTest extends FunctionalTestCase
      */
     public function countAllUnassignedPendingItems()
     {
-        $this->assertEquals(
+        self::assertEquals(
             2,
             $this->subject->countAllUnassignedPendingItems()
         );
@@ -237,7 +237,7 @@ class QueueRepositoryTest extends FunctionalTestCase
             ],
         ];
 
-        $this->assertEquals(
+        self::assertEquals(
             $expectedArray,
             $this->subject->countPendingItemsGroupedByConfigurationKey()
         );
@@ -255,7 +255,7 @@ class QueueRepositoryTest extends FunctionalTestCase
             3 => 789,
         ];
 
-        $this->assertSame(
+        self::assertSame(
             $expectedArray,
             $this->subject->getSetIdWithUnprocessedEntries()
         );
@@ -273,7 +273,7 @@ class QueueRepositoryTest extends FunctionalTestCase
             'SecondConfiguration' => 2,
         ];
 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $this->subject->getTotalQueueEntriesByConfiguration($setIds)
         );
@@ -290,7 +290,7 @@ class QueueRepositoryTest extends FunctionalTestCase
             '2' => 18,
         ];
 
-        $this->assertEquals(
+        self::assertEquals(
             $expectedArray,
             $this->subject->getLastProcessedEntriesTimestamps(3)
         );
@@ -309,7 +309,7 @@ class QueueRepositoryTest extends FunctionalTestCase
             $actually[] = $processedEntry['qid'];
         }
 
-        $this->assertSame(
+        self::assertSame(
             $expectedArray,
             $actually
         );
@@ -341,7 +341,7 @@ class QueueRepositoryTest extends FunctionalTestCase
             ],
         ];
 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $this->subject->getPerformanceData(9, 21)
         );
@@ -352,7 +352,7 @@ class QueueRepositoryTest extends FunctionalTestCase
      */
     public function countAll()
     {
-        $this->assertEquals(
+        self::assertEquals(
             12,
             $this->subject->countAll()
         );
@@ -381,7 +381,7 @@ class QueueRepositoryTest extends FunctionalTestCase
      */
     public function isPageInQueue($uid, $unprocessed_only, $timed_only, $timestamp, $expected)
     {
-        $this->assertSame(
+        self::assertSame(
             $expected,
             $this->subject->isPageInQueue($uid, $unprocessed_only, $timed_only, $timestamp)
         );
@@ -392,7 +392,7 @@ class QueueRepositoryTest extends FunctionalTestCase
      */
     public function isPageInQueueTimed()
     {
-        $this->assertTrue($this->subject->isPageInQueueTimed(15));
+        self::assertTrue($this->subject->isPageInQueueTimed(15));
     }
 
     /**

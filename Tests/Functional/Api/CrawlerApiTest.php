@@ -142,7 +142,7 @@ class CrawlerApiTest extends FunctionalTestCase
      */
     public function findCrawlerReturnsCrawlerObject()
     {
-        $this->assertInstanceOf(
+        self::assertInstanceOf(
             CrawlerController::class,
             $this->callInaccessibleMethod($this->subject, 'findCrawler')
         );
@@ -156,7 +156,7 @@ class CrawlerApiTest extends FunctionalTestCase
         $newId = 12345;
         $this->subject->overwriteSetId($newId);
 
-        $this->assertSame(
+        self::assertSame(
             $newId,
             $this->subject->getSetId()
         );
@@ -177,7 +177,7 @@ class CrawlerApiTest extends FunctionalTestCase
 
         $this->subject->setAllowedConfigurations($newConfiguration);
 
-        $this->assertSame(
+        self::assertSame(
             $newConfiguration,
             $this->subject->getAllowedConfigurations()
         );
@@ -190,12 +190,12 @@ class CrawlerApiTest extends FunctionalTestCase
     {
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
 
-        $this->assertSame(
+        self::assertSame(
             1,
             $this->callInaccessibleMethod($this->subject, 'countEntriesInQueueForPageByScheduleTime', 15, 0)
         );
 
-        $this->assertSame(
+        self::assertSame(
             1,
             $this->callInaccessibleMethod($this->subject, 'countEntriesInQueueForPageByScheduleTime', 17, 4321)
         );
@@ -208,7 +208,7 @@ class CrawlerApiTest extends FunctionalTestCase
     {
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
 
-        $this->assertSame(
+        self::assertSame(
             4321,
             $this->subject->getLatestCrawlTimestampForPage(17)
         );
@@ -221,7 +221,7 @@ class CrawlerApiTest extends FunctionalTestCase
     {
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 [
                     'scheduled' => 4321,
@@ -240,7 +240,7 @@ class CrawlerApiTest extends FunctionalTestCase
     {
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
 
-        $this->assertSame(
+        self::assertSame(
             [
                 'assignedButUnprocessed' => 3,
                 'unprocessed' => 5
@@ -267,7 +267,7 @@ class CrawlerApiTest extends FunctionalTestCase
         $crawlerApi->addPageToQueueTimed(5, 9998);
         $crawlerApi->addPageToQueueTimed(5, 3422);
 
-        $this->assertSame(
+        self::assertSame(
             $this->queueRepository->countUnprocessedItems(),
             1
         );
@@ -292,7 +292,7 @@ class CrawlerApiTest extends FunctionalTestCase
         $crawlerApi->addPageToQueueTimed(5, 100001);
         $crawlerApi->addPageToQueueTimed(5, 100001);
 
-        $this->assertSame(
+        self::assertSame(
             $this->queueRepository->countUnprocessedItems(),
             1
         );
@@ -316,7 +316,7 @@ class CrawlerApiTest extends FunctionalTestCase
         $crawlerApi->addPageToQueueTimed(5, 100011);
         $crawlerApi->addPageToQueueTimed(5, 100014);
 
-        $this->assertEquals($this->queueRepository->countUnprocessedItems(), 2);
+        self::assertEquals($this->queueRepository->countUnprocessedItems(), 2);
     }
 
     /**
@@ -350,23 +350,23 @@ class CrawlerApiTest extends FunctionalTestCase
         $queueItems = $this->queueRepository->getUnprocessedItems();
         //$queueItems = $crawlerApi->getUnprocessedItems();
 
-        $this->assertEquals($queueItems[0]['page_id'], 7);
-        $this->assertEquals($queueItems[0]['scheduled'], 100011);
-        $this->assertEquals(
+        self::assertEquals($queueItems[0]['page_id'], 7);
+        self::assertEquals($queueItems[0]['scheduled'], 100011);
+        self::assertEquals(
             $expectedParameter,
             $queueItems[0]['parameters'],
             'Wrong queue parameters created by crawler lib for configuration record'
         );
 
-        $this->assertEquals($queueItems[1]['page_id'], 7);
-        $this->assertEquals($queueItems[1]['scheduled'], 100059);
-        $this->assertEquals(
+        self::assertEquals($queueItems[1]['page_id'], 7);
+        self::assertEquals($queueItems[1]['scheduled'], 100059);
+        self::assertEquals(
             $expectedParameter,
             $queueItems[1]['parameters'],
             'Wrong queue parameters created by crawler lib for configuration record'
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             $this->queueRepository->countUnprocessedItems(),
             2,
             'Could not add pages to queue configured by record'

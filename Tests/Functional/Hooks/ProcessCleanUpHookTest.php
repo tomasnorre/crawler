@@ -140,12 +140,12 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         $processCountAfter = $this->processRepository->countAll();
         $queueCountAfter = $this->queueRepository->countAll();
 
-        $this->assertEquals(
+        self::assertEquals(
             $processCountBefore,
             $processCountAfter
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             $queueCountBefore,
             $queueCountAfter
         );
@@ -168,12 +168,12 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         $processCountAfter = $this->processRepository->countAll();
         $queueCountAfter = $this->queueRepository->countAll();
 
-        $this->assertEquals(
+        self::assertEquals(
             $processCountBefore - $expectedProcessesToBeRemoved,
             $processCountAfter
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             $queueCountBefore - $expectedQueueRecordsToBeRemoved,
             $queueCountAfter
         );
@@ -195,17 +195,17 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         $processCountAfter = $this->processRepository->countAll();
         $queueCountAfter = $this->queueRepository->countAllByProcessId($existingProcessId);
 
-        $this->assertEquals(
+        self::assertEquals(
             $processCountBefore - $expectedProcessesToBeRemoved,
             $processCountAfter
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             1,
             $queueCountBefore
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             0,
             $queueCountAfter
         );
@@ -218,7 +218,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
     {
         $emptyInputString = '';
 
-        $this->assertEquals(
+        self::assertEquals(
             [],
             $this->callInaccessibleMethod($this->subject, 'createResponseArray', $emptyInputString)
         );
@@ -233,7 +233,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         $inputString = '1   2 2 4 5 6 ';
         $expectedOutputArray = ['1', '2', '2', '4', '5', '6'];
 
-        $this->assertEquals(
+        self::assertEquals(
             $expectedOutputArray,
             $this->callInaccessibleMethod($this->subject, 'createResponseArray', $inputString)
         );
