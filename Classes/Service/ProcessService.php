@@ -201,9 +201,9 @@ class ProcessService
 
         // Check whether OS is Windows
         if (Environment::isWindows()) {
-            $completePath = CommandUtility::escapeShellArgument('start ' . $this->getCrawlerCliPath());
+            $completePath = 'start ' . $this->getCrawlerCliPath();
         } else {
-            $completePath = '(' . CommandUtility::escapeShellArgument($this->getCrawlerCliPath()) . ' &) > /dev/null';
+            $completePath = '(' . $this->getCrawlerCliPath() . ' &) > /dev/null';
         }
 
         $fileHandler = CommandUtility::exec($completePath);
