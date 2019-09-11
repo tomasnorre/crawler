@@ -16,6 +16,7 @@ namespace AOE\Crawler\CrawlStrategy;
  */
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
+use AOE\Crawler\Utility\PhpBinaryUtility;
 use Psr\Http\Message\UriInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
@@ -85,7 +86,7 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface
             base64_encode(serialize($requestHeaders))
         ];
         $commandParts = CommandUtility::escapeShellArguments($commandParts);
-        $cmd = escapeshellcmd($this->extensionSettings['phpPath']);
+        $cmd = escapeshellcmd(PhpBinaryUtility::getPhpBinary($this->extensionSettings));
         $cmd .= ' ' . implode(' ', $commandParts);
 
         $startTime = microtime(true);
@@ -109,7 +110,6 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface
         return $reqHeaders;
     }
 
-
     /**
      * Executes a shell command and returns the outputted result.
      *
@@ -120,7 +120,6 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface
     {
         return shell_exec($command);
     }
-
 
     /**
      * Gets the base path of the website frontend.
@@ -136,10 +135,10 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface
         // Get the path from the extension settings:
         if (isset($this->extensionSettings['frontendBasePath']) && $this->extensionSettings['frontendBasePath']) {
             $frontendBasePath = $this->extensionSettings['frontendBasePath'];
-            // If empty, try to use config.absRefPrefix:
+        // If empty, try to use config.absRefPrefix:
         } elseif (isset($GLOBALS['TSFE']->absRefPrefix) && !empty($GLOBALS['TSFE']->absRefPrefix)) {
             $frontendBasePath = $GLOBALS['TSFE']->absRefPrefix;
-            // If not in CLI mode the base path can be determined from $_SERVER environment:
+        // If not in CLI mode the base path can be determined from $_SERVER environment:
         } elseif (!Environment::isCli()) {
             $frontendBasePath = GeneralUtility::getIndpEnv('TYPO3_SITE_PATH');
         }

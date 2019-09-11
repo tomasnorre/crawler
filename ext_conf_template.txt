@@ -60,8 +60,11 @@ purgeQueueDays=14
 ## System
 #########
 
-# cat=System; type=string; label= PHP Path: Local path to php binary file (e.g. "/usr/bin/php")
-phpPath=/usr/bin/php
+# cat=System; type=string; label= Name of the php binary (e.g. PHP72-LATEST-CLI ), default is php
+phpBinary=php
+
+# cat=System; type=string; label= PHP Path: Local path to php binary file (e.g. "/usr/bin/php"), you should ONLY use this the resolved php-binary isn't the correct one. You can check that in the Info -> Site Crawling -> Crawling Process -> CLI-Path
+phpPath=
 
 #########
 ## Debug
