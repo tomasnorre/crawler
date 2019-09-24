@@ -869,14 +869,7 @@ class BackendModule
             $this->addErrorMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:message.noPhpForkAvailable'));
         }
 
-        $exitCode = 0;
-        $out = [];
-        CommandUtility::exec(
-            CommandUtility::escapeShellArgument($this->extensionSettings['phpPath'] . ' -v'),
-            $out,
-            $exitCode
-        );
-        if ($exitCode > 0) {
+        if (!CommandUtility::checkCommand($this->extensionSettings['phpPath'])) {
             $this->addErrorMessage(sprintf($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:message.phpBinaryNotFound'), htmlspecialchars($this->extensionSettings['phpPath'])));
         }
     }
