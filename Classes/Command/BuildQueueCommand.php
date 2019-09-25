@@ -128,7 +128,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             $crawlerController->registerQueueEntriesInternallyOnly = true;
         }
 
-        $pageId = MathUtility::forceIntegerInRange($input->getOption('startpage'), 0);
+        $pageId = MathUtility::forceIntegerInRange($input->getOption('page'), 0);
 
         $configurationKeys = $this->getConfigurationKeys($input->getOption('conf'));
 
