@@ -872,7 +872,7 @@ class BackendModule
         $exitCode = 0;
         $out = [];
         CommandUtility::exec(
-            CommandUtility::escapeShellArgument($this->extensionSettings['phpPath'] . ' -v'),
+            CommandUtility::escapeShellArgument($this->extensionSettings['phpPath']) . ' -v',
             $out,
             $exitCode
         );
