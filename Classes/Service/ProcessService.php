@@ -31,6 +31,7 @@ use AOE\Crawler\Domain\Repository\QueueRepository;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
@@ -222,6 +223,7 @@ class ProcessService
      * Returns the path to start the crawler from the command line
      *
      * @return string
+     * @throws \TYPO3\CMS\Core\Package\Exception
      */
     public function getCrawlerCliPath()
     {
@@ -243,7 +245,13 @@ class ProcessService
             $scriptPath = $phpPath . $composerRootDir . $binDir . '/' . $cliPart;
         } else {
             $typo3ConsolePath = ExtensionManagementUtility::extPath('typo3_console');
-            $scriptPath = $phpPath . $typo3ConsolePath . $cliPart;
+
+            $isTypo3ConsoleVersion4 = VersionNumberUtility::convertVersionNumberToInteger(ExtensionManagementUtility::getExtensionVersion('typo3_console')) < 5000000;
+            if ($isTypo3ConsoleVersion4) {
+                $scriptPath = $phpPath . $typo3ConsolePath . 'Scripts/' . $cliPart;
+            } else {
+                $scriptPath = $phpPath . $typo3ConsolePath . $cliPart;
+            }
         }
 
         if (TYPO3_OS === 'WIN') {
