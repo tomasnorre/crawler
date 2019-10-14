@@ -67,12 +67,12 @@ class ProcessServiceTest extends FunctionalTestCase
 
         // Check with phpPath set
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [
-            'phpPath' => '/usr/local/bin/php73',
+            'phpPath' => '/usr/local/bin/foobar-binary-to-be-able-to-differ-the-test',
             'phpBinary' => '/usr/local/bin/php74'
 
         ];
         self::assertContains(
-            '/usr/local/bin/php73',
+            '/usr/local/bin/foobar-binary-to-be-able-to-differ-the-test',
             $this->subject->getCrawlerCliPath()
         );
 
@@ -82,7 +82,7 @@ class ProcessServiceTest extends FunctionalTestCase
 
         ];
         self::assertContains(
-            '/usr/bin/php',
+            'php',
             $this->subject->getCrawlerCliPath()
         );
     }
