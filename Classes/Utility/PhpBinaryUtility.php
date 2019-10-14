@@ -17,18 +17,21 @@ namespace AOE\Crawler\Utility;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use TYPO3\CMS\Core\Utility\CommandUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class PhpBinaryUtility
 {
     /**
-     * @param array $extensionSettings
      * @return string
      */
-    public static function getPhpBinary(array $extensionSettings): string
+    public static function getPhpBinary(): string
     {
+        $extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
+
         if (empty($extensionSettings)) {
-            throwException('ExtensionSettings are empty');
+            throw new \Exception('ExtensionSettings are empty');
         }
 
         if (empty($extensionSettings['phpPath'])) {

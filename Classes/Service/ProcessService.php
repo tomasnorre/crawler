@@ -227,7 +227,7 @@ class ProcessService
      */
     public function getCrawlerCliPath(): string
     {
-        $phpPath = PhpBinaryUtility::getPhpBinary($this->crawlerController->extensionSettings);
+        $phpPath = PhpBinaryUtility::getPhpBinary();
         $typo3BinaryPath = ExtensionManagementUtility::extPath('core') . 'bin/';
         $cliPart = 'typo3 crawler:processQueue';
         // Don't like the spacing, but don't have an better idea for now

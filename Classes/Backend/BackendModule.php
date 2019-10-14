@@ -873,7 +873,7 @@ class BackendModule
         $exitCode = 0;
         $out = [];
         CommandUtility::exec(
-            PhpBinaryUtility::getPhpBinary($this->extensionSettings) . ' -v',
+            PhpBinaryUtility::getPhpBinary() . ' -v',
             $out,
             $exitCode
         );

@@ -86,7 +86,7 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface
             base64_encode(serialize($requestHeaders))
         ];
         $commandParts = CommandUtility::escapeShellArguments($commandParts);
-        $cmd = escapeshellcmd(PhpBinaryUtility::getPhpBinary($this->extensionSettings));
+        $cmd = escapeshellcmd(PhpBinaryUtility::getPhpBinary());
         $cmd .= ' ' . implode(' ', $commandParts);
 
         $startTime = microtime(true);
