@@ -1,5 +1,5 @@
 <?php
-namespace AOE\Crawler\Tests\Unit\Service;
+namespace AOE\Crawler\Tests\Functional\Service;
 
 /***************************************************************
  *  Copyright notice
@@ -27,14 +27,14 @@ namespace AOE\Crawler\Tests\Unit\Service;
 
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Service\ProcessService;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 
 /**
  * Class ProcessServiceTest
  *
  * @package AOE\Crawler\Tests\Unit\Domain\Model
  */
-class ProcessServiceTest extends UnitTestCase
+class ProcessServiceTest extends FunctionalTestCase
 {
 
     /**
@@ -54,6 +54,7 @@ class ProcessServiceTest extends UnitTestCase
      */
     public function setUp()
     {
+        parent::setUp();
         $this->subject = $this->createPartialMock(ProcessService::class, ['dummyMethod']);
         $this->crawlerController = $this->createPartialMock(CrawlerController::class, ['dummyMethod']);
     }
@@ -63,10 +64,36 @@ class ProcessServiceTest extends UnitTestCase
      */
     public function getCrawlerCliPathReturnsString()
     {
+
+        // Check with phpPath set
+        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [
+            'phpPath' => '/usr/local/bin/foobar-binary-to-be-able-to-differ-the-test',
+            'phpBinary' => '/usr/local/bin/php74'
+
+        ];
         self::assertContains(
-            '/typo3/sysext/core/bin/typo3 crawler:processQueue',
+            '/usr/local/bin/foobar-binary-to-be-able-to-differ-the-test',
             $this->subject->getCrawlerCliPath()
         );
+
+        // Check without phpPath set
+        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [
+            'phpBinary' => 'php'
+
+        ];
+        self::assertContains(
+            'php',
+            $this->subject->getCrawlerCliPath()
+        );
+    }
+
+    /**
+     * @test
+     * @expectedException \Exception
+     */
+    public function getCrawlerCliPathThrowsException()
+    {
+        $this->subject->getCrawlerCliPath();
     }
 
     /**

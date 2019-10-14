@@ -28,6 +28,7 @@ namespace AOE\Crawler\Service;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Utility\PhpBinaryUtility;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -200,9 +201,9 @@ class ProcessService
 
         // Check whether OS is Windows
         if (Environment::isWindows()) {
-            $completePath = CommandUtility::escapeShellArgument('start ' . $this->getCrawlerCliPath());
+            $completePath = 'start ' . $this->getCrawlerCliPath();
         } else {
-            $completePath = '(' . CommandUtility::escapeShellArgument($this->getCrawlerCliPath()) . ' &) > /dev/null';
+            $completePath = '(' . $this->getCrawlerCliPath() . ' &) > /dev/null';
         }
 
         $fileHandler = CommandUtility::exec($completePath);
@@ -226,10 +227,11 @@ class ProcessService
      */
     public function getCrawlerCliPath(): string
     {
-        $phpPath = $this->crawlerController->extensionSettings['phpPath'] . ' ';
-        $cliPart = 'typo3 crawler:processQueue';
+        $phpPath = PhpBinaryUtility::getPhpBinary();
         $typo3BinaryPath = ExtensionManagementUtility::extPath('core') . 'bin/';
-        $scriptPath = $phpPath . $typo3BinaryPath . $cliPart;
+        $cliPart = 'typo3 crawler:processQueue';
+        // Don't like the spacing, but don't have an better idea for now
+        $scriptPath = $phpPath . ' ' . $typo3BinaryPath . $cliPart;
 
         if (Environment::isWindows()) {
             $scriptPath = str_replace('/', '\\', $scriptPath);

@@ -32,6 +32,7 @@ use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\EventDispatcher;
 use AOE\Crawler\Service\ProcessService;
+use AOE\Crawler\Utility\PhpBinaryUtility;
 use Psr\Http\Message\UriInterface;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
@@ -872,7 +873,7 @@ class BackendModule
         $exitCode = 0;
         $out = [];
         CommandUtility::exec(
-            CommandUtility::escapeShellArgument($this->extensionSettings['phpPath'] . ' -v'),
+            PhpBinaryUtility::getPhpBinary() . ' -v',
             $out,
             $exitCode
         );
