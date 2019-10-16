@@ -383,7 +383,7 @@ class BackendModule extends AbstractFunctionModule
                 $output .= $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.count') . ': ' . count(array_keys($this->duplicateTrack)) . '<br />';
                 $output .= $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.curtime') . ': ' . date('H:i:s', time()) . '<br />';
                 $output .= '<br />
-					<table class="lrPadding c-list url-table">' .
+					<table class="table table-striped table-hover typo3-page-pages">' .
                         $this->drawURLs_printTableHeader() .
                         $code .
                     '</table>';
@@ -457,16 +457,20 @@ class BackendModule extends AbstractFunctionModule
         );
 
         $output = '
-			<table class="lrPadding c-list">
-				<tr class="bgColor5 tableheader">
-					<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.depth') . ':</td>
-					<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.configurations') . ':</td>
-					<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.scheduled') . ':</td>
-				</tr>
-				<tr class="bgColor4">
-					<td valign="top">' . implode('</td>
-					<td valign="top">', $cell) . '</td>
-				</tr>
+			<table class="table table-striped table-hover typo3-page-pages">
+			    <thead>
+                    <tr>
+                        <td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.depth') . ':</td>
+                        <td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.configurations') . ':</td>
+                        <td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.scheduled') . ':</td>
+                    </tr>
+				</thead>
+				<tbody>
+                    <tr">
+                        <td valign="top">' . implode('</td>
+                        <td valign="top">', $cell) . '</td>
+                    </tr>
+				</tbody>
 			</table>';
 
         return $output;
@@ -480,15 +484,17 @@ class BackendModule extends AbstractFunctionModule
     public function drawURLs_printTableHeader()
     {
         $content = '
-			<tr class="bgColor5 tableheader">
-				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.pagetitle') . ':</td>
-				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.key') . ':</td>
-				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.parametercfg') . ':</td>
-				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.values') . ':</td>
-				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.urls') . ':</td>
-				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.options') . ':</td>
-				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.parameters') . ':</td>
-			</tr>';
+            <thead>
+                <tr>
+                    <td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.pagetitle') . ':</td>
+                    <td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.key') . ':</td>
+                    <td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.parametercfg') . ':</td>
+                    <td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.values') . ':</td>
+                    <td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.urls') . ':</td>
+                    <td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.options') . ':</td>
+                    <td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.parameters') . ':</td>
+                </tr>
+            </thead>';
 
         return $content;
     }
@@ -610,7 +616,7 @@ class BackendModule extends AbstractFunctionModule
 						<br /><br />
 
 
-						<table class="lrPadding c-list crawlerlog">' .
+						<table class="table table-striped table-hover typo3-page-pages">' .
                             $this->drawLog_printTableHeader() .
                             $code .
                         '</table>';
@@ -625,11 +631,13 @@ class BackendModule extends AbstractFunctionModule
                             );
 
                 $code = '
-					<tr class="bgColor5 tableheader">
-						<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.setid') . ':</td>
-						<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.count') . 't:</td>
-						<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.time') . ':</td>
-					</tr>
+                    <thead>
+                        <tr>
+                            <td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.setid') . ':</td>
+                            <td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.count') . 't:</td>
+                            <td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.time') . ':</td>
+                        </tr>
+					</thead>
 				';
 
                 $cc = 0;
@@ -647,7 +655,7 @@ class BackendModule extends AbstractFunctionModule
 
                 $output .= '
 					<br /><br />
-					<table class="lrPadding c-list">' .
+					<table class="table table-striped table-hover typo3-page-pages">' .
                         $code .
                     '</table>';
             }
@@ -846,24 +854,26 @@ class BackendModule extends AbstractFunctionModule
     public function drawLog_printTableHeader()
     {
         $content = '
-			<tr class="bgColor5 tableheader">
-				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.pagetitle') . ':</td>
-				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.qid') . ':</td>
-				<td>&nbsp;</td>' .
-                ($this->pObj->MOD_SETTINGS['log_resultLog'] ? '
-				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.resultlog') . ':</td>' : '
-				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.scheduledtime') . ':</td>
-				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.runtime') . ':</td>') . '
-				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.status') . ':</td>
-				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.url') . ':</td>
-				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.groups') . ':</td>
-				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.procinstr') . ':</td>
-				<td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.setid') . ':</td>' .
-                ($this->pObj->MOD_SETTINGS['log_feVars'] ? '
-				<td>' . htmlspecialchars('TSFE->id') . '</td>
-				<td>' . htmlspecialchars('TSFE->gr_list') . '</td>
-				<td>' . htmlspecialchars('TSFE->no_cache') . '</td>' : '') . '
-			</tr>';
+            <thead>            
+                <tr>
+                    <td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.pagetitle') . ':</td>
+                    <td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.qid') . ':</td>
+                    <td>&nbsp;</td>' .
+                    ($this->pObj->MOD_SETTINGS['log_resultLog'] ? '
+                    <td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.resultlog') . ':</td>' : '
+                    <td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.scheduledtime') . ':</td>
+                    <td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.runtime') . ':</td>') . '
+                    <td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.status') . ':</td>
+                    <td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.url') . ':</td>
+                    <td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.groups') . ':</td>
+                    <td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.procinstr') . ':</td>
+                    <td>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.setid') . ':</td>' .
+                    ($this->pObj->MOD_SETTINGS['log_feVars'] ? '
+                    <td>' . htmlspecialchars('TSFE->id') . '</td>
+                    <td>' . htmlspecialchars('TSFE->gr_list') . '</td>
+                    <td>' . htmlspecialchars('TSFE->no_cache') . '</td>' : '') . '
+                </tr>
+			</thead>';
 
         return $content;
     }
