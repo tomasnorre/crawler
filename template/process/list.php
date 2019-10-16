@@ -36,7 +36,7 @@
 </table>
 
 <h2><?php echo $this->getLLLabel('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.processstates'); ?>: </h2>
-<table class="processes">
+<table class="processes table table-striped table-hover typo3-page-pages">
 	<thead>
 		<tr>
 			<th><?php echo $this->getLLLabel('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.state'); ?>: </th>

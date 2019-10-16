@@ -643,7 +643,7 @@ class BackendModule extends AbstractFunctionModule
                 $cc = 0;
                 foreach ($setList as $set) {
                     $code .= '
-						<tr class="bgColor' . ($cc % 2 ? '-20' : '-10') . '">
+						<tr>
 							<td><a href="' . htmlspecialchars('index.php?setID=' . $set['set_id']) . '">' . $set['set_id'] . '</a></td>
 							<td>' . $set['count_value'] . '</td>
 							<td>' . BackendUtility::dateTimeAge($set['scheduled']) . '</td>
@@ -788,7 +788,7 @@ class BackendModule extends AbstractFunctionModule
 
                 // Put rows together:
                 $content .= '
-					<tr class="bgColor' . ($c % 2 ? '-20' : '-10') . '">
+					<tr>
 						' . $titleClm . '
 						<td><a href="' . $this->getModuleUrl(['qid_details' => $vv['qid'], 'setID' => $setId]) . '">' . htmlspecialchars($vv['qid']) . '</a></td>
 						<td><a href="' . $this->getModuleUrl(['qid_read' => $vv['qid'], 'setID' => $setId]) . '">' . $refreshIcon . '</a></td>';
@@ -818,7 +818,7 @@ class BackendModule extends AbstractFunctionModule
 
                 // Compile row:
             $content = '
-				<tr class="bgColor-20">
+				<tr>
 					<td>' . $titleString . '</td>
 					<td colspan="' . $colSpan . '"><em>' . $GLOBALS['LANG']->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.noentries') . '</em></td>
 				</tr>';

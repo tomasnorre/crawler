@@ -2012,16 +2012,16 @@ class CrawlerController
                     foreach ($confArray['paramExpanded'] as $gVar => $gVal) {
                         $paramExpanded .= '
                             <tr>
-                                <td class="bgColor4-20">' . htmlspecialchars('&' . $gVar . '=') . '<br/>' .
+                                <td>' . htmlspecialchars('&' . $gVar . '=') . '<br/>' .
                                                 '(' . count($gVal) . ')' .
                                                 '</td>
-                                <td class="bgColor4" nowrap="nowrap">' . nl2br(htmlspecialchars(implode(chr(10), $gVal))) . '</td>
+                                <td>' . nl2br(htmlspecialchars(implode(chr(10), $gVal))) . '</td>
                             </tr>
                         ';
                         $calcRes *= count($gVal);
                         $calcAccu[] = count($gVal);
                     }
-                    $paramExpanded = '<table class="lrPadding c-list param-expanded">' . $paramExpanded . '</table>';
+                    $paramExpanded = '<table class="table table-striped table-hover typo3-page-pages">' . $paramExpanded . '</table>';
                     $paramExpanded .= 'Comb: ' . implode('*', $calcAccu) . '=' . $calcRes;
 
                     // Options
@@ -2038,17 +2038,17 @@ class CrawlerController
 
                     // Compile row:
                     $content .= '
-                        <tr class="bgColor' . ($c % 2 ? '-20' : '-10') . '">
+                        <tr>
                             ' . $titleClm . '
                             <td>' . htmlspecialchars($confKey) . '</td>
                             <td>' . nl2br(htmlspecialchars(rawurldecode(trim(str_replace('&', chr(10) . '&', GeneralUtility::implodeArrayForUrl('', $confArray['paramParsed'])))))) . '</td>
                             <td>' . $paramExpanded . '</td>
-                            <td nowrap="nowrap">' . $urlList . '</td>
-                            <td nowrap="nowrap">' . $optionValues . '</td>
-                            <td nowrap="nowrap">' . DebugUtility::viewArray($confArray['subCfg']['procInstrParams.']) . '</td>
+                            <td>' . $urlList . '</td>
+                            <td>' . $optionValues . '</td>
+                            <td>' . DebugUtility::viewArray($confArray['subCfg']['procInstrParams.']) . '</td>
                         </tr>';
                 } else {
-                    $content .= '<tr class="bgColor' . ($c % 2 ? '-20' : '-10') . '">
+                    $content .= '<tr>
                             ' . $titleClm . '
                             <td>' . htmlspecialchars($confKey) . '</td>
                             <td colspan="5"><em>No entries</em> (Page is excluded in this configuration)</td>
@@ -2062,7 +2062,7 @@ class CrawlerController
 
             // Compile row:
             $content .= '
-                <tr class="bgColor-20" style="border-bottom: 1px solid black;">
+                <tr style="border-bottom: 1px solid black;">
                     <td>' . $pageTitleAndIcon . '</td>
                     <td colspan="6"><em>No entries</em>' . $message . '</td>
                 </tr>';
