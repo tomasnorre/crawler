@@ -27,8 +27,8 @@ The content of this document is related to TYPO3, a GNU/GPL CMS/Framework availa
    Configuration/Index
    ExecutingTheQueue/Index
    Features/Index
-   Faq/Index
-   Aoe/Aoe
+   Troubleshooting/Index
    Links/Links
+   Aoe/Aoe
    Targets
 

@@ -20,6 +20,3 @@ Links
 
 :Git Repository:
     	https://github.com/AOEpeople/crawler.git
-
-:Contact:
-    	dev@aoe.com
