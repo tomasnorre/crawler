@@ -35,6 +35,7 @@ for several reasons;
    :titlesonly:
    :glob:
 
+   RunningViaCommandController/Index
    ExecutingQueueWithCron-job/Index
    RunViaBackend/Index
    AddingEntriesToTheQueueByContextMenue/Index
