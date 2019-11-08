@@ -63,7 +63,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     {
         parent::setUp();
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->importDataSet(dirname(__FILE__) . '/../../Fixtures/tx_crawler_queue.xml');
+        $this->importDataSet(__DIR__ . '/../../Fixtures/tx_crawler_queue.xml');
         $this->subject = $objectManager->get(QueueRepository::class);
     }
 
@@ -83,8 +83,13 @@ class QueueRepositoryTest extends FunctionalTestCase
         $result = $mockedRepository->_call('getFirstOrLastObjectByProcess', $process, $orderBy);
 
         $this->assertSame(
-            $expected,
-            $result->getRow()
+            $expected['qid'],
+            $result->getQid()
+        );
+
+        $this->assertSame(
+            $expected['configuration'],
+            $result->getConfiguration()
         );
     }
 
@@ -96,23 +101,22 @@ class QueueRepositoryTest extends FunctionalTestCase
         $process = new Process();
         $process->setProcessId('qwerty');
 
+        /** @var Queue $queueEntry */
+        $queueEntry = $this->subject->findYoungestEntryForProcess($process);
+
         $this->assertEquals(
-            [
-                'qid' => '2',
-                'page_id' => '0',
-                'parameters' => '',
-                'parameters_hash' => '',
-                'configuration_hash' => '',
-                'scheduled' => '0',
-                'exec_time' => '10',
-                'set_id' => '0',
-                'result_data' => '',
-                'process_scheduled' => '0',
-                'process_id' => '1002',
-                'process_id_completed' => 'qwerty',
-                'configuration' => 'ThirdConfiguration'
-            ],
-            $this->subject->findYoungestEntryForProcess($process)->getRow()
+            '2',
+            $queueEntry->getQid()
+        );
+
+        $this->assertEquals(
+            'ThirdConfiguration',
+            $queueEntry->getConfiguration()
+        );
+
+        $this->assertEquals(
+            '1002',
+            $queueEntry->getProcessId()
         );
     }
 
@@ -124,23 +128,22 @@ class QueueRepositoryTest extends FunctionalTestCase
         $process = new Process();
         $process->setProcessId('qwerty');
 
+        /** @var Queue $queueEntry */
+        $queueEntry = $this->subject->findOldestEntryForProcess($process);
+
         $this->assertEquals(
-            [
-                'qid' => '3',
-                'page_id' => '0',
-                'parameters' => '',
-                'parameters_hash' => '',
-                'configuration_hash' => '',
-                'scheduled' => '0',
-                'exec_time' => '20',
-                'set_id' => '0',
-                'result_data' => '',
-                'process_scheduled' => '0',
-                'process_id' => '1003',
-                'process_id_completed' => 'qwerty',
-                'configuration' => 'FirstConfiguration'
-            ],
-            $this->subject->findOldestEntryForProcess($process)->getRow()
+            '3',
+            $queueEntry->getQid()
+        );
+
+        $this->assertEquals(
+            'FirstConfiguration',
+            $queueEntry->getConfiguration()
+        );
+
+        $this->assertEquals(
+            '1003',
+            $queueEntry->getProcessId()
         );
     }
 
