@@ -87,9 +87,22 @@ class QueueRepository extends AbstractRepository
         } else {
             $first = [];
         }
-        $resultObject = new Queue($first);
+        $queueObject = new Queue();
+        $queueObject->setQid($first['qid']);
+        $queueObject->setPageId($first['page_id']);
+        $queueObject->setParameters($first['parameters']);
+        $queueObject->setScheduled($first['scheduled']);
+        $queueObject->setExecTime($first['exec_time']);
+        $queueObject->setSetId($first['set_id']);
+        $queueObject->setResultData($first['result_data']);
+        $queueObject->setProcessScheduled($first['process_scheduled']);
+        $queueObject->setProcessId($first['process_id']);
+        $queueObject->setProcessIdCompleted($first['process_id_completed']);
+        $queueObject->setParametersHash($first['parameters_hash']);
+        $queueObject->setConfigurationHash($first['configuration_hash']);
+        $queueObject->setConfiguration($first['configuration']);
 
-        return $resultObject;
+        return $queueObject;
     }
 
     /**
