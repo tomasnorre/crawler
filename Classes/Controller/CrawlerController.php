@@ -928,14 +928,12 @@ class CrawlerController
                                     $andWhereLanguage = ' AND ' . $this->db->quoteStr($transOrigPointerField, $subpartParams['_TABLE']) . ' <= 0 ';
                                 }
 								
-                                $pidList = (string)$lookUpPid;
                                 if($recursiveDepth > 0) {
                                     /** @var \TYPO3\CMS\Core\Database\QueryGenerator $queryGenerator */
                                     $queryGenerator = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\QueryGenerator::class);
-                                    $recursivePids = $queryGenerator->getTreeList($lookUpPid, $recursiveDepth, 1, 1);
-                                    if (strlen($recursivePids) > 0) {
-                                        $pidList .= ',' . $recursivePids;
-                                    }
+                                    $pidList = $queryGenerator->getTreeList($lookUpPid, $recursiveDepth, 0, 1);
+                                } else {
+                                    $pidList = (string)$lookUpPid;
                                 }
 
                                 $where = $this->db->quoteStr($pidField, $subpartParams['_TABLE']) . ' IN(' . $pidList . ') ' .

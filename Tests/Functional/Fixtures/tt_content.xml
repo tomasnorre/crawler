@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataset>
+	<tt_content>
+		<uid>1</uid>
+		<pid>5</pid>
+		<header>Record on page 1.5 - Uid 1</header>
+		<hidden>0</hidden>
+	</tt_content>
+	<tt_content>
+		<uid>2</uid>
+		<pid>5</pid>
+		<header>Record on page 1.5 - Uid 2</header>
+		<hidden>0</hidden>
+	</tt_content>
+	<tt_content>
+		<uid>3</uid>
+		<pid>7</pid>
+		<header>Record on page 1.5.7 - Uid 3</header>
+		<hidden>0</hidden>
+	</tt_content>
+	<tt_content>
+		<uid>4</uid>
+		<pid>7</pid>
+		<header>Record on page 1.5.7 - Uid 4</header>
+		<hidden>1</hidden>
+	</tt_content>
+	<tt_content>
+		<uid>5</uid>
+		<pid>9</pid>
+		<header>Record on page 1.5.7.9 - Uid 5</header>
+		<hidden>0</hidden>
+	</tt_content>
+	<tt_content>
+		<uid>6</uid>
+		<pid>10</pid>
+		<header>Record on page 1.5.7.10 - Uid 6</header>
+		<hidden>0</hidden>
+	</tt_content>
+</dataset>
