@@ -913,7 +913,8 @@ class CrawlerController
 
                         // Table exists:
                         if (isset($TCA[$subpartParams['_TABLE']])) {
-                            $lookUpPid = isset($subpartParams['_PID']) ? intval($subpartParams['_PID']) : $pid;
+                            $lookUpPid = isset($subpartParams['_PID']) ? intval($subpartParams['_PID']) : intval($pid);
+                            $recursiveDepth = isset($subpartParams['_RECURSIVE']) ? intval($subpartParams['_RECURSIVE']) : 0;
                             $pidField = isset($subpartParams['_PIDFIELD']) ? trim($subpartParams['_PIDFIELD']) : 'pid';
                             $where = isset($subpartParams['_WHERE']) ? $subpartParams['_WHERE'] : '';
                             $addTable = isset($subpartParams['_ADDTABLE']) ? $subpartParams['_ADDTABLE'] : '';
@@ -926,8 +927,16 @@ class CrawlerController
                                 if ($subpartParams['_ENABLELANG'] && $transOrigPointerField) {
                                     $andWhereLanguage = ' AND ' . $this->db->quoteStr($transOrigPointerField, $subpartParams['_TABLE']) . ' <= 0 ';
                                 }
+								
+                                if($recursiveDepth > 0) {
+                                    /** @var \TYPO3\CMS\Core\Database\QueryGenerator $queryGenerator */
+                                    $queryGenerator = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\QueryGenerator::class);
+                                    $pidList = $queryGenerator->getTreeList($lookUpPid, $recursiveDepth, 0, 1);
+                                } else {
+                                    $pidList = (string)$lookUpPid;
+                                }
 
-                                $where = $this->db->quoteStr($pidField, $subpartParams['_TABLE']) . '=' . intval($lookUpPid) . ' ' .
+                                $where = $this->db->quoteStr($pidField, $subpartParams['_TABLE']) . ' IN(' . $pidList . ') ' .
                                     $andWhereLanguage . $where;
 
                                 $rows = $this->db->exec_SELECTgetRows(
