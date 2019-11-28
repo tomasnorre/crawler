@@ -128,12 +128,12 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             $crawlerController->registerQueueEntriesInternallyOnly = true;
         }
 
-        if ($this->request instanceof \TYPO3\CMS\Extbase\Mvc\Cli\Request) {
-            $pageId = MathUtility::forceIntegerInRange($input->getOption('startpage'), 0);
-        } else {
+        #if ($this->request instanceof \TYPO3\CMS\Extbase\Mvc\Cli\Request) {
+            $pageId = MathUtility::forceIntegerInRange($input->getOption('page'), 0);
+        #} else {
             // Crawler is called over Backend
-            $pageId = 1;
-        }
+        #    $pageId = 1;
+        #}
 
         $configurationKeys = $this->getConfigurationKeys($input->getOption('conf'));
 
