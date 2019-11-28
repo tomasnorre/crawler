@@ -63,4 +63,14 @@
 		<sys_language_uid>0</sys_language_uid>
 		<l10n_parent>0</l10n_parent>
 	</pages>
+	<pages>
+		<uid>8</uid>
+		<pid>5</pid>
+		<title>Page Uid 8</title>
+		<is_siteroot>0</is_siteroot>
+		<hidden>1</hidden>
+		<slug>/page-uid-5/page-uid-8</slug>
+		<sys_language_uid>0</sys_language_uid>
+		<l10n_parent>0</l10n_parent>
+	</pages>
 </dataset>
