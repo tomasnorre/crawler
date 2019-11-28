@@ -813,7 +813,8 @@ class CrawlerController implements LoggerAwareInterface
 
                         // Table exists:
                         if (isset($GLOBALS['TCA'][$subpartParams['_TABLE']])) {
-                            $lookUpPid = isset($subpartParams['_PID']) ? (int)$subpartParams['_PID'] : $pid;
+                            $lookUpPid = isset($subpartParams['_PID']) ? intval($subpartParams['_PID']) : intval($pid);
+                            $recursiveDepth = isset($subpartParams['_RECURSIVE']) ? intval($subpartParams['_RECURSIVE']) : 0;
                             $pidField = isset($subpartParams['_PIDFIELD']) ? trim($subpartParams['_PIDFIELD']) : 'pid';
                             $where = isset($subpartParams['_WHERE']) ? $subpartParams['_WHERE'] : '';
                             $addTable = isset($subpartParams['_ADDTABLE']) ? $subpartParams['_ADDTABLE'] : '';
@@ -822,6 +823,15 @@ class CrawlerController implements LoggerAwareInterface
                             if ($fieldName === 'uid' || $GLOBALS['TCA'][$subpartParams['_TABLE']]['columns'][$fieldName]) {
                                 $queryBuilder = $this->getQueryBuilder($subpartParams['_TABLE']);
 
+                                if($recursiveDepth > 0) {
+                                    /** @var \TYPO3\CMS\Core\Database\QueryGenerator $queryGenerator */
+                                    $queryGenerator = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\QueryGenerator::class);
+                                    $pidList = $queryGenerator->getTreeList($lookUpPid, $recursiveDepth, 0, 1);
+                                    $pidArray = GeneralUtility::intExplode(',', $pidList);
+                                } else {
+                                    $pidArray = [(string)$lookUpPid];
+                                }
+                                
                                 $queryBuilder->getRestrictions()
                                     ->removeAll()
                                     ->add(GeneralUtility::makeInstance(DeletedRestriction::class));
@@ -830,7 +840,7 @@ class CrawlerController implements LoggerAwareInterface
                                     ->select($fieldName)
                                     ->from($subpartParams['_TABLE'])
                                     ->where(
-                                        $queryBuilder->expr()->eq($pidField, $queryBuilder->createNamedParameter($lookUpPid, \PDO::PARAM_INT)),
+                                        $queryBuilder->expr()->in($pidField, $queryBuilder->createNamedParameter($pidArray, Connection::PARAM_INT_ARRAY)),
                                         $where
                                     );
                                 if(!empty($addTable)) {

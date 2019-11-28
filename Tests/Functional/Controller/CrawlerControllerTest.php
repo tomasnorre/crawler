@@ -67,6 +67,7 @@ class CrawlerControllerTest extends FunctionalTestCase
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_configuration.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_process.xml');
+        $this->importDataSet(__DIR__ . '/../Fixtures/tt_content.xml');
         $this->subject = $this->getAccessibleMock(CrawlerController::class, ['dummy']);
     }
 
@@ -346,7 +347,28 @@ class CrawlerControllerTest extends FunctionalTestCase
                 'expected' => [
                     'table' => [2,3,4,5]
                 ]
-            ]
+            ],
+            'Parameters with _TABLE _PID _RECURSIVE(:0) & _WHERE (hidden = 0)' => [
+                'paramArray' => ['table' => '[_TABLE:tt_content;_PID:5;_RECURSIVE:0;_WHERE: hidden = 0]'],
+                'pid' => 1,
+                'expected' => [
+                    'table' => [1,2]
+                ]
+            ],
+            'Parameters with _TABLE _PID _RECURSIVE(:1) & _WHERE (hidden = 0)' => [
+                'paramArray' => ['table' => '[_TABLE:tt_content;_PID:5;_RECURSIVE:1;_WHERE: hidden = 0]'],
+                'pid' => 1,
+                'expected' => [
+                    'table' => [1,2,3]
+                ]
+            ],
+            'Parameters with _TABLE _PID _RECURSIVE(:2) & _WHERE (hidden = 0)' => [
+                'paramArray' => ['table' => '[_TABLE:tt_content;_PID:5;_RECURSIVE:2;_WHERE: hidden = 0]'],
+                'pid' => 1,
+                'expected' => [
+                    'table' => [1,2,3,5,6]
+                ]
+            ],
         ];
     }
 
