@@ -724,7 +724,7 @@ class BackendModule
                 return implode("\n", $requestResult['errorlog']);
             }
         }
-        return 'Error: ' . substr(preg_replace('/\s+/', ' ', strip_tags($requestContent['content'])), 0, 10000) . '...';
+        return 'Error: ' . substr(preg_replace('/\s+/', ' ', strip_tags($requestResult)), 0, 10000) . '...';
     }
 
     /**
