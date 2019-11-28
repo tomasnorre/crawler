@@ -102,7 +102,7 @@ Page TSconfig Reference (tx\_crawler.crawlerCfg)
          ::
 
             tx_crawler.crawlerCfg.paramSets {
-               myConfigurationKeyName = &tx_myext[items]=[_TABLE:tt_myext_items;_PID:15;_WHERE: and hidden = 0]
+               myConfigurationKeyName = &tx_myext[items]=[_TABLE:tt_myext_items;_PID:15;_WHERE: hidden = 0]
                myConfigurationKeyName {
                  pidsonly = 13
                  procInstrFilter = tx_indexedsearch_reindex

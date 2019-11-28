@@ -817,18 +817,20 @@ class CrawlerController implements LoggerAwareInterface
                                 $queryBuilder
                                     ->select($fieldName)
                                     ->from($subpartParams['_TABLE'])
-                                    // TODO: Check if this works as intended!
-                                    ->add('from', $addTable)
                                     ->where(
-                                        $queryBuilder->expr()->eq($queryBuilder->quoteIdentifier($pidField), $queryBuilder->createNamedParameter($lookUpPid, \PDO::PARAM_INT)),
+                                        $queryBuilder->expr()->eq($pidField, $queryBuilder->createNamedParameter($lookUpPid, \PDO::PARAM_INT)),
                                         $where
                                     );
+                                if(!empty($addTable)) {
+                                    // TODO: Check if this works as intended!
+                                    $queryBuilder->add('from', $addTable);
+                                }
                                 $transOrigPointerField = $GLOBALS['TCA'][$subpartParams['_TABLE']]['ctrl']['transOrigPointerField'];
 
                                 if ($subpartParams['_ENABLELANG'] && $transOrigPointerField) {
                                     $queryBuilder->andWhere(
                                         $queryBuilder->expr()->lte(
-                                            $queryBuilder->quoteIdentifier($transOrigPointerField),
+                                           $transOrigPointerField,
                                             0
                                         )
                                     );
@@ -838,7 +840,7 @@ class CrawlerController implements LoggerAwareInterface
 
                                 $rows = [];
                                 while ($row = $statement->fetch()) {
-                                    $rows[$fieldName] = $row;
+                                    $rows[$row[$fieldName]] = $row;
                                 }
 
                                 if (is_array($rows)) {
