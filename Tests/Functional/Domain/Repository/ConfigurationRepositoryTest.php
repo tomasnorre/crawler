@@ -67,7 +67,7 @@ class ConfigurationRepositoryTest extends FunctionalTestCase
     public function getCrawlerConfigurationRecords()
     {
         self::assertSame(
-            2,
+            3,
             count($this->subject->getCrawlerConfigurationRecords())
         );
     }

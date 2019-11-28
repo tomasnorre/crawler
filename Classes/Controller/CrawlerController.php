@@ -141,9 +141,9 @@ class CrawlerController implements LoggerAwareInterface
     protected $accessMode;
 
     /**
-     * @var BackendUserAuthentication
+     * @var BackendUserAuthentication|null
      */
-    private $backendUser;
+    private $backendUser = null;
 
     /**
      * @var integer
@@ -278,7 +278,6 @@ class CrawlerController implements LoggerAwareInterface
         $this->queueExecutor = $objectManager->get(QueueExecutor::class);
         $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
 
-        $this->backendUser = $GLOBALS['BE_USER'];
         $this->processFilename = Environment::getVarPath() . '/locks/tx_crawler.proc';
 
         /** @var ExtensionConfigurationProvider $configurationProvider */
@@ -293,6 +292,16 @@ class CrawlerController implements LoggerAwareInterface
 
         $this->extensionSettings['processLimit'] = MathUtility::forceIntegerInRange($this->extensionSettings['processLimit'], 1, 99, 1);
         $this->maximumUrlsToCompile = MathUtility::forceIntegerInRange($this->extensionSettings['maxCompileUrls'], 1, 1000000000, 10000);
+    }
+    
+    /**
+     * @return BackendUserAuthentication
+     */
+    private function getBackendUser() {
+        if($this->backendUser === null) {
+            $this->backendUser = $GLOBALS['BE_USER'];
+        }
+        return $this->backendUser;
     }
 
     /**
@@ -604,7 +613,7 @@ class CrawlerController implements LoggerAwareInterface
         foreach ($crawlerConfigurations as $configurationRecord) {
 
                 // check access to the configuration record
-            if (empty($configurationRecord['begroups']) || $this->backendUser->isAdmin() || $this->hasGroupAccess($this->backendUser->user['usergroup_cached_list'], $configurationRecord['begroups'])) {
+            if (empty($configurationRecord['begroups']) || $this->getBackendUser()->isAdmin() || $this->hasGroupAccess($this->getBackendUser()->user['usergroup_cached_list'], $configurationRecord['begroups'])) {
                 $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $configurationRecord['pidsonly'], true));
 
                 // process configuration if it is not page-specific or if the specific page is the current page:
@@ -657,7 +666,7 @@ class CrawlerController implements LoggerAwareInterface
      * @param $depth
      * @return array
      *
-     * TODO: Write Functional Tests
+     * TODO: Write Functional Tests => done?!?!
      */
     public function getConfigurationsForBranch(int $rootid, $depth)
     {
@@ -677,8 +686,8 @@ class CrawlerController implements LoggerAwareInterface
         }
         /* @var PageTreeView $tree */
         $tree = GeneralUtility::makeInstance(PageTreeView::class);
-        $perms_clause = $this->backendUser->getPagePermsClause(Permission::PAGE_SHOW);
-        $tree->init('AND ' . $perms_clause);
+        $perms_clause = $this->getBackendUser()->getPagePermsClause(Permission::PAGE_SHOW);
+        $tree->init( empty($perms_clause) ? '' : ('AND ' . $perms_clause) );
         $tree->getTree($rootid, $depth, '');
         foreach ($tree->tree as $node) {
             $pids[] = $node['row']['uid'];
@@ -686,9 +695,12 @@ class CrawlerController implements LoggerAwareInterface
 
         $queryBuilder = $this->getQueryBuilder('tx_crawler_configuration');
 
-        $queryBuilder->getRestrictions()
-            ->removeAll()
-            ->add(GeneralUtility::makeInstance(DeletedRestriction::class));
+        // The pre TYPO3 v9 version use the method BackendUtility::BEenableFields('tx_crawler_configuration') 
+        // to create the where clause (deleted, hidden, startTime, endTime ), this is exactly the new default behavior 
+        // Therefore, why remove the default restrictions for TYPO3 v9?
+        #$queryBuilder->getRestrictions()
+        #    ->removeAll() 
+        #    ->add(GeneralUtility::makeInstance(DeletedRestriction::class));
 
         $statement = $queryBuilder
             ->select('name')
@@ -1193,7 +1205,7 @@ class CrawlerController implements LoggerAwareInterface
      *
      * @return array
      *
-     * TODO: Write Functional Tests
+     * TODO: Write Functional Tests => done?!?!
      */
     protected function getDuplicateRowsIfExist($tstamp, $fieldArray)
     {
@@ -1231,13 +1243,15 @@ class CrawlerController implements LoggerAwareInterface
                 );
         }
 
-        $statement = $queryBuilder
-            ->andWhere('exec_time != 0')
-            ->andWhere('process_id != 0')
+        $queryBuilder
+            /* ->andWhere('exec_time != 0') # this was ' AND NOT exec_time' therfore functional test fails => change back */ ->andWhere('NOT exec_time')
+            /* ->andWhere('process_id != 0') # this was ' AND NOT process_id' therfore functional test fails => change back */ ->andWhere('NOT process_id')
             ->andWhere($queryBuilder->expr()->eq('page_id', $queryBuilder->createNamedParameter($fieldArray['page_id'], \PDO::PARAM_INT)))
             ->andWhere($queryBuilder->expr()->eq('parameters_hash', $queryBuilder->createNamedParameter($fieldArray['parameters_hash'], \PDO::PARAM_STR)))
-            ->execute();
+            ;
 
+        $statement = $queryBuilder->execute();
+        
         while ($row = $statement->fetch()) {
             $rows[] = $row['qid'];
         }
@@ -1430,7 +1444,7 @@ class CrawlerController implements LoggerAwareInterface
         // Drawing tree:
         /* @var PageTreeView $tree */
         $tree = GeneralUtility::makeInstance(PageTreeView::class);
-        $perms_clause = $this->backendUser->getPagePermsClause(Permission::PAGE_SHOW);
+        $perms_clause = $this->getBackendUser()->getPagePermsClause(Permission::PAGE_SHOW);
         $tree->init('AND ' . $perms_clause);
 
         $pageInfo = BackendUtility::readPageAccess($id, $perms_clause);
@@ -1517,7 +1531,7 @@ class CrawlerController implements LoggerAwareInterface
             if (!empty($excludeString)) {
                 /** @var PageTreeView $tree */
                 $tree = GeneralUtility::makeInstance(PageTreeView::class);
-                $tree->init('AND ' . $this->backendUser->getPagePermsClause(Permission::PAGE_SHOW));
+                $tree->init('AND ' . $this->getBackendUser()->getPagePermsClause(Permission::PAGE_SHOW));
 
                 $excludeParts = GeneralUtility::trimExplode(',', $excludeString);
 

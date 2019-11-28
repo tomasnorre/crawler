@@ -4,7 +4,7 @@ namespace AOE\Crawler\Tests\Functional\Api;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2018 AOE GmbH <dev@aoe.com>
+ *  (c) 2019 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -240,10 +240,10 @@ class CrawlerApiTest extends FunctionalTestCase
     {
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
 
-        self::assertSame(
+        $this->assertEquals(
             [
                 'assignedButUnprocessed' => 3,
-                'unprocessed' => 5
+                'unprocessed' => 7
             ],
             $this->subject->getQueueStatistics()
         );

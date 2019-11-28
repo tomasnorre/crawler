@@ -49,6 +49,11 @@ class CrawlerControllerTest extends FunctionalTestCase
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     /**
+     * @var ObjectManager
+     */
+    private $objectManager;
+
+    /**
      * @var CrawlerController
      */
     protected $subject;
@@ -56,6 +61,10 @@ class CrawlerControllerTest extends FunctionalTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        #$this->importDataSet(__DIR__ . '/../Fixtures/sys_domain.xml');
+        $this->importDataSet(__DIR__ . '/../Fixtures/pages.xml');
+        $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_configuration.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_process.xml');
         $this->subject = $this->getAccessibleMock(CrawlerController::class, ['dummy']);
@@ -102,7 +111,7 @@ class CrawlerControllerTest extends FunctionalTestCase
                 'tx_crawler_queue',
                 [
                     'exec_time' => time() + (7 * 24 * 60 * 60),
-                    'scheduled' => time() + (7 * 24 * 60 * 60)
+                    'scheduled' => time() + (7 * 24 * 60 * 60),
                 ]
             );
         }
@@ -183,6 +192,231 @@ class CrawlerControllerTest extends FunctionalTestCase
     }
 
     /**
+     * @test
+     */
+    public function getConfigurationHash()
+    {
+        $configuration = [
+            'paramExpanded' => 'extendedParameter',
+            'URLs' => 'URLs',
+            'NotImportantParameter' => 'value not important',
+        ];
+
+        $originalCheckSum = md5(serialize($configuration));
+
+        $this->assertNotEquals(
+            $originalCheckSum,
+            $this->subject->_call('getConfigurationHash', $configuration)
+        );
+
+        unset($configuration['paramExpanded'], $configuration['URLs']);
+        $newCheckSum = md5(serialize($configuration));
+        $this->assertEquals(
+            $newCheckSum,
+            $this->subject->_call('getConfigurationHash', $configuration)
+        );
+    }
+
+// CrawlerController::isCrawlingProtocolHttps() removed in [7f7f07b]
+    /**
+     * @test
+     * @dataProvider isCrawlingProtocolHttpsDataProvider
+     */
+//    public function isCrawlingProtocolHttps($crawlerConfiguration, $pageConfiguration, $expected)
+//    {
+//        $this->assertEquals(
+//            $expected,
+//            $this->subject->_call(isCrawlingProtocolHttps, $crawlerConfiguration, $pageConfiguration)
+//        );
+//    }
+    
+    /**
+     * @test
+     */
+    public function getConfigurationsForBranch()
+    {
+        $GLOBALS['BE_USER'] = $this->getMockBuilder(BackendUserAuthentication::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['isAdmin', 'getTSConfig', 'getPagePermsClause', 'isInWebMount'])
+            ->getMock();
+
+        $configurationsForBranch = $this->subject->getConfigurationsForBranch(5,99);
+
+        $this->assertNotEmpty($configurationsForBranch);
+        $this->assertCount(
+            3,
+            $configurationsForBranch
+        );
+
+        $this->assertEquals(
+            $configurationsForBranch,
+            [
+                'Not hidden or deleted',
+                'Not hidden or deleted - uid 5',
+                'Not hidden or deleted - uid 6'
+            ]
+        );
+    }
+
+    /**
+     * @test
+     * @dataProvider getDuplicateRowsIfExistDataProvider
+     */
+    public function getDuplicateRowsIfExist($timeslotActive, $tstamp, $current, $fieldArray, $expected)
+    {
+
+        $mockedCrawlerController = $this->getAccessibleMock(CrawlerController::class, ['getCurrentTime']);
+        $mockedCrawlerController->expects($this->any())->method('getCurrentTime')->willReturn($current);
+
+        $mockedCrawlerController->setExtensionSettings([
+            'enableTimeslot' => $timeslotActive,
+        ]);
+
+
+        $this->assertEquals(
+            $expected,
+            $mockedCrawlerController->_call('getDuplicateRowsIfExist', $tstamp, $fieldArray)
+        );
+    }
+
+    /**
+     * @test
+     * @dataProvider addUrlDataProvider
+     */
+    public function addUrl($id, $url, $subCfg, $tstamp, $configurationHash, $skipInnerDuplicationCheck, $mockedDuplicateRowResult, $registerQueueEntriesInternallyOnly, $expected)
+    {
+        $mockedCrawlerController = $this->getAccessibleMock(CrawlerController::class, ['getDuplicateRowsIfExist']);
+        $mockedCrawlerController->expects($this->any())->method('getDuplicateRowsIfExist')->withAnyParameters()->willReturn($mockedDuplicateRowResult);
+
+        $mockedCrawlerController->_set('registerQueueEntriesInternallyOnly', $registerQueueEntriesInternallyOnly);
+
+        // Checking the mock of getDuplicateRowsIfExist()
+        $this->assertEquals(
+            $mockedDuplicateRowResult,
+            $mockedCrawlerController->_call('getDuplicateRowsIfExist', 1234, [])
+        );
+
+        $this->assertEquals(
+            $expected,
+            $mockedCrawlerController->addUrl($id, $url, $subCfg, $tstamp, $configurationHash, $skipInnerDuplicationCheck)
+        );
+    }
+
+    public function addUrlDataProvider()
+    {
+        return [
+            'Queue entry added' => [
+                'id' => 0,
+                'url' => '',
+                'subCfg' => [
+                    'key' => 'some-key',
+                    'procInstrFilter' => 'tx_crawler_post',
+                    'procInstrParams.' => [
+                        'action' => true
+                    ],
+                    'userGroups' => '12,14'
+                ],
+                'tstamp' => 1563287062,
+                'configurationHash' => '',
+                'skipInnerDuplicationCheck' => false,
+                'mockedDuplicateRowResult' => [],
+                'registerQueueEntriesInternallyOnly' => false,
+                'expected' => true,
+            ],
+            'Queue entry is NOT added, due to duplication check return not empty array (mocked)' => [
+                'id' => 0,
+                'url' => '',
+                'subCfg' =>  ['key' => 'some-key'],
+                'tstamp' => 1563287062,
+                'configurationHash' => '',
+                'skipInnerDuplicationCheck' => false,
+                'mockedDuplicateRowResult' => ['duplicate-exists' => true],
+                'registerQueueEntriesInternallyOnly' => false,
+                'expected' => false
+            ],
+            'Queue entry is added, due to duplication is ignored' => [
+                'id' => 0,
+                'url' => '',
+                'subCfg' =>  ['key' => 'some-key'],
+                'tstamp' => 1563287062,
+                'configurationHash' => '',
+                'skipInnerDuplicationCheck' => true,
+                'mockedDuplicateRowResult' => ['duplicate-exists' => true],
+                'registerQueueEntriesInternallyOnly' => false,
+                'expected' => true
+            ],
+            'Queue entry is NOT added, due to registerQueueEntriesInternalOnly' => [
+                'id' => 0,
+                'url' => '',
+                'subCfg' =>  ['key' => 'some-key'],
+                'tstamp' => 1563287062,
+                'configurationHash' => '',
+                'skipInnerDuplicationCheck' => true,
+                'mockedDuplicateRowResult' => ['duplicate-exists' => true],
+                'registerQueueEntriesInternallyOnly' => true,
+                'expected' => false
+            ],
+        ];
+    }
+
+    public function getDuplicateRowsIfExistDataProvider()
+    {
+        return [
+            'EnableTimeslot is true and timestamp is <= current' => [
+                'timeslotActive' => true,
+                'tstamp' => 10,
+                'current' => 12,
+                'fieldArray' => [
+                    'page_id' => 15,
+                    'parameters_hash' => ''
+                ],
+                'expected' => [15,18]
+            ],
+            'EnableTimeslot is false and timestamp is <= current' => [
+                'timeslotActive' => false,
+                'tstamp' => 11,
+                'current' => 11,
+                'fieldArray' => [
+                    'page_id' => 15,
+                    'parameters_hash' => ''
+                ],
+                'expected' => [18]
+            ],
+            'EnableTimeslot is true and timestamp is > current' => [
+                'timeslotActive' => true,
+                'tstamp' => 12,
+                'current' => 10,
+                'fieldArray' => [
+                    'page_id' => 15,
+                    'parameters_hash' => ''
+                ],
+                'expected' => [15]
+            ],
+            'EnableTimeslot is false and timestamp is > current' => [
+                'timeslotActive' => false,
+                'tstamp' => 12,
+                'current' => 10,
+                'fieldArray' => [
+                    'page_id' => 15,
+                    'parameters_hash' => ''
+                ],
+                'expected' => [15]
+            ],
+            'EnableTimeslot is false and timestamp is > current and parameters_hash is set' => [
+                'timeslotActive' => false,
+                'tstamp' => 12,
+                'current' => 10,
+                'fieldArray' => [
+                    'page_id' => 15,
+                    'parameters_hash' => 'NotReallyAHashButWillDoForTesting'
+                ],
+                'expected' => [19]
+            ],
+        ];
+    }
+
+
+    /**
      * @return array
      */
     public function getLogEntriesForSetIdDataProvider()
@@ -194,7 +428,7 @@ class CrawlerControllerTest extends FunctionalTestCase
                 'doFlush' => true,
                 'doFullFlush' => false,
                 'itemsPerPage' => 5,
-                'expected' => []
+                'expected' => [],
             ],
             'Do Full Flush' => [
                 'setId' => 456,
@@ -202,7 +436,7 @@ class CrawlerControllerTest extends FunctionalTestCase
                 'doFlush' => true,
                 'doFullFlush' => true,
                 'itemsPerPage' => 5,
-                'expected' => []
+                'expected' => [],
             ],
             'Check that doFullFlush do not flush if doFlush is not true' => [
                 'setId' => 456,
@@ -223,8 +457,8 @@ class CrawlerControllerTest extends FunctionalTestCase
                     'process_scheduled' => '0',
                     'process_id' => '1007',
                     'process_id_completed' => 'asdfgh',
-                    'configuration' => 'ThirdConfiguration'
-                ]]
+                    'configuration' => 'ThirdConfiguration',
+                ]],
             ],
             'Get entries for set_id 456' => [
                 'setId' => 456,
@@ -245,8 +479,8 @@ class CrawlerControllerTest extends FunctionalTestCase
                     'process_scheduled' => '0',
                     'process_id' => '1007',
                     'process_id_completed' => 'asdfgh',
-                    'configuration' => 'ThirdConfiguration'
-                ]]
+                    'configuration' => 'ThirdConfiguration',
+                ]],
             ],
             'Do Flush Pending' => [
                 'setId' => 456,
@@ -254,7 +488,7 @@ class CrawlerControllerTest extends FunctionalTestCase
                 'doFlush' => true,
                 'doFullFlush' => false,
                 'itemsPerPage' => 5,
-                'expected' => []
+                'expected' => [],
             ],
             'Do Flush Finished' => [
                 'setId' => 456,
@@ -262,7 +496,7 @@ class CrawlerControllerTest extends FunctionalTestCase
                 'doFlush' => true,
                 'doFullFlush' => false,
                 'itemsPerPage' => 5,
-                'expected' => []
+                'expected' => [],
             ],
         ];
     }
@@ -279,7 +513,7 @@ class CrawlerControllerTest extends FunctionalTestCase
                 'doFlush' => true,
                 'doFullFlush' => false,
                 'itemsPerPage' => 5,
-                'expected' => []
+                'expected' => [],
             ],
             'Do Full Flush' => [
                 'id' => 1002,
@@ -287,7 +521,7 @@ class CrawlerControllerTest extends FunctionalTestCase
                 'doFlush' => true,
                 'doFullFlush' => true,
                 'itemsPerPage' => 5,
-                'expected' => []
+                'expected' => [],
             ],
             'Check that doFullFlush do not flush if doFlush is not true' => [
                 'id' => 2001,
@@ -308,8 +542,8 @@ class CrawlerControllerTest extends FunctionalTestCase
                     'process_scheduled' => '0',
                     'process_id' => '1006',
                     'process_id_completed' => 'qwerty',
-                    'configuration' => 'SecondConfiguration'
-                ]]
+                    'configuration' => 'SecondConfiguration',
+                ]],
             ],
             'Get entries for page_id 2001' => [
                 'id' => 2001,
@@ -329,9 +563,9 @@ class CrawlerControllerTest extends FunctionalTestCase
                     'result_data' => '',
                     'process_scheduled' => '0',
                     'process_id' => '1006',
-                     'process_id_completed' => 'qwerty',
-                    'configuration' => 'SecondConfiguration'
-                ]]
+                    'process_id_completed' => 'qwerty',
+                    'configuration' => 'SecondConfiguration',
+                ]],
             ],
 
         ];
@@ -353,8 +587,12 @@ class CrawlerControllerTest extends FunctionalTestCase
             ],
             'Flush Queue for specific process id' => [
                 'where' => 'process_id = \'1007\'',
-                'expected' => 9
-            ]
+                'expected' => 11
+            ],
+            'Flush Queue for where that does not exist, nothing is deleted' => [
+                'where' => 'qid > 100000',
+                'expected' => 14,
+             ]
         ];
     }
 
@@ -367,18 +605,48 @@ class CrawlerControllerTest extends FunctionalTestCase
             'No record found, uid not present' => [
                 'uid' => 3000,
                 'configurationHash' => '7b6919e533f334550b6f19034dfd2f81',
-                'expected' => true
+                'expected' => true,
             ],
             'No record found, configurationHash not present' => [
                 'uid' => 2001,
                 'configurationHash' => 'invalidConfigurationHash',
-                'expected' => true
+                'expected' => true,
             ],
             'Record found - uid and configurationHash is present' => [
                 'uid' => 2001,
                 'configurationHash' => '7b6919e533f334550b6f19034dfd2f81',
-                'expected' => false
+                'expected' => false,
             ],
         ];
     }
+
+// CrawlerController::isCrawlingProtocolHttps() removed in [7f7f07b]
+    /**
+     * @return array
+     */
+//    public function isCrawlingProtocolHttpsDataProvider()
+//    {
+//        return [
+//            'Crawler Configuration set to http' => [
+//                'crawlerConfiguration' => -1,
+//                'pageConfiguration' => true,
+//                'expected' => false,
+//            ],
+//            'Crawler Configuration set to https' => [
+//                'crawlerConfiguration' => 1,
+//                'pageConfiguration' => false,
+//                'expected' => true,
+//            ],
+//            'Crawler Configuration set to page-configuration' => [
+//                'crawlerConfiguration' => 0,
+//                'pageConfiguration' => true,
+//                'expected' => true,
+//            ],
+//            'Crawler Configuration default fallback' => [
+//                'crawlerConfiguration' => 99,
+//                'pageConfiguration' => true,
+//                'expected' => false,
+//            ],
+//        ];
+//    }
 }
