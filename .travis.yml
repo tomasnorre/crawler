@@ -22,10 +22,6 @@ cache:
   directories:
     - $HOME/.composer/cache
 
-before_install:
-  - composer self-update
-  - composer --version
-
 before_script:
   # Installs nimut/typo3-complete
   - travis_wait 30 composer require --dev nimut/typo3-complete=$TYPO3_VERSION
@@ -79,6 +75,7 @@ jobs:
     - env: TYPO3_VERSION=dev-master COVERAGE=0 FUNCTIONAL=0
     - env: TYPO3_VERSION=dev-master COVERAGE=0 FUNCTIONAL=1
     - name: "Rector CI"
+    - name: "PHPStan"
   include:
     - stage: test
       env: TYPO3_VERSION=^9.5 COVERAGE=0 FUNCTIONAL=0
@@ -117,11 +114,18 @@ jobs:
       php: 7.3
 
     # Rector CI
-    - stage: rector
+    - stage: static
       name: "Rector CI"
       php: 7.2
       script:
-        - .Build/bin/rector process --dry-run
+        - .Build/bin/rector process --dry-run --config rector-ci.yaml
+
+    # Rector CI
+    - stage: static
+      name: "PHPStan"
+      php: 7.2
+      script:
+        - .Build/bin/phsptan analyse
 
     - stage: ship to ter
       if: tag IS present
