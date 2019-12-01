@@ -15,6 +15,10 @@ addons:
     packages:
       - parallel
 
+php:
+  - '7.2'
+  - '7.3'
+
 env:
   # tested TYPO3 version
   - TYPO3_VERSION=^9.5
@@ -70,21 +74,10 @@ jobs:
     - name: "Rector CI"
     - name: "PHPStan"
   include:
-    # php 7.2
     - stage: test
       env: FUNCTIONAL=0
-      php: 7.2
     - stage: test
       env: FUNCTIONAL=1
-      php: 7.2
-
-    # php 7.3
-    - stage: test
-      env: FUNCTIONAL=0
-      php: 7.3
-    - stage: test
-      env: FUNCTIONAL=1
-      php: 7.3
 
     - stage: test
       name: "Coverage"
