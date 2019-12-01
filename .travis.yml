@@ -123,6 +123,8 @@ jobs:
     - stage: rector
       name: "Rector CI"
       php: 7.2
+      before_script:
+        - composer install
       script:
         - .Build/bin/rector process --dry-run
 
