@@ -16,7 +16,7 @@ addons:
       - parallel
 
 env:
-  # default tested typo 3 version
+  # default tested TYPO3 version
   - TYPO3_VERSION=^9.5
 
 services:
