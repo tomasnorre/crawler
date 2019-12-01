@@ -22,6 +22,9 @@ cache:
   directories:
     - $HOME/.composer/cache
 
+install:
+  - composer install
+
 before_script:
   # Installs nimut/typo3-complete
   - travis_wait 30 composer require --dev nimut/typo3-complete=$TYPO3_VERSION
