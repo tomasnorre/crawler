@@ -132,7 +132,7 @@ jobs:
       name: "PHPStan"
       php: 7.2
       script:
-        - .Build/bin/phsptan analyse
+        - .Build/bin/phpstan analyse
 
     - stage: ship to ter
       if: tag IS present
