@@ -26,7 +26,6 @@ namespace AOE\Crawler\Tests\Functional\Domain\Repository;
  ***************************************************************/
 
 use AOE\Crawler\Domain\Model\Process;
-use AOE\Crawler\Domain\Model\Queue;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;

@@ -27,10 +27,10 @@ namespace AOE\Crawler\Command;
  ***************************************************************/
 
 use AOE\Crawler\Controller\CrawlerController;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Command\Command;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
@@ -58,7 +58,7 @@ It will remove queue entries and perform a cleanup.' . chr(10) . chr(10) .
             InputOption::VALUE_OPTIONAL,
             'Output mode',
             'finished'
-		);
+        );
 
         $this->addOption(
             'page',
@@ -107,6 +107,4 @@ It will remove queue entries and perform a cleanup.' . chr(10) . chr(10) .
                 break;
         }
     }
-
-
 }

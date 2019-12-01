@@ -25,7 +25,6 @@ namespace AOE\Crawler\Tests\Unit\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use AOE\Crawler\Command\QueueCommandLineController;
 use AOE\Crawler\Controller\CrawlerController;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Psr\Log\NullLogger;

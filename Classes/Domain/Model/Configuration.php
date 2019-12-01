@@ -243,4 +243,3 @@ class Configuration extends AbstractEntity
         $this->exclude = $exclude;
     }
 }
-
