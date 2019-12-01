@@ -16,8 +16,10 @@ addons:
       - parallel
 
 env:
-  # default tested TYPO3 version
+  # tested TYPO3 version
   - TYPO3_VERSION=^9.5
+  - TYPO3_VERSION=^10.0
+  - TYPO3_VERSION=dev-master
 
 services:
   - mysql
@@ -68,40 +70,20 @@ jobs:
     - name: "Rector CI"
     - name: "PHPStan"
   include:
+    # php 7.2
     - stage: test
       env: FUNCTIONAL=0
       php: 7.2
     - stage: test
+      env: FUNCTIONAL=1
+      php: 7.2
+
+    # php 7.3
+    - stage: test
       env: FUNCTIONAL=0
       php: 7.3
     - stage: test
-      env: COVERAGE=1 FUNCTIONAL=1
-      php: 7.2
-
-    - stage: test
-      env: TYPO3_VERSION=^10.0 FUNCTIONAL=0
-      php: 7.2
-    - stage: test
-      env: TYPO3_VERSION=^10.0 FUNCTIONAL=1
-      php: 7.2
-    - stage: test
-      env: TYPO3_VERSION=^10.0 FUNCTIONAL=0
-      php: 7.3
-    - stage: test
-      env: TYPO3_VERSION=^10.0 FUNCTIONAL=1
-      php: 7.3
-
-    - stage: test
-      env: TYPO3_VERSION=dev-master FUNCTIONAL=0
-      php: 7.2
-    - stage: test
-      env: TYPO3_VERSION=dev-master FUNCTIONAL=1
-      php: 7.2
-    - stage: test
-      env: TYPO3_VERSION=dev-master FUNCTIONAL=0
-      php: 7.3
-    - stage: test
-      env: TYPO3_VERSION=dev-master FUNCTIONAL=1
+      env: FUNCTIONAL=1
       php: 7.3
 
     - stage: test
@@ -154,3 +136,6 @@ jobs:
             echo "Uploading release ${TRAVIS_TAG} to TER"
             $HOME/.composer/vendor/bin/ter-client upload aoe_ipauth . -u "$TYPO3_ORG_USERNAME" -p "$TYPO3_ORG_PASSWORD" -m "$TAG_MESSAGE"
           fi;
+
+matrix:
+  fast_finish: true
