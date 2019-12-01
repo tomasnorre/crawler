@@ -30,7 +30,8 @@
     "require-dev": {
         "nimut/typo3-complete": "^8.7",
         "nimut/testing-framework": "^2.0 || ^4.1",
-        "friendsofphp/php-cs-fixer": "^2.15"
+        "friendsofphp/php-cs-fixer": "^2.15",
+        "rector/rector": "^0.6.0"
     },
     "replace": {
         "typo3-ter/crawler": "self.version"
