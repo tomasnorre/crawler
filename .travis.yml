@@ -81,6 +81,7 @@ jobs:
     - env: TYPO3_VERSION=^10.0 COVERAGE=0 FUNCTIONAL=0
     - env: TYPO3_VERSION=dev-master COVERAGE=0 FUNCTIONAL=0
     - env: TYPO3_VERSION=dev-master COVERAGE=0 FUNCTIONAL=1
+    - name: "Rector CI"
   include:
     - stage: test
       env: TYPO3_VERSION=^9.5 COVERAGE=0 FUNCTIONAL=0
@@ -117,6 +118,13 @@ jobs:
     - stage: test
       env: TYPO3_VERSION=dev-master COVERAGE=0 FUNCTIONAL=1
       php: 7.3
+
+    # Rector CI
+    - stage: rector
+      name: "Rector CI"
+      php: 7.2
+      script:
+        - .Build/bin/rector process --dry-run
 
     - stage: ship to ter
       if: tag IS present
