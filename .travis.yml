@@ -85,13 +85,13 @@ jobs:
     - name: "PHPStan"
   include:
     - stage: test
-      env: TYPO3_VERSION=^9.5 COVERAGE=0 FUNCTIONAL=0
+      env: COVERAGE=0 FUNCTIONAL=0
       php: 7.2
     - stage: test
-      env: TYPO3_VERSION=^9.5 COVERAGE=0 FUNCTIONAL=0
+      env: COVERAGE=0 FUNCTIONAL=0
       php: 7.3
     - stage: test
-      env: TYPO3_VERSION=^9.5 COVERAGE=1 FUNCTIONAL=1
+      env: COVERAGE=1 FUNCTIONAL=1
       php: 7.2
 
     - stage: test
