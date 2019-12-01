@@ -135,5 +135,4 @@ class ProcessQueueCommand extends Command
 
         return $output->writeln($result);
     }
-
 }

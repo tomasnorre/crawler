@@ -59,7 +59,7 @@ class GuzzleExecutionStrategy implements LoggerAwareInterface
                 sprintf('Error while opening "%s" - ' . $e->getResponse()->getStatusCode() . chr(32) . $e->getResponse()->getReasonPhrase(), $url),
                 ['crawlerId' => $crawlerId]
             );
-            return $e->getResponse()->getStatusCode() . chr(32) .  $e->getResponse()->getReasonPhrase();
+            return $e->getResponse()->getStatusCode() . chr(32) . $e->getResponse()->getReasonPhrase();
         }
     }
 
@@ -77,5 +77,4 @@ class GuzzleExecutionStrategy implements LoggerAwareInterface
             'User-Agent' => 'TYPO3 crawler'
         ];
     }
-
 }

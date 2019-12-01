@@ -15,7 +15,6 @@ namespace AOE\Crawler\Middleware;
  * The TYPO3 project - inspiring people to share!
  */
 
-
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -142,5 +141,4 @@ class CrawlerInitialization implements MiddlewareInterface
             }
         }
     }
-
 }

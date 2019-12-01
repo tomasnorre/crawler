@@ -62,7 +62,6 @@ class ConfigurationRepository extends AbstractRepository
         return $records;
     }
 
-
     /**
      * Traverses up the rootline of a page and fetches all crawler records.
      *

@@ -29,10 +29,10 @@ namespace AOE\Crawler\Command;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Event\EventDispatcher;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Command\Command;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
@@ -108,7 +108,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
      *
      * --- Re-cache pages from page 7 and two levels down, executed immediately
      * $ typo3 crawler:buildQueue --page 7 --depth 2 --conf defaultConfiguration --mode exec
-
+     *
      *
      * --- Put entries for re-caching pages from page 7 into queue, 4 every minute.
      * $ typo3 crawler:buildQueue --page 7 --depth 0 --conf defaultConfiguration --mode queue --number 4
@@ -116,7 +116,6 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-
         $mode = $input->getOption('mode');
 
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
@@ -124,7 +123,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
         /** @var CrawlerController $crawlerController */
         $crawlerController = $objectManager->get(CrawlerController::class);
 
-        if ( $mode === 'exec') {
+        if ($mode === 'exec') {
             $crawlerController->registerQueueEntriesInternallyOnly = true;
         }
 
@@ -166,7 +165,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             $pageId,
             MathUtility::forceIntegerInRange($input->getOption('depth'), 0, 99),
             $crawlerController->getCurrentTime(),
-            MathUtility::forceIntegerInRange($input->getOption('number') ?:  30, 1, 1000),
+            MathUtility::forceIntegerInRange($input->getOption('number') ?: 30, 1, 1000),
             $mode === 'queue' || $mode === 'exec',
             $mode === 'url',
             [],
@@ -174,31 +173,31 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
         );
 
         if ($mode === 'url') {
-             $output->writeln('<info>' . implode(PHP_EOL, $crawlerController->downloadUrls) . PHP_EOL . '</info>');
+            $output->writeln('<info>' . implode(PHP_EOL, $crawlerController->downloadUrls) . PHP_EOL . '</info>');
         } elseif ($mode === 'exec') {
-             $output->writeln('<info>Executing ' . count($crawlerController->urlList) . ' requests right away:</info>');
-             $output->writeln('<info>' . implode(PHP_EOL, $crawlerController->urlList) . '</info>' . PHP_EOL);
-             $output->writeln('<info>Processing</info>' . PHP_EOL);
+            $output->writeln('<info>Executing ' . count($crawlerController->urlList) . ' requests right away:</info>');
+            $output->writeln('<info>' . implode(PHP_EOL, $crawlerController->urlList) . '</info>' . PHP_EOL);
+            $output->writeln('<info>Processing</info>' . PHP_EOL);
 
             foreach ($crawlerController->queueEntries as $queueRec) {
                 $p = unserialize($queueRec['parameters']);
-                 $output->writeln('<info>' . $p['url'] . ' (' . implode(',', $p['procInstructions']) . ') => ' . '</info>' . PHP_EOL);
+                $output->writeln('<info>' . $p['url'] . ' (' . implode(',', $p['procInstructions']) . ') => ' . '</info>' . PHP_EOL);
                 $result = $crawlerController->readUrlFromArray($queueRec);
 
                 $requestResult = unserialize($result['content']);
                 if (is_array($requestResult)) {
                     $resLog = is_array($requestResult['log']) ? PHP_EOL . chr(9) . chr(9) . implode(PHP_EOL . chr(9) . chr(9), $requestResult['log']) : '';
-                     $output->writeln('<info>OK: ' . $resLog . '</info>' . PHP_EOL);
+                    $output->writeln('<info>OK: ' . $resLog . '</info>' . PHP_EOL);
                 } else {
-                     $output->writeln('<errror>Error checking Crawler Result:  ' . substr(preg_replace('/\s+/', ' ', strip_tags($result['content'])), 0, 30000) . '...' . PHP_EOL . '</errror>' . PHP_EOL);
+                    $output->writeln('<errror>Error checking Crawler Result:  ' . substr(preg_replace('/\s+/', ' ', strip_tags($result['content'])), 0, 30000) . '...' . PHP_EOL . '</errror>' . PHP_EOL);
                 }
             }
         } elseif ($mode === 'queue') {
-             $output->writeln('<info>Putting ' . count($crawlerController->urlList) . ' entries in queue:</info>' . PHP_EOL);
-             $output->writeln('<info>' . implode(PHP_EOL, $crawlerController->urlList) . '</info>' . PHP_EOL);
+            $output->writeln('<info>Putting ' . count($crawlerController->urlList) . ' entries in queue:</info>' . PHP_EOL);
+            $output->writeln('<info>' . implode(PHP_EOL, $crawlerController->urlList) . '</info>' . PHP_EOL);
         } else {
-             $output->writeln('<info>' . count($crawlerController->urlList) . ' entries found for processing. (Use "mode" to decide action):</info>' . PHP_EOL);
-             $output->writeln('<info>' . implode(PHP_EOL, $crawlerController->urlList) . '</info>' . PHP_EOL);
+            $output->writeln('<info>' . count($crawlerController->urlList) . ' entries found for processing. (Use "mode" to decide action):</info>' . PHP_EOL);
+            $output->writeln('<info>' . implode(PHP_EOL, $crawlerController->urlList) . '</info>' . PHP_EOL);
         }
     }
 
@@ -213,6 +212,4 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
         $parameter = trim($conf);
         return ($parameter != '' ? GeneralUtility::trimExplode(',', $parameter) : []);
     }
-
-
 }

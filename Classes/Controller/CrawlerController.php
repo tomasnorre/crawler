@@ -25,12 +25,12 @@ namespace AOE\Crawler\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use AOE\Crawler\QueueExecutor;
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\EventDispatcher;
+use AOE\Crawler\QueueExecutor;
 use AOE\Crawler\Utility\SignalSlotUtility;
 use Psr\Http\Message\UriInterface;
 use Psr\Log\LoggerAwareInterface;
@@ -449,7 +449,6 @@ class CrawlerController implements LoggerAwareInterface
         array &$downloadUrls,
         array $incomingProcInstructions
     ) {
-
         if (!is_array($vv['URLs'])) {
             return 'ERROR - no URL generated';
         }
@@ -1359,7 +1358,7 @@ class CrawlerController implements LoggerAwareInterface
      */
     public function readUrlFromArray($field_array)
     {
-            // Set exec_time to lock record:
+        // Set exec_time to lock record:
         $field_array['exec_time'] = $this->getCurrentTime();
         $connectionForCrawlerQueue = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable($this->tableName);
         $connectionForCrawlerQueue->insert(
