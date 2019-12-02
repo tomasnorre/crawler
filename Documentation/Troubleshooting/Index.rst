@@ -39,3 +39,14 @@ Please check the Upgrade Wizard, and check if the "Introduce URL parts ("slugs")
 is marked as done, if not you should perform this step.
 
 See related issue: `[BUG] Crawling Depth not respected #464 <https://github.com/AOEpeople/crawler/issues/464>`_
+
+
+Update from older versions
+''''''''''''''''''''''''''
+
+If you update the extension from older versions you can run into following error:
+
+SQL error: 'Field 'sys_domain_base_url' doesn't have a default value'
+
+Make sure to delete all unnecessary fields from database tabeles. You can do this in the backend via "Analyze Database Structure"-Tool or if you have typo3-console installed via command line command "typo3cms database:updateschema".
+
