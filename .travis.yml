@@ -61,7 +61,6 @@ jobs:
   allow_failures:
     - env: TYPO3_VERSION=^10.0
     - env: TYPO3_VERSION=dev-master
-    - name: "Rector CI"
     - name: "PHPStan"
   include:
     -
