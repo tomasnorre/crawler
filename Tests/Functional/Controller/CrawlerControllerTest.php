@@ -62,7 +62,6 @@ class CrawlerControllerTest extends FunctionalTestCase
     {
         parent::setUp();
         $this->objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        #$this->importDataSet(__DIR__ . '/../Fixtures/sys_domain.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/pages.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_configuration.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
@@ -218,19 +217,6 @@ class CrawlerControllerTest extends FunctionalTestCase
         );
     }
 
-// CrawlerController::isCrawlingProtocolHttps() removed in [7f7f07b]
-    /**
-     * @test
-     * @dataProvider isCrawlingProtocolHttpsDataProvider
-     */
-//    public function isCrawlingProtocolHttps($crawlerConfiguration, $pageConfiguration, $expected)
-//    {
-//        $this->assertEquals(
-//            $expected,
-//            $this->subject->_call(isCrawlingProtocolHttps, $crawlerConfiguration, $pageConfiguration)
-//        );
-//    }
-    
     /**
      * @test
      */
@@ -690,33 +676,4 @@ class CrawlerControllerTest extends FunctionalTestCase
         ];
     }
 
-// CrawlerController::isCrawlingProtocolHttps() removed in [7f7f07b]
-    /**
-     * @return array
-     */
-//    public function isCrawlingProtocolHttpsDataProvider()
-//    {
-//        return [
-//            'Crawler Configuration set to http' => [
-//                'crawlerConfiguration' => -1,
-//                'pageConfiguration' => true,
-//                'expected' => false,
-//            ],
-//            'Crawler Configuration set to https' => [
-//                'crawlerConfiguration' => 1,
-//                'pageConfiguration' => false,
-//                'expected' => true,
-//            ],
-//            'Crawler Configuration set to page-configuration' => [
-//                'crawlerConfiguration' => 0,
-//                'pageConfiguration' => true,
-//                'expected' => true,
-//            ],
-//            'Crawler Configuration default fallback' => [
-//                'crawlerConfiguration' => 99,
-//                'pageConfiguration' => true,
-//                'expected' => false,
-//            ],
-//        ];
-//    }
 }

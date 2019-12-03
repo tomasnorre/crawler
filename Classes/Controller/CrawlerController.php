@@ -666,7 +666,7 @@ class CrawlerController implements LoggerAwareInterface
      * @param $depth
      * @return array
      *
-     * TODO: Write Functional Tests => done?!?!
+     * TODO: Write Functional Tests
      */
     public function getConfigurationsForBranch(int $rootid, $depth)
     {
@@ -694,14 +694,6 @@ class CrawlerController implements LoggerAwareInterface
         }
 
         $queryBuilder = $this->getQueryBuilder('tx_crawler_configuration');
-
-        // The pre TYPO3 v9 version use the method BackendUtility::BEenableFields('tx_crawler_configuration') 
-        // to create the where clause (deleted, hidden, startTime, endTime ), this is exactly the new default behavior 
-        // Therefore, why remove the default restrictions for TYPO3 v9?
-        #$queryBuilder->getRestrictions()
-        #    ->removeAll() 
-        #    ->add(GeneralUtility::makeInstance(DeletedRestriction::class));
-
         $statement = $queryBuilder
             ->select('name')
             ->from('tx_crawler_configuration')
@@ -852,7 +844,7 @@ class CrawlerController implements LoggerAwareInterface
                                 if ($subpartParams['_ENABLELANG'] && $transOrigPointerField) {
                                     $queryBuilder->andWhere(
                                         $queryBuilder->expr()->lte(
-                                           $transOrigPointerField,
+                                            $transOrigPointerField,
                                             0
                                         )
                                     );
@@ -1214,8 +1206,6 @@ class CrawlerController implements LoggerAwareInterface
      * @param array $fieldArray
      *
      * @return array
-     *
-     * TODO: Write Functional Tests => done?!?!
      */
     protected function getDuplicateRowsIfExist($tstamp, $fieldArray)
     {
@@ -1254,8 +1244,8 @@ class CrawlerController implements LoggerAwareInterface
         }
 
         $queryBuilder
-            /* ->andWhere('exec_time != 0') # this was ' AND NOT exec_time' therfore functional test fails => change back */ ->andWhere('NOT exec_time')
-            /* ->andWhere('process_id != 0') # this was ' AND NOT process_id' therfore functional test fails => change back */ ->andWhere('NOT process_id')
+            ->andWhere('NOT exec_time')
+            ->andWhere('NOT process_id')
             ->andWhere($queryBuilder->expr()->eq('page_id', $queryBuilder->createNamedParameter($fieldArray['page_id'], \PDO::PARAM_INT)))
             ->andWhere($queryBuilder->expr()->eq('parameters_hash', $queryBuilder->createNamedParameter($fieldArray['parameters_hash'], \PDO::PARAM_STR)))
             ;
