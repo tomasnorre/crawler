@@ -10,6 +10,10 @@ notifications:
 
 sudo: false
 
+before_install:
+  # turn off XDebug for speed up
+  - phpenv config-rm xdebug.ini || return 0
+
 addons:
   apt:
     packages:
@@ -72,6 +76,8 @@ jobs:
     -
       stage: test
       name: "Tests Coverage"
+      before_install:
+        - echo "keep xdebug"
       script:
         - export typo3DatabaseName="typo3";
         - export typo3DatabaseHost="localhost";
