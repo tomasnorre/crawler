@@ -15,10 +15,8 @@
             "role": "Developer"
         }
     ],
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "require": {
-        "php": ">=7.2",
+        "php": "^7.2",
         "ext-json": "*",
         "typo3/cms-core": "~9.5.9 || ^10",
         "typo3/cms-beuser": "*",
@@ -31,21 +29,20 @@
     "require-dev": {
         "nimut/testing-framework": "^4.1",
         "nimut/typo3-complete": "^9.5",
-        "friendsofphp/php-cs-fixer": "^2.15",
         "phpstan/phpstan": "^0.11.19",
-        "rector/rector": "^0.6.0@dev"
+        "rector/rector": "^0.6"
     },
     "replace": {
         "typo3-ter/crawler": "self.version"
     },
     "autoload": {
         "psr-4": {
-            "AOE\\Crawler\\": "Classes/"
+            "AOE\\Crawler\\": "Classes"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "AOE\\Crawler\\Tests\\": "Tests/"
+            "AOE\\Crawler\\Tests\\": "Tests"
         }
     },
     "config": {
@@ -60,22 +57,13 @@
             "export TYPO3_PATH_WEB=$PWD/.Build/Web"
         ],
         "test:unit": [
-            "[ -e .Build/bin/phpunit ] || composer update",
             "TYPO3_PATH_WEB=.Build/Web .Build/bin/phpunit --colors -c .Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/Unit"
         ],
         "test:functional": [
-            "[ -e .Build/bin/phpunit ] || composer update",
             "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseName=crawler typo3DatabaseHost=127.0.0.1 typo3DatabaseUsername=root typo3DatabasePassword=root .Build/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml Tests/Functional"
         ],
-        "cs-fix": [
-            "[ -e .Build/bin/php-cs-fixer ] || composer update",
-            "./.Build/bin/php-cs-fixer fix Classes/",
-            "./.Build/bin/php-cs-fixer fix Tests/"
-        ],
-        "analyse": [
-            "[ -e .Build/bin/phpstan ] || composer update",
-            ".Build/bin/phpstan analyse --no-progress"
-        ],
+        "cs-fix": ".Build/bin/php-cs-fixer fix Classes Tests",
+        "analyse": ".Build/bin/phpstan analyse",
         "test:all": [
             "@test:unit",
             "@test:functional"
@@ -100,5 +88,7 @@
                 "Migrations/Code/ClassAliasMap.php"
             ]
         }
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
 }
