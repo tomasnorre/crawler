@@ -15,6 +15,16 @@ addons:
     packages:
       - parallel
 
+php:
+  - '7.2'
+  - '7.3'
+
+env:
+  # tested TYPO3 version
+  - TYPO3_VERSION=^9.5
+  - TYPO3_VERSION=^10.0
+  - TYPO3_VERSION=dev-master
+
 services:
   - mysql
 
@@ -22,14 +32,10 @@ cache:
   directories:
     - $HOME/.composer/cache
 
-before_install:
-  - composer self-update
-  - composer --version
+install:
+  - composer install
 
 before_script:
-  # Enables us to test dev-master
-  - composer config minimum-stability dev
-  - composer config prefer-stable true
   # Installs nimut/typo3-complete
   - travis_wait 30 composer require --dev nimut/typo3-complete=$TYPO3_VERSION
   - export "TYPO3_PATH_WEB"=$PWD/.Build/Web;
@@ -41,92 +47,72 @@ before_script:
   - ln -nfs .Build/vendor/typo3/cms/typo3 typo3
 
 script:
-  - >
-    if [[ "$COVERAGE" == "0" ]]; then
-      echo;
-      echo "Running unit tests";
-      .Build/bin/phpunit --colors -c $UNIT_XML Tests/Unit
-    fi
-  - >
-    if [[ "$COVERAGE" == "1" ]]; then
-      echo;
-      echo "Running unit tests";
-      .Build/bin/phpunit --whitelist Classes/ --coverage-clover=unittest-coverage.clover --colors -c $UNIT_XML Tests/Unit
-    fi
-  - >
-    if [[ "$FUNCTIONAL" == "1" ]]; then
-      echo;
-      echo "Running functional tests";
-      export typo3DatabaseName="typo3";
-      export typo3DatabaseHost="localhost";
-      export typo3DatabaseUsername="root";
-      export typo3DatabasePassword="";
-      .Build/bin/phpunit --whitelist Classes/ --coverage-clover=functional-coverage.clover --colors -c $FUNCTIONAL_XML Tests/Functional
-    fi
-  - >
-    if [[ "$COVERAGE" == "1" ]]; then
-      echo;
-      echo "Uploading code coverage results";
-      wget https://scrutinizer-ci.com/ocular.phar
-      php ocular.phar code-coverage:upload --format=php-clover unittest-coverage.clover
-      php ocular.phar code-coverage:upload --format=php-clover functional-coverage.clover
-    fi
-  - >
-    echo;
-      echo "Running php lint";
-      find . -name \*.php ! -path "./.Build/*" ! -path "./scripts/*" ! -path "./typo3_src/*" | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \;
+  # run tests by default
+  # unit tests
+  - .Build/bin/phpunit --colors -c $UNIT_XML Tests/Unit
+  # functional tests
+  - export typo3DatabaseName="typo3"
+  - export typo3DatabaseHost="localhost"
+  - export typo3DatabaseUsername="root"
+  - export typo3DatabasePassword=""
+  - .Build/bin/phpunit --whitelist Classes --colors -c $FUNCTIONAL_XML Tests/Functional
+
 jobs:
   allow_failures:
-    - env: TYPO3_VERSION=^10.0 COVERAGE=0 FUNCTIONAL=1
-    - env: TYPO3_VERSION=^10.0 COVERAGE=0 FUNCTIONAL=0
-    - env: TYPO3_VERSION=dev-master COVERAGE=0 FUNCTIONAL=0
-    - env: TYPO3_VERSION=dev-master COVERAGE=0 FUNCTIONAL=1
+    - env: TYPO3_VERSION=^10.0
+    - env: TYPO3_VERSION=dev-master
     - name: "Rector CI"
+    - name: "PHPStan"
   include:
-    - stage: test
-      env: TYPO3_VERSION=^9.5 COVERAGE=0 FUNCTIONAL=0
-      php: 7.2
-    - stage: test
-      env: TYPO3_VERSION=^9.5 COVERAGE=0 FUNCTIONAL=0
-      php: 7.3
-    - stage: test
-      env: TYPO3_VERSION=^9.5 COVERAGE=1 FUNCTIONAL=1
-      php: 7.2
+    -
+      stage: test
+      name: "PHP Lint"
+      script:
+        - find . -name \*.php ! -path "./.Build/*" ! -path "./scripts/*" ! -path "./typo3_src/*" | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \;
 
-    - stage: test
-      env: TYPO3_VERSION=^10.0 COVERAGE=0 FUNCTIONAL=0
-      php: 7.2
-    - stage: test
-      env: TYPO3_VERSION=^10.0 COVERAGE=0 FUNCTIONAL=1
-      php: 7.2
-    - stage: test
-      env: TYPO3_VERSION=^10.0 COVERAGE=0 FUNCTIONAL=0
-      php: 7.3
-    - stage: test
-      env: TYPO3_VERSION=^10.0 COVERAGE=0 FUNCTIONAL=1
-      php: 7.3
+    -
+      stage: test
+      name: "Tests Coverage"
+      script:
+        - export typo3DatabaseName="typo3";
+        - export typo3DatabaseHost="localhost";
+        - export typo3DatabaseUsername="root";
+        - export typo3DatabasePassword="";
 
-    - stage: test
-      env: TYPO3_VERSION=dev-master COVERAGE=0 FUNCTIONAL=0
-      php: 7.2
-    - stage: test
-      env: TYPO3_VERSION=dev-master COVERAGE=0 FUNCTIONAL=1
-      php: 7.2
-    - stage: test
-      env: TYPO3_VERSION=dev-master COVERAGE=0 FUNCTIONAL=0
-      php: 7.3
-    - stage: test
-      env: TYPO3_VERSION=dev-master COVERAGE=0 FUNCTIONAL=1
-      php: 7.3
+        # Unit tests
+        - .Build/bin/phpunit --whitelist Classes --coverage-clover=unittest-coverage.clover --colors -c $UNIT_XML Tests/Unit
 
-    # Rector CI
-    - stage: rector
+        # Functional tests
+        - .Build/bin/phpunit --whitelist Classes --coverage-clover=functional-coverage.clover --colors -c $FUNCTIONAL_XML Tests/Functional
+
+      after_script:
+        - wget https://scrutinizer-ci.com/ocular.phar
+        - php ocular.phar code-coverage:upload --format=php-clover unittest-coverage.clover
+        - php ocular.phar code-coverage:upload --format=php-clover functional-coverage
+
+    # Static Analysis
+    -
+      stage: static
       name: "Rector CI"
       php: 7.2
+      env:
+        - TYPO3_VERSION=^9.5
       script:
-        - .Build/bin/rector process --dry-run
+        - .Build/bin/rector process --dry-run --config rector-ci.yaml
 
-    - stage: ship to ter
+    -
+      stage: static
+      name: "PHPStan"
+      php: 7.2
+      env:
+        - TYPO3_VERSION=^9.5
+      script:
+        - .Build/bin/phpstan analyse
+
+    # Deploy
+    -
+      stage: deploy
+      name: "Ship to TER"
       if: tag IS present
       php: 7.0
       install: skip
@@ -145,3 +131,6 @@ jobs:
             echo "Uploading release ${TRAVIS_TAG} to TER"
             $HOME/.composer/vendor/bin/ter-client upload aoe_ipauth . -u "$TYPO3_ORG_USERNAME" -p "$TYPO3_ORG_PASSWORD" -m "$TAG_MESSAGE"
           fi;
+
+matrix:
+  fast_finish: true
