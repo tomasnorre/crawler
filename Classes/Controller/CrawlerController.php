@@ -143,7 +143,7 @@ class CrawlerController implements LoggerAwareInterface
     /**
      * @var BackendUserAuthentication|null
      */
-    private $backendUser = null;
+    private $backendUser;
 
     /**
      * @var integer
@@ -873,7 +873,7 @@ class CrawlerController implements LoggerAwareInterface
                             'currentValue' => $pV,
                             'pid' => $pid
                         ];
-                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/class.tx_crawler_lib.php']['expandParameters'] as $key => $_funcRef) {
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/class.tx_crawler_lib.php']['expandParameters'] as $_funcRef) {
                             GeneralUtility::callUserFunction($_funcRef, $_params, $this);
                         }
                     }

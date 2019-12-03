@@ -76,8 +76,7 @@ class ItemProvider extends AbstractProvider
     public function addItems(array $items): array
     {
         $localItems = $this->prepareItems($this->itemsConfiguration);
-        $items += $localItems;
-        return $items;
+        return $items + $localItems;
     }
 
     /**

@@ -29,7 +29,7 @@ class IndexedSearchCrawlerFilesHook
      * @param object $pObj Parent object (tx_crawler lib)
      * @return array|null Result array
      */
-    public function crawler_execute($params, &$pObj)
+    public function crawler_execute($params)
     {
         if (!is_array($params['conf'])) {
             return;

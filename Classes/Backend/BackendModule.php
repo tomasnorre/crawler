@@ -601,7 +601,7 @@ class BackendModule
             // Traverse parameter combinations:
             $c = 0;
             $content = '';
-            foreach ($logEntriesOfPage as $kk => $vv) {
+            foreach ($logEntriesOfPage as $vv) {
                 // Title column:
                 if (!$c) {
                     $titleClm = '<td rowspan="' . count($logEntriesOfPage) . '">' . $titleString . '</td>';

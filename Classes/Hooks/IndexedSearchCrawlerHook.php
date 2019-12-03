@@ -443,7 +443,7 @@ class IndexedSearchCrawlerHook
         // Dummy.
         // Submit URLs:
         if (!empty($res)) {
-            foreach ($res as $paramSetKey => $vv) {
+            foreach ($res as $vv) {
                 $pObj->urlListFromUrlArray($vv, $pageRow, $GLOBALS['EXEC_TIME'], 30, 1, 0, $duplicateTrack, $downloadUrls, ['tx_indexedsearch_reindex']);
             }
         }
@@ -633,7 +633,7 @@ class IndexedSearchCrawlerHook
         $subUrls = [];
         $list = $indexerObj->extractHyperLinks($indexerObj->indexExternalUrl_content);
         // Traverse links:
-        foreach ($list as $count => $linkInfo) {
+        foreach ($list as $linkInfo) {
             // Decode entities:
             $subUrl = htmlspecialchars_decode($linkInfo['href']);
             $qParts = parse_url($subUrl);
@@ -835,7 +835,7 @@ class IndexedSearchCrawlerHook
      * @param mixed $value Target value (ignored)
      * @param DataHandler $pObj DataHandler calling object
      */
-    public function processCmdmap_preProcess($command, $table, $id, $value, $pObj)
+    public function processCmdmap_preProcess($command, $table, $id)
     {
         // Clean up the index
         if ($command === 'delete' && $table === 'pages') {

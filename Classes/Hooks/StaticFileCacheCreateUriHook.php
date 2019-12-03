@@ -43,7 +43,7 @@ class StaticFileCacheCreateUriHook
      * @throws \Exception
      * @return void
      */
-    public function initialize(array $parameters, \SFC\NcStaticfilecache\StaticFileCache $parent)
+    public function initialize(array $parameters)
     {
         list($parameters['host'], $parameters['uri']) = $this->fixNonSpeakingUri($parameters['host'], $parameters['uri'], $parameters['TSFE']);
     }

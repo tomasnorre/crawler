@@ -49,11 +49,6 @@ class CrawlerControllerTest extends FunctionalTestCase
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     /**
-     * @var ObjectManager
-     */
-    private $objectManager;
-
-    /**
      * @var CrawlerController
      */
     protected $subject;
@@ -61,7 +56,7 @@ class CrawlerControllerTest extends FunctionalTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        GeneralUtility::makeInstance(ObjectManager::class);
         $this->importDataSet(__DIR__ . '/../Fixtures/pages.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_configuration.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
