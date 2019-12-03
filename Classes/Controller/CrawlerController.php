@@ -141,9 +141,9 @@ class CrawlerController implements LoggerAwareInterface
     protected $accessMode;
 
     /**
-     * @var BackendUserAuthentication
+     * @var BackendUserAuthentication|null
      */
-    private $backendUser;
+    private $backendUser = null;
 
     /**
      * @var integer
@@ -278,7 +278,6 @@ class CrawlerController implements LoggerAwareInterface
         $this->queueExecutor = $objectManager->get(QueueExecutor::class);
         $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
 
-        $this->backendUser = $GLOBALS['BE_USER'];
         $this->processFilename = Environment::getVarPath() . '/locks/tx_crawler.proc';
 
         /** @var ExtensionConfigurationProvider $configurationProvider */
@@ -293,6 +292,16 @@ class CrawlerController implements LoggerAwareInterface
 
         $this->extensionSettings['processLimit'] = MathUtility::forceIntegerInRange($this->extensionSettings['processLimit'], 1, 99, 1);
         $this->maximumUrlsToCompile = MathUtility::forceIntegerInRange($this->extensionSettings['maxCompileUrls'], 1, 1000000000, 10000);
+    }
+    
+    /**
+     * @return BackendUserAuthentication
+     */
+    private function getBackendUser() {
+        if($this->backendUser === null) {
+            $this->backendUser = $GLOBALS['BE_USER'];
+        }
+        return $this->backendUser;
     }
 
     /**
@@ -603,7 +612,7 @@ class CrawlerController implements LoggerAwareInterface
         foreach ($crawlerConfigurations as $configurationRecord) {
 
                 // check access to the configuration record
-            if (empty($configurationRecord['begroups']) || $this->backendUser->isAdmin() || $this->hasGroupAccess($this->backendUser->user['usergroup_cached_list'], $configurationRecord['begroups'])) {
+            if (empty($configurationRecord['begroups']) || $this->getBackendUser()->isAdmin() || $this->hasGroupAccess($this->getBackendUser()->user['usergroup_cached_list'], $configurationRecord['begroups'])) {
                 $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $configurationRecord['pidsonly'], true));
 
                 // process configuration if it is not page-specific or if the specific page is the current page:
@@ -676,19 +685,14 @@ class CrawlerController implements LoggerAwareInterface
         }
         /* @var PageTreeView $tree */
         $tree = GeneralUtility::makeInstance(PageTreeView::class);
-        $perms_clause = $this->backendUser->getPagePermsClause(Permission::PAGE_SHOW);
-        $tree->init('AND ' . $perms_clause);
+        $perms_clause = $this->getBackendUser()->getPagePermsClause(Permission::PAGE_SHOW);
+        $tree->init( empty($perms_clause) ? '' : ('AND ' . $perms_clause) );
         $tree->getTree($rootid, $depth, '');
         foreach ($tree->tree as $node) {
             $pids[] = $node['row']['uid'];
         }
 
         $queryBuilder = $this->getQueryBuilder('tx_crawler_configuration');
-
-        $queryBuilder->getRestrictions()
-            ->removeAll()
-            ->add(GeneralUtility::makeInstance(DeletedRestriction::class));
-
         $statement = $queryBuilder
             ->select('name')
             ->from('tx_crawler_configuration')
@@ -800,7 +804,8 @@ class CrawlerController implements LoggerAwareInterface
 
                         // Table exists:
                         if (isset($GLOBALS['TCA'][$subpartParams['_TABLE']])) {
-                            $lookUpPid = isset($subpartParams['_PID']) ? (int)$subpartParams['_PID'] : $pid;
+                            $lookUpPid = isset($subpartParams['_PID']) ? intval($subpartParams['_PID']) : intval($pid);
+                            $recursiveDepth = isset($subpartParams['_RECURSIVE']) ? intval($subpartParams['_RECURSIVE']) : 0;
                             $pidField = isset($subpartParams['_PIDFIELD']) ? trim($subpartParams['_PIDFIELD']) : 'pid';
                             $where = isset($subpartParams['_WHERE']) ? $subpartParams['_WHERE'] : '';
                             $addTable = isset($subpartParams['_ADDTABLE']) ? $subpartParams['_ADDTABLE'] : '';
@@ -809,6 +814,15 @@ class CrawlerController implements LoggerAwareInterface
                             if ($fieldName === 'uid' || $GLOBALS['TCA'][$subpartParams['_TABLE']]['columns'][$fieldName]) {
                                 $queryBuilder = $this->getQueryBuilder($subpartParams['_TABLE']);
 
+                                if($recursiveDepth > 0) {
+                                    /** @var \TYPO3\CMS\Core\Database\QueryGenerator $queryGenerator */
+                                    $queryGenerator = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\QueryGenerator::class);
+                                    $pidList = $queryGenerator->getTreeList($lookUpPid, $recursiveDepth, 0, 1);
+                                    $pidArray = GeneralUtility::intExplode(',', $pidList);
+                                } else {
+                                    $pidArray = [(string)$lookUpPid];
+                                }
+                                
                                 $queryBuilder->getRestrictions()
                                     ->removeAll()
                                     ->add(GeneralUtility::makeInstance(DeletedRestriction::class));
@@ -816,18 +830,20 @@ class CrawlerController implements LoggerAwareInterface
                                 $queryBuilder
                                     ->select($fieldName)
                                     ->from($subpartParams['_TABLE'])
-                                    // TODO: Check if this works as intended!
-                                    ->add('from', $addTable)
                                     ->where(
-                                        $queryBuilder->expr()->eq($queryBuilder->quoteIdentifier($pidField), $queryBuilder->createNamedParameter($lookUpPid, \PDO::PARAM_INT)),
+                                        $queryBuilder->expr()->in($pidField, $queryBuilder->createNamedParameter($pidArray, Connection::PARAM_INT_ARRAY)),
                                         $where
                                     );
+                                if(!empty($addTable)) {
+                                    // TODO: Check if this works as intended!
+                                    $queryBuilder->add('from', $addTable);
+                                }
                                 $transOrigPointerField = $GLOBALS['TCA'][$subpartParams['_TABLE']]['ctrl']['transOrigPointerField'];
 
                                 if ($subpartParams['_ENABLELANG'] && $transOrigPointerField) {
                                     $queryBuilder->andWhere(
                                         $queryBuilder->expr()->lte(
-                                            $queryBuilder->quoteIdentifier($transOrigPointerField),
+                                            $transOrigPointerField,
                                             0
                                         )
                                     );
@@ -837,7 +853,7 @@ class CrawlerController implements LoggerAwareInterface
 
                                 $rows = [];
                                 while ($row = $statement->fetch()) {
-                                    $rows[$fieldName] = $row;
+                                    $rows[$row[$fieldName]] = $row;
                                 }
 
                                 if (is_array($rows)) {
@@ -1189,8 +1205,6 @@ class CrawlerController implements LoggerAwareInterface
      * @param array $fieldArray
      *
      * @return array
-     *
-     * TODO: Write Functional Tests
      */
     protected function getDuplicateRowsIfExist($tstamp, $fieldArray)
     {
@@ -1228,13 +1242,15 @@ class CrawlerController implements LoggerAwareInterface
                 );
         }
 
-        $statement = $queryBuilder
-            ->andWhere('exec_time != 0')
-            ->andWhere('process_id != 0')
+        $queryBuilder
+            ->andWhere('NOT exec_time')
+            ->andWhere('NOT process_id')
             ->andWhere($queryBuilder->expr()->eq('page_id', $queryBuilder->createNamedParameter($fieldArray['page_id'], \PDO::PARAM_INT)))
             ->andWhere($queryBuilder->expr()->eq('parameters_hash', $queryBuilder->createNamedParameter($fieldArray['parameters_hash'], \PDO::PARAM_STR)))
-            ->execute();
+            ;
 
+        $statement = $queryBuilder->execute();
+        
         while ($row = $statement->fetch()) {
             $rows[] = $row['qid'];
         }
@@ -1427,7 +1443,7 @@ class CrawlerController implements LoggerAwareInterface
         // Drawing tree:
         /* @var PageTreeView $tree */
         $tree = GeneralUtility::makeInstance(PageTreeView::class);
-        $perms_clause = $this->backendUser->getPagePermsClause(Permission::PAGE_SHOW);
+        $perms_clause = $this->getBackendUser()->getPagePermsClause(Permission::PAGE_SHOW);
         $tree->init('AND ' . $perms_clause);
 
         $pageInfo = BackendUtility::readPageAccess($id, $perms_clause);
@@ -1514,7 +1530,7 @@ class CrawlerController implements LoggerAwareInterface
             if (!empty($excludeString)) {
                 /** @var PageTreeView $tree */
                 $tree = GeneralUtility::makeInstance(PageTreeView::class);
-                $tree->init('AND ' . $this->backendUser->getPagePermsClause(Permission::PAGE_SHOW));
+                $tree->init('AND ' . $this->getBackendUser()->getPagePermsClause(Permission::PAGE_SHOW));
 
                 $excludeParts = GeneralUtility::trimExplode(',', $excludeString);
 

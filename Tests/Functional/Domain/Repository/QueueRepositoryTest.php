@@ -175,7 +175,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     public function countUnprocessedItems()
     {
         self::assertEquals(
-            5,
+            7,
             $this->subject->countUnprocessedItems()
         );
     }
@@ -186,7 +186,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     public function countAllPendingItems()
     {
         self::assertEquals(
-            5,
+            7,
             $this->subject->countAllPendingItems()
         );
     }
@@ -208,7 +208,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     public function countAllUnassignedPendingItems()
     {
         self::assertEquals(
-            2,
+            4,
             $this->subject->countAllUnassignedPendingItems()
         );
     }
@@ -226,7 +226,7 @@ class QueueRepositoryTest extends FunctionalTestCase
             ],
             1 => [
                 'configuration' => 'SecondConfiguration',
-                'unprocessed' => 1,
+                'unprocessed' => 3,
                 'assignedButUnprocessed' => 1,
             ],
             2 => [
@@ -352,7 +352,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     public function countAll()
     {
         self::assertEquals(
-            12,
+            14,
             $this->subject->countAll()
         );
     }

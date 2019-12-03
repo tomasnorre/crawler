@@ -288,7 +288,7 @@ class CrawlerApi
             $res = 0;
         }
 
-        return $res;
+        return intval($res);
     }
 
     /**
