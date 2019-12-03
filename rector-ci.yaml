@@ -2,7 +2,6 @@ parameters:
     paths:
         - "Classes"
         - "Configuration"
-        - "Migrations"
         - "Tests"
 
     sets:
@@ -16,5 +15,3 @@ parameters:
     exclude_paths:
         # missing parent interface "TYPO3\CMS\IndexedSearch\Worker\WorkerInterface"
         - "Classes/Worker/CrawlerWorker.php"
-        # BC layer
-        - "Migrations/Code/LegacyClassesForIde.php"
