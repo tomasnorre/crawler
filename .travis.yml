@@ -101,6 +101,15 @@ jobs:
 
     -
       stage: static
+      name: "Coding Standards"
+      php: 7.2
+      env:
+        - TYPO3_VERSION=^9.5
+      script:
+        - .Build/bin/php-cs-fixer fix Classes Configuration Tests --config .php_cs
+
+    -
+      stage: static
       name: "PHPStan"
       php: 7.2
       env:
