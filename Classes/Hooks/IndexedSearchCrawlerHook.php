@@ -833,8 +833,6 @@ class IndexedSearchCrawlerHook
      * @param string $command DataHandler command
      * @param string $table Table name
      * @param string $id Record ID. If new record its a string pointing to index inside \TYPO3\CMS\Core\DataHandling\DataHandler::substNEWwithIDs
-     * @param mixed $value Target value (ignored)
-     * @param DataHandler $pObj DataHandler calling object
      */
     public function processCmdmap_preProcess($command, $table, $id)
     {
