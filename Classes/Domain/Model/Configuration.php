@@ -39,9 +39,9 @@ class Configuration extends AbstractEntity
     protected $name = '';
 
     /**
-     * @var bool
+     * @var int
      */
-    protected $forceSsl = true;
+    protected $forceSsl = 1;
 
     /**
      * @var string
@@ -120,7 +120,7 @@ class Configuration extends AbstractEntity
     }
 
     /**
-     * @return bool
+     * @return int
      */
     public function isForceSsl()
     {
@@ -128,7 +128,7 @@ class Configuration extends AbstractEntity
     }
 
     /**
-     * @param bool $forceSsl
+     * @param int $forceSsl
      */
     public function setForceSsl($forceSsl)
     {
