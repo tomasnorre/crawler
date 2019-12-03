@@ -297,8 +297,9 @@ class CrawlerController implements LoggerAwareInterface
     /**
      * @return BackendUserAuthentication
      */
-    private function getBackendUser() {
-        if($this->backendUser === null) {
+    private function getBackendUser()
+    {
+        if ($this->backendUser === null) {
             $this->backendUser = $GLOBALS['BE_USER'];
         }
         return $this->backendUser;
@@ -686,7 +687,7 @@ class CrawlerController implements LoggerAwareInterface
         /* @var PageTreeView $tree */
         $tree = GeneralUtility::makeInstance(PageTreeView::class);
         $perms_clause = $this->getBackendUser()->getPagePermsClause(Permission::PAGE_SHOW);
-        $tree->init( empty($perms_clause) ? '' : ('AND ' . $perms_clause) );
+        $tree->init(empty($perms_clause) ? '' : ('AND ' . $perms_clause));
         $tree->getTree($rootid, $depth, '');
         foreach ($tree->tree as $node) {
             $pids[] = $node['row']['uid'];
@@ -814,7 +815,7 @@ class CrawlerController implements LoggerAwareInterface
                             if ($fieldName === 'uid' || $GLOBALS['TCA'][$subpartParams['_TABLE']]['columns'][$fieldName]) {
                                 $queryBuilder = $this->getQueryBuilder($subpartParams['_TABLE']);
 
-                                if($recursiveDepth > 0) {
+                                if ($recursiveDepth > 0) {
                                     /** @var \TYPO3\CMS\Core\Database\QueryGenerator $queryGenerator */
                                     $queryGenerator = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\QueryGenerator::class);
                                     $pidList = $queryGenerator->getTreeList($lookUpPid, $recursiveDepth, 0, 1);
@@ -834,7 +835,7 @@ class CrawlerController implements LoggerAwareInterface
                                         $queryBuilder->expr()->in($pidField, $queryBuilder->createNamedParameter($pidArray, Connection::PARAM_INT_ARRAY)),
                                         $where
                                     );
-                                if(!empty($addTable)) {
+                                if (!empty($addTable)) {
                                     // TODO: Check if this works as intended!
                                     $queryBuilder->add('from', $addTable);
                                 }
