@@ -9,7 +9,7 @@ return [
             'after' => [
                 'typo3/cms-frontend/tsfe',
                 'typo3/cms-frontend/authentication',
-            ]
+            ],
         ],
-    ]
+    ],
 ];

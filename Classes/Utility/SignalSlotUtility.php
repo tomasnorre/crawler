@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Crawler\Utility;
 
 /***************************************************************
@@ -38,8 +39,8 @@ class SignalSlotUtility
     /**
      * Predefined signals
      */
-    const SIGNNAL_QUEUEITEM_PREPROCESS = 'queueItemPreProcess';
-    const SIGNNAL_QUEUEITEM_POSTPROCESS = 'queueItemPostProcess';
+    public const SIGNNAL_QUEUEITEM_PREPROCESS = 'queueItemPreProcess';
+    public const SIGNNAL_QUEUEITEM_POSTPROCESS = 'queueItemPostProcess';
 
     /**
      * Emits a signal to the signalslot dispatcher

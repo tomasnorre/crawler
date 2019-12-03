@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Crawler\Tests\Unit\Domain\Model;
 
 /***************************************************************
@@ -49,7 +50,7 @@ class ReasonTest extends UnitTestCase
     public function expectsConstructorToSetPropertiesFromArray()
     {
         $propertiesArray = [
-            'uid' => 209
+            'uid' => 209,
         ];
         $reason = new Reason($propertiesArray);
 
@@ -79,7 +80,7 @@ class ReasonTest extends UnitTestCase
             'cruser_id' => $reason->getBackendUserId(),
             'reason' => $reason->getReason(),
             'detail_text' => $reason->getDetailText(),
-            'queue_entry_uid' => $reason->getQueueEntryUid()
+            'queue_entry_uid' => $reason->getQueueEntryUid(),
         ];
 
         self::assertSame(

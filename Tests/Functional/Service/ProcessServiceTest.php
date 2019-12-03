@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Crawler\Tests\Functional\Service;
 
 /***************************************************************
@@ -36,7 +37,6 @@ use Nimut\TestingFramework\TestCase\FunctionalTestCase;
  */
 class ProcessServiceTest extends FunctionalTestCase
 {
-
     /**
      * @var CrawlerController
      */
@@ -68,7 +68,7 @@ class ProcessServiceTest extends FunctionalTestCase
         // Check with phpPath set
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [
             'phpPath' => '/usr/local/bin/foobar-binary-to-be-able-to-differ-the-test',
-            'phpBinary' => '/usr/local/bin/php74'
+            'phpBinary' => '/usr/local/bin/php74',
 
         ];
         self::assertContains(
@@ -78,7 +78,7 @@ class ProcessServiceTest extends FunctionalTestCase
 
         // Check without phpPath set
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [
-            'phpBinary' => 'php'
+            'phpBinary' => 'php',
 
         ];
         self::assertContains(

@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Crawler\Domain\Repository;
 
 /***************************************************************
@@ -36,7 +37,6 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
  */
 abstract class AbstractRepository extends Repository
 {
-
     /**
      * @var string table name
      */

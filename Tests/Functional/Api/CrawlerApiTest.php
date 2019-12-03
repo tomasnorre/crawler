@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Crawler\Tests\Functional\Api;
 
 /***************************************************************
@@ -226,8 +227,8 @@ class CrawlerApiTest extends FunctionalTestCase
                 [
                     'scheduled' => 4321,
                     'exec_time' => 20,
-                    'set_id' => 0
-                ]
+                    'set_id' => 0,
+                ],
             ],
             $this->subject->getCrawlHistoryForPage(17, 1)
         );
@@ -243,7 +244,7 @@ class CrawlerApiTest extends FunctionalTestCase
         $this->assertEquals(
             [
                 'assignedButUnprocessed' => 3,
-                'unprocessed' => 7
+                'unprocessed' => 7,
             ],
             $this->subject->getQueueStatistics()
         );
@@ -332,13 +333,13 @@ class CrawlerApiTest extends FunctionalTestCase
         $expectedParameterData = [
             'url' => 'http://www.testcase.de/index.php?id=7&L=0&S=CRAWL&cHash=966b79fa43675d725b45415c54ea0cb7',
             'procInstructions' => [
-                0 => 'tx_staticpub_publish'
+                0 => 'tx_staticpub_publish',
             ],
             'procInstrParams' => [
                 'tx_staticpub_publish.' => [
-                    'includeResources' => 'relPath'
-                ]
-            ]
+                    'includeResources' => 'relPath',
+                ],
+            ],
         ];
         $expectedParameter = serialize($expectedParameterData);
 

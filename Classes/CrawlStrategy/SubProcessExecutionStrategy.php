@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 namespace AOE\Crawler\CrawlStrategy;
 
@@ -65,7 +66,7 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface
             return false;
         }
 
-        if (!in_array($parsedUrl['scheme'], ['','http','https'])) {
+        if (!in_array($parsedUrl['scheme'], ['', 'http', 'https'])) {
             $this->logger->debug(
                 sprintf('Scheme does not match for url "%s"', $url),
                 ['crawlerId' => $crawlerId]
@@ -83,7 +84,7 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface
             ExtensionManagementUtility::extPath('crawler') . 'cli/bootstrap.php',
             $this->getFrontendBasePath(),
             $url,
-            base64_encode(serialize($requestHeaders))
+            base64_encode(serialize($requestHeaders)),
         ];
         $commandParts = CommandUtility::escapeShellArguments($commandParts);
         $cmd = escapeshellcmd(PhpBinaryUtility::getPhpBinary());

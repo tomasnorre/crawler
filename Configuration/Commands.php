@@ -6,12 +6,12 @@ use AOE\Crawler\Command\ProcessQueueCommand;
 
 return [
     'crawler:buildQueue' => [
-        'class' => BuildQueueCommand::class
+        'class' => BuildQueueCommand::class,
     ],
     'crawler:flushQueue' => [
-        'class' => FlushQueueCommand::class
+        'class' => FlushQueueCommand::class,
     ],
     'crawler:processQueue' => [
-        'class' => ProcessQueueCommand::class
+        'class' => ProcessQueueCommand::class,
     ],
 ];

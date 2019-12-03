@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Crawler\Api;
 
 /***************************************************************
@@ -348,7 +349,7 @@ class CrawlerApi
     {
         return [
             'assignedButUnprocessed' => $this->queueRepository->countAllAssignedPendingItems(),
-            'unprocessed' => $this->queueRepository->countAllPendingItems()
+            'unprocessed' => $this->queueRepository->countAllPendingItems(),
         ];
     }
 

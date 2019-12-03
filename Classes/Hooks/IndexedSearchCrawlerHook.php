@@ -1,4 +1,5 @@
 <?php
+
 namespace AOEPeople\Crawler\Hooks;
 
 /*
@@ -98,10 +99,10 @@ class IndexedSearchCrawlerHook
                 [
                     'set_id' => $setId,
                     'timer_next_indexing' => $nextTime,
-                    'session_data' => ''
+                    'session_data' => '',
                 ],
                 [
-                    'uid' => (int)$cfgRec['uid']
+                    'uid' => (int)$cfgRec['uid'],
                 ]
             );
             // Based on configuration type:
@@ -112,7 +113,7 @@ class IndexedSearchCrawlerHook
                     $params = [
                         'indexConfigUid' => $cfgRec['uid'],
                         'procInstructions' => ['[Index Cfg UID#' . $cfgRec['uid'] . ']'],
-                        'url' => 'Records (start)'
+                        'url' => 'Records (start)',
                     ];
                     //
                     $pObj->addQueueEntry_callBack($setId, $params, $this->callBack, $cfgRec['pid']);
@@ -127,7 +128,7 @@ class IndexedSearchCrawlerHook
                         // General
                         'url' => $cfgRec['filepath'],
                         // Partly general... (for URL and file types)
-                        'depth' => 0
+                        'depth' => 0,
                     ];
                     $pObj->addQueueEntry_callBack($setId, $params, $this->callBack, $cfgRec['pid']);
                     break;
@@ -141,7 +142,7 @@ class IndexedSearchCrawlerHook
                         // General
                         'url' => $cfgRec['externalUrl'],
                         // Partly general... (for URL and file types)
-                        'depth' => 0
+                        'depth' => 0,
                     ];
                     $pObj->addQueueEntry_callBack($setId, $params, $this->callBack, $cfgRec['pid']);
                     break;
@@ -155,7 +156,7 @@ class IndexedSearchCrawlerHook
                         // General
                         'url' => (int)$cfgRec['alternative_source_pid'],
                         // Partly general... (for URL and file types and page tree (root))
-                        'depth' => 0
+                        'depth' => 0,
                     ];
                     $pObj->addQueueEntry_callBack($setId, $params, $this->callBack, $cfgRec['pid']);
                     break;
@@ -172,7 +173,7 @@ class IndexedSearchCrawlerHook
                             // General
                             'procInstructions' => ['[Index Cfg UID#' . $cfgRec['uid'] . '/CUSTOM]'],
                             // General
-                            'url' => $hookObj->initMessage($message)
+                            'url' => $hookObj->initMessage($message),
                         ];
                         $pObj->addQueueEntry_callBack($setId, $params, $this->callBack, $cfgRec['pid']);
                     }
@@ -268,7 +269,7 @@ class IndexedSearchCrawlerHook
             // Init session data array if not already:
             if (!is_array($session_data)) {
                 $session_data = [
-                    'uid' => 0
+                    'uid' => 0,
                 ];
             }
             // Init:
@@ -314,7 +315,7 @@ class IndexedSearchCrawlerHook
                 $nparams = [
                     'indexConfigUid' => $cfgRec['uid'],
                     'url' => 'Records from UID#' . ($session_data['uid'] + 1) . '-?',
-                    'procInstructions' => ['[Index Cfg UID#' . $cfgRec['uid'] . ']']
+                    'procInstructions' => ['[Index Cfg UID#' . $cfgRec['uid'] . ']'],
                 ];
                 $pObj->addQueueEntry_callBack($cfgRec['set_id'], $nparams, $this->callBack, $cfgRec['pid']);
             }
@@ -373,7 +374,7 @@ class IndexedSearchCrawlerHook
                             'indexConfigUid' => $cfgRec['uid'],
                             'url' => $path,
                             'procInstructions' => ['[Index Cfg UID#' . $cfgRec['uid'] . ']'],
-                            'depth' => $params['depth'] + 1
+                            'depth' => $params['depth'] + 1,
                         ];
                         $pObj->addQueueEntry_callBack($cfgRec['set_id'], $nparams, $this->callBack, $cfgRec['pid'], $GLOBALS['EXEC_TIME'] + $this->instanceCounter * $this->secondsPerExternalUrl);
                     }
@@ -395,7 +396,7 @@ class IndexedSearchCrawlerHook
         // Init session data array if not already:
         if (!is_array($session_data)) {
             $session_data = [
-                'urlLog' => [$params['url']]
+                'urlLog' => [$params['url']],
             ];
         }
         // Index the URL:
@@ -413,7 +414,7 @@ class IndexedSearchCrawlerHook
                             'indexConfigUid' => $cfgRec['uid'],
                             'url' => $url,
                             'procInstructions' => ['[Index Cfg UID#' . $cfgRec['uid'] . ']'],
-                            'depth' => $params['depth'] + 1
+                            'depth' => $params['depth'] + 1,
                         ];
                         $pObj->addQueueEntry_callBack($cfgRec['set_id'], $nparams, $this->callBack, $cfgRec['pid'], $GLOBALS['EXEC_TIME'] + $this->instanceCounter * $this->secondsPerExternalUrl);
                     }
@@ -473,7 +474,7 @@ class IndexedSearchCrawlerHook
                     'indexConfigUid' => $cfgRec['uid'],
                     'url' => $row['uid'],
                     'procInstructions' => ['[Index Cfg UID#' . $cfgRec['uid'] . ']'],
-                    'depth' => $params['depth'] + 1
+                    'depth' => $params['depth'] + 1,
                 ];
                 $pObj->addQueueEntry_callBack(
                     $cfgRec['set_id'],
@@ -499,7 +500,7 @@ class IndexedSearchCrawlerHook
             'index_section',
             'index_grlist',
             'index_fulltext',
-            'index_debug'
+            'index_debug',
         ];
 
         $queryBuilder = $connectionPool->getQueryBuilderForTable('index_config');
@@ -523,7 +524,7 @@ class IndexedSearchCrawlerHook
                     'tx_crawler_queue',
                     [
                         'set_id' => (int)$cfgRec['set_id'],
-                        'exec_time' => 0
+                        'exec_time' => 0,
                     ]
                 );
             if (!$queued_items) {
@@ -567,7 +568,7 @@ class IndexedSearchCrawlerHook
                         'index_config',
                         [
                             'set_id' => 0,
-                            'session_data' => ''
+                            'session_data' => '',
                         ],
                         ['uid' => (int)$cfgRec['uid']]
                     );
@@ -765,7 +766,7 @@ class IndexedSearchCrawlerHook
             'indexConfigUid' => $cfgRec['uid'],
             // This must ALWAYS be the cfgRec uid!
             'url' => $title,
-            'procInstructions' => ['[Index Cfg UID#' . $cfgRec['uid'] . ']']
+            'procInstructions' => ['[Index Cfg UID#' . $cfgRec['uid'] . ']'],
         ];
         $this->pObj->addQueueEntry_callBack($cfgRec['set_id'], $nparams, $this->callBack, $cfgRec['pid']);
     }

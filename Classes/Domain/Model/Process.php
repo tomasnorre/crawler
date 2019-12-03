@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Crawler\Domain\Model;
 
 /***************************************************************
@@ -37,9 +38,9 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  */
 class Process extends AbstractEntity
 {
-    const STATE_RUNNING = 'running';
-    const STATE_CANCELLED = 'cancelled';
-    const STATE_COMPLETED = 'completed';
+    public const STATE_RUNNING = 'running';
+    public const STATE_CANCELLED = 'cancelled';
+    public const STATE_COMPLETED = 'completed';
 
     /**
      * @var array

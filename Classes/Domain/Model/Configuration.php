@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Crawler\Domain\Model;
 
 /***************************************************************
@@ -32,7 +33,6 @@ use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
  */
 class Configuration extends AbstractEntity
 {
-
     /**
      * @var string
      */

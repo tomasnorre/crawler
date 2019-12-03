@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Crawler\Event;
 
 /***************************************************************
@@ -32,7 +33,6 @@ namespace AOE\Crawler\Event;
  */
 interface EventObserverInterface
 {
-
     /**
      * This method should be implemented by the observer to register events
      * that should be forwarded to the observer

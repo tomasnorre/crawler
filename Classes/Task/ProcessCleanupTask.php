@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Crawler\Task;
 
 /***************************************************************
@@ -38,7 +39,6 @@ use TYPO3\CMS\Scheduler\Task\AbstractTask;
  */
 class ProcessCleanupTask extends AbstractTask
 {
-
     /**
      * Function execute scheduler task
      *

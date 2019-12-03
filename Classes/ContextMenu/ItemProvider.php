@@ -1,5 +1,6 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 namespace AOE\Crawler\ContextMenu;
 
 /***************************************************************
@@ -43,8 +44,8 @@ class ItemProvider extends AbstractProvider
             'type' => 'item',
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:contextMenu.label',
             'iconIdentifier' => 'tx-crawler',
-            'callbackAction' => 'crawler'
-        ]
+            'callbackAction' => 'crawler',
+        ],
     ];
 
     /**
@@ -91,7 +92,7 @@ class ItemProvider extends AbstractProvider
         $additionalParameters[] = 'SET[crawlaction]=start';
         $additionalParameters[] = 'configurationSelection[]=' . $crawlerConfiguration['name'];
         return [
-            'onclick' => 'top.goToModule(\'web_info\', 1, ' . GeneralUtility::quoteJSvalue('&' . implode('&', $additionalParameters)) . ');'
+            'onclick' => 'top.goToModule(\'web_info\', 1, ' . GeneralUtility::quoteJSvalue('&' . implode('&', $additionalParameters)) . ');',
         ];
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Crawler\Utility;
 
 /***************************************************************
@@ -47,7 +48,7 @@ class SchedulerUtility
             'extension' => $extKey,
             'title' => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_crawlMultiProcess.name',
             'description' => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/Backend.xlf:crawler_crawl.description',
-            'additionalFields' => CrawlMultiProcessTaskAdditionalFieldProvider::class
+            'additionalFields' => CrawlMultiProcessTaskAdditionalFieldProvider::class,
         ];
 
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks'][ProcessCleanupTask::class] = [

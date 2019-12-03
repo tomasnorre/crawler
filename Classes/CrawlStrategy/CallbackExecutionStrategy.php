@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 namespace AOE\Crawler\CrawlStrategy;
 
@@ -23,7 +24,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class CallbackExecutionStrategy
 {
-
     /**
      * In the future, the callback should implement an interface.
      *

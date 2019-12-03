@@ -106,7 +106,7 @@ jobs:
       env:
         - TYPO3_VERSION=^9.5
       script:
-        - .Build/bin/php-cs-fixer fix Classes Configuration Tests --config .php_cs
+        - .Build/bin/ecs check Classes Configuration Tests
 
     -
       stage: static

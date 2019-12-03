@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Crawler\Tests\Unit\Domain\Model;
 
 /***************************************************************
@@ -35,7 +36,6 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
  */
 class EventDispatcherTest extends UnitTestCase
 {
-
     /**
      * @var array
      */
@@ -101,14 +101,14 @@ class EventDispatcherTest extends UnitTestCase
                     ['name' => 'foo', 'group' => 111, 'parameters' => ['foo', 'bar']],
                 ],
                 'expectedFooCalls' => 1,
-                'expectedBarCalls' => 0
+                'expectedBarCalls' => 0,
             ],
             [
                 'events' => [
                     ['name' => 'bar', 'group' => 111, 'parameters' => ['foo', 'bar']],
                 ],
                 'expectedFooCalls' => 0,
-                'expectedBarCalls' => 1
+                'expectedBarCalls' => 1,
             ],
             [
                 'events' => [
@@ -116,7 +116,7 @@ class EventDispatcherTest extends UnitTestCase
                     ['name' => 'foo', 'group' => 111, 'parameters' => ['foo', 'bar']],
                 ],
                 'expectedFooCalls' => 1,
-                'expectedBarCalls' => 1
+                'expectedBarCalls' => 1,
             ],
             [
                 'events' => [
@@ -127,7 +127,7 @@ class EventDispatcherTest extends UnitTestCase
 
                 ],
                 'expectedFooCalls' => 3,
-                'expectedBarCalls' => 1
+                'expectedBarCalls' => 1,
             ],
         ];
     }
