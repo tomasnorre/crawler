@@ -8,12 +8,7 @@
     },
     "license": "GPL-3.0",
     "authors": [
-        {
-            "name": "AOEpeople",
-            "email": "dev@aoe.com",
-            "homepage": "https://www.aoe.com/",
-            "role": "Developer"
-        }
+        { "name": "AOEpeople", "email": "dev@aoe.com", "homepage": "https://www.aoe.com/", "role": "Developer" }
     ],
     "require": {
         "php": "^7.2",
