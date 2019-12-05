@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AOE\Crawler\Tests\Functional\Service;
 
 /***************************************************************
@@ -52,7 +54,7 @@ class ProcessServiceTest extends FunctionalTestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->subject = $this->createPartialMock(ProcessService::class, ['dummyMethod']);
@@ -62,7 +64,7 @@ class ProcessServiceTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function getCrawlerCliPathReturnsString()
+    public function getCrawlerCliPathReturnsString(): void
     {
 
         // Check with phpPath set
@@ -91,7 +93,7 @@ class ProcessServiceTest extends FunctionalTestCase
      * @test
      * @expectedException \Exception
      */
-    public function getCrawlerCliPathThrowsException()
+    public function getCrawlerCliPathThrowsException(): void
     {
         $this->subject->getCrawlerCliPath();
     }
@@ -99,7 +101,7 @@ class ProcessServiceTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function multiProcessThrowsException()
+    public function multiProcessThrowsException(): void
     {
         $this->expectException(\RuntimeException::class);
 

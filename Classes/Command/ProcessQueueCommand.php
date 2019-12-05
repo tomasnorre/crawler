@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace AOE\Crawler\Command;
 
 /***************************************************************
@@ -45,7 +46,7 @@ class ProcessQueueCommand extends Command
     public const CLI_STATUS_ABORTED = 4; //instance didn't finish
     public const CLI_STATUS_POLLABLE_PROCESSED = 8;
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setHelp(
             'Crawler Command - Crawling the URLs from the queue' . chr(10) . chr(10) .
@@ -112,7 +113,7 @@ class ProcessQueueCommand extends Command
             try {
                 // Run process:
                 $result = $crawlerController->CLI_run($countInARun, $sleepTime, $sleepAfterFinish);
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 $output->writeln('<warning>' . get_class($e) . ': ' . $e->getMessage() . '</warning>');
                 $result = self::CLI_STATUS_ABORTED;
             }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AOE\Crawler\Tests\Functional\Domain\Repository;
 
 /***************************************************************
@@ -57,7 +59,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
      * Creates the test environment.
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
@@ -112,7 +114,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function removeByProcessId()
+    public function removeByProcessId(): void
     {
         self::assertSame(
             5,
@@ -130,7 +132,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function countActive()
+    public function countActive(): void
     {
         self::assertSame(
             3,
@@ -141,7 +143,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function countNotTimeouted()
+    public function countNotTimeouted(): void
     {
         self::assertSame(
             2,
@@ -152,7 +154,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function countAll()
+    public function countAll(): void
     {
         self::assertSame(
             5,
@@ -163,7 +165,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function getActiveProcessesOlderThanOneOHour()
+    public function getActiveProcessesOlderThanOneOHour(): void
     {
         $expected = [
             ['process_id' => '1000', 'system_process_id' => 0],
@@ -180,7 +182,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function getActiveOrphanProcesses()
+    public function getActiveOrphanProcesses(): void
     {
         $expected = [
             ['process_id' => '1000', 'system_process_id' => 0],
@@ -197,7 +199,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function deleteProcessesWithoutItemsAssigned()
+    public function deleteProcessesWithoutItemsAssigned(): void
     {
         $countBeforeDelete = $this->subject->countAll();
         $expectedProcessesToBeDeleted = 2;
@@ -213,7 +215,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function deleteProcessesMarkedAsDeleted()
+    public function deleteProcessesMarkedAsDeleted(): void
     {
         $countBeforeDelete = $this->subject->countAll();
         $expectedProcessesToBeDeleted = 2;

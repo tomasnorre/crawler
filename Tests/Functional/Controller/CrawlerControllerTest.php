@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AOE\Crawler\Tests\Functional\Controller;
 
 /***************************************************************
@@ -54,7 +56,7 @@ class CrawlerControllerTest extends FunctionalTestCase
      */
     protected $subject;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->importDataSet(__DIR__ . '/../Fixtures/pages.xml');
@@ -74,7 +76,7 @@ class CrawlerControllerTest extends FunctionalTestCase
      *
      * @dataProvider noUnprocessedQueueEntriesForPageWithConfigurationHashExistDataProvider
      */
-    public function noUnprocessedQueueEntriesForPageWithConfigurationHashExist($uid, $configurationHash, $expected)
+    public function noUnprocessedQueueEntriesForPageWithConfigurationHashExist($uid, $configurationHash, $expected): void
     {
         self::assertSame(
             $expected,
@@ -90,7 +92,7 @@ class CrawlerControllerTest extends FunctionalTestCase
      * @test
      *
      */
-    public function cleanUpOldQueueEntries()
+    public function cleanUpOldQueueEntries(): void
     {
         $this->markTestSkipped('This fails with PHP7 & TYPO3 7.6');
 
@@ -134,7 +136,7 @@ class CrawlerControllerTest extends FunctionalTestCase
      *
      * @dataProvider flushQueueDataProvider
      */
-    public function flushQueue($where, $expected)
+    public function flushQueue($where, $expected): void
     {
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $queryRepository = $objectManager->get(QueueRepository::class);
@@ -158,7 +160,7 @@ class CrawlerControllerTest extends FunctionalTestCase
      *
      * @dataProvider getLogEntriesForPageIdDataProvider
      */
-    public function getLogEntriesForPageId($id, $filter, $doFlush, $doFullFlush, $itemsPerPage, $expected)
+    public function getLogEntriesForPageId($id, $filter, $doFlush, $doFullFlush, $itemsPerPage, $expected): void
     {
         self::assertEquals(
             $expected,
@@ -178,7 +180,7 @@ class CrawlerControllerTest extends FunctionalTestCase
      *
      * @dataProvider getLogEntriesForSetIdDataProvider
      */
-    public function getLogEntriesForSetId($setId, $filter, $doFlush, $doFullFlush, $itemsPerPage, $expected)
+    public function getLogEntriesForSetId($setId, $filter, $doFlush, $doFullFlush, $itemsPerPage, $expected): void
     {
         self::assertEquals(
             $expected,
@@ -189,7 +191,7 @@ class CrawlerControllerTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function getConfigurationHash()
+    public function getConfigurationHash(): void
     {
         $configuration = [
             'paramExpanded' => 'extendedParameter',
@@ -215,7 +217,7 @@ class CrawlerControllerTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function getConfigurationsForBranch()
+    public function getConfigurationsForBranch(): void
     {
         $GLOBALS['BE_USER'] = $this->getMockBuilder(BackendUserAuthentication::class)
             ->disableOriginalConstructor()
@@ -244,7 +246,7 @@ class CrawlerControllerTest extends FunctionalTestCase
      * @test
      * @dataProvider getDuplicateRowsIfExistDataProvider
      */
-    public function getDuplicateRowsIfExist($timeslotActive, $tstamp, $current, $fieldArray, $expected)
+    public function getDuplicateRowsIfExist($timeslotActive, $tstamp, $current, $fieldArray, $expected): void
     {
         $mockedCrawlerController = $this->getAccessibleMock(CrawlerController::class, ['getCurrentTime']);
         $mockedCrawlerController->expects($this->any())->method('getCurrentTime')->willReturn($current);
@@ -263,7 +265,7 @@ class CrawlerControllerTest extends FunctionalTestCase
      * @test
      * @dataProvider addUrlDataProvider
      */
-    public function addUrl($id, $url, $subCfg, $tstamp, $configurationHash, $skipInnerDuplicationCheck, $mockedDuplicateRowResult, $registerQueueEntriesInternallyOnly, $expected)
+    public function addUrl($id, $url, $subCfg, $tstamp, $configurationHash, $skipInnerDuplicationCheck, $mockedDuplicateRowResult, $registerQueueEntriesInternallyOnly, $expected): void
     {
         $mockedCrawlerController = $this->getAccessibleMock(CrawlerController::class, ['getDuplicateRowsIfExist']);
         $mockedCrawlerController->expects($this->any())->method('getDuplicateRowsIfExist')->withAnyParameters()->willReturn($mockedDuplicateRowResult);
@@ -286,7 +288,7 @@ class CrawlerControllerTest extends FunctionalTestCase
      * @test
      * @dataProvider expandParametersDataProvider
      */
-    public function expandParameters($paramArray, $pid, $expected)
+    public function expandParameters($paramArray, $pid, $expected): void
     {
         $output = $this->subject->expandParameters($paramArray, $pid);
 

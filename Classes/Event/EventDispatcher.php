@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AOE\Crawler\Event;
 
 /***************************************************************
@@ -101,7 +103,7 @@ class EventDispatcher
      *
      * @return void
      */
-    public function addObserver(EventObserverInterface $observer_object, $observer_method, $event)
+    public function addObserver(EventObserverInterface $observer_object, $observer_method, $event): void
     {
         $this->observers[$event][] = ['object' => $observer_object, 'method' => $observer_method];
     }
@@ -128,7 +130,7 @@ class EventDispatcher
      *
      * @return void
      */
-    public function post($event, $group, $attachedData)
+    public function post($event, $group, $attachedData): void
     {
         if (is_array($this->observers[$event])) {
             foreach ($this->observers[$event] as $eventObserver) {

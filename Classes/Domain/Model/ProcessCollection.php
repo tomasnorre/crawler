@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AOE\Crawler\Domain\Model;
 
 /***************************************************************
@@ -55,7 +57,7 @@ class ProcessCollection extends \ArrayObject
      * @throws \InvalidArgumentException
      * @return void
      */
-    public function offsetSet($index, $subject)
+    public function offsetSet($index, $subject): void
     {
         if (!$subject instanceof Process) {
             throw new \InvalidArgumentException('Wrong parameter type given, "\AOE\Crawler\Domain\Model\Process" expected!');
@@ -69,7 +71,7 @@ class ProcessCollection extends \ArrayObject
      * @throws \InvalidArgumentException
      * @return void
      */
-    public function append($subject)
+    public function append($subject): void
     {
         if (!$subject instanceof Process) {
             throw new \InvalidArgumentException('Wrong parameter type given, "\AOE\Crawler\Domain\Model\Process" expected!');

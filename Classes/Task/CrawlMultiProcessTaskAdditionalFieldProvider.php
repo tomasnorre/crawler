@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AOE\Crawler\Task;
 
 /***************************************************************
@@ -98,7 +100,7 @@ class CrawlMultiProcessTaskAdditionalFieldProvider implements AdditionalFieldPro
      * @param CrawlMultiProcessTask|AbstractTask $task
      * @return void
      */
-    public function saveAdditionalFields(array $submittedData, AbstractTask $task)
+    public function saveAdditionalFields(array $submittedData, AbstractTask $task): void
     {
         $task->timeOut = intval($submittedData['timeOut']);
     }

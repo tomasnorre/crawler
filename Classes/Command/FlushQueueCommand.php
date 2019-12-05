@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace AOE\Crawler\Command;
 
 /***************************************************************
@@ -85,7 +86,7 @@ It will remove queue entries and perform a cleanup.' . chr(10) . chr(10) .
      * $ typo3 crawler:flushQueue --mode pending
      *
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
 

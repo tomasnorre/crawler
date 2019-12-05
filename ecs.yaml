@@ -5,7 +5,7 @@ parameters:
         - "arrays"
         - "php70"
         - "php71"
-        - "common"
+#        - "common"
 
     skip:
         PhpCsFixer\Fixer\Operator\UnaryOperatorSpacesFixer: null

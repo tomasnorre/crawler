@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace AOE\Crawler\Tests\Unit;
 
 /*
@@ -28,7 +29,7 @@ class QueueExecutorTest extends UnitTestCase
     /**
      * @test
      */
-    public function validateTypo3InternalGuzzleExecutionIsSelected()
+    public function validateTypo3InternalGuzzleExecutionIsSelected(): void
     {
         $configuration = [
             'makeDirectRequests' => 0,
@@ -43,7 +44,7 @@ class QueueExecutorTest extends UnitTestCase
     /**
      * @test
      */
-    public function validateDirectExecutionIsSelected()
+    public function validateDirectExecutionIsSelected(): void
     {
         $configuration = [
             'makeDirectRequests' => 1,
@@ -58,7 +59,7 @@ class QueueExecutorTest extends UnitTestCase
     /**
      * @test
      */
-    public function invalidArgumentsReturnErrorInExecuteQueueItem()
+    public function invalidArgumentsReturnErrorInExecuteQueueItem(): void
     {
         $crawlerController = $this->createMock(CrawlerController::class);
         $settings = $this->createMock(ExtensionConfigurationProvider::class);

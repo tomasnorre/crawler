@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AOE\Crawler\Tests\Functional\Domain\Repository;
 
 /***************************************************************
@@ -54,7 +56,7 @@ class ConfigurationRepositoryTest extends FunctionalTestCase
     /**
      * Creates the test environment.
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
@@ -65,7 +67,7 @@ class ConfigurationRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function getCrawlerConfigurationRecords()
+    public function getCrawlerConfigurationRecords(): void
     {
         self::assertSame(
             3,

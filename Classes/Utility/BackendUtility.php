@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AOE\Crawler\Utility;
 
 /***************************************************************
@@ -44,7 +46,7 @@ class BackendUtility
      *
      * @return void
      */
-    public static function registerInfoModuleFunction()
+    public static function registerInfoModuleFunction(): void
     {
         ExtensionManagementUtility::insertModuleFunction(
             'web_info',
@@ -59,7 +61,7 @@ class BackendUtility
      *
      * @return void
      */
-    public static function registerIcons()
+    public static function registerIcons(): void
     {
         self::registerCrawlerIcon();
         self::registerStartIcon();
@@ -71,7 +73,7 @@ class BackendUtility
      *
      * @return void
      */
-    private static function registerStartIcon()
+    private static function registerStartIcon(): void
     {
         /** @var IconRegistry $iconRegistry */
         $iconRegistry = GeneralUtility::makeInstance(IconRegistry::class);
@@ -87,7 +89,7 @@ class BackendUtility
      *
      * @return void
      */
-    private static function registerStopIcon()
+    private static function registerStopIcon(): void
     {
         /** @var IconRegistry $iconRegistry */
         $iconRegistry = GeneralUtility::makeInstance(IconRegistry::class);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AOE\Crawler\Service;
 
 /***************************************************************
@@ -100,7 +102,7 @@ class ProcessService
      *
      * @throws \RuntimeException
      */
-    public function multiProcess($timeout)
+    public function multiProcess($timeout): void
     {
         if ($this->processLimit <= 1) {
             throw new \RuntimeException('To run crawler in multi process mode you have to configure the processLimit > 1.' . PHP_EOL);
@@ -150,7 +152,7 @@ class ProcessService
     /**
      * Reports curent Status of queue
      */
-    protected function reportItemStatus()
+    protected function reportItemStatus(): void
     {
         echo 'Pending:' . $this->queueRepository->countAllPendingItems() . ' / Assigned:' . $this->queueRepository->countAllAssignedPendingItems() . chr(10);
     }

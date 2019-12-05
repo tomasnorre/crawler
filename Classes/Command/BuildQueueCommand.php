@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace AOE\Crawler\Command;
 
 /***************************************************************
@@ -115,7 +116,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
      * $ typo3 crawler:buildQueue --page 7 --depth 0 --conf defaultConfiguration --mode queue --number 4
      *
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $mode = $input->getOption('mode');
 

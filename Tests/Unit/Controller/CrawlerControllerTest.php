@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AOE\Crawler\Tests\Unit\Controller;
 
 /***************************************************************
@@ -47,7 +49,7 @@ class CrawlerControllerTest extends UnitTestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->crawlerController = $this->createPartialMock(
             CrawlerController::class,
@@ -82,7 +84,7 @@ class CrawlerControllerTest extends UnitTestCase
      *
      * @return void
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->crawlerController);
     }
@@ -90,7 +92,7 @@ class CrawlerControllerTest extends UnitTestCase
     /**
      * @test
      */
-    public function setAndGet()
+    public function setAndGet(): void
     {
         $accessMode = 'cli';
         $this->crawlerController->setAccessMode($accessMode);
@@ -106,7 +108,7 @@ class CrawlerControllerTest extends UnitTestCase
      *
      * @dataProvider setAndGetDisabledDataProvider
      */
-    public function setAndGetDisabled($disabled, $expected)
+    public function setAndGetDisabled($disabled, $expected): void
     {
         $filenameWithPath = tempnam('/tmp', 'test_foo');
         $this->crawlerController->setProcessFilename($filenameWithPath);
@@ -125,7 +127,7 @@ class CrawlerControllerTest extends UnitTestCase
     /**
      * @test
      */
-    public function setAndGetProcessFilename()
+    public function setAndGetProcessFilename(): void
     {
         $filenameWithPath = tempnam('/tmp', 'test_foo');
         $this->crawlerController->setProcessFilename($filenameWithPath);
@@ -141,7 +143,7 @@ class CrawlerControllerTest extends UnitTestCase
      *
      * @dataProvider drawURLs_PIfilterDataProvider
      */
-    public function drawURLs_PIfilter($piString, $incomingProcInstructions, $expected)
+    public function drawURLs_PIfilter($piString, $incomingProcInstructions, $expected): void
     {
         self::assertEquals(
             $expected,
@@ -158,7 +160,7 @@ class CrawlerControllerTest extends UnitTestCase
      *
      * @dataProvider hasGroupAccessDataProvider
      */
-    public function hasGroupAccess($groupList, $accessList, $expected)
+    public function hasGroupAccess($groupList, $accessList, $expected): void
     {
         self::assertEquals(
             $expected,
@@ -177,7 +179,7 @@ class CrawlerControllerTest extends UnitTestCase
      *
      * @dataProvider getUrlsForPageRowDataProvider
      */
-    public function getUrlsForPageRow($checkIfPageSkipped, $getUrlsForPages, $pageRow, $skipMessage, $expected)
+    public function getUrlsForPageRow($checkIfPageSkipped, $getUrlsForPages, $pageRow, $skipMessage, $expected): void
     {
         /** @var CrawlerController $crawlerController */
         $crawlerController = $this->createPartialMock(CrawlerController::class, ['checkIfPageShouldBeSkipped', 'getUrlsForPageId']);
@@ -222,7 +224,7 @@ class CrawlerControllerTest extends UnitTestCase
      *
      * @dataProvider compileUrlsDataProvider
      */
-    public function compileUrls($paramArray, $urls, $expected)
+    public function compileUrls($paramArray, $urls, $expected): void
     {
         self::assertEquals(
             $expected,
@@ -273,7 +275,7 @@ class CrawlerControllerTest extends UnitTestCase
      *
      * @dataProvider checkIfPageShouldBeSkippedDataProvider
      */
-    public function checkIfPageShouldBeSkipped($extensionSetting, $pageRow, $excludeDoktype, $expected)
+    public function checkIfPageShouldBeSkipped($extensionSetting, $pageRow, $excludeDoktype, $expected): void
     {
         $this->crawlerController->setExtensionSettings($extensionSetting);
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['excludeDoktype'] = $excludeDoktype;
@@ -287,7 +289,7 @@ class CrawlerControllerTest extends UnitTestCase
     /**
      * @test
      */
-    public function CLI_buildProcessIdIsSetReturnsValue()
+    public function CLI_buildProcessIdIsSetReturnsValue(): void
     {
         $processId = '12297a261b';
         $crawlerController = $this->getAccessibleMock(CrawlerController::class, ['dummy'], [], '', false);
@@ -307,7 +309,7 @@ class CrawlerControllerTest extends UnitTestCase
      *
      * @dataProvider getConfigurationHasReturnsExpectedValueDataProvider
      */
-    public function getConfigurationHasReturnsExpectedValue(array $configuration, $expected)
+    public function getConfigurationHasReturnsExpectedValue(array $configuration, $expected): void
     {
         $crawlerLib = $this->getAccessibleMock(CrawlerController::class, ['dummy'], [], '', false);
 

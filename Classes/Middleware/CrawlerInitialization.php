@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace AOE\Crawler\Middleware;
 
 /*
@@ -55,7 +56,7 @@ class CrawlerInitialization implements MiddlewareInterface
     /**
      * @param Context|null $context
      */
-    public function __construct(Context $context = null)
+    public function __construct(?Context $context = null)
     {
         $this->context = $context ?? GeneralUtility::makeInstance(Context::class);
         $this->queueRepository = GeneralUtility::makeInstance(ObjectManager::class)->get(QueueRepository::class);
@@ -129,7 +130,7 @@ class CrawlerInitialization implements MiddlewareInterface
      * Required because some extensions (staticpub) might never be requested to run due to some Core side effects
      * and since this is considered as error the crawler should handle it properly
      */
-    protected function runPollSuccessHooks()
+    protected function runPollSuccessHooks(): void
     {
         if (!is_array($GLOBALS['TSFE']->applicationData['tx_crawler']['content']['parameters']['procInstructions'])) {
             return;

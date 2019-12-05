@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AOE\Crawler\Hooks;
 
 /***************************************************************
@@ -73,7 +75,7 @@ class ProcessCleanUpHook
      *
      * @return void
      */
-    public function crawler_init(CrawlerController $crawlerController)
+    public function crawler_init(CrawlerController $crawlerController): void
     {
         $this->crawlerController = $crawlerController;
         $this->extensionSettings = $this->crawlerController->extensionSettings;
@@ -88,7 +90,7 @@ class ProcessCleanUpHook
      *
      * @return void
      */
-    private function removeActiveProcessesOlderThanOneHour()
+    private function removeActiveProcessesOlderThanOneHour(): void
     {
         $results = $this->processRepository->getActiveProcessesOlderThanOneHour();
 
@@ -112,7 +114,7 @@ class ProcessCleanUpHook
      *
      * @return void
      */
-    private function removeActiveOrphanProcesses()
+    private function removeActiveOrphanProcesses(): void
     {
         $results = $this->processRepository->getActiveOrphanProcesses();
 
@@ -149,7 +151,7 @@ class ProcessCleanUpHook
      *
      * @return void
      */
-    private function removeProcessFromProcesslist($processId)
+    private function removeProcessFromProcesslist($processId): void
     {
         $this->processRepository->removeByProcessId($processId);
         $this->queueRepository->unsetQueueProcessId($processId);
@@ -205,7 +207,7 @@ class ProcessCleanUpHook
      * @return void
      * @codeCoverageIgnore
      */
-    private function killProcess($pid)
+    private function killProcess($pid): void
     {
         if (!Environment::isWindows()) {
             // Not windows

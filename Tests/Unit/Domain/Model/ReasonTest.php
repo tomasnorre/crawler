@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AOE\Crawler\Tests\Unit\Domain\Model;
 
 /***************************************************************
@@ -34,12 +36,12 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
  */
 class ReasonTest extends UnitTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
     }
@@ -47,7 +49,7 @@ class ReasonTest extends UnitTestCase
     /**
      * @test
      */
-    public function expectsConstructorToSetPropertiesFromArray()
+    public function expectsConstructorToSetPropertiesFromArray(): void
     {
         $propertiesArray = [
             'uid' => 209,
@@ -63,7 +65,7 @@ class ReasonTest extends UnitTestCase
     /**
      * @test
      */
-    public function settersWillSetValuesAndGettersWillRetrieveTheValues()
+    public function settersWillSetValuesAndGettersWillRetrieveTheValues(): void
     {
         $reason = new Reason([]);
 

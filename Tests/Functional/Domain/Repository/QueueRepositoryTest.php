@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AOE\Crawler\Tests\Functional\Domain\Repository;
 
 /***************************************************************
@@ -57,7 +59,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     /**
      * Creates the test environment.
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
@@ -70,7 +72,7 @@ class QueueRepositoryTest extends FunctionalTestCase
      *
      * @dataProvider getFirstOrLastObjectByProcessDataProvider
      */
-    public function getFirstOrLastObjectByProcess($processId, $orderBy, $orderDirection, $expected)
+    public function getFirstOrLastObjectByProcess($processId, $orderBy, $orderDirection, $expected): void
     {
         /** @var Process $process */
         $process = new Process();
@@ -88,7 +90,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function findYoungestEntryForProcessReturnsQueueEntry()
+    public function findYoungestEntryForProcessReturnsQueueEntry(): void
     {
         $process = new Process();
         $process->setProcessId('qwerty');
@@ -116,7 +118,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function findOldestEntryForProcessReturnsQueueEntry()
+    public function findOldestEntryForProcessReturnsQueueEntry(): void
     {
         $process = new Process();
         $process->setProcessId('qwerty');
@@ -144,7 +146,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function countExecutedItemsByProcessReturnsInteger()
+    public function countExecutedItemsByProcessReturnsInteger(): void
     {
         $process = new Process();
         $process->setProcessId('qwerty');
@@ -158,7 +160,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function countNonExecutedItemsByProcessReturnsInteger()
+    public function countNonExecutedItemsByProcessReturnsInteger(): void
     {
         $process = new Process();
         $process->setProcessId('1007');
@@ -172,7 +174,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function countUnprocessedItems()
+    public function countUnprocessedItems(): void
     {
         self::assertEquals(
             7,
@@ -183,7 +185,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function countAllPendingItems()
+    public function countAllPendingItems(): void
     {
         self::assertEquals(
             7,
@@ -194,7 +196,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function countAllAssignedPendingItems()
+    public function countAllAssignedPendingItems(): void
     {
         self::assertEquals(
             3,
@@ -205,7 +207,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function countAllUnassignedPendingItems()
+    public function countAllUnassignedPendingItems(): void
     {
         self::assertEquals(
             4,
@@ -216,7 +218,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function countPendingItemsGroupedByConfigurationKey()
+    public function countPendingItemsGroupedByConfigurationKey(): void
     {
         $expectedArray = [
             0 => [
@@ -245,7 +247,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function getSetIdWithUnprocessedEntries()
+    public function getSetIdWithUnprocessedEntries(): void
     {
         $expectedArray = [
             0 => 0,
@@ -263,7 +265,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function getTotalQueueEntriesByConfiguration()
+    public function getTotalQueueEntriesByConfiguration(): void
     {
         $setIds = [123, 789];
 
@@ -281,7 +283,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function getLastProcessedEntriesTimestamps()
+    public function getLastProcessedEntriesTimestamps(): void
     {
         $expectedArray = [
             '0' => 20,
@@ -298,7 +300,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function getLastProcessedEntries()
+    public function getLastProcessedEntries(): void
     {
         $expectedArray = [3, 17];
 
@@ -317,7 +319,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function getPerformanceData()
+    public function getPerformanceData(): void
     {
         $expected = [
             'asdfgh' => [
@@ -349,7 +351,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function countAll()
+    public function countAll(): void
     {
         self::assertEquals(
             14,
@@ -360,7 +362,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function isPageInQueueThrowInvalidArgumentException()
+    public function isPageInQueueThrowInvalidArgumentException(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionCode(1468931945);
@@ -378,7 +380,7 @@ class QueueRepositoryTest extends FunctionalTestCase
      *
      * @dataProvider isPageInQueueDataProvider
      */
-    public function isPageInQueue($uid, $unprocessed_only, $timed_only, $timestamp, $expected)
+    public function isPageInQueue($uid, $unprocessed_only, $timed_only, $timestamp, $expected): void
     {
         self::assertSame(
             $expected,
@@ -389,7 +391,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function isPageInQueueTimed()
+    public function isPageInQueueTimed(): void
     {
         self::assertTrue($this->subject->isPageInQueueTimed(15));
     }

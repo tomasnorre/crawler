@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AOE\Crawler\Hooks;
 
 /***************************************************************
@@ -44,9 +46,9 @@ class StaticFileCacheCreateUriHook
      * @throws \Exception
      * @return void
      */
-    public function initialize(array $parameters)
+    public function initialize(array $parameters): void
     {
-        list($parameters['host'], $parameters['uri']) = $this->fixNonSpeakingUri($parameters['host'], $parameters['uri'], $parameters['TSFE']);
+        [$parameters['host'], $parameters['uri']] = $this->fixNonSpeakingUri($parameters['host'], $parameters['uri'], $parameters['TSFE']);
     }
 
     /**

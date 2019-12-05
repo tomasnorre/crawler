@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AOE\Crawler\Tests\Unit\Domain\Repository;
 
 /***************************************************************
@@ -41,7 +43,7 @@ class ProcessRepositoryTest extends UnitTestCase
      *
      * @dataProvider getLimitFromItemCountAndOffsetDataProvider
      */
-    public function getLimitFromItemCountAndOffset($itemCount, $offset, $expected)
+    public function getLimitFromItemCountAndOffset($itemCount, $offset, $expected): void
     {
         self::assertEquals(
             $expected,
