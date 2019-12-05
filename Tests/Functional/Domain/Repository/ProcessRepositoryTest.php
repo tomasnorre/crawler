@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Crawler\Tests\Functional\Domain\Repository;
 
 /***************************************************************
@@ -37,7 +38,6 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  */
 class ProcessRepositoryTest extends FunctionalTestCase
 {
-
     /**
      * @var array
      */
@@ -168,7 +168,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
         $expected = [
             ['process_id' => '1000', 'system_process_id' => 0],
             ['process_id' => '1001', 'system_process_id' => 0],
-            ['process_id' => '1002', 'system_process_id' => 0]
+            ['process_id' => '1002', 'system_process_id' => 0],
         ];
 
         self::assertSame(
@@ -185,7 +185,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
         $expected = [
             ['process_id' => '1000', 'system_process_id' => 0],
             ['process_id' => '1001', 'system_process_id' => 0],
-            ['process_id' => '1002', 'system_process_id' => 0]
+            ['process_id' => '1002', 'system_process_id' => 0],
         ];
 
         self::assertSame(

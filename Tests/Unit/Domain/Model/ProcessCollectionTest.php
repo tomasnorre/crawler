@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Crawler\Tests\Unit\Domain\Model;
 
 /***************************************************************
@@ -37,7 +38,6 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
  */
 class ProcessCollectionTest extends UnitTestCase
 {
-
     /**
      * @var ProcessCollection
      */

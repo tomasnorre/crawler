@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Crawler\Domain\Repository;
 
 /***************************************************************
@@ -36,7 +37,6 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
  */
 abstract class AbstractRepository extends Repository
 {
-
     /**
      * @var string table name
      */
@@ -50,13 +50,12 @@ abstract class AbstractRepository extends Repository
     public function countAll()
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
-        $count = $queryBuilder
+
+        return $queryBuilder
             ->count('*')
             ->from($this->tableName)
             ->execute()
             ->fetchColumn(0);
-
-        return $count;
     }
 
     /**
@@ -67,7 +66,8 @@ abstract class AbstractRepository extends Repository
     public function countAllByProcessId($processId)
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
-        $count = $queryBuilder
+
+        return $queryBuilder
             ->count('*')
             ->from($this->tableName)
             ->where(
@@ -75,7 +75,5 @@ abstract class AbstractRepository extends Repository
             )
             ->execute()
             ->fetchColumn(0);
-
-        return $count;
     }
 }

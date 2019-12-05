@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Crawler\Task;
 
 /***************************************************************
@@ -64,7 +65,7 @@ class CrawlMultiProcessTaskAdditionalFieldProvider implements AdditionalFieldPro
         $fieldCode = '<input type="text" name="tx_scheduler[timeOut]" id="' . $fieldId . '" value="' . htmlentities($taskInfo['timeOut']) . '" class="form-control" />';
         $additionalFields[$fieldId] = [
             'code' => $fieldCode,
-            'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_im.timeOut'
+            'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:crawler_im.timeOut',
         ];
 
         return $additionalFields;

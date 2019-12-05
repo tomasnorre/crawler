@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 namespace AOE\Crawler\Command;
 
@@ -38,11 +39,11 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 class ProcessQueueCommand extends Command
 {
-    const CLI_STATUS_NOTHING_PROCCESSED = 0;
-    const CLI_STATUS_REMAIN = 1; //queue not empty
-    const CLI_STATUS_PROCESSED = 2; //(some) queue items where processed
-    const CLI_STATUS_ABORTED = 4; //instance didn't finish
-    const CLI_STATUS_POLLABLE_PROCESSED = 8;
+    public const CLI_STATUS_NOTHING_PROCCESSED = 0;
+    public const CLI_STATUS_REMAIN = 1; //queue not empty
+    public const CLI_STATUS_PROCESSED = 2; //(some) queue items where processed
+    public const CLI_STATUS_ABORTED = 4; //instance didn't finish
+    public const CLI_STATUS_POLLABLE_PROCESSED = 8;
 
     protected function configure()
     {

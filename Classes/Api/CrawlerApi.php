@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Crawler\Api;
 
 /***************************************************************
@@ -348,7 +349,7 @@ class CrawlerApi
     {
         return [
             'assignedButUnprocessed' => $this->queueRepository->countAllAssignedPendingItems(),
-            'unprocessed' => $this->queueRepository->countAllPendingItems()
+            'unprocessed' => $this->queueRepository->countAllPendingItems(),
         ];
     }
 
@@ -364,7 +365,7 @@ class CrawlerApi
         $totals = $this->queueRepository->getTotalQueueEntriesByConfiguration($setIds);
 
         // "merge" arrays
-        foreach ($statistics as $key => &$value) {
+        foreach ($statistics as &$value) {
             $value['total'] = $totals[$value['configuration']];
         }
 
@@ -421,7 +422,7 @@ class CrawlerApi
         $pages = 0;
 
         reset($lastProcessedEntries);
-        foreach ($lastProcessedEntries as $key => $timestamp) {
+        foreach ($lastProcessedEntries as $timestamp) {
             if ($compareValue - $timestamp > $tooOldDelta) {
                 break;
             }
@@ -435,9 +436,8 @@ class CrawlerApi
         }
         $oldestTimestampThatIsNotTooOld = $compareValue;
         $time = $startTime - $oldestTimestampThatIsNotTooOld;
-        $speed = $pages / ($time / 60);
 
-        return $speed;
+        return $pages / ($time / 60);
     }
 
     /**
@@ -469,7 +469,7 @@ class CrawlerApi
             $slotData = $this->queueRepository->getPerformanceData($slotStart, $slotEnd);
 
             $slotUrlCount = 0;
-            foreach ($slotData as $processId => &$processData) {
+            foreach ($slotData as &$processData) {
                 $duration = $processData['end'] - $processData['start'];
                 if ($processData['urlcount'] > 5 && $duration > 0) {
                     $processData['speed'] = 60 * 1 / ($duration / $processData['urlcount']);

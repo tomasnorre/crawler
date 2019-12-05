@@ -10,6 +10,10 @@ notifications:
 
 sudo: false
 
+before_install:
+  # turn off XDebug for speed up
+  - phpenv config-rm xdebug.ini || return 0
+
 addons:
   apt:
     packages:
@@ -61,7 +65,6 @@ jobs:
   allow_failures:
     - env: TYPO3_VERSION=^10.0
     - env: TYPO3_VERSION=dev-master
-    - name: "Rector CI"
     - name: "PHPStan"
   include:
     -
@@ -73,6 +76,8 @@ jobs:
     -
       stage: test
       name: "Tests Coverage"
+      before_install:
+        - echo "keep xdebug"
       script:
         - export typo3DatabaseName="typo3";
         - export typo3DatabaseHost="localhost";
@@ -99,6 +104,15 @@ jobs:
         - TYPO3_VERSION=^9.5
       script:
         - .Build/bin/rector process --dry-run --config rector-ci.yaml
+
+    -
+      stage: static
+      name: "Coding Standards"
+      php: 7.2
+      env:
+        - TYPO3_VERSION=^9.5
+      script:
+        - .Build/bin/ecs check Classes Configuration Tests
 
     -
       stage: static

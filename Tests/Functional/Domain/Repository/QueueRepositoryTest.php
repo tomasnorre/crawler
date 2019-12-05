@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Crawler\Tests\Functional\Domain\Repository;
 
 /***************************************************************
@@ -38,7 +39,6 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  */
 class QueueRepositoryTest extends FunctionalTestCase
 {
-
     /**
      * @var array
      */

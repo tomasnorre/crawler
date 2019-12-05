@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Crawler\Domain\Model;
 
 /***************************************************************
@@ -36,9 +37,9 @@ class Reason
      *
      * Convention for own states: <extensionkey>_<reason>
      */
-    const REASON_DEFAULT = 'crawler_default_reason';
-    const REASON_GUI_SUBMIT = 'crawler_gui_submit_reason';
-    const REASON_CLI_SUBMIT = 'crawler_cli_submit_reason';
+    public const REASON_DEFAULT = 'crawler_default_reason';
+    public const REASON_GUI_SUBMIT = 'crawler_gui_submit_reason';
+    public const REASON_CLI_SUBMIT = 'crawler_cli_submit_reason';
 
     /**
      * @var array

@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Crawler\Backend;
 
 /***************************************************************
@@ -190,7 +191,7 @@ class BackendModule
             'crawlaction' => [
                 'start' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.start'),
                 'log' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.log'),
-                'multiprocess' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.multiprocess')
+                'multiprocess' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.multiprocess'),
             ],
             'log_resultLog' => '',
             'log_feVars' => '',
@@ -198,14 +199,14 @@ class BackendModule
             'log_display' => [
                 'all' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.all'),
                 'pending' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.pending'),
-                'finished' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.finished')
+                'finished' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.finished'),
             ],
             'itemsPerPage' => [
                 '5' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.itemsPerPage.5'),
                 '10' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.itemsPerPage.10'),
                 '50' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.itemsPerPage.50'),
-                '0' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.itemsPerPage.0')
-            ]
+                '0' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.itemsPerPage.0'),
+            ],
         ];
     }
 
@@ -497,7 +498,7 @@ class BackendModule
                 $HTML = $this->iconFactory->getIconForRecord('pages', $pageinfo, Icon::SIZE_SMALL)->render();
                 $tree->tree[] = [
                     'row' => $pageinfo,
-                    'HTML' => $HTML
+                    'HTML' => $HTML,
                 ];
 
                 // Get branch beneath:
@@ -601,7 +602,7 @@ class BackendModule
             // Traverse parameter combinations:
             $c = 0;
             $content = '';
-            foreach ($logEntriesOfPage as $kk => $vv) {
+            foreach ($logEntriesOfPage as $vv) {
                 // Title column:
                 if (!$c) {
                     $titleClm = '<td rowspan="' . count($logEntriesOfPage) . '">' . $titleString . '</td>';
@@ -769,7 +770,7 @@ class BackendModule
             'assignedUnprocessedItemCount' => $queueRepository->countAllAssignedPendingItems(),
             'activeProcessCount' => $currentActiveProcesses,
             'maxActiveProcessCount' => $maxActiveProcesses,
-            'mode' => $mode
+            'mode' => $mode,
         ]);
 
         return $this->view->render();
@@ -1067,7 +1068,7 @@ class BackendModule
     {
         if (GeneralUtility::_GP('id')) {
             $uriParameters = array_merge($uriParameters, [
-                'id' => GeneralUtility::_GP('id')
+                'id' => GeneralUtility::_GP('id'),
             ]);
         }
         /** @var UriBuilder $uriBuilder */

@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Crawler\Domain\Repository;
 
 /***************************************************************
@@ -123,7 +124,8 @@ class QueueRepository extends AbstractRepository
     public function countExecutedItemsByProcess($process): int
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
-        $count = $queryBuilder
+
+        return $queryBuilder
             ->count('*')
             ->from($this->tableName)
             ->where(
@@ -132,8 +134,6 @@ class QueueRepository extends AbstractRepository
             )
             ->execute()
             ->fetchColumn(0);
-
-        return $count;
     }
 
     /**
@@ -146,7 +146,8 @@ class QueueRepository extends AbstractRepository
     public function countNonExecutedItemsByProcess($process): int
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
-        $count = $queryBuilder
+
+        return $queryBuilder
             ->count('*')
             ->from($this->tableName)
             ->where(
@@ -155,8 +156,6 @@ class QueueRepository extends AbstractRepository
             )
             ->execute()
             ->fetchColumn(0);
-
-        return $count;
     }
 
     /**
@@ -167,15 +166,14 @@ class QueueRepository extends AbstractRepository
     public function getUnprocessedItems(): array
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
-        $unprocessedItems = $queryBuilder
+
+        return $queryBuilder
             ->select('*')
             ->from($this->tableName)
             ->where(
                 $queryBuilder->expr()->eq('exec_time', 0)
             )
             ->execute()->fetchAll();
-
-        return $unprocessedItems;
     }
 
     /**
@@ -197,7 +195,8 @@ class QueueRepository extends AbstractRepository
     public function countAllPendingItems(): int
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
-        $count = $queryBuilder
+
+        return $queryBuilder
             ->count('*')
             ->from($this->tableName)
             ->where(
@@ -207,8 +206,6 @@ class QueueRepository extends AbstractRepository
             )
             ->execute()
             ->fetchColumn(0);
-
-        return $count;
     }
 
     /**
@@ -220,7 +217,8 @@ class QueueRepository extends AbstractRepository
     public function countAllAssignedPendingItems(): int
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
-        $count = $queryBuilder
+
+        return $queryBuilder
             ->count('*')
             ->from($this->tableName)
             ->where(
@@ -230,8 +228,6 @@ class QueueRepository extends AbstractRepository
             )
             ->execute()
             ->fetchColumn(0);
-
-        return $count;
     }
 
     /**
@@ -243,7 +239,8 @@ class QueueRepository extends AbstractRepository
     public function countAllUnassignedPendingItems(): int
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
-        $count = $queryBuilder
+
+        return $queryBuilder
             ->count('*')
             ->from($this->tableName)
             ->where(
@@ -253,8 +250,6 @@ class QueueRepository extends AbstractRepository
             )
             ->execute()
             ->fetchColumn(0);
-
-        return $count;
     }
 
     /**

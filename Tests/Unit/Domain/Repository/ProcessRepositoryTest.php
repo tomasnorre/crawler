@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Crawler\Tests\Unit\Domain\Repository;
 
 /***************************************************************
@@ -35,7 +36,6 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
  */
 class ProcessRepositoryTest extends UnitTestCase
 {
-
     /**
      * @test
      *
@@ -58,22 +58,22 @@ class ProcessRepositoryTest extends UnitTestCase
             'Both itemCount and offset bigger as minimum value' => [
                 'itemCount' => 10,
                 'offset' => 100,
-                'expected' => '100, 10'
+                'expected' => '100, 10',
             ],
             'itemCount smaller than minimum value, offset bigger than minimum value' => [
                 'itemCount' => -1,
                 'offset' => 10,
-                'expected' => '10, 20'
+                'expected' => '10, 20',
             ],
             'itemCount bigger than minimum value, offset smaller than minimum value' => [
                 'itemCount' => 10,
                 'offset' => -1,
-                'expected' => '0, 10'
+                'expected' => '0, 10',
             ],
             'Both itemCount and offset are smaller than minimum value' => [
                 'itemCount' => -1,
                 'offset' => -1,
-                'expected' => '0, 20'
+                'expected' => '0, 20',
             ],
         ];
     }

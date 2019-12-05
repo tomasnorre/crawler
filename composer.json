@@ -8,17 +8,10 @@
     },
     "license": "GPL-3.0",
     "authors": [
-        {
-            "name": "AOEpeople",
-            "email": "dev@aoe.com",
-            "homepage": "https://www.aoe.com/",
-            "role": "Developer"
-        }
+        { "name": "AOEpeople", "email": "dev@aoe.com", "homepage": "https://www.aoe.com/", "role": "Developer" }
     ],
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "require": {
-        "php": ">=7.2",
+        "php": "^7.2",
         "ext-json": "*",
         "typo3/cms-core": "~9.5.9 || ^10",
         "typo3/cms-beuser": "*",
@@ -31,21 +24,21 @@
     "require-dev": {
         "nimut/testing-framework": "^4.1",
         "nimut/typo3-complete": "^9.5",
-        "friendsofphp/php-cs-fixer": "^2.15",
         "phpstan/phpstan": "^0.11.19",
-        "rector/rector": "^0.6.0@dev"
+        "rector/rector": "^0.6",
+        "symplify/easy-coding-standard": "^7.0"
     },
     "replace": {
         "typo3-ter/crawler": "self.version"
     },
     "autoload": {
         "psr-4": {
-            "AOE\\Crawler\\": "Classes/"
+            "AOE\\Crawler\\": "Classes"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "AOE\\Crawler\\Tests\\": "Tests/"
+            "AOE\\Crawler\\Tests\\": "Tests"
         }
     },
     "config": {
@@ -68,13 +61,12 @@
             "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseName=crawler typo3DatabaseHost=127.0.0.1 typo3DatabaseUsername=root typo3DatabasePassword=root .Build/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml Tests/Functional"
         ],
         "cs-fix": [
-            "[ -e .Build/bin/php-cs-fixer ] || composer update",
-            "./.Build/bin/php-cs-fixer fix Classes/",
-            "./.Build/bin/php-cs-fixer fix Tests/"
+            "[ -e .Build/bin/ecs ] || composer update",
+           ".Build/bin/ecs check Classes Configuration Tests"
         ],
         "analyse": [
             "[ -e .Build/bin/phpstan ] || composer update",
-            ".Build/bin/phpstan analyse --no-progress"
+            ".Build/bin/phpstan analyse"
         ],
         "test:all": [
             "@test:unit",
@@ -100,5 +92,7 @@
                 "Migrations/Code/ClassAliasMap.php"
             ]
         }
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

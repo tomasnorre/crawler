@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Crawler\Tests\Unit\Domain\Model;
 
 /***************************************************************
@@ -34,7 +35,6 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
  */
 class QueueTest extends UnitTestCase
 {
-
     /**
      * @var Queue
      */

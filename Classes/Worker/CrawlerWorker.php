@@ -1,4 +1,5 @@
 <?php
+
 namespace AOEPeople\Crawler\Worker;
 
 /*
@@ -22,7 +23,6 @@ use TYPO3\CMS\IndexedSearch\Worker\WorkerInterface;
 
 class CrawlerWorker implements WorkerInterface
 {
-
     /**
      * CrawlerWorker constructor.
      */
@@ -45,7 +45,7 @@ class CrawlerWorker implements WorkerInterface
         $params = [
             'document' => $contentTmpFile,
             'alturl' => $file,
-            'conf' => $conf
+            'conf' => $conf,
         ];
 
         unset($params['conf']['content']);

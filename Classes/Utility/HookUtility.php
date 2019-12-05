@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Crawler\Utility;
 
 /***************************************************************
@@ -35,7 +36,6 @@ use AOE\Crawler\Hooks\StaticFileCacheCreateUriHook;
  */
 class HookUtility
 {
-
     /**
      * Registers hooks
      *

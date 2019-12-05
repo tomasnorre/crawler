@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Crawler\Domain\Repository;
 
 /***************************************************************
@@ -104,14 +105,13 @@ class ProcessRepository extends AbstractRepository
     public function findByProcessId($processId)
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
-        $process = $queryBuilder
+
+        return $queryBuilder
             ->select('*')
             ->from($this->tableName)
             ->where(
                 $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId, \PDO::PARAM_STR))
             )->execute()->fetch(0);
-
-        return $process;
     }
 
     /**
@@ -171,7 +171,8 @@ class ProcessRepository extends AbstractRepository
     public function countActive()
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
-        $count = $queryBuilder
+
+        return $queryBuilder
             ->count('*')
             ->from($this->tableName)
             ->where(
@@ -180,8 +181,6 @@ class ProcessRepository extends AbstractRepository
             )
             ->execute()
             ->fetchColumn(0);
-
-        return $count;
     }
 
     /**
@@ -220,7 +219,8 @@ class ProcessRepository extends AbstractRepository
     public function getActiveOrphanProcesses()
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
-        $statement = $queryBuilder
+
+        return $queryBuilder
             ->select('process_id', 'system_process_id')
             ->from($this->tableName)
             ->where(
@@ -228,8 +228,6 @@ class ProcessRepository extends AbstractRepository
                 $queryBuilder->expr()->eq('active', 1)
             )
             ->execute()->fetchAll();
-
-        return $statement;
     }
 
     /**
@@ -242,7 +240,8 @@ class ProcessRepository extends AbstractRepository
     public function countNotTimeouted($ttl)
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
-        $count = $queryBuilder
+
+        return $queryBuilder
             ->count('*')
             ->from($this->tableName)
             ->where(
@@ -251,8 +250,6 @@ class ProcessRepository extends AbstractRepository
             )
             ->execute()
             ->fetchColumn(0);
-
-        return $count;
     }
 
     /**
@@ -267,9 +264,8 @@ class ProcessRepository extends AbstractRepository
     {
         $itemCount = filter_var($itemCount, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'default' => 20]]);
         $offset = filter_var($offset, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0, 'default' => 0]]);
-        $limit = $offset . ', ' . $itemCount;
 
-        return $limit;
+        return $offset . ', ' . $itemCount;
     }
 
     /**

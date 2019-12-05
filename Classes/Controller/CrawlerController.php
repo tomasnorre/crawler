@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Crawler\Controller;
 
 /***************************************************************
@@ -65,11 +66,11 @@ class CrawlerController implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
-    const CLI_STATUS_NOTHING_PROCCESSED = 0;
-    const CLI_STATUS_REMAIN = 1; //queue not empty
-    const CLI_STATUS_PROCESSED = 2; //(some) queue items where processed
-    const CLI_STATUS_ABORTED = 4; //instance didn't finish
-    const CLI_STATUS_POLLABLE_PROCESSED = 8;
+    public const CLI_STATUS_NOTHING_PROCCESSED = 0;
+    public const CLI_STATUS_REMAIN = 1; //queue not empty
+    public const CLI_STATUS_PROCESSED = 2; //(some) queue items where processed
+    public const CLI_STATUS_ABORTED = 4; //instance didn't finish
+    public const CLI_STATUS_POLLABLE_PROCESSED = 8;
 
     /**
      * @var integer
@@ -143,7 +144,7 @@ class CrawlerController implements LoggerAwareInterface
     /**
      * @var BackendUserAuthentication|null
      */
-    private $backendUser = null;
+    private $backendUser;
 
     /**
      * @var integer
@@ -297,8 +298,9 @@ class CrawlerController implements LoggerAwareInterface
     /**
      * @return BackendUserAuthentication
      */
-    private function getBackendUser() {
-        if($this->backendUser === null) {
+    private function getBackendUser()
+    {
+        if ($this->backendUser === null) {
             $this->backendUser = $GLOBALS['BE_USER'];
         }
         return $this->backendUser;
@@ -355,7 +357,7 @@ class CrawlerController implements LoggerAwareInterface
             // veto hook
             foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pageVeto'] ?? [] as $key => $func) {
                 $params = [
-                    'pageRow' => $pageRow
+                    'pageRow' => $pageRow,
                 ];
                 // expects "false" if page is ok and "true" or a skipMessage if this page should _not_ be crawled
                 $veto = GeneralUtility::callUserFunction($func, $params, $this);
@@ -549,7 +551,7 @@ class CrawlerController implements LoggerAwareInterface
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['getPageTSconfigForId'])) {
             $params = [
                 'pageId' => $id,
-                'pageTSConfig' => &$pageTSconfig
+                'pageTSConfig' => &$pageTSconfig,
             ];
             foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['getPageTSconfigForId'] as $userFunc) {
                 GeneralUtility::callUserFunction($userFunc, $params, $this);
@@ -633,7 +635,7 @@ class CrawlerController implements LoggerAwareInterface
                             'force_ssl' => (int)$configurationRecord['force_ssl'],
                             'userGroups' => $configurationRecord['fegroups'],
                             'exclude' => $configurationRecord['exclude'],
-                            'key' => $key
+                            'key' => $key,
                         ];
 
                         if (!in_array($pageId, $this->expandExcludeString($subCfg['exclude']))) {
@@ -686,7 +688,7 @@ class CrawlerController implements LoggerAwareInterface
         /* @var PageTreeView $tree */
         $tree = GeneralUtility::makeInstance(PageTreeView::class);
         $perms_clause = $this->getBackendUser()->getPagePermsClause(Permission::PAGE_SHOW);
-        $tree->init( empty($perms_clause) ? '' : ('AND ' . $perms_clause) );
+        $tree->init(empty($perms_clause) ? '' : ('AND ' . $perms_clause));
         $tree->getTree($rootid, $depth, '');
         foreach ($tree->tree as $node) {
             $pids[] = $node['row']['uid'];
@@ -814,7 +816,7 @@ class CrawlerController implements LoggerAwareInterface
                             if ($fieldName === 'uid' || $GLOBALS['TCA'][$subpartParams['_TABLE']]['columns'][$fieldName]) {
                                 $queryBuilder = $this->getQueryBuilder($subpartParams['_TABLE']);
 
-                                if($recursiveDepth > 0) {
+                                if ($recursiveDepth > 0) {
                                     /** @var \TYPO3\CMS\Core\Database\QueryGenerator $queryGenerator */
                                     $queryGenerator = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\QueryGenerator::class);
                                     $pidList = $queryGenerator->getTreeList($lookUpPid, $recursiveDepth, 0, 1);
@@ -834,7 +836,7 @@ class CrawlerController implements LoggerAwareInterface
                                         $queryBuilder->expr()->in($pidField, $queryBuilder->createNamedParameter($pidArray, Connection::PARAM_INT_ARRAY)),
                                         $where
                                     );
-                                if(!empty($addTable)) {
+                                if (!empty($addTable)) {
                                     // TODO: Check if this works as intended!
                                     $queryBuilder->add('from', $addTable);
                                 }
@@ -871,9 +873,9 @@ class CrawlerController implements LoggerAwareInterface
                             'paramArray' => &$paramArray,
                             'currentKey' => $p,
                             'currentValue' => $pV,
-                            'pid' => $pid
+                            'pid' => $pid,
                         ];
-                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/class.tx_crawler_lib.php']['expandParameters'] as $key => $_funcRef) {
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/class.tx_crawler_lib.php']['expandParameters'] as $_funcRef) {
                             GeneralUtility::callUserFunction($_funcRef, $_params, $this);
                         }
                     }
@@ -1140,7 +1142,7 @@ class CrawlerController implements LoggerAwareInterface
 
         // Creating parameters:
         $parameters = [
-            'url' => $url
+            'url' => $url,
         ];
 
         // fe user group simulation:
@@ -1322,7 +1324,7 @@ class CrawlerController implements LoggerAwareInterface
             ->update(
                 'tx_crawler_queue',
                 $field_array,
-                [ 'qid' => (int)$queueId ]
+                ['qid' => (int)$queueId]
             );
 
         $result = $this->queueExecutor->executeQueueItem($queueRec, $this);
@@ -1358,7 +1360,7 @@ class CrawlerController implements LoggerAwareInterface
             ->update(
                 'tx_crawler_queue',
                 $field_array,
-                [ 'qid' => (int)$queueId ]
+                ['qid' => (int)$queueId]
             );
 
         $this->logger->debug('crawler-readurl stop ' . microtime(true));
@@ -1451,7 +1453,7 @@ class CrawlerController implements LoggerAwareInterface
             // Set root row:
             $tree->tree[] = [
                 'row' => $pageInfo,
-                'HTML' => $this->iconFactory->getIconForRecord('pages', $pageInfo, Icon::SIZE_SMALL)
+                'HTML' => $this->iconFactory->getIconForRecord('pages', $pageInfo, Icon::SIZE_SMALL),
             ];
         }
 
@@ -1764,8 +1766,8 @@ class CrawlerController implements LoggerAwareInterface
             GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('tx_crawler_process')
                 ->update(
                     'tx_crawler_process',
-                    [ 'assigned_items_count' => (int)$numberOfAffectedRows ],
-                    [ 'process_id' => $processId ]
+                    ['assigned_items_count' => (int)$numberOfAffectedRows],
+                    ['process_id' => $processId]
                 );
 
             if ($numberOfAffectedRows == count($quidList)) {
@@ -1878,7 +1880,7 @@ class CrawlerController implements LoggerAwareInterface
                     'process_id' => $id,
                     'active' => 1,
                     'ttl' => $currentTime + (int)$this->extensionSettings['processMaxRunTime'],
-                    'system_process_id' => $systemProcessId
+                    'system_process_id' => $systemProcessId,
                 ]
             );
         } else {

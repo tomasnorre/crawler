@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Crawler\Event;
 
 /***************************************************************
@@ -131,7 +132,7 @@ class EventDispatcher
     {
         if (is_array($this->observers[$event])) {
             foreach ($this->observers[$event] as $eventObserver) {
-                call_user_func([$eventObserver['object'],$eventObserver['method']], $event, $group, $attachedData);
+                call_user_func([$eventObserver['object'], $eventObserver['method']], $event, $group, $attachedData);
             }
         }
     }

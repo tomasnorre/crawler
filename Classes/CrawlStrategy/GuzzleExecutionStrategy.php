@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 namespace AOE\Crawler\CrawlStrategy;
 
@@ -74,7 +75,7 @@ class GuzzleExecutionStrategy implements LoggerAwareInterface
         return [
             'Connection' => 'close',
             'X-T3Crawler' => $crawlerId,
-            'User-Agent' => 'TYPO3 crawler'
+            'User-Agent' => 'TYPO3 crawler',
         ];
     }
 }

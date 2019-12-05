@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Crawler\Tests\Functional\Controller;
 
 /***************************************************************
@@ -49,11 +50,6 @@ class CrawlerControllerTest extends FunctionalTestCase
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     /**
-     * @var ObjectManager
-     */
-    private $objectManager;
-
-    /**
      * @var CrawlerController
      */
     protected $subject;
@@ -61,7 +57,6 @@ class CrawlerControllerTest extends FunctionalTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->importDataSet(__DIR__ . '/../Fixtures/pages.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_configuration.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
@@ -227,7 +222,7 @@ class CrawlerControllerTest extends FunctionalTestCase
             ->setMethods(['isAdmin', 'getTSConfig', 'getPagePermsClause', 'isInWebMount'])
             ->getMock();
 
-        $configurationsForBranch = $this->subject->getConfigurationsForBranch(5,99);
+        $configurationsForBranch = $this->subject->getConfigurationsForBranch(5, 99);
 
         $this->assertNotEmpty($configurationsForBranch);
         $this->assertCount(
@@ -240,7 +235,7 @@ class CrawlerControllerTest extends FunctionalTestCase
             [
                 'Not hidden or deleted',
                 'Not hidden or deleted - uid 5',
-                'Not hidden or deleted - uid 6'
+                'Not hidden or deleted - uid 6',
             ]
         );
     }
@@ -251,14 +246,12 @@ class CrawlerControllerTest extends FunctionalTestCase
      */
     public function getDuplicateRowsIfExist($timeslotActive, $tstamp, $current, $fieldArray, $expected)
     {
-
         $mockedCrawlerController = $this->getAccessibleMock(CrawlerController::class, ['getCurrentTime']);
         $mockedCrawlerController->expects($this->any())->method('getCurrentTime')->willReturn($current);
 
         $mockedCrawlerController->setExtensionSettings([
             'enableTimeslot' => $timeslotActive,
         ]);
-
 
         $this->assertEquals(
             $expected,
@@ -310,50 +303,50 @@ class CrawlerControllerTest extends FunctionalTestCase
                 'paramArray' => ['range' => '[1-5]'],
                 'pid' => 1,
                 'expected' => [
-                    'range' => [1,2,3,4,5]
-                ]
+                    'range' => [1, 2, 3, 4, 5],
+                ],
             ],
-            'Parameters with _TABLE _PID & _WHERE (hidden = 0)'=> [
+            'Parameters with _TABLE _PID & _WHERE (hidden = 0)' => [
                 'paramArray' => ['table' => '[_TABLE:pages;_PID:5;_WHERE: hidden = 0]'],
                 'pid' => 1,
                 'expected' => [
-                    'table' => [7]
-                ]
+                    'table' => [7],
+                ],
             ],
             'Parameters with _TABLE _PID & _WHERE (hidden = 1)' => [
                 'paramArray' => ['table' => '[_TABLE:pages;_PID:5:_WHERE: hidden = 1]'],
                 'pid' => 1,
                 'expected' => [
-                    'table' => [7,8]
-                ]
+                    'table' => [7, 8],
+                ],
             ],
             'Parameters with _TABLE no _PID, then pid from input is used' => [
                 'paramArray' => ['table' => '[_TABLE:pages]'],
                 'pid' => 1,
                 'expected' => [
-                    'table' => [2,3,4,5]
-                ]
+                    'table' => [2, 3, 4, 5],
+                ],
             ],
             'Parameters with _TABLE _PID _RECURSIVE(:0) & _WHERE (hidden = 0)' => [
                 'paramArray' => ['table' => '[_TABLE:tt_content;_PID:5;_RECURSIVE:0;_WHERE: hidden = 0]'],
                 'pid' => 1,
                 'expected' => [
-                    'table' => [1,2]
-                ]
+                    'table' => [1, 2],
+                ],
             ],
             'Parameters with _TABLE _PID _RECURSIVE(:1) & _WHERE (hidden = 0)' => [
                 'paramArray' => ['table' => '[_TABLE:tt_content;_PID:5;_RECURSIVE:1;_WHERE: hidden = 0]'],
                 'pid' => 1,
                 'expected' => [
-                    'table' => [1,2,3]
-                ]
+                    'table' => [1, 2, 3],
+                ],
             ],
             'Parameters with _TABLE _PID _RECURSIVE(:2) & _WHERE (hidden = 0)' => [
                 'paramArray' => ['table' => '[_TABLE:tt_content;_PID:5;_RECURSIVE:2;_WHERE: hidden = 0]'],
                 'pid' => 1,
                 'expected' => [
-                    'table' => [1,2,3,5,6]
-                ]
+                    'table' => [1, 2, 3, 5, 6],
+                ],
             ],
         ];
     }
@@ -368,9 +361,9 @@ class CrawlerControllerTest extends FunctionalTestCase
                     'key' => 'some-key',
                     'procInstrFilter' => 'tx_crawler_post',
                     'procInstrParams.' => [
-                        'action' => true
+                        'action' => true,
                     ],
-                    'userGroups' => '12,14'
+                    'userGroups' => '12,14',
                 ],
                 'tstamp' => 1563287062,
                 'configurationHash' => '',
@@ -382,35 +375,35 @@ class CrawlerControllerTest extends FunctionalTestCase
             'Queue entry is NOT added, due to duplication check return not empty array (mocked)' => [
                 'id' => 0,
                 'url' => '',
-                'subCfg' =>  ['key' => 'some-key'],
+                'subCfg' => ['key' => 'some-key'],
                 'tstamp' => 1563287062,
                 'configurationHash' => '',
                 'skipInnerDuplicationCheck' => false,
                 'mockedDuplicateRowResult' => ['duplicate-exists' => true],
                 'registerQueueEntriesInternallyOnly' => false,
-                'expected' => false
+                'expected' => false,
             ],
             'Queue entry is added, due to duplication is ignored' => [
                 'id' => 0,
                 'url' => '',
-                'subCfg' =>  ['key' => 'some-key'],
+                'subCfg' => ['key' => 'some-key'],
                 'tstamp' => 1563287062,
                 'configurationHash' => '',
                 'skipInnerDuplicationCheck' => true,
                 'mockedDuplicateRowResult' => ['duplicate-exists' => true],
                 'registerQueueEntriesInternallyOnly' => false,
-                'expected' => true
+                'expected' => true,
             ],
             'Queue entry is NOT added, due to registerQueueEntriesInternalOnly' => [
                 'id' => 0,
                 'url' => '',
-                'subCfg' =>  ['key' => 'some-key'],
+                'subCfg' => ['key' => 'some-key'],
                 'tstamp' => 1563287062,
                 'configurationHash' => '',
                 'skipInnerDuplicationCheck' => true,
                 'mockedDuplicateRowResult' => ['duplicate-exists' => true],
                 'registerQueueEntriesInternallyOnly' => true,
-                'expected' => false
+                'expected' => false,
             ],
         ];
     }
@@ -424,9 +417,9 @@ class CrawlerControllerTest extends FunctionalTestCase
                 'current' => 12,
                 'fieldArray' => [
                     'page_id' => 15,
-                    'parameters_hash' => ''
+                    'parameters_hash' => '',
                 ],
-                'expected' => [15,18]
+                'expected' => [15, 18],
             ],
             'EnableTimeslot is false and timestamp is <= current' => [
                 'timeslotActive' => false,
@@ -434,9 +427,9 @@ class CrawlerControllerTest extends FunctionalTestCase
                 'current' => 11,
                 'fieldArray' => [
                     'page_id' => 15,
-                    'parameters_hash' => ''
+                    'parameters_hash' => '',
                 ],
-                'expected' => [18]
+                'expected' => [18],
             ],
             'EnableTimeslot is true and timestamp is > current' => [
                 'timeslotActive' => true,
@@ -444,9 +437,9 @@ class CrawlerControllerTest extends FunctionalTestCase
                 'current' => 10,
                 'fieldArray' => [
                     'page_id' => 15,
-                    'parameters_hash' => ''
+                    'parameters_hash' => '',
                 ],
-                'expected' => [15]
+                'expected' => [15],
             ],
             'EnableTimeslot is false and timestamp is > current' => [
                 'timeslotActive' => false,
@@ -454,9 +447,9 @@ class CrawlerControllerTest extends FunctionalTestCase
                 'current' => 10,
                 'fieldArray' => [
                     'page_id' => 15,
-                    'parameters_hash' => ''
+                    'parameters_hash' => '',
                 ],
-                'expected' => [15]
+                'expected' => [15],
             ],
             'EnableTimeslot is false and timestamp is > current and parameters_hash is set' => [
                 'timeslotActive' => false,
@@ -464,13 +457,12 @@ class CrawlerControllerTest extends FunctionalTestCase
                 'current' => 10,
                 'fieldArray' => [
                     'page_id' => 15,
-                    'parameters_hash' => 'NotReallyAHashButWillDoForTesting'
+                    'parameters_hash' => 'NotReallyAHashButWillDoForTesting',
                 ],
-                'expected' => [19]
+                'expected' => [19],
             ],
         ];
     }
-
 
     /**
      * @return array
@@ -635,20 +627,20 @@ class CrawlerControllerTest extends FunctionalTestCase
         return [
             'Flush Entire Queue' => [
                 'where' => '1=1',
-                'expected' => 0
+                'expected' => 0,
             ],
             'Flush Queue with specific configuration' => [
                 'where' => 'configuration = \'SecondConfiguration\'',
-                'expected' => 9
+                'expected' => 9,
             ],
             'Flush Queue for specific process id' => [
                 'where' => 'process_id = \'1007\'',
-                'expected' => 11
+                'expected' => 11,
             ],
             'Flush Queue for where that does not exist, nothing is deleted' => [
                 'where' => 'qid > 100000',
                 'expected' => 14,
-             ]
+            ],
         ];
     }
 
@@ -675,5 +667,4 @@ class CrawlerControllerTest extends FunctionalTestCase
             ],
         ];
     }
-
 }

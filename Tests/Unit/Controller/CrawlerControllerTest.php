@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Crawler\Tests\Unit\Controller;
 
 /***************************************************************
@@ -200,14 +201,14 @@ class CrawlerControllerTest extends UnitTestCase
                 'getUrlsForPages' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
                 'pageRow' => ['uid' => 2001],
                 '$skipMessage' => 'Just variable placeholder, not used in tests as parsed as reference',
-                'expected' => ['index.php?q=search&page=1', 'index.php?q=search&page=2']
+                'expected' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
             ],
             'Message string not empty, returns empty array' => [
                 'checkIfPageSkipped' => 'Because page is hidden',
                 'getUrlsForPages' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
                 'pageRow' => ['uid' => 2001],
                 '$skipMessage' => 'Just variable placeholder, not used in tests as parsed as reference',
-                'expected' => []
+                'expected' => [],
             ],
         ];
     }
@@ -238,12 +239,12 @@ class CrawlerControllerTest extends UnitTestCase
             'Empty Params array' => [
                 'paramArray' => [],
                 'urls' => ['/home', '/search', '/about'],
-                'expected' => ['/home', '/search', '/about']
+                'expected' => ['/home', '/search', '/about'],
             ],
             'Empty Urls array' => [
                 'paramArray' => ['pagination' => [1, 2, 3, 4]],
                 'urls' => [],
-                'expected' => []
+                'expected' => [],
             ],
             'case' => [
                 'paramArray' => ['pagination' => [1, 2, 3, 4]],
@@ -257,8 +258,8 @@ class CrawlerControllerTest extends UnitTestCase
                     'index.php?id=11&pagination=2',
                     'index.php?id=11&pagination=3',
                     'index.php?id=11&pagination=4',
-                ]
-            ]
+                ],
+            ],
         ];
     }
 
@@ -326,41 +327,41 @@ class CrawlerControllerTest extends UnitTestCase
                 'configuration' => [
                     'testKey' => 'testValue',
                     'paramExpanded' => '',
-                    'URLs' => ''
+                    'URLs' => '',
                 ],
-                'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22'
+                'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22',
             ],
             'Configuration with only paramExpanded set' => [
                 'configuration' => [
                     'testKey' => 'testValue',
                     'paramExpanded' => 'Value not important',
-                    'URLs' => ''
+                    'URLs' => '',
                 ],
-                'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22'
+                'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22',
             ],
             'Configuration with only URLS set' => [
                 'configuration' => [
                     'testKey' => 'testValue',
                     'paramExpanded' => '',
-                    'URLs' => 'Value not important'
+                    'URLs' => 'Value not important',
                 ],
-                'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22'
+                'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22',
             ],
             'Configuration with both paramExpanded and URLS set' => [
                 'configuration' => [
                     'testKey' => 'testValue',
                     'paramExpanded' => 'Value not important',
-                    'URLs' => 'Value not important'
+                    'URLs' => 'Value not important',
                 ],
-                'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22'
+                'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22',
             ],
             'Configuration with both paramExpanded and URLS set, will return same hash' => [
                 'configuration' => [
                     'testKey' => 'testValue',
                     'paramExpanded' => 'Value not important, but different than test case before',
-                    'URLs' => 'Value not important, but different than test case before'
+                    'URLs' => 'Value not important, but different than test case before',
                 ],
-                'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22'
+                'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22',
             ],
         ];
     }
@@ -375,16 +376,16 @@ class CrawlerControllerTest extends UnitTestCase
                 'extensionSetting' => [],
                 'pageRow' => [
                     'doktype' => 1,
-                    'hidden' => 0
+                    'hidden' => 0,
                 ],
                 'excludeDoktype' => [],
-                'expected' => false
+                'expected' => false,
             ],
             'Extension Setting do not crawl hidden pages and page is hidden' => [
                 'extensionSetting' => ['crawlHiddenPages' => false],
                 'pageRow' => [
                     'doktype' => 1,
-                    'hidden' => 1
+                    'hidden' => 1,
                 ],
                 'excludeDoktype' => [],
                 'expected' => 'Because page is hidden',
@@ -393,38 +394,38 @@ class CrawlerControllerTest extends UnitTestCase
                 'extensionSettings' => [],
                 'pageRow' => [
                     'doktype' => 3,
-                    'hidden' => 0
+                    'hidden' => 0,
                 ],
                 'excludeDoktype' => [],
-                'expected' => 'Because doktype is not allowed'
+                'expected' => 'Because doktype is not allowed',
             ],
             'Page of doktype 4 - Shortcut' => [
                 'extensionSettings' => [],
                 'pageRow' => [
                     'doktype' => 4,
-                    'hidden' => 0
+                    'hidden' => 0,
                 ],
                 'excludeDoktype' => [],
-                'expected' => 'Because doktype is not allowed'
+                'expected' => 'Because doktype is not allowed',
             ],
             'Page of doktype 155 - Custom' => [
                 'extensionSettings' => [],
                 'pageRow' => [
                     'doktype' => 155,
-                    'hidden' => 0
+                    'hidden' => 0,
                 ],
                 'excludeDoktype' => ['custom' => 155],
-                'expected' => 'Doktype was excluded by "custom"'
+                'expected' => 'Doktype was excluded by "custom"',
             ],
             'Page of doktype 255 - Out of allowed range' => [
                 'extensionSettings' => [],
                 'pageRow' => [
                     'doktype' => 255,
-                    'hidden' => 0
+                    'hidden' => 0,
                 ],
                 'excludeDoktype' => [],
-                'expected' => 'Because doktype is not allowed'
-            ]
+                'expected' => 'Because doktype is not allowed',
+            ],
         ];
     }
 
@@ -436,16 +437,16 @@ class CrawlerControllerTest extends UnitTestCase
         return [
             'cliObject with no -conf' => [
                 'config' => [(string)'-d' => 4, (string)'-o' => 'url'],
-                'expected' => []
+                'expected' => [],
             ],
             'cliObject with one -conf' => [
                 'config' => [(string)'-d' => 4, (string)'-o' => 'url', (string)'-conf' => 'default'],
-                'expected' => ['default']
+                'expected' => ['default'],
             ],
             'cliObject with two -conf' => [
                 'config' => [(string)'-d' => 4, (string)'-o' => 'url', (string)'-conf' => 'default,news'],
-                'expected' => ['default', 'news']
-            ]
+                'expected' => ['default', 'news'],
+            ],
         ];
     }
 
@@ -457,15 +458,15 @@ class CrawlerControllerTest extends UnitTestCase
         return [
             'setDisabled with no param' => [
                 'disabled' => null,
-                'expected' => true
+                'expected' => true,
             ],
             'setDisabled with true param' => [
                 'disabled' => true,
-                'expected' => true
+                'expected' => true,
             ],
             'setDisabled with false param' => [
                 'disabled' => false,
-                'expected' => false
+                'expected' => false,
             ],
         ];
     }
@@ -479,36 +480,36 @@ class CrawlerControllerTest extends UnitTestCase
             'Not in list' => [
                 'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
                 'incomingProcInstructions' => [
-                    'tx_unknown_extension_instruction'
+                    'tx_unknown_extension_instruction',
                 ],
-                'expected' => false
+                'expected' => false,
             ],
             'In list' => [
                 'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
                 'incomingProcInstructions' => [
                     'tx_indexedsearch_reindex',
                 ],
-                'expected' => true
+                'expected' => true,
             ],
             'Twice in list' => [
                 'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
                 'incomingProcInstructions' => [
                     'tx_indexedsearch_reindex',
-                    'tx_indexedsearch_reindex'
+                    'tx_indexedsearch_reindex',
                 ],
-                'expected' => true
+                'expected' => true,
             ],
             'Empty incomingProcInstructions' => [
                 'piString' => '',
                 'incomingProcInstructions' => [],
-                'expected' => true
+                'expected' => true,
             ],
             'In list CAPITALIZED' => [
                 'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
                 'incomingProcInstructions' => [
-                    'TX_INDEXEDSEARCH_REINDES'
+                    'TX_INDEXEDSEARCH_REINDES',
                 ],
-                'expected' => false
+                'expected' => false,
             ],
         ];
     }
@@ -522,18 +523,18 @@ class CrawlerControllerTest extends UnitTestCase
             'Do not have access' => [
                 'groupList' => '1,2,3',
                 'accessList' => '4,5,6',
-                'expected' => false
+                'expected' => false,
             ],
             'Do have access' => [
                 'groupList' => '1,2,3,4',
                 'accessList' => '4,5,6',
-                'expected' => true
+                'expected' => true,
             ],
             'Access List empty' => [
                 'groupList' => '1,2,3',
                 'accessList' => '',
-                'expected' => true
-            ]
+                'expected' => true,
+            ],
         ];
     }
 }

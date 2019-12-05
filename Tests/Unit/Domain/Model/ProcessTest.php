@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Crawler\Tests\Unit\Domain\Model;
 
 /***************************************************************
@@ -34,7 +35,6 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
  */
 class ProcessTest extends UnitTestCase
 {
-
     /**
      * @var Process
      * @inject
@@ -100,23 +100,23 @@ class ProcessTest extends UnitTestCase
             'Check that state is running, Active and less than 100%' => [
                 'active' => 1,
                 'processes' => 90,
-                'expectedState' => Process::STATE_RUNNING
+                'expectedState' => Process::STATE_RUNNING,
             ],
             'Check that state is cancelled, Inactive and less than 100%' => [
                 'active' => 0,
                 'processes' => 90,
-                'expectedState' => Process::STATE_CANCELLED
+                'expectedState' => Process::STATE_CANCELLED,
             ],
             'Check that state is completed, Active and 100%' => [
                 'active' => 1,
                 'processes' => 100,
-                'expectedState' => Process::STATE_COMPLETED
+                'expectedState' => Process::STATE_COMPLETED,
             ],
             'Check that state is completed, Inactive and 100%' => [
                 'active' => 0,
                 'processes' => 100,
-                'expectedState' => Process::STATE_COMPLETED
-            ]
+                'expectedState' => Process::STATE_COMPLETED,
+            ],
         ];
     }
 
@@ -172,27 +172,27 @@ class ProcessTest extends UnitTestCase
             'CountItemsAssigned is negative number' => [
                 'countItemsAssigned' => -2,
                 'countItemsProcessed' => 8,
-                'expectedProgress' => 0
+                'expectedProgress' => 0,
             ],
             'CountItemsAssigned is 0' => [
                 'countItemsAssigned' => 0,
                 'countItemsProcessed' => 8,
-                'expectedProgress' => 0
+                'expectedProgress' => 0,
             ],
             'CountItemsAssigned is higher than countItemsProcessed' => [
                 'countItemsAssigned' => 100,
                 'countItemsProcessed' => 8,
-                'expectedProgress' => 8.0
+                'expectedProgress' => 8.0,
             ],
             'CountItemsAssigned are equal countItemsProcessed' => [
                 'countItemsAssigned' => 15,
                 'countItemsProcessed' => 15,
-                'expectedProgress' => 100.0
+                'expectedProgress' => 100.0,
             ],
             'CountItemsAssigned is lower than countItemsProcessed' => [
                 'countItemsAssigned' => 15,
                 'countItemsProcessed' => 20,
-                'expectedProgress' => 100.0
+                'expectedProgress' => 100.0,
             ],
         ];
     }
@@ -209,7 +209,7 @@ class ProcessTest extends UnitTestCase
     public function getRuntimeReturnsInteger($getTimeForFirstItem, $getTimeForLastItem, $expected)
     {
         /** @var Process $processMock */
-        $processMock = $this->getAccessibleMock(Process::class, [ 'getTimeForFirstItem', 'getTimeForLastItem'], [], '', false);
+        $processMock = $this->getAccessibleMock(Process::class, ['getTimeForFirstItem', 'getTimeForLastItem'], [], '', false);
         $processMock->expects($this->any())->method('getTimeForFirstItem')->will($this->returnValue($getTimeForFirstItem));
         $processMock->expects($this->any())->method('getTimeForLastItem')->will($this->returnValue($getTimeForLastItem));
 
@@ -228,27 +228,27 @@ class ProcessTest extends UnitTestCase
             'getTimeForFirstItem is bigger than getTimeForLastItem' => [
                 'getTimeForFirstItem' => 75,
                 'getTimeForLastItem' => 50,
-                'expected' => -25
+                'expected' => -25,
             ],
             'getTimeForFirstItem is smaller than getTimeForLastItem' => [
                 'getTimeForFirstItem' => 55,
                 'getTimeForLastItem' => 85,
-                'expected' => 30
+                'expected' => 30,
             ],
             'getTimeForFirstItem is equal to getTimeForLastItem' => [
                 'getTimeForFirstItem' => 45,
                 'getTimeForLastItem' => 45,
-                'expected' => 0
+                'expected' => 0,
             ],
             'getTimeForFirstItem is negative number and getTimeForLastItem is positive' => [
                 'getTimeForFirstItem' => -25,
                 'getTimeForLastItem' => 50,
-                'expected' => 75
+                'expected' => 75,
             ],
             'getTimeForFirstItem is positive number and getTimeForLastItem is negative' => [
                 'getTimeForFirstItem' => 25,
                 'getTimeForLastItem' => -50,
-                'expected' => -75
+                'expected' => -75,
             ],
         ];
     }

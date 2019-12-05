@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Crawler\Hooks;
 
 /***************************************************************
@@ -167,8 +168,7 @@ class ProcessCleanUpHook
     private function createResponseArray($string)
     {
         $responseArray = GeneralUtility::trimExplode(' ', $string, true);
-        $responseArray = array_values($responseArray);
-        return $responseArray;
+        return array_values($responseArray);
     }
 
     /**
