@@ -3,6 +3,13 @@ parameters:
     sets:
         - "psr12"
         - "arrays"
+        - "php70"
+        - "php71"
+        - "common"
+
+    skip:
+        PhpCsFixer\Fixer\Operator\UnaryOperatorSpacesFixer: null
+        PHP_CodeSniffer\Standards\Generic\Sniffs\CodeAnalysis\AssignmentInConditionSniff.FoundInWhileCondition: null
 
 services:
     PhpCsFixer\Fixer\ArrayNotation\ArraySyntaxFixer:
