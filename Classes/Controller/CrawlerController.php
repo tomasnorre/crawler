@@ -593,7 +593,7 @@ class CrawlerController implements LoggerAwareInterface
             $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $subCfg['pidsOnly'], true));
 
             // process configuration if it is not page-specific or if the specific page is the current page:
-            if (!strcmp($subCfg['pidsOnly'], '') || GeneralUtility::inList($pidOnlyList, $pageId)) {
+            if (!strcmp((string) $subCfg['pidsOnly'], '') || GeneralUtility::inList($pidOnlyList, $pageId)) {
 
                 // Explode, process etc.:
                 $res[$key] = [];
@@ -1050,7 +1050,7 @@ class CrawlerController implements LoggerAwareInterface
      */
     protected function flushQueue($where = ''): void
     {
-        $realWhere = strlen($where) > 0 ? $where : '1=1';
+        $realWhere = strlen((string) $where) > 0 ? $where : '1=1';
 
         $queryBuilder = $this->getQueryBuilder($this->tableName);
 
