@@ -29,7 +29,6 @@ namespace AOE\Crawler\Utility;
  ***************************************************************/
 
 use AOE\Crawler\Hooks\ProcessCleanUpHook;
-use AOE\Crawler\Hooks\StaticFileCacheCreateUriHook;
 
 /**
  * Class HookUtility
@@ -45,10 +44,6 @@ class HookUtility
      */
     public static function registerHooks($extKey): void
     {
-        // Activating NC Static File Cache hook
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['nc_staticfilecache/class.tx_ncstaticfilecache.php']['createFile_initializeVariables']['tx_crawler'] =
-            StaticFileCacheCreateUriHook::class . '->initialize';
-
         // Activating Crawler cli_hooks
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['cli_hooks'][] =
             ProcessCleanUpHook::class;

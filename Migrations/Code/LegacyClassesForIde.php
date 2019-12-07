@@ -80,13 +80,6 @@ class tx_crawler_hooks_processCleanUp extends AOE\Crawler\Hooks\ProcessCleanUpHo
 /**
  * @deprecated
  */
-class tx_crawler_hooks_staticFileCacheCreateUri extends AOE\Crawler\Hooks\StaticFileCacheCreateUriHook
-{
-}
-
-/**
- * @deprecated
- */
 class tx_crawler_hooks_tsfe extends AOE\Crawler\Hooks\TsfeHook
 {
 }
