@@ -62,7 +62,7 @@
         ],
         "cs-fix": [
             "[ -e .Build/bin/ecs ] || composer update",
-           ".Build/bin/ecs check Classes Configuration Tests"
+            ".Build/bin/ecs check Classes Configuration Tests"
         ],
         "analyse": [
             "[ -e .Build/bin/phpstan ] || composer update",

@@ -5,10 +5,10 @@
  * Retrieve path (taken from cli_dispatch.phpsh)
  */
 
-    // Get path to this script
+// Get path to this script
 $tempPathThisScript = isset($_SERVER['argv'][0]) ? $_SERVER['argv'][0] : (isset($_ENV['_']) ? $_ENV['_'] : $_SERVER['_']);
 
-    // Resolve path
+// Resolve path
 if (!isAbsPath($tempPathThisScript)) {
     $workingDirectory = $_SERVER['PWD'] ? $_SERVER['PWD'] : getcwd();
     if ($workingDirectory) {
@@ -39,21 +39,21 @@ if (is_array($additionalHeaders)) {
     }
 }
 
-    // put parsed query parts into $_GET array
+// put parsed query parts into $_GET array
 $urlParts = parse_url($_SERVER['argv'][2]);
-    // Populating $_GET
+// Populating $_GET
 parse_str($urlParts['query'], $_GET);
-    // Populating $_REQUEST
+// Populating $_REQUEST
 parse_str($urlParts['query'], $_REQUEST);
-    // Populating $_POST
+// Populating $_POST
 $_POST = [];
-    // Populating $_COOKIE
+// Populating $_COOKIE
 $_COOKIE = [];
 
-    // Get the TYPO3_SITE_PATH of the website frontend:
+// Get the TYPO3_SITE_PATH of the website frontend:
 $typo3SitePath = $_SERVER['argv'][1];
 
-    // faking the environment
+// faking the environment
 $_SERVER['DOCUMENT_ROOT'] = preg_replace('#' . preg_quote($typo3SitePath, '#') . '$#', '', $typo3Root);
 $_SERVER['HTTP_USER_AGENT'] = 'CLI Mode';
 $_SERVER['HTTP_HOST'] = $_SERVER['SERVER_NAME'] = $urlParts['host'];
@@ -63,13 +63,13 @@ $_SERVER['QUERY_STRING'] = (isset($urlParts['query']) ? $urlParts['query'] : '')
 $_SERVER['REQUEST_URI'] = $urlParts['path'] . (isset($urlParts['query']) ? '?' . $urlParts['query'] : '');
 $_SERVER['REQUEST_METHOD'] = 'GET';
 
-    // Define a port if used in the URL:
+// Define a port if used in the URL:
 if (isset($urlParts['port'])) {
     $_SERVER['HTTP_HOST'] .= ':' . $urlParts['port'];
     $_SERVER['SERVER_PORT'] = $urlParts['port'];
 }
 
-    // Define HTTPS disposal:
+// Define HTTPS disposal:
 if ($urlParts['scheme'] === 'https') {
     $_SERVER['HTTPS'] = 'on';
 }
