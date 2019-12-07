@@ -7,9 +7,6 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
 use AOE\Crawler\Event\EventDispatcher;
 use AOE\Crawler\Event\EventObserverInterface;
 
-/**
- * Class EventsHelper
- */
 class EventsHelper implements EventObserverInterface
 {
     public static $called_foo = 0;

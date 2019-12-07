@@ -31,9 +31,6 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
 use AOE\Crawler\Domain\Model\Queue;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
-/**
- * Class QueueTest
- */
 class QueueTest extends UnitTestCase
 {
     /**

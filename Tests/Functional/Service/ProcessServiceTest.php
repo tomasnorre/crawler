@@ -32,9 +32,6 @@ use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Service\ProcessService;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 
-/**
- * Class ProcessServiceTest
- */
 class ProcessServiceTest extends FunctionalTestCase
 {
     /**

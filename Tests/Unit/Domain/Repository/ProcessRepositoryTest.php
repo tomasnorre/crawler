@@ -7,9 +7,6 @@ namespace AOE\Crawler\Tests\Unit\Domain\Repository;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
-/**
- * Class ProcessRepositoryTest
- */
 class ProcessRepositoryTest extends UnitTestCase
 {
     /**

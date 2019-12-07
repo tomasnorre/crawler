@@ -31,9 +31,6 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
 use AOE\Crawler\Domain\Model\Process;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
-/**
- * Class Process
- */
 class ProcessTest extends UnitTestCase
 {
     /**

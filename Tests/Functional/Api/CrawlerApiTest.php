@@ -36,9 +36,6 @@ use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
-/**
- * Class CrawlerApiTest
- */
 class CrawlerApiTest extends FunctionalTestCase
 {
     use SiteBasedTestTrait;

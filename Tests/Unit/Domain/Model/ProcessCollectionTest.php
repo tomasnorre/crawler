@@ -33,9 +33,6 @@ use AOE\Crawler\Domain\Model\ProcessCollection;
 use AOE\Crawler\Utility\BackendUtility;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
-/**
- * Class ProcessCollectionTest
- */
 class ProcessCollectionTest extends UnitTestCase
 {
     /**

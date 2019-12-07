@@ -1,147 +1,150 @@
 language: php
 
 notifications:
-  email:
-    recipients:
-      - tomas.mikkelsen@aoe.com
-      - stefan.rotsch@aoe.com
-    on_success: never
-    on_failure: never
+    email:
+        recipients:
+            - tomas.mikkelsen@aoe.com
+            - stefan.rotsch@aoe.com
+        on_success: never
+        on_failure: never
 
 sudo: false
 
 before_install:
-  # turn off XDebug for speed up
-  - phpenv config-rm xdebug.ini || return 0
+    # turn off XDebug for speed up
+    - phpenv config-rm xdebug.ini || return 0
 
 addons:
-  apt:
-    packages:
-      - parallel
+    apt:
+        packages:
+            - parallel
 
 php:
-  - '7.2'
-  - '7.3'
+    - '7.2'
+    - '7.3'
 
 env:
-  # tested TYPO3 version
-  - TYPO3_VERSION=^9.5
-  - TYPO3_VERSION=^10.2
-  - TYPO3_VERSION=dev-master
+    # tested TYPO3 version
+    - TYPO3_VERSION=^9.5
+    - TYPO3_VERSION=^10.2
+    - TYPO3_VERSION=dev-master
 
 services:
-  - mysql
+    - mysql
 
 cache:
-  directories:
-    - $HOME/.composer/cache
+    directories:
+        - $HOME/.composer/cache
+
+install:
+    - composer install
 
 before_script:
-  # Installs nimut/typo3-complete
-  - travis_wait 30 composer require --dev nimut/typo3-complete=$TYPO3_VERSION
-  - export "TYPO3_PATH_WEB"=$PWD/.Build/Web;
-  # Locating UnitTests.xml
-  - export "UNIT_XML"='.Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml'
-  # Location FunctionalTests.xml
-  - export "FUNCTIONAL_XML"='.Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml'
-  # Symlink TYPO3-Core
-  - ln -nfs .Build/vendor/typo3/cms/typo3 typo3
+    # Installs nimut/typo3-complete
+    - travis_wait 30 composer require --dev nimut/typo3-complete=$TYPO3_VERSION
+    - export "TYPO3_PATH_WEB"=$PWD/.Build/Web;
+    # Locating UnitTests.xml
+    - export "UNIT_XML"='.Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml'
+    # Location FunctionalTests.xml
+    - export "FUNCTIONAL_XML"='.Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml'
+    # Symlink TYPO3-Core
+    - ln -nfs .Build/vendor/typo3/cms/typo3 typo3
 
 script:
-  # run tests by default
-  # unit tests
-  - .Build/bin/phpunit --colors -c $UNIT_XML Tests/Unit
-  # functional tests
-  - export typo3DatabaseName="typo3"
-  - export typo3DatabaseHost="localhost"
-  - export typo3DatabaseUsername="root"
-  - export typo3DatabasePassword=""
-  - .Build/bin/phpunit --whitelist Classes --colors -c $FUNCTIONAL_XML Tests/Functional
+    # run tests by default
+    # unit tests
+    - .Build/bin/phpunit --colors -c $UNIT_XML Tests/Unit
+    # functional tests
+    - export typo3DatabaseName="typo3"
+    - export typo3DatabaseHost="localhost"
+    - export typo3DatabaseUsername="root"
+    - export typo3DatabasePassword=""
+    - .Build/bin/phpunit --whitelist Classes --colors -c $FUNCTIONAL_XML Tests/Functional
 
 jobs:
-  allow_failures:
-    - env: TYPO3_VERSION=^10.2
-    - env: TYPO3_VERSION=dev-master
-    - name: "PHPStan"
-  include:
-    -
-      stage: test
-      name: "PHP Lint"
-      script:
-        - find . -name \*.php ! -path "./.Build/*" ! -path "./scripts/*" ! -path "./typo3_src/*" | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \;
+    allow_failures:
+        - env: TYPO3_VERSION=^10.2
+        - env: TYPO3_VERSION=dev-master
+        - name: "PHPStan"
+    include:
+        -
+            stage: test
+            name: "PHP Lint"
+            script:
+                - find . -name \*.php ! -path "./.Build/*" ! -path "./scripts/*" ! -path "./typo3_src/*" | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \;
 
-    -
-      stage: test
-      name: "Tests Coverage"
-      before_install:
-        - echo "keep xdebug"
-      script:
-        - export typo3DatabaseName="typo3";
-        - export typo3DatabaseHost="localhost";
-        - export typo3DatabaseUsername="root";
-        - export typo3DatabasePassword="";
+        -
+            stage: test
+            name: "Tests Coverage"
+            before_install:
+                - echo "keep xdebug"
+            script:
+                - export typo3DatabaseName="typo3";
+                - export typo3DatabaseHost="localhost";
+                - export typo3DatabaseUsername="root";
+                - export typo3DatabasePassword="";
 
-        # Unit tests
-        - .Build/bin/phpunit --whitelist Classes --coverage-clover=unittest-coverage.clover --colors -c $UNIT_XML Tests/Unit
+                # Unit tests
+                - .Build/bin/phpunit --whitelist Classes --coverage-clover=unittest-coverage.clover --colors -c $UNIT_XML Tests/Unit
 
-        # Functional tests
-        - .Build/bin/phpunit --whitelist Classes --coverage-clover=functional-coverage.clover --colors -c $FUNCTIONAL_XML Tests/Functional
+                # Functional tests
+                - .Build/bin/phpunit --whitelist Classes --coverage-clover=functional-coverage.clover --colors -c $FUNCTIONAL_XML Tests/Functional
 
-      after_script:
-        - wget https://scrutinizer-ci.com/ocular.phar
-        - php ocular.phar code-coverage:upload --format=php-clover unittest-coverage.clover
-        - php ocular.phar code-coverage:upload --format=php-clover functional-coverage
+            after_script:
+                - wget https://scrutinizer-ci.com/ocular.phar
+                - php ocular.phar code-coverage:upload --format=php-clover unittest-coverage.clover
+                - php ocular.phar code-coverage:upload --format=php-clover functional-coverage
 
-    # Static Analysis
-    -
-      stage: static
-      name: "Rector CI"
-      php: 7.2
-      env:
-        - TYPO3_VERSION=^9.5
-      script:
-        - .Build/bin/rector process --dry-run --config rector-ci.yaml
+        # Static Analysis
+        -
+            stage: static
+            name: "Rector CI"
+            php: 7.2
+            env:
+                - TYPO3_VERSION=^9.5
+            script:
+                - .Build/bin/rector process --dry-run --config rector-ci.yaml
 
-    -
-      stage: static
-      name: "Coding Standards"
-      php: 7.2
-      env:
-        - TYPO3_VERSION=^9.5
-      script:
-        - .Build/bin/ecs check Classes Configuration Tests
+        -
+            stage: static
+            name: "Coding Standards"
+            php: 7.2
+            env:
+                - TYPO3_VERSION=^9.5
+            script:
+                - .Build/bin/ecs check Classes Configuration Tests
 
-    -
-      stage: static
-      name: "PHPStan"
-      php: 7.2
-      env:
-        - TYPO3_VERSION=^9.5
-      script:
-        - .Build/bin/phpstan analyse
+        -
+            stage: static
+            name: "PHPStan"
+            php: 7.2
+            env:
+                - TYPO3_VERSION=^9.5
+            script:
+                - .Build/bin/phpstan analyse
 
-    # Deploy
-    -
-      stage: deploy
-      name: "Ship to TER"
-      if: tag IS present
-      php: 7.0
-      install: skip
-      before_script: skip
-      script:
-        - |
-          if [ -n "$TYPO3_ORG_USERNAME" ] && [ -n "$TYPO3_ORG_PASSWORD" ]; then
-            echo -e "Preparing upload of release ${TRAVIS_TAG} to TER\n";
-            # Install ter client
-            composer global require helhum/ter-client
-            # Build extension files
-            composer extension-release
-            # Upload
-            TAG_MESSAGE=`git log -1 --pretty=%B`
-            echo "Tag-Message: ${TAG_MESSAGE}"
-            echo "Uploading release ${TRAVIS_TAG} to TER"
-            $HOME/.composer/vendor/bin/ter-client upload aoe_ipauth . -u "$TYPO3_ORG_USERNAME" -p "$TYPO3_ORG_PASSWORD" -m "$TAG_MESSAGE"
-          fi;
+        # Deploy
+        -
+            stage: deploy
+            name: "Ship to TER"
+            if: tag IS present
+            php: 7.0
+            install: skip
+            before_script: skip
+            script:
+                - |
+                    if [ -n "$TYPO3_ORG_USERNAME" ] && [ -n "$TYPO3_ORG_PASSWORD" ]; then
+                      echo -e "Preparing upload of release ${TRAVIS_TAG} to TER\n";
+                      # Install ter client
+                      composer global require helhum/ter-client
+                      # Build extension files
+                      composer extension-release
+                      # Upload
+                      TAG_MESSAGE=`git log -1 --pretty=%B`
+                      echo "Tag-Message: ${TAG_MESSAGE}"
+                      echo "Uploading release ${TRAVIS_TAG} to TER"
+                      $HOME/.composer/vendor/bin/ter-client upload aoe_ipauth . -u "$TYPO3_ORG_USERNAME" -p "$TYPO3_ORG_PASSWORD" -m "$TAG_MESSAGE"
+                    fi;
 
 matrix:
-  fast_finish: true
+    fast_finish: true

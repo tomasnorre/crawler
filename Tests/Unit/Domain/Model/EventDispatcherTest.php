@@ -7,9 +7,6 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
 use AOE\Crawler\Event\EventDispatcher;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
-/**
- * Class EventDispatcherTest
- */
 class EventDispatcherTest extends UnitTestCase
 {
     /**

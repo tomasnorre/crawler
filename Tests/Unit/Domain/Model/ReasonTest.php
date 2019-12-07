@@ -7,9 +7,6 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
 use AOE\Crawler\Domain\Model\Reason;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
-/**
- * Class ReasonTest
- */
 class ReasonTest extends UnitTestCase
 {
     protected function setUp(): void

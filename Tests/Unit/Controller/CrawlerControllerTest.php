@@ -8,9 +8,6 @@ use AOE\Crawler\Controller\CrawlerController;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Psr\Log\NullLogger;
 
-/**
- * Class CrawlerLibTest
- */
 class CrawlerControllerTest extends UnitTestCase
 {
     /**

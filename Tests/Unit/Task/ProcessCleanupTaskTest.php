@@ -6,9 +6,6 @@ namespace AOE\Crawler\Tests\Unit\Task;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
-/**
- * Class ProcessCleanupTaskTest
- */
 class ProcessCleanupTaskTest extends UnitTestCase
 {
     /**
