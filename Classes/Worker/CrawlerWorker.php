@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 namespace AOEPeople\Crawler\Worker;
 
+use AOE\Crawler\Controller\CrawlerController;
+use AOEPeople\Crawler\Hooks\IndexedSearchCrawlerFilesHook;
+use TYPO3\CMS\Core\TimeTracker\TimeTracker;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\IndexedSearch\Worker\WorkerInterface;
+
 /*
  * This file is part of the TYPO3 CMS project.
  *
@@ -17,21 +23,8 @@ namespace AOEPeople\Crawler\Worker;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Controller\CrawlerController;
-use AOEPeople\Crawler\Hooks\IndexedSearchCrawlerFilesHook;
-use TYPO3\CMS\Core\TimeTracker\TimeTracker;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\IndexedSearch\Worker\WorkerInterface;
-
 class CrawlerWorker implements WorkerInterface
 {
-    /**
-     * CrawlerWorker constructor.
-     */
-    public function __construct()
-    {
-    }
-
     /**
      * @param object $caller Method caller
      * @param array $conf Indexed search configuration

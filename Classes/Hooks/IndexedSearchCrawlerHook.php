@@ -53,9 +53,6 @@ class IndexedSearchCrawlerHook
      */
     public $callBack = self::class;
 
-    /**
-     * The constructor
-     */
     public function __construct()
     {
         // To make sure the backend charset is available:

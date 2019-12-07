@@ -74,7 +74,7 @@ class CrawlerController implements LoggerAwareInterface
     public const CLI_STATUS_POLLABLE_PROCESSED = 8;
 
     /**
-     * @var integer
+     * @var int
      */
     public $setID = 0;
 
@@ -126,7 +126,7 @@ class CrawlerController implements LoggerAwareInterface
     /**
      * Mount Point
      *
-     * @var boolean
+     * @var bool
      */
     public $MP = false;
 
@@ -183,12 +183,12 @@ class CrawlerController implements LoggerAwareInterface
     private $backendUser;
 
     /**
-     * @var integer
+     * @var int
      */
     private $scheduledTime = 0;
 
     /**
-     * @var integer
+     * @var int
      */
     private $reqMinute = 0;
 

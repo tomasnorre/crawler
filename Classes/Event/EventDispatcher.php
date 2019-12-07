@@ -59,9 +59,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class EventDispatcher
 {
     /**
-     * @var array
+     * @var mixed[]
      */
-    protected $observers;
+    protected $observers = [];
 
     /**
      * @var EventDispatcher
@@ -73,7 +73,6 @@ class EventDispatcher
      */
     protected function __construct()
     {
-        $this->observers = [];
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/domain/events/class.tx_crawler_domain_events_dispatcher.php']['registerObservers'])) {
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/domain/events/class.tx_crawler_domain_events_dispatcher.php']['registerObservers'] as $classRef) {
                 $hookObj = &GeneralUtility::makeInstance($classRef);

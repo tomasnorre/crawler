@@ -60,7 +60,7 @@ class CrawlerApi
     protected $tableName = 'tx_crawler_queue';
 
     /**
-     * @var CrawlerController|object
+     * @var CrawlerController
      */
     private $crawlerController;
 

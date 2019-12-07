@@ -37,7 +37,7 @@ use TYPO3\CMS\Scheduler\Task\AbstractTask;
 class CrawlMultiProcessTask extends AbstractTask
 {
     /**
-     * @var integer
+     * @var int
      */
     public $timeOut;
 

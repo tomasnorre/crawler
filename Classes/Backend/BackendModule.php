@@ -106,7 +106,7 @@ class BackendModule
     /**
      * If true the user requested a CSV export of the queue
      *
-     * @var boolean
+     * @var bool
      */
     protected $CSVExport = false;
 
@@ -125,7 +125,7 @@ class BackendModule
     /**
      * Indicate that an flash message with an error is present.
      *
-     * @var boolean
+     * @var bool
      */
     protected $isErrorDetected = false;
 

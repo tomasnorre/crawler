@@ -30,8 +30,6 @@ namespace AOE\Crawler\Event;
 
 /**
  * Interface EventObserverInterface
- *
- * @package AOE\Crawler\Event
  */
 interface EventObserverInterface
 {

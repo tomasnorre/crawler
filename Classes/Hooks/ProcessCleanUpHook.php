@@ -156,7 +156,7 @@ class ProcessCleanUpHook
      */
     private function createResponseArray($string)
     {
-        $responseArray = GeneralUtility::trimExplode(' ', $string, true);
+        $responseArray = (array) GeneralUtility::trimExplode(' ', $string, true);
         return array_values($responseArray);
     }
 

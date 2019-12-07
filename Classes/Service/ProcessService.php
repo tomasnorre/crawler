@@ -41,17 +41,17 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 class ProcessService
 {
     /**
-     * @var integer
+     * @var int
      */
     private $timeToLive;
 
     /**
-     * @var integer
+     * @var int
      */
     private $countInARun;
 
     /**
-     * @var integer
+     * @var int
      */
     private $processLimit;
 
@@ -71,13 +71,10 @@ class ProcessService
     private $processRepository;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $verbose;
 
-    /**
-     * the constructor
-     */
     public function __construct()
     {
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
