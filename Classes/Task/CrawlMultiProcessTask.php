@@ -32,9 +32,6 @@ use AOE\Crawler\Service\ProcessService;
 use TYPO3\CMS\Scheduler\Task\AbstractTask;
 
 /**
- * Class CrawlMultiProcessTask
- *
- * @package AOE\Crawler\Task
  * @codeCoverageIgnore
  */
 class CrawlMultiProcessTask extends AbstractTask

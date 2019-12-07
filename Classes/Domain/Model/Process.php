@@ -33,11 +33,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
-/**
- * Class Process
- *
- * @package AOE\Crawler\Domain\Model
- */
 class Process extends AbstractEntity
 {
     public const STATE_RUNNING = 'running';

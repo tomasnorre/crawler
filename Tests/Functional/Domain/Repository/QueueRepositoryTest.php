@@ -36,8 +36,6 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class QueryRepositoryTest
- *
- * @package AOE\Crawler\Tests\Functional\Domain\Repository
  */
 class QueueRepositoryTest extends FunctionalTestCase
 {

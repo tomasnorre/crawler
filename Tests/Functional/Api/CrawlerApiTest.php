@@ -38,8 +38,6 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class CrawlerApiTest
- *
- * @package AOE\Crawler\Tests\Functional\Api
  */
 class CrawlerApiTest extends FunctionalTestCase
 {

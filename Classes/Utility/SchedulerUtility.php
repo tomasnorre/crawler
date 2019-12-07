@@ -33,8 +33,6 @@ use AOE\Crawler\Task\CrawlMultiProcessTaskAdditionalFieldProvider;
 use AOE\Crawler\Task\ProcessCleanupTask;
 
 /**
- * Class SchedulerUtility
- *
  * @codeCoverageIgnore
  */
 class SchedulerUtility

@@ -28,6 +28,8 @@ namespace AOE\Crawler\Tests\Functional\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+namespace AOE\Crawler\Tests\Functional\Controller;
+
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
@@ -36,8 +38,6 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class CrawlerControllerTest
- *
- * @package AOE\Crawler\Tests\Functional\Controller
  */
 class CrawlerControllerTest extends FunctionalTestCase
 {

@@ -25,8 +25,6 @@ namespace AOE\Crawler\Utility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 /**
- * Class TcaUtility
- *
  * @codeCoverageIgnore
  */
 class TcaUtility

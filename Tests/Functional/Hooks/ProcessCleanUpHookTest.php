@@ -37,8 +37,6 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class ProcessCleanUpHookTest
- *
- * @package AOE\Crawler\Tests\Functional\Hooks
  */
 class ProcessCleanUpHookTest extends FunctionalTestCase
 {

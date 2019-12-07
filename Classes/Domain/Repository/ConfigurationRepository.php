@@ -36,9 +36,6 @@ use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\HiddenRestriction;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-/**
- * Class ConfigurationRepository
- */
 class ConfigurationRepository extends AbstractRepository
 {
     /**

@@ -32,8 +32,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
 /**
- * Class SignalSlotUtility
- *
  * @codeCoverageIgnore
  */
 class SignalSlotUtility

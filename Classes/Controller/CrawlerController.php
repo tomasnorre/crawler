@@ -59,11 +59,6 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Frontend\Page\CacheHashCalculator;
 use TYPO3\CMS\Frontend\Page\PageRepository;
 
-/**
- * Class CrawlerController
- *
- * @package AOE\Crawler\Controller
- */
 class CrawlerController implements LoggerAwareInterface
 {
     use LoggerAwareTrait;

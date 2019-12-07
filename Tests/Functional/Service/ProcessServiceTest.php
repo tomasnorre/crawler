@@ -34,8 +34,6 @@ use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 
 /**
  * Class ProcessServiceTest
- *
- * @package AOE\Crawler\Tests\Unit\Domain\Model
  */
 class ProcessServiceTest extends FunctionalTestCase
 {

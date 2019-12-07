@@ -30,7 +30,7 @@ services:
     PhpCsFixer\Fixer\Phpdoc\AlignMultilineCommentFixer:
         comment_type: 'phpdocs_only'
     PhpCsFixer\Fixer\Phpdoc\GeneralPhpdocAnnotationRemoveFixer:
-        annotations: ['author', 'since']
+        annotations: ['author', 'since', 'package']
 
     # use statements
     PhpCsFixer\Fixer\Import\NoLeadingImportSlashFixer: null

@@ -33,7 +33,6 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
 
 /**
  * Class QueueTest
- * @package AOE\Crawler\Tests\Unit\Domain\Model
  */
 class QueueTest extends UnitTestCase
 {

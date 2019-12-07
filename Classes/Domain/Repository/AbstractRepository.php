@@ -32,11 +32,6 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
-/**
- * Class AbstractRepository
- *
- * @package AOE\Crawler\Domain\Repository
- */
 abstract class AbstractRepository extends Repository
 {
     /**

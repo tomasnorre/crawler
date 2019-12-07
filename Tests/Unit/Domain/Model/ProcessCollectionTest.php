@@ -35,8 +35,6 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
 
 /**
  * Class ProcessCollectionTest
- *
- * @package AOE\Crawler\Tests\Unit\Domain\Model
  */
 class ProcessCollectionTest extends UnitTestCase
 {

@@ -35,8 +35,6 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class ProcessRepositoryTest
- *
- * @package AOE\Crawler\Tests\Functional\Domain\Repository
  */
 class ProcessRepositoryTest extends FunctionalTestCase
 {
