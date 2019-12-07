@@ -35,7 +35,6 @@ class TcaUtility
      * Get crawler processing instructions.
      * This function is called as a itemsProcFunc in tx_crawler_configuration.processing_instruction_filter
      *
-     * @param array $configuration
      * @return array
      */
     public function getProcessingInstructions(array $configuration)

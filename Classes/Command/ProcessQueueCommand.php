@@ -41,10 +41,72 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 class ProcessQueueCommand extends Command
 {
     public const CLI_STATUS_NOTHING_PROCCESSED = 0;
+
     public const CLI_STATUS_REMAIN = 1; //queue not empty
+
     public const CLI_STATUS_PROCESSED = 2; //(some) queue items where processed
+
     public const CLI_STATUS_ABORTED = 4; //instance didn't finish
+
     public const CLI_STATUS_POLLABLE_PROCESSED = 8;
+
+    /**
+     * Crawler Command - Crawling the URLs from the queue
+     *
+     * Examples:
+     *
+     * --- Will trigger the crawler which starts to process the queue entries
+     * $ typo3 crawler:crawlQueue
+     *
+     * @return int
+     */
+    public function execute(InputInterface $input, OutputInterface $output)
+    {
+        $amount = $input->getOption('amount');
+        $sleeptime = $input->getOption('sleeptime');
+        $sleepafter = $input->getOption('sleepafter');
+
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+
+        $result = self::CLI_STATUS_NOTHING_PROCCESSED;
+
+        /** @var CrawlerController $crawlerController */
+        $crawlerController = $objectManager->get(CrawlerController::class);
+        /** @var QueueRepository $queueRepository */
+        $queueRepository = $objectManager->get(QueueRepository::class);
+
+        if (! $crawlerController->getDisabled() && $crawlerController->CLI_checkAndAcquireNewProcess($crawlerController->CLI_buildProcessId())) {
+            $countInARun = $amount ? intval($amount) : $crawlerController->extensionSettings['countInARun'];
+            $sleepAfterFinish = $sleeptime ? intval($sleeptime) : $crawlerController->extensionSettings['sleepAfterFinish'];
+            $sleepTime = $sleepafter ? intval($sleepafter) : $crawlerController->extensionSettings['sleepTime'];
+
+            try {
+                // Run process:
+                $result = $crawlerController->CLI_run($countInARun, $sleepTime, $sleepAfterFinish);
+            } catch (\Throwable $e) {
+                $output->writeln('<warning>' . get_class($e) . ': ' . $e->getMessage() . '</warning>');
+                $result = self::CLI_STATUS_ABORTED;
+            }
+
+            // Cleanup
+            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tx_crawler_process');
+            $queryBuilder
+                ->delete('tx_crawler_process')
+                ->where(
+                    $queryBuilder->expr()->eq('assigned_items_count', 0)
+                )
+                ->execute();
+
+            $crawlerController->CLI_releaseProcesses($crawlerController->CLI_buildProcessId());
+
+            $output->writeln('<info>Unprocessed Items remaining:' . $queueRepository->countUnprocessedItems() . ' (' . $crawlerController->CLI_buildProcessId() . ')</info>');
+            $result |= ($queueRepository->countUnprocessedItems() > 0 ? self::CLI_STATUS_REMAIN : self::CLI_STATUS_NOTHING_PROCCESSED);
+        } else {
+            $result |= self::CLI_STATUS_ABORTED;
+        }
+
+        return $output->writeln($result);
+    }
 
     protected function configure(): void
     {
@@ -78,63 +140,5 @@ class ProcessQueueCommand extends Command
             InputOption::VALUE_OPTIONAL,
             'Amount of seconds which the system should use to relax after all crawls are done.'
         );
-    }
-
-    /**
-     * Crawler Command - Crawling the URLs from the queue
-     *
-     * Examples:
-     *
-     * --- Will trigger the crawler which starts to process the queue entries
-     * $ typo3 crawler:crawlQueue
-     *
-     * @return int
-     */
-    public function execute(InputInterface $input, OutputInterface $output)
-    {
-        $amount = $input->getOption('amount');
-        $sleeptime = $input->getOption('sleeptime');
-        $sleepafter = $input->getOption('sleepafter');
-
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-
-        $result = self::CLI_STATUS_NOTHING_PROCCESSED;
-
-        /** @var CrawlerController $crawlerController */
-        $crawlerController = $objectManager->get(CrawlerController::class);
-        /** @var QueueRepository $queueRepository */
-        $queueRepository = $objectManager->get(QueueRepository::class);
-
-        if (!$crawlerController->getDisabled() && $crawlerController->CLI_checkAndAcquireNewProcess($crawlerController->CLI_buildProcessId())) {
-            $countInARun = $amount ? intval($amount) : $crawlerController->extensionSettings['countInARun'];
-            $sleepAfterFinish = $sleeptime ? intval($sleeptime) : $crawlerController->extensionSettings['sleepAfterFinish'];
-            $sleepTime = $sleepafter ? intval($sleepafter) : $crawlerController->extensionSettings['sleepTime'];
-
-            try {
-                // Run process:
-                $result = $crawlerController->CLI_run($countInARun, $sleepTime, $sleepAfterFinish);
-            } catch (\Throwable $e) {
-                $output->writeln('<warning>' . get_class($e) . ': ' . $e->getMessage() . '</warning>');
-                $result = self::CLI_STATUS_ABORTED;
-            }
-
-            // Cleanup
-            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tx_crawler_process');
-            $queryBuilder
-                ->delete('tx_crawler_process')
-                ->where(
-                    $queryBuilder->expr()->eq('assigned_items_count', 0)
-                )
-                ->execute();
-
-            $crawlerController->CLI_releaseProcesses($crawlerController->CLI_buildProcessId());
-
-            $output->writeln('<info>Unprocessed Items remaining:' . $queueRepository->countUnprocessedItems() . ' (' . $crawlerController->CLI_buildProcessId() . ')</info>');
-            $result |= ($queueRepository->countUnprocessedItems() > 0 ? self::CLI_STATUS_REMAIN : self::CLI_STATUS_NOTHING_PROCCESSED);
-        } else {
-            $result |= self::CLI_STATUS_ABORTED;
-        }
-
-        return $output->writeln($result);
     }
 }

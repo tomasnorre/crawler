@@ -42,6 +42,7 @@ class SignalSlotUtility
      * Predefined signals
      */
     public const SIGNNAL_QUEUEITEM_PREPROCESS = 'queueItemPreProcess';
+
     public const SIGNNAL_QUEUEITEM_POSTPROCESS = 'queueItemPostProcess';
 
     /**
@@ -49,8 +50,6 @@ class SignalSlotUtility
      *
      * @param string $class
      * @param string $signal
-     * @param array $payload
-     * @return void
      */
     public static function emitSignal($class, $signal, array $payload = []): void
     {

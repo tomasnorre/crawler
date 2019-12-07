@@ -114,7 +114,6 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
      *
      * --- Put entries for re-caching pages from page 7 into queue, 4 every minute.
      * $ typo3 crawler:buildQueue --page 7 --depth 0 --conf defaultConfiguration --mode queue --number 4
-     *
      */
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
@@ -133,7 +132,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
 
         $configurationKeys = $this->getConfigurationKeys($input->getOption('conf'));
 
-        if (!is_array($configurationKeys)) {
+        if (! is_array($configurationKeys)) {
             $configurations = $crawlerController->getUrlsForPageId($pageId);
             if (is_array($configurations)) {
                 $configurationKeys = array_keys($configurations);
@@ -207,6 +206,6 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
     private function getConfigurationKeys($conf)
     {
         $parameter = trim($conf);
-        return ($parameter != '' ? GeneralUtility::trimExplode(',', $parameter) : []);
+        return ($parameter !== '' ? GeneralUtility::trimExplode(',', $parameter) : []);
     }
 }

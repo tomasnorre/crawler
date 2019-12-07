@@ -30,7 +30,6 @@ namespace AOE\Crawler\Domain\Model;
 
 /**
  * Class Reason
- *
  */
 class Reason
 {
@@ -40,7 +39,9 @@ class Reason
      * Convention for own states: <extensionkey>_<reason>
      */
     public const REASON_DEFAULT = 'crawler_default_reason';
+
     public const REASON_GUI_SUBMIT = 'crawler_gui_submit_reason';
+
     public const REASON_CLI_SUBMIT = 'crawler_cli_submit_reason';
 
     /**
@@ -60,7 +61,6 @@ class Reason
      * Set uid
      *
      * @param int uid
-     * @return void
      */
     public function setUid($uid): void
     {
@@ -110,6 +110,7 @@ class Reason
     {
         return $this->row['cruser_id'];
     }
+
     /**
      * Method to set the type of the reason for this reason instance (see constances)
      *

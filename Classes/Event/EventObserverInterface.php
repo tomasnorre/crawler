@@ -39,7 +39,6 @@ interface EventObserverInterface
      * This method should be implemented by the observer to register events
      * that should be forwarded to the observer
      *
-     * @param EventDispatcher $dispatcher
      * @return boolean
      */
     public function registerObservers(EventDispatcher $dispatcher);

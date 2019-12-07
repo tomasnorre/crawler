@@ -84,7 +84,6 @@ It will remove queue entries and perform a cleanup.' . chr(10) . chr(10) .
      *
      * --- Remove all pending queue-entries for all pages
      * $ typo3 crawler:flushQueue --mode pending
-     *
      */
     protected function execute(InputInterface $input, OutputInterface $output): void
     {

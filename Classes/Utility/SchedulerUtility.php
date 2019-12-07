@@ -41,8 +41,6 @@ class SchedulerUtility
 {
     /**
      * @param string $extKey
-     *
-     * @return void
      */
     public static function registerSchedulerTasks($extKey): void
     {

@@ -33,7 +33,7 @@ class IndexedSearchCrawlerFilesHook
      */
     public function crawler_execute($params)
     {
-        if (!is_array($params['conf'])) {
+        if (! is_array($params['conf'])) {
             return;
         }
         // Initialize the indexer class:

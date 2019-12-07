@@ -181,17 +181,11 @@ class Configuration extends AbstractEntity
         $this->baseUrl = $baseUrl;
     }
 
-    /**
-     * @return mixed
-     */
     public function getPidsOnly()
     {
         return $this->pidsonly;
     }
 
-    /**
-     * @param mixed $pidsOnly
-     */
     public function setPidsOnly($pidsOnly): void
     {
         $this->pidsonly = $pidsOnly;

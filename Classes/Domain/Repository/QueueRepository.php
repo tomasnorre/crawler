@@ -68,10 +68,6 @@ class QueueRepository extends AbstractRepository
 
     /**
      * This method is used to find the youngest entry for a given process.
-     *
-     * @param Process $process
-     *
-     * @return array
      */
     public function findYoungestEntryForProcess(Process $process): array
     {
@@ -80,10 +76,6 @@ class QueueRepository extends AbstractRepository
 
     /**
      * This method is used to find the oldest entry for a given process.
-     *
-     * @param Process $process
-     *
-     * @return array
      */
     public function findOldestEntryForProcess(Process $process): array
     {
@@ -91,37 +83,9 @@ class QueueRepository extends AbstractRepository
     }
 
     /**
-     * This internal helper method is used to create an instance of an entry object
-     *
-     * @param Process $process
-     * @param string $orderByField first matching item will be returned as object
-     * @param string $orderBySorting sorting direction
-     *
-     * @return array
-     */
-    protected function getFirstOrLastObjectByProcess($process, $orderByField, $orderBySorting = 'ASC'): array
-    {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
-        $first = $queryBuilder
-            ->select('*')
-            ->from($this->tableName)
-            ->where(
-                $queryBuilder->expr()->eq('process_id_completed', $queryBuilder->createNamedParameter($process->getProcessId())),
-                $queryBuilder->expr()->gt('exec_time', 0)
-            )
-            ->setMaxResults(1)
-            ->addOrderBy($orderByField, $orderBySorting)
-            ->execute()->fetch(0);
-
-        return $first ?: [];
-    }
-
-    /**
      * Counts all executed items of a process.
      *
      * @param Process $process
-     *
-     * @return int
      */
     public function countExecutedItemsByProcess($process): int
     {
@@ -142,8 +106,6 @@ class QueueRepository extends AbstractRepository
      * Counts items of a process which yet have not been processed/executed
      *
      * @param Process $process
-     *
-     * @return int
      */
     public function countNonExecutedItemsByProcess($process): int
     {
@@ -162,8 +124,6 @@ class QueueRepository extends AbstractRepository
 
     /**
      * get items which have not been processed yet
-     *
-     * @return array
      */
     public function getUnprocessedItems(): array
     {
@@ -180,8 +140,6 @@ class QueueRepository extends AbstractRepository
 
     /**
      * Count items which have not been processed yet
-     *
-     * @return int
      */
     public function countUnprocessedItems(): int
     {
@@ -191,8 +149,6 @@ class QueueRepository extends AbstractRepository
     /**
      * This method can be used to count all queue entrys which are
      * scheduled for now or a earlier date.
-     *
-     * @return int
      */
     public function countAllPendingItems(): int
     {
@@ -213,8 +169,6 @@ class QueueRepository extends AbstractRepository
     /**
      * This method can be used to count all queue entrys which are
      * scheduled for now or a earlier date and are assigned to a process.
-     *
-     * @return int
      */
     public function countAllAssignedPendingItems(): int
     {
@@ -235,8 +189,6 @@ class QueueRepository extends AbstractRepository
     /**
      * This method can be used to count all queue entrys which are
      * scheduled for now or a earlier date and are not assigned to a process.
-     *
-     * @return int
      */
     public function countAllUnassignedPendingItems(): int
     {
@@ -256,8 +208,6 @@ class QueueRepository extends AbstractRepository
 
     /**
      * Count pending queue entries grouped by configuration key
-     *
-     * @return array
      */
     public function countPendingItemsGroupedByConfigurationKey(): array
     {
@@ -305,8 +255,6 @@ class QueueRepository extends AbstractRepository
     /**
      * Get total queue entries by configuration
      *
-     * @param array $setIds
-     *
      * @return array totals by configuration (keys)
      */
     public function getTotalQueueEntriesByConfiguration(array $setIds): array
@@ -337,8 +285,6 @@ class QueueRepository extends AbstractRepository
      * Get the timestamps of the last processed entries
      *
      * @param int $limit
-     *
-     * @return array
      */
     public function getLastProcessedEntriesTimestamps($limit = 100): array
     {
@@ -362,8 +308,6 @@ class QueueRepository extends AbstractRepository
      * Get the last processed entries
      *
      * @param int $limit
-     *
-     * @return array
      */
     public function getLastProcessedEntries($limit = 100): array
     {
@@ -421,12 +365,10 @@ class QueueRepository extends AbstractRepository
      * @param bool $unprocessed_only
      * @param bool $timed_only
      * @param bool $timestamp
-     *
-     * @return bool
      */
     public function isPageInQueue($uid, $unprocessed_only = true, $timed_only = false, $timestamp = false): bool
     {
-        if (!MathUtility::canBeInterpretedAsInteger($uid)) {
+        if (! MathUtility::canBeInterpretedAsInteger($uid)) {
             throw new \InvalidArgumentException('Invalid parameter type', 1468931945);
         }
 
@@ -440,19 +382,19 @@ class QueueRepository extends AbstractRepository
                 $queryBuilder->expr()->eq('page_id', $queryBuilder->createNamedParameter($uid, \PDO::PARAM_INT))
             );
 
-        if (false !== $unprocessed_only) {
+        if ($unprocessed_only !== false) {
             $statement->andWhere(
                 $queryBuilder->expr()->eq('exec_time', 0)
             );
         }
 
-        if (false !== $timed_only) {
+        if ($timed_only !== false) {
             $statement->andWhere(
                 $queryBuilder->expr()->neq('scheduled', 0)
             );
         }
 
-        if (false !== $timestamp) {
+        if ($timestamp !== false) {
             $statement->andWhere(
                 $queryBuilder->expr()->eq('scheduled', $queryBuilder->createNamedParameter($timestamp, \PDO::PARAM_INT))
             );
@@ -463,7 +405,7 @@ class QueueRepository extends AbstractRepository
             ->execute()
             ->fetchColumn(0);
 
-        if (false !== $count && $count > 0) {
+        if ($count !== false && $count > 0) {
             $isPageInQueue = true;
         }
 
@@ -476,9 +418,6 @@ class QueueRepository extends AbstractRepository
      *
      * @param int $uid uid of the page
      * @param boolean $show_unprocessed only respect unprocessed pages
-     *
-     * @return bool
-     *
      */
     public function isPageInQueueTimed($uid, $show_unprocessed = true): bool
     {
@@ -486,9 +425,6 @@ class QueueRepository extends AbstractRepository
         return $this->isPageInQueue($uid, $show_unprocessed);
     }
 
-    /**
-     * @return array
-     */
     public function getAvailableSets(): array
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
@@ -520,5 +456,29 @@ class QueueRepository extends AbstractRepository
             ->execute()
             ->fetch();
         return is_array($queueRec) ? $queueRec : null;
+    }
+
+    /**
+     * This internal helper method is used to create an instance of an entry object
+     *
+     * @param Process $process
+     * @param string $orderByField first matching item will be returned as object
+     * @param string $orderBySorting sorting direction
+     */
+    protected function getFirstOrLastObjectByProcess($process, $orderByField, $orderBySorting = 'ASC'): array
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $first = $queryBuilder
+            ->select('*')
+            ->from($this->tableName)
+            ->where(
+                $queryBuilder->expr()->eq('process_id_completed', $queryBuilder->createNamedParameter($process->getProcessId())),
+                $queryBuilder->expr()->gt('exec_time', 0)
+            )
+            ->setMaxResults(1)
+            ->addOrderBy($orderByField, $orderBySorting)
+            ->execute()->fetch(0);
+
+        return $first ?: [];
     }
 }

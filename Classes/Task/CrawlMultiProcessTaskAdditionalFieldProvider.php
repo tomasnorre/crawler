@@ -45,20 +45,18 @@ class CrawlMultiProcessTaskAdditionalFieldProvider implements AdditionalFieldPro
     /**
      * Gets additional fields to render in the form to add/edit a task
      *
-     * @param array $taskInfo
      * @param CrawlMultiProcessTask $task
-     * @param SchedulerModuleController $schedulerModule
      * @return array
      */
     public function getAdditionalFields(array &$taskInfo, $task, SchedulerModuleController $schedulerModule)
     {
         $additionalFields = [];
 
-        if ($schedulerModule->CMD == 'add') {
+        if ($schedulerModule->CMD === 'add') {
             $taskInfo['timeOut'] = $taskInfo['timeOut'] ?: 10000;
         }
 
-        if ($schedulerModule->CMD == 'edit') {
+        if ($schedulerModule->CMD === 'edit') {
             $taskInfo['timeOut'] = $task->timeOut;
         }
 
@@ -76,8 +74,6 @@ class CrawlMultiProcessTaskAdditionalFieldProvider implements AdditionalFieldPro
     /**
      * Validates the additional fields' values
      *
-     * @param array $submittedData
-     * @param \TYPO3\CMS\Scheduler\Controller\SchedulerModuleController $schedulerModule
      * @return bool
      */
     public function validateAdditionalFields(array &$submittedData, SchedulerModuleController $schedulerModule)
@@ -96,9 +92,7 @@ class CrawlMultiProcessTaskAdditionalFieldProvider implements AdditionalFieldPro
     /**
      * Takes care of saving the additional fields' values in the task's object
      *
-     * @param array $submittedData
      * @param CrawlMultiProcessTask|AbstractTask $task
-     * @return void
      */
     public function saveAdditionalFields(array $submittedData, AbstractTask $task): void
     {

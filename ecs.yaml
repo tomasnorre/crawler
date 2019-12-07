@@ -10,6 +10,7 @@ parameters:
     skip:
         PhpCsFixer\Fixer\Operator\UnaryOperatorSpacesFixer: null
         PHP_CodeSniffer\Standards\Generic\Sniffs\CodeAnalysis\AssignmentInConditionSniff.FoundInWhileCondition: null
+        PhpCsFixer\Fixer\PhpUnit\PhpUnitTestAnnotationFixer:
 
 services:
     PhpCsFixer\Fixer\ArrayNotation\ArraySyntaxFixer:

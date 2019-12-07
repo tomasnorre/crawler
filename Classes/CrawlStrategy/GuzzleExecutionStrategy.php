@@ -34,8 +34,6 @@ class GuzzleExecutionStrategy implements LoggerAwareInterface
     /**
      * Sets up a CURL / Guzzle Request for fetching the request.
      *
-     * @param UriInterface $url
-     * @param string $crawlerId
      * @return bool|mixed
      */
     public function fetchUrlContents(UriInterface $url, string $crawlerId)
@@ -47,7 +45,7 @@ class GuzzleExecutionStrategy implements LoggerAwareInterface
             $options['auth'] = explode(':', $url->getUserInfo());
         }
         try {
-            $url = (string)$url;
+            $url = (string) $url;
             $response = GeneralUtility::makeInstance(RequestFactory::class)
                 ->request(
                     $url,
@@ -67,9 +65,6 @@ class GuzzleExecutionStrategy implements LoggerAwareInterface
 
     /**
      * Builds HTTP request headers.
-     *
-     * @param string $crawlerId
-     * @return array
      */
     protected function buildRequestHeaders(string $crawlerId): array
     {

@@ -43,8 +43,6 @@ class BackendUtility
 {
     /**
      * Registers the crawler info module function
-     *
-     * @return void
      */
     public static function registerInfoModuleFunction(): void
     {
@@ -58,8 +56,6 @@ class BackendUtility
 
     /**
      * Registers icons for use in the IconFactory
-     *
-     * @return void
      */
     public static function registerIcons(): void
     {
@@ -70,8 +66,6 @@ class BackendUtility
 
     /**
      * Register Start Icon
-     *
-     * @return void
      */
     private static function registerStartIcon(): void
     {
@@ -86,8 +80,6 @@ class BackendUtility
 
     /**
      * Register Stop Icon
-     *
-     * @return void
      */
     private static function registerStopIcon(): void
     {

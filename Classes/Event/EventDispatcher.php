@@ -85,23 +85,10 @@ class EventDispatcher
     }
 
     /**
-     * Returns all registered event types.
-     *
-     * @return array array with registered events.
-     */
-    protected function getEvents()
-    {
-        return array_keys($this->observers);
-    }
-
-    /**
      * This method can be used to add an observer for an event to the dispatcher
      *
-     * @param EventObserverInterface $observer_object
      * @param string $observer_method
      * @param string $event
-     *
-     * @return void
      */
     public function addObserver(EventObserverInterface $observer_object, $observer_method, $event): void
     {
@@ -126,9 +113,6 @@ class EventDispatcher
      *
      * @param string $event
      * @param string $group
-     * @param mixed $attachedData
-     *
-     * @return void
      */
     public function post($event, $group, $attachedData): void
     {
@@ -146,11 +130,21 @@ class EventDispatcher
      */
     public static function getInstance()
     {
-        if (!self::$instance instanceof EventDispatcher) {
-            $dispatcher = new EventDispatcher();
+        if (! self::$instance instanceof self) {
+            $dispatcher = new self();
             self::$instance = $dispatcher;
         }
 
         return self::$instance;
+    }
+
+    /**
+     * Returns all registered event types.
+     *
+     * @return array array with registered events.
+     */
+    protected function getEvents()
+    {
+        return array_keys($this->observers);
     }
 }

@@ -79,10 +79,13 @@ class BackendModule
 
     // Internal, dynamic:
     protected $duplicateTrack = [];
+
     protected $submitCrawlUrls = false;
+
     protected $downloadCrawlUrls = false;
 
     protected $scheduledTime = 0;
+
     protected $reqMinute = 1000;
 
     /**
@@ -164,12 +167,11 @@ class BackendModule
 
     /**
      * Called by the InfoModuleController
-     * @param InfoModuleController $pObj
      */
     public function init(InfoModuleController $pObj): void
     {
         $this->pObj = $pObj;
-        $this->id = (int)GeneralUtility::_GP('id');
+        $this->id = (int) GeneralUtility::_GP('id');
         // Setting MOD_MENU items as we need them for logging:
         $this->pObj->MOD_MENU = array_merge($this->pObj->MOD_MENU, $this->modMenu());
     }
@@ -219,7 +221,7 @@ class BackendModule
         }
         $this->view->assign('currentPageId', $this->id);
 
-        $selectedAction = (string)$this->pObj->MOD_SETTINGS['crawlaction'] ?? 'start';
+        $selectedAction = (string) $this->pObj->MOD_SETTINGS['crawlaction'] ?? 'start';
 
         // Type function menu:
         $actionDropdown = BackendUtility::getFuncMenu(
@@ -246,8 +248,8 @@ class BackendModule
                     $this->pObj->MOD_MENU['depth']
                 );
 
-                $quiPart = GeneralUtility::_GP('qid_details') ? '&qid_details=' . (int)GeneralUtility::_GP('qid_details') : '';
-                $setId = (int)GeneralUtility::_GP('setID');
+                $quiPart = GeneralUtility::_GP('qid_details') ? '&qid_details=' . (int) GeneralUtility::_GP('qid_details') : '';
+                $setId = (int) GeneralUtility::_GP('setID');
 
                 $theOutput .= '<br><br>' .
                     $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.display') . ': ' . BackendUtility::getFuncMenu(
@@ -297,7 +299,6 @@ class BackendModule
 
     /**
      * Show a list of URLs to be crawled for each page
-     * @return string
      */
     protected function showCrawlerInformationAction(): string
     {
@@ -335,7 +336,7 @@ class BackendModule
 
             $code = '';
             $noConfigurationSelected = empty($this->incomingConfigurationSelection)
-                || (count($this->incomingConfigurationSelection) == 1 && empty($this->incomingConfigurationSelection[0]));
+                || (count($this->incomingConfigurationSelection) === 1 && empty($this->incomingConfigurationSelection[0]));
             if ($noConfigurationSelected) {
                 $this->addWarningMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.noConfigSelected'));
             } else {
@@ -407,7 +408,7 @@ class BackendModule
         );
 
         // Configurations
-        $availableConfigurations = $this->crawlerController->getConfigurationsForBranch((int)$this->id, $this->pObj->MOD_SETTINGS['depth'] ?: 0);
+        $availableConfigurations = $this->crawlerController->getConfigurationsForBranch((int) $this->id, $this->pObj->MOD_SETTINGS['depth'] ?: 0);
         $selectors['configurations'] = $this->selectorBox(
             empty($availableConfigurations) ? [] : array_combine($availableConfigurations, $availableConfigurations),
             'configurationSelection',
@@ -451,11 +452,11 @@ class BackendModule
 
             // Read URL:
             if (GeneralUtility::_GP('qid_read')) {
-                $this->crawlerController->readUrl((int)GeneralUtility::_GP('qid_read'), true);
+                $this->crawlerController->readUrl((int) GeneralUtility::_GP('qid_read'), true);
             }
 
             // Look for set ID sent - if it is, we will display contents of that set:
-            $showSetId = (int)GeneralUtility::_GP('setID');
+            $showSetId = (int) GeneralUtility::_GP('setID');
 
             $queueId = GeneralUtility::_GP('qid_details');
             $this->view->assign('queueId', $queueId);
@@ -478,7 +479,7 @@ class BackendModule
                 $resStatus = $this->getResStatus($q_entry['result_data']);
                 if (is_array($q_entry['result_data'])) {
                     $q_entry['result_data']['content'] = unserialize($q_entry['result_data']['content']);
-                    if (!$this->pObj->MOD_SETTINGS['log_resultLog']) {
+                    if (! $this->pObj->MOD_SETTINGS['log_resultLog']) {
                         unset($q_entry['result_data']['content']['log']);
                     }
                 }
@@ -519,14 +520,14 @@ class BackendModule
                     $doFlush = false;
                     $doFullFlush = false;
                 }
-                $itemsPerPage = (int)$this->pObj->MOD_SETTINGS['itemsPerPage'];
+                $itemsPerPage = (int) $this->pObj->MOD_SETTINGS['itemsPerPage'];
                 // Traverse page tree:
                 $code = '';
                 $count = 0;
                 foreach ($tree->tree as $data) {
                     // Get result:
                     $logEntriesOfPage = $this->crawlerController->getLogEntriesForPageId(
-                        (int)$data['row']['uid'],
+                        (int) $data['row']['uid'],
                         $this->pObj->MOD_SETTINGS['log_display'],
                         $doFlush,
                         $doFullFlush,
@@ -548,8 +549,8 @@ class BackendModule
                 $this->outputCsvFile();
             }
         }
-        $this->view->assign('showResultLog', (bool)$this->pObj->MOD_SETTINGS['log_resultLog']);
-        $this->view->assign('showFeVars', (bool)$this->pObj->MOD_SETTINGS['log_feVars']);
+        $this->view->assign('showResultLog', (bool) $this->pObj->MOD_SETTINGS['log_resultLog']);
+        $this->view->assign('showFeVars', (bool) $this->pObj->MOD_SETTINGS['log_feVars']);
         return $this->view->render();
     }
 
@@ -558,7 +559,7 @@ class BackendModule
      */
     protected function outputCsvFile(): void
     {
-        if (!count($this->CSVaccu)) {
+        if (! count($this->CSVaccu)) {
             $this->addWarningMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:message.canNotExportEmptyQueueToCsvText'));
             return;
         }
@@ -598,15 +599,15 @@ class BackendModule
                 + ($this->pObj->MOD_SETTINGS['log_resultLog'] ? -1 : 0)
                 + ($this->pObj->MOD_SETTINGS['log_feVars'] ? 3 : 0);
 
-        if (!empty($logEntriesOfPage)) {
-            $setId = (int)GeneralUtility::_GP('setID');
+        if (! empty($logEntriesOfPage)) {
+            $setId = (int) GeneralUtility::_GP('setID');
             $refreshIcon = $this->iconFactory->getIcon('actions-system-refresh', Icon::SIZE_SMALL);
             // Traverse parameter combinations:
             $c = 0;
             $content = '';
             foreach ($logEntriesOfPage as $vv) {
                 // Title column:
-                if (!$c) {
+                if (! $c) {
                     $titleClm = '<td rowspan="' . count($logEntriesOfPage) . '">' . $titleString . '</td>';
                 } else {
                     $titleClm = '';
@@ -681,9 +682,6 @@ class BackendModule
 
     /**
      * Find Fe vars
-     *
-     * @param array $resultData
-     * @return array
      */
     protected function getResFeVars(array $resultData): array
     {
@@ -723,9 +721,8 @@ class BackendModule
         if (is_array($requestResult)) {
             if (empty($requestResult['errorlog'])) {
                 return 'OK';
-            } else {
-                return implode("\n", $requestResult['errorlog']);
             }
+            return implode("\n", $requestResult['errorlog']);
         }
         return 'Error: ' . substr(preg_replace('/\s+/', ' ', strip_tags($requestResult)), 0, 10000) . '...';
     }
@@ -751,16 +748,16 @@ class BackendModule
         $queueRepository = new QueueRepository();
 
         $mode = $this->pObj->MOD_SETTINGS['processListMode'];
-        if ($mode == 'simple') {
+        if ($mode === 'simple') {
             $allProcesses = $processRepository->findAllActive();
         } else {
             $allProcesses = $processRepository->findAll();
         }
-        $isCrawlerEnabled = !$this->findCrawler()->getDisabled() && !$this->isErrorDetected;
+        $isCrawlerEnabled = ! $this->findCrawler()->getDisabled() && ! $this->isErrorDetected;
         $currentActiveProcesses = $processRepository->countActive();
         $maxActiveProcesses = MathUtility::forceIntegerInRange($this->extensionSettings['processLimit'], 1, 99, 1);
         $this->view->assignMultiple([
-            'pageId' => (int)$this->id,
+            'pageId' => (int) $this->id,
             'refreshLink' => $this->getRefreshLink(),
             'addLink' => $this->getAddLink($currentActiveProcesses, $maxActiveProcesses, $isCrawlerEnabled),
             'modeLink' => $this->getModeLink($mode),
@@ -781,7 +778,6 @@ class BackendModule
     /**
      * Returns a tag for the refresh icon
      *
-     * @return string
      * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
      */
     protected function getRefreshLink(): string
@@ -796,8 +792,6 @@ class BackendModule
     /**
      * Returns a link for the panel to enable or disable the crawler
      *
-     * @param bool $isCrawlerEnabled
-     * @return string
      * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
      */
     protected function getEnableDisableLink(bool $isCrawlerEnabled): string
@@ -809,19 +803,16 @@ class BackendModule
                 $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.disablecrawling'),
                 $this->getInfoModuleUrl(['action' => 'stopCrawling'])
             );
-        } else {
-            // TODO: Icon Should be bigger
-            return $this->getLinkButton(
+        }
+        // TODO: Icon Should be bigger
+        return $this->getLinkButton(
                 'tx-crawler-start',
                 $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.enablecrawling'),
                 $this->getInfoModuleUrl(['action' => 'resumeCrawling'])
             );
-        }
     }
 
     /**
-     * @param string $mode
-     * @return string
      * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
      */
     protected function getModeLink(string $mode): string
@@ -846,12 +837,11 @@ class BackendModule
      * @param $currentActiveProcesses
      * @param $maxActiveProcesses
      * @param $isCrawlerEnabled
-     * @return string
      * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
      */
     protected function getAddLink($currentActiveProcesses, $maxActiveProcesses, $isCrawlerEnabled): string
     {
-        if (!$isCrawlerEnabled) {
+        if (! $isCrawlerEnabled) {
             return '';
         }
         if (MathUtility::convertToPositiveInteger($currentActiveProcesses) >= MathUtility::convertToPositiveInteger($maxActiveProcesses)) {
@@ -869,7 +859,7 @@ class BackendModule
      */
     protected function makeCrawlerProcessableChecks(): void
     {
-        if (!$this->isPhpForkAvailable()) {
+        if (! $this->isPhpForkAvailable()) {
             $this->addErrorMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:message.noPhpForkAvailable'));
         }
 
@@ -926,7 +916,7 @@ class BackendModule
      */
     protected function findCrawler(): CrawlerController
     {
-        if (!$this->crawlerController instanceof CrawlerController) {
+        if (! $this->crawlerController instanceof CrawlerController) {
             $this->crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
         }
         return $this->crawlerController;
@@ -1004,7 +994,7 @@ class BackendModule
     {
         $options = [];
         foreach ($optArray as $key => $val) {
-            $selected = (!$multiple && !strcmp($value, $key)) || ($multiple && in_array($key, (array)$value));
+            $selected = (! $multiple && ! strcmp($value, $key)) || ($multiple && in_array($key, (array) $value, true));
             $options[] = '
 				<option value="' . htmlspecialchars($key) . '"' . ($selected ? ' selected="selected"' : '') . '>' . htmlspecialchars($val) . '</option>';
         }
@@ -1041,18 +1031,12 @@ class BackendModule
         return $GLOBALS['LANG'];
     }
 
-    /**
-     * @param string $iconIdentifier
-     * @param string $title
-     * @param UriInterface $href
-     * @return string
-     */
     protected function getLinkButton(string $iconIdentifier, string $title, UriInterface $href): string
     {
         $moduleTemplate = GeneralUtility::makeInstance(ModuleTemplate::class);
         $buttonBar = $moduleTemplate->getDocHeaderComponent()->getButtonBar();
-        return (string)$buttonBar->makeLinkButton()
-            ->setHref((string)$href)
+        return (string) $buttonBar->makeLinkButton()
+            ->setHref((string) $href)
             ->setIcon($this->iconFactory->getIcon($iconIdentifier, Icon::SIZE_SMALL))
             ->setTitle($title)
             ->setShowLabelText(true);
@@ -1062,7 +1046,6 @@ class BackendModule
      * Returns the URL to the current module, including $_GET['id'].
      *
      * @param array $uriParameters optional parameters to add to the URL
-     * @return Uri
      *
      * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
      */

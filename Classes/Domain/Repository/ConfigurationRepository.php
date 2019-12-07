@@ -46,9 +46,6 @@ class ConfigurationRepository extends AbstractRepository
      */
     protected $tableName = 'tx_crawler_configuration';
 
-    /**
-     * @return array
-     */
     public function getCrawlerConfigurationRecords(): array
     {
         $records = [];
@@ -67,9 +64,6 @@ class ConfigurationRepository extends AbstractRepository
 
     /**
      * Traverses up the rootline of a page and fetches all crawler records.
-     *
-     * @param int $pageId
-     * @return array
      */
     public function getCrawlerConfigurationRecordsFromRootLine(int $pageId): array
     {
@@ -77,7 +71,7 @@ class ConfigurationRepository extends AbstractRepository
         $rootLine = BackendUtility::BEgetRootLine($pageId);
 
         foreach ($rootLine as $pageInRootLine) {
-            $pageIdsInRootLine[] = (int)$pageInRootLine['uid'];
+            $pageIdsInRootLine[] = (int) $pageInRootLine['uid'];
         }
 
         $queryBuilder = $this->createQueryBuilder();
