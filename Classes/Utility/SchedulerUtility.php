@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AOE\Crawler\Utility;
 
 /***************************************************************
@@ -42,7 +44,7 @@ class SchedulerUtility
      *
      * @return void
      */
-    public static function registerSchedulerTasks($extKey)
+    public static function registerSchedulerTasks($extKey): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks'][CrawlMultiProcessTask::class] = [
             'extension' => $extKey,

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AOEPeople\Crawler\Hooks;
 
 /*
@@ -70,7 +72,7 @@ class IndexedSearchCrawlerHook
      *
      * @param object $pObj Parent object (tx_crawler lib)
      */
-    public function crawler_init(&$pObj)
+    public function crawler_init(&$pObj): void
     {
         // Select all indexing configuration which are waiting to be activated:
         $connection = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('index_config');
@@ -263,7 +265,7 @@ class IndexedSearchCrawlerHook
      * @param array $params Parameters from the log queue.
      * @param object $pObj Parent object (from "crawler" extension!)
      */
-    public function crawler_execute_type1($cfgRec, &$session_data, $params, &$pObj)
+    public function crawler_execute_type1($cfgRec, &$session_data, $params, &$pObj): void
     {
         if ($cfgRec['table2index'] && isset($GLOBALS['TCA'][$cfgRec['table2index']])) {
             // Init session data array if not already:
@@ -330,7 +332,7 @@ class IndexedSearchCrawlerHook
      * @param array $params Parameters from the log queue.
      * @param object $pObj Parent object (from "crawler" extension!)
      */
-    public function crawler_execute_type2($cfgRec, &$session_data, $params, &$pObj)
+    public function crawler_execute_type2($cfgRec, &$session_data, $params, &$pObj): void
     {
         // Prepare path, making it absolute and checking:
         $readpath = $params['url'];
@@ -391,7 +393,7 @@ class IndexedSearchCrawlerHook
      * @param array $params Parameters from the log queue.
      * @param object $pObj Parent object (from "crawler" extension!)
      */
-    public function crawler_execute_type3($cfgRec, &$session_data, $params, &$pObj)
+    public function crawler_execute_type3($cfgRec, &$session_data, $params, &$pObj): void
     {
         // Init session data array if not already:
         if (!is_array($session_data)) {
@@ -431,7 +433,7 @@ class IndexedSearchCrawlerHook
      * @param array $params Parameters from the log queue.
      * @param object $pObj Parent object (from "crawler" extension!)
      */
-    public function crawler_execute_type4($cfgRec, &$session_data, $params, &$pObj)
+    public function crawler_execute_type4($cfgRec, &$session_data, $params, &$pObj): void
     {
         // Base page uid:
         $pageUid = (int)$params['url'];
@@ -490,7 +492,7 @@ class IndexedSearchCrawlerHook
     /**
      * Look up all old index configurations which are finished and needs to be reset and done
      */
-    public function cleanUpOldRunningConfigurations()
+    public function cleanUpOldRunningConfigurations(): void
     {
         $connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
         // List of tables that store information related to the phash value
@@ -592,7 +594,7 @@ class IndexedSearchCrawlerHook
     public function checkUrl($url, $urlLog, $baseUrl)
     {
         $url = preg_replace('/\\/\\/$/', '/', $url);
-        list($url) = explode('#', $url);
+        [$url] = explode('#', $url);
         if (!strstr($url, '../')) {
             if (GeneralUtility::isFirstPartOfStr($url, $baseUrl)) {
                 if (!in_array($url, $urlLog)) {
@@ -658,7 +660,7 @@ class IndexedSearchCrawlerHook
      * @param array $cfgRec Configuration Record
      * @param array $rl Rootline array to relate indexing to
      */
-    public function indexSingleRecord($r, $cfgRec, $rl = null)
+    public function indexSingleRecord($r, $cfgRec, $rl = null): void
     {
         // Init:
         $rl = is_array($rl) ? $rl : $this->getUidRootLineForClosestTemplate($cfgRec['pid']);
@@ -760,7 +762,7 @@ class IndexedSearchCrawlerHook
      * @param array $cfgRec Configuration record
      * @param string $title Title/URL
      */
-    public function addQueueEntryForHook($cfgRec, $title)
+    public function addQueueEntryForHook($cfgRec, $title): void
     {
         $nparams = [
             'indexConfigUid' => $cfgRec['uid'],
@@ -776,7 +778,7 @@ class IndexedSearchCrawlerHook
      *
      * @param int $id Uid of the page to delete all pHash
      */
-    public function deleteFromIndex($id)
+    public function deleteFromIndex($id): void
     {
         $connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
 
@@ -834,7 +836,7 @@ class IndexedSearchCrawlerHook
      * @param string $table Table name
      * @param string $id Record ID. If new record its a string pointing to index inside \TYPO3\CMS\Core\DataHandling\DataHandler::substNEWwithIDs
      */
-    public function processCmdmap_preProcess($command, $table, $id)
+    public function processCmdmap_preProcess($command, $table, $id): void
     {
         // Clean up the index
         if ($command === 'delete' && $table === 'pages') {
@@ -851,7 +853,7 @@ class IndexedSearchCrawlerHook
      * @param array $fieldArray Field array of updated fields in the operation
      * @param DataHandler $pObj DataHandler calling object
      */
-    public function processDatamap_afterDatabaseOperations($status, $table, $id, $fieldArray, $pObj)
+    public function processDatamap_afterDatabaseOperations($status, $table, $id, $fieldArray, $pObj): void
     {
         // Check if any fields are actually updated:
         if (empty($fieldArray)) {

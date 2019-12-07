@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AOE\Crawler\Task;
 
 /***************************************************************
@@ -54,7 +56,7 @@ class CrawlMultiProcessTask extends AbstractTask
 
         try {
             $processManager->multiProcess($timeout);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             // We don't do anything about the exception if the process cannot be startet
         }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AOE\Crawler\Tests\Functional\Api;
 
 /***************************************************************
@@ -79,7 +81,7 @@ class CrawlerApiTest extends FunctionalTestCase
      * Creates the test environment.
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -131,7 +133,7 @@ class CrawlerApiTest extends FunctionalTestCase
     /**
      * Resets the test enviroment after the test.
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         //restore rootline
@@ -141,7 +143,7 @@ class CrawlerApiTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function findCrawlerReturnsCrawlerObject()
+    public function findCrawlerReturnsCrawlerObject(): void
     {
         self::assertInstanceOf(
             CrawlerController::class,
@@ -152,7 +154,7 @@ class CrawlerApiTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function overwriteSetId()
+    public function overwriteSetId(): void
     {
         $newId = 12345;
         $this->subject->overwriteSetId($newId);
@@ -166,7 +168,7 @@ class CrawlerApiTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function setAllowedConfigurations()
+    public function setAllowedConfigurations(): void
     {
         $newConfiguration = [
             'simple_array_values',
@@ -187,7 +189,7 @@ class CrawlerApiTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function countEntriesInQueueForPageByScheduleTime()
+    public function countEntriesInQueueForPageByScheduleTime(): void
     {
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
 
@@ -205,7 +207,7 @@ class CrawlerApiTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function getLatestCrawlTimestampForPage()
+    public function getLatestCrawlTimestampForPage(): void
     {
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
 
@@ -218,7 +220,7 @@ class CrawlerApiTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function getCrawlHistoryForPage()
+    public function getCrawlHistoryForPage(): void
     {
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
 
@@ -237,7 +239,7 @@ class CrawlerApiTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function getQueueStatistics()
+    public function getQueueStatistics(): void
     {
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
 
@@ -258,7 +260,7 @@ class CrawlerApiTest extends FunctionalTestCase
      * @test
      *
      */
-    public function canNotCreateDuplicateQueueEntriesForTwoPagesInThePast()
+    public function canNotCreateDuplicateQueueEntriesForTwoPagesInThePast(): void
     {
         $this->markTestSkipped('Is skipped, as we need to check how we are dealing with the find duplicates entries in queue');
         $this->importDataSet(__DIR__ . '/../data/canNotAddDuplicatePagesToQueue.xml');
@@ -283,7 +285,7 @@ class CrawlerApiTest extends FunctionalTestCase
      *
      * @return void
      */
-    public function canNotCreateDuplicateForTwoPagesInTheFutureWithTheSameTimestamp()
+    public function canNotCreateDuplicateForTwoPagesInTheFutureWithTheSameTimestamp(): void
     {
         $this->markTestSkipped('Is skipped, as we need to check how we are dealing with the find duplicates entries in queue');
         $this->importDataSet(__DIR__ . '/../data/canNotAddDuplicatePagesToQueue.xml');
@@ -308,7 +310,7 @@ class CrawlerApiTest extends FunctionalTestCase
      *
      * @return void
      */
-    public function canCreateTwoQueueEntriesForDiffrentTimestampsInTheFuture()
+    public function canCreateTwoQueueEntriesForDiffrentTimestampsInTheFuture(): void
     {
         $this->importDataSet(__DIR__ . '/../data/canNotAddDuplicatePagesToQueue.xml');
 
@@ -328,7 +330,7 @@ class CrawlerApiTest extends FunctionalTestCase
      *
      * @return void
      */
-    public function canCreateQueueEntriesUsingConfigurationRecord()
+    public function canCreateQueueEntriesUsingConfigurationRecord(): void
     {
         $expectedParameterData = [
             'url' => 'http://www.testcase.de/index.php?id=7&L=0&S=CRAWL&cHash=966b79fa43675d725b45415c54ea0cb7',

@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace AOE\Crawler\Tests\Functional;
 
 /*
@@ -38,7 +39,7 @@ trait SiteBasedTestTrait
         array $site = [],
         array $languages = [],
         array $errorHandling = []
-    ) {
+    ): void {
         $configuration = $site;
         if (!empty($languages)) {
             $configuration['languages'] = $languages;
@@ -53,7 +54,7 @@ trait SiteBasedTestTrait
 
         try {
             $siteConfiguration->write($identifier, $configuration);
-        } catch (\Exception $exception) {
+        } catch (\Throwable $exception) {
             $this->markTestSkipped($exception->getMessage());
         }
     }
@@ -65,7 +66,7 @@ trait SiteBasedTestTrait
     protected function mergeSiteConfiguration(
         string $identifier,
         array $overrides
-    ) {
+    ): void {
         $siteConfiguration = new SiteConfiguration(
             $this->getInstancePath() . '/typo3conf/sites/'
         );
@@ -73,7 +74,7 @@ trait SiteBasedTestTrait
         $configuration = array_merge($configuration, $overrides);
         try {
             $siteConfiguration->write($identifier, $configuration);
-        } catch (\Exception $exception) {
+        } catch (\Throwable $exception) {
             $this->markTestSkipped($exception->getMessage());
         }
     }
@@ -120,7 +121,7 @@ trait SiteBasedTestTrait
         string $identifier,
         string $base,
         array $fallbackIdentifiers = [],
-        string $fallbackType = null
+        ?string $fallbackType = null
     ): array {
         $preset = $this->resolveLanguagePreset($identifier);
 

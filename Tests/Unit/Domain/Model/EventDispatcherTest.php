@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AOE\Crawler\Tests\Unit\Domain\Model;
 
 /***************************************************************
@@ -46,7 +48,7 @@ class EventDispatcherTest extends UnitTestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->oldObservers = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/domain/events/class.tx_crawler_domain_events_dispatcher.php']['registerObservers'];
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/domain/events/class.tx_crawler_domain_events_dispatcher.php']['registerObservers'] = [];
@@ -57,7 +59,7 @@ class EventDispatcherTest extends UnitTestCase
      *
      * @return void
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/domain/events/class.tx_crawler_domain_events_dispatcher.php']['registerObservers'] = $this->oldObservers;
     }
@@ -70,7 +72,7 @@ class EventDispatcherTest extends UnitTestCase
      * @dataProvider eventsAndResultsDataProvider
      *
      */
-    public function canDispatcherDispatchEvent($events, $expectedFooCalls, $expectedBarCalls)
+    public function canDispatcherDispatchEvent($events, $expectedFooCalls, $expectedBarCalls): void
     {
         EventsHelper::$called_foo = 0;
         EventsHelper::$called_bar = 0;

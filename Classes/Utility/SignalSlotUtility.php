@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AOE\Crawler\Utility;
 
 /***************************************************************
@@ -50,7 +52,7 @@ class SignalSlotUtility
      * @param array $payload
      * @return void
      */
-    public static function emitSignal($class, $signal, array $payload = [])
+    public static function emitSignal($class, $signal, array $payload = []): void
     {
         /** @var \TYPO3\CMS\Extbase\SignalSlot\Dispatcher $signalSlotDispatcher */
         $signalSlotDispatcher = GeneralUtility::makeInstance(Dispatcher::class);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AOE\Crawler\Domain\Model;
 
 /***************************************************************
@@ -60,7 +62,7 @@ class Reason
      * @param int uid
      * @return void
      */
-    public function setUid($uid)
+    public function setUid($uid): void
     {
         $this->row['uid'] = $uid;
     }
@@ -78,7 +80,7 @@ class Reason
      *
      * @param int $time
      */
-    public function setCreationDate($time)
+    public function setCreationDate($time): void
     {
         $this->row['crdate'] = $time;
     }
@@ -96,7 +98,7 @@ class Reason
      *
      * @param int $user_id
      */
-    public function setBackendUserId($user_id)
+    public function setBackendUserId($user_id): void
     {
         $this->row['cruser_id'] = $user_id;
     }
@@ -113,7 +115,7 @@ class Reason
      *
      * @param string $string
      */
-    public function setReason($string)
+    public function setReason($string): void
     {
         $this->row['reason'] = $string;
     }
@@ -133,7 +135,7 @@ class Reason
      *
      * @param string $detail_text
      */
-    public function setDetailText($detail_text)
+    public function setDetailText($detail_text): void
     {
         $this->row['detail_text'] = $detail_text;
     }
@@ -154,7 +156,7 @@ class Reason
      *
      * @param int $entry_uid
      */
-    public function setQueueEntryUid($entry_uid)
+    public function setQueueEntryUid($entry_uid): void
     {
         $this->row['queue_entry_uid'] = $entry_uid;
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AOE\Crawler\Utility;
 
 /***************************************************************
@@ -41,7 +43,7 @@ class HookUtility
      *
      * @param string $extKey
      */
-    public static function registerHooks($extKey)
+    public static function registerHooks($extKey): void
     {
         // Activating NC Static File Cache hook
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['nc_staticfilecache/class.tx_ncstaticfilecache.php']['createFile_initializeVariables']['tx_crawler'] =

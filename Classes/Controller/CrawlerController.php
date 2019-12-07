@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AOE\Crawler\Controller;
 
 /***************************************************************
@@ -214,7 +216,7 @@ class CrawlerController implements LoggerAwareInterface
     /**
      * @param string $accessMode
      */
-    public function setAccessMode($accessMode)
+    public function setAccessMode($accessMode): void
     {
         $this->accessMode = $accessMode;
     }
@@ -225,7 +227,7 @@ class CrawlerController implements LoggerAwareInterface
      * @param  bool $disabled (optional, defaults to true)
      * @return void
      */
-    public function setDisabled($disabled = true)
+    public function setDisabled($disabled = true): void
     {
         if ($disabled) {
             GeneralUtility::writeFile($this->processFilename, '');
@@ -251,7 +253,7 @@ class CrawlerController implements LoggerAwareInterface
      *
      * @return void
      */
-    public function setProcessFilename($filenameWithPath)
+    public function setProcessFilename($filenameWithPath): void
     {
         $this->processFilename = $filenameWithPath;
     }
@@ -294,7 +296,7 @@ class CrawlerController implements LoggerAwareInterface
         $this->extensionSettings['processLimit'] = MathUtility::forceIntegerInRange($this->extensionSettings['processLimit'], 1, 99, 1);
         $this->maximumUrlsToCompile = MathUtility::forceIntegerInRange($this->extensionSettings['maxCompileUrls'], 1, 1000000000, 10000);
     }
-    
+
     /**
      * @return BackendUserAuthentication
      */
@@ -312,7 +314,7 @@ class CrawlerController implements LoggerAwareInterface
      * @param array $extensionSettings
      * @return void
      */
-    public function setExtensionSettings(array $extensionSettings)
+    public function setExtensionSettings(array $extensionSettings): void
     {
         $this->extensionSettings = $extensionSettings;
     }
@@ -591,7 +593,7 @@ class CrawlerController implements LoggerAwareInterface
             $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $subCfg['pidsOnly'], true));
 
             // process configuration if it is not page-specific or if the specific page is the current page:
-            if (!strcmp($subCfg['pidsOnly'], '') || GeneralUtility::inList($pidOnlyList, $pageId)) {
+            if (!strcmp((string) $subCfg['pidsOnly'], '') || GeneralUtility::inList($pidOnlyList, $pageId)) {
 
                 // Explode, process etc.:
                 $res[$key] = [];
@@ -800,7 +802,7 @@ class CrawlerController implements LoggerAwareInterface
                         $subparts = GeneralUtility::trimExplode(';', $pV);
                         $subpartParams = [];
                         foreach ($subparts as $spV) {
-                            list($pKey, $pVal) = GeneralUtility::trimExplode(':', $spV);
+                            [$pKey, $pVal] = GeneralUtility::trimExplode(':', $spV);
                             $subpartParams[$pKey] = $pVal;
                         }
 
@@ -809,8 +811,8 @@ class CrawlerController implements LoggerAwareInterface
                             $lookUpPid = isset($subpartParams['_PID']) ? intval($subpartParams['_PID']) : intval($pid);
                             $recursiveDepth = isset($subpartParams['_RECURSIVE']) ? intval($subpartParams['_RECURSIVE']) : 0;
                             $pidField = isset($subpartParams['_PIDFIELD']) ? trim($subpartParams['_PIDFIELD']) : 'pid';
-                            $where = isset($subpartParams['_WHERE']) ? $subpartParams['_WHERE'] : '';
-                            $addTable = isset($subpartParams['_ADDTABLE']) ? $subpartParams['_ADDTABLE'] : '';
+                            $where = $subpartParams['_WHERE'] ?? '';
+                            $addTable = $subpartParams['_ADDTABLE'] ?? '';
 
                             $fieldName = $subpartParams['_FIELD'] ? $subpartParams['_FIELD'] : 'uid';
                             if ($fieldName === 'uid' || $GLOBALS['TCA'][$subpartParams['_TABLE']]['columns'][$fieldName]) {
@@ -824,7 +826,7 @@ class CrawlerController implements LoggerAwareInterface
                                 } else {
                                     $pidArray = [(string)$lookUpPid];
                                 }
-                                
+
                                 $queryBuilder->getRestrictions()
                                     ->removeAll()
                                     ->add(GeneralUtility::makeInstance(DeletedRestriction::class));
@@ -915,7 +917,7 @@ class CrawlerController implements LoggerAwareInterface
         $newUrls = [];
         foreach ($urls as $url) {
             foreach ($valueSet as $val) {
-                $newUrls[] = $url . (strcmp($val, '') ? '&' . rawurlencode($varName) . '=' . rawurlencode($val) : '');
+                $newUrls[] = $url . (strcmp((string) $val, '') ? '&' . rawurlencode($varName) . '=' . rawurlencode((string) $val) : '');
 
                 if (count($newUrls) > $this->maximumUrlsToCompile) {
                     break;
@@ -1046,9 +1048,9 @@ class CrawlerController implements LoggerAwareInterface
      * @param string $where SQL related filter for the entries which should be removed
      * @return void
      */
-    protected function flushQueue($where = '')
+    protected function flushQueue($where = ''): void
     {
-        $realWhere = strlen($where) > 0 ? $where : '1=1';
+        $realWhere = strlen((string) $where) > 0 ? $where : '1=1';
 
         $queryBuilder = $this->getQueryBuilder($this->tableName);
 
@@ -1091,7 +1093,7 @@ class CrawlerController implements LoggerAwareInterface
      * @param integer $schedule Time at which to activate
      * @return void
      */
-    public function addQueueEntry_callBack($setId, $params, $callBack, $page_id = 0, $schedule = 0)
+    public function addQueueEntry_callBack($setId, $params, $callBack, $page_id = 0, $schedule = 0): void
     {
         if (!is_array($params)) {
             $params = [];
@@ -1252,7 +1254,7 @@ class CrawlerController implements LoggerAwareInterface
             ;
 
         $statement = $queryBuilder->execute();
-        
+
         while ($row = $statement->fetch()) {
             $rows[] = $row['qid'];
         }
@@ -1537,7 +1539,7 @@ class CrawlerController implements LoggerAwareInterface
                 $excludeParts = GeneralUtility::trimExplode(',', $excludeString);
 
                 foreach ($excludeParts as $excludePart) {
-                    list($pid, $depth) = GeneralUtility::trimExplode('+', $excludePart);
+                    [$pid, $depth] = GeneralUtility::trimExplode('+', $excludePart);
 
                     // default is "page only" = "depth=0"
                     if (empty($depth)) {
@@ -1819,7 +1821,7 @@ class CrawlerController implements LoggerAwareInterface
      *
      * @return void
      */
-    public function CLI_runHooks()
+    public function CLI_runHooks(): void
     {
         foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['cli_hooks'] ?? [] as $objRef) {
             $hookObj = GeneralUtility::makeInstance($objRef);
@@ -2007,7 +2009,7 @@ class CrawlerController implements LoggerAwareInterface
      *
      * @param  string $msg  the message
      */
-    public function CLI_debug($msg)
+    public function CLI_debug($msg): void
     {
         if ((int)$this->extensionSettings['processDebug']) {
             echo $msg . "\n";
@@ -2022,7 +2024,7 @@ class CrawlerController implements LoggerAwareInterface
      *
      * @return void
      */
-    public function cleanUpOldQueueEntries()
+    public function cleanUpOldQueueEntries(): void
     {
         $processedAgeInSeconds = $this->extensionSettings['cleanUpProcessedAge'] * 86400; // 24*60*60 Seconds in 24 hours
         $scheduledAgeInSeconds = $this->extensionSettings['cleanUpScheduledAge'] * 86400;

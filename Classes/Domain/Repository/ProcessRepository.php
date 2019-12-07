@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AOE\Crawler\Domain\Repository;
 
 /***************************************************************
@@ -271,7 +273,7 @@ class ProcessRepository extends AbstractRepository
     /**
      * @return void
      */
-    public function deleteProcessesWithoutItemsAssigned()
+    public function deleteProcessesWithoutItemsAssigned(): void
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
         $queryBuilder
@@ -282,7 +284,7 @@ class ProcessRepository extends AbstractRepository
             ->execute();
     }
 
-    public function deleteProcessesMarkedAsDeleted()
+    public function deleteProcessesMarkedAsDeleted(): void
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
         $queryBuilder

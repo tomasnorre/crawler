@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AOE\Crawler\Domain\Model;
 
 /***************************************************************
@@ -94,7 +96,7 @@ class Configuration extends AbstractEntity
     /**
      * @param string $name
      */
-    public function setName($name)
+    public function setName($name): void
     {
         $this->name = $name;
     }
@@ -110,7 +112,7 @@ class Configuration extends AbstractEntity
     /**
      * @param int $forceSsl
      */
-    public function setForceSsl($forceSsl)
+    public function setForceSsl($forceSsl): void
     {
         $this->forceSsl = $forceSsl;
     }
@@ -126,7 +128,7 @@ class Configuration extends AbstractEntity
     /**
      * @param string $processingInstructionFilter
      */
-    public function setProcessingInstructionFilter($processingInstructionFilter)
+    public function setProcessingInstructionFilter($processingInstructionFilter): void
     {
         $this->processingInstructionFilter = $processingInstructionFilter;
     }
@@ -142,7 +144,7 @@ class Configuration extends AbstractEntity
     /**
      * @param string $processingInstructionParameters
      */
-    public function setProcessingInstructionParameters($processingInstructionParameters)
+    public function setProcessingInstructionParameters($processingInstructionParameters): void
     {
         $this->processingInstructionParameters = $processingInstructionParameters;
     }
@@ -158,7 +160,7 @@ class Configuration extends AbstractEntity
     /**
      * @param string $configuration
      */
-    public function setConfiguration($configuration)
+    public function setConfiguration($configuration): void
     {
         $this->configuration = $configuration;
     }
@@ -174,7 +176,7 @@ class Configuration extends AbstractEntity
     /**
      * @param string $baseUrl
      */
-    public function setBaseUrl($baseUrl)
+    public function setBaseUrl($baseUrl): void
     {
         $this->baseUrl = $baseUrl;
     }
@@ -190,7 +192,7 @@ class Configuration extends AbstractEntity
     /**
      * @param mixed $pidsOnly
      */
-    public function setPidsOnly($pidsOnly)
+    public function setPidsOnly($pidsOnly): void
     {
         $this->pidsonly = $pidsOnly;
     }
@@ -206,7 +208,7 @@ class Configuration extends AbstractEntity
     /**
      * @param string $beGroups
      */
-    public function setBeGroups($beGroups)
+    public function setBeGroups($beGroups): void
     {
         $this->begroups = $beGroups;
     }
@@ -222,7 +224,7 @@ class Configuration extends AbstractEntity
     /**
      * @param string $feGroups
      */
-    public function setFeGroups($feGroups)
+    public function setFeGroups($feGroups): void
     {
         $this->fegroups = $feGroups;
     }
@@ -238,7 +240,7 @@ class Configuration extends AbstractEntity
     /**
      * @param string $exclude
      */
-    public function setExclude($exclude)
+    public function setExclude($exclude): void
     {
         $this->exclude = $exclude;
     }

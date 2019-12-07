@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AOE\Crawler\Tests\Unit\Domain\Model;
 
 /***************************************************************
@@ -43,7 +45,7 @@ class QueueTest extends UnitTestCase
     /**
      * @test
      */
-    public function getterAndSettersTest()
+    public function getterAndSettersTest(): void
     {
         $execTime = 123456;
         $configuration = 'Test Configuration';

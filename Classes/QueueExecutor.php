@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace AOE\Crawler;
 
 /*
@@ -41,7 +42,7 @@ class QueueExecutor implements SingletonInterface
      */
     protected $extensionSettings;
 
-    public function __construct(ExtensionConfigurationProvider $configurationProvider = null)
+    public function __construct(?ExtensionConfigurationProvider $configurationProvider = null)
     {
         $configurationProvider = $configurationProvider ?? GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
         $settings = $configurationProvider->getExtensionConfiguration();

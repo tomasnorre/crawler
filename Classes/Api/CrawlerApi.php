@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AOE\Crawler\Api;
 
 /***************************************************************
@@ -82,7 +84,7 @@ class CrawlerApi
      * @param int $id
      * @throws \Exception
      */
-    public function overwriteSetId(int $id)
+    public function overwriteSetId(int $id): void
     {
         $this->findCrawler()->setID = $id;
     }
@@ -93,7 +95,7 @@ class CrawlerApi
      *
      * @param array $allowedConfigurations
      */
-    public function setAllowedConfigurations(array $allowedConfigurations)
+    public function setAllowedConfigurations(array $allowedConfigurations): void
     {
         $this->allowedConfigurations = $allowedConfigurations;
     }
@@ -142,7 +144,7 @@ class CrawlerApi
      *
      * @param int $uid uid
      */
-    public function addPageToQueue($uid)
+    public function addPageToQueue($uid): void
     {
         $uid = intval($uid);
         //non timed elements will be added with timestamp 0
@@ -179,7 +181,7 @@ class CrawlerApi
      * @throws \Exception
      * @return void
      */
-    public function addPageToQueueTimed($uid, $time)
+    public function addPageToQueueTimed($uid, $time): void
     {
         $uid = intval($uid);
         $time = intval($time);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AOE\Crawler\Domain\Model;
 
 /***************************************************************
@@ -114,7 +116,7 @@ class Queue extends AbstractEntity
     /**
      * @param int $qid
      */
-    public function setQid($qid)
+    public function setQid($qid): void
     {
         $this->qid = $qid;
     }
@@ -130,7 +132,7 @@ class Queue extends AbstractEntity
     /**
      * @param int $pageId
      */
-    public function setPageId($pageId)
+    public function setPageId($pageId): void
     {
         $this->pageId = $pageId;
     }
@@ -146,7 +148,7 @@ class Queue extends AbstractEntity
     /**
      * @param string $parameters
      */
-    public function setParameters($parameters)
+    public function setParameters($parameters): void
     {
         $this->parameters = $parameters;
     }
@@ -162,7 +164,7 @@ class Queue extends AbstractEntity
     /**
      * @param string $parametersHash
      */
-    public function setParametersHash($parametersHash)
+    public function setParametersHash($parametersHash): void
     {
         $this->parametersHash = $parametersHash;
     }
@@ -178,7 +180,7 @@ class Queue extends AbstractEntity
     /**
      * @param string $configurationHash
      */
-    public function setConfigurationHash($configurationHash)
+    public function setConfigurationHash($configurationHash): void
     {
         $this->configurationHash = $configurationHash;
     }
@@ -194,7 +196,7 @@ class Queue extends AbstractEntity
     /**
      * @param bool $scheduled
      */
-    public function setScheduled($scheduled)
+    public function setScheduled($scheduled): void
     {
         $this->scheduled = $scheduled;
     }
@@ -210,7 +212,7 @@ class Queue extends AbstractEntity
     /**
      * @param int $execTime
      */
-    public function setExecTime($execTime)
+    public function setExecTime($execTime): void
     {
         $this->execTime = $execTime;
     }
@@ -226,7 +228,7 @@ class Queue extends AbstractEntity
     /**
      * @param int $setId
      */
-    public function setSetId($setId)
+    public function setSetId($setId): void
     {
         $this->setId = $setId;
     }
@@ -242,7 +244,7 @@ class Queue extends AbstractEntity
     /**
      * @param string $resultData
      */
-    public function setResultData($resultData)
+    public function setResultData($resultData): void
     {
         $this->resultData = $resultData;
     }
@@ -258,7 +260,7 @@ class Queue extends AbstractEntity
     /**
      * @param bool $processScheduled
      */
-    public function setProcessScheduled($processScheduled)
+    public function setProcessScheduled($processScheduled): void
     {
         $this->processScheduled = $processScheduled;
     }
@@ -274,7 +276,7 @@ class Queue extends AbstractEntity
     /**
      * @param string $processId
      */
-    public function setProcessId($processId)
+    public function setProcessId($processId): void
     {
         $this->processId = $processId;
     }
@@ -290,7 +292,7 @@ class Queue extends AbstractEntity
     /**
      * @param string $processIdCompleted
      */
-    public function setProcessIdCompleted($processIdCompleted)
+    public function setProcessIdCompleted($processIdCompleted): void
     {
         $this->processIdCompleted = $processIdCompleted;
     }
@@ -306,7 +308,7 @@ class Queue extends AbstractEntity
     /**
      * @param string $configuration
      */
-    public function setConfiguration($configuration)
+    public function setConfiguration($configuration): void
     {
         $this->configuration = $configuration;
     }

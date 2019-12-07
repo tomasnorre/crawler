@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AOE\Crawler\Tests\Functional\Hooks;
 
 /***************************************************************
@@ -65,7 +67,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
      */
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -81,7 +83,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
     }
@@ -89,7 +91,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function removeActiveProcessesOlderThanOneHour()
+    public function removeActiveProcessesOlderThanOneHour(): void
     {
         $this->markTestSkipped('Please Implement');
     }
@@ -97,7 +99,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function removeActiveOrphanProcesses()
+    public function removeActiveOrphanProcesses(): void
     {
         $this->markTestSkipped('Please Implement');
     }
@@ -105,7 +107,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function doProcessStillExists()
+    public function doProcessStillExists(): void
     {
         $this->markTestSkipped('Skipped due to differences between windows and *nix');
     }
@@ -113,7 +115,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function killProcess()
+    public function killProcess(): void
     {
         $this->markTestSkipped('Skipped due to differences between windows and *nix');
     }
@@ -121,7 +123,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function findDispatcherProcesses()
+    public function findDispatcherProcesses(): void
     {
         $this->markTestSkipped('Skipped due to differences between windows and *nix');
     }
@@ -129,7 +131,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function removeProcessFromProcesslistCalledWithProcessThatDoesNotExist()
+    public function removeProcessFromProcesslistCalledWithProcessThatDoesNotExist(): void
     {
         $processCountBefore = $this->processRepository->countAll();
         $queueCountBefore = $this->queueRepository->countAll();
@@ -154,7 +156,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function removeProcessFromProcesslistRemoveOneProcessAndNoQueueRecords()
+    public function removeProcessFromProcesslistRemoveOneProcessAndNoQueueRecords(): void
     {
         $expectedProcessesToBeRemoved = 1;
         $expectedQueueRecordsToBeRemoved = 0;
@@ -182,7 +184,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function removeProcessFromProcesslistRemoveOneProcessAndOneQueueRecordIsReset()
+    public function removeProcessFromProcesslistRemoveOneProcessAndOneQueueRecordIsReset(): void
     {
         $existingProcessId = 1001;
         $expectedProcessesToBeRemoved = 1;
@@ -214,7 +216,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function createResponseArrayReturnsEmptyArray()
+    public function createResponseArrayReturnsEmptyArray(): void
     {
         $emptyInputString = '';
 
@@ -227,7 +229,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function createResponseArrayReturnsArray()
+    public function createResponseArrayReturnsArray(): void
     {
         // Input string has multiple spacing to ensure we don't end up with an array with empty values
         $inputString = '1   2 2 4 5 6 ';

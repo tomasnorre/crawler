@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AOE\Crawler\Tests\Unit\Domain\Model;
 
 /***************************************************************
@@ -43,7 +45,7 @@ class EventsHelper implements EventObserverInterface
     /**
      * @return void
      */
-    public function fooFunc()
+    public function fooFunc(): void
     {
         self::$called_foo++;
     }
@@ -51,7 +53,7 @@ class EventsHelper implements EventObserverInterface
     /**
      * @return void
      */
-    public function barFunc()
+    public function barFunc(): void
     {
         self::$called_bar++;
     }
@@ -61,7 +63,7 @@ class EventsHelper implements EventObserverInterface
      *
      * @return void
      */
-    public function registerObservers(EventDispatcher $dispatcher)
+    public function registerObservers(EventDispatcher $dispatcher): void
     {
         $dispatcher->addObserver($this, 'fooFunc', 'foo');
         $dispatcher->addObserver($this, 'barFunc', 'bar');

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AOE\Crawler\Tests\Unit\Domain\Model;
 
 /***************************************************************
@@ -41,7 +43,7 @@ class ProcessTest extends UnitTestCase
      */
     protected $subject;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->subject = $this->createPartialMock(Process::class, ['dummy']);
         $this->subject->setActive(true);
@@ -53,7 +55,7 @@ class ProcessTest extends UnitTestCase
     /**
      * @test
      */
-    public function setAndGetRowDoAsExpected()
+    public function setAndGetRowDoAsExpected(): void
     {
         $processId = 4567;
         $ttl = 600;
@@ -129,7 +131,7 @@ class ProcessTest extends UnitTestCase
      *
      * @dataProvider getStateDataProvider
      */
-    public function getStateReturnsExpectedState($active, $processes, $expectedState)
+    public function getStateReturnsExpectedState($active, $processes, $expectedState): void
     {
         /** @var Process $processMock */
         $processMock = $this->getAccessibleMock(Process::class, ['isActive', 'getProgress'], [], '', false);
@@ -150,7 +152,7 @@ class ProcessTest extends UnitTestCase
      *
      * @dataProvider getProgressReturnsExpectedPercentageDataProvider
      */
-    public function getProgressReturnsExpectedPercentage($countItemsAssigned, $countItemsProcessed, $expectedProgress)
+    public function getProgressReturnsExpectedPercentage($countItemsAssigned, $countItemsProcessed, $expectedProgress): void
     {
         /** @var Process $processMock */
         $processMock = $this->getAccessibleMock(Process::class, ['getAssignedItemsCount', 'getAmountOfItemsProcessed'], [], '', false);
@@ -206,7 +208,7 @@ class ProcessTest extends UnitTestCase
      *
      * @dataProvider getRuntimeReturnsIntegerDataProvider
      */
-    public function getRuntimeReturnsInteger($getTimeForFirstItem, $getTimeForLastItem, $expected)
+    public function getRuntimeReturnsInteger($getTimeForFirstItem, $getTimeForLastItem, $expected): void
     {
         /** @var Process $processMock */
         $processMock = $this->getAccessibleMock(Process::class, ['getTimeForFirstItem', 'getTimeForLastItem'], [], '', false);

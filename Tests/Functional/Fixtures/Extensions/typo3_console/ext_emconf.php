@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 $EM_CONF[$_EXTKEY] = [
     'title' => 'TYPO3 Console',
     'description' => 'A reliable and powerful command line interface for TYPO3 CMS',

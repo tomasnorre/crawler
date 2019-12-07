@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AOE\Crawler\Backend;
 
 /***************************************************************
@@ -741,7 +743,7 @@ class BackendModule
 
         try {
             $this->handleProcessOverviewActions();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->addErrorMessage($e->getMessage());
         }
 

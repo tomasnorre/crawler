@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AOE\Crawler\Domain\Model;
 
 /***************************************************************
@@ -99,7 +101,7 @@ class Process extends AbstractEntity
     /**
      * @param string $processId
      */
-    public function setProcessId($processId)
+    public function setProcessId($processId): void
     {
         $this->processId = $processId;
     }
@@ -115,7 +117,7 @@ class Process extends AbstractEntity
     /**
      * @param bool $active
      */
-    public function setActive($active)
+    public function setActive($active): void
     {
         $this->active = $active;
     }
@@ -131,7 +133,7 @@ class Process extends AbstractEntity
     /**
      * @param int $ttl
      */
-    public function setTtl($ttl)
+    public function setTtl($ttl): void
     {
         $this->ttl = $ttl;
     }
@@ -147,7 +149,7 @@ class Process extends AbstractEntity
     /**
      * @param int $assignedItemsCount
      */
-    public function setAssignedItemsCount($assignedItemsCount)
+    public function setAssignedItemsCount($assignedItemsCount): void
     {
         $this->assignedItemsCount = $assignedItemsCount;
     }
@@ -163,7 +165,7 @@ class Process extends AbstractEntity
     /**
      * @param bool $deleted
      */
-    public function setDeleted($deleted)
+    public function setDeleted($deleted): void
     {
         $this->deleted = $deleted;
     }
@@ -179,7 +181,7 @@ class Process extends AbstractEntity
     /**
      * @param string $systemProcessId
      */
-    public function setSystemProcessId($systemProcessId)
+    public function setSystemProcessId($systemProcessId): void
     {
         $this->systemProcessId = $systemProcessId;
     }

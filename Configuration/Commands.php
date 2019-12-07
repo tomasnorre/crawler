@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use AOE\Crawler\Command\BuildQueueCommand;
 use AOE\Crawler\Command\FlushQueueCommand;
 use AOE\Crawler\Command\ProcessQueueCommand;
