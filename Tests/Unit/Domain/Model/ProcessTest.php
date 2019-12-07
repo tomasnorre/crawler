@@ -43,7 +43,7 @@ class ProcessTest extends UnitTestCase
      */
     protected $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->subject = $this->createPartialMock(Process::class, ['dummy']);
         $this->subject->setActive(true);

@@ -67,7 +67,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
      */
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -83,7 +83,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
     }

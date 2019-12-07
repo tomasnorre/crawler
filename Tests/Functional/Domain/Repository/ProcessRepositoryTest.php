@@ -57,9 +57,8 @@ class ProcessRepositoryTest extends FunctionalTestCase
 
     /**
      * Creates the test environment.
-     *
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);

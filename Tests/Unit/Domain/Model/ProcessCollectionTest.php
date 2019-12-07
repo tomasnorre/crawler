@@ -45,7 +45,7 @@ class ProcessCollectionTest extends UnitTestCase
      */
     protected $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->subject = new ProcessCollection();
     }

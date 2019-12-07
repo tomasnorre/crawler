@@ -39,30 +39,19 @@ use AOE\Crawler\Event\EventObserverInterface;
 class EventsHelper implements EventObserverInterface
 {
     public static $called_foo = 0;
-    
+
     public static $called_bar = 0;
-    
-    /**
-     * @return void
-     */
+
     public function fooFunc(): void
     {
         self::$called_foo++;
     }
-    
-    /**
-     * @return void
-     */
+
     public function barFunc(): void
     {
         self::$called_bar++;
     }
-    
-    /**
-     * @param EventDispatcher $dispatcher
-     *
-     * @return void
-     */
+
     public function registerObservers(EventDispatcher $dispatcher): void
     {
         $dispatcher->addObserver($this, 'fooFunc', 'foo');

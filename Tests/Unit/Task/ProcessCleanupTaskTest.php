@@ -40,7 +40,7 @@ class ProcessCleanupTaskTest extends UnitTestCase
     /**
      * @test
      */
-    public function ClassAliasMapReturnsNewClassName(): void
+    public function classAliasMapReturnsNewClassName(): void
     {
         $classObject = $this->createMock('\AOE\Crawler\Tasks\ProcessCleanupTask', [], [], '', false);
 

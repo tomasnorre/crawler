@@ -28,12 +28,6 @@ use TYPO3\CMS\Core\Configuration\SiteConfiguration;
  */
 trait SiteBasedTestTrait
 {
-    /**
-     * @param string $identifier
-     * @param array $site
-     * @param array $languages
-     * @param array $errorHandling
-     */
     protected function writeSiteConfiguration(
         string $identifier,
         array $site = [],
@@ -41,10 +35,10 @@ trait SiteBasedTestTrait
         array $errorHandling = []
     ): void {
         $configuration = $site;
-        if (!empty($languages)) {
+        if (! empty($languages)) {
             $configuration['languages'] = $languages;
         }
-        if (!empty($errorHandling)) {
+        if (! empty($errorHandling)) {
             $configuration['errorHandling'] = $errorHandling;
         }
 
@@ -59,10 +53,6 @@ trait SiteBasedTestTrait
         }
     }
 
-    /**
-     * @param string $identifier
-     * @param array $overrides
-     */
     protected function mergeSiteConfiguration(
         string $identifier,
         array $overrides
@@ -79,11 +69,6 @@ trait SiteBasedTestTrait
         }
     }
 
-    /**
-     * @param int $rootPageId
-     * @param string $base
-     * @return array
-     */
     protected function buildSiteConfiguration(
         int $rootPageId,
         string $base = ''
@@ -94,11 +79,6 @@ trait SiteBasedTestTrait
         ];
     }
 
-    /**
-     * @param string $identifier
-     * @param string $base
-     * @return array
-     */
     protected function buildDefaultLanguageConfiguration(
         string $identifier,
         string $base
@@ -111,11 +91,7 @@ trait SiteBasedTestTrait
     }
 
     /**
-     * @param string $identifier
-     * @param string $base
-     * @param array $fallbackIdentifiers
      * @param string $fallbackType
-     * @return array
      */
     protected function buildLanguageConfiguration(
         string $identifier,
@@ -139,7 +115,7 @@ trait SiteBasedTestTrait
             'fallbackType' => $fallbackType ?? (empty($fallbackIdentifiers) ? 'strict' : 'fallback'),
         ];
 
-        if (!empty($fallbackIdentifiers)) {
+        if (! empty($fallbackIdentifiers)) {
             $fallbackIds = array_map(
                 function (string $fallbackIdentifier) {
                     $preset = $this->resolveLanguagePreset($fallbackIdentifier);
@@ -154,13 +130,9 @@ trait SiteBasedTestTrait
         return $configuration;
     }
 
-    /**
-     * @param string $identifier
-     * @return mixed
-     */
     protected function resolveLanguagePreset(string $identifier)
     {
-        if (!isset(static::LANGUAGE_PRESETS[$identifier])) {
+        if (! isset(static::LANGUAGE_PRESETS[$identifier])) {
             throw new \LogicException(
                 sprintf('Undefined preset identifier "%s"', $identifier),
                 1533893665
