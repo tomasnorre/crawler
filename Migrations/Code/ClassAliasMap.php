@@ -13,7 +13,6 @@ return [
     'tx_crawler_domain_queue_repository' => \AOE\Crawler\Domain\Repository\QueueRepository::class,
     'tx_crawler_domain_reason' => \AOE\Crawler\Domain\Model\Reason::class,
     'tx_crawler_hooks_processCleanUp' => \AOE\Crawler\Hooks\ProcessCleanUpHook::class,
-    'tx_crawler_hooks_staticFileCacheCreateUri' => \AOE\Crawler\Hooks\StaticFileCacheCreateUriHook::class,
     'tx_crawler_hooks_tsfe' => \AOE\Crawler\Hooks\TsfeHook::class,
     'tx_crawler_lib' => \AOE\Crawler\Controller\CrawlerController::class,
     'tx_crawler_modfunc1' => \AOE\Crawler\Backend\BackendModule::class,
