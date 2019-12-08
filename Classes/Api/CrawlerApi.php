@@ -45,11 +45,6 @@ use TYPO3\CMS\Frontend\Page\PageRepository;
 class CrawlerApi
 {
     /**
-     * @var CrawlerController|Object
-     */
-    private $crawlerController;
-
-    /**
      * @var QueueRepository
      */
     protected $queueRepository;
@@ -73,7 +68,6 @@ class CrawlerApi
     {
         /** @var ObjectManager $objectManager */
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->crawlerController = $objectManager->get(CrawlerController::class);
         $this->queueRepository = $objectManager->get(QueueRepository::class);
     }
 
