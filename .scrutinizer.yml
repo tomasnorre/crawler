@@ -11,7 +11,7 @@ filter:
 tools:
     external_code_coverage:
         timeout: 750
-        runs: 2
+        runs: 1
     php_cpd:
         enabled: true
     php_code_sniffer:

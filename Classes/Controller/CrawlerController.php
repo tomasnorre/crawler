@@ -937,7 +937,7 @@ class CrawlerController implements LoggerAwareInterface
      * Return array of records from crawler queue for input page ID
      *
      * @param integer $id Page ID for which to look up log entries.
-     * @param string$filter Filter: "all" => all entries, "pending" => all that is not yet run, "finished" => all complete ones
+     * @param string $filter Filter: "all" => all entries, "pending" => all that is not yet run, "finished" => all complete ones
      * @param boolean $doFlush If TRUE, then entries selected at DELETED(!) instead of selected!
      * @param boolean $doFullFlush
      * @param integer $itemsPerPage Limit the amount of entries per page default is 10
