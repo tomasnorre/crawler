@@ -36,9 +36,6 @@ cache:
   directories:
     - $HOME/.composer/cache
 
-install:
-  - composer install
-
 before_script:
   # Installs nimut/typo3-complete
   - travis_wait 30 composer require --dev nimut/typo3-complete=$TYPO3_VERSION
@@ -63,7 +60,7 @@ script:
 
 jobs:
   allow_failures:
-    - env: TYPO3_VERSION=^10.0
+    - env: TYPO3_VERSION=^10.2
     - env: TYPO3_VERSION=dev-master
     - name: "PHPStan"
   include:
