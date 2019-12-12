@@ -14,3 +14,14 @@ Please read the [documentation](https://docs.typo3.org/typo3cms/extensions/crawl
 
 To render the documentation locally, please use the official TYPO3 Documentation rendering Docker Tool.
 <https://github.com/t3docs/docker-render-documentation>
+
+### Contributions
+
+When you have a PR, please run the following checks first.
+
+* `composer test:all`
+    * Requires a mysql-database, you can boot one with `docker-compose` from the `.Docker`-directory
+* `composer cs-fix`
+    * Ensures that coding standards are respected
+* `composer analyse`
+    * Will run PHPStan and do a static code analysis, this is not adjust completely in build yet, but please try to avoid adding new violations. ;)
