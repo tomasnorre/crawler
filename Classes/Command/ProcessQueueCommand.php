@@ -106,9 +106,9 @@ class ProcessQueueCommand extends Command
         $queueRepository = $objectManager->get(QueueRepository::class);
 
         if (!$crawlerController->getDisabled() && $crawlerController->CLI_checkAndAcquireNewProcess($crawlerController->CLI_buildProcessId())) {
-            $countInARun = $amount ? intval($amount) : $crawlerController->extensionSettings['countInARun'];
-            $sleepAfterFinish = $sleeptime ? intval($sleeptime) : $crawlerController->extensionSettings['sleepAfterFinish'];
-            $sleepTime = $sleepafter ? intval($sleepafter) : $crawlerController->extensionSettings['sleepTime'];
+            $countInARun = $amount ? (int)$amount : (int)$crawlerController->extensionSettings['countInARun'];
+            $sleepAfterFinish = $sleeptime ? (int)$sleeptime : (int)$crawlerController->extensionSettings['sleepAfterFinish'];
+            $sleepTime = $sleepafter ? (int)$sleepafter : (int)$crawlerController->extensionSettings['sleepTime'];
 
             try {
                 // Run process:
