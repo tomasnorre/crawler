@@ -4,3 +4,7 @@ parameters:
         - "Classes/"
         - "Configuration/"
         - "Tests/"
+
+    inferPrivatePropertyTypeFromConstructor: true
+    checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false
