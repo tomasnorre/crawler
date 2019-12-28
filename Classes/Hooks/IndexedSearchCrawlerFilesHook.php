@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOEPeople\Crawler\Hooks;
+namespace AOE\Crawler\Hooks;
 
 /*
  * This file is part of the TYPO3 CMS project.
@@ -16,6 +16,8 @@ namespace AOEPeople\Crawler\Hooks;
  *
  * The TYPO3 project - inspiring people to share!
  */
+
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Crawler hook for indexed search. Works with the "crawler" extension
@@ -34,10 +36,10 @@ class IndexedSearchCrawlerFilesHook
     public function crawler_execute($params)
     {
         if (!is_array($params['conf'])) {
-            return;
+            return null;
         }
         // Initialize the indexer class:
-        $indexerObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\IndexedSearch\Indexer::class);
+        $indexerObj = GeneralUtility::makeInstance(\TYPO3\CMS\IndexedSearch\Indexer::class);
         $indexerObj->conf = $params['conf'];
         $indexerObj->init();
         // Index document:

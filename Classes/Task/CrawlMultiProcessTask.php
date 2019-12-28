@@ -52,7 +52,7 @@ class CrawlMultiProcessTask extends AbstractTask
     public function execute()
     {
         $processManager = new ProcessService();
-        $timeout = is_int($this->timeOut) ? (int)$this->timeOut : 1800;
+        $timeout = $this->timeOut ?: 1800;
 
         try {
             $processManager->multiProcess($timeout);
