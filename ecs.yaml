@@ -33,4 +33,7 @@ services:
     PhpCsFixer\Fixer\Import\NoLeadingImportSlashFixer: null
     PhpCsFixer\Fixer\Import\NoUnusedImportsFixer: null
     PhpCsFixer\Fixer\Import\OrderedImportsFixer:
-        ordered_imports: true
+        importsOrder:
+            - 'class'
+            - 'const'
+            - 'function'
