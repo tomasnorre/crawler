@@ -41,6 +41,7 @@ use Psr\Log\LoggerAwareTrait;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -302,6 +303,8 @@ class CrawlerController implements LoggerAwareInterface
      */
     private function getBackendUser()
     {
+        // Make sure the _cli_ user is loaded
+        Bootstrap::initializeBackendAuthentication();
         if ($this->backendUser === null) {
             $this->backendUser = $GLOBALS['BE_USER'];
         }
