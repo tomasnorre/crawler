@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOEPeople\Crawler\Hooks;
+namespace AOE\Crawler\Hooks;
 
 /*
  * This file is part of the TYPO3 CMS project.

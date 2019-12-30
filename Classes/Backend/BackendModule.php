@@ -631,9 +631,9 @@ class BackendModule
                 }
                 $rowData['result_status'] = GeneralUtility::fixed_lgd_cs($resStatus, 50);
                 $rowData['url'] = '<a href="' . htmlspecialchars($parameters['url']) . '" target="_newWIndow">' . htmlspecialchars($parameters['url']) . '</a>';
-                $rowData['feUserGroupList'] = $parameters['feUserGroupList'];
+                $rowData['feUserGroupList'] = $parameters['feUserGroupList'] ?: '';
                 $rowData['procInstructions'] = is_array($parameters['procInstructions']) ? implode('; ', $parameters['procInstructions']) : '';
-                $rowData['set_id'] = $vv['set_id'];
+                $rowData['set_id'] = (string)$vv['set_id'];
 
                 if ($this->pObj->MOD_SETTINGS['log_feVars']) {
                     $resFeVars = $this->getResFeVars($resultData ?: []);
@@ -646,7 +646,7 @@ class BackendModule
                 $content .= '
 					<tr>
 						' . $titleClm . '
-						<td><a href="' . $this->getInfoModuleUrl(['qid_details' => $vv['qid'], 'setID' => $setId]) . '">' . htmlspecialchars($vv['qid']) . '</a></td>
+						<td><a href="' . $this->getInfoModuleUrl(['qid_details' => $vv['qid'], 'setID' => $setId]) . '">' . htmlspecialchars((string)$vv['qid']) . '</a></td>
 						<td><a href="' . $this->getInfoModuleUrl(['qid_read' => $vv['qid'], 'setID' => $setId]) . '">' . $refreshIcon . '</a></td>';
                 foreach ($rowData as $fKey => $value) {
                     if ($fKey === 'url') {
@@ -704,7 +704,7 @@ class BackendModule
     {
         $content = '';
         if (is_array($resultRow) && array_key_exists('result_data', $resultRow)) {
-            $requestContent = unserialize($resultRow['result_data']);
+            $requestContent = unserialize($resultRow['result_data']) ?: ['content' => ''];
             $requestResult = unserialize($requestContent['content']);
 
             if (is_array($requestResult) && array_key_exists('log', $requestResult)) {
@@ -1002,11 +1002,15 @@ class BackendModule
      */
     protected function selectorBox($optArray, $name, $value, bool $multiple): string
     {
+        if (!is_string($value) || !is_array($value)) {
+            $value = '';
+        }
+        
         $options = [];
         foreach ($optArray as $key => $val) {
-            $selected = (!$multiple && !strcmp($value, $key)) || ($multiple && in_array($key, (array)$value));
+            $selected = (!$multiple && !strcmp($value, (string)$key)) || ($multiple && in_array($key, (array)$value));
             $options[] = '
-				<option value="' . htmlspecialchars($key) . '"' . ($selected ? ' selected="selected"' : '') . '>' . htmlspecialchars($val) . '</option>';
+				<option value="' . $key .'" ' . ($selected ? ' selected="selected"' : '') . '>' . htmlspecialchars($val) . '</option>';
         }
 
         return '<select class="form-control" name="' . htmlspecialchars($name . ($multiple ? '[]' : '')) . '"' . ($multiple ? ' multiple' : '') . '>' . implode('', $options) . '</select>';
