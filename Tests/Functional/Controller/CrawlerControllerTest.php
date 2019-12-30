@@ -221,7 +221,7 @@ class CrawlerControllerTest extends FunctionalTestCase
     {
         $GLOBALS['BE_USER'] = $this->getMockBuilder(BackendUserAuthentication::class)
             ->disableOriginalConstructor()
-            ->setMethods(['isAdmin', 'getTSConfig', 'getPagePermsClause', 'isInWebMount'])
+            ->setMethods(['isAdmin', 'getTSConfig', 'getPagePermsClause', 'isInWebMount', 'backendCheckLogin'])
             ->getMock();
 
         $configurationsForBranch = $this->subject->getConfigurationsForBranch(5, 99);
