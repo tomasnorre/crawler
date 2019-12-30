@@ -53,7 +53,7 @@ class ProcessQueueCommand extends Command
             '
             Examples:
               --- Will trigger the crawler which starts to process the queue entries
-              $ typo3 crawler:crawlQueue
+              $ typo3 crawler:processqueue --amount 15 --sleepafter 5 --sleeptime 2  
             '
         );
         $this->addOption(

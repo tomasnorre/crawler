@@ -18,7 +18,7 @@ Run queue
 ::
 
    # replace vendor/bin/typo3 with your own cli runner
-   $ vendor/bin/typo3 crawler:crawlqueue [--amount <pages to crawl>] [--sleeptime <milliseconds>] [--sleepafter <seconds>]
+   $ vendor/bin/typo3 crawler:processqueue [--amount <pages to crawl>] [--sleeptime <milliseconds>] [--sleepafter <seconds>]
 
 Flush queue
 -----------
