@@ -1005,12 +1005,12 @@ class BackendModule
         if (!is_string($value) || !is_array($value)) {
             $value = '';
         }
-        
+
         $options = [];
         foreach ($optArray as $key => $val) {
             $selected = (!$multiple && !strcmp($value, (string)$key)) || ($multiple && in_array($key, (array)$value));
             $options[] = '
-				<option value="' . $key .'" ' . ($selected ? ' selected="selected"' : '') . '>' . htmlspecialchars($val) . '</option>';
+				<option value="' . $key . '" ' . ($selected ? ' selected="selected"' : '') . '>' . htmlspecialchars($val) . '</option>';
         }
 
         return '<select class="form-control" name="' . htmlspecialchars($name . ($multiple ? '[]' : '')) . '"' . ($multiple ? ' multiple' : '') . '>' . implode('', $options) . '</select>';
