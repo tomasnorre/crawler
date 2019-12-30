@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace AOE\Crawler\CrawlStrategy;
 
 /*
+ * (c) 2020 AOE GmbH <dev@aoe.com>
+ *
  * This file is part of the TYPO3 Crawler Extension.
  *
  * It is free software; you can redistribute it and/or modify it under
