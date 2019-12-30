@@ -610,11 +610,6 @@ class CrawlerController
 
             if (\is_array($crawlerCfg['paramSets.'])) {
                 foreach ($crawlerCfg['paramSets.'] as $key => $values) {
-                    if (!\is_array($values)) {
-                        // Sub configuration for a single configuration string:
-                        $subCfg = (array)$crawlerCfg['paramSets.'][$key . '.'];
-                        $subCfg['key'] = $key;
-                    }
                     $key = str_replace('.', '', $key);
                     // Sub configuration for a single configuration string:
                     $subCfg = (array)$crawlerCfg['paramSets.'][$key . '.'];
