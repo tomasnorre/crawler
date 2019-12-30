@@ -229,10 +229,10 @@ class ProcessCleanUpHook
         $returnArray = [];
         if (!Environment::isWindows()) {
             // Not windows
-            exec('ps aux | grep \'cli_dispatcher\'', $returnArray, $returnValue);
+            exec('ps aux | grep \'typo3 crawler:processQueue\'', $returnArray, $returnValue);
         } else {
             // Windows
-            exec('tasklist | find \'cli_dispatcher\'', $returnArray, $returnValue);
+            exec('tasklist | find \'typo3 crawler:processQueue\'', $returnArray, $returnValue);
         }
         return $returnArray;
     }
