@@ -122,7 +122,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
 
         $pageId = MathUtility::forceIntegerInRange($input->getOption('page'), 0);
 
-        $configurationKeys = $this->getConfigurationKeys($input->getOption('conf'));
+        $configurationKeys = $this->getConfigurationKeys((string) $input->getOption('conf'));
 
         if (!is_array($configurationKeys)) {
             $configurations = $crawlerController->getUrlsForPageId($pageId);
