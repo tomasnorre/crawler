@@ -25,6 +25,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Context\UserAspect;
 use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
@@ -102,7 +103,17 @@ class CrawlerInitialization implements MiddlewareInterface
             }
             $GLOBALS['TSFE']->fe_user->user['usergroup'] = $grList;
             $GLOBALS['TSFE']->applicationData['tx_crawler']['log'][] = 'User Groups: ' . $grList;
-            // @todo: set the frontend user aspect again.
+            // we has to set the fe user group to the user aspect since indexed_search only reads the user aspect
+            // to get the groups.  otherwise groups are ignored during indexing.
+            // we need to add the groups 0, and -2 too, like the getGroupIds getter does.
+            $this->context->setAspect(
+                'frontend.user',
+                GeneralUtility::makeInstance(
+                    UserAspect::class,
+                    $GLOBALS['TSFE']->fe_user,
+                    explode(',', '0,-2,' . $grList)
+                )
+            );
         }
 
         // Execute the frontend request as is
