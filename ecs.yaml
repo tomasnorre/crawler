@@ -13,6 +13,8 @@ parameters:
 services:
     PhpCsFixer\Fixer\ArrayNotation\ArraySyntaxFixer:
         syntax: 'short'
+    Symplify\CodingStandard\Sniffs\CleanCode\CognitiveComplexitySniff:
+        maxCognitiveComplexity: 60 # default is 8
 
     # spacing
     PhpCsFixer\Fixer\Operator\ConcatSpaceFixer:

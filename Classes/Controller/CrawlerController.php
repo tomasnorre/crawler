@@ -782,13 +782,7 @@ class CrawlerController implements LoggerAwareInterface
 
                         // Look for integer range: (fx. 1-34 or -40--30 // reads minus 40 to minus 30)
                     if (preg_match('/^(-?[0-9]+)\s*-\s*(-?[0-9]+)$/', trim($pV), $reg)) {
-
-                        // Swap if first is larger than last:
-                        if ($reg[1] > $reg[2]) {
-                            $temp = $reg[2];
-                            $reg[2] = $reg[1];
-                            $reg[1] = $temp;
-                        }
+                        $reg = self::swapIfFirstIsLargerThanSecond($reg);
 
                         // Traverse range, add values:
                         $runAwayBrake = 1000; // Limit to size of range!
@@ -841,6 +835,7 @@ class CrawlerController implements LoggerAwareInterface
                                         $queryBuilder->expr()->in($pidField, $queryBuilder->createNamedParameter($pidArray, Connection::PARAM_INT_ARRAY)),
                                         $where
                                     );
+
                                 if (!empty($addTable)) {
                                     // TODO: Check if this works as intended!
                                     $queryBuilder->add('from', $addTable);
@@ -2103,5 +2098,21 @@ class CrawlerController implements LoggerAwareInterface
         }
 
         return $url;
+    }
+
+    /**
+     * @param $reg array
+     * @return array
+     */
+    private function swapIfFirstIsLargerThanSecond($reg): array
+    {
+        // Swap if first is larger than last:
+        if ($reg[1] > $reg[2]) {
+            $temp = $reg[2];
+            $reg[2] = $reg[1];
+            $reg[1] = $temp;
+        }
+
+        return $reg;
     }
 }
