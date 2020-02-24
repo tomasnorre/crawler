@@ -30,6 +30,7 @@ namespace AOE\Crawler\Tests\Unit\Controller;
 
 use AOE\Crawler\Controller\CrawlerController;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 
 /**
@@ -143,7 +144,7 @@ class CrawlerControllerTest extends UnitTestCase
      *
      * @dataProvider drawURLs_PIfilterDataProvider
      */
-    public function drawURLs_PIfilter($piString, $incomingProcInstructions, $expected): void
+    public function drawURLs_PIfilter(string $piString, array $incomingProcInstructions, bool $expected): void
     {
         self::assertEquals(
             $expected,
@@ -154,13 +155,9 @@ class CrawlerControllerTest extends UnitTestCase
     /**
      * @test
      *
-     * @param $groupList
-     * @param $accessList
-     * @param $expected
-     *
      * @dataProvider hasGroupAccessDataProvider
      */
-    public function hasGroupAccess($groupList, $accessList, $expected): void
+    public function hasGroupAccess(string $groupList, string $accessList, bool $expected): void
     {
         self::assertEquals(
             $expected,
@@ -171,17 +168,11 @@ class CrawlerControllerTest extends UnitTestCase
     /**
      * @test
      *
-     * @param $checkIfPageSkipped
-     * @param $getUrlsForPages
-     * @param $pageRow
-     * @param $skipMessage
-     * @param $expected
-     *
      * @dataProvider getUrlsForPageRowDataProvider
      */
-    public function getUrlsForPageRow($checkIfPageSkipped, $getUrlsForPages, $pageRow, $skipMessage, $expected): void
+    public function getUrlsForPageRow(bool $checkIfPageSkipped, array $getUrlsForPages, array $pageRow, string $skipMessage, array $expected): void
     {
-        /** @var CrawlerController $crawlerController */
+        /** @var MockObject|CrawlerController $crawlerController */
         $crawlerController = $this->createPartialMock(CrawlerController::class, ['checkIfPageShouldBeSkipped', 'getUrlsForPageId']);
         $crawlerController->expects($this->any())->method('checkIfPageShouldBeSkipped')->will($this->returnValue($checkIfPageSkipped));
         $crawlerController->expects($this->any())->method('getUrlsForPageId')->will($this->returnValue($getUrlsForPages));
@@ -218,13 +209,9 @@ class CrawlerControllerTest extends UnitTestCase
     /**
      * @test
      *
-     * @param $paramArray
-     * @param $urls
-     * @param $expected
-     *
      * @dataProvider compileUrlsDataProvider
      */
-    public function compileUrls($paramArray, $urls, $expected): void
+    public function compileUrls(array $paramArray, array $urls, array $expected): void
     {
         self::assertEquals(
             $expected,
@@ -268,14 +255,9 @@ class CrawlerControllerTest extends UnitTestCase
     /**
      * @test
      *
-     * @param $extensionSetting
-     * @param $pageRow
-     * @param $excludeDoktype
-     * @param $expected
-     *
      * @dataProvider checkIfPageShouldBeSkippedDataProvider
      */
-    public function checkIfPageShouldBeSkipped($extensionSetting, $pageRow, $excludeDoktype, $expected): void
+    public function checkIfPageShouldBeSkipped(array $extensionSetting, array $pageRow, array $excludeDoktype, string $expected): void
     {
         $this->crawlerController->setExtensionSettings($extensionSetting);
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['excludeDoktype'] = $excludeDoktype;

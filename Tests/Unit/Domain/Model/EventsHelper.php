@@ -38,8 +38,14 @@ use AOE\Crawler\Event\EventObserverInterface;
  */
 class EventsHelper implements EventObserverInterface
 {
+    /**
+     * @var int
+     */
     public static $called_foo = 0;
-    
+
+    /**
+     * @var int
+     */
     public static $called_bar = 0;
     
     /**

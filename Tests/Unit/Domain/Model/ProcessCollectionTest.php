@@ -32,6 +32,7 @@ use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Domain\Model\ProcessCollection;
 use AOE\Crawler\Utility\BackendUtility;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Class ProcessCollectionTest
@@ -60,14 +61,14 @@ class ProcessCollectionTest extends UnitTestCase
             ->setMethods(['dummy'])
             ->disableOriginalConstructor()
             ->getMock();
-        $processOne->setProcessId(11);
+        $processOne->setProcessId('11');
 
         /** @var Process $processTwo */
         $processTwo = $this->getMockBuilder(Process::class)
             ->setMethods(['dummy'])
             ->disableOriginalConstructor()
             ->getMock();
-        $processTwo->setProcessId(13);
+        $processTwo->setProcessId('13');
 
         $processes = [];
         $processes[] = $processOne;
@@ -97,6 +98,7 @@ class ProcessCollectionTest extends UnitTestCase
      */
     public function appendCrawlerDomainObject(): void
     {
+        /** @var MockObject|Process $correctObjectType */
         $correctObjectType = $this->getAccessibleMock(Process::class, ['dummy'], [], '', false);
         $this->subject->append($correctObjectType);
 
@@ -122,6 +124,7 @@ class ProcessCollectionTest extends UnitTestCase
      */
     public function offsetSetAndGet(): void
     {
+        /** @var MockObject|Process $correctObjectType */
         $correctObjectType = $this->getAccessibleMock(Process::class, ['dummy'], [], '', false);
         $this->subject->offsetSet(100, $correctObjectType);
 

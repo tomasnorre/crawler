@@ -30,6 +30,7 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
 
 use AOE\Crawler\Domain\Model\Process;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Class Process
@@ -48,8 +49,8 @@ class ProcessTest extends UnitTestCase
         $this->subject = $this->createPartialMock(Process::class, ['dummy']);
         $this->subject->setActive(true);
         $this->subject->setProcessId('1234');
-        $this->subject->setTtl('300');
-        $this->subject->setAssignedItemsCount('20');
+        $this->subject->setTtl(300);
+        $this->subject->setAssignedItemsCount(20);
     }
 
     /**
@@ -57,7 +58,7 @@ class ProcessTest extends UnitTestCase
      */
     public function setAndGetRowDoAsExpected(): void
     {
-        $processId = 4567;
+        $processId = '4567';
         $ttl = 600;
         $assignedItemsCount = 30;
         $systemProcessId = sha1('processId');
@@ -125,16 +126,12 @@ class ProcessTest extends UnitTestCase
     /**
      * @test
      *
-     * @param $active
-     * @param $processes
-     * @param $expectedState
-     *
      * @dataProvider getStateDataProvider
      */
-    public function getStateReturnsExpectedState($active, $processes, $expectedState): void
+    public function getStateReturnsExpectedState(int $active, int $processes, string $expectedState): void
     {
-        /** @var Process $processMock */
-        $processMock = $this->getAccessibleMock(Process::class, ['isActive', 'getProgress'], [], '', false);
+        /** @var MockObject|Process $processMock */
+        $processMock = self::getAccessibleMock(Process::class, ['isActive', 'getProgress'], [], '', false);
         $processMock->expects($this->any())->method('isActive')->will($this->returnValue($active));
         $processMock->expects($this->any())->method('getProgress')->will($this->returnValue($processes));
 
@@ -147,15 +144,12 @@ class ProcessTest extends UnitTestCase
     /**
      * @test
      *
-     * @param $countItemsAssigned
-     * @param $expectedProgress
-     *
      * @dataProvider getProgressReturnsExpectedPercentageDataProvider
      */
-    public function getProgressReturnsExpectedPercentage($countItemsAssigned, $countItemsProcessed, $expectedProgress): void
+    public function getProgressReturnsExpectedPercentage(int $countItemsAssigned, int $countItemsProcessed, float $expectedProgress): void
     {
-        /** @var Process $processMock */
-        $processMock = $this->getAccessibleMock(Process::class, ['getAssignedItemsCount', 'getAmountOfItemsProcessed'], [], '', false);
+        /** @var MockObject|Process $processMock */
+        $processMock = self::getAccessibleMock(Process::class, ['getAssignedItemsCount', 'getAmountOfItemsProcessed'], [], '', false);
         $processMock->expects($this->any())->method('getAssignedItemsCount')->will($this->returnValue($countItemsAssigned));
         $processMock->expects($this->any())->method('getAmountOfItemsProcessed')->will($this->returnValue($countItemsProcessed));
 
@@ -202,16 +196,12 @@ class ProcessTest extends UnitTestCase
     /**
      * @test
      *
-     * @param $getTimeForFirstItem
-     * @param $getTimeForLastItem
-     * @param $expected
-     *
      * @dataProvider getRuntimeReturnsIntegerDataProvider
      */
-    public function getRuntimeReturnsInteger($getTimeForFirstItem, $getTimeForLastItem, $expected): void
+    public function getRuntimeReturnsInteger(int $getTimeForFirstItem, int $getTimeForLastItem, int $expected): void
     {
-        /** @var Process $processMock */
-        $processMock = $this->getAccessibleMock(Process::class, ['getTimeForFirstItem', 'getTimeForLastItem'], [], '', false);
+        /** @var MockObject|Process $processMock */
+        $processMock = self::getAccessibleMock(Process::class, ['getTimeForFirstItem', 'getTimeForLastItem'], [], '', false);
         $processMock->expects($this->any())->method('getTimeForFirstItem')->will($this->returnValue($getTimeForFirstItem));
         $processMock->expects($this->any())->method('getTimeForLastItem')->will($this->returnValue($getTimeForLastItem));
 

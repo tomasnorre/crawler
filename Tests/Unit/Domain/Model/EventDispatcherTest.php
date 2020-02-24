@@ -72,7 +72,7 @@ class EventDispatcherTest extends UnitTestCase
      * @dataProvider eventsAndResultsDataProvider
      *
      */
-    public function canDispatcherDispatchEvent($events, $expectedFooCalls, $expectedBarCalls): void
+    public function canDispatcherDispatchEvent(array $events, int $expectedFooCalls, int $expectedBarCalls): void
     {
         EventsHelper::$called_foo = 0;
         EventsHelper::$called_bar = 0;

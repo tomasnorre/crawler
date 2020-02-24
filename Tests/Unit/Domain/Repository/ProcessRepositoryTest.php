@@ -43,7 +43,7 @@ class ProcessRepositoryTest extends UnitTestCase
      *
      * @dataProvider getLimitFromItemCountAndOffsetDataProvider
      */
-    public function getLimitFromItemCountAndOffset($itemCount, $offset, $expected): void
+    public function getLimitFromItemCountAndOffset(int $itemCount, int $offset, string $expected): void
     {
         self::assertEquals(
             $expected,

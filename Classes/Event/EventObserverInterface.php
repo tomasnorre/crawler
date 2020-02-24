@@ -40,7 +40,6 @@ interface EventObserverInterface
      * that should be forwarded to the observer
      *
      * @param EventDispatcher $dispatcher
-     * @return boolean
      */
-    public function registerObservers(EventDispatcher $dispatcher);
+    public function registerObservers(EventDispatcher $dispatcher): void;
 }
