@@ -15,9 +15,5 @@ return [
     'tx_crawler_hooks_tsfe' => \AOE\Crawler\Hooks\TsfeHook::class,
     'tx_crawler_lib' => \AOE\Crawler\Controller\CrawlerController::class,
     'tx_crawler_modfunc1' => \AOE\Crawler\Backend\BackendModule::class,
-    'tx_crawler_scheduler_crawl' => \AOE\Crawler\Task\CrawlerTask::class,
-    'tx_crawler_scheduler_crawlMultiProcess' => \AOE\Crawler\Task\CrawlMultiProcessTask::class,
-    'tx_crawler_scheduler_flush' => \AOE\Crawler\Task\FlushQueueTask::class,
-    'tx_crawler_scheduler_im' => \AOE\Crawler\Task\CrawlerQueueTask::class,
     'tx_crawler_tcafunc' => \AOE\Crawler\Utility\TcaUtility::class,
 ];
