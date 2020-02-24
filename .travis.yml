@@ -8,8 +8,6 @@ notifications:
     on_success: never
     on_failure: never
 
-sudo: false
-
 before_install:
   # turn off XDebug for speed up
   - phpenv config-rm xdebug.ini || return 0
@@ -59,6 +57,7 @@ script:
   - .Build/bin/phpunit --whitelist Classes --colors -c $FUNCTIONAL_XML Tests/Functional
 
 jobs:
+  fast_finish: true
   allow_failures:
     - env: TYPO3_VERSION=^10.2
     - env: TYPO3_VERSION=dev-master
@@ -142,6 +141,3 @@ jobs:
             echo "Uploading release ${TRAVIS_TAG} to TER"
             $HOME/.composer/vendor/bin/ter-client upload aoe_ipauth . -u "$TYPO3_ORG_USERNAME" -p "$TYPO3_ORG_PASSWORD" -m "$TAG_MESSAGE"
           fi;
-
-matrix:
-  fast_finish: true
