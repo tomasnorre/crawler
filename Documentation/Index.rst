@@ -26,6 +26,7 @@ The content of this document is related to TYPO3, a GNU/GPL CMS/Framework availa
    Introduction/Index
    Configuration/Index
    ExecutingTheQueue/Index
+   Scheduler/Index
    Features/Index
    Troubleshooting/Index
    Links/Links

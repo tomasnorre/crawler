@@ -13,7 +13,7 @@
 .. role::   ts(typoscript)
    :class:  typoscript
 .. role::   php(code)
-
+.. _executing-the-queue-label:
 
 Executing the queue
 -------------------
