@@ -11,7 +11,7 @@
 .. role::   ts(typoscript)
    :class:  typoscript
 .. role::   php(code)
-
+.. _executing-the-queue-cli-label:
 
 Building and Executing queue right away (from cli)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
