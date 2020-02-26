@@ -50,7 +50,7 @@ class ProcessRepository extends AbstractRepository
     /**
      * @var QueryBuilder
      */
-    protected $queryBuilder = QueryBuilder::class;
+    protected $queryBuilder;
 
     /**
      * @var array

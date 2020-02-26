@@ -107,7 +107,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
      * $ typo3 crawler:buildQueue --page 7 --depth 0 --conf defaultConfiguration --mode queue --number 4
      *
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $mode = $input->getOption('mode');
 
@@ -139,7 +139,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             $reason->setDetailText('The cli script of the crawler added to the queue');
             EventDispatcher::getInstance()->post(
                 'invokeQueueChange',
-                $crawlerController->setID,
+                strval($crawlerController->setID),
                 ['reason' => $reason]
             );
         }
@@ -187,6 +187,8 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             $output->writeln('<info>' . count($crawlerController->urlList) . ' entries found for processing. (Use "mode" to decide action):</info>' . PHP_EOL);
             $output->writeln('<info>' . implode(PHP_EOL, $crawlerController->urlList) . '</info>' . PHP_EOL);
         }
+
+        return 0;
     }
 
     /**

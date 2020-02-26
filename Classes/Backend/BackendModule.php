@@ -34,6 +34,7 @@ use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\EventDispatcher;
+use AOE\Crawler\Hooks\CrawlerHookInterface;
 use AOE\Crawler\Service\ProcessService;
 use AOE\Crawler\Utility\PhpBinaryUtility;
 use Psr\Http\Message\UriInterface;
@@ -78,11 +79,29 @@ class BackendModule
     protected $id;
 
     // Internal, dynamic:
+    /**
+     * @var array
+     */
     protected $duplicateTrack = [];
+
+    /**
+     * @var bool
+     */
     protected $submitCrawlUrls = false;
+
+    /**
+     * @var bool
+     */
     protected $downloadCrawlUrls = false;
 
+    /**
+     * @var int
+     */
     protected $scheduledTime = 0;
+
+    /**
+     * @var int
+     */
     protected $reqMinute = 1000;
 
     /**
@@ -346,7 +365,7 @@ class BackendModule
 
                     EventDispatcher::getInstance()->post(
                         'invokeQueueChange',
-                        $this->findCrawler()->setID,
+                        strval($this->findCrawler()->setID),
                         ['reason' => $reason]
                     );
                 }
@@ -714,7 +733,7 @@ class BackendModule
         return $content;
     }
 
-    protected function getResStatus($requestContent): string
+    protected function getResStatus(array $requestContent): string
     {
         if (empty($requestContent)) {
             return '-';
@@ -843,20 +862,17 @@ class BackendModule
     }
 
     /**
-     * @param $currentActiveProcesses
-     * @param $maxActiveProcesses
-     * @param $isCrawlerEnabled
-     * @return string
      * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
      */
-    protected function getAddLink($currentActiveProcesses, $maxActiveProcesses, $isCrawlerEnabled): string
+    protected function getAddLink(int $currentActiveProcesses, int $maxActiveProcesses, bool $isCrawlerEnabled): string
     {
         if (!$isCrawlerEnabled) {
             return '';
         }
-        if (MathUtility::convertToPositiveInteger($currentActiveProcesses) >= MathUtility::convertToPositiveInteger($maxActiveProcesses)) {
+        if ($currentActiveProcesses >= $maxActiveProcesses) {
             return '';
         }
+
         return $this->getLinkButton(
             'actions-add',
             $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.process.add'),
@@ -941,10 +957,10 @@ class BackendModule
     /**
      * This method is used to add a message to the internal queue
      *
-     * @param  string  the message itself
-     * @param  integer message level (-1 = success (default), 0 = info, 1 = notice, 2 = warning, 3 = error)
+     * @param  string $message the message itself
+     * @param  int $severity message level (-1 = success (default), 0 = info, 1 = notice, 2 = warning, 3 = error)
      */
-    protected function addMessage($message, $severity = FlashMessage::OK): void
+    protected function addMessage(string $message, int $severity = FlashMessage::OK): void
     {
         $message = GeneralUtility::makeInstance(
             FlashMessage::class,
@@ -953,7 +969,6 @@ class BackendModule
             $severity
         );
 
-        // TODO:
         /** @var FlashMessageService $flashMessageService */
         $flashMessageService = GeneralUtility::makeInstance(FlashMessageService::class);
         $flashMessageService->getMessageQueueByIdentifier()->addMessage($message);
@@ -961,8 +976,6 @@ class BackendModule
 
     /**
      * Add notice message to the user interface.
-     *
-     * @param string The message
      */
     protected function addNoticeMessage(string $message): void
     {
@@ -971,8 +984,6 @@ class BackendModule
 
     /**
      * Add error message to the user interface.
-     *
-     * @param string The message
      */
     protected function addErrorMessage(string $message): void
     {
@@ -982,8 +993,6 @@ class BackendModule
 
     /**
      * Add error message to the user interface.
-     *
-     * @param string The message
      */
     protected function addWarningMessage(string $message): void
     {
@@ -1023,6 +1032,7 @@ class BackendModule
     {
         $crawlerLib = GeneralUtility::makeInstance(CrawlerController::class);
         foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['refresh_hooks'] ?? [] as $objRef) {
+            /** @var CrawlerHookInterface $hookObj */
             $hookObj = GeneralUtility::makeInstance($objRef);
             if (is_object($hookObj)) {
                 $hookObj->crawler_init($crawlerLib);

@@ -77,7 +77,7 @@ It will remove queue entries and perform a cleanup.' . chr(10) . chr(10) .
      * $ typo3 crawler:flushQueue --mode pending
      *
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
 
@@ -93,11 +93,13 @@ It will remove queue entries and perform a cleanup.' . chr(10) . chr(10) .
                 break;
             case 'finished':
             case 'pending':
-                $crawlerController->getLogEntriesForPageId($pageId, $input->getOption('mode'), true, $fullFlush);
+                $crawlerController->getLogEntriesForPageId($pageId, strval($input->getOption('mode')), true, $fullFlush);
                 break;
             default:
                 $output->writeln('<info>No matching parameters found.' . PHP_EOL . 'Try "typo3 help crawler:flushQueue" to see your options</info>');
                 break;
         }
+
+        return 0;
     }
 }

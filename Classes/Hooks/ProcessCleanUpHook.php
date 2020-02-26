@@ -39,7 +39,7 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  * Class ProcessCleanUpHook
  * @package AOE\Crawler\Hooks
  */
-class ProcessCleanUpHook
+class ProcessCleanUpHook implements CrawlerHookInterface
 {
     /**
      * @var CrawlerController

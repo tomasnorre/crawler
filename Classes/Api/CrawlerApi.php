@@ -367,28 +367,17 @@ class CrawlerApi
 
     /**
      * Get active processes count
-     *
-     * @param void
-     *
-     * @return int
      */
-    public function getActiveProcessesCount()
+    public function getActiveProcessesCount(): int
     {
         $processRepository = new ProcessRepository();
 
         return $processRepository->countActive();
     }
 
-    /**
-     * Get last processed entries
-     *
-     * @param int $limit
-     *
-     * @return array
-     */
-    public function getLastProcessedQueueEntries($limit)
+    public function getLastProcessedQueueEntries(int $limit): array
     {
-        return $this->queueRepository->getLastProcessedEntries('*', $limit);
+        return $this->queueRepository->getLastProcessedEntries($limit);
     }
 
     /**

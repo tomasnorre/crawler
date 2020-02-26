@@ -100,7 +100,7 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface
         return unserialize($content);
     }
 
-    protected function buildRequestHeaders(array $url, string $crawlerId)
+    protected function buildRequestHeaders(array $url, string $crawlerId): array
     {
         $reqHeaders = [];
         $reqHeaders[] = 'GET ' . $url['path'] . ($url['query'] ? '?' . $url['query'] : '') . ' HTTP/1.0';
@@ -118,7 +118,7 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface
      * Executes a shell command and returns the outputted result.
      *
      * @param string $command Shell command to be executed
-     * @return string Outputted result of the command execution
+     * @return string|null Outputted result of the command execution
      */
     protected function executeShellCommand($command)
     {

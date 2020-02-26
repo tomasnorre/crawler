@@ -19,6 +19,7 @@ namespace AOE\Crawler\Hooks;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Controller\CrawlerController;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\Connection;
@@ -71,10 +72,8 @@ class IndexedSearchCrawlerHook
      * Initialization of crawler hook.
      * This function is asked for each instance of the crawler and we must check if something is timed to happen and if so put entry(s) in the crawlers log to start processing.
      * In reality we select indexing configurations and evaluate if any of them needs to run.
-     *
-     * @param object $pObj Parent object (tx_crawler lib)
      */
-    public function crawler_init(&$pObj): void
+    public function crawler_init(CrawlerController &$pObj): void
     {
         // Select all indexing configuration which are waiting to be activated:
         $connection = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('index_config');
@@ -359,7 +358,7 @@ class IndexedSearchCrawlerHook
                 // Select files and directories in path:
                 $extList = implode(',', GeneralUtility::trimExplode(',', $cfgRec['extensions'], true));
                 $fileArr = [];
-                $files = GeneralUtility::getAllFilesAndFoldersInPath($fileArr, $readpath, $extList, 0, 0);
+                $files = GeneralUtility::getAllFilesAndFoldersInPath($fileArr, $readpath, $extList, false, 0);
                 $directoryList = GeneralUtility::get_dirs($readpath);
                 if (is_array($directoryList) && $params['depth'] < $cfgRec['depth']) {
                     foreach ($directoryList as $subdir) {
@@ -591,19 +590,19 @@ class IndexedSearchCrawlerHook
      * @param string $url URL string to check
      * @param array $urlLog Array of already indexed URLs (input url is looked up here and must not exist already)
      * @param string $baseUrl Base URL of the indexing process (input URL must be "inside" the base URL!)
-     * @return string Returls the URL if OK, otherwise FALSE
+     * @return string|false Returls the URL if OK, otherwise FALSE
      */
     public function checkUrl($url, $urlLog, $baseUrl)
     {
         $url = preg_replace('/\\/\\/$/', '/', $url);
         [$url] = explode('#', $url);
-        if (!strstr($url, '../')) {
-            if (GeneralUtility::isFirstPartOfStr($url, $baseUrl)) {
-                if (!in_array($url, $urlLog)) {
-                    return $url;
-                }
-            }
+        if ((strpos($url, '../') === false)
+            && GeneralUtility::isFirstPartOfStr($url, $baseUrl)
+            && !in_array($url, $urlLog, true)) {
+            return $url;
         }
+
+        return false;
     }
 
     /**
@@ -733,8 +732,8 @@ class IndexedSearchCrawlerHook
         $lastSureOffset = $aMidNight + MathUtility::forceIntegerInRange($cfgRec['timer_offset'], 0, 86400);
         $frequencySeconds = MathUtility::forceIntegerInRange($cfgRec['timer_frequency'], 1);
         // Now, find out how many blocks of the length of frequency there is until the next time:
-        $frequencyBlocksUntilNextTime = ceil(($currentTime - $lastSureOffset) / $frequencySeconds);
-        // Set next time to the offset + the frequencyblocks multiplied with the frequency length in seconds.
+        $frequencyBlocksUntilNextTime = intval(ceil(($currentTime - $lastSureOffset) / $frequencySeconds));
+        // Set next time to the offset + the frequency blocks multiplied with the frequency length in seconds.
         return $lastSureOffset + $frequencyBlocksUntilNextTime * $frequencySeconds;
     }
 
