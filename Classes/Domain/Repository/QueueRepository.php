@@ -29,7 +29,6 @@ namespace AOE\Crawler\Domain\Repository;
  ***************************************************************/
 
 use AOE\Crawler\Domain\Model\Process;
-use AOE\Crawler\Domain\Model\Queue;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
@@ -51,10 +50,7 @@ class QueueRepository extends AbstractRepository
         // Left empty intentional
     }
 
-    /**
-     * @param $processId
-     */
-    public function unsetQueueProcessId($processId): void
+    public function unsetQueueProcessId(string $processId): void
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
         $queryBuilder
@@ -416,16 +412,10 @@ class QueueRepository extends AbstractRepository
 
     /**
      * Determines if a page is queued
-     *
-     * @param $uid
-     * @param bool $unprocessed_only
-     * @param bool $timed_only
-     * @param bool $timestamp
-     *
-     * @return bool
      */
-    public function isPageInQueue($uid, $unprocessed_only = true, $timed_only = false, $timestamp = false): bool
+    public function isPageInQueue(int $uid, bool $unprocessed_only = true, bool $timed_only = false, int $timestamp = 0): bool
     {
+        // TODO: Looks like the check is obsolete as PHP doesn't allow other than ints for the $uid, PHP 7.2 Strict Mode
         if (!MathUtility::canBeInterpretedAsInteger($uid)) {
             throw new \InvalidArgumentException('Invalid parameter type', 1468931945);
         }
@@ -452,7 +442,7 @@ class QueueRepository extends AbstractRepository
             );
         }
 
-        if (false !== $timestamp) {
+        if ($timestamp) {
             $statement->andWhere(
                 $queryBuilder->expr()->eq('scheduled', $queryBuilder->createNamedParameter($timestamp, \PDO::PARAM_INT))
             );
@@ -473,22 +463,12 @@ class QueueRepository extends AbstractRepository
     /**
      * Method to check if a page is in the queue which is timed for a
      * date when it should be crawled
-     *
-     * @param int $uid uid of the page
-     * @param boolean $show_unprocessed only respect unprocessed pages
-     *
-     * @return bool
-     *
      */
-    public function isPageInQueueTimed($uid, $show_unprocessed = true): bool
+    public function isPageInQueueTimed(int $uid, bool $show_unprocessed = true): bool
     {
-        $uid = intval($uid);
         return $this->isPageInQueue($uid, $show_unprocessed);
     }
 
-    /**
-     * @return array
-     */
     public function getAvailableSets(): array
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);

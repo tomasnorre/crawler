@@ -38,10 +38,11 @@ class ProcessCollection extends \ArrayObject
     /**
      * Method to retrieve an element from the collection.
      *
-     * @throws \Exception
+     * @param mixed $index
      * @return Process
+     * @throws \Exception
      */
-    public function offsetGet($index)
+    public function offsetGet($index): Process
     {
         if (!parent::offsetExists($index)) {
             throw new \Exception('Index "' . var_export($index, true) . '" for \AOE\Crawler\Domain\Model\Process are not available');

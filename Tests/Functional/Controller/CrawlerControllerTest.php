@@ -70,13 +70,9 @@ class CrawlerControllerTest extends FunctionalTestCase
     /**
      * @test
      *
-     * @param $uid
-     * @param $configurationHash
-     * @param $expected
-     *
      * @dataProvider noUnprocessedQueueEntriesForPageWithConfigurationHashExistDataProvider
      */
-    public function noUnprocessedQueueEntriesForPageWithConfigurationHashExist($uid, $configurationHash, $expected): void
+    public function noUnprocessedQueueEntriesForPageWithConfigurationHashExist(int $uid, string $configurationHash, bool $expected): void
     {
         self::assertSame(
             $expected,
@@ -131,12 +127,9 @@ class CrawlerControllerTest extends FunctionalTestCase
     /**
      * @test
      *
-     * @param $where
-     * @param $expected
-     *
      * @dataProvider flushQueueDataProvider
      */
-    public function flushQueue($where, $expected): void
+    public function flushQueue(string $where, int $expected): void
     {
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $queryRepository = $objectManager->get(QueueRepository::class);
@@ -151,16 +144,9 @@ class CrawlerControllerTest extends FunctionalTestCase
     /**
      * @test
      *
-     * @param $id
-     * @param $filter
-     * @param $doFlush
-     * @param $doFullFlush
-     * @param $itemsPerPage
-     * @param $expected
-     *
      * @dataProvider getLogEntriesForPageIdDataProvider
      */
-    public function getLogEntriesForPageId($id, $filter, $doFlush, $doFullFlush, $itemsPerPage, $expected): void
+    public function getLogEntriesForPageId(int $id, string $filter, bool $doFlush, bool $doFullFlush, int $itemsPerPage, array $expected): void
     {
         self::assertEquals(
             $expected,
@@ -171,16 +157,9 @@ class CrawlerControllerTest extends FunctionalTestCase
     /**
      * @test
      *
-     * @param $setId
-     * @param $filter
-     * @param $doFlush
-     * @param $doFullFlush
-     * @param $itemsPerPage
-     * @param $expected
-     *
      * @dataProvider getLogEntriesForSetIdDataProvider
      */
-    public function getLogEntriesForSetId($setId, $filter, $doFlush, $doFullFlush, $itemsPerPage, $expected): void
+    public function getLogEntriesForSetId(int $setId, string $filter, bool $doFlush, bool $doFullFlush, int $itemsPerPage, array $expected): void
     {
         self::assertEquals(
             $expected,
@@ -246,7 +225,7 @@ class CrawlerControllerTest extends FunctionalTestCase
      * @test
      * @dataProvider getDuplicateRowsIfExistDataProvider
      */
-    public function getDuplicateRowsIfExist($timeslotActive, $tstamp, $current, $fieldArray, $expected): void
+    public function getDuplicateRowsIfExist(bool $timeslotActive, int $tstamp, int $current, array $fieldArray, array $expected): void
     {
         $mockedCrawlerController = $this->getAccessibleMock(CrawlerController::class, ['getCurrentTime']);
         $mockedCrawlerController->expects($this->any())->method('getCurrentTime')->willReturn($current);
@@ -265,7 +244,7 @@ class CrawlerControllerTest extends FunctionalTestCase
      * @test
      * @dataProvider addUrlDataProvider
      */
-    public function addUrl($id, $url, $subCfg, $tstamp, $configurationHash, $skipInnerDuplicationCheck, $mockedDuplicateRowResult, $registerQueueEntriesInternallyOnly, $expected): void
+    public function addUrl(int $id, string $url, array $subCfg, int $tstamp, string $configurationHash, bool $skipInnerDuplicationCheck, array $mockedDuplicateRowResult, bool $registerQueueEntriesInternallyOnly, bool $expected): void
     {
         $mockedCrawlerController = $this->getAccessibleMock(CrawlerController::class, ['getDuplicateRowsIfExist']);
         $mockedCrawlerController->expects($this->any())->method('getDuplicateRowsIfExist')->withAnyParameters()->willReturn($mockedDuplicateRowResult);
@@ -288,7 +267,7 @@ class CrawlerControllerTest extends FunctionalTestCase
      * @test
      * @dataProvider expandParametersDataProvider
      */
-    public function expandParameters($paramArray, $pid, $expected): void
+    public function expandParameters(array $paramArray, int $pid, array $expected): void
     {
         $output = $this->subject->expandParameters($paramArray, $pid);
 
@@ -298,7 +277,7 @@ class CrawlerControllerTest extends FunctionalTestCase
         );
     }
 
-    public function expandParametersDataProvider()
+    public function expandParametersDataProvider(): array
     {
         return [
             'Parameters with range' => [
@@ -353,7 +332,7 @@ class CrawlerControllerTest extends FunctionalTestCase
         ];
     }
 
-    public function addUrlDataProvider()
+    public function addUrlDataProvider(): array
     {
         return [
             'Queue entry added' => [
@@ -410,7 +389,7 @@ class CrawlerControllerTest extends FunctionalTestCase
         ];
     }
 
-    public function getDuplicateRowsIfExistDataProvider()
+    public function getDuplicateRowsIfExistDataProvider(): array
     {
         return [
             'EnableTimeslot is true and timestamp is <= current' => [

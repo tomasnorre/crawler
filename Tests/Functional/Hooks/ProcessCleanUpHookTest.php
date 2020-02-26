@@ -136,7 +136,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         $processCountBefore = $this->processRepository->countAll();
         $queueCountBefore = $this->queueRepository->countAll();
 
-        $notExistingProcessId = 23456;
+        $notExistingProcessId = '23456';
         $this->callInaccessibleMethod($this->subject, 'removeProcessFromProcesslist', $notExistingProcessId);
 
         $processCountAfter = $this->processRepository->countAll();
@@ -164,7 +164,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         $processCountBefore = $this->processRepository->countAll();
         $queueCountBefore = $this->queueRepository->countAll();
 
-        $existingProcessId = 1000;
+        $existingProcessId = '1000';
         $this->callInaccessibleMethod($this->subject, 'removeProcessFromProcesslist', $existingProcessId);
 
         $processCountAfter = $this->processRepository->countAll();
@@ -186,7 +186,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
      */
     public function removeProcessFromProcesslistRemoveOneProcessAndOneQueueRecordIsReset(): void
     {
-        $existingProcessId = 1001;
+        $existingProcessId = '1001';
         $expectedProcessesToBeRemoved = 1;
 
         $processCountBefore = $this->processRepository->countAll();

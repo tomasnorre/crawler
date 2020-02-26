@@ -72,7 +72,7 @@ class QueueRepositoryTest extends FunctionalTestCase
      *
      * @dataProvider getFirstOrLastObjectByProcessDataProvider
      */
-    public function getFirstOrLastObjectByProcess($processId, $orderBy, $orderDirection, $expected): void
+    public function getFirstOrLastObjectByProcess(string $processId, string $orderBy, string $orderDirection, array $expected): void
     {
         /** @var Process $process */
         $process = new Process();
@@ -364,23 +364,16 @@ class QueueRepositoryTest extends FunctionalTestCase
      */
     public function isPageInQueueThrowInvalidArgumentException(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionCode(1468931945);
+        $this->expectExceptionMessage('Argument 1 passed to AOE\Crawler\Domain\Repository\QueueRepository::isPageInQueue() must be of the type int');
         $this->subject->isPageInQueue('Cannot be interpreted as integer');
     }
 
     /**
      * @test
      *
-     * @param $uid
-     * @param $unprocessed_only
-     * @param $timed_only
-     * @param $timestamp
-     * @param $expected
-     *
      * @dataProvider isPageInQueueDataProvider
      */
-    public function isPageInQueue($uid, $unprocessed_only, $timed_only, $timestamp, $expected): void
+    public function isPageInQueue(int $uid, bool $unprocessed_only, bool $timed_only, int $timestamp, bool $expected): void
     {
         self::assertSame(
             $expected,
@@ -406,14 +399,14 @@ class QueueRepositoryTest extends FunctionalTestCase
                 'uid' => 15,
                 'unprocessed_only' => true,
                 'timed_only' => false,
-                'timestamp' => false,
+                'timestamp' => 0,
                 'expected' => true,
             ],
             'Timed Only' => [
                 'uid' => 16,
                 'unprocessed_only' => false,
                 'timed_only' => true,
-                'timestamp' => false,
+                'timestamp' => 0,
                 'expected' => true,
             ],
             'Timestamp Only' => [
@@ -427,7 +420,7 @@ class QueueRepositoryTest extends FunctionalTestCase
                 'uid' => 40000,
                 'unprocessed_only' => false,
                 'timed_only' => false,
-                'timestamp' => false,
+                'timestamp' => 0,
                 'expected' => false,
             ],
         ];

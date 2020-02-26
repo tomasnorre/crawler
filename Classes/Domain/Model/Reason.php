@@ -56,13 +56,7 @@ class Reason
         $this->row = $row;
     }
 
-    /**
-     * Set uid
-     *
-     * @param int uid
-     * @return void
-     */
-    public function setUid($uid): void
+    public function setUid(int $uid): void
     {
         $this->row['uid'] = $uid;
     }

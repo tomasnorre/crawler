@@ -121,7 +121,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
             $this->subject->findAll()->count()
         );
 
-        $this->subject->removeByProcessId(1002);
+        $this->subject->removeByProcessId('1002');
 
         self::assertSame(
             4,

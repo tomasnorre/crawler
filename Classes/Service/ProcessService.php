@@ -46,17 +46,17 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 class ProcessService
 {
     /**
-     * @var $timeToLive integer
+     * @var int
      */
     private $timeToLive;
 
     /**
-     * @var integer
+     * @var int
      */
     private $countInARun;
 
     /**
-     * @var integer
+     * @var int
      */
     private $processLimit;
 
@@ -76,7 +76,7 @@ class ProcessService
     private $processRepository;
 
     /**
-     * @var $verbose boolean
+     * @var bool
      */
     private $verbose;
 
@@ -92,7 +92,7 @@ class ProcessService
         $this->timeToLive = intval($this->crawlerController->extensionSettings['processMaxRunTime']);
         $this->countInARun = intval($this->crawlerController->extensionSettings['countInARun']);
         $this->processLimit = intval($this->crawlerController->extensionSettings['processLimit']);
-        $this->verbose = intval($this->crawlerController->extensionSettings['processVerbose']);
+        $this->verbose = boolval($this->crawlerController->extensionSettings['processVerbose']);
     }
 
     /**
@@ -136,7 +136,7 @@ class ProcessService
             }
             sleep(1);
             if ($nextTimeOut < time()) {
-                $timedOutProcesses = $this->processRepository->findAll('', 'DESC', null, 0, 'ttl >' . $nextTimeOut);
+                $timedOutProcesses = $this->processRepository->findAll();
                 $nextTimeOut = time() + $this->timeToLive;
                 if ($this->verbose) {
                     echo 'Cleanup' . implode(',', $timedOutProcesses->getProcessIds()) . chr(10);
@@ -197,7 +197,7 @@ class ProcessService
      * starts new process
      * @throws \Exception if no crawler process was started
      */
-    public function startProcess()
+    public function startProcess(): bool
     {
         $ttl = (time() + $this->timeToLive - 1);
         $current = $this->processRepository->countNotTimeouted($ttl);
@@ -225,8 +225,6 @@ class ProcessService
 
     /**
      * Returns the path to start the crawler from the command line
-     *
-     * @return string
      */
     public function getCrawlerCliPath(): string
     {

@@ -64,6 +64,11 @@ class CrawlerApi
      */
     protected $tableName = 'tx_crawler_queue';
 
+    /**
+     * @var CrawlerController
+     */
+    protected $crawlerController;
+
     public function __construct()
     {
         /** @var ObjectManager $objectManager */
@@ -148,10 +153,8 @@ class CrawlerApi
     /**
      * This method is used to limit the processing instructions to the processing instructions
      * that are allowed.
-     *
-     * @return array
      */
-    protected function filterUnallowedConfigurations($configurations)
+    protected function filterUnallowedConfigurations(array $configurations): array
     {
         if (count($this->allowedConfigurations) > 0) {
             // 	remove configuration that does not match the current selection
@@ -293,12 +296,9 @@ class CrawlerApi
      * at what time the scheduled crawl has been executed. The array also contains items that are
      * scheduled but have note been crawled yet.
      *
-     * @param int $uid uid of the page
-     * @param bool $limit
-     *
      * @return array array with the crawl-history of a page => 0 : scheduled time , 1 : executed_time, 2 : set_id
      */
-    public function getCrawlHistoryForPage($uid, $limit = 0)
+    public function getCrawlHistoryForPage(int $uid, int $limit = 0)
     {
         $uid = intval($uid);
         $limit = intval($limit);
@@ -337,11 +337,8 @@ class CrawlerApi
     /**
      * Get queue statistics
      *
-     * @param void
-     *
-     * @return array array('assignedButUnprocessed' => <>, 'unprocessed' => <>);
      */
-    public function getQueueStatistics()
+    public function getQueueStatistics(): array
     {
         return [
             'assignedButUnprocessed' => $this->queueRepository->countAllAssignedPendingItems(),
@@ -397,9 +394,7 @@ class CrawlerApi
     /**
      * Get current crawling speed
      *
-     * @param float|false page speed in pages per minute
-     *
-     * @return int
+     * @return int|float|bool
      */
     public function getCurrentCrawlingSpeed()
     {

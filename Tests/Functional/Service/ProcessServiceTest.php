@@ -91,10 +91,10 @@ class ProcessServiceTest extends FunctionalTestCase
 
     /**
      * @test
-     * @expectedException \Exception
      */
     public function getCrawlerCliPathThrowsException(): void
     {
+        $this->expectExceptionMessage('Return value of AOE\Crawler\Configuration\ExtensionConfigurationProvider::getExtensionConfiguration() must be of the type array');
         $this->subject->getCrawlerCliPath();
     }
 
