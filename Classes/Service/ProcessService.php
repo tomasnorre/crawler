@@ -141,7 +141,7 @@ class ProcessService
                 if ($this->verbose) {
                     echo 'Cleanup' . implode(',', $timedOutProcesses->getProcessIds()) . chr(10);
                 }
-                $this->crawlerController->CLI_releaseProcesses($timedOutProcesses->getProcessIds(), true);
+                $this->crawlerController->CLI_releaseProcesses($timedOutProcesses->getProcessIds());
             }
         }
         if ($currentPendingItems > 0 && $this->verbose) {
@@ -163,7 +163,6 @@ class ProcessService
      *
      * @return boolean if processes are started
      * @throws \Exception
-     *
      */
     private function startRequiredProcesses()
     {

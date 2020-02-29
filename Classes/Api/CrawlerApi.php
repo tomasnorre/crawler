@@ -336,7 +336,6 @@ class CrawlerApi
 
     /**
      * Get queue statistics
-     *
      */
     public function getQueueStatistics(): array
     {

@@ -243,7 +243,7 @@ class CrawlerApiTest extends FunctionalTestCase
     {
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 'assignedButUnprocessed' => 3,
                 'unprocessed' => 7,
@@ -258,7 +258,6 @@ class CrawlerApiTest extends FunctionalTestCase
      * The testcase uses a TSConfig crawler configuration.
      *
      * @test
-     *
      */
     public function canNotCreateDuplicateQueueEntriesForTwoPagesInThePast(): void
     {

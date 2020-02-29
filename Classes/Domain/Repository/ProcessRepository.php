@@ -168,7 +168,7 @@ class ProcessRepository extends AbstractRepository
     /**
      * Returns the number of active processes.
      *
-     * @return integer
+     * @return int
      */
     public function countActive()
     {
@@ -216,7 +216,6 @@ class ProcessRepository extends AbstractRepository
      *
      * @see getActiveProcessesOlderThanOneHour
      * @return array
-     *
      */
     public function getActiveOrphanProcesses()
     {
@@ -235,9 +234,9 @@ class ProcessRepository extends AbstractRepository
     /**
      * Returns the number of processes that live longer than the given timestamp.
      *
-     * @param  integer $ttl
+     * @param   int $ttl
      *
-     * @return integer
+     * @return int
      */
     public function countNotTimeouted($ttl)
     {
@@ -257,8 +256,8 @@ class ProcessRepository extends AbstractRepository
     /**
      * Get limit clause
      *
-     * @param  integer $itemCount
-     * @param  integer $offset
+     * @param   int $itemCount
+     * @param   int $offset
      *
      * @return string
      */

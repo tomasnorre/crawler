@@ -57,7 +57,6 @@ class ProcessRepositoryTest extends FunctionalTestCase
 
     /**
      * Creates the test environment.
-     *
      */
     public function setUp(): void
     {

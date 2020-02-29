@@ -165,7 +165,6 @@ class ProcessCleanUpHook implements CrawlerHookInterface
      * @param string $string String to create array from
      *
      * @return array
-     *
      */
     private function createResponseArray($string)
     {

@@ -105,7 +105,6 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
      *
      * --- Put entries for re-caching pages from page 7 into queue, 4 every minute.
      * $ typo3 crawler:buildQueue --page 7 --depth 0 --conf defaultConfiguration --mode queue --number 4
-     *
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {

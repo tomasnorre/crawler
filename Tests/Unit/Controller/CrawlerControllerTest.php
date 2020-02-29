@@ -109,16 +109,12 @@ class CrawlerControllerTest extends UnitTestCase
      *
      * @dataProvider setAndGetDisabledDataProvider
      */
-    public function setAndGetDisabled($disabled, $expected): void
+    public function setAndGetDisabled(bool $disabled, bool $expected): void
     {
-        $filenameWithPath = tempnam('/tmp', 'test_foo');
+        $filenameWithPath = tempnam('/tmp', 'test_foo') ?: 'FileNameIsForceIfTempNamReturnedFalse.txt';
         $this->crawlerController->setProcessFilename($filenameWithPath);
+        $this->crawlerController->setDisabled($disabled);
 
-        if (null === $disabled) {
-            $this->crawlerController->setDisabled();
-        } else {
-            $this->crawlerController->setDisabled($disabled);
-        }
         self::assertEquals(
             $expected,
             $this->crawlerController->getDisabled()
@@ -130,7 +126,7 @@ class CrawlerControllerTest extends UnitTestCase
      */
     public function setAndGetProcessFilename(): void
     {
-        $filenameWithPath = tempnam('/tmp', 'test_foo');
+        $filenameWithPath = tempnam('/tmp', 'test_foo') ?: 'FileNameIsForceIfTempNamReturnedFalse.txt';
         $this->crawlerController->setProcessFilename($filenameWithPath);
 
         self::assertEquals(
@@ -440,10 +436,6 @@ class CrawlerControllerTest extends UnitTestCase
     public function setAndGetDisabledDataProvider()
     {
         return [
-            'setDisabled with no param' => [
-                'disabled' => null,
-                'expected' => true,
-            ],
             'setDisabled with true param' => [
                 'disabled' => true,
                 'expected' => true,

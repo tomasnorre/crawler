@@ -453,7 +453,6 @@ class CrawlerController implements LoggerAwareInterface
      * @param array $downloadUrls Array which will be filled with URLS for download if flag is set.
      * @param array $incomingProcInstructions Array of processing instructions
      * @return string List of URLs (meant for display in backend module)
-     *
      */
     public function urlListFromUrlArray(
         array $vv,
@@ -595,7 +594,8 @@ class CrawlerController implements LoggerAwareInterface
             $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $subCfg['pidsOnly'], true));
 
             // process configuration if it is not page-specific or if the specific page is the current page:
-            if (!strcmp((string)$subCfg['pidsOnly'], '') || GeneralUtility::inList($pidOnlyList, $pageId)) {
+            // TODO: Check if $pidOnlyList can be kept as Array instead of imploded
+            if (!strcmp((string)$subCfg['pidsOnly'], '') || GeneralUtility::inList($pidOnlyList, strval($pageId))) {
 
                 // Explode, process etc.:
                 $res[$key] = [];
@@ -622,7 +622,8 @@ class CrawlerController implements LoggerAwareInterface
                 $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $configurationRecord['pidsonly'], true));
 
                 // process configuration if it is not page-specific or if the specific page is the current page:
-                if (!strcmp($configurationRecord['pidsonly'], '') || GeneralUtility::inList($pidOnlyList, $pageId)) {
+                // TODO: Check if $pidOnlyList can be kept as Array instead of imploded
+                if (!strcmp($configurationRecord['pidsonly'], '') || GeneralUtility::inList($pidOnlyList, strval($pageId))) {
                     $key = $configurationRecord['name'];
 
                     // don't overwrite previously defined paramSets
@@ -765,7 +766,7 @@ class CrawlerController implements LoggerAwareInterface
             $v = trim($v);
 
             // If value is encapsulated in square brackets it means there are some ranges of values to find, otherwise the value is literal
-            if (substr($v, 0, 1) === '[' && substr($v, -1) === ']') {
+            if (strpos($v, '[') === 0 && substr($v, -1) === ']') {
                 // So, find the value inside brackets and reset the paramArray value as an array.
                 $v = substr($v, 1, -1);
                 $paramArray[$p] = [];
@@ -776,7 +777,7 @@ class CrawlerController implements LoggerAwareInterface
 
                     // Look for integer range: (fx. 1-34 or -40--30 // reads minus 40 to minus 30)
                     if (preg_match('/^(-?[0-9]+)\s*-\s*(-?[0-9]+)$/', trim($pV), $reg)) {
-                        $reg = self::swapIfFirstIsLargerThanSecond($reg);
+                        $reg = $this->swapIfFirstIsLargerThanSecond($reg);
 
                         // Traverse range, add values:
                         $runAwayBrake = 1000; // Limit to size of range!
@@ -787,7 +788,7 @@ class CrawlerController implements LoggerAwareInterface
                                 break;
                             }
                         }
-                    } elseif (substr(trim($pV), 0, 7) == '_TABLE:') {
+                    } elseif (strpos(trim($pV), '_TABLE:') === 0) {
 
                         // Parse parameters:
                         $subparts = GeneralUtility::trimExplode(';', $pV);
@@ -1679,13 +1680,8 @@ class CrawlerController implements LoggerAwareInterface
 
     /**
      * Running the functionality of the CLI (crawling URLs from queue)
-     *
-     * @param int $countInARun
-     * @param int $sleepTime
-     * @param int $sleepAfterFinish
-     * @return string
      */
-    public function CLI_run($countInARun, $sleepTime, $sleepAfterFinish)
+    public function CLI_run(int $countInARun, int $sleepTime, int $sleepAfterFinish): int
     {
         $result = 0;
         $counter = 0;
@@ -1825,7 +1821,6 @@ class CrawlerController implements LoggerAwareInterface
      * @param string $id identification string for the process
      * @return boolean
      * @todo preemption might not be the most elegant way to clean up
-     *
      */
     public function CLI_checkAndAcquireNewProcess($id)
     {
@@ -1879,7 +1874,7 @@ class CrawlerController implements LoggerAwareInterface
         }
 
         $this->processRepository->deleteProcessesMarkedAsDeleted();
-        $this->CLI_releaseProcesses($orphanProcesses, true); // maybe this should be somehow included into the current lock
+        $this->CLI_releaseProcesses($orphanProcesses);
 
         return $ret;
     }
@@ -1888,10 +1883,9 @@ class CrawlerController implements LoggerAwareInterface
      * Release a process and the required resources
      *
      * @param mixed $releaseIds string with a single process-id or array with multiple process-ids
-     * @param boolean $withinLock show whether the DB-actions are included within an existing lock
      * @return boolean
      */
-    public function CLI_releaseProcesses($releaseIds, $withinLock = false)
+    public function CLI_releaseProcesses($releaseIds)
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
 
@@ -1901,10 +1895,6 @@ class CrawlerController implements LoggerAwareInterface
 
         if (empty($releaseIds)) {
             return false;   //nothing to release
-        }
-
-        if (!$withinLock) {
-            //$this->queryBuilder->getConnection()->executeQuery('BEGIN');
         }
 
         // some kind of 2nd chance algo - this way you need at least 2 processes to have a real cleanup
@@ -1932,21 +1922,7 @@ class CrawlerController implements LoggerAwareInterface
             )
             ->set('system_process_id', 0)
             ->execute();
-        // previous version for reference
-        /*
-        $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
-            'tx_crawler_process',
-            'active=0 AND deleted=0
-            AND NOT EXISTS (
-                SELECT * FROM tx_crawler_queue
-                WHERE tx_crawler_queue.process_id = tx_crawler_process.process_id
-                AND tx_crawler_queue.exec_time = 0
-            )',
-            [
-                'deleted' => '1',
-                'system_process_id' => 0
-            ]
-        );*/
+
         // mark all requested processes as non-active
         $queryBuilder
             ->update('tx_crawler_process')
@@ -1971,10 +1947,6 @@ class CrawlerController implements LoggerAwareInterface
             ->set('process_scheduled', 0)
             ->set('process_id', '')
             ->execute();
-
-        if (!$withinLock) {
-            //$this->queryBuilder->getConnection()->executeQuery('COMMIT');
-        }
 
         return true;
     }
@@ -2090,7 +2062,7 @@ class CrawlerController implements LoggerAwareInterface
         return $url;
     }
 
-    private function swapIfFirstIsLargerThanSecond(array $reg): array
+    protected function swapIfFirstIsLargerThanSecond(array $reg): array
     {
         // Swap if first is larger than last:
         if ($reg[1] > $reg[2]) {

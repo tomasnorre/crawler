@@ -30,7 +30,6 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
 
 use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Domain\Model\ProcessCollection;
-use AOE\Crawler\Utility\BackendUtility;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -89,7 +88,7 @@ class ProcessCollectionTest extends UnitTestCase
      */
     public function appendThrowsException(): void
     {
-        $wrongObjectType = new BackendUtility();
+        $wrongObjectType = new \stdClass();
         $this->subject->append($wrongObjectType);
     }
 
@@ -115,7 +114,7 @@ class ProcessCollectionTest extends UnitTestCase
      */
     public function offsetSetThrowsException(): void
     {
-        $wrongObjectType = new BackendUtility();
+        $wrongObjectType = new \stdClass();
         $this->subject->offsetSet(100, $wrongObjectType);
     }
 

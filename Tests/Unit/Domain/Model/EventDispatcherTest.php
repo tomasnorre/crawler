@@ -70,7 +70,6 @@ class EventDispatcherTest extends UnitTestCase
      *
      * @test
      * @dataProvider eventsAndResultsDataProvider
-     *
      */
     public function canDispatcherDispatchEvent(array $events, int $expectedFooCalls, int $expectedBarCalls): void
     {

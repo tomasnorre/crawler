@@ -30,7 +30,11 @@ namespace AOE\Crawler\Tests\Functional\Controller;
 
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use Nimut\TestingFramework\MockObject\AccessibleMockObjectInterface;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
@@ -52,7 +56,7 @@ class CrawlerControllerTest extends FunctionalTestCase
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     /**
-     * @var CrawlerController
+     * @var MockObject|AccessibleMockObjectInterface|CrawlerController
      */
     protected $subject;
 
@@ -86,31 +90,36 @@ class CrawlerControllerTest extends FunctionalTestCase
 
     /**
      * @test
-     *
      */
     public function cleanUpOldQueueEntries(): void
     {
-        $this->markTestSkipped('This fails with PHP7 & TYPO3 7.6');
-
-        $this->importDataSet(__DIR__ . '/Fixtures/tx_crawler_queue.xml');
         $queryRepository = new QueueRepository();
 
-        $recordsFromFixture = 9;
+        $recordsFromFixture = 14;
         $expectedRemainingRecords = 2;
+
         // Add records to queue repository to ensure we always have records,
         // that will not be deleted with the cleanUpOldQueueEntries-function
+        $connectionForCrawlerQueue = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('tx_crawler_queue');
+
+        // Done for performance reason, as it gets repeated often
+        $time = time() + (7 * 24 * 60 * 60);
+
         for ($i = 0; $i < $expectedRemainingRecords; $i++) {
-            $this->getDatabaseConnection()->exec_INSERTquery(
-                'tx_crawler_queue',
-                [
-                    'exec_time' => time() + (7 * 24 * 60 * 60),
-                    'scheduled' => time() + (7 * 24 * 60 * 60),
-                ]
-            );
+            $connectionForCrawlerQueue
+                ->insert(
+                    'tx_crawler_queue',
+                    [
+                        'exec_time' => $time,
+                        'scheduled' => $time,
+                        'parameters' => 'not important parameters',
+                        'result_data' => 'not important result_data',
+                    ]
+                );
         }
 
         // Check total entries before cleanup
-        self::assertEquals(
+        self::assertSame(
             $recordsFromFixture + $expectedRemainingRecords,
             $queryRepository->countAll()
         );
@@ -118,7 +127,7 @@ class CrawlerControllerTest extends FunctionalTestCase
         $this->subject->_call('cleanUpOldQueueEntries');
 
         // Check total entries after cleanup
-        self::assertEquals(
+        self::assertSame(
             $expectedRemainingRecords,
             $queryRepository->countAll()
         );
@@ -180,14 +189,14 @@ class CrawlerControllerTest extends FunctionalTestCase
 
         $originalCheckSum = md5(serialize($configuration));
 
-        $this->assertNotEquals(
+        self::assertNotEquals(
             $originalCheckSum,
             $this->subject->_call('getConfigurationHash', $configuration)
         );
 
         unset($configuration['paramExpanded'], $configuration['URLs']);
         $newCheckSum = md5(serialize($configuration));
-        $this->assertEquals(
+        self::assertEquals(
             $newCheckSum,
             $this->subject->_call('getConfigurationHash', $configuration)
         );
@@ -205,13 +214,13 @@ class CrawlerControllerTest extends FunctionalTestCase
 
         $configurationsForBranch = $this->subject->getConfigurationsForBranch(5, 99);
 
-        $this->assertNotEmpty($configurationsForBranch);
-        $this->assertCount(
+        self::assertNotEmpty($configurationsForBranch);
+        self::assertCount(
             3,
             $configurationsForBranch
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             $configurationsForBranch,
             [
                 'Not hidden or deleted',
@@ -234,7 +243,7 @@ class CrawlerControllerTest extends FunctionalTestCase
             'enableTimeslot' => $timeslotActive,
         ]);
 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $mockedCrawlerController->_call('getDuplicateRowsIfExist', $tstamp, $fieldArray)
         );
@@ -252,12 +261,12 @@ class CrawlerControllerTest extends FunctionalTestCase
         $mockedCrawlerController->_set('registerQueueEntriesInternallyOnly', $registerQueueEntriesInternallyOnly);
 
         // Checking the mock of getDuplicateRowsIfExist()
-        $this->assertEquals(
+        self::assertEquals(
             $mockedDuplicateRowResult,
             $mockedCrawlerController->_call('getDuplicateRowsIfExist', 1234, [])
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $mockedCrawlerController->addUrl($id, $url, $subCfg, $tstamp, $configurationHash, $skipInnerDuplicationCheck)
         );
@@ -271,7 +280,7 @@ class CrawlerControllerTest extends FunctionalTestCase
     {
         $output = $this->subject->expandParameters($paramArray, $pid);
 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $output
         );
