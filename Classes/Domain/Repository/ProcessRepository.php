@@ -233,12 +233,8 @@ class ProcessRepository extends AbstractRepository
 
     /**
      * Returns the number of processes that live longer than the given timestamp.
-     *
-     * @param   int $ttl
-     *
-     * @return int
      */
-    public function countNotTimeouted($ttl)
+    public function countNotTimeouted(int $ttl): int
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
 
@@ -255,13 +251,8 @@ class ProcessRepository extends AbstractRepository
 
     /**
      * Get limit clause
-     *
-     * @param   int $itemCount
-     * @param   int $offset
-     *
-     * @return string
      */
-    public static function getLimitFromItemCountAndOffset($itemCount, $offset): string
+    public static function getLimitFromItemCountAndOffset(int $itemCount, int $offset): string
     {
         $itemCount = filter_var($itemCount, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'default' => 20]]);
         $offset = filter_var($offset, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0, 'default' => 0]]);
