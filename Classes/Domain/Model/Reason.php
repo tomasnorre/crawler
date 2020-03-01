@@ -28,10 +28,6 @@ namespace AOE\Crawler\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-/**
- * Class Reason
- *
- */
 class Reason
 {
     /**

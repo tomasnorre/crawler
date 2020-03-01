@@ -77,10 +77,6 @@ class CrawlerApiTest extends FunctionalTestCase
         'FR-CA' => ['id' => 2, 'title' => 'Franco-Canadian', 'locale' => 'fr_CA.UTF8', 'iso' => 'fr', 'hrefLang' => 'fr-CA', 'direction' => ''],
     ];
 
-    /**
-     * Creates the test environment.
-     *
-     */
     public function setUp(): void
     {
         parent::setUp();
@@ -130,9 +126,6 @@ class CrawlerApiTest extends FunctionalTestCase
         );
     }
 
-    /**
-     * Resets the test enviroment after the test.
-     */
     public function tearDown(): void
     {
         parent::tearDown();

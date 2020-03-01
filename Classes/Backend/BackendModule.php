@@ -36,6 +36,7 @@ use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\EventDispatcher;
 use AOE\Crawler\Hooks\CrawlerHookInterface;
 use AOE\Crawler\Service\ProcessService;
+use AOE\Crawler\Utility\MessageUtility;
 use AOE\Crawler\Utility\PhpBinaryUtility;
 use Psr\Http\Message\UriInterface;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
@@ -48,8 +49,6 @@ use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Localization\LanguageService;
-use TYPO3\CMS\Core\Messaging\FlashMessage;
-use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\CsvUtility;
 use TYPO3\CMS\Core\Utility\DebugUtility;
@@ -322,7 +321,8 @@ class BackendModule
     {
         $this->view->setTemplate('ShowCrawlerInformation');
         if (empty($this->id)) {
-            $this->addErrorMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.noPageSelected'));
+            $this->isErrorDetected = true;
+            MessageUtility::addErrorMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.noPageSelected'));
         } else {
             $crawlerParameter = GeneralUtility::_GP('_crawl');
             $downloadParameter = GeneralUtility::_GP('_download');
@@ -356,7 +356,7 @@ class BackendModule
             $noConfigurationSelected = empty($this->incomingConfigurationSelection)
                 || (count($this->incomingConfigurationSelection) == 1 && empty($this->incomingConfigurationSelection[0]));
             if ($noConfigurationSelected) {
-                $this->addWarningMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.noConfigSelected'));
+                MessageUtility::addWarningMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.noConfigSelected'));
             } else {
                 if ($this->submitCrawlUrls) {
                     $reason = new Reason();
@@ -459,7 +459,8 @@ class BackendModule
     {
         $this->view->setTemplate('ShowLog');
         if (empty($this->id)) {
-            $this->addErrorMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.noPageSelected'));
+            $this->isErrorDetected = true;
+            MessageUtility::addErrorMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.noPageSelected'));
         } else {
             $this->crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
             $this->crawlerController->setAccessMode('gui');
@@ -578,7 +579,7 @@ class BackendModule
     protected function outputCsvFile(): void
     {
         if (!count($this->CSVaccu)) {
-            $this->addWarningMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:message.canNotExportEmptyQueueToCsvText'));
+            MessageUtility::addWarningMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:message.canNotExportEmptyQueueToCsvText'));
             return;
         }
         $csvLines = [];
@@ -663,10 +664,10 @@ class BackendModule
 
                 // Put rows together:
                 $content .= '
-					<tr>
-						' . $titleClm . '
-						<td><a href="' . $this->getInfoModuleUrl(['qid_details' => $vv['qid'], 'setID' => $setId]) . '">' . htmlspecialchars((string)$vv['qid']) . '</a></td>
-						<td><a href="' . $this->getInfoModuleUrl(['qid_read' => $vv['qid'], 'setID' => $setId]) . '">' . $refreshIcon . '</a></td>';
+                    <tr>
+                        ' . $titleClm . '
+                        <td><a href="' . $this->getInfoModuleUrl(['qid_details' => $vv['qid'], 'setID' => $setId]) . '">' . htmlspecialchars((string)$vv['qid']) . '</a></td>
+                        <td><a href="' . $this->getInfoModuleUrl(['qid_read' => $vv['qid'], 'setID' => $setId]) . '">' . $refreshIcon . '</a></td>';
                 foreach ($rowData as $fKey => $value) {
                     if ($fKey === 'url') {
                         $content .= '<td>' . $value . '</td>';
@@ -689,10 +690,10 @@ class BackendModule
         } else {
             // Compile row:
             $content = '
-				<tr>
-					<td>' . $titleString . '</td>
-					<td colspan="' . $colSpan . '"><em>' . $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.noentries') . '</em></td>
-				</tr>';
+                <tr>
+                    <td>' . $titleString . '</td>
+                    <td colspan="' . $colSpan . '"><em>' . $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.noentries') . '</em></td>
+                </tr>';
         }
 
         return $content;
@@ -763,7 +764,8 @@ class BackendModule
         try {
             $this->handleProcessOverviewActions();
         } catch (\Throwable $e) {
-            $this->addErrorMessage($e->getMessage());
+            $this->isErrorDetected = true;
+            MessageUtility::addErrorMessage($e->getMessage());
         }
 
         $processRepository = new ProcessRepository();
@@ -886,7 +888,8 @@ class BackendModule
     protected function makeCrawlerProcessableChecks(): void
     {
         if (!$this->isPhpForkAvailable()) {
-            $this->addErrorMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:message.noPhpForkAvailable'));
+            $this->isErrorDetected = true;
+            MessageUtility::addErrorMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:message.noPhpForkAvailable'));
         }
 
         $exitCode = 0;
@@ -897,7 +900,8 @@ class BackendModule
             $exitCode
         );
         if ($exitCode > 0) {
-            $this->addErrorMessage(sprintf($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:message.phpBinaryNotFound'), htmlspecialchars($this->extensionSettings['phpPath'])));
+            $this->isErrorDetected = true;
+            MessageUtility::addErrorMessage(sprintf($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:message.phpBinaryNotFound'), htmlspecialchars($this->extensionSettings['phpPath'])));
         }
     }
 
@@ -932,7 +936,7 @@ class BackendModule
                 if ($this->processManager->startProcess() === false) {
                     throw new \Exception($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.newprocesserror'));
                 }
-                $this->addNoticeMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.newprocess'));
+                MessageUtility::addNoticeMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.newprocess'));
                 break;
         }
     }
@@ -955,59 +959,14 @@ class BackendModule
      *****************************/
 
     /**
-     * This method is used to add a message to the internal queue
-     *
-     * @param  string $message the message itself
-     * @param  int $severity message level (-1 = success (default), 0 = info, 1 = notice, 2 = warning, 3 = error)
-     */
-    protected function addMessage(string $message, int $severity = FlashMessage::OK): void
-    {
-        $message = GeneralUtility::makeInstance(
-            FlashMessage::class,
-            $message,
-            '',
-            $severity
-        );
-
-        /** @var FlashMessageService $flashMessageService */
-        $flashMessageService = GeneralUtility::makeInstance(FlashMessageService::class);
-        $flashMessageService->getMessageQueueByIdentifier()->addMessage($message);
-    }
-
-    /**
-     * Add notice message to the user interface.
-     */
-    protected function addNoticeMessage(string $message): void
-    {
-        $this->addMessage($message, FlashMessage::NOTICE);
-    }
-
-    /**
-     * Add error message to the user interface.
-     */
-    protected function addErrorMessage(string $message): void
-    {
-        $this->isErrorDetected = true;
-        $this->addMessage($message, FlashMessage::ERROR);
-    }
-
-    /**
-     * Add error message to the user interface.
-     */
-    protected function addWarningMessage(string $message): void
-    {
-        $this->addMessage($message, FlashMessage::WARNING);
-    }
-
-    /**
      * Create selector box
      *
-     * @param	array		$optArray Options key(value) => label pairs
-     * @param	string		$name Selector box name
-     * @param	string|array		$value Selector box value (array for multiple...)
-     * @param	boolean		$multiple If set, will draw multiple box.
+     * @param array $optArray Options key(value) => label pairs
+     * @param string $name Selector box name
+     * @param string|array $value Selector box value (array for multiple...)
+     * @param boolean  $multiple If set, will draw multiple box.
      *
-     * @return	string		HTML select element
+     * @return string HTML select element
      */
     protected function selectorBox($optArray, $name, $value, bool $multiple): string
     {
@@ -1019,7 +978,7 @@ class BackendModule
         foreach ($optArray as $key => $val) {
             $selected = (!$multiple && !strcmp($value, (string)$key)) || ($multiple && in_array($key, (array)$value));
             $options[] = '
-				<option value="' . $key . '" ' . ($selected ? ' selected="selected"' : '') . '>' . htmlspecialchars($val) . '</option>';
+                <option value="' . $key . '" ' . ($selected ? ' selected="selected"' : '') . '>' . htmlspecialchars($val) . '</option>';
         }
 
         return '<select class="form-control" name="' . htmlspecialchars($name . ($multiple ? '[]' : '')) . '"' . ($multiple ? ' multiple' : '') . '>' . implode('', $options) . '</select>';
