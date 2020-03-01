@@ -200,7 +200,7 @@ class CrawlerCommandController extends CommandController
      * $ typo3cms crawler:crawlqueue
      *
      * @param int $amount How many pages should be crawled during that run.
-     * @param int $sleeptime Amount of milliseconds which the system should use to relax between crawls.
+     * @param int $sleeptime Amount of microseconds which the system should use to relax between crawls.
      * @param int $sleepafter Amount of seconds which the system should use to relax after all crawls are done.
      *
      * @return int
@@ -220,8 +220,8 @@ class CrawlerCommandController extends CommandController
 
         if (!$crawlerController->getDisabled() && $crawlerController->CLI_checkAndAcquireNewProcess($crawlerController->CLI_buildProcessId())) {
             $countInARun = $amount ? intval($amount) : $crawlerController->extensionSettings['countInARun'];
-            $sleepAfterFinish = $sleeptime ? intval($sleeptime) : $crawlerController->extensionSettings['sleepAfterFinish'];
-            $sleepTime = $sleepafter ? intval($sleepafter) : $crawlerController->extensionSettings['sleepTime'];
+            $sleepAfterFinish = $sleepafter ? intval($sleepafter) : $crawlerController->extensionSettings['sleepAfterFinish'];
+            $sleepTime = $sleeptime ? intval($sleeptime) : $crawlerController->extensionSettings['sleepTime'];
 
             try {
                 // Run process:
