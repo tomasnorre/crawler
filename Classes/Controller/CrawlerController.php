@@ -2042,6 +2042,9 @@ class CrawlerController implements LoggerAwareInterface
                 $url = $url->withHost($alternativeBaseUrl->getHost());
                 $url = $url->withScheme($alternativeBaseUrl->getScheme());
                 $url = $url->withPort($alternativeBaseUrl->getPort());
+                if ($userInfo = $alternativeBaseUrl->getUserInfo()) {
+                    $url = $url->withUserInfo($userInfo);
+                }
             }
         } else {
             // Technically this is not possible with site handling, but kept for backwards-compatibility reasons
