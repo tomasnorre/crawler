@@ -13,13 +13,13 @@
     "require": {
         "php": "^7.2",
         "ext-json": "*",
-        "typo3/cms-core": "~9.5.14 || ^10.2",
-        "typo3/cms-beuser": "*",
-        "typo3/cms-frontend": "*",
-        "typo3/cms-info": "*",
-        "typo3/cms-extensionmanager": "*",
+        "guzzlehttp/guzzle": "^6.4.1",
         "symfony/console": "^4.3",
-        "guzzlehttp/guzzle": "^6.4.1"
+        "typo3/cms-beuser": "*",
+        "typo3/cms-core": "~9.5.14 || ^10.2",
+        "typo3/cms-extensionmanager": "*",
+        "typo3/cms-frontend": "*",
+        "typo3/cms-info": "*"
     },
     "require-dev": {
         "nimut/testing-framework": "^4.1 || dev-master",
@@ -29,7 +29,8 @@
         "phpstan/phpstan": "^0.12",
         "rector/rector": "^0.7",
         "saschaegerer/phpstan-typo3": "^0.13.1",
-        "symplify/easy-coding-standard": "^7.0"
+        "symplify/easy-coding-standard": "^7.0",
+        "symfony/yaml": "^4.4 || ^5.0"
     },
     "replace": {
         "typo3-ter/crawler": "self.version"
