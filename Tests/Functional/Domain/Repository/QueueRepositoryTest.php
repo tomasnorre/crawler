@@ -44,7 +44,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     /**
      * @var array
      */
-    protected $coreExtensionsToLoad = ['cms', 'core', 'frontend', 'version', 'lang', 'extensionmanager', 'fluid'];
+    protected $coreExtensionsToLoad = ['cms', 'core', 'frontend', 'version', 'lang', 'fluid'];
 
     /**
      * @var array

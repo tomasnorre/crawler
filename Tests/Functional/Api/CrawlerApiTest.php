@@ -53,11 +53,6 @@ class CrawlerApiTest extends FunctionalTestCase
     /**
      * @var array
      */
-    //protected $coreExtensionsToLoad = ['cms', 'core', 'frontend', 'version', 'lang', 'extensionmanager', 'fluid'];
-
-    /**
-     * @var array
-     */
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     /**
