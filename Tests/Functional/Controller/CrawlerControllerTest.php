@@ -50,7 +50,6 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  */
 class CrawlerControllerTest extends FunctionalTestCase
 {
-
     /**
      * @var array
      */

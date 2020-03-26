@@ -23,6 +23,7 @@ use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Event\EventDispatcher;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -43,26 +44,23 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             '
             Examples:
               --- Re-cache pages from page 7 and two levels down, executed immediately
-              $ typo3 crawler:buildQueue --page 7 --depth 2 --conf defaultConfiguration --mode exec
+              $ typo3 crawler:buildQueue 7 defaultConfiguration --depth 2 --mode exec
              
               --- Put entries for re-caching pages from page 7 into queue, 4 every minute.
-              $ typo3 crawler:buildQueue --page 7 --depth 0 --conf defaultConfiguration --mode queue --number 4
+              $ typo3 crawler:buildQueue 7 defaultConfiguration --depth 0 --mode queue --number 4
             '
         );
 
-        $this->addOption(
-            'conf',
-            'c',
-            InputOption::VALUE_REQUIRED,
-            'A comma separated list of crawler configurations'
+        $this->addArgument(
+            'page',
+            InputArgument::REQUIRED,
+            'The page from where the queue building should start'
         );
 
-        $this->addOption(
-            'page',
-            'p',
-            InputOption::VALUE_OPTIONAL,
-            'The page from where the queue building should start',
-            0
+        $this->addArgument(
+            'conf',
+            InputArgument::REQUIRED,
+            'A comma separated list of crawler configurations'
         );
 
         $this->addOption(
@@ -100,11 +98,11 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
      * Examples:
      *
      * --- Re-cache pages from page 7 and two levels down, executed immediately
-     * $ typo3 crawler:buildQueue --page 7 --depth 2 --conf defaultConfiguration --mode exec
+     * $ typo3 crawler:buildQueue 7 defaultConfiguration --depth 2 --mode exec
      *
      *
      * --- Put entries for re-caching pages from page 7 into queue, 4 every minute.
-     * $ typo3 crawler:buildQueue --page 7 --depth 0 --conf defaultConfiguration --mode queue --number 4
+     * $ typo3 crawler:buildQueue 7 defaultConfiguration --depth 0 --mode queue --number 4
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -119,9 +117,9 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             $crawlerController->registerQueueEntriesInternallyOnly = true;
         }
 
-        $pageId = MathUtility::forceIntegerInRange($input->getOption('page'), 0);
+        $pageId = MathUtility::forceIntegerInRange($input->getArgument('page'), 0);
 
-        $configurationKeys = $this->getConfigurationKeys((string) $input->getOption('conf'));
+        $configurationKeys = $this->getConfigurationKeys((string) $input->getArgument('conf'));
 
         if (!is_array($configurationKeys)) {
             $configurations = $crawlerController->getUrlsForPageId($pageId);
