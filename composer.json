@@ -8,7 +8,12 @@
     },
     "license": "GPL-3.0",
     "authors": [
-        { "name": "AOEpeople", "email": "dev@aoe.com", "homepage": "https://www.aoe.com/", "role": "Developer" }
+        {
+            "name": "AOEpeople",
+            "email": "dev@aoe.com",
+            "homepage": "https://www.aoe.com/",
+            "role": "Developer"
+        }
     ],
     "require": {
         "php": "^7.2",
@@ -20,6 +25,11 @@
         "typo3/cms-info": "*"
     },
     "require-dev": {
+        "codeception/codeception": "^4.1",
+        "codeception/module-asserts": "^1.1",
+        "codeception/module-filesystem": "^1.0",
+        "codeception/module-phpbrowser": "^1.0",
+        "codeception/module-webdriver": "^1.0",
         "nimut/testing-framework": "^4.1 || dev-master",
         "nimut/typo3-complete": "^9.5",
         "nunomaduro/phpinsights": "^1.13",
@@ -27,8 +37,9 @@
         "phpstan/phpstan": "^0.12",
         "rector/rector": "^0.7",
         "saschaegerer/phpstan-typo3": "^0.13.1",
+        "symfony/yaml": "^4.4 || ^5.0",
         "symplify/easy-coding-standard": "^7.0",
-        "symfony/yaml": "^4.4 || ^5.0"
+        "typo3/testing-framework": "9.x-dev || dev-master"
     },
     "replace": {
         "typo3-ter/crawler": "self.version"
@@ -40,14 +51,19 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "AOE\\Crawler\\Tests\\": "Tests"
+            "AOE\\Crawler\\Tests\\": "Tests",
+            "TYPO3\\CMS\\Core\\Tests\\": ".Build/Web/typo3/sysext/core/Tests"
         }
     },
     "config": {
         "vendor-dir": ".Build/vendor",
         "bin-dir": ".Build/bin",
         "process-timeout": 0,
-        "sort-packages": true
+        "sort-packages": true,
+        "preferred-install": {
+            "typo3/cms-core": "source",
+            "*": "dist"
+        }
     },
     "scripts": {
         "post-autoload-dump": [
@@ -65,7 +81,7 @@
         ],
         "cs-fix": [
             "[ -e .Build/bin/ecs ] || composer update",
-           ".Build/bin/ecs check Classes Configuration Tests"
+            ".Build/bin/ecs check Classes Configuration Tests"
         ],
         "analyse": [
             "[ -e .Build/bin/phpstan ] || composer update",
@@ -98,5 +114,11 @@
         }
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/tomasnorre/testing-framework-1.git"
+        }
+    ]
 }

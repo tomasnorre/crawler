@@ -108,7 +108,7 @@ jobs:
       env:
         - TYPO3_VERSION=^9.5
       script:
-        - .Build/bin/ecs check Classes Configuration Tests
+        - .Build/bin/ecs check
 
     -
       stage: static

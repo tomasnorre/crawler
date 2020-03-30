@@ -10,6 +10,15 @@ parameters:
         PhpCsFixer\Fixer\Operator\UnaryOperatorSpacesFixer: null
         PHP_CodeSniffer\Standards\Generic\Sniffs\CodeAnalysis\AssignmentInConditionSniff.FoundInWhileCondition: null
 
+    paths:
+        - 'Classes'
+        - 'Configuration'
+        - 'Tests'
+
+    exclude_files:
+        # Codeception Generated Files
+        - "Tests/Acceptance/Support/_generated/*Actions.php"
+
 services:
     PhpCsFixer\Fixer\ArrayNotation\ArraySyntaxFixer:
         syntax: 'short'

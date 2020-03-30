@@ -11,6 +11,8 @@ parameters:
 
     autoload_paths:
         - "Classes"
+        - "Tests/Acceptance/Support/"
+        - "Tests/Acceptance/Support/_generated"
 
     exclude_paths:
         # missing parent interface "TYPO3\CMS\IndexedSearch\Worker\WorkerInterface"
@@ -21,3 +23,5 @@ parameters:
         - "Classes/Domain/Model/Reason.php"
         - "Classes/Utility/SignalSlotUtility.php"
         - "Tests/Functional/Api/CrawlerApiTest.php"
+        # Codeception Generated Files
+        - "Tests/Acceptance/Support/_generated"
