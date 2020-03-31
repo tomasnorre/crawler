@@ -16,6 +16,10 @@ omit_containers: [dba]
 use_dns_when_possible: true
 timezone: ""
 
+hooks:
+  post-start:
+    - exec-host: ddev import-db build-files/db.sql.gz
+    - exec: composer install -d /var/www/html
 
 # This config.yaml was created with ddev version v1.13.0
 # webimage: drud/ddev-webserver:v1.13.0
