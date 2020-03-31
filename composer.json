@@ -76,6 +76,7 @@
             "@test:functional"
         ],
         "extension-release": [
+            "rm -rf .devbox",
             "rm -rf Tests/",
             "rm .gitignore",
             "rm .scrutinizer.yml",
