@@ -20,7 +20,6 @@ hooks:
   post-start:
     - exec-host: ddev import-db --src=build-files/db.sql.gz
     - exec: composer install -d /var/www/html
-    - exec: mkdir -p /var/www/html/public/fileadmin/
     - exec: /var/www/html/bin/typo3cms install:generatepackagestates
 
 # This config.yaml was created with ddev version v1.13.0
