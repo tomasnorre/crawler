@@ -25,3 +25,29 @@ When you have a PR, please run the following checks first.
     * Ensures that coding standards are respected
 * `composer analyse`
     * Will run PHPStan and do a static code analysis, this is not adjust completely in build yet, but please try to avoid adding new violations. ;)
+
+#### Devbox
+
+If you don't have a setup already, where you can do development, bugfixing etc. for the crawler, don't worry.
+
+We have included a [ddev](https://www.ddev.com) devbox to help the development.
+
+##### Prerequisites
+
+* [DDEV](https://www.ddev.com)
+* Docker
+
+##### How to use the devbox?
+
+```
+$ git clone git@github.com:AOEpeople/crawler.git
+$ cd .devbox
+$ ddev start
+```
+
+And start working.
+
+**INFO** 
+xdebug is disable as default, to speed up the devbox when xdebug isn't needed.
+
+This can be activated in `.devbox/.ddev/config.yaml` and by `ddev restart` afterwards.
