@@ -30,3 +30,8 @@ composer.lock
 
 var/log
 var/tests
+
+
+# Devbox 
+.devbox/public/fileadmin/_processed_
+.devbox/public/fileadmin/_temp_

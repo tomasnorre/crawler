@@ -1,0 +1,81 @@
+
+renderingOptions:
+  submitButtonLabel: Submit
+identifier: contactForm
+label: 'Simple Contact Form'
+type: Form
+prototypeName: standard
+finishers:
+  -
+    options:
+      subject: 'Your message: {subject}'
+      recipientAddress: your.company@example.com
+      recipientName: 'Your Company name'
+      senderAddress: '{email}'
+      senderName: '{name}'
+      replyToAddress: ''
+      carbonCopyAddress: ''
+      blindCarbonCopyAddress: ''
+      format: html
+      attachUploads: true
+      translation:
+        language: ''
+    identifier: EmailToReceiver
+renderables:
+  -
+    renderingOptions:
+      previousButtonLabel: 'Previous step'
+      nextButtonLabel: 'Next step'
+    identifier: page-1
+    label: 'Contact Form'
+    type: Page
+    renderables:
+      -
+        defaultValue: ''
+        properties:
+          placeholder: Name
+        identifier: name
+        label: Name
+        type: Text
+        validators:
+          -
+            identifier: NotEmpty
+      -
+        defaultValue: ''
+        properties:
+          placeholder: Subject
+        identifier: subject
+        label: Subject
+        type: Text
+        validators:
+          -
+            identifier: NotEmpty
+      -
+        defaultValue: ''
+        properties:
+          placeholder: 'Email address'
+        identifier: email
+        label: Email
+        type: Text
+        validators:
+          -
+            identifier: NotEmpty
+          -
+            identifier: EmailAddress
+      -
+        defaultValue: ''
+        properties:
+          placeholder: ''
+        identifier: message
+        label: Message
+        type: Textarea
+        validators:
+          -
+            identifier: NotEmpty
+  -
+    renderingOptions:
+      previousButtonLabel: 'Previous step'
+      nextButtonLabel: 'Next step'
+    identifier: summarypage
+    label: 'Summary page'
+    type: SummaryPage
