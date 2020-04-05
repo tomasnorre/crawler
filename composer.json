@@ -114,11 +114,5 @@
         }
     },
     "minimum-stability": "dev",
-    "prefer-stable": true,
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/tomasnorre/testing-framework-1.git"
-        }
-    ]
+    "prefer-stable": true
 }
