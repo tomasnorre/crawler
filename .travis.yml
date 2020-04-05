@@ -1,4 +1,5 @@
 language: php
+dist: bionic
 
 notifications:
   email:
@@ -29,6 +30,7 @@ env:
 
 services:
   - mysql
+  - docker
 
 cache:
   directories:
@@ -62,6 +64,7 @@ jobs:
     - env: TYPO3_VERSION=^10.2
     - env: TYPO3_VERSION=dev-master
     - name: "PHPStan"
+    - name: "Behaviour"
   include:
     -
       stage: test
@@ -91,6 +94,35 @@ jobs:
         - php ocular.phar code-coverage:upload --format=php-clover unittest-coverage.clover
         - php ocular.phar code-coverage:upload --format=php-clover functional-coverage.clover
 
+    # Behaviour Tests
+    -
+      stage: test
+      name: "Behaviour"
+      php: 7.2
+      env:
+        - TYPO3_VERSION=^9.5
+      before_script:
+        - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+        - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+        - sudo apt update
+        - sudo apt install docker-ce
+        - sudo curl -L "https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+        - sudo chmod +x /usr/local/bin/docker-compose
+        - docker-compose --version
+        - wget https://github.com/drud/ddev/releases/download/v1.13.1/ddev_linux.v1.13.1.tar.gz
+        - tar vxzf ddev_linux.v1.13.1.tar.gz
+        - sudo chmod +x ddev && sudo mv ddev /usr/local/bin/ddev
+        - sudo chmod +x mkcert && sudo mv mkcert /usr/local/bin/mkcert
+        - mkcert -install
+        - ddev --version
+      script:
+        - cd .devbox
+        - composer require aoepeople/crawler:dev-${TRAVIS_BRANCH}
+        - ddev start
+        - cd .. # Going back to "root" directory
+        - composer install
+        - php .Build/bin/codecept run
+
     # Static Analysis
     -
       stage: static
@@ -108,7 +140,7 @@ jobs:
       env:
         - TYPO3_VERSION=^9.5
       script:
-        - .Build/bin/ecs check Classes Configuration Tests
+        - .Build/bin/ecs check
 
     -
       stage: static
