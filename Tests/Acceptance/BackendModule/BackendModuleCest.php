@@ -39,7 +39,6 @@ class BackendModuleCest
     public function canSeeInfoModule(Admin $I): void
     {
         $I->loginAsAdmin();
-        $I->canSee('crawler-devbox');
         $I->canSee('Info', '#web_info');
     }
 
