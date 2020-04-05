@@ -101,7 +101,6 @@ jobs:
       env:
         - TYPO3_VERSION=^9.5
       before_script:
-        - cd .devbox # Switch to .devbox folder
         - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
         - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
         - sudo apt update
@@ -115,11 +114,9 @@ jobs:
         - sudo chmod +x mkcert
         - ./mkcert -install
       script:
-        - composer install
         - ./ddev --version
         - ./ddev start
-        - php bin/codecept bootstrap
-        - php bin/codecept run
+        - php .Build/bin/codecept run
 
     # Static Analysis
     -
