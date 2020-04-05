@@ -110,12 +110,14 @@ jobs:
         - docker-compose --version
         - wget https://github.com/drud/ddev/releases/download/v1.13.1/ddev_linux.v1.13.1.tar.gz
         - tar vxzf ddev_linux.v1.13.1.tar.gz
-        - sudo chmod +x ddev
-        - sudo chmod +x mkcert
-        - ./mkcert -install
+        - sudo chmod +x ddev && mv ddev /usr/local/bin/ddev
+        - sudo chmod +x mkcert && mv mkcert /usr/local/bin/mkcert
+        - mkcert -install
+        - ddev --version
       script:
-        - ./ddev --version
-        - ./ddev start
+        - cd .devbox
+        - ddev start
+        - cd .. # Going back to "root" directory
         - php .Build/bin/codecept run
 
     # Static Analysis
