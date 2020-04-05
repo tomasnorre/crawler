@@ -34,6 +34,11 @@ var/tests
 # Devbox
 .devbox/public/fileadmin/_processed_
 .devbox/public/fileadmin/_temp_
+.devbox/bin
+.devbox/vendor
+.devbox/public/index.php
+.devbox/public/typo3
+.devbox/public/typo3conf/ext
 
 # Codeception Files
 Tests/Acceptance/_data/*
