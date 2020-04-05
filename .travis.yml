@@ -64,6 +64,7 @@ jobs:
     - env: TYPO3_VERSION=^10.2
     - env: TYPO3_VERSION=dev-master
     - name: "PHPStan"
+    - name: "Behaviour"
   include:
     -
       stage: test
@@ -96,7 +97,7 @@ jobs:
     # Behaviour Tests
     -
       stage: test
-      name: "Behaviour Driven"
+      name: "Behaviour"
       php: 7.2
       env:
         - TYPO3_VERSION=^9.5
