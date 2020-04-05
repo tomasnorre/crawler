@@ -118,7 +118,7 @@ jobs:
       script:
         - cd .devbox
         - echo ${TRAVIS_BRANCH}
-        - composer reuquire aoepeople/crawler:dev-${TRAVIS_BRANCH}
+        - composer require aoepeople/crawler:dev-${TRAVIS_BRANCH}
         - ddev start
         - cd .. # Going back to "root" directory
         - composer install
