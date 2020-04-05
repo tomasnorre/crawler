@@ -118,6 +118,7 @@ jobs:
         - composer install
         - ./ddev --version
         - ./ddev start
+        - php bin/codecept bootstrap
         - php bin/codecept run
 
     # Static Analysis
