@@ -118,7 +118,7 @@ jobs:
         - composer install
         - ./ddev --version
         - ./ddev start
-        - php vendor/bin/codecept run
+        - php bin/codecept run
 
     # Static Analysis
     -

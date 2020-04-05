@@ -25,6 +25,11 @@
         "helhum/typo3-console": "^5.6",
         "aoepeople/crawler": "dev-typo3v9"
     },
+    "require-dev": {
+        "codeception/codeception": "^4.1",
+        "codeception/module-phpbrowser": "^1.0.0",
+        "codeception/module-asserts": "^1.0.0"
+    },
     "config": {
         "vendor-dir": "vendor",
         "bin-dir": "bin"
