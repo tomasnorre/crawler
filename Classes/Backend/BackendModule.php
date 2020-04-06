@@ -657,9 +657,9 @@ class BackendModule
 
                 if ($this->pObj->MOD_SETTINGS['log_feVars']) {
                     $resFeVars = $this->getResFeVars($resultData ?: []);
-                    $rowData['tsfe_id'] = $resFeVars['id'];
-                    $rowData['tsfe_gr_list'] = $resFeVars['gr_list'];
-                    $rowData['tsfe_no_cache'] = $resFeVars['no_cache'];
+                    $rowData['tsfe_id'] = $resFeVars['id'] ?: '';
+                    $rowData['tsfe_gr_list'] = $resFeVars['gr_list'] ?: '';
+                    $rowData['tsfe_no_cache'] = $resFeVars['no_cache'] ?: '';
                 }
 
                 // Put rows together:
