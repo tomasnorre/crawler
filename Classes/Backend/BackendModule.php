@@ -268,6 +268,8 @@ class BackendModule
                 $setId = (int)GeneralUtility::_GP('setID');
 
                 $theOutput .= '<br><br>' .
+                    '<table width="60%"><tr>' .
+                    '<td>'.
                     $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.display') . ': ' . BackendUtility::getFuncMenu(
                         $this->id,
                         'SET[log_display]',
@@ -275,21 +277,21 @@ class BackendModule
                         $this->pObj->MOD_MENU['log_display'],
                         'index.php',
                         '&setID=' . $setId
-                    ) . ' ' .
+                    ) . '</td><td> ' .
                     $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.showresultlog') . ': ' . BackendUtility::getFuncCheck(
                         $this->id,
                         'SET[log_resultLog]',
                         $this->pObj->MOD_SETTINGS['log_resultLog'],
                         'index.php',
                         '&setID=' . $setId . $quiPart
-                    ) . ' ' .
+                    ) . '</td><td> ' .
                     $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.showfevars') . ': ' . BackendUtility::getFuncCheck(
                         $this->id,
                         'SET[log_feVars]',
                         $this->pObj->MOD_SETTINGS['log_feVars'],
                         'index.php',
                         '&setID=' . $setId . $quiPart
-                    ) . ' ' .
+                    ) . '</td><td> ' .
                     $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.itemsPerPage') . ': ' .
                     BackendUtility::getFuncMenu(
                         $this->id,
@@ -297,6 +299,7 @@ class BackendModule
                         $this->pObj->MOD_SETTINGS['itemsPerPage'],
                         $this->pObj->MOD_MENU['itemsPerPage']
                     );
+                     $theOutput .= '</td></tr></table>';
                 $theOutput .= $this->showLogAction();
                 break;
             case 'multiprocess':
