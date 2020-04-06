@@ -269,7 +269,7 @@ class BackendModule
 
                 $theOutput .= '<br><br>' .
                     '<table width="60%"><tr>' .
-                    '<td>'.
+                    '<td>' .
                     $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.display') . ': ' . BackendUtility::getFuncMenu(
                         $this->id,
                         'SET[log_display]',
