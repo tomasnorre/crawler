@@ -19,17 +19,10 @@ namespace AOE\Crawler\Middleware;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Domain\Repository\QueueRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use TYPO3\CMS\Core\Context\Context;
-use TYPO3\CMS\Core\Context\UserAspect;
-use TYPO3\CMS\Core\Http\Response;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Frontend\Controller\ErrorController;
 
 /**
  * Evaluates HTTP headers and checks if Crawler should register itself.
@@ -42,30 +35,6 @@ use TYPO3\CMS\Frontend\Controller\ErrorController;
 class CrawlerInitialization implements MiddlewareInterface
 {
     /**
-     * @var string
-     */
-    protected $headerName = 'X-T3CRAWLER';
-
-    /**
-     * @var Context
-     */
-    protected $context;
-
-    /**
-     * @var QueueRepository
-     */
-    protected $queueRepository;
-
-    /**
-     * @param Context|null $context
-     */
-    public function __construct(?Context $context = null)
-    {
-        $this->context = $context ?? GeneralUtility::makeInstance(Context::class);
-        $this->queueRepository = GeneralUtility::makeInstance(ObjectManager::class)->get(QueueRepository::class);
-    }
-
-    /**
      * @param ServerRequestInterface $request
      * @param RequestHandlerInterface $handler
      * @return ResponseInterface
@@ -74,47 +43,17 @@ class CrawlerInitialization implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $crawlerInformation = $request->getHeaderLine($this->headerName) ?? null;
-        if (empty($crawlerInformation)) {
+        $queueParameters = $request->getAttribute('tx_crawler');
+        if ($queueParameters === null) {
             return $handler->handle($request);
         }
 
-        // Authenticate crawler request:
-        //@todo: ask service to exclude current call for special reasons: for example no relevance because the language version is not affected
-        [$queueId, $hash] = explode(':', $crawlerInformation);
-        $queueRec = $this->queueRepository->findByQueueId($queueId);
-
-        // If a crawler record was found and hash was matching, set it up
-        if (!$this->isRequestHashMatchingQueueRecord($queueRec, $hash)) {
-            return GeneralUtility::makeInstance(ErrorController::class)->unavailableAction($request, 'No crawler entry found');
-        }
-
-        $queueParameters = unserialize($queueRec['parameters']);
         $GLOBALS['TSFE']->applicationData['tx_crawler']['running'] = true;
         $GLOBALS['TSFE']->applicationData['tx_crawler']['parameters'] = $queueParameters;
         $GLOBALS['TSFE']->applicationData['tx_crawler']['log'] = [];
-        $request = $request->withAttribute('tx_crawler', $queueParameters);
-
-        // Now ensure to set the proper user groups
-        $grList = $queueParameters['feUserGroupList'];
-        if ($grList) {
-            if (!is_array($GLOBALS['TSFE']->fe_user->user)) {
-                $GLOBALS['TSFE']->fe_user->user = [];
-            }
-            $GLOBALS['TSFE']->fe_user->user['usergroup'] = $grList;
-            $GLOBALS['TSFE']->applicationData['tx_crawler']['log'][] = 'User Groups: ' . $grList;
-            // we has to set the fe user group to the user aspect since indexed_search only reads the user aspect
-            // to get the groups.  otherwise groups are ignored during indexing.
-            // we need to add the groups 0, and -2 too, like the getGroupIds getter does.
-            $this->context->setAspect(
-                'frontend.user',
-                GeneralUtility::makeInstance(
-                    UserAspect::class,
-                    $GLOBALS['TSFE']->fe_user,
-                    explode(',', '0,-2,' . $grList)
-                )
-            );
-        }
+        $GLOBALS['TSFE']->applicationData['tx_crawler']['log'] = [
+            'User Groups: ' . $queueParameters['feUserGroupList'],
+        ];
 
         // Execute the frontend request as is
         $handler->handle($request);
@@ -131,12 +70,8 @@ class CrawlerInitialization implements MiddlewareInterface
         $content = serialize($GLOBALS['TSFE']->applicationData['tx_crawler']);
         $response = new Response();
         $response->getBody()->write($content);
-        return $response;
-    }
 
-    protected function isRequestHashMatchingQueueRecord(?array $queueRec, string $hash): bool
-    {
-        return is_array($queueRec) && $hash === md5($queueRec['qid'] . '|' . $queueRec['set_id'] . '|' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']);
+        return $response;
     }
 
     /**
