@@ -737,7 +737,11 @@ class BackendModule
         return $content;
     }
 
-    protected function getResStatus(array $requestContent): string
+    /**
+     * @param mixed $requestContent
+     * @return string
+     */
+    protected function getResStatus($requestContent): string
     {
         if (empty($requestContent)) {
             return '-';
