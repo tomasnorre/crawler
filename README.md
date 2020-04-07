@@ -45,6 +45,8 @@ $ cd .devbox
 $ ddev start
 ```
 
+Username/password: `admin`/`password`
+
 And start working.
 
 **INFO** 
