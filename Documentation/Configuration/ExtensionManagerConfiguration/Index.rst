@@ -11,6 +11,7 @@
 .. role::   ts(typoscript)
    :class:  typoscript
 .. role::   php(code)
+.. _extension-manager-configuration:
 
 
 Extension Manager Configuration
