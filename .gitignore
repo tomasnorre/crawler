@@ -41,6 +41,7 @@ var/tests
 .devbox/public/typo3
 .devbox/public/typo3conf/ext
 .devbox/public/typo3conf/PackageStates.php
+.devbox/public/typo3temp
 
 # Codeception Files
 Tests/Acceptance/_data/*

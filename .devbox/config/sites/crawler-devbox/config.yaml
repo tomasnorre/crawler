@@ -1,0 +1,18 @@
+base: 'https://crawler-typo3v9.ddev.site/'
+baseVariants: {  }
+errorHandling: {  }
+languages:
+  -
+    title: Default
+    enabled: true
+    base: /
+    typo3Language: default
+    locale: en_US.UTF-8
+    iso-639-1: ab
+    navigationTitle: ''
+    hreflang: ''
+    direction: ''
+    flag: global
+    languageId: '0'
+rootPageId: 1
+routes: {  }
