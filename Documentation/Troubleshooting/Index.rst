@@ -18,10 +18,21 @@
 Troubleshooting
 ---------------
 
+Make Direct Request doesn't work
+''''''''''''''''''''''''''''''''
+If you are using direct request, see :ref:`extension-manager-configuration`, and it doesn't give you any result,
+or that the scheduler tasks stalls.
+
+It can be because of a faulty configured `TrustedHostPattern`, this can be changed in the `LocalConfiguration.php`.
+
+::
+
+    $GLOBALS['TYPO3_CONF_VARS']['SYS']['trustedHostsPattern'] = '<your-pattern>';
+
 Crawler want process all entries from command line
 ''''''''''''''''''''''''''''''''''''''''''''''''''
 
-The crawler won't process all entrys at command-line-way. This might
+The crawler won't process all entries at command-line-way. This might
 happened because the php run into an time out, to avoid this you can
 call the crawler like:
 
@@ -46,7 +57,9 @@ Update from older versions
 
 If you update the extension from older versions you can run into following error:
 
-SQL error: 'Field 'sys_domain_base_url' doesn't have a default value'
+::
 
-Make sure to delete all unnecessary fields from database tabeles. You can do this in the backend via "Analyze Database Structure"-Tool or if you have typo3-console installed via command line command "typo3cms database:updateschema".
+    SQL error: 'Field 'sys_domain_base_url' doesn't have a default value'
+
+Make sure to delete all unnecessary fields from database tables. You can do this in the backend via "Analyze Database Structure"-Tool or if you have typo3-console installed via command line command "typo3cms database:updateschema".
 

@@ -23,6 +23,9 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Http\Response;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Evaluates HTTP headers and checks if Crawler should register itself.
@@ -34,6 +37,19 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 class CrawlerInitialization implements MiddlewareInterface
 {
+    /**
+     * @var Context
+     */
+    protected $context;
+
+    /**
+     * @param Context|null $context
+     */
+    public function __construct(?Context $context = null)
+    {
+        $this->context = $context ?? GeneralUtility::makeInstance(Context::class);
+    }
+
     /**
      * @param ServerRequestInterface $request
      * @param RequestHandlerInterface $handler
