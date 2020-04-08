@@ -754,6 +754,11 @@ class BackendModule
                 return implode("\n", $requestResult['errorlog']);
             }
         }
+
+        if (is_bool($requestResult)) {
+            return 'Error - no info, sorry!';
+        }
+
         return 'Error: ' . substr(preg_replace('/\s+/', ' ', strip_tags($requestResult)), 0, 10000) . '...';
     }
 
