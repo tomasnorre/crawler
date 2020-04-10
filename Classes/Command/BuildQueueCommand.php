@@ -106,7 +106,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $mode = $input->getOption('mode');
+        $mode = $input->getOption('mode') ?? 'queue';
 
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
 
