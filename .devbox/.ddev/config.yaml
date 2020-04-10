@@ -10,7 +10,7 @@ xdebug_enabled: false
 additional_hostnames: []
 additional_fqdns: []
 mariadb_version: "10.2"
-nfs_mount_enabled: true
+nfs_mount_enabled: false
 provider: default
 webimage_extra_packages: [cron]
 hooks:
