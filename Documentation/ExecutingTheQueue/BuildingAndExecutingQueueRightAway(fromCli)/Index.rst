@@ -26,7 +26,7 @@ The script to use is this:
 
 ::
 
-   [pathToYourTYPO3Installation-composer-bin-dir]/typo3cms crawler:buildqueue
+   [pathToYourTYPO3Installation-composer-bin-dir]/typo3cms crawler:buildQueue <startPageUid> <configurationKeys>
 
 If you run it you will see a list of options which explains usage.
 
@@ -35,7 +35,7 @@ If you run it you will see a list of options which explains usage.
 .. container:: table-row
 
    Property
-         --startpage <startpage>
+         <startPageUid>
 
    Data type
          integer
@@ -49,7 +49,7 @@ If you run it you will see a list of options which explains usage.
 .. container:: table-row
 
    Property
-         --conf <configurationKeys>
+         <configurationKeys>
 
    Data type
          string
@@ -58,7 +58,7 @@ If you run it you will see a list of options which explains usage.
          Configurationkey:
 
          Comma separated list of your crawler configurations. If you use the
-         crwaler configuration records you have to use the “name” if you're
+         crawler configuration records you have to use the "name" if you're
          still using the old TypoScript based configuration you have to use the
          configuration key which is also a string.
 
@@ -66,7 +66,7 @@ If you run it you will see a list of options which explains usage.
 
          ::
 
-            -conf re-crawl-pages,re-crawl-news
+            re-crawl-pages,re-crawl-news
 
    Default
          n/a
@@ -128,34 +128,45 @@ If you run it you will see a list of options which explains usage.
 
 .. ###### END~OF~TABLE ######
 
-Basically you must pass options similar to those you would otherwise
-select using the Site Crawler when you set up a crawler job (“Start
-Crawling”). Here is an example:
+Example
+-------
+
+We want to crawl pages under the page "Content Examples" (uid=6) and 2 levels down, with the default crawler configuration.
+
+This is done like this in the backend.
 
 .. image:: /Images/backend_startcrawling.png
-
-We want to publish pages under the page “ID=3 (“Contact” page
-selected) and 1 level down (“1 level” selected) to static files
-(Processing Instruction “Publish static [tx\_staticpub\_publish]”
-selected). Four URLs are generated based on the configuration (see
-right column in table).
 
 To do the same with the CLI script you run this:
 
 ::
 
-   [pathToYourTYPO3Installation-composer-bin-dir]/typo3cms crawler:buildqueue --startpage 3 --depth 1 --conf tx_staticpub_publish
+   [pathToYourTYPO3Installation-composer-bin-dir]/typo3 crawler:buildqueue 6 default --depth 2
 
 And this is the output:
 
 ::
 
-   [22-03 15:29:00] ?id=3
-   [22-03 15:29:00] ?id=3&L=1
-   [22-03 15:29:00] ?id=5
-   [22-03 15:29:00] ?id=4
+    38 entries found for processing. (Use "mode" to decide action):
 
-At this point you have three options for “action”:
+    [10-04-20 10:35] https://crawler-typo3v9.ddev.site/content-examples/overview
+    [10-04-20 10:35] https://crawler-typo3v9.ddev.site/content-examples/text/rich-text
+    [10-04-20 10:35] https://crawler-typo3v9.ddev.site/content-examples/text/headers
+    [10-04-20 10:35] https://crawler-typo3v9.ddev.site/content-examples/text/bullet-list
+    [10-04-20 10:35] https://crawler-typo3v9.ddev.site/content-examples/text/text-with-teaser
+    [10-04-20 10:35] https://crawler-typo3v9.ddev.site/content-examples/text/text-and-icon
+    [10-04-20 10:35] https://crawler-typo3v9.ddev.site/content-examples/text/text-in-columns
+    [10-04-20 10:35] https://crawler-typo3v9.ddev.site/content-examples/text/list-group
+    [10-04-20 10:35] https://crawler-typo3v9.ddev.site/content-examples/text/panel
+    [10-04-20 10:35] https://crawler-typo3v9.ddev.site/content-examples/text/table
+    [10-04-20 10:35] https://crawler-typo3v9.ddev.site/content-examples/text/quote
+    [10-04-20 10:35] https://crawler-typo3v9.ddev.site/content-examples/media/audio
+    [10-04-20 10:35] https://crawler-typo3v9.ddev.site/content-examples/media/text-and-images
+    ...
+    [10-04-20 10:36] https://crawler-typo3v9.ddev.site/content-examples/and-more/frames
+
+
+At this point you have three options for "action":
 
 - Commit the URLs to the queue and let the cron script take care of it
   over time. In this case there is an option for setting the amount of
@@ -163,24 +174,69 @@ At this point you have three options for “action”:
   useful if you would like to submit a job to the cron script based
   crawler everyday.
 
-  - Add “--mode queue”
+  - Add "--mode queue"
+  - This is also the **default** setting, so unless you want it to be explicit visible, you don't need to add it.
 
 - List full URLs for use with wget or similar. Corresponds to pressing
-  the “Download URLs” button in the backend module.
+  the "Download URLs" button in the backend module.
 
-  - Add “--mode url”
+  - Add "--mode url"
 
-.. image:: /Images/cli_addtoque.png
+::
+
+    $ bin/typo3 crawler:buildqueue 6 default --depth 2 --mode url
+    https://crawler-typo3v9.ddev.site/content-examples/overview
+    https://crawler-typo3v9.ddev.site/content-examples/text/rich-text
+    https://crawler-typo3v9.ddev.site/content-examples/text/headers
+    https://crawler-typo3v9.ddev.site/content-examples/text/bullet-list
+    https://crawler-typo3v9.ddev.site/content-examples/text/text-with-teaser
+    https://crawler-typo3v9.ddev.site/content-examples/text/text-and-icon
+    https://crawler-typo3v9.ddev.site/content-examples/text/text-in-columns
+    https://crawler-typo3v9.ddev.site/content-examples/text/list-group
+    https://crawler-typo3v9.ddev.site/content-examples/text/panel
+    ...
 
 - Commit and execute the queue right away. This will still put the jobs
   into the queue but execute them immediately. If server load is no
   issue to you and if you are in a hurry this is the way to go! It also
-  feels much more like the “command-line-way” of things. And the status
+  feels much more like the "command-line-way" of things. And the status
   output is more immediate than in the queue.
 
-  - Add “--mode exec”
+  - Add "--mode exec"
 
-.. image:: /Images/cli_processque.png
+::
 
-The examples above assume that “staticpub” is installed.
+    $ bin/typo3 crawler:buildqueue 6 default --depth 2 --mode exec
+    https://crawler-typo3v9.ddev.site/content-examples/overview
+    https://crawler-typo3v9.ddev.site/content-examples/text/rich-text
+    https://crawler-typo3v9.ddev.site/content-examples/text/headers
+    https://crawler-typo3v9.ddev.site/content-examples/text/bullet-list
+    https://crawler-typo3v9.ddev.site/content-examples/text/text-with-teaser
+    https://crawler-typo3v9.ddev.site/content-examples/text/text-and-icon
+    https://crawler-typo3v9.ddev.site/content-examples/text/text-in-columns
+    https://crawler-typo3v9.ddev.site/content-examples/text/list-group
+    https://crawler-typo3v9.ddev.site/content-examples/text/panel
+    ...
+    Processing
+
+    https://crawler-typo3v9.ddev.site/content-examples/overview () =>
+
+    OK:
+            User Groups:
+
+    https://crawler-typo3v9.ddev.site/content-examples/text/rich-text () =>
+
+    OK:
+            User Groups:
+
+    https://crawler-typo3v9.ddev.site/content-examples/text/headers () =>
+
+    OK:
+            User Groups:
+
+    https://crawler-typo3v9.ddev.site/content-examples/text/bullet-list () =>
+
+    OK:
+            User Groups:
+    ...
 

@@ -17,7 +17,7 @@ Screenshots
 ^^^^^^^^^^^
 
 Has a backend module which displays the queue and log and allows
-execution and status check of the “cronscript” from the backend for
+execution and status check of the "cronscript" from the backend for
 testing purposes.
 
 Here is the CLI (Command Line Interface = shell script = cron script)

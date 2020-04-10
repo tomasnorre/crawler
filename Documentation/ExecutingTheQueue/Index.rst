@@ -26,7 +26,7 @@ for several reasons;
 
 - To time the requests for nightly processing
 
-- And simply to avoid “max\_execution\_time” of PHP to limit processing
+- And simply to avoid "max\_execution\_time" of PHP to limit processing
   to 30 seconds !
 
 
@@ -38,6 +38,5 @@ for several reasons;
    RunningViaCommandController/Index
    ExecutingQueueWithCron-job/Index
    RunViaBackend/Index
-   AddingEntriesToTheQueueByContextMenue/Index
    BuildingAndExecutingQueueRightAway(fromCli)/Index
 

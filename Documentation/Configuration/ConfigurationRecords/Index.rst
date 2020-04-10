@@ -57,5 +57,7 @@ Fields and their pageTS equivalents
 
 - **Exclude pages** - comma separated list of page ids which should not be crawled
 
-.. image:: /Images/backend_configurationrecord.png
+.. image:: /Images/backend_configurationrecord_1.png
+.. image:: /Images/backend_configurationrecord_2.png
+.. image:: /Images/backend_configurationrecord_3.png
 

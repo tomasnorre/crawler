@@ -20,13 +20,13 @@ What does it do?
 
 Uses a command line cron-script to traverse a queue of actions
 (alternative option: executing all immediately), eg. requesting a URL
-but could also be calling of a function. The name “crawler” refers to
+but could also be calling of a function. The name "crawler" refers to
 this action: That a URL in the queue is requested.
 
 Features an API that other extensions can plug into. Example of this
-is “indexed\_search” which uses crawler to index content defined by
+is "indexed\_search" which uses crawler to index content defined by
 its Indexing Configurations. Other extensions supporting it are
-“staticpub” (publishing to static pages) or “cachemgm” (allows
+"staticpub" (publishing to static pages) or "cachemgm" (allows
 recaching of pages).
 
 The requests of URLs is specially designed to request TYPO3 frontends

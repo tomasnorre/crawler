@@ -23,6 +23,5 @@ Introduction
    :glob:
 
    WhatDoesItDo/Index
-   WhatsNew/Index
    Screenshots/Index
 
