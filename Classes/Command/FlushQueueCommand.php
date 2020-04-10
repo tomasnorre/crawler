@@ -21,6 +21,7 @@ namespace AOE\Crawler\Command;
 
 use AOE\Crawler\Controller\CrawlerController;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -45,12 +46,10 @@ It will remove queue entries and perform a cleanup.' . chr(10) . chr(10) .
               $ typo3 crawler:flushQueue --mode pending
             '
         );
-        $this->addOption(
+        $this->addArgument(
             'mode',
-            'm',
-            InputOption::VALUE_OPTIONAL,
-            'Output mode',
-            'finished'
+            InputArgument::REQUIRED,
+            'What to clear: all, finished, pending'
         );
 
         $this->addOption(
@@ -80,19 +79,21 @@ It will remove queue entries and perform a cleanup.' . chr(10) . chr(10) .
     {
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
 
+        $mode = strtolower($input->getArgument('mode'));
+
         /** @var CrawlerController $crawlerController */
         $crawlerController = $objectManager->get(CrawlerController::class);
 
         $pageId = MathUtility::forceIntegerInRange($input->getOption('page'), 0);
         $fullFlush = ($pageId === 0);
 
-        switch ($input->getOption('mode')) {
+        switch ($mode) {
             case 'all':
                 $crawlerController->getLogEntriesForPageId($pageId, '', true, $fullFlush);
                 break;
             case 'finished':
             case 'pending':
-                $crawlerController->getLogEntriesForPageId($pageId, strval($input->getOption('mode')), true, $fullFlush);
+                $crawlerController->getLogEntriesForPageId($pageId, strval($mode), true, $fullFlush);
                 break;
             default:
                 $output->writeln('<info>No matching parameters found.' . PHP_EOL . 'Try "typo3 help crawler:flushQueue" to see your options</info>');
