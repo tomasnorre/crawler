@@ -46,7 +46,7 @@ return [
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.crawling_protocol',
             'config' => [
                 'type' => 'select',
-                'maxitems' => 1,
+                'renderType' => 'selectSingle',
                 'items' => [
                     [
                         'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.crawling_protocol.http',
