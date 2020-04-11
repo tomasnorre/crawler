@@ -85,15 +85,16 @@ It will remove queue entries and perform a cleanup.' . chr(10) . chr(10) .
         $crawlerController = $objectManager->get(CrawlerController::class);
 
         $pageId = MathUtility::forceIntegerInRange($input->getOption('page'), 0);
-        $fullFlush = ($pageId === 0);
 
         switch ($mode) {
             case 'all':
-                $crawlerController->getLogEntriesForPageId($pageId, '', true, $fullFlush);
+                $crawlerController->getLogEntriesForPageId($pageId, '', true, true);
+                $output->writeln('<info>All entries in Crawler queue will be flushed</info>');
                 break;
             case 'finished':
             case 'pending':
-                $crawlerController->getLogEntriesForPageId($pageId, strval($mode), true, $fullFlush);
+                $crawlerController->getLogEntriesForPageId($pageId, strval($mode), true, false);
+                $output->writeln('<info>All entries in Crawler queue, with status: "' . $mode . '" will be flushed</info>');
                 break;
             default:
                 $output->writeln('<info>No matching parameters found.' . PHP_EOL . 'Try "typo3 help crawler:flushQueue" to see your options</info>');

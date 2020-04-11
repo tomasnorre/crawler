@@ -954,21 +954,27 @@ class CrawlerController implements LoggerAwareInterface
         // PHPStorm adds the highlight that the $addWhere is immediately overwritten,
         // but the $query = $expressionBuilder->andX() ensures that the $addWhere is written correctly with AND
         // between the statements, it's not a mistake in the code.
-        $addWhere = '';
+        $addWhere = '1=1';
         switch ($filter) {
             case 'pending':
                 $queryBuilder->andWhere($queryBuilder->expr()->eq('exec_time', 0));
-                $addWhere = ' AND ' . $query->add($expressionBuilder->eq('exec_time', 0));
+                $addWhere .= ' AND ' . $query->add($expressionBuilder->eq('exec_time', 0));
                 break;
             case 'finished':
                 $queryBuilder->andWhere($queryBuilder->expr()->gt('exec_time', 0));
-                $addWhere = ' AND ' . $query->add($expressionBuilder->gt('exec_time', 0));
+                $addWhere .= ' AND ' . $query->add($expressionBuilder->gt('exec_time', 0));
+                break;
+            case 'all':
+                $doFullFlush = $doFullFlush ?: false;
                 break;
         }
 
         // FIXME: Write unit test that ensures that the right records are deleted.
         if ($doFlush) {
-            $addWhere = $query->add($expressionBuilder->eq('page_id', (int)$id));
+            // We do currently ignore PageId by flush.
+            // To have pending and finished parameters accepted
+            // 2020.04.11 - Tomas Mikkelsen
+            // $addWhere = $query->add($expressionBuilder->eq('page_id', (int)$id));
             $this->flushQueue($doFullFlush ? '1=1' : $addWhere);
             return [];
         } else {
