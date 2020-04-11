@@ -675,7 +675,7 @@ class BackendModule
                     if ($fKey === 'url') {
                         $content .= '<td>' . $value . '</td>';
                     } else {
-                        $content .= '<td>' . nl2br(htmlspecialchars($value)) . '</td>';
+                        $content .= '<td>' . nl2br(htmlspecialchars(strval($value))) . '</td>';
                     }
                 }
                 $content .= '</tr>';
