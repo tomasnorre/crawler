@@ -100,9 +100,6 @@
         ]
     },
     "extra": {
-        "branch-alias": {
-            "dev-typo3v9": "9.0.0-dev"
-        },
         "typo3/cms": {
             "cms-package-dir": "{$vendor-dir}/typo3/cms",
             "web-dir": ".Build/Web"
