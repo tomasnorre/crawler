@@ -25,7 +25,7 @@ php:
 env:
   # tested TYPO3 version
   - TYPO3_VERSION=^9.5
-  - TYPO3_VERSION=^10.2
+  - TYPO3_VERSION=^10.3
   - TYPO3_VERSION=dev-master
 
 services:
