@@ -31,7 +31,7 @@
         "codeception/module-phpbrowser": "^1.0",
         "codeception/module-webdriver": "^1.0",
         "nimut/testing-framework": "^5.0",
-        "nimut/typo3-complete": "^10.3",
+        "nimut/typo3-complete": "^9.5",
         "nunomaduro/phpinsights": "^1.13",
         "phpstan/extension-installer": "^1.0",
         "phpstan/phpstan": "^0.12",
