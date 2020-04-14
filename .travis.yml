@@ -119,7 +119,7 @@ jobs:
         - composer require aoepeople/crawler:dev-${TRAVIS_BRANCH}
         - ddev start
         - cd .. # Going back to "root" directory
-        - composer require typo3/testing-framework:"9.x-dev"
+        - composer install
         - php .Build/bin/codecept run
 
     # Static Analysis
