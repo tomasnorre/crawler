@@ -318,7 +318,7 @@ class CrawlerControllerTest extends FunctionalTestCase
             $yamlFileContents = Yaml::dump($configuration, 99, 2);
             GeneralUtility::mkdir($this->fixturePath . '/home');
             GeneralUtility::writeFile($this->fixturePath . '/home/config.yaml', $yamlFileContents);
-            $sites = $this->siteConfiguration->resolveAllExistingSites();
+            $sites = $this->siteConfiguration->resolveAllExistingSites(false);
             self::assertCount(1, $sites);
             $currentSite = current($sites);
             self::assertSame(2, $currentSite->getRootPageId());
