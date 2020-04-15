@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2020-04-15T15:00:00Z"
+		  product-name="crawler">
+		<header/>
+		<body>
+			<trans-unit id="title">
+				<source>Site Crawler</source>
+			</trans-unit>
+			<trans-unit id="labels.start">
+				<source>Start Crawling</source>
+			</trans-unit>
+			<trans-unit id="labels.log">
+				<source>Crawler log</source>
+			</trans-unit>
+			<trans-unit id="labels.multiprocess">
+				<source>Crawling Processes</source>
+			</trans-unit>
+			<trans-unit id="labels.all">
+				<source>All</source>
+			</trans-unit>
+			<trans-unit id="labels.pending">
+				<source>Pending</source>
+			</trans-unit>
+			<trans-unit id="labels.finished">
+				<source>Finished</source>
+			</trans-unit>
+			<trans-unit id="labels.noPageSelected">
+				<source>Please select a page in the pagetree</source>
+			</trans-unit>
+			<trans-unit id="labels.noConfigSelected">
+				<source>Please select at least one configuration</source>
+			</trans-unit>
+			<trans-unit id="labels.configuration">
+				<source>Crawl configuration</source>
+			</trans-unit>
+			<trans-unit id="labels.triggerUpdate">
+				<source>Update</source>
+			</trans-unit>
+			<trans-unit id="labels.triggerCrawl">
+				<source>Crawl URLs</source>
+			</trans-unit>
+			<trans-unit id="labels.triggerDownload">
+				<source>Download URLs</source>
+			</trans-unit>
+			<trans-unit id="labels.continue">
+				<source>Continue</source>
+			</trans-unit>
+			<trans-unit id="labels.continueinlog">
+				<source>Continue and show Log</source>
+			</trans-unit>
+			<trans-unit id="labels.count">
+				<source>Count</source>
+			</trans-unit>
+			<trans-unit id="labels.time">
+				<source>Time</source>
+			</trans-unit>
+			<trans-unit id="labels.curtime">
+				<source>Current server time</source>
+			</trans-unit>
+			<trans-unit id="labels.submitted">
+				<source>URLs submitted</source>
+			</trans-unit>
+			<trans-unit id="labels.depth">
+				<source>Depth</source>
+			</trans-unit>
+			<trans-unit id="labels.configurations">
+				<source>Configurations</source>
+			</trans-unit>
+			<trans-unit id="labels.scheduled">
+				<source>Scheduled</source>
+			</trans-unit>
+			<trans-unit id="labels.pagetitle">
+				<source>Page title</source>
+			</trans-unit>
+			<trans-unit id="labels.key">
+				<source>Key</source>
+			</trans-unit>
+			<trans-unit id="labels.parametercfg">
+				<source>Parameter Cfg</source>
+			</trans-unit>
+			<trans-unit id="labels.values">
+				<source>Values Expanded</source>
+			</trans-unit>
+			<trans-unit id="labels.url">
+				<source>URL</source>
+			</trans-unit>
+			<trans-unit id="labels.urls">
+				<source>URLs</source>
+			</trans-unit>
+			<trans-unit id="labels.options">
+				<source>Options</source>
+			</trans-unit>
+			<trans-unit id="labels.parameters">
+				<source>Parameters</source>
+			</trans-unit>
+			<trans-unit id="labels.back">
+				<source>Back</source>
+			</trans-unit>
+			<trans-unit id="labels.reloadlist">
+				<source>Reload list</source>
+			</trans-unit>
+			<trans-unit id="labels.downloadcsv">
+				<source>Download entries as CSV</source>
+			</trans-unit>
+			<trans-unit id="labels.flushvisiblequeue">
+				<source>Flush visible entries</source>
+			</trans-unit>
+			<trans-unit id="labels.flushfullqueue">
+				<source>Flush entire queue</source>
+			</trans-unit>
+			<trans-unit id="labels.confirmyouresure">
+				<source>Are you sure?</source>
+			</trans-unit>
+			<trans-unit id="labels.setid">
+				<source>Set ID</source>
+			</trans-unit>
+			<trans-unit id="labels.qid">
+				<source>Queue id</source>
+			</trans-unit>
+			<trans-unit id="labels.resultlog">
+				<source>Result Log</source>
+			</trans-unit>
+			<trans-unit id="labels.scheduledtime">
+				<source>Scheduled</source>
+			</trans-unit>
+			<trans-unit id="labels.runtime">
+				<source>Run-time</source>
+			</trans-unit>
+			<trans-unit id="labels.status">
+				<source>Status</source>
+			</trans-unit>
+			<trans-unit id="labels.groups">
+				<source>Groups</source>
+			</trans-unit>
+			<trans-unit id="labels.procinstr">
+				<source>Proc. Instr.</source>
+			</trans-unit>
+			<trans-unit id="labels.newprocess">
+				<source>New process has been started, refresh to monitor the state</source>
+			</trans-unit>
+			<trans-unit id="labels.newprocesserror">
+				<source>Error while starting process</source>
+			</trans-unit>
+			<trans-unit id="labels.time.now">
+				<source>Now</source>
+			</trans-unit>
+			<trans-unit id="labels.time.midnight">
+				<source>Midnight</source>
+			</trans-unit>
+			<trans-unit id="labels.time.4am">
+				<source>4 AM</source>
+			</trans-unit>
+			<trans-unit id="labels.display">
+				<source>Display</source>
+			</trans-unit>
+			<trans-unit id="labels.showresultlog">
+				<source>Show Result Log</source>
+			</trans-unit>
+			<trans-unit id="labels.showfevars">
+				<source>Show FE Vars</source>
+			</trans-unit>
+			<trans-unit id="labels.noentries">
+				<source>No entries</source>
+			</trans-unit>
+			<trans-unit id="labels.immediate">
+				<source>immediate</source>
+			</trans-unit>
+			<trans-unit id="labels.generalinformation">
+				<source>General Information</source>
+			</trans-unit>
+			<trans-unit id="labels.pendingoverview">
+				<source>Pending Entries (assigned / overall)</source>
+			</trans-unit>
+			<trans-unit id="labels.processcount">
+				<source>Processes count (running / max)</source>
+			</trans-unit>
+			<trans-unit id="labels.clipath">
+				<source>CLI-Path</source>
+			</trans-unit>
+			<trans-unit id="labels.processstates">
+				<source>Process States</source>
+			</trans-unit>
+			<trans-unit id="labels.state">
+				<source>State</source>
+			</trans-unit>
+			<trans-unit id="labels.processid">
+				<source>Id</source>
+			</trans-unit>
+			<trans-unit id="labels.time.first">
+				<source>Time first item</source>
+			</trans-unit>
+			<trans-unit id="labels.time.last">
+				<source>Time last item</source>
+			</trans-unit>
+			<trans-unit id="labels.time.duration">
+				<source>Runtime</source>
+			</trans-unit>
+			<trans-unit id="labels.ttl">
+				<source>TTL</source>
+			</trans-unit>
+			<trans-unit id="labels.status.current">
+				<source>Processed</source>
+			</trans-unit>
+			<trans-unit id="labels.status.initial">
+				<source>Initially assigned</source>
+			</trans-unit>
+			<trans-unit id="labels.status.finally">
+				<source>Finally assigned</source>
+			</trans-unit>
+			<trans-unit id="labels.status.progress">
+				<source>Progress</source>
+			</trans-unit>
+			<trans-unit id="labels.process.running">
+				<source>Process running</source>
+			</trans-unit>
+			<trans-unit id="labels.process.success">
+				<source>Process completed successfully</source>
+			</trans-unit>
+			<trans-unit id="labels.process.cancelled">
+				<source>Process was cancelled</source>
+			</trans-unit>
+			<trans-unit id="labels.refresh">
+				<source>Refresh</source>
+			</trans-unit>
+			<trans-unit id="labels.disablecrawling">
+				<source>Stop all processes and disable crawling</source>
+			</trans-unit>
+			<trans-unit id="labels.enablecrawling">
+				<source>Enable crawling</source>
+			</trans-unit>
+			<trans-unit id="labels.show.running">
+				<source>Show only running processes</source>
+			</trans-unit>
+			<trans-unit id="labels.show.all">
+				<source>Show finished and terminated processes</source>
+			</trans-unit>
+			<trans-unit id="labels.process.add">
+				<source>Add process</source>
+			</trans-unit>
+			<trans-unit id="time.detailed">
+				<source>d-m-y H:i:s</source>
+			</trans-unit>
+			<trans-unit id="labels.itemsPerPage.5">
+				<source>limit to 5</source>
+			</trans-unit>
+			<trans-unit id="labels.itemsPerPage.10">
+				<source>limit to 10</source>
+			</trans-unit>
+			<trans-unit id="labels.itemsPerPage.50">
+				<source>limit to 50</source>
+			</trans-unit>
+			<trans-unit id="labels.itemsPerPage.0">
+				<source>no limit</source>
+			</trans-unit>
+			<trans-unit id="labels.itemsPerPage">
+				<source>Items per page</source>
+			</trans-unit>
+			<trans-unit id="message.noBeUserAvailable">
+				<source>There is no be_user "_cli_crawler" available!</source>
+			</trans-unit>
+			<trans-unit id="message.noPhpForkAvailable">
+				<source>There is no PHP method "popen" available!</source>
+			</trans-unit>
+			<trans-unit id="message.beUserIsAdmin">
+				<source>The be_user "_cli_crawler" is not allowed to have admin rights!</source>
+			</trans-unit>
+			<trans-unit id="message.canNotExportEmptyQueueToCsvText">
+				<source>An empty queue can not be exported to CSV.</source>
+			</trans-unit>
+			<trans-unit id="message.phpBinaryNotFound">
+				<source>No php binary found in '%s'. Please update value for 'phpPath' in crawler extension setup.
+				</source>
+			</trans-unit>
+
+		</body>
+	</file>
+</xliff>
