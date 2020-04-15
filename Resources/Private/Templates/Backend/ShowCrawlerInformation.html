@@ -3,10 +3,10 @@
 <f:section name="Headline">
 	<f:if condition="{noConfigurationSelected}">
 		<f:then>
-			<f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.noConfigSelected" />
+			<f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noConfigSelected" />
 		</f:then>
 		<f:else>
-			<f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.configuration" />
+			<f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.configuration" />
 		</f:else>
 	</f:if>
 </f:section>
@@ -17,19 +17,19 @@
 	<f:if condition="{submitCrawlUrls}">
 		<f:then>
 			<p>
-				{amountOfUrls} <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.submitted" />
+				{amountOfUrls} <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.submitted" />
 			</p>
 			<br><br>
-			<input type="submit" class="btn btn-default" name="_" value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.continue')}">
-			<input type="submit" class="btn btn-primary" onclick="<f:format.raw>this.form.elements['SET[crawlaction]'].value='log';</f:format.raw>" value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.continueinlog')}">
+			<input type="submit" class="btn btn-default" name="_" value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.continue')}">
+			<input type="submit" class="btn btn-primary" onclick="<f:format.raw>this.form.elements['SET[crawlaction]'].value='log';</f:format.raw>" value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.continueinlog')}">
 		</f:then>
 		<f:else>
 			<table class="table">
 				<thead>
 				<tr>
-					<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.configurations" /></th>
-					<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.depth" /></th>
-					<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.scheduled" /></th>
+					<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.configurations" /></th>
+					<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.depth" /></th>
+					<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.scheduled" /></th>
 				</tr>
 				</thead>
 				<tbody>
@@ -40,25 +40,25 @@
 				</tr>
 				</tbody>
 			</table>
-			<input type="submit" class="btn btn-primary" name="_update" value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.triggerUpdate')}">
-			<input type="submit" class="btn btn-default" name="_crawl" value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.triggerCrawl')}">
-			<input type="submit" class="btn btn-default" name="_download" value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.triggerDownload')}">
+			<input type="submit" class="btn btn-primary" name="_update" value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.triggerUpdate')}">
+			<input type="submit" class="btn btn-default" name="_crawl" value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.triggerCrawl')}">
+			<input type="submit" class="btn btn-default" name="_download" value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.triggerDownload')}">
 			<br><br>
 			<p>
-				<f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.count" />: {amountOfUrls}<br>
-				<f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.curtime" />: <f:format.date format="H:i:s">now</f:format.date>
+				<f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.count" />: {amountOfUrls}<br>
+				<f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.curtime" />: <f:format.date format="H:i:s">now</f:format.date>
 			</p>
 			<f:if condition="{noConfigurationSelected} == false">
 				<table class="table table-striped table-hover">
 					<thead>
 					<tr>
-						<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.pagetitle" /></th>
-						<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.key" /></th>
-						<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.parametercfg" /></th>
-						<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.values" /></th>
-						<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.urls" /></th>
-						<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.options" /></th>
-						<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.parameters" /></th>
+						<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.pagetitle" /></th>
+						<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.key" /></th>
+						<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.parametercfg" /></th>
+						<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.values" /></th>
+						<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.urls" /></th>
+						<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.options" /></th>
+						<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.parameters" /></th>
 					</tr>
 					</thead>
 					<tbody>

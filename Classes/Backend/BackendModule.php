@@ -209,23 +209,23 @@ class BackendModule
                 99 => $this->getLanguageService()->sL('LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_infi'),
             ],
             'crawlaction' => [
-                'start' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.start'),
-                'log' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.log'),
-                'multiprocess' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.multiprocess'),
+                'start' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.start'),
+                'log' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.log'),
+                'multiprocess' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.multiprocess'),
             ],
             'log_resultLog' => '',
             'log_feVars' => '',
             'processListMode' => '',
             'log_display' => [
-                'all' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.all'),
-                'pending' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.pending'),
-                'finished' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.finished'),
+                'all' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.all'),
+                'pending' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.pending'),
+                'finished' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.finished'),
             ],
             'itemsPerPage' => [
-                '5' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.itemsPerPage.5'),
-                '10' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.itemsPerPage.10'),
-                '50' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.itemsPerPage.50'),
-                '0' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.itemsPerPage.0'),
+                '5' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.itemsPerPage.5'),
+                '10' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.itemsPerPage.10'),
+                '50' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.itemsPerPage.50'),
+                '0' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.itemsPerPage.0'),
             ],
         ];
     }
@@ -270,7 +270,7 @@ class BackendModule
                 $theOutput .= '<br><br>' .
                     '<table width="60%"><tr>' .
                     '<td>' .
-                    $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.display') . ': ' . BackendUtility::getFuncMenu(
+                    $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.display') . ': ' . BackendUtility::getFuncMenu(
                         $this->id,
                         'SET[log_display]',
                         $this->pObj->MOD_SETTINGS['log_display'],
@@ -278,21 +278,21 @@ class BackendModule
                         'index.php',
                         '&setID=' . $setId
                     ) . '</td><td> ' .
-                    $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.showresultlog') . ': ' . BackendUtility::getFuncCheck(
+                    $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showresultlog') . ': ' . BackendUtility::getFuncCheck(
                         $this->id,
                         'SET[log_resultLog]',
                         $this->pObj->MOD_SETTINGS['log_resultLog'],
                         'index.php',
                         '&setID=' . $setId . $quiPart
                     ) . '</td><td> ' .
-                    $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.showfevars') . ': ' . BackendUtility::getFuncCheck(
+                    $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showfevars') . ': ' . BackendUtility::getFuncCheck(
                         $this->id,
                         'SET[log_feVars]',
                         $this->pObj->MOD_SETTINGS['log_feVars'],
                         'index.php',
                         '&setID=' . $setId . $quiPart
                     ) . '</td><td> ' .
-                    $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.itemsPerPage') . ': ' .
+                    $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.itemsPerPage') . ': ' .
                     BackendUtility::getFuncMenu(
                         $this->id,
                         'SET[itemsPerPage]',
@@ -325,7 +325,7 @@ class BackendModule
         $this->view->setTemplate('ShowCrawlerInformation');
         if (empty($this->id)) {
             $this->isErrorDetected = true;
-            MessageUtility::addErrorMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.noPageSelected'));
+            MessageUtility::addErrorMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noPageSelected'));
         } else {
             $crawlerParameter = GeneralUtility::_GP('_crawl');
             $downloadParameter = GeneralUtility::_GP('_download');
@@ -359,7 +359,7 @@ class BackendModule
             $noConfigurationSelected = empty($this->incomingConfigurationSelection)
                 || (count($this->incomingConfigurationSelection) == 1 && empty($this->incomingConfigurationSelection[0]));
             if ($noConfigurationSelected) {
-                MessageUtility::addWarningMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.noConfigSelected'));
+                MessageUtility::addWarningMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noConfigSelected'));
             } else {
                 if ($this->submitCrawlUrls) {
                     $reason = new Reason();
@@ -440,9 +440,9 @@ class BackendModule
         // Scheduled time:
         $selectors['scheduled'] = $this->selectorBox(
             [
-                'now' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.time.now'),
-                'midnight' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.time.midnight'),
-                '04:00' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.time.4am'),
+                'now' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.time.now'),
+                'midnight' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.time.midnight'),
+                '04:00' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.time.4am'),
             ],
             'tstamp',
             GeneralUtility::_POST('tstamp'),
@@ -463,7 +463,7 @@ class BackendModule
         $this->view->setTemplate('ShowLog');
         if (empty($this->id)) {
             $this->isErrorDetected = true;
-            MessageUtility::addErrorMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.noPageSelected'));
+            MessageUtility::addErrorMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noPageSelected'));
         } else {
             $this->crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
             $this->crawlerController->setAccessMode('gui');
@@ -582,7 +582,7 @@ class BackendModule
     protected function outputCsvFile(): void
     {
         if (!count($this->CSVaccu)) {
-            MessageUtility::addWarningMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:message.canNotExportEmptyQueueToCsvText'));
+            MessageUtility::addWarningMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:message.canNotExportEmptyQueueToCsvText'));
             return;
         }
         $csvLines = [];
@@ -649,7 +649,7 @@ class BackendModule
                 if ($this->pObj->MOD_SETTINGS['log_resultLog']) {
                     $rowData['result_log'] = $resLog;
                 } else {
-                    $rowData['scheduled'] = ($vv['scheduled'] > 0) ? BackendUtility::datetime($vv['scheduled']) : ' ' . $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.immediate');
+                    $rowData['scheduled'] = ($vv['scheduled'] > 0) ? BackendUtility::datetime($vv['scheduled']) : ' ' . $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.immediate');
                     $rowData['exec_time'] = $vv['exec_time'] ? BackendUtility::datetime($vv['exec_time']) : '-';
                 }
                 $rowData['result_status'] = GeneralUtility::fixed_lgd_cs($resStatus, 50);
@@ -695,7 +695,7 @@ class BackendModule
             $content = '
                 <tr>
                     <td>' . $titleString . '</td>
-                    <td colspan="' . $colSpan . '"><em>' . $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.noentries') . '</em></td>
+                    <td colspan="' . $colSpan . '"><em>' . $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noentries') . '</em></td>
                 </tr>';
         }
 
@@ -821,7 +821,7 @@ class BackendModule
     {
         return $this->getLinkButton(
             'actions-refresh',
-            $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.refresh'),
+            $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.refresh'),
             $this->getInfoModuleUrl(['SET[\'crawleraction\']' => 'crawleraction', 'id' => $this->id])
         );
     }
@@ -839,14 +839,14 @@ class BackendModule
             // TODO: Icon Should be bigger + Perhaps better icon
             return $this->getLinkButton(
                 'tx-crawler-stop',
-                $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.disablecrawling'),
+                $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.disablecrawling'),
                 $this->getInfoModuleUrl(['action' => 'stopCrawling'])
             );
         } else {
             // TODO: Icon Should be bigger
             return $this->getLinkButton(
                 'tx-crawler-start',
-                $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.enablecrawling'),
+                $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.enablecrawling'),
                 $this->getInfoModuleUrl(['action' => 'resumeCrawling'])
             );
         }
@@ -862,13 +862,13 @@ class BackendModule
         if ($mode === 'detail') {
             return $this->getLinkButton(
                 'actions-document-view',
-                $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.show.running'),
+                $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.show.running'),
                 $this->getInfoModuleUrl(['SET[\'processListMode\']' => 'simple'])
             );
         } elseif ($mode === 'simple') {
             return $this->getLinkButton(
                 'actions-document-view',
-                $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.show.all'),
+                $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.show.all'),
                 $this->getInfoModuleUrl(['SET[\'processListMode\']' => 'detail'])
             );
         }
@@ -889,7 +889,7 @@ class BackendModule
 
         return $this->getLinkButton(
             'actions-add',
-            $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.process.add'),
+            $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.process.add'),
             $this->getInfoModuleUrl(['action' => 'addProcess'])
         );
     }
@@ -901,7 +901,7 @@ class BackendModule
     {
         if (!$this->isPhpForkAvailable()) {
             $this->isErrorDetected = true;
-            MessageUtility::addErrorMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:message.noPhpForkAvailable'));
+            MessageUtility::addErrorMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:message.noPhpForkAvailable'));
         }
 
         $exitCode = 0;
@@ -913,7 +913,7 @@ class BackendModule
         );
         if ($exitCode > 0) {
             $this->isErrorDetected = true;
-            MessageUtility::addErrorMessage(sprintf($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:message.phpBinaryNotFound'), htmlspecialchars($this->extensionSettings['phpPath'])));
+            MessageUtility::addErrorMessage(sprintf($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:message.phpBinaryNotFound'), htmlspecialchars($this->extensionSettings['phpPath'])));
         }
     }
 
@@ -946,9 +946,9 @@ class BackendModule
                 break;
             case 'addProcess':
                 if ($this->processManager->startProcess() === false) {
-                    throw new \Exception($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.newprocesserror'));
+                    throw new \Exception($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.newprocesserror'));
                 }
-                MessageUtility::addNoticeMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xml:labels.newprocess'));
+                MessageUtility::addNoticeMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.newprocess'));
                 break;
         }
     }
