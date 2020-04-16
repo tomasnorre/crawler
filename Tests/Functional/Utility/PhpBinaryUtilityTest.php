@@ -20,6 +20,7 @@ namespace AOE\Crawler\Tests\Functioanal\Utility;
 
 use AOE\Crawler\Utility\PhpBinaryUtility;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use TYPO3\CMS\Core\Utility\CommandUtility;
 
 class PhpBinaryUtilityTest extends FunctionalTestCase
 {
@@ -64,6 +65,7 @@ class PhpBinaryUtilityTest extends FunctionalTestCase
             'phpBinary' => $phpBinary
         ];
 
+
         $this->assertEquals(
             PhpBinaryUtility::getPhpBinary(),
             $expected
@@ -76,7 +78,8 @@ class PhpBinaryUtilityTest extends FunctionalTestCase
             'php set to standard PHP' => [
                 'phpPath' => '',
                 'phpBinary' => 'php',
-                'expected' => '/usr/bin/php'
+                // Done to accept that travis stores PHP binaries elsewhere as standard unix
+                'expected' => CommandUtility::getCommand('php')
             ],
 
             'phpPath is set' => [
