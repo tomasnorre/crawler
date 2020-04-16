@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace AOE\Crawler\Tests\Functioanal\Utility;
@@ -24,7 +25,6 @@ use TYPO3\CMS\Core\Utility\CommandUtility;
 
 class PhpBinaryUtilityTest extends FunctionalTestCase
 {
-
     /**
      * @test
      */
@@ -47,7 +47,7 @@ class PhpBinaryUtilityTest extends FunctionalTestCase
         $this->expectExceptionCode(1587068215);
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [
             'phpPath' => '',
-            'phpBinary' => 'non-existing-binary'
+            'phpBinary' => 'non-existing-binary',
         ];
 
         PhpBinaryUtility::getPhpBinary();
@@ -59,12 +59,10 @@ class PhpBinaryUtilityTest extends FunctionalTestCase
      */
     public function getPhpBinary(string $phpPath, string $phpBinary, string $expected): void
     {
-
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [
             'phpPath' => $phpPath,
-            'phpBinary' => $phpBinary
+            'phpBinary' => $phpBinary,
         ];
-
 
         $this->assertEquals(
             PhpBinaryUtility::getPhpBinary(),
@@ -79,14 +77,14 @@ class PhpBinaryUtilityTest extends FunctionalTestCase
                 'phpPath' => '',
                 'phpBinary' => 'php',
                 // Done to accept that travis stores PHP binaries elsewhere as standard unix
-                'expected' => CommandUtility::getCommand('php')
+                'expected' => CommandUtility::getCommand('php'),
             ],
 
             'phpPath is set' => [
                 'phpPath' => '/complete/path/to/php',
                 'phpBinary' => '/this/value/is/not/important/as/phpPath/is/set',
-                'expected' => '/complete/path/to/php'
-            ]
+                'expected' => '/complete/path/to/php',
+            ],
         ];
     }
 }
