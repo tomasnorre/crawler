@@ -21,6 +21,8 @@ addons:
 php:
   - '7.2'
   - '7.3'
+  - '7.4'
+  - '7.5'
 
 env:
   # tested TYPO3 version
@@ -61,6 +63,8 @@ script:
 jobs:
   fast_finish: true
   allow_failures:
+    - php: 7.3
+    - php: 7.4
     - env: TYPO3_VERSION=dev-master
     - name: "PHPStan"
     - name: "Behaviour"
