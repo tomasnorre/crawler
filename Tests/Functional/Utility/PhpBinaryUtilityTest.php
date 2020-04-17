@@ -34,7 +34,6 @@ class PhpBinaryUtilityTest extends FunctionalTestCase
         $this->expectExceptionMessage('ExtensionSettings are empty');
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [];
         PhpBinaryUtility::getPhpBinary();
-
     }
 
     /**
