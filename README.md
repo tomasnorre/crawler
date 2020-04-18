@@ -6,6 +6,16 @@ Libraries and scripts for crawling the TYPO3 page tree. Used for re-caching, re-
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/AOEpeople/crawler/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/AOEpeople/crawler/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/AOEpeople/crawler/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/AOEpeople/crawler/?branch=master)
 
+## Versions and Support 
+
+| Release  | TYPO3 | PHP   | Fixes will contain
+|---|---|---|---|
+| 6.x.y  | 7.6-8.7   | 5.6-7.4 | Bugfixes, Security Updates
+| 7.x.y  |    |  | Releases do not exist
+| 8.x.y  |    |  | Releases do not exists
+| 9.x.y  | 9.5-10.4  | 7.2-7.4 |Features, Bugfixes, Security Updates
+
+
 ### Wiki
 Please see the [Wiki Pages](https://github.com/AOEpeople/crawler/wiki) for Release notes and Known issues.
 
