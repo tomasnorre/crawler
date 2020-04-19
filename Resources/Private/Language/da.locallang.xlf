@@ -3,96 +3,363 @@
   <file source-language="en" datatype="plaintext" original="messages" date="2020-04-15T15:00:00Z" product-name="crawler" target-language="da">
     <header/>
     <body>
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-
-		</body>
+      <trans-unit id="title" approved="yes">
+        <source>Site Crawler</source>
+        <target state="final">Side Crawler</target>
+      </trans-unit>
+      <trans-unit id="labels.start" approved="yes">
+        <source>Start Crawling</source>
+        <target state="final">Start Crawling</target>
+      </trans-unit>
+      <trans-unit id="labels.log" approved="yes">
+        <source>Crawler log</source>
+        <target state="final">Crawler log</target>
+      </trans-unit>
+      <trans-unit id="labels.multiprocess" approved="yes">
+        <source>Crawling Processes</source>
+        <target state="final">Crawler Processor</target>
+      </trans-unit>
+      <trans-unit id="labels.all" approved="yes">
+        <source>All</source>
+        <target state="final">Alle</target>
+      </trans-unit>
+      <trans-unit id="labels.pending" approved="yes">
+        <source>Pending</source>
+        <target state="final">Afventende</target>
+      </trans-unit>
+      <trans-unit id="labels.finished" approved="yes">
+        <source>Finished</source>
+        <target state="final">Færdige</target>
+      </trans-unit>
+      <trans-unit id="labels.noPageSelected" approved="yes">
+        <source>Please select a page in the pagetree</source>
+        <target state="final">Vælg venligst en side i sidetræet</target>
+      </trans-unit>
+      <trans-unit id="labels.noConfigSelected" approved="yes">
+        <source>Please select at least one configuration</source>
+        <target state="final">Vælg venligst mindst en konfiguration</target>
+      </trans-unit>
+      <trans-unit id="labels.configuration" approved="yes">
+        <source>Crawl configuration</source>
+        <target state="final">Crawler konfiguration</target>
+      </trans-unit>
+      <trans-unit id="labels.triggerUpdate" approved="yes">
+        <source>Update</source>
+        <target state="final">Opdatér</target>
+      </trans-unit>
+      <trans-unit id="labels.triggerCrawl" approved="yes">
+        <source>Crawl URLs</source>
+        <target state="final">Crawl URLs</target>
+      </trans-unit>
+      <trans-unit id="labels.triggerDownload" approved="yes">
+        <source>Download URLs</source>
+        <target state="final">Download URLs</target>
+      </trans-unit>
+      <trans-unit id="labels.continue" approved="yes">
+        <source>Continue</source>
+        <target state="final">Forsæt</target>
+      </trans-unit>
+      <trans-unit id="labels.continueinlog" approved="yes">
+        <source>Continue and show Log</source>
+        <target state="final">Forsæt og vis log</target>
+      </trans-unit>
+      <trans-unit id="labels.count" approved="yes">
+        <source>Count</source>
+        <target state="final">Antal</target>
+      </trans-unit>
+      <trans-unit id="labels.time" approved="yes">
+        <source>Time</source>
+        <target state="final">Tid</target>
+      </trans-unit>
+      <trans-unit id="labels.curtime" approved="yes">
+        <source>Current server time</source>
+        <target state="final">Aktuel servertid er</target>
+      </trans-unit>
+      <trans-unit id="labels.submitted" approved="yes">
+        <source>URLs submitted</source>
+        <target state="final">URLer sendt</target>
+      </trans-unit>
+      <trans-unit id="labels.depth" approved="yes">
+        <source>Depth</source>
+        <target state="final">Dybde</target>
+      </trans-unit>
+      <trans-unit id="labels.configurations" approved="yes">
+        <source>Configurations</source>
+        <target state="final">Konfigurationer</target>
+      </trans-unit>
+      <trans-unit id="labels.scheduled" approved="yes">
+        <source>Scheduled</source>
+        <target state="final">Planlagt</target>
+      </trans-unit>
+      <trans-unit id="labels.pagetitle" approved="yes">
+        <source>Page title</source>
+        <target state="final">Sidetitel</target>
+      </trans-unit>
+      <trans-unit id="labels.key" approved="yes">
+        <source>Key</source>
+        <target state="final">Nøgle</target>
+      </trans-unit>
+      <trans-unit id="labels.parametercfg" approved="yes">
+        <source>Parameter Cfg</source>
+        <target state="final">Parameter Konf</target>
+      </trans-unit>
+      <trans-unit id="labels.values" approved="yes">
+        <source>Values Expanded</source>
+        <target state="final">Værdier udvidet</target>
+      </trans-unit>
+      <trans-unit id="labels.url" approved="yes">
+        <source>URL</source>
+        <target state="final">URL</target>
+      </trans-unit>
+      <trans-unit id="labels.urls" approved="yes">
+        <source>URLs</source>
+        <target state="final">URLer</target>
+      </trans-unit>
+      <trans-unit id="labels.options" approved="yes">
+        <source>Options</source>
+        <target state="final">Muligheder</target>
+      </trans-unit>
+      <trans-unit id="labels.parameters" approved="yes">
+        <source>Parameters</source>
+        <target state="final">Parametre</target>
+      </trans-unit>
+      <trans-unit id="labels.back" approved="yes">
+        <source>Back</source>
+        <target state="final">Tilbage</target>
+      </trans-unit>
+      <trans-unit id="labels.reloadlist" approved="yes">
+        <source>Reload list</source>
+        <target state="final">Genindlæs listen</target>
+      </trans-unit>
+      <trans-unit id="labels.downloadcsv" approved="yes">
+        <source>Download entries as CSV</source>
+        <target state="final">Download posterne som CSV</target>
+      </trans-unit>
+      <trans-unit id="labels.flushvisiblequeue" approved="yes">
+        <source>Flush visible entries</source>
+        <target state="final">Ryd synlige poster</target>
+      </trans-unit>
+      <trans-unit id="labels.flushfullqueue" approved="yes">
+        <source>Flush entire queue</source>
+        <target state="final">Ryd den komplette kø</target>
+      </trans-unit>
+      <trans-unit id="labels.confirmyouresure" approved="yes">
+        <source>Are you sure?</source>
+        <target state="final">Er du sikker?</target>
+      </trans-unit>
+      <trans-unit id="labels.setid" approved="yes">
+        <source>Set ID</source>
+        <target state="final">Angiv id</target>
+      </trans-unit>
+      <trans-unit id="labels.qid" approved="yes">
+        <source>Queue id</source>
+        <target state="final">Kø id</target>
+      </trans-unit>
+      <trans-unit id="labels.resultlog" approved="yes">
+        <source>Result Log</source>
+        <target state="final">Resultat log</target>
+      </trans-unit>
+      <trans-unit id="labels.scheduledtime" approved="yes">
+        <source>Scheduled</source>
+        <target state="final">Planlagt</target>
+      </trans-unit>
+      <trans-unit id="labels.runtime" approved="yes">
+        <source>Run-time</source>
+        <target state="final">Run-time</target>
+      </trans-unit>
+      <trans-unit id="labels.status" approved="yes">
+        <source>Status</source>
+        <target state="final">Status</target>
+      </trans-unit>
+      <trans-unit id="labels.groups" approved="yes">
+        <source>Groups</source>
+        <target state="final">Grupper</target>
+      </trans-unit>
+      <trans-unit id="labels.procinstr" approved="yes">
+        <source>Proc. Instr.</source>
+        <target state="final">Proc. instr.</target>
+      </trans-unit>
+      <trans-unit id="labels.newprocess" approved="yes">
+        <source>New process has been started, refresh to monitor the state</source>
+        <target state="final">En ny proces er blevet startet, genindlæs for at se statussen</target>
+      </trans-unit>
+      <trans-unit id="labels.newprocesserror" approved="yes">
+        <source>Error while starting process</source>
+        <target state="final">Fejl ved start af process</target>
+      </trans-unit>
+      <trans-unit id="labels.time.now" approved="yes">
+        <source>Now</source>
+        <target state="final">Nu</target>
+      </trans-unit>
+      <trans-unit id="labels.time.midnight" approved="yes">
+        <source>Midnight</source>
+        <target state="final">Midnat</target>
+      </trans-unit>
+      <trans-unit id="labels.time.4am" approved="yes">
+        <source>4 AM</source>
+        <target state="final">4:00</target>
+      </trans-unit>
+      <trans-unit id="labels.display" approved="yes">
+        <source>Display</source>
+        <target state="final">Vis</target>
+      </trans-unit>
+      <trans-unit id="labels.showresultlog" approved="yes">
+        <source>Show Result Log</source>
+        <target state="final">Vis resultat log</target>
+      </trans-unit>
+      <trans-unit id="labels.showfevars" approved="yes">
+        <source>Show FE Vars</source>
+        <target state="final">Vis FE Variabler</target>
+      </trans-unit>
+      <trans-unit id="labels.noentries" approved="yes">
+        <source>No entries</source>
+        <target state="final">Ingen poster</target>
+      </trans-unit>
+      <trans-unit id="labels.immediate" approved="yes">
+        <source>immediate</source>
+        <target state="final">straks</target>
+      </trans-unit>
+      <trans-unit id="labels.generalinformation" approved="yes">
+        <source>General Information</source>
+        <target state="final">Generel information</target>
+      </trans-unit>
+      <trans-unit id="labels.pendingoverview" approved="yes">
+        <source>Pending Entries (assigned / overall)</source>
+        <target state="final">Afventende poster (tildelte / i alt)</target>
+      </trans-unit>
+      <trans-unit id="labels.processcount" approved="yes">
+        <source>Processes count (running / max)</source>
+        <target state="final">Antal processor (kører / maks.)</target>
+      </trans-unit>
+      <trans-unit id="labels.clipath" approved="yes">
+        <source>CLI-Path</source>
+        <target state="final">CLI Sti</target>
+      </trans-unit>
+      <trans-unit id="labels.processstates" approved="yes">
+        <source>Process States</source>
+        <target state="final">Process status</target>
+      </trans-unit>
+      <trans-unit id="labels.state" approved="yes">
+        <source>State</source>
+        <target state="final">Status</target>
+      </trans-unit>
+      <trans-unit id="labels.processid" approved="yes">
+        <source>Id</source>
+        <target state="final">Id</target>
+      </trans-unit>
+      <trans-unit id="labels.time.first" approved="yes">
+        <source>Time first item</source>
+        <target state="final">Tid første emne</target>
+      </trans-unit>
+      <trans-unit id="labels.time.last" approved="yes">
+        <source>Time last item</source>
+        <target state="final">Tid sidste emne</target>
+      </trans-unit>
+      <trans-unit id="labels.time.duration" approved="yes">
+        <source>Runtime</source>
+        <target state="final">Varighed</target>
+      </trans-unit>
+      <trans-unit id="labels.ttl" approved="yes">
+        <source>TTL</source>
+        <target state="final">TTL</target>
+      </trans-unit>
+      <trans-unit id="labels.status.current" approved="yes">
+        <source>Processed</source>
+        <target state="final">Processeret</target>
+      </trans-unit>
+      <trans-unit id="labels.status.initial" approved="yes">
+        <source>Initially assigned</source>
+        <target state="final">Initielt tildelt</target>
+      </trans-unit>
+      <trans-unit id="labels.status.finally" approved="yes">
+        <source>Finally assigned</source>
+        <target state="final">Endelige tildelte</target>
+      </trans-unit>
+      <trans-unit id="labels.status.progress" approved="yes">
+        <source>Progress</source>
+        <target state="final">Fremskridt</target>
+      </trans-unit>
+      <trans-unit id="labels.process.running" approved="yes">
+        <source>Process running</source>
+        <target state="final">Process kører</target>
+      </trans-unit>
+      <trans-unit id="labels.process.success" approved="yes">
+        <source>Process completed successfully</source>
+        <target state="final">Processen er afsluttet med succes</target>
+      </trans-unit>
+      <trans-unit id="labels.process.cancelled" approved="yes">
+        <source>Process was cancelled</source>
+        <target state="final">Processen blev annulleret</target>
+      </trans-unit>
+      <trans-unit id="labels.refresh" approved="yes">
+        <source>Refresh</source>
+        <target state="final">Genindlæs</target>
+      </trans-unit>
+      <trans-unit id="labels.disablecrawling" approved="yes">
+        <source>Stop all processes and disable crawling</source>
+        <target state="final">Stop alle processor og deaktiver crawling</target>
+      </trans-unit>
+      <trans-unit id="labels.enablecrawling" approved="yes">
+        <source>Enable crawling</source>
+        <target state="final">Aktivér crawling</target>
+      </trans-unit>
+      <trans-unit id="labels.show.running" approved="yes">
+        <source>Show only running processes</source>
+        <target state="final">Vis kun kørende processor</target>
+      </trans-unit>
+      <trans-unit id="labels.show.all" approved="yes">
+        <source>Show finished and terminated processes</source>
+        <target state="final">Vis færdige og terminerede processor</target>
+      </trans-unit>
+      <trans-unit id="labels.process.add" approved="yes">
+        <source>Add process</source>
+        <target state="final">Tilføj process</target>
+      </trans-unit>
+      <trans-unit id="time.detailed" approved="yes">
+        <source>d-m-y H:i:s</source>
+        <target state="final">d-m-y H:i:s</target>
+      </trans-unit>
+      <trans-unit id="labels.itemsPerPage.5" approved="yes">
+        <source>limit to 5</source>
+        <target state="final">begræns til 5</target>
+      </trans-unit>
+      <trans-unit id="labels.itemsPerPage.10" approved="yes">
+        <source>limit to 10</source>
+        <target state="final">begræns til 10</target>
+      </trans-unit>
+      <trans-unit id="labels.itemsPerPage.50" approved="yes">
+        <source>limit to 50</source>
+        <target state="final">begræns til 50</target>
+      </trans-unit>
+      <trans-unit id="labels.itemsPerPage.0" approved="yes">
+        <source>no limit</source>
+        <target state="final">ingen begrænsning</target>
+      </trans-unit>
+      <trans-unit id="labels.itemsPerPage" approved="yes">
+        <source>Items per page</source>
+        <target state="final">Antal pr. side</target>
+      </trans-unit>
+      <trans-unit id="message.noBeUserAvailable" approved="yes">
+        <source>There is no be_user "_cli_crawler" available!</source>
+        <target state="final">Der er ingen be_user "_cli_crawler" tilgængelig!</target>
+      </trans-unit>
+      <trans-unit id="message.noPhpForkAvailable" approved="yes">
+        <source>There is no PHP method "popen" available!</source>
+        <target state="final">PHP metoden "popen" er ikke tilgængelig!</target>
+      </trans-unit>
+      <trans-unit id="message.beUserIsAdmin" approved="yes">
+        <source>The be_user "_cli_crawler" is not allowed to have admin rights!</source>
+        <target state="final">Backend brugeren "_cli_crawler" må ikke have admin rettigheder!</target>
+      </trans-unit>
+      <trans-unit id="message.canNotExportEmptyQueueToCsvText" approved="yes">
+        <source>An empty queue can not be exported to CSV.</source>
+        <target state="final">En tøm kø kan ikke eksporteres til CSV.</target>
+      </trans-unit>
+      <trans-unit id="message.phpBinaryNotFound" approved="yes">
+        <source>No php binary found in '%s'. Please update value for 'phpPath' in crawler extension setup.
+				</source>
+        <target state="final">Der blev ikke fundet en PHP binær i '%s'. Opdatér venligst værdigen for 'phpPath' i Crawler udvidelsens indstillinger.</target>
+      </trans-unit>
+    </body>
   </file>
 </xliff>
