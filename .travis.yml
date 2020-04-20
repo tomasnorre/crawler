@@ -17,7 +17,11 @@ addons:
   apt:
     packages:
       - parallel
-
+  sonarcloud:
+    organization: "aoe-crawler"
+    branches:
+      - master
+      - sonarqube
 php:
   - '7.2'
   - '7.3'
@@ -33,9 +37,13 @@ services:
   - mysql
   - docker
 
+jdk:
+  - oraclejdk8
+
 cache:
   directories:
     - $HOME/.composer/cache
+    - $HOME/.sonar/cache
 
 before_script:
   # Installs nimut/typo3-complete
@@ -152,6 +160,22 @@ jobs:
         - TYPO3_VERSION=^9.5
       script:
         - .Build/bin/phpstan analyse
+
+    - stage: static
+      if: type = push AND branch IN (master, sonarqube)
+      php: 7.2
+      before_install: skip
+      install: skip
+      before_script: skip
+      script:
+        - git fetch --unshallow
+        - composer install
+        - .Build/bin/phpunit --whitelist Classes --coverage-clover clover.xml --log-junit junit.xml
+        - >
+          if [ -n "$SONAR_TOKEN" ]; then
+            sonar-scanner
+          fi
+
 
     # Deploy
     -
