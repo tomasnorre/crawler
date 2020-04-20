@@ -24,7 +24,8 @@
         "bk2k/bootstrap-package": "*",
         "helhum/typo3-console": "^5.6",
         "aoepeople/crawler": "dev-master",
-        "typo3/cms-beuser": "^9.5"
+        "typo3/cms-beuser": "^9.5",
+        "georgringer/news": "^7.3"
     },
     "config": {
         "vendor-dir": "vendor",
