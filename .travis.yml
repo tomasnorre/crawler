@@ -168,10 +168,14 @@ jobs:
       before_install: skip
       install: skip
       script:
+        - mkdir -p .Logs/coverage .Logs/junit
         - git fetch --unshallow
         - composer install
-        - .Build/bin/phpunit --whitelist Classes --coverage-clover clover.xml --log-junit junit.xml -c $UNIT_XML Tests/Unit
-        #- .Build/bin/phpunit --whitelist Classes --coverage-clover functional-coverage.xml --log-junit functional-junit.xml -c $FUNCTIONAL_XML Tests/Functional
+        - .Build/bin/phpunit --whitelist Classes --coverage-clover .Logs/coverage/unit_clover.xml --log-junit .Logs/junit/unit_junit.xml -c $UNIT_XML Tests/Unit
+        - .Build/bin/phpunit --whitelist Classes --coverage-clover .Logs/coverage/functional-coverage.xml --log-junit .Logs/junit/functional-junit.xml -c $FUNCTIONAL_XML Tests/Functional
+        - composer require --no-progress --no-suggest --update-with-all-dependencies nimut/phpunit-merger;
+          .Build/bin/phpunit-merger coverage .Logs/coverage/ .Logs/coverage.xml;
+          .Build/bin/phpunit-merger log .Logs/junit/ .Logs/junit.xml;
         - >
           if [ -n "$SONAR_TOKEN" ]; then
             sonar-scanner
