@@ -165,17 +165,16 @@ jobs:
       name: "SonarCloud"
       if: type = push AND branch IN (master, sonarqube)
       php: 7.2
+      env:
+        - TYPO3_VERSION=^9.5
       before_install:
         - echo "keep xdebug"
         # Installs nimut/typo3-complete
         - travis_wait 30 composer require --dev nimut/typo3-complete=$TYPO3_VERSION
         - export "TYPO3_PATH_WEB"=$PWD/.Build/Web;
-        # Locating UnitTests.xml
+        # Locating UnitTests.xml and FunctionalTests.xml
         - export "UNIT_XML"='.Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml'
-        # Location FunctionalTests.xml
         - export "FUNCTIONAL_XML"='.Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml'
-        # Symlink TYPO3-Core
-        - ln -nfs .Build/vendor/typo3/cms/typo3 typo3
       install: skip
       script:
         - export typo3DatabaseName="typo3"
@@ -194,7 +193,6 @@ jobs:
           if [ -n "$SONAR_TOKEN" ]; then
             sonar-scanner
           fi
-
 
     # Deploy
     -
