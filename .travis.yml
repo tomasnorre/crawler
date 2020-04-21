@@ -165,9 +165,12 @@ jobs:
       name: "SonarCloud"
       if: type = push AND branch IN (master, sonarqube)
       php: 7.2
-      before_install: skip
       install: skip
       script:
+        - export typo3DatabaseName="typo3"
+        - export typo3DatabaseHost="localhost"
+        - export typo3DatabaseUsername="root"
+        - export typo3DatabasePassword=""
         - mkdir -p .Logs/coverage .Logs/junit
         - git fetch --unshallow
         - composer install
