@@ -1,10 +1,16 @@
 # crawler
-Libraries and scripts for crawling the TYPO3 page tree. Used for re-caching, re-indexing, publishing applications etc.
-
-## Build information
 [![Build Status](https://travis-ci.org/AOEpeople/crawler.svg?branch=master)](https://travis-ci.org/AOEpeople/crawler)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/AOEpeople/crawler/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/AOEpeople/crawler/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/AOEpeople/crawler/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/AOEpeople/crawler/?branch=master)
+
+Libraries and scripts for crawling the TYPO3 page tree. Used for re-caching, re-indexing, publishing applications etc.
+
+
+You can include the crawler in your TYPO3 project with composer or from [TER](https://extensions.typo3.org)
+
+```shell script
+composer require aoepeople/crawler
+```
 
 ## Versions and Support 
 
