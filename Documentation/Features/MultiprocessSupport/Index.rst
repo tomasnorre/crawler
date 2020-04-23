@@ -15,12 +15,12 @@
 .. role::   php(code)
 
 
-Multiprocess support
-^^^^^^^^^^^^^^^^^^^^
+Multi process support
+^^^^^^^^^^^^^^^^^^^^^
 
 If you want to optimize the crawling process for speed (instead of low
 server stress), maybe because the machine is a dedicated staging
-machine you should experiment with the new mulitprocess features.
+machine you should experiment with the new multi process features.
 
 In the extension settings you can set how many processes are allowed to
 run at the same time, how many queue entries a process should grab and
