@@ -41,8 +41,8 @@ class SignalSlotUtility
     /**
      * Predefined signals
      */
-    public const SIGNNAL_QUEUEITEM_PREPROCESS = 'queueItemPreProcess';
-    public const SIGNNAL_QUEUEITEM_POSTPROCESS = 'queueItemPostProcess';
+    public const SIGNAL_QUEUEITEM_PREPROCESS = 'queueItemPreProcess';
+    public const SIGNAL_QUEUEITEM_POSTPROCESS = 'queueItemPostProcess';
 
     /**
      * Emits a signal to the signalslot dispatcher
