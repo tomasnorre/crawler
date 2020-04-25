@@ -7,7 +7,7 @@ namespace AOE\Crawler\Domain\Repository;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2019 AOE GmbH <dev@aoe.com>
+ *  (c) 2020 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -28,7 +28,9 @@ namespace AOE\Crawler\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Model\Process;
+use Psr\Log\LoggerAwareInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
@@ -38,8 +40,10 @@ use TYPO3\CMS\Core\Utility\MathUtility;
  *
  * @package AOE\Crawler\Domain\Repository
  */
-class QueueRepository extends AbstractRepository
+class QueueRepository extends AbstractRepository implements LoggerAwareInterface
 {
+    use \Psr\Log\LoggerAwareTrait;
+
     /**
      * @var string
      */
@@ -207,7 +211,7 @@ class QueueRepository extends AbstractRepository
     }
 
     /**
-     * This method can be used to count all queue entrys which are
+     * This method can be used to count all queue entries which are
      * scheduled for now or a earlier date and are assigned to a process.
      *
      * @return int
@@ -500,5 +504,28 @@ class QueueRepository extends AbstractRepository
             ->execute()
             ->fetch();
         return is_array($queueRec) ? $queueRec : null;
+    }
+
+    public function cleanupQueue(): void
+    {
+        $extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
+        $purgeDays = (int)$extensionSettings['purgeQueueDays'];
+
+        if ($purgeDays > 0) {
+            $purgeDate = time() - 24 * 60 * 60 * $purgeDays;
+
+            $queryBuilderDelete = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+            $del = $queryBuilderDelete
+                ->delete($this->tableName)
+                ->where(
+                    'exec_time != 0 AND exec_time < ' . $purgeDate
+                )->execute();
+
+            if (false === $del) {
+                $this->logger->info(
+                    'Records could not be deleted.'
+                );
+            }
+        }
     }
 }

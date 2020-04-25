@@ -1696,22 +1696,7 @@ class CrawlerController implements LoggerAwareInterface
         $this->CLI_runHooks();
 
         // Clean up the queue
-        if ((int)$this->extensionSettings['purgeQueueDays'] > 0) {
-            $purgeDate = $this->getCurrentTime() - 24 * 60 * 60 * (int)$this->extensionSettings['purgeQueueDays'];
-
-            $queryBuilderDelete = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
-            $del = $queryBuilderDelete
-                ->delete($this->tableName)
-                ->where(
-                    'exec_time != 0 AND exec_time < ' . $purgeDate
-                )->execute();
-
-            if (false === $del) {
-                $this->logger->info(
-                    'Records could not be deleted.'
-                );
-            }
-        }
+        $this->queueRepository->cleanupQueue();
 
         // Select entries:
         //TODO Shouldn't this reside within the transaction?
@@ -1744,7 +1729,7 @@ class CrawlerController implements LoggerAwareInterface
             //$this->queryBuilder->getConnection()->executeQuery('BEGIN');
             //TODO make sure we're not taking assigned queue-entires
 
-            //save the number of assigned queue entrys to determine who many have been processed later
+            //save the number of assigned queue entries to determine who many have been processed later
             $queryBuilderUpdate = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
             $numberOfAffectedRows = $queryBuilderUpdate
                 ->update($this->tableName)

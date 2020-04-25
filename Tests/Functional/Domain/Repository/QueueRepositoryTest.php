@@ -398,7 +398,7 @@ class QueueRepositoryTest extends FunctionalTestCase
             [
                 'count_value' => 1,
                 'set_id' => 0,
-                'scheduled' => 4321
+                'scheduled' => 4321,
             ],
             $availableSets[0]
         );
@@ -418,6 +418,16 @@ class QueueRepositoryTest extends FunctionalTestCase
             12,
             $queueRecord['scheduled']
         );
+    }
+
+    /**
+     * @test
+     */
+    public function cleanupQueue(): void
+    {
+        self::assertEquals(14, $this->subject->countAll());
+        $this->subject->cleanupQueue();
+        self::assertEquals(7, $this->subject->countAll());
     }
 
     /**
