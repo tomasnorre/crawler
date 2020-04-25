@@ -74,7 +74,6 @@ class QueueRepositoryTest extends FunctionalTestCase
      */
     public function getFirstOrLastObjectByProcess(string $processId, string $orderBy, string $orderDirection, array $expected): void
     {
-        /** @var Process $process */
         $process = new Process();
         $process->setProcessId($processId);
 
@@ -390,6 +389,38 @@ class QueueRepositoryTest extends FunctionalTestCase
     }
 
     /**
+     * @test
+     */
+    public function getAvailableSets(): void
+    {
+        $availableSets = $this->subject->getAvailableSets();
+        self::assertEquals(
+            [
+                'count_value' => 1,
+                'set_id' => 0,
+                'scheduled' => 4321
+            ],
+            $availableSets[0]
+        );
+        self::assertCount(
+            7,
+            $availableSets
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function findByQueueId(): void
+    {
+        $queueRecord = $this->subject->findByQueueId('15');
+        self::assertEquals(
+            12,
+            $queueRecord['scheduled']
+        );
+    }
+
+    /**
      * @return array
      */
     public function isPageInQueueDataProvider()
@@ -432,7 +463,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     public function getFirstOrLastObjectByProcessDataProvider()
     {
         return [
-            'Know process_id, get first' => [
+            'Known process_id, get first' => [
                 'processId' => 'qwerty',
                 'orderBy' => 'process_id',
                 'orderDirection' => 'ASC',
@@ -452,7 +483,7 @@ class QueueRepositoryTest extends FunctionalTestCase
                     'configuration' => 'ThirdConfiguration',
                 ],
             ],
-            'Know process_id, get last' => [
+            'Known process_id, get last' => [
                 'processId' => 'qwerty',
                 'orderBy' => 'process_id',
                 'orderDirection' => 'DESC',
@@ -472,7 +503,7 @@ class QueueRepositoryTest extends FunctionalTestCase
                     'configuration' => 'FirstConfiguration',
                 ],
             ],
-            'Unknow process_id' => [
+            'Unknown process_id' => [
                 'processId' => 'unknown_id',
                 'orderBy' => 'process_id',
                 'orderDirection' => '',
