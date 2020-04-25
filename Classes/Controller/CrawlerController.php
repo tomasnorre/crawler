@@ -1475,7 +1475,7 @@ class CrawlerController implements LoggerAwareInterface
 
             // recognize mount points
             if ($data['row']['doktype'] == PageRepository::DOKTYPE_MOUNTPOINT) {
-                $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+                $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('pages');
                 $queryBuilder->getRestrictions()->removeAll()->add(GeneralUtility::makeInstance(DeletedRestriction::class));
                 $mountpage = $queryBuilder
                     ->select('*')
