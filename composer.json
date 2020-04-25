@@ -19,6 +19,7 @@
         "php": "^7.2",
         "ext-json": "*",
         "guzzlehttp/guzzle": "^6.4.1",
+        "psr/log": "^1.0",
         "symfony/console": "^4.3",
         "typo3/cms-core": "~9.5.14 || ^10.3",
         "typo3/cms-frontend": "*",
@@ -102,11 +103,6 @@
         "typo3/cms": {
             "cms-package-dir": "{$vendor-dir}/typo3/cms",
             "web-dir": ".Build/Web"
-        },
-        "typo3/class-alias-loader": {
-            "class-alias-maps": [
-                "Migrations/Code/ClassAliasMap.php"
-            ]
         }
     },
     "minimum-stability": "dev",
