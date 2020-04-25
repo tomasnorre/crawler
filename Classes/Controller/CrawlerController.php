@@ -1328,7 +1328,11 @@ class CrawlerController implements LoggerAwareInterface
             );
 
         $result = $this->queueExecutor->executeQueueItem($queueRec, $this);
-        $resultData = unserialize($result['content']);
+        if (null === $result['content']) {
+            $resultData = 'An errors happened';
+        } else {
+            $resultData = unserialize($result['content']);
+        }
 
         //atm there's no need to point to specific pollable extensions
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'])) {
