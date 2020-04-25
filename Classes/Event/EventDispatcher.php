@@ -28,6 +28,8 @@ namespace AOE\Crawler\Event;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Compatibility\PublicMethodDeprecationTrait;
+use TYPO3\CMS\Core\Compatibility\PublicPropertyDeprecationTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -58,13 +60,37 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class EventDispatcher
 {
+    use PublicPropertyDeprecationTrait;
+    use PublicMethodDeprecationTrait;
+
+    /**
+     * @var string[]
+     */
+    private $deprecatedPublicProperties = [
+        'observers' => 'Using observers is deprecated since 9.0.1 and will be removed in v10.x',
+        'instance' => 'Using instance is deprecated since 9.0.1 and will be removed in v10.x',
+    ];
+
+    /**
+     * @var string[]
+     */
+    private $deprecatedPublicMethods = [
+        'getEvents' => 'Using EventDispatcher::getEvents() is deprecated since 9.0.1 and will be removed in v10.x',
+        'addObserver' => 'Using EventDispatcher::addObserver() is deprecated since 9.0.1 and will be removed in v10.x',
+        'hasObserver' => 'Using EventDispatcher::hasObserver() is deprecated since 9.0.1 and will be removed in v10.x',
+        'post' => 'Using EventDispatcher::post() is deprecated since 9.0.1 and will be removed in v10.x',
+        'getInstance' => 'Using EventDispatcher::getInstance() is deprecated since 9.0.1 and will be removed in v10.x',
+
+    ];
     /**
      * @var array
+     * @deprecated
      */
     protected $observers;
 
     /**
      * @var EventDispatcher
+     * @deprecated
      */
     protected static $instance;
 
@@ -88,6 +114,7 @@ class EventDispatcher
      * Returns all registered event types.
      *
      * @return array array with registered events.
+     * @deprecated
      */
     protected function getEvents()
     {
@@ -102,6 +129,7 @@ class EventDispatcher
      * @param string $event
      *
      * @return void
+     * @deprecated
      */
     public function addObserver(EventObserverInterface $observer_object, $observer_method, $event): void
     {
@@ -114,6 +142,7 @@ class EventDispatcher
      * @param string $event
      *
      * @return boolean
+     * @deprecated
      */
     public function hasObserver($event)
     {
@@ -129,6 +158,7 @@ class EventDispatcher
      * @param mixed $attachedData
      *
      * @return void
+     * @deprecated
      */
     public function post($event, $group, $attachedData): void
     {
@@ -143,6 +173,7 @@ class EventDispatcher
      * Returns the instance of the dispatcher singleton
      *
      * @return EventDispatcher
+     * @deprecated
      */
     public static function getInstance()
     {

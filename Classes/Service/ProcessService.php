@@ -28,10 +28,13 @@ namespace AOE\Crawler\Service;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Utility\PhpBinaryUtility;
+use TYPO3\CMS\Core\Compatibility\PublicMethodDeprecationTrait;
+use TYPO3\CMS\Core\Compatibility\PublicPropertyDeprecationTrait;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -45,6 +48,29 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  */
 class ProcessService
 {
+    use PublicMethodDeprecationTrait;
+    use PublicPropertyDeprecationTrait;
+
+    /**
+     * @var string[]
+     */
+    private $deprecatedPublicProperties = [
+        'queueRepository' => 'Using queueRepository is deprecated since 9.0.1 and will be removed in v10.x',
+        'crawlerController' => 'Using crawlerController is deprecated since 9.0.1 and will be removed in v10.x',
+        'countInARun' => 'Using countInARun is deprecated since 9.0.1 and will be removed in v10.x',
+        'processLimit' => 'Using processLimit is deprecated since 9.0.1 and will be removed in v10.x',
+        'verbose' => 'Using verbose is deprecated since 9.0.1 and will be removed in v10.x',
+    ];
+
+    /**
+     * @var string[]
+     */
+    private $deprecatedPublicMethods = [
+        'multiProcess' => 'Using ProcessService::multiProcess() is deprecated since 9.0.1 and will be removed in v10.x',
+        'reportItemStatus' => 'Using ProcessService::reportItemStatus() is deprecated since 9.0.1 and will be removed in v10.x',
+        'startRequiredProcesses' => 'Using ProcessService::startRequiredProcesses() is deprecated since 9.0.1 and will be removed in v10.x',
+    ];
+
     /**
      * @var int
      */
@@ -52,21 +78,25 @@ class ProcessService
 
     /**
      * @var int
+     * @deprecated
      */
     private $countInARun;
 
     /**
      * @var int
+     * @deprecated
      */
     private $processLimit;
 
     /**
      * @var CrawlerController
+     * @deprecated
      */
     private $crawlerController;
 
     /**
      * @var \AOE\Crawler\Domain\Repository\QueueRepository
+     * @deprecated
      */
     private $queueRepository;
 
@@ -77,6 +107,7 @@ class ProcessService
 
     /**
      * @var bool
+     * @deprecated
      */
     private $verbose;
 
@@ -88,11 +119,11 @@ class ProcessService
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->processRepository = $objectManager->get(ProcessRepository::class);
         $this->queueRepository = $objectManager->get(QueueRepository::class);
-        $this->crawlerController = $objectManager->get(CrawlerController::class);
-        $this->timeToLive = intval($this->crawlerController->extensionSettings['processMaxRunTime']);
-        $this->countInARun = intval($this->crawlerController->extensionSettings['countInARun']);
-        $this->processLimit = intval($this->crawlerController->extensionSettings['processLimit']);
-        $this->verbose = boolval($this->crawlerController->extensionSettings['processVerbose']);
+        $extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
+        $this->timeToLive = intval($extensionSettings['processMaxRunTime']);
+        $this->countInARun = intval($extensionSettings['countInARun']);
+        $this->processLimit = intval($extensionSettings['processLimit']);
+        $this->verbose = boolval($extensionSettings['processVerbose']);
     }
 
     /**
@@ -101,6 +132,7 @@ class ProcessService
      * @param integer $timeout
      *
      * @throws \RuntimeException
+     * @deprecated
      */
     public function multiProcess($timeout): void
     {
@@ -151,6 +183,7 @@ class ProcessService
 
     /**
      * Reports curent Status of queue
+     * @deprecated
      */
     protected function reportItemStatus(): void
     {
@@ -163,6 +196,7 @@ class ProcessService
      *
      * @return boolean if processes are started
      * @throws \Exception
+     * @deprecated
      */
     private function startRequiredProcesses()
     {

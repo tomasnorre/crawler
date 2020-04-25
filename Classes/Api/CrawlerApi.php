@@ -31,6 +31,8 @@ namespace AOE\Crawler\Api;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use TYPO3\CMS\Core\Compatibility\PublicMethodDeprecationTrait;
+use TYPO3\CMS\Core\Compatibility\PublicPropertyDeprecationTrait;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -39,36 +41,82 @@ use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
  * Class CrawlerApi
- *
- * @package AOE\Crawler\Api
+ * @deprecated The CrawlerApi is deprecated an will be removed in v10.x
  */
 class CrawlerApi
 {
+    use PublicPropertyDeprecationTrait;
+    use PublicMethodDeprecationTrait;
+
+    /**
+     * @var string[]
+     */
+    private $deprecatedPublicProperties = [
+        'queueRepository' => 'Using queueRepository is deprecated since 9.0.1 and will be removed in v10.x',
+        'allowedConfigurations' => 'Using allowedConfigurations is deprecated since 9.0.1 and will be removed in v10.x',
+        'queryBuilder' => 'Using queryBuilder is deprecated since 9.0.1 and will be removed in v10.x',
+        'tableName' => 'Using tableName is deprecated since 9.0.1 and will be removed in v10.x',
+        'crawlerController' => 'Using crawlerController is deprecated since 9.0.1 and will be removed in v10.x',
+    ];
+
+    /**
+     * @var string[]
+     */
+    private $deprecatedPublicMethods = [
+        'overwriteSetId' => 'Using CrawlerApi::overwriteSetId() is deprecated since 9.0.1 and will be removed in v10.x',
+        'setAllowedConfigurations' => 'Using CrawlerApi::setAllowedConfigurations() is deprecated since 9.0.1 and will be removed in v10.x',
+        'getAllowedConfigurations' => 'Using CrawlerApi::getAllowedConfigurations() is deprecated since 9.0.1 and will be removed in v10.x',
+        'getSetId' => 'Using CrawlerApi::getSetId() is deprecated since 9.0.1 and will be removed in v10.x',
+        'findCrawler' => 'Using CrawlerApi::findCrawler() is deprecated since 9.0.1 and will be removed in v10.x',
+        'addPageToQueue' => 'Using CrawlerApi::addPageToQueue() is deprecated since 9.0.1 and will be removed in v10.x',
+        'filterUnallowedConfigurations' => 'Using CrawlerApi::filterUnallowedConfigurations() is deprecated since 9.0.1 and will be removed in v10.x',
+        'addPageToQueueTimed' => 'Using CrawlerApi::addPageToQueueTimed() is deprecated since 9.0.1 and will be removed in v10.x',
+        'countEntriesInQueueForPageByScheduleTime' => 'Using CrawlerApi::countEntriesInQueueForPageByScheduleTime() is deprecated since 9.0.1 and will be removed in v10.x',
+        'getLatestCrawlTimestampForPage' => 'Using CrawlerApi::getLatestCrawlTimestampForPage() is deprecated since 9.0.1 and will be removed in v10.x',
+        'getCrawlHistoryForPage' => 'Using CrawlerApi::getCrawlHistoryForPage() is deprecated since 9.0.1 and will be removed in v10.x',
+        'getCrawlerProcInstructions' => 'Using CrawlerApi::getCrawlerProcInstructions() is deprecated since 9.0.1 and will be removed in v10.x',
+        'getQueueStatistics' => 'Using CrawlerApi::getQueueStatistics() is deprecated since 9.0.1 and will be removed in v10.x',
+        'getQueueStatisticsByConfiguration' => 'Using CrawlerApi::getQueueStatisticsByConfiguration() is deprecated since 9.0.1 and will be removed in v10.x',
+        'getActiveProcessesCount' => 'Using CrawlerApi::getActiveProcessesCount() is deprecated since 9.0.1 and will be removed in v10.x',
+        'getLastProcessedQueueEntries' => 'Using CrawlerApi::getLastProcessedQueueEntries() is deprecated since 9.0.1 and will be removed in v10.x',
+        'getCurrentCrawlingSpeed' => 'Using CrawlerApi::getCurrentCrawlingSpeed() is deprecated since 9.0.1 and will be removed in v10.x',
+        'getPerformanceData' => 'Using CrawlerApi::getPerformanceData() is deprecated since 9.0.1 and will be removed in v10.x',
+    ];
+
     /**
      * @var QueueRepository
+     * @deprecated
      */
     protected $queueRepository;
 
     /**
      * @var array
+     * @deprecated
      */
     protected $allowedConfigurations = [];
 
     /**
      * @var QueryBuilder
+     * @deprecated
      */
     protected $queryBuilder;
 
     /**
      * @var string
+     * @deprecated
      */
     protected $tableName = 'tx_crawler_queue';
 
     /**
      * @var CrawlerController
+     * @deprecated
      */
     protected $crawlerController;
 
+    /**
+     * CrawlerApi constructor.
+     * @deprecated
+     */
     public function __construct()
     {
         /** @var ObjectManager $objectManager */
@@ -82,6 +130,7 @@ class CrawlerApi
      *
      * @param int $id
      * @throws \Exception
+     * @deprecated
      */
     public function overwriteSetId(int $id): void
     {
@@ -93,6 +142,7 @@ class CrawlerApi
      * a set of configurations.
      *
      * @param array $allowedConfigurations
+     * @deprecated
      */
     public function setAllowedConfigurations(array $allowedConfigurations): void
     {
@@ -101,6 +151,7 @@ class CrawlerApi
 
     /**
      * @return array
+     * @deprecated
      */
     public function getAllowedConfigurations()
     {
@@ -111,6 +162,7 @@ class CrawlerApi
      * Returns the setID of the crawler
      *
      * @return int
+     * @deprecated
      */
     public function getSetId()
     {
@@ -123,6 +175,7 @@ class CrawlerApi
      * @return CrawlerController Instance of the crawler lib
      *
      * @throws \Exception
+     * @deprecated
      */
     protected function findCrawler()
     {
@@ -142,6 +195,7 @@ class CrawlerApi
      * Adds a page to the crawlerqueue by uid
      *
      * @param int $uid uid
+     * @deprecated
      */
     public function addPageToQueue($uid): void
     {
@@ -153,6 +207,7 @@ class CrawlerApi
     /**
      * This method is used to limit the processing instructions to the processing instructions
      * that are allowed.
+     * @deprecated
      */
     protected function filterUnallowedConfigurations(array $configurations): array
     {
@@ -175,8 +230,9 @@ class CrawlerApi
      * @param int $uid pageid
      * @param int $time timestamp
      *
-     * @throws \Exception
      * @return void
+     * @throws \Exception
+     * @deprecated
      */
     public function addPageToQueueTimed($uid, $time): void
     {
@@ -219,6 +275,7 @@ class CrawlerApi
      * @param int $schedule_timestamp
      *
      * @return int
+     * @deprecated
      */
     protected function countEntriesInQueueForPageByScheduleTime($page_uid, $schedule_timestamp)
     {
@@ -256,6 +313,7 @@ class CrawlerApi
      * @param bool $unprocessed_only
      *
      * @return int
+     * @deprecated
      */
     public function getLatestCrawlTimestampForPage($uid, $future_crawldates_only = false, $unprocessed_only = false)
     {
@@ -297,6 +355,7 @@ class CrawlerApi
      * scheduled but have note been crawled yet.
      *
      * @return array array with the crawl-history of a page => 0 : scheduled time , 1 : executed_time, 2 : set_id
+     * @deprecated
      */
     public function getCrawlHistoryForPage(int $uid, int $limit = 0)
     {
@@ -321,6 +380,7 @@ class CrawlerApi
      * Reads the registered processingInstructions of the crawler
      *
      * @return array
+     * @deprecated
      */
     private function getCrawlerProcInstructions(): array
     {
@@ -336,6 +396,7 @@ class CrawlerApi
 
     /**
      * Get queue statistics
+     * @deprecated
      */
     public function getQueueStatistics(): array
     {
@@ -349,6 +410,7 @@ class CrawlerApi
      * Get queue statistics by configuration
      *
      * @return array array of array('configuration' => <>, 'assignedButUnprocessed' => <>, 'unprocessed' => <>)
+     * @deprecated
      */
     public function getQueueStatisticsByConfiguration()
     {
@@ -366,6 +428,7 @@ class CrawlerApi
 
     /**
      * Get active processes count
+     * @deprecated
      */
     public function getActiveProcessesCount(): int
     {
@@ -374,6 +437,11 @@ class CrawlerApi
         return $processRepository->countActive();
     }
 
+    /**
+     * @param int $limit
+     * @return array
+     * @deprecated
+     */
     public function getLastProcessedQueueEntries(int $limit): array
     {
         return $this->queueRepository->getLastProcessedEntries($limit);
@@ -383,6 +451,7 @@ class CrawlerApi
      * Get current crawling speed
      *
      * @return int|float|bool
+     * @deprecated
      */
     public function getCurrentCrawlingSpeed()
     {
@@ -429,6 +498,7 @@ class CrawlerApi
      * @return array data
      *
      * @throws \Exception
+     * @deprecated
      */
     public function getPerformanceData($start, $end, $resolution)
     {

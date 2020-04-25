@@ -32,6 +32,7 @@ namespace AOE\Crawler\Event;
  * Interface EventObserverInterface
  *
  * @package AOE\Crawler\Event
+ * @deprecated Is deprecated since 9.0.1 and will be removed in v10.x
  */
 interface EventObserverInterface
 {
