@@ -7,7 +7,7 @@ namespace AOE\Crawler\Controller;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2019 AOE GmbH <dev@aoe.com>
+ *  (c) 2020 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -1762,8 +1762,6 @@ class CrawlerController implements LoggerAwareInterface
         $processCount = 0;
         $orphanProcesses = [];
 
-        //$this->queryBuilder->getConnection()->executeQuery('BEGIN');
-
         $statement = $queryBuilder
             ->select('process_id', 'ttl')
             ->from('tx_crawler_process')
@@ -1850,30 +1848,8 @@ class CrawlerController implements LoggerAwareInterface
             ->set('system_process_id', 0)
             ->execute();
 
-        // mark all requested processes as non-active
-        $queryBuilder
-            ->update('tx_crawler_process')
-            ->where(
-                'NOT EXISTS (
-                SELECT * FROM tx_crawler_queue
-                    WHERE tx_crawler_queue.process_id = tx_crawler_process.process_id
-                    AND tx_crawler_queue.exec_time = 0
-                )',
-                $queryBuilder->expr()->in('process_id', $queryBuilder->createNamedParameter($releaseIds, Connection::PARAM_STR_ARRAY)),
-                $queryBuilder->expr()->eq('deleted', 0)
-            )
-            ->set('active', 0)
-            ->execute();
-        $queryBuilder->resetQueryPart('set');
-        $queryBuilder
-            ->update($this->tableName)
-            ->where(
-                $queryBuilder->expr()->eq('exec_time', 0),
-                $queryBuilder->expr()->in('process_id', $queryBuilder->createNamedParameter($releaseIds, Connection::PARAM_STR_ARRAY))
-            )
-            ->set('process_scheduled', 0)
-            ->set('process_id', '')
-            ->execute();
+        $this->processRepository->markRequestedProcessesAsNotActive($releaseIds);
+        $this->queueRepository->unsetProcessScheduledAndProcessIdForQueueEntries($releaseIds);
 
         return true;
     }

@@ -225,6 +225,25 @@ class ProcessRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
+    public function markRequestedProcessesAsNotActive(): void
+    {
+        self::assertEquals(
+            3,
+            $this->subject->countActive()
+        );
+
+        $processIds = ['1001', '1002'];
+        $this->subject->markRequestedProcessesAsNotActive($processIds);
+        
+        self::assertEquals(
+            1,
+            $this->subject->countActive()
+        );
+    }
+
+    /**
+     * @test
+     */
     public function updateProcessAssignItemsCount(): void
     {
         $processBefore = $this->subject->findByProcessId('1002');

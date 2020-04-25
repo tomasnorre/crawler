@@ -462,14 +462,34 @@ class QueueRepositoryTest extends FunctionalTestCase
         );
     }
 
-     /**
+    /**
+     * @test
+     */
+    public function unsetProcessScheduledAndProcessIdForQueueEntries(): void
+    {
+        $unprocessedEntriesBefore = $this->subject->countAllUnassignedPendingItems();
+        self::assertEquals(
+            4,
+            $unprocessedEntriesBefore
+        );
+        $processIds = ['1007'];
+        $this->subject->unsetProcessScheduledAndProcessIdForQueueEntries($processIds);
+
+        $unprocessedEntriesAfter = $this->subject->countAllUnassignedPendingItems();
+        self::assertEquals(
+            6,
+            $unprocessedEntriesAfter
+        );
+    }
+
+    /**
      * @dataProvider noUnprocessedQueueEntriesForPageWithConfigurationHashExistDataProvider
      */
     public function noUnprocessedQueueEntriesForPageWithConfigurationHashExist(int $uid, string $configurationHash, bool $expected): void
     {
         self::assertSame(
             $expected,
-            $this->subject->noUnprocessedQueueEntriesForPageWithConfigurationHashExist($uid,$configurationHash)
+            $this->subject->noUnprocessedQueueEntriesForPageWithConfigurationHashExist($uid, $configurationHash)
         );
     }
 

@@ -31,6 +31,7 @@ namespace AOE\Crawler\Domain\Repository;
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Domain\Model\ProcessCollection;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -214,8 +215,8 @@ class ProcessRepository extends AbstractRepository
     /**
      * Function is moved from ProcessCleanUpHook
      *
-     * @see getActiveProcessesOlderThanOneHour
      * @return array
+     * @see getActiveProcessesOlderThanOneHour
      */
     public function getActiveOrphanProcesses()
     {
@@ -313,5 +314,22 @@ class ProcessRepository extends AbstractRepository
                 ['assigned_items_count' => (int)$numberOfAffectedRows],
                 ['process_id' => $processId]
             );
+    }
+
+    public function markRequestedProcessesAsNotActive(array $processIds): void
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $queryBuilder->update('tx_crawler_process')
+            ->where(
+                'NOT EXISTS (
+                SELECT * FROM tx_crawler_queue
+                    WHERE tx_crawler_queue.process_id = tx_crawler_process.process_id
+                    AND tx_crawler_queue.exec_time = 0
+                )',
+                $queryBuilder->expr()->in('process_id', $queryBuilder->createNamedParameter($processIds, Connection::PARAM_STR_ARRAY)),
+                $queryBuilder->expr()->eq('deleted', 0)
+            )
+            ->set('active', 0)
+            ->execute();
     }
 }

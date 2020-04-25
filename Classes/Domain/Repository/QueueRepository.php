@@ -31,6 +31,7 @@ namespace AOE\Crawler\Domain\Repository;
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Model\Process;
 use Psr\Log\LoggerAwareInterface;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
@@ -569,6 +570,23 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
             ->set('process_id', $processId)
             ->execute();
         return $numberOfAffectedRows;
+    }
+
+    /**
+     * @param array $processIds
+     */
+    public function unsetProcessScheduledAndProcessIdForQueueEntries(array $processIds): void
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $queryBuilder
+            ->update($this->tableName)
+            ->where(
+                $queryBuilder->expr()->eq('exec_time', 0),
+                $queryBuilder->expr()->in('process_id', $queryBuilder->createNamedParameter($processIds, Connection::PARAM_STR_ARRAY))
+            )
+            ->set('process_scheduled', 0)
+            ->set('process_id', '')
+            ->execute();
     }
 
     /**
