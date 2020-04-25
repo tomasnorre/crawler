@@ -31,6 +31,7 @@ namespace AOE\Crawler\Domain\Repository;
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Model\Process;
 use Psr\Log\LoggerAwareInterface;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
@@ -569,5 +570,54 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
             ->set('process_id', $processId)
             ->execute();
         return $numberOfAffectedRows;
+    }
+
+    /**
+     * @param array $processIds
+     */
+    public function unsetProcessScheduledAndProcessIdForQueueEntries(array $processIds): void
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $queryBuilder
+            ->update($this->tableName)
+            ->where(
+                $queryBuilder->expr()->eq('exec_time', 0),
+                $queryBuilder->expr()->in('process_id', $queryBuilder->createNamedParameter($processIds, Connection::PARAM_STR_ARRAY))
+            )
+            ->set('process_scheduled', 0)
+            ->set('process_id', '')
+            ->execute();
+    }
+
+    /**
+     * This method is used to count if there are ANY unprocessed queue entries
+     * of a given page_id and the configuration which matches a given hash.
+     * If there if none, we can skip an inner detail check
+     *
+     * @param int $uid
+     * @param string $configurationHash
+     * @return boolean
+     */
+    public function noUnprocessedQueueEntriesForPageWithConfigurationHashExist($uid, $configurationHash): bool
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $noUnprocessedQueueEntriesFound = true;
+
+        $result = $queryBuilder
+            ->count('*')
+            ->from($this->tableName)
+            ->where(
+                $queryBuilder->expr()->eq('page_id', (int)$uid),
+                $queryBuilder->expr()->eq('configuration_hash', $queryBuilder->createNamedParameter($configurationHash)),
+                $queryBuilder->expr()->eq('exec_time', 0)
+            )
+            ->execute()
+            ->fetchColumn();
+
+        if ($result) {
+            $noUnprocessedQueueEntriesFound = false;
+        }
+
+        return $noUnprocessedQueueEntriesFound;
     }
 }

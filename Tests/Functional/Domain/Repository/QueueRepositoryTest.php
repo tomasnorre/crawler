@@ -463,6 +463,37 @@ class QueueRepositoryTest extends FunctionalTestCase
     }
 
     /**
+     * @test
+     */
+    public function unsetProcessScheduledAndProcessIdForQueueEntries(): void
+    {
+        $unprocessedEntriesBefore = $this->subject->countAllUnassignedPendingItems();
+        self::assertEquals(
+            4,
+            $unprocessedEntriesBefore
+        );
+        $processIds = ['1007'];
+        $this->subject->unsetProcessScheduledAndProcessIdForQueueEntries($processIds);
+
+        $unprocessedEntriesAfter = $this->subject->countAllUnassignedPendingItems();
+        self::assertEquals(
+            6,
+            $unprocessedEntriesAfter
+        );
+    }
+
+    /**
+     * @dataProvider noUnprocessedQueueEntriesForPageWithConfigurationHashExistDataProvider
+     */
+    public function noUnprocessedQueueEntriesForPageWithConfigurationHashExist(int $uid, string $configurationHash, bool $expected): void
+    {
+        self::assertSame(
+            $expected,
+            $this->subject->noUnprocessedQueueEntriesForPageWithConfigurationHashExist($uid, $configurationHash)
+        );
+    }
+
+    /**
      * @return array
      */
     public function isPageInQueueDataProvider()
@@ -550,6 +581,30 @@ class QueueRepositoryTest extends FunctionalTestCase
                 'orderBy' => 'process_id',
                 'orderDirection' => '',
                 'expected' => [],
+            ],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function noUnprocessedQueueEntriesForPageWithConfigurationHashExistDataProvider()
+    {
+        return [
+            'No record found, uid not present' => [
+                'uid' => 3000,
+                'configurationHash' => '7b6919e533f334550b6f19034dfd2f81',
+                'expected' => true,
+            ],
+            'No record found, configurationHash not present' => [
+                'uid' => 2001,
+                'configurationHash' => 'invalidConfigurationHash',
+                'expected' => true,
+            ],
+            'Record found - uid and configurationHash is present' => [
+                'uid' => 2001,
+                'configurationHash' => '7b6919e533f334550b6f19034dfd2f81',
+                'expected' => false,
             ],
         ];
     }

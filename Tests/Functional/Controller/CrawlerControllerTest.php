@@ -91,23 +91,6 @@ class CrawlerControllerTest extends FunctionalTestCase
 
     /**
      * @test
-     *
-     * @dataProvider noUnprocessedQueueEntriesForPageWithConfigurationHashExistDataProvider
-     */
-    public function noUnprocessedQueueEntriesForPageWithConfigurationHashExist(int $uid, string $configurationHash, bool $expected): void
-    {
-        self::assertSame(
-            $expected,
-            $this->subject->_call(
-                'noUnprocessedQueueEntriesForPageWithConfigurationHashExist',
-                $uid,
-                $configurationHash
-            )
-        );
-    }
-
-    /**
-     * @test
      */
     public function cleanUpOldQueueEntries(): void
     {
@@ -759,30 +742,6 @@ class CrawlerControllerTest extends FunctionalTestCase
             'Flush Queue for where that does not exist, nothing is deleted' => [
                 'where' => 'qid > 100000',
                 'expected' => 14,
-            ],
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function noUnprocessedQueueEntriesForPageWithConfigurationHashExistDataProvider()
-    {
-        return [
-            'No record found, uid not present' => [
-                'uid' => 3000,
-                'configurationHash' => '7b6919e533f334550b6f19034dfd2f81',
-                'expected' => true,
-            ],
-            'No record found, configurationHash not present' => [
-                'uid' => 2001,
-                'configurationHash' => 'invalidConfigurationHash',
-                'expected' => true,
-            ],
-            'Record found - uid and configurationHash is present' => [
-                'uid' => 2001,
-                'configurationHash' => '7b6919e533f334550b6f19034dfd2f81',
-                'expected' => false,
             ],
         ];
     }
