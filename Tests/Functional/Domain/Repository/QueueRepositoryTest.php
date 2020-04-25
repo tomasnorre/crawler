@@ -431,6 +431,38 @@ class QueueRepositoryTest extends FunctionalTestCase
     }
 
     /**
+     * @test
+     */
+    public function fetchRecordsToBeCrawled(): void
+    {
+        $recordsToBeCrawledLimitHigherThanRecordsCount = $this->subject->fetchRecordsToBeCrawled(10);
+        self::assertCount(
+            7,
+            $recordsToBeCrawledLimitHigherThanRecordsCount
+        );
+
+        $recordsToBeCrawledLimitLowerThanRecordsCount = $this->subject->fetchRecordsToBeCrawled(5);
+        self::assertCount(
+            5,
+            $recordsToBeCrawledLimitLowerThanRecordsCount
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function UpdateProcessIdAndSchedulerForQueueIds(): void
+    {
+        $qidToUpdate = [4, 8, 15, 18];
+        $processId = md5('this-is-the-process-id');
+
+        self::assertEquals(
+            4,
+            $this->subject->updateProcessIdAndSchedulerForQueueIds($qidToUpdate, $processId)
+        );
+    }
+
+    /**
      * @return array
      */
     public function isPageInQueueDataProvider()

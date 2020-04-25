@@ -1699,21 +1699,7 @@ class CrawlerController implements LoggerAwareInterface
         $this->queueRepository->cleanupQueue();
 
         // Select entries:
-        //TODO Shouldn't this reside within the transaction?
-        $queryBuilderSelect = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
-        $rows = $queryBuilderSelect
-            ->select('qid', 'scheduled')
-            ->from($this->tableName)
-            ->where(
-                $queryBuilderSelect->expr()->eq('exec_time', 0),
-                $queryBuilderSelect->expr()->eq('process_scheduled', 0),
-                $queryBuilderSelect->expr()->lte('scheduled', $this->getCurrentTime())
-            )
-            ->orderBy('scheduled')
-            ->addOrderBy('qid')
-            ->setMaxResults($countInARun)
-            ->execute()
-            ->fetchAll();
+        $rows = $this->queueRepository->fetchRecordsToBeCrawled($countInARun);
 
         if (!empty($rows)) {
             $quidList = [];
@@ -1724,33 +1710,11 @@ class CrawlerController implements LoggerAwareInterface
 
             $processId = $this->CLI_buildProcessId();
 
-            //reserve queue entries for process
+            //save the number of assigned queue entries to determine how many have been processed later
+            $numberOfAffectedRows = $this->queueRepository->updateProcessIdAndSchedulerForQueueIds($quidList, $processId);
+            $this->processRepository->updateProcessAssignItemsCount($numberOfAffectedRows, $processId);
 
-            //$this->queryBuilder->getConnection()->executeQuery('BEGIN');
-            //TODO make sure we're not taking assigned queue-entires
-
-            //save the number of assigned queue entries to determine who many have been processed later
-            $queryBuilderUpdate = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
-            $numberOfAffectedRows = $queryBuilderUpdate
-                ->update($this->tableName)
-                ->where(
-                    $queryBuilderUpdate->expr()->in('qid', $quidList)
-                )
-                ->set('process_scheduled', $this->getCurrentTime())
-                ->set('process_id', $processId)
-                ->execute();
-
-            GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('tx_crawler_process')
-                ->update(
-                    'tx_crawler_process',
-                    ['assigned_items_count' => (int)$numberOfAffectedRows],
-                    ['process_id' => $processId]
-                );
-
-            if ($numberOfAffectedRows == count($quidList)) {
-                //$this->queryBuilder->getConnection()->executeQuery('COMMIT');
-            } else {
-                //$this->queryBuilder->getConnection()->executeQuery('ROLLBACK');
+            if ($numberOfAffectedRows !== count($quidList)) {
                 $this->CLI_debug("Nothing processed due to multi-process collision (" . $this->CLI_buildProcessId() . ")");
                 return ($result | self::CLI_STATUS_ABORTED);
             }

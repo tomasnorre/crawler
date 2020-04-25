@@ -528,4 +528,46 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
             }
         }
     }
+
+    /**
+     * @param int $countInARun
+     * @return mixed
+     */
+    public function fetchRecordsToBeCrawled(int $countInARun)
+    {
+        $queryBuilderSelect = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $rows = $queryBuilderSelect
+            ->select('qid', 'scheduled')
+            ->from($this->tableName)
+            ->where(
+                $queryBuilderSelect->expr()->eq('exec_time', 0),
+                $queryBuilderSelect->expr()->eq('process_scheduled', 0),
+                $queryBuilderSelect->expr()->lte('scheduled', time())
+            )
+            ->orderBy('scheduled')
+            ->addOrderBy('qid')
+            ->setMaxResults($countInARun)
+            ->execute()
+            ->fetchAll();
+        return $rows;
+    }
+
+    /**
+     * @param array $quidList
+     * @param string $processId
+     * @return mixed
+     */
+    public function updateProcessIdAndSchedulerForQueueIds(array $quidList, string $processId)
+    {
+        $queryBuilderUpdate = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $numberOfAffectedRows = $queryBuilderUpdate
+            ->update($this->tableName)
+            ->where(
+                $queryBuilderUpdate->expr()->in('qid', $quidList)
+            )
+            ->set('process_scheduled', time())
+            ->set('process_id', $processId)
+            ->execute();
+        return $numberOfAffectedRows;
+    }
 }
