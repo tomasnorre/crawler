@@ -300,4 +300,18 @@ class ProcessRepository extends AbstractRepository
 
         return (bool)$isActive;
     }
+
+    /**
+     * @param $numberOfAffectedRows
+     * @param string $processId
+     */
+    public function updateProcessAssignItemsCount($numberOfAffectedRows, string $processId): void
+    {
+        GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable($this->tableName)
+            ->update(
+                'tx_crawler_process',
+                ['assigned_items_count' => (int)$numberOfAffectedRows],
+                ['process_id' => $processId]
+            );
+    }
 }

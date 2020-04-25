@@ -221,4 +221,24 @@ class ProcessRepositoryTest extends FunctionalTestCase
             $countBeforeDelete - $expectedProcessesToBeDeleted
         );
     }
+
+    /**
+     * @test
+     */
+    public function updateProcessAssignItemsCount(): void
+    {
+        $processBefore = $this->subject->findByProcessId('1002');
+        self::assertEquals(
+            1,
+            $processBefore['assigned_items_count']
+        );
+
+        $this->subject->updateProcessAssignItemsCount(10, '1002');
+
+        $processAfter = $this->subject->findByProcessId('1002');
+        self::assertEquals(
+            10,
+            $processAfter['assigned_items_count']
+        );
+    }
 }
