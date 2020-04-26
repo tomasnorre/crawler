@@ -7,6 +7,8 @@ parameters:
         - "array"
         - "docblock"
         - "comments"
+        - "namespaces"
+        - "spaces"
 
     skip:
         PhpCsFixer\Fixer\Operator\UnaryOperatorSpacesFixer: null

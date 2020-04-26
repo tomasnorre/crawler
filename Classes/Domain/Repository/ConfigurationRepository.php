@@ -62,7 +62,7 @@ class ConfigurationRepository extends AbstractRepository
         $rootLine = BackendUtility::BEgetRootLine($pageId);
 
         foreach ($rootLine as $pageInRootLine) {
-            $pageIdsInRootLine[] = (int)$pageInRootLine['uid'];
+            $pageIdsInRootLine[] = (int) $pageInRootLine['uid'];
         }
 
         $queryBuilder = $this->createQueryBuilder();

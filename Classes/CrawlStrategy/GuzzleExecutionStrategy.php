@@ -47,7 +47,7 @@ class GuzzleExecutionStrategy implements LoggerAwareInterface
             $options['auth'] = explode(':', $url->getUserInfo());
         }
         try {
-            $url = (string)$url;
+            $url = (string) $url;
             $response = GeneralUtility::makeInstance(RequestFactory::class)
                 ->request(
                     $url,

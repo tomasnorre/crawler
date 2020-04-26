@@ -123,7 +123,7 @@ class CrawlerApi
      */
     protected function findCrawler()
     {
-        if (!is_object($this->crawlerController)) {
+        if (! is_object($this->crawlerController)) {
             $this->crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
             $this->crawlerController->setID = GeneralUtility::md5int(microtime());
         }
@@ -156,7 +156,7 @@ class CrawlerApi
         if (count($this->allowedConfigurations) > 0) {
             // 	remove configuration that does not match the current selection
             foreach ($configurations as $confKey => $confArray) {
-                if (!in_array($confKey, $this->allowedConfigurations)) {
+                if (! in_array($confKey, $this->allowedConfigurations)) {
                     unset($configurations[$confKey]);
                 }
             }
@@ -319,7 +319,7 @@ class CrawlerApi
     private function getCrawlerProcInstructions(): array
     {
         $crawlerProcInstructions = [];
-        if (!empty($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'])) {
+        if (! empty($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'])) {
             foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'] as $configuration) {
                 $crawlerProcInstructions[$configuration['key']] = $configuration['value'];
             }

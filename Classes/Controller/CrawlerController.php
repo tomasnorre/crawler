@@ -70,9 +70,13 @@ class CrawlerController implements LoggerAwareInterface
     use LoggerAwareTrait;
 
     public const CLI_STATUS_NOTHING_PROCCESSED = 0;
+
     public const CLI_STATUS_REMAIN = 1; //queue not empty
+
     public const CLI_STATUS_PROCESSED = 2; //(some) queue items where processed
+
     public const CLI_STATUS_ABORTED = 4; //instance didn't finish
+
     public const CLI_STATUS_POLLABLE_PROCESSED = 8;
 
     /**
@@ -328,21 +332,21 @@ class CrawlerController implements LoggerAwareInterface
         $skipMessage = 'Skipped'; // message will be overwritten later
 
         // if page is hidden
-        if (!$this->extensionSettings['crawlHiddenPages']) {
+        if (! $this->extensionSettings['crawlHiddenPages']) {
             if ($pageRow['hidden']) {
                 $skipPage = true;
                 $skipMessage = 'Because page is hidden';
             }
         }
 
-        if (!$skipPage) {
+        if (! $skipPage) {
             if (GeneralUtility::inList('3,4', $pageRow['doktype']) || $pageRow['doktype'] >= 199) {
                 $skipPage = true;
                 $skipMessage = 'Because doktype is not allowed';
             }
         }
 
-        if (!$skipPage) {
+        if (! $skipPage) {
             foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['excludeDoktype'] ?? [] as $key => $doktypeList) {
                 if (GeneralUtility::inList($doktypeList, $pageRow['doktype'])) {
                     $skipPage = true;
@@ -352,7 +356,7 @@ class CrawlerController implements LoggerAwareInterface
             }
         }
 
-        if (!$skipPage) {
+        if (! $skipPage) {
             // veto hook
             foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pageVeto'] ?? [] as $key => $func) {
                 $params = [
@@ -426,19 +430,19 @@ class CrawlerController implements LoggerAwareInterface
         array &$downloadUrls,
         array $incomingProcInstructions
     ) {
-        if (!is_array($vv['URLs'])) {
+        if (! is_array($vv['URLs'])) {
             return 'ERROR - no URL generated';
         }
         $urlLog = [];
-        $pageId = (int)$pageRow['uid'];
+        $pageId = (int) $pageRow['uid'];
         $configurationHash = $this->getConfigurationHash($vv);
         $skipInnerCheck = $this->queueRepository->noUnprocessedQueueEntriesForPageWithConfigurationHashExist($pageId, $configurationHash);
 
         foreach ($vv['URLs'] as $urlQuery) {
-            if (!$this->drawURLs_PIfilter($vv['subCfg']['procInstrFilter'], $incomingProcInstructions)) {
+            if (! $this->drawURLs_PIfilter($vv['subCfg']['procInstrFilter'], $incomingProcInstructions)) {
                 continue;
             }
-            $url = (string)$this->getUrlFromPageAndQueryParameters(
+            $url = (string) $this->getUrlFromPageAndQueryParameters(
                 $pageId,
                 $urlQuery,
                 $vv['subCfg']['baseUrl'] ?? null,
@@ -506,7 +510,7 @@ class CrawlerController implements LoggerAwareInterface
 
     public function getPageTSconfigForId($id): array
     {
-        if (!$this->MP) {
+        if (! $this->MP) {
             $pageTSconfig = BackendUtility::getPagesTSconfig($id);
         } else {
             // TODO: Please check, this makes no sense to split a boolean value.
@@ -541,12 +545,12 @@ class CrawlerController implements LoggerAwareInterface
         // Fetch Crawler Configuration from pageTSconfig
         $crawlerCfg = $pageTSconfig['tx_crawler.']['crawlerCfg.']['paramSets.'] ?? [];
         foreach ($crawlerCfg as $key => $values) {
-            if (!is_array($values)) {
+            if (! is_array($values)) {
                 continue;
             }
             $key = str_replace('.', '', $key);
             // Sub configuration for a single configuration string:
-            $subCfg = (array)$crawlerCfg[$key . '.'];
+            $subCfg = (array) $crawlerCfg[$key . '.'];
             $subCfg['key'] = $key;
 
             if (strcmp($subCfg['procInstrFilter'], '')) {
@@ -556,7 +560,7 @@ class CrawlerController implements LoggerAwareInterface
 
             // process configuration if it is not page-specific or if the specific page is the current page:
             // TODO: Check if $pidOnlyList can be kept as Array instead of imploded
-            if (!strcmp((string)$subCfg['pidsOnly'], '') || GeneralUtility::inList($pidOnlyList, strval($pageId))) {
+            if (! strcmp((string) $subCfg['pidsOnly'], '') || GeneralUtility::inList($pidOnlyList, strval($pageId))) {
 
                 // Explode, process etc.:
                 $res[$key] = [];
@@ -566,7 +570,7 @@ class CrawlerController implements LoggerAwareInterface
                 $res[$key]['origin'] = 'pagets';
 
                 // recognize MP value
-                if (!$this->MP) {
+                if (! $this->MP) {
                     $res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'], ['?id=' . $pageId]);
                 } else {
                     $res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'], ['?id=' . $pageId . '&MP=' . $this->MP]);
@@ -584,11 +588,11 @@ class CrawlerController implements LoggerAwareInterface
 
                 // process configuration if it is not page-specific or if the specific page is the current page:
                 // TODO: Check if $pidOnlyList can be kept as Array instead of imploded
-                if (!strcmp($configurationRecord['pidsonly'], '') || GeneralUtility::inList($pidOnlyList, strval($pageId))) {
+                if (! strcmp($configurationRecord['pidsonly'], '') || GeneralUtility::inList($pidOnlyList, strval($pageId))) {
                     $key = $configurationRecord['name'];
 
                     // don't overwrite previously defined paramSets
-                    if (!isset($res[$key])) {
+                    if (! isset($res[$key])) {
 
                         /* @var $TSparserObject \TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser */
                         $TSparserObject = GeneralUtility::makeInstance(TypoScriptParser::class);
@@ -598,13 +602,13 @@ class CrawlerController implements LoggerAwareInterface
                             'procInstrFilter' => $configurationRecord['processing_instruction_filter'],
                             'procInstrParams.' => $TSparserObject->setup,
                             'baseUrl' => $configurationRecord['base_url'],
-                            'force_ssl' => (int)$configurationRecord['force_ssl'],
+                            'force_ssl' => (int) $configurationRecord['force_ssl'],
                             'userGroups' => $configurationRecord['fegroups'],
                             'exclude' => $configurationRecord['exclude'],
                             'key' => $key,
                         ];
 
-                        if (!in_array($pageId, $this->expandExcludeString($subCfg['exclude']))) {
+                        if (! in_array($pageId, $this->expandExcludeString($subCfg['exclude']))) {
                             $res[$key] = [];
                             $res[$key]['subCfg'] = $subCfg;
                             $res[$key]['paramParsed'] = GeneralUtility::explodeUrl2Array($configurationRecord['configuration']);
@@ -636,7 +640,7 @@ class CrawlerController implements LoggerAwareInterface
         $pageTSconfig = $this->getPageTSconfigForId($rootid);
         $sets = $pageTSconfig['tx_crawler.']['crawlerCfg.']['paramSets.'] ?? [];
         foreach ($sets as $key => $value) {
-            if (!is_array($value)) {
+            if (! is_array($value)) {
                 continue;
             }
             $configurationsForBranch[] = substr($key, -1) == '.' ? substr($key, 0, -1) : $key;
@@ -776,7 +780,7 @@ class CrawlerController implements LoggerAwareInterface
                                     $pidList = $queryGenerator->getTreeList($lookUpPid, $recursiveDepth, 0, 1);
                                     $pidArray = GeneralUtility::intExplode(',', $pidList);
                                 } else {
-                                    $pidArray = [(string)$lookUpPid];
+                                    $pidArray = [(string) $lookUpPid];
                                 }
 
                                 $queryBuilder->getRestrictions()
@@ -791,7 +795,7 @@ class CrawlerController implements LoggerAwareInterface
                                         $where
                                     );
 
-                                if (!empty($addTable)) {
+                                if (! empty($addTable)) {
                                     // TODO: Check if this works as intended!
                                     $queryBuilder->add('from', $addTable);
                                 }
@@ -870,7 +874,7 @@ class CrawlerController implements LoggerAwareInterface
         $newUrls = [];
         foreach ($urls as $url) {
             foreach ($valueSet as $val) {
-                $newUrls[] = $url . (strcmp((string)$val, '') ? '&' . rawurlencode($varName) . '=' . rawurlencode((string)$val) : '');
+                $newUrls[] = $url . (strcmp((string) $val, '') ? '&' . rawurlencode($varName) . '=' . rawurlencode((string) $val) : '');
 
                 if (count($newUrls) > $this->maximumUrlsToCompile) {
                     break;
@@ -940,7 +944,7 @@ class CrawlerController implements LoggerAwareInterface
         } else {
             if ($itemsPerPage > 0) {
                 $queryBuilder
-                    ->setMaxResults((int)$itemsPerPage);
+                    ->setMaxResults((int) $itemsPerPage);
             }
 
             return $queryBuilder->execute()->fetchAll();
@@ -988,13 +992,13 @@ class CrawlerController implements LoggerAwareInterface
         }
         // FIXME: Write unit test that ensures that the right records are deleted.
         if ($doFlush) {
-            $addWhere = $query->add($expressionBuilder->eq('set_id', (int)$set_id));
+            $addWhere = $query->add($expressionBuilder->eq('set_id', (int) $set_id));
             $this->queueRepository->flushQueue($doFullFlush ? '' : $addWhere);
             return [];
         } else {
             if ($itemsPerPage > 0) {
                 $queryBuilder
-                    ->setMaxResults((int)$itemsPerPage);
+                    ->setMaxResults((int) $itemsPerPage);
             }
 
             return $queryBuilder->execute()->fetchAll();
@@ -1012,7 +1016,7 @@ class CrawlerController implements LoggerAwareInterface
      */
     public function addQueueEntry_callBack($setId, $params, $callBack, $page_id = 0, $schedule = 0): void
     {
-        if (!is_array($params)) {
+        if (! is_array($params)) {
             $params = [];
         }
         $params['_CALLBACKOBJ'] = $callBack;
@@ -1021,11 +1025,11 @@ class CrawlerController implements LoggerAwareInterface
             ->insert(
                 'tx_crawler_queue',
                 [
-                    'page_id' => (int)$page_id,
+                    'page_id' => (int) $page_id,
                     'parameters' => serialize($params),
-                    'scheduled' => (int)$schedule ?: $this->getCurrentTime(),
+                    'scheduled' => (int) $schedule ?: $this->getCurrentTime(),
                     'exec_time' => 0,
-                    'set_id' => (int)$setId,
+                    'set_id' => (int) $setId,
                     'result_data' => '',
                 ]
             );
@@ -1079,13 +1083,13 @@ class CrawlerController implements LoggerAwareInterface
         // Compile value array:
         $parameters_serialized = serialize($parameters);
         $fieldArray = [
-            'page_id' => (int)$id,
+            'page_id' => (int) $id,
             'parameters' => $parameters_serialized,
             'parameters_hash' => GeneralUtility::shortMD5($parameters_serialized),
             'configuration_hash' => $configurationHash,
             'scheduled' => $tstamp,
             'exec_time' => 0,
-            'set_id' => (int)$this->setID,
+            'set_id' => (int) $this->setID,
             'result_data' => '',
             'configuration' => $subCfg['key'],
         ];
@@ -1094,7 +1098,7 @@ class CrawlerController implements LoggerAwareInterface
             //the entries will only be registered and not stored to the database
             $this->queueEntries[] = $fieldArray;
         } else {
-            if (!$skipInnerDuplicationCheck) {
+            if (! $skipInnerDuplicationCheck) {
                 // check if there is already an equal entry
                 $rows = $this->getDuplicateRowsIfExist($tstamp, $fieldArray);
             }
@@ -1213,14 +1217,14 @@ class CrawlerController implements LoggerAwareInterface
             ->where(
                 $queryBuilder->expr()->eq('qid', $queryBuilder->createNamedParameter($queueId, \PDO::PARAM_INT))
             );
-        if (!$force) {
+        if (! $force) {
             $queryBuilder
                 ->andWhere('exec_time = 0')
                 ->andWhere('process_scheduled > 0');
         }
         $queueRec = $queryBuilder->execute()->fetch();
 
-        if (!is_array($queueRec)) {
+        if (! is_array($queueRec)) {
             return;
         }
 
@@ -1242,7 +1246,7 @@ class CrawlerController implements LoggerAwareInterface
             ->update(
                 'tx_crawler_queue',
                 $field_array,
-                ['qid' => (int)$queueId]
+                ['qid' => (int) $queueId]
             );
 
         $result = $this->queueExecutor->executeQueueItem($queueRec, $this);
@@ -1263,7 +1267,7 @@ class CrawlerController implements LoggerAwareInterface
                         $resultData['parameters']['procInstructions']
                     )
                 ) {
-                    if (!empty($resultData['success'][$pollable]) && $resultData['success'][$pollable]) {
+                    if (! empty($resultData['success'][$pollable]) && $resultData['success'][$pollable]) {
                         $ret |= self::CLI_STATUS_POLLABLE_PROCESSED;
                     }
                 }
@@ -1283,7 +1287,7 @@ class CrawlerController implements LoggerAwareInterface
             ->update(
                 'tx_crawler_queue',
                 $field_array,
-                ['qid' => (int)$queueId]
+                ['qid' => (int) $queueId]
             );
 
         $this->logger->debug('crawler-readurl stop ' . microtime(true));
@@ -1452,7 +1456,7 @@ class CrawlerController implements LoggerAwareInterface
         if (empty($expandedExcludeStringCache[$excludeString])) {
             $pidList = [];
 
-            if (!empty($excludeString)) {
+            if (! empty($excludeString)) {
                 /** @var PageTreeView $tree */
                 $tree = GeneralUtility::makeInstance(PageTreeView::class);
                 $tree->init('AND ' . $this->getBackendUser()->getPagePermsClause(Permission::PAGE_SHOW));
@@ -1500,10 +1504,10 @@ class CrawlerController implements LoggerAwareInterface
         // Get list of configurations
         $configurations = $this->getUrlsForPageRow($pageRow, $skipMessage);
 
-        if (!empty($this->incomingConfigurationSelection)) {
+        if (! empty($this->incomingConfigurationSelection)) {
             // remove configuration that does not match the current selection
             foreach ($configurations as $confKey => $confArray) {
-                if (!in_array($confKey, $this->incomingConfigurationSelection)) {
+                if (! in_array($confKey, $this->incomingConfigurationSelection)) {
                     unset($configurations[$confKey]);
                 }
             }
@@ -1512,17 +1516,17 @@ class CrawlerController implements LoggerAwareInterface
         // Traverse parameter combinations:
         $c = 0;
         $content = '';
-        if (!empty($configurations)) {
+        if (! empty($configurations)) {
             foreach ($configurations as $confKey => $confArray) {
 
                 // Title column:
-                if (!$c) {
+                if (! $c) {
                     $titleClm = '<td rowspan="' . count($configurations) . '">' . $pageTitle . '</td>';
                 } else {
                     $titleClm = '';
                 }
 
-                if (!in_array($pageRow['uid'], $this->expandExcludeString($confArray['subCfg']['exclude']))) {
+                if (! in_array($pageRow['uid'], $this->expandExcludeString($confArray['subCfg']['exclude']))) {
 
                     // URL list:
                     $urlList = $this->urlListFromUrlArray(
@@ -1587,7 +1591,7 @@ class CrawlerController implements LoggerAwareInterface
                 $c++;
             }
         } else {
-            $message = !empty($skipMessage) ? ' (' . $skipMessage . ')' : '';
+            $message = ! empty($skipMessage) ? ' (' . $skipMessage . ')' : '';
 
             // Compile row:
             $content .= '
@@ -1623,7 +1627,7 @@ class CrawlerController implements LoggerAwareInterface
         // Select entries:
         $rows = $this->queueRepository->fetchRecordsToBeCrawled($countInARun);
 
-        if (!empty($rows)) {
+        if (! empty($rows)) {
             $quidList = [];
 
             foreach ($rows as $r) {
@@ -1645,7 +1649,7 @@ class CrawlerController implements LoggerAwareInterface
                 $result |= $this->readUrl($r['qid']);
 
                 $counter++;
-                usleep((int)$sleepTime); // Just to relax the system
+                usleep((int) $sleepTime); // Just to relax the system
 
                 // if during the start and the current read url the cli has been disable we need to return from the function
                 // mark the process NOT as ended.
@@ -1653,7 +1657,7 @@ class CrawlerController implements LoggerAwareInterface
                     return ($result | self::CLI_STATUS_ABORTED);
                 }
 
-                if (!$this->processRepository->isProcessActive($this->CLI_buildProcessId())) {
+                if (! $this->processRepository->isProcessActive($this->CLI_buildProcessId())) {
                     $this->CLI_debug("conflict / timeout (" . $this->CLI_buildProcessId() . ")");
 
                     //TODO might need an additional returncode
@@ -1662,7 +1666,7 @@ class CrawlerController implements LoggerAwareInterface
                 }
             }
 
-            sleep((int)$sleepAfterFinish);
+            sleep((int) $sleepAfterFinish);
 
             $msg = 'Rows: ' . $counter;
             $this->CLI_debug($msg . " (" . $this->CLI_buildProcessId() . ")");
@@ -1729,20 +1733,20 @@ class CrawlerController implements LoggerAwareInterface
         }
 
         // if there are less than allowed active processes then add a new one
-        if ($processCount < (int)$this->extensionSettings['processLimit']) {
-            $this->CLI_debug("add process " . $this->CLI_buildProcessId() . " (" . ($processCount + 1) . "/" . (int)$this->extensionSettings['processLimit'] . ")");
+        if ($processCount < (int) $this->extensionSettings['processLimit']) {
+            $this->CLI_debug("add process " . $this->CLI_buildProcessId() . " (" . ($processCount + 1) . "/" . (int) $this->extensionSettings['processLimit'] . ")");
 
             GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('tx_crawler_process')->insert(
                 'tx_crawler_process',
                 [
                     'process_id' => $id,
                     'active' => 1,
-                    'ttl' => $currentTime + (int)$this->extensionSettings['processMaxRunTime'],
+                    'ttl' => $currentTime + (int) $this->extensionSettings['processMaxRunTime'],
                     'system_process_id' => $systemProcessId,
                 ]
             );
         } else {
-            $this->CLI_debug("Processlimit reached (" . ($processCount) . "/" . (int)$this->extensionSettings['processLimit'] . ")");
+            $this->CLI_debug("Processlimit reached (" . ($processCount) . "/" . (int) $this->extensionSettings['processLimit'] . ")");
             $ret = false;
         }
 
@@ -1762,7 +1766,7 @@ class CrawlerController implements LoggerAwareInterface
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
 
-        if (!is_array($releaseIds)) {
+        if (! is_array($releaseIds)) {
             $releaseIds = [$releaseIds];
         }
 
@@ -1809,7 +1813,7 @@ class CrawlerController implements LoggerAwareInterface
      */
     public function CLI_buildProcessId()
     {
-        if (!$this->processID) {
+        if (! $this->processID) {
             $this->processID = GeneralUtility::shortMD5(microtime(true));
         }
         return $this->processID;
@@ -1822,7 +1826,7 @@ class CrawlerController implements LoggerAwareInterface
      */
     public function CLI_debug($msg): void
     {
-        if ((int)$this->extensionSettings['processDebug']) {
+        if ((int) $this->extensionSettings['processDebug']) {
             echo $msg . "\n";
             flush();
         }
@@ -1865,7 +1869,7 @@ class CrawlerController implements LoggerAwareInterface
      */
     protected function getUrlFromPageAndQueryParameters(int $pageId, string $queryString, ?string $alternativeBaseUrl, int $httpsOrHttp): UriInterface
     {
-        $site = GeneralUtility::makeInstance(SiteMatcher::class)->matchByPageId((int)$pageId);
+        $site = GeneralUtility::makeInstance(SiteMatcher::class)->matchByPageId((int) $pageId);
         if ($site instanceof Site) {
             $queryString = ltrim($queryString, '?&');
             $queryParts = [];
@@ -1875,12 +1879,12 @@ class CrawlerController implements LoggerAwareInterface
             if (isset($queryParts['L'])) {
                 $queryParts['_language'] = $queryParts['L'];
                 unset($queryParts['L']);
-                $siteLanguage = $site->getLanguageById((int)$queryParts['_language']);
+                $siteLanguage = $site->getLanguageById((int) $queryParts['_language']);
             } else {
                 $siteLanguage = $site->getDefaultLanguage();
             }
             $url = $site->getRouter()->generateUri($pageId, $queryParts);
-            if (!empty($alternativeBaseUrl)) {
+            if (! empty($alternativeBaseUrl)) {
                 $alternativeBaseUrl = new Uri($alternativeBaseUrl);
                 $url = $url->withHost($alternativeBaseUrl->getHost());
                 $url = $url->withScheme($alternativeBaseUrl->getScheme());

@@ -41,9 +41,13 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 class ProcessQueueCommand extends Command
 {
     public const CLI_STATUS_NOTHING_PROCCESSED = 0;
+
     public const CLI_STATUS_REMAIN = 1; //queue not empty
+
     public const CLI_STATUS_PROCESSED = 2; //(some) queue items where processed
+
     public const CLI_STATUS_ABORTED = 4; //instance didn't finish
+
     public const CLI_STATUS_POLLABLE_PROCESSED = 8;
 
     protected function configure(): void
@@ -105,10 +109,10 @@ class ProcessQueueCommand extends Command
         /** @var QueueRepository $queueRepository */
         $queueRepository = $objectManager->get(QueueRepository::class);
 
-        if (!$crawlerController->getDisabled() && $crawlerController->CLI_checkAndAcquireNewProcess($crawlerController->CLI_buildProcessId())) {
-            $countInARun = $amount ? (int)$amount : (int)$crawlerController->extensionSettings['countInARun'];
-            $sleepAfterFinish = $sleepafter ? (int)$sleepafter : (int)$crawlerController->extensionSettings['sleepAfterFinish'];
-            $sleepTime = $sleeptime ? (int)$sleeptime : (int)$crawlerController->extensionSettings['sleepTime'];
+        if (! $crawlerController->getDisabled() && $crawlerController->CLI_checkAndAcquireNewProcess($crawlerController->CLI_buildProcessId())) {
+            $countInARun = $amount ? (int) $amount : (int) $crawlerController->extensionSettings['countInARun'];
+            $sleepAfterFinish = $sleepafter ? (int) $sleepafter : (int) $crawlerController->extensionSettings['sleepAfterFinish'];
+            $sleepTime = $sleeptime ? (int) $sleeptime : (int) $crawlerController->extensionSettings['sleepTime'];
 
             try {
                 // Run process:

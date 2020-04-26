@@ -140,7 +140,7 @@ class EventDispatcher
      */
     public static function getInstance()
     {
-        if (!self::$instance instanceof EventDispatcher) {
+        if (! self::$instance instanceof EventDispatcher) {
             $dispatcher = new EventDispatcher();
             self::$instance = $dispatcher;
         }

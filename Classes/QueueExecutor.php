@@ -67,7 +67,7 @@ class QueueExecutor implements SingletonInterface
         // Decode parameters:
         $parameters = unserialize($queueItem['parameters'] ?? '');
         $result = 'ERROR';
-        if (!is_array($parameters)) {
+        if (! is_array($parameters)) {
             return 'ERROR';
         }
         if ($parameters['_CALLBACKOBJ']) {

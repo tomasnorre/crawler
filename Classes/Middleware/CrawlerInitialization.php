@@ -90,7 +90,7 @@ class CrawlerInitialization implements MiddlewareInterface
      */
     protected function runPollSuccessHooks(): void
     {
-        if (!is_array($GLOBALS['TSFE']->applicationData['tx_crawler']['content']['parameters']['procInstructions'])) {
+        if (! is_array($GLOBALS['TSFE']->applicationData['tx_crawler']['content']['parameters']['procInstructions'])) {
             return;
         }
         foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'] ?? [] as $pollable) {

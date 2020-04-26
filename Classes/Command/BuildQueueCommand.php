@@ -121,7 +121,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
 
         $configurationKeys = $this->getConfigurationKeys((string) $input->getArgument('conf'));
 
-        if (!is_array($configurationKeys)) {
+        if (! is_array($configurationKeys)) {
             $configurations = $crawlerController->getUrlsForPageId($pageId);
             if (is_array($configurations)) {
                 $configurationKeys = array_keys($configurations);

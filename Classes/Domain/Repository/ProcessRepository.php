@@ -288,7 +288,7 @@ class ProcessRepository extends AbstractRepository
             ->execute()
             ->fetchColumn(0);
 
-        return (bool)$isActive;
+        return (bool) $isActive;
     }
 
     /**
@@ -299,7 +299,7 @@ class ProcessRepository extends AbstractRepository
         GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable($this->tableName)
             ->update(
                 'tx_crawler_process',
-                ['assigned_items_count' => (int)$numberOfAffectedRows],
+                ['assigned_items_count' => (int) $numberOfAffectedRows],
                 ['process_id' => $processId]
             );
     }

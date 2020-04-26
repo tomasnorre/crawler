@@ -35,10 +35,10 @@ trait SiteBasedTestTrait
         array $errorHandling = []
     ): void {
         $configuration = $site;
-        if (!empty($languages)) {
+        if (! empty($languages)) {
             $configuration['languages'] = $languages;
         }
-        if (!empty($errorHandling)) {
+        if (! empty($errorHandling)) {
             $configuration['errorHandling'] = $errorHandling;
         }
 
@@ -115,7 +115,7 @@ trait SiteBasedTestTrait
             'fallbackType' => $fallbackType ?? (empty($fallbackIdentifiers) ? 'strict' : 'fallback'),
         ];
 
-        if (!empty($fallbackIdentifiers)) {
+        if (! empty($fallbackIdentifiers)) {
             $fallbackIds = array_map(
                 function (string $fallbackIdentifier) {
                     $preset = $this->resolveLanguagePreset($fallbackIdentifier);
@@ -132,7 +132,7 @@ trait SiteBasedTestTrait
 
     protected function resolveLanguagePreset(string $identifier)
     {
-        if (!isset(static::LANGUAGE_PRESETS[$identifier])) {
+        if (! isset(static::LANGUAGE_PRESETS[$identifier])) {
             throw new \LogicException(
                 sprintf('Undefined preset identifier "%s"', $identifier),
                 1533893665

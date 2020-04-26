@@ -390,7 +390,7 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
     public function isPageInQueue(int $uid, bool $unprocessed_only = true, bool $timed_only = false, int $timestamp = 0): bool
     {
         // TODO: Looks like the check is obsolete as PHP doesn't allow other than ints for the $uid, PHP 7.2 Strict Mode
-        if (!MathUtility::canBeInterpretedAsInteger($uid)) {
+        if (! MathUtility::canBeInterpretedAsInteger($uid)) {
             throw new \InvalidArgumentException('Invalid parameter type', 1468931945);
         }
 
@@ -479,7 +479,7 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
     public function cleanupQueue(): void
     {
         $extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
-        $purgeDays = (int)$extensionSettings['purgeQueueDays'];
+        $purgeDays = (int) $extensionSettings['purgeQueueDays'];
 
         if ($purgeDays > 0) {
             $purgeDate = time() - 24 * 60 * 60 * $purgeDays;
@@ -564,7 +564,7 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
             ->count('*')
             ->from($this->tableName)
             ->where(
-                $queryBuilder->expr()->eq('page_id', (int)$uid),
+                $queryBuilder->expr()->eq('page_id', (int) $uid),
                 $queryBuilder->expr()->eq('configuration_hash', $queryBuilder->createNamedParameter($configurationHash)),
                 $queryBuilder->expr()->eq('exec_time', 0)
             )
@@ -585,7 +585,7 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
      */
     public function flushQueue($where = ''): void
     {
-        $realWhere = strlen((string)$where) > 0 ? $where : '1=1';
+        $realWhere = strlen((string) $where) > 0 ? $where : '1=1';
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
 
         if (EventDispatcher::getInstance()->hasObserver('queueEntryFlush')) {

@@ -81,7 +81,7 @@ class CrawlerControllerTest extends FunctionalTestCase
 
         $basePath = Environment::getVarPath() . '/tests/unit';
         $this->fixturePath = $basePath . '/fixture/config/sites';
-        if (!file_exists($this->fixturePath)) {
+        if (! file_exists($this->fixturePath)) {
             GeneralUtility::mkdir_deep($this->fixturePath);
         }
 

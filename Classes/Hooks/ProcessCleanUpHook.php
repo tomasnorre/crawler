@@ -90,11 +90,11 @@ class ProcessCleanUpHook implements CrawlerHookInterface
     {
         $results = $this->processRepository->getActiveProcessesOlderThanOneHour();
 
-        if (!is_array($results)) {
+        if (! is_array($results)) {
             return;
         }
         foreach ($results as $result) {
-            $systemProcessId = (int)$result['system_process_id'];
+            $systemProcessId = (int) $result['system_process_id'];
             $processId = $result['process_id'];
             if ($systemProcessId > 1) {
                 if ($this->doProcessStillExists($systemProcessId)) {
@@ -112,26 +112,26 @@ class ProcessCleanUpHook implements CrawlerHookInterface
     {
         $results = $this->processRepository->getActiveOrphanProcesses();
 
-        if (!is_array($results)) {
+        if (! is_array($results)) {
             return;
         }
         foreach ($results as $result) {
             $processExists = false;
-            $systemProcessId = (int)$result['system_process_id'];
+            $systemProcessId = (int) $result['system_process_id'];
             $processId = $result['process_id'];
             if ($systemProcessId > 1) {
                 $dispatcherProcesses = $this->findDispatcherProcesses();
-                if (!is_array($dispatcherProcesses) || empty($dispatcherProcesses)) {
+                if (! is_array($dispatcherProcesses) || empty($dispatcherProcesses)) {
                     $this->removeProcessFromProcesslist($processId);
                     return;
                 }
                 foreach ($dispatcherProcesses as $process) {
                     $responseArray = $this->createResponseArray($process);
-                    if ($systemProcessId === (int)$responseArray[1]) {
+                    if ($systemProcessId === (int) $responseArray[1]) {
                         $processExists = true;
                     };
                 }
-                if (!$processExists) {
+                if (! $processExists) {
                     $this->removeProcessFromProcesslist($processId);
                 }
             }
@@ -175,7 +175,7 @@ class ProcessCleanUpHook implements CrawlerHookInterface
     private function doProcessStillExists($pid)
     {
         $doProcessStillExists = false;
-        if (!Environment::isWindows()) {
+        if (! Environment::isWindows()) {
             // Not windows
             if (file_exists('/proc/' . $pid)) {
                 $doProcessStillExists = true;
@@ -199,7 +199,7 @@ class ProcessCleanUpHook implements CrawlerHookInterface
      */
     private function killProcess($pid): void
     {
-        if (!Environment::isWindows()) {
+        if (! Environment::isWindows()) {
             // Not windows
             posix_kill($pid, 9);
         } else {
@@ -217,7 +217,7 @@ class ProcessCleanUpHook implements CrawlerHookInterface
     private function findDispatcherProcesses()
     {
         $returnArray = [];
-        if (!Environment::isWindows()) {
+        if (! Environment::isWindows()) {
             // Not windows
             exec('ps aux | grep \'typo3 crawler:processQueue\'', $returnArray, $returnValue);
         } else {
