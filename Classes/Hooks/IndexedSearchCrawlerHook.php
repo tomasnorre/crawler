@@ -118,7 +118,6 @@ class IndexedSearchCrawlerHook
                         'procInstructions' => ['[Index Cfg UID#' . $cfgRec['uid'] . ']'],
                         'url' => 'Records (start)',
                     ];
-                    //
                     $pObj->addQueueEntry_callBack($setId, $params, $this->callBack, $cfgRec['pid']);
                     break;
                 case 2:

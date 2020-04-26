@@ -6,6 +6,7 @@ parameters:
         - "php71"
         - "array"
         - "docblock"
+        - "comments"
 
     skip:
         PhpCsFixer\Fixer\Operator\UnaryOperatorSpacesFixer: null
