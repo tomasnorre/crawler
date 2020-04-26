@@ -150,6 +150,53 @@ class ProcessService
     }
 
     /**
+     * starts new process
+     * @throws \Exception if no crawler process was started
+     */
+    public function startProcess(): bool
+    {
+        $ttl = (time() + $this->timeToLive - 1);
+        $current = $this->processRepository->countNotTimeouted($ttl);
+
+        // Check whether OS is Windows
+        if (Environment::isWindows()) {
+            $completePath = 'start ' . $this->getCrawlerCliPath();
+        } else {
+            $completePath = '(' . $this->getCrawlerCliPath() . ' &) > /dev/null';
+        }
+
+        $fileHandler = CommandUtility::exec($completePath);
+        if ($fileHandler === false) {
+            throw new \Exception('could not start process!');
+        }
+        for ($i = 0; $i < 10; $i++) {
+            if ($this->processRepository->countNotTimeouted($ttl) > $current) {
+                return true;
+            }
+            sleep(1);
+        }
+        throw new \Exception('Something went wrong: process did not appear within 10 seconds.');
+    }
+
+    /**
+     * Returns the path to start the crawler from the command line
+     */
+    public function getCrawlerCliPath(): string
+    {
+        $phpPath = PhpBinaryUtility::getPhpBinary();
+        $typo3BinaryPath = ExtensionManagementUtility::extPath('core') . 'bin/';
+        $cliPart = 'typo3 crawler:processQueue';
+        // Don't like the spacing, but don't have an better idea for now
+        $scriptPath = $phpPath . ' ' . $typo3BinaryPath . $cliPart;
+
+        if (Environment::isWindows()) {
+            $scriptPath = str_replace('/', '\\', $scriptPath);
+        }
+
+        return ltrim($scriptPath);
+    }
+
+    /**
      * Reports curent Status of queue
      */
     protected function reportItemStatus(): void
@@ -190,53 +237,5 @@ class ProcessService
             echo chr(10);
         }
         return $ret;
-    }
-
-    /**
-     * starts new process
-     * @throws \Exception if no crawler process was started
-     */
-    public function startProcess(): bool
-    {
-        $ttl = (time() + $this->timeToLive - 1);
-        $current = $this->processRepository->countNotTimeouted($ttl);
-
-        // Check whether OS is Windows
-        if (Environment::isWindows()) {
-            $completePath = 'start ' . $this->getCrawlerCliPath();
-        } else {
-            $completePath = '(' . $this->getCrawlerCliPath() . ' &) > /dev/null';
-        }
-
-        $fileHandler = CommandUtility::exec($completePath);
-        if ($fileHandler === false) {
-            throw new \Exception('could not start process!');
-        } else {
-            for ($i = 0; $i < 10; $i++) {
-                if ($this->processRepository->countNotTimeouted($ttl) > $current) {
-                    return true;
-                }
-                sleep(1);
-            }
-            throw new \Exception('Something went wrong: process did not appear within 10 seconds.');
-        }
-    }
-
-    /**
-     * Returns the path to start the crawler from the command line
-     */
-    public function getCrawlerCliPath(): string
-    {
-        $phpPath = PhpBinaryUtility::getPhpBinary();
-        $typo3BinaryPath = ExtensionManagementUtility::extPath('core') . 'bin/';
-        $cliPart = 'typo3 crawler:processQueue';
-        // Don't like the spacing, but don't have an better idea for now
-        $scriptPath = $phpPath . ' ' . $typo3BinaryPath . $cliPart;
-
-        if (Environment::isWindows()) {
-            $scriptPath = str_replace('/', '\\', $scriptPath);
-        }
-
-        return ltrim($scriptPath);
     }
 }

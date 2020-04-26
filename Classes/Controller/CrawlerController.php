@@ -150,31 +150,6 @@ class CrawlerController implements LoggerAwareInterface
     protected $accessMode;
 
     /**
-     * @var BackendUserAuthentication|null
-     */
-    private $backendUser;
-
-    /**
-     * @var integer
-     */
-    private $scheduledTime = 0;
-
-    /**
-     * @var integer
-     */
-    private $reqMinute = 0;
-
-    /**
-     * @var bool
-     */
-    private $submitCrawlUrls = false;
-
-    /**
-     * @var bool
-     */
-    private $downloadCrawlUrls = false;
-
-    /**
      * @var QueueRepository
      */
     protected $queueRepository;
@@ -208,6 +183,62 @@ class CrawlerController implements LoggerAwareInterface
      * @var IconFactory
      */
     protected $iconFactory;
+
+    /**
+     * @var BackendUserAuthentication|null
+     */
+    private $backendUser;
+
+    /**
+     * @var integer
+     */
+    private $scheduledTime = 0;
+
+    /**
+     * @var integer
+     */
+    private $reqMinute = 0;
+
+    /**
+     * @var bool
+     */
+    private $submitCrawlUrls = false;
+
+    /**
+     * @var bool
+     */
+    private $downloadCrawlUrls = false;
+
+    /************************************
+     *
+     * Getting URLs based on Page TSconfig
+     *
+     ************************************/
+
+    public function __construct()
+    {
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $this->queueRepository = $objectManager->get(QueueRepository::class);
+        $this->processRepository = $objectManager->get(ProcessRepository::class);
+        $this->configurationRepository = $objectManager->get(ConfigurationRepository::class);
+        $this->queueExecutor = $objectManager->get(QueueExecutor::class);
+        $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
+
+        $this->processFilename = Environment::getVarPath() . '/lock/tx_crawler.proc';
+
+        /** @var ExtensionConfigurationProvider $configurationProvider */
+        $configurationProvider = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
+        $settings = $configurationProvider->getExtensionConfiguration();
+        $this->extensionSettings = is_array($settings) ? $settings : [];
+
+        // set defaults:
+        if (MathUtility::convertToPositiveInteger($this->extensionSettings['countInARun']) == 0) {
+            $this->extensionSettings['countInARun'] = 100;
+        }
+
+        $this->extensionSettings['processLimit'] = MathUtility::forceIntegerInRange($this->extensionSettings['processLimit'], 1, 99, 1);
+        $this->maximumUrlsToCompile = MathUtility::forceIntegerInRange($this->extensionSettings['maxCompileUrls'], 1, 1000000000, 10000);
+    }
 
     /**
      * Method to set the accessMode can be gui, cli or cli_im
@@ -267,50 +298,6 @@ class CrawlerController implements LoggerAwareInterface
     public function getProcessFilename()
     {
         return $this->processFilename;
-    }
-
-    /************************************
-     *
-     * Getting URLs based on Page TSconfig
-     *
-     ************************************/
-
-    public function __construct()
-    {
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->queueRepository = $objectManager->get(QueueRepository::class);
-        $this->processRepository = $objectManager->get(ProcessRepository::class);
-        $this->configurationRepository = $objectManager->get(ConfigurationRepository::class);
-        $this->queueExecutor = $objectManager->get(QueueExecutor::class);
-        $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
-
-        $this->processFilename = Environment::getVarPath() . '/lock/tx_crawler.proc';
-
-        /** @var ExtensionConfigurationProvider $configurationProvider */
-        $configurationProvider = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
-        $settings = $configurationProvider->getExtensionConfiguration();
-        $this->extensionSettings = is_array($settings) ? $settings : [];
-
-        // set defaults:
-        if (MathUtility::convertToPositiveInteger($this->extensionSettings['countInARun']) == 0) {
-            $this->extensionSettings['countInARun'] = 100;
-        }
-
-        $this->extensionSettings['processLimit'] = MathUtility::forceIntegerInRange($this->extensionSettings['processLimit'], 1, 99, 1);
-        $this->maximumUrlsToCompile = MathUtility::forceIntegerInRange($this->extensionSettings['maxCompileUrls'], 1, 1000000000, 10000);
-    }
-
-    /**
-     * @return BackendUserAuthentication
-     */
-    private function getBackendUser()
-    {
-        // Make sure the _cli_ user is loaded
-        Bootstrap::initializeBackendAuthentication();
-        if ($this->backendUser === null) {
-            $this->backendUser = $GLOBALS['BE_USER'];
-        }
-        return $this->backendUser;
     }
 
     /**
@@ -675,16 +662,6 @@ class CrawlerController implements LoggerAwareInterface
     }
 
     /**
-     * Get querybuilder for given table
-     *
-     * @return \TYPO3\CMS\Core\Database\Query\QueryBuilder
-     */
-    private function getQueryBuilder(string $table)
-    {
-        return GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($table);
-    }
-
-    /**
      * Check if a user has access to an item
      * (e.g. get the group list of the current logged in user from $GLOBALS['TSFE']->gr_list)
      *
@@ -941,14 +918,13 @@ class CrawlerController implements LoggerAwareInterface
             // $addWhere = $query->add($expressionBuilder->eq('page_id', (int)$id));
             $this->queueRepository->flushQueue($doFullFlush ? '1=1' : $addWhere);
             return [];
-        } else {
-            if ($itemsPerPage > 0) {
-                $queryBuilder
-                    ->setMaxResults((int) $itemsPerPage);
-            }
-
-            return $queryBuilder->execute()->fetchAll();
         }
+        if ($itemsPerPage > 0) {
+            $queryBuilder
+                ->setMaxResults((int) $itemsPerPage);
+        }
+
+        return $queryBuilder->execute()->fetchAll();
     }
 
     /**
@@ -995,14 +971,13 @@ class CrawlerController implements LoggerAwareInterface
             $addWhere = $query->add($expressionBuilder->eq('set_id', (int) $set_id));
             $this->queueRepository->flushQueue($doFullFlush ? '' : $addWhere);
             return [];
-        } else {
-            if ($itemsPerPage > 0) {
-                $queryBuilder
-                    ->setMaxResults((int) $itemsPerPage);
-            }
-
-            return $queryBuilder->execute()->fetchAll();
         }
+        if ($itemsPerPage > 0) {
+            $queryBuilder
+                ->setMaxResults((int) $itemsPerPage);
+        }
+
+        return $queryBuilder->execute()->fetchAll();
     }
 
     /**
@@ -1122,67 +1097,6 @@ class CrawlerController implements LoggerAwareInterface
     }
 
     /**
-     * This method determines duplicates for a queue entry with the same parameters and this timestamp.
-     * If the timestamp is in the past, it will check if there is any unprocessed queue entry in the past.
-     * If the timestamp is in the future it will check, if the queued entry has exactly the same timestamp
-     *
-     * @param int $tstamp
-     * @param array $fieldArray
-     *
-     * @return array
-     */
-    protected function getDuplicateRowsIfExist($tstamp, $fieldArray)
-    {
-        $rows = [];
-
-        $currentTime = $this->getCurrentTime();
-
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
-        $queryBuilder
-            ->select('qid')
-            ->from('tx_crawler_queue');
-        //if this entry is scheduled with "now"
-        if ($tstamp <= $currentTime) {
-            if ($this->extensionSettings['enableTimeslot']) {
-                $timeBegin = $currentTime - 100;
-                $timeEnd = $currentTime + 100;
-                $queryBuilder
-                    ->where(
-                        'scheduled BETWEEN ' . $timeBegin . ' AND ' . $timeEnd . ''
-                    )
-                    ->orWhere(
-                        $queryBuilder->expr()->lte('scheduled', $currentTime)
-                    );
-            } else {
-                $queryBuilder
-                    ->where(
-                        $queryBuilder->expr()->lte('scheduled', $currentTime)
-                    );
-            }
-        } elseif ($tstamp > $currentTime) {
-            //entry with a timestamp in the future need to have the same schedule time
-            $queryBuilder
-                ->where(
-                    $queryBuilder->expr()->eq('scheduled', $tstamp)
-                );
-        }
-
-        $queryBuilder
-            ->andWhere('NOT exec_time')
-            ->andWhere('NOT process_id')
-            ->andWhere($queryBuilder->expr()->eq('page_id', $queryBuilder->createNamedParameter($fieldArray['page_id'], \PDO::PARAM_INT)))
-            ->andWhere($queryBuilder->expr()->eq('parameters_hash', $queryBuilder->createNamedParameter($fieldArray['parameters_hash'], \PDO::PARAM_STR)));
-
-        $statement = $queryBuilder->execute();
-
-        while ($row = $statement->fetch()) {
-            $rows[] = $row['qid'];
-        }
-
-        return $rows;
-    }
-
-    /**
      * Returns the current system time
      *
      * @return int
@@ -1229,7 +1143,7 @@ class CrawlerController implements LoggerAwareInterface
         }
 
         SignalSlotUtility::emitSignal(
-            __CLASS__,
+            self::class,
             SignalSlotUtility::SIGNAL_QUEUEITEM_PREPROCESS,
             [$queueId, &$queueRec]
         );
@@ -1250,7 +1164,7 @@ class CrawlerController implements LoggerAwareInterface
             );
 
         $result = $this->queueExecutor->executeQueueItem($queueRec, $this);
-        if (null === $result['content']) {
+        if ($result['content'] === null) {
             $resultData = 'An errors happened';
         } else {
             $resultData = unserialize($result['content']);
@@ -1278,7 +1192,7 @@ class CrawlerController implements LoggerAwareInterface
         $field_array = ['result_data' => serialize($result)];
 
         SignalSlotUtility::emitSignal(
-            __CLASS__,
+            self::class,
             SignalSlotUtility::SIGNAL_QUEUEITEM_POSTPROCESS,
             [$queueId, &$field_array]
         );
@@ -1318,7 +1232,7 @@ class CrawlerController implements LoggerAwareInterface
         $field_array = ['result_data' => serialize($result)];
 
         SignalSlotUtility::emitSignal(
-            __CLASS__,
+            self::class,
             SignalSlotUtility::SIGNAL_QUEUEITEM_POSTPROCESS,
             [$queueId, &$field_array]
         );
@@ -1641,7 +1555,7 @@ class CrawlerController implements LoggerAwareInterface
             $this->processRepository->updateProcessAssignItemsCount($numberOfAffectedRows, $processId);
 
             if ($numberOfAffectedRows !== count($quidList)) {
-                $this->CLI_debug("Nothing processed due to multi-process collision (" . $this->CLI_buildProcessId() . ")");
+                $this->CLI_debug('Nothing processed due to multi-process collision (' . $this->CLI_buildProcessId() . ')');
                 return ($result | self::CLI_STATUS_ABORTED);
             }
 
@@ -1658,7 +1572,7 @@ class CrawlerController implements LoggerAwareInterface
                 }
 
                 if (! $this->processRepository->isProcessActive($this->CLI_buildProcessId())) {
-                    $this->CLI_debug("conflict / timeout (" . $this->CLI_buildProcessId() . ")");
+                    $this->CLI_debug('conflict / timeout (' . $this->CLI_buildProcessId() . ')');
 
                     //TODO might need an additional returncode
                     $result |= self::CLI_STATUS_ABORTED;
@@ -1669,9 +1583,9 @@ class CrawlerController implements LoggerAwareInterface
             sleep((int) $sleepAfterFinish);
 
             $msg = 'Rows: ' . $counter;
-            $this->CLI_debug($msg . " (" . $this->CLI_buildProcessId() . ")");
+            $this->CLI_debug($msg . ' (' . $this->CLI_buildProcessId() . ')');
         } else {
-            $this->CLI_debug("Nothing within queue which needs to be processed (" . $this->CLI_buildProcessId() . ")");
+            $this->CLI_debug('Nothing within queue which needs to be processed (' . $this->CLI_buildProcessId() . ')');
         }
 
         if ($counter > 0) {
@@ -1734,7 +1648,7 @@ class CrawlerController implements LoggerAwareInterface
 
         // if there are less than allowed active processes then add a new one
         if ($processCount < (int) $this->extensionSettings['processLimit']) {
-            $this->CLI_debug("add process " . $this->CLI_buildProcessId() . " (" . ($processCount + 1) . "/" . (int) $this->extensionSettings['processLimit'] . ")");
+            $this->CLI_debug('add process ' . $this->CLI_buildProcessId() . ' (' . ($processCount + 1) . '/' . (int) $this->extensionSettings['processLimit'] . ')');
 
             GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('tx_crawler_process')->insert(
                 'tx_crawler_process',
@@ -1746,7 +1660,7 @@ class CrawlerController implements LoggerAwareInterface
                 ]
             );
         } else {
-            $this->CLI_debug("Processlimit reached (" . ($processCount) . "/" . (int) $this->extensionSettings['processLimit'] . ")");
+            $this->CLI_debug('Processlimit reached (' . ($processCount) . '/' . (int) $this->extensionSettings['processLimit'] . ')');
             $ret = false;
         }
 
@@ -1848,6 +1762,67 @@ class CrawlerController implements LoggerAwareInterface
     }
 
     /**
+     * This method determines duplicates for a queue entry with the same parameters and this timestamp.
+     * If the timestamp is in the past, it will check if there is any unprocessed queue entry in the past.
+     * If the timestamp is in the future it will check, if the queued entry has exactly the same timestamp
+     *
+     * @param int $tstamp
+     * @param array $fieldArray
+     *
+     * @return array
+     */
+    protected function getDuplicateRowsIfExist($tstamp, $fieldArray)
+    {
+        $rows = [];
+
+        $currentTime = $this->getCurrentTime();
+
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $queryBuilder
+            ->select('qid')
+            ->from('tx_crawler_queue');
+        //if this entry is scheduled with "now"
+        if ($tstamp <= $currentTime) {
+            if ($this->extensionSettings['enableTimeslot']) {
+                $timeBegin = $currentTime - 100;
+                $timeEnd = $currentTime + 100;
+                $queryBuilder
+                    ->where(
+                        'scheduled BETWEEN ' . $timeBegin . ' AND ' . $timeEnd . ''
+                    )
+                    ->orWhere(
+                        $queryBuilder->expr()->lte('scheduled', $currentTime)
+                    );
+            } else {
+                $queryBuilder
+                    ->where(
+                        $queryBuilder->expr()->lte('scheduled', $currentTime)
+                    );
+            }
+        } elseif ($tstamp > $currentTime) {
+            //entry with a timestamp in the future need to have the same schedule time
+            $queryBuilder
+                ->where(
+                    $queryBuilder->expr()->eq('scheduled', $tstamp)
+                );
+        }
+
+        $queryBuilder
+            ->andWhere('NOT exec_time')
+            ->andWhere('NOT process_id')
+            ->andWhere($queryBuilder->expr()->eq('page_id', $queryBuilder->createNamedParameter($fieldArray['page_id'], \PDO::PARAM_INT)))
+            ->andWhere($queryBuilder->expr()->eq('parameters_hash', $queryBuilder->createNamedParameter($fieldArray['parameters_hash'], \PDO::PARAM_STR)));
+
+        $statement = $queryBuilder->execute();
+
+        while ($row = $statement->fetch()) {
+            $rows[] = $row['qid'];
+        }
+
+        return $rows;
+    }
+
+    /**
      * Returns a md5 hash generated from a serialized configuration array.
      *
      * @return string
@@ -1922,5 +1897,28 @@ class CrawlerController implements LoggerAwareInterface
         }
 
         return $reg;
+    }
+
+    /**
+     * @return BackendUserAuthentication
+     */
+    private function getBackendUser()
+    {
+        // Make sure the _cli_ user is loaded
+        Bootstrap::initializeBackendAuthentication();
+        if ($this->backendUser === null) {
+            $this->backendUser = $GLOBALS['BE_USER'];
+        }
+        return $this->backendUser;
+    }
+
+    /**
+     * Get querybuilder for given table
+     *
+     * @return \TYPO3\CMS\Core\Database\Query\QueryBuilder
+     */
+    private function getQueryBuilder(string $table)
+    {
+        return GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($table);
     }
 }

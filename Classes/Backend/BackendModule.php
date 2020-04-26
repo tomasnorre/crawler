@@ -742,9 +742,8 @@ class BackendModule
         if (is_array($requestResult)) {
             if (empty($requestResult['errorlog'])) {
                 return 'OK';
-            } else {
-                return implode("\n", $requestResult['errorlog']);
             }
+            return implode("\n", $requestResult['errorlog']);
         }
 
         if (is_bool($requestResult)) {
@@ -831,14 +830,13 @@ class BackendModule
                 $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.disablecrawling'),
                 $this->getInfoModuleUrl(['action' => 'stopCrawling'])
             );
-        } else {
-            // TODO: Icon Should be bigger
-            return $this->getLinkButton(
+        }
+        // TODO: Icon Should be bigger
+        return $this->getLinkButton(
                 'tx-crawler-start',
                 $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.enablecrawling'),
                 $this->getInfoModuleUrl(['action' => 'resumeCrawling'])
             );
-        }
     }
 
     /**

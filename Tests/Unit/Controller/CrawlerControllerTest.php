@@ -136,7 +136,7 @@ class CrawlerControllerTest extends UnitTestCase
      *
      * @dataProvider drawURLs_PIfilterDataProvider
      */
-    public function drawURLs_PIfilter(string $piString, array $incomingProcInstructions, bool $expected): void
+    public function drawURLsPIfilter(string $piString, array $incomingProcInstructions, bool $expected): void
     {
         self::assertEquals(
             $expected,
@@ -263,7 +263,7 @@ class CrawlerControllerTest extends UnitTestCase
     /**
      * @test
      */
-    public function CLI_buildProcessIdIsSetReturnsValue(): void
+    public function cLIBuildProcessIdIsSetReturnsValue(): void
     {
         $processId = '12297a261b';
         $crawlerController = $this->getAccessibleMock(CrawlerController::class, ['dummy'], [], '', false);

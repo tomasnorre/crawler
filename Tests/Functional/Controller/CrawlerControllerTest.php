@@ -275,7 +275,7 @@ class CrawlerControllerTest extends FunctionalTestCase
      */
     public function getUrlFromPageAndQueryParameters(int $pageId, string $queryString, ?string $alternativeBaseUrl, int $httpsOrHttp, UriInterface $expected): void
     {
-        if (2 === $pageId) {
+        if ($pageId === 2) {
             $configuration = [
                 'rootPageId' => 2,
                 'base' => 'https://example.com',

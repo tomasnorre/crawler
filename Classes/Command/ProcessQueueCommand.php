@@ -50,40 +50,6 @@ class ProcessQueueCommand extends Command
 
     public const CLI_STATUS_POLLABLE_PROCESSED = 8;
 
-    protected function configure(): void
-    {
-        $this->setHelp(
-            'Crawler Command - Crawling the URLs from the queue' . chr(10) . chr(10) .
-            '
-            Examples:
-              --- Will trigger the crawler which starts to process the queue entries
-              $ typo3 crawler:processqueue --amount 15 --sleepafter 5 --sleeptime 2  
-            '
-        );
-        $this->addOption(
-            'amount',
-            '',
-            InputOption::VALUE_OPTIONAL,
-            'How many pages should be crawled during that run',
-            0
-        );
-
-        $this->addOption(
-            'sleepafter',
-            '',
-            InputOption::VALUE_OPTIONAL,
-            'Amount of milliseconds which the system should use to relax between crawls',
-            0
-        );
-
-        $this->addOption(
-            'sleeptime',
-            '',
-            InputOption::VALUE_OPTIONAL,
-            'Amount of seconds which the system should use to relax after all crawls are done.'
-        );
-    }
-
     /**
      * Crawler Command - Crawling the URLs from the queue
      *
@@ -140,5 +106,39 @@ class ProcessQueueCommand extends Command
         }
 
         return $output->writeln($result);
+    }
+
+    protected function configure(): void
+    {
+        $this->setHelp(
+            'Crawler Command - Crawling the URLs from the queue' . chr(10) . chr(10) .
+            '
+            Examples:
+              --- Will trigger the crawler which starts to process the queue entries
+              $ typo3 crawler:processqueue --amount 15 --sleepafter 5 --sleeptime 2  
+            '
+        );
+        $this->addOption(
+            'amount',
+            '',
+            InputOption::VALUE_OPTIONAL,
+            'How many pages should be crawled during that run',
+            0
+        );
+
+        $this->addOption(
+            'sleepafter',
+            '',
+            InputOption::VALUE_OPTIONAL,
+            'Amount of milliseconds which the system should use to relax between crawls',
+            0
+        );
+
+        $this->addOption(
+            'sleeptime',
+            '',
+            InputOption::VALUE_OPTIONAL,
+            'Amount of seconds which the system should use to relax after all crawls are done.'
+        );
     }
 }

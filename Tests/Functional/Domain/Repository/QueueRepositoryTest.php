@@ -451,7 +451,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function UpdateProcessIdAndSchedulerForQueueIds(): void
+    public function updateProcessIdAndSchedulerForQueueIds(): void
     {
         $qidToUpdate = [4, 8, 15, 18];
         $processId = md5('this-is-the-process-id');

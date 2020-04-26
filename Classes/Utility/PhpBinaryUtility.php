@@ -35,7 +35,7 @@ class PhpBinaryUtility
 
         if (empty($extensionSettings['phpPath'])) {
             $phpPath = CommandUtility::getCommand($extensionSettings['phpBinary']);
-            if (false === $phpPath) {
+            if ($phpPath === false) {
                 throw new \Exception('The phpBinary: "' . $extensionSettings['phpBinary'] . '" could not be found!', 1587068215);
             }
         } else {

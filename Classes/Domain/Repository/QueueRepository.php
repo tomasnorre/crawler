@@ -85,30 +85,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
     }
 
     /**
-     * This internal helper method is used to create an instance of an entry object
-     *
-     * @param Process $process
-     * @param string $orderByField first matching item will be returned as object
-     * @param string $orderBySorting sorting direction
-     */
-    protected function getFirstOrLastObjectByProcess($process, $orderByField, $orderBySorting = 'ASC'): array
-    {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
-        $first = $queryBuilder
-            ->select('*')
-            ->from($this->tableName)
-            ->where(
-                $queryBuilder->expr()->eq('process_id_completed', $queryBuilder->createNamedParameter($process->getProcessId())),
-                $queryBuilder->expr()->gt('exec_time', 0)
-            )
-            ->setMaxResults(1)
-            ->addOrderBy($orderByField, $orderBySorting)
-            ->execute()->fetch(0);
-
-        return $first ?: [];
-    }
-
-    /**
      * Counts all executed items of a process.
      *
      * @param Process $process
@@ -404,13 +380,13 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
                 $queryBuilder->expr()->eq('page_id', $queryBuilder->createNamedParameter($uid, \PDO::PARAM_INT))
             );
 
-        if (false !== $unprocessed_only) {
+        if ($unprocessed_only !== false) {
             $statement->andWhere(
                 $queryBuilder->expr()->eq('exec_time', 0)
             );
         }
 
-        if (false !== $timed_only) {
+        if ($timed_only !== false) {
             $statement->andWhere(
                 $queryBuilder->expr()->neq('scheduled', 0)
             );
@@ -427,7 +403,7 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
             ->execute()
             ->fetchColumn(0);
 
-        if (false !== $count && $count > 0) {
+        if ($count !== false && $count > 0) {
             $isPageInQueue = true;
         }
 
@@ -491,7 +467,7 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
                     'exec_time != 0 AND exec_time < ' . $purgeDate
                 )->execute();
 
-            if (false === $del) {
+            if ($del === false) {
                 $this->logger->info(
                     'Records could not be deleted.'
                 );
@@ -615,5 +591,29 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
             ->delete($this->tableName)
             ->where($realWhere)
             ->execute();
+    }
+
+    /**
+     * This internal helper method is used to create an instance of an entry object
+     *
+     * @param Process $process
+     * @param string $orderByField first matching item will be returned as object
+     * @param string $orderBySorting sorting direction
+     */
+    protected function getFirstOrLastObjectByProcess($process, $orderByField, $orderBySorting = 'ASC'): array
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $first = $queryBuilder
+            ->select('*')
+            ->from($this->tableName)
+            ->where(
+                $queryBuilder->expr()->eq('process_id_completed', $queryBuilder->createNamedParameter($process->getProcessId())),
+                $queryBuilder->expr()->gt('exec_time', 0)
+            )
+            ->setMaxResults(1)
+            ->addOrderBy($orderByField, $orderBySorting)
+            ->execute()->fetch(0);
+
+        return $first ?: [];
     }
 }

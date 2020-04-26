@@ -4,11 +4,7 @@ parameters:
         - "psr12"
         - "php70"
         - "php71"
-        - "array"
-        - "docblock"
-        - "comments"
-        - "namespaces"
-        - "spaces"
+        - "common"
 
     skip:
         PhpCsFixer\Fixer\Operator\UnaryOperatorSpacesFixer: null

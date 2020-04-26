@@ -42,16 +42,6 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 class ProcessCleanUpHook implements CrawlerHookInterface
 {
     /**
-     * @var CrawlerController
-     */
-    private $crawlerController;
-
-    /**
-     * @var array
-     */
-    private $extensionSettings;
-
-    /**
      * @var ProcessRepository
      */
     protected $processRepository;
@@ -60,6 +50,16 @@ class ProcessCleanUpHook implements CrawlerHookInterface
      * @var QueueRepository
      */
     protected $queueRepository;
+
+    /**
+     * @var CrawlerController
+     */
+    private $crawlerController;
+
+    /**
+     * @var array
+     */
+    private $extensionSettings;
 
     public function __construct()
     {
