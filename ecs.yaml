@@ -2,9 +2,9 @@
 parameters:
     sets:
         - "psr12"
-        - "arrays"
         - "php70"
         - "php71"
+        - "common"
 
     skip:
         PhpCsFixer\Fixer\Operator\UnaryOperatorSpacesFixer: null

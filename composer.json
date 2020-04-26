@@ -39,7 +39,7 @@
         "rector/rector": "^0.7",
         "saschaegerer/phpstan-typo3": "^0.13.1",
         "symfony/yaml": "^4.4 || ^5.0",
-        "symplify/easy-coding-standard": "^7.0"
+        "symplify/easy-coding-standard": "^7.2"
     },
     "replace": {
         "typo3-ter/crawler": "self.version"
