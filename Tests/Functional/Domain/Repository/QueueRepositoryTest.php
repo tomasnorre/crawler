@@ -494,6 +494,49 @@ class QueueRepositoryTest extends FunctionalTestCase
     }
 
     /**
+     * @test
+     *
+     * @dataProvider flushQueueDataProvider
+     */
+    public function flushQueue(string $where, int $expected): void
+    {
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $queryRepository = $objectManager->get(QueueRepository::class);
+        $this->subject->flushQueue($where);
+
+        self::assertEquals(
+            $expected,
+            $queryRepository->countAll()
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function flushQueueDataProvider(): array
+    {
+        return [
+            'Flush Entire Queue' => [
+                'where' => '1=1',
+                'expected' => 0,
+            ],
+            'Flush Queue with specific configuration' => [
+                'where' => 'configuration = \'SecondConfiguration\'',
+                'expected' => 9,
+            ],
+            'Flush Queue for specific process id' => [
+                'where' => 'process_id = \'1007\'',
+                'expected' => 11,
+            ],
+            'Flush Queue for where that does not exist, nothing is deleted' => [
+                'where' => 'qid > 100000',
+                'expected' => 14,
+            ],
+        ];
+    }
+
+
+    /**
      * @return array
      */
     public function isPageInQueueDataProvider()

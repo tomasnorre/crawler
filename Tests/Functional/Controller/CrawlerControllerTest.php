@@ -137,23 +137,6 @@ class CrawlerControllerTest extends FunctionalTestCase
     /**
      * @test
      *
-     * @dataProvider flushQueueDataProvider
-     */
-    public function flushQueue(string $where, int $expected): void
-    {
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $queryRepository = $objectManager->get(QueueRepository::class);
-        $this->subject->_call('flushQueue', $where);
-
-        self::assertEquals(
-            $expected,
-            $queryRepository->countAll()
-        );
-    }
-
-    /**
-     * @test
-     *
      * @dataProvider getLogEntriesForPageIdDataProvider
      */
     public function getLogEntriesForPageId(int $id, string $filter, bool $doFlush, bool $doFullFlush, int $itemsPerPage, array $expected): void
@@ -718,31 +701,6 @@ class CrawlerControllerTest extends FunctionalTestCase
                 ]],
             ],
 
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function flushQueueDataProvider()
-    {
-        return [
-            'Flush Entire Queue' => [
-                'where' => '1=1',
-                'expected' => 0,
-            ],
-            'Flush Queue with specific configuration' => [
-                'where' => 'configuration = \'SecondConfiguration\'',
-                'expected' => 9,
-            ],
-            'Flush Queue for specific process id' => [
-                'where' => 'process_id = \'1007\'',
-                'expected' => 11,
-            ],
-            'Flush Queue for where that does not exist, nothing is deleted' => [
-                'where' => 'qid > 100000',
-                'expected' => 14,
-            ],
         ];
     }
 }

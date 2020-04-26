@@ -943,7 +943,7 @@ class CrawlerController implements LoggerAwareInterface
             // To have pending and finished parameters accepted
             // 2020.04.11 - Tomas Mikkelsen
             // $addWhere = $query->add($expressionBuilder->eq('page_id', (int)$id));
-            $this->flushQueue($doFullFlush ? '1=1' : $addWhere);
+            $this->queueRepository->flushQueue($doFullFlush ? '1=1' : $addWhere);
             return [];
         } else {
             if ($itemsPerPage > 0) {
@@ -997,7 +997,7 @@ class CrawlerController implements LoggerAwareInterface
         // FIXME: Write unit test that ensures that the right records are deleted.
         if ($doFlush) {
             $addWhere = $query->add($expressionBuilder->eq('set_id', (int)$set_id));
-            $this->flushQueue($doFullFlush ? '' : $addWhere);
+            $this->queueRepository->flushQueue($doFullFlush ? '' : $addWhere);
             return [];
         } else {
             if ($itemsPerPage > 0) {
@@ -1007,47 +1007,6 @@ class CrawlerController implements LoggerAwareInterface
 
             return $queryBuilder->execute()->fetchAll();
         }
-    }
-
-    /**
-     * Removes queue entries
-     *
-     * @param string $where SQL related filter for the entries which should be removed
-     * @return void
-     */
-    protected function flushQueue($where = ''): void
-    {
-        $realWhere = strlen((string)$where) > 0 ? $where : '1=1';
-
-        $queryBuilder = $this->getQueryBuilder($this->tableName);
-
-        if (EventDispatcher::getInstance()->hasObserver('queueEntryFlush')) {
-            $groups = $queryBuilder
-                ->select('DISTINCT set_id')
-                ->from($this->tableName)
-                ->where($realWhere)
-                ->execute()
-                ->fetchAll();
-            if (is_array($groups)) {
-                foreach ($groups as $group) {
-                    $subSet = $queryBuilder
-                        ->select('uid', 'set_id')
-                        ->from($this->tableName)
-                        ->where(
-                            $realWhere,
-                            $queryBuilder->expr()->eq('set_id', $group['set_id'])
-                        )
-                        ->execute()
-                        ->fetchAll();
-                    EventDispatcher::getInstance()->post('queueEntryFlush', $group['set_id'], $subSet);
-                }
-            }
-        }
-
-        $queryBuilder
-            ->delete($this->tableName)
-            ->where($realWhere)
-            ->execute();
     }
 
     /**
@@ -1894,7 +1853,7 @@ class CrawlerController implements LoggerAwareInterface
 
         $now = time();
         $condition = '(exec_time<>0 AND exec_time<' . ($now - $processedAgeInSeconds) . ') OR scheduled<=' . ($now - $scheduledAgeInSeconds);
-        $this->flushQueue($condition);
+        $this->queueRepository->flushQueue($condition);
     }
 
     /**

@@ -30,6 +30,7 @@ namespace AOE\Crawler\Domain\Repository;
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Model\Process;
+use AOE\Crawler\Event\EventDispatcher;
 use Psr\Log\LoggerAwareInterface;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -619,5 +620,45 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
         }
 
         return $noUnprocessedQueueEntriesFound;
+    }
+
+    /**
+     * Removes queue entries
+     *
+     * @param string $where SQL related filter for the entries which should be removed
+     * @return void
+     */
+    public function flushQueue($where = ''): void
+    {
+        $realWhere = strlen((string)$where) > 0 ? $where : '1=1';
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+
+        if (EventDispatcher::getInstance()->hasObserver('queueEntryFlush')) {
+            $groups = $queryBuilder
+                ->select('DISTINCT set_id')
+                ->from($this->tableName)
+                ->where($realWhere)
+                ->execute()
+                ->fetchAll();
+            if (is_array($groups)) {
+                foreach ($groups as $group) {
+                    $subSet = $queryBuilder
+                        ->select('uid', 'set_id')
+                        ->from($this->tableName)
+                        ->where(
+                            $realWhere,
+                            $queryBuilder->expr()->eq('set_id', $group['set_id'])
+                        )
+                        ->execute()
+                        ->fetchAll();
+                    EventDispatcher::getInstance()->post('queueEntryFlush', $group['set_id'], $subSet);
+                }
+            }
+        }
+
+        $queryBuilder
+            ->delete($this->tableName)
+            ->where($realWhere)
+            ->execute();
     }
 }
