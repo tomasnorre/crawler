@@ -42,5 +42,17 @@ class HookUtility
         // Activating refresh hooks
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['refresh_hooks'][] =
             ProcessCleanUpHook::class;
+
+        // Env-dependent
+        if (TYPO3_MODE == 'BE') {
+            self::registerBackendHooks($extKey);
+        }
+    }
+
+    private static function registerBackendHooks(string $extKey): void
+    {
+        // DataHandler clear page cache pre-processing
+        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['clearPageCacheEval'][] =
+            "AOE\Crawler\Hooks\DataHandlerHook->addFlushedPagesToCrawlerQueue";
     }
 }
