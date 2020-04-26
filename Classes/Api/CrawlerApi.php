@@ -45,37 +45,31 @@ class CrawlerApi
 {
     /**
      * @var QueueRepository
-     * @deprecated
      */
     protected $queueRepository;
 
     /**
      * @var array
-     * @deprecated
      */
     protected $allowedConfigurations = [];
 
     /**
      * @var QueryBuilder
-     * @deprecated
      */
     protected $queryBuilder;
 
     /**
      * @var string
-     * @deprecated
      */
     protected $tableName = 'tx_crawler_queue';
 
     /**
      * @var CrawlerController
-     * @deprecated
      */
     protected $crawlerController;
 
     /**
      * CrawlerApi constructor.
-     * @deprecated
      */
     public function __construct()
     {

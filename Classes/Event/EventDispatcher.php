@@ -56,7 +56,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  *
  * Events can be posted by EventDispatcher::getInstance()->post('myEvent','eventGroup', array('foo' => 'bar'));
  *
- * @deprecated Is deprecated since 9.0.1 and will be removed in v10.x
+ * @deprecated since 9.0.1 and will be removed in v10.x
  */
 class EventDispatcher
 {
@@ -91,7 +91,6 @@ class EventDispatcher
      * Returns all registered event types.
      *
      * @return array array with registered events.
-     * @deprecated
      */
     protected function getEvents()
     {
@@ -106,7 +105,6 @@ class EventDispatcher
      * @param string $event
      *
      * @return void
-     * @deprecated
      */
     public function addObserver(EventObserverInterface $observer_object, $observer_method, $event): void
     {
@@ -119,7 +117,6 @@ class EventDispatcher
      * @param string $event
      *
      * @return boolean
-     * @deprecated
      */
     public function hasObserver($event)
     {
@@ -135,7 +132,6 @@ class EventDispatcher
      * @param mixed $attachedData
      *
      * @return void
-     * @deprecated
      */
     public function post($event, $group, $attachedData): void
     {
@@ -150,7 +146,6 @@ class EventDispatcher
      * Returns the instance of the dispatcher singleton
      *
      * @return EventDispatcher
-     * @deprecated
      */
     public static function getInstance()
     {
