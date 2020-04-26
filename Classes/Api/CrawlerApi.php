@@ -31,8 +31,6 @@ namespace AOE\Crawler\Api;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
-use TYPO3\CMS\Core\Compatibility\PublicMethodDeprecationTrait;
-use TYPO3\CMS\Core\Compatibility\PublicPropertyDeprecationTrait;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
