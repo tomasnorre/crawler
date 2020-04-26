@@ -42,8 +42,6 @@ class ItemProvider extends AbstractProvider
 
     /**
      * Item is added only for crawler configurations
-     *
-     * @return bool
      */
     public function canHandle(): bool
     {
@@ -52,8 +50,6 @@ class ItemProvider extends AbstractProvider
 
     /**
      * This needs to be lower than priority of the RecordProvider
-     *
-     * @return int
      */
     public function getPriority(): int
     {
@@ -62,9 +58,6 @@ class ItemProvider extends AbstractProvider
 
     /**
      * Adds the crawler info
-     *
-     * @param array $items
-     * @return array
      */
     public function addItems(array $items): array
     {
@@ -72,9 +65,6 @@ class ItemProvider extends AbstractProvider
         return $items + $localItems;
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function getAdditionalAttributes(string $itemName): array
     {
         $crawlerConfiguration = BackendUtility::getRecordWSOL($this->table, $this->identifier);

@@ -25,9 +25,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class PhpBinaryUtility
 {
-    /**
-     * @return string
-     */
     public static function getPhpBinary(): string
     {
         $extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();

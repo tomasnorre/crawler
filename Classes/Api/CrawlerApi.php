@@ -80,7 +80,6 @@ class CrawlerApi
      * Each crawler run has a setid, this facade method delegates
      * the it to the crawler object
      *
-     * @param int $id
      * @throws \Exception
      */
     public function overwriteSetId(int $id): void
@@ -91,8 +90,6 @@ class CrawlerApi
     /**
      * This method is used to limit the configuration selection to
      * a set of configurations.
-     *
-     * @param array $allowedConfigurations
      */
     public function setAllowedConfigurations(array $allowedConfigurations): void
     {
@@ -176,7 +173,6 @@ class CrawlerApi
      * @param int $time timestamp
      *
      * @throws \Exception
-     * @return void
      */
     public function addPageToQueueTimed($uid, $time): void
     {
@@ -319,8 +315,6 @@ class CrawlerApi
 
     /**
      * Reads the registered processingInstructions of the crawler
-     *
-     * @return array
      */
     private function getCrawlerProcInstructions(): array
     {

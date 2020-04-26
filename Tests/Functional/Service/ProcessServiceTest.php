@@ -51,8 +51,6 @@ class ProcessServiceTest extends FunctionalTestCase
 
     /**
      * Creates the test environment.
-     *
-     * @return void
      */
     public function setUp(): void
     {

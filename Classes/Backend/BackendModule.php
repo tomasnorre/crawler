@@ -182,7 +182,6 @@ class BackendModule
 
     /**
      * Called by the InfoModuleController
-     * @param InfoModuleController $pObj
      */
     public function init(InfoModuleController $pObj): void
     {
@@ -318,7 +317,6 @@ class BackendModule
 
     /**
      * Show a list of URLs to be crawled for each page
-     * @return string
      */
     protected function showCrawlerInformationAction(): string
     {
@@ -704,9 +702,6 @@ class BackendModule
 
     /**
      * Find Fe vars
-     *
-     * @param array $resultData
-     * @return array
      */
     protected function getResFeVars(array $resultData): array
     {
@@ -737,10 +732,6 @@ class BackendModule
         return $content;
     }
 
-    /**
-     * @param mixed $requestContent
-     * @return string
-     */
     protected function getResStatus($requestContent): string
     {
         if (empty($requestContent)) {
@@ -814,7 +805,6 @@ class BackendModule
     /**
      * Returns a tag for the refresh icon
      *
-     * @return string
      * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
      */
     protected function getRefreshLink(): string
@@ -829,8 +819,6 @@ class BackendModule
     /**
      * Returns a link for the panel to enable or disable the crawler
      *
-     * @param bool $isCrawlerEnabled
-     * @return string
      * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
      */
     protected function getEnableDisableLink(bool $isCrawlerEnabled): string
@@ -853,8 +841,6 @@ class BackendModule
     }
 
     /**
-     * @param string $mode
-     * @return string
      * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
      */
     protected function getModeLink(string $mode): string
@@ -1026,12 +1012,6 @@ class BackendModule
         return $GLOBALS['LANG'];
     }
 
-    /**
-     * @param string $iconIdentifier
-     * @param string $title
-     * @param UriInterface $href
-     * @return string
-     */
     protected function getLinkButton(string $iconIdentifier, string $title, UriInterface $href): string
     {
         $moduleTemplate = GeneralUtility::makeInstance(ModuleTemplate::class);
@@ -1047,7 +1027,6 @@ class BackendModule
      * Returns the URL to the current module, including $_GET['id'].
      *
      * @param array $uriParameters optional parameters to add to the URL
-     * @return Uri
      *
      * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
      */

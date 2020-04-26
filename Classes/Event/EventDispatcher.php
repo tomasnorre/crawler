@@ -97,11 +97,8 @@ class EventDispatcher
     /**
      * This method can be used to add an observer for an event to the dispatcher
      *
-     * @param EventObserverInterface $observer_object
      * @param string $observer_method
      * @param string $event
-     *
-     * @return void
      */
     public function addObserver(EventObserverInterface $observer_object, $observer_method, $event): void
     {
@@ -126,9 +123,6 @@ class EventDispatcher
      *
      * @param string $event
      * @param string $group
-     * @param mixed $attachedData
-     *
-     * @return void
      */
     public function post($event, $group, $attachedData): void
     {

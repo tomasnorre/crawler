@@ -45,8 +45,6 @@ class EventDispatcherTest extends UnitTestCase
 
     /**
      * Used to save the old state of the registered observers for the dispatcher
-     *
-     * @return void
      */
     public function setUp(): void
     {
@@ -56,8 +54,6 @@ class EventDispatcherTest extends UnitTestCase
 
     /**
      * Resets the hook configuration for the event dispatcher.
-     *
-     * @return void
      */
     public function tearDown(): void
     {

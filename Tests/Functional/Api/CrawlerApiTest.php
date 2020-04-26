@@ -56,7 +56,6 @@ class CrawlerApiTest extends FunctionalTestCase
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     /**
-     *
      * @var array stores the old rootline
      */
     protected $oldRootline;
@@ -269,8 +268,6 @@ class CrawlerApiTest extends FunctionalTestCase
      * The testcase uses a TSConfig crawler configuration.
      *
      * @test
-     *
-     * @return void
      */
     public function canNotCreateDuplicateForTwoPagesInTheFutureWithTheSameTimestamp(): void
     {
@@ -294,8 +291,6 @@ class CrawlerApiTest extends FunctionalTestCase
      * The testcase uses a TSConfig crawler configuration.
      *
      * @test
-     *
-     * @return void
      */
     public function canCreateTwoQueueEntriesForDiffrentTimestampsInTheFuture(): void
     {
@@ -314,8 +309,6 @@ class CrawlerApiTest extends FunctionalTestCase
      * Where the crawler is configured using configuration records instead of pagets config.
      *
      * @test
-     *
-     * @return void
      */
     public function canCreateQueueEntriesUsingConfigurationRecord(): void
     {

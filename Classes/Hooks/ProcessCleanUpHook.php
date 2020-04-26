@@ -72,8 +72,6 @@ class ProcessCleanUpHook implements CrawlerHookInterface
      * Main function of process CleanUp Hook.
      *
      * @param CrawlerController $crawlerController Crawler Lib class
-     *
-     * @return void
      */
     public function crawler_init(CrawlerController $crawlerController): void
     {
@@ -87,8 +85,6 @@ class ProcessCleanUpHook implements CrawlerHookInterface
 
     /**
      * Remove active processes older than one hour
-     *
-     * @return void
      */
     private function removeActiveProcessesOlderThanOneHour(): void
     {
@@ -111,8 +107,6 @@ class ProcessCleanUpHook implements CrawlerHookInterface
 
     /**
      * Removes active orphan processes from process list
-     *
-     * @return void
      */
     private function removeActiveOrphanProcesses(): void
     {
@@ -148,8 +142,6 @@ class ProcessCleanUpHook implements CrawlerHookInterface
      * Remove a process from processlist
      *
      * @param string $processId Unique process Id.
-     *
-     * @return void
      */
     private function removeProcessFromProcesslist($processId): void
     {
@@ -203,7 +195,6 @@ class ProcessCleanUpHook implements CrawlerHookInterface
      *
      * @param int $pid Process id to kill
      *
-     * @return void
      * @codeCoverageIgnore
      */
     private function killProcess($pid): void

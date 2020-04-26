@@ -72,8 +72,6 @@ class ProcessRepository extends AbstractRepository
 
     /**
      * This method is used to find all cli processes within a limit.
-     *
-     * @return ProcessCollection
      */
     public function findAll(): ProcessCollection
     {
@@ -103,7 +101,6 @@ class ProcessRepository extends AbstractRepository
 
     /**
      * @param string $processId
-     * @return mixed
      */
     public function findByProcessId($processId)
     {
@@ -117,9 +114,6 @@ class ProcessRepository extends AbstractRepository
             )->execute()->fetch(0);
     }
 
-    /**
-     * @return ProcessCollection
-     */
     public function findAllActive(): ProcessCollection
     {
         /** @var ProcessCollection $collection */
@@ -152,8 +146,6 @@ class ProcessRepository extends AbstractRepository
 
     /**
      * @param string $processId
-     *
-     * @return void
      */
     public function removeByProcessId($processId): void
     {
@@ -261,9 +253,6 @@ class ProcessRepository extends AbstractRepository
         return $offset . ', ' . $itemCount;
     }
 
-    /**
-     * @return void
-     */
     public function deleteProcessesWithoutItemsAssigned(): void
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
@@ -304,7 +293,6 @@ class ProcessRepository extends AbstractRepository
 
     /**
      * @param $numberOfAffectedRows
-     * @param string $processId
      */
     public function updateProcessAssignItemsCount($numberOfAffectedRows, string $processId): void
     {

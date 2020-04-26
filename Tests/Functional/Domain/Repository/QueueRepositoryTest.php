@@ -510,9 +510,6 @@ class QueueRepositoryTest extends FunctionalTestCase
         );
     }
 
-    /**
-     * @return array
-     */
     public function flushQueueDataProvider(): array
     {
         return [

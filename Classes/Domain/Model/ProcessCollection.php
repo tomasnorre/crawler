@@ -38,8 +38,6 @@ class ProcessCollection extends \ArrayObject
     /**
      * Method to retrieve an element from the collection.
      *
-     * @param mixed $index
-     * @return Process
      * @throws \Exception
      */
     public function offsetGet($index): Process
@@ -53,10 +51,8 @@ class ProcessCollection extends \ArrayObject
     /**
      * Method to add an element to the collection-
      *
-     * @param mixed $index
      * @param Process $subject
      * @throws \InvalidArgumentException
-     * @return void
      */
     public function offsetSet($index, $subject): void
     {
@@ -70,7 +66,6 @@ class ProcessCollection extends \ArrayObject
      * Method to append an element to the collection
      * @param Process $subject
      * @throws \InvalidArgumentException
-     * @return void
      */
     public function append($subject): void
     {

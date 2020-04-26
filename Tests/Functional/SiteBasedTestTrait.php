@@ -28,12 +28,6 @@ use TYPO3\CMS\Core\Configuration\SiteConfiguration;
  */
 trait SiteBasedTestTrait
 {
-    /**
-     * @param string $identifier
-     * @param array $site
-     * @param array $languages
-     * @param array $errorHandling
-     */
     protected function writeSiteConfiguration(
         string $identifier,
         array $site = [],
@@ -59,10 +53,6 @@ trait SiteBasedTestTrait
         }
     }
 
-    /**
-     * @param string $identifier
-     * @param array $overrides
-     */
     protected function mergeSiteConfiguration(
         string $identifier,
         array $overrides
@@ -79,11 +69,6 @@ trait SiteBasedTestTrait
         }
     }
 
-    /**
-     * @param int $rootPageId
-     * @param string $base
-     * @return array
-     */
     protected function buildSiteConfiguration(
         int $rootPageId,
         string $base = ''
@@ -94,11 +79,6 @@ trait SiteBasedTestTrait
         ];
     }
 
-    /**
-     * @param string $identifier
-     * @param string $base
-     * @return array
-     */
     protected function buildDefaultLanguageConfiguration(
         string $identifier,
         string $base
@@ -111,11 +91,7 @@ trait SiteBasedTestTrait
     }
 
     /**
-     * @param string $identifier
-     * @param string $base
-     * @param array $fallbackIdentifiers
      * @param string $fallbackType
-     * @return array
      */
     protected function buildLanguageConfiguration(
         string $identifier,
@@ -154,10 +130,6 @@ trait SiteBasedTestTrait
         return $configuration;
     }
 
-    /**
-     * @param string $identifier
-     * @return mixed
-     */
     protected function resolveLanguagePreset(string $identifier)
     {
         if (!isset(static::LANGUAGE_PRESETS[$identifier])) {

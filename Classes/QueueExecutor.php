@@ -60,8 +60,6 @@ class QueueExecutor implements SingletonInterface
      * Takes a queue record and fetches the contents of the URL.
      * In the future, updating the queue item & additional signal/slot/events should also happen in here.
      *
-     * @param array $queueItem
-     * @param CrawlerController $crawlerController
      * @return array|bool|mixed|string
      */
     public function executeQueueItem(array $queueItem, CrawlerController $crawlerController)

@@ -227,7 +227,6 @@ class CrawlerController implements LoggerAwareInterface
      * Set disabled status to prevent processes from being processed
      *
      * @param bool $disabled (optional, defaults to true)
-     * @return void
      */
     public function setDisabled($disabled = true): void
     {
@@ -252,8 +251,6 @@ class CrawlerController implements LoggerAwareInterface
 
     /**
      * @param string $filenameWithPath
-     *
-     * @return void
      */
     public function setProcessFilename($filenameWithPath): void
     {
@@ -314,9 +311,6 @@ class CrawlerController implements LoggerAwareInterface
 
     /**
      * Sets the extensions settings (unserialized pendant of $TYPO3_CONF_VARS['EXT']['extConf']['crawler']).
-     *
-     * @param array $extensionSettings
-     * @return void
      */
     public function setExtensionSettings(array $extensionSettings): void
     {
@@ -326,7 +320,6 @@ class CrawlerController implements LoggerAwareInterface
     /**
      * Check if the given page should be crawled
      *
-     * @param array $pageRow
      * @return false|string false if the page should be crawled (not excluded), true / skipMessage if it should be skipped
      */
     public function checkIfPageShouldBeSkipped(array $pageRow)
@@ -680,7 +673,6 @@ class CrawlerController implements LoggerAwareInterface
     /**
      * Get querybuilder for given table
      *
-     * @param string $table
      * @return \TYPO3\CMS\Core\Database\Query\QueryBuilder
      */
     private function getQueryBuilder(string $table)
@@ -1017,7 +1009,6 @@ class CrawlerController implements LoggerAwareInterface
      * @param string $callBack Call back object reference, eg. 'EXT:indexed_search/class.crawler.php:&tx_indexedsearch_crawler'
      * @param integer $page_id Page ID to attach it to
      * @param integer $schedule Time at which to activate
-     * @return void
      */
     public function addQueueEntry_callBack($setId, $params, $callBack, $page_id = 0, $schedule = 0): void
     {
@@ -1688,8 +1679,6 @@ class CrawlerController implements LoggerAwareInterface
 
     /**
      * Activate hooks
-     *
-     * @return void
      */
     public function CLI_runHooks(): void
     {
@@ -1843,8 +1832,6 @@ class CrawlerController implements LoggerAwareInterface
      * Cleans up entries that stayed for too long in the queue. These are:
      * - processed entries that are over 1.5 days in age
      * - scheduled entries that are over 7 days old
-     *
-     * @return void
      */
     public function cleanUpOldQueueEntries(): void
     {
@@ -1859,8 +1846,6 @@ class CrawlerController implements LoggerAwareInterface
     /**
      * Returns a md5 hash generated from a serialized configuration array.
      *
-     * @param array $configuration
-     *
      * @return string
      */
     protected function getConfigurationHash(array $configuration)
@@ -1874,11 +1859,7 @@ class CrawlerController implements LoggerAwareInterface
      * Build a URL from a Page and the Query String. If the page has a Site configuration, it can be built by using
      * the Site instance.
      *
-     * @param int $pageId
-     * @param string $queryString
-     * @param string|null $alternativeBaseUrl
      * @param int $httpsOrHttp see tx_crawler_configuration.force_ssl
-     * @return UriInterface
      * @throws \TYPO3\CMS\Core\Exception\SiteNotFoundException
      * @throws \TYPO3\CMS\Core\Routing\InvalidRouteArgumentsException
      */

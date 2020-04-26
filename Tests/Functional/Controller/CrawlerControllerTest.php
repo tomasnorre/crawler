@@ -314,9 +314,6 @@ class CrawlerControllerTest extends FunctionalTestCase
         );
     }
 
-    /**
-     * @return array
-     */
     public function getUrlFromPageAndQueryParametersDataProvider(): array
     {
         return [

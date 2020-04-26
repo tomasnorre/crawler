@@ -47,8 +47,6 @@ class CrawlerControllerTest extends UnitTestCase
 
     /**
      * Creates the test environment.
-     *
-     * @return void
      */
     public function setUp(): void
     {
@@ -82,8 +80,6 @@ class CrawlerControllerTest extends UnitTestCase
 
     /**
      * Resets the test environment after the test.
-     *
-     * @return void
      */
     public function tearDown(): void
     {
@@ -282,7 +278,6 @@ class CrawlerControllerTest extends UnitTestCase
     /**
      * @test
      *
-     * @param array $configuration
      * @param string $expected
      *
      * @dataProvider getConfigurationHasReturnsExpectedValueDataProvider

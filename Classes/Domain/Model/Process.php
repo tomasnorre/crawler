@@ -196,18 +196,12 @@ class Process extends AbstractEntity
         return $this->getTimeForLastItem() - $this->getTimeForFirstItem();
     }
 
-    /**
-     * @return int
-     */
     public function getTimeForLastItem(): int
     {
         $entry = $this->queueRepository->findOldestEntryForProcess($this);
         return $entry['exec_time'];
     }
 
-    /**
-     * @return int
-     */
     public function getTimeForFirstItem(): int
     {
         $entry = $this->queueRepository->findYoungestEntryForProcess($this);
@@ -236,9 +230,6 @@ class Process extends AbstractEntity
         return $this->queueRepository->countNonExecutedItemsByProcess($this);
     }
 
-    /**
-     * @return int
-     */
     public function getFinallyAssigned(): int
     {
         return $this->getItemsToProcess() + $this->getAmountOfItemsProcessed();

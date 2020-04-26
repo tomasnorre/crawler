@@ -40,9 +40,8 @@ class CrawlerWorker implements WorkerInterface
      * @param string $file Relative Filename, relative to public web path. It can also be an absolute path as long as it is inside the lockRootPath (validated with \TYPO3\CMS\Core\Utility\GeneralUtility::isAbsPath()). Finally, if $contentTmpFile is set, this value can be anything, most likely a URL
      * @param string $contentTmpFile Temporary file with the content to read it from (instead of $file). Used when the $file is a URL.
      * @param string $fileExtension File extension for temporary file.
-     * @return mixed
      */
-    public function index(object $caller, array $conf, string $file, string $contentTmpFile = '', $fileExtension = '')
+    public function index(object $caller, array $conf, string $file, string $contentTmpFile = '', $fileExtension = ''): void
     {
         $crawler = GeneralUtility::makeInstance(CrawlerController::class);
 

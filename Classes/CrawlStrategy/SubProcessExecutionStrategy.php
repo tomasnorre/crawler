@@ -52,8 +52,6 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface
     /**
      * Fetches a URL by calling a shell script.
      *
-     * @param UriInterface $url
-     * @param string $crawlerId
      * @return array|bool|mixed
      */
     public function fetchUrlContents(UriInterface $url, string $crawlerId)

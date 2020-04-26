@@ -70,10 +70,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
 
     /**
      * This method is used to find the youngest entry for a given process.
-     *
-     * @param Process $process
-     *
-     * @return array
      */
     public function findYoungestEntryForProcess(Process $process): array
     {
@@ -82,10 +78,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
 
     /**
      * This method is used to find the oldest entry for a given process.
-     *
-     * @param Process $process
-     *
-     * @return array
      */
     public function findOldestEntryForProcess(Process $process): array
     {
@@ -98,8 +90,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
      * @param Process $process
      * @param string $orderByField first matching item will be returned as object
      * @param string $orderBySorting sorting direction
-     *
-     * @return array
      */
     protected function getFirstOrLastObjectByProcess($process, $orderByField, $orderBySorting = 'ASC'): array
     {
@@ -122,8 +112,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
      * Counts all executed items of a process.
      *
      * @param Process $process
-     *
-     * @return int
      */
     public function countExecutedItemsByProcess($process): int
     {
@@ -144,8 +132,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
      * Counts items of a process which yet have not been processed/executed
      *
      * @param Process $process
-     *
-     * @return int
      */
     public function countNonExecutedItemsByProcess($process): int
     {
@@ -164,8 +150,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
 
     /**
      * get items which have not been processed yet
-     *
-     * @return array
      */
     public function getUnprocessedItems(): array
     {
@@ -182,8 +166,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
 
     /**
      * Count items which have not been processed yet
-     *
-     * @return int
      */
     public function countUnprocessedItems(): int
     {
@@ -193,8 +175,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
     /**
      * This method can be used to count all queue entrys which are
      * scheduled for now or a earlier date.
-     *
-     * @return int
      */
     public function countAllPendingItems(): int
     {
@@ -215,8 +195,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
     /**
      * This method can be used to count all queue entries which are
      * scheduled for now or a earlier date and are assigned to a process.
-     *
-     * @return int
      */
     public function countAllAssignedPendingItems(): int
     {
@@ -237,8 +215,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
     /**
      * This method can be used to count all queue entrys which are
      * scheduled for now or a earlier date and are not assigned to a process.
-     *
-     * @return int
      */
     public function countAllUnassignedPendingItems(): int
     {
@@ -258,8 +234,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
 
     /**
      * Count pending queue entries grouped by configuration key
-     *
-     * @return array
      */
     public function countPendingItemsGroupedByConfigurationKey(): array
     {
@@ -307,8 +281,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
     /**
      * Get total queue entries by configuration
      *
-     * @param array $setIds
-     *
      * @return array totals by configuration (keys)
      */
     public function getTotalQueueEntriesByConfiguration(array $setIds): array
@@ -339,8 +311,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
      * Get the timestamps of the last processed entries
      *
      * @param int $limit
-     *
-     * @return array
      */
     public function getLastProcessedEntriesTimestamps($limit = 100): array
     {
@@ -364,8 +334,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
      * Get the last processed entries
      *
      * @param int $limit
-     *
-     * @return array
      */
     public function getLastProcessedEntries($limit = 100): array
     {
@@ -531,10 +499,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
         }
     }
 
-    /**
-     * @param int $countInARun
-     * @return mixed
-     */
     public function fetchRecordsToBeCrawled(int $countInARun)
     {
         $queryBuilderSelect = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
@@ -554,11 +518,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
         return $rows;
     }
 
-    /**
-     * @param array $quidList
-     * @param string $processId
-     * @return mixed
-     */
     public function updateProcessIdAndSchedulerForQueueIds(array $quidList, string $processId)
     {
         $queryBuilderUpdate = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
@@ -573,9 +532,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
         return $numberOfAffectedRows;
     }
 
-    /**
-     * @param array $processIds
-     */
     public function unsetProcessScheduledAndProcessIdForQueueEntries(array $processIds): void
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
@@ -626,7 +582,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
      * Removes queue entries
      *
      * @param string $where SQL related filter for the entries which should be removed
-     * @return void
      */
     public function flushQueue($where = ''): void
     {
