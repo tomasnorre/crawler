@@ -2,13 +2,18 @@
 parameters:
     sets:
         - "psr12"
-        - "arrays"
         - "php70"
         - "php71"
+        - "common"
 
     skip:
         PhpCsFixer\Fixer\Operator\UnaryOperatorSpacesFixer: null
         PHP_CodeSniffer\Standards\Generic\Sniffs\CodeAnalysis\AssignmentInConditionSniff.FoundInWhileCondition: null
+        PhpCsFixer\Fixer\PhpUnit\PhpUnitStrictFixer: null
+        PhpCsFixer\Fixer\PhpUnit\PhpUnitTestAnnotationFixer: null
+
+        # buggy with comment only follow up
+        SlevomatCodingStandard\Sniffs\Classes\TraitUseSpacingSniff.IncorrectLinesCountAfterLastUse: null
 
     paths:
         - 'Classes'

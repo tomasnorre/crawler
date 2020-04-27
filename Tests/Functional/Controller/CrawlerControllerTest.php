@@ -69,7 +69,7 @@ class CrawlerControllerTest extends FunctionalTestCase
      */
     protected $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->importDataSet(__DIR__ . '/../Fixtures/pages.xml');
@@ -81,7 +81,7 @@ class CrawlerControllerTest extends FunctionalTestCase
 
         $basePath = Environment::getVarPath() . '/tests/unit';
         $this->fixturePath = $basePath . '/fixture/config/sites';
-        if (!file_exists($this->fixturePath)) {
+        if (! file_exists($this->fixturePath)) {
             GeneralUtility::mkdir_deep($this->fixturePath);
         }
 
@@ -275,7 +275,7 @@ class CrawlerControllerTest extends FunctionalTestCase
      */
     public function getUrlFromPageAndQueryParameters(int $pageId, string $queryString, ?string $alternativeBaseUrl, int $httpsOrHttp, UriInterface $expected): void
     {
-        if (2 === $pageId) {
+        if ($pageId === 2) {
             $configuration = [
                 'rootPageId' => 2,
                 'base' => 'https://example.com',
@@ -314,9 +314,6 @@ class CrawlerControllerTest extends FunctionalTestCase
         );
     }
 
-    /**
-     * @return array
-     */
     public function getUrlFromPageAndQueryParametersDataProvider(): array
     {
         return [

@@ -47,10 +47,8 @@ class CrawlerControllerTest extends UnitTestCase
 
     /**
      * Creates the test environment.
-     *
-     * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->crawlerController = $this->createPartialMock(
             CrawlerController::class,
@@ -82,10 +80,8 @@ class CrawlerControllerTest extends UnitTestCase
 
     /**
      * Resets the test environment after the test.
-     *
-     * @return void
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         unset($this->crawlerController);
     }
@@ -140,7 +136,7 @@ class CrawlerControllerTest extends UnitTestCase
      *
      * @dataProvider drawURLs_PIfilterDataProvider
      */
-    public function drawURLs_PIfilter(string $piString, array $incomingProcInstructions, bool $expected): void
+    public function drawURLsPIfilter(string $piString, array $incomingProcInstructions, bool $expected): void
     {
         self::assertEquals(
             $expected,
@@ -267,7 +263,7 @@ class CrawlerControllerTest extends UnitTestCase
     /**
      * @test
      */
-    public function CLI_buildProcessIdIsSetReturnsValue(): void
+    public function cLIBuildProcessIdIsSetReturnsValue(): void
     {
         $processId = '12297a261b';
         $crawlerController = $this->getAccessibleMock(CrawlerController::class, ['dummy'], [], '', false);
@@ -282,7 +278,6 @@ class CrawlerControllerTest extends UnitTestCase
     /**
      * @test
      *
-     * @param array $configuration
      * @param string $expected
      *
      * @dataProvider getConfigurationHasReturnsExpectedValueDataProvider
@@ -416,15 +411,15 @@ class CrawlerControllerTest extends UnitTestCase
     {
         return [
             'cliObject with no -conf' => [
-                'config' => [(string)'-d' => 4, (string)'-o' => 'url'],
+                'config' => [(string) '-d' => 4, (string) '-o' => 'url'],
                 'expected' => [],
             ],
             'cliObject with one -conf' => [
-                'config' => [(string)'-d' => 4, (string)'-o' => 'url', (string)'-conf' => 'default'],
+                'config' => [(string) '-d' => 4, (string) '-o' => 'url', (string) '-conf' => 'default'],
                 'expected' => ['default'],
             ],
             'cliObject with two -conf' => [
-                'config' => [(string)'-d' => 4, (string)'-o' => 'url', (string)'-conf' => 'default,news'],
+                'config' => [(string) '-d' => 4, (string) '-o' => 'url', (string) '-conf' => 'default,news'],
                 'expected' => ['default', 'news'],
             ],
         ];

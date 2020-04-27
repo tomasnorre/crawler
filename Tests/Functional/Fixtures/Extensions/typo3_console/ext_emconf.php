@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-$EM_CONF["typo3_console"] = [
+$EM_CONF['typo3_console'] = [
     'title' => 'TYPO3 Console',
     'description' => 'A reliable and powerful command line interface for TYPO3 CMS',
     'category' => 'cli',

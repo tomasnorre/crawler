@@ -53,7 +53,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
     /**
      * Creates the test environment.
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
@@ -234,7 +234,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
 
         $processIds = ['1001', '1002'];
         $this->subject->markRequestedProcessesAsNotActive($processIds);
-        
+
         self::assertEquals(
             1,
             $this->subject->countActive()

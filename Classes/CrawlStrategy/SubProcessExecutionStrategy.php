@@ -52,13 +52,11 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface
     /**
      * Fetches a URL by calling a shell script.
      *
-     * @param UriInterface $url
-     * @param string $crawlerId
      * @return array|bool|mixed
      */
     public function fetchUrlContents(UriInterface $url, string $crawlerId)
     {
-        $url = (string)$url;
+        $url = (string) $url;
         $parsedUrl = parse_url($url);
 
         if ($parsedUrl === false) {
@@ -69,7 +67,7 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface
             return false;
         }
 
-        if (!in_array($parsedUrl['scheme'], ['', 'http', 'https'])) {
+        if (! in_array($parsedUrl['scheme'], ['', 'http', 'https'], true)) {
             $this->logger->debug(
                 sprintf('Scheme does not match for url "%s"', $url),
                 ['crawlerId' => $crawlerId]
@@ -77,7 +75,7 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface
             return false;
         }
 
-        if (!is_array($parsedUrl)) {
+        if (! is_array($parsedUrl)) {
             return [];
         }
 
@@ -106,7 +104,7 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface
         $reqHeaders[] = 'GET ' . $url['path'] . ($url['query'] ? '?' . $url['query'] : '') . ' HTTP/1.0';
         $reqHeaders[] = 'Host: ' . $url['host'];
         $reqHeaders[] = 'Connection: close';
-        if ($url['user'] != '') {
+        if ($url['user'] !== '') {
             $reqHeaders[] = 'Authorization: Basic ' . base64_encode($url['user'] . ':' . $url['pass']);
         }
         $reqHeaders[] = 'X-T3crawler: ' . $crawlerId;
@@ -140,10 +138,10 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface
         if (isset($this->extensionSettings['frontendBasePath']) && $this->extensionSettings['frontendBasePath']) {
             $frontendBasePath = $this->extensionSettings['frontendBasePath'];
         // If empty, try to use config.absRefPrefix:
-        } elseif (isset($GLOBALS['TSFE']->absRefPrefix) && !empty($GLOBALS['TSFE']->absRefPrefix)) {
+        } elseif (isset($GLOBALS['TSFE']->absRefPrefix) && ! empty($GLOBALS['TSFE']->absRefPrefix)) {
             $frontendBasePath = $GLOBALS['TSFE']->absRefPrefix;
         // If not in CLI mode the base path can be determined from $_SERVER environment:
-        } elseif (!Environment::isCli()) {
+        } elseif (! Environment::isCli()) {
             $frontendBasePath = GeneralUtility::getIndpEnv('TYPO3_SITE_PATH');
         }
 

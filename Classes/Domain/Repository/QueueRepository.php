@@ -70,10 +70,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
 
     /**
      * This method is used to find the youngest entry for a given process.
-     *
-     * @param Process $process
-     *
-     * @return array
      */
     public function findYoungestEntryForProcess(Process $process): array
     {
@@ -82,10 +78,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
 
     /**
      * This method is used to find the oldest entry for a given process.
-     *
-     * @param Process $process
-     *
-     * @return array
      */
     public function findOldestEntryForProcess(Process $process): array
     {
@@ -93,37 +85,9 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
     }
 
     /**
-     * This internal helper method is used to create an instance of an entry object
-     *
-     * @param Process $process
-     * @param string $orderByField first matching item will be returned as object
-     * @param string $orderBySorting sorting direction
-     *
-     * @return array
-     */
-    protected function getFirstOrLastObjectByProcess($process, $orderByField, $orderBySorting = 'ASC'): array
-    {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
-        $first = $queryBuilder
-            ->select('*')
-            ->from($this->tableName)
-            ->where(
-                $queryBuilder->expr()->eq('process_id_completed', $queryBuilder->createNamedParameter($process->getProcessId())),
-                $queryBuilder->expr()->gt('exec_time', 0)
-            )
-            ->setMaxResults(1)
-            ->addOrderBy($orderByField, $orderBySorting)
-            ->execute()->fetch(0);
-
-        return $first ?: [];
-    }
-
-    /**
      * Counts all executed items of a process.
      *
      * @param Process $process
-     *
-     * @return int
      */
     public function countExecutedItemsByProcess($process): int
     {
@@ -144,8 +108,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
      * Counts items of a process which yet have not been processed/executed
      *
      * @param Process $process
-     *
-     * @return int
      */
     public function countNonExecutedItemsByProcess($process): int
     {
@@ -164,8 +126,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
 
     /**
      * get items which have not been processed yet
-     *
-     * @return array
      */
     public function getUnprocessedItems(): array
     {
@@ -182,8 +142,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
 
     /**
      * Count items which have not been processed yet
-     *
-     * @return int
      */
     public function countUnprocessedItems(): int
     {
@@ -193,8 +151,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
     /**
      * This method can be used to count all queue entrys which are
      * scheduled for now or a earlier date.
-     *
-     * @return int
      */
     public function countAllPendingItems(): int
     {
@@ -215,8 +171,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
     /**
      * This method can be used to count all queue entries which are
      * scheduled for now or a earlier date and are assigned to a process.
-     *
-     * @return int
      */
     public function countAllAssignedPendingItems(): int
     {
@@ -237,8 +191,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
     /**
      * This method can be used to count all queue entrys which are
      * scheduled for now or a earlier date and are not assigned to a process.
-     *
-     * @return int
      */
     public function countAllUnassignedPendingItems(): int
     {
@@ -258,8 +210,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
 
     /**
      * Count pending queue entries grouped by configuration key
-     *
-     * @return array
      */
     public function countPendingItemsGroupedByConfigurationKey(): array
     {
@@ -307,8 +257,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
     /**
      * Get total queue entries by configuration
      *
-     * @param array $setIds
-     *
      * @return array totals by configuration (keys)
      */
     public function getTotalQueueEntriesByConfiguration(array $setIds): array
@@ -339,8 +287,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
      * Get the timestamps of the last processed entries
      *
      * @param int $limit
-     *
-     * @return array
      */
     public function getLastProcessedEntriesTimestamps($limit = 100): array
     {
@@ -364,8 +310,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
      * Get the last processed entries
      *
      * @param int $limit
-     *
-     * @return array
      */
     public function getLastProcessedEntries($limit = 100): array
     {
@@ -422,7 +366,7 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
     public function isPageInQueue(int $uid, bool $unprocessed_only = true, bool $timed_only = false, int $timestamp = 0): bool
     {
         // TODO: Looks like the check is obsolete as PHP doesn't allow other than ints for the $uid, PHP 7.2 Strict Mode
-        if (!MathUtility::canBeInterpretedAsInteger($uid)) {
+        if (! MathUtility::canBeInterpretedAsInteger($uid)) {
             throw new \InvalidArgumentException('Invalid parameter type', 1468931945);
         }
 
@@ -436,13 +380,13 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
                 $queryBuilder->expr()->eq('page_id', $queryBuilder->createNamedParameter($uid, \PDO::PARAM_INT))
             );
 
-        if (false !== $unprocessed_only) {
+        if ($unprocessed_only !== false) {
             $statement->andWhere(
                 $queryBuilder->expr()->eq('exec_time', 0)
             );
         }
 
-        if (false !== $timed_only) {
+        if ($timed_only !== false) {
             $statement->andWhere(
                 $queryBuilder->expr()->neq('scheduled', 0)
             );
@@ -459,7 +403,7 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
             ->execute()
             ->fetchColumn(0);
 
-        if (false !== $count && $count > 0) {
+        if ($count !== false && $count > 0) {
             $isPageInQueue = true;
         }
 
@@ -511,7 +455,7 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
     public function cleanupQueue(): void
     {
         $extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
-        $purgeDays = (int)$extensionSettings['purgeQueueDays'];
+        $purgeDays = (int) $extensionSettings['purgeQueueDays'];
 
         if ($purgeDays > 0) {
             $purgeDate = time() - 24 * 60 * 60 * $purgeDays;
@@ -523,7 +467,7 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
                     'exec_time != 0 AND exec_time < ' . $purgeDate
                 )->execute();
 
-            if (false === $del) {
+            if ($del === false) {
                 $this->logger->info(
                     'Records could not be deleted.'
                 );
@@ -531,10 +475,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
         }
     }
 
-    /**
-     * @param int $countInARun
-     * @return mixed
-     */
     public function fetchRecordsToBeCrawled(int $countInARun)
     {
         $queryBuilderSelect = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
@@ -554,11 +494,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
         return $rows;
     }
 
-    /**
-     * @param array $quidList
-     * @param string $processId
-     * @return mixed
-     */
     public function updateProcessIdAndSchedulerForQueueIds(array $quidList, string $processId)
     {
         $queryBuilderUpdate = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
@@ -573,9 +508,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
         return $numberOfAffectedRows;
     }
 
-    /**
-     * @param array $processIds
-     */
     public function unsetProcessScheduledAndProcessIdForQueueEntries(array $processIds): void
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
@@ -608,7 +540,7 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
             ->count('*')
             ->from($this->tableName)
             ->where(
-                $queryBuilder->expr()->eq('page_id', (int)$uid),
+                $queryBuilder->expr()->eq('page_id', (int) $uid),
                 $queryBuilder->expr()->eq('configuration_hash', $queryBuilder->createNamedParameter($configurationHash)),
                 $queryBuilder->expr()->eq('exec_time', 0)
             )
@@ -626,11 +558,10 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
      * Removes queue entries
      *
      * @param string $where SQL related filter for the entries which should be removed
-     * @return void
      */
     public function flushQueue($where = ''): void
     {
-        $realWhere = strlen((string)$where) > 0 ? $where : '1=1';
+        $realWhere = strlen((string) $where) > 0 ? $where : '1=1';
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
 
         if (EventDispatcher::getInstance()->hasObserver('queueEntryFlush')) {
@@ -660,5 +591,29 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
             ->delete($this->tableName)
             ->where($realWhere)
             ->execute();
+    }
+
+    /**
+     * This internal helper method is used to create an instance of an entry object
+     *
+     * @param Process $process
+     * @param string $orderByField first matching item will be returned as object
+     * @param string $orderBySorting sorting direction
+     */
+    protected function getFirstOrLastObjectByProcess($process, $orderByField, $orderBySorting = 'ASC'): array
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $first = $queryBuilder
+            ->select('*')
+            ->from($this->tableName)
+            ->where(
+                $queryBuilder->expr()->eq('process_id_completed', $queryBuilder->createNamedParameter($process->getProcessId())),
+                $queryBuilder->expr()->gt('exec_time', 0)
+            )
+            ->setMaxResults(1)
+            ->addOrderBy($orderByField, $orderBySorting)
+            ->execute()->fetch(0);
+
+        return $first ?: [];
     }
 }

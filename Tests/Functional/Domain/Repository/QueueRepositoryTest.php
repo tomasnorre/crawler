@@ -59,7 +59,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     /**
      * Creates the test environment.
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
@@ -451,7 +451,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function UpdateProcessIdAndSchedulerForQueueIds(): void
+    public function updateProcessIdAndSchedulerForQueueIds(): void
     {
         $qidToUpdate = [4, 8, 15, 18];
         $processId = md5('this-is-the-process-id');
@@ -510,9 +510,6 @@ class QueueRepositoryTest extends FunctionalTestCase
         );
     }
 
-    /**
-     * @return array
-     */
     public function flushQueueDataProvider(): array
     {
         return [
