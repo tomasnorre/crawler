@@ -55,6 +55,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * EventDispatcher::getInstance();
  *
  * Events can be posted by EventDispatcher::getInstance()->post('myEvent','eventGroup', array('foo' => 'bar'));
+ *
+ * @deprecated since 9.0.1 and will be removed in v10.x
  */
 class EventDispatcher
 {
@@ -73,6 +75,7 @@ class EventDispatcher
      */
     protected function __construct()
     {
+        trigger_error('The ' . self::class . ' is deprecated an will be removed in v10.x, will be migrated to PSR-14 EventDispatcher');
         $this->observers = [];
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/domain/events/class.tx_crawler_domain_events_dispatcher.php']['registerObservers'])) {
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/domain/events/class.tx_crawler_domain_events_dispatcher.php']['registerObservers'] as $classRef) {

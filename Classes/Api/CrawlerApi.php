@@ -39,8 +39,7 @@ use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
  * Class CrawlerApi
- *
- * @package AOE\Crawler\Api
+ * @deprecated The CrawlerApi is deprecated an will be removed in v10.x
  */
 class CrawlerApi
 {
@@ -69,8 +68,12 @@ class CrawlerApi
      */
     protected $crawlerController;
 
+    /**
+     * CrawlerApi constructor.
+     */
     public function __construct()
     {
+        trigger_error('The ' . self::class . ' is deprecated an will be removed in v10.x, most of functionality is moved to the respective Domain Model and Repository, and some to the CrawlerController.');
         /** @var ObjectManager $objectManager */
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->queueRepository = $objectManager->get(QueueRepository::class);
