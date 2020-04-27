@@ -1,5 +1,41 @@
 # Changelog TYPO3 Crawler
 
+## Version 9.0.1-dev
+
+### Added
+* Add better error handling to getPhpBinary + More tests for getPhpBinary
+* Add SonarCloud to Pipeline
+* More tests for QueryRepository
+* More tests for ProcessRepository
+
+### Changed
+* Switched locallang.xml to xlf for crowdin support
+* Corrected typos in Documentation and signals
+* Cleanup CrawlerController - functions moved to respected Repository
+
+### Deprecated
+#### Classes
+* CrawlerApi
+* EventDispatcher
+* EventObserverInterface
+
+#### Functions & Properties
+* ProcessService->queueRepository
+* ProcessService->crawlerController
+* ProcessService->countInARun
+* ProcessService->processLimit
+* ProcessService->verbose
+* ProcessService->multiProcess()
+* ProcessService->reportItemStatus()
+* ProcessService->startRequiredProcesses()
+
+### Removed
+* ClassAliasMap and LegacyClassForIde as they are obsolete
+
+### Fixed
+* Changed result handling for Crawling in case of 500 errors on directRequests
+* Set correct tableName for mountPoint queries
+
 ## Version 9.0.0
 
 ### Added
