@@ -12,6 +12,9 @@ parameters:
         PhpCsFixer\Fixer\PhpUnit\PhpUnitStrictFixer: null
         PhpCsFixer\Fixer\PhpUnit\PhpUnitTestAnnotationFixer: null
 
+        # buggy with comment only follow up
+        SlevomatCodingStandard\Sniffs\Classes\TraitUseSpacingSniff.IncorrectLinesCountAfterLastUse: null
+
     paths:
         - 'Classes'
         - 'Configuration'

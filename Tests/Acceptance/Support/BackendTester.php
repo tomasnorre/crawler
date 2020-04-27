@@ -39,6 +39,7 @@ class BackendTester extends \Codeception\Actor
 {
     use BackendTesterActions;
     use FrameSteps;
+
     /**
      * Define custom actions here
      */
