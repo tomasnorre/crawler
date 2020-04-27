@@ -75,7 +75,7 @@ class EventDispatcher
      */
     protected function __construct()
     {
-        trigger_error('The ' . __CLASS__ . ' is deprecated an will be removed in v10.x, will be migrated to PSR-14 EventDispatcher');
+        trigger_error('The ' . self::class . ' is deprecated an will be removed in v10.x, will be migrated to PSR-14 EventDispatcher');
         $this->observers = [];
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/domain/events/class.tx_crawler_domain_events_dispatcher.php']['registerObservers'])) {
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/domain/events/class.tx_crawler_domain_events_dispatcher.php']['registerObservers'] as $classRef) {

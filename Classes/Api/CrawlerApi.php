@@ -73,7 +73,7 @@ class CrawlerApi
      */
     public function __construct()
     {
-        trigger_error('The ' . __CLASS__ . ' is deprecated an will be removed in v10.x, most of functionality is moved to the respective Domain Model and Repository, and some to the CrawlerController.');
+        trigger_error('The ' . self::class . ' is deprecated an will be removed in v10.x, most of functionality is moved to the respective Domain Model and Repository, and some to the CrawlerController.');
         /** @var ObjectManager $objectManager */
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->queueRepository = $objectManager->get(QueueRepository::class);
@@ -281,10 +281,6 @@ class CrawlerApi
         return $processRepository->countActive();
     }
 
-    /**
-     * @param int $limit
-     * @return array
-     */
     public function getLastProcessedQueueEntries(int $limit): array
     {
         return $this->queueRepository->getLastProcessedEntries($limit);
