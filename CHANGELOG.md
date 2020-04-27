@@ -17,8 +17,6 @@ Released:
 ### Deprecated
 #### Classes
 * CrawlerApi
-* EventDispatcher
-* EventObserverInterface
 
 #### Functions & Properties
 * ProcessService->queueRepository
