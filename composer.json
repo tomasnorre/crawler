@@ -24,7 +24,7 @@
         "typo3/cms-core": "~9.5.14 || ^10.3",
         "typo3/cms-frontend": "*",
         "typo3/cms-info": "*",
-        "typo3/cms-seo": "*"
+        "typo3/cms-workspaces": "^9.5"
     },
     "require-dev": {
         "codeception/codeception": "^4.1",

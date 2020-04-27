@@ -48,4 +48,3 @@ Example::
          return false;
       }
    }
-

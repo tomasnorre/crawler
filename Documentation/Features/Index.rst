@@ -10,6 +10,7 @@ Features
    :titlesonly:
    :glob:
 
+   AutomaticAddPagesToQueue/Index
    PollableProcessingInstructions/Index
    MultiprocessSupport/Index
    Hooks/Index
