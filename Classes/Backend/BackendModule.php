@@ -356,7 +356,7 @@ class BackendModule
 
             $code = '';
             $noConfigurationSelected = empty($this->incomingConfigurationSelection)
-                || (count($this->incomingConfigurationSelection) == 1 && empty($this->incomingConfigurationSelection[0]));
+                || (count($this->incomingConfigurationSelection) === 1 && empty($this->incomingConfigurationSelection[0]));
             if ($noConfigurationSelected) {
                 MessageUtility::addWarningMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noConfigSelected'));
             } else {
@@ -775,7 +775,7 @@ class BackendModule
         $queueRepository = new QueueRepository();
 
         $mode = $this->pObj->MOD_SETTINGS['processListMode'];
-        if ($mode == 'simple') {
+        if ($mode === 'simple') {
             $allProcesses = $processRepository->findAllActive();
         } else {
             $allProcesses = $processRepository->findAll();
@@ -973,7 +973,7 @@ class BackendModule
 
         $options = [];
         foreach ($optArray as $key => $val) {
-            $selected = (! $multiple && ! strcmp($value, (string) $key)) || ($multiple && in_array($key, (array) $value));
+            $selected = (! $multiple && ! strcmp($value, (string) $key)) || ($multiple && in_array($key, (array) $value, true));
             $options[] = '
                 <option value="' . $key . '" ' . ($selected ? ' selected="selected"' : '') . '>' . htmlspecialchars($val) . '</option>';
         }

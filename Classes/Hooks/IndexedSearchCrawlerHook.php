@@ -361,7 +361,7 @@ class IndexedSearchCrawlerHook
                 $directoryList = GeneralUtility::get_dirs($readpath);
                 if (is_array($directoryList) && $params['depth'] < $cfgRec['depth']) {
                     foreach ($directoryList as $subdir) {
-                        if ((string) $subdir != '') {
+                        if ((string) $subdir !== '') {
                             $files[] = $readpath . $subdir . '/';
                         }
                     }
@@ -864,7 +864,7 @@ class IndexedSearchCrawlerHook
         // Translate new ids.
         if ($status === 'new') {
             $id = $pObj->substNEWwithIDs[$id];
-        } elseif ($table === 'pages' && $status === 'update' && (array_key_exists('hidden', $fieldArray) && $fieldArray['hidden'] == 1 || array_key_exists('no_search', $fieldArray) && $fieldArray['no_search'] == 1)) {
+        } elseif ($table === 'pages' && $status === 'update' && (array_key_exists('hidden', $fieldArray) && $fieldArray['hidden'] === 1 || array_key_exists('no_search', $fieldArray) && $fieldArray['no_search'] === 1)) {
             // If the page should be hidden or not indexed after update, delete index for this page
             $this->deleteFromIndex($id);
         }

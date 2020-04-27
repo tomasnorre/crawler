@@ -232,7 +232,7 @@ class CrawlerController implements LoggerAwareInterface
         $this->extensionSettings = is_array($settings) ? $settings : [];
 
         // set defaults:
-        if (MathUtility::convertToPositiveInteger($this->extensionSettings['countInARun']) == 0) {
+        if (MathUtility::convertToPositiveInteger($this->extensionSettings['countInARun']) === 0) {
             $this->extensionSettings['countInARun'] = 100;
         }
 
@@ -595,7 +595,7 @@ class CrawlerController implements LoggerAwareInterface
                             'key' => $key,
                         ];
 
-                        if (! in_array($pageId, $this->expandExcludeString($subCfg['exclude']))) {
+                        if (! in_array($pageId, $this->expandExcludeString($subCfg['exclude']), true)) {
                             $res[$key] = [];
                             $res[$key]['subCfg'] = $subCfg;
                             $res[$key]['paramParsed'] = GeneralUtility::explodeUrl2Array($configurationRecord['configuration']);
@@ -630,7 +630,7 @@ class CrawlerController implements LoggerAwareInterface
             if (! is_array($value)) {
                 continue;
             }
-            $configurationsForBranch[] = substr($key, -1) == '.' ? substr($key, 0, -1) : $key;
+            $configurationsForBranch[] = substr($key, -1) === '.' ? substr($key, 0, -1) : $key;
         }
         $pids = [];
         $rootLine = BackendUtility::BEgetRootLine($rootid);
@@ -1178,7 +1178,7 @@ class CrawlerController implements LoggerAwareInterface
                 if (is_array($resultData['parameters']['procInstructions'])
                     && in_array(
                         $pollable,
-                        $resultData['parameters']['procInstructions']
+                        $resultData['parameters']['procInstructions'], true
                     )
                 ) {
                     if (! empty($resultData['success'][$pollable]) && $resultData['success'][$pollable]) {
@@ -1310,7 +1310,7 @@ class CrawlerController implements LoggerAwareInterface
             $this->MP = false;
 
             // recognize mount points
-            if ($data['row']['doktype'] == PageRepository::DOKTYPE_MOUNTPOINT) {
+            if ($data['row']['doktype'] === PageRepository::DOKTYPE_MOUNTPOINT) {
                 $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('pages');
                 $queryBuilder->getRestrictions()->removeAll()->add(GeneralUtility::makeInstance(DeletedRestriction::class));
                 $mountpage = $queryBuilder
@@ -1421,7 +1421,7 @@ class CrawlerController implements LoggerAwareInterface
         if (! empty($this->incomingConfigurationSelection)) {
             // remove configuration that does not match the current selection
             foreach ($configurations as $confKey => $confArray) {
-                if (! in_array($confKey, $this->incomingConfigurationSelection)) {
+                if (! in_array($confKey, $this->incomingConfigurationSelection, true)) {
                     unset($configurations[$confKey]);
                 }
             }
@@ -1440,7 +1440,7 @@ class CrawlerController implements LoggerAwareInterface
                     $titleClm = '';
                 }
 
-                if (! in_array($pageRow['uid'], $this->expandExcludeString($confArray['subCfg']['exclude']))) {
+                if (! in_array($pageRow['uid'], $this->expandExcludeString($confArray['subCfg']['exclude']), true)) {
 
                     // URL list:
                     $urlList = $this->urlListFromUrlArray(

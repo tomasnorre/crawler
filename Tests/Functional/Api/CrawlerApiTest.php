@@ -120,7 +120,7 @@ class CrawlerApiTest extends FunctionalTestCase
         );
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
         //restore rootline

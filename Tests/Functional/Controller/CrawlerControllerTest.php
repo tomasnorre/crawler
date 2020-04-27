@@ -69,7 +69,7 @@ class CrawlerControllerTest extends FunctionalTestCase
      */
     protected $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->importDataSet(__DIR__ . '/../Fixtures/pages.xml');

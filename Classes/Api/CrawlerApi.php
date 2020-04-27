@@ -413,7 +413,7 @@ class CrawlerApi
         if (count($this->allowedConfigurations) > 0) {
             // 	remove configuration that does not match the current selection
             foreach ($configurations as $confKey => $confArray) {
-                if (! in_array($confKey, $this->allowedConfigurations)) {
+                if (! in_array($confKey, $this->allowedConfigurations, true)) {
                     unset($configurations[$confKey]);
                 }
             }
@@ -439,7 +439,7 @@ class CrawlerApi
 
         //if the same page is scheduled for the same time and has not be executed?
         //un-timed elements need an exec_time with 0 because they can occur multiple times
-        if ($schedule_timestamp == 0) {
+        if ($schedule_timestamp === 0) {
             $count->where(
                 $queryBuilder->expr()->eq('page_id', $page_uid),
                 $queryBuilder->expr()->eq('exec_time', 0),

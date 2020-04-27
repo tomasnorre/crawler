@@ -36,12 +36,12 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
  */
 class ReasonTest extends UnitTestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
     }

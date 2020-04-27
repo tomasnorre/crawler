@@ -122,7 +122,7 @@ class ProcessService
             if ($this->startRequiredProcesses()) {
                 $nextTimeOut = time() + $this->timeToLive;
             }
-            if ($currentPendingItems == 0) {
+            if ($currentPendingItems === 0) {
                 if ($this->verbose) {
                     echo 'Finished...' . chr(10);
                 }

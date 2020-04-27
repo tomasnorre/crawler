@@ -48,7 +48,7 @@ class CrawlerControllerTest extends UnitTestCase
     /**
      * Creates the test environment.
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->crawlerController = $this->createPartialMock(
             CrawlerController::class,
@@ -81,7 +81,7 @@ class CrawlerControllerTest extends UnitTestCase
     /**
      * Resets the test environment after the test.
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         unset($this->crawlerController);
     }

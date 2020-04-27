@@ -52,7 +52,7 @@ class ProcessServiceTest extends FunctionalTestCase
     /**
      * Creates the test environment.
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->subject = $this->createPartialMock(ProcessService::class, ['dummyMethod']);

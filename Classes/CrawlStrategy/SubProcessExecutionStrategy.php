@@ -67,7 +67,7 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface
             return false;
         }
 
-        if (! in_array($parsedUrl['scheme'], ['', 'http', 'https'])) {
+        if (! in_array($parsedUrl['scheme'], ['', 'http', 'https'], true)) {
             $this->logger->debug(
                 sprintf('Scheme does not match for url "%s"', $url),
                 ['crawlerId' => $crawlerId]
@@ -104,7 +104,7 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface
         $reqHeaders[] = 'GET ' . $url['path'] . ($url['query'] ? '?' . $url['query'] : '') . ' HTTP/1.0';
         $reqHeaders[] = 'Host: ' . $url['host'];
         $reqHeaders[] = 'Connection: close';
-        if ($url['user'] != '') {
+        if ($url['user'] !== '') {
             $reqHeaders[] = 'Authorization: Basic ' . base64_encode($url['user'] . ':' . $url['pass']);
         }
         $reqHeaders[] = 'X-T3crawler: ' . $crawlerId;

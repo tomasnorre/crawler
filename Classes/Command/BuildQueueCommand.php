@@ -169,7 +169,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
                 $output->writeln('<info>' . $p['url'] . ' (' . implode(',', $p['procInstructions']) . ') => ' . '</info>' . PHP_EOL);
                 $result = $crawlerController->readUrlFromArray($queueRec);
 
-                $resultContent = is_null($result['content']) ? '' : $result['content'];
+                $resultContent = $result['content'] === null ? '' : $result['content'];
                 $requestResult = unserialize($resultContent);
                 if (is_array($requestResult)) {
                     $resLog = is_array($requestResult['log']) ? PHP_EOL . chr(9) . chr(9) . implode(PHP_EOL . chr(9) . chr(9), $requestResult['log']) : '';
@@ -198,6 +198,6 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
     private function getConfigurationKeys($conf)
     {
         $parameter = trim($conf);
-        return ($parameter != '' ? GeneralUtility::trimExplode(',', $parameter) : []);
+        return ($parameter !== '' ? GeneralUtility::trimExplode(',', $parameter) : []);
     }
 }

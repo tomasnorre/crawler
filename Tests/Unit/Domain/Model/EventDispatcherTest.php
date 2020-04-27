@@ -46,7 +46,7 @@ class EventDispatcherTest extends UnitTestCase
     /**
      * Used to save the old state of the registered observers for the dispatcher
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->oldObservers = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/domain/events/class.tx_crawler_domain_events_dispatcher.php']['registerObservers'];
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/domain/events/class.tx_crawler_domain_events_dispatcher.php']['registerObservers'] = [];
@@ -55,7 +55,7 @@ class EventDispatcherTest extends UnitTestCase
     /**
      * Resets the hook configuration for the event dispatcher.
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/domain/events/class.tx_crawler_domain_events_dispatcher.php']['registerObservers'] = $this->oldObservers;
     }

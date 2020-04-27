@@ -9,6 +9,8 @@ parameters:
     skip:
         PhpCsFixer\Fixer\Operator\UnaryOperatorSpacesFixer: null
         PHP_CodeSniffer\Standards\Generic\Sniffs\CodeAnalysis\AssignmentInConditionSniff.FoundInWhileCondition: null
+        PhpCsFixer\Fixer\PhpUnit\PhpUnitStrictFixer: null
+        PhpCsFixer\Fixer\PhpUnit\PhpUnitTestAnnotationFixer: null
 
     paths:
         - 'Classes'
