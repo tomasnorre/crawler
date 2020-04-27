@@ -55,7 +55,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * EventDispatcher::getInstance();
  *
  * Events can be posted by EventDispatcher::getInstance()->post('myEvent','eventGroup', array('foo' => 'bar'));
- *
  */
 class EventDispatcher
 {
