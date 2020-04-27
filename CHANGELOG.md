@@ -1,6 +1,7 @@
 # Changelog TYPO3 Crawler
 
 ## Version 9.0.1-dev
+Released:
 
 ### Added
 * Add better error handling to getPhpBinary + More tests for getPhpBinary
@@ -37,6 +38,7 @@
 * Set correct tableName for mountPoint queries
 
 ## Version 9.0.0
+Released: 2020-04-14
 
 ### Added
 
