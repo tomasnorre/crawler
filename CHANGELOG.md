@@ -16,7 +16,6 @@ Released:
 
 ### Deprecated
 #### Classes
-* CrawlerApi
 
 #### Functions & Properties
 * ProcessService->queueRepository
