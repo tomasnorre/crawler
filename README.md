@@ -1,7 +1,12 @@
 # crawler
+[![Latest Stable Version](https://poser.pugx.org/aoepeople/crawler/v/stable)](https://packagist.org/packages/aoepeople/crawler)
+[![Total Downloads](https://poser.pugx.org/aoepeople/crawler/downloads)](https://packagist.org/packages/aoepeople/crawler)
+[![License](https://poser.pugx.org/aoepeople/crawler/license)](https://packagist.org/packages/aoepeople/crawler)
 [![Build Status](https://travis-ci.org/AOEpeople/crawler.svg?branch=master)](https://travis-ci.org/AOEpeople/crawler)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/AOEpeople/crawler/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/AOEpeople/crawler/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/AOEpeople/crawler/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/AOEpeople/crawler/?branch=master)
+[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/aoepeople/crawler.svg)](http://isitmaintained.com/project/aoepeople/crawler "Average time to resolve an issue")
+[![Percentage of issues still open](http://isitmaintained.com/badge/open/aoepeople/crawler.svg)](http://isitmaintained.com/project/aoepeople/crawler "Percentage of issues still open")
 
 Libraries and scripts for crawling the TYPO3 page tree. Used for re-caching, re-indexing, publishing applications etc.
 

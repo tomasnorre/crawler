@@ -39,8 +39,6 @@ class PageTree extends AbstractPageTree
 {
     /**
      * Inject our core AcceptanceTester actor into ModalDialog
-     *
-     * @param BackendTester $I
      */
     public function __construct(BackendTester $I)
     {

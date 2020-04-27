@@ -22,7 +22,7 @@ hooks:
     - exec: /var/www/html/build-files/import-if-empty.sh
     - exec: composer install -d /var/www/html
     - exec: /var/www/html/bin/typo3cms install:generatepackagestates
-omit_containers: [dba]
+omit_containers: ["dba", "ddev-ssh-agent"]
 use_dns_when_possible: true
 timezone: Europe/Copenhagen
 

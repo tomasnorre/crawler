@@ -59,7 +59,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     /**
      * Creates the test environment.
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
@@ -451,7 +451,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function UpdateProcessIdAndSchedulerForQueueIds(): void
+    public function updateProcessIdAndSchedulerForQueueIds(): void
     {
         $qidToUpdate = [4, 8, 15, 18];
         $processId = md5('this-is-the-process-id');
@@ -491,6 +491,45 @@ class QueueRepositoryTest extends FunctionalTestCase
             $expected,
             $this->subject->noUnprocessedQueueEntriesForPageWithConfigurationHashExist($uid, $configurationHash)
         );
+    }
+
+    /**
+     * @test
+     *
+     * @dataProvider flushQueueDataProvider
+     */
+    public function flushQueue(string $where, int $expected): void
+    {
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $queryRepository = $objectManager->get(QueueRepository::class);
+        $this->subject->flushQueue($where);
+
+        self::assertEquals(
+            $expected,
+            $queryRepository->countAll()
+        );
+    }
+
+    public function flushQueueDataProvider(): array
+    {
+        return [
+            'Flush Entire Queue' => [
+                'where' => '1=1',
+                'expected' => 0,
+            ],
+            'Flush Queue with specific configuration' => [
+                'where' => 'configuration = \'SecondConfiguration\'',
+                'expected' => 9,
+            ],
+            'Flush Queue for specific process id' => [
+                'where' => 'process_id = \'1007\'',
+                'expected' => 11,
+            ],
+            'Flush Queue for where that does not exist, nothing is deleted' => [
+                'where' => 'qid > 100000',
+                'expected' => 14,
+            ],
+        ];
     }
 
     /**

@@ -41,7 +41,9 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 class Process extends AbstractEntity
 {
     public const STATE_RUNNING = 'running';
+
     public const STATE_CANCELLED = 'cancelled';
+
     public const STATE_COMPLETED = 'completed';
 
     /**
@@ -196,18 +198,12 @@ class Process extends AbstractEntity
         return $this->getTimeForLastItem() - $this->getTimeForFirstItem();
     }
 
-    /**
-     * @return int
-     */
     public function getTimeForLastItem(): int
     {
         $entry = $this->queueRepository->findOldestEntryForProcess($this);
         return $entry['exec_time'];
     }
 
-    /**
-     * @return int
-     */
     public function getTimeForFirstItem(): int
     {
         $entry = $this->queueRepository->findYoungestEntryForProcess($this);
@@ -236,9 +232,6 @@ class Process extends AbstractEntity
         return $this->queueRepository->countNonExecutedItemsByProcess($this);
     }
 
-    /**
-     * @return int
-     */
     public function getFinallyAssigned(): int
     {
         return $this->getItemsToProcess() + $this->getAmountOfItemsProcessed();
@@ -273,7 +266,7 @@ class Process extends AbstractEntity
     {
         if ($this->isActive() && $this->getProgress() < 100) {
             $stage = self::STATE_RUNNING;
-        } elseif (!$this->isActive() && $this->getProgress() < 100) {
+        } elseif (! $this->isActive() && $this->getProgress() < 100) {
             $stage = self::STATE_CANCELLED;
         } else {
             $stage = self::STATE_COMPLETED;

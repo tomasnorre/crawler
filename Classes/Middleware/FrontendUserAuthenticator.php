@@ -50,9 +50,6 @@ class FrontendUserAuthenticator implements MiddlewareInterface
      */
     protected $queueRepository;
 
-    /**
-     * @param Context|null $context
-     */
     public function __construct(?Context $context = null)
     {
         $this->context = $context ?? GeneralUtility::makeInstance(Context::class);
@@ -60,9 +57,6 @@ class FrontendUserAuthenticator implements MiddlewareInterface
     }
 
     /**
-     * @param ServerRequestInterface $request
-     * @param RequestHandlerInterface $handler
-     * @return ResponseInterface
      * @throws \TYPO3\CMS\Core\Context\Exception\AspectNotFoundException
      * @throws \TYPO3\CMS\Core\Error\Http\ServiceUnavailableException
      */
@@ -79,7 +73,7 @@ class FrontendUserAuthenticator implements MiddlewareInterface
         $queueRec = $this->queueRepository->findByQueueId($queueId);
 
         // If a crawler record was found and hash was matching, set it up
-        if (!$this->isRequestHashMatchingQueueRecord($queueRec, $hash)) {
+        if (! $this->isRequestHashMatchingQueueRecord($queueRec, $hash)) {
             return GeneralUtility::makeInstance(ErrorController::class)->unavailableAction($request, 'No crawler entry found');
         }
 

@@ -62,7 +62,7 @@ class IndexedSearchCrawlerHook
     public function __construct()
     {
         // To make sure the backend charset is available:
-        if (!is_object($GLOBALS['LANG'])) {
+        if (! is_object($GLOBALS['LANG'])) {
             $GLOBALS['LANG'] = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Localization\LanguageService::class);
             $GLOBALS['LANG']->init($GLOBALS['BE_USER']->uc['lang']);
         }
@@ -105,7 +105,7 @@ class IndexedSearchCrawlerHook
                     'session_data' => '',
                 ],
                 [
-                    'uid' => (int)$cfgRec['uid'],
+                    'uid' => (int) $cfgRec['uid'],
                 ]
             );
             // Based on configuration type:
@@ -118,7 +118,6 @@ class IndexedSearchCrawlerHook
                         'procInstructions' => ['[Index Cfg UID#' . $cfgRec['uid'] . ']'],
                         'url' => 'Records (start)',
                     ];
-                    //
                     $pObj->addQueueEntry_callBack($setId, $params, $this->callBack, $cfgRec['pid']);
                     break;
                 case 2:
@@ -157,7 +156,7 @@ class IndexedSearchCrawlerHook
                         // General
                         'procInstructions' => ['[Index Cfg UID#' . $cfgRec['uid'] . ']'],
                         // General
-                        'url' => (int)$cfgRec['alternative_source_pid'],
+                        'url' => (int) $cfgRec['alternative_source_pid'],
                         // Partly general... (for URL and file types and page tree (root))
                         'depth' => 0,
                     ];
@@ -251,7 +250,7 @@ class IndexedSearchCrawlerHook
                     ->update(
                         'index_config',
                         ['session_data' => serialize($session_data)],
-                        ['uid' => (int)$cfgRec['uid']]
+                        ['uid' => (int) $cfgRec['uid']]
                     );
             }
         }
@@ -270,13 +269,13 @@ class IndexedSearchCrawlerHook
     {
         if ($cfgRec['table2index'] && isset($GLOBALS['TCA'][$cfgRec['table2index']])) {
             // Init session data array if not already:
-            if (!is_array($session_data)) {
+            if (! is_array($session_data)) {
                 $session_data = [
                     'uid' => 0,
                 ];
             }
             // Init:
-            $pid = (int)$cfgRec['alternative_source_pid'] ?: $cfgRec['pid'];
+            $pid = (int) $cfgRec['alternative_source_pid'] ?: $cfgRec['pid'];
             $numberOfRecords = $cfgRec['recordsbatch']
                 ? MathUtility::forceIntegerInRange($cfgRec['recordsbatch'], 1)
                 : 100;
@@ -337,7 +336,7 @@ class IndexedSearchCrawlerHook
     {
         // Prepare path, making it absolute and checking:
         $readpath = $params['url'];
-        if (!GeneralUtility::isAbsPath($readpath)) {
+        if (! GeneralUtility::isAbsPath($readpath)) {
             $readpath = GeneralUtility::getFileAbsFileName($readpath);
         }
         if (GeneralUtility::isAllowedAbsPath($readpath)) {
@@ -362,7 +361,7 @@ class IndexedSearchCrawlerHook
                 $directoryList = GeneralUtility::get_dirs($readpath);
                 if (is_array($directoryList) && $params['depth'] < $cfgRec['depth']) {
                     foreach ($directoryList as $subdir) {
-                        if ((string)$subdir != '') {
+                        if ((string) $subdir !== '') {
                             $files[] = $readpath . $subdir . '/';
                         }
                     }
@@ -397,7 +396,7 @@ class IndexedSearchCrawlerHook
     public function crawler_execute_type3($cfgRec, &$session_data, $params, &$pObj): void
     {
         // Init session data array if not already:
-        if (!is_array($session_data)) {
+        if (! is_array($session_data)) {
             $session_data = [
                 'urlLog' => [$params['url']],
             ];
@@ -409,7 +408,7 @@ class IndexedSearchCrawlerHook
         if ($params['depth'] < $cfgRec['depth']) {
             foreach ($subUrls as $url) {
                 if ($url = $this->checkUrl($url, $session_data['urlLog'], $cfgRec['externalUrl'])) {
-                    if (!$this->checkDeniedSuburls($url, $cfgRec['url_deny'])) {
+                    if (! $this->checkDeniedSuburls($url, $cfgRec['url_deny'])) {
                         $this->instanceCounter++;
                         $session_data['urlLog'][] = $url;
                         // Parameters:
@@ -437,7 +436,7 @@ class IndexedSearchCrawlerHook
     public function crawler_execute_type4($cfgRec, &$session_data, $params, &$pObj): void
     {
         // Base page uid:
-        $pageUid = (int)$params['url'];
+        $pageUid = (int) $params['url'];
         // Get array of URLs from page:
         $pageRow = BackendUtility::getRecord('pages', $pageUid);
         $res = $pObj->getUrlsForPageRow($pageRow);
@@ -446,7 +445,7 @@ class IndexedSearchCrawlerHook
         $downloadUrls = [];
         // Dummy.
         // Submit URLs:
-        if (!empty($res)) {
+        if (! empty($res)) {
             foreach ($res as $vv) {
                 $pObj->urlListFromUrlArray($vv, $pageRow, $GLOBALS['EXEC_TIME'], 30, 1, 0, $duplicateTrack, $downloadUrls, ['tx_indexedsearch_reindex']);
             }
@@ -526,11 +525,11 @@ class IndexedSearchCrawlerHook
                     '*',
                     'tx_crawler_queue',
                     [
-                        'set_id' => (int)$cfgRec['set_id'],
+                        'set_id' => (int) $cfgRec['set_id'],
                         'exec_time' => 0,
                     ]
                 );
-            if (!$queued_items) {
+            if (! $queued_items) {
                 // Lookup old phash rows:
                 $queryBuilder = $connectionPool->getQueryBuilderForTable('index_phash');
                 $oldPhashRows = $queryBuilder
@@ -573,7 +572,7 @@ class IndexedSearchCrawlerHook
                             'set_id' => 0,
                             'session_data' => '',
                         ],
-                        ['uid' => (int)$cfgRec['uid']]
+                        ['uid' => (int) $cfgRec['uid']]
                     );
             }
         }
@@ -584,6 +583,7 @@ class IndexedSearchCrawlerHook
      * Helper functions
      *
      *****************************************/
+
     /**
      * Check if an input URL are allowed to be indexed. Depends on whether it is already present in the url log.
      *
@@ -598,7 +598,7 @@ class IndexedSearchCrawlerHook
         [$url] = explode('#', $url);
         if ((strpos($url, '../') === false)
             && GeneralUtility::isFirstPartOfStr($url, $baseUrl)
-            && !in_array($url, $urlLog, true)) {
+            && ! in_array($url, $urlLog, true)) {
             return $url;
         }
 
@@ -627,7 +627,7 @@ class IndexedSearchCrawlerHook
         $url_qParts = parse_url($url);
         $baseAbsoluteHref = $url_qParts['scheme'] . '://' . $url_qParts['host'];
         $baseHref = $indexerObj->extractBaseHref($indexerObj->indexExternalUrl_content);
-        if (!$baseHref) {
+        if (! $baseHref) {
             // Extract base href from current URL
             $baseHref = $baseAbsoluteHref;
             $baseHref .= substr($url_qParts['path'], 0, strrpos($url_qParts['path'], '/'));
@@ -641,7 +641,7 @@ class IndexedSearchCrawlerHook
             // Decode entities:
             $subUrl = htmlspecialchars_decode($linkInfo['href']);
             $qParts = parse_url($subUrl);
-            if (!$qParts['scheme']) {
+            if (! $qParts['scheme']) {
                 $relativeUrl = GeneralUtility::resolveBackPath($subUrl);
                 if ($relativeUrl[0] === '/') {
                     $subUrl = $baseAbsoluteHref . $relativeUrl;
@@ -671,12 +671,12 @@ class IndexedSearchCrawlerHook
         // (Re)-Indexing a row from a table:
         $indexerObj = GeneralUtility::makeInstance(\TYPO3\CMS\IndexedSearch\Indexer::class);
         parse_str(str_replace('###UID###', $r['uid'], $cfgRec['get_params']), $GETparams);
-        $indexerObj->backend_initIndexer($cfgRec['pid'], 0, $sys_language_uid, '', $rl, $GETparams, (bool)$cfgRec['chashcalc']);
+        $indexerObj->backend_initIndexer($cfgRec['pid'], 0, $sys_language_uid, '', $rl, $GETparams, (bool) $cfgRec['chashcalc']);
         $indexerObj->backend_setFreeIndexUid($cfgRec['uid'], $cfgRec['set_id']);
         $indexerObj->forceIndexing = true;
         $theContent = '';
         foreach ($fieldList as $k => $v) {
-            if (!$k) {
+            if (! $k) {
                 $theTitle = $r[$v];
             } else {
                 $theContent .= $r[$v] . ' ';
@@ -830,6 +830,7 @@ class IndexedSearchCrawlerHook
      * Hook functions for DataHandler (indexing of records)
      *
      *************************/
+
     /**
      * DataHandler hook function for on-the-fly indexing of database records
      *
@@ -863,7 +864,7 @@ class IndexedSearchCrawlerHook
         // Translate new ids.
         if ($status === 'new') {
             $id = $pObj->substNEWwithIDs[$id];
-        } elseif ($table === 'pages' && $status === 'update' && (array_key_exists('hidden', $fieldArray) && $fieldArray['hidden'] == 1 || array_key_exists('no_search', $fieldArray) && $fieldArray['no_search'] == 1)) {
+        } elseif ($table === 'pages' && $status === 'update' && (array_key_exists('hidden', $fieldArray) && $fieldArray['hidden'] === 1 || array_key_exists('no_search', $fieldArray) && $fieldArray['no_search'] === 1)) {
             // If the page should be hidden or not indexed after update, delete index for this page
             $this->deleteFromIndex($id);
         }

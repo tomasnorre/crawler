@@ -42,16 +42,6 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 class ProcessCleanUpHook implements CrawlerHookInterface
 {
     /**
-     * @var CrawlerController
-     */
-    private $crawlerController;
-
-    /**
-     * @var array
-     */
-    private $extensionSettings;
-
-    /**
      * @var ProcessRepository
      */
     protected $processRepository;
@@ -60,6 +50,16 @@ class ProcessCleanUpHook implements CrawlerHookInterface
      * @var QueueRepository
      */
     protected $queueRepository;
+
+    /**
+     * @var CrawlerController
+     */
+    private $crawlerController;
+
+    /**
+     * @var array
+     */
+    private $extensionSettings;
 
     public function __construct()
     {
@@ -72,8 +72,6 @@ class ProcessCleanUpHook implements CrawlerHookInterface
      * Main function of process CleanUp Hook.
      *
      * @param CrawlerController $crawlerController Crawler Lib class
-     *
-     * @return void
      */
     public function crawler_init(CrawlerController $crawlerController): void
     {
@@ -87,18 +85,16 @@ class ProcessCleanUpHook implements CrawlerHookInterface
 
     /**
      * Remove active processes older than one hour
-     *
-     * @return void
      */
     private function removeActiveProcessesOlderThanOneHour(): void
     {
         $results = $this->processRepository->getActiveProcessesOlderThanOneHour();
 
-        if (!is_array($results)) {
+        if (! is_array($results)) {
             return;
         }
         foreach ($results as $result) {
-            $systemProcessId = (int)$result['system_process_id'];
+            $systemProcessId = (int) $result['system_process_id'];
             $processId = $result['process_id'];
             if ($systemProcessId > 1) {
                 if ($this->doProcessStillExists($systemProcessId)) {
@@ -111,33 +107,31 @@ class ProcessCleanUpHook implements CrawlerHookInterface
 
     /**
      * Removes active orphan processes from process list
-     *
-     * @return void
      */
     private function removeActiveOrphanProcesses(): void
     {
         $results = $this->processRepository->getActiveOrphanProcesses();
 
-        if (!is_array($results)) {
+        if (! is_array($results)) {
             return;
         }
         foreach ($results as $result) {
             $processExists = false;
-            $systemProcessId = (int)$result['system_process_id'];
+            $systemProcessId = (int) $result['system_process_id'];
             $processId = $result['process_id'];
             if ($systemProcessId > 1) {
                 $dispatcherProcesses = $this->findDispatcherProcesses();
-                if (!is_array($dispatcherProcesses) || empty($dispatcherProcesses)) {
+                if (! is_array($dispatcherProcesses) || empty($dispatcherProcesses)) {
                     $this->removeProcessFromProcesslist($processId);
                     return;
                 }
                 foreach ($dispatcherProcesses as $process) {
                     $responseArray = $this->createResponseArray($process);
-                    if ($systemProcessId === (int)$responseArray[1]) {
+                    if ($systemProcessId === (int) $responseArray[1]) {
                         $processExists = true;
                     };
                 }
-                if (!$processExists) {
+                if (! $processExists) {
                     $this->removeProcessFromProcesslist($processId);
                 }
             }
@@ -148,8 +142,6 @@ class ProcessCleanUpHook implements CrawlerHookInterface
      * Remove a process from processlist
      *
      * @param string $processId Unique process Id.
-     *
-     * @return void
      */
     private function removeProcessFromProcesslist($processId): void
     {
@@ -183,7 +175,7 @@ class ProcessCleanUpHook implements CrawlerHookInterface
     private function doProcessStillExists($pid)
     {
         $doProcessStillExists = false;
-        if (!Environment::isWindows()) {
+        if (! Environment::isWindows()) {
             // Not windows
             if (file_exists('/proc/' . $pid)) {
                 $doProcessStillExists = true;
@@ -203,12 +195,11 @@ class ProcessCleanUpHook implements CrawlerHookInterface
      *
      * @param int $pid Process id to kill
      *
-     * @return void
      * @codeCoverageIgnore
      */
     private function killProcess($pid): void
     {
-        if (!Environment::isWindows()) {
+        if (! Environment::isWindows()) {
             // Not windows
             posix_kill($pid, 9);
         } else {
@@ -226,7 +217,7 @@ class ProcessCleanUpHook implements CrawlerHookInterface
     private function findDispatcherProcesses()
     {
         $returnArray = [];
-        if (!Environment::isWindows()) {
+        if (! Environment::isWindows()) {
             // Not windows
             exec('ps aux | grep \'typo3 crawler:processQueue\'', $returnArray, $returnValue);
         } else {

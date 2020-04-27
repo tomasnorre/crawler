@@ -41,7 +41,6 @@ use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class CrawlerControllerTest
@@ -70,7 +69,7 @@ class CrawlerControllerTest extends FunctionalTestCase
      */
     protected $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->importDataSet(__DIR__ . '/../Fixtures/pages.xml');
@@ -82,7 +81,7 @@ class CrawlerControllerTest extends FunctionalTestCase
 
         $basePath = Environment::getVarPath() . '/tests/unit';
         $this->fixturePath = $basePath . '/fixture/config/sites';
-        if (!file_exists($this->fixturePath)) {
+        if (! file_exists($this->fixturePath)) {
             GeneralUtility::mkdir_deep($this->fixturePath);
         }
 
@@ -130,23 +129,6 @@ class CrawlerControllerTest extends FunctionalTestCase
         // Check total entries after cleanup
         self::assertSame(
             $expectedRemainingRecords,
-            $queryRepository->countAll()
-        );
-    }
-
-    /**
-     * @test
-     *
-     * @dataProvider flushQueueDataProvider
-     */
-    public function flushQueue(string $where, int $expected): void
-    {
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $queryRepository = $objectManager->get(QueueRepository::class);
-        $this->subject->_call('flushQueue', $where);
-
-        self::assertEquals(
-            $expected,
             $queryRepository->countAll()
         );
     }
@@ -293,7 +275,7 @@ class CrawlerControllerTest extends FunctionalTestCase
      */
     public function getUrlFromPageAndQueryParameters(int $pageId, string $queryString, ?string $alternativeBaseUrl, int $httpsOrHttp, UriInterface $expected): void
     {
-        if (2 === $pageId) {
+        if ($pageId === 2) {
             $configuration = [
                 'rootPageId' => 2,
                 'base' => 'https://example.com',
@@ -332,9 +314,6 @@ class CrawlerControllerTest extends FunctionalTestCase
         );
     }
 
-    /**
-     * @return array
-     */
     public function getUrlFromPageAndQueryParametersDataProvider(): array
     {
         return [
@@ -718,31 +697,6 @@ class CrawlerControllerTest extends FunctionalTestCase
                 ]],
             ],
 
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function flushQueueDataProvider()
-    {
-        return [
-            'Flush Entire Queue' => [
-                'where' => '1=1',
-                'expected' => 0,
-            ],
-            'Flush Queue with specific configuration' => [
-                'where' => 'configuration = \'SecondConfiguration\'',
-                'expected' => 9,
-            ],
-            'Flush Queue for specific process id' => [
-                'where' => 'process_id = \'1007\'',
-                'expected' => 11,
-            ],
-            'Flush Queue for where that does not exist, nothing is deleted' => [
-                'where' => 'qid > 100000',
-                'expected' => 14,
-            ],
         ];
     }
 }

@@ -26,26 +26,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class MessageUtility
 {
     /**
-     * This method is used to add a message to the internal queue
-     *
-     * @param string $message the message itself
-     * @param int $severity message level (-1 = success (default), 0 = info, 1 = notice, 2 = warning, 3 = error)
-     */
-    private static function addMessage(string $message, int $severity = FlashMessage::OK): void
-    {
-        $message = GeneralUtility::makeInstance(
-            FlashMessage::class,
-            $message,
-            '',
-            $severity
-        );
-
-        /** @var FlashMessageService $flashMessageService */
-        $flashMessageService = GeneralUtility::makeInstance(FlashMessageService::class);
-        $flashMessageService->getMessageQueueByIdentifier()->addMessage($message);
-    }
-
-    /**
      * Add notice message to the user interface.
      */
     public static function addNoticeMessage(string $message): void
@@ -68,5 +48,25 @@ class MessageUtility
     public static function addWarningMessage(string $message): void
     {
         self::addMessage($message, FlashMessage::WARNING);
+    }
+
+    /**
+     * This method is used to add a message to the internal queue
+     *
+     * @param string $message the message itself
+     * @param int $severity message level (-1 = success (default), 0 = info, 1 = notice, 2 = warning, 3 = error)
+     */
+    private static function addMessage(string $message, int $severity = FlashMessage::OK): void
+    {
+        $message = GeneralUtility::makeInstance(
+            FlashMessage::class,
+            $message,
+            '',
+            $severity
+        );
+
+        /** @var FlashMessageService $flashMessageService */
+        $flashMessageService = GeneralUtility::makeInstance(FlashMessageService::class);
+        $flashMessageService->getMessageQueueByIdentifier()->addMessage($message);
     }
 }

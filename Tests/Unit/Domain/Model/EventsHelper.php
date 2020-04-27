@@ -47,28 +47,17 @@ class EventsHelper implements EventObserverInterface
      * @var int
      */
     public static $called_bar = 0;
-    
-    /**
-     * @return void
-     */
+
     public function fooFunc(): void
     {
         self::$called_foo++;
     }
-    
-    /**
-     * @return void
-     */
+
     public function barFunc(): void
     {
         self::$called_bar++;
     }
-    
-    /**
-     * @param EventDispatcher $dispatcher
-     *
-     * @return void
-     */
+
     public function registerObservers(EventDispatcher $dispatcher): void
     {
         $dispatcher->addObserver($this, 'fooFunc', 'foo');

@@ -45,6 +45,12 @@ class CrawlerApiTest extends FunctionalTestCase
 {
     use SiteBasedTestTrait;
 
+    protected const LANGUAGE_PRESETS = [
+        'EN' => ['id' => 0, 'title' => 'English', 'locale' => 'en_US.UTF8', 'iso' => 'en', 'hrefLang' => 'en-US', 'direction' => ''],
+        'FR' => ['id' => 1, 'title' => 'French', 'locale' => 'fr_FR.UTF8', 'iso' => 'fr', 'hrefLang' => 'fr-FR', 'direction' => ''],
+        'FR-CA' => ['id' => 2, 'title' => 'Franco-Canadian', 'locale' => 'fr_CA.UTF8', 'iso' => 'fr', 'hrefLang' => 'fr-CA', 'direction' => ''],
+    ];
+
     /**
      * @var CrawlerApi
      */
@@ -56,7 +62,6 @@ class CrawlerApiTest extends FunctionalTestCase
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     /**
-     *
      * @var array stores the old rootline
      */
     protected $oldRootline;
@@ -66,13 +71,7 @@ class CrawlerApiTest extends FunctionalTestCase
      */
     protected $queueRepository;
 
-    protected const LANGUAGE_PRESETS = [
-        'EN' => ['id' => 0, 'title' => 'English', 'locale' => 'en_US.UTF8', 'iso' => 'en', 'hrefLang' => 'en-US', 'direction' => ''],
-        'FR' => ['id' => 1, 'title' => 'French', 'locale' => 'fr_FR.UTF8', 'iso' => 'fr', 'hrefLang' => 'fr-FR', 'direction' => ''],
-        'FR-CA' => ['id' => 2, 'title' => 'Franco-Canadian', 'locale' => 'fr_CA.UTF8', 'iso' => 'fr', 'hrefLang' => 'fr-CA', 'direction' => ''],
-    ];
-
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -121,7 +120,7 @@ class CrawlerApiTest extends FunctionalTestCase
         );
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
         //restore rootline
@@ -269,8 +268,6 @@ class CrawlerApiTest extends FunctionalTestCase
      * The testcase uses a TSConfig crawler configuration.
      *
      * @test
-     *
-     * @return void
      */
     public function canNotCreateDuplicateForTwoPagesInTheFutureWithTheSameTimestamp(): void
     {
@@ -294,8 +291,6 @@ class CrawlerApiTest extends FunctionalTestCase
      * The testcase uses a TSConfig crawler configuration.
      *
      * @test
-     *
-     * @return void
      */
     public function canCreateTwoQueueEntriesForDiffrentTimestampsInTheFuture(): void
     {
@@ -314,8 +309,6 @@ class CrawlerApiTest extends FunctionalTestCase
      * Where the crawler is configured using configuration records instead of pagets config.
      *
      * @test
-     *
-     * @return void
      */
     public function canCreateQueueEntriesUsingConfigurationRecord(): void
     {
@@ -374,13 +367,13 @@ class CrawlerApiTest extends FunctionalTestCase
     {
         //created mocked crawler controller which returns a faked timestamp
         $crawlerController = $this->getAccessibleMock(CrawlerController::class, ['getCurrentTime', 'drawURLs_PIfilter'], [], '');
-        $crawlerController->expects($this->any())->method("getCurrentTime")->will($this->returnValue($currentTime));
-        $crawlerController->expects($this->any())->method("drawURLs_PIfilter")->will($this->returnValue(true));
+        $crawlerController->expects($this->any())->method('getCurrentTime')->will($this->returnValue($currentTime));
+        $crawlerController->expects($this->any())->method('drawURLs_PIfilter')->will($this->returnValue(true));
 
         /* @var CrawlerApi $crawlerApi */
         //create mocked api
         $crawlerApi = $this->createPartialMock(CrawlerApi::class, ['findCrawler']);
-        $crawlerApi->expects($this->any())->method("findCrawler")->will($this->returnValue($crawlerController));
+        $crawlerApi->expects($this->any())->method('findCrawler')->will($this->returnValue($crawlerController));
 
         return $crawlerApi;
     }
