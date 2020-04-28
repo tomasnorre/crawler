@@ -28,7 +28,6 @@ Released:
 * ProcessService->startRequiredProcesses()
 
 ### Removed
-* ClassAliasMap and LegacyClassForIde as they are obsolete
 
 ### Fixed
 * Changed result handling for Crawling in case of 500 errors on directRequests
