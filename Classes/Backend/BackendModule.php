@@ -711,7 +711,7 @@ class BackendModule
             return [];
         }
         $requestResult = unserialize($resultData['content']);
-        return $requestResult['vars'];
+        return $requestResult['vars'] ?? [];
     }
 
     /**
