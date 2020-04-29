@@ -33,6 +33,7 @@ Released:
 * Changed result handling for Crawling in case of 500 errors on directRequests
 * Set correct tableName for mountPoint queries
 * Fallback to alturl is added to ensure crawling of pages including PDF files
+* Get fe_user from $GLOBALS['TSFE'] instead of $request->getAttribute()
 
 ## Version 9.0.0
 Released: 2020-04-14
