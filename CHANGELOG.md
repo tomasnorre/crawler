@@ -1,6 +1,6 @@
 # Changelog TYPO3 Crawler
 
-## Version 9.0.1-dev
+## Crawler 9.0.1-dev
 Released:
 
 ### Added
@@ -35,8 +35,8 @@ Released:
 * Fallback to alturl is added to ensure crawling of pages including PDF files
 * Get fe_user from $GLOBALS['TSFE'] instead of $request->getAttribute()
 
-## Version 9.0.0
-Released: 2020-04-14
+## Crawler 9.0.0
+Crawler 9.0.0 was released on April 14th, 2020
 
 ### Added
 
@@ -90,5 +90,135 @@ Released: 2020-04-14
 * CrawlerApi->removeQueueEntrie()
 * CrawlerController->CLI_deleteProcessesMarkedDeleted()
 
-## Sorry !!!
-Unfortunately we haven't done any changelog before version 9.0.0, we are sorry for that.
+## Sorry !!! 
+We don't have any changelogs between version 5.1.3 and 9.0.0, version 7 and 8 was never released, we jumped to 9.0.0
+
+## Crawler 5.1.3
+Crawler 5.1.3 was released on July 21st, 2017.
+
+### Changes
+    [RELEASE] Release of crawler 5.1.3
+    [TASK] Added Cache to TypoScriptUtility
+
+## Crawler 5.1.2
+Crawler 5.1.2 was released on November 24th, 2016.
+
+### Changes
+    [RELEASE] Release of crawler 5.1.2
+    [BUGFIX] Scheduler Tasks broken after upgrade to 5.1.1 (composer) (#154)
+    [BUGFIX] Fixed incorrect class name in ClassAliasMap (#153)
+
+## Crawler 5.1.1
+Crawler 5.1.1 was released on November 21th, 2016.
+
+### Changes
+    [RELEASE] Release of crawler 5.1.1
+    [BUGFIX] It's not possible to "add process" after upgrade to 5.1.0 (#145)
+    [BUGFIX] #1442236317: MenuItem "" is not valid (More information) (#148)
+    [BUGFIX] Not possible to add new scheduler tasks (not only Crawler tasks) after upgrade to 5.1.0 (#144)
+    [BUGFIX] Scheduler Tasks broken after upgrade to 5.1.0 (#142)
+
+## Crawler 5.1.0
+Crawler 5.1.0 was released on November 15th, 2016.
+
+### Changes
+    [FEATURE] Remove assignment of queue items to process if process gets killed by cleanup hook
+    [FEATURE] Adjust namespace of ProcessCleanupTask (#138)
+    [CLEANUP] Streamline ext_emconf.php and ext_localconf.php
+    [TASK] Convert locallang_db.xml to xlf Resolves #134
+    [TASK] Auto detect TypoScript Template
+    [TASK] Moving hooks to Classes/Hooks and create utilities for Hooks and Scheduler tasks
+    [TASK] Move "scheduler"-classes into "Classes/Tasks"
+    [TASK] Set version to 5.0.10-dev
+
+
+## Crawler 5.0.9
+Crawler 5.0.9 was released on September 16th, 2016.
+
+### Changes
+    [RELEASE] Release of crawler 5.0.9
+    [BUGFIX] Switch to PHP 5.3 compatible array syntax
+    [TASK] Set version to 5.0.9-dev
+
+## Crawler 5.0.8
+Crawler 5.0.8 was released on September 16th, 2016.
+
+### Changes
+    [RELEASE] Release of crawler 5.0.8
+    [FEATURE] Emit signals before/after a queue item is processed
+    [TASK] Update README.md
+    [TASK] Add scheduler task for process cleanup hook
+    [TASK] Set version to 5.0.8-dev
+
+## Crawler 5.0.7
+Crawler 5.0.7 was released on September 6th, 2016.
+
+### Changes
+    [RELEASE] Release of crawler 5.0.7
+    [FEATURE] Adjust autoload configuration for TYPO3 7+ (#117)
+    [TASK] Update exception for "no typoscript template found" (#114)
+    [TASK] Remove deprecated API call (#112)
+    [TASK] Adjust composer psr-4 autoloading - fixes issue #115
+    [TASK] Set version to 5.0.7-dev
+
+## Crawler 5.0.6
+Crawler 5.0.6 was released on August 22nd, 2016.
+
+### Changes
+    [RELEASE] Release of crawler 5.0.6
+    Revert "Merge pull request #104 from AOEpeople/feature/remove-curl"
+    #107 Fixes deprecated notices (#108)
+    [TASK] Set version to 5.0.6-dev
+
+## Crawler 5.0.5
+Crawler 5.0.5 was released on August 15th, 2016.
+
+### Changes
+    [RELEASE] Release of crawler 5.0.5
+    [FEATURE] Remove option to request pages by HTTP/HTTPS
+    [FEATURE] Remove option to follow redirects
+    [FEATURE] Introduce backend utility class to clean up ext_tables.php
+    [TASK] Remove obsolete validator class (#101)
+    [BUGFIX] Remove dependency for workspaces (#97)
+    replace deprecated function call in TCA file, add renderType for select fields (#96)
+    [BUGFIX] Crawler context menu throws fatal error
+    [TASK] Deleting old tx_crawler_processes entries ends up in slow query
+    [BUGFIX] Fix broken displayCond
+    Revert "[TASK] Re-enable Workspace after Core Issue #70052 fixed"
+    [TASK] Missing "hide"/"disable" field in the configuration record form
+    [TASK] config.absRefPrefix not respected by tx_crawler_lib::getFrontendBasePath()
+    [TASK] Set version to 5.0.5-dev
+    [TASK] Remove "Add Process"-button when no more queue-item can be assigned
+
+## Crawler 5.0.4
+Crawler 5.0.4 was released on March 18th, 2016.
+
+### Changes
+    [RELEASE] Release of crawler 5.0.4
+    [TASK] Replace deprecated parameter
+    Revert "[TASK] config.absRefPrefix not respected by tx_crawler_lib::getFrontendBasePath()"
+    [TASK] Re-enable Workspace after Core Issue #70052 fixed
+    Improve configuration record documentation
+    [TASK] config.absRefPrefix not respected by tx_crawler_lib::getFrontendBasePath()
+    [TASK] Add Travis Config for both TYPO3 6 and 7LTS
+    [TASK] Remove deprecated call of GeneralUtility::loadTCA()
+    [TASK] Set version to 5.0.4-dev
+
+## Crawler 5.0.3
+Crawler 5.0.3 was released on March 10th, 2016.
+
+### Changes
+    [RELEASE] Release of crawler 5.0.3
+    [TASK] Split Unit and Functional tests
+    Update .travis.yml
+    Renamed tests -> Tests
+    [TASK] Update Travis script to be prepared for TYPO3 7 LTS compatibility update later
+    [TASK] Update Documentation
+    [TASK] #86620 Add refresh hooks so that the refresh button also removes orphan and old processes.
+    [BUGFIX] Links on refresh icon/queue id do not work in TYPO3 7.6
+    Set version to 5.0.2-dev
+    [FIX] Fixed to ensure traversable else return
+
+
+## Sorry
+We don't have any changes logs later than this.
