@@ -652,7 +652,8 @@ class BackendModule
                     $rowData['exec_time'] = $vv['exec_time'] ? BackendUtility::datetime($vv['exec_time']) : '-';
                 }
                 $rowData['result_status'] = GeneralUtility::fixed_lgd_cs($resStatus, 50);
-                $rowData['url'] = '<a href="' . htmlspecialchars($parameters['url']) . '" target="_newWIndow">' . htmlspecialchars($parameters['url']) . '</a>';
+                $url = htmlspecialchars($parameters['url'] ?? $parameters['alturl']);
+                $rowData['url'] = '<a href="' . $url . '" target="_newWIndow">' . $url . '</a>';
                 $rowData['feUserGroupList'] = $parameters['feUserGroupList'] ?: '';
                 $rowData['procInstructions'] = is_array($parameters['procInstructions']) ? implode('; ', $parameters['procInstructions']) : '';
                 $rowData['set_id'] = (string) $vv['set_id'];
