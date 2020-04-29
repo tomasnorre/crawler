@@ -83,7 +83,7 @@ class FrontendUserAuthenticator implements MiddlewareInterface
         // Now ensure to set the proper user groups
         $grList = $queueParameters['feUserGroupList'];
         if ($grList) {
-            $frontendUser = $request->getAttribute('frontend.user');
+            $frontendUser = $GLOBALS['TSFE']->fe_user;
             $frontendUser->user[$frontendUser->usergroup_column] = $grList;
             // we have to set the fe user group to the user aspect since indexed_search only reads the user aspect
             // to get the groups. otherwise groups are ignored during indexing.
