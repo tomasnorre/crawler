@@ -475,6 +475,34 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
         }
     }
 
+    /**
+     * Cleans up entries that stayed for too long in the queue. These are default:
+     * - processed entries that are over 1.5 days in age
+     * - scheduled entries that are over 7 days old
+     */
+    public function cleanUpOldQueueEntries(): void
+    {
+        $extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
+        $processedAgeInSeconds = $extensionSettings['cleanUpProcessedAge'] * 86400; // 24*60*60 Seconds in 24 hours
+        $scheduledAgeInSeconds = $extensionSettings['cleanUpScheduledAge'] * 86400;
+
+        $now = time();
+        $condition = '(exec_time<>0 AND exec_time<' . ($now - $processedAgeInSeconds) . ') OR scheduled<=' . ($now - $scheduledAgeInSeconds);
+
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $del = $queryBuilder
+            ->delete($this->tableName)
+            ->where(
+                $condition
+            )->execute();
+
+        if ($del === false) {
+            $this->logger->info(
+                'Records could not be deleted.'
+            );
+        }
+    }
+
     public function fetchRecordsToBeCrawled(int $countInARun)
     {
         $queryBuilderSelect = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
@@ -557,39 +585,27 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
     /**
      * Removes queue entries
      *
-     * @param string $where SQL related filter for the entries which should be removed
+     * @param string $filter all, pending, finished
      */
-    public function flushQueue($where = ''): void
+    public function flushQueue(string $filter): void
     {
-        $realWhere = strlen((string) $where) > 0 ? $where : '1=1';
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
 
-        if (EventDispatcher::getInstance()->hasObserver('queueEntryFlush')) {
-            $groups = $queryBuilder
-                ->select('DISTINCT set_id')
-                ->from($this->tableName)
-                ->where($realWhere)
-                ->execute()
-                ->fetchAll();
-            if (is_array($groups)) {
-                foreach ($groups as $group) {
-                    $subSet = $queryBuilder
-                        ->select('uid', 'set_id')
-                        ->from($this->tableName)
-                        ->where(
-                            $realWhere,
-                            $queryBuilder->expr()->eq('set_id', $group['set_id'])
-                        )
-                        ->execute()
-                        ->fetchAll();
-                    EventDispatcher::getInstance()->post('queueEntryFlush', $group['set_id'], $subSet);
-                }
-            }
+        switch (strtolower($filter)) {
+            case 'all':
+                // No where claus needed delete everything
+                break;
+            case 'pending':
+                $queryBuilder->andWhere($queryBuilder->expr()->eq('exec_time', 0));
+                break;
+            case 'finished':
+            default:
+                $queryBuilder->andWhere($queryBuilder->expr()->gt('exec_time', 0));
+                break;
         }
 
         $queryBuilder
             ->delete($this->tableName)
-            ->where($realWhere)
             ->execute();
     }
 

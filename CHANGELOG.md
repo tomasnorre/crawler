@@ -18,11 +18,14 @@ Released:
 #### Classes
 
 #### Functions & Properties
-* ProcessService->queueRepository
-* ProcessService->crawlerController
 * ProcessService->countInARun
+* ProcessService->crawlerController
 * ProcessService->processLimit
+* ProcessService->queueRepository
 * ProcessService->verbose
+* CrawlerController->cleanUpOldQueueEntries()
+* CrawlerController->flushQueue()
+* CrawlerController->getLogEntriesForSetId()
 * ProcessService->multiProcess()
 * ProcessService->reportItemStatus()
 * ProcessService->startRequiredProcesses()
@@ -90,7 +93,7 @@ Crawler 9.0.0 was released on April 14th, 2020
 * CrawlerApi->removeQueueEntrie()
 * CrawlerController->CLI_deleteProcessesMarkedDeleted()
 
-## Sorry !!! 
+## Sorry !!!
 We don't have any changelogs between version 5.1.3 and 9.0.0, version 7 and 8 was never released, we jumped to 9.0.0
 
 ## Crawler 5.1.3
