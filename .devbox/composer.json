@@ -21,12 +21,18 @@
         "typo3/cms-tstemplate": "^9.5",
         "typo3/cms-info": "^9.5",
         "typo3/cms-belog": "^9.5",
-        "bk2k/bootstrap-package": "*",
+        "bk2k/bootstrap-package": "dev-typo3fluid-dependency as 10.0.0",
         "helhum/typo3-console": "^5.6",
         "aoepeople/crawler": "dev-master",
         "typo3/cms-beuser": "^9.5",
         "georgringer/news": "^7.3"
     },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/tomasnorre/bootstrap_package.git"
+        }
+    ],
     "config": {
         "vendor-dir": "vendor",
         "bin-dir": "bin"
