@@ -14,6 +14,7 @@ Released:
 * Switched locallang.xml to xlf for crowdin support
 * Corrected typos in Documentation and signals
 * Cleanup CrawlerController - functions moved to respected Repository
+* Moved HTMl from BackendModule showLog to Fluid template
 
 ### Deprecated
 #### Classes
