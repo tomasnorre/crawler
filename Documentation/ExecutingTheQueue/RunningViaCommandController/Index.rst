@@ -11,6 +11,7 @@
 .. role::   ts(typoscript)
    :class:  typoscript
 .. role::   php(code)
+.. _command-controller:
 
 Run via command controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^

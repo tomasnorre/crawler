@@ -13,7 +13,7 @@
 .. role::   ts(typoscript)
    :class:  typoscript
 .. role::   php(code)
-
+.. _backend-configuration-record:
 
 Configuration records
 ^^^^^^^^^^^^^^^^^^^^^
