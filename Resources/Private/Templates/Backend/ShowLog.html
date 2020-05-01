@@ -4,6 +4,23 @@
 	<f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.log" />
 </f:section>
 
+<f:section name="DisplayActions">
+    <br />
+    <br />
+    <table class="crawlerLogActions">
+        <tr class="firstRow">
+            <td>{displayLogFilterHtml -> f:format.raw()}</td>
+            <td>{itemPerPageHtml -> f:format.raw()}</td>
+        </tr>
+        <tr>
+            <td colspan="2">{showResultLogHtml -> f:format.raw()}</td>
+        </tr>
+        <tr>
+            <td colspan="2">{showFeVarsHtml -> f:format.raw()}</td>
+        </tr>
+    </table>
+</f:section>
+
 <f:section name="Content">
 	<input type="hidden" name="id" value="{currentPageId}">
 	<input type="hidden" value="{setId}" name="setID" />

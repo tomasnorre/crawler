@@ -1,0 +1,8 @@
+table.crawlerLogActions {
+    border-spacing: 0px 10px;
+    border-collapse: initial;
+}
+
+table.crawlerLogActions tr.firstRow td {
+    padding: 0px 10px 0px 0px;
+}

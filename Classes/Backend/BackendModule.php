@@ -7,7 +7,7 @@ namespace AOE\Crawler\Backend;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2018 AOE GmbH <dev@aoe.com>
+ *  (c) 2020 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -255,52 +255,12 @@ class BackendModule
                 $theOutput .= $this->showCrawlerInformationAction();
                 break;
             case 'log':
-
-                // Additional menus for the log type:
-                $theOutput .= BackendUtility::getFuncMenu(
-                    $this->id,
-                    'SET[depth]',
-                    $this->pObj->MOD_SETTINGS['depth'],
-                    $this->pObj->MOD_MENU['depth']
-                );
-
                 $quiPart = GeneralUtility::_GP('qid_details') ? '&qid_details=' . (int) GeneralUtility::_GP('qid_details') : '';
                 $setId = (int) GeneralUtility::_GP('setID');
 
-                $theOutput .= '<br><br>' .
-                    '<table width="60%"><tr>' .
-                    '<td>' .
-                    $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.display') . ': ' . BackendUtility::getFuncMenu(
-                        $this->id,
-                        'SET[log_display]',
-                        $this->pObj->MOD_SETTINGS['log_display'],
-                        $this->pObj->MOD_MENU['log_display'],
-                        'index.php',
-                        '&setID=' . $setId
-                    ) . '</td><td> ' .
-                    $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showresultlog') . ': ' . BackendUtility::getFuncCheck(
-                        $this->id,
-                        'SET[log_resultLog]',
-                        $this->pObj->MOD_SETTINGS['log_resultLog'],
-                        'index.php',
-                        '&setID=' . $setId . $quiPart
-                    ) . '</td><td> ' .
-                    $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showfevars') . ': ' . BackendUtility::getFuncCheck(
-                        $this->id,
-                        'SET[log_feVars]',
-                        $this->pObj->MOD_SETTINGS['log_feVars'],
-                        'index.php',
-                        '&setID=' . $setId . $quiPart
-                    ) . '</td><td> ' .
-                    $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.itemsPerPage') . ': ' .
-                    BackendUtility::getFuncMenu(
-                        $this->id,
-                        'SET[itemsPerPage]',
-                        $this->pObj->MOD_SETTINGS['itemsPerPage'],
-                        $this->pObj->MOD_MENU['itemsPerPage']
-                    );
-                     $theOutput .= '</td></tr></table>';
-                $theOutput .= $this->showLogAction();
+                // Additional menus for the log type:
+                $theOutput .= $this->getDepthDropDownHtml();
+                $theOutput .= $this->showLogAction($setId, $quiPart);
                 break;
             case 'multiprocess':
                 $theOutput .= $this->processOverviewAction();
@@ -392,6 +352,7 @@ class BackendModule
             $this->view->assign('amountOfUrls', count(array_keys($this->duplicateTrack)));
             $this->view->assign('selectors', $this->generateConfigurationSelectors());
             $this->view->assign('code', $code);
+            $this->view->assign('displayActions', 0);
 
             // Download Urls to crawl:
             if ($this->downloadCrawlUrls) {
@@ -457,7 +418,10 @@ class BackendModule
      *
      ******************************/
 
-    protected function showLogAction(): string
+    /**
+     * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
+     */
+    protected function showLogAction(int $setId, string $quiPath): string
     {
         $this->view->setTemplate('ShowLog');
         if (empty($this->id)) {
@@ -572,6 +536,11 @@ class BackendModule
         }
         $this->view->assign('showResultLog', (bool) $this->pObj->MOD_SETTINGS['log_resultLog']);
         $this->view->assign('showFeVars', (bool) $this->pObj->MOD_SETTINGS['log_feVars']);
+        $this->view->assign('displayActions', 1);
+        $this->view->assign('displayLogFilterHtml', $this->getDisplayLogFilterHtml($setId));
+        $this->view->assign('itemPerPageHtml', $this->getItemsPerPageDropDownHtml());
+        $this->view->assign('showResultLogHtml', $this->getShowResultLogCheckBoxHtml($setId, $quiPath));
+        $this->view->assign('showFeVarsHtml', $this->getShowFeVarsCheckBoxHtml($setId, $quiPath));
         return $this->view->render();
     }
 
@@ -617,8 +586,8 @@ class BackendModule
     protected function drawLog_addRows(array $logEntriesOfPage, string $titleString): string
     {
         $colSpan = 9
-                + ($this->pObj->MOD_SETTINGS['log_resultLog'] ? -1 : 0)
-                + ($this->pObj->MOD_SETTINGS['log_feVars'] ? 3 : 0);
+            + ($this->pObj->MOD_SETTINGS['log_resultLog'] ? -1 : 0)
+            + ($this->pObj->MOD_SETTINGS['log_feVars'] ? 3 : 0);
 
         if (! empty($logEntriesOfPage)) {
             $setId = (int) GeneralUtility::_GP('setID');
@@ -798,6 +767,7 @@ class BackendModule
             'activeProcessCount' => $currentActiveProcesses,
             'maxActiveProcessCount' => $maxActiveProcesses,
             'mode' => $mode,
+            'displayActions' => 0,
         ]);
 
         return $this->view->render();
@@ -834,10 +804,10 @@ class BackendModule
         }
         // TODO: Icon Should be bigger
         return $this->getLinkButton(
-                'tx-crawler-start',
-                $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.enablecrawling'),
-                $this->getInfoModuleUrl(['action' => 'resumeCrawling'])
-            );
+            'tx-crawler-start',
+            $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.enablecrawling'),
+            $this->getInfoModuleUrl(['action' => 'resumeCrawling'])
+        );
     }
 
     /**
@@ -962,7 +932,7 @@ class BackendModule
      * @param array $optArray Options key(value) => label pairs
      * @param string $name Selector box name
      * @param string|array $value Selector box value (array for multiple...)
-     * @param boolean  $multiple If set, will draw multiple box.
+     * @param boolean $multiple If set, will draw multiple box.
      *
      * @return string HTML select element
      */
@@ -1040,5 +1010,60 @@ class BackendModule
         /** @var UriBuilder $uriBuilder */
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
         return $uriBuilder->buildUriFromRoute('web_info', $uriParameters);
+    }
+
+    private function getDepthDropDownHtml(): string
+    {
+        return BackendUtility::getFuncMenu(
+            $this->id,
+            'SET[depth]',
+            $this->pObj->MOD_SETTINGS['depth'],
+            $this->pObj->MOD_MENU['depth']
+        );
+    }
+
+    private function getDisplayLogFilterHtml(int $setId): string
+    {
+        return $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.display') . ': ' . BackendUtility::getFuncMenu(
+                $this->id,
+                'SET[log_display]',
+                $this->pObj->MOD_SETTINGS['log_display'],
+                $this->pObj->MOD_MENU['log_display'],
+                'index.php',
+                '&setID=' . $setId
+            );
+    }
+
+    private function getShowResultLogCheckBoxHtml(int $setId, string $quiPart): string
+    {
+        return BackendUtility::getFuncCheck(
+                $this->id,
+                'SET[log_resultLog]',
+                $this->pObj->MOD_SETTINGS['log_resultLog'],
+                'index.php',
+                '&setID=' . $setId . $quiPart
+            ) . '&nbsp;' . $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showresultlog');
+    }
+
+    private function getShowFeVarsCheckBoxHtml(int $setId, string $quiPart): string
+    {
+        return BackendUtility::getFuncCheck(
+                $this->id,
+                'SET[log_feVars]',
+                $this->pObj->MOD_SETTINGS['log_feVars'],
+                'index.php',
+                '&setID=' . $setId . $quiPart
+            ) . '&nbsp;' . $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showfevars');
+    }
+
+    private function getItemsPerPageDropDownHtml(): string
+    {
+        return $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.itemsPerPage') . ': ' .
+            BackendUtility::getFuncMenu(
+                $this->id,
+                'SET[itemsPerPage]',
+                $this->pObj->MOD_SETTINGS['itemsPerPage'],
+                $this->pObj->MOD_MENU['itemsPerPage']
+            );
     }
 }
