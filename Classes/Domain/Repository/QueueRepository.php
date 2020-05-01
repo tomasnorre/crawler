@@ -30,7 +30,6 @@ namespace AOE\Crawler\Domain\Repository;
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Model\Process;
-use AOE\Crawler\Event\EventDispatcher;
 use Psr\Log\LoggerAwareInterface;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;

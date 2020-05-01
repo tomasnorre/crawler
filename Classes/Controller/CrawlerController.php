@@ -71,15 +71,6 @@ class CrawlerController implements LoggerAwareInterface
     use LoggerAwareTrait;
     use PublicMethodDeprecationTrait;
 
-    /**
-     * @var string[]
-     */
-    private $deprecatedPublicMethods = [
-        'getLogEntriesForSetId' => 'Using crawlerController::getLogEntriesForSetId() is deprecated since 9.0.1 and will be removed in v10.x',
-        'flushQueue' => 'Using CrawlerController::flushQueue() is deprecated since 9.0.1 and will be removed in v10.x, please use QueueRepository->flushQueue() instead.',
-        'cleanUpOldQueueEntries' => 'Using CrawlerController::cleanUpOldQueueEntries() is deprecated since 9.0.1 and will be removed in v10.x, please use QueueRepository->cleanUpOldQueueEntries() instead.',
-    ];
-
     public const CLI_STATUS_NOTHING_PROCCESSED = 0;
 
     public const CLI_STATUS_REMAIN = 1; //queue not empty
@@ -194,6 +185,15 @@ class CrawlerController implements LoggerAwareInterface
      * @var IconFactory
      */
     protected $iconFactory;
+
+    /**
+     * @var string[]
+     */
+    private $deprecatedPublicMethods = [
+        'getLogEntriesForSetId' => 'Using crawlerController::getLogEntriesForSetId() is deprecated since 9.0.1 and will be removed in v10.x',
+        'flushQueue' => 'Using CrawlerController::flushQueue() is deprecated since 9.0.1 and will be removed in v10.x, please use QueueRepository->flushQueue() instead.',
+        'cleanUpOldQueueEntries' => 'Using CrawlerController::cleanUpOldQueueEntries() is deprecated since 9.0.1 and will be removed in v10.x, please use QueueRepository->cleanUpOldQueueEntries() instead.',
+    ];
 
     /**
      * @var BackendUserAuthentication|null
@@ -966,49 +966,6 @@ class CrawlerController implements LoggerAwareInterface
         }
 
         return $queryBuilder->execute()->fetchAll();
-    }
-
-    /**
-     * Removes queue entries
-     *
-     * @param string $where SQL related filter for the entries which should be removed
-     * @return void
-     *
-     * @deprecated
-     */
-    protected function flushQueue($where = ''): void
-    {
-        $realWhere = strlen((string)$where) > 0 ? $where : '1=1';
-
-        $queryBuilder = $this->getQueryBuilder($this->tableName);
-
-        if (EventDispatcher::getInstance()->hasObserver('queueEntryFlush')) {
-            $groups = $queryBuilder
-                ->select('DISTINCT set_id')
-                ->from($this->tableName)
-                ->where($realWhere)
-                ->execute()
-                ->fetchAll();
-            if (is_array($groups)) {
-                foreach ($groups as $group) {
-                    $subSet = $queryBuilder
-                        ->select('uid', 'set_id')
-                        ->from($this->tableName)
-                        ->where(
-                            $realWhere,
-                            $queryBuilder->expr()->eq('set_id', $group['set_id'])
-                        )
-                        ->execute()
-                        ->fetchAll();
-                    EventDispatcher::getInstance()->post('queueEntryFlush', $group['set_id'], $subSet);
-                }
-            }
-        }
-
-        $queryBuilder
-            ->delete($this->tableName)
-            ->where($realWhere)
-            ->execute();
     }
 
     /**
@@ -1792,6 +1749,48 @@ class CrawlerController implements LoggerAwareInterface
         $now = time();
         $condition = '(exec_time<>0 AND exec_time<' . ($now - $processedAgeInSeconds) . ') OR scheduled<=' . ($now - $scheduledAgeInSeconds);
         $this->flushQueue($condition);
+    }
+
+    /**
+     * Removes queue entries
+     *
+     * @param string $where SQL related filter for the entries which should be removed
+     *
+     * @deprecated
+     */
+    protected function flushQueue($where = ''): void
+    {
+        $realWhere = strlen((string) $where) > 0 ? $where : '1=1';
+
+        $queryBuilder = $this->getQueryBuilder($this->tableName);
+
+        if (EventDispatcher::getInstance()->hasObserver('queueEntryFlush')) {
+            $groups = $queryBuilder
+                ->select('DISTINCT set_id')
+                ->from($this->tableName)
+                ->where($realWhere)
+                ->execute()
+                ->fetchAll();
+            if (is_array($groups)) {
+                foreach ($groups as $group) {
+                    $subSet = $queryBuilder
+                        ->select('uid', 'set_id')
+                        ->from($this->tableName)
+                        ->where(
+                            $realWhere,
+                            $queryBuilder->expr()->eq('set_id', $group['set_id'])
+                        )
+                        ->execute()
+                        ->fetchAll();
+                    EventDispatcher::getInstance()->post('queueEntryFlush', $group['set_id'], $subSet);
+                }
+            }
+        }
+
+        $queryBuilder
+            ->delete($this->tableName)
+            ->where($realWhere)
+            ->execute();
     }
 
     /**
