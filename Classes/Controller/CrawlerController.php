@@ -906,7 +906,22 @@ class CrawlerController implements LoggerAwareInterface
         // PHPStorm adds the highlight that the $addWhere is immediately overwritten,
         // but the $query = $expressionBuilder->andX() ensures that the $addWhere is written correctly with AND
         // between the statements, it's not a mistake in the code.
-        $this->queueRepository->flushQueue($filter);
+        switch ($filter) {
+            case 'pending':
+                $queryBuilder->andWhere($queryBuilder->expr()->eq('exec_time', 0));
+                break;
+            case 'finished':
+                $queryBuilder->andWhere($queryBuilder->expr()->gt('exec_time', 0));
+                break;
+        }
+
+        if($doFlush) {
+            if ($doFullFlush) {
+                $this->queueRepository->flushQueue('all');
+            } else {
+                $this->queueRepository->flushQueue($filter);
+            }
+        }
         if ($itemsPerPage > 0) {
             $queryBuilder
                 ->setMaxResults((int) $itemsPerPage);
