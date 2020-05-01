@@ -191,7 +191,7 @@ jobs:
           .Build/bin/phpunit-merger log .Logs/junit/ .Logs/junit.xml;
         - >
           if [ -n "$SONAR_TOKEN" ]; then
-            sonar-scanner
+            sonar-scanner -X
           fi
 
     # Deploy
