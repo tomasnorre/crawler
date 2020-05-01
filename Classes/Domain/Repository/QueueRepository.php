@@ -30,6 +30,7 @@ namespace AOE\Crawler\Domain\Repository;
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Model\Process;
+use AOE\Crawler\Utility\SignalSlotUtility;
 use Psr\Log\LoggerAwareInterface;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -580,6 +581,7 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
      */
     public function flushQueue(string $filter): void
     {
+
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
 
         switch (strtolower($filter)) {
@@ -593,6 +595,36 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
             default:
                 $queryBuilder->andWhere($queryBuilder->expr()->gt('exec_time', 0));
                 break;
+        }
+
+        /** @var Connection $queryBuilder */
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+
+        // This is only used for the Signal Slot, but haven't found an if() that I could wrap around it.
+        $groups = $queryBuilder
+            ->selectLiteral('DISTINCT set_id')
+            ->from($this->tableName)
+            ->where($realWhere)
+            ->execute()
+            ->fetchAll();
+        if (is_array($groups)) {
+            foreach ($groups as $group) {
+                $subSet = $queryBuilder
+                    ->select('qid', 'set_id')
+                    ->from($this->tableName)
+                    ->where(
+                        $realWhere,
+                        $queryBuilder->expr()->eq('set_id', $group['set_id'])
+                    )
+                    ->execute()
+                    ->fetchAll();
+                $signalPayload = $subSet ?? [];
+                SignalSlotUtility::emitSignal(
+                    self::class,
+                    SignalSlotUtility::SIGNAL_QUEUE_ENTRY_FLUSH,
+                    $signalPayload
+                );
+            }
         }
 
         $queryBuilder

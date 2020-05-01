@@ -7,7 +7,7 @@ namespace AOE\Crawler\Domain\Model;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2019 AOE GmbH <dev@aoe.com>
+ *  (c) 2020 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -29,6 +29,7 @@ namespace AOE\Crawler\Domain\Model;
  ***************************************************************/
 
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use TYPO3\CMS\Core\Compatibility\PublicMethodDeprecationTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
@@ -40,16 +41,13 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  */
 class Process extends AbstractEntity
 {
+    use PublicMethodDeprecationTrait;
+
     public const STATE_RUNNING = 'running';
 
     public const STATE_CANCELLED = 'cancelled';
 
     public const STATE_COMPLETED = 'completed';
-
-    /**
-     * @var array
-     */
-    protected $row;
 
     /**
      * @var string
@@ -85,6 +83,14 @@ class Process extends AbstractEntity
      * @var QueueRepository
      */
     protected $queueRepository;
+
+    /**
+     * @var string[]
+     */
+    private $deprecatedPublicMethods = [
+        'getTimeForFirstItem' => 'Using Process::getTimeForFirstItem() is deprecated since 9.0.1 and will be removed in v10.x',
+        'getTimeForLastItem' => 'Using Process::getTimeForLastItem() is deprecated since 9.0.1 and will be removed in v10.x',
+    ];
 
     public function __construct()
     {
@@ -195,15 +201,23 @@ class Process extends AbstractEntity
      */
     public function getRuntime()
     {
-        return $this->getTimeForLastItem() - $this->getTimeForFirstItem();
+        $lastItem = $this->queueRepository->findOldestEntryForProcess($this);
+        $firstItem = $this->queueRepository->findYoungestEntryForProcess($this);
+        return $lastItem['exec_time'] - $firstItem['exec_time'];
     }
 
+    /**
+     * @deprecated
+     */
     public function getTimeForLastItem(): int
     {
         $entry = $this->queueRepository->findOldestEntryForProcess($this);
         return $entry['exec_time'];
     }
 
+    /**
+     * @deprecated
+     */
     public function getTimeForFirstItem(): int
     {
         $entry = $this->queueRepository->findYoungestEntryForProcess($this);

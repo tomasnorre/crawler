@@ -29,6 +29,7 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
  ***************************************************************/
 
 use AOE\Crawler\Domain\Model\Process;
+use AOE\Crawler\Domain\Repository\QueueRepository;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -198,16 +199,17 @@ class ProcessTest extends UnitTestCase
      *
      * @dataProvider getRuntimeReturnsIntegerDataProvider
      */
-    public function getRuntimeReturnsInteger(int $getTimeForFirstItem, int $getTimeForLastItem, int $expected): void
+    public function getRuntimeReturnsInteger(array $getTimeForFirstItem, array $getTimeForLastItem, int $expected): void
     {
-        /** @var MockObject|Process $processMock */
-        $processMock = self::getAccessibleMock(Process::class, ['getTimeForFirstItem', 'getTimeForLastItem'], [], '', false);
-        $processMock->expects($this->any())->method('getTimeForFirstItem')->will($this->returnValue($getTimeForFirstItem));
-        $processMock->expects($this->any())->method('getTimeForLastItem')->will($this->returnValue($getTimeForLastItem));
+        /** @var MockObject|QueueRepository $queueRepositoryMock */
+        $queueRepositoryMock = self::getAccessibleMock(QueueRepository::class, ['findOldestEntryForProcess', 'findYoungestEntryForProcess'], [], '', false);
+        $queueRepositoryMock->expects($this->any())->method('findOldestEntryForProcess')->will($this->returnValue($getTimeForLastItem));
+        $queueRepositoryMock->expects($this->any())->method('findYoungestEntryForProcess')->will($this->returnValue($getTimeForFirstItem));
 
+        $this->subject->_setProperty('queueRepository', $queueRepositoryMock);
         self::assertEquals(
             $expected,
-            $processMock->getRuntime()
+            $this->subject->getRuntime()
         );
     }
 
@@ -218,28 +220,28 @@ class ProcessTest extends UnitTestCase
     {
         return [
             'getTimeForFirstItem is bigger than getTimeForLastItem' => [
-                'getTimeForFirstItem' => 75,
-                'getTimeForLastItem' => 50,
+                'getTimeForFirstItem' => ['exec_time' => 75],
+                'getTimeForLastItem' => ['exec_time' => 50],
                 'expected' => -25,
             ],
             'getTimeForFirstItem is smaller than getTimeForLastItem' => [
-                'getTimeForFirstItem' => 55,
-                'getTimeForLastItem' => 85,
+                'getTimeForFirstItem' => ['exec_time' => 55],
+                'getTimeForLastItem' => ['exec_time' => 85],
                 'expected' => 30,
             ],
             'getTimeForFirstItem is equal to getTimeForLastItem' => [
-                'getTimeForFirstItem' => 45,
-                'getTimeForLastItem' => 45,
+                'getTimeForFirstItem' => ['exec_time' => 45],
+                'getTimeForLastItem' => ['exec_time' => 45],
                 'expected' => 0,
             ],
             'getTimeForFirstItem is negative number and getTimeForLastItem is positive' => [
-                'getTimeForFirstItem' => -25,
-                'getTimeForLastItem' => 50,
+                'getTimeForFirstItem' => ['exec_time' => -25],
+                'getTimeForLastItem' => ['exec_time' => 50],
                 'expected' => 75,
             ],
             'getTimeForFirstItem is positive number and getTimeForLastItem is negative' => [
-                'getTimeForFirstItem' => 25,
-                'getTimeForLastItem' => -50,
+                'getTimeForFirstItem' => ['exec_time' => 25],
+                'getTimeForLastItem' => ['exec_time' => -50],
                 'expected' => -75,
             ],
         ];

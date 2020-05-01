@@ -24,7 +24,7 @@ use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy;
 use AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategy;
 use AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategy;
-use AOE\Crawler\Event\EventDispatcher;
+use AOE\Crawler\Utility\SignalSlotUtility;
 use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -87,10 +87,11 @@ class QueueExecutor implements SingletonInterface
                 $result = ['content' => serialize($result)];
             }
 
-            EventDispatcher::getInstance()->post(
-                'urlCrawled',
-                $queueItem['set_id'],
-                ['url' => $parameters['url'], 'result' => $result]
+            $signalPayload = ['url' => $parameters['url'], 'result' => $result];
+            SignalSlotUtility::emitSignal(
+                self::class,
+                SignalSlotUtility::SIGNAL_URL_CRAWLED,
+                $signalPayload
             );
         }
         return $result;

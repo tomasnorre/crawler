@@ -7,7 +7,7 @@ namespace AOE\Crawler\Tests\Functional\Api;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2019 AOE GmbH <dev@aoe.com>
+ *  (c) 2020 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -170,24 +170,6 @@ class CrawlerApiTest extends FunctionalTestCase
         self::assertSame(
             $newConfiguration,
             $this->subject->getAllowedConfigurations()
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function countEntriesInQueueForPageByScheduleTime(): void
-    {
-        $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
-
-        self::assertSame(
-            1,
-            $this->callInaccessibleMethod($this->subject, 'countEntriesInQueueForPageByScheduleTime', 15, 0)
-        );
-
-        self::assertSame(
-            1,
-            $this->callInaccessibleMethod($this->subject, 'countEntriesInQueueForPageByScheduleTime', 17, 4321)
         );
     }
 

@@ -7,7 +7,7 @@ namespace AOE\Crawler\Utility;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2018 AOE GmbH <dev@aoe.com>
+ *  (c) 2020 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -45,8 +45,18 @@ class SignalSlotUtility
 
     public const SIGNAL_QUEUEITEM_POSTPROCESS = 'queueItemPostProcess';
 
+    public const SIGNAL_INVOKE_QUEUE_CHANGE = 'invokeQueueChange';
+
+    public const SIGNAL_URL_ADDED_TO_QUEUE = 'urlAddedToQueue';
+
+    public const SIGNAL_DUPLICATE_URL_IN_QUEUE = 'duplicateUrlInQueue';
+
+    public const SIGNAL_URL_CRAWLED = 'urlCrawled';
+
+    public const SIGNAL_QUEUE_ENTRY_FLUSH = 'queueEntryFlush';
+
     /**
-     * Emits a signal to the signalslot dispatcher
+     * Emits a signal to the signal slot dispatcher
      *
      * @param string $class
      * @param string $signal

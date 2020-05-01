@@ -32,7 +32,6 @@ use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
-use AOE\Crawler\Event\EventDispatcher;
 use AOE\Crawler\QueueExecutor;
 use AOE\Crawler\Utility\SignalSlotUtility;
 use Psr\Http\Message\UriInterface;
@@ -1090,9 +1089,20 @@ class CrawlerController implements LoggerAwareInterface
                 $uid = $connectionForCrawlerQueue->lastInsertId('tx_crawler_queue', 'qid');
                 $rows[] = $uid;
                 $urlAdded = true;
-                EventDispatcher::getInstance()->post('urlAddedToQueue', strval($this->setID), ['uid' => $uid, 'fieldArray' => $fieldArray]);
+
+                $signalPayload = ['uid' => $uid, 'fieldArray' => $fieldArray];
+                SignalSlotUtility::emitSignal(
+                    self::class,
+                    SignalSlotUtility::SIGNAL_URL_ADDED_TO_QUEUE,
+                    $signalPayload
+                );
             } else {
-                EventDispatcher::getInstance()->post('duplicateUrlInQueue', strval($this->setID), ['rows' => $rows, 'fieldArray' => $fieldArray]);
+                $signalPayload = ['rows' => $rows, 'fieldArray' => $fieldArray];
+                SignalSlotUtility::emitSignal(
+                    self::class,
+                    SignalSlotUtility::SIGNAL_DUPLICATE_URL_IN_QUEUE,
+                    $signalPayload
+                );
             }
         }
 
@@ -1676,6 +1686,7 @@ class CrawlerController implements LoggerAwareInterface
      *
      * @param mixed $releaseIds string with a single process-id or array with multiple process-ids
      * @return boolean
+     * @depracated check alternative??
      */
     public function CLI_releaseProcesses($releaseIds)
     {
