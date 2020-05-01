@@ -1788,26 +1788,30 @@ class CrawlerController implements LoggerAwareInterface
 
         $queryBuilder = $this->getQueryBuilder($this->tableName);
 
-        if (EventDispatcher::getInstance()->hasObserver('queueEntryFlush')) {
-            $groups = $queryBuilder
-                ->select('DISTINCT set_id')
-                ->from($this->tableName)
-                ->where($realWhere)
-                ->execute()
-                ->fetchAll();
-            if (is_array($groups)) {
-                foreach ($groups as $group) {
-                    $subSet = $queryBuilder
-                        ->select('uid', 'set_id')
-                        ->from($this->tableName)
-                        ->where(
-                            $realWhere,
-                            $queryBuilder->expr()->eq('set_id', $group['set_id'])
-                        )
-                        ->execute()
-                        ->fetchAll();
-                    EventDispatcher::getInstance()->post('queueEntryFlush', $group['set_id'], $subSet);
-                }
+        $groups = $queryBuilder
+            ->selectLiteral('DISTINCT set_id')
+            ->from($this->tableName)
+            ->where($realWhere)
+            ->execute()
+            ->fetchAll();
+        if (is_array($groups)) {
+            foreach ($groups as $group) {
+                $subSet = $queryBuilder
+                    ->select('qid', 'set_id')
+                    ->from($this->tableName)
+                    ->where(
+                        $realWhere,
+                        $queryBuilder->expr()->eq('set_id', $group['set_id'])
+                    )
+                    ->execute()
+                    ->fetchAll();
+
+                $payLoad = ['subSet' => $subSet];
+                SignalSlotUtility::emitSignal(
+                    self::class,
+                    SignalSlotUtility::SIGNAL_QUEUE_ENTRY_FLUSH,
+                    $payLoad
+                );
             }
         }
 
