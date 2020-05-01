@@ -4,6 +4,7 @@
 Released:
 
 ### Added
+* Documentation on how to use the Crawler for cache warmup during deployments
 * Add better error handling to getPhpBinary + More tests for getPhpBinary
 * Add SonarCloud to Pipeline
 * More tests for QueryRepository
