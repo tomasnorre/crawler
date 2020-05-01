@@ -41,6 +41,7 @@ use Psr\Log\LoggerAwareTrait;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Compatibility\PublicMethodDeprecationTrait;
 use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\Connection;
@@ -68,6 +69,7 @@ use TYPO3\CMS\Frontend\Page\PageRepository;
 class CrawlerController implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
+    use PublicMethodDeprecationTrait;
 
     public const CLI_STATUS_NOTHING_PROCCESSED = 0;
 
@@ -183,6 +185,15 @@ class CrawlerController implements LoggerAwareInterface
      * @var IconFactory
      */
     protected $iconFactory;
+
+    /**
+     * @var string[]
+     */
+    private $deprecatedPublicMethods = [
+        'getLogEntriesForSetId' => 'Using crawlerController::getLogEntriesForSetId() is deprecated since 9.0.1 and will be removed in v10.x',
+        'flushQueue' => 'Using CrawlerController::flushQueue() is deprecated since 9.0.1 and will be removed in v10.x, please use QueueRepository->flushQueue() instead.',
+        'cleanUpOldQueueEntries' => 'Using CrawlerController::cleanUpOldQueueEntries() is deprecated since 9.0.1 and will be removed in v10.x, please use QueueRepository->cleanUpOldQueueEntries() instead.',
+    ];
 
     /**
      * @var BackendUserAuthentication|null
@@ -895,30 +906,7 @@ class CrawlerController implements LoggerAwareInterface
         // PHPStorm adds the highlight that the $addWhere is immediately overwritten,
         // but the $query = $expressionBuilder->andX() ensures that the $addWhere is written correctly with AND
         // between the statements, it's not a mistake in the code.
-        $addWhere = '1=1';
-        switch ($filter) {
-            case 'pending':
-                $queryBuilder->andWhere($queryBuilder->expr()->eq('exec_time', 0));
-                $addWhere .= ' AND ' . $query->add($expressionBuilder->eq('exec_time', 0));
-                break;
-            case 'finished':
-                $queryBuilder->andWhere($queryBuilder->expr()->gt('exec_time', 0));
-                $addWhere .= ' AND ' . $query->add($expressionBuilder->gt('exec_time', 0));
-                break;
-            case 'all':
-                $doFullFlush = $doFullFlush ?: false;
-                break;
-        }
-
-        // FIXME: Write unit test that ensures that the right records are deleted.
-        if ($doFlush) {
-            // We do currently ignore PageId by flush.
-            // To have pending and finished parameters accepted
-            // 2020.04.11 - Tomas Mikkelsen
-            // $addWhere = $query->add($expressionBuilder->eq('page_id', (int)$id));
-            $this->queueRepository->flushQueue($doFullFlush ? '1=1' : $addWhere);
-            return [];
-        }
+        $this->queueRepository->flushQueue($filter);
         if ($itemsPerPage > 0) {
             $queryBuilder
                 ->setMaxResults((int) $itemsPerPage);
@@ -933,8 +921,10 @@ class CrawlerController implements LoggerAwareInterface
      * @param int $set_id Set ID for which to look up log entries.
      * @param string $filter Filter: "all" => all entries, "pending" => all that is not yet run, "finished" => all complete ones
      * @param bool $doFlush If TRUE, then entries selected at DELETED(!) instead of selected!
-     * @param int $itemsPerPage Limit the amount of entires per page default is 10
+     * @param int $itemsPerPage Limit the amount of entries per page default is 10
      * @return array
+     *
+     * @deprecated
      */
     public function getLogEntriesForSetId(int $set_id, string $filter = '', bool $doFlush = false, bool $doFullFlush = false, int $itemsPerPage = 10)
     {
@@ -951,7 +941,6 @@ class CrawlerController implements LoggerAwareInterface
             ->getConnectionForTable($this->tableName)
             ->getExpressionBuilder();
         $query = $expressionBuilder->andX();
-        // FIXME: Write Unit tests for Filters
         // PHPStorm adds the highlight that the $addWhere is immediately overwritten,
         // but the $query = $expressionBuilder->andX() ensures that the $addWhere is written correctly with AND
         // between the statements, it's not a mistake in the code.
@@ -966,10 +955,9 @@ class CrawlerController implements LoggerAwareInterface
                 $addWhere = $query->add($expressionBuilder->gt('exec_time', 0));
                 break;
         }
-        // FIXME: Write unit test that ensures that the right records are deleted.
         if ($doFlush) {
             $addWhere = $query->add($expressionBuilder->eq('set_id', (int) $set_id));
-            $this->queueRepository->flushQueue($doFullFlush ? '' : $addWhere);
+            $this->flushQueue($doFullFlush ? '' : $addWhere);
             return [];
         }
         if ($itemsPerPage > 0) {
@@ -1750,6 +1738,8 @@ class CrawlerController implements LoggerAwareInterface
      * Cleans up entries that stayed for too long in the queue. These are:
      * - processed entries that are over 1.5 days in age
      * - scheduled entries that are over 7 days old
+     *
+     * @deprecated
      */
     public function cleanUpOldQueueEntries(): void
     {
@@ -1758,7 +1748,49 @@ class CrawlerController implements LoggerAwareInterface
 
         $now = time();
         $condition = '(exec_time<>0 AND exec_time<' . ($now - $processedAgeInSeconds) . ') OR scheduled<=' . ($now - $scheduledAgeInSeconds);
-        $this->queueRepository->flushQueue($condition);
+        $this->flushQueue($condition);
+    }
+
+    /**
+     * Removes queue entries
+     *
+     * @param string $where SQL related filter for the entries which should be removed
+     *
+     * @deprecated
+     */
+    protected function flushQueue($where = ''): void
+    {
+        $realWhere = strlen((string) $where) > 0 ? $where : '1=1';
+
+        $queryBuilder = $this->getQueryBuilder($this->tableName);
+
+        if (EventDispatcher::getInstance()->hasObserver('queueEntryFlush')) {
+            $groups = $queryBuilder
+                ->select('DISTINCT set_id')
+                ->from($this->tableName)
+                ->where($realWhere)
+                ->execute()
+                ->fetchAll();
+            if (is_array($groups)) {
+                foreach ($groups as $group) {
+                    $subSet = $queryBuilder
+                        ->select('uid', 'set_id')
+                        ->from($this->tableName)
+                        ->where(
+                            $realWhere,
+                            $queryBuilder->expr()->eq('set_id', $group['set_id'])
+                        )
+                        ->execute()
+                        ->fetchAll();
+                    EventDispatcher::getInstance()->post('queueEntryFlush', $group['set_id'], $subSet);
+                }
+            }
+        }
+
+        $queryBuilder
+            ->delete($this->tableName)
+            ->where($realWhere)
+            ->execute();
     }
 
     /**

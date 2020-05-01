@@ -19,8 +19,10 @@ namespace AOE\Crawler\Command;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Model\Reason;
+use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\EventDispatcher;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -37,7 +39,7 @@ class BuildQueueCommand extends Command
     {
         $this->setHelp(
             'Try "typo3 help crawler:flushQueue" to see your options' . chr(10) . chr(10) .
-            'Works as a CLI interface to some functionality from the Web > Info > Site Crawler module; 
+            'Works as a CLI interface to some functionality from the Web > Info > Site Crawler module;
 It can put entries in the queue from command line options, return the list of URLs and even execute
 all entries right away without having to queue them up - this can be useful for immediate re-cache,
 re-indexing or static publishing from command line.' . chr(10) . chr(10) .
@@ -45,7 +47,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             Examples:
               --- Re-cache pages from page 7 and two levels down, executed immediately
               $ typo3 crawler:buildQueue 7 defaultConfiguration --depth 2 --mode exec
-             
+
               --- Put entries for re-caching pages from page 7 into queue, 4 every minute.
               $ typo3 crawler:buildQueue 7 defaultConfiguration --depth 0 --mode queue --number 4
             '
@@ -108,10 +110,14 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
     {
         $mode = $input->getOption('mode') ?? 'queue';
 
+        $extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
+
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
 
         /** @var CrawlerController $crawlerController */
         $crawlerController = $objectManager->get(CrawlerController::class);
+        /** @var QueueRepository $queueRepository */
+        $queueRepository = $objectManager->get(QueueRepository::class);
 
         if ($mode === 'exec') {
             $crawlerController->registerQueueEntriesInternallyOnly = true;
@@ -141,8 +147,8 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             );
         }
 
-        if ($crawlerController->extensionSettings['cleanUpOldQueueEntries']) {
-            $crawlerController->cleanUpOldQueueEntries();
+        if ($extensionSettings['cleanUpOldQueueEntries']) {
+            $queueRepository->cleanUpOldQueueEntries();
         }
 
         $crawlerController->setID = (int) GeneralUtility::md5int(microtime());

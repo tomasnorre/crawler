@@ -31,6 +31,7 @@ namespace AOE\Crawler\Tests\Functional\Domain\Repository;
 use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
@@ -433,6 +434,49 @@ class QueueRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
+    public function cleanUpOldQueueEntries(): void
+    {
+        $recordsFromFixture = 14;
+        $expectedRemainingRecords = 2;
+
+        // Add records to queue repository to ensure we always have records,
+        // that will not be deleted with the cleanUpOldQueueEntries-function
+        $connectionForCrawlerQueue = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('tx_crawler_queue');
+
+        // Done for performance reason, as it gets repeated often
+        $time = time() + (7 * 24 * 60 * 60);
+
+        for ($i = 0; $i < $expectedRemainingRecords; $i++) {
+            $connectionForCrawlerQueue
+                ->insert(
+                    'tx_crawler_queue',
+                    [
+                        'exec_time' => $time,
+                        'scheduled' => $time,
+                        'parameters' => 'not important parameters',
+                        'result_data' => 'not important result_data',
+                    ]
+                );
+        }
+
+        // Check total entries before cleanup
+        self::assertSame(
+            $recordsFromFixture + $expectedRemainingRecords,
+            $this->subject->countAll()
+        );
+
+        $this->subject->cleanUpOldQueueEntries();
+
+        // Check total entries after cleanup
+        self::assertSame(
+            $expectedRemainingRecords,
+            $this->subject->countAll()
+        );
+    }
+
+    /**
+     * @test
+     */
     public function fetchRecordsToBeCrawled(): void
     {
         $recordsToBeCrawledLimitHigherThanRecordsCount = $this->subject->fetchRecordsToBeCrawled(10);
@@ -514,20 +558,20 @@ class QueueRepositoryTest extends FunctionalTestCase
     {
         return [
             'Flush Entire Queue' => [
-                'where' => '1=1',
+                'filter' => 'all',
                 'expected' => 0,
             ],
-            'Flush Queue with specific configuration' => [
-                'where' => 'configuration = \'SecondConfiguration\'',
-                'expected' => 9,
+            'Flush Pending entries' => [
+                'filter' => 'pending',
+                'expected' => 7,
             ],
-            'Flush Queue for specific process id' => [
-                'where' => 'process_id = \'1007\'',
-                'expected' => 11,
+            'Flush Finished entries' => [
+                'filter' => 'finished',
+                'expected' => 7,
             ],
-            'Flush Queue for where that does not exist, nothing is deleted' => [
-                'where' => 'qid > 100000',
-                'expected' => 14,
+            'Other parameter given, default to finished' => [
+                'filter' => 'not-existing-param',
+                'expected' => 7,
             ],
         ];
     }
