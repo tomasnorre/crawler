@@ -915,7 +915,7 @@ class CrawlerController implements LoggerAwareInterface
                 break;
         }
 
-        if($doFlush) {
+        if ($doFlush) {
             if ($doFullFlush) {
                 $this->queueRepository->flushQueue('all');
             } else {
