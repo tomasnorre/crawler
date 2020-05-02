@@ -34,6 +34,7 @@ use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\EventDispatcher;
+use AOE\Crawler\Exception\ProcessException;
 use AOE\Crawler\Hooks\CrawlerHookInterface;
 use AOE\Crawler\Service\ProcessService;
 use AOE\Crawler\Utility\MessageUtility;
@@ -885,7 +886,7 @@ class BackendModule
     /**
      * Method to handle incomming actions of the process overview
      *
-     * @throws \Exception
+     * @throws ProcessException
      */
     protected function handleProcessOverviewActions(): void
     {
@@ -902,7 +903,7 @@ class BackendModule
                 break;
             case 'addProcess':
                 if ($this->processManager->startProcess() === false) {
-                    throw new \Exception($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.newprocesserror'));
+                    throw new ProcessException($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.newprocesserror'));
                 }
                 MessageUtility::addNoticeMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.newprocess'));
                 break;
