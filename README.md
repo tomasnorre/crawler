@@ -17,7 +17,7 @@ You can include the crawler in your TYPO3 project with composer or from [TER](ht
 composer require aoepeople/crawler
 ```
 
-## Versions and Support 
+## Versions and Support
 
 | Release  | TYPO3 | PHP   | Fixes will contain
 |---|---|---|---|
@@ -38,39 +38,4 @@ To render the documentation locally, please use the official TYPO3 Documentation
 
 ### Contributions
 
-When you have a PR, please run the following checks first.
-
-* `composer test:all`
-    * Requires a mysql-database, you can boot one with `docker-compose` from the `.Docker`-directory
-* `composer cs-fix`
-    * Ensures that coding standards are respected
-* `composer analyse`
-    * Will run PHPStan and do a static code analysis, this is not adjust completely in build yet, but please try to avoid adding new violations. ;)
-
-#### Devbox
-
-If you don't have a setup already, where you can do development, bugfixing etc. for the crawler, don't worry.
-
-We have included a [ddev](https://www.ddev.com) devbox to help the development.
-
-##### Prerequisites
-
-* [DDEV](https://www.ddev.com)
-* Docker
-
-##### How to use the devbox?
-
-```
-$ git clone git@github.com:AOEpeople/crawler.git
-$ cd .devbox
-$ ddev start
-```
-
-Username/password: `admin`/`password`
-
-And start working.
-
-**INFO** 
-xdebug is disable as default, to speed up the devbox when xdebug isn't needed.
-
-This can be activated in `.devbox/.ddev/config.yaml` and by `ddev restart` afterwards.
+Please see [CONTRIBUTING.md](https://github.com/AOEpeople/crawler/blob/master/CONTRIBUTING.md)
