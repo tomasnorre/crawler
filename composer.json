@@ -40,7 +40,8 @@
         "saschaegerer/phpstan-typo3": "^0.13.1",
         "slam/phpstan-extensions": "^5.0",
         "symfony/yaml": "^4.4 || ^5.0",
-        "symplify/easy-coding-standard": "^7.2"
+        "symplify/easy-coding-standard": "^7.2",
+        "typo3/testing-framework": "^4.14"
     },
     "replace": {
         "typo3-ter/crawler": "self.version"
@@ -87,6 +88,10 @@
         "analyse": [
             "[ -e .Build/bin/phpstan ] || composer update",
             ".Build/bin/phpstan analyse"
+        ],
+        "rector": [
+            "[ -e .Build/bin/rector ] || composer update",
+            ".Build/bin/rector process --dry-run --config rector-ci.yaml"
         ],
         "test:all": [
             "@test:unit",

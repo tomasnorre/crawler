@@ -47,3 +47,4 @@ var/tests
 # Codeception Files
 Tests/Acceptance/_data/*
 Tests/Acceptance/_output/*
+Tests/Acceptance/Support/_generated/

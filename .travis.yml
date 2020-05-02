@@ -73,7 +73,6 @@ jobs:
     - php: 7.4
     - env: TYPO3_VERSION=dev-master
     - name: "PHPStan"
-    - name: "Behaviour"
   include:
     -
       stage: test
