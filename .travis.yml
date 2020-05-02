@@ -43,7 +43,6 @@ jdk:
 cache:
   directories:
     - $HOME/.composer/cache
-    - $HOME/.sonar/cache
 
 before_script:
   # Installs nimut/typo3-complete
