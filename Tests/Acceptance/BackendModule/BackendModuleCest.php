@@ -71,6 +71,6 @@ class BackendModuleCest
         $I->selectOption('configurationSelection[]', 'default');
         $I->selectOption('SET[depth]', 99);
         $I->click('Update');
-        $I->waitForText('Count: 45', 15);
+        $I->waitForText('Count: 43', 15);
     }
 }
