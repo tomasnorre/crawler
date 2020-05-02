@@ -41,7 +41,7 @@
         "slam/phpstan-extensions": "^5.0",
         "symfony/yaml": "^4.4 || ^5.0",
         "symplify/easy-coding-standard": "^7.2",
-        "typo3/testing-framework": "9.x-dev"
+        "typo3/testing-framework": "^4.14 || ^6.2"
     },
     "replace": {
         "typo3-ter/crawler": "self.version"
