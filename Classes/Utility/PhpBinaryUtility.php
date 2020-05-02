@@ -20,6 +20,8 @@ namespace AOE\Crawler\Utility;
  */
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
+use AOE\Crawler\Exception\CommandNotFoundException;
+use AOE\Crawler\Exception\ExtensionSettingsException;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -30,13 +32,13 @@ class PhpBinaryUtility
         $extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
 
         if (empty($extensionSettings)) {
-            throw new \Exception('ExtensionSettings are empty', 1587066853);
+            throw new ExtensionSettingsException('ExtensionSettings are empty', 1587066853);
         }
 
         if (empty($extensionSettings['phpPath'])) {
             $phpPath = CommandUtility::getCommand($extensionSettings['phpBinary']);
             if ($phpPath === false) {
-                throw new \Exception('The phpBinary: "' . $extensionSettings['phpBinary'] . '" could not be found!', 1587068215);
+                throw new CommandNotFoundException('The phpBinary: "' . $extensionSettings['phpBinary'] . '" could not be found!', 1587068215);
             }
         } else {
             $phpPath = $extensionSettings['phpPath'];

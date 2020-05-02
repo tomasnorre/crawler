@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace AOE\Crawler\Domain\Model;
 
+use AOE\Crawler\Exception\NoIndexFoundException;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -38,12 +40,12 @@ class ProcessCollection extends \ArrayObject
     /**
      * Method to retrieve an element from the collection.
      *
-     * @throws \Exception
+     * @throws NoIndexFoundException
      */
     public function offsetGet($index): Process
     {
         if (! parent::offsetExists($index)) {
-            throw new \Exception('Index "' . var_export($index, true) . '" for \AOE\Crawler\Domain\Model\Process are not available');
+            throw new NoIndexFoundException('Index "' . var_export($index, true) . '" for \AOE\Crawler\Domain\Model\Process are not available');
         }
         return parent::offsetGet($index);
     }

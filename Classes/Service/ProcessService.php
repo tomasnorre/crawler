@@ -32,6 +32,7 @@ use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Exception\ProcessException;
 use AOE\Crawler\Utility\PhpBinaryUtility;
 use TYPO3\CMS\Core\Compatibility\PublicMethodDeprecationTrait;
 use TYPO3\CMS\Core\Compatibility\PublicPropertyDeprecationTrait;
@@ -183,7 +184,7 @@ class ProcessService
 
     /**
      * starts new process
-     * @throws \Exception if no crawler process was started
+     * @throws ProcessException if no crawler process was started
      */
     public function startProcess(): bool
     {
@@ -199,7 +200,7 @@ class ProcessService
 
         $fileHandler = CommandUtility::exec($completePath);
         if ($fileHandler === false) {
-            throw new \Exception('could not start process!');
+            throw new ProcessException('could not start process!');
         }
         for ($i = 0; $i < 10; $i++) {
             if ($this->processRepository->countNotTimeouted($ttl) > $current) {
@@ -207,7 +208,7 @@ class ProcessService
             }
             sleep(1);
         }
-        throw new \Exception('Something went wrong: process did not appear within 10 seconds.');
+        throw new ProcessException('Something went wrong: process did not appear within 10 seconds.');
     }
 
     /**
@@ -242,7 +243,7 @@ class ProcessService
      * starts more crawling processes
      *
      * @return boolean if processes are started
-     * @throws \Exception
+     * @throws ProcessException
      * @deprecated
      */
     private function startRequiredProcesses()

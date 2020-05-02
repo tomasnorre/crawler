@@ -31,6 +31,8 @@ namespace AOE\Crawler\Api;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Exception\CrawlerObjectException;
+use AOE\Crawler\Exception\TimeStampException;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -332,7 +334,7 @@ class CrawlerApi
      *
      * @return array data
      *
-     * @throws \Exception
+     * @throws TimeStampException
      */
     public function getPerformanceData($start, $end, $resolution)
     {
@@ -344,7 +346,7 @@ class CrawlerApi
         $data['duration'] = $data['end'] - $data['start'];
 
         if ($data['duration'] < 1) {
-            throw new \Exception('End timestamp must be after start timestamp', 1512659945);
+            throw new TimeStampException('End timestamp must be after start timestamp', 1512659945);
         }
 
         for ($slotStart = $start; $slotStart < $end; $slotStart += $resolution) {
@@ -389,7 +391,7 @@ class CrawlerApi
      *
      * @return CrawlerController Instance of the crawler lib
      *
-     * @throws \Exception
+     * @throws CrawlerObjectException
      */
     protected function findCrawler()
     {
@@ -401,7 +403,7 @@ class CrawlerApi
         if (is_object($this->crawlerController)) {
             return $this->crawlerController;
         }
-        throw new \Exception('no crawler object', 1512659759);
+        throw new CrawlerObjectException('no crawler object', 1512659759);
     }
 
     /**

@@ -505,7 +505,7 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
     public function fetchRecordsToBeCrawled(int $countInARun)
     {
         $queryBuilderSelect = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
-        $rows = $queryBuilderSelect
+        return $queryBuilderSelect
             ->select('qid', 'scheduled')
             ->from($this->tableName)
             ->where(
@@ -518,13 +518,12 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
             ->setMaxResults($countInARun)
             ->execute()
             ->fetchAll();
-        return $rows;
     }
 
     public function updateProcessIdAndSchedulerForQueueIds(array $quidList, string $processId)
     {
         $queryBuilderUpdate = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
-        $numberOfAffectedRows = $queryBuilderUpdate
+        return $queryBuilderUpdate
             ->update($this->tableName)
             ->where(
                 $queryBuilderUpdate->expr()->in('qid', $quidList)
@@ -532,7 +531,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
             ->set('process_scheduled', time())
             ->set('process_id', $processId)
             ->execute();
-        return $numberOfAffectedRows;
     }
 
     public function unsetProcessScheduledAndProcessIdForQueueEntries(array $processIds): void
