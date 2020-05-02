@@ -252,9 +252,6 @@ class BackendModule
 
         // Branch based on type:
         switch ($selectedAction) {
-            case 'start':
-                $theOutput .= $this->showCrawlerInformationAction();
-                break;
             case 'log':
                 $quiPart = GeneralUtility::_GP('qid_details') ? '&qid_details=' . (int) GeneralUtility::_GP('qid_details') : '';
                 $setId = (int) GeneralUtility::_GP('setID');
@@ -265,6 +262,10 @@ class BackendModule
                 break;
             case 'multiprocess':
                 $theOutput .= $this->processOverviewAction();
+                break;
+            case 'start':
+            default:
+                $theOutput .= $this->showCrawlerInformationAction();
                 break;
         }
 
@@ -897,15 +898,16 @@ class BackendModule
                 //set the cli status to disable (all processes will be terminated)
                 $crawler->setDisabled(true);
                 break;
-            case 'resumeCrawling':
-                //set the cli status to end (all processes will be terminated)
-                $crawler->setDisabled(false);
-                break;
             case 'addProcess':
                 if ($this->processManager->startProcess() === false) {
                     throw new ProcessException($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.newprocesserror'));
                 }
                 MessageUtility::addNoticeMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.newprocess'));
+                break;
+            case 'resumeCrawling':
+            default:
+                //set the cli status to end (all processes will be terminated)
+                $crawler->setDisabled(false);
                 break;
         }
     }
