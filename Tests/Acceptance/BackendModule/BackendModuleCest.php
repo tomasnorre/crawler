@@ -71,6 +71,6 @@ class BackendModuleCest
         $I->selectOption('configurationSelection[]', 'default');
         $I->selectOption('SET[depth]', 99);
         $I->click('Update');
-        $I->waitForText('Count: 43', 15);
+        $I->waitForElementVisible('.table-striped', 15);
     }
 }
