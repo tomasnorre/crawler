@@ -1,3 +1,10 @@
+includes:
+    - .Build/vendor/symplify/coding-standard/packages/cognitive-complexity/config/cognitive-complexity-rules.neon
+
+rules:
+    - Symplify\CodingStandard\Rules\NoDefaultExceptionRule
+    - Symplify\CodingStandard\Rules\NoDebugFuncCallRule
+
 parameters:
     level: max
     paths:
@@ -8,6 +15,10 @@ parameters:
     inferPrivatePropertyTypeFromConstructor: true
     checkMissingIterableValueType: false
     checkGenericClassInNonGenericObjectType: false
+
+    symplify:
+        max_cognitive_complexity: 60
+        max_class_cognitive_complexity: 60
 
     ignoreErrors:
         # This will hopefully be replace after implementing https://github.com/phpstan/phpstan-doctrine/issues/117
