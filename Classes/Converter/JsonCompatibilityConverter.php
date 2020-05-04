@@ -32,7 +32,7 @@ class JsonCompatibilityConverter
      */
     public function convert(string $dataString)
     {
-        $unserialized = unserialize($dataString);
+        $unserialized = unserialize($dataString, ['allowed_classes' => false]);
         if ($unserialized) {
             return $unserialized;
         }
