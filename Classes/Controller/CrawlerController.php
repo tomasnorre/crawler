@@ -1576,8 +1576,6 @@ class CrawlerController implements LoggerAwareInterface
 
                 if (! $this->processRepository->isProcessActive($this->CLI_buildProcessId())) {
                     $this->CLI_debug('conflict / timeout (' . $this->CLI_buildProcessId() . ')');
-
-                    //TODO might need an additional returncode
                     $result |= self::CLI_STATUS_ABORTED;
                     break; //possible timeout
                 }
