@@ -797,14 +797,12 @@ class BackendModule
     protected function getEnableDisableLink(bool $isCrawlerEnabled): string
     {
         if ($isCrawlerEnabled) {
-            // TODO: Icon Should be bigger + Perhaps better icon
             return $this->getLinkButton(
                 'tx-crawler-stop',
                 $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.disablecrawling'),
                 $this->getInfoModuleUrl(['action' => 'stopCrawling'])
             );
         }
-        // TODO: Icon Should be bigger
         return $this->getLinkButton(
             'tx-crawler-start',
             $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.enablecrawling'),

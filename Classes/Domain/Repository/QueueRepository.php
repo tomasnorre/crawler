@@ -34,7 +34,6 @@ use Psr\Log\LoggerAwareInterface;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\MathUtility;
 
 /**
  * Class QueueRepository
@@ -364,11 +363,6 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
      */
     public function isPageInQueue(int $uid, bool $unprocessed_only = true, bool $timed_only = false, int $timestamp = 0): bool
     {
-        // TODO: Looks like the check is obsolete as PHP doesn't allow other than ints for the $uid, PHP 7.2 Strict Mode
-        if (! MathUtility::canBeInterpretedAsInteger($uid)) {
-            throw new \InvalidArgumentException('Invalid parameter type', 1468931945);
-        }
-
         $isPageInQueue = false;
 
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
