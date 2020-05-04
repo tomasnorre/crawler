@@ -54,6 +54,7 @@ class ProcessService
 
     /**
      * @var string[]
+     * @noRector \Rector\DeadCode\Rector\Property\RemoveUnusedPrivatePropertyRector
      */
     private $deprecatedPublicProperties = [
         'queueRepository' => 'Using queueRepository is deprecated since 9.0.1 and will be removed in v10.x',
@@ -65,6 +66,7 @@ class ProcessService
 
     /**
      * @var string[]
+     * @noRector \Rector\DeadCode\Rector\Property\RemoveUnusedPrivatePropertyRector
      */
     private $deprecatedPublicMethods = [
         'multiProcess' => 'Using ProcessService::multiProcess() is deprecated since 9.0.1 and will be removed in v10.x',
