@@ -1004,7 +1004,7 @@ class CrawlerController implements LoggerAwareInterface
                 'tx_crawler_queue',
                 [
                     'page_id' => (int) $page_id,
-                    'parameters' => serialize($params),
+                    'parameters' => json_encode($params),
                     'scheduled' => (int) $schedule ?: $this->getCurrentTime(),
                     'exec_time' => 0,
                     'set_id' => (int) $setId,
@@ -1059,7 +1059,7 @@ class CrawlerController implements LoggerAwareInterface
         }
 
         // Compile value array:
-        $parameters_serialized = serialize($parameters);
+        $parameters_serialized = json_encode($parameters);
         $fieldArray = [
             'page_id' => (int) $id,
             'parameters' => $parameters_serialized,
@@ -1205,7 +1205,7 @@ class CrawlerController implements LoggerAwareInterface
         }
 
         // Set result in log which also denotes the end of the processing of this entry.
-        $field_array = ['result_data' => serialize($result)];
+        $field_array = ['result_data' => json_encode($result)];
 
         SignalSlotUtility::emitSignal(
             self::class,
@@ -1245,7 +1245,7 @@ class CrawlerController implements LoggerAwareInterface
         $result = $this->queueExecutor->executeQueueItem($field_array, $this);
 
         // Set result in log which also denotes the end of the processing of this entry.
-        $field_array = ['result_data' => serialize($result)];
+        $field_array = ['result_data' => json_encode($result)];
 
         SignalSlotUtility::emitSignal(
             self::class,

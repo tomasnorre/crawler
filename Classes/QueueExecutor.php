@@ -81,7 +81,7 @@ class QueueExecutor implements SingletonInterface
             unset($parameters['_CALLBACKOBJ']);
             $result = GeneralUtility::makeInstance(CallbackExecutionStrategy::class)
                 ->fetchByCallback($className, $parameters, $crawlerController);
-            $result = ['content' => serialize($result)];
+            $result = ['content' => json_encode($result)];
         } else {
             // Regular FE request
             $crawlerId = $this->generateCrawlerIdFromQueueItem($queueItem);
@@ -90,7 +90,7 @@ class QueueExecutor implements SingletonInterface
             $url = new Uri($parameters['url']);
             $result = $this->selectedStrategy->fetchUrlContents($url, $crawlerId);
             if ($result !== false) {
-                $result = ['content' => serialize($result)];
+                $result = ['content' => json_encode($result)];
             }
 
             $signalPayload = ['url' => $parameters['url'], 'result' => $result];

@@ -303,7 +303,7 @@ class CrawlerApiTest extends FunctionalTestCase
                 ],
             ],
         ];
-        $expectedParameter = serialize($expectedParameterData);
+        $expectedParameter = json_encode($expectedParameterData);
 
         $this->importDataSet(__DIR__ . '/../data/canCreateQueueEntriesUsingConfigurationRecord.xml');
         $crawlerApi = $this->getMockedCrawlerAPI(100000);
