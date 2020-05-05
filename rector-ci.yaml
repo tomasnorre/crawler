@@ -28,3 +28,4 @@ parameters:
 
 services:
     Rector\DeadCode\Rector\Property\RemoveUnusedPrivatePropertyRector: null
+    Rector\DeadCode\Rector\Class_\RemoveSetterOnlyPropertyAndMethodCallRector: null
