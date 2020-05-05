@@ -44,16 +44,6 @@ cache:
   directories:
     - $HOME/.composer/cache
 
-deploy:
-    provider: s3
-    access_key_id: "$AWS_ACCESS_KEY"
-    secret_access_key: "$AWS_SECRET_KEY"
-    bucket: "crawler-devbox"
-    region: eu-east-1
-    local_dir: $HOME/build/AOEpeople/crawler/Tests/Acceptance/_output/
-    on:
-        condition: $PUBLISH_REPORT = 1
-
 before_script:
   # Installs nimut/typo3-complete
   - travis_wait 30 composer require --dev nimut/typo3-complete=$TYPO3_VERSION
@@ -120,7 +110,6 @@ jobs:
       php: 7.2
       env:
         - TYPO3_VERSION=^9.5
-        - PUBLISH_REPORT=1
       before_script:
         - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
         - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"

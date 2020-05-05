@@ -89,10 +89,6 @@
             "[ -e .Build/bin/phpstan ] || composer update",
             ".Build/bin/phpstan analyse"
         ],
-        "rector": [
-            "[ -e .Build/bin/rector ] || composer update",
-            ".Build/bin/rector process --dry-run --config rector-ci.yaml"
-        ],
         "test:all": [
             "@test:unit",
             "@test:functional"
