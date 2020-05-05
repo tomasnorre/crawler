@@ -248,7 +248,6 @@ class CrawlerApiTest extends FunctionalTestCase
      */
     public function canNotCreateDuplicateQueueEntriesForTwoPagesInThePast(): void
     {
-        $this->markTestSkipped('Is skipped, as we need to check how we are dealing with the find duplicates entries in queue');
         $this->importDataSet(__DIR__ . '/../data/canNotAddDuplicatePagesToQueue.xml');
 
         $crawlerApi = $this->getMockedCrawlerAPI(100000);
@@ -271,7 +270,6 @@ class CrawlerApiTest extends FunctionalTestCase
      */
     public function canNotCreateDuplicateForTwoPagesInTheFutureWithTheSameTimestamp(): void
     {
-        $this->markTestSkipped('Is skipped, as we need to check how we are dealing with the find duplicates entries in queue');
         $this->importDataSet(__DIR__ . '/../data/canNotAddDuplicatePagesToQueue.xml');
 
         $crawlerApi = $this->getMockedCrawlerAPI(100000);
