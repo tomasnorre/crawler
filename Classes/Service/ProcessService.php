@@ -54,6 +54,7 @@ class ProcessService
 
     /**
      * @var string[]
+     * @noRector
      * @noRector \Rector\DeadCode\Rector\Property\RemoveUnusedPrivatePropertyRector
      * @noRector \Rector\DeadCode\Rector\Class_\RemoveSetterOnlyPropertyAndMethodCallRector
      */
@@ -67,6 +68,7 @@ class ProcessService
 
     /**
      * @var string[]
+     * @noRector
      * @noRector \Rector\DeadCode\Rector\Property\RemoveUnusedPrivatePropertyRector
      * @noRector \Rector\DeadCode\Rector\Class_\RemoveSetterOnlyPropertyAndMethodCallRector
      */
