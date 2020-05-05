@@ -56,20 +56,20 @@ class ProcessService
      * @var string[]
      */
     private $deprecatedPublicProperties = [
-        'queueRepository' => 'Using queueRepository is deprecated since 9.0.1 and will be removed in v10.x',
-        'crawlerController' => 'Using crawlerController is deprecated since 9.0.1 and will be removed in v10.x',
-        'countInARun' => 'Using countInARun is deprecated since 9.0.1 and will be removed in v10.x',
-        'processLimit' => 'Using processLimit is deprecated since 9.0.1 and will be removed in v10.x',
-        'verbose' => 'Using verbose is deprecated since 9.0.1 and will be removed in v10.x',
+        'queueRepository' => 'Using queueRepository is deprecated since 9.0.1 and will be removed in v11.x',
+        'crawlerController' => 'Using crawlerController is deprecated since 9.0.1 and will be removed in v11.x',
+        'countInARun' => 'Using countInARun is deprecated since 9.0.1 and will be removed in v11.x',
+        'processLimit' => 'Using processLimit is deprecated since 9.0.1 and will be removed in v11.x',
+        'verbose' => 'Using verbose is deprecated since 9.0.1 and will be removed in v11.x',
     ];
 
     /**
      * @var string[]
      */
     private $deprecatedPublicMethods = [
-        'multiProcess' => 'Using ProcessService::multiProcess() is deprecated since 9.0.1 and will be removed in v10.x',
-        'reportItemStatus' => 'Using ProcessService::reportItemStatus() is deprecated since 9.0.1 and will be removed in v10.x',
-        'startRequiredProcesses' => 'Using ProcessService::startRequiredProcesses() is deprecated since 9.0.1 and will be removed in v10.x',
+        'multiProcess' => 'Using ProcessService::multiProcess() is deprecated since 9.0.1 and will be removed in v11.x',
+        'reportItemStatus' => 'Using ProcessService::reportItemStatus() is deprecated since 9.0.1 and will be removed in v11.x',
+        'startRequiredProcesses' => 'Using ProcessService::startRequiredProcesses() is deprecated since 9.0.1 and will be removed in v11.x',
     ];
 
     /**
