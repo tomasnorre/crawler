@@ -10,6 +10,7 @@ suites:
                     browser: chrome
                     wait: 1
                     host: localhost
+                    window_size: 1920x1080
                 - \Helper\Acceptance
         step_decorators:
             - Codeception\Step\ConditionalAssertion

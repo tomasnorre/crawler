@@ -42,29 +42,35 @@ class BackendModuleCest
         $I->canSee('Info', '#web_info');
     }
 
-    public function canSelectInfoModule(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    public function canSelectInfoModuleStartCrawling(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
-        $I->openCrawlerBackendModule($adminStep, $pageTree);
-        $I->switchToContentFrame();
-        $I->see('Please select at least one configuration');
+        $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
+    }
+
+    public function canSelectInfoModuleCrawlerLog(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    {
+        $I->openCrawlerBackendModuleCrawlerLog($adminStep, $pageTree);
+    }
+
+    public function canSelectInfoModuleMultiProcess(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    {
+        $I->openCrawlerBackendModuleCrawlerMultiProcess($adminStep, $pageTree);
     }
 
     public function updateUrlButton(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
-        $I->openCrawlerBackendModule($adminStep, $pageTree);
-        $I->switchToContentFrame();
+        $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
         $I->selectOption('configurationSelection[]', 'default');
         $I->click('Update');
-        $I->waitForText('Count: 1');
+        $I->waitForText('Count: 1', 15);
     }
 
     public function updateUrlButtonSetDepth(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
-        $I->openCrawlerBackendModule($adminStep, $pageTree);
-        $I->switchToContentFrame();
+        $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
         $I->selectOption('configurationSelection[]', 'default');
         $I->selectOption('SET[depth]', 99);
         $I->click('Update');
-        $I->waitForText('Count: 43');
+        $I->waitForElementVisible('.table-striped', 15);
     }
 }

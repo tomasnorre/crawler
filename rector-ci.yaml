@@ -25,3 +25,7 @@ parameters:
         - "Tests/Functional/Api/CrawlerApiTest.php"
         # Codeception Generated Files
         - "Tests/Acceptance/Support/_generated"
+
+services:
+    Rector\DeadCode\Rector\Property\RemoveUnusedPrivatePropertyRector: null
+    Rector\DeadCode\Rector\Class_\RemoveSetterOnlyPropertyAndMethodCallRector: null

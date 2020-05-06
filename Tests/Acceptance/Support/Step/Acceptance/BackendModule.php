@@ -30,9 +30,31 @@ class BackendModule extends \AcceptanceTester
         $I->click('#web_info');
         // Due to slow response time.
         $I->wait(15);
-        //$I->canSee('Page Information');
-        $pageTree->openPath(['Congratulations']);
+        $pageTree->openPath(['[1] Congratulations']);
         // Due to slow response time.
         $I->wait(15);
+        $I->switchToContentFrame();
+        $I->waitForText('Page information', 30);
+    }
+
+    public function openCrawlerBackendModuleStartCrawling(Admin $I, PageTree $pageTree): void
+    {
+        $this->openCrawlerBackendModule($I, $pageTree);
+        $I->selectOption('SET[crawlaction]', 'start');
+        $I->waitForText('Please select at least one configuration');
+    }
+
+    public function openCrawlerBackendModuleCrawlerLog(Admin $I, PageTree $pageTree): void
+    {
+        $this->openCrawlerBackendModule($I, $pageTree);
+        $I->selectOption('SET[crawlaction]', 'log');
+        $I->waitForText('Crawler log');
+    }
+
+    public function openCrawlerBackendModuleCrawlerMultiProcess(Admin $I, PageTree $pageTree): void
+    {
+        $this->openCrawlerBackendModule($I, $pageTree);
+        $I->selectOption('SET[crawlaction]', 'multiprocess');
+        $I->waitForText('CLI-Path');
     }
 }
