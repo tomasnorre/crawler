@@ -36,7 +36,7 @@
         "nunomaduro/phpinsights": "^1.13",
         "phpstan/extension-installer": "^1.0",
         "phpstan/phpstan": "^0.12",
-        "rector/rector": "^0.7",
+        "rector/rector": "^0.7.22",
         "saschaegerer/phpstan-typo3": "^0.13.1",
         "slam/phpstan-extensions": "^5.0",
         "symfony/yaml": "^4.4 || ^5.0",
