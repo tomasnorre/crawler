@@ -88,8 +88,8 @@ class Process extends AbstractEntity
      * @var string[]
      */
     private $deprecatedPublicMethods = [
-        'getTimeForFirstItem' => 'Using Process::getTimeForFirstItem() is deprecated since 9.0.1 and will be removed in v10.x',
-        'getTimeForLastItem' => 'Using Process::getTimeForLastItem() is deprecated since 9.0.1 and will be removed in v10.x',
+        'getTimeForFirstItem' => 'Using Process::getTimeForFirstItem() is deprecated since 9.0.1 and will be removed in v11.x',
+        'getTimeForLastItem' => 'Using Process::getTimeForLastItem() is deprecated since 9.0.1 and will be removed in v11.x',
     ];
 
     public function __construct()
