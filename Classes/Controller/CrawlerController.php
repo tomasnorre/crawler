@@ -1686,7 +1686,6 @@ class CrawlerController implements LoggerAwareInterface
      *
      * @param mixed $releaseIds string with a single process-id or array with multiple process-ids
      * @return boolean
-     * @depracated check alternative??
      */
     public function CLI_releaseProcesses($releaseIds)
     {
