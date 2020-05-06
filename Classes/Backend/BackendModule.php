@@ -33,12 +33,11 @@ use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
-use AOE\Crawler\Event\EventDispatcher;
-use AOE\Crawler\Exception\ProcessException;
 use AOE\Crawler\Hooks\CrawlerHookInterface;
 use AOE\Crawler\Service\ProcessService;
 use AOE\Crawler\Utility\MessageUtility;
 use AOE\Crawler\Utility\PhpBinaryUtility;
+use AOE\Crawler\Utility\SignalSlotUtility;
 use Psr\Http\Message\UriInterface;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
@@ -327,10 +326,11 @@ class BackendModule
                     $reason->setReason(Reason::REASON_GUI_SUBMIT);
                     $reason->setDetailText('The user ' . $GLOBALS['BE_USER']->user['username'] . ' added pages to the crawler queue manually');
 
-                    EventDispatcher::getInstance()->post(
-                        'invokeQueueChange',
-                        strval($this->findCrawler()->setID),
-                        ['reason' => $reason]
+                    $signalPayload = ['reason' => $reason];
+                    SignalSlotUtility::emitSignal(
+                        self::class,
+                        SignalSlotUtility::SIGNAL_INVOKE_QUEUE_CHANGE,
+                        $signalPayload
                     );
                 }
 

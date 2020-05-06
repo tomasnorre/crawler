@@ -28,11 +28,22 @@ Released:
 * CrawlerController->cleanUpOldQueueEntries()
 * CrawlerController->flushQueue()
 * CrawlerController->getLogEntriesForSetId()
+* Process->getTimeForFirstItem()
+* Process->getTimeForLastItem()
 * ProcessService->multiProcess()
 * ProcessService->reportItemStatus()
 * ProcessService->startRequiredProcesses()
 
 ### Removed
+#### Classes
+* EventDispatcher
+* EventObserverInterface
+
+#### Functions & Properties
+* Process->row
+* Queue->row
+* CrawlerApi->countEntriesInQueueForPageByScheduleTime()
+
 
 ### Fixed
 * Changed result handling for Crawling in case of 500 errors on directRequests

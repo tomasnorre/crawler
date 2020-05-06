@@ -7,7 +7,7 @@ namespace AOE\Crawler\Domain\Model;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2019 AOE GmbH <dev@aoe.com>
+ *  (c) 2020 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -35,11 +35,6 @@ use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
  */
 class Queue extends AbstractEntity
 {
-    /**
-     * @var array
-     */
-    protected $row;
-
     /**
      * @var int
      */

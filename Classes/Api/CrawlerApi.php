@@ -425,42 +425,6 @@ class CrawlerApi
     }
 
     /**
-     * Counts all entries in the database which are scheduled for a given page id and a schedule timestamp.
-     *
-     * @param int $page_uid
-     * @param int $schedule_timestamp
-     *
-     * @return int
-     */
-    protected function countEntriesInQueueForPageByScheduleTime($page_uid, $schedule_timestamp)
-    {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
-        $count = $queryBuilder
-            ->count('*')
-            ->from($this->tableName);
-
-        //if the same page is scheduled for the same time and has not be executed?
-        //un-timed elements need an exec_time with 0 because they can occur multiple times
-        if ($schedule_timestamp === 0) {
-            $count->where(
-                $queryBuilder->expr()->eq('page_id', $page_uid),
-                $queryBuilder->expr()->eq('exec_time', 0),
-                $queryBuilder->expr()->eq('scheduled', $schedule_timestamp)
-            );
-        } else {
-            //timed elements have got a fixed schedule time, if a record with this time
-            //exists it is maybe queued for the future, or is has been queue for the past and therefore
-            //also been processed.
-            $count->where(
-                $queryBuilder->expr()->eq('page_id', $page_uid),
-                $queryBuilder->expr()->eq('scheduled', $schedule_timestamp)
-            );
-        }
-
-        return $count->execute()->rowCount();
-    }
-
-    /**
      * Reads the registered processingInstructions of the crawler
      */
     private function getCrawlerProcInstructions(): array

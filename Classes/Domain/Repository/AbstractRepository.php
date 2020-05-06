@@ -49,7 +49,7 @@ abstract class AbstractRepository extends Repository
      *
      * @return integer
      *
-     * Todo: Remove as the Repository function that we enherit from already have a countAll() function. But currently tests fails, if removed.
+     * Todo: Remove as the Repository function that we inherit from already have a countAll() function. But currently tests fails, if removed.
      */
     public function countAll()
     {

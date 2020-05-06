@@ -23,7 +23,7 @@ use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Domain\Repository\QueueRepository;
-use AOE\Crawler\Event\EventDispatcher;
+use AOE\Crawler\Utility\SignalSlotUtility;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -140,10 +140,12 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             $reason = new Reason();
             $reason->setReason(Reason::REASON_GUI_SUBMIT);
             $reason->setDetailText('The cli script of the crawler added to the queue');
-            EventDispatcher::getInstance()->post(
-                'invokeQueueChange',
-                strval($crawlerController->setID),
-                ['reason' => $reason]
+
+            $signalPayload = ['reason' => $reason];
+            SignalSlotUtility::emitSignal(
+                self::class,
+                SignalSlotUtility::SIGNAL_INVOKE_QUEUE_CHANGE,
+                $signalPayload
             );
         }
 

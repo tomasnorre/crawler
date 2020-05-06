@@ -32,7 +32,6 @@ use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
-use AOE\Crawler\Event\EventDispatcher;
 use AOE\Crawler\QueueExecutor;
 use AOE\Crawler\Utility\SignalSlotUtility;
 use Psr\Http\Message\UriInterface;
@@ -1090,9 +1089,20 @@ class CrawlerController implements LoggerAwareInterface
                 $uid = $connectionForCrawlerQueue->lastInsertId('tx_crawler_queue', 'qid');
                 $rows[] = $uid;
                 $urlAdded = true;
-                EventDispatcher::getInstance()->post('urlAddedToQueue', strval($this->setID), ['uid' => $uid, 'fieldArray' => $fieldArray]);
+
+                $signalPayload = ['uid' => $uid, 'fieldArray' => $fieldArray];
+                SignalSlotUtility::emitSignal(
+                    self::class,
+                    SignalSlotUtility::SIGNAL_URL_ADDED_TO_QUEUE,
+                    $signalPayload
+                );
             } else {
-                EventDispatcher::getInstance()->post('duplicateUrlInQueue', strval($this->setID), ['rows' => $rows, 'fieldArray' => $fieldArray]);
+                $signalPayload = ['rows' => $rows, 'fieldArray' => $fieldArray];
+                SignalSlotUtility::emitSignal(
+                    self::class,
+                    SignalSlotUtility::SIGNAL_DUPLICATE_URL_IN_QUEUE,
+                    $signalPayload
+                );
             }
         }
 
@@ -1777,26 +1787,30 @@ class CrawlerController implements LoggerAwareInterface
 
         $queryBuilder = $this->getQueryBuilder($this->tableName);
 
-        if (EventDispatcher::getInstance()->hasObserver('queueEntryFlush')) {
-            $groups = $queryBuilder
-                ->select('DISTINCT set_id')
-                ->from($this->tableName)
-                ->where($realWhere)
-                ->execute()
-                ->fetchAll();
-            if (is_array($groups)) {
-                foreach ($groups as $group) {
-                    $subSet = $queryBuilder
-                        ->select('uid', 'set_id')
-                        ->from($this->tableName)
-                        ->where(
-                            $realWhere,
-                            $queryBuilder->expr()->eq('set_id', $group['set_id'])
-                        )
-                        ->execute()
-                        ->fetchAll();
-                    EventDispatcher::getInstance()->post('queueEntryFlush', $group['set_id'], $subSet);
-                }
+        $groups = $queryBuilder
+            ->selectLiteral('DISTINCT set_id')
+            ->from($this->tableName)
+            ->where($realWhere)
+            ->execute()
+            ->fetchAll();
+        if (is_array($groups)) {
+            foreach ($groups as $group) {
+                $subSet = $queryBuilder
+                    ->select('qid', 'set_id')
+                    ->from($this->tableName)
+                    ->where(
+                        $realWhere,
+                        $queryBuilder->expr()->eq('set_id', $group['set_id'])
+                    )
+                    ->execute()
+                    ->fetchAll();
+
+                $payLoad = ['subSet' => $subSet];
+                SignalSlotUtility::emitSignal(
+                    self::class,
+                    SignalSlotUtility::SIGNAL_QUEUE_ENTRY_FLUSH,
+                    $payLoad
+                );
             }
         }
 
