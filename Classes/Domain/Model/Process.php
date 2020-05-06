@@ -86,6 +86,8 @@ class Process extends AbstractEntity
 
     /**
      * @var string[]
+     * @noRector \Rector\DeadCode\Rector\Property\RemoveUnusedPrivatePropertyRector
+     * @noRector \Rector\DeadCode\Rector\Class_\RemoveSetterOnlyPropertyAndMethodCallRector
      */
     private $deprecatedPublicMethods = [
         'getTimeForFirstItem' => 'Using Process::getTimeForFirstItem() is deprecated since 9.0.1 and will be removed in v11.x',
