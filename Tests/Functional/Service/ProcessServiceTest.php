@@ -29,8 +29,11 @@ namespace AOE\Crawler\Tests\Functional\Service;
  ***************************************************************/
 
 use AOE\Crawler\Controller\CrawlerController;
+use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Service\ProcessService;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class ProcessServiceTest
@@ -39,6 +42,11 @@ use Nimut\TestingFramework\TestCase\FunctionalTestCase;
  */
 class ProcessServiceTest extends FunctionalTestCase
 {
+    /**
+     * @var array
+     */
+    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+
     /**
      * @var CrawlerController
      */
@@ -55,8 +63,22 @@ class ProcessServiceTest extends FunctionalTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->subject = $this->createPartialMock(ProcessService::class, ['dummyMethod']);
+
+        // Extension Settings
+        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [
+            'phpBinary' => 'php',
+        ];
+
+        $this->subject = GeneralUtility::makeInstance(ObjectManager::class)->get(ProcessService::class);
         $this->crawlerController = $this->createPartialMock(CrawlerController::class, ['dummyMethod']);
+
+        $mockedProcessRepository = $this->createPartialMock(ProcessRepository::class, ['countNotTimeouted']);
+        $mockedProcessRepository->expects($this->exactly(2))->method('countNotTimeouted')->withConsecutive(
+            [$this->equalTo(1), $this->greaterThan(1)],
+            [$this->equalTo(2), $this->greaterThan(2)]
+        );
+
+        $this->subject->processRepository = $mockedProcessRepository;
     }
 
     /**
@@ -69,7 +91,6 @@ class ProcessServiceTest extends FunctionalTestCase
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [
             'phpPath' => '/usr/local/bin/foobar-binary-to-be-able-to-differ-the-test',
             'phpBinary' => '/usr/local/bin/php74',
-
         ];
         self::assertContains(
             '/usr/local/bin/foobar-binary-to-be-able-to-differ-the-test',
@@ -108,5 +129,13 @@ class ProcessServiceTest extends FunctionalTestCase
             'processLimit' => 1,
         ]);
         $this->subject->multiProcess($timeOut);
+    }
+
+    /**
+     * @test
+     */
+    public function startProcess(): void
+    {
+        self::assertTrue($this->subject->startProcess());
     }
 }
