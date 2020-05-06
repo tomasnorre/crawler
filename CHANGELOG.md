@@ -15,6 +15,7 @@ Released:
 * Corrected typos in Documentation and signals
 * Cleanup CrawlerController - functions moved to respected Repository
 * Moved HTMl from BackendModule showLog to Fluid template
+* Switched from serialized to json-data for Queue information
 
 ### Deprecated
 #### Classes
