@@ -22,7 +22,7 @@ We have included a [ddev](https://www.ddev.com) devbox to help the development.
 
 ##### How to use the devbox?
 
-```
+```shell script
 $ git clone git@github.com:AOEpeople/crawler.git
 $ cd .devbox
 $ ddev start
