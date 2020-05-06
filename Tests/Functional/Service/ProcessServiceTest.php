@@ -63,22 +63,8 @@ class ProcessServiceTest extends FunctionalTestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        // Extension Settings
-        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [
-            'phpBinary' => 'php',
-        ];
-
         $this->subject = GeneralUtility::makeInstance(ObjectManager::class)->get(ProcessService::class);
         $this->crawlerController = $this->createPartialMock(CrawlerController::class, ['dummyMethod']);
-
-        $mockedProcessRepository = $this->createPartialMock(ProcessRepository::class, ['countNotTimeouted']);
-        $mockedProcessRepository->expects($this->exactly(2))->method('countNotTimeouted')->withConsecutive(
-            [$this->equalTo(1), $this->greaterThan(1)],
-            [$this->equalTo(2), $this->greaterThan(2)]
-        );
-
-        $this->subject->processRepository = $mockedProcessRepository;
     }
 
     /**
@@ -111,15 +97,6 @@ class ProcessServiceTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function getCrawlerCliPathThrowsException(): void
-    {
-        $this->expectExceptionMessage('Return value of AOE\Crawler\Configuration\ExtensionConfigurationProvider::getExtensionConfiguration() must be of the type array');
-        $this->subject->getCrawlerCliPath();
-    }
-
-    /**
-     * @test
-     */
     public function multiProcessThrowsException(): void
     {
         $this->expectException(\RuntimeException::class);
@@ -136,6 +113,17 @@ class ProcessServiceTest extends FunctionalTestCase
      */
     public function startProcess(): void
     {
+        // Extension Settings
+        $extensionSettings = [
+            'phpBinary' => 'php',
+            'processMaxRunTime' => 7,
+        ];
+
+        $mockedProcessRepository = $this->createPartialMock(ProcessRepository::class, ['countNotTimeouted']);
+        // This is done to fake that the process is started, the process start itself isn't tested, but the code around it is.
+        $mockedProcessRepository->expects($this->exactly(2))->method('countNotTimeouted')->will($this->onConsecutiveCalls(1, 2));
+        $this->subject->processRepository = $mockedProcessRepository;
+
         self::assertTrue($this->subject->startProcess());
     }
 }

@@ -113,6 +113,11 @@ class ProcessService
     private $processRepository;
 
     /**
+     * @var array
+     */
+    private $extensionSettings;
+
+    /**
      * @var bool
      * @deprecated
      */
@@ -126,11 +131,11 @@ class ProcessService
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->processRepository = $objectManager->get(ProcessRepository::class);
         $this->queueRepository = $objectManager->get(QueueRepository::class);
-        $extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
-        $this->timeToLive = intval($extensionSettings['processMaxRunTime']);
-        $this->countInARun = intval($extensionSettings['countInARun']);
-        $this->processLimit = intval($extensionSettings['processLimit']);
-        $this->verbose = boolval($extensionSettings['processVerbose']);
+        $this->extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
+        $this->timeToLive = (int) $this->extensionSettings['processMaxRunTime'];
+        $this->countInARun = (int) $this->extensionSettings['countInARun'];
+        $this->processLimit = (int) $this->extensionSettings['processLimit'];
+        $this->verbose = (bool) $this->extensionSettings['processVerbose'];
     }
 
     /**
