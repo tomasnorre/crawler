@@ -196,6 +196,68 @@ class ProcessTest extends UnitTestCase
 
     /**
      * @test
+     */
+    public function getTimeForFirstItemReturnsInt(): void
+    {
+        $expectedExecTime = 1588934231;
+        $mockedQueueRepository = self::getAccessibleMock(QueueRepository::class, ['findYoungestEntryForProcess'], [], '', false);
+        $mockedQueueRepository->method('findYoungestEntryForProcess')->willReturn(['exec_time' => $expectedExecTime]);
+        $this->subject->_setProperty('queueRepository', $mockedQueueRepository);
+
+        self::assertEquals(
+            $expectedExecTime,
+            $this->subject->getTimeForFirstItem()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function getTimeForFirstItemReturnZeroAsProcessEmpty(): void
+    {
+        $mockedQueueRepository = self::getAccessibleMock(QueueRepository::class, ['findYoungestEntryForProcess'], [], '', false);
+        $mockedQueueRepository->method('findYoungestEntryForProcess')->willReturn([]);
+        $this->subject->_setProperty('queueRepository', $mockedQueueRepository);
+
+        self::assertEquals(
+            0,
+            $this->subject->getTimeForFirstItem()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function getTimeForLastItemReturnsInt(): void
+    {
+        $expectedExecTime = 1588934231;
+        $mockedQueueRepository = self::getAccessibleMock(QueueRepository::class, ['findOldestEntryForProcess'], [], '', false);
+        $mockedQueueRepository->method('findOldestEntryForProcess')->willReturn(['exec_time' => $expectedExecTime]);
+        $this->subject->_setProperty('queueRepository', $mockedQueueRepository);
+
+        self::assertEquals(
+            $expectedExecTime,
+            $this->subject->getTimeForLastItem()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function getTimeForLastItemReturnZeroAsProcessEmpty(): void
+    {
+        $mockedQueueRepository = self::getAccessibleMock(QueueRepository::class, ['findOldestEntryForProcess'], [], '', false);
+        $mockedQueueRepository->method('findOldestEntryForProcess')->willReturn([]);
+        $this->subject->_setProperty('queueRepository', $mockedQueueRepository);
+
+        self::assertEquals(
+            0,
+            $this->subject->getTimeForLastItem()
+        );
+    }
+
+    /**
+     * @test
      *
      * @dataProvider getRuntimeReturnsIntegerDataProvider
      */
