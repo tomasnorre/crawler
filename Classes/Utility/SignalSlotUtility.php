@@ -51,6 +51,9 @@ class SignalSlotUtility
      *
      * @param string $class
      * @param string $signal
+     * @param array $payload
+     *
+     * @return void
      */
     public static function emitSignal($class, $signal, array $payload = []): void
     {
