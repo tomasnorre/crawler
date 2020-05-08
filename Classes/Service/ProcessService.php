@@ -46,6 +46,7 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  * Class ProcessService
  *
  * @package AOE\Crawler\Service
+ * @ignoreAnnotation("noRector")
  */
 class ProcessService
 {
