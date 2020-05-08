@@ -248,6 +248,9 @@ class Process extends AbstractEntity
         return $this->queueRepository->countNonExecutedItemsByProcess($this);
     }
 
+    /**
+     * @codeCoverageIgnore as it's a simple addition function
+     */
     public function getFinallyAssigned(): int
     {
         return $this->getItemsToProcess() + $this->getAmountOfItemsProcessed();
