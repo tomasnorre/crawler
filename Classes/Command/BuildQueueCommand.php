@@ -39,7 +39,7 @@ class BuildQueueCommand extends Command
     protected function configure(): void
     {
         $this->setHelp(
-            'Try "typo3 help crawler:flushQueue" to see your options' . chr(10) . chr(10) .
+            'Try "typo3 help crawler:buildQueue" to see your options' . chr(10) . chr(10) .
             'Works as a CLI interface to some functionality from the Web > Info > Site Crawler module;
 It can put entries in the queue from command line options, return the list of URLs and even execute
 all entries right away without having to queue them up - this can be useful for immediate re-cache,
