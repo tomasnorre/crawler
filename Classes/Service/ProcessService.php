@@ -7,7 +7,7 @@ namespace AOE\Crawler\Service;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2017 AOE GmbH <dev@aoe.com>
+ *  (c) 2020 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
