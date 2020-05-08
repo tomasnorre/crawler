@@ -40,10 +40,10 @@ It will remove queue entries and perform a cleanup.' . chr(10) . chr(10) .
             '
             Examples:
               --- Remove all finished queue-entries in the sub-branch of page 5
-              $ typo3 crawler:flushQueue --mode finished --page 5
-             
+              $ typo3 crawler:flushQueue finished --page 5
+
               --- Remove all pending queue-entries for all pages
-              $ typo3 crawler:flushQueue --mode pending
+              $ typo3 crawler:flushQueue pending
             '
         );
         $this->addArgument(
@@ -70,10 +70,10 @@ It will remove queue entries and perform a cleanup.' . chr(10) . chr(10) .
      * Examples:
      *
      * --- Remove all finished queue-entries in the sub-branch of page 5
-     * $ typo3 crawler:flushQueue --mode finished --page 5
+     * $ typo3 crawler:flushQueue finished --page 5
      *
      * --- Remove all pending queue-entries for all pages
-     * $ typo3 crawler:flushQueue --mode pending
+     * $ typo3 crawler:flushQueue pending
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
