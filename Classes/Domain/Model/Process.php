@@ -38,6 +38,7 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  * Class Process
  *
  * @package AOE\Crawler\Domain\Model
+ * @ignoreAnnotation("noRector")
  */
 class Process extends AbstractEntity
 {
@@ -248,6 +249,9 @@ class Process extends AbstractEntity
         return $this->queueRepository->countNonExecutedItemsByProcess($this);
     }
 
+    /**
+     * @codeCoverageIgnore as it's a simple addition function
+     */
     public function getFinallyAssigned(): int
     {
         return $this->getItemsToProcess() + $this->getAmountOfItemsProcessed();

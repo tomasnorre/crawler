@@ -7,7 +7,7 @@ namespace AOE\Crawler\Tests\Functional\Service;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2019 AOE GmbH <dev@aoe.com>
+ *  (c) 2020 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -29,8 +29,11 @@ namespace AOE\Crawler\Tests\Functional\Service;
  ***************************************************************/
 
 use AOE\Crawler\Controller\CrawlerController;
+use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Service\ProcessService;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class ProcessServiceTest
@@ -39,6 +42,11 @@ use Nimut\TestingFramework\TestCase\FunctionalTestCase;
  */
 class ProcessServiceTest extends FunctionalTestCase
 {
+    /**
+     * @var array
+     */
+    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+
     /**
      * @var CrawlerController
      */
@@ -55,7 +63,7 @@ class ProcessServiceTest extends FunctionalTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->subject = $this->createPartialMock(ProcessService::class, ['dummyMethod']);
+        $this->subject = GeneralUtility::makeInstance(ObjectManager::class)->get(ProcessService::class);
         $this->crawlerController = $this->createPartialMock(CrawlerController::class, ['dummyMethod']);
     }
 
@@ -69,7 +77,6 @@ class ProcessServiceTest extends FunctionalTestCase
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [
             'phpPath' => '/usr/local/bin/foobar-binary-to-be-able-to-differ-the-test',
             'phpBinary' => '/usr/local/bin/php74',
-
         ];
         self::assertContains(
             '/usr/local/bin/foobar-binary-to-be-able-to-differ-the-test',
@@ -90,15 +97,6 @@ class ProcessServiceTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function getCrawlerCliPathThrowsException(): void
-    {
-        $this->expectExceptionMessage('Return value of AOE\Crawler\Configuration\ExtensionConfigurationProvider::getExtensionConfiguration() must be of the type array');
-        $this->subject->getCrawlerCliPath();
-    }
-
-    /**
-     * @test
-     */
     public function multiProcessThrowsException(): void
     {
         $this->expectException(\RuntimeException::class);
@@ -108,5 +106,24 @@ class ProcessServiceTest extends FunctionalTestCase
             'processLimit' => 1,
         ]);
         $this->subject->multiProcess($timeOut);
+    }
+
+    /**
+     * @test
+     */
+    public function startProcess(): void
+    {
+        // Extension Settings
+        $extensionSettings = [
+            'phpBinary' => 'php',
+            'processMaxRunTime' => 7,
+        ];
+
+        $mockedProcessRepository = $this->createPartialMock(ProcessRepository::class, ['countNotTimeouted']);
+        // This is done to fake that the process is started, the process start itself isn't tested, but the code around it is.
+        $mockedProcessRepository->expects($this->exactly(2))->method('countNotTimeouted')->will($this->onConsecutiveCalls(1, 2));
+        $this->subject->processRepository = $mockedProcessRepository;
+
+        self::assertTrue($this->subject->startProcess());
     }
 }
