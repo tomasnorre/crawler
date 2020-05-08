@@ -18,6 +18,20 @@
 Troubleshooting
 ---------------
 
+Problem reading data in Crawler Queue
+'''''''''''''''''''''''''''''''''''''
+
+With the crawler release 9.1.0 we have changed the data stores in crawler queue from serialized to json data.
+If you are experiencing problems with the old data still in your database, you can flush your complete crawler queue
+and the problem should be solved.
+
+We have build in a `JsonCompatibiityConverter` to ensure that this should not happen, but in case of it run:
+
+::
+
+    $ vendor/bin/typo3 crawler:flushQueue all
+
+
 Make Direct Request doesn't work
 ''''''''''''''''''''''''''''''''
 If you are using direct request, see :ref:`extension-manager-configuration`, and it doesn't give you any result,

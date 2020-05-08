@@ -21,6 +21,7 @@ namespace AOE\Crawler\Command;
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Controller\CrawlerController;
+use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Utility\SignalSlotUtility;
@@ -108,6 +109,8 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        /** @var JsonCompatibilityConverter $jsonCompatibilityConverter */
+        $jsonCompatibilityConverter = GeneralUtility::makeInstance(JsonCompatibilityConverter::class);
         $mode = $input->getOption('mode') ?? 'queue';
 
         $extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
@@ -173,12 +176,12 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             $output->writeln('<info>Processing</info>' . PHP_EOL);
 
             foreach ($crawlerController->queueEntries as $queueRec) {
-                $p = unserialize($queueRec['parameters']);
+                $p = $jsonCompatibilityConverter->convert($queueRec['parameters']);
                 $output->writeln('<info>' . $p['url'] . ' (' . implode(',', $p['procInstructions']) . ') => ' . '</info>' . PHP_EOL);
                 $result = $crawlerController->readUrlFromArray($queueRec);
 
                 $resultContent = $result['content'] === null ? '' : $result['content'];
-                $requestResult = unserialize($resultContent);
+                $requestResult = $jsonCompatibilityConverter->convert($resultContent);
                 if (is_array($requestResult)) {
                     $resLog = is_array($requestResult['log']) ? PHP_EOL . chr(9) . chr(9) . implode(PHP_EOL . chr(9) . chr(9), $requestResult['log']) : '';
                     $output->writeln('<info>OK: ' . $resLog . '</info>' . PHP_EOL);

@@ -21,6 +21,7 @@ namespace AOE\Crawler;
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Controller\CrawlerController;
+use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy;
 use AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategy;
 use AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategy;
@@ -64,10 +65,15 @@ class QueueExecutor implements SingletonInterface
      */
     public function executeQueueItem(array $queueItem, CrawlerController $crawlerController)
     {
-        // Decode parameters:
-        $parameters = unserialize($queueItem['parameters'] ?? '');
-        $result = 'ERROR';
-        if (! is_array($parameters)) {
+        $parameters = '';
+        if (isset($queueItem['parameters'])) {
+            // Decode parameters:
+            /** @var JsonCompatibilityConverter $jsonCompatibleConverter */
+            $jsonCompatibleConverter = GeneralUtility::makeInstance(JsonCompatibilityConverter::class);
+            $parameters = $jsonCompatibleConverter->convert($queueItem['parameters']);
+        }
+
+        if (! is_array($parameters) || empty($parameters)) {
             return 'ERROR';
         }
         if ($parameters['_CALLBACKOBJ']) {
@@ -75,7 +81,7 @@ class QueueExecutor implements SingletonInterface
             unset($parameters['_CALLBACKOBJ']);
             $result = GeneralUtility::makeInstance(CallbackExecutionStrategy::class)
                 ->fetchByCallback($className, $parameters, $crawlerController);
-            $result = ['content' => serialize($result)];
+            $result = ['content' => json_encode($result)];
         } else {
             // Regular FE request
             $crawlerId = $this->generateCrawlerIdFromQueueItem($queueItem);
@@ -84,7 +90,7 @@ class QueueExecutor implements SingletonInterface
             $url = new Uri($parameters['url']);
             $result = $this->selectedStrategy->fetchUrlContents($url, $crawlerId);
             if ($result !== false) {
-                $result = ['content' => serialize($result)];
+                $result = ['content' => json_encode($result)];
             }
 
             $signalPayload = ['url' => $parameters['url'], 'result' => $result];

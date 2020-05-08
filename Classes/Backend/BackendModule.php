@@ -30,6 +30,7 @@ namespace AOE\Crawler\Backend;
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Controller\CrawlerController;
+use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
@@ -170,6 +171,11 @@ class BackendModule
      */
     protected $iconFactory;
 
+    /**
+     * @var JsonCompatibilityConverter
+     */
+    protected $jsonCompatibilityConverter;
+
     public function __construct()
     {
         $objectManger = GeneralUtility::makeInstance(ObjectManager::class);
@@ -179,6 +185,7 @@ class BackendModule
         $this->initializeView();
         $this->extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
         $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
+        $this->jsonCompatibilityConverter = GeneralUtility::makeInstance(JsonCompatibilityConverter::class);
     }
 
     /**
@@ -461,11 +468,11 @@ class BackendModule
                     ->fetch();
 
                 // Explode values
-                $q_entry['parameters'] = unserialize($q_entry['parameters']);
-                $q_entry['result_data'] = unserialize($q_entry['result_data']);
+                $q_entry['parameters'] = $this->jsonCompatibilityConverter->convert($q_entry['parameters']);
+                $q_entry['result_data'] = $this->jsonCompatibilityConverter->convert($q_entry['result_data']);
                 $resStatus = $this->getResStatus($q_entry['result_data']);
                 if (is_array($q_entry['result_data'])) {
-                    $q_entry['result_data']['content'] = unserialize($q_entry['result_data']['content']);
+                    $q_entry['result_data']['content'] = $this->jsonCompatibilityConverter->convert($q_entry['result_data']['content']);
                     if (! $this->pObj->MOD_SETTINGS['log_resultLog']) {
                         unset($q_entry['result_data']['content']['log']);
                     }
@@ -608,11 +615,11 @@ class BackendModule
                 // Result:
                 $resLog = $this->getResultLog($vv);
 
-                $resultData = $vv['result_data'] ? unserialize($vv['result_data']) : [];
+                $resultData = $vv['result_data'] ? $this->jsonCompatibilityConverter->convert($vv['result_data']) : [];
                 $resStatus = $this->getResStatus($resultData);
 
                 // Compile row:
-                $parameters = unserialize($vv['parameters']);
+                $parameters = $this->jsonCompatibilityConverter->convert($vv['parameters']);
 
                 // Put data into array:
                 $rowData = [];
@@ -681,7 +688,7 @@ class BackendModule
         if (empty($resultData)) {
             return [];
         }
-        $requestResult = unserialize($resultData['content']);
+        $requestResult = $this->jsonCompatibilityConverter->convert($resultData['content']);
         return $requestResult['vars'] ?? [];
     }
 
@@ -695,8 +702,8 @@ class BackendModule
     {
         $content = '';
         if (is_array($resultRow) && array_key_exists('result_data', $resultRow)) {
-            $requestContent = unserialize($resultRow['result_data']) ?: ['content' => ''];
-            $requestResult = unserialize($requestContent['content']);
+            $requestContent = $this->jsonCompatibilityConverter->convert($resultRow['result_data']) ?: ['content' => ''];
+            $requestResult = $this->jsonCompatibilityConverter->convert($requestContent['content']);
 
             if (is_array($requestResult) && array_key_exists('log', $requestResult)) {
                 $content = implode(chr(10), $requestResult['log']);
@@ -710,7 +717,7 @@ class BackendModule
         if (empty($requestContent)) {
             return '-';
         }
-        $requestResult = unserialize($requestContent['content']);
+        $requestResult = $this->jsonCompatibilityConverter->convert($requestContent['content']);
         if (is_array($requestResult)) {
             if (empty($requestResult['errorlog'])) {
                 return 'OK';
