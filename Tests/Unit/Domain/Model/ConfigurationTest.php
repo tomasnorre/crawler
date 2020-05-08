@@ -111,7 +111,5 @@ class ConfigurationTest extends UnitTestCase
             $excludes,
             $this->subject->getExclude()
         );
-
     }
-
 }
