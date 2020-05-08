@@ -43,4 +43,14 @@ class HookUtility
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['refresh_hooks'][] =
             ProcessCleanUpHook::class;
     }
+
+    public function triggerCliHooks(): void
+    {
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['cli_hooks'] ?? [] as $objRef) {
+            $hookObj = GeneralUtility::makeInstance($objRef);
+            if (is_object($hookObj)) {
+                $hookObj->crawler_init($this);
+            }
+        }
+    }
 }

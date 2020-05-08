@@ -27,6 +27,7 @@ Released:
 * ProcessService->queueRepository
 * ProcessService->verbose
 * CrawlerController->cleanUpOldQueueEntries()
+* CrawlerController->CLI_runHooks()
 * CrawlerController->flushQueue()
 * CrawlerController->getLogEntriesForSetId()
 * Process->getTimeForFirstItem()

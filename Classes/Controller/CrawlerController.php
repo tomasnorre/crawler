@@ -34,6 +34,7 @@ use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\QueueExecutor;
+use AOE\Crawler\Utility\HookUtility;
 use AOE\Crawler\Utility\SignalSlotUtility;
 use Psr\Http\Message\UriInterface;
 use Psr\Log\LoggerAwareInterface;
@@ -190,9 +191,10 @@ class CrawlerController implements LoggerAwareInterface
      * @var string[]
      */
     private $deprecatedPublicMethods = [
-        'getLogEntriesForSetId' => 'Using crawlerController::getLogEntriesForSetId() is deprecated since 9.0.1 and will be removed in v11.x',
-        'flushQueue' => 'Using CrawlerController::flushQueue() is deprecated since 9.0.1 and will be removed in v11.x, please use QueueRepository->flushQueue() instead.',
         'cleanUpOldQueueEntries' => 'Using CrawlerController::cleanUpOldQueueEntries() is deprecated since 9.0.1 and will be removed in v11.x, please use QueueRepository->cleanUpOldQueueEntries() instead.',
+        'CLI_runHooks' => 'Using CrawlerController::CLI_runHooks() is deprecated since 9.0.1 and will be removed in v11.x',
+        'flushQueue' => 'Using CrawlerController::flushQueue() is deprecated since 9.0.1 and will be removed in v11.x, please use QueueRepository->flushQueue() instead.',
+        'getLogEntriesForSetId' => 'Using crawlerController::getLogEntriesForSetId() is deprecated since 9.0.1 and will be removed in v11.x',
     ];
 
     /**
@@ -330,18 +332,14 @@ class CrawlerController implements LoggerAwareInterface
         $skipMessage = 'Skipped'; // message will be overwritten later
 
         // if page is hidden
-        if (! $this->extensionSettings['crawlHiddenPages']) {
-            if ($pageRow['hidden']) {
-                $skipPage = true;
-                $skipMessage = 'Because page is hidden';
-            }
+        if (!$this->extensionSettings['crawlHiddenPages'] && $pageRow['hidden']) {
+            $skipPage = true;
+            $skipMessage = 'Because page is hidden';
         }
 
-        if (! $skipPage) {
-            if (GeneralUtility::inList('3,4', $pageRow['doktype']) || $pageRow['doktype'] >= 199) {
+        if (! $skipPage && (GeneralUtility::inList('3,4', $pageRow['doktype']) || $pageRow['doktype'] >= 199)) {
                 $skipPage = true;
                 $skipMessage = 'Because doktype is not allowed';
-            }
         }
 
         if (! $skipPage) {
@@ -1549,7 +1547,10 @@ class CrawlerController implements LoggerAwareInterface
         $counter = 0;
 
         // First, run hooks:
-        $this->CLI_runHooks();
+        /** @var HookUtility $hookUtility */
+        $hookUtility = GeneralUtility::makeInstance(HookUtility::class);
+        $hookUtility->triggerCliHooks();
+
 
         // Clean up the queue
         $this->queueRepository->cleanupQueue();
@@ -1610,16 +1611,13 @@ class CrawlerController implements LoggerAwareInterface
     }
 
     /**
-     * Activate hooks
+     * @deprecated
      */
     public function CLI_runHooks(): void
     {
-        foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['cli_hooks'] ?? [] as $objRef) {
-            $hookObj = GeneralUtility::makeInstance($objRef);
-            if (is_object($hookObj)) {
-                $hookObj->crawler_init($this);
-            }
-        }
+        /** @var HookUtility $hookUtility */
+        $hookUtility = GeneralUtility::makeInstance(HookUtility::class);
+        $hookUtility->triggerCliHooks();
     }
 
     /**
