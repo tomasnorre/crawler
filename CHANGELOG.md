@@ -50,6 +50,7 @@ Released:
 * Set correct tableName for mountPoint queries
 * Fallback to alturl is added to ensure crawling of pages including PDF files
 * Get fe_user from $GLOBALS['TSFE'] instead of $request->getAttribute()
+* Have getTimeForFirstItem() and getTimeForLastItem return 0 is no process found
 
 ## Crawler 9.0.0
 Crawler 9.0.0 was released on April 14th, 2020
