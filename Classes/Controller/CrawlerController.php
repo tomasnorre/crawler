@@ -332,14 +332,14 @@ class CrawlerController implements LoggerAwareInterface
         $skipMessage = 'Skipped'; // message will be overwritten later
 
         // if page is hidden
-        if (!$this->extensionSettings['crawlHiddenPages'] && $pageRow['hidden']) {
+        if (! $this->extensionSettings['crawlHiddenPages'] && $pageRow['hidden']) {
             $skipPage = true;
             $skipMessage = 'Because page is hidden';
         }
 
         if (! $skipPage && (GeneralUtility::inList('3,4', $pageRow['doktype']) || $pageRow['doktype'] >= 199)) {
-                $skipPage = true;
-                $skipMessage = 'Because doktype is not allowed';
+            $skipPage = true;
+            $skipMessage = 'Because doktype is not allowed';
         }
 
         if (! $skipPage) {
@@ -1550,7 +1550,6 @@ class CrawlerController implements LoggerAwareInterface
         /** @var HookUtility $hookUtility */
         $hookUtility = GeneralUtility::makeInstance(HookUtility::class);
         $hookUtility->triggerCliHooks();
-
 
         // Clean up the queue
         $this->queueRepository->cleanupQueue();
