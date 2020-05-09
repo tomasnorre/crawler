@@ -24,7 +24,7 @@ use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
-class FlushQueueCommandTest extends AbstractCommandTests
+class ProcessQueueCommandTest extends AbstractCommandTests
 {
     /**
      * @var array
@@ -49,46 +49,28 @@ class FlushQueueCommandTest extends AbstractCommandTests
     }
 
     /**
-     * This will test that the commands and output contains what needed, the cleanup it self isn't tested.
-     *
      * @test
-     * @dataProvider flushQueueDataProvider
+     * @dataProvider processQueueCommandDataProvider
      */
-    public function flushQueueCommandTest(string $mode, string $expectedOutput, int $expectedCount): void
+    public function processQueueCommandTest(array $parameters, string $expectedOutput): void
     {
         $commandOutput = '';
-        $cliCommand = $this->getTypo3TestBinaryCommand() . ' crawler:flushQueue ' . $mode;
+        $cliCommand = $this->getTypo3TestBinaryCommand() . ' crawler:processqueue ' . implode(' ', $parameters);
         CommandUtility::exec($cliCommand, $commandOutput);
 
-        self::assertContains($expectedOutput, $commandOutput);
-        self::assertEquals(
-            $expectedCount,
-            $this->queueRepository->countAll()
-        );
+        self::assertContains($expectedOutput, $commandOutput[0]);
     }
 
-    public function flushQueueDataProvider(): array
+    public function processQueueCommandDataProvider(): array
     {
         return [
-            'Flush All' => [
-                'mode' => 'all',
-                'expectedOutput' => 'All entries in Crawler queue will be flushed',
-                'expectedCount' => 0,
+            'No params' => [
+                'parameters' => [],
+                'expectedOutput' => 'Unprocessed Items remaining:0',
             ],
-            'Flush Pending' => [
-                'mode' => 'pending',
-                'expectedOutput' => 'All entries in Crawler queue, with status: "pending" will be flushed',
-                'expectedCount' => 7,
-            ],
-            'Flush Finished' => [
-                'mode' => 'finished',
-                'expectedOutput' => 'All entries in Crawler queue, with status: "finished" will be flushed',
-                'expectedCount' => 7,
-            ],
-            'Unknown mode' => [
-                'mode' => 'unknown',
-                'expectedOutput' => 'No matching parameters found.',
-                'expectedCount' => 14,
+            '--amount 5' => [
+                'parameters' => ['--amount 5'],
+                'expectedOutput' => 'Unprocessed Items remaining:2',
             ],
         ];
     }

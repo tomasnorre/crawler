@@ -141,7 +141,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
 
         if ($mode === 'queue' || $mode === 'exec') {
             $reason = new Reason();
-            $reason->setReason(Reason::REASON_GUI_SUBMIT);
+            $reason->setReason(Reason::REASON_CLI_SUBMIT);
             $reason->setDetailText('The cli script of the crawler added to the queue');
 
             $signalPayload = ['reason' => $reason];
