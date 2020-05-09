@@ -199,7 +199,7 @@ class CrawlerControllerTest extends FunctionalTestCase
 
         self::assertNotEmpty($configurationsForBranch);
         self::assertCount(
-            3,
+            4,
             $configurationsForBranch
         );
 
@@ -209,6 +209,7 @@ class CrawlerControllerTest extends FunctionalTestCase
                 'Not hidden or deleted',
                 'Not hidden or deleted - uid 5',
                 'Not hidden or deleted - uid 6',
+                'default',
             ]
         );
     }

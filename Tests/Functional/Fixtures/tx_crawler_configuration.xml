@@ -112,4 +112,20 @@
         <fegroups></fegroups>
         <exclude>0</exclude>
     </tx_crawler_configuration>
+    <tx_crawler_configuration>
+        <uid>8</uid>
+        <pid>1</pid>
+        <deleted>0</deleted>
+        <hidden>0</hidden>
+        <name>default</name>
+        <force_ssl>0</force_ssl>
+        <processing_instruction_filter></processing_instruction_filter>
+        <processing_instruction_parameters_ts></processing_instruction_parameters_ts>
+        <configuration></configuration>
+        <base_url>https://www.example.com</base_url>
+        <pidsonly></pidsonly>
+        <begroups></begroups>
+        <fegroups></fegroups>
+        <exclude>0</exclude>
+    </tx_crawler_configuration>
 </dataset>

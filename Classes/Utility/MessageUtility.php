@@ -38,7 +38,6 @@ class MessageUtility
      */
     public static function addErrorMessage(string $message): void
     {
-        //$this->isErrorDetected = true;
         self::addMessage($message, FlashMessage::ERROR);
     }
 

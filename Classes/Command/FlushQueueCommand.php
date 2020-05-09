@@ -93,7 +93,7 @@ It will remove queue entries and perform a cleanup.' . chr(10) . chr(10) .
                 break;
             case 'finished':
             case 'pending':
-                $crawlerController->getLogEntriesForPageId($pageId, strval($mode), true, false);
+                $crawlerController->getLogEntriesForPageId($pageId, (string) $mode, true, false);
                 $output->writeln('<info>All entries in Crawler queue, with status: "' . $mode . '" will be flushed</info>');
                 break;
             default:

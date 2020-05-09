@@ -61,7 +61,7 @@ class ConfigurationRepositoryTest extends FunctionalTestCase
     public function getCrawlerConfigurationRecords(): void
     {
         self::assertCount(
-            3,
+            4,
             $this->subject->getCrawlerConfigurationRecords()
         );
     }
