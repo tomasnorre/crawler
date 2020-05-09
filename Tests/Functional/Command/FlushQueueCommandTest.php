@@ -19,10 +19,12 @@ namespace AOE\Crawler\Tests\Functional\Command;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Service\ProcessService;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 class FlushQueueCommandTest extends FunctionalTestCase
 {
@@ -31,10 +33,21 @@ class FlushQueueCommandTest extends FunctionalTestCase
      */
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    protected function setUp()
+    /**
+     * @var array
+     */
+    protected $coreExtensionsToLoad = ['cms', 'core', 'frontend', 'version', 'lang', 'fluid'];
+
+    /**
+     * @var QueueRepository
+     */
+    protected $queueRepository;
+
+    protected function setUp(): void
     {
         parent::setUp();
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
+        $this->queueRepository = GeneralUtility::makeInstance(ObjectManager::class)->get(QueueRepository::class);
     }
 
     /**
@@ -43,13 +56,17 @@ class FlushQueueCommandTest extends FunctionalTestCase
      * @test
      * @dataProvider flushQueueDataProvider
      */
-    public function flushQueueCommandTest(string $mode, string $expected): void
+    public function flushQueueCommandTest(string $mode, string $expectedOutput, int $expectedCount): void
     {
         $commandOutput = '';
         $cliCommand = self::getTypo3TestBinaryCommand() . ' crawler:flushQueue ' . $mode;
         CommandUtility::exec($cliCommand, $commandOutput);
 
-        self::assertContains($expected, $commandOutput);
+        self::assertContains($expectedOutput, $commandOutput);
+        self::assertEquals(
+            $expectedCount,
+            $this->queueRepository->countAll()
+        );
     }
 
     public function flushQueueDataProvider(): array
@@ -57,20 +74,24 @@ class FlushQueueCommandTest extends FunctionalTestCase
         return [
             'Flush All' => [
                 'mode' => 'all',
-                'expected' => 'All entries in Crawler queue will be flushed'
+                'expectedOutput' => 'All entries in Crawler queue will be flushed',
+                'expectedCount' => 0,
             ],
             'Flush Pending' => [
                 'mode' => 'pending',
-                'expected' => 'All entries in Crawler queue, with status: "pending" will be flushed',
+                'expectedOutput' => 'All entries in Crawler queue, with status: "pending" will be flushed',
+                'expectedCount' => 7,
             ],
             'Flush Finished' => [
                 'mode' => 'finished',
-                'expected' => 'All entries in Crawler queue, with status: "finished" will be flushed',
+                'expectedOutput' => 'All entries in Crawler queue, with status: "finished" will be flushed',
+                'expectedCount' => 7,
             ],
             'Unknown mode' => [
                 'mode' => 'unknown',
-                'expected' => 'No matching parameters found.',
-            ]
+                'expectedOutput' => 'No matching parameters found.',
+                'expectedCount' => 14,
+            ],
         ];
     }
 
@@ -80,7 +101,5 @@ class FlushQueueCommandTest extends FunctionalTestCase
         $cliPath = substr($processService->getCrawlerCliPath(), 0, -21);
 
         return $cliPath;
-
-
     }
 }
