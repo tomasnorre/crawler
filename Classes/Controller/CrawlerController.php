@@ -504,7 +504,7 @@ class CrawlerController implements LoggerAwareInterface
         return false;
     }
 
-    public function getPageTSconfigForId($id): array
+    public function getPageTSconfigForId(int $id): array
     {
         if (! $this->MP) {
             $pageTSconfig = BackendUtility::getPagesTSconfig($id);
@@ -763,7 +763,7 @@ class CrawlerController implements LoggerAwareInterface
                                 if ($recursiveDepth > 0) {
                                     /** @var \TYPO3\CMS\Core\Database\QueryGenerator $queryGenerator */
                                     $queryGenerator = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\QueryGenerator::class);
-                                    $pidList = $queryGenerator->getTreeList($lookUpPid, $recursiveDepth, 0, 1);
+                                    $pidList = $queryGenerator->getTreeList($lookUpPid, $recursiveDepth, 0, '1');
                                     $pidArray = GeneralUtility::intExplode(',', $pidList);
                                 } else {
                                     $pidArray = [(string) $lookUpPid];
