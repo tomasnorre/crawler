@@ -20,6 +20,7 @@ namespace AOE\Crawler\Utility;
  */
 
 use AOE\Crawler\Hooks\ProcessCleanUpHook;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class HookUtility
