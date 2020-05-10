@@ -21,8 +21,14 @@ namespace AOE\Crawler\Tests\Unit\Controller;
 
 class VetoHookTestHelper
 {
-    public function hookMain(array $params): bool
+    public function returnTrue(array $params): bool
     {
         return is_array($params);
+    }
+
+    public function returnString(array $params): string
+    {
+        $string = json_encode($params);
+        return 'Veto because of ' . $string;
     }
 }

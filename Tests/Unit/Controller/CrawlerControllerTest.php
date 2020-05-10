@@ -406,11 +406,19 @@ class CrawlerControllerTest extends UnitTestCase
                     'hidden' => 0,
                 ],
                 'excludeDoktype' => [],
-                'pageVeto' => ['veto-func' => VetoHookTestHelper::class . '->hookMain'],
+                'pageVeto' => ['veto-func' => VetoHookTestHelper::class . '->returnTrue'],
                 'expected' => 'Veto from hook "veto-func"',
-
             ],
-
+            'Page veto exists - string' => [
+                'extensionSettings' => [],
+                'pageRow' => [
+                    'doktype' => 1,
+                    'hidden' => 0,
+                ],
+                'excludeDoktype' => [],
+                'pageVeto' => ['veto-func' => VetoHookTestHelper::class . '->returnString'],
+                'expected' => 'Veto because of {"pageRow":{"doktype":1,"hidden":0}}',
+            ],
         ];
     }
 
