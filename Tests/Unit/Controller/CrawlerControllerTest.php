@@ -240,10 +240,11 @@ class CrawlerControllerTest extends UnitTestCase
      *
      * @dataProvider checkIfPageShouldBeSkippedDataProvider
      */
-    public function checkIfPageShouldBeSkipped(array $extensionSetting, array $pageRow, array $excludeDoktype, string $expected): void
+    public function checkIfPageShouldBeSkipped(array $extensionSetting, array $pageRow, array $excludeDoktype, array $pageVeto, string $expected): void
     {
         $this->crawlerController->setExtensionSettings($extensionSetting);
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['excludeDoktype'] = $excludeDoktype;
+        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pageVeto'] = $pageVeto;
 
         self::assertEquals(
             $expected,
@@ -345,6 +346,7 @@ class CrawlerControllerTest extends UnitTestCase
                     'hidden' => 0,
                 ],
                 'excludeDoktype' => [],
+                'pageVeto' => [],
                 'expected' => false,
             ],
             'Extension Setting do not crawl hidden pages and page is hidden' => [
@@ -354,6 +356,7 @@ class CrawlerControllerTest extends UnitTestCase
                     'hidden' => 1,
                 ],
                 'excludeDoktype' => [],
+                'pageVeto' => [],
                 'expected' => 'Because page is hidden',
             ],
             'Page of doktype 3 - External Url' => [
@@ -363,6 +366,7 @@ class CrawlerControllerTest extends UnitTestCase
                     'hidden' => 0,
                 ],
                 'excludeDoktype' => [],
+                'pageVeto' => [],
                 'expected' => 'Because doktype is not allowed',
             ],
             'Page of doktype 4 - Shortcut' => [
@@ -372,6 +376,7 @@ class CrawlerControllerTest extends UnitTestCase
                     'hidden' => 0,
                 ],
                 'excludeDoktype' => [],
+                'pageVeto' => [],
                 'expected' => 'Because doktype is not allowed',
             ],
             'Page of doktype 155 - Custom' => [
@@ -381,6 +386,7 @@ class CrawlerControllerTest extends UnitTestCase
                     'hidden' => 0,
                 ],
                 'excludeDoktype' => ['custom' => 155],
+                'pageVeto' => [],
                 'expected' => 'Doktype was excluded by "custom"',
             ],
             'Page of doktype 255 - Out of allowed range' => [
@@ -390,8 +396,21 @@ class CrawlerControllerTest extends UnitTestCase
                     'hidden' => 0,
                 ],
                 'excludeDoktype' => [],
+                'pageVeto' => [],
                 'expected' => 'Because doktype is not allowed',
             ],
+            'Page veto exists' => [
+                'extensionSettings' => [],
+                'pageRow' => [
+                    'doktype' => 1,
+                    'hidden' => 0,
+                ],
+                'excludeDoktype' => [],
+                'pageVeto' => ['veto-func' => VetoHookTestHelper::class . '->hookMain'],
+                'expected' => 'Veto from hook "veto-func"',
+
+            ],
+
         ];
     }
 
