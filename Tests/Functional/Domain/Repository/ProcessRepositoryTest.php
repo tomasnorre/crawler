@@ -79,9 +79,9 @@ class ProcessRepositoryTest extends FunctionalTestCase
      */
     public function findAllReturnsAll(): void
     {
-        self::assertSame(
+        self::assertCount(
             5,
-            $this->subject->findAll()->count()
+            $this->subject->findAll()
         );
     }
 
@@ -90,9 +90,9 @@ class ProcessRepositoryTest extends FunctionalTestCase
      */
     public function findAllActiveReturnsActive(): void
     {
-        self::assertSame(
+        self::assertCount(
             3,
-            $this->subject->findAllActive()->count()
+            $this->subject->findAllActive()
         );
     }
 
@@ -101,16 +101,16 @@ class ProcessRepositoryTest extends FunctionalTestCase
      */
     public function removeByProcessId(): void
     {
-        self::assertSame(
+        self::assertCount(
             5,
-            $this->subject->findAll()->count()
+            $this->subject->findAll()
         );
 
         $this->subject->removeByProcessId('1002');
 
-        self::assertSame(
+        self::assertCount(
             4,
-            $this->subject->findAll()->count()
+            $this->subject->findAll()
         );
     }
 

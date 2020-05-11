@@ -87,6 +87,9 @@ class MessageUtilityTest extends FunctionalTestCase
         );
     }
 
+    /**
+     * @return FlashMessage[]
+     */
     private function getMessages()
     {
         $flashMessageQueue = GeneralUtility::makeInstance(FlashMessageService::class)->getMessageQueueByIdentifier();
