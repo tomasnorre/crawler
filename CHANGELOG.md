@@ -1,7 +1,7 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 9.0.1-dev
-Released:
+## Crawler 9.0.1
+Crawler 9.0.1 was released on May 11th, 2020
 
 ### Added
 * Documentation on how to use the Crawler for cache warmup during deployments
