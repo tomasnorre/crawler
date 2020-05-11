@@ -73,6 +73,22 @@
             "[ -L .Build/Web/typo3conf/ext/crawler ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/crawler",
             "export TYPO3_PATH_WEB=$PWD/.Build/Web"
         ],
+        "analyse": [
+            "[ -e .Build/bin/phpstan ] || composer update",
+            ".Build/bin/phpstan analyse"
+        ],
+        "cs-fix": [
+            "[ -e .Build/bin/ecs ] || composer update",
+            ".Build/bin/ecs check Classes Configuration Tests"
+        ],
+        "rector": [
+            "[ -e .Build/bin/rector ] || composer update",
+            ".Build/bin/rector process --dry-run --config rector-ci.yaml"
+        ],
+        "test:all": [
+            "@test:unit",
+            "@test:functional"
+        ],
         "test:unit": [
             "[ -e .Build/bin/phpunit ] || composer update",
             "TYPO3_PATH_WEB=.Build/Web .Build/bin/phpunit --colors -c .Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/Unit"
@@ -80,18 +96,6 @@
         "test:functional": [
             "[ -e .Build/bin/phpunit ] || composer update",
             "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseName=crawler typo3DatabaseHost=127.0.0.1 typo3DatabaseUsername=root typo3DatabasePassword=root .Build/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml Tests/Functional"
-        ],
-        "cs-fix": [
-            "[ -e .Build/bin/ecs ] || composer update",
-            ".Build/bin/ecs check Classes Configuration Tests"
-        ],
-        "analyse": [
-            "[ -e .Build/bin/phpstan ] || composer update",
-            ".Build/bin/phpstan analyse"
-        ],
-        "test:all": [
-            "@test:unit",
-            "@test:functional"
         ],
         "extension-release": [
             "rm -rf .devbox",
