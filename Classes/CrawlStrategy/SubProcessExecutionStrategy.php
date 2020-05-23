@@ -104,7 +104,7 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface
         $reqHeaders[] = 'GET ' . $url['path'] . ($url['query'] ? '?' . $url['query'] : '') . ' HTTP/1.0';
         $reqHeaders[] = 'Host: ' . $url['host'];
         $reqHeaders[] = 'Connection: close';
-        if ($url['user'] !== '') {
+        if (isset($url['user'], $url['pass']) && $url['user'] !== '' && $url['pass'] !== '') {
             $reqHeaders[] = 'Authorization: Basic ' . base64_encode($url['user'] . ':' . $url['pass']);
         }
         $reqHeaders[] = 'X-T3crawler: ' . $crawlerId;
