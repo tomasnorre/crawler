@@ -1,5 +1,5 @@
 {
-    "name": "aoepeople/crawler-typo3v9-devbox",
+    "name": "aoepeople/crawler-devbox",
     "type": "project",
     "description": "Devbox for Crawler extension for TYPO3v9",
     "homepage": "https://github.com/AOEpeople/crawler",

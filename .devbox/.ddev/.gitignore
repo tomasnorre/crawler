@@ -4,12 +4,14 @@
 /commands/*/*.example
 /commands/*/README.txt
 /commands/host/launch
+/commands/web/xdebug
 /commands/db/mysql
 /homeadditions/*.example
 /homeadditions/README.txt
 /.gitignore
 /import.yaml
-/docker-compose.yaml
+/.ddev-docker-compose-base.yaml
+/.ddev-docker-compose-full.yaml
 /db_snapshots
 /sequelpro.spf
 /import-db

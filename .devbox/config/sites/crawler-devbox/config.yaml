@@ -1,4 +1,4 @@
-base: 'https://crawler-typo3v9.ddev.site/'
+base: 'https://crawler-devbox.ddev.site/'
 baseVariants: {  }
 errorHandling: {  }
 languages:

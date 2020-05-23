@@ -1,5 +1,5 @@
 APIVersion: v1.13.1
-name: crawler-typo3v9
+name: crawler-devbox
 type: typo3
 docroot: public
 php_version: "7.2"

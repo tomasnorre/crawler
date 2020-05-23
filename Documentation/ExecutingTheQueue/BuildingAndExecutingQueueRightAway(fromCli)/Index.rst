@@ -149,21 +149,21 @@ And this is the output:
 
     38 entries found for processing. (Use "mode" to decide action):
 
-    [10-04-20 10:35] https://crawler-typo3v9.ddev.site/content-examples/overview
-    [10-04-20 10:35] https://crawler-typo3v9.ddev.site/content-examples/text/rich-text
-    [10-04-20 10:35] https://crawler-typo3v9.ddev.site/content-examples/text/headers
-    [10-04-20 10:35] https://crawler-typo3v9.ddev.site/content-examples/text/bullet-list
-    [10-04-20 10:35] https://crawler-typo3v9.ddev.site/content-examples/text/text-with-teaser
-    [10-04-20 10:35] https://crawler-typo3v9.ddev.site/content-examples/text/text-and-icon
-    [10-04-20 10:35] https://crawler-typo3v9.ddev.site/content-examples/text/text-in-columns
-    [10-04-20 10:35] https://crawler-typo3v9.ddev.site/content-examples/text/list-group
-    [10-04-20 10:35] https://crawler-typo3v9.ddev.site/content-examples/text/panel
-    [10-04-20 10:35] https://crawler-typo3v9.ddev.site/content-examples/text/table
-    [10-04-20 10:35] https://crawler-typo3v9.ddev.site/content-examples/text/quote
-    [10-04-20 10:35] https://crawler-typo3v9.ddev.site/content-examples/media/audio
-    [10-04-20 10:35] https://crawler-typo3v9.ddev.site/content-examples/media/text-and-images
+    [10-04-20 10:35] https://crawler-devbox.ddev.site/content-examples/overview
+    [10-04-20 10:35] https://crawler-devbox.ddev.site/content-examples/text/rich-text
+    [10-04-20 10:35] https://crawler-devbox.ddev.site/content-examples/text/headers
+    [10-04-20 10:35] https://crawler-devbox.ddev.site/content-examples/text/bullet-list
+    [10-04-20 10:35] https://crawler-devbox.ddev.site/content-examples/text/text-with-teaser
+    [10-04-20 10:35] https://crawler-devbox.ddev.site/content-examples/text/text-and-icon
+    [10-04-20 10:35] https://crawler-devbox.ddev.site/content-examples/text/text-in-columns
+    [10-04-20 10:35] https://crawler-devbox.ddev.site/content-examples/text/list-group
+    [10-04-20 10:35] https://crawler-devbox.ddev.site/content-examples/text/panel
+    [10-04-20 10:35] https://crawler-devbox.ddev.site/content-examples/text/table
+    [10-04-20 10:35] https://crawler-devbox.ddev.site/content-examples/text/quote
+    [10-04-20 10:35] https://crawler-devbox.ddev.site/content-examples/media/audio
+    [10-04-20 10:35] https://crawler-devbox.ddev.site/content-examples/media/text-and-images
     ...
-    [10-04-20 10:36] https://crawler-typo3v9.ddev.site/content-examples/and-more/frames
+    [10-04-20 10:36] https://crawler-devbox.ddev.site/content-examples/and-more/frames
 
 
 At this point you have three options for "action":
@@ -185,15 +185,15 @@ At this point you have three options for "action":
 ::
 
     $ bin/typo3 crawler:buildqueue 6 default --depth 2 --mode url
-    https://crawler-typo3v9.ddev.site/content-examples/overview
-    https://crawler-typo3v9.ddev.site/content-examples/text/rich-text
-    https://crawler-typo3v9.ddev.site/content-examples/text/headers
-    https://crawler-typo3v9.ddev.site/content-examples/text/bullet-list
-    https://crawler-typo3v9.ddev.site/content-examples/text/text-with-teaser
-    https://crawler-typo3v9.ddev.site/content-examples/text/text-and-icon
-    https://crawler-typo3v9.ddev.site/content-examples/text/text-in-columns
-    https://crawler-typo3v9.ddev.site/content-examples/text/list-group
-    https://crawler-typo3v9.ddev.site/content-examples/text/panel
+    https://crawler-devbox.ddev.site/content-examples/overview
+    https://crawler-devbox.ddev.site/content-examples/text/rich-text
+    https://crawler-devbox.ddev.site/content-examples/text/headers
+    https://crawler-devbox.ddev.site/content-examples/text/bullet-list
+    https://crawler-devbox.ddev.site/content-examples/text/text-with-teaser
+    https://crawler-devbox.ddev.site/content-examples/text/text-and-icon
+    https://crawler-devbox.ddev.site/content-examples/text/text-in-columns
+    https://crawler-devbox.ddev.site/content-examples/text/list-group
+    https://crawler-devbox.ddev.site/content-examples/text/panel
     ...
 
 - Commit and execute the queue right away. This will still put the jobs
@@ -207,34 +207,34 @@ At this point you have three options for "action":
 ::
 
     $ bin/typo3 crawler:buildqueue 6 default --depth 2 --mode exec
-    https://crawler-typo3v9.ddev.site/content-examples/overview
-    https://crawler-typo3v9.ddev.site/content-examples/text/rich-text
-    https://crawler-typo3v9.ddev.site/content-examples/text/headers
-    https://crawler-typo3v9.ddev.site/content-examples/text/bullet-list
-    https://crawler-typo3v9.ddev.site/content-examples/text/text-with-teaser
-    https://crawler-typo3v9.ddev.site/content-examples/text/text-and-icon
-    https://crawler-typo3v9.ddev.site/content-examples/text/text-in-columns
-    https://crawler-typo3v9.ddev.site/content-examples/text/list-group
-    https://crawler-typo3v9.ddev.site/content-examples/text/panel
+    https://crawler-devbox.ddev.site/content-examples/overview
+    https://crawler-devbox.ddev.site/content-examples/text/rich-text
+    https://crawler-devbox.ddev.site/content-examples/text/headers
+    https://crawler-devbox.ddev.site/content-examples/text/bullet-list
+    https://crawler-devbox.ddev.site/content-examples/text/text-with-teaser
+    https://crawler-devbox.ddev.site/content-examples/text/text-and-icon
+    https://crawler-devbox.ddev.site/content-examples/text/text-in-columns
+    https://crawler-devbox.ddev.site/content-examples/text/list-group
+    https://crawler-devbox.ddev.site/content-examples/text/panel
     ...
     Processing
 
-    https://crawler-typo3v9.ddev.site/content-examples/overview () =>
+    https://crawler-devbox.ddev.site/content-examples/overview () =>
 
     OK:
             User Groups:
 
-    https://crawler-typo3v9.ddev.site/content-examples/text/rich-text () =>
+    https://crawler-devbox.ddev.site/content-examples/text/rich-text () =>
 
     OK:
             User Groups:
 
-    https://crawler-typo3v9.ddev.site/content-examples/text/headers () =>
+    https://crawler-devbox.ddev.site/content-examples/text/headers () =>
 
     OK:
             User Groups:
 
-    https://crawler-typo3v9.ddev.site/content-examples/text/bullet-list () =>
+    https://crawler-devbox.ddev.site/content-examples/text/bullet-list () =>
 
     OK:
             User Groups:
