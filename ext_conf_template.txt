@@ -18,14 +18,14 @@ makeDirectRequests=0
 # cat=Queue; type=int [1- 86400]; label= Maximal number of URLs, which can be added to the queue at one time
 maxCompileUrls=10000
 
-# cat=Queue; type=boolean; label= Enabled Timeslot for Duplicationcheck: When this option is active items will not be queue twice for the past if theire schedule time is the currenttime +-100 seconds.
+# cat=Queue; type=boolean; label= Enabled timeslot for duplication check: When this option is active, items will not be queued twice for the past if their scheduled time is the current time +-100 seconds.
 enableTimeslot=1
 
 #########
 ## Processing
 #########
 
-# cat=Processing; type=int [0-10000]; label= Sleep time between requests: Time in milliseconds the crawler should sleep beetween requesting urls: low = faster / high = less stress for the server
+# cat=Processing; type=int [0-10000]; label= Sleep time between requests: Time in milliseconds the crawler should sleep between requesting urls: low = faster / high = less stress for the server
 sleepTime = 1000
 
 # cat=Processing; type=int [0-100]; label= Sleep time after finishing: Time in seconds the crawler should sleep before finishing
@@ -37,7 +37,7 @@ countInARun=100
 # cat=Processing; type=int [1-99]; label= Maximum processes
 processLimit=1
 
-# cat=Processing; type=int [1- 86400]; label= Maximal process runtime: in secounds - only necessary if processLimit > 1
+# cat=Processing; type=int [1- 86400]; label= Maximal process runtime: in seconds - only necessary if processLimit > 1
 processMaxRunTime=300
 
 #########
@@ -63,7 +63,7 @@ purgeQueueDays=14
 # cat=System; type=string; label= Name of the php binary (e.g. PHP72-LATEST-CLI ), default is php
 phpBinary=php
 
-# cat=System; type=string; label= PHP Path: Local path to php binary file (e.g. "/usr/bin/php"), you should ONLY use this the resolved php-binary isn't the correct one. You can check that in the Info -> Site Crawling -> Crawling Process -> CLI-Path
+# cat=System; type=string; label= PHP Path: Local path to php binary file (e.g. "/usr/bin/php"), you should ONLY use this when the resolved php-binary isn't the correct one. You can check that in the Info -> Site Crawling -> Crawling Process -> CLI-Path
 phpPath=
 
 #########
