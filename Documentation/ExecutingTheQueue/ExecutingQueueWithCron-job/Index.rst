@@ -26,7 +26,7 @@ like this:
 
 ::
 
-   * * * * * [pathToYourTYPO3Installation-composer-bin-dir]/typo3cms crawler:buildqueue <startpage> <configurationKeys> > /dev/null
+   * * * * * [pathToYourTYPO3Installation-composer-bin-dir]/typo3cms crawler:buildQueue <startpage> <configurationKeys> > /dev/null
 
 This will run the script every minute. You should try to run the
 script on the command line first to make sure it runs without any

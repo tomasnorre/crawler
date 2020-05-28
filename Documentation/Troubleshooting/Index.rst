@@ -52,7 +52,7 @@ call the crawler like:
 
 ::
 
-   php -d max_execution_time=512 [pathToYourTYPO3Installation-composer-bin-dir]/typo3cms crawler:buildqueue
+   php -d max_execution_time=512 [pathToYourTYPO3Installation-composer-bin-dir]/typo3cms crawler:buildQueue
 
 Crawler Count is 0 (zero)
 '''''''''''''''''''''''''

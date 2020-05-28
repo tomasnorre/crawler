@@ -141,7 +141,7 @@ To do the same with the CLI script you run this:
 
 ::
 
-   [pathToYourTYPO3Installation-composer-bin-dir]/typo3 crawler:buildqueue 6 default --depth 2
+   [pathToYourTYPO3Installation-composer-bin-dir]/typo3 crawler:buildQueue 6 default --depth 2
 
 And this is the output:
 
@@ -184,7 +184,7 @@ At this point you have three options for "action":
 
 ::
 
-    $ bin/typo3 crawler:buildqueue 6 default --depth 2 --mode url
+    $ bin/typo3 crawler:buildQueue 6 default --depth 2 --mode url
     https://crawler-devbox.ddev.site/content-examples/overview
     https://crawler-devbox.ddev.site/content-examples/text/rich-text
     https://crawler-devbox.ddev.site/content-examples/text/headers
@@ -206,7 +206,7 @@ At this point you have three options for "action":
 
 ::
 
-    $ bin/typo3 crawler:buildqueue 6 default --depth 2 --mode exec
+    $ bin/typo3 crawler:buildQueue 6 default --depth 2 --mode exec
     https://crawler-devbox.ddev.site/content-examples/overview
     https://crawler-devbox.ddev.site/content-examples/text/rich-text
     https://crawler-devbox.ddev.site/content-examples/text/headers
