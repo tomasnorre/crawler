@@ -1,5 +1,8 @@
 # Changelog TYPO3 Crawler
 
+### Added
+* Update specific doktypes for skipping page [@brotkrueml](https://github.com/brotkrueml)
+
 ### Fixed
 * Handle empty response when fetching URL [@brotkrueml](https://github.com/brotkrueml)
 
