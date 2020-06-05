@@ -1,5 +1,8 @@
 # Changelog TYPO3 Crawler
 
+### Changed
+* Handle empty response when fetching URL
+
 ## Crawler 9.0.1
 Crawler 9.0.1 was released on May 11th, 2020
 
