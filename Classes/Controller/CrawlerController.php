@@ -338,7 +338,7 @@ class CrawlerController implements LoggerAwareInterface
         }
 
         if (! $skipPage) {
-            if (GeneralUtility::inList('3,4', $pageRow['doktype']) || $pageRow['doktype'] >= 199) {
+            if (GeneralUtility::inList('3,4,199,254,255', $pageRow['doktype'])) {
                 $skipPage = true;
                 $skipMessage = 'Because doktype is not allowed';
             }
