@@ -57,11 +57,16 @@ class GuzzleExecutionStrategy implements LoggerAwareInterface
             $contents = $response->getBody()->getContents();
             return unserialize($contents);
         } catch (RequestException $e) {
+            $response = $e->getResponse();
+            $message = ($response ? $response->getStatusCode() : 0)
+                . chr(32)
+                . ($response ? $response->getReasonPhrase() : $e->getMessage());
+
             $this->logger->debug(
-                sprintf('Error while opening "%s" - ' . $e->getResponse()->getStatusCode() . chr(32) . $e->getResponse()->getReasonPhrase(), $url),
+                sprintf('Error while opening "%s" - ' . $message, $url),
                 ['crawlerId' => $crawlerId]
             );
-            return $e->getResponse()->getStatusCode() . chr(32) . $e->getResponse()->getReasonPhrase();
+            return $message;
         }
     }
 
