@@ -693,7 +693,7 @@ class BackendModule
     }
 
     /**
-     * Extract the log information from the current row and retrive it as formatted string.
+     * Extract the log information from the current row and retrieve it as formatted string.
      *
      * @param array $resultRow
      * @return string
@@ -703,6 +703,9 @@ class BackendModule
         $content = '';
         if (is_array($resultRow) && array_key_exists('result_data', $resultRow)) {
             $requestContent = $this->jsonCompatibilityConverter->convert($resultRow['result_data']) ?: ['content' => ''];
+            if (! array_key_exists('content', $requestContent)) {
+                return $content;
+            }
             $requestResult = $this->jsonCompatibilityConverter->convert($requestContent['content']);
 
             if (is_array($requestResult) && array_key_exists('log', $requestResult)) {
@@ -717,6 +720,10 @@ class BackendModule
         if (empty($requestContent)) {
             return '-';
         }
+        if (! array_key_exists('content', $requestContent)) {
+            return 'Content index does not exists in requestContent array';
+        }
+
         $requestResult = $this->jsonCompatibilityConverter->convert($requestContent['content']);
         if (is_array($requestResult)) {
             if (empty($requestResult['errorlog'])) {
