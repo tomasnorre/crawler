@@ -726,7 +726,7 @@ class IndexedSearchCrawlerHook
             $aMidNight = mktime(0, 0, 0) - 1 * 24 * 3600;
         } else {
             $lastTime = $cfgRec['timer_next_indexing'] ?: $GLOBALS['EXEC_TIME'];
-            $aMidNight = mktime(0, 0, 0, date('m', $lastTime), date('d', $lastTime), date('y', $lastTime));
+            $aMidNight = mktime(0, 0, 0, (int) date('m', $lastTime), (int) date('d', $lastTime), (int) date('y', $lastTime));
         }
         // Find last offset time plus frequency in seconds:
         $lastSureOffset = $aMidNight + MathUtility::forceIntegerInRange($cfgRec['timer_offset'], 0, 86400);
