@@ -110,12 +110,14 @@ class ProcessQueueCommand extends Command
 
     protected function configure(): void
     {
+        $this->setDescription('Trigger the crawler to process the queue entries');
+
         $this->setHelp(
             'Crawler Command - Crawling the URLs from the queue' . chr(10) . chr(10) .
             '
             Examples:
               --- Will trigger the crawler which starts to process the queue entries
-              $ typo3 crawler:processqueue --amount 15 --sleepafter 5 --sleeptime 2  
+              $ typo3 crawler:processqueue --amount 15 --sleepafter 5 --sleeptime 2
             '
         );
         $this->addOption(

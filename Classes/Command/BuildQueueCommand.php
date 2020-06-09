@@ -38,6 +38,8 @@ class BuildQueueCommand extends Command
 {
     protected function configure(): void
     {
+        $this->setDescription('Create entries in the queue that can be processed at once');
+
         $this->setHelp(
             'Try "typo3 help crawler:buildQueue" to see your options' . chr(10) . chr(10) .
             'Works as a CLI interface to some functionality from the Web > Info > Site Crawler module;
