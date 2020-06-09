@@ -186,7 +186,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
                     $resLog = is_array($requestResult['log']) ? PHP_EOL . chr(9) . chr(9) . implode(PHP_EOL . chr(9) . chr(9), $requestResult['log']) : '';
                     $output->writeln('<info>OK: ' . $resLog . '</info>' . PHP_EOL);
                 } else {
-                    $output->writeln('<errror>Error checking Crawler Result:  ' . substr(preg_replace('/\s+/', ' ', strip_tags($resultContent)), 0, 30000) . '...' . PHP_EOL . '</errror>' . PHP_EOL);
+                    $output->writeln('<error>Error checking Crawler Result:  ' . substr(preg_replace('/\s+/', ' ', strip_tags($resultContent)), 0, 30000) . '...' . PHP_EOL . '</error>' . PHP_EOL);
                 }
             }
         } elseif ($mode === 'queue') {
