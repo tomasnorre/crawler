@@ -109,13 +109,14 @@ class IndexedSearchCrawlerHookTest extends UnitTestCase
     }
 
     /**
-     * @test
-     * @dataProvider generataNextIndexingTimeDataProvider
+     * test
+     * @dataProvider generateNextIndexingTimeDataProvider
      */
     public function generateNextIndexingTime(array $configurationRecord, int $expected): void
     {
         // Force "current time"
         $GLOBALS['EXEC_TIME'] = 1591637103;
+        date_default_timezone_set('UTC');
 
         self::assertSame(
             $expected,
@@ -123,7 +124,7 @@ class IndexedSearchCrawlerHookTest extends UnitTestCase
         );
     }
 
-    public function generataNextIndexingTimeDataProvider(): array
+    public function generateNextIndexingTimeDataProvider(): array
     {
         return [
             'Timer Frequency less than 24 hours (5 hours)' => [
