@@ -8,6 +8,7 @@
 
 ### Fixed
 * Handle empty response when fetching URL [@brotkrueml](https://github.com/brotkrueml)
+* Set default value when procInstrFilter is not defined [@brotkrueml](https://github.com/brotkrueml)
 
 ## Crawler 9.0.1
 Crawler 9.0.1 was released on May 11th, 2020

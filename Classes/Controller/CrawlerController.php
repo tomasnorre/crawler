@@ -550,7 +550,7 @@ class CrawlerController implements LoggerAwareInterface
             $subCfg = (array) $crawlerCfg[$key . '.'];
             $subCfg['key'] = $key;
 
-            if (strcmp($subCfg['procInstrFilter'], '')) {
+            if (strcmp($subCfg['procInstrFilter'] ?? '', '')) {
                 $subCfg['procInstrFilter'] = implode(',', GeneralUtility::trimExplode(',', $subCfg['procInstrFilter']));
             }
             $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $subCfg['pidsOnly'], true));
