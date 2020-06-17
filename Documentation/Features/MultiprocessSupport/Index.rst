@@ -1,22 +1,8 @@
-﻿
+﻿.. include:: /Includes.txt
 
-.. ==================================================
-.. FOR YOUR INFORMATION
-.. --------------------------------------------------
-.. -*- coding: utf-8 -*- with BOM.
-
-.. ==================================================
-.. DEFINE SOME TEXTROLES
-.. --------------------------------------------------
-.. role::   underline
-.. role::   typoscript(code)
-.. role::   ts(typoscript)
-   :class:  typoscript
-.. role::   php(code)
-
-
+=====================
 Multi process support
-^^^^^^^^^^^^^^^^^^^^^
+=====================
 
 If you want to optimize the crawling process for speed (instead of low
 server stress), maybe because the machine is a dedicated staging
@@ -29,5 +15,7 @@ crawling processes per minute. You'll be able to speed up the crawler quite a lo
 
 But choose your settings carefully as it puts loads on the server.
 
-.. image:: /Images/crawler_settings_processLimit.png
+.. figure:: /Images/crawler_settings_processLimit.png
+   :alt: Backend configuration: Processing
 
+   Backend configuration: Processing

@@ -1,34 +1,22 @@
-﻿
+﻿.. include:: /Includes.txt
 
-.. ==================================================
-.. FOR YOUR INFORMATION
-.. --------------------------------------------------
-.. -*- coding: utf-8 -*- with BOM.
-
-.. ==================================================
-.. DEFINE SOME TEXTROLES
-.. --------------------------------------------------
-.. role::   underline
-.. role::   typoscript(code)
-.. role::   ts(typoscript)
-   :class:  typoscript
-.. role::   php(code)
 .. _backend-configuration-record:
 
+=====================
 Configuration records
-^^^^^^^^^^^^^^^^^^^^^
+=====================
 
 Formerly configuration was done by using pageTS (see below). This is
 still possible (fully backwards compatible) but not recommended.
 Instead of writing pageTS simply create a configuration record (table:
-tx\_crawler\_configuration) and put it on the topmost page of the
+``tx_crawler_configuration``) and put it on the topmost page of the
 pagetree you want to affect with this configuration.
 
-The fields in these records are related to the page ts keys described
+The fields in these records are related to the pageTS keys described
 below.
 
 Fields and their pageTS equivalents
-'''''''''''''''''''''''''''''''''''
+===================================
 
 - **Name** - corresponds to the "key" part in the pageTS setup
   e.g. tx_crawler.crawlerCfg.paramSets.myConfigurationKeyName

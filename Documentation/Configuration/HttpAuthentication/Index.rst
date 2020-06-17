@@ -1,24 +1,12 @@
-.. ==================================================
-.. FOR YOUR INFORMATION
-.. --------------------------------------------------
-.. -*- coding: utf-8 -*- with BOM.
+.. include:: /Includes.txt
 
-.. ==================================================
-.. DEFINE SOME TEXTROLES
-.. --------------------------------------------------
-.. role::   underline
-.. role::   typoscript(code)
-.. role::   ts(typoscript)
-
-:class:  typoscript
-.. role::   php(code)
-
-
+===================
 HTTP Authentication
-^^^^^^^^^^^^^^^^^^^
+===================
 
-If you want to use HTTP Authentication you  need to configure your base url to contain user:pass
+If you want to use HTTP Authentication you need to configure your base url
+to contain user:pass
 
-::
+.. code-block:: text
 
-    http://user:pass@www.mydomain.com/
+   https://user:pass@www.mydomain.com/

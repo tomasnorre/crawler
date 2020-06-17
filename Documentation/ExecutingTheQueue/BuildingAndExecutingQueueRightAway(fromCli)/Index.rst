@@ -1,20 +1,10 @@
-﻿.. ==================================================
-.. FOR YOUR INFORMATION
-.. --------------------------------------------------
-.. -*- coding: utf-8 -*- with BOM.
+﻿.. include:: /Includes.txt
 
-.. ==================================================
-.. DEFINE SOME TEXTROLES
-.. --------------------------------------------------
-.. role::   underline
-.. role::   typoscript(code)
-.. role::   ts(typoscript)
-   :class:  typoscript
-.. role::   php(code)
 .. _executing-the-queue-cli-label:
 
+==================================================
 Building and Executing queue right away (from cli)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==================================================
 
 An alternative mode is to automatically build and execute the queue
 from the command line in one process. This doesn't allow scheduling of
@@ -26,7 +16,7 @@ The script to use is this:
 
 ::
 
-   [pathToYourTYPO3Installation-composer-bin-dir]/typo3cms crawler:buildQueue <startPageUid> <configurationKeys>
+   vendor/bin/typo3 crawler:buildQueue <startPageUid> <configurationKeys>
 
 If you run it you will see a list of options which explains usage.
 
@@ -99,14 +89,14 @@ If you run it you will see a list of options which explains usage.
    Description
          Output mode: "url", "exec", "queue"
 
-         \- url : Will list URLs which wget could use as input.
+         - url : Will list URLs which wget could use as input.
 
-         \- queue: Will put entries in queue table.
+         - queue: Will put entries in queue table.
 
-         \- exec: Will execute all entries right away!
+         - exec: Will execute all entries right away!
 
    Default
-         Queue
+         queue
 
 
 .. container:: table-row
@@ -141,11 +131,11 @@ To do the same with the CLI script you run this:
 
 ::
 
-   [pathToYourTYPO3Installation-composer-bin-dir]/typo3 crawler:buildQueue 6 default --depth 2
+   vendor/bin/typo3 crawler:buildQueue 6 default --depth 2
 
 And this is the output:
 
-::
+.. code-block:: text
 
     38 entries found for processing. (Use "mode" to decide action):
 

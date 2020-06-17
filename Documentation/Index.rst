@@ -15,7 +15,7 @@ Crawler
 :Author:          Kasper Skårhøj, Daniel Pötzinger, Fabrizio Branca, Tolleiv Nietsch, Timo Schmidt, Michael Klapper, Stefan Rotsch, Tomas Norre Mikkelsen
 :Email:           dev@aoe.com
 :License:         This document is published under the Open Content License available from
-                  http://www.opencontent.org/opl.shtml
+                  https://www.opencontent.org/openpub/
 :Rendered:        |today|
 
 The content of this document is related to TYPO3, a GNU/GPL CMS/Framework available from https://typo3.org/.

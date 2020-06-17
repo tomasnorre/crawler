@@ -1,22 +1,9 @@
-﻿
+﻿.. include:: /Includes.txt
+.. highlight:: php
 
-.. ==================================================
-.. FOR YOUR INFORMATION
-.. --------------------------------------------------
-.. -*- coding: utf-8 -*- with BOM.
-
-.. ==================================================
-.. DEFINE SOME TEXTROLES
-.. --------------------------------------------------
-.. role::   underline
-.. role::   typoscript(code)
-.. role::   ts(typoscript)
-   :class:  typoscript
-.. role::   php(code)
-
-
+================================
 Pollable processing instructions
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+================================
 
 Some processing instructions are never executed on the "client side"
 (the TYPO3 frontend that is called by the crawler). This happens for

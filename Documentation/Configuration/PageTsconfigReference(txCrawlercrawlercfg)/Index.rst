@@ -1,39 +1,11 @@
-﻿
+﻿.. include:: /Includes.txt
+.. highlight:: typoscript
 
-.. ==================================================
-.. FOR YOUR INFORMATION
-.. --------------------------------------------------
-.. -*- coding: utf-8 -*- with BOM.
-
-.. ==================================================
-.. DEFINE SOME TEXTROLES
-.. --------------------------------------------------
-.. role::   underline
-.. role::   typoscript(code)
-.. role::   ts(typoscript)
-   :class:  typoscript
-.. role::   php(code)
-
-
+================================================
 Page TSconfig Reference (tx\_crawler.crawlerCfg)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+================================================
 
 .. ### BEGIN~OF~TABLE ###
-
-.. container:: table-row
-
-   Property
-         Property:
-
-   Data type
-         Data type:
-
-   Description
-         Description:
-
-   Default
-         Default:
-
 
 .. container:: table-row
 
@@ -108,8 +80,7 @@ Page TSconfig Reference (tx\_crawler.crawlerCfg)
                  procInstrFilter = tx_indexedsearch_reindex
                }
             }
-            
-   Default
+
 
 
 .. container:: table-row
@@ -124,11 +95,9 @@ Page TSconfig Reference (tx\_crawler.crawlerCfg)
 
    Description
          List of processing instructions, eg. "tx\_indexedsearch\_reindex" from
-         indexed\_searchto send for the request. Processing instructions are
+         indexed\_search to send for the request. Processing instructions are
          necessary for the request to perform any meaningful action, since they
          activate third party activity.
-
-   Default
 
 
 .. container:: table-row
@@ -147,8 +116,6 @@ Page TSconfig Reference (tx\_crawler.crawlerCfg)
 
          .....procInstrParams.tx\_staticpub\_publish.includeResources=1
 
-   Default
-
 
 .. container:: table-row
 
@@ -163,8 +130,6 @@ Page TSconfig Reference (tx\_crawler.crawlerCfg)
    Description
          List of Page Ids to limit this configuration to
 
-   Default
-
 
 .. container:: table-row
 
@@ -178,8 +143,6 @@ Page TSconfig Reference (tx\_crawler.crawlerCfg)
 
    Description
          User groups to set for the request.
-
-   Default
 
 
 .. container:: table-row
@@ -199,8 +162,6 @@ Page TSconfig Reference (tx\_crawler.crawlerCfg)
          MUST BE SET if run from CLI (since TYPO3\_SITE\_URL does not exist in
          that context!)
 
-   Default
-
 
 .. ###### END~OF~TABLE ######
 
@@ -208,12 +169,12 @@ Page TSconfig Reference (tx\_crawler.crawlerCfg)
 
 
 Example
-~~~~~~~
+=======
 
 ::
 
    tx_crawler.crawlerCfg.paramSets.test = &L=[0-3]
    tx_crawler.crawlerCfg.paramSets.test {
-           procInstrFilter = tx_indexedsearch_reindex
+      procInstrFilter = tx_indexedsearch_reindex
    }
 

@@ -6,6 +6,7 @@
 .. role:: js(code)
 .. role:: php(code)
 .. role:: sep (strong)
+.. role:: shell(code)
 .. role:: yaml(code)
 .. role:: underline
 .. role:: typoscript(code)
@@ -13,5 +14,4 @@
 .. role:: ts(typoscript)
    :class: typoscript
 
-.. default-role:: code
 .. highlight:: php
