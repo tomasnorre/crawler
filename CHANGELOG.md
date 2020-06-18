@@ -5,6 +5,7 @@
 ### Added
 * Update specific doktypes for skipping page [@brotkrueml](https://github.com/brotkrueml)
 * Tests for BackendModule
+* Add index for tx_crawler_queue.scheduled table field [@brotkrueml](https://github.com/brotkrueml)
 
 ### Fixed
 * Handle empty response when fetching URL [@brotkrueml](https://github.com/brotkrueml)
