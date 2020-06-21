@@ -4,6 +4,7 @@
 
 ### Added
 * Update specific doktypes for skipping page [@brotkrueml](https://github.com/brotkrueml)
+* Configure commands in Services.yaml for TYPO3 v10 [@brotkrueml](https://github.com/brotkrueml)
 * Tests for BackendModule
 
 ### Fixed

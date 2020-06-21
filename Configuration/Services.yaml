@@ -1,0 +1,23 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    AOE\Crawler\:
+        resource: '../Classes/*'
+
+    AOE\Crawler\Command\BuildQueueCommand:
+        tags:
+            - name: 'console.command'
+              command: 'crawler:buildQueue'
+
+    AOE\Crawler\Command\FlushQueueCommand:
+        tags:
+            - name: 'console.command'
+              command: 'crawler:flushQueue'
+
+    AOE\Crawler\Command\ProcessQueueCommand:
+        tags:
+            - name: 'console.command'
+              command: 'crawler:processQueue'
