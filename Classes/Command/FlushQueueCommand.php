@@ -31,6 +31,25 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 class FlushQueueCommand extends Command
 {
+    /**
+     * @var CrawlerController
+     */
+    protected $crawlerController;
+
+    public function __construct(CrawlerController $crawlerController = null)
+    {
+        if ($crawlerController === null) {
+            // This is a fallback and can be removed when support for TYPO3 v9 is dropped!
+            $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+            $crawlerController = $objectManager->get(CrawlerController::class);
+        }
+
+        $this->crawlerController = $crawlerController;
+
+        parent::__construct();
+    }
+
+
     protected function configure(): void
     {
         $this->setDescription('Remove queue entries and perform a cleanup');
@@ -79,23 +98,17 @@ It will remove queue entries and perform a cleanup.' . chr(10) . chr(10) .
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-
         $mode = strtolower($input->getArgument('mode'));
-
-        /** @var CrawlerController $crawlerController */
-        $crawlerController = $objectManager->get(CrawlerController::class);
-
         $pageId = MathUtility::forceIntegerInRange($input->getOption('page'), 0);
 
         switch ($mode) {
             case 'all':
-                $crawlerController->getLogEntriesForPageId($pageId, '', true, true);
+                $this->crawlerController->getLogEntriesForPageId($pageId, '', true, true);
                 $output->writeln('<info>All entries in Crawler queue will be flushed</info>');
                 break;
             case 'finished':
             case 'pending':
-                $crawlerController->getLogEntriesForPageId($pageId, (string) $mode, true, false);
+                $this->crawlerController->getLogEntriesForPageId($pageId, (string)$mode, true, false);
                 $output->writeln('<info>All entries in Crawler queue, with status: "' . $mode . '" will be flushed</info>');
                 break;
             default:

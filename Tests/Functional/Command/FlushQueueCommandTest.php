@@ -19,8 +19,10 @@ namespace AOE\Crawler\Tests\Functional\Command;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Command\FlushQueueCommand;
+use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\QueueRepository;
-use TYPO3\CMS\Core\Utility\CommandUtility;
+use Symfony\Component\Console\Tester\CommandTester;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
@@ -41,11 +43,26 @@ class FlushQueueCommandTest extends AbstractCommandTests
      */
     protected $queueRepository;
 
+    /**
+     * @var CrawlerController
+     */
+    protected $crawlerController;
+
+    /**
+     * @var CommandTester
+     */
+    protected $commandTester;
+
     protected function setUp(): void
     {
         parent::setUp();
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
-        $this->queueRepository = GeneralUtility::makeInstance(ObjectManager::class)->get(QueueRepository::class);
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $this->queueRepository = $objectManager->get(QueueRepository::class);
+        $this->crawlerController = $objectManager->get(CrawlerController::class);
+
+        $command = new FlushQueueCommand($this->crawlerController);
+        $this->commandTester = new CommandTester($command);
     }
 
     /**
@@ -56,9 +73,9 @@ class FlushQueueCommandTest extends AbstractCommandTests
      */
     public function flushQueueCommandTest(string $mode, string $expectedOutput, int $expectedCount): void
     {
-        $commandOutput = '';
-        $cliCommand = $this->getTypo3TestBinaryCommand() . ' crawler:flushQueue ' . $mode;
-        CommandUtility::exec($cliCommand, $commandOutput);
+        $arguments = ['mode' => $mode];
+        $this->commandTester->execute($arguments);
+        $commandOutput = $this->commandTester->getDisplay();
 
         self::assertContains($expectedOutput, $commandOutput);
         self::assertEquals(
