@@ -47,3 +47,6 @@ var/tests
 # Codeception Files
 Tests/Acceptance/_data/*
 Tests/Acceptance/_output/*
+
+# Generated documentation
+Documentation-GENERATED-temp

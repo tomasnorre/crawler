@@ -1,22 +1,8 @@
-﻿
+﻿.. include:: /Includes.txt
 
-.. ==================================================
-.. FOR YOUR INFORMATION
-.. --------------------------------------------------
-.. -*- coding: utf-8 -*- with BOM.
-
-.. ==================================================
-.. DEFINE SOME TEXTROLES
-.. --------------------------------------------------
-.. role::   underline
-.. role::   typoscript(code)
-.. role::   ts(typoscript)
-   :class:  typoscript
-.. role::   php(code)
-
-
+================
 What does it do?
-^^^^^^^^^^^^^^^^
+================
 
 Uses a command line cron-script to traverse a queue of actions
 (alternative option: executing all immediately), eg. requesting a URL
@@ -39,4 +25,3 @@ extensions (and indexed search is one of them). In this way a
 processing instruction can instruct the frontend to perform an action
 (like indexing, publishing etc.) which cannot be done with a request
 from outside.
-
