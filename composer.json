@@ -20,7 +20,7 @@
         "ext-json": "*",
         "guzzlehttp/guzzle": "^6.4.1",
         "psr/log": "^1.0",
-        "symfony/console": "^4.3",
+        "symfony/console": "^4.3 || ^5.0",
         "typo3/cms-core": "~9.5.14 || ^10.3",
         "typo3/cms-frontend": "*",
         "typo3/cms-info": "*"

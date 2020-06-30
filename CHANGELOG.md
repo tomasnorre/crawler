@@ -7,6 +7,7 @@
 * Configure commands in Services.yaml for TYPO3 v10 [@brotkrueml](https://github.com/brotkrueml)
 * Tests for BackendModule
 * Add index for tx_crawler_queue.scheduled table field [@brotkrueml](https://github.com/brotkrueml)
+* Support for Symfony console 5
 
 ### Fixed
 * Handle empty response when fetching URL [@brotkrueml](https://github.com/brotkrueml)

@@ -105,7 +105,8 @@ class ProcessQueueCommand extends Command
             $result |= self::CLI_STATUS_ABORTED;
         }
 
-        return $output->writeln($result);
+        $output->writeln($result);
+        return $result & self::CLI_STATUS_ABORTED;
     }
 
     protected function configure(): void
