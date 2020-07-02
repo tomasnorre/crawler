@@ -31,7 +31,7 @@ class IndexedSearchCrawlerHookTest extends UnitTestCase
 
     protected function setUp(): void
     {
-        $this->subject = self::getAccessibleMock(IndexedSearchCrawlerHook::class, ['dummy'], [], '', false);
+        $this->subject = self::getAccessibleMock(IndexedSearchCrawlerHook::class, ['getMidnightTimestamp'], [], '', false);
     }
 
     /**
@@ -112,8 +112,10 @@ class IndexedSearchCrawlerHookTest extends UnitTestCase
      * @test
      * @dataProvider generateNextIndexingTimeDataProvider
      */
-    public function generateNextIndexingTime(array $configurationRecord, int $expected): void
+    public function generateNextIndexingTime(array $configurationRecord, int $atMidnightTimestamp, int $expected): void
     {
+        $this->subject->method('getMidnightTimestamp')->willReturn($atMidnightTimestamp);
+
         // Force "current time"
         $GLOBALS['EXEC_TIME'] = 1591637103;
         date_default_timezone_set('UTC');
@@ -130,10 +132,11 @@ class IndexedSearchCrawlerHookTest extends UnitTestCase
             'Timer Frequency less than 24 hours (5 hours)' => [
                 'configurationRecord' => [
                     'timer_frequency' => 18000,
-                    'timer_next_indexing' => 500,
+                    'timer_next_indexing' => 1591638558,
                     'timer_offset' => 60,
                 ],
-                'expected' => 1591642860,
+                'atMidnightTimestamp' => 1593475200,
+                'expected' => 1591639260,
             ],
             'Timer frequency more than 24 hours (26 hours)' => [
                 'configurationRecord' => [
@@ -141,6 +144,7 @@ class IndexedSearchCrawlerHookTest extends UnitTestCase
                     'timer_next_indexing' => 1591638558,
                     'timer_offset' => 60,
                 ],
+                'atMidnightTimestamp' => 1591574400,
                 'expected' => 1591668060,
             ],
             'Offset at minimum in range' => [
@@ -149,7 +153,8 @@ class IndexedSearchCrawlerHookTest extends UnitTestCase
                     'timer_next_indexing' => 1591638558,
                     'timer_offset' => 0,
                 ],
-                'expected' => 1591637300,
+                'atMidnightTimestamp' => 1591574400,
+                'expected' => 1591637400,
             ],
             'Offset at maximum in range' => [
                 'configurationRecord' => [
@@ -157,7 +162,8 @@ class IndexedSearchCrawlerHookTest extends UnitTestCase
                     'timer_next_indexing' => 1591638558,
                     'timer_offset' => 86400,
                 ],
-                'expected' => 1591637200,
+                'atMidnightTimestamp' => 1591574400,
+                'expected' => 1591637300,
             ],
             'Offset at smaller than rangen' => [
                 'configurationRecord' => [
@@ -165,7 +171,8 @@ class IndexedSearchCrawlerHookTest extends UnitTestCase
                     'timer_next_indexing' => 1591638558,
                     'timer_offset' => -1,
                 ],
-                'expected' => 1591637300,
+                'atMidnightTimestamp' => 1591574400,
+                'expected' => 1591637400,
             ],
             'Offset larger than range' => [
                 'configurationRecord' => [
@@ -173,7 +180,8 @@ class IndexedSearchCrawlerHookTest extends UnitTestCase
                     'timer_next_indexing' => 1591638558,
                     'timer_offset' => 86401,
                 ],
-                'expected' => 1591637200,
+                'atMidnightTimestamp' => 1591574400,
+                'expected' => 1591637300,
             ],
             'Timer frequency as numeric string' => [
                 'configurationRecord' => [
@@ -181,7 +189,8 @@ class IndexedSearchCrawlerHookTest extends UnitTestCase
                     'timer_next_indexing' => 1591638558,
                     'timer_offset' => 60,
                 ],
-                'expected' => 1591637360,
+                'atMidnightTimestamp' => 1591574400,
+                'expected' => 1591637460,
             ],
             'Timer frequency as numeric value' => [
                 'configurationRecord' => [
@@ -189,7 +198,8 @@ class IndexedSearchCrawlerHookTest extends UnitTestCase
                     'timer_next_indexing' => 1591638558,
                     'timer_offset' => 60,
                 ],
-                'expected' => 1591637360,
+                'atMidnightTimestamp' => 1591574400,
+                'expected' => 1591637460,
             ],
             'Timer next indexing set to positive' => [
                 'configurationRecord' => [
@@ -197,7 +207,8 @@ class IndexedSearchCrawlerHookTest extends UnitTestCase
                     'timer_next_indexing' => 1591638558,
                     'timer_offset' => 60,
                 ],
-                'expected' => 1591637360,
+                'atMidnightTimestamp' => 1591574400,
+                'expected' => 1591637460,
             ],
             'Timer next indexing set to negative' => [
                 'configurationRecord' => [
@@ -205,9 +216,9 @@ class IndexedSearchCrawlerHookTest extends UnitTestCase
                     'timer_next_indexing' => -1,
                     'timer_offset' => 60,
                 ],
-                'expected' => 1591637360,
+                'atMidnightTimestamp' => 1591574400,
+                'expected' => 1591637460,
             ],
-
         ];
     }
 
