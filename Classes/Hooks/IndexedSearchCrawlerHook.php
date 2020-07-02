@@ -910,7 +910,6 @@ class IndexedSearchCrawlerHook
     }
 
     /**
-     * @param array $cfgRec
      * @return false|float|int
      */
     protected function getMidnightTimestamp(array $cfgRec)
