@@ -5,6 +5,8 @@
 Hooks
 =====
 
+Register the following hooks in :file:`ext_localconf.php` of your extension.
+
 excludeDoktype Hook
 ===================
 
@@ -24,6 +26,26 @@ individual userfunction. Register your function here:
 
 ::
 
-   $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pageVeto'][] = 'EXT:yourext/.../class.tx_yourext_foo.php: tx_yourext_foo->bar';
+   $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pageVeto'][] = Vendor\YourExt\Hooks\Crawler\PageVeto::class . '->excludePage';
 
+Example::
+
+   <?php
+   declare(strict_types=1);
+
+   namespace Vendor\YourExt\Hooks\Crawler;
+
+   use AOE\Crawler\Controller\CrawlerController;
+
+   class PageVeto
+   {
+      public function excludePage(array &$params, CrawlerController $controller)
+      {
+         if ($params['pageRow']['uid'] === 42) {
+            return 'Page with uid "42" is excluded by page veto hook');
+         }
+
+         return false;
+      }
+   }
 
