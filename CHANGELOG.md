@@ -8,6 +8,7 @@
 * Tests for BackendModule
 * Add index for tx_crawler_queue.scheduled table field [@brotkrueml](https://github.com/brotkrueml)
 * Support for Symfony console 5
+* Add example for pageVeto hook in documentation [@brotkrueml](https://github.com/brotkrueml)
 
 ### Fixed
 * Handle empty response when fetching URL [@brotkrueml](https://github.com/brotkrueml)
