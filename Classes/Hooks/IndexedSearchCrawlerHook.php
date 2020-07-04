@@ -722,17 +722,12 @@ class IndexedSearchCrawlerHook
     {
         $currentTime = $GLOBALS['EXEC_TIME'];
         // Now, find a midnight time to use for offset calculation. This has to differ depending on whether we have frequencies within a day or more than a day; Less than a day, we don't care which day to use for offset, more than a day we want to respect the currently entered day as offset regardless of when the script is run - thus the day-of-week used in case "Weekly" is selected will be respected
-        if ($cfgRec['timer_frequency'] <= 24 * 3600) {
-            $aMidNight = mktime(0, 0, 0) - 1 * 24 * 3600;
-        } else {
-            $lastTime = $cfgRec['timer_next_indexing'] ?: $GLOBALS['EXEC_TIME'];
-            $aMidNight = mktime(0, 0, 0, (int) date('m', $lastTime), (int) date('d', $lastTime), (int) date('y', $lastTime));
-        }
+        $aMidNight = $this->getMidnightTimestamp($cfgRec);
         // Find last offset time plus frequency in seconds:
         $lastSureOffset = $aMidNight + MathUtility::forceIntegerInRange($cfgRec['timer_offset'], 0, 86400);
         $frequencySeconds = MathUtility::forceIntegerInRange($cfgRec['timer_frequency'], 1);
         // Now, find out how many blocks of the length of frequency there is until the next time:
-        $frequencyBlocksUntilNextTime = intval(ceil(($currentTime - $lastSureOffset) / $frequencySeconds));
+        $frequencyBlocksUntilNextTime = (int) ceil(($currentTime - $lastSureOffset) / $frequencySeconds);
         // Set next time to the offset + the frequency blocks multiplied with the frequency length in seconds.
         return $lastSureOffset + $frequencyBlocksUntilNextTime * $frequencySeconds;
     }
@@ -912,5 +907,19 @@ class IndexedSearchCrawlerHook
                 $this->indexSingleRecord($currentRecord, $cfgRec);
             }
         }
+    }
+
+    /**
+     * @return false|float|int
+     */
+    protected function getMidnightTimestamp(array $cfgRec)
+    {
+        if ($cfgRec['timer_frequency'] <= 24 * 3600) {
+            $aMidNight = mktime(0, 0, 0) - 1 * 24 * 3600;
+        } else {
+            $lastTime = $cfgRec['timer_next_indexing'] ?: $GLOBALS['EXEC_TIME'];
+            $aMidNight = mktime(0, 0, 0, (int) date('m', $lastTime), (int) date('d', $lastTime), (int) date('y', $lastTime));
+        }
+        return $aMidNight;
     }
 }
