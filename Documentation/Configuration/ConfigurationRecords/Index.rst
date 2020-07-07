@@ -18,34 +18,61 @@ below.
 Fields and their pageTS equivalents
 ===================================
 
-- **Name** - corresponds to the "key" part in the pageTS setup
-  e.g. tx_crawler.crawlerCfg.paramSets.myConfigurationKeyName
+General
+-------
 
-- **Protocol for crawling** - force HTTP, HTTPS or keep the configured protocol
+.. figure:: /Images/backend_configurationrecord_general.png
+   :alt: Backend configuration record: General
 
-- **Processing instruction filter** - :ref:`paramSets.[key].procInstrFilter <crawler-tsconfig-paramSets-key-procInstrFilter>`
+   Backend configuration record: General
 
-- **Baseurl** - set baseUrl (most likely the same as the entry point configured in your site configuration)
+Name
+   Corresponds to the "key" part in the pageTS setup e.g.
+   :typoscript:`tx_crawler.crawlerCfg.paramSets.myConfigurationKeyName`
 
-- **Baseurl from Domainrecord** - :ref:`paramSets.[key].baseUrl <crawler-tsconfig-paramSets-key-baseUrl>`
+Protocol for crawling
+   Force HTTP, HTTPS or keep the configured protocol
 
-- **Configuration** - :ref:`paramSets.[key] <crawler-tsconfig-paramSets-key>`
+Processing instruction filter
+   List of processing instructions. See also:
+   :ref:`paramSets.[key].procInstrFilter <crawler-tsconfig-paramSets-key-procInstrFilter>`
 
-- **Page Id of TypoScript root template**
+Base URL
+   Set baseUrl (most likely the same as the entry point configured in your
+   site configuration)
 
-- **Pids only** - :ref:`paramSets.[key].pidsonly <crawler-tsconfig-paramSets-key-pidsonly>`
+Pids only
+   List of Page Ids to limit this configuration to. See also:
+   :ref:`paramSets.[key].pidsonly <crawler-tsconfig-paramSets-key-pidsonly>`
 
-- **Configuration**
+Exclude pages
+   Comma separated list of page ids which should not be crawled
 
-- **Processing instruction parameters**
+Configuration
+   Parameter configuration. The values of GET variables are according to a
+   special syntax. See also: :ref:`paramSets.[key]
+   <crawler-tsconfig-paramSets-key>`
 
-- **Restrict access to** - restricts access to this configuration record to selected backend user groups. Empty means no restriction is set.
+Processing instruction parameters
+   Options for processing instructions. Will be defined in the respective third
+   party modules. See also: :ref:`paramSets.[key].procInstrParams
+   <crawler-tsconfig-paramSets-key-procInstrParams>`
 
-- **Crawl with FE usergroups** - :ref:`paramSets.[key].userGroups <crawler-tsconfig-paramSets-key-userGroups>`
+Crawl with FE user groups
+   User groups to set for the request. See also:
+   :ref:`paramSets.[key].userGroups <crawler-tsconfig-paramSets-key-userGroups>`
 
-- **Exclude pages** - comma separated list of page ids which should not be crawled
+Access
+------
 
-.. image:: /Images/backend_configurationrecord_1.png
-.. image:: /Images/backend_configurationrecord_2.png
-.. image:: /Images/backend_configurationrecord_3.png
+.. figure:: /Images/backend_configurationrecord_access.png
+   :alt: Backend configuration record: Access
 
+   Backend configuration record: Access
+
+Hide
+   If activated the configuration record is not taken into account.
+
+Restrict access to
+   Restricts access to this configuration record to selected backend user
+   groups. Empty means no restriction is set.

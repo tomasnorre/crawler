@@ -3,16 +3,19 @@
 ## Crawler 9.0.2-dev
 
 ### Added
-* Update specific doktypes for skipping page [@brotkrueml](https://github.com/brotkrueml)
-* Configure commands in Services.yaml for TYPO3 v10 [@brotkrueml](https://github.com/brotkrueml)
+* Update specific doktypes for skipping page
+* Configure commands in Services.yaml for TYPO3 v10
 * Tests for BackendModule
-* Add index for tx_crawler_queue.scheduled table field [@brotkrueml](https://github.com/brotkrueml)
+* Add index for tx_crawler_queue.scheduled table field
 * Support for Symfony console 5
-* Add example for pageVeto hook in documentation [@brotkrueml](https://github.com/brotkrueml)
+* Add example for pageVeto hook in documentation
+
+### Changed
+* Group TCA in tabs and add descriptions to fields
 
 ### Fixed
-* Handle empty response when fetching URL [@brotkrueml](https://github.com/brotkrueml)
-* Set default value when procInstrFilter is not defined [@brotkrueml](https://github.com/brotkrueml)
+* Handle empty response when fetching URL
+* Set default value when procInstrFilter is not defined
 
 ## Crawler 9.0.1
 Crawler 9.0.1 was released on May 11th, 2020
