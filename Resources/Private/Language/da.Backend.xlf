@@ -43,10 +43,6 @@
         <source>Configuration</source>
         <target state="final">Konfiguration</target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration.base_url" approved="yes">
-        <source>Base URL (leave empty for fetching the Base URL from the Site Configuration)</source>
-        <target state="final">Base URL (hvis du lader den være tom, bruges Base URL fra Sidekonfiguration)</target>
-      </trans-unit>
       <trans-unit id="tx_crawler_configuration.pidsonly" approved="yes">
         <source>Pids only</source>
         <target state="final">Kun Pids</target>
@@ -54,10 +50,6 @@
       <trans-unit id="tx_crawler_configuration.begroups" approved="yes">
         <source>Restrict access to</source>
         <target state="final">Begræns adgang til</target>
-      </trans-unit>
-      <trans-unit id="tx_crawler_configuration.fegroups" approved="yes">
-        <source>Crawl with FE usergroups</source>
-        <target state="final">Crawl me FE brugergrupper</target>
       </trans-unit>
       <trans-unit id="tx_crawler_configuration.exclude" approved="yes">
         <source>Exclude pages</source>
