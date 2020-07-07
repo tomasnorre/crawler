@@ -61,15 +61,17 @@ return [
                         1,
                     ],
                 ],
+                'default' => 0,
             ],
         ],
         'processing_instruction_filter' => [
             'exclude' => true,
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.processing_instruction_filter',
+            'description' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.processing_instruction_filter.description',
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectCheckBox',
-                'itemsProcFunc' => 'AOE\\Crawler\\Utility\\TcaUtility->getProcessingInstructions',
+                'itemsProcFunc' => AOE\Crawler\Utility\TcaUtility::class . '->getProcessingInstructions',
                 'eval' => 'required',
                 'maxitems' => 100,
             ],
@@ -79,7 +81,7 @@ return [
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.processing_instruction_parameters_ts',
             'config' => [
                 'type' => 'text',
-                'cols' => 40,
+                'cols' => 48,
                 'rows' => 5,
             ],
         ],
@@ -88,13 +90,14 @@ return [
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.configuration',
             'config' => [
                 'type' => 'text',
-                'cols' => 40,
+                'cols' => 48,
                 'rows' => 5,
             ],
         ],
         'base_url' => [
             'exclude' => true,
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.base_url',
+            'description' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.base_url.description',
             'config' => [
                 'type' => 'input',
                 'size' => 30,
@@ -103,6 +106,7 @@ return [
         'pidsonly' => [
             'exclude' => true,
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.pidsonly',
+            'description' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.pidsonly.description',
             'config' => [
                 'type' => 'group',
                 'internal_type' => 'db',
@@ -115,6 +119,7 @@ return [
         'begroups' => [
             'exclude' => true,
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.begroups',
+            'description' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.begroups.description',
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectMultipleSideBySide',
@@ -126,6 +131,7 @@ return [
         'fegroups' => [
             'exclude' => true,
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.fegroups',
+            'description' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.fegroups.description',
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectMultipleSideBySide',
@@ -138,6 +144,7 @@ return [
         'exclude' => [
             'exclude' => true,
             'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.exclude',
+            'description' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.exclude.description',
             'config' => [
                 'type' => 'text',
                 'cols' => 48,
@@ -146,9 +153,14 @@ return [
         ],
     ],
     'types' => [
-        '0' => ['showitem' => 'hidden, name, force_ssl, processing_instruction_filter, base_url, pidsonly, configuration, processing_instruction_parameters_ts,begroups, fegroups, exclude'],
-    ],
-    'palettes' => [
-        '1' => ['showitem' => ''],
+        '0' => [
+            'showitem' => '
+                --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general,
+                name, force_ssl, processing_instruction_filter, base_url, pidsonly, exclude,
+                configuration, processing_instruction_parameters_ts, fegroups,
+                --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access,
+                hidden, begroups,
+            ',
+        ],
     ],
 ];
