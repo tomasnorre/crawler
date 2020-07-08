@@ -35,6 +35,10 @@
         <source>Processing instruction filter</source>
         <target state="final">Procesinstruktions filter</target>
       </trans-unit>
+      <trans-unit id="tx_crawler_configuration.processing_instruction_filter.description" approved="yes">
+        <source>List of processing instructions to send for the request. Processing instructions are necessary for the request to perform any meaningful action, since they activate third party activity.</source>
+        <target state="final">Liste af process instruktioner som udføres ved request. Process instruktionerne er nødvendige for at requestet kan udføre nogen handlinger da de trigger aktiviter for treide parts extensions.</target>
+      </trans-unit>
       <trans-unit id="tx_crawler_configuration.processing_instruction_parameters_ts" approved="yes">
         <source>Processing instruction parameters</source>
         <target state="final">Procesinstruktions parameter</target>
@@ -42,6 +46,10 @@
       <trans-unit id="tx_crawler_configuration.configuration" approved="yes">
         <source>Configuration</source>
         <target state="final">Konfiguration</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.base_url.description" approved="yes">
+        <source>Leave empty for fetching the base URL from the Site Configuration.</source>
+        <target state="final">Base URL (hvis du lader den være tom, bruges Base URL fra Sidekonfiguration.</target>
       </trans-unit>
       <trans-unit id="tx_crawler_configuration.pidsonly" approved="yes">
         <source>Pids only</source>
@@ -51,9 +59,25 @@
         <source>Restrict access to</source>
         <target state="final">Begræns adgang til</target>
       </trans-unit>
+      <trans-unit id="tx_crawler_configuration.begroups.description" approved="yes">
+        <source>Restrict access to this configuration record to selected backend user groups. Empty means no restriction is set.</source>
+        <target state="final">Begræns adgang til denne konfiguration for bestemte backend bruger grupper. Tom betyder ingen adgangs begrænsning.</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.fegroups" approved="yes">
+        <source>Crawl with FE user groups</source>
+        <target state="final">Crawl med FE bruger gruppper</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.fegroups.description" approved="yes">
+        <source>Frontend user groups to set for the request.</source>
+        <target state="final">Frontend bruger grupper til brug for requestet.</target>
+      </trans-unit>
       <trans-unit id="tx_crawler_configuration.exclude" approved="yes">
         <source>Exclude pages</source>
         <target state="final">Ekskludere sider</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.exclude.description" approved="yes">
+        <source>Comma separated list of page IDs which should not be crawled.</source>
+        <target state="final">Kommasepereret liste med side IDs, som ikke skal crawles.</target>
       </trans-unit>
       <trans-unit id="crawler_im.name" approved="yes">
         <source>Crawler queue</source>
