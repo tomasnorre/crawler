@@ -1,46 +1,98 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <xliff version="1.0">
-  <file source-language="en" datatype="plaintext" original="messages" date="2020-04-15T15:00:00Z" product-name="crawler" target-language="de">
+  <file source-language="en" datatype="plaintext" original="EXT:crawler/Resources/Private/Language/locallang.xlf" date="2020-04-15T15:00:00Z" product-name="crawler" target-language="de">
     <header/>
     <body>
-      <trans-unit id="labels.log" approved="yes">
-        <source>Crawler log</source>
-        <target state="final">Crawler-Protokoll</target>
-      </trans-unit>
-      <trans-unit id="labels.multiprocess" approved="yes">
-        <source>Crawling Processes</source>
-        <target state="final">Crawling-Prozesse</target>
-      </trans-unit>
-      <trans-unit id="labels.reloadlist" approved="yes">
-        <source>Reload list</source>
-        <target state="final">Liste neuladen</target>
-      </trans-unit>
-      <trans-unit id="labels.qid" approved="yes">
-        <source>Queue id</source>
-        <target state="final">Warteschlangen-ID</target>
-      </trans-unit>
-      <trans-unit id="labels.clipath" approved="yes">
-        <source>CLI-Path</source>
-        <target state="final">CLI-Pfad</target>
-      </trans-unit>
-      <trans-unit id="labels.processid" approved="yes">
-        <source>Id</source>
-        <target state="final">ID</target>
-      </trans-unit>
-      <trans-unit id="message.noPhpForkAvailable" approved="yes">
-        <source>There is no PHP method "popen" available!</source>
-        <target state="final">Es ist keine PHP-Methode "popen" verfügbar!</target>
-      </trans-unit>
-      <trans-unit id="message.canNotExportEmptyQueueToCsvText" approved="yes">
-        <source>An empty queue can not be exported to CSV.</source>
-        <target state="final">Eine leere Warteschlange kann nicht als CSV-Datei exportiert werden.</target>
-      </trans-unit>
-      <trans-unit id="message.phpBinaryNotFound" approved="yes">
-        <source>No php binary found in '%s'. Please update value for 'phpPath' in crawler extension setup.
-				</source>
-        <target state="final">Keine PHP-Binärdatei in '%s' gefunden. Bitte aktualisieren Sie den Wert für 'phpPath' im Crawler-Erweiterungs-Setup.
-				</target>
-      </trans-unit>
-    </body>
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+
+		</body>
   </file>
 </xliff>
