@@ -1,274 +1,274 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-	<file source-language="en" datatype="plaintext" original="messages" date="2020-04-15T15:00:00Z"
+	<file source-language="en" datatype="plaintext" original="EXT:crawler/Resources/Private/Language/locallang.xlf" date="2020-04-15T15:00:00Z"
 		  product-name="crawler">
 		<header/>
 		<body>
-			<trans-unit id="title">
+			<trans-unit id="title" resname="title">
 				<source>Site Crawler</source>
 			</trans-unit>
-			<trans-unit id="labels.start">
+			<trans-unit id="labels.start" resname="labels.start">
 				<source>Start Crawling</source>
 			</trans-unit>
-			<trans-unit id="labels.log">
+			<trans-unit id="labels.log" resname="labels.log">
 				<source>Crawler log</source>
 			</trans-unit>
-			<trans-unit id="labels.multiprocess">
+			<trans-unit id="labels.multiprocess" resname="labels.multiprocess">
 				<source>Crawling Processes</source>
 			</trans-unit>
-			<trans-unit id="labels.all">
+			<trans-unit id="labels.all" resname="labels.all">
 				<source>All</source>
 			</trans-unit>
-			<trans-unit id="labels.pending">
+			<trans-unit id="labels.pending" resname="labels.pending">
 				<source>Pending</source>
 			</trans-unit>
-			<trans-unit id="labels.finished">
+			<trans-unit id="labels.finished" resname="labels.finished">
 				<source>Finished</source>
 			</trans-unit>
-			<trans-unit id="labels.noPageSelected">
+			<trans-unit id="labels.noPageSelected" resname="labels.noPageSelected">
 				<source>Please select a page in the pagetree</source>
 			</trans-unit>
-			<trans-unit id="labels.noConfigSelected">
+			<trans-unit id="labels.noConfigSelected" resname="labels.noConfigSelected">
 				<source>Please select at least one configuration</source>
 			</trans-unit>
-			<trans-unit id="labels.configuration">
+			<trans-unit id="labels.configuration" resname="labels.configuration">
 				<source>Crawl configuration</source>
 			</trans-unit>
-			<trans-unit id="labels.triggerUpdate">
+			<trans-unit id="labels.triggerUpdate" resname="labels.triggerUpdate">
 				<source>Update</source>
 			</trans-unit>
-			<trans-unit id="labels.triggerCrawl">
+			<trans-unit id="labels.triggerCrawl" resname="labels.triggerCrawl">
 				<source>Crawl URLs</source>
 			</trans-unit>
-			<trans-unit id="labels.triggerDownload">
+			<trans-unit id="labels.triggerDownload" resname="labels.triggerDownload">
 				<source>Download URLs</source>
 			</trans-unit>
-			<trans-unit id="labels.continue">
+			<trans-unit id="labels.continue" resname="labels.continue">
 				<source>Continue</source>
 			</trans-unit>
-			<trans-unit id="labels.continueinlog">
+			<trans-unit id="labels.continueinlog" resname="labels.continueinlog">
 				<source>Continue and show Log</source>
 			</trans-unit>
-			<trans-unit id="labels.count">
+			<trans-unit id="labels.count" resname="labels.count">
 				<source>Count</source>
 			</trans-unit>
-			<trans-unit id="labels.time">
+			<trans-unit id="labels.time" resname="labels.time">
 				<source>Time</source>
 			</trans-unit>
-			<trans-unit id="labels.curtime">
+			<trans-unit id="labels.curtime" resname="labels.curtime">
 				<source>Current server time</source>
 			</trans-unit>
-			<trans-unit id="labels.submitted">
+			<trans-unit id="labels.submitted" resname="labels.submitted">
 				<source>URLs submitted</source>
 			</trans-unit>
-			<trans-unit id="labels.depth">
+			<trans-unit id="labels.depth" resname="labels.depth">
 				<source>Depth</source>
 			</trans-unit>
-			<trans-unit id="labels.configurations">
+			<trans-unit id="labels.configurations" resname="labels.configurations">
 				<source>Configurations</source>
 			</trans-unit>
-			<trans-unit id="labels.scheduled">
+			<trans-unit id="labels.scheduled" resname="labels.scheduled">
 				<source>Scheduled</source>
 			</trans-unit>
-			<trans-unit id="labels.pagetitle">
+			<trans-unit id="labels.pagetitle" resname="labels.pagetitle">
 				<source>Page title</source>
 			</trans-unit>
-			<trans-unit id="labels.key">
+			<trans-unit id="labels.key" resname="labels.key">
 				<source>Key</source>
 			</trans-unit>
-			<trans-unit id="labels.parametercfg">
+			<trans-unit id="labels.parametercfg" resname="labels.parametercfg">
 				<source>Parameter Cfg</source>
 			</trans-unit>
-			<trans-unit id="labels.values">
+			<trans-unit id="labels.values" resname="labels.values">
 				<source>Values Expanded</source>
 			</trans-unit>
-			<trans-unit id="labels.url">
+			<trans-unit id="labels.url" resname="labels.url">
 				<source>URL</source>
 			</trans-unit>
-			<trans-unit id="labels.urls">
+			<trans-unit id="labels.urls" resname="labels.urls">
 				<source>URLs</source>
 			</trans-unit>
-			<trans-unit id="labels.options">
+			<trans-unit id="labels.options" resname="labels.options">
 				<source>Options</source>
 			</trans-unit>
-			<trans-unit id="labels.parameters">
+			<trans-unit id="labels.parameters" resname="labels.parameters">
 				<source>Parameters</source>
 			</trans-unit>
-			<trans-unit id="labels.back">
+			<trans-unit id="labels.back" resname="labels.back">
 				<source>Back</source>
 			</trans-unit>
-			<trans-unit id="labels.reloadlist">
+			<trans-unit id="labels.reloadlist" resname="labels.reloadlist">
 				<source>Reload list</source>
 			</trans-unit>
-			<trans-unit id="labels.downloadcsv">
+			<trans-unit id="labels.downloadcsv" resname="labels.downloadcsv">
 				<source>Download entries as CSV</source>
 			</trans-unit>
-			<trans-unit id="labels.flushvisiblequeue">
+			<trans-unit id="labels.flushvisiblequeue" resname="labels.flushvisiblequeue">
 				<source>Flush visible entries</source>
 			</trans-unit>
-			<trans-unit id="labels.flushfullqueue">
+			<trans-unit id="labels.flushfullqueue" resname="labels.flushfullqueue">
 				<source>Flush entire queue</source>
 			</trans-unit>
-			<trans-unit id="labels.confirmyouresure">
+			<trans-unit id="labels.confirmyouresure" resname="labels.confirmyouresure">
 				<source>Are you sure?</source>
 			</trans-unit>
-			<trans-unit id="labels.setid">
+			<trans-unit id="labels.setid" resname="labels.setid">
 				<source>Set ID</source>
 			</trans-unit>
-			<trans-unit id="labels.qid">
+			<trans-unit id="labels.qid" resname="labels.qid">
 				<source>Queue id</source>
 			</trans-unit>
-			<trans-unit id="labels.resultlog">
+			<trans-unit id="labels.resultlog" resname="labels.resultlog">
 				<source>Result Log</source>
 			</trans-unit>
-			<trans-unit id="labels.scheduledtime">
+			<trans-unit id="labels.scheduledtime" resname="labels.scheduledtime">
 				<source>Scheduled</source>
 			</trans-unit>
-			<trans-unit id="labels.runtime">
+			<trans-unit id="labels.runtime" resname="labels.runtime">
 				<source>Run-time</source>
 			</trans-unit>
-			<trans-unit id="labels.status">
+			<trans-unit id="labels.status" resname="labels.status">
 				<source>Status</source>
 			</trans-unit>
-			<trans-unit id="labels.groups">
+			<trans-unit id="labels.groups" resname="labels.groups">
 				<source>Groups</source>
 			</trans-unit>
-			<trans-unit id="labels.procinstr">
+			<trans-unit id="labels.procinstr" resname="labels.procinstr">
 				<source>Proc. Instr.</source>
 			</trans-unit>
-			<trans-unit id="labels.newprocess">
+			<trans-unit id="labels.newprocess" resname="labels.newprocess">
 				<source>New process has been started, refresh to monitor the state</source>
 			</trans-unit>
-			<trans-unit id="labels.newprocesserror">
+			<trans-unit id="labels.newprocesserror" resname="labels.newprocesserror">
 				<source>Error while starting process</source>
 			</trans-unit>
-			<trans-unit id="labels.time.now">
+			<trans-unit id="labels.time.now" resname="labels.time.now">
 				<source>Now</source>
 			</trans-unit>
-			<trans-unit id="labels.time.midnight">
+			<trans-unit id="labels.time.midnight" resname="labels.time.midnight">
 				<source>Midnight</source>
 			</trans-unit>
-			<trans-unit id="labels.time.4am">
+			<trans-unit id="labels.time.4am" resname="labels.time.4am">
 				<source>4 AM</source>
 			</trans-unit>
-			<trans-unit id="labels.display">
+			<trans-unit id="labels.display" resname="labels.display">
 				<source>Display</source>
 			</trans-unit>
-			<trans-unit id="labels.showresultlog">
+			<trans-unit id="labels.showresultlog" resname="labels.showresultlog">
 				<source>Show Result Log</source>
 			</trans-unit>
-			<trans-unit id="labels.showfevars">
+			<trans-unit id="labels.showfevars" resname="labels.showfevars">
 				<source>Show FE Vars</source>
 			</trans-unit>
-			<trans-unit id="labels.noentries">
+			<trans-unit id="labels.noentries" resname="labels.noentries">
 				<source>No entries</source>
 			</trans-unit>
-			<trans-unit id="labels.immediate">
+			<trans-unit id="labels.immediate" resname="labels.immediate">
 				<source>immediate</source>
 			</trans-unit>
-			<trans-unit id="labels.generalinformation">
+			<trans-unit id="labels.generalinformation" resname="labels.generalinformation">
 				<source>General Information</source>
 			</trans-unit>
-			<trans-unit id="labels.pendingoverview">
+			<trans-unit id="labels.pendingoverview" resname="labels.pendingoverview">
 				<source>Pending Entries (assigned / overall)</source>
 			</trans-unit>
-			<trans-unit id="labels.processcount">
+			<trans-unit id="labels.processcount" resname="labels.processcount">
 				<source>Processes count (running / max)</source>
 			</trans-unit>
-			<trans-unit id="labels.clipath">
+			<trans-unit id="labels.clipath" resname="labels.clipath">
 				<source>CLI-Path</source>
 			</trans-unit>
-			<trans-unit id="labels.processstates">
+			<trans-unit id="labels.processstates" resname="labels.processstates">
 				<source>Process States</source>
 			</trans-unit>
-			<trans-unit id="labels.state">
+			<trans-unit id="labels.state" resname="labels.state">
 				<source>State</source>
 			</trans-unit>
-			<trans-unit id="labels.processid">
+			<trans-unit id="labels.processid" resname="labels.processid">
 				<source>Id</source>
 			</trans-unit>
-			<trans-unit id="labels.time.first">
+			<trans-unit id="labels.time.first" resname="labels.time.first">
 				<source>Time first item</source>
 			</trans-unit>
-			<trans-unit id="labels.time.last">
+			<trans-unit id="labels.time.last" resname="labels.time.last">
 				<source>Time last item</source>
 			</trans-unit>
-			<trans-unit id="labels.time.duration">
+			<trans-unit id="labels.time.duration" resname="labels.time.duration">
 				<source>Runtime</source>
 			</trans-unit>
-			<trans-unit id="labels.ttl">
+			<trans-unit id="labels.ttl" resname="labels.ttl">
 				<source>TTL</source>
 			</trans-unit>
-			<trans-unit id="labels.status.current">
+			<trans-unit id="labels.status.current" resname="labels.status.current">
 				<source>Processed</source>
 			</trans-unit>
-			<trans-unit id="labels.status.initial">
+			<trans-unit id="labels.status.initial" resname="labels.status.initial">
 				<source>Initially assigned</source>
 			</trans-unit>
-			<trans-unit id="labels.status.finally">
+			<trans-unit id="labels.status.finally" resname="labels.status.finally">
 				<source>Finally assigned</source>
 			</trans-unit>
-			<trans-unit id="labels.status.progress">
+			<trans-unit id="labels.status.progress" resname="labels.status.progress">
 				<source>Progress</source>
 			</trans-unit>
-			<trans-unit id="labels.process.running">
+			<trans-unit id="labels.process.running" resname="labels.process.running">
 				<source>Process running</source>
 			</trans-unit>
-			<trans-unit id="labels.process.success">
+			<trans-unit id="labels.process.success" resname="labels.process.success">
 				<source>Process completed successfully</source>
 			</trans-unit>
-			<trans-unit id="labels.process.cancelled">
+			<trans-unit id="labels.process.cancelled" resname="labels.process.cancelled">
 				<source>Process was cancelled</source>
 			</trans-unit>
-			<trans-unit id="labels.refresh">
+			<trans-unit id="labels.refresh" resname="labels.refresh">
 				<source>Refresh</source>
 			</trans-unit>
-			<trans-unit id="labels.disablecrawling">
+			<trans-unit id="labels.disablecrawling" resname="labels.disablecrawling">
 				<source>Stop all processes and disable crawling</source>
 			</trans-unit>
-			<trans-unit id="labels.enablecrawling">
+			<trans-unit id="labels.enablecrawling" resname="labels.enablecrawling">
 				<source>Enable crawling</source>
 			</trans-unit>
-			<trans-unit id="labels.show.running">
+			<trans-unit id="labels.show.running" resname="labels.show.running">
 				<source>Show only running processes</source>
 			</trans-unit>
-			<trans-unit id="labels.show.all">
+			<trans-unit id="labels.show.all" resname="labels.show.all">
 				<source>Show finished and terminated processes</source>
 			</trans-unit>
-			<trans-unit id="labels.process.add">
+			<trans-unit id="labels.process.add" resname="labels.process.add">
 				<source>Add process</source>
 			</trans-unit>
-			<trans-unit id="time.detailed">
+			<trans-unit id="time.detailed" resname="time.detailed">
 				<source>d-m-y H:i:s</source>
 			</trans-unit>
-			<trans-unit id="labels.itemsPerPage.5">
+			<trans-unit id="labels.itemsPerPage.5" resname="labels.itemsPerPage.5">
 				<source>limit to 5</source>
 			</trans-unit>
-			<trans-unit id="labels.itemsPerPage.10">
+			<trans-unit id="labels.itemsPerPage.10" resname="labels.itemsPerPage.10">
 				<source>limit to 10</source>
 			</trans-unit>
-			<trans-unit id="labels.itemsPerPage.50">
+			<trans-unit id="labels.itemsPerPage.50" resname="labels.itemsPerPage.50">
 				<source>limit to 50</source>
 			</trans-unit>
-			<trans-unit id="labels.itemsPerPage.0">
+			<trans-unit id="labels.itemsPerPage.0" resname="labels.itemsPerPage.0">
 				<source>no limit</source>
 			</trans-unit>
-			<trans-unit id="labels.itemsPerPage">
+			<trans-unit id="labels.itemsPerPage" resname="labels.itemsPerPage">
 				<source>Items per page</source>
 			</trans-unit>
-			<trans-unit id="message.noBeUserAvailable">
+			<trans-unit id="message.noBeUserAvailable" resname="message.noBeUserAvailable">
 				<source>There is no be_user "_cli_crawler" available!</source>
 			</trans-unit>
-			<trans-unit id="message.noPhpForkAvailable">
+			<trans-unit id="message.noPhpForkAvailable" resname="message.noPhpForkAvailable">
 				<source>There is no PHP method "popen" available!</source>
 			</trans-unit>
-			<trans-unit id="message.beUserIsAdmin">
+			<trans-unit id="message.beUserIsAdmin" resname="message.beUserIsAdmin">
 				<source>The be_user "_cli_crawler" is not allowed to have admin rights!</source>
 			</trans-unit>
-			<trans-unit id="message.canNotExportEmptyQueueToCsvText">
+			<trans-unit id="message.canNotExportEmptyQueueToCsvText" resname="message.canNotExportEmptyQueueToCsvText">
 				<source>An empty queue can not be exported to CSV.</source>
 			</trans-unit>
-			<trans-unit id="message.phpBinaryNotFound">
+			<trans-unit id="message.phpBinaryNotFound" resname="message.phpBinaryNotFound">
 				<source>No php binary found in '%s'. Please update value for 'phpPath' in crawler extension setup.
 				</source>
 			</trans-unit>
