@@ -1,44 +1,62 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <xliff version="1.0">
-  <file source-language="en" datatype="plaintext" original="messages" date="2016-11-04T16:17:39Z" product-name="crawler" target-language="de">
+  <file source-language="en" datatype="plaintext" original="EXT:crawler/Resources/Private/Language/Backend.xlf" date="2016-11-04T16:17:39Z" product-name="crawler" target-language="de">
     <header/>
     <body>
-      <trans-unit id="tx_crawler_configuration" approved="yes">
-        <source>Crawler Configuration</source>
-        <target state="final">Crawler-Konfiguration</target>
-      </trans-unit>
-      <trans-unit id="tx_crawler_configuration.base_url.description" approved="yes">
-        <source>Leave empty for fetching the base URL from the Site Configuration.</source>
-        <target state="final">Zur Übernahme der Basis-URL aus der Site-Konfiguration das Feld leer lassen.</target>
-      </trans-unit>
-      <trans-unit id="tx_crawler_configuration.pidsonly.description" approved="yes">
-        <source>List of page IDs to limit this configuration to.</source>
-        <target state="final">Liste der Seiten-IDs, auf die diese Konfiguration beschränkt werden soll.</target>
-      </trans-unit>
-      <trans-unit id="tx_crawler_configuration.fegroups" approved="yes">
-        <source>Crawl with FE user groups</source>
-        <target state="final">Crawling mit FE-Benutzergruppen</target>
-      </trans-unit>
-      <trans-unit id="tx_crawler_configuration.exclude.description" approved="yes">
-        <source>Comma separated list of page IDs which should not be crawled.</source>
-        <target state="final">Kommagetrennte Liste von Seiten-IDs, die nicht gecrawlt werden sollten.</target>
-      </trans-unit>
-      <trans-unit id="crawler_im.name" approved="yes">
-        <source>Crawler queue</source>
-        <target state="final">Crawler-Warteschlange</target>
-      </trans-unit>
-      <trans-unit id="crawler_im.description" approved="yes">
-        <source>Running the crawler queue process to collect the relevant entries.</source>
-        <target state="final">Führe den Crawler-Warteschlangen-Prozess aus, um die relevanten Einträge zu sammeln.</target>
-      </trans-unit>
-      <trans-unit id="crawler_flush.name" approved="yes">
-        <source>Crawler Queue Flush</source>
-        <target state="final">Crawler-Warteschlange leeren</target>
-      </trans-unit>
-      <trans-unit id="crawler_flush.description" approved="yes">
-        <source>Cleanup the crawler queue and remove unwanted or finished entries.</source>
-        <target state="final">Bereinigen der Crawler-Warteschlange und entfernen der unerwünschten oder fertigen Einträge.</target>
-      </trans-unit>
-    </body>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+
+            
+
+            
+            
+
+            
+            
+            
+            
+            
+            
+
+            
+            
+
+            
+        </body>
   </file>
 </xliff>
