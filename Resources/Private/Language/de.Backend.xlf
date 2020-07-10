@@ -31,6 +31,10 @@
         <source>Running the crawler queue process to collect the relevant entries.</source>
         <target state="final">Führe den Crawler-Warteschlangen-Prozess aus, um die relevanten Einträge zu sammeln.</target>
       </trans-unit>
+      <trans-unit id="crawler_crawl.name" resname="crawler_crawl.name" approved="yes">
+        <source>Crawler Run</source>
+        <target state="final">Crawler-Durchlauf</target>
+      </trans-unit>
       <trans-unit id="crawler_flush.name" resname="crawler_flush.name" approved="yes">
         <source>Crawler Queue Flush</source>
         <target state="final">Crawler-Warteschlange leeren</target>
