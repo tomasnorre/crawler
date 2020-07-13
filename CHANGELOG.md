@@ -1,5 +1,9 @@
 # Changelog TYPO3 Crawler
 
+## [Unreleased]
+### Added
+* Added more information into [CONTRIBUTING.md](CONTRIBUTING.md) about development using container
+
 ## Crawler 9.0.2
 Crawler 9.0.2 was released on July 13th, 2020
 
