@@ -8,7 +8,10 @@ use AOE\Crawler\Api\CrawlerApi;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Hooks\DataHandlerHook;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use Prophecy\Argument;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Cache\CacheManager;
+use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
@@ -16,6 +19,9 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 class DataHandlerHookTest extends UnitTestCase
 {
     /**
+     * Page with ID 1 is not queue, should be added
+     * Page with ID 2 is already in queue. Should NOT be added.
+     *
      * @test
      */
     public function itShouldAddPageToQueue(): void
@@ -32,7 +38,11 @@ class DataHandlerHookTest extends UnitTestCase
         $objectManager->get(QueueRepository::class)->willReturn($queueRepository->reveal());
         $objectManager->get(CrawlerApi::class)->willReturn($crawlerApi->reveal());
 
-        GeneralUtility::addInstance(ObjectManager::class, $objectManager->reveal());
+        $cacheManager = $this->prophesize(CacheManager::class);
+        $cacheManager->getCache(Argument::any())->willReturn($this->prophesize(FrontendInterface::class)->reveal());
+
+        GeneralUtility::setSingletonInstance(CacheManager::class, $cacheManager->reveal());
+        GeneralUtility::setSingletonInstance(ObjectManager::class, $objectManager->reveal());
 
         $beUser = new BackendUserAuthentication();
         $beUser->workspace = 1;
