@@ -1,4 +1,4 @@
-### Contributions
+### Contributing
 
 When you have a PR, please run the following checks first.
 
@@ -36,3 +36,11 @@ And start working.
 xdebug is disable as default, to speed up the devbox when xdebug isn't needed.
 
 This can be activated in `.devbox/.ddev/config.yaml` and by `ddev restart` afterwards.
+
+#### Running tests without local development environment
+If you don't have `php` and/or `composer` installed on your host machine,
+you can run the test from withing the `ddev` docker container.
+
+Do do that go into the `.devbox` folder an run `ddev ssh`.
+From there you need to switch folder into `/public/typo3conf/ext/crawler`
+and run `composer` commands from there (see above).
