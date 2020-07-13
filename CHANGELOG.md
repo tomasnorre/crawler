@@ -1,6 +1,7 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 9.0.2-dev
+## Crawler 9.0.2
+Crawler 9.0.2 was released on July 13th, 2020
 
 ### Added
 * Update specific doktypes for skipping page
