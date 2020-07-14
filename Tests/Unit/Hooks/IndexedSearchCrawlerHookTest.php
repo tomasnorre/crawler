@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Unit\Hook;
+namespace AOE\Crawler\Tests\Unit\Hooks;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
