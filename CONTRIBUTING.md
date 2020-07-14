@@ -41,6 +41,6 @@ This can be activated in `.devbox/.ddev/config.yaml` and by `ddev restart` after
 If you don't have `php` and/or `composer` installed on your host machine,
 you can run the test from withing the `ddev` docker container.
 
-Do do that go into the `.devbox` folder an run `ddev ssh`.
+Do that go into the `.devbox` folder an run `ddev ssh`.
 From there you need to switch folder into `/public/typo3conf/ext/crawler`
 and run `composer` commands from there (see above).
