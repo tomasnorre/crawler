@@ -26,13 +26,9 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 class DataHandlerHook
 {
-    /**
-     * @param array $parameters
-     * @param \TYPO3\CMS\Core\DataHandling\DataHandler $dataHandler
-     */
     public function addFlushedPagesToCrawlerQueue(array $parameters, \TYPO3\CMS\Core\DataHandling\DataHandler $dataHandler): void
     {
-        if ($dataHandler->BE_USER->workspace > 0 && !$this->isWorkspacePublishAction($dataHandler->cmdmap)) {
+        if ($dataHandler->BE_USER->workspace > 0 && ! $this->isWorkspacePublishAction($dataHandler->cmdmap)) {
             return;
         }
 
@@ -41,7 +37,7 @@ class DataHandlerHook
             return;
         }
         foreach ($pageIdsToBeFlushedFromCache as $pageId) {
-            $pageId = (int)$pageId;
+            $pageId = (int) $pageId;
             if ($pageId < 1) {
                 continue;
             }
@@ -66,22 +62,19 @@ class DataHandlerHook
      *         'version' => array(
      *             'action' => 'swap'
      * [...]
-     *
-     * @param array $commandMap
-     * @return bool
      */
     private function isWorkspacePublishAction(array $commandMap): bool
     {
         $isWorkspacePublishAction = false;
         foreach ($commandMap as $tableCommandMap) {
-            if (!is_array($tableCommandMap)) {
+            if (! is_array($tableCommandMap)) {
                 continue;
             }
             foreach ($tableCommandMap as $singleCommandMap) {
-                if (!is_array($singleCommandMap)) {
+                if (! is_array($singleCommandMap)) {
                     continue;
                 }
-                if (!$this->isSwapAction($singleCommandMap)) {
+                if (! $this->isSwapAction($singleCommandMap)) {
                     continue;
                 }
                 $isWorkspacePublishAction = true;
@@ -93,9 +86,6 @@ class DataHandlerHook
 
     /**
      * Checks if a page is being swapped with it's workspace overlay
-     *
-     * @param array $singleCommandMap
-     * @return bool
      */
     private function isSwapAction(array $singleCommandMap): bool
     {
@@ -104,7 +94,7 @@ class DataHandlerHook
             isset($singleCommandMap['version'])
             && is_array($singleCommandMap['version'])
             && isset($singleCommandMap['version']['action'])
-            && 'swap' === $singleCommandMap['version']['action']
+            && $singleCommandMap['version']['action'] === 'swap'
         ) {
             $isSwapAction = true;
         }

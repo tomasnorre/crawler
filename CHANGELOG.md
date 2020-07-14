@@ -5,6 +5,7 @@
 ### Added
 * Adds light red background color + icons to crawler log rows with errors
 * Crawler processing by page priority
+* Automatically adding pages being edited or a page caches is cleared to the crawler queue
 
 ## Crawler 9.0.3
 Crawler 9.0.2 was released on July 20th, 2020

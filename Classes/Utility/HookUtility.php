@@ -44,7 +44,7 @@ class HookUtility
             ProcessCleanUpHook::class;
 
         // Env-dependent
-        if (TYPO3_MODE == 'BE') {
+        if (TYPO3_MODE === 'BE') {
             self::registerBackendHooks($extKey);
         }
     }
