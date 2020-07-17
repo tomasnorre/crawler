@@ -1,8 +1,13 @@
 # Changelog TYPO3 Crawler
 
-## [Unreleased]
+## Crawler 9.0.3-dev
+Released:
+
 ### Added
 * Added more information into [CONTRIBUTING.md](CONTRIBUTING.md) about development using container
+
+### Changed
+* Load crawler initialization before tsfe rendering preparation
 
 ## Crawler 9.0.2
 Crawler 9.0.2 was released on July 13th, 2020
