@@ -506,7 +506,7 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
                 $this->tableName,
                 'pages',
                 'p',
-                $queryBuilderSelect->expr()->eq('p.uid', $queryBuilderSelect->quoteIdentifier($this->tableName.'.page_id'))
+                $queryBuilderSelect->expr()->eq('p.uid', $queryBuilderSelect->quoteIdentifier($this->tableName . '.page_id'))
             )
             ->where(
                 $queryBuilderSelect->expr()->eq('exec_time', 0),

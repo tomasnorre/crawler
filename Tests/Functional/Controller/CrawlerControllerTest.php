@@ -227,7 +227,7 @@ class CrawlerControllerTest extends FunctionalTestCase
             'enableTimeslot' => $timeslotActive,
         ]);
 
-        self::assertEquals(
+        self::assertSame(
             $expected,
             $mockedCrawlerController->_call('getDuplicateRowsIfExist', $tstamp, $fieldArray)
         );
@@ -498,17 +498,17 @@ class CrawlerControllerTest extends FunctionalTestCase
                 'tstamp' => 10,
                 'current' => 12,
                 'fieldArray' => [
-                    'page_id' => 15,
+                    'page_id' => 10,
                     'parameters_hash' => '',
                 ],
-                'expected' => [15, 18],
+                'expected' => [18, 20],
             ],
             'EnableTimeslot is false and timestamp is <= current' => [
                 'timeslotActive' => false,
                 'tstamp' => 11,
                 'current' => 11,
                 'fieldArray' => [
-                    'page_id' => 15,
+                    'page_id' => 10,
                     'parameters_hash' => '',
                 ],
                 'expected' => [18],
@@ -518,27 +518,27 @@ class CrawlerControllerTest extends FunctionalTestCase
                 'tstamp' => 12,
                 'current' => 10,
                 'fieldArray' => [
-                    'page_id' => 15,
+                    'page_id' => 10,
                     'parameters_hash' => '',
                 ],
-                'expected' => [15],
+                'expected' => [20],
             ],
             'EnableTimeslot is false and timestamp is > current' => [
                 'timeslotActive' => false,
                 'tstamp' => 12,
                 'current' => 10,
                 'fieldArray' => [
-                    'page_id' => 15,
+                    'page_id' => 10,
                     'parameters_hash' => '',
                 ],
-                'expected' => [15],
+                'expected' => [20],
             ],
             'EnableTimeslot is false and timestamp is > current and parameters_hash is set' => [
                 'timeslotActive' => false,
                 'tstamp' => 12,
                 'current' => 10,
                 'fieldArray' => [
-                    'page_id' => 15,
+                    'page_id' => 10,
                     'parameters_hash' => 'NotReallyAHashButWillDoForTesting',
                 ],
                 'expected' => [19],
@@ -576,7 +576,7 @@ class CrawlerControllerTest extends FunctionalTestCase
                 'itemsPerPage' => 5,
                 'expected' => [[
                     'qid' => '8',
-                    'page_id' => '0',
+                    'page_id' => '3',
                     'parameters' => '',
                     'parameters_hash' => '',
                     'configuration_hash' => '',
@@ -598,7 +598,7 @@ class CrawlerControllerTest extends FunctionalTestCase
                 'itemsPerPage' => 1,
                 'expected' => [[
                     'qid' => '8',
-                    'page_id' => '0',
+                    'page_id' => '3',
                     'parameters' => '',
                     'parameters_hash' => '',
                     'configuration_hash' => '',
@@ -654,14 +654,14 @@ class CrawlerControllerTest extends FunctionalTestCase
                 'expected' => [],
             ],
             'Check that doFullFlush do not flush if doFlush is not true' => [
-                'id' => 2001,
+                'id' => 2,
                 'filter' => '',
                 'doFlush' => false,
                 'doFullFlush' => true,
                 'itemsPerPage' => 5,
                 'expected' => [[
                     'qid' => '6',
-                    'page_id' => '2001',
+                    'page_id' => '2',
                     'parameters' => '',
                     'parameters_hash' => '',
                     'configuration_hash' => '7b6919e533f334550b6f19034dfd2f81',
@@ -676,14 +676,14 @@ class CrawlerControllerTest extends FunctionalTestCase
                 ]],
             ],
             'Get entries for page_id 2001' => [
-                'id' => 2001,
+                'id' => 2,
                 'filter' => '',
                 'doFlush' => false,
                 'doFullFlush' => false,
                 'itemsPerPage' => 1,
                 'expected' => [[
                     'qid' => '6',
-                    'page_id' => '2001',
+                    'page_id' => '2',
                     'parameters' => '',
                     'parameters_hash' => '',
                     'configuration_hash' => '7b6919e533f334550b6f19034dfd2f81',

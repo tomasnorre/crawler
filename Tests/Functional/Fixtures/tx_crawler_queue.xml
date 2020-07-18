@@ -13,6 +13,7 @@
     <tx_crawler_queue>
         <qid>2</qid>
         <process_id>1002</process_id>
+        <page_id>1002</page_id>
         <process_id_completed>qwerty</process_id_completed>
         <parameters></parameters>
         <result_data></result_data>

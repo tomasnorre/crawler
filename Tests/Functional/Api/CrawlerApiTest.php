@@ -215,7 +215,7 @@ class CrawlerApiTest extends FunctionalTestCase
         self::assertEquals(
             [
                 'assignedButUnprocessed' => 3,
-                'unprocessed' => 7,
+                'unprocessed' => 8,
             ],
             $this->subject->getQueueStatistics()
         );
