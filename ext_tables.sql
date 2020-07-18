@@ -42,7 +42,6 @@ CREATE TABLE tx_crawler_process (
   KEY process_id (process_id)
 ) ENGINE=InnoDB;
 
-
 #
 # Table structure for table 'tx_crawler_configuration'
 #
@@ -68,3 +67,15 @@ CREATE TABLE tx_crawler_configuration (
   PRIMARY KEY (uid),
   KEY parent (pid)
 ) ENGINE=InnoDB;
+
+#
+# Table structure for table 'pages'
+# This is added to reuse the information from typo3/cms-seo, the sitemap_priority is first
+# introduced in TYPO3 10LTS, therefore we add it here, to have it supported in 9LTS as well.
+# It has zero impact on SEO for TYPO3 9 LTS, as the surrounding feature is not implemented.
+# This is re-used to make the upgrade easier later.
+#
+CREATE TABLE pages
+(
+    sitemap_priority decimal(2, 1) DEFAULT '0.5' NOT NULL
+);

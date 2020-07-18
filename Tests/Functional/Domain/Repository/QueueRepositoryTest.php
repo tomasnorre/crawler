@@ -56,6 +56,8 @@ class QueueRepositoryTest extends FunctionalTestCase
         parent::setUp();
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->importDataSet(__DIR__ . '/../../Fixtures/tx_crawler_queue.xml');
+        $this->importDataSet(__DIR__ . '/../../Fixtures/pages.xml');
+
         $this->subject = $objectManager->get(QueueRepository::class);
     }
 
@@ -377,7 +379,7 @@ class QueueRepositoryTest extends FunctionalTestCase
      */
     public function isPageInQueueTimed(): void
     {
-        self::assertTrue($this->subject->isPageInQueueTimed(15));
+        self::assertTrue($this->subject->isPageInQueueTimed(10));
     }
 
     /**
@@ -427,7 +429,7 @@ class QueueRepositoryTest extends FunctionalTestCase
      */
     public function cleanUpOldQueueEntries(): void
     {
-        $recordsFromFixture = 14;
+        $recordsFromFixture = 15;
         $expectedRemainingRecords = 2;
 
         // Add records to queue repository to ensure we always have records,
@@ -472,14 +474,32 @@ class QueueRepositoryTest extends FunctionalTestCase
     {
         $recordsToBeCrawledLimitHigherThanRecordsCount = $this->subject->fetchRecordsToBeCrawled(10);
         self::assertCount(
-            7,
+            8,
             $recordsToBeCrawledLimitHigherThanRecordsCount
         );
 
-        $recordsToBeCrawledLimitLowerThanRecordsCount = $this->subject->fetchRecordsToBeCrawled(5);
+        $recordsToBeCrawledLimitLowerThanRecordsCount = $this->subject->fetchRecordsToBeCrawled(3);
         self::assertCount(
-            5,
+            3,
             $recordsToBeCrawledLimitLowerThanRecordsCount
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function fetchRecordsToBeCrawledCheckingPriority(): void
+    {
+        $recordsToBeCrawled = $this->subject->fetchRecordsToBeCrawled(5);
+
+        $actualArray = [];
+        foreach ($recordsToBeCrawled as $record) {
+            $actualArray[] = $record['page_id'];
+        }
+
+        self::assertSame(
+            [1,3,5,2,4],
+            $actualArray
         );
     }
 
@@ -574,7 +594,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     {
         return [
             'Unprocessed Only' => [
-                'uid' => 15,
+                'uid' => 10,
                 'unprocessed_only' => true,
                 'timed_only' => false,
                 'timestamp' => 0,

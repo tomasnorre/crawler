@@ -95,7 +95,7 @@ class CrawlerControllerTest extends FunctionalTestCase
     {
         $queryRepository = new QueueRepository();
 
-        $recordsFromFixture = 14;
+        $recordsFromFixture = 15;
         $expectedRemainingRecords = 2;
 
         // Add records to queue repository to ensure we always have records,

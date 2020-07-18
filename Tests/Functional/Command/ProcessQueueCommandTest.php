@@ -45,6 +45,7 @@ class ProcessQueueCommandTest extends AbstractCommandTests
     {
         parent::setUp();
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
+        $this->importDataSet(__DIR__ . '/../Fixtures/pages.xml');
         $this->queueRepository = GeneralUtility::makeInstance(ObjectManager::class)->get(QueueRepository::class);
     }
 
@@ -70,7 +71,7 @@ class ProcessQueueCommandTest extends AbstractCommandTests
             ],
             '--amount 5' => [
                 'parameters' => ['--amount 5'],
-                'expectedOutput' => 'Unprocessed Items remaining:2',
+                'expectedOutput' => 'Unprocessed Items remaining:3',
             ],
         ];
     }
