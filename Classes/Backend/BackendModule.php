@@ -655,7 +655,7 @@ class BackendModule
                     <tr ' . $trClass . ' >
                         ' . $titleClm . '
                         <td><a href="' . $this->getInfoModuleUrl(['qid_details' => $vv['qid'], 'setID' => $setId]) . '">' . htmlspecialchars((string) $vv['qid']) . '</a></td>
-                        <td><a href="' . $this->getInfoModuleUrl(['qid_read' => $vv['qid'], 'setID' => $setId]) . '">' . $refreshIcon . $warningIcon . '</a></td>';
+                        <td><a href="' . $this->getInfoModuleUrl(['qid_read' => $vv['qid'], 'setID' => $setId]) . '">' . $refreshIcon . '</a>&nbsp;&nbsp;' . $warningIcon . '</td>';
                 foreach ($rowData as $fKey => $value) {
                     if ($fKey === 'url') {
                         $content .= '<td>' . $value . '</td>';
