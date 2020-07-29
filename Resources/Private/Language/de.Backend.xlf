@@ -51,10 +51,6 @@
         <source>Restrict access to</source>
         <target state="final">Zugang einschränken auf</target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration.begroups.description" resname="tx_crawler_configuration.begroups.description" approved="yes">
-        <source>Restrict access to this configuration record to selected backend user groups. Empty means no restriction is set.</source>
-        <target state="final">Den Zugriff auf diesen Konfigurationseintrag auf ausgewählte Backend-Benutzergruppen beschränken. Bleibt das Feld leer, ist keine Beschränkung definiert.</target>
-      </trans-unit>
       <trans-unit id="tx_crawler_configuration.fegroups" resname="tx_crawler_configuration.fegroups" approved="yes">
         <source>Crawl with FE user groups</source>
         <target state="final">Crawling mit FE-Benutzergruppen</target>
@@ -175,6 +171,7 @@
         <source>Crawl</source>
         <target state="final">Crawl</target>
       </trans-unit>
+      <!-- For Crawler Priority - Will be remove when support for 9 LTS is dropped -->
     </body>
   </file>
 </xliff>
