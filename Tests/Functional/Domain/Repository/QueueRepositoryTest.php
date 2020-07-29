@@ -56,6 +56,8 @@ class QueueRepositoryTest extends FunctionalTestCase
         parent::setUp();
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->importDataSet(__DIR__ . '/../../Fixtures/tx_crawler_queue.xml');
+        $this->importDataSet(__DIR__ . '/../../Fixtures/pages.xml');
+
         $this->subject = $objectManager->get(QueueRepository::class);
     }
 
@@ -89,7 +91,7 @@ class QueueRepositoryTest extends FunctionalTestCase
         self::assertEquals(
             [
                 'qid' => '2',
-                'page_id' => '0',
+                'page_id' => '1002',
                 'parameters' => '',
                 'parameters_hash' => '',
                 'configuration_hash' => '',
@@ -156,7 +158,7 @@ class QueueRepositoryTest extends FunctionalTestCase
         $process = new Process();
         $process->setProcessId('1007');
 
-        self::assertEquals(
+        self::assertSame(
             2,
             $this->subject->countNonExecutedItemsByProcess($process)
         );
@@ -167,8 +169,8 @@ class QueueRepositoryTest extends FunctionalTestCase
      */
     public function countUnprocessedItems(): void
     {
-        self::assertEquals(
-            7,
+        self::assertSame(
+            8,
             $this->subject->countUnprocessedItems()
         );
     }
@@ -178,8 +180,8 @@ class QueueRepositoryTest extends FunctionalTestCase
      */
     public function countAllPendingItems(): void
     {
-        self::assertEquals(
-            7,
+        self::assertSame(
+            8,
             $this->subject->countAllPendingItems()
         );
     }
@@ -189,7 +191,7 @@ class QueueRepositoryTest extends FunctionalTestCase
      */
     public function countAllAssignedPendingItems(): void
     {
-        self::assertEquals(
+        self::assertSame(
             3,
             $this->subject->countAllAssignedPendingItems()
         );
@@ -200,8 +202,8 @@ class QueueRepositoryTest extends FunctionalTestCase
      */
     public function countAllUnassignedPendingItems(): void
     {
-        self::assertEquals(
-            4,
+        self::assertSame(
+            5,
             $this->subject->countAllUnassignedPendingItems()
         );
     }
@@ -214,7 +216,7 @@ class QueueRepositoryTest extends FunctionalTestCase
         $expectedArray = [
             0 => [
                 'configuration' => 'FirstConfiguration',
-                'unprocessed' => 2,
+                'unprocessed' => 3,
                 'assignedButUnprocessed' => 0,
             ],
             1 => [
@@ -282,7 +284,7 @@ class QueueRepositoryTest extends FunctionalTestCase
             '2' => 18,
         ];
 
-        self::assertEquals(
+        self::assertSame(
             $expectedArray,
             $this->subject->getLastProcessedEntriesTimestamps(3)
         );
@@ -344,8 +346,8 @@ class QueueRepositoryTest extends FunctionalTestCase
      */
     public function countAll(): void
     {
-        self::assertEquals(
-            14,
+        self::assertSame(
+            15,
             $this->subject->countAll()
         );
     }
@@ -377,7 +379,7 @@ class QueueRepositoryTest extends FunctionalTestCase
      */
     public function isPageInQueueTimed(): void
     {
-        self::assertTrue($this->subject->isPageInQueueTimed(15));
+        self::assertTrue($this->subject->isPageInQueueTimed(10));
     }
 
     /**
@@ -386,7 +388,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     public function getAvailableSets(): void
     {
         $availableSets = $this->subject->getAvailableSets();
-        self::assertEquals(
+        self::assertSame(
             [
                 'count_value' => 1,
                 'set_id' => 0,
@@ -406,7 +408,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     public function findByQueueId(): void
     {
         $queueRecord = $this->subject->findByQueueId('15');
-        self::assertEquals(
+        self::assertSame(
             12,
             $queueRecord['scheduled']
         );
@@ -417,9 +419,9 @@ class QueueRepositoryTest extends FunctionalTestCase
      */
     public function cleanupQueue(): void
     {
-        self::assertEquals(14, $this->subject->countAll());
+        self::assertSame(15, $this->subject->countAll());
         $this->subject->cleanupQueue();
-        self::assertEquals(7, $this->subject->countAll());
+        self::assertSame(8, $this->subject->countAll());
     }
 
     /**
@@ -427,7 +429,7 @@ class QueueRepositoryTest extends FunctionalTestCase
      */
     public function cleanUpOldQueueEntries(): void
     {
-        $recordsFromFixture = 14;
+        $recordsFromFixture = 15;
         $expectedRemainingRecords = 2;
 
         // Add records to queue repository to ensure we always have records,
@@ -472,14 +474,32 @@ class QueueRepositoryTest extends FunctionalTestCase
     {
         $recordsToBeCrawledLimitHigherThanRecordsCount = $this->subject->fetchRecordsToBeCrawled(10);
         self::assertCount(
-            7,
+            8,
             $recordsToBeCrawledLimitHigherThanRecordsCount
         );
 
-        $recordsToBeCrawledLimitLowerThanRecordsCount = $this->subject->fetchRecordsToBeCrawled(5);
+        $recordsToBeCrawledLimitLowerThanRecordsCount = $this->subject->fetchRecordsToBeCrawled(3);
         self::assertCount(
-            5,
+            3,
             $recordsToBeCrawledLimitLowerThanRecordsCount
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function fetchRecordsToBeCrawledCheckingPriority(): void
+    {
+        $recordsToBeCrawled = $this->subject->fetchRecordsToBeCrawled(5);
+
+        $actualArray = [];
+        foreach ($recordsToBeCrawled as $record) {
+            $actualArray[] = $record['page_id'];
+        }
+
+        self::assertSame(
+            [1, 3, 5, 2, 4],
+            $actualArray
         );
     }
 
@@ -491,7 +511,7 @@ class QueueRepositoryTest extends FunctionalTestCase
         $qidToUpdate = [4, 8, 15, 18];
         $processId = md5('this-is-the-process-id');
 
-        self::assertEquals(
+        self::assertSame(
             4,
             $this->subject->updateProcessIdAndSchedulerForQueueIds($qidToUpdate, $processId)
         );
@@ -503,16 +523,16 @@ class QueueRepositoryTest extends FunctionalTestCase
     public function unsetProcessScheduledAndProcessIdForQueueEntries(): void
     {
         $unprocessedEntriesBefore = $this->subject->countAllUnassignedPendingItems();
-        self::assertEquals(
-            4,
+        self::assertSame(
+            5,
             $unprocessedEntriesBefore
         );
         $processIds = ['1007'];
         $this->subject->unsetProcessScheduledAndProcessIdForQueueEntries($processIds);
 
         $unprocessedEntriesAfter = $this->subject->countAllUnassignedPendingItems();
-        self::assertEquals(
-            6,
+        self::assertSame(
+            7,
             $unprocessedEntriesAfter
         );
     }
@@ -539,7 +559,7 @@ class QueueRepositoryTest extends FunctionalTestCase
         $queryRepository = $objectManager->get(QueueRepository::class);
         $this->subject->flushQueue($where);
 
-        self::assertEquals(
+        self::assertSame(
             $expected,
             $queryRepository->countAll()
         );
@@ -558,11 +578,11 @@ class QueueRepositoryTest extends FunctionalTestCase
             ],
             'Flush Finished entries' => [
                 'filter' => 'finished',
-                'expected' => 7,
+                'expected' => 8,
             ],
             'Other parameter given, default to finished' => [
                 'filter' => 'not-existing-param',
-                'expected' => 7,
+                'expected' => 8,
             ],
         ];
     }
@@ -574,7 +594,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     {
         return [
             'Unprocessed Only' => [
-                'uid' => 15,
+                'uid' => 10,
                 'unprocessed_only' => true,
                 'timed_only' => false,
                 'timestamp' => 0,
@@ -616,7 +636,7 @@ class QueueRepositoryTest extends FunctionalTestCase
                 'orderDirection' => 'ASC',
                 'expected' => [
                     'qid' => '2',
-                    'page_id' => '0',
+                    'page_id' => '1002',
                     'parameters' => '',
                     'parameters_hash' => '',
                     'configuration_hash' => '',

@@ -500,14 +500,21 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
     {
         $queryBuilderSelect = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
         return $queryBuilderSelect
-            ->select('qid', 'scheduled')
+            ->select('qid', 'scheduled', 'page_id', 'sitemap_priority')
             ->from($this->tableName)
+            ->leftJoin(
+                $this->tableName,
+                'pages',
+                'p',
+                $queryBuilderSelect->expr()->eq('p.uid', $queryBuilderSelect->quoteIdentifier($this->tableName . '.page_id'))
+            )
             ->where(
                 $queryBuilderSelect->expr()->eq('exec_time', 0),
                 $queryBuilderSelect->expr()->eq('process_scheduled', 0),
                 $queryBuilderSelect->expr()->lte('scheduled', time())
             )
-            ->orderBy('scheduled')
+            ->orderBy('sitemap_priority', 'DESC')
+            ->addOrderBy('scheduled')
             ->addOrderBy('qid')
             ->setMaxResults($countInARun)
             ->execute()
