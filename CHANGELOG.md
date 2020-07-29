@@ -1,5 +1,10 @@
 # Changelog TYPO3 Crawler
 
+## Crawler 9.1.0-dev
+
+### Added
+* Adds light red background color + icons to crawler log rows with errors
+
 ## Crawler 9.0.3
 Crawler 9.0.2 was released on July 20th, 2020
 

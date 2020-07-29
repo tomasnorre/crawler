@@ -643,12 +643,19 @@ class BackendModule
                     $rowData['tsfe_no_cache'] = $resFeVars['no_cache'] ?: '';
                 }
 
+                $trClass = '';
+                $warningIcon = '';
+                if ($rowData['exec_time'] !== 0 && $resultData === false) {
+                    $trClass = 'class="bg-danger"';
+                    $warningIcon = $this->iconFactory->getIcon('actions-ban', Icon::SIZE_SMALL);
+                }
+
                 // Put rows together:
                 $content .= '
-                    <tr>
+                    <tr ' . $trClass . ' >
                         ' . $titleClm . '
                         <td><a href="' . $this->getInfoModuleUrl(['qid_details' => $vv['qid'], 'setID' => $setId]) . '">' . htmlspecialchars((string) $vv['qid']) . '</a></td>
-                        <td><a href="' . $this->getInfoModuleUrl(['qid_read' => $vv['qid'], 'setID' => $setId]) . '">' . $refreshIcon . '</a></td>';
+                        <td><a href="' . $this->getInfoModuleUrl(['qid_read' => $vv['qid'], 'setID' => $setId]) . '">' . $refreshIcon . '</a>&nbsp;&nbsp;' . $warningIcon . '</td>';
                 foreach ($rowData as $fKey => $value) {
                     if ($fKey === 'url') {
                         $content .= '<td>' . $value . '</td>';

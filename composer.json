@@ -31,6 +31,7 @@
         "codeception/module-filesystem": "^1.0",
         "codeception/module-phpbrowser": "^1.0",
         "codeception/module-webdriver": "^1.0",
+        "nikic/php-parser": "4.4.",
         "nimut/testing-framework": "^5.0",
         "nimut/typo3-complete": "^9.5",
         "nunomaduro/phpinsights": "^1.13",
@@ -42,6 +43,9 @@
         "symfony/yaml": "^4.4 || ^5.0",
         "symplify/easy-coding-standard": "^7.2",
         "typo3/testing-framework": "^4.14 || ^5.0"
+    },
+    "suggest": {
+        "nikic/php-parser": "Is not a hard dependency, but needs to be locked at 4.4 to not have rector break. Due to PHPStan dependencies Rector cannot be updated yet"
     },
     "replace": {
         "typo3-ter/crawler": "self.version"
@@ -107,7 +111,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "9.0.x-dev"
+            "dev-master": "9.1.x-dev"
         },
         "typo3/cms": {
             "cms-package-dir": "{$vendor-dir}/typo3/cms",
