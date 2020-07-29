@@ -31,10 +31,6 @@
         <source>Processing instruction filter</source>
         <target state="final">Procesinstruktions filter</target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration.processing_instruction_filter.description" resname="tx_crawler_configuration.processing_instruction_filter.description" approved="yes">
-        <source>List of processing instructions to send for the request. Processing instructions are necessary for the request to perform any meaningful action, since they activate third party activity.</source>
-        <target state="final">Liste af process instruktioner som udføres ved request. Process instruktionerne er nødvendige for at requestet kan udføre nogen handlinger da de trigger aktiviter for treide parts extensions.</target>
-      </trans-unit>
       <trans-unit id="tx_crawler_configuration.processing_instruction_parameters_ts" resname="tx_crawler_configuration.processing_instruction_parameters_ts" approved="yes">
         <source>Processing instruction parameters</source>
         <target state="final">Procesinstruktions parameter</target>
@@ -54,10 +50,6 @@
       <trans-unit id="tx_crawler_configuration.begroups" resname="tx_crawler_configuration.begroups" approved="yes">
         <source>Restrict access to</source>
         <target state="final">Begræns adgang til</target>
-      </trans-unit>
-      <trans-unit id="tx_crawler_configuration.begroups.description" resname="tx_crawler_configuration.begroups.description" approved="yes">
-        <source>Restrict access to this configuration record to selected backend user groups. Empty means no restriction is set.</source>
-        <target state="final">Begræns adgang til denne konfiguration for bestemte backend bruger grupper. Tom betyder ingen adgangs begrænsning.</target>
       </trans-unit>
       <trans-unit id="tx_crawler_configuration.fegroups" resname="tx_crawler_configuration.fegroups" approved="yes">
         <source>Crawl with FE user groups</source>
@@ -179,6 +171,7 @@
         <source>Remove Orphan processes and processes that are older than one hour</source>
         <target state="final">Fjern forældreløse processor og processor ældre end en time</target>
       </trans-unit>
+      <!-- For Crawler Priority - Will be remove when support for 9 LTS is dropped -->
     </body>
   </file>
 </xliff>
