@@ -36,3 +36,12 @@ be processed during the next crawler process.
    :alt: Page is added to the crawler queue
 
    Page is added to the crawler queue
+
+Swapping live and workspace record
+----------------------------------
+
+If you have workspaces installed, you will depending on you configuration of the workspace,
+have the posibility to :guilabel`Swap live and workspace versions of record`.
+This functionality do as it says, switch the current workspace version of the
+record with the one in the live-workspace. When you use this functions, the
+changes pages, just published, will be added to the crawler queue as well.
