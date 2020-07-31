@@ -29,11 +29,11 @@ class DataHandlerHook
 {
     public function addFlushedPagesToCrawlerQueue(array $parameters, \TYPO3\CMS\Core\DataHandling\DataHandler $dataHandler): void
     {
-        if (!in_array($parameters['table'], ['pages', 'tt_content'])) {
+        if (! in_array($parameters['table'], ['pages', 'tt_content'], true)) {
             return;
         }
 
-        if ($this->getInstallUtility()->isLoaded('workspaces') && $dataHandler->BE_USER->workspace > 0 && !$this->isWorkspacePublishAction($dataHandler->cmdmap)) {
+        if ($this->getInstallUtility()->isLoaded('workspaces') && $dataHandler->BE_USER->workspace > 0 && ! $this->isWorkspacePublishAction($dataHandler->cmdmap)) {
             return;
         }
 
