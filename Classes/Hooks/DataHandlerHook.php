@@ -23,12 +23,17 @@ use AOE\Crawler\Api\CrawlerApi;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extensionmanager\Utility\InstallUtility;
 
 class DataHandlerHook
 {
     public function addFlushedPagesToCrawlerQueue(array $parameters, \TYPO3\CMS\Core\DataHandling\DataHandler $dataHandler): void
     {
-        if ($dataHandler->BE_USER->workspace > 0 && ! $this->isWorkspacePublishAction($dataHandler->cmdmap)) {
+        if (!in_array($parameters['table'], ['pages', 'tt_content'])) {
+            return;
+        }
+
+        if ($this->getInstallUtility()->isLoaded('workspaces') && $dataHandler->BE_USER->workspace > 0 && !$this->isWorkspacePublishAction($dataHandler->cmdmap)) {
             return;
         }
 
@@ -99,6 +104,11 @@ class DataHandlerHook
             $isSwapAction = true;
         }
         return $isSwapAction;
+    }
+
+    private function getInstallUtility(): InstallUtility
+    {
+        return GeneralUtility::makeInstance(ObjectManager::class)->get(InstallUtility::class);
     }
 
     private function getQueueRepository(): QueueRepository

@@ -30,6 +30,7 @@ use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extensionmanager\Utility\InstallUtility;
 
 class DataHandlerHookTest extends UnitTestCase
 {
@@ -45,13 +46,18 @@ class DataHandlerHookTest extends UnitTestCase
 
         $crawlerApi = $this->prophesize(CrawlerApi::class);
         $crawlerApi->addPageToQueue(1)->shouldBeCalled();
+
         $queueRepository = $this->prophesize(QueueRepository::class);
         $queueRepository->isPageInQueue(1)->willReturn(false);
         $queueRepository->isPageInQueue(2)->willReturn(true);
 
+        $installUtility = $this->prophesize(InstallUtility::class);
+        $installUtility->isLoaded(Argument::any())->willReturn(true);
+
         $objectManager = $this->prophesize(ObjectManager::class);
         $objectManager->get(QueueRepository::class)->willReturn($queueRepository->reveal());
         $objectManager->get(CrawlerApi::class)->willReturn($crawlerApi->reveal());
+        $objectManager->get(InstallUtility::class)->willReturn($installUtility->reveal());
 
         $cacheManager = $this->prophesize(CacheManager::class);
         $cacheManager->getCache(Argument::any())->willReturn($this->prophesize(FrontendInterface::class)->reveal());
@@ -68,6 +74,7 @@ class DataHandlerHookTest extends UnitTestCase
 
         $dataHandlerHook->addFlushedPagesToCrawlerQueue(
             [
+                'table' => 'pages',
                 'pageIdArray' => [0, 1, 2],
             ],
             $dataHandler
@@ -93,9 +100,13 @@ class DataHandlerHookTest extends UnitTestCase
         $queueRepository->isPageInQueue(2)->willReturn(true);
         $queueRepository->isPageInQueue(3)->willReturn(false);
 
+        $installUtility = $this->prophesize(InstallUtility::class);
+        $installUtility->isLoaded(Argument::any())->willReturn(true);
+
         $objectManager = $this->prophesize(ObjectManager::class);
         $objectManager->get(QueueRepository::class)->willReturn($queueRepository->reveal());
         $objectManager->get(CrawlerApi::class)->willReturn($crawlerApi->reveal());
+        $objectManager->get(InstallUtility::class)->willReturn($installUtility->reveal());
 
         $cacheManager = $this->prophesize(CacheManager::class);
         $cacheManager->getCache(Argument::any())->willReturn($this->prophesize(FrontendInterface::class)->reveal());
@@ -112,6 +123,7 @@ class DataHandlerHookTest extends UnitTestCase
 
         $dataHandlerHook->addFlushedPagesToCrawlerQueue(
             [
+                'table' => 'tt_content',
                 'pageIdArray' => [0, 1, 2, 3],
             ],
             $dataHandler
