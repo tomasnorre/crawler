@@ -29,10 +29,6 @@ class DataHandlerHook
 {
     public function addFlushedPagesToCrawlerQueue(array $parameters, \TYPO3\CMS\Core\DataHandling\DataHandler $dataHandler): void
     {
-        if (! in_array($parameters['table'], ['pages', 'tt_content'], true)) {
-            return;
-        }
-
         $pageIdsToBeFlushedFromCache = $parameters['pageIdArray'];
         if (empty($pageIdsToBeFlushedFromCache)) {
             return;
