@@ -23,7 +23,6 @@ use AOE\Crawler\Api\CrawlerApi;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Extensionmanager\Utility\InstallUtility;
 
 class DataHandlerHook
 {

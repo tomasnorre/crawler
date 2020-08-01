@@ -24,13 +24,11 @@ use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Hooks\DataHandlerHook;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Prophecy\Argument;
-use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Extensionmanager\Utility\InstallUtility;
 
 class DataHandlerHookTest extends UnitTestCase
 {
