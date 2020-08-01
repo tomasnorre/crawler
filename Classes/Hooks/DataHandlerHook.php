@@ -33,10 +33,6 @@ class DataHandlerHook
             return;
         }
 
-        if ($this->getInstallUtility()->isLoaded('workspaces') && $dataHandler->BE_USER->workspace > 0 && ! $this->isWorkspacePublishAction($dataHandler->cmdmap)) {
-            return;
-        }
-
         $pageIdsToBeFlushedFromCache = $parameters['pageIdArray'];
         if (empty($pageIdsToBeFlushedFromCache)) {
             return;
@@ -51,64 +47,6 @@ class DataHandlerHook
             }
             $this->getCrawlerApi()->addPageToQueue($pageId);
         }
-    }
-
-    /**
-     * Checks if a workspace record is being published
-     *
-     * Example $commandMap structure as provided by TYPO3:
-     * 'pages' => array(
-     *     123 => array(
-     *         'version' => array(
-     *             'action' => 'swap'
-     *  [...]
-     * 'tt_content' => array(
-     *     456 => array(
-     *         'version' => array(
-     *             'action' => 'swap'
-     * [...]
-     */
-    private function isWorkspacePublishAction(array $commandMap): bool
-    {
-        $isWorkspacePublishAction = false;
-        foreach ($commandMap as $tableCommandMap) {
-            if (! is_array($tableCommandMap)) {
-                continue;
-            }
-            foreach ($tableCommandMap as $singleCommandMap) {
-                if (! is_array($singleCommandMap)) {
-                    continue;
-                }
-                if (! $this->isSwapAction($singleCommandMap)) {
-                    continue;
-                }
-                $isWorkspacePublishAction = true;
-                return $isWorkspacePublishAction;
-            }
-        }
-        return $isWorkspacePublishAction;
-    }
-
-    /**
-     * Checks if a page is being swapped with it's workspace overlay
-     */
-    private function isSwapAction(array $singleCommandMap): bool
-    {
-        $isSwapAction = false;
-        if (
-            isset($singleCommandMap['version'])
-            && is_array($singleCommandMap['version'])
-            && isset($singleCommandMap['version']['action'])
-            && $singleCommandMap['version']['action'] === 'swap'
-        ) {
-            $isSwapAction = true;
-        }
-        return $isSwapAction;
-    }
-
-    private function getInstallUtility(): InstallUtility
-    {
-        return GeneralUtility::makeInstance(ObjectManager::class)->get(InstallUtility::class);
     }
 
     private function getQueueRepository(): QueueRepository

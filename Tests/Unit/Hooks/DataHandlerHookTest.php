@@ -51,13 +51,9 @@ class DataHandlerHookTest extends UnitTestCase
         $queueRepository->isPageInQueue(1)->willReturn(false);
         $queueRepository->isPageInQueue(2)->willReturn(true);
 
-        $installUtility = $this->prophesize(InstallUtility::class);
-        $installUtility->isLoaded(Argument::any())->willReturn(true);
-
         $objectManager = $this->prophesize(ObjectManager::class);
         $objectManager->get(QueueRepository::class)->willReturn($queueRepository->reveal());
         $objectManager->get(CrawlerApi::class)->willReturn($crawlerApi->reveal());
-        $objectManager->get(InstallUtility::class)->willReturn($installUtility->reveal());
 
         $cacheManager = $this->prophesize(CacheManager::class);
         $cacheManager->getCache(Argument::any())->willReturn($this->prophesize(FrontendInterface::class)->reveal());
@@ -65,12 +61,7 @@ class DataHandlerHookTest extends UnitTestCase
         GeneralUtility::setSingletonInstance(CacheManager::class, $cacheManager->reveal());
         GeneralUtility::setSingletonInstance(ObjectManager::class, $objectManager->reveal());
 
-        $beUser = new BackendUserAuthentication();
-        $beUser->workspace = 1;
-
         $dataHandler = new DataHandler();
-        $cmd = ['pages' => [123 => ['version' => ['action' => 'swap']]]];
-        $dataHandler->start([], $cmd, $beUser);
 
         $dataHandlerHook->addFlushedPagesToCrawlerQueue(
             [
@@ -100,13 +91,9 @@ class DataHandlerHookTest extends UnitTestCase
         $queueRepository->isPageInQueue(2)->willReturn(true);
         $queueRepository->isPageInQueue(3)->willReturn(false);
 
-        $installUtility = $this->prophesize(InstallUtility::class);
-        $installUtility->isLoaded(Argument::any())->willReturn(true);
-
         $objectManager = $this->prophesize(ObjectManager::class);
         $objectManager->get(QueueRepository::class)->willReturn($queueRepository->reveal());
         $objectManager->get(CrawlerApi::class)->willReturn($crawlerApi->reveal());
-        $objectManager->get(InstallUtility::class)->willReturn($installUtility->reveal());
 
         $cacheManager = $this->prophesize(CacheManager::class);
         $cacheManager->getCache(Argument::any())->willReturn($this->prophesize(FrontendInterface::class)->reveal());
@@ -114,12 +101,7 @@ class DataHandlerHookTest extends UnitTestCase
         GeneralUtility::setSingletonInstance(CacheManager::class, $cacheManager->reveal());
         GeneralUtility::setSingletonInstance(ObjectManager::class, $objectManager->reveal());
 
-        $beUser = new BackendUserAuthentication();
-        $beUser->workspace = 1;
-
         $dataHandler = new DataHandler();
-        $cmd = ['pages' => [123 => ['version' => ['action' => 'swap']]]];
-        $dataHandler->start([], $cmd, $beUser);
 
         $dataHandlerHook->addFlushedPagesToCrawlerQueue(
             [
