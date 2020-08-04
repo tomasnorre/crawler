@@ -15,4 +15,5 @@ Features
    MultiprocessSupport/Index
    Hooks/Index
    PriorityCrawling/Index
+   Widgets/Index
 

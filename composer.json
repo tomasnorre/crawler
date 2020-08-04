@@ -46,7 +46,8 @@
         "typo3/testing-framework": "^4.14 || ^5.0"
     },
     "suggest": {
-        "nikic/php-parser": "Is not a hard dependency, but needs to be locked at 4.4 to not have rector break. Due to PHPStan dependencies Rector cannot be updated yet"
+        "nikic/php-parser": "Is not a hard dependency, but needs to be locked at 4.4 to not have rector break. Due to PHPStan dependencies Rector cannot be updated yet",
+        "typo3/cms-dashboard": "^10.4"
     },
     "replace": {
         "typo3-ter/crawler": "self.version"

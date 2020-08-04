@@ -272,7 +272,21 @@
 				<source>No php binary found in '%s'. Please update value for 'phpPath' in crawler extension setup.
 				</source>
 			</trans-unit>
-
+			<trans-unit id="dashboard.widget.group.title" resname="dashboard.widget.group.title">
+				<source>Crawler</source>
+			</trans-unit>
+			<trans-unit id="dashboard.widget.group.description" resname="dashboard.widget.group.description">
+				<source>This preset will give you a dashboard containing the most common Crawler widgets.</source>
+			</trans-unit>
+			<trans-unit id="dashboard.widget.queuesize.title" resname="dashboard.widget.group.description">
+				<source>Queue size</source>
+			</trans-unit>
+			<trans-unit id="dashboard.widget.queuesize.description" resname="dashboard.widget.group.description">
+				<source>Widget for displaying the queue size</source>
+			</trans-unit>
+			<trans-unit id="dashboard.widget.queuesize.widget.title" resname="dashboard.widget.group.description">
+				<source>Number of uncrawled items</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>
