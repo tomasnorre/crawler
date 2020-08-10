@@ -1,5 +1,10 @@
 # Changelog TYPO3 Crawler
 
+## Crawler 9.1.1-dev
+
+### Added
+* Documentation example for ext:news
+
 ## Crawler 9.1.0
 Crawler 9.1.0 was released on August 2nd, 2020
 

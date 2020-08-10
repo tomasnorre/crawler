@@ -13,3 +13,4 @@ Configuration
    ConfigurationRecords/Index
    PageTsconfigReference(txCrawlercrawlercfg)/Index
    HttpAuthentication/Index
+   Examples/Index
