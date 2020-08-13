@@ -33,9 +33,9 @@ Username/password: `admin`/`password`
 And start working.
 
 **INFO**
-xdebug is disable as default, to speed up the devbox when xdebug isn't needed.
+xdebug is disabled as default, to speed up the devbox when xdebug isn't needed.
 
-This can be activated in `.devbox/.ddev/config.yaml` and by `ddev restart` afterwards.
+This can be activated with `ddev xdebug on`.
 
 #### Running tests without local development environment
 If you don't have `php` and/or `composer` installed on your host machine,
