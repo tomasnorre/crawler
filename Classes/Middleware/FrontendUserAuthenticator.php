@@ -29,6 +29,7 @@ use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\UserAspect;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 use TYPO3\CMS\Frontend\Controller\ErrorController;
 
 /**
@@ -88,7 +89,7 @@ class FrontendUserAuthenticator implements MiddlewareInterface
         // Now ensure to set the proper user groups
         $grList = $queueParameters['feUserGroupList'];
         if ($grList) {
-            $frontendUser = $GLOBALS['TSFE']->fe_user;
+            $frontendUser = new FrontendUserAuthentication();
             $frontendUser->user[$frontendUser->usergroup_column] = $grList;
             // we have to set the fe user group to the user aspect since indexed_search only reads the user aspect
             // to get the groups. otherwise groups are ignored during indexing.
