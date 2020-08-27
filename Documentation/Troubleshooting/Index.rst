@@ -79,3 +79,24 @@ have `TYPO3 Console <https://extensions.typo3.org/extension/typo3_console/>`_
 installed via command line command
 :shell:`vendor/bin/typo3cms database:updateschema`.
 
+
+TYPO3 shows error if the PHP path is not correct
+================================================
+
+In some cases you get an error, if the PHP path is not set correctly. It occures
+if you select the Site Crawler in Info-module.
+
+.. figure:: /Images/backend_info_php_error.png
+   :alt: Error message in Info-module
+
+   Error message in Info-module
+
+In this case you have to set the path to your PHP in the Extension configuration.
+
+.. figure:: /Images/backend_php_path_configuration.png
+   :alt: Correct PHP path settings
+
+   Correct PHP path settings in Extension configuration
+
+Please be sure to add the correct path to your PHP. The path in this screenshot
+might be different to your PHP path.
