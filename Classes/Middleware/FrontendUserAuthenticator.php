@@ -28,6 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\UserAspect;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Domain\Model\FrontendUser;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 use TYPO3\CMS\Frontend\Controller\ErrorController;
@@ -89,8 +90,10 @@ class FrontendUserAuthenticator implements MiddlewareInterface
         // Now ensure to set the proper user groups
         $grList = $queueParameters['feUserGroupList'];
         if ($grList) {
-            $frontendUser = new FrontendUserAuthentication();
-            $frontendUser->user[$frontendUser->usergroup_column] = $grList;
+            $frontendUser = $request->getAttribute('frontend.user');
+            $frontendUser->user[$frontendUser->usergroup_column] = '0,-2,' . $grList; //'0,-2,' . $grList;
+            $frontendUser->user['uid'] = PHP_INT_MAX;
+
             // we have to set the fe user group to the user aspect since indexed_search only reads the user aspect
             // to get the groups. otherwise groups are ignored during indexing.
             // we need to add the groups 0, and -2 too, like the getGroupIds getter does.
@@ -99,7 +102,7 @@ class FrontendUserAuthenticator implements MiddlewareInterface
                 GeneralUtility::makeInstance(
                     UserAspect::class,
                     $frontendUser,
-                    explode(',', '0,-2,' . $grList)
+                    explode(',', '0,-2,'.$grList)
                 )
             );
         }
