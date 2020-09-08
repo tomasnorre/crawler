@@ -281,8 +281,7 @@ class CrawlerApi
     public function getActiveProcessesCount(): int
     {
         $processRepository = new ProcessRepository();
-
-        return $processRepository->countActive();
+        return $processRepository->findAllActive()->count();
     }
 
     public function getLastProcessedQueueEntries(int $limit): array

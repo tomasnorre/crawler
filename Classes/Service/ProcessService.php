@@ -261,7 +261,7 @@ class ProcessService
     private function startRequiredProcesses()
     {
         $ret = false;
-        $currentProcesses = $this->processRepository->countActive();
+        $currentProcesses = $this->processRepository->findAllActive()->count();
         $availableProcessesCount = $this->processLimit - $currentProcesses;
         $requiredProcessesCount = ceil($this->queueRepository->countAllUnassignedPendingItems() / $this->countInARun);
         $startProcessCount = min([$availableProcessesCount, $requiredProcessesCount]);

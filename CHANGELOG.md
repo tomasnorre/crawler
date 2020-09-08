@@ -5,6 +5,12 @@
 ### Added
 * Documentation example for ext:news
 
+### Deprecated
+
+#### Functions & Properties
+* ProcessRepository->countActive()
+* ProcessRepository->getLimitFromItemCountAndOffset()
+
 ### Fixed
 * Frontend User initialization with UserGroups for crawling protected pages
 

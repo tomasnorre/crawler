@@ -419,9 +419,9 @@ class QueueRepositoryTest extends FunctionalTestCase
      */
     public function cleanupQueue(): void
     {
-        self::assertSame(15, $this->subject->countAll());
+        self::assertSame(15, $this->subject->findAll()->count());
         $this->subject->cleanupQueue();
-        self::assertSame(8, $this->subject->countAll());
+        self::assertSame(8, $this->subject->findAll()->count());
     }
 
     /**
@@ -455,7 +455,7 @@ class QueueRepositoryTest extends FunctionalTestCase
         // Check total entries before cleanup
         self::assertSame(
             $recordsFromFixture + $expectedRemainingRecords,
-            $this->subject->countAll()
+            $this->subject->findAll()->count()
         );
 
         $this->subject->cleanUpOldQueueEntries();
@@ -463,7 +463,7 @@ class QueueRepositoryTest extends FunctionalTestCase
         // Check total entries after cleanup
         self::assertSame(
             $expectedRemainingRecords,
-            $this->subject->countAll()
+            $this->subject->findAll()->count()
         );
     }
 
@@ -561,7 +561,7 @@ class QueueRepositoryTest extends FunctionalTestCase
 
         self::assertSame(
             $expected,
-            $queryRepository->countAll()
+            $queryRepository->findAll()->count()
         );
     }
 

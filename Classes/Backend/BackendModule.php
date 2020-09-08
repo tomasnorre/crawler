@@ -774,7 +774,7 @@ class BackendModule
             $allProcesses = $processRepository->findAll();
         }
         $isCrawlerEnabled = ! $this->findCrawler()->getDisabled() && ! $this->isErrorDetected;
-        $currentActiveProcesses = $processRepository->countActive();
+        $currentActiveProcesses = $processRepository->findAllActive()->count();
         $maxActiveProcesses = MathUtility::forceIntegerInRange($this->extensionSettings['processLimit'], 1, 99, 1);
         $this->view->assignMultiple([
             'pageId' => (int) $this->id,

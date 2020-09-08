@@ -124,14 +124,14 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
      */
     public function removeProcessFromProcesslistCalledWithProcessThatDoesNotExist(): void
     {
-        $processCountBefore = $this->processRepository->countAll();
-        $queueCountBefore = $this->queueRepository->countAll();
+        $processCountBefore = $this->processRepository->findAll()->count();
+        $queueCountBefore = $this->queueRepository->findAll()->count();
 
         $notExistingProcessId = '23456';
         $this->callInaccessibleMethod($this->subject, 'removeProcessFromProcesslist', $notExistingProcessId);
 
-        $processCountAfter = $this->processRepository->countAll();
-        $queueCountAfter = $this->queueRepository->countAll();
+        $processCountAfter = $this->processRepository->findAll()->count();
+        $queueCountAfter = $this->queueRepository->findAll()->count();
 
         self::assertEquals(
             $processCountBefore,
@@ -152,14 +152,14 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         $expectedProcessesToBeRemoved = 1;
         $expectedQueueRecordsToBeRemoved = 0;
 
-        $processCountBefore = $this->processRepository->countAll();
-        $queueCountBefore = $this->queueRepository->countAll();
+        $processCountBefore = $this->processRepository->findAll()->count();
+        $queueCountBefore = $this->queueRepository->findAll()->count();
 
         $existingProcessId = '1000';
         $this->callInaccessibleMethod($this->subject, 'removeProcessFromProcesslist', $existingProcessId);
 
-        $processCountAfter = $this->processRepository->countAll();
-        $queueCountAfter = $this->queueRepository->countAll();
+        $processCountAfter = $this->processRepository->findAll()->count();
+        $queueCountAfter = $this->queueRepository->findAll()->count();
 
         self::assertEquals(
             $processCountBefore - $expectedProcessesToBeRemoved,
@@ -180,12 +180,12 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         $existingProcessId = '1001';
         $expectedProcessesToBeRemoved = 1;
 
-        $processCountBefore = $this->processRepository->countAll();
+        $processCountBefore = $this->processRepository->findAll()->count();
         $queueCountBefore = $this->queueRepository->countAllByProcessId($existingProcessId);
 
         $this->callInaccessibleMethod($this->subject, 'removeProcessFromProcesslist', $existingProcessId);
 
-        $processCountAfter = $this->processRepository->countAll();
+        $processCountAfter = $this->processRepository->findAll()->count();
         $queueCountAfter = $this->queueRepository->countAllByProcessId($existingProcessId);
 
         self::assertEquals(
