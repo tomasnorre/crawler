@@ -45,6 +45,8 @@ cache:
     - $HOME/.composer/cache
 
 before_script:
+  # See https://github.com/composer/composer/issues/9191 Problems with composer 1.10.11 therefore we force the rollback for now
+  - composer self-update 1.10.10
   # Installs nimut/typo3-complete
   - travis_wait 30 composer require --dev nimut/typo3-complete=$TYPO3_VERSION
   - export "TYPO3_PATH_WEB"=$PWD/.Build/Web;
