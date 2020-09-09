@@ -28,9 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\UserAspect;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Domain\Model\FrontendUser;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 use TYPO3\CMS\Frontend\Controller\ErrorController;
 
 /**
@@ -102,7 +100,7 @@ class FrontendUserAuthenticator implements MiddlewareInterface
                 GeneralUtility::makeInstance(
                     UserAspect::class,
                     $frontendUser,
-                    explode(',', '0,-2,'.$grList)
+                    explode(',', '0,-2,' . $grList)
                 )
             );
         }
