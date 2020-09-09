@@ -1,6 +1,7 @@
-# ==============================================
+# =========================================================
 # Persistence object mapping configuration
-# ==============================================
+# This can be removed when dropping support for TYPO3 9 LTS
+# =========================================================
 config.tx_extbase.persistence.classes {
     AOE\Crawler\Domain\Model\Configuration {
         mapping {
