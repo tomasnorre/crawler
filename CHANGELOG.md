@@ -5,6 +5,9 @@
 ### Added
 * Documentation example for ext:news
 
+### Fixed
+* Frontend User initialization with UserGroups for crawling protected pages
+
 ## Crawler 9.1.0
 Crawler 9.1.0 was released on August 2nd, 2020
 

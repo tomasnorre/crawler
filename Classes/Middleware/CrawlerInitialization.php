@@ -60,7 +60,6 @@ class CrawlerInitialization implements MiddlewareInterface
 
         $GLOBALS['TSFE']->applicationData['tx_crawler']['running'] = true;
         $GLOBALS['TSFE']->applicationData['tx_crawler']['parameters'] = $queueParameters;
-        $GLOBALS['TSFE']->applicationData['tx_crawler']['log'] = [];
         $GLOBALS['TSFE']->applicationData['tx_crawler']['log'] = [
             'User Groups: ' . $queueParameters['feUserGroupList'],
         ];
