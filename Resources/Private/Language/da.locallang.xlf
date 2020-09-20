@@ -7,6 +7,14 @@
         <source>Site Crawler</source>
         <target state="final">Side Crawler</target>
       </trans-unit>
+      <trans-unit id="labels.start" resname="labels.start" approved="yes">
+        <source>Start Crawling</source>
+        <target state="final">Start Crawling</target>
+      </trans-unit>
+      <trans-unit id="labels.log" resname="labels.log" approved="yes">
+        <source>Crawler log</source>
+        <target state="final">Crawler log</target>
+      </trans-unit>
       <trans-unit id="labels.multiprocess" resname="labels.multiprocess" approved="yes">
         <source>Crawling Processes</source>
         <target state="final">Crawler Processor</target>
@@ -38,6 +46,14 @@
       <trans-unit id="labels.triggerUpdate" resname="labels.triggerUpdate" approved="yes">
         <source>Update</source>
         <target state="final">Opdatér</target>
+      </trans-unit>
+      <trans-unit id="labels.triggerCrawl" resname="labels.triggerCrawl" approved="yes">
+        <source>Crawl URLs</source>
+        <target state="final">Crawl URLer</target>
+      </trans-unit>
+      <trans-unit id="labels.triggerDownload" resname="labels.triggerDownload" approved="yes">
+        <source>Download URLs</source>
+        <target state="final">Download URLer</target>
       </trans-unit>
       <trans-unit id="labels.continue" resname="labels.continue" approved="yes">
         <source>Continue</source>
@@ -91,6 +107,10 @@
         <source>Values Expanded</source>
         <target state="final">Værdier udvidet</target>
       </trans-unit>
+      <trans-unit id="labels.url" resname="labels.url" approved="yes">
+        <source>URL</source>
+        <target state="final">URL</target>
+      </trans-unit>
       <trans-unit id="labels.urls" resname="labels.urls" approved="yes">
         <source>URLs</source>
         <target state="final">URLer</target>
@@ -142,6 +162,14 @@
       <trans-unit id="labels.scheduledtime" resname="labels.scheduledtime" approved="yes">
         <source>Scheduled</source>
         <target state="final">Planlagt</target>
+      </trans-unit>
+      <trans-unit id="labels.runtime" resname="labels.runtime" approved="yes">
+        <source>Run-time</source>
+        <target state="final">Run-time</target>
+      </trans-unit>
+      <trans-unit id="labels.status" resname="labels.status" approved="yes">
+        <source>Status</source>
+        <target state="final">Status</target>
       </trans-unit>
       <trans-unit id="labels.groups" resname="labels.groups" approved="yes">
         <source>Groups</source>
@@ -215,6 +243,10 @@
         <source>State</source>
         <target state="final">Status</target>
       </trans-unit>
+      <trans-unit id="labels.processid" resname="labels.processid" approved="yes">
+        <source>Id</source>
+        <target state="final">Id</target>
+      </trans-unit>
       <trans-unit id="labels.time.first" resname="labels.time.first" approved="yes">
         <source>Time first item</source>
         <target state="final">Tid første emne</target>
@@ -226,6 +258,10 @@
       <trans-unit id="labels.time.duration" resname="labels.time.duration" approved="yes">
         <source>Runtime</source>
         <target state="final">Varighed</target>
+      </trans-unit>
+      <trans-unit id="labels.ttl" resname="labels.ttl" approved="yes">
+        <source>TTL</source>
+        <target state="final">TTL</target>
       </trans-unit>
       <trans-unit id="labels.status.current" resname="labels.status.current" approved="yes">
         <source>Processed</source>
@@ -278,6 +314,10 @@
       <trans-unit id="labels.process.add" resname="labels.process.add" approved="yes">
         <source>Add process</source>
         <target state="final">Tilføj process</target>
+      </trans-unit>
+      <trans-unit id="time.detailed" resname="time.detailed" approved="yes">
+        <source>d-m-y H:i:s</source>
+        <target state="final">d-m-y H:i:s</target>
       </trans-unit>
       <trans-unit id="labels.itemsPerPage.5" resname="labels.itemsPerPage.5" approved="yes">
         <source>limit to 5</source>
