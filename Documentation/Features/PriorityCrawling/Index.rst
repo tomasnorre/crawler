@@ -37,7 +37,7 @@ same priority.
 TYPO3 9 LTS
 -----------
 
-In TYPO3 9 LTS, the will be a new tab :guilabel`Crawler` when editing pages, here you
+In TYPO3 9 LTS, the will be a new tab :guilabel:`Crawler` when editing pages, here you
 can set the priority.
 
 .. figure:: /Images/backend_crawler_priority_v9.png
@@ -48,7 +48,7 @@ can set the priority.
 TYPO3 10 LTS
 ------------
 
-In TYPO3 10 LTS or higher, the existing :guilabel:`SEO tab will be used to set priorities when editing
+In TYPO3 10 LTS or higher, the existing :guilabel:`SEO` tab will be used to set priorities when editing
 pages.
 
 .. image:: /Images/backend_crawler_seo_v10.png
