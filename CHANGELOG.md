@@ -12,6 +12,13 @@
 * ProcessRepository->countActive()
 * ProcessRepository->getLimitFromItemCountAndOffset()
 
+### Changed
+* UrlService->getUrlFromPageAndQueryParameters() moved from CrawlerController
+
+### Deprecated
+#### Functions & Properties
+* CrawlerController->getUrlFromPageAndQueryParameters()
+
 ### Fixed
 * Frontend User initialization with UserGroups for crawling protected pages
 * Making sure PageUid added with ExcludeString is kept as integers
@@ -96,7 +103,6 @@ Crawler 9.0.1 was released on May 11th, 2020
 * Process->row
 * Queue->row
 * CrawlerApi->countEntriesInQueueForPageByScheduleTime()
-
 
 ### Fixed
 * Changed result handling for Crawling in case of 500 errors on directRequests
