@@ -1400,7 +1400,7 @@ class CrawlerController implements LoggerAwareInterface
                         $depth = (stristr($excludePart, '+')) ? 99 : 0;
                     }
 
-                    $pidList[] = $pid;
+                    $pidList[] = (int) $pid;
 
                     if ($depth > 0) {
                         if (empty($treeCache[$pid][$depth])) {
@@ -1410,7 +1410,7 @@ class CrawlerController implements LoggerAwareInterface
                         }
 
                         foreach ($treeCache[$pid][$depth] as $data) {
-                            $pidList[] = $data['row']['uid'];
+                            $pidList[] = (int) $data['row']['uid'];
                         }
                     }
                 }

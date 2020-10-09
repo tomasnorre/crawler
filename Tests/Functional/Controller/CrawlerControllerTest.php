@@ -272,6 +272,23 @@ class CrawlerControllerTest extends FunctionalTestCase
 
     /**
      * @test
+     */
+    public function expandExcludeStringReturnsArraysOfIntegers(): void
+    {
+        $GLOBALS['BE_USER'] = $this->getMockBuilder(BackendUserAuthentication::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['isAdmin', 'getTSConfig', 'getPagePermsClause', 'isInWebMount', 'backendCheckLogin'])
+            ->getMock();
+
+        $excludeStringArray = $this->subject->expandExcludeString('1,2,4,6,8');
+
+        foreach ($excludeStringArray as $excluded) {
+            self::assertIsInt($excluded);
+        }
+    }
+
+    /**
+     * @test
      * @dataProvider getUrlFromPageAndQueryParametersDataProvider
      */
     public function getUrlFromPageAndQueryParameters(int $pageId, string $queryString, ?string $alternativeBaseUrl, int $httpsOrHttp, UriInterface $expected): void

@@ -7,6 +7,7 @@
 
 ### Fixed
 * Frontend User initialization with UserGroups for crawling protected pages
+* Making sure PageUid added with ExcludeString is kept as integers
 
 ## Crawler 9.1.0
 Crawler 9.1.0 was released on August 2nd, 2020
