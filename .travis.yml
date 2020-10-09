@@ -130,6 +130,9 @@ jobs:
         - ddev start
         - cd .. # Going back to "root" directory
         - composer install
+        - wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
+        - chmod +x wait-for-it.sh
+        - ./wait-for-it.sh -t 60 https://crawler-devbox.ddev.site:443
         - php .Build/bin/codecept run
 
     # Static Analysis
