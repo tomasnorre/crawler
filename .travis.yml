@@ -131,8 +131,8 @@ jobs:
         - composer require aoepeople/crawler:dev-${TRAVIS_BRANCH}
         - ddev start
         # Not so nice work around, but to test if that's the problem
-        - ddev exec sudo chmod -R 777 var
         - ddev exec bin/typo3cms install:fixfolderstructure
+        - ddev exec sudo chmod -R 777 var
         - cd .. # Going back to "root" directory
         - composer install
         - wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
