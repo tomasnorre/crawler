@@ -23,22 +23,22 @@ addons:
       - master
       - sonarqube
 php:
-#  - '7.2'
-#  - '7.3'
+  - '7.2'
+  - '7.3'
   - '7.4'
 
 env:
   # tested TYPO3 version
   - TYPO3_VERSION=^9.5
-  #- TYPO3_VERSION=^10.4
-  #- TYPO3_VERSION=dev-master
+  - TYPO3_VERSION=^10.4
+  - TYPO3_VERSION=dev-master
 
 services:
   - mysql
   - docker
 
-#jdk:
-#  - oraclejdk8
+jdk:
+  - oraclejdk8
 
 cache:
   directories:
@@ -46,28 +46,26 @@ cache:
     - docker
 
 before_script:
-  ## Installs nimut/typo3-complete
-  #- travis_wait 30 composer require --dev nimut/typo3-complete=$TYPO3_VERSION
-  #- export "TYPO3_PATH_WEB"=$PWD/.Build/Web;
-  ## Locating UnitTests.xml
-  #- export "UNIT_XML"='.Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml'
-  ## Location FunctionalTests.xml
-  #- export "FUNCTIONAL_XML"='.Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml'
-  ## Symlink TYPO3-Core
-  #- ln -nfs .Build/vendor/typo3/cms/typo3 typo3
-  - echo "before script"
+  # Installs nimut/typo3-complete
+  - travis_wait 30 composer require --dev nimut/typo3-complete=$TYPO3_VERSION
+  - export "TYPO3_PATH_WEB"=$PWD/.Build/Web;
+  # Locating UnitTests.xml
+  - export "UNIT_XML"='.Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml'
+  # Location FunctionalTests.xml
+  - export "FUNCTIONAL_XML"='.Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml'
+  # Symlink TYPO3-Core
+  - ln -nfs .Build/vendor/typo3/cms/typo3 typo3
 
 script:
-  ## run tests by default
-  ## unit tests
-  #- .Build/bin/phpunit --colors -c $UNIT_XML Tests/Unit
+  # run tests by default
+  # unit tests
+  - .Build/bin/phpunit --colors -c $UNIT_XML Tests/Unit
   # functional tests
-  #- export typo3DatabaseName="typo3"
-  #- export typo3DatabaseHost="localhost"
-  #- export typo3DatabaseUsername="root"
-  #- export typo3DatabasePassword=""
-  #- .Build/bin/phpunit --whitelist Classes --colors -c $FUNCTIONAL_XML Tests/Functional
-  - echo "script"
+  - export typo3DatabaseName="typo3"
+  - export typo3DatabaseHost="localhost"
+  - export typo3DatabaseUsername="root"
+  - export typo3DatabasePassword=""
+  - .Build/bin/phpunit --whitelist Classes --colors -c $FUNCTIONAL_XML Tests/Functional
 
 jobs:
   fast_finish: true
@@ -78,33 +76,33 @@ jobs:
     - name: "PHPStan"
     - name: "Behaviour"
   include:
-    #-
-    #  stage: test
-    #  name: "PHP Lint"
-    #  script:
-    #    - find . -name \*.php ! -path "./.Build/*" ! -path "./scripts/*" ! -path "./typo3_src/*" | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \;
+    -
+      stage: test
+      name: "PHP Lint"
+      script:
+        - find . -name \*.php ! -path "./.Build/*" ! -path "./scripts/*" ! -path "./typo3_src/*" | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \;
 
-    #-
-    #  stage: test
-    #  name: "Tests Coverage"
-    #  before_install:
-    #    - echo "keep xdebug"
-    #  script:
-    #    - export typo3DatabaseName="typo3";
-    #    - export typo3DatabaseHost="localhost";
-    #    - export typo3DatabaseUsername="root";
-    #    - export typo3DatabasePassword="";
+    -
+      stage: test
+      name: "Tests Coverage"
+      before_install:
+        - echo "keep xdebug"
+      script:
+        - export typo3DatabaseName="typo3";
+        - export typo3DatabaseHost="localhost";
+        - export typo3DatabaseUsername="root";
+        - export typo3DatabasePassword="";
 
-     #   # Unit tests
-     #   - .Build/bin/phpunit --whitelist Classes --coverage-clover=unittest-coverage.clover --colors -c $UNIT_XML Tests/Unit
+        # Unit tests
+        - .Build/bin/phpunit --whitelist Classes --coverage-clover=unittest-coverage.clover --colors -c $UNIT_XML Tests/Unit
 
-     #   # Functional tests
-     #   - .Build/bin/phpunit --whitelist Classes --coverage-clover=functional-coverage.clover --colors -c $FUNCTIONAL_XML Tests/Functional
+        # Functional tests
+        - .Build/bin/phpunit --whitelist Classes --coverage-clover=functional-coverage.clover --colors -c $FUNCTIONAL_XML Tests/Functional
 
-      #after_script:
-      #  - wget https://scrutinizer-ci.com/ocular.phar
-      #  - php ocular.phar code-coverage:upload --format=php-clover unittest-coverage.clover
-      #  - php ocular.phar code-coverage:upload --format=php-clover functional-coverage.clover
+      after_script:
+        - wget https://scrutinizer-ci.com/ocular.phar
+        - php ocular.phar code-coverage:upload --format=php-clover unittest-coverage.clover
+        - php ocular.phar code-coverage:upload --format=php-clover functional-coverage.clover
 
     # Behaviour Tests
     -
@@ -131,7 +129,6 @@ jobs:
         - cd .devbox
         - composer require aoepeople/crawler:dev-${TRAVIS_BRANCH}
         - ddev start
-        # Not so nice work around, but to test if that's the problem
         - ddev exec bin/typo3cms install:fixfolderstructure
         - ddev exec bin/typo3cms install:extensionsetupifpossible
         - ddev exec bin/typo3cms cache:flush
@@ -144,68 +141,67 @@ jobs:
         - ./wait-for-it.sh -t 60 127.0.0.1:443
         - ./wait-for-it.sh -t 60 localhost:4444
         - php .Build/bin/codecept run
-        - cat /home/travis/build/AOEpeople/crawler/Tests/Acceptance/_output/*.html
 
     # Static Analysis
-    #-
-    #  stage: static
-    #  name: "Rector CI"
-    #  php: 7.2
-    #  env:
-    #    - TYPO3_VERSION=^9.5
-    #  script:
-    #    - .Build/bin/rector process --dry-run --config rector-ci.yaml
+    -
+      stage: static
+      name: "Rector CI"
+      php: 7.2
+      env:
+        - TYPO3_VERSION=^9.5
+      script:
+        - .Build/bin/rector process --dry-run --config rector-ci.yaml
 
-    #-
-    #  stage: static
-    #  name: "Coding Standards"
-    #  php: 7.2
-    #  env:
-    #    - TYPO3_VERSION=^9.5
-    #  script:
-    #    - .Build/bin/ecs check
+    -
+      stage: static
+      name: "Coding Standards"
+      php: 7.2
+      env:
+        - TYPO3_VERSION=^9.5
+      script:
+        - .Build/bin/ecs check
 
-    #-
-    #  stage: static
-    #  name: "PHPStan"
-    #  php: 7.2
-    #  env:
-    #    - TYPO3_VERSION=^9.5
-    #  script:
-    #    - .Build/bin/phpstan analyse
+    -
+      stage: static
+      name: "PHPStan"
+      php: 7.2
+      env:
+        - TYPO3_VERSION=^9.5
+      script:
+        - .Build/bin/phpstan analyse
 
-    #- stage: static
-    #  name: "SonarCloud"
-    #  if: type = push AND branch IN (master, sonarqube)
-    #  php: 7.2
-    #  env:
-    #    - TYPO3_VERSION=^9.5
-    #  before_install:
-    #    - echo "keep xdebug"
-    #    # Installs nimut/typo3-complete
-    #    - travis_wait 30 composer require --dev nimut/typo3-complete=$TYPO3_VERSION
-    #    - export "TYPO3_PATH_WEB"=$PWD/.Build/Web;
-    #    # Locating UnitTests.xml and FunctionalTests.xml
-    #    - export "UNIT_XML"='.Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml'
-    #    - export "FUNCTIONAL_XML"='.Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml'
-    #  install: skip
-    #  script:
-    #    - export typo3DatabaseName="typo3"
-    #    - export typo3DatabaseHost="localhost"
-    #    - export typo3DatabaseUsername="root"
-    #    - export typo3DatabasePassword=""
-    #    - mkdir -p .Logs/coverage .Logs/junit
-    #    - git fetch --unshallow
-    #    - composer install
-    #    - .Build/bin/phpunit --whitelist Classes --coverage-php .Logs/coverage/unit_clover.cov --log-junit .Logs/junit/unit_junit.xml -c $UNIT_XML Tests/Unit
-    #    - .Build/bin/phpunit --whitelist Classes --coverage-php .Logs/coverage/functional-coverage.cov --log-junit .Logs/junit/functional-junit.xml -c $FUNCTIONAL_XML Tests/Functional
-    #    - composer require --no-progress --no-suggest --update-with-all-dependencies nimut/phpunit-merger;
-    #      .Build/bin/phpunit-merger coverage .Logs/coverage/ .Logs/coverage.xml;
-    #      .Build/bin/phpunit-merger log .Logs/junit/ .Logs/junit.xml;
-    #    - >
-    #      if [ -n "$SONAR_TOKEN" ]; then
-    #        sonar-scanner -X
-    #      fi
+    - stage: static
+      name: "SonarCloud"
+      if: type = push AND branch IN (master, sonarqube)
+      php: 7.2
+      env:
+        - TYPO3_VERSION=^9.5
+      before_install:
+        - echo "keep xdebug"
+        # Installs nimut/typo3-complete
+        - travis_wait 30 composer require --dev nimut/typo3-complete=$TYPO3_VERSION
+        - export "TYPO3_PATH_WEB"=$PWD/.Build/Web;
+        # Locating UnitTests.xml and FunctionalTests.xml
+        - export "UNIT_XML"='.Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml'
+        - export "FUNCTIONAL_XML"='.Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml'
+      install: skip
+      script:
+        - export typo3DatabaseName="typo3"
+        - export typo3DatabaseHost="localhost"
+        - export typo3DatabaseUsername="root"
+        - export typo3DatabasePassword=""
+        - mkdir -p .Logs/coverage .Logs/junit
+        - git fetch --unshallow
+        - composer install
+        - .Build/bin/phpunit --whitelist Classes --coverage-php .Logs/coverage/unit_clover.cov --log-junit .Logs/junit/unit_junit.xml -c $UNIT_XML Tests/Unit
+        - .Build/bin/phpunit --whitelist Classes --coverage-php .Logs/coverage/functional-coverage.cov --log-junit .Logs/junit/functional-junit.xml -c $FUNCTIONAL_XML Tests/Functional
+        - composer require --no-progress --no-suggest --update-with-all-dependencies nimut/phpunit-merger;
+          .Build/bin/phpunit-merger coverage .Logs/coverage/ .Logs/coverage.xml;
+          .Build/bin/phpunit-merger log .Logs/junit/ .Logs/junit.xml;
+        - >
+          if [ -n "$SONAR_TOKEN" ]; then
+            sonar-scanner -X
+          fi
 
     # Deploy
     -
