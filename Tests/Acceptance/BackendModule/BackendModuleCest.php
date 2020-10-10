@@ -28,7 +28,7 @@ class BackendModuleCest
     public function canSeeLoginMask(Admin $I): void
     {
         $I->amOnPage('/');
-        $I->waitForText('Login', '15');
+        $I->waitForText('Login', 30);
     }
 
     public function signInSuccessfully(Admin $I): void
