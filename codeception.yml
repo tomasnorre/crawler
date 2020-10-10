@@ -8,7 +8,7 @@ suites:
                 - WebDriver:
                     url: http://web/typo3/
                     browser: chrome
-                    wait: 1
+                    wait: 10
                     host: localhost
                     window_size: 1920x1080
                 - \Helper\Acceptance
@@ -16,14 +16,14 @@ suites:
             - Codeception\Step\ConditionalAssertion
             - Codeception\Step\TryTo
             - Codeception\Step\Retry
-                
+
 extensions:
     enabled: [Codeception\Extension\RunFailed]
 
-params: 
+params:
     - env
 
-gherkin: []    
+gherkin: []
 
 # additional paths
 paths:
