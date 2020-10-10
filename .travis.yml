@@ -130,9 +130,9 @@ jobs:
         - cd .devbox
         - composer require aoepeople/crawler:dev-${TRAVIS_BRANCH}
         - ddev start
+        - ddev exec bin/typo3cms install:fixfolderstructure
         - cd .. # Going back to "root" directory
         - composer install
-        - ddev exec bin/typo3cms install:fixfolderstructure
         - wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
         - chmod +x wait-for-it.sh
         - docker ps
