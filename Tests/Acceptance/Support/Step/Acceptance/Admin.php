@@ -25,7 +25,7 @@ class Admin extends \AcceptanceTester
     {
         $I = $this;
         $I->amOnPage('/');
-        $I->canSee('Login');
+        $I->waitForText('Login', '15');
         $I->fillField('#t3-username', 'admin');
         $I->fillField('#t3-password', 'password');
         $I->click('#t3-login-submit-section > button');
