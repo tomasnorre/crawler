@@ -144,6 +144,7 @@ jobs:
         - ./wait-for-it.sh -t 60 127.0.0.1:443
         - ./wait-for-it.sh -t 60 localhost:4444
         - php .Build/bin/codecept run
+        - cat /home/travis/build/AOEpeople/crawler/Tests/Acceptance/_output/*.html
 
     # Static Analysis
     #-
