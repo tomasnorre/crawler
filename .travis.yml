@@ -43,6 +43,7 @@ services:
 cache:
   directories:
     - $HOME/.composer/cache
+    - docker
 
 before_script:
   ## Installs nimut/typo3-complete
