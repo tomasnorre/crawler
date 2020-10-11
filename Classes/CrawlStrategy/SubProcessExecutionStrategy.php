@@ -33,7 +33,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * Executes another process via shell_exec() to include cli/bootstrap.php which in turn
  * includes the index.php for frontend.
  */
-class SubProcessExecutionStrategy implements LoggerAwareInterface
+class SubProcessExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
 {
     use LoggerAwareTrait;
 
@@ -98,7 +98,7 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface
         return unserialize($content);
     }
 
-    protected function buildRequestHeaders(array $url, string $crawlerId): array
+    private function buildRequestHeaders(array $url, string $crawlerId): array
     {
         $reqHeaders = [];
         $reqHeaders[] = 'GET ' . $url['path'] . ($url['query'] ? '?' . $url['query'] : '') . ' HTTP/1.0';
@@ -118,7 +118,7 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface
      * @param string $command Shell command to be executed
      * @return string|null Outputted result of the command execution
      */
-    protected function executeShellCommand($command)
+    private function executeShellCommand($command)
     {
         return shell_exec($command);
     }
@@ -130,7 +130,7 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface
      *
      * @return string Base path of the website frontend
      */
-    protected function getFrontendBasePath()
+    private function getFrontendBasePath()
     {
         $frontendBasePath = '/';
 

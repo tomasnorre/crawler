@@ -29,7 +29,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Calls Guzzle / CURL (based on TYPO3 settings) for fetching a URL.
  */
-class GuzzleExecutionStrategy implements LoggerAwareInterface
+class GuzzleExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
 {
     use LoggerAwareTrait;
 
@@ -73,7 +73,7 @@ class GuzzleExecutionStrategy implements LoggerAwareInterface
     /**
      * Builds HTTP request headers.
      */
-    protected function buildRequestHeaders(string $crawlerId): array
+    private function buildRequestHeaders(string $crawlerId): array
     {
         return [
             'Connection' => 'close',
