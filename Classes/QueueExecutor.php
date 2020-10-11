@@ -36,25 +36,13 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class QueueExecutor implements SingletonInterface
 {
     /**
-     * @var GuzzleExecutionStrategy|SubProcessExecutionStrategy
+     * @var CrawlStrategy\
      */
-    protected $selectedStrategy;
+    protected $crawlStrategy;
 
-    /**
-     * @var array
-     */
-    protected $extensionSettings;
-
-    public function __construct(?ExtensionConfigurationProvider $configurationProvider = null)
+    public function __construct(CrawlStrategy $crawlStrategy)
     {
-        $configurationProvider = $configurationProvider ?? GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
-        $settings = $configurationProvider->getExtensionConfiguration();
-        $this->extensionSettings = is_array($settings) ? $settings : [];
-        if ($this->extensionSettings['makeDirectRequests']) {
-            $this->selectedStrategy = GeneralUtility::makeInstance(SubProcessExecutionStrategy::class);
-        } else {
-            $this->selectedStrategy = GeneralUtility::makeInstance(GuzzleExecutionStrategy::class);
-        }
+        $this->crawlStrategy = $crawlStrategy;
     }
 
     /**
@@ -88,7 +76,7 @@ class QueueExecutor implements SingletonInterface
 
             // Get result:
             $url = new Uri($parameters['url']);
-            $result = $this->selectedStrategy->fetchUrlContents($url, $crawlerId);
+            $result = $this->crawlStrategy->fetchUrlContents($url, $crawlerId);
             if ($result !== false) {
                 $result = ['content' => json_encode($result)];
             }

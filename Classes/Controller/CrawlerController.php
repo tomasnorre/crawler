@@ -30,6 +30,7 @@ namespace AOE\Crawler\Controller;
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
+use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
@@ -229,10 +230,11 @@ class CrawlerController implements LoggerAwareInterface
     public function __construct()
     {
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $crawlStrategy = $objectManager->get(CrawlStrategyFactory::class)->create();
         $this->queueRepository = $objectManager->get(QueueRepository::class);
         $this->processRepository = $objectManager->get(ProcessRepository::class);
         $this->configurationRepository = $objectManager->get(ConfigurationRepository::class);
-        $this->queueExecutor = $objectManager->get(QueueExecutor::class);
+        $this->queueExecutor = $objectManager->get(QueueExecutor::class, [$crawlStrategy]);
         $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
 
         $this->processFilename = Environment::getVarPath() . '/lock/tx_crawler.proc';
