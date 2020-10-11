@@ -39,11 +39,15 @@ use AOE\Crawler\Service\ProcessService;
 use AOE\Crawler\Utility\MessageUtility;
 use AOE\Crawler\Utility\PhpBinaryUtility;
 use AOE\Crawler\Utility\SignalSlotUtility;
+use AOE\Crawler\Value\CrawlAction;
+use AOE\Crawler\Value\ModuleMenu;
+use AOE\Crawler\Value\ModuleSettings;
 use Psr\Http\Message\UriInterface;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Compatibility\PublicMethodDeprecationTrait;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Http\Uri;
@@ -176,8 +180,19 @@ class BackendModule
      */
     protected $jsonCompatibilityConverter;
 
+    /**
+     * @var LanguageService
+     */
+    private $languageService;
+
+    /**
+     * @var ModuleSettings
+     */
+    private $moduleSettings;
+
     public function __construct()
     {
+        $this->languageService = $GLOBALS['LANG'];
         $objectManger = GeneralUtility::makeInstance(ObjectManager::class);
         $this->processManager = $objectManger->get(ProcessService::class);
         $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tx_crawler_queue');
@@ -193,18 +208,14 @@ class BackendModule
      */
     public function init(InfoModuleController $pObj): void
     {
+
         $this->pObj = $pObj;
         $this->id = (int) GeneralUtility::_GP('id');
         // Setting MOD_MENU items as we need them for logging:
-        $this->pObj->MOD_MENU = array_merge($this->pObj->MOD_MENU, $this->modMenu());
+        $this->pObj->MOD_MENU = array_merge($this->pObj->MOD_MENU, $this->getModuleMenu());
     }
 
-    /**
-     * Additions to the function menu array
-     *
-     * @return array Menu array
-     */
-    public function modMenu(): array
+    private function getModuleMenu(): array
     {
         return [
             'depth' => [
@@ -235,6 +246,17 @@ class BackendModule
                 '0' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.itemsPerPage.0'),
             ],
         ];
+    }
+
+    /**
+     * Additions to the function menu array
+     *
+     * @return array Menu array
+     * @deprecated Using BackendModule->modMenu() is deprecated since 9.1.1 and will be removed in v11.x
+     */
+    public function modMenu(): array
+    {
+        return $this->getModuleMenu();
     }
 
     public function main(): string

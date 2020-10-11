@@ -73,6 +73,12 @@ Crawler 9.0.2 was released on July 13th, 2020
 ### Changed
 * Group TCA in tabs and add descriptions to fields
 
+### Deprecated
+#### Classes
+
+#### Functions & Properties
+* BackendModule->modMenu()
+
 ### Fixed
 * Handle empty response when fetching URL
 * Set default value when procInstrFilter is not defined
