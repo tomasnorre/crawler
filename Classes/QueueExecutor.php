@@ -36,7 +36,7 @@ class QueueExecutor implements SingletonInterface
     /**
      * @var CrawlStrategy
      */
-    protected $crawlStrategyFactory;
+    protected $crawlStrategy;
 
     public function __construct(CrawlStrategyFactory $crawlStrategyFactory)
     {
