@@ -30,47 +30,13 @@ class QueueExecutorTest extends UnitTestCase
     /**
      * @test
      */
-    public function validateTypo3InternalGuzzleExecutionIsSelected(): void
-    {
-        $configuration = [
-            'makeDirectRequests' => 0,
-            'frontendBasePath' => '/',
-        ];
-        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = $configuration;
-        $crawlStrategy = GeneralUtility::makeInstance(CrawlStrategyFactory::class)->create();
-
-        $subject = $this->getAccessibleMock(QueueExecutor::class, ['dummy'], [$crawlStrategy]);
-        $res = $subject->_get('crawlStrategy');
-        self::assertEquals(get_class($res), GuzzleExecutionStrategy::class);
-    }
-
-    /**
-     * @test
-     */
-    public function validateDirectExecutionIsSelected(): void
-    {
-        $configuration = [
-            'makeDirectRequests' => 1,
-            'frontendBasePath' => '/',
-        ];
-        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = $configuration;
-        $crawlStrategy = GeneralUtility::makeInstance(CrawlStrategyFactory::class)->create();
-
-        $subject = $this->getAccessibleMock(QueueExecutor::class, ['dummy'], [$crawlStrategy]);
-        $res = $subject->_get('crawlStrategy');
-        self::assertEquals(get_class($res), SubProcessExecutionStrategy::class);
-    }
-
-    /**
-     * @test
-     */
     public function invalidArgumentsReturnErrorInExecuteQueueItem(): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [];
 
         $crawlerController = $this->createMock(CrawlerController::class);
-        $crawlStrategy = GeneralUtility::makeInstance(CrawlStrategyFactory::class)->create();
-        $subject = new QueueExecutor($crawlStrategy);
+        $crawlStrategyFactory = GeneralUtility::makeInstance(CrawlStrategyFactory::class);
+        $subject = new QueueExecutor($crawlStrategyFactory);
         $result = $subject->executeQueueItem([], $crawlerController);
         self::assertEquals('ERROR', $result);
     }

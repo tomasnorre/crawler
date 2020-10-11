@@ -230,11 +230,11 @@ class CrawlerController implements LoggerAwareInterface
     public function __construct()
     {
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $crawlStrategy = $objectManager->get(CrawlStrategyFactory::class)->create();
+        $crawlStrategyFactory = GeneralUtility::makeInstance(CrawlStrategyFactory::class);
         $this->queueRepository = $objectManager->get(QueueRepository::class);
         $this->processRepository = $objectManager->get(ProcessRepository::class);
         $this->configurationRepository = $objectManager->get(ConfigurationRepository::class);
-        $this->queueExecutor = GeneralUtility::makeInstance(QueueExecutor::class, $crawlStrategy);
+        $this->queueExecutor = GeneralUtility::makeInstance(QueueExecutor::class, $crawlStrategyFactory);
         $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
 
         $this->processFilename = Environment::getVarPath() . '/lock/tx_crawler.proc';

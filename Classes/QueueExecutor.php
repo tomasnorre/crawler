@@ -22,7 +22,7 @@ namespace AOE\Crawler;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy;
-use AOE\Crawler\CrawlStrategy\CrawlStrategy;
+use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
 use AOE\Crawler\Utility\SignalSlotUtility;
 use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\SingletonInterface;
@@ -36,11 +36,11 @@ class QueueExecutor implements SingletonInterface
     /**
      * @var CrawlStrategy
      */
-    protected $crawlStrategy;
+    protected $crawlStrategyFactory;
 
-    public function __construct(CrawlStrategy $crawlStrategy)
+    public function __construct(CrawlStrategyFactory $crawlStrategyFactory)
     {
-        $this->crawlStrategy = $crawlStrategy;
+        $this->crawlStrategy = $crawlStrategyFactory->create();
     }
 
     /**
