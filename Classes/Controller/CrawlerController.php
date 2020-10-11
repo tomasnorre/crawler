@@ -234,7 +234,7 @@ class CrawlerController implements LoggerAwareInterface
         $this->queueRepository = $objectManager->get(QueueRepository::class);
         $this->processRepository = $objectManager->get(ProcessRepository::class);
         $this->configurationRepository = $objectManager->get(ConfigurationRepository::class);
-        $this->queueExecutor = $objectManager->get(QueueExecutor::class, [$crawlStrategy]);
+        $this->queueExecutor = GeneralUtility::makeInstance(QueueExecutor::class, $crawlStrategy);
         $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
 
         $this->processFilename = Environment::getVarPath() . '/lock/tx_crawler.proc';

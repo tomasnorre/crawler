@@ -19,10 +19,12 @@ namespace AOE\Crawler\Tests\Unit;
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Controller\CrawlerController;
+use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
 use AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategy;
 use AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategy;
 use AOE\Crawler\QueueExecutor;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class QueueExecutorTest extends UnitTestCase
 {
@@ -36,8 +38,10 @@ class QueueExecutorTest extends UnitTestCase
             'frontendBasePath' => '/',
         ];
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = $configuration;
-        $subject = $this->getAccessibleMock(QueueExecutor::class, ['dummy']);
-        $res = $subject->_get('selectedStrategy');
+        $crawlStrategy = GeneralUtility::makeInstance(CrawlStrategyFactory::class)->create();
+
+        $subject = $this->getAccessibleMock(QueueExecutor::class, ['dummy'], [$crawlStrategy]);
+        $res = $subject->_get('crawlStrategy');
         self::assertEquals(get_class($res), GuzzleExecutionStrategy::class);
     }
 
@@ -51,8 +55,10 @@ class QueueExecutorTest extends UnitTestCase
             'frontendBasePath' => '/',
         ];
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = $configuration;
-        $subject = $this->getAccessibleMock(QueueExecutor::class, ['dummy']);
-        $res = $subject->_get('selectedStrategy');
+        $crawlStrategy = GeneralUtility::makeInstance(CrawlStrategyFactory::class)->create();
+
+        $subject = $this->getAccessibleMock(QueueExecutor::class, ['dummy'], [$crawlStrategy]);
+        $res = $subject->_get('crawlStrategy');
         self::assertEquals(get_class($res), SubProcessExecutionStrategy::class);
     }
 
@@ -61,10 +67,11 @@ class QueueExecutorTest extends UnitTestCase
      */
     public function invalidArgumentsReturnErrorInExecuteQueueItem(): void
     {
+        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [];
+
         $crawlerController = $this->createMock(CrawlerController::class);
-        $settings = $this->createMock(ExtensionConfigurationProvider::class);
-        $settings->expects($this->once())->method('getExtensionConfiguration')->willReturn([]);
-        $subject = new QueueExecutor($settings);
+        $crawlStrategy = GeneralUtility::makeInstance(CrawlStrategyFactory::class)->create();
+        $subject = new QueueExecutor($crawlStrategy);
         $result = $subject->executeQueueItem([], $crawlerController);
         self::assertEquals('ERROR', $result);
     }
