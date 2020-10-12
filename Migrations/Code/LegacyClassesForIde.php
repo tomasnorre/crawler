@@ -17,13 +17,6 @@ class tx_crawler_domain_events_dispatcher extends AOE\Crawler\Event\EventDispatc
 /**
  * @deprecated
  */
-class tx_crawler_domain_lib_abstract_repository extends AOE\Crawler\Domain\Repository\AbstractRepository
-{
-}
-
-/**
- * @deprecated
- */
 class tx_crawler_domain_process extends AOE\Crawler\Domain\Model\Process
 {
 }
