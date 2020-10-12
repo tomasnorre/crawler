@@ -19,12 +19,10 @@ namespace AOE\Crawler;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy;
-use AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategy;
-use AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategy;
+use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
 use AOE\Crawler\Utility\SignalSlotUtility;
 use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\SingletonInterface;
@@ -36,25 +34,13 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class QueueExecutor implements SingletonInterface
 {
     /**
-     * @var GuzzleExecutionStrategy|SubProcessExecutionStrategy
+     * @var CrawlStrategy
      */
-    protected $selectedStrategy;
+    protected $crawlStrategy;
 
-    /**
-     * @var array
-     */
-    protected $extensionSettings;
-
-    public function __construct(?ExtensionConfigurationProvider $configurationProvider = null)
+    public function __construct(CrawlStrategyFactory $crawlStrategyFactory)
     {
-        $configurationProvider = $configurationProvider ?? GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
-        $settings = $configurationProvider->getExtensionConfiguration();
-        $this->extensionSettings = is_array($settings) ? $settings : [];
-        if ($this->extensionSettings['makeDirectRequests']) {
-            $this->selectedStrategy = GeneralUtility::makeInstance(SubProcessExecutionStrategy::class);
-        } else {
-            $this->selectedStrategy = GeneralUtility::makeInstance(GuzzleExecutionStrategy::class);
-        }
+        $this->crawlStrategy = $crawlStrategyFactory->create();
     }
 
     /**
@@ -88,7 +74,7 @@ class QueueExecutor implements SingletonInterface
 
             // Get result:
             $url = new Uri($parameters['url']);
-            $result = $this->selectedStrategy->fetchUrlContents($url, $crawlerId);
+            $result = $this->crawlStrategy->fetchUrlContents($url, $crawlerId);
             if ($result !== false) {
                 $result = ['content' => json_encode($result)];
             }

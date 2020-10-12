@@ -4,6 +4,7 @@
 
 ### Added
 * Documentation example for ext:news
+* CrawlStrategyFactory to move login out of the QueueExecutor
 
 ### Fixed
 * Frontend User initialization with UserGroups for crawling protected pages

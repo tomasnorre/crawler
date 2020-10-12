@@ -17,54 +17,24 @@ namespace AOE\Crawler\Tests\Unit;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Controller\CrawlerController;
-use AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategy;
-use AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategy;
+use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
 use AOE\Crawler\QueueExecutor;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class QueueExecutorTest extends UnitTestCase
 {
     /**
      * @test
      */
-    public function validateTypo3InternalGuzzleExecutionIsSelected(): void
-    {
-        $configuration = [
-            'makeDirectRequests' => 0,
-            'frontendBasePath' => '/',
-        ];
-        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = $configuration;
-        $subject = $this->getAccessibleMock(QueueExecutor::class, ['dummy']);
-        $res = $subject->_get('selectedStrategy');
-        self::assertEquals(get_class($res), GuzzleExecutionStrategy::class);
-    }
-
-    /**
-     * @test
-     */
-    public function validateDirectExecutionIsSelected(): void
-    {
-        $configuration = [
-            'makeDirectRequests' => 1,
-            'frontendBasePath' => '/',
-        ];
-        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = $configuration;
-        $subject = $this->getAccessibleMock(QueueExecutor::class, ['dummy']);
-        $res = $subject->_get('selectedStrategy');
-        self::assertEquals(get_class($res), SubProcessExecutionStrategy::class);
-    }
-
-    /**
-     * @test
-     */
     public function invalidArgumentsReturnErrorInExecuteQueueItem(): void
     {
+        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [];
+
         $crawlerController = $this->createMock(CrawlerController::class);
-        $settings = $this->createMock(ExtensionConfigurationProvider::class);
-        $settings->expects($this->once())->method('getExtensionConfiguration')->willReturn([]);
-        $subject = new QueueExecutor($settings);
+        $crawlStrategyFactory = GeneralUtility::makeInstance(CrawlStrategyFactory::class);
+        $subject = new QueueExecutor($crawlStrategyFactory);
         $result = $subject->executeQueueItem([], $crawlerController);
         self::assertEquals('ERROR', $result);
     }
