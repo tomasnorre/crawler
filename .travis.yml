@@ -141,13 +141,13 @@ jobs:
         - ./wait-for-it.sh -t 60 localhost:4444
         - php .Build/bin/codecept run
 
-  -
+    -
       stage: test
-      name: "Behaviour TYPO3 10.4"
-      php: 7.2
-      env:
+        name: "Behaviour TYPO3 10.4"
+        php: 7.2
+        env:
           - TYPO3_VERSION=^10.4
-      before_script:
+        before_script:
           - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
           - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
           - sudo apt update
@@ -161,7 +161,7 @@ jobs:
           - sudo chmod +x mkcert && sudo mv mkcert /usr/local/bin/mkcert
           - mkcert -install
           - ddev --version
-      script:
+        script:
           - cd .devbox
           - composer require aoepeople/crawler:dev-${TRAVIS_BRANCH}
           - travis_wait 30 composer require --dev nimut/typo3-complete=$TYPO3_VERSION
@@ -180,6 +180,7 @@ jobs:
           - ./wait-for-it.sh -t 60 127.0.0.1:443
           - ./wait-for-it.sh -t 60 localhost:4444
           - php .Build/bin/codecept run
+
     # Static Analysis
     -
       stage: static
