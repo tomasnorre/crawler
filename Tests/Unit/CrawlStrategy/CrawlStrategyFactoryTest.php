@@ -30,7 +30,7 @@ class CrawlStrategyFactoryTest extends UnitTestCase
     /**
      * @test
      */
-    public function CrawlerStrategyFactoryReturnsGuzzleExecutionStrategy(): void
+    public function crawlerStrategyFactoryReturnsGuzzleExecutionStrategy(): void
     {
         $configuration = [
             'makeDirectRequests' => 0,
@@ -48,7 +48,7 @@ class CrawlStrategyFactoryTest extends UnitTestCase
     /**
      * @test
      */
-    public function CrawlerStrategyFactoryReturnsSubProcessExecutionStrategy(): void
+    public function crawlerStrategyFactoryReturnsSubProcessExecutionStrategy(): void
     {
         $configuration = [
             'makeDirectRequests' => 1,
@@ -62,5 +62,4 @@ class CrawlStrategyFactoryTest extends UnitTestCase
             $crawlStrategy
         );
     }
-
 }

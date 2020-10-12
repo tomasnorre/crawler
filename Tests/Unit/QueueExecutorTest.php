@@ -19,8 +19,6 @@ namespace AOE\Crawler\Tests\Unit;
 
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
-use AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategy;
-use AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategy;
 use AOE\Crawler\QueueExecutor;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
