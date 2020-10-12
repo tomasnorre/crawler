@@ -85,10 +85,16 @@ class ProcessRepository extends Repository
         /** @var ProcessCollection $collection */
         $collection = GeneralUtility::makeInstance(ProcessCollection::class);
 
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+
+        $queryBuilder
+            ->select('*')
+            ->from($this->tableName)
+            ->orderBy('ttl', QueryInterface::ORDER_DESCENDING);
+
+        /** @var Query $query */
         $query = $this->createQuery();
-        $query->setOrderings(['ttl' => QueryInterface::ORDER_DESCENDING]);
-        /** @var QueryResult $result */
-        $result = $query->execute();
+        $result = $query->statement($queryBuilder)->execute();
 
         /** @var Process $process */
         foreach ($result as $process) {
