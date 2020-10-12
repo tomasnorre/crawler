@@ -6,6 +6,12 @@
 * Documentation example for ext:news
 * CrawlStrategyFactory to move login out of the QueueExecutor
 
+### Deprecated
+
+#### Functions & Properties
+* ProcessRepository->countActive()
+* ProcessRepository->getLimitFromItemCountAndOffset()
+
 ### Fixed
 * Frontend User initialization with UserGroups for crawling protected pages
 * Making sure PageUid added with ExcludeString is kept as integers

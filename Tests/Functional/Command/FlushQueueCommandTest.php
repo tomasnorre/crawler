@@ -63,7 +63,7 @@ class FlushQueueCommandTest extends AbstractCommandTests
         self::assertContains($expectedOutput, $commandOutput);
         self::assertEquals(
             $expectedCount,
-            $this->queueRepository->countAll()
+            $this->queueRepository->findAll()->count()
         );
     }
 

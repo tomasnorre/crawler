@@ -35,4 +35,11 @@
         <deleted>1</deleted>
         <assigned_items_count>0</assigned_items_count>
     </tx_crawler_process>
+    <tx_crawler_process>
+        <process_id>1005</process_id>
+        <ttl>20</ttl>
+        <active>1</active>
+        <deleted>1</deleted>
+        <assigned_items_count>0</assigned_items_count>
+    </tx_crawler_process>
 </dataset>

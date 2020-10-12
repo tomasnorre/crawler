@@ -26,11 +26,12 @@ use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\HiddenRestriction;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Persistence\Repository;
 
 /**
  * Class ConfigurationRepository
  */
-class ConfigurationRepository extends AbstractRepository
+class ConfigurationRepository extends Repository
 {
     /**
      * @var string

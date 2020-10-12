@@ -34,13 +34,15 @@ use Psr\Log\LoggerAwareInterface;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extbase\Persistence\Repository;
 
 /**
  * Class QueueRepository
  *
  * @package AOE\Crawler\Domain\Repository
  */
-class QueueRepository extends AbstractRepository implements LoggerAwareInterface
+class QueueRepository extends Repository implements LoggerAwareInterface
 {
     use \Psr\Log\LoggerAwareTrait;
 
@@ -51,7 +53,8 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
 
     public function __construct()
     {
-        // Left empty intentional
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        parent::__construct($objectManager);
     }
 
     public function unsetQueueProcessId(string $processId): void
@@ -605,6 +608,25 @@ class QueueRepository extends AbstractRepository implements LoggerAwareInterface
         $queryBuilder
             ->delete($this->tableName)
             ->execute();
+    }
+
+    /**
+     * @param string $processId
+     *
+     * @return bool|string
+     */
+    public function countAllByProcessId($processId)
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+
+        return $queryBuilder
+            ->count('*')
+            ->from($this->tableName)
+            ->where(
+                $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId, \PDO::PARAM_STR))
+            )
+            ->execute()
+            ->fetchColumn(0);
     }
 
     /**

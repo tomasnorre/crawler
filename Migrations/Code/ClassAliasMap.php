@@ -3,7 +3,6 @@ return [
     'tx_crawler_api' => \AOE\Crawler\Api\CrawlerApi::class,
     'tx_crawler_domain_events_dispatcher' => \AOE\Crawler\Event\EventDispatcher::class,
     'tx_crawler_domain_events_observer' => \AOE\Crawler\Event\EventObserverInterface::class,
-    'tx_crawler_domain_lib_abstract_repository' => \AOE\Crawler\Domain\Repository\AbstractRepository::class,
     'tx_crawler_domain_process' => \AOE\Crawler\Domain\Model\Process::class,
     'tx_crawler_domain_process_collection' => \AOE\Crawler\Domain\Model\ProcessCollection::class,
     'tx_crawler_domain_process_manager' => \AOE\Crawler\Service\ProcessService::class,

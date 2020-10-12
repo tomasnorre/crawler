@@ -41,6 +41,7 @@ use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class CrawlerControllerTest
@@ -93,7 +94,8 @@ class CrawlerControllerTest extends FunctionalTestCase
      */
     public function cleanUpOldQueueEntries(): void
     {
-        $queryRepository = new QueueRepository();
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $queryRepository = $objectManager->get(QueueRepository::class);
 
         $recordsFromFixture = 15;
         $expectedRemainingRecords = 2;
@@ -121,7 +123,7 @@ class CrawlerControllerTest extends FunctionalTestCase
         // Check total entries before cleanup
         self::assertSame(
             $recordsFromFixture + $expectedRemainingRecords,
-            $queryRepository->countAll()
+            $queryRepository->findAll()->count()
         );
 
         $this->subject->_call('cleanUpOldQueueEntries');
@@ -129,7 +131,7 @@ class CrawlerControllerTest extends FunctionalTestCase
         // Check total entries after cleanup
         self::assertSame(
             $expectedRemainingRecords,
-            $queryRepository->countAll()
+            $queryRepository->findAll()->count()
         );
     }
 

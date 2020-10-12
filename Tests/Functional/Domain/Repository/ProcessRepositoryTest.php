@@ -37,9 +37,19 @@ class ProcessRepositoryTest extends FunctionalTestCase
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     /**
+     * @var array
+     */
+    protected $coreExtensionsToLoad = ['cms', 'core', 'frontend', 'version', 'lang', 'fluid', 'extbase'];
+
+    /**
      * @var ProcessRepository
      */
     protected $subject;
+
+    /**
+     * @var \TYPO3\CMS\Extbase\Object\ObjectManagerInterface The object manager
+     */
+    protected $objectManager;
 
     /**
      * Creates the test environment.
@@ -47,7 +57,8 @@ class ProcessRepositoryTest extends FunctionalTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $this->objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $this->subject = $this->objectManager->get(ProcessRepository::class);
 
         $configuration = [
             'sleepTime' => '1000',
@@ -71,7 +82,6 @@ class ProcessRepositoryTest extends FunctionalTestCase
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = $configuration;
 
         $this->importDataSet(__DIR__ . '/../../Fixtures/tx_crawler_process.xml');
-        $this->subject = $objectManager->get(ProcessRepository::class);
     }
 
     /**
@@ -80,7 +90,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
     public function findAllReturnsAll(): void
     {
         self::assertSame(
-            5,
+            6,
             $this->subject->findAll()->count()
         );
     }
@@ -102,14 +112,14 @@ class ProcessRepositoryTest extends FunctionalTestCase
     public function removeByProcessId(): void
     {
         self::assertSame(
-            5,
+            6,
             $this->subject->findAll()->count()
         );
 
         $this->subject->removeByProcessId('1002');
 
         self::assertSame(
-            4,
+            5,
             $this->subject->findAll()->count()
         );
     }
@@ -121,7 +131,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
     {
         self::assertSame(
             3,
-            $this->subject->countActive()
+            $this->subject->findAllActive()->count()
         );
     }
 
@@ -142,7 +152,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
     public function countAll(): void
     {
         self::assertSame(
-            5,
+            6,
             $this->subject->countAll()
         );
     }
@@ -156,6 +166,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
             ['process_id' => '1000', 'system_process_id' => 0],
             ['process_id' => '1001', 'system_process_id' => 0],
             ['process_id' => '1002', 'system_process_id' => 0],
+            ['process_id' => '1005', 'system_process_id' => 0],
         ];
 
         self::assertSame(
@@ -173,6 +184,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
             ['process_id' => '1000', 'system_process_id' => 0],
             ['process_id' => '1001', 'system_process_id' => 0],
             ['process_id' => '1002', 'system_process_id' => 0],
+            ['process_id' => '1005', 'system_process_id' => 0],
         ];
 
         self::assertSame(
@@ -186,13 +198,12 @@ class ProcessRepositoryTest extends FunctionalTestCase
      */
     public function deleteProcessesWithoutItemsAssigned(): void
     {
-        $countBeforeDelete = $this->subject->countAll();
-        $expectedProcessesToBeDeleted = 2;
+        $countBeforeDelete = $this->subject->findAll()->count();
+        $expectedProcessesToBeDeleted = 3;
         $this->subject->deleteProcessesWithoutItemsAssigned();
 
-        // TODO: Fix the count all
         self::assertSame(
-            3, //$this->subject->countAll(),
+            $this->subject->findAll()->count(),
             $countBeforeDelete - $expectedProcessesToBeDeleted
         );
     }
@@ -202,13 +213,12 @@ class ProcessRepositoryTest extends FunctionalTestCase
      */
     public function deleteProcessesMarkedAsDeleted(): void
     {
-        $countBeforeDelete = $this->subject->countAll();
-        $expectedProcessesToBeDeleted = 2;
+        $countBeforeDelete = $this->subject->findAll()->count();
+        $expectedProcessesToBeDeleted = 3;
         $this->subject->deleteProcessesMarkedAsDeleted();
 
-        // TODO: Fix the count all
         self::assertSame(
-            3, //$this->subject->countAll(),
+            $this->subject->findAll()->count(),
             $countBeforeDelete - $expectedProcessesToBeDeleted
         );
     }
@@ -218,9 +228,10 @@ class ProcessRepositoryTest extends FunctionalTestCase
      */
     public function markRequestedProcessesAsNotActive(): void
     {
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching'] = [];
         self::assertEquals(
             3,
-            $this->subject->countActive()
+            $this->subject->findAllActive()->count()
         );
 
         $processIds = ['1001', '1002'];
@@ -228,7 +239,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
 
         self::assertEquals(
             1,
-            $this->subject->countActive()
+            $this->subject->findAllActive()->count()
         );
     }
 
