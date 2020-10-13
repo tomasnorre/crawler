@@ -265,7 +265,7 @@ class CrawlerControllerTest extends FunctionalTestCase
             self::assertIsInt($excluded);
         }
     }
-    
+
     public function expandParametersDataProvider(): array
     {
         return [
