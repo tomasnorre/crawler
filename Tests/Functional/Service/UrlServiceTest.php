@@ -100,6 +100,11 @@ class UrlServiceTest extends FunctionalTestCase
             $expected->getQuery(),
             $actual->getQuery()
         );
+
+        self::assertEquals(
+            $expected->getUserInfo(),
+            $actual->getUserInfo()
+        );
     }
 
     /**
@@ -110,42 +115,92 @@ class UrlServiceTest extends FunctionalTestCase
         $uri = new Uri();
 
         return [
+            'Site is not instance of Site::class + http' => [
+                'pageId' => 0,
+                'queryString' => '?id=1234&param=foo',
+                'alternativeBaseUrl' => 'http://www.example.com',
+                'httpsOrHttp' => -1,
+                'expected' =>
+                    $uri->withScheme('http')
+                        ->withHost('www.example.com')
+                        ->withPath('/index.php')
+                        ->withQuery('id=1234&param=foo&cHash=e500fbff5c75d50b8178fd477521cc9d'),
+            ],
+            'Site is not instance of Site::class + https' => [
+                'pageId' => 0,
+                'queryString' => '?id=1234&param=foo',
+                'alternativeBaseUrl' => 'https://www.example.com',
+                'httpsOrHttp' => 1,
+                'expected' =>
+                    $uri->withScheme('https')
+                        ->withHost('www.example.com')
+                        ->withPath('/index.php')
+                        ->withQuery('?id=1234&param=foo&cHash=e500fbff5c75d50b8178fd477521cc9d'),
+            ],
+            'Site is not instance of Site::class + https + userinfo' => [
+                'pageId' => 0,
+                'queryString' => '?id=1234&param=foo',
+                'alternativeBaseUrl' => 'https://username:password@www.example.com',
+                'httpsOrHttp' => 1,
+                'expected' =>
+                    $uri->withScheme('https')
+                        ->withHost('www.example.com')
+                        ->withPath('/index.php')
+                        ->withQuery('?id=1234&param=foo&cHash=e500fbff5c75d50b8178fd477521cc9d')
+                        ->withUserInfo('username', 'password'),
+            ],
             'Only with pageId' => [
                 'pageId' => 1,
                 'queryString' => '',
                 'alternativeBaseUrl' => '',
                 'httpsOrHttp' => 1,
-                'expected' => $uri->withHost('acme.us')->withPath('/')->withScheme('https'),
+                'expected' =>
+                    $uri->withScheme('https')
+                        ->withHost('acme.us')
+                        ->withPath('/'),
             ],
             'With PageId and QueryString' => [
                 'pageId' => 1,
                 'queryString' => 'id=21&q=crawler',
                 'alternativeBaseUrl' => '',
                 'httpsOrHttp' => 1,
-                'expected' => $uri->withHost('acme.us')->withPath('/')->withScheme('https')->withQuery('q=crawler&cHash='),
+                'expected' => $uri->withScheme('https')
+                    ->withHost('acme.us')
+                    ->withPath('/')
+                    ->withQuery('q=crawler&cHash='),
             ],
             'With PageId and QueryString (including Language (FR))' => [
                 'pageId' => 1,
                 'queryString' => 'id=21&L=1&q=crawler',
                 'alternativeBaseUrl' => '',
                 'httpsOrHttp' => 1,
-                'expected' => $uri->withHost('acme.fr')->withPath('/')->withScheme('https')->withQuery('q=crawler&cHash='),
+                'expected' =>
+                    $uri->withScheme('https')
+                        ->withHost('acme.fr')
+                        ->withPath('/')
+                        ->withQuery('q=crawler&cHash='),
             ],
             'With alternative BaseUrl' => [
                 'pageId' => 1,
                 'queryString' => '',
                 'alternativeBaseUrl' => 'https://www.acme.co.uk',
                 'httpsOrHttp' => 1,
-                'expected' => $uri->withHost('www.acme.co.uk')->withPath('/')->withScheme('https'),
+                'expected' =>
+                    $uri->withScheme('https')
+                        ->withHost('www.acme.co.uk')
+                        ->withPath('/'),
             ],
             'With alternative BaseUrl and port' => [
                 'pageId' => 1,
                 'queryString' => '',
                 'alternativeBaseUrl' => 'https://www.acme.co.uk:443',
                 'httpsOrHttp' => 1,
-                'expected' => $uri->withHost('www.acme.co.uk')->withPath('/')->withScheme('https')->withPort(443),
+                'expected' =>
+                    $uri->withScheme('https')
+                        ->withHost('www.acme.co.uk')
+                        ->withPath('/')
+                        ->withPort(443),
             ],
-            //TODO: Add tests for when $site !instanceof Site
         ];
     }
 }
