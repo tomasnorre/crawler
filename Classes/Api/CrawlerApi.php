@@ -280,7 +280,7 @@ class CrawlerApi
      */
     public function getActiveProcessesCount(): int
     {
-        $processRepository = new ProcessRepository();
+        $processRepository = GeneralUtility::makeInstance(ProcessRepository::class);
         return $processRepository->findAllActive()->count();
     }
 
