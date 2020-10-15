@@ -764,8 +764,8 @@ class BackendModule
             MessageUtility::addErrorMessage($e->getMessage());
         }
 
-        $processRepository = new ProcessRepository();
-        $queueRepository = new QueueRepository();
+        $processRepository = GeneralUtility::makeInstance(ProcessRepository::class);
+        $queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
 
         $mode = $this->pObj->MOD_SETTINGS['processListMode'];
         if ($mode === 'simple') {
