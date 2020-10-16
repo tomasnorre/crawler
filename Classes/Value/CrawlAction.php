@@ -18,13 +18,12 @@ final class CrawlAction
      */
     private $crawlActionLabel;
 
-    public function __construct(string $crawlAction, string $crawlActionLabel)
+    public function __construct(string $crawlAction)
     {
         Assert::that($crawlAction)
             ->inArray(['start', 'log', 'multiprocess']);
 
         $this->crawlAction = $crawlAction;
-        $this->crawlActionLabel = $crawlActionLabel;
     }
 
     public function __toString(): string
