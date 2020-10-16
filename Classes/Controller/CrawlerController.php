@@ -35,6 +35,7 @@ use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\QueueExecutor;
+use AOE\Crawler\Service\UrlService;
 use AOE\Crawler\Utility\SignalSlotUtility;
 use Psr\Http\Message\UriInterface;
 use Psr\Log\LoggerAwareInterface;
@@ -48,10 +49,8 @@ use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
-use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
-use TYPO3\CMS\Core\Routing\SiteMatcher;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Type\Bitmask\Permission;
 use TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser;
@@ -59,7 +58,6 @@ use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Frontend\Page\CacheHashCalculator;
 use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
@@ -437,11 +435,13 @@ class CrawlerController implements LoggerAwareInterface
         $configurationHash = $this->getConfigurationHash($vv);
         $skipInnerCheck = $this->queueRepository->noUnprocessedQueueEntriesForPageWithConfigurationHashExist($pageId, $configurationHash);
 
+        $urlService = new UrlService();
+
         foreach ($vv['URLs'] as $urlQuery) {
             if (! $this->drawURLs_PIfilter($vv['subCfg']['procInstrFilter'], $incomingProcInstructions)) {
                 continue;
             }
-            $url = (string) $this->getUrlFromPageAndQueryParameters(
+            $url = (string) $urlService->getUrlFromPageAndQueryParameters(
                 $pageId,
                 $urlQuery,
                 $vv['subCfg']['baseUrl'] ?? null,
@@ -1904,50 +1904,13 @@ class CrawlerController implements LoggerAwareInterface
      * @param int $httpsOrHttp see tx_crawler_configuration.force_ssl
      * @throws \TYPO3\CMS\Core\Exception\SiteNotFoundException
      * @throws \TYPO3\CMS\Core\Routing\InvalidRouteArgumentsException
+     *
+     * @deprecated Using CrawlerController::getUrlFromPageAndQueryParameters() is deprecated since 9.1.1 and will be removed in v11.x, please use UrlService->getUrlFromPageAndQueryParameters() instead.
      */
     protected function getUrlFromPageAndQueryParameters(int $pageId, string $queryString, ?string $alternativeBaseUrl, int $httpsOrHttp): UriInterface
     {
-        $site = GeneralUtility::makeInstance(SiteMatcher::class)->matchByPageId((int) $pageId);
-        if ($site instanceof Site) {
-            $queryString = ltrim($queryString, '?&');
-            $queryParts = [];
-            parse_str($queryString, $queryParts);
-            unset($queryParts['id']);
-            // workaround as long as we don't have native language support in crawler configurations
-            if (isset($queryParts['L'])) {
-                $queryParts['_language'] = $queryParts['L'];
-                unset($queryParts['L']);
-                $siteLanguage = $site->getLanguageById((int) $queryParts['_language']);
-            } else {
-                $siteLanguage = $site->getDefaultLanguage();
-            }
-            $url = $site->getRouter()->generateUri($pageId, $queryParts);
-            if (! empty($alternativeBaseUrl)) {
-                $alternativeBaseUrl = new Uri($alternativeBaseUrl);
-                $url = $url->withHost($alternativeBaseUrl->getHost());
-                $url = $url->withScheme($alternativeBaseUrl->getScheme());
-                $url = $url->withPort($alternativeBaseUrl->getPort());
-                if ($userInfo = $alternativeBaseUrl->getUserInfo()) {
-                    $url = $url->withUserInfo($userInfo);
-                }
-            }
-        } else {
-            // Technically this is not possible with site handling, but kept for backwards-compatibility reasons
-            // Once EXT:crawler is v10-only compatible, this should be removed completely
-            $baseUrl = ($alternativeBaseUrl ?: GeneralUtility::getIndpEnv('TYPO3_SITE_URL'));
-            $cacheHashCalculator = GeneralUtility::makeInstance(CacheHashCalculator::class);
-            $queryString .= '&cHash=' . $cacheHashCalculator->generateForParameters($queryString);
-            $url = rtrim($baseUrl, '/') . '/index.php' . $queryString;
-            $url = new Uri($url);
-        }
-
-        if ($httpsOrHttp === -1) {
-            $url = $url->withScheme('http');
-        } elseif ($httpsOrHttp === 1) {
-            $url = $url->withScheme('https');
-        }
-
-        return $url;
+        $urlService = new UrlService();
+        return $urlService->getUrlFromPageAndQueryParameters($pageId, $queryString, $alternativeBaseUrl, $httpsOrHttp);
     }
 
     protected function swapIfFirstIsLargerThanSecond(array $reg): array

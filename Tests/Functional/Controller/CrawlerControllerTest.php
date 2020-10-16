@@ -33,13 +33,8 @@ use AOE\Crawler\Domain\Repository\QueueRepository;
 use Nimut\TestingFramework\MockObject\AccessibleMockObjectInterface;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
-use Psr\Http\Message\UriInterface;
-use Symfony\Component\Yaml\Yaml;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
-use TYPO3\CMS\Core\Configuration\SiteConfiguration;
-use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
@@ -56,16 +51,6 @@ class CrawlerControllerTest extends FunctionalTestCase
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     /**
-     * @var \TYPO3\CMS\Core\Configuration\SiteConfiguration
-     */
-    protected $siteConfiguration;
-
-    /**
-     * @var string
-     */
-    protected $fixturePath;
-
-    /**
      * @var MockObject|AccessibleMockObjectInterface|CrawlerController
      */
     protected $subject;
@@ -79,14 +64,6 @@ class CrawlerControllerTest extends FunctionalTestCase
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_process.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/tt_content.xml');
         $this->subject = $this->getAccessibleMock(CrawlerController::class, ['dummy']);
-
-        $basePath = Environment::getVarPath() . '/tests/unit';
-        $this->fixturePath = $basePath . '/fixture/config/sites';
-        if (! file_exists($this->fixturePath)) {
-            GeneralUtility::mkdir_deep($this->fixturePath);
-        }
-
-        $this->siteConfiguration = new SiteConfiguration($this->fixturePath);
     }
 
     /**
@@ -287,114 +264,6 @@ class CrawlerControllerTest extends FunctionalTestCase
         foreach ($excludeStringArray as $excluded) {
             self::assertIsInt($excluded);
         }
-    }
-
-    /**
-     * @test
-     * @dataProvider getUrlFromPageAndQueryParametersDataProvider
-     */
-    public function getUrlFromPageAndQueryParameters(int $pageId, string $queryString, ?string $alternativeBaseUrl, int $httpsOrHttp, UriInterface $expected): void
-    {
-        if ($pageId === 2) {
-            $configuration = [
-                'rootPageId' => 2,
-                'base' => 'https://example.com',
-            ];
-            $yamlFileContents = Yaml::dump($configuration, 99, 2);
-            GeneralUtility::mkdir($this->fixturePath . '/home');
-            GeneralUtility::writeFile($this->fixturePath . '/home/config.yaml', $yamlFileContents);
-            $sites = $this->siteConfiguration->resolveAllExistingSites(false);
-            self::assertCount(1, $sites);
-            $currentSite = current($sites);
-            self::assertSame(2, $currentSite->getRootPageId());
-            self::assertEquals(new Uri('https://example.com'), $currentSite->getBase());
-        }
-
-        /** @var Uri $actualUrl */
-        $actualUrl = $this->subject->_call('getUrlFromPageAndQueryParameters', $pageId, $queryString, $alternativeBaseUrl, $httpsOrHttp);
-
-        self::assertSame(
-            $expected->getScheme(),
-            $actualUrl->getScheme()
-        );
-
-        self::assertEquals(
-            $expected->getQuery(),
-            $actualUrl->getQuery()
-        );
-
-        self::assertEquals(
-            $expected->getPort(),
-            $actualUrl->getPort()
-        );
-
-        self::assertEquals(
-            $expected->getUserInfo(),
-            $actualUrl->getUserInfo()
-        );
-    }
-
-    public function getUrlFromPageAndQueryParametersDataProvider(): array
-    {
-        return [
-            'Site is not instance of Site::class + http' => [
-                'pageId' => 1,
-                'queryString' => '?id=1234&param=foo',
-                'alternativeBaseUrl' => 'www.example.com',
-                'httpsOrHttp' => -1,
-                'expected' => new Uri('http://www.example.com/index.php?id=1234&param=foo&cHash=e500fbff5c75d50b8178fd477521cc9d'),
-            ],
-            'Site is not instance of Site::class + https' => [
-                'pageId' => 1,
-                'queryString' => '?id=1234&param=foo',
-                'alternativeBaseUrl' => 'www.example.com',
-                'httpsOrHttp' => 1,
-                'expected' => new Uri('https://www.example.com/index.php?id=1234&param=foo&cHash=e500fbff5c75d50b8178fd477521cc9d'),
-            ],
-            'Site is not instance of Site::class + https + userinfo' => [
-                'pageId' => 1,
-                'queryString' => '?id=1234&param=foo',
-                'alternativeBaseUrl' => 'https://username:password@www.example.com',
-                'httpsOrHttp' => 1,
-                'expected' => new Uri('https://username:password@www.example.com/index.php?id=1234&param=foo&cHash=e500fbff5c75d50b8178fd477521cc9d'),
-            ],
-            'Site + https' => [
-                'pageId' => 2,
-                'queryString' => '',
-                'alternativeBaseUrl' => '',
-                'httpsOrHttp' => 1,
-                'expected' => new Uri('https://www.example.com/page-uid-2'),
-            ],
-            'Site + http' => [
-                'pageId' => 2,
-                'queryString' => '',
-                'alternativeBaseUrl' => '',
-                'httpsOrHttp' => -1,
-                'expected' => new Uri('http://www.example.com/page-uid-2'),
-            ],
-            'Site + https + alternativeBaseUrl' => [
-                'pageId' => 2,
-                'queryString' => '',
-                'alternativeBaseUrl' => 'https://www.example-site.com',
-                'httpsOrHttp' => 1,
-                'expected' => new Uri('https://www.example-site.com/page-uid-2'),
-            ],
-            'Site + https + alternativeBaseUrl + user information' => [
-                'pageId' => 2,
-                'queryString' => '',
-                'alternativeBaseUrl' => 'https://username:password@www.example-site.com',
-                'httpsOrHttp' => 1,
-                'expected' => new Uri('https://username:password@www.example-site.com/page-uid-2'),
-            ],
-            'Site + https + alternativeBaseUrl + user information + port' => [
-                'pageId' => 2,
-                'queryString' => '',
-                'alternativeBaseUrl' => 'https://username:password@www.example-site.com:8080',
-                'httpsOrHttp' => 1,
-                'expected' => new Uri('https://username:password@www.example-site.com:8080/page-uid-2'),
-            ],
-
-        ];
     }
 
     public function expandParametersDataProvider(): array
