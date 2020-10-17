@@ -23,6 +23,7 @@ use AOE\Crawler\Api\CrawlerApi;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Frontend\Page\PageRepository;
 
 class DataHandlerHook
 {
@@ -34,7 +35,7 @@ class DataHandlerHook
         }
         foreach ($pageIdsToBeFlushedFromCache as $pageId) {
             $pageId = (int) $pageId;
-            if ($pageId < 1) {
+            if ($pageId < 1 || empty($this->getPageRepository()->getPage($pageId))) {
                 continue;
             }
             if ($this->getQueueRepository()->isPageInQueue($pageId)) {
@@ -52,5 +53,11 @@ class DataHandlerHook
     private function getCrawlerApi(): CrawlerApi
     {
         return GeneralUtility::makeInstance(ObjectManager::class)->get(CrawlerApi::class);
+    }
+
+    private function getPageRepository(): PageRepository
+    {
+        // Todo: Switch to TYPO3\CMS\Core\Repository\PageRepository when dropping support for TYPO3 9LTS
+        return GeneralUtility::makeInstance(ObjectManager::class)->get(PageRepository::class);
     }
 }

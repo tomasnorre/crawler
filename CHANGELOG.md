@@ -23,6 +23,7 @@
 * Frontend User initialization with UserGroups for crawling protected pages
 * Making sure PageUid added with ExcludeString is kept as integers
 * Instatiation of ProcessRepository and QueueRepository change to GeneralUtility::makeInstance
+* Ensure that DataHandlerHook will not add pages to queue that does not exist
 
 ## Crawler 9.1.0
 Crawler 9.1.0 was released on August 2nd, 2020
