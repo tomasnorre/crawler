@@ -1,28 +1,26 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 9.1.1-dev
+## Crawler 9.1.1
+Crawler 9.1.1 was released on October 17th, 2020
 
 ### Added
 * Documentation example for ext:news
-* CrawlStrategyFactory to move login out of the QueueExecutor
+* CrawlStrategyFactory to move logic out of the QueueExecutor
 
 ### Deprecated
 
 #### Functions & Properties
 * ProcessRepository->countActive()
 * ProcessRepository->getLimitFromItemCountAndOffset()
+* CrawlerController->getUrlFromPageAndQueryParameters()
 
 ### Changed
 * UrlService->getUrlFromPageAndQueryParameters() moved from CrawlerController
 
-### Deprecated
-#### Functions & Properties
-* CrawlerController->getUrlFromPageAndQueryParameters()
-
 ### Fixed
 * Frontend User initialization with UserGroups for crawling protected pages
 * Making sure PageUid added with ExcludeString is kept as integers
-* Instatiation of ProcessRepository and QueueRepository change to GeneralUtility::makeInstance
+* Instantiation of ProcessRepository and QueueRepository change to GeneralUtility::makeInstance
 * Ensure that DataHandlerHook will not add pages to queue that does not exist
 
 ## Crawler 9.1.0
