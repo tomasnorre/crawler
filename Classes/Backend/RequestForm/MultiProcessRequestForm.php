@@ -19,6 +19,7 @@ namespace AOE\Crawler\Backend\RequestForm;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Backend\Helper\UrlBuilder;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
@@ -173,26 +174,6 @@ final class MultiProcessRequestForm implements RequestForm
     }
 
     /**
-     * Returns the URL to the current module, including $_GET['id'].
-     *
-     * @param array $uriParameters optional parameters to add to the URL
-     *
-     * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
-     * TODO: Move to UrlService?
-     */
-    private function getInfoModuleUrl(array $uriParameters = []): Uri
-    {
-        if (GeneralUtility::_GP('id')) {
-            $uriParameters = array_merge($uriParameters, [
-                'id' => GeneralUtility::_GP('id'),
-            ]);
-        }
-        /** @var UriBuilder $uriBuilder */
-        $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
-        return $uriBuilder->buildUriFromRoute('web_info', $uriParameters);
-    }
-
-    /**
      * Method to handle incomming actions of the process overview
      *
      * @throws ProcessException
@@ -228,7 +209,7 @@ final class MultiProcessRequestForm implements RequestForm
         return $this->getLinkButton(
             'actions-refresh',
             $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.refresh'),
-            $this->getInfoModuleUrl(['SET[\'crawleraction\']' => 'crawleraction', 'id' => $this->id])
+            UrlBuilder::getInfoModuleUrl(['SET[\'crawleraction\']' => 'crawleraction', 'id' => $this->id])
         );
     }
 
@@ -247,7 +228,7 @@ final class MultiProcessRequestForm implements RequestForm
         return $this->getLinkButton(
             'actions-add',
             $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.process.add'),
-            $this->getInfoModuleUrl(['action' => 'addProcess'])
+            UrlBuilder::getInfoModuleUrl(['action' => 'addProcess'])
         );
     }
 
@@ -260,13 +241,13 @@ final class MultiProcessRequestForm implements RequestForm
             return $this->getLinkButton(
                 'actions-document-view',
                 $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.show.running'),
-                $this->getInfoModuleUrl(['SET[\'processListMode\']' => 'simple'])
+                UrlBuilder::getInfoModuleUrl(['SET[\'processListMode\']' => 'simple'])
             );
         } elseif ($mode === 'simple') {
             return $this->getLinkButton(
                 'actions-document-view',
                 $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.show.all'),
-                $this->getInfoModuleUrl(['SET[\'processListMode\']' => 'detail'])
+                UrlBuilder::getInfoModuleUrl(['SET[\'processListMode\']' => 'detail'])
             );
         }
         return '';
@@ -283,13 +264,13 @@ final class MultiProcessRequestForm implements RequestForm
             return $this->getLinkButton(
                 'tx-crawler-stop',
                 $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.disablecrawling'),
-                $this->getInfoModuleUrl(['action' => 'stopCrawling'])
+                UrlBuilder::getInfoModuleUrl(['action' => 'stopCrawling'])
             );
         }
         return $this->getLinkButton(
             'tx-crawler-start',
             $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.enablecrawling'),
-            $this->getInfoModuleUrl(['action' => 'resumeCrawling'])
+            UrlBuilder::getInfoModuleUrl(['action' => 'resumeCrawling'])
         );
     }
 

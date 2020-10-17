@@ -19,9 +19,13 @@ namespace AOE\Crawler\Backend\RequestForm;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Controller\CrawlerController;
+use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Utility\MessageUtility;
+use AOE\Crawler\Utility\PhpBinaryUtility;
 use AOE\Crawler\Utility\SignalSlotUtility;
 use TYPO3\CMS\Core\Localization\LanguageService;
+use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 
@@ -142,5 +146,107 @@ final class StartRequestForm implements RequestForm
     private function getLanguageService(): LanguageService
     {
         return $GLOBALS['LANG'];
+    }
+
+    /**
+     * Verify that the crawler is executable.
+     */
+    private function makeCrawlerProcessableChecks(): void
+    {
+        if (! $this->isPhpForkAvailable()) {
+            $this->isErrorDetected = true;
+            MessageUtility::addErrorMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:message.noPhpForkAvailable'));
+        }
+
+        $exitCode = 0;
+        $out = [];
+        CommandUtility::exec(
+            PhpBinaryUtility::getPhpBinary() . ' -v',
+            $out,
+            $exitCode
+        );
+        if ($exitCode > 0) {
+            $this->isErrorDetected = true;
+            MessageUtility::addErrorMessage(sprintf($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:message.phpBinaryNotFound'), htmlspecialchars($this->extensionSettings['phpPath'])));
+        }
+    }
+
+    /**
+     * Indicate that the required PHP method "popen" is
+     * available in the system.
+     */
+    private function isPhpForkAvailable(): bool
+    {
+        return function_exists('popen');
+    }
+
+    /**
+     * Generates the configuration selectors for compiling URLs:
+     */
+    private function generateConfigurationSelectors(): array
+    {
+        $selectors = [];
+        $selectors['depth'] = $this->selectorBox(
+            [
+                0 => $this->getLanguageService()->sL('LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_0'),
+                1 => $this->getLanguageService()->sL('LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_1'),
+                2 => $this->getLanguageService()->sL('LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_2'),
+                3 => $this->getLanguageService()->sL('LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_3'),
+                4 => $this->getLanguageService()->sL('LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_4'),
+                99 => $this->getLanguageService()->sL('LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_infi'),
+            ],
+            'SET[depth]',
+            $this->pObj->MOD_SETTINGS['depth'],
+            false
+        );
+
+        // Configurations
+        $availableConfigurations = $this->crawlerController->getConfigurationsForBranch((int) $this->id, (int) $this->pObj->MOD_SETTINGS['depth'] ?: 0);
+        $selectors['configurations'] = $this->selectorBox(
+            empty($availableConfigurations) ? [] : array_combine($availableConfigurations, $availableConfigurations),
+            'configurationSelection',
+            $this->incomingConfigurationSelection,
+            true
+        );
+
+        // Scheduled time:
+        $selectors['scheduled'] = $this->selectorBox(
+            [
+                'now' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.time.now'),
+                'midnight' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.time.midnight'),
+                '04:00' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.time.4am'),
+            ],
+            'tstamp',
+            GeneralUtility::_POST('tstamp'),
+            false
+        );
+
+        return $selectors;
+    }
+
+    /**
+     * Create selector box
+     *
+     * @param array $optArray Options key(value) => label pairs
+     * @param string $name Selector box name
+     * @param string|array $value Selector box value (array for multiple...)
+     * @param boolean $multiple If set, will draw multiple box.
+     *
+     * @return string HTML select element
+     */
+    private function selectorBox($optArray, $name, $value, bool $multiple): string
+    {
+        if (! is_string($value) || ! is_array($value)) {
+            $value = '';
+        }
+
+        $options = [];
+        foreach ($optArray as $key => $val) {
+            $selected = (! $multiple && ! strcmp($value, (string) $key)) || ($multiple && in_array($key, (array) $value, true));
+            $options[] = '
+                <option value="' . $key . '" ' . ($selected ? ' selected="selected"' : '') . '>' . htmlspecialchars($val) . '</option>';
+        }
+
+        return '<select class="form-control" name="' . htmlspecialchars($name . ($multiple ? '[]' : '')) . '"' . ($multiple ? ' multiple' : '') . '>' . implode('', $options) . '</select>';
     }
 }
