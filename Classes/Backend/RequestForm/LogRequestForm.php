@@ -3,12 +3,15 @@ declare(strict_types=1);
 
 namespace AOE\Crawler\Backend\RequestForm;
 
+use AOE\Crawler\Backend\Helper\UrlBuilder;
 use AOE\Crawler\Controller\CrawlerController;
+use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\Csv\CsvWriter;
 use AOE\Crawler\Utility\MessageUtility;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Imaging\Icon;
+use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -19,9 +22,18 @@ final class LogRequestForm implements RequestForm
     /** @var StandaloneView */
     private $view;
 
+    /** @var JsonCompatibilityConverter  */
+    private $jsonCompatibilityConverter;
+
+    /** @var int */
+    private $pageId;
+
+
+
     public function __construct(StandaloneView $view)
     {
         $this->view = $view;
+        $this->jsonCompatibilityConverter = new JsonCompatibilityConverter();
         // TODO: Implement CSV Writer
 
     }
@@ -30,6 +42,7 @@ final class LogRequestForm implements RequestForm
     {
         $quiPart = GeneralUtility::_GP('qid_details') ? '&qid_details=' . (int)GeneralUtility::_GP('qid_details') : '';
         $setId = (int)GeneralUtility::_GP('setID');
+        $this->pageId = $id;
 
         return $this->getDepthDropDownHtml($id, $currentValue, $menuItems)
             . $this->showLogAction($setId, $quiPart);
@@ -57,7 +70,7 @@ final class LogRequestForm implements RequestForm
     private function showLogAction(int $setId, string $quiPath): string
     {
         $this->view->setTemplate('ShowLog');
-        if (empty($this->id)) {
+        if (empty($this->pageId)) {
             $this->isErrorDetected = true;
             MessageUtility::addErrorMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noPageSelected'));
         } else {
@@ -113,10 +126,10 @@ final class LogRequestForm implements RequestForm
 
                 // Set root row:
                 $pageinfo = BackendUtility::readPageAccess(
-                    $this->id,
+                    $this->pageId,
                     $perms_clause
                 );
-                $HTML = $this->iconFactory->getIconForRecord('pages', $pageinfo, Icon::SIZE_SMALL)->render();
+                $HTML = $this->getIconFactory()->getIconForRecord('pages', $pageinfo, Icon::SIZE_SMALL)->render();
                 $tree->tree[] = [
                     'row' => $pageinfo,
                     'HTML' => $HTML,
@@ -124,7 +137,7 @@ final class LogRequestForm implements RequestForm
 
                 // Get branch beneath:
                 if ($this->pObj->MOD_SETTINGS['depth']) {
-                    $tree->getTree($this->id, $this->pObj->MOD_SETTINGS['depth']);
+                    $tree->getTree($this->pageId, $this->pObj->MOD_SETTINGS['depth']);
                 }
 
                 // If Flush button is pressed, flush tables instead of selecting entries:
@@ -196,6 +209,11 @@ final class LogRequestForm implements RequestForm
         exit;
     }
 
+    private function getIconFactory(): IconFactory
+    {
+        return GeneralUtility::makeInstance(IconFactory::class);
+    }
+
     /**
      * @return LanguageService
      */
@@ -207,7 +225,7 @@ final class LogRequestForm implements RequestForm
     private function getDisplayLogFilterHtml(int $setId): string
     {
         return $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.display') . ': ' . BackendUtility::getFuncMenu(
-                $this->id,
+                $this->pageId,
                 'SET[log_display]',
                 $this->pObj->MOD_SETTINGS['log_display'],
                 $this->pObj->MOD_MENU['log_display'],
@@ -220,7 +238,7 @@ final class LogRequestForm implements RequestForm
     {
         return $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.itemsPerPage') . ': ' .
             BackendUtility::getFuncMenu(
-                $this->id,
+                $this->pageId,
                 'SET[itemsPerPage]',
                 $this->pObj->MOD_SETTINGS['itemsPerPage'],
                 $this->pObj->MOD_MENU['itemsPerPage']
@@ -230,7 +248,7 @@ final class LogRequestForm implements RequestForm
     private function getShowResultLogCheckBoxHtml(int $setId, string $quiPart): string
     {
         return BackendUtility::getFuncCheck(
-                $this->id,
+                $this->pageId,
                 'SET[log_resultLog]',
                 $this->pObj->MOD_SETTINGS['log_resultLog'],
                 'index.php',
@@ -241,11 +259,162 @@ final class LogRequestForm implements RequestForm
     private function getShowFeVarsCheckBoxHtml(int $setId, string $quiPart): string
     {
         return BackendUtility::getFuncCheck(
-                $this->id,
+                $this->pageId,
                 'SET[log_feVars]',
                 $this->pObj->MOD_SETTINGS['log_feVars'],
                 'index.php',
                 '&setID=' . $setId . $quiPart
             ) . '&nbsp;' . $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showfevars');
+    }
+
+    /**
+     * Create the rows for display of the page tree
+     * For each page a number of rows are shown displaying GET variable configuration
+     *
+     * @param array $logEntriesOfPage Log items of one page
+     * @param string $titleString Title string
+     * @return string HTML <tr> content (one or more)
+     * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
+     */
+    private function drawLog_addRows(array $logEntriesOfPage, string $titleString): string
+    {
+        $colSpan = 9
+            + ($this->pObj->MOD_SETTINGS['log_resultLog'] ? -1 : 0)
+            + ($this->pObj->MOD_SETTINGS['log_feVars'] ? 3 : 0);
+
+        if (! empty($logEntriesOfPage)) {
+            $setId = (int) GeneralUtility::_GP('setID');
+            $refreshIcon = $this->getIconFactory()->getIcon('actions-system-refresh', Icon::SIZE_SMALL);
+            // Traverse parameter combinations:
+            $c = 0;
+            $content = '';
+            foreach ($logEntriesOfPage as $vv) {
+                // Title column:
+                if (! $c) {
+                    $titleClm = '<td rowspan="' . count($logEntriesOfPage) . '">' . $titleString . '</td>';
+                } else {
+                    $titleClm = '';
+                }
+
+                // Result:
+                $resLog = $this->getResultLog($vv);
+
+                $resultData = $vv['result_data'] ? $this->jsonCompatibilityConverter->convert($vv['result_data']) : [];
+                $resStatus = $this->getResStatus($resultData);
+
+                // Compile row:
+                $parameters = $this->jsonCompatibilityConverter->convert($vv['parameters']);
+
+                // Put data into array:
+                $rowData = [];
+                if ($this->pObj->MOD_SETTINGS['log_resultLog']) {
+                    $rowData['result_log'] = $resLog;
+                } else {
+                    $rowData['scheduled'] = ($vv['scheduled'] > 0) ? BackendUtility::datetime($vv['scheduled']) : ' ' . $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.immediate');
+                    $rowData['exec_time'] = $vv['exec_time'] ? BackendUtility::datetime($vv['exec_time']) : '-';
+                }
+                $rowData['result_status'] = GeneralUtility::fixed_lgd_cs($resStatus, 50);
+                $url = htmlspecialchars($parameters['url'] ?? $parameters['alturl'], ENT_QUOTES | ENT_HTML5);
+                $rowData['url'] = '<a href="' . $url . '" target="_newWIndow">' . $url . '</a>';
+                $rowData['feUserGroupList'] = $parameters['feUserGroupList'] ?: '';
+                $rowData['procInstructions'] = is_array($parameters['procInstructions']) ? implode('; ', $parameters['procInstructions']) : '';
+                $rowData['set_id'] = (string) $vv['set_id'];
+
+                if ($this->pObj->MOD_SETTINGS['log_feVars']) {
+                    $resFeVars = $this->getResFeVars($resultData ?: []);
+                    $rowData['tsfe_id'] = $resFeVars['id'] ?: '';
+                    $rowData['tsfe_gr_list'] = $resFeVars['gr_list'] ?: '';
+                    $rowData['tsfe_no_cache'] = $resFeVars['no_cache'] ?: '';
+                }
+
+                $trClass = '';
+                $warningIcon = '';
+                if ($rowData['exec_time'] !== 0 && $resultData === false) {
+                    $trClass = 'class="bg-danger"';
+                    $warningIcon = $this->getIconFactory()->getIcon('actions-ban', Icon::SIZE_SMALL);
+                }
+
+                // Put rows together:
+                $content .= '
+                    <tr ' . $trClass . ' >
+                        ' . $titleClm . '
+                        <td><a href="' . UrlBuilder::getInfoModuleUrl(['qid_details' => $vv['qid'], 'setID' => $setId]) . '">' . htmlspecialchars((string) $vv['qid']) . '</a></td>
+                        <td><a href="' . UrlBuilder::getInfoModuleUrl(['qid_read' => $vv['qid'], 'setID' => $setId]) . '">' . $refreshIcon . '</a>&nbsp;&nbsp;' . $warningIcon . '</td>';
+                foreach ($rowData as $fKey => $value) {
+                    if ($fKey === 'url') {
+                        $content .= '<td>' . $value . '</td>';
+                    } else {
+                        $content .= '<td>' . nl2br(htmlspecialchars(strval($value))) . '</td>';
+                    }
+                }
+                $content .= '</tr>';
+                $c++;
+
+                if ($this->CSVExport) {
+                    // Only for CSV (adding qid and scheduled/exec_time if needed):
+                    $rowData['result_log'] = implode('// ', explode(chr(10), $resLog));
+                    $rowData['qid'] = $vv['qid'];
+                    $rowData['scheduled'] = BackendUtility::datetime($vv['scheduled']);
+                    $rowData['exec_time'] = $vv['exec_time'] ? BackendUtility::datetime($vv['exec_time']) : '-';
+                    $this->CSVaccu[] = $rowData;
+                }
+            }
+        } else {
+            // Compile row:
+            $content = '
+                <tr>
+                    <td>' . $titleString . '</td>
+                    <td colspan="' . $colSpan . '"><em>' . $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noentries') . '</em></td>
+                </tr>';
+        }
+
+        return $content;
+    }
+
+    /**
+     * Extract the log information from the current row and retrieve it as formatted string.
+     *
+     * @param array $resultRow
+     * @return string
+     */
+    private function getResultLog($resultRow)
+    {
+        $content = '';
+        if (is_array($resultRow) && array_key_exists('result_data', $resultRow)) {
+            $requestContent = $this->jsonCompatibilityConverter->convert($resultRow['result_data']) ?: ['content' => ''];
+            if (! array_key_exists('content', $requestContent)) {
+                return $content;
+            }
+            $requestResult = $this->jsonCompatibilityConverter->convert($requestContent['content']);
+
+            if (is_array($requestResult) && array_key_exists('log', $requestResult)) {
+                $content = implode(chr(10), $requestResult['log']);
+            }
+        }
+        return $content;
+    }
+
+    protected function getResStatus($requestContent): string
+    {
+        if (empty($requestContent)) {
+            return '-';
+        }
+        if (! array_key_exists('content', $requestContent)) {
+            return 'Content index does not exists in requestContent array';
+        }
+
+        $requestResult = $this->jsonCompatibilityConverter->convert($requestContent['content']);
+        if (is_array($requestResult)) {
+            if (empty($requestResult['errorlog'])) {
+                return 'OK';
+            }
+            return implode("\n", $requestResult['errorlog']);
+        }
+
+        if (is_bool($requestResult)) {
+            return 'Error - no info, sorry!';
+        }
+
+        return 'Error: ' . substr(preg_replace('/\s+/', ' ', strip_tags($requestResult)), 0, 10000) . '...';
     }
 }
