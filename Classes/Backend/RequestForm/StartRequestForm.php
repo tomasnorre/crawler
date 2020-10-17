@@ -20,7 +20,9 @@ namespace AOE\Crawler\Backend\RequestForm;
  */
 
 use AOE\Crawler\Utility\MessageUtility;
+use AOE\Crawler\Utility\SignalSlotUtility;
 use TYPO3\CMS\Core\Localization\LanguageService;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 
 final class StartRequestForm implements RequestForm
@@ -35,7 +37,7 @@ final class StartRequestForm implements RequestForm
 
     public function render($id, string $elementName, array $menuItems): string
     {
-        return $this->showCrawlerInformationAction();
+        return $this->showCrawlerInformationAction($id);
     }
 
     /*******************************
@@ -47,10 +49,10 @@ final class StartRequestForm implements RequestForm
     /**
      * Show a list of URLs to be crawled for each page
      */
-    private function showCrawlerInformationAction(): string
+    private function showCrawlerInformationAction(int $pageId): string
     {
         $this->view->setTemplate('ShowCrawlerInformation');
-        if (empty($this->id)) {
+        if (empty($pageId)) {
             $this->isErrorDetected = true;
             MessageUtility::addErrorMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noPageSelected'));
         } else {
