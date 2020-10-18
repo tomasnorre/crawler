@@ -28,9 +28,7 @@ use AOE\Crawler\Service\ProcessService;
 use AOE\Crawler\Utility\MessageUtility;
 use AOE\Crawler\Utility\PhpBinaryUtility;
 use Psr\Http\Message\UriInterface;
-use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
-use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Localization\LanguageService;
@@ -41,22 +39,34 @@ use TYPO3\CMS\Fluid\View\StandaloneView;
 
 final class MultiProcessRequestForm implements RequestForm
 {
-    /** @var StandaloneView */
+    /**
+     * @var StandaloneView
+     */
     private $view;
 
-    /** @var ProcessRepository */
+    /**
+     * @var ProcessRepository
+     */
     private $processRepository;
 
-    /** @var QueueRepository */
+    /**
+     * @var QueueRepository
+     */
     private $queueRepository;
 
-    /** @var CrawlerController */
+    /**
+     * @var CrawlerController
+     */
     private $crawlerController;
 
-    /** @var ProcessService */
+    /**
+     * @var ProcessService
+     */
     private $processService;
 
-    /** @var IconFactory  */
+    /**
+     * @var IconFactory
+     */
     private $iconFactory;
 
     public function __construct(StandaloneView $view)
@@ -123,7 +133,6 @@ final class MultiProcessRequestForm implements RequestForm
 
         return $this->view->render();
     }
-
 
     /**
      * Verify that the crawler is executable.
@@ -273,5 +282,4 @@ final class MultiProcessRequestForm implements RequestForm
             UrlBuilder::getInfoModuleUrl(['action' => 'resumeCrawling'])
         );
     }
-
 }

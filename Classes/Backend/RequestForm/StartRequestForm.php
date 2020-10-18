@@ -31,7 +31,9 @@ use TYPO3\CMS\Fluid\View\StandaloneView;
 
 final class StartRequestForm implements RequestForm
 {
-    /** @var StandaloneView */
+    /**
+     * @var StandaloneView
+     */
     private $view;
 
     public function __construct(StandaloneView $view)

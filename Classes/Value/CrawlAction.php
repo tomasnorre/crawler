@@ -35,5 +35,4 @@ final class CrawlAction
     {
         return $this->crawlActionLabel;
     }
-
 }

@@ -33,7 +33,6 @@ class ModuleMenuTest extends UnitTestCase
             ModuleMenu::class,
             ModuleMenu::fromArray($this->getModuleMenu())
         );
-
     }
 
     private function getModuleMenu(): array

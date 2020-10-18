@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace AOE\Crawler\Value;
@@ -63,8 +64,7 @@ final class ModuleSettings
         int $itemsPerPage,
         string $logDisplay,
         bool $logFeVars
-    )
-    {
+    ) {
         $this->processListMode = $processListMode;
         $this->crawlAction = $crawlAction;
         $this->depth = $depth;
@@ -72,7 +72,6 @@ final class ModuleSettings
         $this->itemsPerPage = $itemsPerPage;
         $this->logDisplay = $logDisplay;
         $this->logFeVars = $logFeVars;
-
     }
 
     public static function fromArray(array $array): self
@@ -88,60 +87,38 @@ final class ModuleSettings
         );
     }
 
-    /**
-     * @return string
-     */
     public function getProcessListMode(): string
     {
         return $this->processListMode;
     }
 
-    /**
-     * @return string
-     */
     public function getCrawlAction(): string
     {
         return $this->crawlAction;
     }
 
-    /**
-     * @return int
-     */
     public function getDepth(): int
     {
         return $this->depth;
     }
 
-    /**
-     * @return bool
-     */
     public function isLogResultLog(): bool
     {
         return $this->logResultLog;
     }
 
-    /**
-     * @return int
-     */
     public function getItemsPerPage(): int
     {
         return $this->itemsPerPage;
     }
 
-    /**
-     * @return string
-     */
     public function getLogDisplay(): string
     {
         return $this->logDisplay;
     }
 
-    /**
-     * @return bool
-     */
     public function isLogFeVars(): bool
     {
         return $this->logFeVars;
     }
-
 }

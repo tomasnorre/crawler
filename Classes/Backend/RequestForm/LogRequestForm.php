@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace AOE\Crawler\Backend\RequestForm;
@@ -6,7 +7,6 @@ namespace AOE\Crawler\Backend\RequestForm;
 use AOE\Crawler\Backend\Helper\UrlBuilder;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
-use AOE\Crawler\Csv\CsvWriter;
 use AOE\Crawler\Utility\MessageUtility;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -19,19 +19,29 @@ use TYPO3\CMS\Fluid\View\StandaloneView;
 
 final class LogRequestForm implements RequestForm
 {
-    /** @var StandaloneView */
+    /**
+     * @var StandaloneView
+     */
     private $view;
 
-    /** @var JsonCompatibilityConverter  */
+    /**
+     * @var JsonCompatibilityConverter
+     */
     private $jsonCompatibilityConverter;
 
-    /** @var int */
+    /**
+     * @var int
+     */
     private $pageId;
 
-    /** @var CrawlerController */
+    /**
+     * @var CrawlerController
+     */
     private $crawlerController;
 
-    /** @var bool */
+    /**
+     * @var bool
+     */
     private $CSVExport;
 
     public function __construct(StandaloneView $view)
@@ -39,13 +49,12 @@ final class LogRequestForm implements RequestForm
         $this->view = $view;
         $this->jsonCompatibilityConverter = new JsonCompatibilityConverter();
         // TODO: Implement CSV Writer
-
     }
 
     public function render($id, string $currentValue, array $menuItems): string
     {
-        $quiPart = GeneralUtility::_GP('qid_details') ? '&qid_details=' . (int)GeneralUtility::_GP('qid_details') : '';
-        $setId = (int)GeneralUtility::_GP('setID');
+        $quiPart = GeneralUtility::_GP('qid_details') ? '&qid_details=' . (int) GeneralUtility::_GP('qid_details') : '';
+        $setId = (int) GeneralUtility::_GP('setID');
         $this->pageId = $id;
 
         return $this->getDepthDropDownHtml($id, $currentValue, $menuItems)
@@ -218,9 +227,6 @@ final class LogRequestForm implements RequestForm
         return GeneralUtility::makeInstance(IconFactory::class);
     }
 
-    /**
-     * @return LanguageService
-     */
     private function getLanguageService(): LanguageService
     {
         return $GLOBALS['LANG'];

@@ -24,15 +24,19 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
 
 class ModuleSettingsTest extends UnitTestCase
 {
+    public const PROCESS_LIST_MODE = 'simple';
 
-    const PROCESS_LIST_MODE = 'simple';
-    const CRAWL_ACTION = 'start';
-    const DEPTH = 5;
-    const LOG_RESULT_LOG = true;
-    const ITEMS_PER_PAGE = 10;
-    const LOG_DISPLAY = 'all';
-    const LOG_FE_VARS = true;
+    public const CRAWL_ACTION = 'start';
 
+    public const DEPTH = 5;
+
+    public const LOG_RESULT_LOG = true;
+
+    public const ITEMS_PER_PAGE = 10;
+
+    public const LOG_DISPLAY = 'all';
+
+    public const LOG_FE_VARS = true;
 
     /**
      * @test
@@ -46,7 +50,7 @@ class ModuleSettingsTest extends UnitTestCase
             'log_resultLog' => self::LOG_RESULT_LOG,
             'itemPerPage' => self::ITEMS_PER_PAGE,
             'log_display' => self::LOG_DISPLAY,
-            'log_feVars' => self::LOG_FE_VARS
+            'log_feVars' => self::LOG_FE_VARS,
         ];
 
         $moduleSettings = ModuleSettings::fromArray($settingsArray);
@@ -97,7 +101,5 @@ class ModuleSettingsTest extends UnitTestCase
         ];
 
         $moduleSettings = ModuleSettings::fromArray($settingsArray);
-
-
     }
 }

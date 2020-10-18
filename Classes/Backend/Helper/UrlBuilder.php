@@ -16,8 +16,6 @@ class UrlBuilder
      * @param array $uriParameters optional parameters to add to the URL
      *
      * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
-     *
-     * @return Uri
      */
     public static function getInfoModuleUrl(array $uriParameters = []): Uri
     {

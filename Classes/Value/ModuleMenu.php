@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace AOE\Crawler\Value;
@@ -22,7 +23,9 @@ use Assert\Assert;
 
 final class ModuleMenu
 {
-    /** @var CrawlAction[] */
+    /**
+     * @var CrawlAction[]
+     */
     private $crawlActions;
 
     public function __construct(array $crawlActions)

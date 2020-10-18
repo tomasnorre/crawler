@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace AOE\Crawler\Backend\RequestForm;
@@ -24,12 +25,5 @@ interface RequestForm
 {
     public function __construct(StandaloneView $view);
 
-    /**
-     * @param mixed  $id
-     * @param string $elementName
-     * @param array  $menuItems
-     * @return string
-     */
     public function render($id, string $elementName, array $menuItems): string;
 }
-
