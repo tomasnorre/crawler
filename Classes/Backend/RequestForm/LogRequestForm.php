@@ -28,7 +28,11 @@ final class LogRequestForm implements RequestForm
     /** @var int */
     private $pageId;
 
+    /** @var CrawlerController */
+    private $crawlerController;
 
+    /** @var bool */
+    private $CSVExport;
 
     public function __construct(StandaloneView $view)
     {
@@ -394,7 +398,7 @@ final class LogRequestForm implements RequestForm
         return $content;
     }
 
-    protected function getResStatus($requestContent): string
+    private function getResStatus($requestContent): string
     {
         if (empty($requestContent)) {
             return '-';

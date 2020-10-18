@@ -270,7 +270,7 @@ class BackendModule
 
         return $theOutput;
     }
-
+    
     /*****************************
      *
      * General Helper Functions
