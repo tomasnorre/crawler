@@ -29,7 +29,7 @@ use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 
-final class StartRequestForm implements RequestForm
+final class StartRequestForm extends AbstractRequestForm implements RequestForm
 {
     /**
      * @var StandaloneView
@@ -110,8 +110,8 @@ final class StartRequestForm implements RequestForm
                 }
 
                 $code = $this->crawlerController->getPageTreeAndUrls(
-                    $this->id,
-                    $this->pObj->MOD_SETTINGS['depth'],
+                    $this->pageId,
+                    4,
                     $this->scheduledTime,
                     $this->reqMinute,
                     $this->submitCrawlUrls,
@@ -152,6 +152,7 @@ final class StartRequestForm implements RequestForm
 
     /**
      * Verify that the crawler is executable.
+     * TODO: popen() is part of PHP Core and check can be removed. The PHP Binary check should be moved to PhPBinaryUtility::class
      */
     private function makeCrawlerProcessableChecks(): void
     {
@@ -203,7 +204,7 @@ final class StartRequestForm implements RequestForm
         );
 
         // Configurations
-        $availableConfigurations = $this->crawlerController->getConfigurationsForBranch((int) $this->id, (int) $this->pObj->MOD_SETTINGS['depth'] ?: 0);
+        $availableConfigurations = $this->crawlerController->getConfigurationsForBranch((int) $this->pageId, (int) $this->pObj->MOD_SETTINGS['depth'] ?: 0);
         $selectors['configurations'] = $this->selectorBox(
             empty($availableConfigurations) ? [] : array_combine($availableConfigurations, $availableConfigurations),
             'configurationSelection',

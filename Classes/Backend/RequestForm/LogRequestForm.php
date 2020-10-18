@@ -17,7 +17,7 @@ use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 
-final class LogRequestForm implements RequestForm
+final class LogRequestForm extends AbstractRequestForm implements RequestForm
 {
     /**
      * @var StandaloneView

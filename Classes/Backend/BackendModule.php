@@ -258,7 +258,6 @@ class BackendModule
         $this->view = $view;
     }
 
-
     private function getModuleMenu(): array
     {
         return [

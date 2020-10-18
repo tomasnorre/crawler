@@ -37,7 +37,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 
-final class MultiProcessRequestForm implements RequestForm
+final class MultiProcessRequestForm extends AbstractRequestForm implements RequestForm
 {
     /**
      * @var StandaloneView
@@ -55,11 +55,6 @@ final class MultiProcessRequestForm implements RequestForm
     private $queueRepository;
 
     /**
-     * @var CrawlerController
-     */
-    private $crawlerController;
-
-    /**
      * @var ProcessService
      */
     private $processService;
@@ -74,7 +69,6 @@ final class MultiProcessRequestForm implements RequestForm
         $this->view = $view;
         $this->processRepository = new ProcessRepository();
         $this->queueRepository = new QueueRepository();
-        $this->crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
         $this->processService = GeneralUtility::makeInstance(ProcessService::class);
         $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
     }
@@ -105,7 +99,7 @@ final class MultiProcessRequestForm implements RequestForm
         $processRepository = GeneralUtility::makeInstance(ProcessRepository::class);
         $queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
 
-        $mode = $this->pObj->MOD_SETTINGS['processListMode'];
+        $mode = 'simple';//$this->pObj->MOD_SETTINGS['processListMode'];
         if ($mode === 'simple') {
             $allProcesses = $processRepository->findAllActive();
         } else {
@@ -121,7 +115,7 @@ final class MultiProcessRequestForm implements RequestForm
             'modeLink' => $this->getModeLink($mode),
             'enableDisableToggle' => $this->getEnableDisableLink($isCrawlerEnabled),
             'processCollection' => $allProcesses,
-            'cliPath' => $this->processManager->getCrawlerCliPath(),
+            'cliPath' => $this->processService->getCrawlerCliPath(),
             'isCrawlerEnabled' => $isCrawlerEnabled,
             'totalUnprocessedItemCount' => $queueRepository->countAllPendingItems(),
             'assignedUnprocessedItemCount' => $queueRepository->countAllAssignedPendingItems(),
@@ -192,7 +186,7 @@ final class MultiProcessRequestForm implements RequestForm
         switch (GeneralUtility::_GP('action')) {
             case 'stopCrawling':
                 //set the cli status to disable (all processes will be terminated)
-                $this->crawlerController->setDisabled(true);
+                $this->findCrawler()->setDisabled(true);
                 break;
             case 'addProcess':
                 if ($this->processService->startProcess() === false) {
@@ -203,7 +197,7 @@ final class MultiProcessRequestForm implements RequestForm
             case 'resumeCrawling':
             default:
                 //set the cli status to end (all processes will be terminated)
-                $this->crawlerController->setDisabled(false);
+                $this->findCrawler()->setDisabled(false);
                 break;
         }
     }
@@ -281,5 +275,20 @@ final class MultiProcessRequestForm implements RequestForm
             $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.enablecrawling'),
             UrlBuilder::getInfoModuleUrl(['action' => 'resumeCrawling'])
         );
+    }
+
+    /**
+     * Activate hooks
+     */
+    private function runRefreshHooks(): void
+    {
+        $crawlerLib = GeneralUtility::makeInstance(CrawlerController::class);
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['refresh_hooks'] ?? [] as $objRef) {
+            /** @var CrawlerHookInterface $hookObj */
+            $hookObj = GeneralUtility::makeInstance($objRef);
+            if (is_object($hookObj)) {
+                $hookObj->crawler_init($crawlerLib);
+            }
+        }
     }
 }
