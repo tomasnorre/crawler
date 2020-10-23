@@ -19,11 +19,13 @@ namespace AOE\Crawler\Backend\RequestForm;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Value\ModuleSettings;
 use TYPO3\CMS\Fluid\View\StandaloneView;
+use TYPO3\CMS\Info\Controller\InfoModuleController;
 
 interface RequestForm
 {
-    public function __construct(StandaloneView $view);
+    public function __construct(StandaloneView $view, ModuleSettings $moduleSettings, InfoModuleController $infoModuleController);
 
     public function render($id, string $elementName, array $menuItems): string;
 }

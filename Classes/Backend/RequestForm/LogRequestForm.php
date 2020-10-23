@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace AOE\Crawler\Backend\RequestForm;
 
 use AOE\Crawler\Backend\Helper\UrlBuilder;
-use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\Utility\MessageUtility;
+use AOE\Crawler\Value\ModuleSettings;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Imaging\Icon;
@@ -16,6 +16,7 @@ use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
+use TYPO3\CMS\Info\Controller\InfoModuleController;
 
 final class LogRequestForm extends AbstractRequestForm implements RequestForm
 {
@@ -23,6 +24,11 @@ final class LogRequestForm extends AbstractRequestForm implements RequestForm
      * @var StandaloneView
      */
     private $view;
+
+    /**
+     * @var ModuleSettings
+     */
+    private $moduleSettings;
 
     /**
      * @var JsonCompatibilityConverter
@@ -35,18 +41,20 @@ final class LogRequestForm extends AbstractRequestForm implements RequestForm
     private $pageId;
 
     /**
-     * @var CrawlerController
-     */
-    private $crawlerController;
-
-    /**
      * @var bool
      */
     private $CSVExport;
 
-    public function __construct(StandaloneView $view)
+    /**
+     * @var InfoModuleController
+     */
+    private $infoModuleController;
+
+    public function __construct(StandaloneView $view, ModuleSettings $moduleSettings, InfoModuleController $infoModuleController)
     {
         $this->view = $view;
+        $this->moduleSettings = $moduleSettings;
+        $this->infoModuleController = $infoModuleController;
         $this->jsonCompatibilityConverter = new JsonCompatibilityConverter();
         // TODO: Implement CSV Writer
     }
@@ -87,16 +95,15 @@ final class LogRequestForm extends AbstractRequestForm implements RequestForm
             $this->isErrorDetected = true;
             MessageUtility::addErrorMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noPageSelected'));
         } else {
-            $this->crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
-            $this->crawlerController->setAccessMode('gui');
-            $this->crawlerController->setID = GeneralUtility::md5int(microtime());
+            $this->findCrawler()->setAccessMode('gui');
+            $this->findCrawler()->setID = GeneralUtility::md5int(microtime());
 
             $csvExport = GeneralUtility::_POST('_csv');
             $this->CSVExport = isset($csvExport);
 
             // Read URL:
             if (GeneralUtility::_GP('qid_read')) {
-                $this->crawlerController->readUrl((int) GeneralUtility::_GP('qid_read'), true);
+                $this->findCrawler()->readUrl((int) GeneralUtility::_GP('qid_read'), true);
             }
 
             // Look for set ID sent - if it is, we will display contents of that set:
@@ -123,7 +130,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestForm
                 $resStatus = $this->getResStatus($q_entry['result_data']);
                 if (is_array($q_entry['result_data'])) {
                     $q_entry['result_data']['content'] = $this->jsonCompatibilityConverter->convert($q_entry['result_data']['content']);
-                    if (! $this->pObj->MOD_SETTINGS['log_resultLog']) {
+                    if (! $this->infoModuleController->MOD_SETTINGS['log_resultLog']) {
                         unset($q_entry['result_data']['content']['log']);
                     }
                 }
@@ -149,8 +156,8 @@ final class LogRequestForm extends AbstractRequestForm implements RequestForm
                 ];
 
                 // Get branch beneath:
-                if ($this->pObj->MOD_SETTINGS['depth']) {
-                    $tree->getTree($this->pageId, $this->pObj->MOD_SETTINGS['depth']);
+                if ($this->infoModuleController->MOD_SETTINGS['depth']) {
+                    $tree->getTree($this->pageId, $this->infoModuleController->MOD_SETTINGS['depth']);
                 }
 
                 // If Flush button is pressed, flush tables instead of selecting entries:
@@ -164,7 +171,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestForm
                     $doFlush = false;
                     $doFullFlush = false;
                 }
-                $itemsPerPage = (int) $this->pObj->MOD_SETTINGS['itemsPerPage'];
+                $itemsPerPage = (int) $this->infoModuleController->MOD_SETTINGS['itemsPerPage'];
                 // Traverse page tree:
                 $code = '';
                 $count = 0;
@@ -172,7 +179,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestForm
                     // Get result:
                     $logEntriesOfPage = $this->crawlerController->getLogEntriesForPageId(
                         (int) $data['row']['uid'],
-                        $this->pObj->MOD_SETTINGS['log_display'],
+                        $this->infoModuleController->MOD_SETTINGS['log_display'],
                         $doFlush,
                         $doFullFlush,
                         $itemsPerPage
@@ -193,8 +200,8 @@ final class LogRequestForm extends AbstractRequestForm implements RequestForm
                 $this->outputCsvFile();
             }
         }
-        $this->view->assign('showResultLog', (bool) $this->pObj->MOD_SETTINGS['log_resultLog']);
-        $this->view->assign('showFeVars', (bool) $this->pObj->MOD_SETTINGS['log_feVars']);
+        $this->view->assign('showResultLog', (bool) $this->infoModuleController->MOD_SETTINGS['log_resultLog']);
+        $this->view->assign('showFeVars', (bool) $this->infoModuleController->MOD_SETTINGS['log_feVars']);
         $this->view->assign('displayActions', 1);
         $this->view->assign('displayLogFilterHtml', $this->getDisplayLogFilterHtml($setId));
         $this->view->assign('itemPerPageHtml', $this->getItemsPerPageDropDownHtml());
@@ -237,8 +244,8 @@ final class LogRequestForm extends AbstractRequestForm implements RequestForm
         return $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.display') . ': ' . BackendUtility::getFuncMenu(
                 $this->pageId,
                 'SET[log_display]',
-                $this->pObj->MOD_SETTINGS['log_display'],
-                $this->pObj->MOD_MENU['log_display'],
+                $this->infoModuleController->MOD_SETTINGS['log_display'],
+                $this->infoModuleController->MOD_MENU['log_display'],
                 'index.php',
                 '&setID=' . $setId
             );
@@ -250,8 +257,8 @@ final class LogRequestForm extends AbstractRequestForm implements RequestForm
             BackendUtility::getFuncMenu(
                 $this->pageId,
                 'SET[itemsPerPage]',
-                $this->pObj->MOD_SETTINGS['itemsPerPage'],
-                $this->pObj->MOD_MENU['itemsPerPage']
+                $this->infoModuleController->MOD_SETTINGS['itemsPerPage'],
+                $this->infoModuleController->MOD_MENU['itemsPerPage']
             );
     }
 
@@ -260,7 +267,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestForm
         return BackendUtility::getFuncCheck(
                 $this->pageId,
                 'SET[log_resultLog]',
-                $this->pObj->MOD_SETTINGS['log_resultLog'],
+                $this->infoModuleController->MOD_SETTINGS['log_resultLog'],
                 'index.php',
                 '&setID=' . $setId . $quiPart
             ) . '&nbsp;' . $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showresultlog');
@@ -271,7 +278,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestForm
         return BackendUtility::getFuncCheck(
                 $this->pageId,
                 'SET[log_feVars]',
-                $this->pObj->MOD_SETTINGS['log_feVars'],
+                $this->infoModuleController->MOD_SETTINGS['log_feVars'],
                 'index.php',
                 '&setID=' . $setId . $quiPart
             ) . '&nbsp;' . $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showfevars');
@@ -289,8 +296,8 @@ final class LogRequestForm extends AbstractRequestForm implements RequestForm
     private function drawLog_addRows(array $logEntriesOfPage, string $titleString): string
     {
         $colSpan = 9
-            + ($this->pObj->MOD_SETTINGS['log_resultLog'] ? -1 : 0)
-            + ($this->pObj->MOD_SETTINGS['log_feVars'] ? 3 : 0);
+            + ($this->infoModuleController->MOD_SETTINGS['log_resultLog'] ? -1 : 0)
+            + ($this->infoModuleController->MOD_SETTINGS['log_feVars'] ? 3 : 0);
 
         if (! empty($logEntriesOfPage)) {
             $setId = (int) GeneralUtility::_GP('setID');
@@ -317,7 +324,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestForm
 
                 // Put data into array:
                 $rowData = [];
-                if ($this->pObj->MOD_SETTINGS['log_resultLog']) {
+                if ($this->infoModuleController->MOD_SETTINGS['log_resultLog']) {
                     $rowData['result_log'] = $resLog;
                 } else {
                     $rowData['scheduled'] = ($vv['scheduled'] > 0) ? BackendUtility::datetime($vv['scheduled']) : ' ' . $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.immediate');
@@ -330,7 +337,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestForm
                 $rowData['procInstructions'] = is_array($parameters['procInstructions']) ? implode('; ', $parameters['procInstructions']) : '';
                 $rowData['set_id'] = (string) $vv['set_id'];
 
-                if ($this->pObj->MOD_SETTINGS['log_feVars']) {
+                if ($this->infoModuleController->MOD_SETTINGS['log_feVars']) {
                     $resFeVars = $this->getResFeVars($resultData ?: []);
                     $rowData['tsfe_id'] = $resFeVars['id'] ?: '';
                     $rowData['tsfe_gr_list'] = $resFeVars['gr_list'] ?: '';

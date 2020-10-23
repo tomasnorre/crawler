@@ -24,22 +24,17 @@ final class ModuleSettings
     /**
      * @var string
      */
-    private $processListMode;
-
-    /**
-     * @var string
-     */
     private $crawlAction;
 
     /**
      * @var int
      */
-    private $depth;
+    private $pages;
 
     /**
-     * @var bool
+     * @var int
      */
-    private $logResultLog;
+    private $depth;
 
     /**
      * @var int
@@ -51,74 +46,68 @@ final class ModuleSettings
      */
     private $logDisplay;
 
-    /**
-     * @var bool
-     */
-    private $logFeVars;
-
     public function __construct(
-        string $processListMode,
-        string $crawlAction,
-        int $depth,
-        bool $logResultLog,
-        int $itemsPerPage,
-        string $logDisplay,
-        bool $logFeVars
+        string $crawlAction = 'start',
+        int $pages = 0,
+        int $depth = 0,
+        int $itemsPerPage = 5,
+        string $logDisplay = 'all'
     ) {
-        $this->processListMode = $processListMode;
         $this->crawlAction = $crawlAction;
+        $this->pages = $pages;
         $this->depth = $depth;
-        $this->logResultLog = $logResultLog;
         $this->itemsPerPage = $itemsPerPage;
         $this->logDisplay = $logDisplay;
-        $this->logFeVars = $logFeVars;
     }
 
     public static function fromArray(array $array): self
     {
         return new self(
-            $array['processListMode'],
-            $array['crawlaction'],
-            $array['depth'],
-            $array['log_resultLog'],
-            $array['itemPerPage'],
-            $array['log_display'],
-            $array['log_feVars']
+            (string) $array['crawlaction'],
+            (int) $array['pages'],
+            (int) $array['depth'],
+            (int) $array['itemPerPage'],
+            (string) $array['log_display']
         );
     }
 
-    public function getProcessListMode(): string
-    {
-        return $this->processListMode;
-    }
-
+    /**
+     * @return string
+     */
     public function getCrawlAction(): string
     {
         return $this->crawlAction;
     }
 
+    /**
+     * @return int
+     */
+    public function getPages(): int
+    {
+        return $this->pages;
+    }
+
+    /**
+     * @return int
+     */
     public function getDepth(): int
     {
         return $this->depth;
     }
 
-    public function isLogResultLog(): bool
-    {
-        return $this->logResultLog;
-    }
-
+    /**
+     * @return int
+     */
     public function getItemsPerPage(): int
     {
         return $this->itemsPerPage;
     }
 
+    /**
+     * @return string
+     */
     public function getLogDisplay(): string
     {
         return $this->logDisplay;
-    }
-
-    public function isLogFeVars(): bool
-    {
-        return $this->logFeVars;
     }
 }

@@ -20,8 +20,10 @@ namespace AOE\Crawler\Backend\RequestForm;
  */
 
 use AOE\Crawler\Value\CrawlAction;
+use AOE\Crawler\Value\ModuleSettings;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
+use TYPO3\CMS\Info\Controller\InfoModuleController;
 
 final class RequestFormFactory
 {
@@ -30,19 +32,19 @@ final class RequestFormFactory
         // Perhaps this can be removed, will need to check.
     }
 
-    public static function create(CrawlAction $selectedAction, StandaloneView $view): RequestForm
+    public static function create(CrawlAction $selectedAction, StandaloneView $view, ModuleSettings $moduleSettings, InfoModuleController $infoModuleController): RequestForm
     {
         switch ($selectedAction->__toString()) {
             case 'log':
                 /** @var RequestForm $requestForm */
-                $requestForm = GeneralUtility::makeInstance(LogRequestForm::class, $view);
+                $requestForm = GeneralUtility::makeInstance(LogRequestForm::class, $view, $moduleSettings, $infoModuleController);
                 break;
             case 'multiprocess':
-                $requestForm = GeneralUtility::makeInstance(MultiProcessRequestForm::class, $view);
+                $requestForm = GeneralUtility::makeInstance(MultiProcessRequestForm::class, $view, $moduleSettings, $infoModuleController);
                 break;
             case 'start':
             default:
-                $requestForm = GeneralUtility::makeInstance(StartRequestForm::class, $view);
+                $requestForm = GeneralUtility::makeInstance(StartRequestForm::class, $view, $moduleSettings, $infoModuleController);
         }
 
         return $requestForm;

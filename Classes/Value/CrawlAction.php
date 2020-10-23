@@ -13,11 +13,6 @@ final class CrawlAction
      */
     private $crawlAction;
 
-    /**
-     * @var string
-     */
-    private $crawlActionLabel;
-
     public function __construct(string $crawlAction)
     {
         Assert::that($crawlAction)
@@ -29,10 +24,5 @@ final class CrawlAction
     public function __toString(): string
     {
         return $this->crawlAction;
-    }
-
-    public function getCrawlActionLabel(): string
-    {
-        return $this->crawlActionLabel;
     }
 }

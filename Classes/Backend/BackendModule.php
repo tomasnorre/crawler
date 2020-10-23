@@ -33,18 +33,12 @@ use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\Domain\Repository\QueueRepository;
-use AOE\Crawler\Hooks\CrawlerHookInterface;
 use AOE\Crawler\Service\ProcessService;
 use AOE\Crawler\Value\CrawlAction;
 use AOE\Crawler\Value\ModuleSettings;
-use Psr\Http\Message\UriInterface;
-use TYPO3\CMS\Backend\Routing\UriBuilder;
-use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
-use TYPO3\CMS\Core\Http\Uri;
-use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -201,6 +195,7 @@ class BackendModule
         $this->id = (int) GeneralUtility::_GP('id');
         // Setting MOD_MENU items as we need them for logging:
         $this->pObj->MOD_MENU = array_merge($this->pObj->MOD_MENU, $this->getModuleMenu());
+        $this->moduleSettings = ModuleSettings::fromArray($this->pObj->MOD_SETTINGS);
     }
 
     /**
@@ -231,7 +226,7 @@ class BackendModule
             $this->pObj->MOD_MENU['crawlaction']
         );
 
-        $theOutput = '<h2>' . htmlspecialchars($this->getLanguageService()->getLL('title')) . '</h2>' . $actionDropdown;
+        $theOutput = '<h2>' . htmlspecialchars($this->getLanguageService()->getLL('title'), ENT_QUOTES | ENT_HTML5) . '</h2>' . $actionDropdown;
         $theOutput .= $this->renderForm($selectedAction);
 
         return $theOutput;
@@ -243,11 +238,6 @@ class BackendModule
      *
      *****************************/
 
-    private function getLanguageService(): LanguageService
-    {
-        return $GLOBALS['LANG'];
-    }
-
     private function initializeView(): void
     {
         $view = GeneralUtility::makeInstance(StandaloneView::class);
@@ -256,6 +246,11 @@ class BackendModule
         $view->setTemplateRootPaths(['EXT:crawler/Resources/Private/Templates/Backend']);
         $view->getRequest()->setControllerExtensionName('Crawler');
         $this->view = $view;
+    }
+
+    private function getLanguageService(): LanguageService
+    {
+        return $GLOBALS['LANG'];
     }
 
     private function getModuleMenu(): array
@@ -293,7 +288,7 @@ class BackendModule
 
     private function renderForm(CrawlAction $selectedAction): string
     {
-        $requestForm = RequestFormFactory::create($selectedAction, $this->view);
+        $requestForm = RequestFormFactory::create($selectedAction, $this->view, $this->moduleSettings, $this->pObj);
         return $requestForm->render(
             $this->id,
             $this->pObj->MOD_SETTINGS['depth'],

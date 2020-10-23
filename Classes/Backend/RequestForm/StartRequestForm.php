@@ -24,10 +24,12 @@ use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Utility\MessageUtility;
 use AOE\Crawler\Utility\PhpBinaryUtility;
 use AOE\Crawler\Utility\SignalSlotUtility;
+use AOE\Crawler\Value\ModuleSettings;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
+use TYPO3\CMS\Info\Controller\InfoModuleController;
 
 final class StartRequestForm extends AbstractRequestForm implements RequestForm
 {
@@ -36,9 +38,21 @@ final class StartRequestForm extends AbstractRequestForm implements RequestForm
      */
     private $view;
 
-    public function __construct(StandaloneView $view)
+    /**
+     * @var ModuleSettings
+     */
+    private $moduleSettings;
+
+    /**
+     * @var InfoModuleController
+     */
+    private $infoModuleController;
+
+    public function __construct(StandaloneView $view, ModuleSettings $moduleSettings, InfoModuleController $infoModuleController)
     {
         $this->view = $view;
+        $this->moduleSettings = $moduleSettings;
+        $this->infoModuleController = $infoModuleController;
     }
 
     public function render($id, string $elementName, array $menuItems): string
@@ -156,7 +170,7 @@ final class StartRequestForm extends AbstractRequestForm implements RequestForm
      */
     private function makeCrawlerProcessableChecks(): void
     {
-        if (! $this->isPhpForkAvailable()) {
+        if (!$this->isPhpForkAvailable()) {
             $this->isErrorDetected = true;
             MessageUtility::addErrorMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:message.noPhpForkAvailable'));
         }
@@ -199,12 +213,12 @@ final class StartRequestForm extends AbstractRequestForm implements RequestForm
                 99 => $this->getLanguageService()->sL('LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_infi'),
             ],
             'SET[depth]',
-            $this->pObj->MOD_SETTINGS['depth'],
+            $this->infoModuleController->MOD_SETTINGS['depth'],
             false
         );
 
         // Configurations
-        $availableConfigurations = $this->crawlerController->getConfigurationsForBranch((int) $this->pageId, (int) $this->pObj->MOD_SETTINGS['depth'] ?: 0);
+        $availableConfigurations = $this->crawlerController->getConfigurationsForBranch((int) $this->pageId, (int) $this->infoModuleController->MOD_SETTINGS['depth'] ?: 0);
         $selectors['configurations'] = $this->selectorBox(
             empty($availableConfigurations) ? [] : array_combine($availableConfigurations, $availableConfigurations),
             'configurationSelection',
@@ -239,17 +253,17 @@ final class StartRequestForm extends AbstractRequestForm implements RequestForm
      */
     private function selectorBox($optArray, $name, $value, bool $multiple): string
     {
-        if (! is_string($value) || ! is_array($value)) {
+        if (!is_string($value) || !is_array($value)) {
             $value = '';
         }
 
         $options = [];
         foreach ($optArray as $key => $val) {
-            $selected = (! $multiple && ! strcmp($value, (string) $key)) || ($multiple && in_array($key, (array) $value, true));
+            $selected = (!$multiple && !strcmp($value, (string) $key)) || ($multiple && in_array($key, (array) $value, true));
             $options[] = '
-                <option value="' . $key . '" ' . ($selected ? ' selected="selected"' : '') . '>' . htmlspecialchars($val) . '</option>';
+                <option value="' . $key . '" ' . ($selected ? ' selected="selected"' : '') . '>' . htmlspecialchars($val, ENT_QUOTES | ENT_HTML5) . '</option>';
         }
 
-        return '<select class="form-control" name="' . htmlspecialchars($name . ($multiple ? '[]' : '')) . '"' . ($multiple ? ' multiple' : '') . '>' . implode('', $options) . '</select>';
+        return '<select class="form-control" name="' . htmlspecialchars($name . ($multiple ? '[]' : ''), ENT_QUOTES | ENT_HTML5) . '"' . ($multiple ? ' multiple' : '') . '>' . implode('', $options) . '</select>';
     }
 }

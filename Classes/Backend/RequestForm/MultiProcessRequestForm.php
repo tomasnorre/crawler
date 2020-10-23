@@ -27,6 +27,7 @@ use AOE\Crawler\Exception\ProcessException;
 use AOE\Crawler\Service\ProcessService;
 use AOE\Crawler\Utility\MessageUtility;
 use AOE\Crawler\Utility\PhpBinaryUtility;
+use AOE\Crawler\Value\ModuleSettings;
 use Psr\Http\Message\UriInterface;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Core\Imaging\Icon;
@@ -36,6 +37,7 @@ use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
+use TYPO3\CMS\Info\Controller\InfoModuleController;
 
 final class MultiProcessRequestForm extends AbstractRequestForm implements RequestForm
 {
@@ -64,13 +66,30 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
      */
     private $iconFactory;
 
-    public function __construct(StandaloneView $view)
+    /**
+     * @var ModuleSettings
+     */
+    private $moduleSettings;
+
+    /**
+     * @var string
+     */
+    private $processListMode;
+
+    /**
+     * @var InfoModuleController
+     */
+    private $infoModuleController;
+
+    public function __construct(StandaloneView $view, ModuleSettings $moduleSettings, InfoModuleController $infoModuleController)
     {
         $this->view = $view;
         $this->processRepository = new ProcessRepository();
         $this->queueRepository = new QueueRepository();
         $this->processService = GeneralUtility::makeInstance(ProcessService::class);
         $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
+        $this->moduleSettings = $moduleSettings;
+        $this->infoModuleController = $infoModuleController;
     }
 
     public function render($id, string $elementName, array $menuItems): string
@@ -99,7 +118,7 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
         $processRepository = GeneralUtility::makeInstance(ProcessRepository::class);
         $queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
 
-        $mode = 'simple';//$this->pObj->MOD_SETTINGS['processListMode'];
+        $mode = $this->processListMode ?? 'simple';
         if ($mode === 'simple') {
             $allProcesses = $processRepository->findAllActive();
         } else {
