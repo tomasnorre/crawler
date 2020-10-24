@@ -8,8 +8,10 @@ use AOE\Crawler\Backend\Helper\UrlBuilder;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\Utility\MessageUtility;
 use AOE\Crawler\Value\ModuleSettings;
+use Doctrine\DBAL\Query\QueryBuilder;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Localization\LanguageService;
@@ -50,12 +52,18 @@ final class LogRequestForm extends AbstractRequestForm implements RequestForm
      */
     private $infoModuleController;
 
+    /**
+     * @var QueryBuilder
+     */
+    private $queryBuilder;
+
     public function __construct(StandaloneView $view, ModuleSettings $moduleSettings, InfoModuleController $infoModuleController)
     {
         $this->view = $view;
         $this->moduleSettings = $moduleSettings;
         $this->infoModuleController = $infoModuleController;
         $this->jsonCompatibilityConverter = new JsonCompatibilityConverter();
+        $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tx_crawler_queue');
         // TODO: Implement CSV Writer
     }
 
