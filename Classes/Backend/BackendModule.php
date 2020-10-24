@@ -75,11 +75,6 @@ class BackendModule
     /**
      * @var bool
      */
-    protected $submitCrawlUrls = false;
-
-    /**
-     * @var bool
-     */
     protected $downloadCrawlUrls = false;
 
     /**
