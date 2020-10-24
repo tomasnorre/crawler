@@ -51,6 +51,7 @@ cache:
 
 before_script:
   # Installs nimut/typo3-complete
+  - composer install
   - travis_wait 30 composer require --dev nimut/typo3-complete=$TYPO3_VERSION
   - export "TYPO3_PATH_WEB"=$PWD/.Build/Web;
   # Locating UnitTests.xml
@@ -222,6 +223,7 @@ jobs:
       before_install:
         - echo "keep xdebug"
         # Installs nimut/typo3-complete
+        - composer install
         - travis_wait 30 composer require --dev nimut/typo3-complete=$TYPO3_VERSION
         - export "TYPO3_PATH_WEB"=$PWD/.Build/Web;
         # Locating UnitTests.xml and FunctionalTests.xml
