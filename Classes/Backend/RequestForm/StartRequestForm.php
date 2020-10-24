@@ -24,7 +24,6 @@ use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Utility\MessageUtility;
 use AOE\Crawler\Utility\PhpBinaryUtility;
 use AOE\Crawler\Utility\SignalSlotUtility;
-use AOE\Crawler\Value\ModuleSettings;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -39,19 +38,18 @@ final class StartRequestForm extends AbstractRequestForm implements RequestForm
     private $view;
 
     /**
-     * @var ModuleSettings
-     */
-    private $moduleSettings;
-
-    /**
      * @var InfoModuleController
      */
     private $infoModuleController;
 
-    public function __construct(StandaloneView $view, ModuleSettings $moduleSettings, InfoModuleController $infoModuleController)
+    /**
+     * @var int
+     */
+    private $reqMinute = 1000;
+
+    public function __construct(StandaloneView $view, InfoModuleController $infoModuleController)
     {
         $this->view = $view;
-        $this->moduleSettings = $moduleSettings;
         $this->infoModuleController = $infoModuleController;
     }
 
@@ -124,8 +122,8 @@ final class StartRequestForm extends AbstractRequestForm implements RequestForm
                 }
 
                 $code = $this->crawlerController->getPageTreeAndUrls(
-                    $this->pageId,
-                    4,
+                    $pageId,
+                    $this->infoModuleController->MOD_SETTINGS['depth'],
                     $this->scheduledTime,
                     $this->reqMinute,
                     $this->submitCrawlUrls,

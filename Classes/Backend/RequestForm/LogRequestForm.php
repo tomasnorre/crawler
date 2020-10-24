@@ -28,11 +28,6 @@ final class LogRequestForm extends AbstractRequestForm implements RequestForm
     private $view;
 
     /**
-     * @var ModuleSettings
-     */
-    private $moduleSettings;
-
-    /**
      * @var JsonCompatibilityConverter
      */
     private $jsonCompatibilityConverter;
@@ -57,10 +52,9 @@ final class LogRequestForm extends AbstractRequestForm implements RequestForm
      */
     private $queryBuilder;
 
-    public function __construct(StandaloneView $view, ModuleSettings $moduleSettings, InfoModuleController $infoModuleController)
+    public function __construct(StandaloneView $view, InfoModuleController $infoModuleController)
     {
         $this->view = $view;
-        $this->moduleSettings = $moduleSettings;
         $this->infoModuleController = $infoModuleController;
         $this->jsonCompatibilityConverter = new JsonCompatibilityConverter();
         $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tx_crawler_queue');
@@ -442,4 +436,17 @@ final class LogRequestForm extends AbstractRequestForm implements RequestForm
 
         return 'Error: ' . substr(preg_replace('/\s+/', ' ', strip_tags($requestResult)), 0, 10000) . '...';
     }
+
+    /**
+     * Find Fe vars
+     */
+    private function getResFeVars(array $resultData): array
+    {
+        if (empty($resultData)) {
+            return [];
+        }
+        $requestResult = $this->jsonCompatibilityConverter->convert($resultData['content']);
+        return $requestResult['vars'] ?? [];
+    }
+
 }

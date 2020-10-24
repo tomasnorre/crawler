@@ -31,15 +31,10 @@ class CrawlActionTest extends UnitTestCase
      */
     public function toStringWithValidValueReturnsOriginalValue(): void
     {
-        $crawlAction = new CrawlAction(self::VALID_VALUE, 'Label');
+        $crawlAction = new CrawlAction(self::VALID_VALUE);
         self::assertEquals(
             self::VALID_VALUE,
             $crawlAction->__toString()
-        );
-
-        self::assertEquals(
-            'Label',
-            $crawlAction->getCrawlActionLabel()
         );
     }
 
@@ -49,6 +44,6 @@ class CrawlActionTest extends UnitTestCase
     public function constructorThrowsExpection(): void
     {
         self::expectException(\InvalidArgumentException::class);
-        new CrawlAction('INVALID', 'label');
+        new CrawlAction('INVALID');
     }
 }

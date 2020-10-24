@@ -67,11 +67,6 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
     private $iconFactory;
 
     /**
-     * @var ModuleSettings
-     */
-    private $moduleSettings;
-
-    /**
      * @var string
      */
     private $processListMode;
@@ -81,14 +76,13 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
      */
     private $infoModuleController;
 
-    public function __construct(StandaloneView $view, ModuleSettings $moduleSettings, InfoModuleController $infoModuleController)
+    public function __construct(StandaloneView $view, InfoModuleController $infoModuleController)
     {
         $this->view = $view;
         $this->processRepository = new ProcessRepository();
         $this->queueRepository = new QueueRepository();
         $this->processService = GeneralUtility::makeInstance(ProcessService::class);
         $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
-        $this->moduleSettings = $moduleSettings;
         $this->infoModuleController = $infoModuleController;
     }
 

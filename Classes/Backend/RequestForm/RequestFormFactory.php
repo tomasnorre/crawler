@@ -32,19 +32,19 @@ final class RequestFormFactory
         // Perhaps this can be removed, will need to check.
     }
 
-    public static function create(CrawlAction $selectedAction, StandaloneView $view, ModuleSettings $moduleSettings, InfoModuleController $infoModuleController): RequestForm
+    public static function create(CrawlAction $selectedAction, StandaloneView $view, InfoModuleController $infoModuleController): RequestForm
     {
         switch ($selectedAction->__toString()) {
             case 'log':
                 /** @var RequestForm $requestForm */
-                $requestForm = GeneralUtility::makeInstance(LogRequestForm::class, $view, $moduleSettings, $infoModuleController);
+                $requestForm = GeneralUtility::makeInstance(LogRequestForm::class, $view, $infoModuleController);
                 break;
             case 'multiprocess':
-                $requestForm = GeneralUtility::makeInstance(MultiProcessRequestForm::class, $view, $moduleSettings, $infoModuleController);
+                $requestForm = GeneralUtility::makeInstance(MultiProcessRequestForm::class, $view, $infoModuleController);
                 break;
             case 'start':
             default:
-                $requestForm = GeneralUtility::makeInstance(StartRequestForm::class, $view, $moduleSettings, $infoModuleController);
+                $requestForm = GeneralUtility::makeInstance(StartRequestForm::class, $view, $infoModuleController);
         }
 
         return $requestForm;

@@ -35,7 +35,6 @@ use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Service\ProcessService;
 use AOE\Crawler\Value\CrawlAction;
-use AOE\Crawler\Value\ModuleSettings;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
@@ -81,11 +80,6 @@ class BackendModule
      * @var int
      */
     protected $scheduledTime = 0;
-
-    /**
-     * @var int
-     */
-    protected $reqMinute = 1000;
 
     /**
      * @var array holds the selection of configuration from the configuration selector box
@@ -163,11 +157,6 @@ class BackendModule
      */
     private $languageService;
 
-    /**
-     * @var ModuleSettings
-     */
-    private $moduleSettings;
-
     public function __construct()
     {
         $this->languageService = $GLOBALS['LANG'];
@@ -190,7 +179,6 @@ class BackendModule
         $this->id = (int) GeneralUtility::_GP('id');
         // Setting MOD_MENU items as we need them for logging:
         $this->pObj->MOD_MENU = array_merge($this->pObj->MOD_MENU, $this->getModuleMenu());
-        $this->moduleSettings = ModuleSettings::fromArray($this->pObj->MOD_SETTINGS);
     }
 
     /**
@@ -243,7 +231,7 @@ class BackendModule
         $this->view = $view;
     }
 
-    private function getLanguageService(): LanguageService
+    public function getLanguageService(): LanguageService
     {
         return $GLOBALS['LANG'];
     }
@@ -283,7 +271,7 @@ class BackendModule
 
     private function renderForm(CrawlAction $selectedAction): string
     {
-        $requestForm = RequestFormFactory::create($selectedAction, $this->view, $this->moduleSettings, $this->pObj);
+        $requestForm = RequestFormFactory::create($selectedAction, $this->view, $this->pObj);
         return $requestForm->render(
             $this->id,
             $this->pObj->MOD_SETTINGS['depth'],
