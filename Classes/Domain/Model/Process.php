@@ -204,8 +204,8 @@ class Process extends AbstractEntity
      */
     public function getRuntime()
     {
-        $lastItem = $this->queueRepository->findOldestEntryForProcess($this);
-        $firstItem = $this->queueRepository->findYoungestEntryForProcess($this);
+        $lastItem = $this->getQueueRepository()->findOldestEntryForProcess($this);
+        $firstItem = $this->getQueueRepository()->findYoungestEntryForProcess($this);
         return $lastItem['exec_time'] - $firstItem['exec_time'];
     }
 
@@ -214,7 +214,7 @@ class Process extends AbstractEntity
      */
     public function getTimeForLastItem(): int
     {
-        $entry = $this->queueRepository->findOldestEntryForProcess($this);
+        $entry = $this->getQueueRepository()->findOldestEntryForProcess($this);
         return $entry['exec_time'] ?? 0;
     }
 
@@ -223,7 +223,7 @@ class Process extends AbstractEntity
      */
     public function getTimeForFirstItem(): int
     {
-        $entry = $this->queueRepository->findYoungestEntryForProcess($this);
+        $entry = $this->getQueueRepository()->findYoungestEntryForProcess($this);
         return $entry['exec_time'] ?? 0;
     }
 
@@ -235,7 +235,7 @@ class Process extends AbstractEntity
      */
     public function getAmountOfItemsProcessed()
     {
-        return $this->queueRepository->countExecutedItemsByProcess($this);
+        return $this->getQueueRepository()->countExecutedItemsByProcess($this);
     }
 
     /**
@@ -246,7 +246,7 @@ class Process extends AbstractEntity
      */
     public function getItemsToProcess()
     {
-        return $this->queueRepository->countNonExecutedItemsByProcess($this);
+        return $this->getQueueRepository()->countNonExecutedItemsByProcess($this);
     }
 
     /**
@@ -292,5 +292,10 @@ class Process extends AbstractEntity
             $stage = self::STATE_COMPLETED;
         }
         return $stage;
+    }
+
+    private function getQueueRepository(): QueueRepository
+    {
+        return $this->queueRepository ?? GeneralUtility::makeInstance(QueueRepository::class);
     }
 }
