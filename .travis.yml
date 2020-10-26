@@ -51,8 +51,7 @@ cache:
 
 before_script:
   # Installs nimut/typo3-complete
-  - composer install
-  - travis_wait 30 composer require --dev nimut/typo3-complete=$TYPO3_VERSION --update-with-dependencies
+  - travis_wait 30 composer require --dev nimut/typo3-complete=$TYPO3_VERSION
   - export "TYPO3_PATH_WEB"=$PWD/.Build/Web;
   # Locating UnitTests.xml
   - export "UNIT_XML"='.Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml'
@@ -131,8 +130,7 @@ jobs:
         - ddev --version
       script:
         - cd .devbox
-        - composer install
-        - composer require aoepeople/crawler:dev-${TRAVIS_BRANCH} --update-with-dependencies
+        - composer require aoepeople/crawler:dev-${TRAVIS_BRANCH}
         - ddev start
         - ddev exec bin/typo3cms install:fixfolderstructure
         - ddev exec bin/typo3cms install:extensionsetupifpossible
@@ -224,8 +222,7 @@ jobs:
       before_install:
         - echo "keep xdebug"
         # Installs nimut/typo3-complete
-        - composer install
-        - travis_wait 30 composer require --dev nimut/typo3-complete=$TYPO3_VERSION --update-with-dependencies
+        - travis_wait 30 composer require --dev nimut/typo3-complete=$TYPO3_VERSION
         - export "TYPO3_PATH_WEB"=$PWD/.Build/Web;
         # Locating UnitTests.xml and FunctionalTests.xml
         - export "UNIT_XML"='.Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml'
