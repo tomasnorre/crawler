@@ -8,7 +8,6 @@
 ### Deprecated
 
 ### Changed
-* UrlService->getUrlFromPageAndQueryParameters() moved from CrawlerController
 
 ### Fixed
 
