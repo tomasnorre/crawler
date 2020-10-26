@@ -215,6 +215,11 @@ class BackendModule
         return $theOutput;
     }
 
+    public function getLanguageService(): LanguageService
+    {
+        return $GLOBALS['LANG'];
+    }
+
     /*****************************
      *
      * General Helper Functions
@@ -229,11 +234,6 @@ class BackendModule
         $view->setTemplateRootPaths(['EXT:crawler/Resources/Private/Templates/Backend']);
         $view->getRequest()->setControllerExtensionName('Crawler');
         $this->view = $view;
-    }
-
-    public function getLanguageService(): LanguageService
-    {
-        return $GLOBALS['LANG'];
     }
 
     private function getModuleMenu(): array

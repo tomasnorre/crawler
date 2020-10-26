@@ -20,7 +20,6 @@ namespace AOE\Crawler\Backend\RequestForm;
  */
 
 use AOE\Crawler\Value\CrawlAction;
-use AOE\Crawler\Value\ModuleSettings;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Info\Controller\InfoModuleController;

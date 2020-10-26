@@ -64,10 +64,4 @@ class BackendModuleTest extends UnitTestCase
         self::assertArrayHasKey('log_display', $modMenu);
         self::assertArrayHasKey('itemsPerPage', $modMenu);
     }
-
-
-
-
-
-
 }

@@ -27,7 +27,6 @@ use AOE\Crawler\Exception\ProcessException;
 use AOE\Crawler\Service\ProcessService;
 use AOE\Crawler\Utility\MessageUtility;
 use AOE\Crawler\Utility\PhpBinaryUtility;
-use AOE\Crawler\Value\ModuleSettings;
 use Psr\Http\Message\UriInterface;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Core\Imaging\Icon;

@@ -168,7 +168,7 @@ final class StartRequestForm extends AbstractRequestForm implements RequestForm
      */
     private function makeCrawlerProcessableChecks(): void
     {
-        if (!$this->isPhpForkAvailable()) {
+        if (! $this->isPhpForkAvailable()) {
             $this->isErrorDetected = true;
             MessageUtility::addErrorMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:message.noPhpForkAvailable'));
         }
@@ -251,13 +251,13 @@ final class StartRequestForm extends AbstractRequestForm implements RequestForm
      */
     private function selectorBox($optArray, $name, $value, bool $multiple): string
     {
-        if (!is_string($value) || !is_array($value)) {
+        if (! is_string($value) || ! is_array($value)) {
             $value = '';
         }
 
         $options = [];
         foreach ($optArray as $key => $val) {
-            $selected = (!$multiple && !strcmp($value, (string) $key)) || ($multiple && in_array($key, (array) $value, true));
+            $selected = (! $multiple && ! strcmp($value, (string) $key)) || ($multiple && in_array($key, (array) $value, true));
             $options[] = '
                 <option value="' . $key . '" ' . ($selected ? ' selected="selected"' : '') . '>' . htmlspecialchars($val, ENT_QUOTES | ENT_HTML5) . '</option>';
         }
