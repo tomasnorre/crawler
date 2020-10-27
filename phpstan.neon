@@ -21,36 +21,15 @@ parameters:
     checkMissingIterableValueType: false
     checkGenericClassInNonGenericObjectType: false
 
-    symplify:
-        max_cognitive_complexity: 60
-        max_class_cognitive_complexity: 60
+services:
+    -
+        class: Symplify\CodingStandard\CognitiveComplexity\Rules\FunctionLikeCognitiveComplexityRule
+        tags: [phpstan.rules.rule]
+        arguments:
+            maxMethodCognitiveComplexity: 60
 
-    ignoreErrors:
-        # This will hopefully be replace after implementing https://github.com/phpstan/phpstan-doctrine/issues/117
-        - '!Cannot call method (?:fetchAll|fetch|fetchColumn|rowCount)\(\) on Doctrine\\DBAL\\Driver\\Statement\|int!'
-
-        # The _call() method, takes additional inputs if the functions takes input, so it's a false positive.
-        - '#Method Nimut\\TestingFramework\\MockObject\\AccessibleMockObjectInterface::\_call\(\) invoked with [2-9] parameters, 1 required.#'
-
-        -
-            message: '#Call to an undefined method object::crawler_execute\(\).#'
-            path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
-
-        -
-            message: '#Cannot call method (?:getReasonPhrase|getStatusCode)\(\) on Psr\\Http\\Message\\ResponseInterface\|null.#'
-            path: Classes/CrawlStrategy/GuzzleExecutionStrategy.php
-
-        -
-            message: '#Call to an undefined method object::(?:addQueueEntry_callBack|getUrlsForPageRow|urlListFromUrlArray)\(\)#'
-            path: Classes/Hooks/IndexedSearchCrawlerHook.php
-
-
-        # We want to make sure that the isPageInQueue throws an exception if wrong input type is given
-        -
-            message: '!Parameter #1 \$uid of method AOE\\Crawler\\Domain\\Repository\\QueueRepository::isPageInQueue\(\) expects int, string given.!'
-            path: Tests/Functional/Domain/Repository/QueueRepositoryTest.php
-
-        # We want to make sure that exceptions are thrown if we give the wrong input Object
-        -
-            message: '!Parameter #[1,2] \$subject of method [a-zA-Z0-9\\].* stdClass given!'
-            path: Tests/Unit/Domain/Model/ProcessCollectionTest.php
+    -
+        class: Symplify\CodingStandard\CognitiveComplexity\Rules\ClassLikeCognitiveComplexityRule
+        tags: [phpstan.rules.rule]
+        arguments:
+            maxClassCognitiveComplexity: 60
