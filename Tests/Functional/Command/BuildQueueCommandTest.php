@@ -55,7 +55,7 @@ class BuildQueueCommandTest extends AbstractCommandTests
      */
     public function buildQueueCommandTest(array $parameters, string $expectedOutput, int $expectedCount): void
     {
-        $commandOutput = [];
+        $commandOutput = '';
         $cliCommand = $this->getTypo3TestBinaryCommand() . ' crawler:buildQueue ' . implode(' ', $parameters);
         CommandUtility::exec($cliCommand . ' 2>&1', $commandOutput);
 
