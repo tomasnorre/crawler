@@ -1230,7 +1230,7 @@ class CrawlerController implements LoggerAwareInterface
      *
      * @param array $field_array Queue field array,
      *
-     * @return string
+     * @return array|bool|mixed|string
      */
     public function readUrlFromArray($field_array)
     {

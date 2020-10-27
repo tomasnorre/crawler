@@ -1,5 +1,16 @@
 # Changelog TYPO3 Crawler
 
+## Crawler 9.1.2-dev
+
+### Added
+* Progress bar to the `crawler:buildQueue` command output when using with `--mode exec`
+
+### Deprecated
+
+### Changed
+
+### Fixed
+
 ## Crawler 9.1.1
 Crawler 9.1.1 was released on October 17th, 2020
 

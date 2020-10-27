@@ -26,6 +26,7 @@ use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Utility\SignalSlotUtility;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -132,15 +133,6 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
 
         $configurationKeys = $this->getConfigurationKeys((string) $input->getArgument('conf'));
 
-        if (! is_array($configurationKeys)) {
-            $configurations = $crawlerController->getUrlsForPageId($pageId);
-            if (is_array($configurations)) {
-                $configurationKeys = array_keys($configurations);
-            } else {
-                $configurationKeys = [];
-            }
-        }
-
         if ($mode === 'queue' || $mode === 'exec') {
             $reason = new Reason();
             $reason->setReason(Reason::REASON_CLI_SUBMIT);
@@ -173,24 +165,33 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
         if ($mode === 'url') {
             $output->writeln('<info>' . implode(PHP_EOL, $crawlerController->downloadUrls) . PHP_EOL . '</info>');
         } elseif ($mode === 'exec') {
+            $progressBar = new ProgressBar($output);
             $output->writeln('<info>Executing ' . count($crawlerController->urlList) . ' requests right away:</info>');
             $output->writeln('<info>' . implode(PHP_EOL, $crawlerController->urlList) . '</info>' . PHP_EOL);
             $output->writeln('<info>Processing</info>' . PHP_EOL);
 
-            foreach ($crawlerController->queueEntries as $queueRec) {
+            foreach ($progressBar->iterate($crawlerController->queueEntries) as $queueRec) {
                 $p = $jsonCompatibilityConverter->convert($queueRec['parameters']);
+
+                $progressBar->clear();
                 $output->writeln('<info>' . $p['url'] . ' (' . implode(',', $p['procInstructions']) . ') => ' . '</info>' . PHP_EOL);
+                $progressBar->display();
+
                 $result = $crawlerController->readUrlFromArray($queueRec);
 
-                $resultContent = $result['content'] === null ? '' : $result['content'];
+                $resultContent = $result['content'] ?? '';
                 $requestResult = $jsonCompatibilityConverter->convert($resultContent);
+
+                $progressBar->clear();
                 if (is_array($requestResult)) {
                     $resLog = is_array($requestResult['log']) ? PHP_EOL . chr(9) . chr(9) . implode(PHP_EOL . chr(9) . chr(9), $requestResult['log']) : '';
                     $output->writeln('<info>OK: ' . $resLog . '</info>' . PHP_EOL);
                 } else {
                     $output->writeln('<error>Error checking Crawler Result:  ' . substr(preg_replace('/\s+/', ' ', strip_tags($resultContent)), 0, 30000) . '...' . PHP_EOL . '</error>' . PHP_EOL);
                 }
+                $progressBar->display();
             }
+            $output->writeln('');
         } elseif ($mode === 'queue') {
             $output->writeln('<info>Putting ' . count($crawlerController->urlList) . ' entries in queue:</info>' . PHP_EOL);
             $output->writeln('<info>' . implode(PHP_EOL, $crawlerController->urlList) . '</info>' . PHP_EOL);
@@ -204,11 +205,8 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
 
     /**
      * Obtains configuration keys from the CLI arguments
-     *
-     * @param $conf string
-     * @return array
      */
-    private function getConfigurationKeys($conf)
+    private function getConfigurationKeys(string $conf): array
     {
         $parameter = trim($conf);
         return ($parameter !== '' ? GeneralUtility::trimExplode(',', $parameter) : []);
