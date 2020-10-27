@@ -22,22 +22,22 @@ jobs:
                     coverage: none
             -   run: composer install --no-progress
             -   run: composer analyse
-    #rector:
-    #    name: Rector
-    #    runs-on: ubuntu-latest
-    #        steps:
-    #              -   uses: actions/checkout@v2
-    #                  -   id: composer-cache
-    #                      run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-    #                  -   uses: actions/cache@v1
-    #                      with:
-    #                          path: ${{ steps.composer-cache.outputs.dir }}
-    #                          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-    #                          restore-keys: |
-    #                              ${{ runner.os }}-composer-
-    #                  -   uses: shivammathur/setup-php@v2
-    #                      with:
-    #                          php-version: 7.4
-    #                          coverage: none
-    #                  -   run: composer install --no-progress
-    #                  -   run: composer rector
+    rector:
+        name: Rector
+        runs-on: ubuntu-latest
+        steps:
+              -   uses: actions/checkout@v2
+              -   id: composer-cache
+                  run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+              -   uses: actions/cache@v1
+                  with:
+                      path: ${{ steps.composer-cache.outputs.dir }}
+                      key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+                      restore-keys: |
+                          ${{ runner.os }}-composer-
+              -   uses: shivammathur/setup-php@v2
+                  with:
+                      php-version: 7.4
+                      coverage: none
+              -   run: composer install --no-progress
+              -   run: composer rector
