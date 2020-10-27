@@ -4,6 +4,7 @@ on: [push, pull_request]
 
 jobs:
     phpstan:
+        name: PHPstan
         runs-on: ubuntu-latest
         steps:
             -   uses: actions/checkout@v2
@@ -22,6 +23,7 @@ jobs:
             -   run: composer install --no-progress
             -   run: composer analyse
     rector:
+        name: Rector
         runs-on: ubuntu-latest
             steps:
                   -   uses: actions/checkout@v2
