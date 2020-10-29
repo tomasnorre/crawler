@@ -24,6 +24,7 @@ adjust with additional parameters if you like.
 
 .. rst-class:: bignums-xxl
 
+.. _create-crawler-configuration:
 #. Create crawler configuration
 
    First we need a `crawler configuration` these are stored in the database. You
@@ -36,6 +37,10 @@ adjust with additional parameters if you like.
       :alt: Crawler configuration record
 
       Crawler configuration record
+
+   
+   .. hint::
+      Let's say your website has _Website Users_ with one or multiple _Website Usergroup_. In this case you need to create multiple crawler configurations: For every possible combination of _Website Usergroups_ that a user can have you need to create a single crawler configuration. To be considered all those crawler configurations need to be added to the `crawler:processQueue` command. Otherwise some user get a warmed up cache but those with a combination of _Website Usergroups_ which was not taken into account in a crawler configuration will get an uncached page.
 
 #. Build the queue
 
