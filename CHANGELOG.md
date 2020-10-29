@@ -5,11 +5,8 @@
 ### Added
 * Progress bar to the `crawler:buildQueue` command output when using with `--mode exec`
 
-### Deprecated
-
-### Changed
-
 ### Fixed
+* Detailed process views is callable again
 
 ## Crawler 9.1.1
 Crawler 9.1.1 was released on October 17th, 2020

@@ -767,7 +767,7 @@ class BackendModule
         $processRepository = GeneralUtility::makeInstance(ProcessRepository::class);
         $queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
 
-        $mode = $this->pObj->MOD_SETTINGS['processListMode'];
+        $mode = GeneralUtility::_GP('processListMode') ?? $this->pObj->MOD_SETTINGS['processListMode'];
         if ($mode === 'simple') {
             $allProcesses = $processRepository->findAllActive();
         } else {
@@ -840,13 +840,13 @@ class BackendModule
             return $this->getLinkButton(
                 'actions-document-view',
                 $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.show.running'),
-                $this->getInfoModuleUrl(['SET[\'processListMode\']' => 'simple'])
+                $this->getInfoModuleUrl(['processListMode' => 'simple'])
             );
         } elseif ($mode === 'simple') {
             return $this->getLinkButton(
                 'actions-document-view',
                 $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.show.all'),
-                $this->getInfoModuleUrl(['SET[\'processListMode\']' => 'detail'])
+                $this->getInfoModuleUrl(['processListMode' => 'detail'])
             );
         }
         return '';
