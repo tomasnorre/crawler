@@ -27,8 +27,8 @@ Example
       }
    }
 
-   # _PID:57 is the detail-view PageId.
-   # pidSOnly = 58 is the Folder where news records are stored.
+   # _PID:57 is the Folder where news records are stored.
+   # pidSOnly = 58 is the detail-view PageId.
 
 Now you can add the News detail-view pages to the crawler queue and have them in
 the cache and the `indexed_search` index if you are using that.
