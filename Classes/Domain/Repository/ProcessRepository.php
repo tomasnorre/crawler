@@ -36,8 +36,6 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
-use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
 /**
@@ -84,20 +82,22 @@ class ProcessRepository extends Repository
     {
         /** @var ProcessCollection $collection */
         $collection = GeneralUtility::makeInstance(ProcessCollection::class);
-
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
 
-        $queryBuilder
+        $statement = $queryBuilder
             ->select('*')
             ->from($this->tableName)
-            ->orderBy('ttl', QueryInterface::ORDER_DESCENDING);
+            ->orderBy('ttl', 'DESC')
+            ->execute();
 
-        /** @var Query $query */
-        $query = $this->createQuery();
-        $result = $query->statement($queryBuilder)->execute();
-
-        /** @var Process $process */
-        foreach ($result as $process) {
+        while ($row = $statement->fetch()) {
+            $process = GeneralUtility::makeInstance(Process::class);
+            $process->setProcessId($row['process_id']);
+            $process->setActive($row['active']);
+            $process->setTtl($row['ttl']);
+            $process->setAssignedItemsCount($row['assigned_items_count']);
+            $process->setDeleted($row['deleted']);
+            $process->setSystemProcessId($row['system_process_id']);
             $collection->append($process);
         }
 
@@ -123,21 +123,26 @@ class ProcessRepository extends Repository
     {
         /** @var ProcessCollection $collection */
         $collection = GeneralUtility::makeInstance(ProcessCollection::class);
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
 
-        $query = $this->createQuery();
-        $query->setOrderings(['ttl' => QueryInterface::ORDER_DESCENDING]);
-        $query->matching(
-            $query->logicalAnd(
-                $query->equals('active', 1),
-                $query->equals('deleted', 0)
+        $statement = $queryBuilder
+            ->select('*')
+            ->from($this->tableName)
+            ->where(
+                $queryBuilder->expr()->eq('active', 1),
+                $queryBuilder->expr()->eq('deleted', 0)
             )
-        );
+            ->orderBy('ttl', 'DESC')
+            ->execute();
 
-        /** @var QueryResult $result */
-        $result = $query->execute();
-
-        /** @var Process $process */
-        foreach ($result as $process) {
+        while ($row = $statement->fetch()) {
+            $process = new Process();
+            $process->setProcessId($row['process_id']);
+            $process->setActive($row['active']);
+            $process->setTtl($row['ttl']);
+            $process->setAssignedItemsCount($row['assigned_items_count']);
+            $process->setDeleted($row['deleted']);
+            $process->setSystemProcessId($row['system_process_id']);
             $collection->append($process);
         }
 
