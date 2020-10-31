@@ -116,11 +116,6 @@ parameters:
 			path: Classes/Command/BuildQueueCommand.php
 
 		-
-			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
-			count: 1
-			path: Classes/Command/BuildQueueCommand.php
-
-		-
 			message: "#^Parameter \\#1 \\$theInt of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\MathUtility\\:\\:forceIntegerInRange\\(\\) expects int, array\\<string\\>\\|bool\\|string\\|null given\\.$#"
 			count: 1
 			path: Classes/Command/BuildQueueCommand.php
@@ -141,22 +136,7 @@ parameters:
 			path: Classes/Command/BuildQueueCommand.php
 
 		-
-			message: "#^Offset 'content' does not exist on string\\.$#"
-			count: 2
-			path: Classes/Command/BuildQueueCommand.php
-
-		-
 			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|null given\\.$#"
-			count: 1
-			path: Classes/Command/BuildQueueCommand.php
-
-		-
-			message: "#^Method AOE\\\\Crawler\\\\Command\\\\BuildQueueCommand\\:\\:getConfigurationKeys\\(\\) has parameter \\$conf with no typehint specified\\.$#"
-			count: 1
-			path: Classes/Command/BuildQueueCommand.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$conf string\\)\\: Unexpected token \"\\$conf\", expected type at offset 82$#"
 			count: 1
 			path: Classes/Command/BuildQueueCommand.php
 
@@ -371,22 +351,7 @@ parameters:
 			path: Classes/Domain/Repository/ConfigurationRepository.php
 
 		-
-			message: "#^PHPDoc tag @var for variable \\$query contains unknown class AOE\\\\Crawler\\\\Domain\\\\Repository\\\\Query\\.$#"
-			count: 1
-			path: Classes/Domain/Repository/ProcessRepository.php
-
-		-
-			message: "#^Call to method statement\\(\\) on an unknown class AOE\\\\Crawler\\\\Domain\\\\Repository\\\\Query\\.$#"
-			count: 1
-			path: Classes/Domain/Repository/ProcessRepository.php
-
-		-
 			message: "#^Method AOE\\\\Crawler\\\\Domain\\\\Repository\\\\ProcessRepository\\:\\:findByProcessId\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: Classes/Domain/Repository/ProcessRepository.php
-
-		-
-			message: "#^Method TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryInterface\\:\\:logicalAnd\\(\\) invoked with 2 parameters, 1 required\\.$#"
 			count: 1
 			path: Classes/Domain/Repository/ProcessRepository.php
 
