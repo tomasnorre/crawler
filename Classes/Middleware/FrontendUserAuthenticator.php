@@ -27,7 +27,9 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\UserAspect;
+use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Frontend\Controller\ErrorController;
 
@@ -88,9 +90,7 @@ class FrontendUserAuthenticator implements MiddlewareInterface
         // Now ensure to set the proper user groups
         $grList = $queueParameters['feUserGroupList'];
         if ($grList) {
-            $frontendUser = $request->getAttribute('frontend.user');
-            $frontendUser->user[$frontendUser->usergroup_column] = '0,-2,' . $grList; //'0,-2,' . $grList;
-            $frontendUser->user['uid'] = PHP_INT_MAX;
+            $frontendUser = $this->getFrontendUser($grList, $request);
 
             // we have to set the fe user group to the user aspect since indexed_search only reads the user aspect
             // to get the groups. otherwise groups are ignored during indexing.
@@ -111,5 +111,24 @@ class FrontendUserAuthenticator implements MiddlewareInterface
     protected function isRequestHashMatchingQueueRecord(?array $queueRec, string $hash): bool
     {
         return is_array($queueRec) && hash_equals($hash, md5($queueRec['qid'] . '|' . $queueRec['set_id'] . '|' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']));
+    }
+
+    /**
+     * @param $grList
+     * @param ServerRequestInterface $request
+     * @return mixed|string|\TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication
+     */
+    private function getFrontendUser($grList, ServerRequestInterface $request)
+    {
+        $currentTYPO3VersionAsInteger = VersionNumberUtility::convertVersionNumberToInteger(VersionNumberUtility::getNumericTypo3Version());
+        if ($currentTYPO3VersionAsInteger < 10000000) {
+            $frontendUser = $GLOBALS['TSFE']->fe_user;
+            $frontendUser->user[$frontendUser->usergroup_column] = $grList;
+        } else {
+            $frontendUser = $request->getAttribute('frontend.user');
+            $frontendUser->user[$frontendUser->usergroup_column] = '0,-2,' . $grList;
+            $frontendUser->user['uid'] = PHP_INT_MAX;
+        }
+        return $frontendUser;
     }
 }
