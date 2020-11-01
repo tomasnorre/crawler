@@ -27,7 +27,6 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\UserAspect;
-use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
@@ -114,11 +113,9 @@ class FrontendUserAuthenticator implements MiddlewareInterface
     }
 
     /**
-     * @param $grList
-     * @param ServerRequestInterface $request
      * @return mixed|string|\TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication
      */
-    private function getFrontendUser($grList, ServerRequestInterface $request)
+    private function getFrontendUser(string $grList, ServerRequestInterface $request)
     {
         $currentTYPO3VersionAsInteger = VersionNumberUtility::convertVersionNumberToInteger(VersionNumberUtility::getNumericTypo3Version());
         if ($currentTYPO3VersionAsInteger < 10000000) {
