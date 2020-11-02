@@ -40,7 +40,7 @@ adjust with additional parameters if you like.
 
    
    .. hint::
-      Let's say your website has _Website Users_ with one or multiple _Website Usergroup_. In this case you need to create multiple crawler configurations: For every possible combination of _Website Usergroups_ that a user can have you need to create a single crawler configuration. To be considered all those crawler configurations need to be added to the `crawler:processQueue` command. Otherwise some user get a warmed up cache but those with a combination of _Website Usergroups_ which was not taken into account in a crawler configuration will get an uncached page.
+      Let's say your website has frontend users with one or multiple Usergroups. In this case you need to create multiple crawler configurations: For every possible combination of Usergroups that a user can have you need to create a individual crawler configuration. All those crawler configurations need to be added to the `crawler:processQueue` command to be considered. If you miss this some user get a warmed up cache but those with a combination of Usergroups which was not taken into account in a crawler configuration will get an uncached page.
 
 #. Build the queue
 

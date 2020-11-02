@@ -4,6 +4,7 @@
 
 ### Added
 * Progress bar to the `crawler:buildQueue` command output when using with `--mode exec`
+* Improve documentation about proper crawler configuration for user with _Website Usergroups_
 
 ### Deprecated
 
