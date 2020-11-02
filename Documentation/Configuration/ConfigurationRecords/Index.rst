@@ -60,7 +60,7 @@ Processing instruction parameters
 
 Crawl with FE user groups
    User groups to set for the request. See also:
-   :ref:`paramSets.[key].userGroups <crawler-tsconfig-paramSets-key-userGroups>`
+   :ref:`paramSets.[key].userGroups <crawler-tsconfig-paramSets-key-userGroups>` and the hint in :ref:`create-crawler-configuration`
 
 Access
 ------
