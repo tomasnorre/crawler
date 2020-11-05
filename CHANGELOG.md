@@ -9,6 +9,7 @@
 ### Fixed
 * Detailed process views is callable again
 * Makes sure the QueueRepository is always set when needed in Domain/Model/Process
+* Crawling with FE-Groups is correct initialized with both TYPO3 9 & 10
 
 ## Crawler 9.1.1
 Crawler 9.1.1 was released on October 17th, 2020

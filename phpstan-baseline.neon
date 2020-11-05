@@ -206,7 +206,27 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
+			message: "#^Offset 'paramParsed' does not exist on array\\(\\)\\|array\\(\\?'origin' \\=\\> 'pagets', \\?'paramExpanded' \\=\\> array, \\?'paramParsed' \\=\\> array\\<string, string\\>, \\?'subCfg' \\=\\> array&nonEmpty, \\?'URLs' \\=\\> array\\)\\.$#"
+			count: 1
+			path: Classes/Controller/CrawlerController.php
+
+		-
+			message: "#^Offset 'paramExpanded' does not exist on array\\(\\)\\|array\\(\\?'origin' \\=\\> 'pagets', \\?'paramExpanded' \\=\\> array, \\?'paramParsed' \\=\\> array\\<string, string\\>, \\?'subCfg' \\=\\> array&nonEmpty, \\?'URLs' \\=\\> array\\)\\.$#"
+			count: 2
+			path: Classes/Controller/CrawlerController.php
+
+		-
 			message: "#^Offset 'usergroup_cached…' does not exist on array\\|null\\.$#"
+			count: 1
+			path: Classes/Controller/CrawlerController.php
+
+		-
+			message: "#^Offset 'paramParsed' does not exist on array\\(\\)\\|array\\(\\?'origin' \\=\\> string, \\?'paramExpanded' \\=\\> array, \\?'paramParsed' \\=\\> array\\<string, string\\>, \\?'subCfg' \\=\\> array, \\?'URLs' \\=\\> array\\)\\.$#"
+			count: 1
+			path: Classes/Controller/CrawlerController.php
+
+		-
+			message: "#^Offset 'paramExpanded' does not exist on array\\(\\)\\|array\\(\\?'origin' \\=\\> string, \\?'paramExpanded' \\=\\> array, \\?'paramParsed' \\=\\> array\\<string, string\\>, \\?'subCfg' \\=\\> array, \\?'URLs' \\=\\> array\\)\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
