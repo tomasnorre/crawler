@@ -111,7 +111,7 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
         $processRepository = GeneralUtility::makeInstance(ProcessRepository::class);
         $queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
 
-        $mode = GeneralUtility::_GP('processListMode') ?? $this->pObj->MOD_SETTINGS['processListMode'];
+        $mode = GeneralUtility::_GP('processListMode') ?? $this->infoModuleController->MOD_SETTINGS['processListMode'];
         if ($mode === 'simple') {
             $allProcesses = $processRepository->findAllActive();
         } else {
