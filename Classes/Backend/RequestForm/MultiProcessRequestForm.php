@@ -111,7 +111,7 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
         $processRepository = GeneralUtility::makeInstance(ProcessRepository::class);
         $queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
 
-        $mode = $this->processListMode ?? 'simple';
+        $mode = GeneralUtility::_GP('processListMode') ?? $this->pObj->MOD_SETTINGS['processListMode'];
         if ($mode === 'simple') {
             $allProcesses = $processRepository->findAllActive();
         } else {
@@ -256,13 +256,13 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
             return $this->getLinkButton(
                 'actions-document-view',
                 $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.show.running'),
-                UrlBuilder::getInfoModuleUrl(['SET[\'processListMode\']' => 'simple'])
+                UrlBuilder::getInfoModuleUrl(['processListMode' => 'simple'])
             );
         } elseif ($mode === 'simple') {
             return $this->getLinkButton(
                 'actions-document-view',
                 $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.show.all'),
-                UrlBuilder::getInfoModuleUrl(['SET[\'processListMode\']' => 'detail'])
+                UrlBuilder::getInfoModuleUrl(['processListMode' => 'detail'])
             );
         }
         return '';
