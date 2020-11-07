@@ -1,6 +1,7 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 9.1.2-dev
+## Crawler 9.1.2
+Crawler 9.1.2 was released on November 7th, 2020
 
 ### Added
 * Progress bar to the `crawler:buildQueue` command output when using with `--mode exec`
