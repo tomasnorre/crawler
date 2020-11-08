@@ -24,8 +24,7 @@ addons:
       - sonarqube
   artifacts:
     paths:
-      - $HOME/build/AOEpeople/crawler/Tests/Acceptance/_output/*.png
-      - $HOME/build/AOEpeople/crawler/Tests/Acceptance/_output/*.html
+      - $HOME/build/AOEpeople/crawler/Tests/Acceptance/_output/
 
 php:
   - '7.2'
