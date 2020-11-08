@@ -4,7 +4,7 @@ includes:
 
 rules:
     - Symplify\CodingStandard\Rules\NoDefaultExceptionRule
-    - Symplify\CodingStandard\Rules\NoDebugFuncCallRule
+    #- Symplify\CodingStandard\Rules\ForbiddenFuncCallRule
 
 parameters:
     level: max
@@ -33,3 +33,6 @@ services:
         tags: [phpstan.rules.rule]
         arguments:
             maxClassCognitiveComplexity: 60
+
+#    -
+#        class: Symplify\PackageBuilder\Matcher\ArrayStringAndFnMatcher
