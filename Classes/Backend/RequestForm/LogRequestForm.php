@@ -7,6 +7,8 @@ namespace AOE\Crawler\Backend\RequestForm;
 use AOE\Crawler\Backend\Helper\UrlBuilder;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\Utility\MessageUtility;
+use AOE\Crawler\Writer\FileWriter\CsvWriter\CrawlerCsvWriter;
+use AOE\Crawler\Writer\FileWriter\CsvWriter\CsvWriter;
 use Doctrine\DBAL\Query\QueryBuilder;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -51,13 +53,18 @@ final class LogRequestForm extends AbstractRequestForm implements RequestForm
      */
     private $queryBuilder;
 
+    /**
+     * @var CsvWriter
+     */
+    private $csvWriter;
+
     public function __construct(StandaloneView $view, InfoModuleController $infoModuleController)
     {
         $this->view = $view;
         $this->infoModuleController = $infoModuleController;
         $this->jsonCompatibilityConverter = new JsonCompatibilityConverter();
         $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tx_crawler_queue');
-        // TODO: Implement CSV Writer
+        $this->csvWriter = new CrawlerCsvWriter();
     }
 
     public function render($id, string $currentValue, array $menuItems): string
