@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace AOE\Crawler\Writer\FileWriter\CsvWriter;
@@ -18,7 +19,7 @@ namespace AOE\Crawler\Writer\FileWriter\CsvWriter;
  * The TYPO3 project - inspiring people to share!
  */
 
-interface CsvWriter
+interface CsvWriterInterface
 {
     public function arrayToCsv(array $records): string;
 }

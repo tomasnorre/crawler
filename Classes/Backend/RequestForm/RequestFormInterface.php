@@ -22,7 +22,7 @@ namespace AOE\Crawler\Backend\RequestForm;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Info\Controller\InfoModuleController;
 
-interface RequestForm
+interface RequestFormInterface
 {
     public function __construct(StandaloneView $view, InfoModuleController $infoModuleController);
 

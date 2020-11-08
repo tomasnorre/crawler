@@ -38,7 +38,7 @@ use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Info\Controller\InfoModuleController;
 
-final class MultiProcessRequestForm extends AbstractRequestForm implements RequestForm
+final class MultiProcessRequestForm extends AbstractRequestForm implements RequestFormInterface
 {
     /**
      * @var StandaloneView

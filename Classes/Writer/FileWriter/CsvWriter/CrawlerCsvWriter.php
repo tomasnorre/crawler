@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace AOE\Crawler\Writer\FileWriter\CsvWriter;
@@ -20,9 +21,9 @@ namespace AOE\Crawler\Writer\FileWriter\CsvWriter;
 
 use TYPO3\CMS\Core\Utility\CsvUtility;
 
-final class CrawlerCsvWriter implements CsvWriter
+final class CrawlerCsvWriter implements CsvWriterInterface
 {
-    const CARRIAGE_RETURN = 13;
+    public const CARRIAGE_RETURN = 13;
 
     public function arrayToCsv(array $records): string
     {

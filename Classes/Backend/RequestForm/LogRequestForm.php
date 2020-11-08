@@ -8,7 +8,7 @@ use AOE\Crawler\Backend\Helper\UrlBuilder;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\Utility\MessageUtility;
 use AOE\Crawler\Writer\FileWriter\CsvWriter\CrawlerCsvWriter;
-use AOE\Crawler\Writer\FileWriter\CsvWriter\CsvWriter;
+use AOE\Crawler\Writer\FileWriter\CsvWriter\CsvWriterInterface;
 use Doctrine\DBAL\Query\QueryBuilder;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -21,7 +21,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Info\Controller\InfoModuleController;
 
-final class LogRequestForm extends AbstractRequestForm implements RequestForm
+final class LogRequestForm extends AbstractRequestForm implements RequestFormInterface
 {
     /**
      * @var StandaloneView
@@ -54,7 +54,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestForm
     private $queryBuilder;
 
     /**
-     * @var CsvWriter
+     * @var CsvWriterInterface
      */
     private $csvWriter;
 

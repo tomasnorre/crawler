@@ -30,7 +30,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Info\Controller\InfoModuleController;
 
-final class StartRequestForm extends AbstractRequestForm implements RequestForm
+final class StartRequestForm extends AbstractRequestForm implements RequestFormInterface
 {
     /**
      * @var StandaloneView
