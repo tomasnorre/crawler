@@ -149,7 +149,7 @@ jobs:
       env:
         - TYPO3_VERSION=^9.5
       script:
-        - .Build/bin/rector process --dry-run --config rector-ci.yaml
+        - .Build/bin/rector process --dry-run --config rector-ci.php
 
     -
       stage: static

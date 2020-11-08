@@ -32,21 +32,17 @@
         "codeception/module-filesystem": "^1.0",
         "codeception/module-phpbrowser": "^1.0",
         "codeception/module-webdriver": "^1.0",
-        "nikic/php-parser": "4.4.",
         "nimut/testing-framework": "^5.0",
         "nimut/typo3-complete": "^9.5",
         "nunomaduro/phpinsights": "^1.13",
         "phpstan/extension-installer": "^1.0",
         "phpstan/phpstan": "^0.12",
-        "rector/rector": "^0.7.22",
+        "rector/rector": "^0.8",
         "saschaegerer/phpstan-typo3": "^0.13.1",
         "slam/phpstan-extensions": "^5.0",
         "symfony/yaml": "^4.4 || ^5.0",
-        "symplify/easy-coding-standard": "^7.2",
+        "symplify/easy-coding-standard": "^8.3",
         "typo3/testing-framework": "^4.14 || ^5.0"
-    },
-    "suggest": {
-        "nikic/php-parser": "Is not a hard dependency, but needs to be locked at 4.4 to not have rector break. Due to PHPStan dependencies Rector cannot be updated yet"
     },
     "replace": {
         "typo3-ter/crawler": "self.version"
@@ -88,7 +84,7 @@
         ],
         "rector": [
             "[ -e .Build/bin/rector ] || composer update",
-            ".Build/bin/rector process --dry-run --config rector-ci.yaml"
+            ".Build/bin/rector process --dry-run --config rector-ci.php"
         ],
         "test:all": [
             "@test:unit",

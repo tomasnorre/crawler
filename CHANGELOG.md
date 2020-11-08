@@ -1,5 +1,12 @@
 # Changelog TYPO3 Crawler
 
+## Crawler 9.1.3-dev
+
+### Changed
+* Updated Rector, PHPStan, ECS for better static code analysis
+
+### Fixed
+
 ## Crawler 9.1.2
 Crawler 9.1.2 was released on November 7th, 2020
 
