@@ -4,7 +4,6 @@ includes:
 
 rules:
     - Symplify\CodingStandard\Rules\NoDefaultExceptionRule
-    #- Symplify\CodingStandard\Rules\ForbiddenFuncCallRule
 
 parameters:
     level: max
@@ -34,5 +33,16 @@ services:
         arguments:
             maxClassCognitiveComplexity: 60
 
-#    -
-#        class: Symplify\PackageBuilder\Matcher\ArrayStringAndFnMatcher
+    -
+        class: Symplify\PackageBuilder\Matcher\ArrayStringAndFnMatcher
+
+    -
+        class: Symplify\CodingStandard\Rules\ForbiddenFuncCallRule
+        tags: [phpstan.rules.rule]
+        arguments:
+            forbiddenFunctions:
+                - dump
+                - die
+                - d
+                - compact
+                - var_dump
