@@ -22,6 +22,11 @@ addons:
     branches:
       - master
       - sonarqube
+  artifacts:
+    paths:
+      - $HOME/build/AOEpeople/crawler/Tests/Acceptance/_output/*.png
+      - $HOME/build/AOEpeople/crawler/Tests/Acceptance/_output/*.html
+
 php:
   - '7.2'
   - '7.3'
