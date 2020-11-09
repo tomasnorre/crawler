@@ -143,6 +143,7 @@ jobs:
         - ./wait-for-it.sh -t 60 127.0.0.1:80
         - ./wait-for-it.sh -t 60 127.0.0.1:443
         - ./wait-for-it.sh -t 60 localhost:4444
+        - touch Tests/Acceptance/_output/test-complete.txt
         - php .Build/bin/codecept run
 
     -
@@ -183,6 +184,7 @@ jobs:
         - ./wait-for-it.sh -t 60 127.0.0.1:80
         - ./wait-for-it.sh -t 60 127.0.0.1:443
         - ./wait-for-it.sh -t 60 localhost:4444
+        - touch Tests/Acceptance/_output/test-complete.txt
         - php .Build/bin/codecept run
 
     # Static Analysis
