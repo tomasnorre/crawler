@@ -171,7 +171,7 @@ jobs:
         - travis_wait 30 composer require --dev nimut/typo3-complete=$TYPO3_VERSION
         - ddev start
         # Make sure Database Schema is updated, as it's build for TYPO3 9.5
-        - ddev exec bin/typo3cms upgrade:all
+        - ddev exec bin/typo3cms database:updateschema
         - ddev exec bin/typo3cms install:fixfolderstructure
         - ddev exec bin/typo3cms install:extensionsetupifpossible
         - ddev exec bin/typo3cms cache:flush
