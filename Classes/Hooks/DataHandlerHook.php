@@ -27,6 +27,9 @@ use TYPO3\CMS\Frontend\Page\PageRepository;
 
 class DataHandlerHook
 {
+    /**
+     * @noRector \Rector\DeadCode\Rector\ClassMethod\RemoveUnusedParameterRector
+     */
     public function addFlushedPagesToCrawlerQueue(array $parameters, \TYPO3\CMS\Core\DataHandling\DataHandler $dataHandler): void
     {
         $pageIdsToBeFlushedFromCache = $parameters['pageIdArray'];

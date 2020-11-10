@@ -24,7 +24,7 @@ use TYPO3\CMS\Info\Controller\InfoModuleController;
 
 interface RequestFormInterface
 {
-    public function __construct(StandaloneView $view, InfoModuleController $infoModuleController);
+    public function __construct(StandaloneView $view, InfoModuleController $infoModuleController, array $extensionSettings);
 
     public function render($id, string $elementName, array $menuItems): string;
 }

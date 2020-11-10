@@ -22,10 +22,7 @@ namespace AOE\Crawler\Backend\RequestForm;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Utility\MessageUtility;
-use AOE\Crawler\Utility\PhpBinaryUtility;
 use AOE\Crawler\Utility\SignalSlotUtility;
-use TYPO3\CMS\Core\Localization\LanguageService;
-use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Info\Controller\InfoModuleController;
@@ -47,10 +44,16 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
      */
     private $reqMinute = 1000;
 
-    public function __construct(StandaloneView $view, InfoModuleController $infoModuleController)
+    /**
+     * @var array holds the selection of configuration from the configuration selector box
+     */
+    private $incomingConfigurationSelection = [];
+
+    public function __construct(StandaloneView $view, InfoModuleController $infoModuleController, array $extensionSettings)
     {
         $this->view = $view;
         $this->infoModuleController = $infoModuleController;
+        $this->extensionSettings = $extensionSettings;
     }
 
     public function render($id, string $elementName, array $menuItems): string
@@ -77,21 +80,21 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
             $crawlerParameter = GeneralUtility::_GP('_crawl');
             $downloadParameter = GeneralUtility::_GP('_download');
 
-            $this->duplicateTrack = [];
-            $this->submitCrawlUrls = isset($crawlerParameter);
-            $this->downloadCrawlUrls = isset($downloadParameter);
-            $this->makeCrawlerProcessableChecks();
+            $duplicateTrack = [];
+            $submitCrawlUrls = isset($crawlerParameter);
+            $downloadCrawlUrls = isset($downloadParameter);
+            $this->makeCrawlerProcessableChecks($this->extensionSettings);
 
             switch ((string) GeneralUtility::_GP('tstamp')) {
                 case 'midnight':
-                    $this->scheduledTime = mktime(0, 0, 0);
+                    $scheduledTime = mktime(0, 0, 0);
                     break;
                 case '04:00':
-                    $this->scheduledTime = mktime(0, 0, 0) + 4 * 3600;
+                    $scheduledTime = mktime(0, 0, 0) + 4 * 3600;
                     break;
                 case 'now':
                 default:
-                    $this->scheduledTime = time();
+                    $scheduledTime = time();
                     break;
             }
 
@@ -108,7 +111,7 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
             if ($noConfigurationSelected) {
                 MessageUtility::addWarningMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noConfigSelected'));
             } else {
-                if ($this->submitCrawlUrls) {
+                if ($submitCrawlUrls) {
                     $reason = new Reason();
                     $reason->setReason(Reason::REASON_GUI_SUBMIT);
                     $reason->setDetailText('The user ' . $GLOBALS['BE_USER']->user['username'] . ' added pages to the crawler queue manually');
@@ -124,75 +127,39 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
                 $code = $this->crawlerController->getPageTreeAndUrls(
                     $pageId,
                     $this->infoModuleController->MOD_SETTINGS['depth'],
-                    $this->scheduledTime,
+                    $scheduledTime,
                     $this->reqMinute,
-                    $this->submitCrawlUrls,
-                    $this->downloadCrawlUrls,
-                    [], // Do not filter any processing instructions
+                    $submitCrawlUrls,
+                    $downloadCrawlUrls,
+                    // Do not filter any processing instructions
+                    [],
                     $this->incomingConfigurationSelection
                 );
             }
 
-            $this->downloadUrls = $this->crawlerController->downloadUrls;
-            $this->duplicateTrack = $this->crawlerController->duplicateTrack;
+            $downloadUrls = $this->crawlerController->downloadUrls;
+
+            $duplicateTrack = $this->crawlerController->duplicateTrack;
 
             $this->view->assign('noConfigurationSelected', $noConfigurationSelected);
-            $this->view->assign('submitCrawlUrls', $this->submitCrawlUrls);
-            $this->view->assign('amountOfUrls', count(array_keys($this->duplicateTrack)));
+            $this->view->assign('submitCrawlUrls', $submitCrawlUrls);
+            $this->view->assign('amountOfUrls', count(array_keys($duplicateTrack)));
             $this->view->assign('selectors', $this->generateConfigurationSelectors());
             $this->view->assign('code', $code);
             $this->view->assign('displayActions', 0);
 
             // Download Urls to crawl:
-            if ($this->downloadCrawlUrls) {
+            if ($downloadCrawlUrls) {
                 // Creating output header:
                 header('Content-Type: application/octet-stream');
                 header('Content-Disposition: attachment; filename=CrawlerUrls.txt');
 
                 // Printing the content of the CSV lines:
-                echo implode(chr(13) . chr(10), $this->downloadUrls);
+                echo implode(chr(13) . chr(10), $downloadUrls);
                 exit;
             }
         }
         return $this->view->render();
-    }
-
-    private function getLanguageService(): LanguageService
-    {
-        return $GLOBALS['LANG'];
-    }
-
-    /**
-     * Verify that the crawler is executable.
-     * TODO: popen() is part of PHP Core and check can be removed. The PHP Binary check should be moved to PhPBinaryUtility::class
-     */
-    private function makeCrawlerProcessableChecks(): void
-    {
-        if (! $this->isPhpForkAvailable()) {
-            $this->isErrorDetected = true;
-            MessageUtility::addErrorMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:message.noPhpForkAvailable'));
-        }
-
-        $exitCode = 0;
-        $out = [];
-        CommandUtility::exec(
-            PhpBinaryUtility::getPhpBinary() . ' -v',
-            $out,
-            $exitCode
-        );
-        if ($exitCode > 0) {
-            $this->isErrorDetected = true;
-            MessageUtility::addErrorMessage(sprintf($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:message.phpBinaryNotFound'), htmlspecialchars($this->extensionSettings['phpPath'])));
-        }
-    }
-
-    /**
-     * Indicate that the required PHP method "popen" is
-     * available in the system.
-     */
-    private function isPhpForkAvailable(): bool
-    {
-        return function_exists('popen');
     }
 
     /**

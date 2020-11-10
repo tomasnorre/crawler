@@ -54,6 +54,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->importDataSet(__DIR__ . '/../../Fixtures/tx_crawler_queue.xml');
         $this->importDataSet(__DIR__ . '/../../Fixtures/pages.xml');

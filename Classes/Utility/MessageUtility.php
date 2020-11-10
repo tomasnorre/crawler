@@ -53,7 +53,7 @@ class MessageUtility
      * This method is used to add a message to the internal queue
      *
      * @param string $message the message itself
-     * @param int $severity message level (0 = success (default), -1  = info, -2 = notice, 1 = warning, 2 = error)
+     * @param int $severity message level (0 = success (default), -1 = info, -2 = notice, 1 = warning, 2 = error)
      */
     private static function addMessage(string $message, int $severity = FlashMessage::OK): void
     {

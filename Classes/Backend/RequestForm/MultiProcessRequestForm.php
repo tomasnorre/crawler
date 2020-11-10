@@ -26,13 +26,10 @@ use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Exception\ProcessException;
 use AOE\Crawler\Service\ProcessService;
 use AOE\Crawler\Utility\MessageUtility;
-use AOE\Crawler\Utility\PhpBinaryUtility;
 use Psr\Http\Message\UriInterface;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
-use TYPO3\CMS\Core\Localization\LanguageService;
-use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
@@ -46,16 +43,6 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
     private $view;
 
     /**
-     * @var ProcessRepository
-     */
-    private $processRepository;
-
-    /**
-     * @var QueueRepository
-     */
-    private $queueRepository;
-
-    /**
      * @var ProcessService
      */
     private $processService;
@@ -66,23 +53,22 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
     private $iconFactory;
 
     /**
-     * @var string
-     */
-    private $processListMode;
-
-    /**
      * @var InfoModuleController
      */
     private $infoModuleController;
 
-    public function __construct(StandaloneView $view, InfoModuleController $infoModuleController)
+    /**
+     * @var int|mixed
+     */
+    private $id;
+
+    public function __construct(StandaloneView $view, InfoModuleController $infoModuleController, array $extensionSettings)
     {
         $this->view = $view;
-        $this->processRepository = new ProcessRepository();
-        $this->queueRepository = new QueueRepository();
         $this->processService = GeneralUtility::makeInstance(ProcessService::class);
         $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
         $this->infoModuleController = $infoModuleController;
+        $this->extensionSettings = $extensionSettings;
     }
 
     public function render($id, string $elementName, array $menuItems): string
@@ -94,12 +80,13 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
      * This method is used to show an overview about the active an the finished crawling processes
      *
      * @return string
+     * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
      */
-    protected function processOverviewAction()
+    private function processOverviewAction()
     {
         $this->view->setTemplate('ProcessOverview');
         $this->runRefreshHooks();
-        $this->makeCrawlerProcessableChecks();
+        $this->makeCrawlerProcessableChecks($this->extensionSettings);
 
         try {
             $this->handleProcessOverviewActions();
@@ -138,43 +125,6 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
         ]);
 
         return $this->view->render();
-    }
-
-    /**
-     * Verify that the crawler is executable.
-     */
-    private function makeCrawlerProcessableChecks(): void
-    {
-        if (! $this->isPhpForkAvailable()) {
-            $this->isErrorDetected = true;
-            MessageUtility::addErrorMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:message.noPhpForkAvailable'));
-        }
-
-        $exitCode = 0;
-        $out = [];
-        CommandUtility::exec(
-            PhpBinaryUtility::getPhpBinary() . ' -v',
-            $out,
-            $exitCode
-        );
-        if ($exitCode > 0) {
-            $this->isErrorDetected = true;
-            MessageUtility::addErrorMessage(sprintf($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:message.phpBinaryNotFound'), htmlspecialchars($this->extensionSettings['phpPath'])));
-        }
-    }
-
-    /**
-     * Indicate that the required PHP method "popen" is
-     * available in the system.
-     */
-    private function isPhpForkAvailable(): bool
-    {
-        return function_exists('popen');
-    }
-
-    private function getLanguageService(): LanguageService
-    {
-        return $GLOBALS['LANG'];
     }
 
     private function getLinkButton(string $iconIdentifier, string $title, UriInterface $href): string

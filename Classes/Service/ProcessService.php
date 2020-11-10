@@ -22,7 +22,7 @@ namespace AOE\Crawler\Service;
  *
  *  This script is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *  GNU General Public License for more details.
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
@@ -57,7 +57,7 @@ class ProcessService
      * @var string[]
      * @noRector
      * @noRector \Rector\DeadCode\Rector\Property\RemoveUnusedPrivatePropertyRector
-     * @noRector \Rector\DeadCode\Rector\Class_\RemoveSetterOnlyPropertyAndMethodCallRector
+     * @noRector \Rector\DeadCode\Rector\Property\RemoveSetterOnlyPropertyAndMethodCallRector
      */
     private $deprecatedPublicProperties = [
         'queueRepository' => 'Using queueRepository is deprecated since 9.0.1 and will be removed in v11.x',
@@ -71,7 +71,7 @@ class ProcessService
      * @var string[]
      * @noRector
      * @noRector \Rector\DeadCode\Rector\Property\RemoveUnusedPrivatePropertyRector
-     * @noRector \Rector\DeadCode\Rector\Class_\RemoveSetterOnlyPropertyAndMethodCallRector
+     * @noRector \Rector\DeadCode\Rector\Property\RemoveSetterOnlyPropertyAndMethodCallRector
      */
     private $deprecatedPublicMethods = [
         'multiProcess' => 'Using ProcessService::multiProcess() is deprecated since 9.0.1 and will be removed in v11.x',

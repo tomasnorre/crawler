@@ -30,6 +30,10 @@ class UrlServiceTest extends FunctionalTestCase
 {
     use SiteBasedTestTrait;
 
+    /**
+     * @noRector
+     * @noRector \Rector\DeadCode\Rector\ClassConst\RemoveUnusedClassConstantRector
+     */
     protected const LANGUAGE_PRESETS = [
         'EN' => ['id' => 0, 'title' => 'English', 'locale' => 'en_US.UTF8', 'iso' => 'en', 'hrefLang' => 'en-US', 'direction' => ''],
         'FR' => ['id' => 1, 'title' => 'French', 'locale' => 'fr_FR.UTF8', 'iso' => 'fr', 'hrefLang' => 'fr-FR', 'direction' => ''],
@@ -52,6 +56,7 @@ class UrlServiceTest extends FunctionalTestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->subject = GeneralUtility::makeInstance(ObjectManager::class)->get(UrlService::class);
 
         $this->importDataSet(__DIR__ . '/../data/pages.xml');

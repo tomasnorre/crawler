@@ -15,7 +15,6 @@ use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
-use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
@@ -41,7 +40,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
     /**
      * @var bool
      */
-    private $CSVExport;
+    private $CSVExport = false;
 
     /**
      * @var InfoModuleController
@@ -58,13 +57,19 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
      */
     private $csvWriter;
 
-    public function __construct(StandaloneView $view, InfoModuleController $infoModuleController)
+    /**
+     * @var array
+     */
+    private $CSVaccu = [];
+
+    public function __construct(StandaloneView $view, InfoModuleController $infoModuleController, array $extensionSettings)
     {
         $this->view = $view;
         $this->infoModuleController = $infoModuleController;
         $this->jsonCompatibilityConverter = new JsonCompatibilityConverter();
         $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tx_crawler_queue');
         $this->csvWriter = new CrawlerCsvWriter();
+        $this->extensionSettings = $extensionSettings;
     }
 
     public function render($id, string $currentValue, array $menuItems): string
@@ -240,11 +245,6 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
     private function getIconFactory(): IconFactory
     {
         return GeneralUtility::makeInstance(IconFactory::class);
-    }
-
-    private function getLanguageService(): LanguageService
-    {
-        return $GLOBALS['LANG'];
     }
 
     private function getDisplayLogFilterHtml(int $setId): string

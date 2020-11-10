@@ -22,7 +22,7 @@ namespace AOE\Crawler\Backend;
  *
  *  This script is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *  GNU General Public License for more details.
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
@@ -30,15 +30,12 @@ namespace AOE\Crawler\Backend;
 
 use AOE\Crawler\Backend\RequestForm\RequestFormFactory;
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
-use AOE\Crawler\Controller\CrawlerController;
-use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Service\ProcessService;
 use AOE\Crawler\Value\CrawlAction;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
-use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
@@ -64,63 +61,12 @@ class BackendModule
      */
     protected $id;
 
-    // Internal, dynamic:
-
-    /**
-     * @var array
-     */
-    protected $duplicateTrack = [];
-
-    /**
-     * @var bool
-     */
-    protected $downloadCrawlUrls = false;
-
-    /**
-     * @var int
-     */
-    protected $scheduledTime = 0;
-
-    /**
-     * @var array holds the selection of configuration from the configuration selector box
-     */
-    protected $incomingConfigurationSelection = [];
-
-    /**
-     * @var CrawlerController
-     */
-    protected $crawlerController;
-
-    /**
-     * @var array
-     */
-    protected $CSVaccu = [];
-
-    /**
-     * If true the user requested a CSV export of the queue
-     *
-     * @var boolean
-     */
-    protected $CSVExport = false;
-
-    /**
-     * @var array
-     */
-    protected $downloadUrls = [];
-
     /**
      * Holds the configuration from ext_conf_template loaded by getExtensionConfiguration()
      *
      * @var array
      */
     protected $extensionSettings = [];
-
-    /**
-     * Indicate that an flash message with an error is present.
-     *
-     * @var boolean
-     */
-    protected $isErrorDetected = false;
 
     /**
      * @var ProcessService
@@ -142,32 +88,14 @@ class BackendModule
      */
     protected $view;
 
-    /**
-     * @var IconFactory
-     */
-    protected $iconFactory;
-
-    /**
-     * @var JsonCompatibilityConverter
-     */
-    protected $jsonCompatibilityConverter;
-
-    /**
-     * @var LanguageService
-     */
-    private $languageService;
-
     public function __construct()
     {
-        $this->languageService = $GLOBALS['LANG'];
         $objectManger = GeneralUtility::makeInstance(ObjectManager::class);
         $this->processManager = $objectManger->get(ProcessService::class);
         $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tx_crawler_queue');
         $this->queueRepository = $objectManger->get(QueueRepository::class);
         $this->initializeView();
         $this->extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
-        $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
-        $this->jsonCompatibilityConverter = GeneralUtility::makeInstance(JsonCompatibilityConverter::class);
     }
 
     /**
@@ -210,9 +138,8 @@ class BackendModule
         );
 
         $theOutput = '<h2>' . htmlspecialchars($this->getLanguageService()->getLL('title'), ENT_QUOTES | ENT_HTML5) . '</h2>' . $actionDropdown;
-        $theOutput .= $this->renderForm($selectedAction);
 
-        return $theOutput;
+        return $theOutput . $this->renderForm($selectedAction);
     }
 
     public function getLanguageService(): LanguageService
@@ -271,7 +198,7 @@ class BackendModule
 
     private function renderForm(CrawlAction $selectedAction): string
     {
-        $requestForm = RequestFormFactory::create($selectedAction, $this->view, $this->pObj);
+        $requestForm = RequestFormFactory::create($selectedAction, $this->view, $this->pObj, $this->extensionSettings);
         return $requestForm->render(
             $this->id,
             $this->pObj->MOD_SETTINGS['depth'],
