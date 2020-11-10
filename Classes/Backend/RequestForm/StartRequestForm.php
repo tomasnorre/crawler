@@ -222,7 +222,7 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
     }
 
     /**
-     * @return false|float|int
+     * @return int
      */
     private function getScheduledTime(string $time)
     {

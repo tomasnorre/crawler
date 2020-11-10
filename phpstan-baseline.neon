@@ -156,7 +156,7 @@ parameters:
 			path: Classes/Backend/RequestForm/StartRequestForm.php
 
 		-
-			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\StartRequestForm\\:\\:showCrawlerInformationAction\\(\\)\" is 13, keep it under 8$#"
+			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\StartRequestForm\\:\\:showCrawlerInformationAction\\(\\)\" is 12, keep it under 8$#"
 			count: 1
 			path: Classes/Backend/RequestForm/StartRequestForm.php
 
