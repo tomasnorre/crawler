@@ -100,12 +100,4 @@ class BackendModuleCest
         $I->click('Show finished and terminated processes');
         $I->waitForText('Process completed successfully');
     }
-
-    public function crawlerLogHasErrors(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
-    {
-        $adminStep->loginAsAdmin();
-        $I->openCrawlerBackendModuleCrawlerLog($adminStep, $pageTree);
-        $I->waitForElement('.bg-danger', 15);
-        $I->waitForText('OK', 15);
-    }
 }
