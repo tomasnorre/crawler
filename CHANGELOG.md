@@ -1,9 +1,10 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 9.1.3-dev
+## Crawler 9.2.0-dev
 
 ### Changed
 * Updated Rector, PHPStan, ECS for better static code analysis
+* BackendModule is splittet into smaller classes to improve readability and maintainability
 
 ### Fixed
 

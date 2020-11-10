@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AOE\Crawler\Backend\RequestForm;
 
+use AOE\Crawler\Backend\Helper\ResultHandler;
 use AOE\Crawler\Backend\Helper\UrlBuilder;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\Utility\MessageUtility;
@@ -140,7 +141,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                 // Explode values
                 $q_entry['parameters'] = $this->jsonCompatibilityConverter->convert($q_entry['parameters']);
                 $q_entry['result_data'] = $this->jsonCompatibilityConverter->convert($q_entry['result_data']);
-                $resStatus = $this->getResStatus($q_entry['result_data']);
+                $resStatus = ResultHandler::getResStatus($q_entry['result_data']);
                 if (is_array($q_entry['result_data'])) {
                     $q_entry['result_data']['content'] = $this->jsonCompatibilityConverter->convert($q_entry['result_data']['content']);
                     if (! $this->infoModuleController->MOD_SETTINGS['log_resultLog']) {
@@ -322,10 +323,10 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                 }
 
                 // Result:
-                $resLog = $this->getResultLog($vv);
+                $resLog = ResultHandler::getResultLog($vv);
 
                 $resultData = $vv['result_data'] ? $this->jsonCompatibilityConverter->convert($vv['result_data']) : [];
-                $resStatus = $this->getResStatus($resultData);
+                $resStatus = ResultHandler::getResStatus($resultData);
 
                 // Compile row:
                 $parameters = $this->jsonCompatibilityConverter->convert($vv['parameters']);
@@ -346,7 +347,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                 $rowData['set_id'] = (string) $vv['set_id'];
 
                 if ($this->infoModuleController->MOD_SETTINGS['log_feVars']) {
-                    $resFeVars = $this->getResFeVars($resultData ?: []);
+                    $resFeVars = ResultHandler::getResFeVars($resultData ?: []);
                     $rowData['tsfe_id'] = $resFeVars['id'] ?: '';
                     $rowData['tsfe_gr_list'] = $resFeVars['gr_list'] ?: '';
                     $rowData['tsfe_no_cache'] = $resFeVars['no_cache'] ?: '';
@@ -394,64 +395,5 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
         }
 
         return $content;
-    }
-
-    /**
-     * Extract the log information from the current row and retrieve it as formatted string.
-     *
-     * @param array $resultRow
-     * @return string
-     */
-    private function getResultLog($resultRow)
-    {
-        $content = '';
-        if (is_array($resultRow) && array_key_exists('result_data', $resultRow)) {
-            $requestContent = $this->jsonCompatibilityConverter->convert($resultRow['result_data']) ?: ['content' => ''];
-            if (! array_key_exists('content', $requestContent)) {
-                return $content;
-            }
-            $requestResult = $this->jsonCompatibilityConverter->convert($requestContent['content']);
-
-            if (is_array($requestResult) && array_key_exists('log', $requestResult)) {
-                $content = implode(chr(10), $requestResult['log']);
-            }
-        }
-        return $content;
-    }
-
-    private function getResStatus($requestContent): string
-    {
-        if (empty($requestContent)) {
-            return '-';
-        }
-        if (! array_key_exists('content', $requestContent)) {
-            return 'Content index does not exists in requestContent array';
-        }
-
-        $requestResult = $this->jsonCompatibilityConverter->convert($requestContent['content']);
-        if (is_array($requestResult)) {
-            if (empty($requestResult['errorlog'])) {
-                return 'OK';
-            }
-            return implode("\n", $requestResult['errorlog']);
-        }
-
-        if (is_bool($requestResult)) {
-            return 'Error - no info, sorry!';
-        }
-
-        return 'Error: ' . substr(preg_replace('/\s+/', ' ', strip_tags($requestResult)), 0, 10000) . '...';
-    }
-
-    /**
-     * Find Fe vars
-     */
-    private function getResFeVars(array $resultData): array
-    {
-        if (empty($resultData)) {
-            return [];
-        }
-        $requestResult = $this->jsonCompatibilityConverter->convert($resultData['content']);
-        return $requestResult['vars'] ?? [];
     }
 }

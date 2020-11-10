@@ -26,12 +26,32 @@ parameters:
 			path: Classes/Backend/BackendModule.php
 
 		-
-			message: "#^Class cognitive complexity for \"LogRequestForm\" is 82, keep it under 50$#"
+			message: "#^Parameter \\#2 \\$search of function array_key_exists expects array, array\\|true given\\.$#"
+			count: 1
+			path: Classes/Backend/Helper/ResultHandler.php
+
+		-
+			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\Helper\\\\ResultHandler\\:\\:getResStatus\\(\\) has parameter \\$requestContent with no typehint specified\\.$#"
+			count: 1
+			path: Classes/Backend/Helper/ResultHandler.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 1
+			path: Classes/Backend/Helper/ResultHandler.php
+
+		-
+			message: "#^Cannot access offset 'vars' on array\\|bool\\.$#"
+			count: 1
+			path: Classes/Backend/Helper/ResultHandler.php
+
+		-
+			message: "#^Class cognitive complexity for \"LogRequestForm\" is 68, keep it under 50$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Class cognitive complexity for \"LogRequestForm\" is 82, keep it under 60$#"
+			message: "#^Class cognitive complexity for \"LogRequestForm\" is 68, keep it under 60$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
@@ -91,7 +111,7 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Parameter \\#1 \\$resultData of method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:getResFeVars\\(\\) expects array, array\\|true given\\.$#"
+			message: "#^Parameter \\#1 \\$resultData of static method AOE\\\\Crawler\\\\Backend\\\\Helper\\\\ResultHandler\\:\\:getResFeVars\\(\\) expects array, array\\|true given\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
@@ -102,26 +122,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$pieces of function implode expects array, array\\<int, string\\>\\|false given\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
-			message: "#^Parameter \\#2 \\$search of function array_key_exists expects array, array\\|true given\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
-			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:getResStatus\\(\\) has parameter \\$requestContent with no typehint specified\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
-			message: "#^Cannot access offset 'vars' on array\\|bool\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
@@ -996,14 +996,9 @@ parameters:
 			path: Tests/Unit/Backend/BackendModuleTest.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Tests\\\\Unit\\\\Backend\\\\RequestForm\\\\LogRequestFormTest\\:\\:getResStatus\\(\\) has parameter \\$requestContent with no typehint specified\\.$#"
+			message: "#^Method AOE\\\\Crawler\\\\Tests\\\\Unit\\\\Backend\\\\Helper\\\\ResultHandlerTest\\:\\:getResStatus\\(\\) has parameter \\$requestContent with no typehint specified\\.$#"
 			count: 1
-			path: Tests/Unit/Backend/RequestForm/LogRequestFormTest.php
-
-		-
-			message: "#^Call to an undefined method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:_call\\(\\)\\.$#"
-			count: 3
-			path: Tests/Unit/Backend/RequestForm/LogRequestFormTest.php
+			path: Tests/Unit/Backend/Helper/ResultHandlerTest.php
 
 		-
 			message: "#^Method Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\:\\:_call\\(\\) invoked with 2 parameters, 1 required\\.$#"

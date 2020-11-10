@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Unit\Backend\RequestForm;
+namespace AOE\Crawler\Tests\Unit\Backend\Helper;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,38 +19,20 @@ namespace AOE\Crawler\Tests\Unit\Backend\RequestForm;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Backend\RequestForm\LogRequestForm;
-use TYPO3\CMS\Core\Localization\LanguageService;
+use AOE\Crawler\Backend\Helper\ResultHandler;
+use Nimut\TestingFramework\TestCase\UnitTestCase;
 
-class LogRequestFormTest extends \Nimut\TestingFramework\TestCase\UnitTestCase
+class ResultHandlerTest extends UnitTestCase
 {
     /**
-     * @var LogRequestForm
-     */
-    protected $subject;
-
-    protected function setUp(): void
-    {
-        /*$mockedLanguageService = self::getAccessibleMock(LanguageService::class, ['sL'], [], '', false);
-        $mockedLanguageService->expects($this->any())->method('sL')->willReturn('language string');
-
-        $this->subject = self::getAccessibleMock(LogRequestForm::class, ['getLanguageService'], [], '', false);
-        $this->subject->expects($this->any())->method('getLanguageService')->willReturn($mockedLanguageService);
-
-        $jsonCompatibilityConverter = new JsonCompatibilityConverter();
-        $this->subject->_set('jsonCompatibilityConverter', $jsonCompatibilityConverter);
-        */
-    }
-
-    /**
-     * test
+     * @test
      * @dataProvider getResStatusDataProvider
      */
     public function getResStatus($requestContent, string $expected): void
     {
         self::assertSame(
             $expected,
-            $this->subject->_call('getResStatus', $requestContent)
+            ResultHandler::getResStatus($requestContent)
         );
     }
 
@@ -91,14 +73,14 @@ class LogRequestFormTest extends \Nimut\TestingFramework\TestCase\UnitTestCase
     }
 
     /**
-     * test
+     * @test
      * @dataProvider getResFeVarsDataProvider
      */
     public function getResFeVars(array $resultData, array $expected): void
     {
         self::assertSame(
             $expected,
-            $this->subject->_call('getResFeVars', $resultData)
+            ResultHandler::getResFeVars($resultData)
         );
     }
 
@@ -131,14 +113,14 @@ class LogRequestFormTest extends \Nimut\TestingFramework\TestCase\UnitTestCase
     }
 
     /**
-     * test
+     * @test
      * @dataProvider getResultLogDataProvider
      */
     public function getResultLog(array $resultLog, string $expected): void
     {
         self::assertSame(
             $expected,
-            $this->subject->_call('getResultLog', $resultLog)
+            ResultHandler::getResultLog($resultLog)
         );
     }
 
