@@ -57,6 +57,9 @@ class BackendModule extends \AcceptanceTester
         $I->waitForText('CLI-Path');
     }
 
+    /**
+     * @noRector \Rector\DeadCode\Rector\ClassMethod\RemoveUnusedParameterRector
+     */
     public function addProcessOnMultiProcess(Admin $I, PageTree $pageTree): void
     {
         $I->click('Add process');

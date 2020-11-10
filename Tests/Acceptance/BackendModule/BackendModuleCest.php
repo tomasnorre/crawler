@@ -22,7 +22,6 @@ namespace AOE\Crawler\Tests\Acceptance\BackendModule;
 use AOE\Crawler\Tests\Acceptance\Support\Helper\PageTree;
 use AOE\Crawler\Tests\Acceptance\Support\Step\Acceptance\Admin;
 use Step\Acceptance\BackendModule;
-use TYPO3\CMS\Extbase\Persistence\Generic\Backend;
 
 class BackendModuleCest
 {
