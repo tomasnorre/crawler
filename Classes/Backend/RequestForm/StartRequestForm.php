@@ -85,18 +85,7 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
             $downloadCrawlUrls = isset($downloadParameter);
             $this->makeCrawlerProcessableChecks($this->extensionSettings);
 
-            switch ((string) GeneralUtility::_GP('tstamp')) {
-                case 'midnight':
-                    $scheduledTime = mktime(0, 0, 0);
-                    break;
-                case '04:00':
-                    $scheduledTime = mktime(0, 0, 0) + 4 * 3600;
-                    break;
-                case 'now':
-                default:
-                    $scheduledTime = time();
-                    break;
-            }
+            $scheduledTime = $this->getScheduledTime((string) GeneralUtility::_GP('tstamp'));
 
             $this->incomingConfigurationSelection = GeneralUtility::_GP('configurationSelection');
             $this->incomingConfigurationSelection = is_array($this->incomingConfigurationSelection) ? $this->incomingConfigurationSelection : [];
@@ -230,5 +219,25 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
         }
 
         return '<select class="form-control" name="' . htmlspecialchars($name . ($multiple ? '[]' : ''), ENT_QUOTES | ENT_HTML5) . '"' . ($multiple ? ' multiple' : '') . '>' . implode('', $options) . '</select>';
+    }
+
+    /**
+     * @return false|float|int
+     */
+    private function getScheduledTime(string $time)
+    {
+        switch ($time) {
+            case 'midnight':
+                $scheduledTime = mktime(0, 0, 0);
+                break;
+            case '04:00':
+                $scheduledTime = mktime(0, 0, 0) + 4 * 3600;
+                break;
+            case 'now':
+            default:
+                $scheduledTime = time();
+                break;
+        }
+        return $scheduledTime;
     }
 }
