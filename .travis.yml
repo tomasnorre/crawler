@@ -22,6 +22,10 @@ addons:
     branches:
       - master
       - sonarqube
+#  artifacts:
+#    paths:
+#      - $HOME/build/AOEpeople/crawler/Tests/Acceptance/_output/
+
 php:
   - '7.2'
   - '7.3'
@@ -106,7 +110,7 @@ jobs:
     # Behaviour Tests
     -
       stage: test
-      name: "Behaviour"
+      name: "Behaviour TYPO3 9.5"
       php: 7.2
       env:
         - TYPO3_VERSION=^9.5
@@ -128,6 +132,46 @@ jobs:
         - cd .devbox
         - composer require aoepeople/crawler:dev-${TRAVIS_BRANCH}
         - ddev start
+        - ddev exec bin/typo3cms install:fixfolderstructure
+        - ddev exec bin/typo3cms install:extensionsetupifpossible
+        - ddev exec bin/typo3cms cache:flush
+        - cd .. # Going back to "root" directory
+        - composer install
+        - wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
+        - chmod +x wait-for-it.sh
+        - docker ps
+        - ./wait-for-it.sh -t 60 127.0.0.1:80
+        - ./wait-for-it.sh -t 60 127.0.0.1:443
+        - ./wait-for-it.sh -t 60 localhost:4444
+        - php .Build/bin/codecept run
+
+    -
+      stage: test
+      name: "Behaviour TYPO3 10.4"
+      php: 7.2
+      env:
+        - TYPO3_VERSION=^10.4
+      before_script:
+        - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+        - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+        - sudo apt update
+        - sudo apt install docker-ce
+        - sudo curl -L "https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+        - sudo chmod +x /usr/local/bin/docker-compose
+        - docker-compose --version
+        - wget https://github.com/drud/ddev/releases/download/v1.13.1/ddev_linux.v1.13.1.tar.gz
+        - tar vxzf ddev_linux.v1.13.1.tar.gz
+        - sudo chmod +x ddev && sudo mv ddev /usr/local/bin/ddev
+        - sudo chmod +x mkcert && sudo mv mkcert /usr/local/bin/mkcert
+        - mkcert -install
+        - ddev --version
+      script:
+        - cd .devbox
+        - composer require aoepeople/crawler:dev-${TRAVIS_BRANCH}
+        - travis_wait 30 composer require --dev nimut/typo3-complete=$TYPO3_VERSION
+        - ddev start
+        # Make sure Database Schema is updated, as it's build for TYPO3 9.5
+        - ddev exec bin/typo3cms database:updateschema
         - ddev exec bin/typo3cms install:fixfolderstructure
         - ddev exec bin/typo3cms install:extensionsetupifpossible
         - ddev exec bin/typo3cms cache:flush
