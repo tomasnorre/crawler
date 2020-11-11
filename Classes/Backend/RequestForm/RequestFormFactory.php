@@ -26,11 +26,6 @@ use TYPO3\CMS\Info\Controller\InfoModuleController;
 
 final class RequestFormFactory
 {
-    public function __construct()
-    {
-        // Perhaps this can be removed, will need to check.
-    }
-
     public static function create(CrawlAction $selectedAction, StandaloneView $view, InfoModuleController $infoModuleController, array $extensionSettings): RequestFormInterface
     {
         switch ($selectedAction->__toString()) {
