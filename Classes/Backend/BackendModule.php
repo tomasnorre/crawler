@@ -113,7 +113,7 @@ class BackendModule
      * Additions to the function menu array
      *
      * @return array Menu array
-     * @deprecated Using BackendModule->modMenu() is deprecated since 9.1.1 and will be removed in v11.x
+     * @deprecated Using BackendModule->modMenu() is deprecated since 9.1.3 and will be removed in v11.x
      */
     public function modMenu(): array
     {
