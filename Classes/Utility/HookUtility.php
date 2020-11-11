@@ -49,6 +49,9 @@ class HookUtility
         }
     }
 
+    /**
+     * @noRector \Rector\DeadCode\Rector\ClassMethod\RemoveUnusedParameterRector
+     */
     private static function registerBackendHooks(string $extKey): void
     {
         // DataHandler clear page cache pre-processing

@@ -24,7 +24,16 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $parameters->set('sets', ['psr12', 'php70', 'php71', 'common']);
 
-    $parameters->set('skip', [UnaryOperatorSpacesFixer::class => null, 'PHP_CodeSniffer\Standards\Generic\Sniffs\CodeAnalysis\AssignmentInConditionSniff.FoundInWhileCondition' => null, PhpUnitStrictFixer::class => null, PhpUnitTestAnnotationFixer::class => null, 'SlevomatCodingStandard\Sniffs\Classes\TraitUseSpacingSniff.IncorrectLinesCountAfterLastUse' => null]);
+    $parameters->set('skip', [
+        'PhpCsFixer\Fixer\Whitespace\ArrayIndentationFixer' => null,
+        'PHP_CodeSniffer\Standards\Generic\Sniffs\CodeAnalysis\AssignmentInConditionSniff.FoundInWhileCondition' => null,
+        PhpUnitStrictFixer::class => null,
+        PhpUnitTestAnnotationFixer::class => null,
+        'SlevomatCodingStandard\Sniffs\Classes\TraitUseSpacingSniff.IncorrectLinesCountAfterLastUse' => null,
+        'Symplify\CodingStandard\Fixer\ArrayNotation\ArrayOpenerAndCloserNewlineFixer' => null,
+        'Symplify\CodingStandard\Fixer\ArrayNotation\ArrayListItemNewlineFixer' => null,
+        UnaryOperatorSpacesFixer::class => null,
+    ]);
 
     $parameters->set('paths', [__DIR__ . '/Classes', __DIR__ . '/Configuration', __DIR__ . '/Tests']);
 

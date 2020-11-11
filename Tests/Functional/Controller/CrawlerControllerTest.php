@@ -22,7 +22,7 @@ namespace AOE\Crawler\Tests\Functional\Controller;
  *
  *  This script is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *  GNU General Public License for more details.
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
@@ -58,6 +58,7 @@ class CrawlerControllerTest extends FunctionalTestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->importDataSet(__DIR__ . '/../Fixtures/pages.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_configuration.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');

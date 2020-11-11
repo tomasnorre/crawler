@@ -2,8 +2,15 @@
 
 ## Crawler 9.1.3-dev
 
+### Deprecated
+#### Classes
+
+#### Functions & Properties
+* BackendModule->modMenu()
+
 ### Changed
 * Updated Rector, PHPStan, ECS for better static code analysis
+* BackendModule is splittet into smaller classes to improve readability and maintainability
 
 ### Fixed
 

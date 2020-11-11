@@ -50,6 +50,7 @@ class ConfigurationRepositoryTest extends FunctionalTestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->subject = $objectManager->get(ConfigurationRepository::class);
         $this->importDataSet(__DIR__ . '/../../Fixtures/tx_crawler_configuration.xml');

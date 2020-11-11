@@ -26,15 +26,14 @@ class BackendModule extends \AcceptanceTester
 {
     public function openCrawlerBackendModule(Admin $I, PageTree $pageTree): void
     {
-        $I->loginAsAdmin();
         $I->click('#web_info');
         // Due to slow response time.
-        $I->wait(15);
+        $I->wait(0.5);
         $pageTree->openPath(['[1] Congratulations']);
         // Due to slow response time.
-        $I->wait(15);
+        $I->wait(0.5);
         $I->switchToContentFrame();
-        $I->waitForText('Page information', 30);
+        $I->waitForText('Page information', 10);
     }
 
     public function openCrawlerBackendModuleStartCrawling(Admin $I, PageTree $pageTree): void
@@ -56,5 +55,14 @@ class BackendModule extends \AcceptanceTester
         $this->openCrawlerBackendModule($I, $pageTree);
         $I->selectOption('SET[crawlaction]', 'multiprocess');
         $I->waitForText('CLI-Path');
+    }
+
+    /**
+     * @noRector \Rector\DeadCode\Rector\ClassMethod\RemoveUnusedParameterRector
+     */
+    public function addProcessOnMultiProcess(Admin $I, PageTree $pageTree): void
+    {
+        $I->click('Add process');
+        $I->waitForText('New process has been started');
     }
 }

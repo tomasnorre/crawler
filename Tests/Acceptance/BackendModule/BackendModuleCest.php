@@ -28,7 +28,7 @@ class BackendModuleCest
     public function canSeeLoginMask(Admin $I): void
     {
         $I->amOnPage('/');
-        $I->waitForText('Login', 30);
+        $I->waitForText('Login', 5);
     }
 
     public function signInSuccessfully(Admin $I): void
@@ -44,21 +44,25 @@ class BackendModuleCest
 
     public function canSelectInfoModuleStartCrawling(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
+        $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
     }
 
     public function canSelectInfoModuleCrawlerLog(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
+        $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleCrawlerLog($adminStep, $pageTree);
     }
 
     public function canSelectInfoModuleMultiProcess(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
+        $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleCrawlerMultiProcess($adminStep, $pageTree);
     }
 
     public function updateUrlButton(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
+        $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
         $I->selectOption('configurationSelection[]', 'default');
         $I->click('Update');
@@ -67,10 +71,33 @@ class BackendModuleCest
 
     public function updateUrlButtonSetDepth(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
+        $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
         $I->selectOption('configurationSelection[]', 'default');
         $I->selectOption('SET[depth]', 99);
         $I->click('Update');
         $I->waitForElementVisible('.table-striped', 15);
+    }
+
+    public function crawlerAddProcess(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    {
+        $adminStep->loginAsAdmin();
+        $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
+        $I->selectOption('configurationSelection[]', 'default');
+        $I->selectOption('SET[depth]', 99);
+        $I->click('Crawl URLs');
+        $I->waitForText('43 URLs submitted', 15);
+
+        // Navigate to Process View
+        $I->selectOption('SET[crawlaction]', 'multiprocess');
+        $I->waitForText('CLI-Path');
+        $I->addProcessOnMultiProcess($adminStep, $pageTree);
+    }
+
+    public function processSuccessful(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    {
+        $this->crawlerAddProcess($I, $adminStep, $pageTree);
+        $I->click('Show finished and terminated processes');
+        $I->waitForText('Process completed successfully');
     }
 }

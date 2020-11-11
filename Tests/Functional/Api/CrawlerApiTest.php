@@ -22,7 +22,7 @@ namespace AOE\Crawler\Tests\Functional\Api;
  *
  *  This script is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *  GNU General Public License for more details.
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
@@ -45,6 +45,10 @@ class CrawlerApiTest extends FunctionalTestCase
 {
     use SiteBasedTestTrait;
 
+    /**
+     * @noRector
+     * @noRector \Rector\DeadCode\Rector\ClassConst\RemoveUnusedClassConstantRector
+     */
     protected const LANGUAGE_PRESETS = [
         'EN' => ['id' => 0, 'title' => 'English', 'locale' => 'en_US.UTF8', 'iso' => 'en', 'hrefLang' => 'en-US', 'direction' => ''],
         'FR' => ['id' => 1, 'title' => 'French', 'locale' => 'fr_FR.UTF8', 'iso' => 'fr', 'hrefLang' => 'fr-FR', 'direction' => ''],
@@ -123,6 +127,7 @@ class CrawlerApiTest extends FunctionalTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
+
         //restore rootline
         $GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields'] = $this->oldRootline;
     }
@@ -266,7 +271,7 @@ class CrawlerApiTest extends FunctionalTestCase
     }
 
     /**
-     * This test is used to check that the api can be used to schedule one  page two times
+     * This test is used to check that the api can be used to schedule one page two times
      * for a diffrent timestamp in the future.
      * The testcase uses a TSConfig crawler configuration.
      *

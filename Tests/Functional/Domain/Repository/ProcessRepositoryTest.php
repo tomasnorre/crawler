@@ -57,6 +57,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->subject = $this->objectManager->get(ProcessRepository::class);
 

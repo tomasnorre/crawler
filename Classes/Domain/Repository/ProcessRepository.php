@@ -22,7 +22,7 @@ namespace AOE\Crawler\Domain\Repository;
  *
  *  This script is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *  GNU General Public License for more details.
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
@@ -66,6 +66,7 @@ class ProcessRepository extends Repository
     public function __construct()
     {
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+
         parent::__construct($objectManager);
 
         $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);

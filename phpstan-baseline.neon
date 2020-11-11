@@ -6,104 +6,184 @@ parameters:
 			path: Classes/Api/CrawlerApi.php
 
 		-
-			message: "#^Class cognitive complexity for \"BackendModule\" is 126, keep it under 60$#"
+			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
 			count: 1
-			path: Classes/Backend/BackendModule.php
+			path: Classes/Api/CrawlerApi.php
 
 		-
-			message: "#^Parameter \\#1 \\$optArray of method AOE\\\\Crawler\\\\Backend\\\\BackendModule\\:\\:selectorBox\\(\\) expects array, array\\|false given\\.$#"
+			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
 			count: 1
-			path: Classes/Backend/BackendModule.php
+			path: Classes/Api/CrawlerApi.php
 
 		-
-			message: "#^Parameter \\#2 \\$row of method TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\IconFactory\\:\\:getIconForRecord\\(\\) expects array, array\\|bool given\\.$#"
+			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Api\\\\CrawlerApi\\:\\:getPerformanceData\\(\\)\" is 12, keep it under 8$#"
 			count: 1
-			path: Classes/Backend/BackendModule.php
+			path: Classes/Api/CrawlerApi.php
 
 		-
-			message: "#^Cannot access offset 'alturl' on array\\|bool\\.$#"
-			count: 1
-			path: Classes/Backend/BackendModule.php
-
-		-
-			message: "#^Cannot access offset 'url' on array\\|bool\\.$#"
-			count: 1
-			path: Classes/Backend/BackendModule.php
-
-		-
-			message: "#^Cannot access offset 'feUserGroupList' on array\\|bool\\.$#"
-			count: 1
-			path: Classes/Backend/BackendModule.php
-
-		-
-			message: "#^Cannot access offset 'procInstructions' on array\\|bool\\.$#"
-			count: 2
-			path: Classes/Backend/BackendModule.php
-
-		-
-			message: "#^Parameter \\#1 \\$resultData of method AOE\\\\Crawler\\\\Backend\\\\BackendModule\\:\\:getResFeVars\\(\\) expects array, array\\|true given\\.$#"
-			count: 1
-			path: Classes/Backend/BackendModule.php
-
-		-
-			message: "#^Offset 'exec_time' does not exist on array\\('result_log' \\=\\> string, 'result_status' \\=\\> string, 'url' \\=\\> string, 'feUserGroupList' \\=\\> mixed, 'procInstructions' \\=\\> string, 'set_id' \\=\\> string, \\?'tsfe_id' \\=\\> mixed, \\?'tsfe_gr_list' \\=\\> mixed, \\.\\.\\.\\)\\|array\\('scheduled' \\=\\> string, 'exec_time' \\=\\> string, 'result_status' \\=\\> string, 'url' \\=\\> string, 'feUserGroupList' \\=\\> mixed, 'procInstructions' \\=\\> string, 'set_id' \\=\\> string, \\?'tsfe_id' \\=\\> mixed, \\.\\.\\.\\)\\.$#"
-			count: 1
-			path: Classes/Backend/BackendModule.php
-
-		-
-			message: "#^Parameter \\#2 \\$pieces of function implode expects array, array\\<int, string\\>\\|false given\\.$#"
-			count: 1
-			path: Classes/Backend/BackendModule.php
-
-		-
-			message: "#^Cannot access offset 'vars' on array\\|bool\\.$#"
+			message: "#^Parameter \\#3 \\$currentValue of static method TYPO3\\\\CMS\\\\Backend\\\\Utility\\\\BackendUtility\\:\\:getFuncMenu\\(\\) expects string, AOE\\\\Crawler\\\\Value\\\\CrawlAction given\\.$#"
 			count: 1
 			path: Classes/Backend/BackendModule.php
 
 		-
 			message: "#^Parameter \\#2 \\$search of function array_key_exists expects array, array\\|true given\\.$#"
 			count: 1
-			path: Classes/Backend/BackendModule.php
+			path: Classes/Backend/Helper/ResultHandler.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\BackendModule\\:\\:getResStatus\\(\\) has parameter \\$requestContent with no typehint specified\\.$#"
+			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\Helper\\\\ResultHandler\\:\\:getResStatus\\(\\) has parameter \\$requestContent with no typehint specified\\.$#"
 			count: 1
-			path: Classes/Backend/BackendModule.php
+			path: Classes/Backend/Helper/ResultHandler.php
 
 		-
 			message: "#^Unreachable statement \\- code above always terminates\\.$#"
 			count: 1
-			path: Classes/Backend/BackendModule.php
+			path: Classes/Backend/Helper/ResultHandler.php
 
 		-
-			message: "#^In method \"AOE\\\\Crawler\\\\Backend\\\\BackendModule\\:\\:processOverviewAction\", caught \"Throwable\" must be rethrown\\. Either catch a more specific exception or add a \"throw\" clause in the \"catch\" block to propagate the exception\\. More info\\: http\\://bit\\.ly/failloud$#"
+			message: "#^Cannot access offset 'vars' on array\\|bool\\.$#"
 			count: 1
-			path: Classes/Backend/BackendModule.php
+			path: Classes/Backend/Helper/ResultHandler.php
 
 		-
-			message: "#^PHPDoc tag @throws with type AOE\\\\Crawler\\\\Backend\\\\ProcessException is not subtype of Throwable$#"
+			message: "#^Class cognitive complexity for \"LogRequestForm\" is 68, keep it under 50$#"
 			count: 1
-			path: Classes/Backend/BackendModule.php
+			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Instantiated class AOE\\\\Crawler\\\\Backend\\\\ProcessException not found\\.$#"
+			message: "#^Class cognitive complexity for \"LogRequestForm\" is 68, keep it under 60$#"
 			count: 1
-			path: Classes/Backend/BackendModule.php
+			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Throwing object of an unknown class AOE\\\\Crawler\\\\Backend\\\\ProcessException\\.$#"
+			message: "#^Property AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:\\$queryBuilder \\(Doctrine\\\\DBAL\\\\Query\\\\QueryBuilder\\) does not accept TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\.$#"
 			count: 1
-			path: Classes/Backend/BackendModule.php
+			path: Classes/Backend/RequestForm/LogRequestForm.php
+
+		-
+			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:render\\(\\) has parameter \\$id with no typehint specified\\.$#"
+			count: 1
+			path: Classes/Backend/RequestForm/LogRequestForm.php
+
+		-
+			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:getDepthDropDownHtml\\(\\) has parameter \\$id with no typehint specified\\.$#"
+			count: 1
+			path: Classes/Backend/RequestForm/LogRequestForm.php
+
+		-
+			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:showLogAction\\(\\)\" is 25, keep it under 8$#"
+			count: 1
+			path: Classes/Backend/RequestForm/LogRequestForm.php
+
+		-
+			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
+			count: 1
+			path: Classes/Backend/RequestForm/LogRequestForm.php
+
+		-
+			message: "#^Parameter \\#2 \\$row of method TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\IconFactory\\:\\:getIconForRecord\\(\\) expects array, array\\|bool given\\.$#"
+			count: 1
+			path: Classes/Backend/RequestForm/LogRequestForm.php
+
+		-
+			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:drawLog_addRows\\(\\)\" is 41, keep it under 8$#"
+			count: 1
+			path: Classes/Backend/RequestForm/LogRequestForm.php
+
+		-
+			message: "#^Cannot access offset 'alturl' on array\\|bool\\.$#"
+			count: 1
+			path: Classes/Backend/RequestForm/LogRequestForm.php
+
+		-
+			message: "#^Cannot access offset 'url' on array\\|bool\\.$#"
+			count: 1
+			path: Classes/Backend/RequestForm/LogRequestForm.php
+
+		-
+			message: "#^Cannot access offset 'feUserGroupList' on array\\|bool\\.$#"
+			count: 1
+			path: Classes/Backend/RequestForm/LogRequestForm.php
+
+		-
+			message: "#^Cannot access offset 'procInstructions' on array\\|bool\\.$#"
+			count: 2
+			path: Classes/Backend/RequestForm/LogRequestForm.php
+
+		-
+			message: "#^Parameter \\#1 \\$resultData of static method AOE\\\\Crawler\\\\Backend\\\\Helper\\\\ResultHandler\\:\\:getResFeVars\\(\\) expects array, array\\|true given\\.$#"
+			count: 1
+			path: Classes/Backend/RequestForm/LogRequestForm.php
+
+		-
+			message: "#^Offset 'exec_time' does not exist on array\\('result_log' \\=\\> string, 'result_status' \\=\\> string, 'url' \\=\\> string, 'feUserGroupList' \\=\\> mixed, 'procInstructions' \\=\\> string, 'set_id' \\=\\> string, \\?'tsfe_id' \\=\\> mixed, \\?'tsfe_gr_list' \\=\\> mixed, \\.\\.\\.\\)\\|array\\('scheduled' \\=\\> string, 'exec_time' \\=\\> string, 'result_status' \\=\\> string, 'url' \\=\\> string, 'feUserGroupList' \\=\\> mixed, 'procInstructions' \\=\\> string, 'set_id' \\=\\> string, \\?'tsfe_id' \\=\\> mixed, \\.\\.\\.\\)\\.$#"
+			count: 1
+			path: Classes/Backend/RequestForm/LogRequestForm.php
+
+		-
+			message: "#^Parameter \\#2 \\$pieces of function implode expects array, array\\<int, string\\>\\|false given\\.$#"
+			count: 1
+			path: Classes/Backend/RequestForm/LogRequestForm.php
+
+		-
+			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\MultiProcessRequestForm\\:\\:render\\(\\) has parameter \\$id with no typehint specified\\.$#"
+			count: 1
+			path: Classes/Backend/RequestForm/MultiProcessRequestForm.php
+
+		-
+			message: "#^In method \"AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\MultiProcessRequestForm\\:\\:processOverviewAction\", caught \"Throwable\" must be rethrown\\. Either catch a more specific exception or add a \"throw\" clause in the \"catch\" block to propagate the exception\\. More info\\: http\\://bit\\.ly/failloud$#"
+			count: 1
+			path: Classes/Backend/RequestForm/MultiProcessRequestForm.php
+
+		-
+			message: "#^PHPDoc tag @var for variable \\$hookObj contains unknown class AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\CrawlerHookInterface\\.$#"
+			count: 1
+			path: Classes/Backend/RequestForm/MultiProcessRequestForm.php
+
+		-
+			message: "#^Call to method crawler_init\\(\\) on an unknown class AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\CrawlerHookInterface\\.$#"
+			count: 1
+			path: Classes/Backend/RequestForm/MultiProcessRequestForm.php
+
+		-
+			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\RequestFormInterface\\:\\:render\\(\\) has parameter \\$id with no typehint specified\\.$#"
+			count: 1
+			path: Classes/Backend/RequestForm/RequestFormInterface.php
+
+		-
+			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\StartRequestForm\\:\\:render\\(\\) has parameter \\$id with no typehint specified\\.$#"
+			count: 1
+			path: Classes/Backend/RequestForm/StartRequestForm.php
+
+		-
+			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\StartRequestForm\\:\\:showCrawlerInformationAction\\(\\)\" is 12, keep it under 8$#"
+			count: 1
+			path: Classes/Backend/RequestForm/StartRequestForm.php
+
+		-
+			message: "#^Access to an undefined property AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\StartRequestForm\\:\\:\\$pageId\\.$#"
+			count: 1
+			path: Classes/Backend/RequestForm/StartRequestForm.php
+
+		-
+			message: "#^Parameter \\#1 \\$optArray of method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\StartRequestForm\\:\\:selectorBox\\(\\) expects array, array\\|false given\\.$#"
+			count: 1
+			path: Classes/Backend/RequestForm/StartRequestForm.php
 
 		-
 			message: "#^Call to function is_array\\(\\) with string will always evaluate to false\\.$#"
 			count: 1
-			path: Classes/Backend/BackendModule.php
+			path: Classes/Backend/RequestForm/StartRequestForm.php
 
 		-
 			message: "#^Result of \\|\\| is always true\\.$#"
 			count: 1
-			path: Classes/Backend/BackendModule.php
+			path: Classes/Backend/RequestForm/StartRequestForm.php
+
+		-
+			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Command\\\\BuildQueueCommand\\:\\:execute\\(\\)\" is 18, keep it under 8$#"
+			count: 1
+			path: Classes/Command/BuildQueueCommand.php
 
 		-
 			message: "#^Parameter \\#1 \\$theInt of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\MathUtility\\:\\:forceIntegerInRange\\(\\) expects int, array\\<string\\>\\|string\\|null given\\.$#"
@@ -151,6 +231,11 @@ parameters:
 			path: Classes/Command/FlushQueueCommand.php
 
 		-
+			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Command\\\\ProcessQueueCommand\\:\\:execute\\(\\)\" is 9, keep it under 8$#"
+			count: 1
+			path: Classes/Command/ProcessQueueCommand.php
+
+		-
 			message: "#^Cannot cast \\(array\\<string\\>&nonEmpty\\)\\|string\\|true to int\\.$#"
 			count: 3
 			path: Classes/Command/ProcessQueueCommand.php
@@ -176,12 +261,27 @@ parameters:
 			path: Classes/ContextMenu/ItemProvider.php
 
 		-
+			message: "#^Class cognitive complexity for \"CrawlerController\" is 291, keep it under 50$#"
+			count: 1
+			path: Classes/Controller/CrawlerController.php
+
+		-
 			message: "#^Class cognitive complexity for \"CrawlerController\" is 291, keep it under 60$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
 		-
 			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
+			count: 1
+			path: Classes/Controller/CrawlerController.php
+
+		-
+			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:checkIfPageShouldBeSkipped\\(\\)\" is 24, keep it under 8$#"
+			count: 1
+			path: Classes/Controller/CrawlerController.php
+
+		-
+			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:urlListFromUrlArray\\(\\)\" is 14, keep it under 8$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -197,6 +297,11 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$id of static method TYPO3\\\\CMS\\\\Backend\\\\Utility\\\\BackendUtility\\:\\:getPagesTSconfig\\(\\) expects int, string given\\.$#"
+			count: 1
+			path: Classes/Controller/CrawlerController.php
+
+		-
+			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:getUrlsForPageId\\(\\)\" is 25, keep it under 8$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -231,7 +336,17 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
+			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
+			count: 4
+			path: Classes/Controller/CrawlerController.php
+
+		-
 			message: "#^Parameter \\#2 \\$item of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:inList\\(\\) expects string, int given\\.$#"
+			count: 1
+			path: Classes/Controller/CrawlerController.php
+
+		-
+			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:expandParameters\\(\\)\" is 60, keep it under 8$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -246,12 +361,22 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
+			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
+			count: 5
+			path: Classes/Controller/CrawlerController.php
+
+		-
 			message: "#^Parameter \\#1 \\$where of method AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:flushQueue\\(\\) expects string, Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression\\|string given\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
 		-
 			message: "#^Parameter \\#1 \\$input of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:shortMD5\\(\\) expects string, string\\|false given\\.$#"
+			count: 1
+			path: Classes/Controller/CrawlerController.php
+
+		-
+			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:readUrl\\(\\)\" is 17, keep it under 8$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -276,7 +401,17 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
+			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:getPageTreeAndUrls\\(\\)\" is 10, keep it under 8$#"
+			count: 1
+			path: Classes/Controller/CrawlerController.php
+
+		-
 			message: "#^Property AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:\\$MP \\(bool\\) does not accept string\\.$#"
+			count: 1
+			path: Classes/Controller/CrawlerController.php
+
+		-
+			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:expandExcludeString\\(\\)\" is 22, keep it under 8$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -287,6 +422,16 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$depth of method TYPO3\\\\CMS\\\\Backend\\\\Tree\\\\View\\\\AbstractTreeView\\:\\:getTree\\(\\) expects int, int\\|string given\\.$#"
+			count: 1
+			path: Classes/Controller/CrawlerController.php
+
+		-
+			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:drawURLs_addRowsForPage\\(\\)\" is 24, keep it under 8$#"
+			count: 1
+			path: Classes/Controller/CrawlerController.php
+
+		-
+			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:CLI_run\\(\\)\" is 11, keep it under 8$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -307,6 +452,11 @@ parameters:
 
 		-
 			message: "#^Method AOE\\\\Crawler\\\\CrawlStrategy\\\\CallbackExecutionStrategy\\:\\:fetchByCallback\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:crawler_execute\\(\\)\\.$#"
 			count: 1
 			path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
 
@@ -366,13 +516,38 @@ parameters:
 			path: Classes/Domain/Model/ProcessCollection.php
 
 		-
+			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
+			count: 1
+			path: Classes/Domain/Repository/ConfigurationRepository.php
+
+		-
+			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
+			count: 1
+			path: Classes/Domain/Repository/ConfigurationRepository.php
+
+		-
 			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
 			count: 1
 			path: Classes/Domain/Repository/ConfigurationRepository.php
 
 		-
+			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
+			count: 4
+			path: Classes/Domain/Repository/ProcessRepository.php
+
+		-
 			message: "#^Method AOE\\\\Crawler\\\\Domain\\\\Repository\\\\ProcessRepository\\:\\:findByProcessId\\(\\) has no return typehint specified\\.$#"
 			count: 1
+			path: Classes/Domain/Repository/ProcessRepository.php
+
+		-
+			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
+			count: 1
+			path: Classes/Domain/Repository/ProcessRepository.php
+
+		-
+			message: "#^Cannot call method fetchColumn\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
+			count: 2
 			path: Classes/Domain/Repository/ProcessRepository.php
 
 		-
@@ -389,6 +564,21 @@ parameters:
 			message: "#^Parameter \\#2 \\$value of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:set\\(\\) expects string, int given\\.$#"
 			count: 1
 			path: Classes/Domain/Repository/ProcessRepository.php
+
+		-
+			message: "#^Cannot call method fetchColumn\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
+			count: 8
+			path: Classes/Domain/Repository/QueueRepository.php
+
+		-
+			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
+			count: 3
+			path: Classes/Domain/Repository/QueueRepository.php
+
+		-
+			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
+			count: 8
+			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
 			message: "#^Strict comparison using \\=\\=\\= between Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int and false will always evaluate to false\\.$#"
@@ -416,8 +606,18 @@ parameters:
 			path: Classes/Hooks/IndexedSearchCrawlerFilesHook.php
 
 		-
+			message: "#^Class cognitive complexity for \"IndexedSearchCrawlerHook\" is 109, keep it under 50$#"
+			count: 1
+			path: Classes/Hooks/IndexedSearchCrawlerHook.php
+
+		-
 			message: "#^Class cognitive complexity for \"IndexedSearchCrawlerHook\" is 109, keep it under 60$#"
 			count: 1
+			path: Classes/Hooks/IndexedSearchCrawlerHook.php
+
+		-
+			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
+			count: 5
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
 		-
@@ -441,8 +641,43 @@ parameters:
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
 		-
+			message: "#^Cannot call method fetchColumn\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
+			count: 1
+			path: Classes/Hooks/IndexedSearchCrawlerHook.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:addQueueEntry_callBack\\(\\)\\.$#"
+			count: 4
+			path: Classes/Hooks/IndexedSearchCrawlerHook.php
+
+		-
+			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Hooks\\\\IndexedSearchCrawlerHook\\:\\:crawler_execute_type2\\(\\)\" is 23, keep it under 8$#"
+			count: 1
+			path: Classes/Hooks/IndexedSearchCrawlerHook.php
+
+		-
 			message: "#^Argument of an invalid type array\\<string\\>\\|string supplied for foreach, only iterables are supported\\.$#"
 			count: 1
+			path: Classes/Hooks/IndexedSearchCrawlerHook.php
+
+		-
+			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Hooks\\\\IndexedSearchCrawlerHook\\:\\:crawler_execute_type3\\(\\)\" is 11, keep it under 8$#"
+			count: 1
+			path: Classes/Hooks/IndexedSearchCrawlerHook.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:getUrlsForPageRow\\(\\)\\.$#"
+			count: 1
+			path: Classes/Hooks/IndexedSearchCrawlerHook.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:urlListFromUrlArray\\(\\)\\.$#"
+			count: 1
+			path: Classes/Hooks/IndexedSearchCrawlerHook.php
+
+		-
+			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
+			count: 3
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
 		-
@@ -496,6 +731,16 @@ parameters:
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
 		-
+			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Hooks\\\\IndexedSearchCrawlerHook\\:\\:processDatamap_afterDatabaseOperations\\(\\)\" is 10, keep it under 8$#"
+			count: 1
+			path: Classes/Hooks/IndexedSearchCrawlerHook.php
+
+		-
+			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Hooks\\\\ProcessCleanUpHook\\:\\:removeActiveOrphanProcesses\\(\\)\" is 13, keep it under 8$#"
+			count: 1
+			path: Classes/Hooks/ProcessCleanUpHook.php
+
+		-
 			message: "#^Call to an undefined method TYPO3\\\\CMS\\\\Core\\\\Context\\\\AspectInterface\\:\\:getGroupIds\\(\\)\\.$#"
 			count: 1
 			path: Classes/Middleware/CrawlerInitialization.php
@@ -526,6 +771,11 @@ parameters:
 			path: Classes/QueueExecutor.php
 
 		-
+			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Service\\\\ProcessService\\:\\:multiProcess\\(\\)\" is 19, keep it under 8$#"
+			count: 1
+			path: Classes/Service/ProcessService.php
+
+		-
 			message: "#^Use custom exceptions instead of native \"RuntimeException\"$#"
 			count: 1
 			path: Classes/Service/ProcessService.php
@@ -534,6 +784,16 @@ parameters:
 			message: "#^Strict comparison using \\=\\=\\= between string and false will always evaluate to false\\.$#"
 			count: 1
 			path: Classes/Service/ProcessService.php
+
+		-
+			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Service\\\\ProcessService\\:\\:startRequiredProcesses\\(\\)\" is 10, keep it under 8$#"
+			count: 1
+			path: Classes/Service/ProcessService.php
+
+		-
+			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Service\\\\UrlService\\:\\:getUrlFromPageAndQueryParameters\\(\\)\" is 13, keep it under 8$#"
+			count: 1
+			path: Classes/Service/UrlService.php
 
 		-
 			message: "#^Function getUrlFromPageAndQueryParameters\\(\\) has an unused variable \\$siteLanguage\\.$#"
@@ -606,6 +866,11 @@ parameters:
 			path: Tests/Functional/Controller/CrawlerControllerTest.php
 
 		-
+			message: "#^Method Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\:\\:_call\\(\\) invoked with 2 parameters, 1 required\\.$#"
+			count: 2
+			path: Tests/Functional/Controller/CrawlerControllerTest.php
+
+		-
 			message: "#^Trying to mock an undefined method getCurrentTime\\(\\) on class Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\.$#"
 			count: 1
 			path: Tests/Functional/Controller/CrawlerControllerTest.php
@@ -613,6 +878,11 @@ parameters:
 		-
 			message: "#^Call to an undefined method Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface&PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:setExtensionSettings\\(\\)\\.$#"
 			count: 1
+			path: Tests/Functional/Controller/CrawlerControllerTest.php
+
+		-
+			message: "#^Method Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\:\\:_call\\(\\) invoked with 3 parameters, 1 required\\.$#"
+			count: 2
 			path: Tests/Functional/Controller/CrawlerControllerTest.php
 
 		-
@@ -629,6 +899,16 @@ parameters:
 			message: "#^You should use assertCount\\(\\$expectedCount, \\$variable\\) instead of assertSame\\(\\$expectedCount, \\$variable\\-\\>count\\(\\)\\)\\.$#"
 			count: 5
 			path: Tests/Functional/Domain/Repository/ProcessRepositoryTest.php
+
+		-
+			message: "#^Method Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\:\\:_call\\(\\) invoked with 4 parameters, 1 required\\.$#"
+			count: 1
+			path: Tests/Functional/Domain/Repository/QueueRepositoryTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$uid of method AOE\\\\Crawler\\\\Domain\\\\Repository\\\\QueueRepository\\:\\:isPageInQueue\\(\\) expects int, string given\\.$#"
+			count: 1
+			path: Tests/Functional/Domain/Repository/QueueRepositoryTest.php
 
 		-
 			message: "#^Offset 'scheduled' does not exist on array\\|null\\.$#"
@@ -716,14 +996,14 @@ parameters:
 			path: Tests/Unit/Backend/BackendModuleTest.php
 
 		-
-			message: "#^Call to an undefined method AOE\\\\Crawler\\\\Backend\\\\BackendModule\\:\\:_call\\(\\)\\.$#"
-			count: 3
-			path: Tests/Unit/Backend/BackendModuleTest.php
+			message: "#^Method AOE\\\\Crawler\\\\Tests\\\\Unit\\\\Backend\\\\Helper\\\\ResultHandlerTest\\:\\:getResStatus\\(\\) has parameter \\$requestContent with no typehint specified\\.$#"
+			count: 1
+			path: Tests/Unit/Backend/Helper/ResultHandlerTest.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Tests\\\\Unit\\\\Backend\\\\BackendModuleTest\\:\\:getResStatus\\(\\) has parameter \\$requestContent with no typehint specified\\.$#"
+			message: "#^Method Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\:\\:_call\\(\\) invoked with 2 parameters, 1 required\\.$#"
 			count: 1
-			path: Tests/Unit/Backend/BackendModuleTest.php
+			path: Tests/Unit/Controller/CrawlerControllerTest.php
 
 		-
 			message: "#^Method AOE\\\\Crawler\\\\Tests\\\\Unit\\\\Converter\\\\JsonCompatibilityConverterTest\\:\\:jsonCompatibilityConverterTest\\(\\) has parameter \\$expected with no typehint specified\\.$#"
@@ -739,6 +1019,16 @@ parameters:
 			message: "#^Unreachable statement \\- code above always terminates\\.$#"
 			count: 1
 			path: Tests/Unit/CrawlStrategy/SubProcessExecutionStrategyTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$subject of method AOE\\\\Crawler\\\\Domain\\\\Model\\\\ProcessCollection\\:\\:append\\(\\) expects AOE\\\\Crawler\\\\Domain\\\\Model\\\\Process, stdClass given\\.$#"
+			count: 1
+			path: Tests/Unit/Domain/Model/ProcessCollectionTest.php
+
+		-
+			message: "#^Parameter \\#2 \\$subject of method AOE\\\\Crawler\\\\Domain\\\\Model\\\\ProcessCollection\\:\\:offsetSet\\(\\) expects AOE\\\\Crawler\\\\Domain\\\\Model\\\\Process, stdClass given\\.$#"
+			count: 1
+			path: Tests/Unit/Domain/Model/ProcessCollectionTest.php
 
 		-
 			message: "#^Trying to mock an undefined method findYoungestEntryForProcess\\(\\) on class Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\.$#"

@@ -24,7 +24,7 @@ use AOE\Crawler\Exception\NoIndexFoundException;
  *
  *  This script is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *  GNU General Public License for more details.
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
@@ -61,6 +61,7 @@ class ProcessCollection extends \ArrayObject
         if (! $subject instanceof Process) {
             throw new \InvalidArgumentException('Wrong parameter type given, "\AOE\Crawler\Domain\Model\Process" expected!');
         }
+
         parent::offsetSet($index, $subject);
     }
 
@@ -74,6 +75,7 @@ class ProcessCollection extends \ArrayObject
         if (! $subject instanceof Process) {
             throw new \InvalidArgumentException('Wrong parameter type given, "\AOE\Crawler\Domain\Model\Process" expected!');
         }
+
         parent::append($subject);
     }
 

@@ -22,7 +22,7 @@ namespace AOE\Crawler\Controller;
  *
  *  This script is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *  GNU General Public License for more details.
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
@@ -72,11 +72,14 @@ class CrawlerController implements LoggerAwareInterface
 
     public const CLI_STATUS_NOTHING_PROCCESSED = 0;
 
-    public const CLI_STATUS_REMAIN = 1; //queue not empty
+    //queue not empty
+    public const CLI_STATUS_REMAIN = 1;
 
-    public const CLI_STATUS_PROCESSED = 2; //(some) queue items where processed
+    //(some) queue items where processed
+    public const CLI_STATUS_PROCESSED = 2;
 
-    public const CLI_STATUS_ABORTED = 4; //instance didn't finish
+    //instance didn't finish
+    public const CLI_STATUS_ABORTED = 4;
 
     public const CLI_STATUS_POLLABLE_PROCESSED = 8;
 
@@ -327,7 +330,8 @@ class CrawlerController implements LoggerAwareInterface
     public function checkIfPageShouldBeSkipped(array $pageRow)
     {
         $skipPage = false;
-        $skipMessage = 'Skipped'; // message will be overwritten later
+        // message will be overwritten later
+        $skipMessage = 'Skipped';
 
         // if page is hidden
         if (! $this->extensionSettings['crawlHiddenPages']) {
@@ -679,7 +683,7 @@ class CrawlerController implements LoggerAwareInterface
      *
      * @param string $groupList Comma-separated list of (fe_)group UIDs from a user
      * @param string $accessList Comma-separated list of (fe_)group UIDs of the item to access
-     * @return bool                 TRUE if at least one of the users group UIDs is in the access list or the access list is empty
+     * @return bool TRUE if at least one of the users group UIDs is in the access list or the access list is empty
      * @see \TYPO3\CMS\Frontend\Page\PageRepository::getMultipleGroupsWhereClause()
      */
     public function hasGroupAccess($groupList, $accessList)
@@ -733,7 +737,8 @@ class CrawlerController implements LoggerAwareInterface
                         $reg = $this->swapIfFirstIsLargerThanSecond($reg);
 
                         // Traverse range, add values:
-                        $runAwayBrake = 1000; // Limit to size of range!
+                        // Limit to size of range!
+                        $runAwayBrake = 1000;
                         for ($a = $reg[1]; $a <= $reg[2]; $a++) {
                             $paramArray[$p][] = $a;
                             $runAwayBrake--;
@@ -811,7 +816,8 @@ class CrawlerController implements LoggerAwareInterface
                                 }
                             }
                         }
-                    } else { // Just add value:
+                    } else {
+                        // Just add value:
                         $paramArray[$p][] = $pV;
                     }
                     // Hook for processing own expandParameters place holder
@@ -1469,7 +1475,8 @@ class CrawlerController implements LoggerAwareInterface
                         $this->downloadCrawlUrls,
                         $this->duplicateTrack,
                         $this->downloadUrls,
-                        $this->incomingProcInstructions // if empty the urls won't be filtered by processing instructions
+                        // if empty the urls won't be filtered by processing instructions
+                        $this->incomingProcInstructions
                     );
 
                     // Expanded parameters:
@@ -1580,7 +1587,8 @@ class CrawlerController implements LoggerAwareInterface
                 $result |= $this->readUrl($r['qid']);
 
                 $counter++;
-                usleep((int) $sleepTime); // Just to relax the system
+                // Just to relax the system
+                usleep((int) $sleepTime);
 
                 // if during the start and the current read url the cli has been disable we need to return from the function
                 // mark the process NOT as ended.
@@ -1591,7 +1599,8 @@ class CrawlerController implements LoggerAwareInterface
                 if (! $this->processRepository->isProcessActive($this->CLI_buildProcessId())) {
                     $this->CLI_debug('conflict / timeout (' . $this->CLI_buildProcessId() . ')');
                     $result |= self::CLI_STATUS_ABORTED;
-                    break; //possible timeout
+                    //possible timeout
+                    break;
                 }
             }
 
@@ -1700,7 +1709,8 @@ class CrawlerController implements LoggerAwareInterface
         }
 
         if (empty($releaseIds)) {
-            return false;   //nothing to release
+            //nothing to release
+            return false;
         }
 
         // some kind of 2nd chance algo - this way you need at least 2 processes to have a real cleanup
@@ -1738,7 +1748,7 @@ class CrawlerController implements LoggerAwareInterface
     /**
      * Create a unique Id for the current process
      *
-     * @return string  the ID
+     * @return string the ID
      */
     public function CLI_buildProcessId()
     {
@@ -1770,7 +1780,8 @@ class CrawlerController implements LoggerAwareInterface
      */
     public function cleanUpOldQueueEntries(): void
     {
-        $processedAgeInSeconds = $this->extensionSettings['cleanUpProcessedAge'] * 86400; // 24*60*60 Seconds in 24 hours
+        // 24*60*60 Seconds in 24 hours
+        $processedAgeInSeconds = $this->extensionSettings['cleanUpProcessedAge'] * 86400;
         $scheduledAgeInSeconds = $this->extensionSettings['cleanUpScheduledAge'] * 86400;
 
         $now = time();

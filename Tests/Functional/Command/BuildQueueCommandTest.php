@@ -44,6 +44,7 @@ class BuildQueueCommandTest extends AbstractCommandTests
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->importDataSet(__DIR__ . '/../Fixtures/pages.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_configuration.xml');
         $this->queueRepository = GeneralUtility::makeInstance(ObjectManager::class)->get(QueueRepository::class);

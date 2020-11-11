@@ -22,7 +22,7 @@ namespace AOE\Crawler\Command;
  *
  *  This script is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *  GNU General Public License for more details.
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
@@ -42,11 +42,14 @@ class ProcessQueueCommand extends Command
 {
     public const CLI_STATUS_NOTHING_PROCCESSED = 0;
 
-    public const CLI_STATUS_REMAIN = 1; //queue not empty
+    //queue not empty
+    public const CLI_STATUS_REMAIN = 1;
 
-    public const CLI_STATUS_PROCESSED = 2; //(some) queue items where processed
+    //(some) queue items where processed
+    public const CLI_STATUS_PROCESSED = 2;
 
-    public const CLI_STATUS_ABORTED = 4; //instance didn't finish
+    //instance didn't finish
+    public const CLI_STATUS_ABORTED = 4;
 
     public const CLI_STATUS_POLLABLE_PROCESSED = 8;
 

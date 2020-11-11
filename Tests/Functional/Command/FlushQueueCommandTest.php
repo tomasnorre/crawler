@@ -44,6 +44,7 @@ class FlushQueueCommandTest extends AbstractCommandTests
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
         $this->queueRepository = GeneralUtility::makeInstance(ObjectManager::class)->get(QueueRepository::class);
     }

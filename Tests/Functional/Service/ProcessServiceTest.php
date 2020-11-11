@@ -54,6 +54,7 @@ class ProcessServiceTest extends FunctionalTestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->subject = GeneralUtility::makeInstance(ObjectManager::class)->get(ProcessService::class);
         $this->crawlerController = $this->createPartialMock(CrawlerController::class, ['dummyMethod']);
     }
