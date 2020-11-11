@@ -142,7 +142,7 @@ class BackendModule
         return $theOutput . $this->renderForm($selectedAction);
     }
 
-    public function getLanguageService(): LanguageService
+    private function getLanguageService(): LanguageService
     {
         return $GLOBALS['LANG'];
     }
