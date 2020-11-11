@@ -2,6 +2,12 @@
 
 ## Crawler 9.1.3-dev
 
+### Deprecated
+#### Classes
+
+#### Functions & Properties
+* BackendModule->modMenu()
+
 ### Changed
 * Updated Rector, PHPStan, ECS for better static code analysis
 * BackendModule is splittet into smaller classes to improve readability and maintainability
@@ -73,12 +79,6 @@ Crawler 9.0.2 was released on July 13th, 2020
 
 ### Changed
 * Group TCA in tabs and add descriptions to fields
-
-### Deprecated
-#### Classes
-
-#### Functions & Properties
-* BackendModule->modMenu()
 
 ### Fixed
 * Handle empty response when fetching URL
