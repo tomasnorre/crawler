@@ -194,6 +194,7 @@ class CrawlerController implements LoggerAwareInterface
      */
     private $deprecatedPublicMethods = [
         'CLI_buildProcessId' => 'Using CrawlerController->CLI_buildProcessId() is deprecated since 9.1.3 and will be removed in v11.x, please use ProcessService::createProcessId() instead',
+        'CLI_debug' => 'Using CrawlerController->CLI_debug() is deprecated since 9.1.3 and will be removed in v11.x',
         'getLogEntriesForSetId' => 'Using crawlerController::getLogEntriesForSetId() is deprecated since 9.0.1 and will be removed in v11.x',
         'flushQueue' => 'Using CrawlerController::flushQueue() is deprecated since 9.0.1 and will be removed in v11.x, please use QueueRepository->flushQueue() instead.',
         'cleanUpOldQueueEntries' => 'Using CrawlerController::cleanUpOldQueueEntries() is deprecated since 9.0.1 and will be removed in v11.x, please use QueueRepository->cleanUpOldQueueEntries() instead.',
@@ -1762,6 +1763,7 @@ class CrawlerController implements LoggerAwareInterface
      * Prints a message to the stdout (only if debug-mode is enabled)
      *
      * @param string $msg the message
+     * @deprecated
      */
     public function CLI_debug($msg): void
     {
