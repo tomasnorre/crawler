@@ -45,6 +45,7 @@ use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Compatibility\PublicMethodDeprecationTrait;
+use TYPO3\CMS\Core\Compatibility\PublicPropertyDeprecationTrait;
 use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\Connection;
@@ -70,6 +71,7 @@ class CrawlerController implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
     use PublicMethodDeprecationTrait;
+    use PublicPropertyDeprecationTrait;
 
     public const CLI_STATUS_NOTHING_PROCCESSED = 0;
 
@@ -151,6 +153,7 @@ class CrawlerController implements LoggerAwareInterface
      * Holds the internal access mode can be 'gui','cli' or 'cli_im'
      *
      * @var string
+     * @deprecated
      */
     protected $accessMode;
 
@@ -193,11 +196,21 @@ class CrawlerController implements LoggerAwareInterface
      * @var string[]
      */
     private $deprecatedPublicMethods = [
+        'cleanUpOldQueueEntries' => 'Using CrawlerController::cleanUpOldQueueEntries() is deprecated since 9.0.1 and will be removed in v11.x, please use QueueRepository->cleanUpOldQueueEntries() instead.',
         'CLI_buildProcessId' => 'Using CrawlerController->CLI_buildProcessId() is deprecated since 9.1.3 and will be removed in v11.x, please use ProcessService::createProcessId() instead',
         'CLI_debug' => 'Using CrawlerController->CLI_debug() is deprecated since 9.1.3 and will be removed in v11.x',
+        'getAccessMode' => 'Using CrawlerController->getAccessMode() is deprecated since 9.1.3 and will be removed in v11.x',
         'getLogEntriesForSetId' => 'Using crawlerController::getLogEntriesForSetId() is deprecated since 9.0.1 and will be removed in v11.x',
         'flushQueue' => 'Using CrawlerController::flushQueue() is deprecated since 9.0.1 and will be removed in v11.x, please use QueueRepository->flushQueue() instead.',
-        'cleanUpOldQueueEntries' => 'Using CrawlerController::cleanUpOldQueueEntries() is deprecated since 9.0.1 and will be removed in v11.x, please use QueueRepository->cleanUpOldQueueEntries() instead.',
+        'setAccessMode' => 'Using CrawlerController->setAccessMode() is deprecated since 9.1.3 and will be removed in v11.x'
+
+    ];
+
+    /**
+     * @var string[]
+     */
+    private $deprecatedPublicProperties = [
+        'accessMode' => 'Using CrawlerController->accessMode is deprecated since 9.1.3 and will be removed in v11.x'
     ];
 
     /**
@@ -261,6 +274,7 @@ class CrawlerController implements LoggerAwareInterface
      * Method to set the accessMode can be gui, cli or cli_im
      *
      * @return string
+     * @deprecated
      */
     public function getAccessMode()
     {
@@ -269,6 +283,7 @@ class CrawlerController implements LoggerAwareInterface
 
     /**
      * @param string $accessMode
+     * @deprecated
      */
     public function setAccessMode($accessMode): void
     {

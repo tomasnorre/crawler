@@ -9,6 +9,9 @@
 * BackendModule->modMenu()
 * CrawlerController->CLI_buildProcessId()
 * CrawlerController->CLI_debug()
+* CrawlerController->getAccessMode()
+* CrawlerController->setAccessMode()
+* CrawlerController->accessMode
 
 ### Changed
 * Updated Rector, PHPStan, ECS for better static code analysis
