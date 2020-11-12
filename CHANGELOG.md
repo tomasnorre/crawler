@@ -7,6 +7,7 @@
 
 #### Functions & Properties
 * BackendModule->modMenu()
+* CrawlerController->CLI_buildProcessId()
 
 ### Changed
 * Updated Rector, PHPStan, ECS for better static code analysis

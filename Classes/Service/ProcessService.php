@@ -241,6 +241,14 @@ class ProcessService
         return ltrim($scriptPath);
     }
 
+    public static function createProcessId(string $processId): string
+    {
+        if (! $processId) {
+            return GeneralUtility::shortMD5(microtime() . random_int(0,1000000));
+        }
+        return $processId;
+    }
+
     /**
      * Reports curent Status of queue
      * @deprecated

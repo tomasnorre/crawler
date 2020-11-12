@@ -35,6 +35,7 @@ use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\QueueExecutor;
+use AOE\Crawler\Service\ProcessService;
 use AOE\Crawler\Service\UrlService;
 use AOE\Crawler\Utility\SignalSlotUtility;
 use Psr\Http\Message\UriInterface;
@@ -192,6 +193,7 @@ class CrawlerController implements LoggerAwareInterface
      * @var string[]
      */
     private $deprecatedPublicMethods = [
+        'CLI_buildProcessId' => 'Using CrawlerController->CLI_buildProcessId() is deprecated since 9.1.3 and will be removed in v11.x, please use ProcessService::createProcessId() instead',
         'getLogEntriesForSetId' => 'Using crawlerController::getLogEntriesForSetId() is deprecated since 9.0.1 and will be removed in v11.x',
         'flushQueue' => 'Using CrawlerController::flushQueue() is deprecated since 9.0.1 and will be removed in v11.x, please use QueueRepository->flushQueue() instead.',
         'cleanUpOldQueueEntries' => 'Using CrawlerController::cleanUpOldQueueEntries() is deprecated since 9.0.1 and will be removed in v11.x, please use QueueRepository->cleanUpOldQueueEntries() instead.',
@@ -1749,13 +1751,11 @@ class CrawlerController implements LoggerAwareInterface
      * Create a unique Id for the current process
      *
      * @return string the ID
+     * @deprecated
      */
-    public function CLI_buildProcessId()
+    public function CLI_buildProcessId(): string
     {
-        if (! $this->processID) {
-            $this->processID = GeneralUtility::shortMD5(microtime(true));
-        }
-        return $this->processID;
+        return ProcessService::createProcessId($this->processID);
     }
 
     /**

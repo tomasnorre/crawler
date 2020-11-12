@@ -261,12 +261,12 @@ parameters:
 			path: Classes/ContextMenu/ItemProvider.php
 
 		-
-			message: "#^Class cognitive complexity for \"CrawlerController\" is 291, keep it under 50$#"
+			message: "#^Class cognitive complexity for \"CrawlerController\" is 290, keep it under 50$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Class cognitive complexity for \"CrawlerController\" is 291, keep it under 60$#"
+			message: "#^Class cognitive complexity for \"CrawlerController\" is 290, keep it under 60$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -443,11 +443,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$value of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:set\\(\\) expects string, int given\\.$#"
 			count: 2
-			path: Classes/Controller/CrawlerController.php
-
-		-
-			message: "#^Parameter \\#1 \\$input of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:shortMD5\\(\\) expects string, float given\\.$#"
-			count: 1
 			path: Classes/Controller/CrawlerController.php
 
 		-
