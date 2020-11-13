@@ -1,5 +1,10 @@
 # Improvements Ideas
 
-## CrawlerService from CrawlerController
-* Move set/getDisable
-* Move processFile
+## CrawlerController ->
+
+### CrawlerService/Object
+* set/getDisable
+* processFile
+
+## PageObject
+* checkIfPageShouldBeSkipped
