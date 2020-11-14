@@ -31,6 +31,7 @@ namespace AOE\Crawler\Controller;
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
+use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
@@ -1268,8 +1269,7 @@ class CrawlerController implements LoggerAwareInterface
             $this->tableName,
             $field_array
         );
-        $queueId = $field_array['qid'] = $connectionForCrawlerQueue->lastInsertId($this->tableName, 'qid');
-
+        $queueId = $connectionForCrawlerQueue->lastInsertId($this->tableName, 'qid');
         $result = $this->queueExecutor->executeQueueItem($field_array, $this);
 
         // Set result in log which also denotes the end of the processing of this entry.
@@ -1656,26 +1656,20 @@ class CrawlerController implements LoggerAwareInterface
         $ret = true;
 
         $systemProcessId = getmypid();
-        if ($systemProcessId < 1) {
+        if (!$systemProcessId) {
             return false;
         }
 
         $processCount = 0;
         $orphanProcesses = [];
 
-        $statement = $queryBuilder
-            ->select('process_id', 'ttl')
-            ->from('tx_crawler_process')
-            ->where(
-                'active = 1 AND deleted = 0'
-            )
-            ->execute();
-
+        $activeProcesses = $this->processRepository->findAllActive();
         $currentTime = $this->getCurrentTime();
 
-        while ($row = $statement->fetch()) {
-            if ($row['ttl'] < $currentTime) {
-                $orphanProcesses[] = $row['process_id'];
+        /** @var Process $process */
+        foreach ($activeProcesses as $process) {
+            if ($process->getTtl() < $currentTime) {
+                $orphanProcesses[] = $process->getProcessId();
             } else {
                 $processCount++;
             }
