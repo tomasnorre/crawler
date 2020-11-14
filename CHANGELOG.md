@@ -7,7 +7,6 @@
 
 #### Functions & Properties
 * BackendModule->modMenu()
-* CrawlerController->CLI_buildProcessId()
 * CrawlerController->CLI_debug()
 * CrawlerController->getAccessMode()
 * CrawlerController->setAccessMode()

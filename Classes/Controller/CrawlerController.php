@@ -35,7 +35,6 @@ use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\QueueExecutor;
-use AOE\Crawler\Service\ProcessService;
 use AOE\Crawler\Service\UrlService;
 use AOE\Crawler\Utility\SignalSlotUtility;
 use Psr\Http\Message\UriInterface;
@@ -197,13 +196,11 @@ class CrawlerController implements LoggerAwareInterface
      */
     private $deprecatedPublicMethods = [
         'cleanUpOldQueueEntries' => 'Using CrawlerController::cleanUpOldQueueEntries() is deprecated since 9.0.1 and will be removed in v11.x, please use QueueRepository->cleanUpOldQueueEntries() instead.',
-        'CLI_buildProcessId' => 'Using CrawlerController->CLI_buildProcessId() is deprecated since 9.1.3 and will be removed in v11.x, please use ProcessService::createProcessId() instead',
         'CLI_debug' => 'Using CrawlerController->CLI_debug() is deprecated since 9.1.3 and will be removed in v11.x',
         'getAccessMode' => 'Using CrawlerController->getAccessMode() is deprecated since 9.1.3 and will be removed in v11.x',
         'getLogEntriesForSetId' => 'Using crawlerController::getLogEntriesForSetId() is deprecated since 9.0.1 and will be removed in v11.x',
         'flushQueue' => 'Using CrawlerController::flushQueue() is deprecated since 9.0.1 and will be removed in v11.x, please use QueueRepository->flushQueue() instead.',
         'setAccessMode' => 'Using CrawlerController->setAccessMode() is deprecated since 9.1.3 and will be removed in v11.x'
-
     ];
 
     /**
@@ -1767,11 +1764,13 @@ class CrawlerController implements LoggerAwareInterface
      * Create a unique Id for the current process
      *
      * @return string the ID
-     * @deprecated
      */
-    public function CLI_buildProcessId(): string
+    public function CLI_buildProcessId()
     {
-        return ProcessService::createProcessId($this->processID);
+        if (! $this->processID) {
+            $this->processID = GeneralUtility::shortMD5(microtime(true));
+        }
+        return $this->processID;
     }
 
     /**
