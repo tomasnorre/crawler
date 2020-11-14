@@ -235,6 +235,11 @@ class CrawlerController implements LoggerAwareInterface
      */
     private $downloadCrawlUrls = false;
 
+    /**
+     * @var PageRepository
+     */
+    private $pageRepository;
+
     /************************************
      *
      * Getting URLs based on Page TSconfig
@@ -248,6 +253,7 @@ class CrawlerController implements LoggerAwareInterface
         $this->queueRepository = $objectManager->get(QueueRepository::class);
         $this->processRepository = $objectManager->get(ProcessRepository::class);
         $this->configurationRepository = $objectManager->get(ConfigurationRepository::class);
+        $this->pageRepository = $objectManager->get(PageRepository::class);
         $this->queueExecutor = GeneralUtility::makeInstance(QueueExecutor::class, $crawlStrategyFactory);
         $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
 
@@ -1349,17 +1355,7 @@ class CrawlerController implements LoggerAwareInterface
 
             // recognize mount points
             if ($data['row']['doktype'] === PageRepository::DOKTYPE_MOUNTPOINT) {
-                $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('pages');
-                $queryBuilder->getRestrictions()->removeAll()->add(GeneralUtility::makeInstance(DeletedRestriction::class));
-                $mountpage = $queryBuilder
-                    ->select('*')
-                    ->from('pages')
-                    ->where(
-                        $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($data['row']['uid'], \PDO::PARAM_INT))
-                    )
-                    ->execute()
-                    ->fetchAll();
-                $queryBuilder->resetRestrictions();
+                $mountpage = $this->pageRepository->getPage($data['row']['uid']);
 
                 // fetch mounted pages
                 $this->MP = $mountpage[0]['mount_pid'] . '-' . $data['row']['uid'];
