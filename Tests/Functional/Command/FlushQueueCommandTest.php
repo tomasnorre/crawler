@@ -86,11 +86,6 @@ class FlushQueueCommandTest extends AbstractCommandTests
                 'expectedOutput' => 'All entries in Crawler queue, with status: "finished" will be flushed',
                 'expectedCount' => 8,
             ],
-            'Unknown mode' => [
-                'mode' => 'unknown',
-                'expectedOutput' => 'No matching parameters found.',
-                'expectedCount' => 15,
-            ],
         ];
     }
 }
