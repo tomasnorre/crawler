@@ -92,7 +92,8 @@
         ],
         "test:all": [
             "@test:unit",
-            "@test:functional"
+            "@test:functional",
+            "@test:acceptance"
         ],
         "test:unit": [
             "[ -e .Build/bin/phpunit ] || composer update",
@@ -101,6 +102,10 @@
         "test:functional": [
             "[ -e .Build/bin/phpunit ] || composer update",
             "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseName=crawler typo3DatabaseHost=127.0.0.1 typo3DatabaseUsername=root typo3DatabasePassword=root .Build/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml Tests/Functional"
+        ],
+        "test:acceptance": [
+            "[ -e .Build/bin/codecept ] || composer update",
+            ".Build/bin/codecept run"
         ],
         "extension-release": [
             "rm -rf .devbox",

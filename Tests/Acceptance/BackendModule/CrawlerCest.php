@@ -29,10 +29,10 @@ class CrawlerCest
     {
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleCrawlerMultiProcess($adminStep, $pageTree);
-        $I->waitForText('Stop all processes and disable crawling', 5);
+        $I->canSee('Stop all processes and disable crawling');
         $I->click('Stop all processes and disable crawling');
-        $I->waitForText('Enable crawling', 5);
+        $I->canSee('Enable crawling');
         $I->click('Enable crawling');
-        $I->waitForText('Stop all processes and disable crawling', 5);
+        $I->canSee('Stop all processes and disable crawling');
     }
 }
