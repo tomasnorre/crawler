@@ -21,6 +21,7 @@ namespace AOE\Crawler\Backend\RequestForm;
 
 use AOE\Crawler\Backend\Helper\UrlBuilder;
 use AOE\Crawler\Controller\CrawlerController;
+use AOE\Crawler\Crawler;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Exception\ProcessException;
@@ -62,6 +63,11 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
      */
     private $id;
 
+    /**
+     * @var Crawler
+     */
+    private $crawler;
+
     public function __construct(StandaloneView $view, InfoModuleController $infoModuleController, array $extensionSettings)
     {
         $this->view = $view;
@@ -69,6 +75,7 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
         $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
         $this->infoModuleController = $infoModuleController;
         $this->extensionSettings = $extensionSettings;
+        $this->crawler = GeneralUtility::makeInstance(Crawler::class);
     }
 
     public function render($id, string $elementName, array $menuItems): string
@@ -104,7 +111,7 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
         } else {
             $allProcesses = $processRepository->findAll();
         }
-        $isCrawlerEnabled = ! $this->findCrawler()->getDisabled() && ! $this->isErrorDetected;
+        $isCrawlerEnabled = ! $this->crawler->isDisabled() && ! $this->isErrorDetected;
         $currentActiveProcesses = $processRepository->findAllActive()->count();
         $maxActiveProcesses = MathUtility::forceIntegerInRange($this->extensionSettings['processLimit'], 1, 99, 1);
         $this->view->assignMultiple([
@@ -148,7 +155,7 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
         switch (GeneralUtility::_GP('action')) {
             case 'stopCrawling':
                 //set the cli status to disable (all processes will be terminated)
-                $this->findCrawler()->setDisabled(true);
+                $this->crawler->setDisabled(true);
                 break;
             case 'addProcess':
                 if ($this->processService->startProcess() === false) {
@@ -159,7 +166,7 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
             case 'resumeCrawling':
             default:
                 //set the cli status to end (all processes will be terminated)
-                $this->findCrawler()->setDisabled(false);
+                $this->crawler->setDisabled(false);
                 break;
         }
     }

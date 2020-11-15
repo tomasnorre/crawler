@@ -30,6 +30,7 @@ namespace AOE\Crawler\Controller;
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
+use AOE\Crawler\Crawler;
 use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
 use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
@@ -146,6 +147,7 @@ class CrawlerController implements LoggerAwareInterface
 
     /**
      * @var string
+     * @deprecated
      */
     protected $processFilename;
 
@@ -201,14 +203,20 @@ class CrawlerController implements LoggerAwareInterface
         'getAccessMode' => 'Using CrawlerController->getAccessMode() is deprecated since 9.1.3 and will be removed in v11.x',
         'getLogEntriesForSetId' => 'Using crawlerController::getLogEntriesForSetId() is deprecated since 9.0.1 and will be removed in v11.x',
         'flushQueue' => 'Using CrawlerController::flushQueue() is deprecated since 9.0.1 and will be removed in v11.x, please use QueueRepository->flushQueue() instead.',
-        'setAccessMode' => 'Using CrawlerController->setAccessMode() is deprecated since 9.1.3 and will be removed in v11.x'
+        'setAccessMode' => 'Using CrawlerController->setAccessMode() is deprecated since 9.1.3 and will be removed in v11.x',
+        'getDisabled' => 'Using CrawlerController->getDisabled() is deprecated since 9.1.3 and will be removed in v11.x, please use Crawler->isDisabled() instead',
+        'setDisabled' => 'Using CrawlerController->setDisabled() is deprecated since 9.1.3 and will be removed in v11.x, please use Crawler->setDisabled() instead',
+        'getProcessFilename' => 'Using CrawlerController->getProcessFilename() is deprecated since 9.1.3 and will be removed in v11.x',
+        'setProcessFilename' => 'Using CrawlerController->setProcessFilename() is deprecated since 9.1.3 and will be removed in v11.x',
+
     ];
 
     /**
      * @var string[]
      */
     private $deprecatedPublicProperties = [
-        'accessMode' => 'Using CrawlerController->accessMode is deprecated since 9.1.3 and will be removed in v11.x'
+        'accessMode' => 'Using CrawlerController->accessMode is deprecated since 9.1.3 and will be removed in v11.x',
+        'processFilename' => 'Using CrawlerController->accessMode is deprecated since 9.1.3 and will be removed in v11.x',
     ];
 
     /**
@@ -241,6 +249,11 @@ class CrawlerController implements LoggerAwareInterface
      */
     private $pageRepository;
 
+    /**
+     * @var Crawler
+     */
+    private $crawler;
+
     /************************************
      *
      * Getting URLs based on Page TSconfig
@@ -257,6 +270,7 @@ class CrawlerController implements LoggerAwareInterface
         $this->pageRepository = $objectManager->get(PageRepository::class);
         $this->queueExecutor = GeneralUtility::makeInstance(QueueExecutor::class, $crawlStrategyFactory);
         $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
+        $this->crawler = GeneralUtility::makeInstance(Crawler::class);
 
         $this->processFilename = Environment::getVarPath() . '/lock/tx_crawler.proc';
 
@@ -298,6 +312,7 @@ class CrawlerController implements LoggerAwareInterface
      * Set disabled status to prevent processes from being processed
      *
      * @param bool $disabled (optional, defaults to true)
+     * @deprecated
      */
     public function setDisabled($disabled = true): void
     {
@@ -314,6 +329,7 @@ class CrawlerController implements LoggerAwareInterface
      * Get disable status
      *
      * @return bool true if disabled
+     * @deprecated
      */
     public function getDisabled()
     {
@@ -322,6 +338,7 @@ class CrawlerController implements LoggerAwareInterface
 
     /**
      * @param string $filenameWithPath
+     * @deprecated
      */
     public function setProcessFilename($filenameWithPath): void
     {
@@ -330,6 +347,7 @@ class CrawlerController implements LoggerAwareInterface
 
     /**
      * @return string
+     * @deprecated
      */
     public function getProcessFilename()
     {
@@ -1603,7 +1621,7 @@ class CrawlerController implements LoggerAwareInterface
 
                 // if during the start and the current read url the cli has been disable we need to return from the function
                 // mark the process NOT as ended.
-                if ($this->getDisabled()) {
+                if ($this->crawler->isDisabled()) {
                     return ($result | self::CLI_STATUS_ABORTED);
                 }
 

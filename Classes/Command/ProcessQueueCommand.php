@@ -29,6 +29,7 @@ namespace AOE\Crawler\Command;
  ***************************************************************/
 
 use AOE\Crawler\Controller\CrawlerController;
+use AOE\Crawler\Crawler;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -78,7 +79,10 @@ class ProcessQueueCommand extends Command
         /** @var QueueRepository $queueRepository */
         $queueRepository = $objectManager->get(QueueRepository::class);
 
-        if (! $crawlerController->getDisabled() && $crawlerController->CLI_checkAndAcquireNewProcess($crawlerController->CLI_buildProcessId())) {
+        /** @var Crawler $crawler */
+        $crawler = GeneralUtility::makeInstance(Crawler::class);
+
+        if (! $crawler->isDisabled() && $crawlerController->CLI_checkAndAcquireNewProcess($crawlerController->CLI_buildProcessId())) {
             $countInARun = $amount ? (int) $amount : (int) $crawlerController->extensionSettings['countInARun'];
             $sleepAfterFinish = $sleepafter ? (int) $sleepafter : (int) $crawlerController->extensionSettings['sleepAfterFinish'];
             $sleepTime = $sleeptime ? (int) $sleeptime : (int) $crawlerController->extensionSettings['sleepTime'];

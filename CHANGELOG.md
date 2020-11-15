@@ -10,11 +10,17 @@
 * CrawlerController->CLI_debug()
 * CrawlerController->getAccessMode()
 * CrawlerController->setAccessMode()
+* CrawlerController->getDisabled()
+* CrawlerController->setDisabled()
+* CrawlerController->getProcessFilename()
+* CrawlerController->setProcessFilename()
 * CrawlerController->accessMode
+* CrawlerController->processFilename
 
 ### Changed
 * Updated Rector, PHPStan, ECS for better static code analysis
 * BackendModule is splittet into smaller classes to improve readability and maintainability
+* Crawler Class added, this can be used to check whether the crawler is enabled or disabled
 
 ### Fixed
 
