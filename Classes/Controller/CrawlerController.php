@@ -30,7 +30,9 @@ namespace AOE\Crawler\Controller;
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
+use AOE\Crawler\Crawler;
 use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
+use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
@@ -44,6 +46,7 @@ use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Compatibility\PublicMethodDeprecationTrait;
+use TYPO3\CMS\Core\Compatibility\PublicPropertyDeprecationTrait;
 use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\Connection;
@@ -69,6 +72,7 @@ class CrawlerController implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
     use PublicMethodDeprecationTrait;
+    use PublicPropertyDeprecationTrait;
 
     public const CLI_STATUS_NOTHING_PROCCESSED = 0;
 
@@ -143,6 +147,7 @@ class CrawlerController implements LoggerAwareInterface
 
     /**
      * @var string
+     * @deprecated
      */
     protected $processFilename;
 
@@ -150,6 +155,7 @@ class CrawlerController implements LoggerAwareInterface
      * Holds the internal access mode can be 'gui','cli' or 'cli_im'
      *
      * @var string
+     * @deprecated
      */
     protected $accessMode;
 
@@ -192,9 +198,25 @@ class CrawlerController implements LoggerAwareInterface
      * @var string[]
      */
     private $deprecatedPublicMethods = [
+        'cleanUpOldQueueEntries' => 'Using CrawlerController::cleanUpOldQueueEntries() is deprecated since 9.0.1 and will be removed in v11.x, please use QueueRepository->cleanUpOldQueueEntries() instead.',
+        'CLI_debug' => 'Using CrawlerController->CLI_debug() is deprecated since 9.1.3 and will be removed in v11.x',
+        'getAccessMode' => 'Using CrawlerController->getAccessMode() is deprecated since 9.1.3 and will be removed in v11.x',
         'getLogEntriesForSetId' => 'Using crawlerController::getLogEntriesForSetId() is deprecated since 9.0.1 and will be removed in v11.x',
         'flushQueue' => 'Using CrawlerController::flushQueue() is deprecated since 9.0.1 and will be removed in v11.x, please use QueueRepository->flushQueue() instead.',
-        'cleanUpOldQueueEntries' => 'Using CrawlerController::cleanUpOldQueueEntries() is deprecated since 9.0.1 and will be removed in v11.x, please use QueueRepository->cleanUpOldQueueEntries() instead.',
+        'setAccessMode' => 'Using CrawlerController->setAccessMode() is deprecated since 9.1.3 and will be removed in v11.x',
+        'getDisabled' => 'Using CrawlerController->getDisabled() is deprecated since 9.1.3 and will be removed in v11.x, please use Crawler->isDisabled() instead',
+        'setDisabled' => 'Using CrawlerController->setDisabled() is deprecated since 9.1.3 and will be removed in v11.x, please use Crawler->setDisabled() instead',
+        'getProcessFilename' => 'Using CrawlerController->getProcessFilename() is deprecated since 9.1.3 and will be removed in v11.x',
+        'setProcessFilename' => 'Using CrawlerController->setProcessFilename() is deprecated since 9.1.3 and will be removed in v11.x',
+
+    ];
+
+    /**
+     * @var string[]
+     */
+    private $deprecatedPublicProperties = [
+        'accessMode' => 'Using CrawlerController->accessMode is deprecated since 9.1.3 and will be removed in v11.x',
+        'processFilename' => 'Using CrawlerController->accessMode is deprecated since 9.1.3 and will be removed in v11.x',
     ];
 
     /**
@@ -222,6 +244,16 @@ class CrawlerController implements LoggerAwareInterface
      */
     private $downloadCrawlUrls = false;
 
+    /**
+     * @var PageRepository
+     */
+    private $pageRepository;
+
+    /**
+     * @var Crawler
+     */
+    private $crawler;
+
     /************************************
      *
      * Getting URLs based on Page TSconfig
@@ -235,8 +267,10 @@ class CrawlerController implements LoggerAwareInterface
         $this->queueRepository = $objectManager->get(QueueRepository::class);
         $this->processRepository = $objectManager->get(ProcessRepository::class);
         $this->configurationRepository = $objectManager->get(ConfigurationRepository::class);
+        $this->pageRepository = $objectManager->get(PageRepository::class);
         $this->queueExecutor = GeneralUtility::makeInstance(QueueExecutor::class, $crawlStrategyFactory);
         $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
+        $this->crawler = GeneralUtility::makeInstance(Crawler::class);
 
         $this->processFilename = Environment::getVarPath() . '/lock/tx_crawler.proc';
 
@@ -258,6 +292,7 @@ class CrawlerController implements LoggerAwareInterface
      * Method to set the accessMode can be gui, cli or cli_im
      *
      * @return string
+     * @deprecated
      */
     public function getAccessMode()
     {
@@ -266,6 +301,7 @@ class CrawlerController implements LoggerAwareInterface
 
     /**
      * @param string $accessMode
+     * @deprecated
      */
     public function setAccessMode($accessMode): void
     {
@@ -276,6 +312,7 @@ class CrawlerController implements LoggerAwareInterface
      * Set disabled status to prevent processes from being processed
      *
      * @param bool $disabled (optional, defaults to true)
+     * @deprecated
      */
     public function setDisabled($disabled = true): void
     {
@@ -292,6 +329,7 @@ class CrawlerController implements LoggerAwareInterface
      * Get disable status
      *
      * @return bool true if disabled
+     * @deprecated
      */
     public function getDisabled()
     {
@@ -300,6 +338,7 @@ class CrawlerController implements LoggerAwareInterface
 
     /**
      * @param string $filenameWithPath
+     * @deprecated
      */
     public function setProcessFilename($filenameWithPath): void
     {
@@ -308,6 +347,7 @@ class CrawlerController implements LoggerAwareInterface
 
     /**
      * @return string
+     * @deprecated
      */
     public function getProcessFilename()
     {
@@ -1247,8 +1287,7 @@ class CrawlerController implements LoggerAwareInterface
             $this->tableName,
             $field_array
         );
-        $queueId = $field_array['qid'] = $connectionForCrawlerQueue->lastInsertId($this->tableName, 'qid');
-
+        $queueId = $connectionForCrawlerQueue->lastInsertId($this->tableName, 'qid');
         $result = $this->queueExecutor->executeQueueItem($field_array, $this);
 
         // Set result in log which also denotes the end of the processing of this entry.
@@ -1334,17 +1373,7 @@ class CrawlerController implements LoggerAwareInterface
 
             // recognize mount points
             if ($data['row']['doktype'] === PageRepository::DOKTYPE_MOUNTPOINT) {
-                $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('pages');
-                $queryBuilder->getRestrictions()->removeAll()->add(GeneralUtility::makeInstance(DeletedRestriction::class));
-                $mountpage = $queryBuilder
-                    ->select('*')
-                    ->from('pages')
-                    ->where(
-                        $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($data['row']['uid'], \PDO::PARAM_INT))
-                    )
-                    ->execute()
-                    ->fetchAll();
-                $queryBuilder->resetRestrictions();
+                $mountpage = $this->pageRepository->getPage($data['row']['uid']);
 
                 // fetch mounted pages
                 $this->MP = $mountpage[0]['mount_pid'] . '-' . $data['row']['uid'];
@@ -1592,7 +1621,7 @@ class CrawlerController implements LoggerAwareInterface
 
                 // if during the start and the current read url the cli has been disable we need to return from the function
                 // mark the process NOT as ended.
-                if ($this->getDisabled()) {
+                if ($this->crawler->isDisabled()) {
                     return ($result | self::CLI_STATUS_ABORTED);
                 }
 
@@ -1641,30 +1670,23 @@ class CrawlerController implements LoggerAwareInterface
      */
     public function CLI_checkAndAcquireNewProcess($id)
     {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
         $ret = true;
 
         $systemProcessId = getmypid();
-        if ($systemProcessId < 1) {
+        if (! $systemProcessId) {
             return false;
         }
 
         $processCount = 0;
         $orphanProcesses = [];
 
-        $statement = $queryBuilder
-            ->select('process_id', 'ttl')
-            ->from('tx_crawler_process')
-            ->where(
-                'active = 1 AND deleted = 0'
-            )
-            ->execute();
-
+        $activeProcesses = $this->processRepository->findAllActive();
         $currentTime = $this->getCurrentTime();
 
-        while ($row = $statement->fetch()) {
-            if ($row['ttl'] < $currentTime) {
-                $orphanProcesses[] = $row['process_id'];
+        /** @var Process $process */
+        foreach ($activeProcesses as $process) {
+            if ($process->getTtl() < $currentTime) {
+                $orphanProcesses[] = $process->getProcessId();
             } else {
                 $processCount++;
             }
@@ -1762,6 +1784,7 @@ class CrawlerController implements LoggerAwareInterface
      * Prints a message to the stdout (only if debug-mode is enabled)
      *
      * @param string $msg the message
+     * @deprecated
      */
     public function CLI_debug($msg): void
     {
