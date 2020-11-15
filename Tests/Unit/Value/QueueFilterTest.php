@@ -57,5 +57,4 @@ class QueueFilterTest extends UnitTestCase
         self::expectException(\InvalidArgumentException::class);
         new QueueFilter('INVALID');
     }
-
 }

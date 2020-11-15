@@ -588,8 +588,6 @@ class QueueRepository extends Repository implements LoggerAwareInterface
 
     /**
      * Removes queue entries
-     *
-     * @param string $filter all, pending, finished
      */
     public function flushQueue(QueueFilter $queueFilter): void
     {

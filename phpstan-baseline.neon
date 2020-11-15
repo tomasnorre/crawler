@@ -221,7 +221,7 @@ parameters:
 			path: Classes/Command/BuildQueueCommand.php
 
 		-
-			message: "#^Parameter \\#1 \\$str of function strtolower expects string, array\\<string\\>\\|string\\|null given\\.$#"
+			message: "#^Parameter \\#1 \\$queueFilter of class AOE\\\\Crawler\\\\Value\\\\QueueFilter constructor expects string, array\\<string\\>\\|string\\|null given\\.$#"
 			count: 1
 			path: Classes/Command/FlushQueueCommand.php
 
