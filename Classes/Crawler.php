@@ -30,13 +30,13 @@ final class Crawler implements SingletonInterface
      */
     private $processFilename;
 
-    public function __construct(string $processFilename = null)
+    public function __construct(?string $processFilename = null)
     {
         $this->processFilename = $processFilename ?: Environment::getVarPath() . '/lock/tx_crawler.proc';
         $this->setDisabled(false);
     }
 
-    public function setDisabled($disabled = true): void
+    public function setDisabled(bool $disabled = true): void
     {
         if ($disabled) {
             GeneralUtility::writeFile($this->processFilename, '');

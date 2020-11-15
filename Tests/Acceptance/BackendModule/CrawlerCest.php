@@ -23,7 +23,7 @@ use AOE\Crawler\Tests\Acceptance\Support\Helper\PageTree;
 use AOE\Crawler\Tests\Acceptance\Support\Step\Acceptance\Admin;
 use Step\Acceptance\BackendModule;
 
-class CrawlerServiceCest
+class CrawlerCest
 {
     public function canDisableAndEnableCrawler(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
@@ -31,7 +31,7 @@ class CrawlerServiceCest
         $I->openCrawlerBackendModuleCrawlerMultiProcess($adminStep, $pageTree);
         $I->waitForText('Stop all processes and disable crawling', 5);
         $I->click('Stop all processes and disable crawling');
-        $I->waitForText('Enable crawling',5);
+        $I->waitForText('Enable crawling', 5);
         $I->click('Enable crawling');
         $I->waitForText('Stop all processes and disable crawling', 5);
     }

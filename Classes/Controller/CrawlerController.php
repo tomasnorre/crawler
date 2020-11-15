@@ -1670,11 +1670,10 @@ class CrawlerController implements LoggerAwareInterface
      */
     public function CLI_checkAndAcquireNewProcess($id)
     {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
         $ret = true;
 
         $systemProcessId = getmypid();
-        if (!$systemProcessId) {
+        if (! $systemProcessId) {
             return false;
         }
 

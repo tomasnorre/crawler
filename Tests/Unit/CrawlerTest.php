@@ -21,7 +21,6 @@ namespace AOE\Crawler\Tests\Unit;
 
 use AOE\Crawler\Crawler;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
-use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class CrawlerTest extends UnitTestCase
@@ -31,7 +30,7 @@ class CrawlerTest extends UnitTestCase
      */
     protected $crawler;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $filenameWithPath = tempnam('/tmp', 'test_foo') ?: 'FileNameIsForceIfTempNamReturnedFalse.txt';
         $this->crawler = GeneralUtility::makeInstance(Crawler::class, $filenameWithPath);
