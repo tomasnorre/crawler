@@ -355,7 +355,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
 
                 $trClass = '';
                 $warningIcon = '';
-                if ($rowData['exec_time'] !== 0 && $resultData === false) {
+                if (str_contains($resStatus, 'Error:')) {
                     $trClass = 'class="bg-danger"';
                     $warningIcon = $this->getIconFactory()->getIcon('actions-ban', Icon::SIZE_SMALL);
                 }
