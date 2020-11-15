@@ -2,6 +2,9 @@
 
 ## Crawler 9.1.3-dev
 
+### Added
+* QueueFilter to operate with Object instead of string/arrays
+
 ### Deprecated
 #### Classes
 

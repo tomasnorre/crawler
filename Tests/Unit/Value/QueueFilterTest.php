@@ -19,22 +19,33 @@ namespace AOE\Crawler\Tests\Unit\Value;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Value\CrawlAction;
+use AOE\Crawler\Value\QueueFilter;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
-class CrawlActionTest extends UnitTestCase
+class QueueFilterTest extends UnitTestCase
 {
-    public const VALID_VALUE = 'start';
+    public const VALID_VALUE = 'finished';
+
+    /**
+     * @test
+     */
+    public function defaultValueConstructor(): void
+    {
+        self::assertEquals(
+            'all',
+            new QueueFilter()
+        );
+    }
 
     /**
      * @test
      */
     public function toStringWithValidValueReturnsOriginalValue(): void
     {
-        $crawlAction = new CrawlAction(self::VALID_VALUE);
+        $queueFilter = new QueueFilter(self::VALID_VALUE);
         self::assertEquals(
             self::VALID_VALUE,
-            $crawlAction->__toString()
+            $queueFilter->__toString()
         );
     }
 
@@ -44,6 +55,7 @@ class CrawlActionTest extends UnitTestCase
     public function constructorThrowsException(): void
     {
         self::expectException(\InvalidArgumentException::class);
-        new CrawlAction('INVALID');
+        new QueueFilter('INVALID');
     }
+
 }

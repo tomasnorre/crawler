@@ -30,6 +30,7 @@ namespace AOE\Crawler\Tests\Functional\Controller;
 
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Value\QueueFilter;
 use Nimut\TestingFramework\MockObject\AccessibleMockObjectInterface;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -118,11 +119,11 @@ class CrawlerControllerTest extends FunctionalTestCase
      *
      * @dataProvider getLogEntriesForPageIdDataProvider
      */
-    public function getLogEntriesForPageId(int $id, string $filter, bool $doFlush, bool $doFullFlush, int $itemsPerPage, array $expected): void
+    public function getLogEntriesForPageId(int $id, QueueFilter $queueFilter, bool $doFlush, bool $doFullFlush, int $itemsPerPage, array $expected): void
     {
         self::assertEquals(
             $expected,
-            $this->subject->getLogEntriesForPageId($id, $filter, $doFlush, $doFullFlush, $itemsPerPage)
+            $this->subject->getLogEntriesForPageId($id, $queueFilter, $doFlush, $doFullFlush, $itemsPerPage)
         );
     }
 
@@ -528,7 +529,7 @@ class CrawlerControllerTest extends FunctionalTestCase
         return [
             'Do Flush' => [
                 'id' => 1002,
-                'filter' => '',
+                'filter' => new QueueFilter(),
                 'doFlush' => true,
                 'doFullFlush' => false,
                 'itemsPerPage' => 5,
@@ -536,7 +537,7 @@ class CrawlerControllerTest extends FunctionalTestCase
             ],
             'Do Full Flush' => [
                 'id' => 1002,
-                'filter' => '',
+                'filter' => new QueueFilter(),
                 'doFlush' => true,
                 'doFullFlush' => true,
                 'itemsPerPage' => 5,
@@ -544,7 +545,7 @@ class CrawlerControllerTest extends FunctionalTestCase
             ],
             'Check that doFullFlush do not flush if doFlush is not true' => [
                 'id' => 2,
-                'filter' => '',
+                'filter' => new QueueFilter(),
                 'doFlush' => false,
                 'doFullFlush' => true,
                 'itemsPerPage' => 5,
@@ -566,7 +567,7 @@ class CrawlerControllerTest extends FunctionalTestCase
             ],
             'Get entries for page_id 2001' => [
                 'id' => 2,
-                'filter' => '',
+                'filter' => new QueueFilter(),
                 'doFlush' => false,
                 'doFullFlush' => false,
                 'itemsPerPage' => 1,

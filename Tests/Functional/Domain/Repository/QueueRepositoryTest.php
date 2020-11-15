@@ -21,6 +21,7 @@ namespace AOE\Crawler\Tests\Functional\Domain\Repository;
 
 use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Value\QueueFilter;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -554,11 +555,11 @@ class QueueRepositoryTest extends FunctionalTestCase
      *
      * @dataProvider flushQueueDataProvider
      */
-    public function flushQueue(string $where, int $expected): void
+    public function flushQueue(QueueFilter $queueFilter, int $expected): void
     {
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $queryRepository = $objectManager->get(QueueRepository::class);
-        $this->subject->flushQueue($where);
+        $this->subject->flushQueue($queueFilter);
 
         self::assertSame(
             $expected,
@@ -570,19 +571,15 @@ class QueueRepositoryTest extends FunctionalTestCase
     {
         return [
             'Flush Entire Queue' => [
-                'filter' => 'all',
+                'filter' => new QueueFilter('all'),
                 'expected' => 0,
             ],
             'Flush Pending entries' => [
-                'filter' => 'pending',
+                'filter' => new QueueFilter('pending'),
                 'expected' => 7,
             ],
             'Flush Finished entries' => [
-                'filter' => 'finished',
-                'expected' => 8,
-            ],
-            'Other parameter given, default to finished' => [
-                'filter' => 'not-existing-param',
+                'filter' => new QueueFilter('finished'),
                 'expected' => 8,
             ],
         ];

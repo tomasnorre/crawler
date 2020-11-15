@@ -8,6 +8,7 @@ use AOE\Crawler\Backend\Helper\ResultHandler;
 use AOE\Crawler\Backend\Helper\UrlBuilder;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\Utility\MessageUtility;
+use AOE\Crawler\Value\QueueFilter;
 use AOE\Crawler\Writer\FileWriter\CsvWriter\CrawlerCsvWriter;
 use AOE\Crawler\Writer\FileWriter\CsvWriter\CsvWriterInterface;
 use Doctrine\DBAL\Query\QueryBuilder;
@@ -186,6 +187,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                     $doFullFlush = false;
                 }
                 $itemsPerPage = (int) $this->infoModuleController->MOD_SETTINGS['itemsPerPage'];
+                $queueFilter = new QueueFilter($this->infoModuleController->MOD_SETTINGS['log_display']);
                 // Traverse page tree:
                 $code = '';
                 $count = 0;
@@ -193,7 +195,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                     // Get result:
                     $logEntriesOfPage = $this->crawlerController->getLogEntriesForPageId(
                         (int) $data['row']['uid'],
-                        $this->infoModuleController->MOD_SETTINGS['log_display'],
+                        $queueFilter,
                         $doFlush,
                         $doFullFlush,
                         $itemsPerPage
