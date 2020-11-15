@@ -20,6 +20,7 @@ namespace AOE\Crawler\Command;
  */
 
 use AOE\Crawler\Controller\CrawlerController;
+use AOE\Crawler\Value\QueueFilter;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -81,22 +82,22 @@ It will remove queue entries and perform a cleanup.' . chr(10) . chr(10) .
     {
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
 
-        $mode = strtolower($input->getArgument('mode'));
+        $queueFilter = new QueueFilter($input->getArgument('mode'));
 
         /** @var CrawlerController $crawlerController */
         $crawlerController = $objectManager->get(CrawlerController::class);
 
         $pageId = MathUtility::forceIntegerInRange($input->getOption('page'), 0);
 
-        switch ($mode) {
+        switch ($queueFilter) {
             case 'all':
-                $crawlerController->getLogEntriesForPageId($pageId, '', true, true);
+                $crawlerController->getLogEntriesForPageId($pageId, $queueFilter, true, true);
                 $output->writeln('<info>All entries in Crawler queue will be flushed</info>');
                 break;
             case 'finished':
             case 'pending':
-                $crawlerController->getLogEntriesForPageId($pageId, (string) $mode, true, false);
-                $output->writeln('<info>All entries in Crawler queue, with status: "' . $mode . '" will be flushed</info>');
+                $crawlerController->getLogEntriesForPageId($pageId, $queueFilter, true, false);
+                $output->writeln('<info>All entries in Crawler queue, with status: "' . $queueFilter . '" will be flushed</info>');
                 break;
             default:
                 $output->writeln('<info>No matching parameters found.' . PHP_EOL . 'Try "typo3 help crawler:flushQueue" to see your options</info>');

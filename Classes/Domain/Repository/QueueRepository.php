@@ -30,6 +30,7 @@ namespace AOE\Crawler\Domain\Repository;
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Model\Process;
+use AOE\Crawler\Value\QueueFilter;
 use Psr\Log\LoggerAwareInterface;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -587,14 +588,12 @@ class QueueRepository extends Repository implements LoggerAwareInterface
 
     /**
      * Removes queue entries
-     *
-     * @param string $filter all, pending, finished
      */
-    public function flushQueue(string $filter): void
+    public function flushQueue(QueueFilter $queueFilter): void
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
 
-        switch (strtolower($filter)) {
+        switch ($queueFilter) {
             case 'all':
                 // No where claus needed delete everything
                 break;

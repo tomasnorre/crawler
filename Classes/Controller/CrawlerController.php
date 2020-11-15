@@ -39,6 +39,7 @@ use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\QueueExecutor;
 use AOE\Crawler\Service\UrlService;
 use AOE\Crawler\Utility\SignalSlotUtility;
+use AOE\Crawler\Value\QueueFilter;
 use Psr\Http\Message\UriInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
@@ -929,13 +930,12 @@ class CrawlerController implements LoggerAwareInterface
      * Return array of records from crawler queue for input page ID
      *
      * @param integer $id Page ID for which to look up log entries.
-     * @param string $filter Filter: "all" => all entries, "pending" => all that is not yet run, "finished" => all complete ones
      * @param boolean $doFlush If TRUE, then entries selected at DELETED(!) instead of selected!
      * @param boolean $doFullFlush
      * @param integer $itemsPerPage Limit the amount of entries per page default is 10
      * @return array
      */
-    public function getLogEntriesForPageId($id, $filter = '', $doFlush = false, $doFullFlush = false, $itemsPerPage = 10)
+    public function getLogEntriesForPageId($id, QueueFilter $queueFilter, $doFlush = false, $doFullFlush = false, $itemsPerPage = 10)
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
         $queryBuilder
@@ -953,7 +953,7 @@ class CrawlerController implements LoggerAwareInterface
         // PHPStorm adds the highlight that the $addWhere is immediately overwritten,
         // but the $query = $expressionBuilder->andX() ensures that the $addWhere is written correctly with AND
         // between the statements, it's not a mistake in the code.
-        switch ($filter) {
+        switch ($queueFilter) {
             case 'pending':
                 $queryBuilder->andWhere($queryBuilder->expr()->eq('exec_time', 0));
                 break;
@@ -964,9 +964,9 @@ class CrawlerController implements LoggerAwareInterface
 
         if ($doFlush) {
             if ($doFullFlush) {
-                $this->queueRepository->flushQueue('all');
+                $this->queueRepository->flushQueue($queueFilter);
             } else {
-                $this->queueRepository->flushQueue($filter);
+                $this->queueRepository->flushQueue($queueFilter);
             }
         }
         if ($itemsPerPage > 0) {
