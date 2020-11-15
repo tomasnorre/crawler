@@ -21,6 +21,7 @@
 * Updated Rector, PHPStan, ECS for better static code analysis
 * BackendModule is splittet into smaller classes to improve readability and maintainability
 * Crawler Class added, this can be used to check whether the crawler is enabled or disabled
+* aoe/crawler/initialization (middleware) is moved to before typo3/cms-core/normalizedParams to have crawler being "last" in middleware chain
 
 ### Fixed
 
