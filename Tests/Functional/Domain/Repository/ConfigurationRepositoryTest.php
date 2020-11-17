@@ -29,6 +29,8 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  */
 class ConfigurationRepositoryTest extends FunctionalTestCase
 {
+    private const PAGE_WITHOUT_CONFIGURATIONS = 11;
+
     /**
      * @var array
      */
@@ -54,6 +56,34 @@ class ConfigurationRepositoryTest extends FunctionalTestCase
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->subject = $objectManager->get(ConfigurationRepository::class);
         $this->importDataSet(__DIR__ . '/../../Fixtures/tx_crawler_configuration.xml');
+        $this->importDataSet(__DIR__ . '/../../Fixtures/pages.xml');
+    }
+
+    /**
+     * @test
+     */
+    public function getCrawlerConfigurationRecordsFromRootLineReturnsEmptyArray(): void
+    {
+        self::assertEmpty(
+            $this->subject->getCrawlerConfigurationRecordsFromRootLine(self::PAGE_WITHOUT_CONFIGURATIONS)
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function getCrawlerConfigurationRecordsFromRootLineReturnsObjects(): void
+    {
+        $configurations = $this->subject->getCrawlerConfigurationRecordsFromRootLine(5);
+
+        self::assertCount(
+            4,
+            $configurations
+        );
+
+        foreach ($configurations as $configuration) {
+            self::assertContains($configuration['uid'], [1, 5, 6, 8]);
+        }
     }
 
     /**
