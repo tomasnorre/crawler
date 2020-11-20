@@ -1,6 +1,7 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 9.1.3-dev
+## Crawler 9.1.3
+Crawler 9.1.3 was released on November 20nd, 2020
 
 ### Added
 * QueueFilter to operate with Object instead of string/arrays
@@ -24,9 +25,9 @@
 * Updated Rector, PHPStan, ECS for better static code analysis
 * BackendModule is splittet into smaller classes to improve readability and maintainability
 * Crawler Class added, this can be used to check whether the crawler is enabled or disabled
-* aoe/crawler/initialization (middleware) is moved to before typo3/cms-core/normalizedParams to have crawler being "last" in middleware chain
 
 ### Fixed
+* aoe/crawler/initialization (middleware) is moved to before typo3/cms-core/normalizedParams to have crawler being "last" in middleware chain
 
 ## Crawler 9.1.2
 Crawler 9.1.2 was released on November 7th, 2020
