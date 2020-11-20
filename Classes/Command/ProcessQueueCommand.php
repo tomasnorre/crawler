@@ -30,6 +30,7 @@ namespace AOE\Crawler\Command;
 
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Crawler;
+use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -78,6 +79,8 @@ class ProcessQueueCommand extends Command
         $crawlerController = $objectManager->get(CrawlerController::class);
         /** @var QueueRepository $queueRepository */
         $queueRepository = $objectManager->get(QueueRepository::class);
+        /** @var ProcessRepository $processRepository */
+        $processRepository = $objectManager->get(ProcessRepository::class);
 
         /** @var Crawler $crawler */
         $crawler = GeneralUtility::makeInstance(Crawler::class);
@@ -96,14 +99,7 @@ class ProcessQueueCommand extends Command
             }
 
             // Cleanup
-            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tx_crawler_process');
-            $queryBuilder
-                ->delete('tx_crawler_process')
-                ->where(
-                    $queryBuilder->expr()->eq('assigned_items_count', 0)
-                )
-                ->execute();
-
+            $processRepository->deleteProcessesWithoutItemsAssigned();
             $crawlerController->CLI_releaseProcesses($crawlerController->CLI_buildProcessId());
 
             $output->writeln('<info>Unprocessed Items remaining:' . $queueRepository->countUnprocessedItems() . ' (' . $crawlerController->CLI_buildProcessId() . ')</info>');
