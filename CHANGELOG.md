@@ -6,10 +6,11 @@
 
 
 ### Changed
-
+* IndexedSearchCrawlerHook::class is marked as deprecated and will be removed when dropping support for TYPO3 9LTS and 10LTS
 
 ### Deprecated
 #### Classes
+* IndexedSearchCrawlerHook
 
 #### Functions & Properties
 

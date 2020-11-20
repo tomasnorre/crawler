@@ -34,6 +34,8 @@ use TYPO3\CMS\Core\Utility\RootlineUtility;
 /**
  * Crawler hook for indexed search. Works with the "crawler" extension
  * @internal this is a TYPO3-internal hook implementation and not part of TYPO3's Core API.
+ * @deprecated This class is deprecated and will be remove when dropping support for TYPO3 9LTS and 10LTS
+ * @codeCoverageIgnore
  */
 class IndexedSearchCrawlerHook
 {
