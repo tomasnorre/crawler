@@ -169,6 +169,7 @@ class ProcessRepository extends Repository
      *
      * @return int
      * @deprecated Using ProcessRepository->countActive() is deprecated since 9.1.1 and will be removed in v11.x, please use ProcessRepository->findAllActive->count() instead
+     * @codeCoverageIgnore
      */
     public function countActive()
     {

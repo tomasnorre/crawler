@@ -1785,6 +1785,7 @@ class CrawlerController implements LoggerAwareInterface
      *
      * @param string $msg the message
      * @deprecated
+     * @codeCoverageIgnore
      */
     public function CLI_debug($msg): void
     {
@@ -1940,6 +1941,7 @@ class CrawlerController implements LoggerAwareInterface
      * @throws \TYPO3\CMS\Core\Routing\InvalidRouteArgumentsException
      *
      * @deprecated Using CrawlerController::getUrlFromPageAndQueryParameters() is deprecated since 9.1.1 and will be removed in v11.x, please use UrlService->getUrlFromPageAndQueryParameters() instead.
+     * @codeCoverageIgnore
      */
     protected function getUrlFromPageAndQueryParameters(int $pageId, string $queryString, ?string $alternativeBaseUrl, int $httpsOrHttp): UriInterface
     {

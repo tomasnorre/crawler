@@ -146,6 +146,7 @@ class ProcessService
      *
      * @throws \RuntimeException
      * @deprecated
+     * @codeCoverageIgnore
      */
     public function multiProcess($timeout): void
     {
@@ -244,6 +245,7 @@ class ProcessService
     /**
      * Reports curent Status of queue
      * @deprecated
+     * @codeCoverageIgnore
      */
     protected function reportItemStatus(): void
     {
@@ -257,6 +259,7 @@ class ProcessService
      * @return boolean if processes are started
      * @throws ProcessException
      * @deprecated
+     * @codeCoverageIgnore
      */
     private function startRequiredProcesses()
     {
