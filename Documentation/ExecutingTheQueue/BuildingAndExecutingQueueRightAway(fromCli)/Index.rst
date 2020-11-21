@@ -110,10 +110,10 @@ If you run it you will see a list of options which explains usage.
    Description
          Tree depth, 0-99.
 
-         How many levels under the 'page\_id' to include.
+         How many levels under the 'page\_id' to include. By default, no additional levels are included.
 
    Default
-         n/a
+         0
 
 
 .. ###### END~OF~TABLE ######
