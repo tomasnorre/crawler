@@ -220,16 +220,13 @@ class CrawlerControllerTest extends FunctionalTestCase
      */
     public function addUrl(int $id, string $url, array $subCfg, int $tstamp, string $configurationHash, bool $skipInnerDuplicationCheck, array $mockedDuplicateRowResult, bool $registerQueueEntriesInternallyOnly, bool $expected): void
     {
-        $mockedCrawlerController = $this->getAccessibleMock(CrawlerController::class, ['getDuplicateRowsIfExist']);
-        $mockedCrawlerController->expects($this->any())->method('getDuplicateRowsIfExist')->withAnyParameters()->willReturn($mockedDuplicateRowResult);
+        $mockedQueueRepository = $this->getAccessibleMock(QueueRepository::class, ['getDuplicateQueueItemsIfExists']);
+        $mockedQueueRepository->expects($this->any())->method('getDuplicateQueueItemsIfExists')->willReturn($mockedDuplicateRowResult);
+
+        $mockedCrawlerController = $this->getAccessibleMock(CrawlerController::class, ['dummy']);
 
         $mockedCrawlerController->_set('registerQueueEntriesInternallyOnly', $registerQueueEntriesInternallyOnly);
-
-        // Checking the mock of getDuplicateRowsIfExist()
-        self::assertEquals(
-            $mockedDuplicateRowResult,
-            $mockedCrawlerController->_call('getDuplicateRowsIfExist', 1234, [])
-        );
+        $mockedCrawlerController->_set('queueRepository', $mockedQueueRepository);
 
         self::assertEquals(
             $expected,

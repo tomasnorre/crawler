@@ -52,9 +52,15 @@ class QueueRepository extends Repository implements LoggerAwareInterface
      */
     protected $tableName = 'tx_crawler_queue';
 
+    /**
+     * @var array
+     */
+    protected $extensionSettings;
+
     public function __construct()
     {
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $this->extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
 
         parent::__construct($objectManager);
     }
@@ -628,6 +634,55 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             )
             ->execute()
             ->fetchColumn(0);
+    }
+
+    public function getDuplicateQueueItemsIfExists(bool $enableTimeslot, int $timestamp, int $currentTime, int $pageId, string $parametersHash): array
+    {
+        $rows = [];
+
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $queryBuilder
+            ->select('qid')
+            ->from('tx_crawler_queue');
+        //if this entry is scheduled with "now"
+        if ($timestamp <= $currentTime) {
+            if ($enableTimeslot) {
+                $timeBegin = $currentTime - 100;
+                $timeEnd = $currentTime + 100;
+                $queryBuilder
+                    ->where(
+                        'scheduled BETWEEN ' . $timeBegin . ' AND ' . $timeEnd . ''
+                    )
+                    ->orWhere(
+                        $queryBuilder->expr()->lte('scheduled', $currentTime)
+                    );
+            } else {
+                $queryBuilder
+                    ->where(
+                        $queryBuilder->expr()->lte('scheduled', $currentTime)
+                    );
+            }
+        } elseif ($timestamp > $currentTime) {
+            //entry with a timestamp in the future need to have the same schedule time
+            $queryBuilder
+                ->where(
+                    $queryBuilder->expr()->eq('scheduled', $timestamp)
+                );
+        }
+
+        $queryBuilder
+            ->andWhere('NOT exec_time')
+            ->andWhere('NOT process_id')
+            ->andWhere($queryBuilder->expr()->eq('page_id', $queryBuilder->createNamedParameter($pageId, \PDO::PARAM_INT)))
+            ->andWhere($queryBuilder->expr()->eq('parameters_hash', $queryBuilder->createNamedParameter($parametersHash, \PDO::PARAM_STR)));
+
+        $statement = $queryBuilder->execute();
+
+        while ($row = $statement->fetch()) {
+            $rows[] = $row['qid'];
+        }
+
+        return $rows;
     }
 
     /**

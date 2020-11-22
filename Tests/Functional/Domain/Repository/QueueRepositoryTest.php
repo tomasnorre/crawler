@@ -586,6 +586,64 @@ class QueueRepositoryTest extends FunctionalTestCase
     }
 
     /**
+     * @test
+     * @dataProvider getDuplicateQueueItemsIfExistsDataProvider
+     */
+    public function getDuplicateQueueItemsIfExists(bool $enableTimeslot, int $timestamp, int $currentTime, int $pageId, string $parametersHash, array $expected): void
+    {
+        self::assertSame(
+            $expected,
+            $this->subject->getDuplicateQueueItemsIfExists($enableTimeslot, $timestamp, $currentTime, $pageId, $parametersHash)
+        );
+    }
+
+    public function getDuplicateQueueItemsIfExistsDataProvider(): array
+    {
+        return [
+            'EnableTimeslot is true and timestamp is <= current' => [
+                'timeslotActive' => true,
+                'tstamp' => 10,
+                'current' => 12,
+                'page_id' => 10,
+                'parameters_hash' => '',
+                'expected' => [18, 20],
+            ],
+            'EnableTimeslot is false and timestamp is <= current' => [
+                'timeslotActive' => false,
+                'tstamp' => 11,
+                'current' => 11,
+                'page_id' => 10,
+                'parameters_hash' => '',
+                'expected' => [18],
+            ],
+            'EnableTimeslot is true and timestamp is > current' => [
+                'timeslotActive' => true,
+                'tstamp' => 12,
+                'current' => 10,
+                'page_id' => 10,
+                'parameters_hash' => '',
+                'expected' => [20],
+            ],
+            'EnableTimeslot is false and timestamp is > current' => [
+                'timeslotActive' => false,
+                'tstamp' => 12,
+                'current' => 10,
+                'page_id' => 10,
+                'parameters_hash' => '',
+                'expected' => [20],
+            ],
+            'EnableTimeslot is false and timestamp is > current and parameters_hash is set' => [
+                'timeslotActive' => false,
+                'tstamp' => 12,
+                'current' => 10,
+                'page_id' => 10,
+                'parameters_hash' => 'NotReallyAHashButWillDoForTesting',
+                'expected' => [19],
+            ],
+        ];
+    }
+
+    /**
      * @return array
      */
     public function isPageInQueueDataProvider()

@@ -13,7 +13,7 @@
 * IndexedSearchCrawlerHook
 
 #### Functions & Properties
-
+* CrawlerController->getDuplicateRowsIfExist()
 
 ### Removed
 #### Classes
