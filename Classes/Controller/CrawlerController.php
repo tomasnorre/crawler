@@ -209,6 +209,7 @@ class CrawlerController implements LoggerAwareInterface
         'setDisabled' => 'Using CrawlerController->setDisabled() is deprecated since 9.1.3 and will be removed in v11.x, please use Crawler->setDisabled() instead',
         'getProcessFilename' => 'Using CrawlerController->getProcessFilename() is deprecated since 9.1.3 and will be removed in v11.x',
         'setProcessFilename' => 'Using CrawlerController->setProcessFilename() is deprecated since 9.1.3 and will be removed in v11.x',
+        'getDuplicateRowsIfExist' => 'Using CrawlerController->getDuplicateRowsIfExist() is deprecated since 9.1.4 and will be remove in v11.x, please use QueueRepository->getDuplicateQueueItemsIfExists() instead',
 
     ];
 
@@ -1125,7 +1126,13 @@ class CrawlerController implements LoggerAwareInterface
         } else {
             if (! $skipInnerDuplicationCheck) {
                 // check if there is already an equal entry
-                $rows = $this->getDuplicateRowsIfExist($tstamp, $fieldArray);
+                $rows = $this->queueRepository->getDuplicateQueueItemsIfExists(
+                    (bool) $this->extensionSettings['enableTimeslot'],
+                    $tstamp,
+                    $this->getCurrentTime(),
+                    $fieldArray['page_id'],
+                    $fieldArray['parameters_hash']
+                );
             }
 
             if (empty($rows)) {
@@ -1868,6 +1875,7 @@ class CrawlerController implements LoggerAwareInterface
      * @param array $fieldArray
      *
      * @return array
+     * @deprecated
      */
     protected function getDuplicateRowsIfExist($tstamp, $fieldArray)
     {
