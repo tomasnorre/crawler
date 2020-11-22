@@ -642,7 +642,7 @@ class QueueRepositoryTest extends FunctionalTestCase
             ],
         ];
     }
-    
+
     /**
      * @return array
      */
