@@ -85,15 +85,12 @@ jobs:
   include:
     - stage: test
       env: TYPO3_VERSION=^7.6 COVERAGE=0 FUNCTIONAL=1
-      php: 5.6
-    - stage: test
-      env: TYPO3_VERSION=^7.6 COVERAGE=1 FUNCTIONAL=1
       php: 7.0
     - stage: test
       env: TYPO3_VERSION=^7.6 COVERAGE=0 FUNCTIONAL=0
       php: 7.1
     - stage: test
-      env: TYPO3_VERSION=^7.6 COVERAGE=0 FUNCTIONAL=0
+      env: TYPO3_VERSION=^7.6 COVERAGE=1 FUNCTIONAL=1
       php: 7.2
     - stage: test
       env: TYPO3_VERSION=^8.7 COVERAGE=0 FUNCTIONAL=0
