@@ -27,6 +27,8 @@ before_install:
   - composer --version
 
 before_script:
+  # Force composer at version 1
+  - composer self-update --1
   # Enables us to test dev-master
   - composer config minimum-stability dev
   - composer config prefer-stable true
