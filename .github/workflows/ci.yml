@@ -1,0 +1,85 @@
+name: CI
+
+on: [ push, pull_request ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        typo3: [ ^7.6, ^8.7 ]
+        php: [ '7.0', '7.1', '7.2', '7.3', '7.4' ]
+
+    steps:
+      - name: Start database server
+        run: sudo /etc/init.d/mysql start
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up PHP Version ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v1
+
+      - name: Environment Check
+        run: |
+          php --version
+          composer --version
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+
+      - name: Install dependencies with nimut/typo3-complete:${{ matrix.typo3 }}
+        run: |
+          composer require nimut/typo3-complete:${{ matrix.typo3 }} --no-progress
+          git checkout composer.json
+          ln -nfs .Build/vendor/typo3/cms/typo3 typo3
+
+      - name: Lint PHP
+        run: find . -name \*.php ! -path "./.Build/*" ! -path "./scripts/*" ! -path "./typo3_src/*" | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \;
+
+      - name: Unit Tests without coverage
+        if: matrix.typo3 != '^7.6'
+        run: |
+          export "UNIT_XML"=.Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml
+          .Build/bin/phpunit --colors -c $UNIT_XML Tests/Unit/
+
+      - name: Unit Tests with coverage
+        if: matrix.typo3 == '^7.6'
+        run: |
+          export "UNIT_XML"=.Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml
+          .Build/bin/phpunit --whitelist Classes/ --coverage-clover=unittest-coverage.clover --colors -c $UNIT_XML Tests/Unit
+
+      - name: Functional Tests without coverage
+        run: |
+          export "FUNCTIONAL_XML"=.Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml
+          .Build/bin/phpunit --whitelist Classes/ --coverage-clover=functional-coverage.clover --colors -c $FUNCTIONAL_XML Tests/Functional
+        if: matrix.typo3 != '^7.6'
+        env:
+          typo3DatabaseHost: 127.0.0.1
+          typo3DatabaseName: typo3
+          typo3DatabasePassword: root
+          typo3DatabaseUsername: root
+
+      - name: Functional Tests with coverage
+        run: |
+          export "FUNCTIONAL_XML"=.Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml
+          .Build/bin/phpunit --whitelist Classes/ --coverage-clover=functional-coverage.clover --colors -c $FUNCTIONAL_XML Tests/Functional
+        if: matrix.typo3 == '^7.6'
+        env:
+          typo3DatabaseHost: 127.0.0.1
+          typo3DatabaseName: typo3
+          typo3DatabasePassword: root
+          typo3DatabaseUsername: root
+
+      - name: Upload coverage results to Scrutinizer
+        if: matrix.typo3 == '^7.6'
+        run: |
+          wget https://scrutinizer-ci.com/ocular.phar
+          php ocular.phar code-coverage:upload --format=php-clover unittest-coverage.clover
+          find 'Tests/Functional' -wholename '*Test.php' -exec php ocular.phar code-coverage:upload --format=php-clover {}functionaltest-coverage.clover \;
