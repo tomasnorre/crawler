@@ -28,7 +28,6 @@ jobs:
       -   uses: shivammathur/setup-php@v2
           with:
             php-version: 7.4
-            coverage: none
       -   run: |
             if [ -n "${{ secrets.SONAR_TOKEN }}" ]; then
                 composer require --dev nimut/typo3-complete:^9.5 --no-progress
