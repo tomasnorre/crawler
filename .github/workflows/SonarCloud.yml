@@ -39,7 +39,6 @@ jobs:
                 .Build/bin/phpunit --whitelist Classes --coverage-php .Logs/coverage/functional-coverage.cov --log-junit .Logs/junit/functional-junit.xml -c $FUNCTIONAL_XML Tests/Functional
                 .Build/bin/phpunit-merger coverage .Logs/coverage/ .Logs/coverage.xml;
                 .Build/bin/phpunit-merger log .Logs/junit/ .Logs/junit.xml;
-                sonar-scanner -X
             fi
           env:
             typo3DatabaseHost: 127.0.0.1
