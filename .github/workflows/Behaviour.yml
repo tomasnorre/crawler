@@ -1,0 +1,35 @@
+name: Behaviour Tests
+
+
+on: [push, pull_request]
+
+  ${{ matrix.typo3 }}
+
+jobs:
+  test:
+    runs-on: ubuntu-18.04
+
+    strategy:
+      fail-fast: false
+      matrix:
+        typo3: [ ^9.5 ]
+
+    steps:
+      - uses: actions/checkout@v1
+      - uses: jonaseberle/github-action-setup-ddev@v1
+      - run: |
+          ddev composer install
+          composer require aoepeople/crawler:dev-$GITHUB_REF_NAME nimut/typo3-complete:${{ matrix.typo3 }}
+          ddev start
+          ddev exec bin/typo3cms install:fixfolderstructure
+          ddev exec bin/typo3cms install:extensionsetupifpossible
+          ddev exec bin/typo3cms cache:flush
+          cd ..
+          composer install
+          wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
+          chmod +x wait-for-it.sh
+          docker ps
+          ./wait-for-it.sh -t 60 127.0.0.1:80
+          ./wait-for-it.sh -t 60 127.0.0.1:443
+          ./wait-for-it.sh -t 60 localhost:4444
+          php .Build/bin/codecept run
