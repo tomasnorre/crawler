@@ -1,9 +1,6 @@
 name: Behaviour Tests
 
-
 on: [push, pull_request]
-
-  ${{ matrix.typo3 }}
 
 jobs:
   test:
