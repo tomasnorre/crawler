@@ -44,6 +44,7 @@ jobs:
           cd .devbox
           ddev composer install
           composer require aoepeople/crawler:dev-$GITHUB_REF_NAME nimut/typo3-complete:${{ matrix.typo3 }}
+          docker network create ddev_defaul
           ddev start
           ddev exec bin/typo3cms install:fixfolderstructure
           ddev exec bin/typo3cms install:extensionsetupifpossible
