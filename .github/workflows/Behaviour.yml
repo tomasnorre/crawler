@@ -3,7 +3,7 @@ name: Behaviour Tests
 on: [push, pull_request]
 
 jobs:
-  test:
+  CodeCeption:
     runs-on: ubuntu-18.04
 
     strategy:
@@ -15,6 +15,7 @@ jobs:
       - uses: actions/checkout@v1
       - uses: jonaseberle/github-action-setup-ddev@v1
       - run: |
+          cd .devbox
           ddev composer install
           composer require aoepeople/crawler:dev-$GITHUB_REF_NAME nimut/typo3-complete:${{ matrix.typo3 }}
           ddev start
