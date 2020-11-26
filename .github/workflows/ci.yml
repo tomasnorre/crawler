@@ -11,7 +11,7 @@ jobs:
       fail-fast: false
       matrix:
         typo3: [ ^7.6, ^8.7 ]
-        php: [ '7.0', '7.1', '7.2', '7.3' ]
+        php: [ '7.2', '7.3' ]
 
     steps:
       - name: Start database server
@@ -70,7 +70,7 @@ jobs:
         run: |
           export "FUNCTIONAL_XML"=.Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml
           .Build/bin/phpunit --whitelist Classes/ --coverage-clover=functional-coverage.clover --colors -c $FUNCTIONAL_XML Tests/Functional
-        if: matrix.typo3 == '^7.6'
+        if: matrix.typo3 == '^7.6' && matrix.php == '7.2'
         env:
           typo3DatabaseHost: 127.0.0.1
           typo3DatabaseName: typo3
