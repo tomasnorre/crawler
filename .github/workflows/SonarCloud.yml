@@ -52,8 +52,11 @@ jobs:
         env:
           # to get access to secrets.SONAR_TOKEN, provide GITHUB_TOKEN
           GITHUB_TOKEN: ${{ secrets.CRAWLER_GITHUB_TOKEN }}
-        run: sonar-scanner -X
-          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-          -Dsonar.organization=aoe-crawler
-          -Dsonar.host.url=https://sonarcloud.io/
-          -Dsonar.projectKey=crawler
+        run: |
+          if [ -n "${{ secrets.SONAR_TOKEN }}" ]; then
+            sonar-scanner -X
+              -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+              -Dsonar.organization=aoe-crawler
+              -Dsonar.host.url=https://sonarcloud.io/
+              -Dsonar.projectKey=crawler
+          fi

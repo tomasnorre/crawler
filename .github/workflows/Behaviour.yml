@@ -39,12 +39,12 @@ jobs:
           tar vxzf ddev_linux.v1.13.1.tar.gz
           sudo chmod +x ddev && sudo mv ddev /usr/local/bin/ddev
           sudo chmod +x mkcert && sudo mv mkcert /usr/local/bin/mkcert
+          docker network create ddev_defaul
           mkcert -install
           ddev --version
           cd .devbox
           ddev composer install
           composer require aoepeople/crawler:dev-$GITHUB_REF_NAME nimut/typo3-complete:${{ matrix.typo3 }}
-          docker network create ddev_defaul
           ddev start
           ddev exec bin/typo3cms install:fixfolderstructure
           ddev exec bin/typo3cms install:extensionsetupifpossible
