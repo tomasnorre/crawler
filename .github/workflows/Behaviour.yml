@@ -9,12 +9,38 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        php: [ '7.2' ]
         typo3: [ ^9.5 ]
 
     steps:
-      - uses: actions/checkout@v1
-      - uses: jonaseberle/github-action-setup-ddev@v1
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up PHP Version ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+
+      - name: Environment Check
+        run: |
+          php --version
+          composer --version
+
       - run: |
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+          sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+          sudo apt update
+          sudo apt install docker-ce
+          sudo curl -L "https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose --version
+          wget https://github.com/drud/ddev/releases/download/v1.13.1/ddev_linux.v1.13.1.tar.gz
+          tar vxzf ddev_linux.v1.13.1.tar.gz
+          sudo chmod +x ddev && sudo mv ddev /usr/local/bin/ddev
+          sudo chmod +x mkcert && sudo mv mkcert /usr/local/bin/mkcert
+          mkcert -install
+          ddev --version
           cd .devbox
           ddev composer install
           composer require aoepeople/crawler:dev-$GITHUB_REF_NAME nimut/typo3-complete:${{ matrix.typo3 }}
