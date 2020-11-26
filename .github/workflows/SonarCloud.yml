@@ -1,4 +1,4 @@
-name: Static Analysis
+name: Sonar Cloud
 
 on:
   push:
@@ -13,6 +13,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      -   name: Start database server
+          run: sudo /etc/init.d/mysql start
+
       -   uses: actions/checkout@v2
       -   id: composer-cache
           run: echo "::set-output name=dir::$(composer config cache-files-dir)"
