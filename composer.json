@@ -108,11 +108,10 @@
             ".Build/bin/codecept run"
         ],
         "extension-release": [
-            "rm -rf .devbox",
-            "rm -rf Tests/",
-            "rm .gitignore",
-            "rm .scrutinizer.yml",
-            "rm disabled.travis.yml"
+            "@extension-create-libs"
+        ],
+        "extension-create-libs": [
+            "@composer install -d Resources/Private/Php/Libraries"
         ]
     },
     "extra": {

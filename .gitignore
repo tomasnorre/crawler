@@ -1,18 +1,7 @@
-#########################
-# EXT:crawler
-# global ignore file
-########################
-#
-# Don't ignore .rej and .orig as we want to see/clean files after conflict resolution.
-#
-# For local exclude patterns please edit .git/info/exclude.
-#
-########################
-#
 # Ignore temporary files (left by editors)
 *~
 *.bak
-#
+
 # Ignore by common IDEs used directories/files
 nbproject
 *.idea
@@ -22,12 +11,13 @@ nbproject
 .settings
 .TemporaryItems
 .webprj
-#
+
 # Ignore PHP/composer stuff
 .Build
 composer.lock
 .php_cs.cache
-
+/Resources/Private/Php/Libraries/vendor
+/Resources/Private/Php/Libraries/composer.lock
 var/log
 var/tests
 

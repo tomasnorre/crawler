@@ -1,0 +1,16 @@
+{
+    "config": {
+        "platform": {
+            "php": "7.2.5"
+        },
+        "classmap-authoritative": true,
+        "prepend-autoloader": false
+    },
+    "require": {
+        "beberlei/assert": "^3.2",
+        "guzzlehttp/guzzle": "^6.4.1",
+        "psr/http-message": "^1.0",
+        "psr/log": "^1.0",
+        "symfony/console": "^4.3 || ^5.0"
+    }
+}
