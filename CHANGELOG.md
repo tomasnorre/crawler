@@ -1,6 +1,7 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 9.1.4-dev
+## Crawler 9.1.4
+Crawler 9.1.4 was released on November 27th, 2020
 
 ### Changed
 * IndexedSearchCrawlerHook::class is marked as deprecated and will be removed when dropping support for TYPO3 9LTS and 10LTS
