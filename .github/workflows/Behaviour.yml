@@ -39,7 +39,7 @@ jobs:
           tar vxzf ddev_linux-amd64.v1.16.0.tar.gz
           sudo chmod +x ddev && sudo mv ddev /usr/local/bin/ddev
           sudo chmod +x mkcert && sudo mv mkcert /usr/local/bin/mkcert
-          docker network create ddev_defaul
+          docker network create ddev_default
           mkcert -install
           ddev --version
           cd .devbox
