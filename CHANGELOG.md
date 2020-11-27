@@ -2,9 +2,6 @@
 
 ## Crawler 9.1.4-dev
 
-### Added
-
-
 ### Changed
 * IndexedSearchCrawlerHook::class is marked as deprecated and will be removed when dropping support for TYPO3 9LTS and 10LTS
 
@@ -15,13 +12,8 @@
 #### Functions & Properties
 * CrawlerController->getDuplicateRowsIfExist()
 
-### Removed
-#### Classes
-
-#### Functions & Properties
-
-
 ### Fixed
+* Auto-loading for non-composer projects fixed
 
 ## Crawler 9.1.3
 Crawler 9.1.3 was released on November 20nd, 2020
