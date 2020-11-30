@@ -70,7 +70,7 @@ $_SERVER['REQUEST_METHOD'] = 'GET';
     // Define a port if used in the URL:
 if (isset($urlParts['port'])) {
     $_SERVER['HTTP_HOST'] .= ':' . $urlParts['port'];
-    $_SERVER['SERVER_PORT'] = $urlParts['port'];
+    $_SERVER['SERVER_PORT'] = (string)$urlParts['port'];
 }
 
     // Define HTTPS disposal:
