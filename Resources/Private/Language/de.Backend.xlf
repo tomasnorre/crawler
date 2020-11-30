@@ -31,6 +31,22 @@
         <source>Force HTTPS for all pages</source>
         <target state="final">HTTPS für alle Seiten erzwingen</target>
       </trans-unit>
+      <trans-unit id="tx_crawler_configuration.processing_instruction_filter" resname="tx_crawler_configuration.processing_instruction_filter">
+        <source>Processing instruction filter</source>
+        <target state="needs-translation">Processing instruction filter</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.processing_instruction_filter.description" resname="tx_crawler_configuration.processing_instruction_filter.description">
+        <source>List of processing instructions to send for the request. Processing instructions are necessary
+                    for the request to perform any meaningful action, since they activate third party activity.
+                </source>
+        <target state="needs-translation">List of processing instructions to send for the request. Processing instructions are necessary
+                    for the request to perform any meaningful action, since they activate third party activity.
+                </target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.processing_instruction_parameters_ts" resname="tx_crawler_configuration.processing_instruction_parameters_ts">
+        <source>Processing instruction parameters</source>
+        <target state="needs-translation">Processing instruction parameters</target>
+      </trans-unit>
       <trans-unit id="tx_crawler_configuration.configuration" resname="tx_crawler_configuration.configuration" approved="yes">
         <source>Configuration</source>
         <target state="final">Konfiguration</target>
@@ -43,6 +59,10 @@
         <source>Leave empty for fetching the base URL from the Site Configuration.</source>
         <target state="final">Zur Übernahme der Basis-URL aus der Site-Konfiguration das Feld leer lassen.</target>
       </trans-unit>
+      <trans-unit id="tx_crawler_configuration.pidsonly" resname="tx_crawler_configuration.pidsonly">
+        <source>Pids only</source>
+        <target state="needs-translation">Pids only</target>
+      </trans-unit>
       <trans-unit id="tx_crawler_configuration.pidsonly.description" resname="tx_crawler_configuration.pidsonly.description" approved="yes">
         <source>List of page IDs to limit this configuration to.</source>
         <target state="final">Liste der Seiten-IDs, auf die diese Konfiguration beschränkt werden soll.</target>
@@ -50,6 +70,14 @@
       <trans-unit id="tx_crawler_configuration.begroups" resname="tx_crawler_configuration.begroups" approved="yes">
         <source>Restrict access to</source>
         <target state="final">Zugang einschränken auf</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.begroups.description" resname="tx_crawler_configuration.begroups.description">
+        <source>Restrict access to this configuration record to selected backend user groups. Empty means no
+                    restriction is set.
+                </source>
+        <target state="needs-translation">Restrict access to this configuration record to selected backend user groups. Empty means no
+                    restriction is set.
+                </target>
       </trans-unit>
       <trans-unit id="tx_crawler_configuration.fegroups" resname="tx_crawler_configuration.fegroups" approved="yes">
         <source>Crawl with FE user groups</source>
@@ -131,9 +159,17 @@
         <source>The count in a run must be a positive integer!</source>
         <target state="final">Die Anzahl in einem Durchlauf muss eine positive Ganzzahl sein!</target>
       </trans-unit>
+      <trans-unit id="crawler_crawlMultiProcess.name" resname="crawler_crawlMultiProcess.name">
+        <source>Crawler Run Multi Process</source>
+        <target state="needs-translation">Crawler Run Multi Process</target>
+      </trans-unit>
       <trans-unit id="crawler_crawl.name" resname="crawler_crawl.name" approved="yes">
         <source>Crawler Run</source>
         <target state="final">Crawler-Durchlauf</target>
+      </trans-unit>
+      <trans-unit id="crawler_crawl.description" resname="crawler_crawl.description">
+        <source>Running the crawler to extension to process it's queue-entries.</source>
+        <target state="needs-translation">Running the crawler to extension to process it's queue-entries.</target>
       </trans-unit>
       <trans-unit id="crawler_flush.name" resname="crawler_flush.name" approved="yes">
         <source>Crawler Queue Flush</source>
@@ -172,6 +208,22 @@
         <target state="final">Crawl</target>
       </trans-unit>
       <!-- For Crawler Priority - Will be remove when support for 9 LTS is dropped -->
+      <trans-unit id="pages_crawler.priority_label" resname="pages_crawler.priority_label">
+        <source>Page priority</source>
+        <target state="needs-translation">Page priority</target>
+      </trans-unit>
+      <trans-unit id="pages_crawler.priority" resname="pages_crawler.priority">
+        <source>Priority</source>
+        <target state="needs-translation">Priority</target>
+      </trans-unit>
+      <trans-unit id="pages_crawler.priority.description" resname="pages_crawler.priority.description">
+        <source>The higher the number, the earlier will it be crawled. This is a reuse of the sitemap_priority
+                    field introduced in 10LTS, to ensure compatibility after upgrade, we reuse the field.
+                </source>
+        <target state="needs-translation">The higher the number, the earlier will it be crawled. This is a reuse of the sitemap_priority
+                    field introduced in 10LTS, to ensure compatibility after upgrade, we reuse the field.
+                </target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
