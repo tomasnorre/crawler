@@ -59,9 +59,9 @@
         <source>Leave empty for fetching the base URL from the Site Configuration.</source>
         <target state="final">Zur Übernahme der Basis-URL aus der Site-Konfiguration das Feld leer lassen.</target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration.pidsonly" resname="tx_crawler_configuration.pidsonly">
+      <trans-unit id="tx_crawler_configuration.pidsonly" resname="tx_crawler_configuration.pidsonly" approved="yes">
         <source>Pids only</source>
-        <target state="needs-translation">Pids only</target>
+        <target state="final">Nur Pids</target>
       </trans-unit>
       <trans-unit id="tx_crawler_configuration.pidsonly.description" resname="tx_crawler_configuration.pidsonly.description" approved="yes">
         <source>List of page IDs to limit this configuration to.</source>
