@@ -24,7 +24,6 @@ use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Routing\SiteMatcher;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Frontend\Page\CacheHashCalculator;
 
 class UrlService
 {
