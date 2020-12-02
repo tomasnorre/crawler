@@ -293,7 +293,7 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Access to deprecated property \\$processFilename of class AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\.$#"
+			message: "#^Class cognitive complexity for \"CrawlerController\" is 292, keep it under 60$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
