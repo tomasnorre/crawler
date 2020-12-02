@@ -298,7 +298,7 @@ class CrawlerApiTest extends FunctionalTestCase
     public function canCreateQueueEntriesUsingConfigurationRecord(): void
     {
         $expectedParameterData = [
-            'url' => 'http://www.testcase.de/index.php?id=7&L=0&S=CRAWL&cHash=966b79fa43675d725b45415c54ea0cb7',
+            'url' => 'http://www.testcase.de/index.php?id=7&L=0&S=CRAWL',
             'procInstructions' => [
                 0 => 'tx_staticpub_publish',
             ],

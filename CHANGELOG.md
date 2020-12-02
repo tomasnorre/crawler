@@ -2,6 +2,9 @@
 
 ## Crawler 9.1.5-dev
 
+### Change
+* Removed all references to cHash as it is not used anymore.
+
 ### Fixed
 * Typecasting port number in cli/bootstrap to have processQueue working with non-standard ports
 

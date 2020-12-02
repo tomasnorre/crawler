@@ -67,7 +67,6 @@ class UrlService
             // Once EXT:crawler is v10-only compatible, this should be removed completely
             $baseUrl = ($alternativeBaseUrl ?: GeneralUtility::getIndpEnv('TYPO3_SITE_URL'));
             $cacheHashCalculator = GeneralUtility::makeInstance(CacheHashCalculator::class);
-            $queryString .= '&cHash=' . $cacheHashCalculator->generateForParameters($queryString);
             $url = rtrim($baseUrl, '/') . '/index.php' . $queryString;
             $url = new Uri($url);
         }
