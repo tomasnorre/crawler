@@ -89,7 +89,7 @@ class BuildQueueCommandTest extends AbstractCommandTests
             ],
             'Start page 1, --mode url' => [
                 'parameters' => [1, $crawlerConfiguration, '--mode url'],
-                'expectedOutput' => 'https://www.example.com/index.php?id=1&cHash=',
+                'expectedOutput' => 'https://www.example.com/index.php?id=1',
                 'expectedCount' => 0,
             ],
             'Start page 1,  --mode exec' => [

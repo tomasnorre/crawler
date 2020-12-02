@@ -129,7 +129,7 @@ class UrlServiceTest extends FunctionalTestCase
                     $uri->withScheme('http')
                         ->withHost('www.example.com')
                         ->withPath('/index.php')
-                        ->withQuery('id=1234&param=foo&cHash=e500fbff5c75d50b8178fd477521cc9d'),
+                        ->withQuery('id=1234&param=foo'),
             ],
             'Site is not instance of Site::class + https' => [
                 'pageId' => 0,
@@ -140,7 +140,7 @@ class UrlServiceTest extends FunctionalTestCase
                     $uri->withScheme('https')
                         ->withHost('www.example.com')
                         ->withPath('/index.php')
-                        ->withQuery('?id=1234&param=foo&cHash=e500fbff5c75d50b8178fd477521cc9d'),
+                        ->withQuery('?id=1234&param=foo'),
             ],
             'Site is not instance of Site::class + https + userinfo' => [
                 'pageId' => 0,
@@ -151,7 +151,7 @@ class UrlServiceTest extends FunctionalTestCase
                     $uri->withScheme('https')
                         ->withHost('www.example.com')
                         ->withPath('/index.php')
-                        ->withQuery('?id=1234&param=foo&cHash=e500fbff5c75d50b8178fd477521cc9d')
+                        ->withQuery('?id=1234&param=foo')
                         ->withUserInfo('username', 'password'),
             ],
             'Only with pageId' => [
@@ -172,7 +172,7 @@ class UrlServiceTest extends FunctionalTestCase
                 'expected' => $uri->withScheme('https')
                     ->withHost('acme.us')
                     ->withPath('/')
-                    ->withQuery('q=crawler&cHash='),
+                    ->withQuery('q=crawler'),
             ],
             'With PageId and QueryString (including Language (FR))' => [
                 'pageId' => 1,
@@ -183,7 +183,7 @@ class UrlServiceTest extends FunctionalTestCase
                     $uri->withScheme('https')
                         ->withHost('acme.fr')
                         ->withPath('/')
-                        ->withQuery('q=crawler&cHash='),
+                        ->withQuery('q=crawler'),
             ],
             'With alternative BaseUrl' => [
                 'pageId' => 1,

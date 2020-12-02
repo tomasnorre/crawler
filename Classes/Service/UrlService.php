@@ -24,7 +24,6 @@ use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Routing\SiteMatcher;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Frontend\Page\CacheHashCalculator;
 
 class UrlService
 {
@@ -66,8 +65,6 @@ class UrlService
             // Technically this is not possible with site handling, but kept for backwards-compatibility reasons
             // Once EXT:crawler is v10-only compatible, this should be removed completely
             $baseUrl = ($alternativeBaseUrl ?: GeneralUtility::getIndpEnv('TYPO3_SITE_URL'));
-            $cacheHashCalculator = GeneralUtility::makeInstance(CacheHashCalculator::class);
-            $queryString .= '&cHash=' . $cacheHashCalculator->generateForParameters($queryString);
             $url = rtrim($baseUrl, '/') . '/index.php' . $queryString;
             $url = new Uri($url);
         }
