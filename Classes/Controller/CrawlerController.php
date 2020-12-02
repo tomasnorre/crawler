@@ -420,6 +420,11 @@ class CrawlerController implements LoggerAwareInterface
      */
     public function getUrlsForPageRow(array $pageRow, &$skipMessage = '')
     {
+        if (!is_int($pageRow['uid'])) {
+            $skipMessage = 'PageUid ' . $pageRow['uid'] . ' was not found';
+            return [];
+        }
+
         $message = $this->checkIfPageShouldBeSkipped($pageRow);
         if ($message === false) {
             $res = $this->getUrlsForPageId($pageRow['uid']);
