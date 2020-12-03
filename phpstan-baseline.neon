@@ -6,7 +6,25 @@ parameters:
 			path: Classes/Api/CrawlerApi.php
 
 		-
+			message:
+				"""
+					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
+					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
+				"""
+			count: 1
+			path: Classes/Api/CrawlerApi.php
+
+		-
 			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
+			count: 1
+			path: Classes/Api/CrawlerApi.php
+
+		-
+			message:
+				"""
+					#^Call to deprecated method fetchAll\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
+					Use fetchAllNumeric\\(\\), fetchAllAssociative\\(\\) or fetchFirstColumn\\(\\) instead\\.$#
+				"""
 			count: 1
 			path: Classes/Api/CrawlerApi.php
 
@@ -72,6 +90,20 @@ parameters:
 
 		-
 			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:showLogAction\\(\\)\" is 25, keep it under 8$#"
+			count: 1
+			path: Classes/Backend/RequestForm/LogRequestForm.php
+
+		-
+			message: "#^Call to deprecated method setAccessMode\\(\\) of class AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\.$#"
+			count: 1
+			path: Classes/Backend/RequestForm/LogRequestForm.php
+
+		-
+			message:
+				"""
+					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
+					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
+				"""
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
@@ -152,6 +184,11 @@ parameters:
 
 		-
 			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\StartRequestForm\\:\\:showCrawlerInformationAction\\(\\)\" is 12, keep it under 8$#"
+			count: 1
+			path: Classes/Backend/RequestForm/StartRequestForm.php
+
+		-
+			message: "#^Call to deprecated method setAccessMode\\(\\) of class AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/StartRequestForm.php
 
@@ -266,6 +303,11 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
+			message: "#^Access to deprecated property \\$processFilename of class AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\.$#"
+			count: 1
+			path: Classes/Controller/CrawlerController.php
+
+		-
 			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
@@ -331,6 +373,15 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
+			message:
+				"""
+					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
+					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
+				"""
+			count: 2
+			path: Classes/Controller/CrawlerController.php
+
+		-
 			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
 			count: 3
 			path: Classes/Controller/CrawlerController.php
@@ -351,7 +402,25 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
+			message:
+				"""
+					#^Call to deprecated method andX\\(\\) of class Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\ExpressionBuilder\\:
+					Use `and\\(\\)` instead\\.$#
+				"""
+			count: 1
+			path: Classes/Controller/CrawlerController.php
+
+		-
 			message: "#^Function getLogEntriesForPageId\\(\\) has an unused variable \\$query\\.$#"
+			count: 1
+			path: Classes/Controller/CrawlerController.php
+
+		-
+			message:
+				"""
+					#^Call to deprecated method fetchAll\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
+					Use fetchAllNumeric\\(\\), fetchAllAssociative\\(\\) or fetchFirstColumn\\(\\) instead\\.$#
+				"""
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -428,6 +497,11 @@ parameters:
 		-
 			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:CLI_run\\(\\)\" is 11, keep it under 8$#"
 			count: 1
+			path: Classes/Controller/CrawlerController.php
+
+		-
+			message: "#^Call to deprecated method CLI_debug\\(\\) of class AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\.$#"
+			count: 6
 			path: Classes/Controller/CrawlerController.php
 
 		-
@@ -511,7 +585,25 @@ parameters:
 			path: Classes/Domain/Model/ProcessCollection.php
 
 		-
+			message:
+				"""
+					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
+					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
+				"""
+			count: 1
+			path: Classes/Domain/Repository/ConfigurationRepository.php
+
+		-
 			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
+			count: 1
+			path: Classes/Domain/Repository/ConfigurationRepository.php
+
+		-
+			message:
+				"""
+					#^Call to deprecated method fetchAll\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
+					Use fetchAllNumeric\\(\\), fetchAllAssociative\\(\\) or fetchFirstColumn\\(\\) instead\\.$#
+				"""
 			count: 1
 			path: Classes/Domain/Repository/ConfigurationRepository.php
 
@@ -526,6 +618,15 @@ parameters:
 			path: Classes/Domain/Repository/ConfigurationRepository.php
 
 		-
+			message:
+				"""
+					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
+					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
+				"""
+			count: 4
+			path: Classes/Domain/Repository/ProcessRepository.php
+
+		-
 			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
 			count: 4
 			path: Classes/Domain/Repository/ProcessRepository.php
@@ -536,8 +637,26 @@ parameters:
 			path: Classes/Domain/Repository/ProcessRepository.php
 
 		-
+			message:
+				"""
+					#^Call to deprecated method fetchAll\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
+					Use fetchAllNumeric\\(\\), fetchAllAssociative\\(\\) or fetchFirstColumn\\(\\) instead\\.$#
+				"""
+			count: 1
+			path: Classes/Domain/Repository/ProcessRepository.php
+
+		-
 			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
 			count: 1
+			path: Classes/Domain/Repository/ProcessRepository.php
+
+		-
+			message:
+				"""
+					#^Call to deprecated method fetchColumn\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
+					Use fetchOne\\(\\) instead\\.$#
+				"""
+			count: 2
 			path: Classes/Domain/Repository/ProcessRepository.php
 
 		-
@@ -561,13 +680,40 @@ parameters:
 			path: Classes/Domain/Repository/ProcessRepository.php
 
 		-
+			message:
+				"""
+					#^Call to deprecated method fetchColumn\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
+					Use fetchOne\\(\\) instead\\.$#
+				"""
+			count: 8
+			path: Classes/Domain/Repository/QueueRepository.php
+
+		-
 			message: "#^Cannot call method fetchColumn\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
 			count: 8
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
+			message:
+				"""
+					#^Call to deprecated method fetchAll\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
+					Use fetchAllNumeric\\(\\), fetchAllAssociative\\(\\) or fetchFirstColumn\\(\\) instead\\.$#
+				"""
+			count: 3
+			path: Classes/Domain/Repository/QueueRepository.php
+
+		-
 			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
 			count: 3
+			path: Classes/Domain/Repository/QueueRepository.php
+
+		-
+			message:
+				"""
+					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
+					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
+				"""
+			count: 9
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
@@ -766,6 +912,26 @@ parameters:
 			path: Classes/QueueExecutor.php
 
 		-
+			message: "#^Access to deprecated property \\$queueRepository of class AOE\\\\Crawler\\\\Service\\\\ProcessService\\.$#"
+			count: 1
+			path: Classes/Service/ProcessService.php
+
+		-
+			message: "#^Access to deprecated property \\$countInARun of class AOE\\\\Crawler\\\\Service\\\\ProcessService\\.$#"
+			count: 1
+			path: Classes/Service/ProcessService.php
+
+		-
+			message: "#^Access to deprecated property \\$processLimit of class AOE\\\\Crawler\\\\Service\\\\ProcessService\\.$#"
+			count: 1
+			path: Classes/Service/ProcessService.php
+
+		-
+			message: "#^Access to deprecated property \\$verbose of class AOE\\\\Crawler\\\\Service\\\\ProcessService\\.$#"
+			count: 1
+			path: Classes/Service/ProcessService.php
+
+		-
 			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Service\\\\ProcessService\\:\\:multiProcess\\(\\)\" is 19, keep it under 8$#"
 			count: 1
 			path: Classes/Service/ProcessService.php
@@ -861,6 +1027,11 @@ parameters:
 			path: Tests/Functional/Controller/CrawlerControllerTest.php
 
 		-
+			message: "#^Call to deprecated method getLogEntriesForSetId\\(\\) of class AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\.$#"
+			count: 1
+			path: Tests/Functional/Controller/CrawlerControllerTest.php
+
+		-
 			message: "#^Method Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\:\\:_call\\(\\) invoked with 2 parameters, 1 required\\.$#"
 			count: 2
 			path: Tests/Functional/Controller/CrawlerControllerTest.php
@@ -919,6 +1090,11 @@ parameters:
 			message: "#^Cannot call method count\\(\\) on array\\|TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface\\.$#"
 			count: 4
 			path: Tests/Functional/Hooks/ProcessCleanUpHookTest.php
+
+		-
+			message: "#^Call to deprecated method multiProcess\\(\\) of class AOE\\\\Crawler\\\\Service\\\\ProcessService\\.$#"
+			count: 1
+			path: Tests/Functional/Service/ProcessServiceTest.php
 
 		-
 			message: "#^Function startProcess\\(\\) has an unused variable \\$extensionSettings\\.$#"
@@ -991,9 +1167,48 @@ parameters:
 			path: Tests/Unit/Backend/BackendModuleTest.php
 
 		-
+			message:
+				"""
+					#^Call to deprecated method modMenu\\(\\) of class AOE\\\\Crawler\\\\Backend\\\\BackendModule\\:
+					Using BackendModule\\-\\>modMenu\\(\\) is deprecated since 9\\.1\\.3 and will be removed in v11\\.x$#
+				"""
+			count: 1
+			path: Tests/Unit/Backend/BackendModuleTest.php
+
+		-
 			message: "#^Method AOE\\\\Crawler\\\\Tests\\\\Unit\\\\Backend\\\\Helper\\\\ResultHandlerTest\\:\\:getResStatus\\(\\) has parameter \\$requestContent with no typehint specified\\.$#"
 			count: 1
 			path: Tests/Unit/Backend/Helper/ResultHandlerTest.php
+
+		-
+			message: "#^Call to deprecated method setAccessMode\\(\\) of class AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\.$#"
+			count: 1
+			path: Tests/Unit/Controller/CrawlerControllerTest.php
+
+		-
+			message: "#^Call to deprecated method getAccessMode\\(\\) of class AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\.$#"
+			count: 1
+			path: Tests/Unit/Controller/CrawlerControllerTest.php
+
+		-
+			message: "#^Call to deprecated method setProcessFilename\\(\\) of class AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\.$#"
+			count: 2
+			path: Tests/Unit/Controller/CrawlerControllerTest.php
+
+		-
+			message: "#^Call to deprecated method setDisabled\\(\\) of class AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\.$#"
+			count: 1
+			path: Tests/Unit/Controller/CrawlerControllerTest.php
+
+		-
+			message: "#^Call to deprecated method getDisabled\\(\\) of class AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\.$#"
+			count: 1
+			path: Tests/Unit/Controller/CrawlerControllerTest.php
+
+		-
+			message: "#^Call to deprecated method getProcessFilename\\(\\) of class AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\.$#"
+			count: 1
+			path: Tests/Unit/Controller/CrawlerControllerTest.php
 
 		-
 			message: "#^Method Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\:\\:_call\\(\\) invoked with 2 parameters, 1 required\\.$#"
@@ -1031,9 +1246,28 @@ parameters:
 			path: Tests/Unit/Domain/Model/ProcessTest.php
 
 		-
+			message: "#^Call to deprecated method getTimeForFirstItem\\(\\) of class AOE\\\\Crawler\\\\Domain\\\\Model\\\\Process\\.$#"
+			count: 2
+			path: Tests/Unit/Domain/Model/ProcessTest.php
+
+		-
 			message: "#^Trying to mock an undefined method findOldestEntryForProcess\\(\\) on class Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\.$#"
 			count: 2
 			path: Tests/Unit/Domain/Model/ProcessTest.php
+
+		-
+			message: "#^Call to deprecated method getTimeForLastItem\\(\\) of class AOE\\\\Crawler\\\\Domain\\\\Model\\\\Process\\.$#"
+			count: 2
+			path: Tests/Unit/Domain/Model/ProcessTest.php
+
+		-
+			message:
+				"""
+					#^Call to deprecated method getLimitFromItemCountAndOffset\\(\\) of class AOE\\\\Crawler\\\\Domain\\\\Repository\\\\ProcessRepository\\:
+					Using ProcessRepository\\:\\:getLimitFromItemCountAndOffset\\(\\) is deprecated since 9\\.1\\.1 and will be removed in v11\\.x, was not used, so will be removed$#
+				"""
+			count: 1
+			path: Tests/Unit/Domain/Repository/ProcessRepositoryTest.php
 
 		-
 			message: "#^Call to an undefined method Prophecy\\\\Prophecy\\\\ObjectProphecy\\:\\:addPageToQueue\\(\\)\\.$#"
@@ -1064,6 +1298,15 @@ parameters:
 			message: "#^Parameter \\#2 \\$instance of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:setSingletonInstance\\(\\) expects TYPO3\\\\CMS\\\\Core\\\\SingletonInterface, object given\\.$#"
 			count: 6
 			path: Tests/Unit/Hooks/DataHandlerHookTest.php
+
+		-
+			message:
+				"""
+					#^Fetching class constant class of deprecated class AOE\\\\Crawler\\\\Hooks\\\\IndexedSearchCrawlerHook\\:
+					This class is deprecated and will be remove when dropping support for TYPO3 9LTS and 10LTS$#
+				"""
+			count: 1
+			path: Tests/Unit/Hooks/IndexedSearchCrawlerHookTest.php
 
 		-
 			message: "#^Property AOE\\\\Crawler\\\\Tests\\\\Unit\\\\Hooks\\\\IndexedSearchCrawlerHookTest\\:\\:\\$subject \\(AOE\\\\Crawler\\\\Hooks\\\\IndexedSearchCrawlerHook\\) does not accept Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface&PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
