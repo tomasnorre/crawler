@@ -195,7 +195,8 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                         (int) $data['row']['uid'],
                         $queueFilter,
                         $doFlush,
-                        false, // is misleading, but the parameter isn't used anymore, it's all handled over the QueueFilter
+                        // is misleading, but the parameter isn't used anymore, it's all handled over the QueueFilter
+                        false,
                         $itemsPerPage
                     );
 
