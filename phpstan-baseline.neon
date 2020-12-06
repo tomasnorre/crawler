@@ -208,7 +208,7 @@ parameters:
 			path: Classes/Backend/RequestForm/StartRequestForm.php
 
 		-
-			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Command\\\\BuildQueueCommand\\:\\:execute\\(\\)\" is 18, keep it under 8$#"
+			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Command\\\\BuildQueueCommand\\:\\:execute\\(\\)\" is 19, keep it under 8$#"
 			count: 1
 			path: Classes/Command/BuildQueueCommand.php
 

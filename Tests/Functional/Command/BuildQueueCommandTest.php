@@ -97,6 +97,11 @@ class BuildQueueCommandTest extends AbstractCommandTests
                 'expectedOutput' => 'Executing 1 requests right away:',
                 'expectedCount' => 1,
             ],
+            'Start page 0, expecting error' => [
+                'parameters' => [0, $crawlerConfiguration, '--mode queue'],
+                'expectedOutput' => 'Page 0 is not a valid page, please check you root page id and try again.',
+                'expectedCount' => 0,
+            ],
         ];
     }
 }
