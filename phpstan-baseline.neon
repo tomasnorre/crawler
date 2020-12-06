@@ -308,16 +308,6 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
-			count: 2
-			path: Classes/Controller/CrawlerController.php
-
-		-
-			message: "#^Function checkIfPageShouldBeSkipped\\(\\) has an unused variable \\$skipPage\\.$#"
-			count: 1
-			path: Classes/Controller/CrawlerController.php
-
-		-
 			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:urlListFromUrlArray\\(\\)\" is 14, keep it under 8$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php

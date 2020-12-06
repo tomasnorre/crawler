@@ -387,7 +387,6 @@ class CrawlerController implements LoggerAwareInterface
 
         foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['excludeDoktype'] ?? [] as $key => $doktypeList) {
             if (GeneralUtility::inList($doktypeList, $pageRow['doktype'])) {
-                $skipPage = true;
                 return 'Doktype was excluded by "' . $key . '"';
             }
         }
@@ -400,14 +399,10 @@ class CrawlerController implements LoggerAwareInterface
             // expects "false" if page is ok and "true" or a skipMessage if this page should _not_ be crawled
             $veto = GeneralUtility::callUserFunction($func, $params, $this);
             if ($veto !== false) {
-                $skipPage = true;
                 if (is_string($veto)) {
                     return $veto;
                 }
                 return 'Veto from hook "' . htmlspecialchars($key) . '"';
-
-                // no need to execute other hooks if a previous one return a veto
-                break;
             }
         }
 
