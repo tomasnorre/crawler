@@ -949,11 +949,7 @@ class CrawlerController implements LoggerAwareInterface
         }
 
         if ($doFlush) {
-            if ($doFullFlush) {
-                $this->queueRepository->flushQueue($queueFilter);
-            } else {
-                $this->queueRepository->flushQueue($queueFilter);
-            }
+            $this->queueRepository->flushQueue($queueFilter);
         }
         if ($itemsPerPage > 0) {
             $queryBuilder
