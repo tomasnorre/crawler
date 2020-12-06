@@ -178,13 +178,11 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                 // If Flush button is pressed, flush tables instead of selecting entries:
                 if (GeneralUtility::_POST('_flush')) {
                     $doFlush = true;
-                    $doFullFlush = false;
                 } elseif (GeneralUtility::_POST('_flush_all')) {
                     $doFlush = true;
-                    $doFullFlush = true;
+                    $this->infoModuleController->MOD_SETTINGS['log_display'] = 'all';
                 } else {
                     $doFlush = false;
-                    $doFullFlush = false;
                 }
                 $itemsPerPage = (int) $this->infoModuleController->MOD_SETTINGS['itemsPerPage'];
                 $queueFilter = new QueueFilter($this->infoModuleController->MOD_SETTINGS['log_display']);
@@ -197,7 +195,8 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                         (int) $data['row']['uid'],
                         $queueFilter,
                         $doFlush,
-                        $doFullFlush,
+                        // is misleading, but the parameter isn't used anymore, it's all handled over the QueueFilter
+                        false,
                         $itemsPerPage
                     );
 
