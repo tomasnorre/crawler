@@ -382,7 +382,6 @@ class CrawlerController implements LoggerAwareInterface
         }
 
         if (GeneralUtility::inList('3,4,199,254,255', $pageRow['doktype'])) {
-            $skipPage = true;
             return 'Because doktype is not allowed';
         }
 
@@ -390,7 +389,6 @@ class CrawlerController implements LoggerAwareInterface
             if (GeneralUtility::inList($doktypeList, $pageRow['doktype'])) {
                 $skipPage = true;
                 return 'Doktype was excluded by "' . $key . '"';
-                break;
             }
         }
 
