@@ -7,6 +7,7 @@
 
 ### Fixed
 * Typecasting port number in cli/bootstrap to have processQueue working with non-standard ports
+* Flush entire queue works again
 
 ## Crawler 9.1.4
 Crawler 9.1.4 was released on November 27th, 2020
