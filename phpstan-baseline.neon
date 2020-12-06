@@ -158,11 +158,6 @@ parameters:
 			path: Classes/Backend/RequestForm/MultiProcessRequestForm.php
 
 		-
-			message: "#^In method \"AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\MultiProcessRequestForm\\:\\:processOverviewAction\", caught \"Throwable\" must be rethrown\\. Either catch a more specific exception or add a \"throw\" clause in the \"catch\" block to propagate the exception\\. More info\\: http\\://bit\\.ly/failloud$#"
-			count: 1
-			path: Classes/Backend/RequestForm/MultiProcessRequestForm.php
-
-		-
 			message: "#^PHPDoc tag @var for variable \\$hookObj contains unknown class AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\CrawlerHookInterface\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/MultiProcessRequestForm.php
@@ -273,11 +268,6 @@ parameters:
 			path: Classes/Command/ProcessQueueCommand.php
 
 		-
-			message: "#^In method \"AOE\\\\Crawler\\\\Command\\\\ProcessQueueCommand\\:\\:execute\", caught \"Throwable\" must be rethrown\\. Either catch a more specific exception or add a \"throw\" clause in the \"catch\" block to propagate the exception\\. More info\\: http\\://bit\\.ly/failloud$#"
-			count: 1
-			path: Classes/Command/ProcessQueueCommand.php
-
-		-
 			message: "#^Parameter \\#1 \\$messages of method Symfony\\\\Component\\\\Console\\\\Output\\\\OutputInterface\\:\\:writeln\\(\\) expects iterable\\|string, int given\\.$#"
 			count: 1
 			path: Classes/Command/ProcessQueueCommand.php
@@ -293,12 +283,12 @@ parameters:
 			path: Classes/ContextMenu/ItemProvider.php
 
 		-
-			message: "#^Class cognitive complexity for \"CrawlerController\" is 291, keep it under 50$#"
+			message: "#^Class cognitive complexity for \"CrawlerController\" is 279, keep it under 50$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Class cognitive complexity for \"CrawlerController\" is 291, keep it under 60$#"
+			message: "#^Class cognitive complexity for \"CrawlerController\" is 279, keep it under 60$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -313,7 +303,17 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:checkIfPageShouldBeSkipped\\(\\)\" is 24, keep it under 8$#"
+			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:checkIfPageShouldBeSkipped\\(\\)\" is 12, keep it under 8$#"
+			count: 1
+			path: Classes/Controller/CrawlerController.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 2
+			path: Classes/Controller/CrawlerController.php
+
+		-
+			message: "#^Function checkIfPageShouldBeSkipped\\(\\) has an unused variable \\$skipPage\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -852,11 +852,6 @@ parameters:
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
 		-
-			message: "#^Empty catch block\\. If you are sure this is meant to be empty, please add a \"// @ignoreException\" comment in the catch block\\.$#"
-			count: 1
-			path: Classes/Hooks/IndexedSearchCrawlerHook.php
-
-		-
 			message: "#^Method AOE\\\\Crawler\\\\Hooks\\\\IndexedSearchCrawlerHook\\:\\:generateNextIndexingTime\\(\\) should return int but returns float\\|int\\.$#"
 			count: 1
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
@@ -987,16 +982,6 @@ parameters:
 			path: Tests/Functional/Api/CrawlerApiTest.php
 
 		-
-			message: "#^In method \"AOE\\\\Crawler\\\\Tests\\\\Functional\\\\Api\\\\CrawlerApiTest\\:\\:writeSiteConfiguration\", caught \"Throwable\" must be rethrown\\. Either catch a more specific exception or add a \"throw\" clause in the \"catch\" block to propagate the exception\\. More info\\: http\\://bit\\.ly/failloud$#"
-			count: 1
-			path: Tests/Functional/Api/CrawlerApiTest.php
-
-		-
-			message: "#^In method \"AOE\\\\Crawler\\\\Tests\\\\Functional\\\\Api\\\\CrawlerApiTest\\:\\:mergeSiteConfiguration\", caught \"Throwable\" must be rethrown\\. Either catch a more specific exception or add a \"throw\" clause in the \"catch\" block to propagate the exception\\. More info\\: http\\://bit\\.ly/failloud$#"
-			count: 1
-			path: Tests/Functional/Api/CrawlerApiTest.php
-
-		-
 			message: "#^Method AOE\\\\Crawler\\\\Tests\\\\Functional\\\\Api\\\\CrawlerApiTest\\:\\:resolveLanguagePreset\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: Tests/Functional/Api/CrawlerApiTest.php
@@ -1123,16 +1108,6 @@ parameters:
 
 		-
 			message: "#^Method AOE\\\\Crawler\\\\Tests\\\\Functional\\\\Service\\\\UrlServiceTest\\:\\:getUrlFromPageAndQueryParametersReturnExpectedUrl\\(\\) has parameter \\$queryString with no typehint specified\\.$#"
-			count: 1
-			path: Tests/Functional/Service/UrlServiceTest.php
-
-		-
-			message: "#^In method \"AOE\\\\Crawler\\\\Tests\\\\Functional\\\\Service\\\\UrlServiceTest\\:\\:writeSiteConfiguration\", caught \"Throwable\" must be rethrown\\. Either catch a more specific exception or add a \"throw\" clause in the \"catch\" block to propagate the exception\\. More info\\: http\\://bit\\.ly/failloud$#"
-			count: 1
-			path: Tests/Functional/Service/UrlServiceTest.php
-
-		-
-			message: "#^In method \"AOE\\\\Crawler\\\\Tests\\\\Functional\\\\Service\\\\UrlServiceTest\\:\\:mergeSiteConfiguration\", caught \"Throwable\" must be rethrown\\. Either catch a more specific exception or add a \"throw\" clause in the \"catch\" block to propagate the exception\\. More info\\: http\\://bit\\.ly/failloud$#"
 			count: 1
 			path: Tests/Functional/Service/UrlServiceTest.php
 

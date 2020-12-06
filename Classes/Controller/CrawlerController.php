@@ -40,6 +40,7 @@ use AOE\Crawler\QueueExecutor;
 use AOE\Crawler\Service\UrlService;
 use AOE\Crawler\Utility\SignalSlotUtility;
 use AOE\Crawler\Value\QueueFilter;
+use PDO;
 use Psr\Http\Message\UriInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
@@ -52,9 +53,13 @@ use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
+use TYPO3\CMS\Core\Database\QueryGenerator;
+use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Routing\InvalidRouteArgumentsException;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Type\Bitmask\Permission;
 use TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser;
@@ -371,57 +376,44 @@ class CrawlerController implements LoggerAwareInterface
      */
     public function checkIfPageShouldBeSkipped(array $pageRow)
     {
-        $skipPage = false;
-        // message will be overwritten later
-        $skipMessage = 'Skipped';
-
         // if page is hidden
-        if (! $this->extensionSettings['crawlHiddenPages']) {
-            if ($pageRow['hidden']) {
+        if (! $this->extensionSettings['crawlHiddenPages'] && $pageRow['hidden']) {
+            return 'Because page is hidden';
+        }
+
+        if (GeneralUtility::inList('3,4,199,254,255', $pageRow['doktype'])) {
+            $skipPage = true;
+            return 'Because doktype is not allowed';
+        }
+
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['excludeDoktype'] ?? [] as $key => $doktypeList) {
+            if (GeneralUtility::inList($doktypeList, $pageRow['doktype'])) {
                 $skipPage = true;
-                $skipMessage = 'Because page is hidden';
+                return 'Doktype was excluded by "' . $key . '"';
+                break;
             }
         }
 
-        if (! $skipPage) {
-            if (GeneralUtility::inList('3,4,199,254,255', $pageRow['doktype'])) {
+        // veto hook
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pageVeto'] ?? [] as $key => $func) {
+            $params = [
+                'pageRow' => $pageRow,
+            ];
+            // expects "false" if page is ok and "true" or a skipMessage if this page should _not_ be crawled
+            $veto = GeneralUtility::callUserFunction($func, $params, $this);
+            if ($veto !== false) {
                 $skipPage = true;
-                $skipMessage = 'Because doktype is not allowed';
-            }
-        }
-
-        if (! $skipPage) {
-            foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['excludeDoktype'] ?? [] as $key => $doktypeList) {
-                if (GeneralUtility::inList($doktypeList, $pageRow['doktype'])) {
-                    $skipPage = true;
-                    $skipMessage = 'Doktype was excluded by "' . $key . '"';
-                    break;
+                if (is_string($veto)) {
+                    return $veto;
                 }
+                return 'Veto from hook "' . htmlspecialchars($key) . '"';
+
+                // no need to execute other hooks if a previous one return a veto
+                break;
             }
         }
 
-        if (! $skipPage) {
-            // veto hook
-            foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pageVeto'] ?? [] as $key => $func) {
-                $params = [
-                    'pageRow' => $pageRow,
-                ];
-                // expects "false" if page is ok and "true" or a skipMessage if this page should _not_ be crawled
-                $veto = GeneralUtility::callUserFunction($func, $params, $this);
-                if ($veto !== false) {
-                    $skipPage = true;
-                    if (is_string($veto)) {
-                        $skipMessage = $veto;
-                    } else {
-                        $skipMessage = 'Veto from hook "' . htmlspecialchars($key) . '"';
-                    }
-                    // no need to execute other hooks if a previous one return a veto
-                    break;
-                }
-            }
-        }
-
-        return $skipPage ? $skipMessage : false;
+        return false;
     }
 
     /**
@@ -639,7 +631,7 @@ class CrawlerController implements LoggerAwareInterface
                     // don't overwrite previously defined paramSets
                     if (! isset($res[$key])) {
 
-                        /* @var $TSparserObject \TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser */
+                        /* @var $TSparserObject TypoScriptParser */
                         $TSparserObject = GeneralUtility::makeInstance(TypoScriptParser::class);
                         $TSparserObject->parse($configurationRecord['processing_instruction_parameters_ts']);
 
@@ -811,8 +803,8 @@ class CrawlerController implements LoggerAwareInterface
                                 $queryBuilder = $this->getQueryBuilder($subpartParams['_TABLE']);
 
                                 if ($recursiveDepth > 0) {
-                                    /** @var \TYPO3\CMS\Core\Database\QueryGenerator $queryGenerator */
-                                    $queryGenerator = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\QueryGenerator::class);
+                                    /** @var QueryGenerator $queryGenerator */
+                                    $queryGenerator = GeneralUtility::makeInstance(QueryGenerator::class);
                                     $pidList = $queryGenerator->getTreeList($lookUpPid, $recursiveDepth, 0, 1);
                                     $pidArray = GeneralUtility::intExplode(',', $pidList);
                                 } else {
@@ -943,7 +935,7 @@ class CrawlerController implements LoggerAwareInterface
             ->select('*')
             ->from($this->tableName)
             ->where(
-                $queryBuilder->expr()->eq('page_id', $queryBuilder->createNamedParameter($id, \PDO::PARAM_INT))
+                $queryBuilder->expr()->eq('page_id', $queryBuilder->createNamedParameter($id, PDO::PARAM_INT))
             )
             ->orderBy('scheduled', 'DESC');
 
@@ -996,7 +988,7 @@ class CrawlerController implements LoggerAwareInterface
             ->select('*')
             ->from($this->tableName)
             ->where(
-                $queryBuilder->expr()->eq('set_id', $queryBuilder->createNamedParameter($set_id, \PDO::PARAM_INT))
+                $queryBuilder->expr()->eq('set_id', $queryBuilder->createNamedParameter($set_id, PDO::PARAM_INT))
             )
             ->orderBy('scheduled', 'DESC');
 
@@ -1197,7 +1189,7 @@ class CrawlerController implements LoggerAwareInterface
             ->select('*')
             ->from('tx_crawler_queue')
             ->where(
-                $queryBuilder->expr()->eq('qid', $queryBuilder->createNamedParameter($queueId, \PDO::PARAM_INT))
+                $queryBuilder->expr()->eq('qid', $queryBuilder->createNamedParameter($queueId, PDO::PARAM_INT))
             );
         if (! $force) {
             $queryBuilder
@@ -1916,8 +1908,8 @@ class CrawlerController implements LoggerAwareInterface
         $queryBuilder
             ->andWhere('NOT exec_time')
             ->andWhere('NOT process_id')
-            ->andWhere($queryBuilder->expr()->eq('page_id', $queryBuilder->createNamedParameter($fieldArray['page_id'], \PDO::PARAM_INT)))
-            ->andWhere($queryBuilder->expr()->eq('parameters_hash', $queryBuilder->createNamedParameter($fieldArray['parameters_hash'], \PDO::PARAM_STR)));
+            ->andWhere($queryBuilder->expr()->eq('page_id', $queryBuilder->createNamedParameter($fieldArray['page_id'], PDO::PARAM_INT)))
+            ->andWhere($queryBuilder->expr()->eq('parameters_hash', $queryBuilder->createNamedParameter($fieldArray['parameters_hash'], PDO::PARAM_STR)));
 
         $statement = $queryBuilder->execute();
 
@@ -1945,8 +1937,8 @@ class CrawlerController implements LoggerAwareInterface
      * the Site instance.
      *
      * @param int $httpsOrHttp see tx_crawler_configuration.force_ssl
-     * @throws \TYPO3\CMS\Core\Exception\SiteNotFoundException
-     * @throws \TYPO3\CMS\Core\Routing\InvalidRouteArgumentsException
+     * @throws SiteNotFoundException
+     * @throws InvalidRouteArgumentsException
      *
      * @deprecated Using CrawlerController::getUrlFromPageAndQueryParameters() is deprecated since 9.1.1 and will be removed in v11.x, please use UrlService->getUrlFromPageAndQueryParameters() instead.
      * @codeCoverageIgnore
@@ -1985,7 +1977,7 @@ class CrawlerController implements LoggerAwareInterface
     /**
      * Get querybuilder for given table
      *
-     * @return \TYPO3\CMS\Core\Database\Query\QueryBuilder
+     * @return QueryBuilder
      */
     private function getQueryBuilder(string $table)
     {
