@@ -275,7 +275,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
         $totals = [];
-        if (count($setIds) > 0) {
+        if (! empty($setIds)) {
             $statement = $queryBuilder
                 ->from($this->tableName)
                 ->selectLiteral('count(*) as c')
