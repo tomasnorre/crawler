@@ -39,5 +39,7 @@ jobs:
 
       - name: "Roave Backward Compatibility Check"
         run: |
+          # To ensure compability with the roave tool.
+          composer config vendor-dir vendor
           composer install
-          .Build/bin/roave-backward-compatibility-check
+          vendor/bin/roave-backward-compatibility-check
