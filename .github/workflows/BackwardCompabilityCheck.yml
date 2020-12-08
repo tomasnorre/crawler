@@ -40,4 +40,4 @@ jobs:
       - name: "Roave Backward Compatibility Check"
         run: |
           composer install
-          bin/roave-backward-compatibility-check
+          .Build/bin/roave-backward-compatibility-check
