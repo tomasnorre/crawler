@@ -652,7 +652,7 @@ parameters:
 					#^Call to deprecated method fetchColumn\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
 					Use fetchOne\\(\\) instead\\.$#
 				"""
-			count: 8
+			count: 7
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
