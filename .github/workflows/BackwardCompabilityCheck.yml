@@ -5,7 +5,7 @@ on:
   push:
 
 jobs:
-  BC Breaks:
+  BC-Breaks:
     name: "Check Backwards Compatibility"
     runs-on: "ubuntu-latest"
 
