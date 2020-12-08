@@ -584,7 +584,6 @@ class CrawlerControllerTest extends FunctionalTestCase
                     'configuration' => 'SecondConfiguration',
                 ]],
             ],
-
         ];
     }
 }

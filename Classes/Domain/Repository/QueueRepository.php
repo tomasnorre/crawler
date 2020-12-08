@@ -31,6 +31,7 @@ namespace AOE\Crawler\Domain\Repository;
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Value\QueueFilter;
+use PDO;
 use Psr\Log\LoggerAwareInterface;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -683,6 +684,41 @@ class QueueRepository extends Repository implements LoggerAwareInterface
         }
 
         return $rows;
+    }
+
+    public function getQueueEntriesForPageId(int $id, int $itemsPerPage, QueueFilter $queueFilter): array
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $queryBuilder
+            ->select('*')
+            ->from($this->tableName)
+            ->where(
+                $queryBuilder->expr()->eq('page_id', $queryBuilder->createNamedParameter($id, PDO::PARAM_INT))
+            )
+            ->orderBy('scheduled', 'DESC');
+
+        $expressionBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable($this->tableName)
+            ->getExpressionBuilder();
+        $query = $expressionBuilder->andX();
+        // PHPStorm adds the highlight that the $addWhere is immediately overwritten,
+        // but the $query = $expressionBuilder->andX() ensures that the $addWhere is written correctly with AND
+        // between the statements, it's not a mistake in the code.
+        switch ($queueFilter) {
+            case 'pending':
+                $queryBuilder->andWhere($queryBuilder->expr()->eq('exec_time', 0));
+                break;
+            case 'finished':
+                $queryBuilder->andWhere($queryBuilder->expr()->gt('exec_time', 0));
+                break;
+        }
+
+        if ($itemsPerPage > 0) {
+            $queryBuilder
+                ->setMaxResults($itemsPerPage);
+        }
+
+        return $queryBuilder->execute()->fetchAll();
     }
 
     /**

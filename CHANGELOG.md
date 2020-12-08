@@ -5,6 +5,10 @@
 ### Change
 * Removed all references to cHash as it is not used anymore.
 
+### Deprecated
+#### Functions & Properties
+* CrawlerController->getLogEntriesForPageId()
+
 ### Fixed
 * Typecasting port number in cli/bootstrap to have processQueue working with non-standard ports
 * Flush entire queue works again
