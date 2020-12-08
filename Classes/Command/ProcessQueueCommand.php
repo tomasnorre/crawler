@@ -101,8 +101,8 @@ class ProcessQueueCommand extends Command
             $processRepository->deleteProcessesWithoutItemsAssigned();
             $crawlerController->CLI_releaseProcesses($crawlerController->CLI_buildProcessId());
 
-            $output->writeln('<info>Unprocessed Items remaining:' . $queueRepository->countUnprocessedItems() . ' (' . $crawlerController->CLI_buildProcessId() . ')</info>');
-            $result |= ($queueRepository->countUnprocessedItems() > 0 ? self::CLI_STATUS_REMAIN : self::CLI_STATUS_NOTHING_PROCCESSED);
+            $output->writeln('<info>Unprocessed Items remaining:' . count($queueRepository->getUnprocessedItems()) . ' (' . $crawlerController->CLI_buildProcessId() . ')</info>');
+            $result |= (count($queueRepository->getUnprocessedItems()) > 0 ? self::CLI_STATUS_REMAIN : self::CLI_STATUS_NOTHING_PROCCESSED);
         } else {
             $result |= self::CLI_STATUS_ABORTED;
         }

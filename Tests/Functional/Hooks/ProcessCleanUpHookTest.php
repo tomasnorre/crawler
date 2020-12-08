@@ -181,12 +181,12 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         $expectedProcessesToBeRemoved = 1;
 
         $processCountBefore = $this->processRepository->findAll()->count();
-        $queueCountBefore = $this->queueRepository->countAllByProcessId($existingProcessId);
+        $queueCountBefore = $this->queueRepository->findByProcessId($existingProcessId)->count();
 
         $this->callInaccessibleMethod($this->subject, 'removeProcessFromProcesslist', $existingProcessId);
 
         $processCountAfter = $this->processRepository->findAll()->count();
-        $queueCountAfter = $this->queueRepository->countAllByProcessId($existingProcessId);
+        $queueCountAfter = $this->queueRepository->findByProcessId($existingProcessId)->count();
 
         self::assertEquals(
             $processCountBefore - $expectedProcessesToBeRemoved,

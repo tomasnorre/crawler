@@ -8,6 +8,8 @@
 ### Deprecated
 #### Functions & Properties
 * CrawlerController->getLogEntriesForPageId()
+* QueueRepository->countAllByProcessId()
+* QueueRepository->countUnprocessedItems()
 
 ### Fixed
 * Typecasting port number in cli/bootstrap to have processQueue working with non-standard ports

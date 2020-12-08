@@ -171,9 +171,9 @@ class QueueRepositoryTest extends FunctionalTestCase
      */
     public function countUnprocessedItems(): void
     {
-        self::assertSame(
+        self::assertCount(
             8,
-            $this->subject->countUnprocessedItems()
+            $this->subject->getUnprocessedItems()
         );
     }
 

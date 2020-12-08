@@ -33,20 +33,16 @@ use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Value\QueueFilter;
 use PDO;
 use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
-/**
- * Class QueueRepository
- *
- * @package AOE\Crawler\Domain\Repository
- */
 class QueueRepository extends Repository implements LoggerAwareInterface
 {
-    use \Psr\Log\LoggerAwareTrait;
+    use LoggerAwareTrait;
 
     /**
      * @var string
@@ -66,6 +62,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
         parent::__construct($objectManager);
     }
 
+    // TODO: Should be a property on the QueueObject
     public function unsetQueueProcessId(string $processId): void
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
@@ -152,9 +149,14 @@ class QueueRepository extends Repository implements LoggerAwareInterface
 
     /**
      * Count items which have not been processed yet
+     * @deprecated Using QueueRepository->countUnprocessedItems() is deprecated since 9.1.5 and will be removed in v11.x, please use count(QueueRepository->getUnprocessedItems()) instead
      */
     public function countUnprocessedItems(): int
     {
+        trigger_error(
+            'Using QueueRepository->countUnprocessedItems() is deprecated since 9.1.5 and will be removed in v11.x, please use count(QueueRepository->getUnprocessedItems()) instead',
+            E_USER_DEPRECATED
+        );
         return count($this->getUnprocessedItems());
     }
 
@@ -622,9 +624,14 @@ class QueueRepository extends Repository implements LoggerAwareInterface
      * @param string $processId
      *
      * @return bool|string
+     * @deprecated Using QueueRepository->countAllByProcessId() is deprecated since 9.1.5 and will be removed in v11.x, please use QueueRepository->findByProcessId()->count() instead
      */
     public function countAllByProcessId($processId)
     {
+        trigger_error(
+            'Using QueueRepository->countAllByProcessId() is deprecated since 9.1.5 and will be removed in v11.x, please use QueueRepository->findByProcessId()->count() instead',
+            E_USER_DEPRECATED
+        );
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
 
         return $queryBuilder

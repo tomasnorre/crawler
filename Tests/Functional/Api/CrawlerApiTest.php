@@ -242,9 +242,9 @@ class CrawlerApiTest extends FunctionalTestCase
         $crawlerApi->addPageToQueueTimed(5, 9998);
         $crawlerApi->addPageToQueueTimed(5, 3422);
 
-        self::assertSame(
-            $this->queueRepository->countUnprocessedItems(),
-            1
+        self::assertCount(
+            1,
+            $this->queueRepository->getUnprocessedItems()
         );
     }
 
@@ -264,9 +264,9 @@ class CrawlerApiTest extends FunctionalTestCase
         $crawlerApi->addPageToQueueTimed(5, 100001);
         $crawlerApi->addPageToQueueTimed(5, 100001);
 
-        self::assertSame(
-            $this->queueRepository->countUnprocessedItems(),
-            1
+        self::assertCount(
+            1,
+            $this->queueRepository->getUnprocessedItems(),
         );
     }
 
@@ -286,7 +286,10 @@ class CrawlerApiTest extends FunctionalTestCase
         $crawlerApi->addPageToQueueTimed(5, 100011);
         $crawlerApi->addPageToQueueTimed(5, 100014);
 
-        self::assertEquals($this->queueRepository->countUnprocessedItems(), 2);
+        self::assertCount(
+            2,
+            $this->queueRepository->getUnprocessedItems()
+        );
     }
 
     /**
@@ -316,7 +319,6 @@ class CrawlerApiTest extends FunctionalTestCase
         $crawlerApi->addPageToQueueTimed(7, 100059);
 
         $queueItems = $this->queueRepository->getUnprocessedItems();
-        //$queueItems = $crawlerApi->getUnprocessedItems();
 
         self::assertEquals($queueItems[0]['page_id'], 7);
         self::assertEquals($queueItems[0]['scheduled'], 100011);
@@ -334,9 +336,9 @@ class CrawlerApiTest extends FunctionalTestCase
             'Wrong queue parameters created by crawler lib for configuration record'
         );
 
-        self::assertEquals(
-            $this->queueRepository->countUnprocessedItems(),
+        self::assertCount(
             2,
+            $this->queueRepository->getUnprocessedItems(),
             'Could not add pages to queue configured by record'
         );
     }
