@@ -37,8 +37,5 @@ jobs:
           key: "php-${{ matrix.php-version }}"
           restore-keys: "php-${{ matrix.php-version }}"
 
-      - name: "Install roave/backward-compatibility-check"
-        run: "composer require --dev roave/backward-compatibility-check"
-
       - name: "Roave Backward Compatibility Check"
         run: "bin/roave-backward-compatibility-check"
