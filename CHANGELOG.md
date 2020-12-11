@@ -3,10 +3,9 @@
 ## Crawler 9.1.5-dev
 
 ### Added
-* Error when Page 0 is used for crawler:buildQueue
+* Error-Handling when Page 0 is used for crawler:buildQueue
 
-
-### Change
+### Changed
 * Removed all references to cHash as it is not used anymore.
 
 ### Fixed
