@@ -283,12 +283,12 @@ parameters:
 			path: Classes/ContextMenu/ItemProvider.php
 
 		-
-			message: "#^Class cognitive complexity for \"CrawlerController\" is 276, keep it under 50$#"
+			message: "#^Class cognitive complexity for \"CrawlerController\" is 277, keep it under 50$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Class cognitive complexity for \"CrawlerController\" is 276, keep it under 60$#"
+			message: "#^Class cognitive complexity for \"CrawlerController\" is 277, keep it under 60$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
