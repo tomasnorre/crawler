@@ -31,21 +31,18 @@ namespace AOE\Crawler\Domain\Repository;
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Value\QueueFilter;
+use PDO;
 use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
-/**
- * Class QueueRepository
- *
- * @package AOE\Crawler\Domain\Repository
- */
 class QueueRepository extends Repository implements LoggerAwareInterface
 {
-    use \Psr\Log\LoggerAwareTrait;
+    use LoggerAwareTrait;
 
     /**
      * @var string
@@ -65,6 +62,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
         parent::__construct($objectManager);
     }
 
+    // TODO: Should be a property on the QueueObject
     public function unsetQueueProcessId(string $processId): void
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
@@ -151,9 +149,14 @@ class QueueRepository extends Repository implements LoggerAwareInterface
 
     /**
      * Count items which have not been processed yet
+     * @deprecated Using QueueRepository->countUnprocessedItems() is deprecated since 9.1.5 and will be removed in v11.x, please use count(QueueRepository->getUnprocessedItems()) instead
      */
     public function countUnprocessedItems(): int
     {
+        trigger_error(
+            'Using QueueRepository->countUnprocessedItems() is deprecated since 9.1.5 and will be removed in v11.x, please use count(QueueRepository->getUnprocessedItems()) instead',
+            E_USER_DEPRECATED
+        );
         return count($this->getUnprocessedItems());
     }
 
@@ -621,9 +624,14 @@ class QueueRepository extends Repository implements LoggerAwareInterface
      * @param string $processId
      *
      * @return bool|string
+     * @deprecated Using QueueRepository->countAllByProcessId() is deprecated since 9.1.5 and will be removed in v11.x, please use QueueRepository->findByProcessId()->count() instead
      */
     public function countAllByProcessId($processId)
     {
+        trigger_error(
+            'Using QueueRepository->countAllByProcessId() is deprecated since 9.1.5 and will be removed in v11.x, please use QueueRepository->findByProcessId()->count() instead',
+            E_USER_DEPRECATED
+        );
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
 
         return $queryBuilder
@@ -683,6 +691,41 @@ class QueueRepository extends Repository implements LoggerAwareInterface
         }
 
         return $rows;
+    }
+
+    public function getQueueEntriesForPageId(int $id, int $itemsPerPage, QueueFilter $queueFilter): array
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $queryBuilder
+            ->select('*')
+            ->from($this->tableName)
+            ->where(
+                $queryBuilder->expr()->eq('page_id', $queryBuilder->createNamedParameter($id, PDO::PARAM_INT))
+            )
+            ->orderBy('scheduled', 'DESC');
+
+        $expressionBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable($this->tableName)
+            ->getExpressionBuilder();
+        $query = $expressionBuilder->andX();
+        // PHPStorm adds the highlight that the $addWhere is immediately overwritten,
+        // but the $query = $expressionBuilder->andX() ensures that the $addWhere is written correctly with AND
+        // between the statements, it's not a mistake in the code.
+        switch ($queueFilter) {
+            case 'pending':
+                $queryBuilder->andWhere($queryBuilder->expr()->eq('exec_time', 0));
+                break;
+            case 'finished':
+                $queryBuilder->andWhere($queryBuilder->expr()->gt('exec_time', 0));
+                break;
+        }
+
+        if ($itemsPerPage > 0) {
+            $queryBuilder
+                ->setMaxResults($itemsPerPage);
+        }
+
+        return $queryBuilder->execute()->fetchAll();
     }
 
     /**

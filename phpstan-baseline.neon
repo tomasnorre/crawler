@@ -64,12 +64,12 @@ parameters:
 			path: Classes/Backend/Helper/ResultHandler.php
 
 		-
-			message: "#^Class cognitive complexity for \"LogRequestForm\" is 67, keep it under 50$#"
+			message: "#^Class cognitive complexity for \"LogRequestForm\" is 68, keep it under 50$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Class cognitive complexity for \"LogRequestForm\" is 67, keep it under 60$#"
+			message: "#^Class cognitive complexity for \"LogRequestForm\" is 68, keep it under 60$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
@@ -89,7 +89,7 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:showLogAction\\(\\)\" is 25, keep it under 8$#"
+			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:showLogAction\\(\\)\" is 26, keep it under 8$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
@@ -253,11 +253,6 @@ parameters:
 			path: Classes/Command/FlushQueueCommand.php
 
 		-
-			message: "#^Parameter \\#1 \\$theInt of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\MathUtility\\:\\:forceIntegerInRange\\(\\) expects int, array\\<string\\>\\|bool\\|string\\|null given\\.$#"
-			count: 1
-			path: Classes/Command/FlushQueueCommand.php
-
-		-
 			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Command\\\\ProcessQueueCommand\\:\\:execute\\(\\)\" is 9, keep it under 8$#"
 			count: 1
 			path: Classes/Command/ProcessQueueCommand.php
@@ -392,25 +387,7 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message:
-				"""
-					#^Call to deprecated method andX\\(\\) of class Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\ExpressionBuilder\\:
-					Use `and\\(\\)` instead\\.$#
-				"""
-			count: 1
-			path: Classes/Controller/CrawlerController.php
-
-		-
 			message: "#^Function getLogEntriesForPageId\\(\\) has an unused variable \\$query\\.$#"
-			count: 1
-			path: Classes/Controller/CrawlerController.php
-
-		-
-			message:
-				"""
-					#^Call to deprecated method fetchAll\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchAllNumeric\\(\\), fetchAllAssociative\\(\\) or fetchFirstColumn\\(\\) instead\\.$#
-				"""
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -675,7 +652,7 @@ parameters:
 					#^Call to deprecated method fetchColumn\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
 					Use fetchOne\\(\\) instead\\.$#
 				"""
-			count: 8
+			count: 7
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
@@ -689,12 +666,12 @@ parameters:
 					#^Call to deprecated method fetchAll\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
 					Use fetchAllNumeric\\(\\), fetchAllAssociative\\(\\) or fetchFirstColumn\\(\\) instead\\.$#
 				"""
-			count: 3
+			count: 4
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
 			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
-			count: 3
+			count: 4
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
@@ -729,6 +706,20 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$value of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:set\\(\\) expects string, int given\\.$#"
 			count: 2
+			path: Classes/Domain/Repository/QueueRepository.php
+
+		-
+			message:
+				"""
+					#^Call to deprecated method andX\\(\\) of class Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\ExpressionBuilder\\:
+					Use `and\\(\\)` instead\\.$#
+				"""
+			count: 1
+			path: Classes/Domain/Repository/QueueRepository.php
+
+		-
+			message: "#^Function getQueueEntriesForPageId\\(\\) has an unused variable \\$query\\.$#"
+			count: 1
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
@@ -999,6 +990,11 @@ parameters:
 		-
 			message: "#^Cannot call method count\\(\\) on array\\|TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface\\.$#"
 			count: 2
+			path: Tests/Functional/Controller/CrawlerControllerTest.php
+
+		-
+			message: "#^Call to deprecated method getLogEntriesForPageId\\(\\) of class AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\.$#"
+			count: 1
 			path: Tests/Functional/Controller/CrawlerControllerTest.php
 
 		-

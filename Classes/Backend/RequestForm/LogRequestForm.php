@@ -7,6 +7,7 @@ namespace AOE\Crawler\Backend\RequestForm;
 use AOE\Crawler\Backend\Helper\ResultHandler;
 use AOE\Crawler\Backend\Helper\UrlBuilder;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
+use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Utility\MessageUtility;
 use AOE\Crawler\Value\QueueFilter;
 use AOE\Crawler\Writer\FileWriter\CsvWriter\CrawlerCsvWriter;
@@ -19,6 +20,7 @@ use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Info\Controller\InfoModuleController;
 
@@ -60,18 +62,25 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
     private $csvWriter;
 
     /**
+     * @var QueueRepository
+     */
+    private $queueRepository;
+
+    /**
      * @var array
      */
     private $CSVaccu = [];
 
     public function __construct(StandaloneView $view, InfoModuleController $infoModuleController, array $extensionSettings)
     {
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->view = $view;
         $this->infoModuleController = $infoModuleController;
         $this->jsonCompatibilityConverter = new JsonCompatibilityConverter();
         $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tx_crawler_queue');
         $this->csvWriter = new CrawlerCsvWriter();
         $this->extensionSettings = $extensionSettings;
+        $this->queueRepository = $objectManager->get(QueueRepository::class);
     }
 
     public function render($id, string $currentValue, array $menuItems): string
@@ -102,6 +111,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
 
     /**
      * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
+     * @throws \TYPO3\CMS\Extbase\Object\Exception
      */
     private function showLogAction(int $setId, string $quiPath): string
     {
@@ -186,18 +196,20 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                 }
                 $itemsPerPage = (int) $this->infoModuleController->MOD_SETTINGS['itemsPerPage'];
                 $queueFilter = new QueueFilter($this->infoModuleController->MOD_SETTINGS['log_display']);
+
+                if ($doFlush) {
+                    $this->queueRepository->flushQueue($queueFilter);
+                }
+
                 // Traverse page tree:
                 $code = '';
                 $count = 0;
                 foreach ($tree->tree as $data) {
                     // Get result:
-                    $logEntriesOfPage = $this->crawlerController->getLogEntriesForPageId(
+                    $logEntriesOfPage = $this->queueRepository->getQueueEntriesForPageId(
                         (int) $data['row']['uid'],
-                        $queueFilter,
-                        $doFlush,
-                        // is misleading, but the parameter isn't used anymore, it's all handled over the QueueFilter
-                        false,
-                        $itemsPerPage
+                        $itemsPerPage,
+                        $queueFilter
                     );
 
                     $code .= $this->drawLog_addRows(

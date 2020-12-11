@@ -19,7 +19,7 @@ namespace AOE\Crawler\Command;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Controller\CrawlerController;
+use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Value\QueueFilter;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -27,7 +27,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 class FlushQueueCommand extends Command
@@ -59,7 +58,7 @@ It will remove queue entries and perform a cleanup.' . chr(10) . chr(10) .
             'page',
             'p',
             InputOption::VALUE_OPTIONAL,
-            'Page to start',
+            'Page to start - deprecated since v9.1.5, will be removed in v11.x',
             0
         );
     }
@@ -84,19 +83,23 @@ It will remove queue entries and perform a cleanup.' . chr(10) . chr(10) .
 
         $queueFilter = new QueueFilter($input->getArgument('mode'));
 
-        /** @var CrawlerController $crawlerController */
-        $crawlerController = $objectManager->get(CrawlerController::class);
+        /** @var QueueRepository $queueRepository */
+        $queueRepository = $objectManager->get(QueueRepository::class);
 
-        $pageId = MathUtility::forceIntegerInRange($input->getOption('page'), 0);
+        $pageId = $input->getOption('page');
+        if ($pageId) {
+            $output->writeln('<error>The --page option is deprecated since v9.1.5 and will be removed in v11.x</error>');
+            trigger_error('The --page option is deprecated since v9.1.5 and will be removed in v11.x', E_USER_DEPRECATED);
+        }
 
         switch ($queueFilter) {
             case 'all':
-                $crawlerController->getLogEntriesForPageId($pageId, $queueFilter, true, true);
+                $queueRepository->flushQueue($queueFilter);
                 $output->writeln('<info>All entries in Crawler queue will be flushed</info>');
                 break;
             case 'finished':
             case 'pending':
-                $crawlerController->getLogEntriesForPageId($pageId, $queueFilter, true, false);
+                $queueRepository->flushQueue($queueFilter);
                 $output->writeln('<info>All entries in Crawler queue, with status: "' . $queueFilter . '" will be flushed</info>');
                 break;
             default:

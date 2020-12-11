@@ -8,6 +8,13 @@
 ### Changed
 * Removed all references to cHash as it is not used anymore.
 
+### Deprecated
+#### Functions & Properties
+* CrawlerController->getLogEntriesForPageId()
+* QueueRepository->countAllByProcessId()
+* QueueRepository->countUnprocessedItems()
+* FlushQueueCommand --page option
+
 ### Fixed
 * Typecasting port number in cli/bootstrap to have processQueue working with non-standard ports
 * Flush entire queue works again

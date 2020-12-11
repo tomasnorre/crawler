@@ -171,9 +171,9 @@ class QueueRepositoryTest extends FunctionalTestCase
      */
     public function countUnprocessedItems(): void
     {
-        self::assertSame(
+        self::assertCount(
             8,
-            $this->subject->countUnprocessedItems()
+            $this->subject->getUnprocessedItems()
         );
     }
 
@@ -553,6 +553,19 @@ class QueueRepositoryTest extends FunctionalTestCase
     /**
      * @test
      *
+     * @dataProvider getQueueEntriesForPageIdDataProvider
+     */
+    public function getQueueEntriesForPageId(int $id, int $itemsPerPage, QueueFilter $queueFilter, array $expected): void
+    {
+        self::assertEquals(
+            $expected,
+            $this->subject->getQueueEntriesForPageId($id, $itemsPerPage, $queueFilter)
+        );
+    }
+
+    /**
+     * @test
+     *
      * @dataProvider flushQueueDataProvider
      */
     public function flushQueue(QueueFilter $queueFilter, int $expected): void
@@ -756,6 +769,82 @@ class QueueRepositoryTest extends FunctionalTestCase
                 'configurationHash' => '7b6919e533f334550b6f19034dfd2f81',
                 'expected' => false,
             ],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getQueueEntriesForPageIdDataProvider()
+    {
+        return [
+            'Do Flush' => [
+                'id' => 1002,
+                'itemsPerPage' => 5,
+                'queueFilter' => new QueueFilter('pending'),
+                'expected' => [],
+            ],
+            'Do Full Flush' => [
+                'id' => 1002,
+                'itemsPerPage' => 5,
+                'queueFilter' => new QueueFilter('finished'),
+                'expected' => [[
+                    'qid' => 2,
+                    'page_id' => 1002,
+                    'parameters' => '',
+                    'parameters_hash' => '',
+                    'configuration_hash' => '',
+                    'scheduled' => 0,
+                    'exec_time' => 10,
+                    'result_data' => '',
+                    'process_scheduled' => 0,
+                    'process_id' => '1002',
+                    'process_id_completed' => 'qwerty',
+                    'configuration' => 'ThirdConfiguration',
+                    'set_id' => 0,
+                ]],
+            ],
+            'Check that doFullFlush do not flush if doFlush is not true' => [
+                'id' => 2,
+                'itemsPerPage' => 5,
+                'queueFilter' => new QueueFilter(),
+                'expected' => [[
+                    'qid' => '6',
+                    'page_id' => '2',
+                    'parameters' => '',
+                    'parameters_hash' => '',
+                    'configuration_hash' => '7b6919e533f334550b6f19034dfd2f81',
+                    'scheduled' => '0',
+                    'exec_time' => '0',
+                    'set_id' => '123',
+                    'result_data' => '',
+                    'process_scheduled' => '0',
+                    'process_id' => '1006',
+                    'process_id_completed' => 'qwerty',
+                    'configuration' => 'SecondConfiguration',
+                ]],
+            ],
+            'Get entries for page_id 2001' => [
+                'id' => 2,
+                'itemsPerPage' => 1,
+                'queueFilter' => new QueueFilter(),
+                'expected' => [[
+                    'qid' => '6',
+                    'page_id' => '2',
+                    'parameters' => '',
+                    'parameters_hash' => '',
+                    'configuration_hash' => '7b6919e533f334550b6f19034dfd2f81',
+                    'scheduled' => '0',
+                    'exec_time' => '0',
+                    'set_id' => '123',
+                    'result_data' => '',
+                    'process_scheduled' => '0',
+                    'process_id' => '1006',
+                    'process_id_completed' => 'qwerty',
+                    'configuration' => 'SecondConfiguration',
+                ]],
+            ],
+
         ];
     }
 }
