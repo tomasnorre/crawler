@@ -8,6 +8,7 @@
 ### Fixed
 * Typecasting port number in cli/bootstrap to have processQueue working with non-standard ports
 * Flush entire queue works again
+* Check if PageRow['uid'] is integer before handing it on to next function
 
 ## Crawler 9.1.4
 Crawler 9.1.4 was released on November 27th, 2020
