@@ -266,7 +266,7 @@ class CrawlerApiTest extends FunctionalTestCase
 
         self::assertCount(
             1,
-            $this->queueRepository->getUnprocessedItems(),
+            $this->queueRepository->getUnprocessedItems()
         );
     }
 
