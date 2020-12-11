@@ -24,6 +24,7 @@ use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Utility\MessageUtility;
 use AOE\Crawler\Utility\SignalSlotUtility;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -130,6 +131,12 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
         }
 
         $pageId = MathUtility::forceIntegerInRange($input->getArgument('page'), 0);
+        if ($pageId === 0) {
+            $message = "Page ${pageId} is not a valid page, please check you root page id and try again.";
+            MessageUtility::addErrorMessage($message);
+            $output->writeln("<info>${message}</info>");
+            return 1;
+        }
 
         $configurationKeys = $this->getConfigurationKeys((string) $input->getArgument('conf'));
 
