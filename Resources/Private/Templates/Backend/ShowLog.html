@@ -1,12 +1,12 @@
-<f:layout name="BackendModule" />
+<f:layout name="BackendModule"/>
 
 <f:section name="Headline">
-	<f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.log" />
+    <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.log"/>
 </f:section>
 
 <f:section name="DisplayActions">
-    <br />
-    <br />
+    <br/>
+    <br/>
     <table class="crawlerLogActions">
         <tr class="firstRow">
             <td>{displayLogFilterHtml -> f:format.raw()}</td>
@@ -22,60 +22,135 @@
 </f:section>
 
 <f:section name="Content">
-	<input type="hidden" name="id" value="{currentPageId}">
-	<input type="hidden" value="{setId}" name="setID" />
-	<f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.curtime" />: <f:format.date format="H:i:s">now</f:format.date>
-	<br>
-	<f:if condition="{queueId}">
-		<f:then>
-			<p>
-				<br>
-				<input type="submit" class="btn btn-default" value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.back')}" name="_back">
-				<br>
-				Status: {queueStatus}<br>
-				{queueDetails -> f:format.raw()}
-			</p>
-		</f:then>
-		<f:else>
-			<input type="submit" class="btn btn-default" value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.back')}" name="_back">
-			<input type="submit" class="btn btn-default" value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.reloadlist')}" name="_reload" />
-			<input type="submit" class="btn btn-default" value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.downloadcsv')}" name="_csv" />
-			<input type="submit" class="btn btn-default" value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.flushvisiblequeue')}" name="_flush" onclick="return confirm('{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.confirmyouresure')}');" />
-			<input type="submit" class="btn btn-default" value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.flushfullqueue')}" name="_flush_all" onclick="return confirm('{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.confirmyouresure')}');" />
-			<br>
-			<br>
-			<table class="table table-hover">
-				<thead>
-				<tr>
-					<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.pagetitle" /></th>
-					<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.qid" /></th>
-					<th>&nbsp;</th>
-					<f:if condition="{showResultLog}">
-						<f:then>
-							<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.resultlog" /></th>
-						</f:then>
-						<f:else>
-							<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.scheduledtime" /></th>
-							<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.runtime" /></th>
-						</f:else>
-					</f:if>
-					<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.status" /></th>
-					<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.url" /></th>
-					<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.groups" /></th>
-					<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.procinstr" /></th>
-					<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.setid" /></th>
-					<f:if condition="{showFeVars}">
-						<th>TSFE->id</th>
-						<th>TSFE->gr_list</th>
-						<th>TSFE->no_cache</th>
-					</f:if>
-				</tr>
-				</thead>
-				<tbody>
-					{code -> f:format.raw()}
-				</tbody>
-			</table>
-		</f:else>
-	</f:if>
+    <input type="hidden" name="id" value="{currentPageId}">
+    <input type="hidden" value="{setId}" name="setID"/>
+    <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.curtime"/>
+    :
+    <f:format.date format="H:i:s">now</f:format.date>
+    <br>
+    <f:if condition="{queueId}">
+        <f:then>
+            <p>
+                <br>
+                <input type="submit" class="btn btn-default"
+                       value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.back')}"
+                       name="_back">
+                <br>
+                Status: {queueStatus}<br>
+                {queueDetails -> f:format.raw()}
+            </p>
+        </f:then>
+        <f:else>
+            <input type="submit" class="btn btn-default"
+                   value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.back')}"
+                   name="_back">
+            <input type="submit" class="btn btn-default"
+                   value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.reloadlist')}"
+                   name="_reload"/>
+            <input type="submit" class="btn btn-default"
+                   value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.downloadcsv')}"
+                   name="_csv"/>
+            <input type="submit" class="btn btn-default"
+                   value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.flushvisiblequeue')}"
+                   name="_flush"
+                   onclick="return confirm('{f:translate(key: 'crawler/Resources/Private/Language/locallang.xlf:labels.confirmyouresure')}')"/>
+            <input type="submit" class="btn btn-default"
+                   value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.flushfullqueue')}"
+                   name="_flush_all"
+                   onclick="return confirm('{f:translate(key: 'crawler/Resources/Private/Language/locallang.xlf:labels.confirmyouresure')}')"/>
+            <br>
+            <br>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>
+                        <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.pagetitle"/>
+                    </th>
+                    <th>
+                        <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.qid"/>
+                    </th>
+                    <th>&nbsp;</th>
+                    <f:if condition="{showResultLog}">
+                        <f:then>
+                            <th>
+                                <f:translate
+                                    key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.resultlog"/>
+                            </th>
+                        </f:then>
+                        <f:else>
+                            <th>
+                                <f:translate
+                                    key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.scheduledtime"/>
+                            </th>
+                            <th>
+                                <f:translate
+                                    key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.runtime"/>
+                            </th>
+                        </f:else>
+                    </f:if>
+                    <th>
+                        <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.status"/>
+                    </th>
+                    <th>
+                        <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.url"/>
+                    </th>
+                    <th>
+                        <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.groups"/>
+                    </th>
+                    <th>
+                        <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.procinstr"/>
+                    </th>
+                    <th>
+                        <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.setid"/>
+                    </th>
+                    <f:if condition="{showFeVars}">
+                        <th>TSFE->id</th>
+                        <th>TSFE->gr_list</th>
+                        <th>TSFE->no_cache</th>
+                    </f:if>
+                </tr>
+                </thead>
+                <tbody>
+                <f:for each="{logEntries}" as="logEntry">
+                    <tr class="{logEntry.trClass}">
+                        <td rowspan="{logEntry.titleRowSpan}">{logEntry.title -> f:format.raw()}</td>
+                        <f:if condition="{logEntry.noEntries} != ''">
+                            <f:then>
+                                <td colspan="{logEntry.colSpan}"><em>{logEntry.noEntries}</em></td>
+                            </f:then>
+                            <f:else>
+                                <td><a href="{logEntry.qid.link}">{logEntry.qid.link-text}</a></td>
+                                <td><a href="{logEntry.refresh.link}">{logEntry.refresh.link-text -> f:format.raw()}</a>
+                                </td>
+                                <f:if condition="{showResultLog}">
+                                    <f:then>
+                                        <td>{logEntry.columns.result_log}</td>
+                                    </f:then>
+                                    <f:else>
+                                        <td>{logEntry.columns.scheduled -> f:format.date(format: 'd.m.Y H:i')}</td>
+                                        <f:if condition="{logEntry.columns.exec_time} = '-'">
+                                            <f:then>
+                                                <td>-</td>
+                                            </f:then>
+                                            <f:else>
+                                                <td>{logEntry.columns.exec_time -> f:format.date(format: 'd.m.Y H:i')}
+                                                </td>
+                                            </f:else>
+                                        </f:if>
+                                    </f:else>
+                                </f:if>
+                                <td>{logEntry.columns.result_status}</td>
+                                <td>{logEntry.columns.url -> f:format.raw()}</td>
+                                <td>{logEntry.columns.feUserGroupList}</td>
+                                <td>{logEntry.columns.procInstructions}</td>
+                                <td>{logEntry.columns.set_id}</td>
+                            </f:else>
+                        </f:if>
+                    </tr>
+                </f:for>
+                </tbody>
+            </table>
+        </f:else>
+    </f:if>
 </f:section>
 

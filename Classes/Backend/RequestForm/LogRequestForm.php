@@ -10,8 +10,10 @@ use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Utility\MessageUtility;
 use AOE\Crawler\Value\QueueFilter;
+use AOE\Crawler\Value\QueueLogEntry;
 use AOE\Crawler\Writer\FileWriter\CsvWriter\CrawlerCsvWriter;
 use AOE\Crawler\Writer\FileWriter\CsvWriter\CsvWriterInterface;
+use Codeception\Util\Debug;
 use Doctrine\DBAL\Query\QueryBuilder;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -204,6 +206,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                 // Traverse page tree:
                 $code = '';
                 $count = 0;
+                $logEntries = [];
                 foreach ($tree->tree as $data) {
                     // Get result:
                     $logEntriesOfPage = $this->queueRepository->getQueueEntriesForPageId(
@@ -212,7 +215,9 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                         $queueFilter
                     );
 
-                    $code .= $this->drawLog_addRows(
+                    //$logEntries[] = $logEntriesOfPage;
+
+                    $logEntries[] = $this->drawLog_addRows(
                         $logEntriesOfPage,
                         $data['HTML'] . BackendUtility::getRecordTitle('pages', $data['row'], true)
                     );
@@ -220,7 +225,9 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                         break;
                     }
                 }
+
                 $this->view->assign('code', $code);
+                $this->view->assign('logEntries', $logEntries);
             }
 
             if ($this->CSVExport) {
@@ -315,9 +322,12 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
      * @return string HTML <tr> content (one or more)
      * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
      */
-    private function drawLog_addRows(array $logEntriesOfPage, string $titleString): string
+    private function drawLog_addRows(array $logEntriesOfPage, string $titleString): array
     {
-        $colSpan = 9
+        $contentArray = [];
+        $contentArray['title'] = $titleString;
+        $contentArray['titleRowSpan'] = 1;
+        $contentArray['colSpan'] =  9
             + ($this->infoModuleController->MOD_SETTINGS['log_resultLog'] ? -1 : 0)
             + ($this->infoModuleController->MOD_SETTINGS['log_feVars'] ? 3 : 0);
 
@@ -326,14 +336,16 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
             $refreshIcon = $this->getIconFactory()->getIcon('actions-system-refresh', Icon::SIZE_SMALL);
             // Traverse parameter combinations:
             $c = 0;
-            $content = '';
             foreach ($logEntriesOfPage as $vv) {
                 // Title column:
                 if (! $c) {
-                    $titleClm = '<td rowspan="' . count($logEntriesOfPage) . '">' . $titleString . '</td>';
+                    $contentArray['titleRowSpan'] = count($logEntriesOfPage);
+                    $contentArray['title'] = $titleString;
                 } else {
-                    $titleClm = '';
+                    $contentArray['title'] = '';
                 }
+
+                $execTime = $vv['exec_time'] ? BackendUtility::datetime($vv['exec_time']) : '-';
 
                 // Result:
                 $resLog = ResultHandler::getResultLog($vv);
@@ -350,7 +362,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                     $rowData['result_log'] = $resLog;
                 } else {
                     $rowData['scheduled'] = ($vv['scheduled'] > 0) ? BackendUtility::datetime($vv['scheduled']) : ' ' . $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.immediate');
-                    $rowData['exec_time'] = $vv['exec_time'] ? BackendUtility::datetime($vv['exec_time']) : '-';
+                    $rowData['exec_time'] = $execTime;
                 }
                 $rowData['result_status'] = GeneralUtility::fixed_lgd_cs($resStatus, 50);
                 $url = htmlspecialchars($parameters['url'] ?? $parameters['alturl'], ENT_QUOTES | ENT_HTML5);
@@ -374,39 +386,44 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                 }
 
                 // Put rows together:
-                $content .= '
-                    <tr ' . $trClass . ' >
-                        ' . $titleClm . '
-                        <td><a href="' . UrlBuilder::getInfoModuleUrl(['qid_details' => $vv['qid'], 'setID' => $setId]) . '">' . htmlspecialchars((string) $vv['qid']) . '</a></td>
-                        <td><a href="' . UrlBuilder::getInfoModuleUrl(['qid_read' => $vv['qid'], 'setID' => $setId]) . '">' . $refreshIcon . '</a>&nbsp;&nbsp;' . $warningIcon . '</td>';
+                $contentArray['trClass'] = $trClass;
+                $contentArray['qid'] = [
+                    'link' => UrlBuilder::getInfoModuleUrl(['qid_details' => $vv['qid'], 'setID' => $setId]),
+                    'link-text' => htmlspecialchars((string) $vv['qid'], ENT_QUOTES | ENT_HTML5),
+                ];
+                $contentArray['refresh'] = [
+                    'link' => UrlBuilder::getInfoModuleUrl(['qid_read' => $vv['qid'], 'setID' => $setId]),
+                    'link-text' => $refreshIcon,
+                    'warning' => $warningIcon,
+                ];
+
                 foreach ($rowData as $fKey => $value) {
                     if ($fKey === 'url') {
-                        $content .= '<td>' . $value . '</td>';
+                        $contentArray['columns'][$fKey] = $value;
                     } else {
-                        $content .= '<td>' . nl2br(htmlspecialchars(strval($value))) . '</td>';
+                        $contentArray['columns'][$fKey] = nl2br(htmlspecialchars((string) $value, ENT_QUOTES | ENT_HTML5));
                     }
                 }
-                $content .= '</tr>';
                 $c++;
 
                 if ($this->CSVExport) {
                     // Only for CSV (adding qid and scheduled/exec_time if needed):
-                    $rowData['result_log'] = implode('// ', explode(chr(10), $resLog));
-                    $rowData['qid'] = $vv['qid'];
-                    $rowData['scheduled'] = BackendUtility::datetime($vv['scheduled']);
-                    $rowData['exec_time'] = $vv['exec_time'] ? BackendUtility::datetime($vv['exec_time']) : '-';
-                    $this->CSVaccu[] = $rowData;
+                    $csvExport['scheduled'] = BackendUtility::datetime($vv['scheduled']);
+                    $csvExport['exec_time'] = $vv['exec_time'] ? BackendUtility::datetime($vv['exec_time']) : '-';
+                    $csvExport['result_status'] = $contentArray['columns']['result_status'];
+                    $csvExport['url'] = $contentArray['columns']['url'];
+                    $csvExport['feUserGroupList'] = $contentArray['columns']['feUserGroupList'];
+                    $csvExport['procInstructions'] = $contentArray['columns']['procInstructions'];
+                    $csvExport['set_id'] = $contentArray['columns']['set_id'];
+                    $csvExport['result_log'] = str_replace(chr(10), '// ', $resLog);
+                    $csvExport['qid'] = $vv['qid'];
+                    $this->CSVaccu[] = $csvExport;
                 }
             }
         } else {
-            // Compile row:
-            $content = '
-                <tr>
-                    <td>' . $titleString . '</td>
-                    <td colspan="' . $colSpan . '"><em>' . $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noentries') . '</em></td>
-                </tr>';
+            $contentArray['noEntries'] = $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noentries');
         }
 
-        return $content;
+        return $contentArray;
     }
 }
