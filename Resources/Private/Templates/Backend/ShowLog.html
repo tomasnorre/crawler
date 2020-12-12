@@ -106,7 +106,6 @@
                     <f:if condition="{showFeVars}">
                         <th>TSFE->id</th>
                         <th>TSFE->gr_list</th>
-                        <th>TSFE->no_cache</th>
                     </f:if>
                 </tr>
                 </thead>
@@ -144,6 +143,10 @@
                                 <td>{logEntry.columns.feUserGroupList}</td>
                                 <td>{logEntry.columns.procInstructions}</td>
                                 <td>{logEntry.columns.set_id}</td>
+                                <f:if condition="{showFeVars}">
+                                    <td>{logEntry.columns.tsfe_id}</td>
+                                    <td>{logEntry.columns.tsfe_gr_list}</td>
+                                </f:if>
                             </f:else>
                         </f:if>
                     </tr>

@@ -329,7 +329,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
         $contentArray['titleRowSpan'] = 1;
         $contentArray['colSpan'] =  9
             + ($this->infoModuleController->MOD_SETTINGS['log_resultLog'] ? -1 : 0)
-            + ($this->infoModuleController->MOD_SETTINGS['log_feVars'] ? 3 : 0);
+            + ($this->infoModuleController->MOD_SETTINGS['log_feVars'] ? 2 : 0);
 
         if (! empty($logEntriesOfPage)) {
             $setId = (int) GeneralUtility::_GP('setID');
@@ -375,7 +375,6 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                     $resFeVars = ResultHandler::getResFeVars($resultData ?: []);
                     $rowData['tsfe_id'] = $resFeVars['id'] ?: '';
                     $rowData['tsfe_gr_list'] = $resFeVars['gr_list'] ?: '';
-                    $rowData['tsfe_no_cache'] = $resFeVars['no_cache'] ?: '';
                 }
 
                 $trClass = '';
