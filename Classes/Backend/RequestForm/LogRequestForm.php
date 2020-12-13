@@ -206,7 +206,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                 // Traverse page tree:
                 $code = '';
                 $count = 0;
-                $logEntries = [];
+                $logEntriesPerPage = [];
                 foreach ($tree->tree as $data) {
                     // Get result:
                     $logEntriesOfPage = $this->queueRepository->getQueueEntriesForPageId(
@@ -217,7 +217,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
 
                     //$logEntries[] = $logEntriesOfPage;
 
-                    $logEntries[] = $this->drawLog_addRows(
+                    $logEntriesPerPage[] = $this->drawLog_addRows(
                         $logEntriesOfPage,
                         $data['HTML'] . BackendUtility::getRecordTitle('pages', $data['row'], true)
                     );
@@ -227,7 +227,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                 }
 
                 $this->view->assign('code', $code);
-                $this->view->assign('logEntries', $logEntries);
+                $this->view->assign('logEntriesPerPage', $logEntriesPerPage);
             }
 
             if ($this->CSVExport) {
@@ -324,6 +324,8 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
      */
     private function drawLog_addRows(array $logEntriesOfPage, string $titleString): array
     {
+        $resultArray = [];
+
         $contentArray = [];
 
         $contentArray['titleRowSpan'] = 1;
@@ -343,6 +345,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                     $contentArray['title'] = $titleString;
                 } else {
                     $contentArray['title'] = '';
+                    $contentArray['titleRowSpan'] = 1;
                 }
 
                 $firstIteration = false;
@@ -405,6 +408,8 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                     }
                 }
 
+                $resultArray[] = $contentArray;
+
                 if ($this->CSVExport) {
                     // Only for CSV (adding qid and scheduled/exec_time if needed):
                     $csvExport['scheduled'] = BackendUtility::datetime($vv['scheduled']);
@@ -422,8 +427,10 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
         } else {
             $contentArray['title'] = $titleString;
             $contentArray['noEntries'] = $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noentries');
+
+            $resultArray[] = $contentArray;
         }
 
-        return $contentArray;
+        return $resultArray;
     }
 }

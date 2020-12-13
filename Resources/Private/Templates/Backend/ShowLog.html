@@ -110,9 +110,12 @@
                 </tr>
                 </thead>
                 <tbody>
-                <f:for each="{logEntries}" as="logEntry">
+                <f:for each="{logEntriesPerPage}" as="logEntryForPage">
+                    <f:for each="{logEntryForPage}" as="logEntry">
                     <tr class="{logEntry.trClass}">
-                        <td rowspan="{logEntry.titleRowSpan}">{logEntry.title -> f:format.raw()}</td>
+                        <f:if condition="{logEntry.title} != ''">
+                            <td rowspan="{logEntry.titleRowSpan}">{logEntry.title -> f:format.raw()}</td>
+                        </f:if>
                         <f:if condition="{logEntry.noEntries} != ''">
                             <f:then>
                                 <td colspan="{logEntry.colSpan}"><em>{logEntry.noEntries}</em></td>
@@ -148,6 +151,7 @@
                             </f:else>
                         </f:if>
                     </tr>
+                    </f:for>
                 </f:for>
                 </tbody>
             </table>
