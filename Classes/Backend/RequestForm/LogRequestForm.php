@@ -325,26 +325,27 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
     private function drawLog_addRows(array $logEntriesOfPage, string $titleString): array
     {
         $contentArray = [];
-        $contentArray['title'] = $titleString;
+
         $contentArray['titleRowSpan'] = 1;
         $contentArray['colSpan'] =  9
             + ($this->infoModuleController->MOD_SETTINGS['log_resultLog'] ? -1 : 0)
-            + ($this->infoModuleController->MOD_SETTINGS['log_feVars'] ? 2 : 0);
+            + ($this->infoModuleController->MOD_SETTINGS['log_feVars'] ? 3 : 0);
 
         if (! empty($logEntriesOfPage)) {
             $setId = (int) GeneralUtility::_GP('setID');
             $refreshIcon = $this->getIconFactory()->getIcon('actions-system-refresh', Icon::SIZE_SMALL);
             // Traverse parameter combinations:
-            $c = 0;
+            $firstIteration = true;
             foreach ($logEntriesOfPage as $vv) {
                 // Title column:
-                if (! $c) {
+                if ($firstIteration) {
                     $contentArray['titleRowSpan'] = count($logEntriesOfPage);
                     $contentArray['title'] = $titleString;
                 } else {
                     $contentArray['title'] = '';
                 }
 
+                $firstIteration = false;
                 $execTime = $vv['exec_time'] ? BackendUtility::datetime($vv['exec_time']) : '-';
 
                 // Result:
@@ -380,7 +381,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                 $trClass = '';
                 $warningIcon = '';
                 if (str_contains($resStatus, 'Error:')) {
-                    $trClass = 'class="bg-danger"';
+                    $trClass = 'bg-danger';
                     $warningIcon = $this->getIconFactory()->getIcon('actions-ban', Icon::SIZE_SMALL);
                 }
 
@@ -403,7 +404,6 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                         $contentArray['columns'][$fKey] = nl2br(htmlspecialchars((string) $value, ENT_QUOTES | ENT_HTML5));
                     }
                 }
-                $c++;
 
                 if ($this->CSVExport) {
                     // Only for CSV (adding qid and scheduled/exec_time if needed):
@@ -420,6 +420,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                 }
             }
         } else {
+            $contentArray['title'] = $titleString;
             $contentArray['noEntries'] = $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noentries');
         }
 
