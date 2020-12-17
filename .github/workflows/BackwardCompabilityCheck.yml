@@ -40,5 +40,5 @@ jobs:
       - name: "Roave Backward Compatibility Check"
         run: |
           # To ensure compability with the roave tool.
-          composer install
+          composer require --dev nimut/typo3-complete:^10.4
           .Build/bin/roave-backward-compatibility-check
