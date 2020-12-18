@@ -11,6 +11,7 @@
 ### Deprecated
 #### Functions & Properties
 * CrawlerController->getLogEntriesForPageId()
+* CrawlerController->CLI_runHooks()
 * QueueRepository->countAllByProcessId()
 * QueueRepository->countUnprocessedItems()
 * FlushQueueCommand --page option
