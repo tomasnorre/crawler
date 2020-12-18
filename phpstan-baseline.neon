@@ -208,6 +208,11 @@ parameters:
 			path: Classes/Backend/RequestForm/StartRequestForm.php
 
 		-
+			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\StartRequestForm\\:\\:getScheduledTime\\(\\) should return int but returns int\\|false\\.$#"
+			count: 1
+			path: Classes/Backend/RequestForm/StartRequestForm.php
+
+		-
 			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Command\\\\BuildQueueCommand\\:\\:execute\\(\\)\" is 19, keep it under 8$#"
 			count: 1
 			path: Classes/Command/BuildQueueCommand.php
@@ -278,12 +283,12 @@ parameters:
 			path: Classes/ContextMenu/ItemProvider.php
 
 		-
-			message: "#^Class cognitive complexity for \"CrawlerController\" is 277, keep it under 50$#"
+			message: "#^Class cognitive complexity for \"CrawlerController\" is 280, keep it under 50$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Class cognitive complexity for \"CrawlerController\" is 277, keep it under 60$#"
+			message: "#^Class cognitive complexity for \"CrawlerController\" is 280, keep it under 60$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -462,18 +467,18 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:CLI_run\\(\\)\" is 11, keep it under 8$#"
+			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:CLI_run\\(\\)\" is 14, keep it under 8$#"
 			count: 1
+			path: Classes/Controller/CrawlerController.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:crawler_init\\(\\)\\.$#"
+			count: 2
 			path: Classes/Controller/CrawlerController.php
 
 		-
 			message: "#^Call to deprecated method CLI_debug\\(\\) of class AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\.$#"
 			count: 6
-			path: Classes/Controller/CrawlerController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:crawler_init\\(\\)\\.$#"
-			count: 1
 			path: Classes/Controller/CrawlerController.php
 
 		-
