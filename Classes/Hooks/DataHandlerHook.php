@@ -23,7 +23,7 @@ use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Service\QueueService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Frontend\Page\PageRepository;
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 
 class DataHandlerHook
 {

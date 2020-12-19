@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        typo3: [ ^9.5, ^10.4 ]
+        typo3: [ ^9.5, ^10.4, dev-master ]
         php: [ '7.2', '7.4' ]
 
     steps:
@@ -69,7 +69,22 @@ jobs:
         run: |
           export "FUNCTIONAL_XML"=.Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml
           .Build/bin/phpunit --whitelist Classes --coverage-clover=functional-coverage.clover --colors -c $FUNCTIONAL_XML Tests/Functional
-        if: matrix.typo3 == '^9.5'
+        if: matrix.typo3 == '^9.5' && matrix.php == '7.4'
+        env:
+          typo3DatabaseHost: 127.0.0.1
+          typo3DatabaseName: typo3
+          typo3DatabasePassword: root
+          typo3DatabaseUsername: root
+
+      - name: Tests for dev-master
+        run: |
+          export "FUNCTIONAL_XML"=.Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml
+          export "UNIT_XML"=.Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml
+          composer remove --dev typo3/testing-framework
+          composer require --dev nimut/typo3-complete:dev-master saschaegerer/phpstan-typo3:"*" nimut/testing-framework:"*"
+          .Build/bin/phpunit --whitelist Classes --colors -c $UNIT_XML Tests/Unit || exit 0
+          .Build/bin/phpunit --whitelist Classes --colors -c $FUNCTIONAL_XML Tests/Functional || exit 0
+        if: matrix.typo3 == 'dev-master'
         env:
           typo3DatabaseHost: 127.0.0.1
           typo3DatabaseName: typo3

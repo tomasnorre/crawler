@@ -37,7 +37,7 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Frontend\Page\PageRepository;
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 
 /**
  * Class CrawlerApi
