@@ -19,6 +19,7 @@ namespace AOE\Crawler\Domain\Repository;
  * The TYPO3 project - inspiring people to share!
  */
 
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 
@@ -26,7 +27,10 @@ class PageRepositoryFactory
 {
     public static function create()
     {
-        $isVersion9 = VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 10000000;
+
+        $version = new Typo3Version();
+
+        $isVersion9 = VersionNumberUtility::convertVersionNumberToInteger($version->getMajorVersion()) < 10;
         if ($isVersion9) {
             return GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Repository\PageRepository::class);
 
