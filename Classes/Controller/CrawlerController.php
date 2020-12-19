@@ -206,6 +206,7 @@ class CrawlerController implements LoggerAwareInterface
     private $deprecatedPublicMethods = [
         'cleanUpOldQueueEntries' => 'Using CrawlerController::cleanUpOldQueueEntries() is deprecated since 9.0.1 and will be removed in v11.x, please use QueueRepository->cleanUpOldQueueEntries() instead.',
         'CLI_debug' => 'Using CrawlerController->CLI_debug() is deprecated since 9.1.3 and will be removed in v11.x',
+        'CLI_runHooks' => 'Using CrawlerController->CLI_runHooks() is deprecated since 9.1.5 and will be removed in v11.x',
         'getAccessMode' => 'Using CrawlerController->getAccessMode() is deprecated since 9.1.3 and will be removed in v11.x',
         'getLogEntriesForPageId' => 'Using CrawlerController->getLogEntriesForPageId() is deprecated since 9.1.5 and will be remove in v11.x',
         'getLogEntriesForSetId' => 'Using crawlerController::getLogEntriesForSetId() is deprecated since 9.0.1 and will be removed in v11.x',
@@ -1581,7 +1582,16 @@ class CrawlerController implements LoggerAwareInterface
         $counter = 0;
 
         // First, run hooks:
-        $this->CLI_runHooks();
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['cli_hooks'] ?? [] as $objRef) {
+            trigger_error(
+                'This hook (crawler/cli_hooks) is deprecated since 9.1.5 and will be removed when dropping support for TYPO3 9LTS and 10LTS',
+                E_USER_DEPRECATED
+            );
+            $hookObj = GeneralUtility::makeInstance($objRef);
+            if (is_object($hookObj)) {
+                $hookObj->crawler_init($this);
+            }
+        }
 
         // Clean up the queue
         $this->queueRepository->cleanupQueue();
@@ -1645,6 +1655,7 @@ class CrawlerController implements LoggerAwareInterface
 
     /**
      * Activate hooks
+     * @deprecated
      */
     public function CLI_runHooks(): void
     {

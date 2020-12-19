@@ -1,5 +1,6 @@
 <?php
 return [
+    // tx_crawler_api can be removed when dropping support for TYPO3 9 LTS & 10 LTS
     'tx_crawler_api' => \AOE\Crawler\Api\CrawlerApi::class,
     'tx_crawler_domain_events_dispatcher' => \AOE\Crawler\Event\EventDispatcher::class,
     'tx_crawler_domain_events_observer' => \AOE\Crawler\Event\EventObserverInterface::class,
