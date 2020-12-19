@@ -34,6 +34,7 @@ use AOE\Crawler\Crawler;
 use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
 use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
+use AOE\Crawler\Domain\Repository\PageRepositoryFactory;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\QueueExecutor;
@@ -276,7 +277,7 @@ class CrawlerController implements LoggerAwareInterface
         $this->queueRepository = $objectManager->get(QueueRepository::class);
         $this->processRepository = $objectManager->get(ProcessRepository::class);
         $this->configurationRepository = $objectManager->get(ConfigurationRepository::class);
-        $this->pageRepository = $objectManager->get(PageRepository::class);
+        $this->pageRepository = PageRepositoryFactory::create();
         $this->queueExecutor = GeneralUtility::makeInstance(QueueExecutor::class, $crawlStrategyFactory);
         $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
         $this->crawler = GeneralUtility::makeInstance(Crawler::class);
