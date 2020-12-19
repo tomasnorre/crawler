@@ -57,7 +57,7 @@ class DataHandlerHook
         return GeneralUtility::makeInstance(ObjectManager::class)->get(QueueService::class);
     }
 
-    private function getPageRepository(): PageRepository
+    private function getPageRepository()
     {
         // Todo: Switch to TYPO3\CMS\Core\Repository\PageRepository when dropping support for TYPO3 9LTS
         return PageRepositoryFactory::create();

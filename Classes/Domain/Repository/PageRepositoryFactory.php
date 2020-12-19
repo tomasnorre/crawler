@@ -21,7 +21,6 @@ namespace AOE\Crawler\Domain\Repository;
 
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 
 class PageRepositoryFactory
 {
@@ -30,7 +29,7 @@ class PageRepositoryFactory
 
         $version = new Typo3Version();
 
-        $isVersion9 = VersionNumberUtility::convertVersionNumberToInteger($version->getMajorVersion()) < 10;
+        $isVersion9 = $version->getMajorVersion() < 10;
         if ($isVersion9) {
             return GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Repository\PageRepository::class);
 
