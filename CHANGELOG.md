@@ -1,6 +1,7 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 9.1.5-dev
+## Crawler 9.1.5
+Crawler 9.1.5 was released on December 19th, 2020
 
 ### Added
 * Error-Handling when Page 0 is used for crawler:buildQueue
