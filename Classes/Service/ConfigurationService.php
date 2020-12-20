@@ -23,7 +23,7 @@ class ConfigurationService
 {
     public static function removeDisallowedConfigurations(array $allowedConfigurations, array $configurations): array
     {
-        if (count($allowedConfigurations) > 0) {
+        if (! empty($allowedConfigurations)) {
             // 	remove configuration that does not match the current selection
             foreach ($configurations as $confKey => $confArray) {
                 if (! in_array($confKey, $allowedConfigurations, true)) {
