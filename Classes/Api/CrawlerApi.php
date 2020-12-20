@@ -43,7 +43,7 @@ use TYPO3\CMS\Frontend\Page\PageRepository;
  * Class CrawlerApi
  *
  * @package AOE\Crawler\Api
- * @deprecated This class will be removed when dropping support for TYPO3 9LTS and 10LTS
+ * @deprecated Since v9.1.6 - This class will be removed when dropping support for TYPO3 9LTS and 10LTS
  */
 class CrawlerApi
 {

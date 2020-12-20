@@ -948,7 +948,7 @@ parameters:
 			message:
 				"""
 					#^Fetching class constant class of deprecated class AOE\\\\Crawler\\\\Api\\\\CrawlerApi\\:
-					This class will be removed when dropping support for TYPO3 9LTS and 10LTS$#
+					Since v9\\.1\\.6 \\- This class will be removed when dropping support for TYPO3 9LTS and 10LTS$#
 				"""
 			count: 2
 			path: Tests/Functional/Api/CrawlerApiTest.php
@@ -957,7 +957,7 @@ parameters:
 			message:
 				"""
 					#^Return type of method AOE\\\\Crawler\\\\Tests\\\\Functional\\\\Api\\\\CrawlerApiTest\\:\\:getMockedCrawlerAPI\\(\\) has typehint with deprecated class AOE\\\\Crawler\\\\Api\\\\CrawlerApi\\:
-					This class will be removed when dropping support for TYPO3 9LTS and 10LTS$#
+					Since v9\\.1\\.6 \\- This class will be removed when dropping support for TYPO3 9LTS and 10LTS$#
 				"""
 			count: 1
 			path: Tests/Functional/Api/CrawlerApiTest.php
