@@ -19,8 +19,8 @@ namespace AOE\Crawler\Hooks;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Api\CrawlerApi;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Service\QueueService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Frontend\Page\PageRepository;
@@ -44,7 +44,7 @@ class DataHandlerHook
             if ($this->getQueueRepository()->isPageInQueue($pageId)) {
                 continue;
             }
-            $this->getCrawlerApi()->addPageToQueue($pageId);
+            $this->getQueueService()->addPageToQueue($pageId);
         }
     }
 
@@ -53,9 +53,9 @@ class DataHandlerHook
         return GeneralUtility::makeInstance(ObjectManager::class)->get(QueueRepository::class);
     }
 
-    private function getCrawlerApi(): CrawlerApi
+    private function getQueueService(): QueueService
     {
-        return GeneralUtility::makeInstance(ObjectManager::class)->get(CrawlerApi::class);
+        return GeneralUtility::makeInstance(ObjectManager::class)->get(QueueService::class);
     }
 
     private function getPageRepository(): PageRepository
