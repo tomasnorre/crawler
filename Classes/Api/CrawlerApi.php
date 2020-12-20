@@ -289,8 +289,6 @@ class CrawlerApi
     }
 
     /**
-     * @param int $limit
-     * @return array
      * @codeCoverageIgnore
      */
     public function getLastProcessedQueueEntries(int $limit): array

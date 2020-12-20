@@ -85,6 +85,10 @@
             "[ -e .Build/bin/phpstan ] || composer update",
             ".Build/bin/phpstan analyse"
         ],
+        "phpstan-baseline": [
+            "[ -e .Build/bin/phpstan ] || composer update",
+            ".Build/bin/phpstan analyse --generate-baseline"
+        ],
         "cs-fix": [
             "[ -e .Build/bin/ecs ] || composer update",
             ".Build/bin/ecs check Classes Configuration Tests"
