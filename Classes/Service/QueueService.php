@@ -41,6 +41,10 @@ class QueueService
          */
         $pageData = GeneralUtility::makeInstance(PageRepository::class)->getPage_noCheck($pageUid, true);
         $configurations = $crawler->getUrlsForPageRow($pageData);
+        // Currently this is only used from the DataHandlerHook, and we don't know of any allowed/disallowed configurations,
+        // when clearing the cache, therefore we allow all configurations in this case.
+        // This next lines could be skipped as it will return the incomming configurations, but for visibility and
+        // later implementation it's kept as it do no harm.
         $allowedConfigurations = [];
         $configurations = ConfigurationService::removeDisallowedConfigurations($allowedConfigurations, $configurations);
         $downloadUrls = [];

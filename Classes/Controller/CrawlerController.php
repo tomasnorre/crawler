@@ -37,6 +37,7 @@ use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\QueueExecutor;
+use AOE\Crawler\Service\ConfigurationService;
 use AOE\Crawler\Service\UrlService;
 use AOE\Crawler\Utility\SignalSlotUtility;
 use AOE\Crawler\Value\QueueFilter;
@@ -1465,15 +1466,7 @@ class CrawlerController implements LoggerAwareInterface
 
         // Get list of configurations
         $configurations = $this->getUrlsForPageRow($pageRow, $skipMessage);
-
-        if (! empty($this->incomingConfigurationSelection)) {
-            // remove configuration that does not match the current selection
-            foreach ($configurations as $confKey => $confArray) {
-                if (! in_array($confKey, $this->incomingConfigurationSelection, true)) {
-                    unset($configurations[$confKey]);
-                }
-            }
-        }
+        $configurations = ConfigurationService::removeDisallowedConfigurations($this->incomingConfigurationSelection, $configurations);
 
         // Traverse parameter combinations:
         $c = 0;
