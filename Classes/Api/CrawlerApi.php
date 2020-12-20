@@ -29,6 +29,7 @@ namespace AOE\Crawler\Api;
  ***************************************************************/
 
 use AOE\Crawler\Controller\CrawlerController;
+use AOE\Crawler\Domain\Repository\PageRepository;
 use AOE\Crawler\Domain\Repository\PageRepositoryFactory;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
@@ -150,7 +151,7 @@ class CrawlerApi
          * This switch to getPage_noCheck() is needed as TYPO3 9 LTS doesn't return dokType < 200, therefore automatically
          * adding pages to crawler queue when editing page-titles from the page tree directly was not working.
          */
-        $pageData = PageRepositoryFactory::create()->getPage_noCheck($uid, true);
+        $pageData = (new PageRepository())->getPage($uid, true);
         $configurations = $crawler->getUrlsForPageRow($pageData);
         $configurations = $this->filterUnallowedConfigurations($configurations);
         $downloadUrls = [];

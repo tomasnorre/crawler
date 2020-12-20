@@ -34,7 +34,7 @@ use AOE\Crawler\Crawler;
 use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
 use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
-use AOE\Crawler\Domain\Repository\PageRepositoryFactory;
+use \AOE\Crawler\Domain\Repository\PageRepository;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\QueueExecutor;
@@ -69,7 +69,6 @@ use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 
 /**
  * Class CrawlerController
@@ -277,7 +276,7 @@ class CrawlerController implements LoggerAwareInterface
         $this->queueRepository = $objectManager->get(QueueRepository::class);
         $this->processRepository = $objectManager->get(ProcessRepository::class);
         $this->configurationRepository = $objectManager->get(ConfigurationRepository::class);
-        $this->pageRepository = PageRepositoryFactory::create();
+        $this->pageRepository = GeneralUtility::makeInstance(\AOE\Crawler\Domain\Repository\PageRepository::class);
         $this->queueExecutor = GeneralUtility::makeInstance(QueueExecutor::class, $crawlStrategyFactory);
         $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
         $this->crawler = GeneralUtility::makeInstance(Crawler::class);

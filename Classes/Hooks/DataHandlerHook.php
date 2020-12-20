@@ -60,6 +60,6 @@ class DataHandlerHook
     private function getPageRepository()
     {
         // Todo: Switch to TYPO3\CMS\Core\Repository\PageRepository when dropping support for TYPO3 9LTS
-        return PageRepositoryFactory::create();
+        return GeneralUtility::makeInstance(PageRepository::class);
     }
 }
