@@ -19,9 +19,9 @@ namespace AOE\Crawler\Tests\Unit\Hooks;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Api\CrawlerApi;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Hooks\DataHandlerHook;
+use AOE\Crawler\Service\QueueService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Prophecy\Argument;
 use TYPO3\CMS\Core\Cache\CacheManager;
@@ -43,8 +43,8 @@ class DataHandlerHookTest extends UnitTestCase
     {
         $dataHandlerHook = new DataHandlerHook();
 
-        $crawlerApi = $this->prophesize(CrawlerApi::class);
-        $crawlerApi->addPageToQueue(1)->shouldBeCalled();
+        $queueService = $this->prophesize(QueueService::class);
+        $queueService->addPageToQueue(1)->shouldBeCalled();
 
         $queueRepository = $this->prophesize(QueueRepository::class);
         $queueRepository->isPageInQueue(1)->willReturn(false);
@@ -56,7 +56,7 @@ class DataHandlerHookTest extends UnitTestCase
 
         $objectManager = $this->prophesize(ObjectManager::class);
         $objectManager->get(QueueRepository::class)->willReturn($queueRepository->reveal());
-        $objectManager->get(CrawlerApi::class)->willReturn($crawlerApi->reveal());
+        $objectManager->get(QueueService::class)->willReturn($queueService->reveal());
         $objectManager->get(PageRepository::class)->willReturn($pageRepository->reveal());
 
         $cacheManager = $this->prophesize(CacheManager::class);
@@ -86,9 +86,9 @@ class DataHandlerHookTest extends UnitTestCase
     public function itShouldAddPageToQueueWithMorePages(): void
     {
         $dataHandlerHook = new DataHandlerHook();
-        $crawlerApi = $this->prophesize(CrawlerApi::class);
-        $crawlerApi->addPageToQueue(1)->shouldBeCalled();
-        $crawlerApi->addPageToQueue(3)->shouldBeCalled();
+        $queueService = $this->prophesize(QueueService::class);
+        $queueService->addPageToQueue(1)->shouldBeCalled();
+        $queueService->addPageToQueue(3)->shouldBeCalled();
 
         $queueRepository = $this->prophesize(QueueRepository::class);
         $queueRepository->isPageInQueue(1)->willReturn(false);
@@ -102,7 +102,7 @@ class DataHandlerHookTest extends UnitTestCase
 
         $objectManager = $this->prophesize(ObjectManager::class);
         $objectManager->get(QueueRepository::class)->willReturn($queueRepository->reveal());
-        $objectManager->get(CrawlerApi::class)->willReturn($crawlerApi->reveal());
+        $objectManager->get(QueueService::class)->willReturn($queueService->reveal());
         $objectManager->get(PageRepository::class)->willReturn($pageRepository->reveal());
 
         $cacheManager = $this->prophesize(CacheManager::class);
@@ -132,8 +132,8 @@ class DataHandlerHookTest extends UnitTestCase
     public function nothingToBeAddedAsPageDoNotExists(): void
     {
         $dataHandlerHook = new DataHandlerHook();
-        $crawlerApi = $this->prophesize(CrawlerApi::class);
-        $crawlerApi->addPageToQueue(1)->shouldBeCalled();
+        $queueService = $this->prophesize(QueueService::class);
+        $queueService->addPageToQueue(1)->shouldBeCalled();
 
         $queueRepository = $this->prophesize(QueueRepository::class);
         $queueRepository->isPageInQueue(1)->willReturn(false);
@@ -145,7 +145,7 @@ class DataHandlerHookTest extends UnitTestCase
 
         $objectManager = $this->prophesize(ObjectManager::class);
         $objectManager->get(QueueRepository::class)->willReturn($queueRepository->reveal());
-        $objectManager->get(CrawlerApi::class)->willReturn($crawlerApi->reveal());
+        $objectManager->get(QueueService::class)->willReturn($queueService->reveal());
         $objectManager->get(PageRepository::class)->willReturn($pageRepository->reveal());
 
         $cacheManager = $this->prophesize(CacheManager::class);

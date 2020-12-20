@@ -43,6 +43,7 @@ use TYPO3\CMS\Frontend\Page\PageRepository;
  * Class CrawlerApi
  *
  * @package AOE\Crawler\Api
+ * @deprecated Since v9.1.6 - This class will be removed when dropping support for TYPO3 9LTS and 10LTS
  */
 class CrawlerApi
 {
@@ -120,6 +121,7 @@ class CrawlerApi
      * Adds a page to the crawlerqueue by uid
      *
      * @param int $uid uid
+     * @codeCoverageIgnore
      */
     public function addPageToQueue($uid): void
     {
@@ -260,6 +262,7 @@ class CrawlerApi
      * Get queue statistics by configuration
      *
      * @return array array of array('configuration' => <>, 'assignedButUnprocessed' => <>, 'unprocessed' => <>)
+     * @codeCoverageIgnore
      */
     public function getQueueStatisticsByConfiguration()
     {
@@ -277,6 +280,7 @@ class CrawlerApi
 
     /**
      * Get active processes count
+     * @codeCoverageIgnore
      */
     public function getActiveProcessesCount(): int
     {
@@ -284,6 +288,9 @@ class CrawlerApi
         return $processRepository->findAllActive()->count();
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getLastProcessedQueueEntries(int $limit): array
     {
         return $this->queueRepository->getLastProcessedEntries($limit);
@@ -293,6 +300,7 @@ class CrawlerApi
      * Get current crawling speed
      *
      * @return int|float|bool
+     * @codeCoverageIgnore
      */
     public function getCurrentCrawlingSpeed()
     {
@@ -340,6 +348,7 @@ class CrawlerApi
      * @return array data
      *
      * @throws TimeStampException
+     * @codeCoverageIgnore
      */
     public function getPerformanceData($start, $end, $resolution)
     {

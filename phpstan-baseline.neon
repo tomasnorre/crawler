@@ -6,25 +6,7 @@ parameters:
 			path: Classes/Api/CrawlerApi.php
 
 		-
-			message:
-				"""
-					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
-				"""
-			count: 1
-			path: Classes/Api/CrawlerApi.php
-
-		-
 			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
-			count: 1
-			path: Classes/Api/CrawlerApi.php
-
-		-
-			message:
-				"""
-					#^Call to deprecated method fetchAll\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchAllNumeric\\(\\), fetchAllAssociative\\(\\) or fetchFirstColumn\\(\\) instead\\.$#
-				"""
 			count: 1
 			path: Classes/Api/CrawlerApi.php
 
@@ -283,12 +265,12 @@ parameters:
 			path: Classes/ContextMenu/ItemProvider.php
 
 		-
-			message: "#^Class cognitive complexity for \"CrawlerController\" is 280, keep it under 50$#"
+			message: "#^Class cognitive complexity for \"CrawlerController\" is 274, keep it under 50$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Class cognitive complexity for \"CrawlerController\" is 280, keep it under 60$#"
+			message: "#^Class cognitive complexity for \"CrawlerController\" is 274, keep it under 60$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -462,7 +444,7 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:drawURLs_addRowsForPage\\(\\)\" is 24, keep it under 8$#"
+			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:drawURLs_addRowsForPage\\(\\)\" is 18, keep it under 8$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -933,6 +915,11 @@ parameters:
 			path: Classes/Service/ProcessService.php
 
 		-
+			message: "#^Method TYPO3\\\\CMS\\\\Frontend\\\\Page\\\\PageRepository\\:\\:getPage_noCheck\\(\\) invoked with 2 parameters, 1 required\\.$#"
+			count: 1
+			path: Classes/Service/QueueService.php
+
+		-
 			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Service\\\\UrlService\\:\\:getUrlFromPageAndQueryParameters\\(\\)\" is 13, keep it under 8$#"
 			count: 1
 			path: Classes/Service/UrlService.php
@@ -956,6 +943,24 @@ parameters:
 			message: "#^Constant TYPO3_version not found\\.$#"
 			count: 1
 			path: Configuration/TCA/Overrides/pages.php
+
+		-
+			message:
+				"""
+					#^Fetching class constant class of deprecated class AOE\\\\Crawler\\\\Api\\\\CrawlerApi\\:
+					Since v9\\.1\\.6 \\- This class will be removed when dropping support for TYPO3 9LTS and 10LTS$#
+				"""
+			count: 2
+			path: Tests/Functional/Api/CrawlerApiTest.php
+
+		-
+			message:
+				"""
+					#^Return type of method AOE\\\\Crawler\\\\Tests\\\\Functional\\\\Api\\\\CrawlerApiTest\\:\\:getMockedCrawlerAPI\\(\\) has typehint with deprecated class AOE\\\\Crawler\\\\Api\\\\CrawlerApi\\:
+					Since v9\\.1\\.6 \\- This class will be removed when dropping support for TYPO3 9LTS and 10LTS$#
+				"""
+			count: 1
+			path: Tests/Functional/Api/CrawlerApiTest.php
 
 		-
 			message: "#^Trying to mock an undefined method getCurrentTime\\(\\) on class Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\.$#"
