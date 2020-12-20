@@ -3,8 +3,8 @@
 [![Total Downloads](https://poser.pugx.org/aoepeople/crawler/downloads)](https://packagist.org/packages/aoepeople/crawler)
 [![License](https://poser.pugx.org/aoepeople/crawler/license)](https://packagist.org/packages/aoepeople/crawler)
 ![Tests](https://github.com/AOEpeople/crawler/workflows/Tests/badge.svg)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/AOEpeople/crawler/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/AOEpeople/crawler/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/AOEpeople/crawler/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/AOEpeople/crawler/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/AOEpeople/crawler/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/AOEpeople/crawler/?branch=main)
+[![Code Coverage](https://scrutinizer-ci.com/g/AOEpeople/crawler/badges/coverage.png?b=main)](https://scrutinizer-ci.com/g/AOEpeople/crawler/?branch=main)
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/aoepeople/crawler.svg)](http://isitmaintained.com/project/aoepeople/crawler "Average time to resolve an issue")
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/aoepeople/crawler.svg)](http://isitmaintained.com/project/aoepeople/crawler "Percentage of issues still open")
 
@@ -34,4 +34,4 @@ To render the documentation locally, please use the official TYPO3 Documentation
 
 ### Contributions
 
-Please see [CONTRIBUTING.md](https://github.com/AOEpeople/crawler/blob/master/CONTRIBUTING.md)
+Please see [CONTRIBUTING.md](https://github.com/AOEpeople/crawler/blob/main/CONTRIBUTING.md)
