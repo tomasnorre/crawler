@@ -39,7 +39,6 @@
         "nimut/phpunit-merger": "^1.1",
         "nimut/testing-framework": "^5.0",
         "nimut/typo3-complete": "^9.5",
-        "nunomaduro/phpinsights": "^1.13",
         "phpstan/extension-installer": "^1.0",
         "phpstan/phpstan": "^0.12",
         "phpstan/phpstan-deprecation-rules": "^0.12.5",
