@@ -58,8 +58,8 @@ class DataHandlerHook
         return GeneralUtility::makeInstance(ObjectManager::class)->get(QueueService::class);
     }
 
-    private function getPageRepository()
+    private function getPageRepository(): PageRepository
     {
-        return GeneralUtility::makeInstance(PageRepository::class);
+        return GeneralUtility::makeInstance(ObjectManager::class)->get(PageRepository::class);
     }
 }
