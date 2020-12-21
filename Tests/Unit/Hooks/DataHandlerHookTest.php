@@ -41,7 +41,7 @@ class DataHandlerHookTest extends UnitTestCase
      */
     public function itShouldAddPageToQueue(): void
     {
-        if($this->isTYPO3v9()) {
+        if ($this->isTYPO3v9()) {
             self::markTestSkipped('Test is not working anymore in TYPO3 9LTS as we have a class_alias for the PageRepository');
         }
         $dataHandlerHook = new DataHandlerHook();
@@ -88,7 +88,7 @@ class DataHandlerHookTest extends UnitTestCase
      */
     public function itShouldAddPageToQueueWithMorePages(): void
     {
-        if($this->isTYPO3v9()) {
+        if ($this->isTYPO3v9()) {
             self::markTestSkipped('Test is not working anymore in TYPO3 9LTS as we have a class_alias for the PageRepository');
         }
         $dataHandlerHook = new DataHandlerHook();
@@ -137,7 +137,7 @@ class DataHandlerHookTest extends UnitTestCase
      */
     public function nothingToBeAddedAsPageDoNotExists(): void
     {
-        if($this->isTYPO3v9()) {
+        if ($this->isTYPO3v9()) {
             self::markTestSkipped('Test is not working anymore in TYPO3 9LTS as we have a class_alias for the PageRepository');
         }
         $dataHandlerHook = new DataHandlerHook();
