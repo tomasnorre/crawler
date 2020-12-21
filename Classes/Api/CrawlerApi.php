@@ -29,14 +29,13 @@ namespace AOE\Crawler\Api;
  ***************************************************************/
 
 use AOE\Crawler\Controller\CrawlerController;
-use AOE\Crawler\Domain\Repository\PageRepository;
-use AOE\Crawler\Domain\Repository\PageRepositoryFactory;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Exception\CrawlerObjectException;
 use AOE\Crawler\Exception\TimeStampException;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
