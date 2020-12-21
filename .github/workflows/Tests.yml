@@ -86,8 +86,8 @@ jobs:
           composer require --dev nimut/typo3-complete:dev-master saschaegerer/phpstan-typo3:"*" nimut/testing-framework:"*"
           git checkout composer.json
           ln -nfs .Build/vendor/typo3/cms/typo3 typo3
-          .Build/bin/phpunit --whitelist Classes --colors -c $UNIT_XML Tests/Unit || exit 0
-          .Build/bin/phpunit --whitelist Classes --colors -c $FUNCTIONAL_XML Tests/Functional || exit 0
+          .Build/bin/phpunit --whitelist Classes --colors -c $UNIT_XML Tests/Unit
+          .Build/bin/phpunit --whitelist Classes --colors -c $FUNCTIONAL_XML Tests/Functional
         if: matrix.typo3 == 'dev-master' && matrix.php == '7.4'
         env:
           typo3DatabaseHost: 127.0.0.1
