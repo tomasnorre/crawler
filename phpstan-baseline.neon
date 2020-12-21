@@ -158,6 +158,11 @@ parameters:
 			path: Classes/Backend/RequestForm/MultiProcessRequestForm.php
 
 		-
+			message: "#^Unable to resolve the template type T in call to method static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\)$#"
+			count: 1
+			path: Classes/Backend/RequestForm/MultiProcessRequestForm.php
+
+		-
 			message: "#^Call to method crawler_init\\(\\) on an unknown class AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\CrawlerHookInterface\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/MultiProcessRequestForm.php
@@ -399,12 +404,12 @@ parameters:
 					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
 					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
 				"""
-			count: 2
+			count: 3
 			path: Classes/Controller/CrawlerController.php
 
 		-
 			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
-			count: 3
+			count: 4
 			path: Classes/Controller/CrawlerController.php
 
 		-
@@ -503,6 +508,11 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
+			message: "#^Unable to resolve the template type T in call to method static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\)$#"
+			count: 2
+			path: Classes/Controller/CrawlerController.php
+
+		-
 			message: "#^Call to an undefined method object\\:\\:crawler_init\\(\\)\\.$#"
 			count: 2
 			path: Classes/Controller/CrawlerController.php
@@ -528,7 +538,12 @@ parameters:
 			path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:crawler_execute\\(\\)\\.$#"
+			message: "#^Parameter \\#1 \\$className of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\) expects class\\-string\\<mixed\\>, string given\\.$#"
+			count: 1
+			path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
+
+		-
+			message: "#^Unable to resolve the template type T in call to method static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\)$#"
 			count: 1
 			path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
 
@@ -797,8 +812,8 @@ parameters:
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:initMessage\\(\\)\\.$#"
-			count: 1
+			message: "#^Unable to resolve the template type T in call to method static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\)$#"
+			count: 2
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
 		-
@@ -809,11 +824,6 @@ parameters:
 		-
 			message: "#^Access to an undefined property AOE\\\\Crawler\\\\Hooks\\\\IndexedSearchCrawlerHook\\:\\:\\$pObj\\.$#"
 			count: 2
-			path: Classes/Hooks/IndexedSearchCrawlerHook.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:indexOperation\\(\\)\\.$#"
-			count: 1
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
 		-
@@ -941,11 +951,6 @@ parameters:
 			path: Classes/Hooks/ProcessCleanUpHook.php
 
 		-
-			message: "#^Call to an undefined method TYPO3\\\\CMS\\\\Core\\\\Context\\\\AspectInterface\\:\\:getGroupIds\\(\\)\\.$#"
-			count: 1
-			path: Classes/Middleware/CrawlerInitialization.php
-
-		-
 			message:
 				"""
 					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
@@ -1047,6 +1052,11 @@ parameters:
 			message: "#^Parameter \\#1 \\$route of method TYPO3\\\\CMS\\\\Core\\\\Routing\\\\RouterInterface\\:\\:generateUri\\(\\) expects array\\|string, int given\\.$#"
 			count: 1
 			path: Classes/Service/UrlService.php
+
+		-
+			message: "#^Parameter \\#3 \\$_unused of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\ExtensionManagementUtility\\:\\:insertModuleFunction\\(\\) expects string, null given\\.$#"
+			count: 1
+			path: Classes/Utility/BackendUtility.php
 
 		-
 			message: "#^Constant TYPO3_MODE not found\\.$#"
