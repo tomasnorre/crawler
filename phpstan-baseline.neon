@@ -1,11 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Method TYPO3\\\\CMS\\\\Frontend\\\\Page\\\\PageRepository\\:\\:getPage_noCheck\\(\\) invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: Classes/Api/CrawlerApi.php
-
-		-
 			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
 			count: 1
 			path: Classes/Api/CrawlerApi.php
@@ -19,6 +14,15 @@ parameters:
 			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Api\\\\CrawlerApi\\:\\:getPerformanceData\\(\\)\" is 12, keep it under 8$#"
 			count: 1
 			path: Classes/Api/CrawlerApi.php
+
+		-
+			message:
+				"""
+					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+					since TYPO3 10\\.4, will be removed in version 12\\.0$#
+				"""
+			count: 2
+			path: Classes/Backend/BackendModule.php
 
 		-
 			message: "#^Parameter \\#3 \\$currentValue of static method TYPO3\\\\CMS\\\\Backend\\\\Utility\\\\BackendUtility\\:\\:getFuncMenu\\(\\) expects string, AOE\\\\Crawler\\\\Value\\\\CrawlAction given\\.$#"
@@ -61,6 +65,15 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
+			message:
+				"""
+					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+					since TYPO3 10\\.4, will be removed in version 12\\.0$#
+				"""
+			count: 1
+			path: Classes/Backend/RequestForm/LogRequestForm.php
+
+		-
 			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:render\\(\\) has parameter \\$id with no typehint specified\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
@@ -95,7 +108,7 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Parameter \\#2 \\$row of method TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\IconFactory\\:\\:getIconForRecord\\(\\) expects array, array\\|bool given\\.$#"
+			message: "#^Parameter \\#2 \\$row of method TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\IconFactory\\:\\:getIconForRecord\\(\\) expects array, array\\|false given\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
@@ -200,6 +213,15 @@ parameters:
 			path: Classes/Command/BuildQueueCommand.php
 
 		-
+			message:
+				"""
+					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+					since TYPO3 10\\.4, will be removed in version 12\\.0$#
+				"""
+			count: 2
+			path: Classes/Command/BuildQueueCommand.php
+
+		-
 			message: "#^Parameter \\#1 \\$theInt of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\MathUtility\\:\\:forceIntegerInRange\\(\\) expects int, array\\<string\\>\\|string\\|null given\\.$#"
 			count: 1
 			path: Classes/Command/BuildQueueCommand.php
@@ -240,8 +262,26 @@ parameters:
 			path: Classes/Command/FlushQueueCommand.php
 
 		-
+			message:
+				"""
+					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+					since TYPO3 10\\.4, will be removed in version 12\\.0$#
+				"""
+			count: 1
+			path: Classes/Command/FlushQueueCommand.php
+
+		-
 			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Command\\\\ProcessQueueCommand\\:\\:execute\\(\\)\" is 9, keep it under 8$#"
 			count: 1
+			path: Classes/Command/ProcessQueueCommand.php
+
+		-
+			message:
+				"""
+					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+					since TYPO3 10\\.4, will be removed in version 12\\.0$#
+				"""
+			count: 3
 			path: Classes/Command/ProcessQueueCommand.php
 
 		-
@@ -272,6 +312,15 @@ parameters:
 		-
 			message: "#^Class cognitive complexity for \"CrawlerController\" is 274, keep it under 60$#"
 			count: 1
+			path: Classes/Controller/CrawlerController.php
+
+		-
+			message:
+				"""
+					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+					since TYPO3 10\\.4, will be removed in version 12\\.0$#
+				"""
+			count: 3
 			path: Classes/Controller/CrawlerController.php
 
 		-
@@ -524,6 +573,15 @@ parameters:
 			path: Classes/Domain/Model/Configuration.php
 
 		-
+			message:
+				"""
+					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+					since TYPO3 10\\.4, will be removed in version 12\\.0$#
+				"""
+			count: 1
+			path: Classes/Domain/Model/Process.php
+
+		-
 			message: "#^Method AOE\\\\Crawler\\\\Domain\\\\Model\\\\ProcessCollection\\:\\:offsetGet\\(\\) has parameter \\$index with no typehint specified\\.$#"
 			count: 1
 			path: Classes/Domain/Model/ProcessCollection.php
@@ -710,6 +768,15 @@ parameters:
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
+			message:
+				"""
+					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+					since TYPO3 10\\.4, will be removed in version 12\\.0$#
+				"""
+			count: 3
+			path: Classes/Hooks/DataHandlerHook.php
+
+		-
 			message: "#^Offset 'extension' does not exist on array\\('dirname' \\=\\> string, 'basename' \\=\\> string, 'filename' \\=\\> string, \\?'extension' \\=\\> string\\)\\.$#"
 			count: 1
 			path: Classes/Hooks/IndexedSearchCrawlerFilesHook.php
@@ -765,6 +832,16 @@ parameters:
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
 		-
+			message: "#^Call to an undefined method TYPO3\\\\CMS\\\\IndexedSearch\\\\Indexer\\:\\:backend_initIndexer\\(\\)\\.$#"
+			count: 3
+			path: Classes/Hooks/IndexedSearchCrawlerHook.php
+
+		-
+			message: "#^Call to an undefined method TYPO3\\\\CMS\\\\IndexedSearch\\\\Indexer\\:\\:backend_setFreeIndexUid\\(\\)\\.$#"
+			count: 3
+			path: Classes/Hooks/IndexedSearchCrawlerHook.php
+
+		-
 			message: "#^Argument of an invalid type array\\<string\\>\\|string supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
@@ -815,6 +892,11 @@ parameters:
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
 		-
+			message: "#^Call to an undefined method TYPO3\\\\CMS\\\\IndexedSearch\\\\Indexer\\:\\:backend_indexAsTYPO3Page\\(\\)\\.$#"
+			count: 1
+			path: Classes/Hooks/IndexedSearchCrawlerHook.php
+
+		-
 			message: "#^Variable \\$theTitle might not be defined\\.$#"
 			count: 1
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
@@ -840,6 +922,20 @@ parameters:
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
 		-
+			message: "#^Parameter \\#1 \\.\\.\\.\\$expressions of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\Expression\\\\ExpressionBuilder\\:\\:orX\\(\\) expects string, TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\Expression\\\\CompositeExpression given\\.$#"
+			count: 1
+			path: Classes/Hooks/IndexedSearchCrawlerHook.php
+
+		-
+			message:
+				"""
+					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+					since TYPO3 10\\.4, will be removed in version 12\\.0$#
+				"""
+			count: 2
+			path: Classes/Hooks/ProcessCleanUpHook.php
+
+		-
 			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Hooks\\\\ProcessCleanUpHook\\:\\:removeActiveOrphanProcesses\\(\\)\" is 13, keep it under 8$#"
 			count: 1
 			path: Classes/Hooks/ProcessCleanUpHook.php
@@ -848,6 +944,15 @@ parameters:
 			message: "#^Call to an undefined method TYPO3\\\\CMS\\\\Core\\\\Context\\\\AspectInterface\\:\\:getGroupIds\\(\\)\\.$#"
 			count: 1
 			path: Classes/Middleware/CrawlerInitialization.php
+
+		-
+			message:
+				"""
+					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+					since TYPO3 10\\.4, will be removed in version 12\\.0$#
+				"""
+			count: 1
+			path: Classes/Middleware/FrontendUserAuthenticator.php
 
 		-
 			message: "#^Offset 'parameters' does not exist on array\\|null\\.$#"
@@ -873,6 +978,15 @@ parameters:
 			message: "#^Call to method fetchUrlContents\\(\\) on an unknown class AOE\\\\Crawler\\\\CrawlStrategy\\.$#"
 			count: 1
 			path: Classes/QueueExecutor.php
+
+		-
+			message:
+				"""
+					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+					since TYPO3 10\\.4, will be removed in version 12\\.0$#
+				"""
+			count: 2
+			path: Classes/Service/ProcessService.php
 
 		-
 			message: "#^Access to deprecated property \\$queueRepository of class AOE\\\\Crawler\\\\Service\\\\ProcessService\\.$#"
@@ -915,7 +1029,7 @@ parameters:
 			path: Classes/Service/ProcessService.php
 
 		-
-			message: "#^Method TYPO3\\\\CMS\\\\Frontend\\\\Page\\\\PageRepository\\:\\:getPage_noCheck\\(\\) invoked with 2 parameters, 1 required\\.$#"
+			message: "#^Method TYPO3\\\\CMS\\\\Core\\\\Domain\\\\Repository\\\\PageRepository\\:\\:getPage_noCheck\\(\\) invoked with 2 parameters, 1 required\\.$#"
 			count: 1
 			path: Classes/Service/QueueService.php
 
@@ -940,9 +1054,27 @@ parameters:
 			path: Classes/Utility/HookUtility.php
 
 		-
+			message:
+				"""
+					#^Fetching class constant class of deprecated class TYPO3\\\\CMS\\\\Extbase\\\\SignalSlot\\\\Dispatcher\\:
+					will be removed in TYPO3 v12\\.0\\. Use PSR\\-14 based events and EventDispatcherInterface instead\\.$#
+				"""
+			count: 1
+			path: Classes/Utility/SignalSlotUtility.php
+
+		-
 			message: "#^Constant TYPO3_version not found\\.$#"
 			count: 1
 			path: Configuration/TCA/Overrides/pages.php
+
+		-
+			message:
+				"""
+					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+					since TYPO3 10\\.4, will be removed in version 12\\.0$#
+				"""
+			count: 2
+			path: Tests/Functional/Api/CrawlerApiTest.php
 
 		-
 			message:
@@ -983,9 +1115,27 @@ parameters:
 			path: Tests/Functional/Api/CrawlerApiTest.php
 
 		-
+			message:
+				"""
+					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+					since TYPO3 10\\.4, will be removed in version 12\\.0$#
+				"""
+			count: 1
+			path: Tests/Functional/Command/BuildQueueCommandTest.php
+
+		-
 			message: "#^Cannot call method count\\(\\) on array\\|TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface\\.$#"
 			count: 1
 			path: Tests/Functional/Command/BuildQueueCommandTest.php
+
+		-
+			message:
+				"""
+					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+					since TYPO3 10\\.4, will be removed in version 12\\.0$#
+				"""
+			count: 1
+			path: Tests/Functional/Command/FlushQueueCommandTest.php
 
 		-
 			message: "#^Cannot call method count\\(\\) on array\\|TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface\\.$#"
@@ -993,7 +1143,25 @@ parameters:
 			path: Tests/Functional/Command/FlushQueueCommandTest.php
 
 		-
+			message:
+				"""
+					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+					since TYPO3 10\\.4, will be removed in version 12\\.0$#
+				"""
+			count: 1
+			path: Tests/Functional/Command/ProcessQueueCommandTest.php
+
+		-
 			message: "#^Property AOE\\\\Crawler\\\\Tests\\\\Functional\\\\Controller\\\\CrawlerControllerTest\\:\\:\\$subject \\(AOE\\\\Crawler\\\\Controller\\\\CrawlerController&Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface&PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\) does not accept Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface&PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
+			count: 1
+			path: Tests/Functional/Controller/CrawlerControllerTest.php
+
+		-
+			message:
+				"""
+					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+					since TYPO3 10\\.4, will be removed in version 12\\.0$#
+				"""
 			count: 1
 			path: Tests/Functional/Controller/CrawlerControllerTest.php
 
@@ -1043,9 +1211,36 @@ parameters:
 			path: Tests/Functional/Controller/CrawlerControllerTest.php
 
 		-
+			message:
+				"""
+					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+					since TYPO3 10\\.4, will be removed in version 12\\.0$#
+				"""
+			count: 1
+			path: Tests/Functional/Domain/Repository/ConfigurationRepositoryTest.php
+
+		-
+			message:
+				"""
+					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+					since TYPO3 10\\.4, will be removed in version 12\\.0$#
+				"""
+			count: 1
+			path: Tests/Functional/Domain/Repository/ProcessRepositoryTest.php
+
+		-
 			message: "#^You should use assertCount\\(\\$expectedCount, \\$variable\\) instead of assertSame\\(\\$expectedCount, \\$variable\\-\\>count\\(\\)\\)\\.$#"
 			count: 5
 			path: Tests/Functional/Domain/Repository/ProcessRepositoryTest.php
+
+		-
+			message:
+				"""
+					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+					since TYPO3 10\\.4, will be removed in version 12\\.0$#
+				"""
+			count: 2
+			path: Tests/Functional/Domain/Repository/QueueRepositoryTest.php
 
 		-
 			message: "#^Method Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\:\\:_call\\(\\) invoked with 4 parameters, 1 required\\.$#"
@@ -1068,9 +1263,27 @@ parameters:
 			path: Tests/Functional/Domain/Repository/QueueRepositoryTest.php
 
 		-
+			message:
+				"""
+					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+					since TYPO3 10\\.4, will be removed in version 12\\.0$#
+				"""
+			count: 3
+			path: Tests/Functional/Hooks/ProcessCleanUpHookTest.php
+
+		-
 			message: "#^Cannot call method count\\(\\) on array\\|TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface\\.$#"
 			count: 4
 			path: Tests/Functional/Hooks/ProcessCleanUpHookTest.php
+
+		-
+			message:
+				"""
+					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+					since TYPO3 10\\.4, will be removed in version 12\\.0$#
+				"""
+			count: 1
+			path: Tests/Functional/Service/ProcessServiceTest.php
 
 		-
 			message: "#^Call to deprecated method multiProcess\\(\\) of class AOE\\\\Crawler\\\\Service\\\\ProcessService\\.$#"
@@ -1086,6 +1299,15 @@ parameters:
 			message: "#^Access to private property AOE\\\\Crawler\\\\Service\\\\ProcessService\\:\\:\\$processRepository\\.$#"
 			count: 1
 			path: Tests/Functional/Service/ProcessServiceTest.php
+
+		-
+			message:
+				"""
+					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+					since TYPO3 10\\.4, will be removed in version 12\\.0$#
+				"""
+			count: 1
+			path: Tests/Functional/Service/UrlServiceTest.php
 
 		-
 			message: "#^Method AOE\\\\Crawler\\\\Tests\\\\Functional\\\\Service\\\\UrlServiceTest\\:\\:getUrlFromPageAndQueryParametersReturnExpectedUrl\\(\\) has parameter \\$alternativeBaseUrl with no typehint specified\\.$#"

@@ -38,7 +38,7 @@
         "codeception/module-webdriver": "^1.0",
         "nimut/phpunit-merger": "^1.1",
         "nimut/testing-framework": "^5.0",
-        "nimut/typo3-complete": "^9.5",
+        "nimut/typo3-complete": "^10.4",
         "phpstan/extension-installer": "^1.0",
         "phpstan/phpstan": "^0.12",
         "phpstan/phpstan-deprecation-rules": "^0.12.5",
