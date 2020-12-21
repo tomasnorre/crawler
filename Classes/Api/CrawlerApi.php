@@ -72,11 +72,17 @@ class CrawlerApi
      */
     protected $crawlerController;
 
+    /**
+     * @var PageRepository
+     */
+    protected $pageRepository;
+
     public function __construct()
     {
         /** @var ObjectManager $objectManager */
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->queueRepository = $objectManager->get(QueueRepository::class);
+        $this->pageRepository = $objectManager->get(PageRepository::class);
     }
 
     /**
@@ -145,12 +151,7 @@ class CrawlerApi
         $time = intval($time);
 
         $crawler = $this->findCrawler();
-        /**
-         * Todo: Switch back to getPage(); when dropping support for TYPO3 9 LTS - TNM
-         * This switch to getPage_noCheck() is needed as TYPO3 9 LTS doesn't return dokType < 200, therefore automatically
-         * adding pages to crawler queue when editing page-titles from the page tree directly was not working.
-         */
-        $pageData = (new PageRepository())->getPage($uid, true);
+        $pageData = $this->pageRepository->getPage($uid, true);
         $configurations = $crawler->getUrlsForPageRow($pageData);
         $configurations = $this->filterUnallowedConfigurations($configurations);
         $downloadUrls = [];
