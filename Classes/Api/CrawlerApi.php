@@ -72,17 +72,11 @@ class CrawlerApi
      */
     protected $crawlerController;
 
-    /**
-     * @var PageRepository
-     */
-    protected $pageRepository;
-
     public function __construct()
     {
         /** @var ObjectManager $objectManager */
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->queueRepository = $objectManager->get(QueueRepository::class);
-        $this->pageRepository = $objectManager->get(PageRepository::class);
     }
 
     /**
@@ -151,7 +145,7 @@ class CrawlerApi
         $time = intval($time);
 
         $crawler = $this->findCrawler();
-        $pageData = $this->pageRepository->getPage($uid, true);
+        $pageData = $this->getPageRepository()->getPage($uid, true);
         $configurations = $crawler->getUrlsForPageRow($pageData);
         $configurations = $this->filterUnallowedConfigurations($configurations);
         $downloadUrls = [];
@@ -452,5 +446,10 @@ class CrawlerApi
         }
 
         return $crawlerProcInstructions;
+    }
+
+    private function getPageRepository(): PageRepository
+    {
+        return GeneralUtility::makeInstance(ObjectManager::class)->get(PageRepository::class);
     }
 }
