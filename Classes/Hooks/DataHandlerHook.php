@@ -21,9 +21,9 @@ namespace AOE\Crawler\Hooks;
 
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Service\QueueService;
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Frontend\Page\PageRepository;
 
 class DataHandlerHook
 {
@@ -60,7 +60,6 @@ class DataHandlerHook
 
     private function getPageRepository(): PageRepository
     {
-        // Todo: Switch to TYPO3\CMS\Core\Repository\PageRepository when dropping support for TYPO3 9LTS
         return GeneralUtility::makeInstance(ObjectManager::class)->get(PageRepository::class);
     }
 }

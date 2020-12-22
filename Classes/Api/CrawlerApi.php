@@ -35,9 +35,9 @@ use AOE\Crawler\Exception\CrawlerObjectException;
 use AOE\Crawler\Exception\TimeStampException;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
  * Class CrawlerApi
@@ -145,12 +145,7 @@ class CrawlerApi
         $time = intval($time);
 
         $crawler = $this->findCrawler();
-        /**
-         * Todo: Switch back to getPage(); when dropping support for TYPO3 9 LTS - TNM
-         * This switch to getPage_noCheck() is needed as TYPO3 9 LTS doesn't return dokType < 200, therefore automatically
-         * adding pages to crawler queue when editing page-titles from the page tree directly was not working.
-         */
-        $pageData = GeneralUtility::makeInstance(PageRepository::class)->getPage_noCheck($uid, true);
+        $pageData = $this->getPageRepository()->getPage($uid, true);
         $configurations = $crawler->getUrlsForPageRow($pageData);
         $configurations = $this->filterUnallowedConfigurations($configurations);
         $downloadUrls = [];
@@ -451,5 +446,10 @@ class CrawlerApi
         }
 
         return $crawlerProcInstructions;
+    }
+
+    private function getPageRepository(): PageRepository
+    {
+        return GeneralUtility::makeInstance(ObjectManager::class)->get(PageRepository::class);
     }
 }

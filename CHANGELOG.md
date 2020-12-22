@@ -3,6 +3,7 @@
 ## Crawler 9.1.6-dev
 
 ### Added
+* Add support for TYPO3 11.0
 
 ### Changed
 

@@ -21,8 +21,8 @@ namespace AOE\Crawler\Service;
 
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Exception\CrawlerObjectException;
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Frontend\Page\PageRepository;
 
 class QueueService
 {
