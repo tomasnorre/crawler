@@ -13,7 +13,6 @@ use AOE\Crawler\Value\QueueFilter;
 use AOE\Crawler\Value\QueueLogEntry;
 use AOE\Crawler\Writer\FileWriter\CsvWriter\CrawlerCsvWriter;
 use AOE\Crawler\Writer\FileWriter\CsvWriter\CsvWriterInterface;
-use Codeception\Util\Debug;
 use Doctrine\DBAL\Query\QueryBuilder;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -215,8 +214,6 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                         $queueFilter
                     );
 
-                    //$logEntries[] = $logEntriesOfPage;
-
                     $logEntriesPerPage[] = $this->drawLog_addRows(
                         $logEntriesOfPage,
                         $data['HTML'] . BackendUtility::getRecordTitle('pages', $data['row'], true)
@@ -226,7 +223,6 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                     }
                 }
 
-                $this->view->assign('code', $code);
                 $this->view->assign('logEntriesPerPage', $logEntriesPerPage);
             }
 
@@ -325,7 +321,6 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
     private function drawLog_addRows(array $logEntriesOfPage, string $titleString): array
     {
         $resultArray = [];
-
         $contentArray = [];
 
         $contentArray['titleRowSpan'] = 1;
