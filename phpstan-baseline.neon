@@ -1,16 +1,7 @@
 parameters:
 	ignoreErrors:
 		-
-			message:
-				"""
-					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
-					since TYPO3 10\\.4, will be removed in version 12\\.0$#
-				"""
-			count: 1
-			path: Classes/Api/CrawlerApi.php
-
-		-
-			message: "#^Method TYPO3\\\\CMS\\\\Core\\\\Domain\\\\Repository\\\\PageRepository\\:\\:getPage_noCheck\\(\\) invoked with 2 parameters, 1 required\\.$#"
+			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
 			count: 1
 			path: Classes/Api/CrawlerApi.php
 
@@ -23,15 +14,6 @@ parameters:
 			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Api\\\\CrawlerApi\\:\\:getPerformanceData\\(\\)\" is 12, keep it under 8$#"
 			count: 1
 			path: Classes/Api/CrawlerApi.php
-
-		-
-			message:
-				"""
-					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
-					since TYPO3 10\\.4, will be removed in version 12\\.0$#
-				"""
-			count: 2
-			path: Classes/Backend/BackendModule.php
 
 		-
 			message:
@@ -343,7 +325,7 @@ parameters:
 					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
 					since TYPO3 10\\.4, will be removed in version 12\\.0$#
 				"""
-			count: 4
+			count: 3
 			path: Classes/Controller/CrawlerController.php
 
 		-
