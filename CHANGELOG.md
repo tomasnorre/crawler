@@ -5,6 +5,7 @@
 ### Added
 
 ### Changed
+* Moved HTML from the LogRequestForm->drawLog_addRows() to Fluid-template
 
 ### Deprecated
 #### Functions & Properties
