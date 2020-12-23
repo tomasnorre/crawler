@@ -204,6 +204,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                 // Traverse page tree:
                 $code = '';
                 $count = 0;
+                $logEntriesPerPage = [];
                 foreach ($tree->tree as $data) {
                     // Get result:
                     $logEntriesOfPage = $this->queueRepository->getQueueEntriesForPageId(
@@ -212,7 +213,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                         $queueFilter
                     );
 
-                    $code .= $this->drawLog_addRows(
+                    $logEntriesPerPage[] = $this->drawLog_addRows(
                         $logEntriesOfPage,
                         $data['HTML'] . BackendUtility::getRecordTitle('pages', $data['row'], true)
                     );
@@ -220,7 +221,8 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                         break;
                     }
                 }
-                $this->view->assign('code', $code);
+
+                $this->view->assign('logEntriesPerPage', $logEntriesPerPage);
             }
 
             if ($this->CSVExport) {
@@ -315,9 +317,13 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
      * @return string HTML <tr> content (one or more)
      * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
      */
-    private function drawLog_addRows(array $logEntriesOfPage, string $titleString): string
+    private function drawLog_addRows(array $logEntriesOfPage, string $titleString): array
     {
-        $colSpan = 9
+        $resultArray = [];
+        $contentArray = [];
+
+        $contentArray['titleRowSpan'] = 1;
+        $contentArray['colSpan'] = 9
             + ($this->infoModuleController->MOD_SETTINGS['log_resultLog'] ? -1 : 0)
             + ($this->infoModuleController->MOD_SETTINGS['log_feVars'] ? 3 : 0);
 
@@ -325,15 +331,19 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
             $setId = (int) GeneralUtility::_GP('setID');
             $refreshIcon = $this->getIconFactory()->getIcon('actions-system-refresh', Icon::SIZE_SMALL);
             // Traverse parameter combinations:
-            $c = 0;
-            $content = '';
+            $firstIteration = true;
             foreach ($logEntriesOfPage as $vv) {
                 // Title column:
-                if (! $c) {
-                    $titleClm = '<td rowspan="' . count($logEntriesOfPage) . '">' . $titleString . '</td>';
+                if ($firstIteration) {
+                    $contentArray['titleRowSpan'] = count($logEntriesOfPage);
+                    $contentArray['title'] = $titleString;
                 } else {
-                    $titleClm = '';
+                    $contentArray['title'] = '';
+                    $contentArray['titleRowSpan'] = 1;
                 }
+
+                $firstIteration = false;
+                $execTime = $vv['exec_time'] ? BackendUtility::datetime($vv['exec_time']) : '-';
 
                 // Result:
                 $resLog = ResultHandler::getResultLog($vv);
@@ -350,7 +360,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                     $rowData['result_log'] = $resLog;
                 } else {
                     $rowData['scheduled'] = ($vv['scheduled'] > 0) ? BackendUtility::datetime($vv['scheduled']) : ' ' . $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.immediate');
-                    $rowData['exec_time'] = $vv['exec_time'] ? BackendUtility::datetime($vv['exec_time']) : '-';
+                    $rowData['exec_time'] = $execTime;
                 }
                 $rowData['result_status'] = GeneralUtility::fixed_lgd_cs($resStatus, 50);
                 $url = htmlspecialchars($parameters['url'] ?? $parameters['alturl'], ENT_QUOTES | ENT_HTML5);
@@ -363,50 +373,58 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                     $resFeVars = ResultHandler::getResFeVars($resultData ?: []);
                     $rowData['tsfe_id'] = $resFeVars['id'] ?: '';
                     $rowData['tsfe_gr_list'] = $resFeVars['gr_list'] ?: '';
-                    $rowData['tsfe_no_cache'] = $resFeVars['no_cache'] ?: '';
                 }
 
                 $trClass = '';
                 $warningIcon = '';
                 if (str_contains($resStatus, 'Error:')) {
-                    $trClass = 'class="bg-danger"';
+                    $trClass = 'bg-danger';
                     $warningIcon = $this->getIconFactory()->getIcon('actions-ban', Icon::SIZE_SMALL);
                 }
 
                 // Put rows together:
-                $content .= '
-                    <tr ' . $trClass . ' >
-                        ' . $titleClm . '
-                        <td><a href="' . UrlBuilder::getInfoModuleUrl(['qid_details' => $vv['qid'], 'setID' => $setId]) . '">' . htmlspecialchars((string) $vv['qid']) . '</a></td>
-                        <td><a href="' . UrlBuilder::getInfoModuleUrl(['qid_read' => $vv['qid'], 'setID' => $setId]) . '">' . $refreshIcon . '</a>&nbsp;&nbsp;' . $warningIcon . '</td>';
+                $contentArray['trClass'] = $trClass;
+                $contentArray['qid'] = [
+                    'link' => UrlBuilder::getInfoModuleUrl(['qid_details' => $vv['qid'], 'setID' => $setId]),
+                    'link-text' => htmlspecialchars((string) $vv['qid'], ENT_QUOTES | ENT_HTML5),
+                ];
+                $contentArray['refresh'] = [
+                    'link' => UrlBuilder::getInfoModuleUrl(['qid_read' => $vv['qid'], 'setID' => $setId]),
+                    'link-text' => $refreshIcon,
+                    'warning' => $warningIcon,
+                ];
+
                 foreach ($rowData as $fKey => $value) {
                     if ($fKey === 'url') {
-                        $content .= '<td>' . $value . '</td>';
+                        $contentArray['columns'][$fKey] = $value;
                     } else {
-                        $content .= '<td>' . nl2br(htmlspecialchars(strval($value))) . '</td>';
+                        $contentArray['columns'][$fKey] = nl2br(htmlspecialchars((string) $value, ENT_QUOTES | ENT_HTML5));
                     }
                 }
-                $content .= '</tr>';
-                $c++;
+
+                $resultArray[] = $contentArray;
 
                 if ($this->CSVExport) {
                     // Only for CSV (adding qid and scheduled/exec_time if needed):
-                    $rowData['result_log'] = implode('// ', explode(chr(10), $resLog));
-                    $rowData['qid'] = $vv['qid'];
-                    $rowData['scheduled'] = BackendUtility::datetime($vv['scheduled']);
-                    $rowData['exec_time'] = $vv['exec_time'] ? BackendUtility::datetime($vv['exec_time']) : '-';
-                    $this->CSVaccu[] = $rowData;
+                    $csvExport['scheduled'] = BackendUtility::datetime($vv['scheduled']);
+                    $csvExport['exec_time'] = $vv['exec_time'] ? BackendUtility::datetime($vv['exec_time']) : '-';
+                    $csvExport['result_status'] = $contentArray['columns']['result_status'];
+                    $csvExport['url'] = $contentArray['columns']['url'];
+                    $csvExport['feUserGroupList'] = $contentArray['columns']['feUserGroupList'];
+                    $csvExport['procInstructions'] = $contentArray['columns']['procInstructions'];
+                    $csvExport['set_id'] = $contentArray['columns']['set_id'];
+                    $csvExport['result_log'] = str_replace(chr(10), '// ', $resLog);
+                    $csvExport['qid'] = $vv['qid'];
+                    $this->CSVaccu[] = $csvExport;
                 }
             }
         } else {
-            // Compile row:
-            $content = '
-                <tr>
-                    <td>' . $titleString . '</td>
-                    <td colspan="' . $colSpan . '"><em>' . $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noentries') . '</em></td>
-                </tr>';
+            $contentArray['title'] = $titleString;
+            $contentArray['noEntries'] = $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noentries');
+
+            $resultArray[] = $contentArray;
         }
 
-        return $content;
+        return $resultArray;
     }
 }
