@@ -4,41 +4,53 @@ on:
   pull_request:
   push:
 
+
 jobs:
-  BC-Breaks:
-    name: "Check Backwards Compatibility"
-    runs-on: "ubuntu-latest"
-
-    strategy:
-      matrix:
-        php-version:
-          - "7.4"
-
+  roave_bc_check:
+    name: Roave BC Check
+    runs-on: ubuntu-latest
     steps:
-      - name: "Checkout"
-        uses: "actions/checkout@v2"
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@master
+      - name: fetch tags
+        run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+      - name: Roave BC Check
+        uses: docker://nyholm/roave-bc-check-ga
 
-      - name: "Install PHP"
-        uses: "shivammathur/setup-php@v2"
-        with:
-          coverage: "pcov"
-          php-version: "${{ matrix.php-version }}"
-          ini-values: memory_limit=-1
-          tools: composer:v2, cs2pr
+#jobs:
+#  BC-Breaks:
+#    name: "Check Backwards Compatibility"
+#    runs-on: "ubuntu-latest"
 
-      - name: "Cache dependencies"
-        uses: "actions/cache@v2"
-        with:
-          path: |
-            ~/.composer/cache
-            vendor
-          key: "php-${{ matrix.php-version }}"
-          restore-keys: "php-${{ matrix.php-version }}"
+#    strategy:
+#      matrix:
+#        php-version:
+#          - "7.4"
 
-      - name: "Roave Backward Compatibility Check"
-        run: |
-          # To ensure compability with the roave tool.
-          composer remove --dev nimut/testing-framework rector/rector symplify/easy-coding-standard typo3/testing-framework
-          .Build/bin/roave-backward-compatibility-check
+#    steps:
+#      - name: "Checkout"
+#        uses: "actions/checkout@v2"
+#        with:
+#          fetch-depth: 0
+
+#      - name: "Install PHP"
+#        uses: "shivammathur/setup-php@v2"
+#        with:
+#          coverage: "pcov"
+#          php-version: "${{ matrix.php-version }}"
+#          ini-values: memory_limit=-1
+#          tools: composer:v2, cs2pr
+
+#      - name: "Cache dependencies"
+#        uses: "actions/cache@v2"
+#        with:
+#          path: |
+#            ~/.composer/cache
+#            vendor
+#          key: "php-${{ matrix.php-version }}"
+#          restore-keys: "php-${{ matrix.php-version }}"
+
+     # - name: "Roave Backward Compatibility Check"
+     #   run: |
+     #     # To ensure compability with the roave tool.
+     #     composer remove --dev nimut/testing-framework rector/rector symplify/easy-coding-standard typo3/testing-framework
+     #     .Build/bin/roave-backward-compatibility-check
