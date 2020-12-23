@@ -25,11 +25,6 @@ parameters:
 			path: Classes/Backend/BackendModule.php
 
 		-
-			message: "#^Parameter \\#3 \\$currentValue of static method TYPO3\\\\CMS\\\\Backend\\\\Utility\\\\BackendUtility\\:\\:getFuncMenu\\(\\) expects string, AOE\\\\Crawler\\\\Value\\\\CrawlAction given\\.$#"
-			count: 1
-			path: Classes/Backend/BackendModule.php
-
-		-
 			message: "#^Parameter \\#2 \\$search of function array_key_exists expects array, array\\|true given\\.$#"
 			count: 1
 			path: Classes/Backend/Helper/ResultHandler.php
@@ -174,11 +169,6 @@ parameters:
 
 		-
 			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\StartRequestForm\\:\\:render\\(\\) has parameter \\$id with no typehint specified\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/StartRequestForm.php
-
-		-
-			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\StartRequestForm\\:\\:showCrawlerInformationAction\\(\\)\" is 12, keep it under 8$#"
 			count: 1
 			path: Classes/Backend/RequestForm/StartRequestForm.php
 
@@ -1412,16 +1402,6 @@ parameters:
 			message: "#^Method Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\:\\:_call\\(\\) invoked with 2 parameters, 1 required\\.$#"
 			count: 1
 			path: Tests/Unit/Controller/CrawlerControllerTest.php
-
-		-
-			message: "#^Method AOE\\\\Crawler\\\\Tests\\\\Unit\\\\Converter\\\\JsonCompatibilityConverterTest\\:\\:jsonCompatibilityConverterTest\\(\\) has parameter \\$expected with no typehint specified\\.$#"
-			count: 1
-			path: Tests/Unit/Converter/JsonCompatibilityConverterTest.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$expected array\\|bool\\)\\: Unexpected token \"\\$expected\", expected type at offset 91$#"
-			count: 1
-			path: Tests/Unit/Converter/JsonCompatibilityConverterTest.php
 
 		-
 			message: "#^Unreachable statement \\- code above always terminates\\.$#"

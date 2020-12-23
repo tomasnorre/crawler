@@ -133,7 +133,7 @@ class BackendModule
         $actionDropdown = BackendUtility::getFuncMenu(
             $this->id,
             'SET[crawlaction]',
-            $selectedAction,
+            $selectedAction->__toString(),
             $this->pObj->MOD_MENU['crawlaction']
         );
 

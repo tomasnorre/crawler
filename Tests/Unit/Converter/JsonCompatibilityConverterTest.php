@@ -40,7 +40,7 @@ class JsonCompatibilityConverterTest extends UnitTestCase
     /**
      * @test
      * @dataProvider jsonCompatibilityConverterDataProvider
-     * @param $expected array|bool
+     * @param array|bool $expected
      */
     public function jsonCompatibilityConverterTest(string $dataString, $expected): void
     {

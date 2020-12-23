@@ -72,82 +72,84 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
      */
     private function showCrawlerInformationAction(int $pageId): string
     {
-        $this->view->setTemplate('ShowCrawlerInformation');
         if (empty($pageId)) {
             $this->isErrorDetected = true;
             MessageUtility::addErrorMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noPageSelected'));
+            return '';
+        }
+
+        $this->view->setTemplate('ShowCrawlerInformation');
+
+        $crawlParameter = GeneralUtility::_GP('_crawl');
+        $downloadParameter = GeneralUtility::_GP('_download');
+
+        $submitCrawlUrls = isset($crawlParameter);
+        $downloadCrawlUrls = isset($downloadParameter);
+        $this->makeCrawlerProcessableChecks($this->extensionSettings);
+
+        $scheduledTime = $this->getScheduledTime((string) GeneralUtility::_GP('tstamp'));
+
+        $this->incomingConfigurationSelection = GeneralUtility::_GP('configurationSelection');
+        $this->incomingConfigurationSelection = is_array($this->incomingConfigurationSelection) ? $this->incomingConfigurationSelection : [];
+
+        $this->crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
+        $this->crawlerController->setAccessMode('gui');
+        $this->crawlerController->setID = GeneralUtility::md5int(microtime());
+
+        $code = '';
+        $noConfigurationSelected = empty($this->incomingConfigurationSelection)
+            || (count($this->incomingConfigurationSelection) === 1 && empty($this->incomingConfigurationSelection[0]));
+        if ($noConfigurationSelected) {
+            MessageUtility::addWarningMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noConfigSelected'));
         } else {
-            $crawlerParameter = GeneralUtility::_GP('_crawl');
-            $downloadParameter = GeneralUtility::_GP('_download');
+            if ($submitCrawlUrls) {
+                $reason = new Reason();
+                $reason->setReason(Reason::REASON_GUI_SUBMIT);
+                $reason->setDetailText('The user ' . $GLOBALS['BE_USER']->user['username'] . ' added pages to the crawler queue manually');
 
-            $duplicateTrack = [];
-            $submitCrawlUrls = isset($crawlerParameter);
-            $downloadCrawlUrls = isset($downloadParameter);
-            $this->makeCrawlerProcessableChecks($this->extensionSettings);
-
-            $scheduledTime = $this->getScheduledTime((string) GeneralUtility::_GP('tstamp'));
-
-            $this->incomingConfigurationSelection = GeneralUtility::_GP('configurationSelection');
-            $this->incomingConfigurationSelection = is_array($this->incomingConfigurationSelection) ? $this->incomingConfigurationSelection : [];
-
-            $this->crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
-            $this->crawlerController->setAccessMode('gui');
-            $this->crawlerController->setID = GeneralUtility::md5int(microtime());
-
-            $code = '';
-            $noConfigurationSelected = empty($this->incomingConfigurationSelection)
-                || (count($this->incomingConfigurationSelection) === 1 && empty($this->incomingConfigurationSelection[0]));
-            if ($noConfigurationSelected) {
-                MessageUtility::addWarningMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noConfigSelected'));
-            } else {
-                if ($submitCrawlUrls) {
-                    $reason = new Reason();
-                    $reason->setReason(Reason::REASON_GUI_SUBMIT);
-                    $reason->setDetailText('The user ' . $GLOBALS['BE_USER']->user['username'] . ' added pages to the crawler queue manually');
-
-                    $signalPayload = ['reason' => $reason];
-                    SignalSlotUtility::emitSignal(
-                        self::class,
-                        SignalSlotUtility::SIGNAL_INVOKE_QUEUE_CHANGE,
-                        $signalPayload
-                    );
-                }
-
-                $code = $this->crawlerController->getPageTreeAndUrls(
-                    $pageId,
-                    $this->infoModuleController->MOD_SETTINGS['depth'],
-                    $scheduledTime,
-                    $this->reqMinute,
-                    $submitCrawlUrls,
-                    $downloadCrawlUrls,
-                    // Do not filter any processing instructions
-                    [],
-                    $this->incomingConfigurationSelection
+                $signalPayload = ['reason' => $reason];
+                SignalSlotUtility::emitSignal(
+                    self::class,
+                    SignalSlotUtility::SIGNAL_INVOKE_QUEUE_CHANGE,
+                    $signalPayload
                 );
             }
 
-            $downloadUrls = $this->crawlerController->downloadUrls;
-
-            $duplicateTrack = $this->crawlerController->duplicateTrack;
-
-            $this->view->assign('noConfigurationSelected', $noConfigurationSelected);
-            $this->view->assign('submitCrawlUrls', $submitCrawlUrls);
-            $this->view->assign('amountOfUrls', count(array_keys($duplicateTrack)));
-            $this->view->assign('selectors', $this->generateConfigurationSelectors());
-            $this->view->assign('code', $code);
-            $this->view->assign('displayActions', 0);
-
-            // Download Urls to crawl:
-            if ($downloadCrawlUrls) {
-                // Creating output header:
-                header('Content-Type: application/octet-stream');
-                header('Content-Disposition: attachment; filename=CrawlerUrls.txt');
-
-                // Printing the content of the CSV lines:
-                echo implode(chr(13) . chr(10), $downloadUrls);
-                exit;
-            }
+            $code = $this->crawlerController->getPageTreeAndUrls(
+                $pageId,
+                $this->infoModuleController->MOD_SETTINGS['depth'],
+                $scheduledTime,
+                $this->reqMinute,
+                $submitCrawlUrls,
+                $downloadCrawlUrls,
+                // Do not filter any processing instructions
+                [],
+                $this->incomingConfigurationSelection
+            );
         }
+
+        $downloadUrls = $this->crawlerController->downloadUrls;
+
+        $duplicateTrack = $this->crawlerController->duplicateTrack;
+
+        $this->view->assign('noConfigurationSelected', $noConfigurationSelected);
+        $this->view->assign('submitCrawlUrls', $submitCrawlUrls);
+        $this->view->assign('amountOfUrls', count($duplicateTrack));
+        $this->view->assign('selectors', $this->generateConfigurationSelectors());
+        $this->view->assign('code', $code);
+        $this->view->assign('displayActions', 0);
+
+        // Download Urls to crawl:
+        if ($downloadCrawlUrls) {
+            // Creating output header:
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename=CrawlerUrls.txt');
+
+            // Printing the content of the CSV lines:
+            echo implode(chr(13) . chr(10), $downloadUrls);
+            exit;
+        }
+
         return $this->view->render();
     }
 
