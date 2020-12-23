@@ -9,7 +9,10 @@
 
 ### Deprecated
 #### Functions & Properties
+* SignalSlotUtility->emitSignal()
+
 #### Classes
+* SignalSlotUtility
 
 ### Fixed
 

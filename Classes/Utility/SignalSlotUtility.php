@@ -26,6 +26,7 @@ use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
  * Class SignalSlotUtility
  *
  * @codeCoverageIgnore
+ * @deprecated
  */
 class SignalSlotUtility
 {
@@ -51,9 +52,16 @@ class SignalSlotUtility
      *
      * @param string $class
      * @param string $signal
+     * @deprecated
      */
     public static function emitSignal($class, $signal, array $payload = []): void
     {
+        trigger_error(
+            'The SignalSlots of the TYPO3 Crawler is deprecated since v9.2.1 and will be removed in v11.x,
+            we will introduce psr-14 Middelware replacements when dropping support for TYPO3 9 LTS',
+            E_USER_DEPRECATED
+        );
+
         /** @var \TYPO3\CMS\Extbase\SignalSlot\Dispatcher $signalSlotDispatcher */
         $signalSlotDispatcher = GeneralUtility::makeInstance(Dispatcher::class);
         $signalSlotDispatcher->dispatch($class, $signal, $payload);
