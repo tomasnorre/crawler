@@ -10,7 +10,6 @@ use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Utility\MessageUtility;
 use AOE\Crawler\Value\QueueFilter;
-use AOE\Crawler\Value\QueueLogEntry;
 use AOE\Crawler\Writer\FileWriter\CsvWriter\CrawlerCsvWriter;
 use AOE\Crawler\Writer\FileWriter\CsvWriter\CsvWriterInterface;
 use Doctrine\DBAL\Query\QueryBuilder;
@@ -324,7 +323,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
         $contentArray = [];
 
         $contentArray['titleRowSpan'] = 1;
-        $contentArray['colSpan'] =  9
+        $contentArray['colSpan'] = 9
             + ($this->infoModuleController->MOD_SETTINGS['log_resultLog'] ? -1 : 0)
             + ($this->infoModuleController->MOD_SETTINGS['log_feVars'] ? 3 : 0);
 

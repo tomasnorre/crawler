@@ -1,7 +1,16 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
+			message:
+				"""
+					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+					since TYPO3 10\\.4, will be removed in version 12\\.0$#
+				"""
+			count: 1
+			path: Classes/Api/CrawlerApi.php
+
+		-
+			message: "#^Method TYPO3\\\\CMS\\\\Core\\\\Domain\\\\Repository\\\\PageRepository\\:\\:getPage_noCheck\\(\\) invoked with 2 parameters, 1 required\\.$#"
 			count: 1
 			path: Classes/Api/CrawlerApi.php
 
@@ -14,6 +23,15 @@ parameters:
 			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Api\\\\CrawlerApi\\:\\:getPerformanceData\\(\\)\" is 12, keep it under 8$#"
 			count: 1
 			path: Classes/Api/CrawlerApi.php
+
+		-
+			message:
+				"""
+					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+					since TYPO3 10\\.4, will be removed in version 12\\.0$#
+				"""
+			count: 2
+			path: Classes/Backend/BackendModule.php
 
 		-
 			message:
@@ -50,12 +68,12 @@ parameters:
 			path: Classes/Backend/Helper/ResultHandler.php
 
 		-
-			message: "#^Class cognitive complexity for \"LogRequestForm\" is 68, keep it under 50$#"
+			message: "#^Class cognitive complexity for \"LogRequestForm\" is 67, keep it under 50$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Class cognitive complexity for \"LogRequestForm\" is 68, keep it under 60$#"
+			message: "#^Class cognitive complexity for \"LogRequestForm\" is 67, keep it under 60$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
@@ -113,7 +131,17 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:drawLog_addRows\\(\\)\" is 40, keep it under 8$#"
+			message: "#^Function showLogAction\\(\\) has an unused variable \\$code\\.$#"
+			count: 1
+			path: Classes/Backend/RequestForm/LogRequestForm.php
+
+		-
+			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:drawLog_addRows\\(\\)\" is 39, keep it under 8$#"
+			count: 1
+			path: Classes/Backend/RequestForm/LogRequestForm.php
+
+		-
+			message: "#^PHPDoc tag @return with type string is incompatible with native type array\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
@@ -139,11 +167,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$resultData of static method AOE\\\\Crawler\\\\Backend\\\\Helper\\\\ResultHandler\\:\\:getResFeVars\\(\\) expects array, array\\|true given\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
-			message: "#^Parameter \\#2 \\$pieces of function implode expects array, array\\<int, string\\>\\|false given\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
@@ -320,7 +343,7 @@ parameters:
 					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
 					since TYPO3 10\\.4, will be removed in version 12\\.0$#
 				"""
-			count: 3
+			count: 4
 			path: Classes/Controller/CrawlerController.php
 
 		-
