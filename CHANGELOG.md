@@ -15,7 +15,7 @@
 * SignalSlotUtility
 
 ### Fixed
-
+* PageTS Crawler configurations (broken since 9.1.3)
 
 ## Crawler 9.2.0
 Crawler 9.2.0 was released on December 22nd, 2020

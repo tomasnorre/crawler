@@ -135,7 +135,7 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
         $this->view->assign('noConfigurationSelected', $noConfigurationSelected);
         $this->view->assign('submitCrawlUrls', $submitCrawlUrls);
         $this->view->assign('amountOfUrls', count($duplicateTrack));
-        $this->view->assign('selectors', $this->generateConfigurationSelectors());
+        $this->view->assign('selectors', $this->generateConfigurationSelectors($pageId));
         $this->view->assign('code', $code);
         $this->view->assign('displayActions', 0);
 
@@ -156,7 +156,7 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
     /**
      * Generates the configuration selectors for compiling URLs:
      */
-    private function generateConfigurationSelectors(): array
+    private function generateConfigurationSelectors(int $pageId): array
     {
         $selectors = [];
         $selectors['depth'] = $this->selectorBox(
@@ -174,7 +174,7 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
         );
 
         // Configurations
-        $availableConfigurations = $this->crawlerController->getConfigurationsForBranch((int) $this->pageId, (int) $this->infoModuleController->MOD_SETTINGS['depth'] ?: 0);
+        $availableConfigurations = $this->crawlerController->getConfigurationsForBranch($pageId, (int) $this->infoModuleController->MOD_SETTINGS['depth'] ?: 0);
         $selectors['configurations'] = $this->selectorBox(
             empty($availableConfigurations) ? [] : array_combine($availableConfigurations, $availableConfigurations),
             'configurationSelection',
