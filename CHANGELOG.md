@@ -6,6 +6,7 @@
 
 ### Changed
 * Moved HTML from the LogRequestForm->drawLog_addRows() to Fluid-template
+* Extended the Example for PageTS Configuration
 
 ### Deprecated
 #### Functions & Properties

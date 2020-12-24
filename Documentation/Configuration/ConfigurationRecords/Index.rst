@@ -43,7 +43,7 @@ Base URL
 
 Pids only
    List of Page Ids to limit this configuration to. See also:
-   :ref:`paramSets.[key].pidsonly <crawler-tsconfig-paramSets-key-pidsonly>`
+   :ref:`paramSets.[key].pidsOnly <crawler-tsconfig-paramSets-key-pidsOnly>`
 
 Exclude pages
    Comma separated list of page ids which should not be crawled
