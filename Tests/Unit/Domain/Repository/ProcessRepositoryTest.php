@@ -68,6 +68,16 @@ class ProcessRepositoryTest extends UnitTestCase
                 'offset' => -1,
                 'expected' => '0, 20',
             ],
+            'Both on minimum values' => [
+                'itemCount' => 1,
+                'offset' => 0,
+                'expected' => '0, 1',
+            ],
+            'Both itemCount and offset is 0' => [
+                'itemCount' => 0,
+                'offset' => 0,
+                'expected' => '0, 20',
+            ],
         ];
     }
 }

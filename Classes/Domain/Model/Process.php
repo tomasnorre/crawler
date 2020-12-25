@@ -259,14 +259,12 @@ class Process extends AbstractEntity
 
     /**
      * Returns the Progress of a crawling process as a percentage value
-     *
-     * @return float
      */
-    public function getProgress()
+    public function getProgress(): float
     {
         $all = $this->getAssignedItemsCount();
         if ($all <= 0) {
-            return 0;
+            return 0.0;
         }
 
         $res = round((100 / $all) * $this->getAmountOfItemsProcessed());

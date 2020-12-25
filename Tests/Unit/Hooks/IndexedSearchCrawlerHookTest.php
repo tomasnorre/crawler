@@ -262,6 +262,36 @@ class IndexedSearchCrawlerHookTest extends UnitTestCase
                 'url_deny' => 'example.com',
                 'expected' => true,
             ],
+            'url_deny that needs trimming left' => [
+                'url' => 'example.com/page-one/',
+                'url_deny' => chr(10) . 'example.com',
+                'expected' => true,
+            ],
+            'url_deny that needs trimming right' => [
+                'url' => 'example.com/page-one/',
+                'url_deny' => 'example.com' . chr(10),
+                'expected' => true,
+            ],
+            'url_deny that needs trimming left and right' => [
+                'url' => 'example.com/page-one/',
+                'url_deny' => chr(10) . 'example.com' . chr(10),
+                'expected' => true,
+            ],
+            'url_deny that needs trimming - multiple whitespace' => [
+                'url' => 'example.com/page-one/',
+                'url_deny' => chr(10) . chr(10) . 'example.com' . chr(10) . chr(10) . chr(10),
+                'expected' => true,
+            ],
+            'url_deny with more domains, denied' => [
+                'url' => 'example.com/page-one/',
+                'url_deny' => ' example.tld ' . chr(10) . chr(10) . ' example.com     ',
+                'expected' => true,
+            ],
+            'url_deny with more domains, not denied' => [
+                'url' => 'example.com/page-one/',
+                'url_deny' => ' example.tld' . chr(10) . ' example-site.com     ',
+                'expected' => false,
+            ],
         ];
     }
 }

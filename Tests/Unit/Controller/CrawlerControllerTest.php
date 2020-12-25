@@ -100,12 +100,30 @@ class CrawlerControllerTest extends UnitTestCase
     {
         $filenameWithPath = tempnam('/tmp', 'test_foo') ?: 'FileNameIsForceIfTempNamReturnedFalse.txt';
         $this->crawlerController->setProcessFilename($filenameWithPath);
-        $this->crawlerController->setDisabled($disabled);
+
+        // Not that elegant but testing that called without params gives the expected default.
+        if ($disabled === null) {
+            $this->crawlerController->setDisabled();
+        } else {
+            $this->crawlerController->setDisabled($disabled);
+        }
 
         self::assertEquals(
             $expected,
             $this->crawlerController->getDisabled()
         );
+
+        self::assertSame(
+            $expected,
+            is_file($filenameWithPath)
+        );
+
+        if ($disabled) {
+            self::assertSame(
+                'disabled',
+                file_get_contents($filenameWithPath)
+            );
+        }
     }
 
     /**
@@ -194,10 +212,19 @@ class CrawlerControllerTest extends UnitTestCase
      *
      * @dataProvider compileUrlsDataProvider
      */
-    public function compileUrls(array $paramArray, array $urls, array $expected): void
+    public function compileUrls(array $paramArray, array $urls, array $expected, int $expectedCount): void
     {
+        $maxUrlsToCompile = 8;
+
+        $this->crawlerController->setMaximumUrlsToCompile($maxUrlsToCompile);
+
         self::assertEquals(
             $expected,
+            $this->crawlerController->compileUrls($paramArray, $urls)
+        );
+
+        self::assertCount(
+            $expectedCount,
             $this->crawlerController->compileUrls($paramArray, $urls)
         );
     }
@@ -212,11 +239,13 @@ class CrawlerControllerTest extends UnitTestCase
                 'paramArray' => [],
                 'urls' => ['/home', '/search', '/about'],
                 'expected' => ['/home', '/search', '/about'],
+                'expectedCount' => 3,
             ],
             'Empty Urls array' => [
                 'paramArray' => ['pagination' => [1, 2, 3, 4]],
                 'urls' => [],
                 'expected' => [],
+                'expectedCount' => 0,
             ],
             'case' => [
                 'paramArray' => ['pagination' => [1, 2, 3, 4]],
@@ -231,6 +260,22 @@ class CrawlerControllerTest extends UnitTestCase
                     'index.php?id=11&pagination=3',
                     'index.php?id=11&pagination=4',
                 ],
+                'expectedCount' => 8,
+            ],
+            'More urls than maximumUrlsToCompile' => [
+                'paramArray' => ['pagination' => [1, 2, 3, 4]],
+                'urls' => ['index.php?id=10', 'index.php?id=11', 'index.php?id=12'],
+                'expected' => [
+                    'index.php?id=10&pagination=1',
+                    'index.php?id=10&pagination=2',
+                    'index.php?id=10&pagination=3',
+                    'index.php?id=10&pagination=4',
+                    'index.php?id=11&pagination=1',
+                    'index.php?id=11&pagination=2',
+                    'index.php?id=11&pagination=3',
+                    'index.php?id=11&pagination=4',
+                ],
+                'expectedCount' => 8,
             ],
         ];
     }

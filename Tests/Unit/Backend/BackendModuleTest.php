@@ -57,11 +57,43 @@ class BackendModuleTest extends UnitTestCase
         );
 
         self::assertArrayHasKey('depth', $modMenu);
+        self::assertArrayHasKey('0', $modMenu['depth']);
+        self::assertArrayHasKey('1', $modMenu['depth']);
+        self::assertArrayHasKey('2', $modMenu['depth']);
+        self::assertArrayHasKey('3', $modMenu['depth']);
+        self::assertArrayHasKey('4', $modMenu['depth']);
+        self::assertArrayHasKey('99', $modMenu['depth']);
+        self::assertIsString($modMenu['depth'][0]);
+        self::assertIsString($modMenu['depth'][1]);
+        self::assertIsString($modMenu['depth'][2]);
+        self::assertIsString($modMenu['depth'][3]);
+        self::assertIsString($modMenu['depth'][4]);
+        self::assertIsString($modMenu['depth'][99]);
         self::assertArrayHasKey('crawlaction', $modMenu);
+        self::assertArrayHasKey('start', $modMenu['crawlaction']);
+        self::assertArrayHasKey('log', $modMenu['crawlaction']);
+        self::assertArrayHasKey('multiprocess', $modMenu['crawlaction']);
+        self::assertIsString($modMenu['crawlaction']['start']);
+        self::assertIsString($modMenu['crawlaction']['log']);
+        self::assertIsString($modMenu['crawlaction']['multiprocess']);
         self::assertArrayHasKey('log_resultLog', $modMenu);
         self::assertArrayHasKey('log_feVars', $modMenu);
         self::assertArrayHasKey('processListMode', $modMenu);
         self::assertArrayHasKey('log_display', $modMenu);
+        self::assertArrayHasKey('all', $modMenu['log_display']);
+        self::assertArrayHasKey('pending', $modMenu['log_display']);
+        self::assertArrayHasKey('finished', $modMenu['log_display']);
+        self::assertIsString($modMenu['log_display']['all']);
+        self::assertIsString($modMenu['log_display']['pending']);
+        self::assertIsString($modMenu['log_display']['finished']);
         self::assertArrayHasKey('itemsPerPage', $modMenu);
+        self::assertArrayHasKey('5', $modMenu['itemsPerPage']);
+        self::assertArrayHasKey('10', $modMenu['itemsPerPage']);
+        self::assertArrayHasKey('50', $modMenu['itemsPerPage']);
+        self::assertArrayHasKey('0', $modMenu['itemsPerPage']);
+        self::assertIsString($modMenu['itemsPerPage'][5]);
+        self::assertIsString($modMenu['itemsPerPage'][10]);
+        self::assertIsString($modMenu['itemsPerPage'][50]);
+        self::assertIsString($modMenu['itemsPerPage'][0]);
     }
 }
