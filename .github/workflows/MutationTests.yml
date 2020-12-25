@@ -39,7 +39,7 @@ jobs:
           key: "php-${{ matrix.php-version }}-${{ matrix.dependencies }}"
           restore-keys: "php-${{ matrix.php-version }}-${{ matrix.dependencies }}"
 
-      - name: "Install locked dependencies"
+      - name: "Install dependencies"
         run: "composer install --no-interaction --no-progress --no-suggest"
 
       - name: "Infection"
