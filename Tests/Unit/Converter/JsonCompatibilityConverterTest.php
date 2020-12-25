@@ -74,4 +74,22 @@ class JsonCompatibilityConverterTest extends UnitTestCase
             ],
         ];
     }
+
+    /**
+     * @test
+     * @throws \Exception
+     */
+    public function jsonCompatibilityConverterTestThrowException(): void
+    {
+        self::expectExceptionCode(1593758307);
+        self::expectException(\Throwable::class);
+        self::expectExceptionMessageRegExp('#.*__PHP_Incomplete_Class.*#');
+
+        $object = new \stdClass();
+        $object->title = 'Test';
+        $object->description = 'This is a test object';
+
+        $serializedObject = serialize($object);
+        $this->subject->convert($serializedObject);
+    }
 }

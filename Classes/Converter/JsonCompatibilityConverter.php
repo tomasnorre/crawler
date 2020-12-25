@@ -29,11 +29,16 @@ class JsonCompatibilityConverter
      * @see https://github.com/AOEpeople/crawler/issues/417
      *
      * @return array|bool
+     * @throws \Exception
      */
     public function convert(string $dataString)
     {
         $unserialized = unserialize($dataString, ['allowed_classes' => false]);
-        if ($unserialized) {
+        if (is_object($unserialized)) {
+            throw new \Exception('Objects are not allowed' . var_export($unserialized, true), 1593758307);
+        }
+
+        if ($unserialized && ! is_object($unserialized)) {
             return $unserialized;
         }
 

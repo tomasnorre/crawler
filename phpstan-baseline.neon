@@ -325,12 +325,12 @@ parameters:
 			path: Classes/ContextMenu/ItemProvider.php
 
 		-
-			message: "#^Class cognitive complexity for \"CrawlerController\" is 274, keep it under 50$#"
+			message: "#^Class cognitive complexity for \"CrawlerController\" is 275, keep it under 50$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Class cognitive complexity for \"CrawlerController\" is 274, keep it under 60$#"
+			message: "#^Class cognitive complexity for \"CrawlerController\" is 275, keep it under 60$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -439,6 +439,11 @@ parameters:
 
 		-
 			message: "#^Parameter \\#4 \\$permClause of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\QueryGenerator\\:\\:getTreeList\\(\\) expects string, int given\\.$#"
+			count: 1
+			path: Classes/Controller/CrawlerController.php
+
+		-
+			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:compileUrls\\(\\)\" is 11, keep it under 8$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -571,6 +576,16 @@ parameters:
 			message: "#^Parameter \\#1 \\$input of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:shortMD5\\(\\) expects string, float given\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
+
+		-
+			message: "#^Use custom exceptions instead of native \"Exception\"$#"
+			count: 1
+			path: Classes/Converter/JsonCompatibilityConverter.php
+
+		-
+			message: "#^Call to function is_object\\(\\) with mixed will always evaluate to false\\.$#"
+			count: 1
+			path: Classes/Converter/JsonCompatibilityConverter.php
 
 		-
 			message: "#^Method AOE\\\\Crawler\\\\CrawlStrategy\\\\CallbackExecutionStrategy\\:\\:fetchByCallback\\(\\) has no return typehint specified\\.$#"
@@ -1440,8 +1455,13 @@ parameters:
 			path: Tests/Unit/Controller/CrawlerControllerTest.php
 
 		-
-			message: "#^Call to deprecated method setDisabled\\(\\) of class AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\.$#"
+			message: "#^Strict comparison using \\=\\=\\= between bool and null will always evaluate to false\\.$#"
 			count: 1
+			path: Tests/Unit/Controller/CrawlerControllerTest.php
+
+		-
+			message: "#^Call to deprecated method setDisabled\\(\\) of class AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\.$#"
+			count: 2
 			path: Tests/Unit/Controller/CrawlerControllerTest.php
 
 		-

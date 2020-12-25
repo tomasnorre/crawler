@@ -45,7 +45,7 @@ class ProcessCollection extends \ArrayObject
     public function offsetGet($index): Process
     {
         if (! parent::offsetExists($index)) {
-            throw new NoIndexFoundException('Index "' . var_export($index, true) . '" for \AOE\Crawler\Domain\Model\Process are not available');
+            throw new NoIndexFoundException('Index "' . var_export($index, true) . '" for \AOE\Crawler\Domain\Model\Process are not available', 1593714823);
         }
         return parent::offsetGet($index);
     }
@@ -59,7 +59,7 @@ class ProcessCollection extends \ArrayObject
     public function offsetSet($index, $subject): void
     {
         if (! $subject instanceof Process) {
-            throw new \InvalidArgumentException('Wrong parameter type given, "\AOE\Crawler\Domain\Model\Process" expected!');
+            throw new \InvalidArgumentException('Wrong parameter type given, "\AOE\Crawler\Domain\Model\Process" expected!', 1593714822);
         }
 
         parent::offsetSet($index, $subject);
@@ -73,7 +73,7 @@ class ProcessCollection extends \ArrayObject
     public function append($subject): void
     {
         if (! $subject instanceof Process) {
-            throw new \InvalidArgumentException('Wrong parameter type given, "\AOE\Crawler\Domain\Model\Process" expected!');
+            throw new \InvalidArgumentException('Wrong parameter type given, "\AOE\Crawler\Domain\Model\Process" expected!', 1593714821);
         }
 
         parent::append($subject);

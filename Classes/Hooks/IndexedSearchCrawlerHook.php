@@ -743,7 +743,7 @@ class IndexedSearchCrawlerHook
      */
     public function checkDeniedSuburls($url, $url_deny)
     {
-        if (trim($url_deny)) {
+        if ($url_deny) {
             $url_denyArray = GeneralUtility::trimExplode(LF, $url_deny, true);
             foreach ($url_denyArray as $testurl) {
                 if (GeneralUtility::isFirstPartOfStr($url, $testurl)) {

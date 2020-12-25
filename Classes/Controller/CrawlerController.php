@@ -294,7 +294,12 @@ class CrawlerController implements LoggerAwareInterface
         }
 
         $this->extensionSettings['processLimit'] = MathUtility::forceIntegerInRange($this->extensionSettings['processLimit'], 1, 99, 1);
-        $this->maximumUrlsToCompile = MathUtility::forceIntegerInRange($this->extensionSettings['maxCompileUrls'], 1, 1000000000, 10000);
+        $this->setMaximumUrlsToCompile(MathUtility::forceIntegerInRange($this->extensionSettings['maxCompileUrls'], 1, 1000000000, 10000));
+    }
+
+    public function setMaximumUrlsToCompile(int $maximumUrlsToCompile): void
+    {
+        $this->maximumUrlsToCompile = $maximumUrlsToCompile;
     }
 
     /**
@@ -319,28 +324,22 @@ class CrawlerController implements LoggerAwareInterface
 
     /**
      * Set disabled status to prevent processes from being processed
-     *
-     * @param bool $disabled (optional, defaults to true)
      * @deprecated
      */
-    public function setDisabled($disabled = true): void
+    public function setDisabled(?bool $disabled = true): void
     {
         if ($disabled) {
-            GeneralUtility::writeFile($this->processFilename, '');
-        } else {
-            if (is_file($this->processFilename)) {
-                unlink($this->processFilename);
-            }
+            GeneralUtility::writeFile($this->processFilename, 'disabled');
+        } elseif (is_file($this->processFilename)) {
+            unlink($this->processFilename);
         }
     }
 
     /**
      * Get disable status
-     *
-     * @return bool true if disabled
      * @deprecated
      */
-    public function getDisabled()
+    public function getDisabled(): bool
     {
         return is_file($this->processFilename);
     }
@@ -894,8 +893,6 @@ class CrawlerController implements LoggerAwareInterface
         if (empty($paramArray)) {
             return $urls;
         }
-        // shift first off stack:
-        reset($paramArray);
         $varName = key($paramArray);
         $valueSet = array_shift($paramArray);
 
@@ -903,10 +900,8 @@ class CrawlerController implements LoggerAwareInterface
         $newUrls = [];
         foreach ($urls as $url) {
             foreach ($valueSet as $val) {
-                $newUrls[] = $url . (strcmp((string) $val, '') ? '&' . rawurlencode($varName) . '=' . rawurlencode((string) $val) : '');
-
-                if (count($newUrls) > $this->maximumUrlsToCompile) {
-                    break;
+                if (count($newUrls) < $this->getMaximumUrlsToCompile()) {
+                    $newUrls[] = $url . (strcmp((string) $val, '') ? '&' . rawurlencode($varName) . '=' . rawurlencode((string) $val) : '');
                 }
             }
         }
@@ -1959,6 +1954,11 @@ class CrawlerController implements LoggerAwareInterface
         }
 
         return $reg;
+    }
+
+    private function getMaximumUrlsToCompile(): int
+    {
+        return $this->maximumUrlsToCompile;
     }
 
     /**

@@ -21,6 +21,7 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
 
 use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Domain\Model\ProcessCollection;
+use AOE\Crawler\Exception\NoIndexFoundException;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -74,11 +75,11 @@ class ProcessCollectionTest extends UnitTestCase
 
     /**
      * @test
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function appendThrowsException(): void
     {
+        self::expectException(\InvalidArgumentException::class);
+        self::expectExceptionCode(1593714821);
         $wrongObjectType = new \stdClass();
         $this->subject->append($wrongObjectType);
     }
@@ -100,11 +101,11 @@ class ProcessCollectionTest extends UnitTestCase
 
     /**
      * @test
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function offsetSetThrowsException(): void
     {
+        self::expectException(\InvalidArgumentException::class);
+        self::expectExceptionCode(1593714822);
         $wrongObjectType = new \stdClass();
         $this->subject->offsetSet(100, $wrongObjectType);
     }
@@ -131,6 +132,8 @@ class ProcessCollectionTest extends UnitTestCase
      */
     public function offsetGetThrowsException(): void
     {
+        self::expectException(NoIndexFoundException::class);
+        self::expectExceptionCode(1593714823);
         $correctObjectType = $this->getAccessibleMock(Process::class, ['dummy'], [], '', false);
 
         self::assertEquals(
