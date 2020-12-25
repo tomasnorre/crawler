@@ -37,6 +37,7 @@
         "codeception/module-filesystem": "^1.0",
         "codeception/module-phpbrowser": "^1.0",
         "codeception/module-webdriver": "^1.0",
+        "infection/infection": "^0.20.2",
         "nimut/phpunit-merger": "^1.1",
         "nimut/testing-framework": "^5.0",
         "nimut/typo3-complete": "^10.4",

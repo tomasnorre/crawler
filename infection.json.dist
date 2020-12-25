@@ -1,0 +1,21 @@
+{
+    "source": {
+        "directories": [
+            "Classes"
+        ],
+        "excludes": [
+            "Worker"
+        ]
+    },
+    "phpUnit": {
+        "configDir": "Tests\/"
+    },
+    "logs": {
+        "text": "infection.log"
+    },
+    "mutators": {
+        "@default": true,
+        "IdenticalEqual": false,
+        "NotIdenticalNotEqual": false
+    }
+}
