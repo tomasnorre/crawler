@@ -11,7 +11,7 @@
         "configDir": "Tests\/"
     },
     "logs": {
-        "text": "infection.log"
+        "text": "infection.log",
         "badge": {
             "branch": "main"
         }
