@@ -1411,11 +1411,6 @@ parameters:
 			path: Tests/Unit/Backend/BackendModuleTest.php
 
 		-
-			message: "#^Trying to mock an undefined method getLanguageService\\(\\) on class Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\.$#"
-			count: 1
-			path: Tests/Unit/Backend/BackendModuleTest.php
-
-		-
 			message:
 				"""
 					#^Call to deprecated method modMenu\\(\\) of class AOE\\\\Crawler\\\\Backend\\\\BackendModule\\:

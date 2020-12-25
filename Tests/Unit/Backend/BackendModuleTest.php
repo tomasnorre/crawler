@@ -36,8 +36,8 @@ class BackendModuleTest extends UnitTestCase
         $mockedLanguageService = self::getAccessibleMock(LanguageService::class, ['sL'], [], '', false);
         $mockedLanguageService->expects($this->any())->method('sL')->willReturn('language string');
 
-        $this->subject = self::getAccessibleMock(BackendModule::class, ['getLanguageService'], [], '', false);
-        $this->subject->expects($this->any())->method('getLanguageService')->willReturn($mockedLanguageService);
+        $GLOBALS['LANG'] = $mockedLanguageService;
+        $this->subject = self::getAccessibleMock(BackendModule::class, ['dummy'], [], '', false);
 
         $jsonCompatibilityConverter = new JsonCompatibilityConverter();
         $this->subject->_set('jsonCompatibilityConverter', $jsonCompatibilityConverter);

@@ -5,6 +5,7 @@
 ![Tests](https://github.com/AOEpeople/crawler/workflows/Tests/badge.svg)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/AOEpeople/crawler/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/AOEpeople/crawler/?branch=main)
 [![Code Coverage](https://scrutinizer-ci.com/g/AOEpeople/crawler/badges/coverage.png?b=main)](https://scrutinizer-ci.com/g/AOEpeople/crawler/?branch=main)
+[![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FAOEpeople%2Fcrawler%2Fmain)](https://dashboard.stryker-mutator.io/reports/github.com/AOEpeople/crawler/main)
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/aoepeople/crawler.svg)](http://isitmaintained.com/project/aoepeople/crawler "Average time to resolve an issue")
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/aoepeople/crawler.svg)](http://isitmaintained.com/project/aoepeople/crawler "Percentage of issues still open")
 

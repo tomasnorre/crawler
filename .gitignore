@@ -20,6 +20,7 @@ composer.lock
 /Resources/Private/Php/Libraries/composer.lock
 var/log
 var/tests
+infection.log
 
 # Devbox
 .devbox/.ddev/config.local.yaml
