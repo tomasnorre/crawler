@@ -12,6 +12,10 @@ A clear and concise description of the behavior.
 **Expected behavior/output**
 A clear and concise description of what you expected to happen.
 
+**Steps to reproduce**
+A clear step-by-step guide on how to reproduce the problem.
+Without this, it will be hard to help you further.
+
 **Environment**
 - Crawler version(s): [e.g. 4.9.3, 5.2.0, 9.1.0]
 - TYPO3 version(s): [e.g. 8.7.12, 9.5.0, 10.4.5]
