@@ -43,7 +43,7 @@ jobs:
         run: "composer install --no-interaction --no-progress --no-suggest"
 
       - name: "Infection"
-        run: ".Build/bin/infection --min-msi=10 --min-covered-msi=95 --threads=8"
+        run: ".Build/bin/infection --min-msi=10 --min-covered-msi=80 --threads=8"
         env:
           #INFECTION_BADGE_API_KEY: ${{ secrets.INFECTION_BADGE_API_KEY }}
           STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
