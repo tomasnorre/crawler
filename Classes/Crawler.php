@@ -40,10 +40,8 @@ final class Crawler implements SingletonInterface
     {
         if ($disabled) {
             GeneralUtility::writeFile($this->processFilename, '');
-        } else {
-            if (is_file($this->processFilename)) {
-                unlink($this->processFilename);
-            }
+        } elseif (is_file($this->processFilename)) {
+            unlink($this->processFilename);
         }
     }
 
