@@ -1601,7 +1601,6 @@ class CrawlerController implements LoggerAwareInterface
             $this->processRepository->updateProcessAssignItemsCount($numberOfAffectedRows, $processId);
 
             if ($numberOfAffectedRows !== count($quidList)) {
-                $this->CLI_debug('Nothing processed due to multi-process collision (' . $this->CLI_buildProcessId() . ')');
                 return ($result | self::CLI_STATUS_ABORTED);
             }
 
@@ -1627,11 +1626,6 @@ class CrawlerController implements LoggerAwareInterface
             }
 
             sleep((int) $sleepAfterFinish);
-
-            $msg = 'Rows: ' . $counter;
-            $this->CLI_debug($msg . ' (' . $this->CLI_buildProcessId() . ')');
-        } else {
-            $this->CLI_debug('Nothing within queue which needs to be processed (' . $this->CLI_buildProcessId() . ')');
         }
 
         if ($counter > 0) {
@@ -1688,8 +1682,6 @@ class CrawlerController implements LoggerAwareInterface
 
         // if there are less than allowed active processes then add a new one
         if ($processCount < (int) $this->extensionSettings['processLimit']) {
-            $this->CLI_debug('add process ' . $this->CLI_buildProcessId() . ' (' . ($processCount + 1) . '/' . (int) $this->extensionSettings['processLimit'] . ')');
-
             GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('tx_crawler_process')->insert(
                 'tx_crawler_process',
                 [
@@ -1700,7 +1692,6 @@ class CrawlerController implements LoggerAwareInterface
                 ]
             );
         } else {
-            $this->CLI_debug('Processlimit reached (' . ($processCount) . '/' . (int) $this->extensionSettings['processLimit'] . ')');
             $ret = false;
         }
 

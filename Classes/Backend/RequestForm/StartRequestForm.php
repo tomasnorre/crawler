@@ -93,7 +93,6 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
         $this->incomingConfigurationSelection = is_array($this->incomingConfigurationSelection) ? $this->incomingConfigurationSelection : [];
 
         $this->crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
-        $this->crawlerController->setAccessMode('gui');
         $this->crawlerController->setID = GeneralUtility::md5int(microtime());
 
         $code = '';
