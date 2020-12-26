@@ -41,7 +41,7 @@ jobs:
           restore-keys: "php-${{ matrix.php-version }}-${{ matrix.dependencies }}"
 
       - name: "Install dependencies"
-        run: "composer install --no-interaction --no-progress --no-suggest"
+        run: "composer require --dev infection/infection:^0.16"
 
       - name: "Infection"
         # --min-msi and --min-covered-msi can be moved to infection.json.dist when upgrading to ^0.16
