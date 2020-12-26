@@ -84,11 +84,6 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Call to deprecated method setAccessMode\\(\\) of class AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
 			message:
 				"""
 					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
@@ -169,11 +164,6 @@ parameters:
 
 		-
 			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\StartRequestForm\\:\\:render\\(\\) has parameter \\$id with no typehint specified\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/StartRequestForm.php
-
-		-
-			message: "#^Call to deprecated method setAccessMode\\(\\) of class AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/StartRequestForm.php
 
@@ -325,12 +315,12 @@ parameters:
 			path: Classes/ContextMenu/ItemProvider.php
 
 		-
-			message: "#^Class cognitive complexity for \"CrawlerController\" is 275, keep it under 50$#"
+			message: "#^Class cognitive complexity for \"CrawlerController\" is 274, keep it under 50$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Class cognitive complexity for \"CrawlerController\" is 275, keep it under 60$#"
+			message: "#^Class cognitive complexity for \"CrawlerController\" is 274, keep it under 60$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -553,7 +543,7 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:CLI_run\\(\\)\" is 14, keep it under 8$#"
+			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:CLI_run\\(\\)\" is 13, keep it under 8$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -564,7 +554,7 @@ parameters:
 
 		-
 			message: "#^Call to deprecated method CLI_debug\\(\\) of class AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\.$#"
-			count: 6
+			count: 1
 			path: Classes/Controller/CrawlerController.php
 
 		-

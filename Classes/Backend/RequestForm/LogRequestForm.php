@@ -120,7 +120,6 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
             $this->isErrorDetected = true;
             MessageUtility::addErrorMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noPageSelected'));
         } else {
-            $this->findCrawler()->setAccessMode('gui');
             $this->findCrawler()->setID = GeneralUtility::md5int(microtime());
 
             $csvExport = GeneralUtility::_POST('_csv');
