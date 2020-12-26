@@ -3,9 +3,6 @@
     "type": "typo3-cms-extension",
     "description": "Crawler extension for TYPO3",
     "homepage": "https://github.com/AOEpeople/crawler",
-    "support": {
-        "issues": "https://github.com/AOEpeople/crawler/issues"
-    },
     "license": "GPL-3.0",
     "authors": [
         {
@@ -31,6 +28,9 @@
         "typo3/cms-info": "*",
         "typo3/cms-seo": "*"
     },
+    "replace": {
+        "typo3-ter/crawler": "self.version"
+    },
     "require-dev": {
         "codeception/codeception": "^4.1",
         "codeception/module-asserts": "^1.1",
@@ -52,8 +52,29 @@
         "symplify/easy-coding-standard": "^8.3",
         "typo3/testing-framework": "^4.14 || ^5.0"
     },
-    "replace": {
-        "typo3-ter/crawler": "self.version"
+    "config": {
+        "bin-dir": ".Build/bin",
+        "preferred-install": {
+            "typo3/cms-core": "source",
+            "*": "dist"
+        },
+        "process-timeout": 0,
+        "sort-packages": true,
+        "vendor-dir": ".Build/vendor"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "9.2.x-dev"
+        },
+        "typo3/class-alias-loader": {
+            "class-alias-maps": [
+                "Migrations/Code/ClassAliasMap.php"
+            ]
+        },
+        "typo3/cms": {
+            "cms-package-dir": "{$vendor-dir}/typo3/cms",
+            "web-dir": ".Build/Web"
+        }
     },
     "autoload": {
         "psr-4": {
@@ -66,16 +87,8 @@
             "TYPO3\\CMS\\Core\\Tests\\": ".Build/Web/typo3/sysext/core/Tests"
         }
     },
-    "config": {
-        "vendor-dir": ".Build/vendor",
-        "bin-dir": ".Build/bin",
-        "process-timeout": 0,
-        "sort-packages": true,
-        "preferred-install": {
-            "typo3/cms-core": "source",
-            "*": "dist"
-        }
-    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "scripts": {
         "post-autoload-dump": [
             "mkdir -p .Build/Web/typo3conf/ext/",
@@ -86,34 +99,12 @@
             "[ -e .Build/bin/phpstan ] || composer update",
             ".Build/bin/phpstan analyse"
         ],
-        "phpstan-baseline": [
-            "[ -e .Build/bin/phpstan ] || composer update",
-            ".Build/bin/phpstan analyse --generate-baseline"
-        ],
         "cs-fix": [
             "[ -e .Build/bin/ecs ] || composer update",
             ".Build/bin/ecs check Classes Configuration Tests"
         ],
-        "rector": [
-            "[ -e .Build/bin/rector ] || composer update",
-            ".Build/bin/rector process --dry-run --config rector-ci.php"
-        ],
-        "test:all": [
-            "@test:unit",
-            "@test:functional",
-            "@test:acceptance"
-        ],
-        "test:unit": [
-            "[ -e .Build/bin/phpunit ] || composer update",
-            "TYPO3_PATH_WEB=.Build/Web .Build/bin/phpunit --colors -c .Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/Unit"
-        ],
-        "test:functional": [
-            "[ -e .Build/bin/phpunit ] || composer update",
-            "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseName=crawler typo3DatabaseHost=127.0.0.1 typo3DatabaseUsername=root typo3DatabasePassword=root .Build/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml Tests/Functional"
-        ],
-        "test:acceptance": [
-            "[ -e .Build/bin/codecept ] || composer update",
-            ".Build/bin/codecept run"
+        "extension-create-libs": [
+            "@composer install -d Resources/Private/Php/Libraries"
         ],
         "extension-release": [
             "@extension-create-libs",
@@ -123,24 +114,33 @@
             "rm .scrutinizer.yml",
             "rm disabled.travis.yml"
         ],
-        "extension-create-libs": [
-            "@composer install -d Resources/Private/Php/Libraries"
+        "phpstan-baseline": [
+            "[ -e .Build/bin/phpstan ] || composer update",
+            ".Build/bin/phpstan analyse --generate-baseline"
+        ],
+        "rector": [
+            "[ -e .Build/bin/rector ] || composer update",
+            ".Build/bin/rector process --dry-run --config rector-ci.php"
+        ],
+        "test:acceptance": [
+            "[ -e .Build/bin/codecept ] || composer update",
+            ".Build/bin/codecept run"
+        ],
+        "test:all": [
+            "@test:unit",
+            "@test:functional",
+            "@test:acceptance"
+        ],
+        "test:functional": [
+            "[ -e .Build/bin/phpunit ] || composer update",
+            "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseName=crawler typo3DatabaseHost=127.0.0.1 typo3DatabaseUsername=root typo3DatabasePassword=root .Build/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml Tests/Functional"
+        ],
+        "test:unit": [
+            "[ -e .Build/bin/phpunit ] || composer update",
+            "TYPO3_PATH_WEB=.Build/Web .Build/bin/phpunit --colors -c .Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/Unit"
         ]
     },
-    "extra": {
-        "branch-alias": {
-            "dev-main": "9.2.x-dev"
-        },
-        "typo3/cms": {
-            "cms-package-dir": "{$vendor-dir}/typo3/cms",
-            "web-dir": ".Build/Web"
-        },
-        "typo3/class-alias-loader": {
-            "class-alias-maps": [
-                "Migrations/Code/ClassAliasMap.php"
-            ]
-        }
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    "support": {
+        "issues": "https://github.com/AOEpeople/crawler/issues"
+    }
 }
