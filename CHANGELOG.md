@@ -1,5 +1,23 @@
 # Changelog TYPO3 Crawler
 
+## Crawler 9.2.2-dev
+
+### Added
+* AccessService::hasGroupAccess()
+
+### Changed
+*
+
+### Deprecated
+#### Functions & Properties
+* CrawlerController->hasGroupAccess()
+
+#### Classes
+*
+
+### Fixed
+*
+
 ## Crawler 9.2.1
 Crawler 9.2.1 was released on December 27th, 2020
 
