@@ -19,8 +19,9 @@ namespace AOE\Crawler\Tests\Functional\Command;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Command\ProcessQueueCommand;
 use AOE\Crawler\Domain\Repository\QueueRepository;
-use TYPO3\CMS\Core\Utility\CommandUtility;
+use Symfony\Component\Console\Tester\CommandTester;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
@@ -41,6 +42,11 @@ class ProcessQueueCommandTest extends AbstractCommandTests
      */
     protected $queueRepository;
 
+    /**
+     * @var CommandTester
+     */
+    protected $commandTester;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -48,6 +54,9 @@ class ProcessQueueCommandTest extends AbstractCommandTests
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/pages.xml');
         $this->queueRepository = GeneralUtility::makeInstance(ObjectManager::class)->get(QueueRepository::class);
+
+        $command = new ProcessQueueCommand();
+        $this->commandTester = new CommandTester($command);
     }
 
     /**
@@ -56,11 +65,14 @@ class ProcessQueueCommandTest extends AbstractCommandTests
      */
     public function processQueueCommandTest(array $parameters, string $expectedOutput): void
     {
-        $commandOutput = '';
-        $cliCommand = $this->getTypo3TestBinaryCommand() . ' crawler:processqueue ' . implode(' ', $parameters);
-        CommandUtility::exec($cliCommand, $commandOutput);
+        $arguments = [];
+        if (! empty($parameters)) {
+            $arguments = $parameters;
+        }
+        $this->commandTester->execute($arguments);
+        $commandOutput = $this->commandTester->getDisplay();
 
-        self::assertContains($expectedOutput, $commandOutput[0]);
+        self::assertContains($expectedOutput, $commandOutput);
     }
 
     public function processQueueCommandDataProvider(): array
@@ -71,7 +83,9 @@ class ProcessQueueCommandTest extends AbstractCommandTests
                 'expectedOutput' => 'Unprocessed Items remaining:0',
             ],
             '--amount 5' => [
-                'parameters' => ['--amount 5'],
+                'parameters' => [
+                    '--amount' => 5,
+                ],
                 'expectedOutput' => 'Unprocessed Items remaining:3',
             ],
         ];
