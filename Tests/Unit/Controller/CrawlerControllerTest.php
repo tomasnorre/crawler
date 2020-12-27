@@ -156,19 +156,6 @@ class CrawlerControllerTest extends UnitTestCase
     /**
      * @test
      *
-     * @dataProvider hasGroupAccessDataProvider
-     */
-    public function hasGroupAccess(string $groupList, string $accessList, bool $expected): void
-    {
-        self::assertEquals(
-            $expected,
-            $this->crawlerController->hasGroupAccess($groupList, $accessList)
-        );
-    }
-
-    /**
-     * @test
-     *
      * @dataProvider getUrlsForPageRowDataProvider
      */
     public function getUrlsForPageRow(bool $checkIfPageSkipped, array $getUrlsForPages, array $pageRow, string $skipMessage, array $expected): void
@@ -544,30 +531,6 @@ class CrawlerControllerTest extends UnitTestCase
                     'TX_INDEXEDSEARCH_REINDES',
                 ],
                 'expected' => false,
-            ],
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function hasGroupAccessDataProvider()
-    {
-        return [
-            'Do not have access' => [
-                'groupList' => '1,2,3',
-                'accessList' => '4,5,6',
-                'expected' => false,
-            ],
-            'Do have access' => [
-                'groupList' => '1,2,3,4',
-                'accessList' => '4,5,6',
-                'expected' => true,
-            ],
-            'Access List empty' => [
-                'groupList' => '1,2,3',
-                'accessList' => '',
-                'expected' => true,
             ],
         ];
     }

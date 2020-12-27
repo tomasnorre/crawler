@@ -37,6 +37,7 @@ use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\QueueExecutor;
+use AOE\Crawler\Service\AccessService;
 use AOE\Crawler\Service\ConfigurationService;
 use AOE\Crawler\Service\UrlService;
 use AOE\Crawler\Utility\SignalSlotUtility;
@@ -211,6 +212,7 @@ class CrawlerController implements LoggerAwareInterface
         'getAccessMode' => 'Using CrawlerController->getAccessMode() is deprecated since 9.1.3 and will be removed in v11.x',
         'getLogEntriesForPageId' => 'Using CrawlerController->getLogEntriesForPageId() is deprecated since 9.1.5 and will be remove in v11.x',
         'getLogEntriesForSetId' => 'Using crawlerController::getLogEntriesForSetId() is deprecated since 9.0.1 and will be removed in v11.x',
+        'hasGroupAccess' => 'Using CrawlerController->getLogEntriesForPageId() is deprecated since 9.2.2 and will be remove in v11.x, please use AccessService::hasGroupAccess() instead.',
         'flushQueue' => 'Using CrawlerController::flushQueue() is deprecated since 9.0.1 and will be removed in v11.x, please use QueueRepository->flushQueue() instead.',
         'setAccessMode' => 'Using CrawlerController->setAccessMode() is deprecated since 9.1.3 and will be removed in v11.x',
         'getDisabled' => 'Using CrawlerController->getDisabled() is deprecated since 9.1.3 and will be removed in v11.x, please use Crawler->isDisabled() instead',
@@ -619,7 +621,7 @@ class CrawlerController implements LoggerAwareInterface
         foreach ($crawlerConfigurations as $configurationRecord) {
 
             // check access to the configuration record
-            if (empty($configurationRecord['begroups']) || $this->getBackendUser()->isAdmin() || $this->hasGroupAccess($this->getBackendUser()->user['usergroup_cached_list'], $configurationRecord['begroups'])) {
+            if (empty($configurationRecord['begroups']) || $this->getBackendUser()->isAdmin() || AccessService::hasGroupAccess($this->getBackendUser()->user['usergroup_cached_list'], $configurationRecord['begroups'])) {
                 $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $configurationRecord['pidsonly'], true));
 
                 // process configuration if it is not page-specific or if the specific page is the current page:
@@ -718,6 +720,8 @@ class CrawlerController implements LoggerAwareInterface
      * @param string $accessList Comma-separated list of (fe_)group UIDs of the item to access
      * @return bool TRUE if at least one of the users group UIDs is in the access list or the access list is empty
      * @see \TYPO3\CMS\Frontend\Page\PageRepository::getMultipleGroupsWhereClause()
+     * @deprecated
+     * @codeCoverageIgnore
      */
     public function hasGroupAccess($groupList, $accessList)
     {
