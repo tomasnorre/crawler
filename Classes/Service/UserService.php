@@ -21,11 +21,8 @@ namespace AOE\Crawler\Service;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class AccessService
+class UserService
 {
-    /**
-     * @see \TYPO3\CMS\Frontend\Page\PageRepository::getMultipleGroupsWhereClause()
-     */
     public static function hasGroupAccess(string $groupList, string $accessList): bool
     {
         if (empty($accessList)) {

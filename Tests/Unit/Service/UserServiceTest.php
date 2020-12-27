@@ -19,10 +19,10 @@ namespace AOE\Crawler\Tests\Unit\Service;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Service\AccessService;
+use AOE\Crawler\Service\UserService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
-class AccessServiceTest extends UnitTestCase
+class UserServiceTest extends UnitTestCase
 {
     /**
      * @test
@@ -33,14 +33,11 @@ class AccessServiceTest extends UnitTestCase
     {
         self::assertEquals(
             $expected,
-            AccessService::hasGroupAccess($groupList, $accessList)
+            UserService::hasGroupAccess($groupList, $accessList)
         );
     }
 
-    /**
-     * @return array
-     */
-    public function hasGroupAccessDataProvider()
+    public function hasGroupAccessDataProvider(): array
     {
         return [
             'Do not have access' => [
