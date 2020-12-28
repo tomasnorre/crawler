@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Functional\Utility;
+namespace AOE\Crawler\Tests\Unit\Utility;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -20,13 +20,25 @@ namespace AOE\Crawler\Tests\Functional\Utility;
  */
 
 use AOE\Crawler\Utility\MessageUtility;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class MessageUtilityTest extends FunctionalTestCase
+class MessageUtilityTest extends UnitTestCase
 {
+    /**
+     * @var FlashMessageService
+     */
+    private $flashMessageQueue;
+
+    protected function setUp()
+    {
+        $this->flashMessageQueue = GeneralUtility::makeInstance(FlashMessageService::class)->getMessageQueueByIdentifier();
+        // Done to have the queue cleared to not stack the messages
+        $this->flashMessageQueue->clear();
+    }
+
     /**
      * @test
      */
@@ -36,6 +48,12 @@ class MessageUtilityTest extends FunctionalTestCase
         MessageUtility::addNoticeMessage($messageText);
 
         $messages = self::getMessages();
+
+        self::assertCount(
+            1,
+            $messages
+        );
+
         self::assertEquals(
             $messageText,
             $messages[0]->getMessage()
@@ -56,6 +74,12 @@ class MessageUtilityTest extends FunctionalTestCase
         MessageUtility::addErrorMessage($messageText);
 
         $messages = self::getMessages();
+
+        self::assertCount(
+            1,
+            $messages
+        );
+
         self::assertEquals(
             $messageText,
             $messages[0]->getMessage()
@@ -76,6 +100,11 @@ class MessageUtilityTest extends FunctionalTestCase
         MessageUtility::addWarningMessage($messageText);
 
         $messages = self::getMessages();
+        self::assertCount(
+            1,
+            $messages
+        );
+
         self::assertEquals(
             $messageText,
             $messages[0]->getMessage()
@@ -89,7 +118,6 @@ class MessageUtilityTest extends FunctionalTestCase
 
     private function getMessages()
     {
-        $flashMessageQueue = GeneralUtility::makeInstance(FlashMessageService::class)->getMessageQueueByIdentifier();
-        return $flashMessageQueue->getAllMessages();
+        return $this->flashMessageQueue->getAllMessages();
     }
 }

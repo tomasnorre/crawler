@@ -1,0 +1,54 @@
+<?php
+
+declare(strict_types=1);
+
+namespace AOE\Crawler\Tests\Unit\FileWriter\CvsWriter;
+
+/*
+ * (c) 2020 AOE GmbH <dev@aoe.com>
+ *
+ * This file is part of the TYPO3 Crawler Extension.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
+
+use AOE\Crawler\Writer\FileWriter\CsvWriter\CrawlerCsvWriter;
+use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+class CrawlerCsvWriterTest extends UnitTestCase
+{
+    /**
+     * @var CrawlerCsvWriter
+     */
+    protected $subject;
+
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->subject = GeneralUtility::makeInstance(CrawlerCsvWriter::class);
+    }
+
+    /**
+     * @test
+     */
+    public function arrayToCsvTest(): void
+    {
+        $records[] = [
+            'Page Title' => 'Home',
+            'Page Uid' => 1
+        ] ;
+
+        self::assertEquals(
+            '"Page Title","Page Uid"' . chr(13) . chr(10) . '"Home","1"',
+            $this->subject->arrayToCsv($records)
+        );
+    }
+}

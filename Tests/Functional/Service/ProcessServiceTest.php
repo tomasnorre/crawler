@@ -20,7 +20,6 @@ namespace AOE\Crawler\Tests\Functional\Service;
  */
 
 use AOE\Crawler\Controller\CrawlerController;
-use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Service\ProcessService;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -39,11 +38,6 @@ class ProcessServiceTest extends FunctionalTestCase
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     /**
-     * @var CrawlerController
-     */
-    protected $crawlerController;
-
-    /**
      * @var ProcessService
      */
     protected $subject;
@@ -56,7 +50,6 @@ class ProcessServiceTest extends FunctionalTestCase
         parent::setUp();
 
         $this->subject = GeneralUtility::makeInstance(ObjectManager::class)->get(ProcessService::class);
-        $this->crawlerController = $this->createPartialMock(CrawlerController::class, ['dummyMethod']);
     }
 
     /**
@@ -84,38 +77,5 @@ class ProcessServiceTest extends FunctionalTestCase
             'php',
             $this->subject->getCrawlerCliPath()
         );
-    }
-
-    /**
-     * @test
-     */
-    public function multiProcessThrowsException(): void
-    {
-        $this->expectException(\RuntimeException::class);
-
-        $timeOut = 1;
-        $this->crawlerController->setExtensionSettings([
-            'processLimit' => 1,
-        ]);
-        $this->subject->multiProcess($timeOut);
-    }
-
-    /**
-     * @test
-     */
-    public function startProcess(): void
-    {
-        // Extension Settings
-        $extensionSettings = [
-            'phpBinary' => 'php',
-            'processMaxRunTime' => 7,
-        ];
-
-        $mockedProcessRepository = $this->createPartialMock(ProcessRepository::class, ['countNotTimeouted']);
-        // This is done to fake that the process is started, the process start itself isn't tested, but the code around it is.
-        $mockedProcessRepository->expects($this->exactly(2))->method('countNotTimeouted')->will($this->onConsecutiveCalls(1, 2));
-        $this->subject->processRepository = $mockedProcessRepository;
-
-        self::assertTrue($this->subject->startProcess());
     }
 }
