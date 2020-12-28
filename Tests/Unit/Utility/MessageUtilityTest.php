@@ -32,7 +32,7 @@ class MessageUtilityTest extends UnitTestCase
      */
     private $flashMessageQueue;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->flashMessageQueue = GeneralUtility::makeInstance(FlashMessageService::class)->getMessageQueueByIdentifier();
         // Done to have the queue cleared to not stack the messages

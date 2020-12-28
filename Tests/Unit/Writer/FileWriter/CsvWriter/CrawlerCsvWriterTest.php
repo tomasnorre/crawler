@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Unit\FileWriter\CvsWriter;
+namespace AOE\Crawler\Tests\Unit\Writer\FileWriter\CsvWriter;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -30,9 +30,10 @@ class CrawlerCsvWriterTest extends UnitTestCase
      */
     protected $subject;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
+
         $this->subject = GeneralUtility::makeInstance(CrawlerCsvWriter::class);
     }
 
@@ -43,8 +44,8 @@ class CrawlerCsvWriterTest extends UnitTestCase
     {
         $records[] = [
             'Page Title' => 'Home',
-            'Page Uid' => 1
-        ] ;
+            'Page Uid' => 1,
+        ];
 
         self::assertEquals(
             '"Page Title","Page Uid"' . chr(13) . chr(10) . '"Home","1"',
