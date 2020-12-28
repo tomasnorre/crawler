@@ -1242,11 +1242,6 @@ parameters:
 			path: Tests/Functional/Controller/CrawlerControllerTest.php
 
 		-
-			message: "#^Method Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\:\\:_call\\(\\) invoked with 2 parameters, 1 required\\.$#"
-			count: 2
-			path: Tests/Functional/Controller/CrawlerControllerTest.php
-
-		-
 			message: "#^Trying to mock an undefined method getCurrentTime\\(\\) on class Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\.$#"
 			count: 1
 			path: Tests/Functional/Controller/CrawlerControllerTest.php
@@ -1446,7 +1441,7 @@ parameters:
 
 		-
 			message: "#^Method Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\:\\:_call\\(\\) invoked with 2 parameters, 1 required\\.$#"
-			count: 1
+			count: 3
 			path: Tests/Unit/Controller/CrawlerControllerTest.php
 
 		-
