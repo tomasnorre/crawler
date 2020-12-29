@@ -172,6 +172,34 @@ class CrawlerControllerTest extends UnitTestCase
     }
 
     /**
+     * @test
+     */
+    public function getConfigurationHash(): void
+    {
+        $crawlerController = $this->getAccessibleMock(CrawlerController::class, ['dummy'], [], '', false);
+
+        $configuration = [
+            'paramExpanded' => 'extendedParameter',
+            'URLs' => 'URLs',
+            'NotImportantParameter' => 'value not important',
+        ];
+
+        $originalCheckSum = md5(serialize($configuration));
+
+        self::assertNotEquals(
+            $originalCheckSum,
+            $crawlerController->_call('getConfigurationHash', $configuration)
+        );
+
+        unset($configuration['paramExpanded'], $configuration['URLs']);
+        $newCheckSum = md5(serialize($configuration));
+        self::assertEquals(
+            $newCheckSum,
+            $crawlerController->_call('getConfigurationHash', $configuration)
+        );
+    }
+
+    /**
      * @return array
      */
     public function getUrlsForPageRowDataProvider()

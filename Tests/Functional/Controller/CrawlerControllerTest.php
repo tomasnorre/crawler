@@ -143,32 +143,6 @@ class CrawlerControllerTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function getConfigurationHash(): void
-    {
-        $configuration = [
-            'paramExpanded' => 'extendedParameter',
-            'URLs' => 'URLs',
-            'NotImportantParameter' => 'value not important',
-        ];
-
-        $originalCheckSum = md5(serialize($configuration));
-
-        self::assertNotEquals(
-            $originalCheckSum,
-            $this->subject->_call('getConfigurationHash', $configuration)
-        );
-
-        unset($configuration['paramExpanded'], $configuration['URLs']);
-        $newCheckSum = md5(serialize($configuration));
-        self::assertEquals(
-            $newCheckSum,
-            $this->subject->_call('getConfigurationHash', $configuration)
-        );
-    }
-
-    /**
-     * @test
-     */
     public function getConfigurationsForBranch(): void
     {
         $GLOBALS['BE_USER'] = $this->getMockBuilder(BackendUserAuthentication::class)

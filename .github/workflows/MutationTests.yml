@@ -45,7 +45,7 @@ jobs:
 
       - name: "Infection"
         # --min-msi and --min-covered-msi can be moved to infection.json.dist when upgrading to ^0.16
-        run: ".Build/bin/infection --min-msi=14 --min-covered-msi=95 --threads=8"
+        run: ".Build/bin/infection --min-msi=16 --min-covered-msi=92 --threads=8"
         env:
           #INFECTION_BADGE_API_KEY: ${{ secrets.INFECTION_BADGE_API_KEY }}
           STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
