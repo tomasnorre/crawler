@@ -1593,11 +1593,6 @@ parameters:
 			path: Tests/Unit/Utility/MessageUtilityTest.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Tests\\\\Unit\\\\Utility\\\\MessageUtilityTest\\:\\:getMessages\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: Tests/Unit/Utility/MessageUtilityTest.php
-
-		-
 			message: "#^Call to an undefined method TYPO3\\\\CMS\\\\Core\\\\Messaging\\\\FlashMessageService\\:\\:getAllMessages\\(\\)\\.$#"
 			count: 1
 			path: Tests/Unit/Utility/MessageUtilityTest.php

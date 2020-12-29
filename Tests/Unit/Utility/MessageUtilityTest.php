@@ -116,6 +116,9 @@ class MessageUtilityTest extends UnitTestCase
         );
     }
 
+    /**
+     * @return FlashMessage[]
+     */
     private function getMessages()
     {
         return $this->flashMessageQueue->getAllMessages();
