@@ -40,17 +40,14 @@ class GuzzleExecutionStrategyTest extends UnitTestCase
         );
 
         $body = $this->createPartialMock(Stream::class, ['getContents']);
-        $body->expects($this->any())
-            ->method('getContents')
+        $body->method('getContents')
             ->willReturn(serialize('Crawler extension for TYPO3'));
 
         $response = $this->createPartialMock(Response::class, ['getBody']);
-        $response->expects($this->any())
-            ->method('getBody')
+        $response->method('getBody')
             ->willReturn($body);
 
         $this->guzzleExecutionStrategy
-            ->expects($this->any())
             ->method('getResponse')
             ->willReturn($response);
     }
