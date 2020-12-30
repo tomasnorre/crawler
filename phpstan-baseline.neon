@@ -1342,6 +1342,25 @@ parameters:
 			path: Tests/Functional/Service/ProcessServiceTest.php
 
 		-
+			message: "#^Trying to mock an undefined method getCurrentTime\\(\\) on class Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\.$#"
+			count: 1
+			path: Tests/Functional/Service/QueueServiceTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$crawlerController of method AOE\\\\Crawler\\\\Service\\\\QueueService\\:\\:injectCrawlerController\\(\\) expects AOE\\\\Crawler\\\\Controller\\\\CrawlerController, Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface&PHPUnit\\\\Framework\\\\MockObject\\\\MockObject given\\.$#"
+			count: 1
+			path: Tests/Functional/Service/QueueServiceTest.php
+
+		-
+			message:
+				"""
+					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+					since TYPO3 10\\.4, will be removed in version 12\\.0$#
+				"""
+			count: 1
+			path: Tests/Functional/Service/QueueServiceTest.php
+
+		-
 			message:
 				"""
 					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
@@ -1417,11 +1436,6 @@ parameters:
 		-
 			message: "#^Call to deprecated method setProcessFilename\\(\\) of class AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\.$#"
 			count: 2
-			path: Tests/Unit/Controller/CrawlerControllerTest.php
-
-		-
-			message: "#^Strict comparison using \\=\\=\\= between bool and null will always evaluate to false\\.$#"
-			count: 1
 			path: Tests/Unit/Controller/CrawlerControllerTest.php
 
 		-

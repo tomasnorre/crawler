@@ -20,22 +20,76 @@ namespace AOE\Crawler\Tests\Unit;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
 use AOE\Crawler\QueueExecutor;
+use AOE\Crawler\Tests\Unit\CrawlStrategy\CallbackObjectForTesting;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class QueueExecutorTest extends UnitTestCase
 {
     /**
-     * @test
+     * @var QueueExecutor
      */
-    public function invalidArgumentsReturnErrorInExecuteQueueItem(): void
+    protected $queueExecutor;
+
+    /**
+     * @var CrawlerController
+     */
+    protected $mockedCrawlerController;
+
+    protected function setUp(): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [];
-
-        $crawlerController = $this->createMock(CrawlerController::class);
+        $this->mockedCrawlerController = $this->createMock(CrawlerController::class);
         $crawlStrategyFactory = GeneralUtility::makeInstance(CrawlStrategyFactory::class);
-        $subject = new QueueExecutor($crawlStrategyFactory);
-        $result = $subject->executeQueueItem([], $crawlerController);
+        $this->queueExecutor = new QueueExecutor($crawlStrategyFactory);
+    }
+
+    /**
+     * @test
+     * @dataProvider invalidArgumentsReturnErrorInExecuteQueueItemDataProvider
+     */
+    public function invalidArgumentsReturnErrorInExecuteQueueItem(array $queueItem): void
+    {
+        $result = $this->queueExecutor->executeQueueItem($queueItem, $this->mockedCrawlerController);
         self::assertEquals('ERROR', $result);
+    }
+
+    /**
+     * @test
+     */
+    public function executeQueueItemCallback(): void
+    {
+        $queueItem = [
+            'parameters' => serialize(['_CALLBACKOBJ' => CallbackObjectForTesting::class]),
+        ];
+        $result = $this->queueExecutor->executeQueueItem($queueItem, $this->mockedCrawlerController);
+
+        self::assertIsArray($result);
+        self::assertArrayHasKey('content', $result);
+        self::assertStringContainsString('Hi, it works!', $result['content']);
+    }
+
+    public function invalidArgumentsReturnErrorInExecuteQueueItemDataProvider(): array
+    {
+        return [
+            'No parameters set' => [
+                'queueItem' => [],
+            ],
+            'Parameters set, but empty' => [
+                'queueItem' => [
+                    'parameters' => '',
+                ],
+            ],
+            'Parameters set, can be converted' => [
+                'queueItem' => [
+                    'parameters' => serialize('Simple string'),
+                ],
+            ],
+            'Parameters set, cannot be converted' => [
+                'queueItem' => [
+                    'parameters' => 'A simple string not encoded',
+                ],
+            ],
+        ];
     }
 }

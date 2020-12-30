@@ -20,7 +20,6 @@ namespace AOE\Crawler\Service;
  */
 
 use AOE\Crawler\Controller\CrawlerController;
-use AOE\Crawler\Exception\CrawlerObjectException;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -29,18 +28,23 @@ class QueueService
     /**
      * @var CrawlerController
      */
-    protected $crawlerController;
+    private $crawlerController;
+
+    public function injectCrawlerController(CrawlerController $crawlerController): void
+    {
+        $this->crawlerController = $crawlerController;
+        $this->crawlerController->setID = GeneralUtility::md5int(microtime());
+    }
 
     public function addPageToQueue(int $pageUid, int $time = 0): void
     {
-        $crawler = $this->findCrawler();
         /**
          * Todo: Switch back to getPage(); when dropping support for TYPO3 9 LTS - TNM
          * This switch to getPage_noCheck() is needed as TYPO3 9 LTS doesn't return dokType < 200, therefore automatically
          * adding pages to crawler queue when editing page-titles from the page tree directly was not working.
          */
         $pageData = GeneralUtility::makeInstance(PageRepository::class)->getPage_noCheck($pageUid, true);
-        $configurations = $crawler->getUrlsForPageRow($pageData);
+        $configurations = $this->crawlerController->getUrlsForPageRow($pageData);
         // Currently this is only used from the DataHandlerHook, and we don't know of any allowed/disallowed configurations,
         // when clearing the cache, therefore we allow all configurations in this case.
         // This next lines could be skipped as it will return the incomming configurations, but for visibility and
@@ -53,8 +57,8 @@ class QueueService
         if (is_array($configurations)) {
             foreach ($configurations as $configuration) {
                 //enable inserting of entries
-                $crawler->registerQueueEntriesInternallyOnly = false;
-                $crawler->urlListFromUrlArray(
+                $this->crawlerController->registerQueueEntriesInternallyOnly = false;
+                $this->crawlerController->urlListFromUrlArray(
                     $configuration,
                     $pageData,
                     $time,
@@ -67,7 +71,7 @@ class QueueService
                 );
 
                 //reset the queue because the entries have been written to the db
-                unset($crawler->queueEntries);
+                unset($this->crawlerController->queueEntries);
             }
         }
     }
@@ -85,25 +89,5 @@ class QueueService
         }
 
         return $crawlerProcInstructions;
-    }
-
-    /**
-     * Method to get an instance of the internal crawler singleton
-     *
-     * @return CrawlerController Instance of the crawler lib
-     *
-     * @throws CrawlerObjectException
-     */
-    private function findCrawler()
-    {
-        if (! is_object($this->crawlerController)) {
-            $this->crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
-            $this->crawlerController->setID = GeneralUtility::md5int(microtime());
-        }
-
-        if (is_object($this->crawlerController)) {
-            return $this->crawlerController;
-        }
-        throw new CrawlerObjectException('no crawler object', 1608465082);
     }
 }

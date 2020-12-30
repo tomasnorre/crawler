@@ -20,6 +20,7 @@ namespace AOE\Crawler\CrawlStrategy;
  */
 
 use GuzzleHttp\Exception\RequestException;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
@@ -48,12 +49,7 @@ class GuzzleExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
         }
         try {
             $url = (string) $url;
-            $response = GeneralUtility::makeInstance(RequestFactory::class)
-                ->request(
-                    $url,
-                    'GET',
-                    $options
-                );
+            $response = $this->getResponse($url, $options);
             $contents = $response->getBody()->getContents();
             return unserialize($contents);
         } catch (RequestException $e) {
@@ -68,6 +64,16 @@ class GuzzleExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
             );
             return $message;
         }
+    }
+
+    protected function getResponse(string $url, array $options): ResponseInterface
+    {
+        return GeneralUtility::makeInstance(RequestFactory::class)
+            ->request(
+                $url,
+                'GET',
+                $options
+            );
     }
 
     /**
