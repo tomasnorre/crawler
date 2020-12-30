@@ -47,6 +47,10 @@ class CrawlerCsvWriterTest extends UnitTestCase
             'Page Uid' => 1,
         ];
 
+        // Done to make sure that the reset() in the function is used, to reset the array
+        // to it's start pointer again.
+        next($records);
+
         self::assertEquals(
             '"Page Title","Page Uid"' . chr(13) . chr(10) . '"Home","1"',
             $this->subject->arrayToCsv($records)

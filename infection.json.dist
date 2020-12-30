@@ -4,7 +4,9 @@
             "Classes"
         ],
         "excludes": [
-            "Worker"
+            "Api",
+            "Hooks/IndexedSearchCrawlerHook.php",
+            "Utility/SignalSlotUtility.php"
         ]
     },
     "phpUnit": {

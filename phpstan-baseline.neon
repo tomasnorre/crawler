@@ -1420,11 +1420,6 @@ parameters:
 			path: Tests/Unit/Controller/CrawlerControllerTest.php
 
 		-
-			message: "#^Strict comparison using \\=\\=\\= between bool and null will always evaluate to false\\.$#"
-			count: 1
-			path: Tests/Unit/Controller/CrawlerControllerTest.php
-
-		-
 			message: "#^Call to deprecated method setDisabled\\(\\) of class AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\.$#"
 			count: 2
 			path: Tests/Unit/Controller/CrawlerControllerTest.php
