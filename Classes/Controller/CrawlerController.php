@@ -208,6 +208,7 @@ class CrawlerController implements LoggerAwareInterface
     private $deprecatedPublicMethods = [
         'cleanUpOldQueueEntries' => 'Using CrawlerController::cleanUpOldQueueEntries() is deprecated since 9.0.1 and will be removed in v11.x, please use QueueRepository->cleanUpOldQueueEntries() instead.',
         'CLI_debug' => 'Using CrawlerController->CLI_debug() is deprecated since 9.1.3 and will be removed in v11.x',
+        'CLI_releaseProcesses' => 'Using CrawlerController->CLI_releaseProcesses() is deprecated since 9.2.2 and will be removed in v11.x',
         'CLI_runHooks' => 'Using CrawlerController->CLI_runHooks() is deprecated since 9.1.5 and will be removed in v11.x',
         'getAccessMode' => 'Using CrawlerController->getAccessMode() is deprecated since 9.1.3 and will be removed in v11.x',
         'getLogEntriesForPageId' => 'Using CrawlerController->getLogEntriesForPageId() is deprecated since 9.1.5 and will be remove in v11.x',
@@ -1700,7 +1701,8 @@ class CrawlerController implements LoggerAwareInterface
         }
 
         $this->processRepository->deleteProcessesMarkedAsDeleted();
-        $this->CLI_releaseProcesses($orphanProcesses);
+        $this->processRepository->markRequestedProcessesAsNotActive($orphanProcesses);
+        $this->queueRepository->unsetProcessScheduledAndProcessIdForQueueEntries($orphanProcesses);
 
         return $ret;
     }
@@ -1710,6 +1712,7 @@ class CrawlerController implements LoggerAwareInterface
      *
      * @param mixed $releaseIds string with a single process-id or array with multiple process-ids
      * @return boolean
+     * @deprecated
      */
     public function CLI_releaseProcesses($releaseIds)
     {

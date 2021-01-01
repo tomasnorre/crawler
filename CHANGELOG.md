@@ -10,6 +10,7 @@
 
 ### Deprecated
 #### Functions & Properties
+* CrawlerController->CLI_releaseProcesses()
 * CrawlerController->hasGroupAccess()
 
 #### Classes
