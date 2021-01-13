@@ -1,0 +1,17 @@
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-18.04    # supported: ubuntu-16.04 and ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - uses: tomasnorre/github-action-setup-ddev@feature/custom-ddev-dir
+        ddevDir: ".devbox"
+      # example: composer install
+      - run: ddev composer install
+      # example: fill database
+      - run: ddev mysql < data/db.sql
+      # example: install TYPO3 with helhum/typo3-console
+      - run: ddev exec vendor/bin/typo3cms install:setup --admin-user-name=admin --admin-password=adminadmin --no-interaction
+      # example: run something in the "web" container
+      - run: ddev exec Build/runTests.sh
