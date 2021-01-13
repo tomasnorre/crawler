@@ -10,5 +10,5 @@ jobs:
           ddevDir: ".devbox"
       # example: composer install
       - run: |
-        cd .devbox
-        ddev composer install
+          cd .devbox
+          ddev composer install
