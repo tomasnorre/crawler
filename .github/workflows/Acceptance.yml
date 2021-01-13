@@ -6,8 +6,8 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - uses: tomasnorre/github-action-setup-ddev@feature/custom-ddev-dir
-        with:
-          ddevDir: ".devbox"
+        #  with:
+        #  ddevDir: ".devbox"
       # example: composer install
       - run: |
           cd .devbox
