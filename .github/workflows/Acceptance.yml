@@ -33,8 +33,7 @@ jobs:
           ddevDir: ".devbox"
       - run: |
           cd .devbox
-          ddev composer require aoepeople/crawler:dev-${{ env.BRANCH_NAME }}
-          ddev composer require --dev nimut/typo3-complete=${{ matrix.typo3 }}
+          ddev composer require aoepeople/crawler:dev-${{ env.BRANCH_NAME }} nimut/typo3-complete=${{ matrix.typo3 }}
           ddev start
           ddev exec bin/typo3cms database:updateschema
           ddev exec bin/typo3cms install:fixfolderstructure
