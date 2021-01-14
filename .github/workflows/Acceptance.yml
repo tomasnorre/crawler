@@ -1,14 +1,42 @@
-on: [push, pull_request]
+on: [ push, pull_request ]
 
 jobs:
-  test:
+  Acceptance:
     runs-on: ubuntu-18.04    # supported: ubuntu-16.04 and ubuntu-18.04
+    strategy:
+      fail-fast: false
+      matrix:
+        typo3: [ ^9.5, ^10.4 ]
     steps:
+      - name: Get branch name (merge)
+        if: github.event_name != 'pull_request'
+        shell: bash
+        run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/} | tr / -)" >> $GITHUB_ENV
+
+      - name: Get branch name (pull request)
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: echo "BRANCH_NAME=$(echo ${GITHUB_HEAD_REF} | tr / -)" >> $GITHUB_ENV
+
       - uses: actions/checkout@v1
-      - uses: tomasnorre/github-action-setup-ddev@feature/custom-ddev-dir
+      - uses: jonaseberle/github-action-setup-ddev@v1
         with:
           ddevDir: ".devbox"
-      # example: composer install
       - run: |
           cd .devbox
-          ddev composer install
+          composer require aoepeople/crawler:dev-${{ env.BRANCH_NAME }}
+          composer require --dev nimut/typo3-complete=${{ matrix.typo3 }}
+          ddev start
+          ddev exec bin/typo3cms database:updateschema
+          ddev exec bin/typo3cms install:fixfolderstructure
+          ddev exec bin/typo3cms install:extensionsetupifpossible
+          ddev exec bin/typo3cms cache:flush
+          cd .. # Going back to "root" directory
+          composer install
+          wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
+          chmod +x wait-for-it.sh
+          docker ps
+          ./wait-for-it.sh -t 60 127.0.0.1:80
+          ./wait-for-it.sh -t 60 127.0.0.1:443
+          ./wait-for-it.sh -t 60 localhost:4444
+          php .Build/bin/codecept run
