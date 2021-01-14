@@ -18,6 +18,11 @@ jobs:
         shell: bash
         run: echo "BRANCH_NAME=$(echo ${GITHUB_HEAD_REF} | tr / -)" >> $GITHUB_ENV
 
+      - name: Version information
+        run: |
+          php -v
+          composer --version
+
       - uses: actions/checkout@v1
       - uses: jonaseberle/github-action-setup-ddev@v1
         with:
