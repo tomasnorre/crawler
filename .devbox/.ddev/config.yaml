@@ -16,10 +16,11 @@ hooks:
         - exec: echo '*/1 * * * * root TYPO3_CONTEXT=Development /usr/bin/php /var/www/html/bin/typo3
               scheduler:run' | sudo tee -a /etc/cron.d/typo3
         - exec: sudo chmod 0600 /etc/cron.d/typo3 && sudo service cron start
-        - exec: /var/www/html/bin/typo3cms install:generatepackagestates
         - exec: composer install -d /var/www/html
-        # Import Database
+        - exec: /var/www/html/bin/typo3cms install:generatepackagestates
+        # Import and upgrade Database
         - exec: /var/www/html/build-files/import-if-empty.sh
+        - exec: /var/www/html/bin/typo3cms database:updateschema
 omit_containers: [dba, ddev-ssh-agent]
 webimage_extra_packages: [cron]
 use_dns_when_possible: true
