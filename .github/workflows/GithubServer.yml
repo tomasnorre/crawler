@@ -63,6 +63,7 @@ jobs:
           curl "$APP_IP:8888"
       - name: Run chromedriver
         run: nohup $CHROMEWEBDRIVER/chromedriver --url-base=/wd/hub /dev/null 2>&1 &
+
       - name: Codeception Acceptance Tests
         run: |
           export APP_IP=`ip addr show eth0 | grep -Po 'inet \K[\d.]+'`
@@ -70,8 +71,8 @@ jobs:
           wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
           chmod +x wait-for-it.sh
           ./wait-for-it.sh -t 60 $APP_IP:8888
-          .Build/bin/codecept run || exit 0
-          find . -name 'AOE.Crawler.Tests.Acceptance.BackendModule.BackendModuleCest.canSeeLoginMask.fail.png' -type f
+          ./wait-for-it.sh -t 60 $APP_IP:9515
+          .Build/bin/codecept run --env=github || exit 0
 
       #- name: Upload Codeception output
       #  if: ${{ failure() }}
@@ -86,10 +87,6 @@ jobs:
       #  with:
       #    name: php-log
       #    path: php.log.txt
-
-      - name: Find
-        run: |
-          find . -name 'AOE.Crawler.Tests.Acceptance.BackendModule.BackendModuleCest.canSeeLoginMask.fail.png' -type f
 
       - uses: shallwefootball/s3-upload-action@master
         #if: ${{ failure() }}
