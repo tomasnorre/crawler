@@ -34,7 +34,7 @@ jobs:
           key: dependencies-composer-${{ hashFiles('composer.json') }}
 
       - name: Install composer dependencies
-        run: composer install --no-progress
+        run: composer require --dev helhum/typo3-console --no-progress
 
       # acceptance
       - name: Setup Runner Database
