@@ -8,7 +8,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        typo3: [ ^9.5 ]
+        typo3: [ ^10.4 ]
     steps:
       - name: Get branch name (merge)
         if: github.event_name != 'pull_request'
