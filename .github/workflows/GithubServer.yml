@@ -1,4 +1,4 @@
-name: CI
+name: GithubServer
 
 # thanks go to derhansen for demo extension https://github.com/derhansen/gha_demo
 # and blog https://www.derhansen.de/2020/05/typo3-extension-testing-with-github-actions.html
@@ -18,6 +18,9 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
 
 
       # start db
