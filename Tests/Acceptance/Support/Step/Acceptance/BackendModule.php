@@ -28,10 +28,10 @@ class BackendModule extends \AcceptanceTester
     {
         $I->click('#web_info');
         // Due to slow response time.
-        $I->waitForElementNotVisible('#noPageSelected', 10);
+        $I->wait(180);
         $pageTree->openPath(['[1] Congratulations']);
         // Due to slow response time.
-        $I->wait(0.5);
+        $I->wait(180);
         $I->switchToContentFrame();
         $I->waitForText('Page information', 10);
     }
