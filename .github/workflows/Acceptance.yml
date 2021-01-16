@@ -29,30 +29,27 @@ jobs:
           php -v
           composer --version
 
-      #- uses: actions/checkout@v1
-      #- uses: jonaseberle/github-action-setup-ddev@v1
-      #  with:
-      #    ddevDir: ".devbox"
-      #- run: |
-      #    cd .devbox
-      #    ddev composer require aoepeople/crawler:dev-${{ env.BRANCH_NAME }} nimut/typo3-complete=${{ matrix.typo3 }}
-      #    ddev start
-      #    ddev exec bin/typo3cms install:fixfolderstructure
-      #    ddev exec bin/typo3cms install:extensionsetupifpossible
-      #    ddev exec bin/typo3cms database:updateschema
-      #    ddev exec bin/typo3cms cache:flush
-      #    cd .. # Going back to "root" directory
-      #    composer install
-      #    wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
-      #    chmod +x wait-for-it.sh
-      #    docker ps
-      #    ./wait-for-it.sh -t 60 127.0.0.1:80
-      #    ./wait-for-it.sh -t 60 127.0.0.1:443
-      #    ./wait-for-it.sh -t 60 localhost:4444
-      #    php .Build/bin/codecept run || exit 0
-
+      - uses: actions/checkout@v1
+        uses: jonaseberle/github-action-setup-ddev@v1
+        with:
+          ddevDir: ".devbox"
       - run: |
-          echo `date` > date.txt
+          cd .devbox
+          ddev composer require aoepeople/crawler:dev-${{ env.BRANCH_NAME }} nimut/typo3-complete=${{ matrix.typo3 }}
+          ddev start
+          ddev exec bin/typo3cms install:fixfolderstructure
+          ddev exec bin/typo3cms install:extensionsetupifpossible
+          ddev exec bin/typo3cms database:updateschema
+          ddev exec bin/typo3cms cache:flush
+          cd .. # Going back to "root" directory
+          composer install
+          wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
+          chmod +x wait-for-it.sh
+          docker ps
+          ./wait-for-it.sh -t 60 127.0.0.1:80
+          ./wait-for-it.sh -t 60 127.0.0.1:443
+          ./wait-for-it.sh -t 60 localhost:4444
+          php .Build/bin/codecept run || exit 0
 
       - uses: shallwefootball/s3-upload-action@master
         with:
