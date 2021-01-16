@@ -8,7 +8,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        typo3: [ ^10.4 ]
+        typo3: [ ^9.5 ]
     steps:
       - name: Get branch name (merge)
         if: github.event_name != 'pull_request'
@@ -42,7 +42,7 @@ jobs:
           ddev exec bin/typo3cms database:updateschema
           ddev exec bin/typo3cms cache:flush
           cd .. # Going back to "root" directory
-          composer install
+          composer require nimut/typo3-complete=${{ matrix.typo3 }}
           wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
           chmod +x wait-for-it.sh
           docker ps

@@ -26,12 +26,13 @@ class BackendModule extends \AcceptanceTester
 {
     public function openCrawlerBackendModule(Admin $I, PageTree $pageTree): void
     {
+        $I->canSee('#web_info');
         $I->click('#web_info');
         // Due to slow response time.
-        $I->wait(180);
+        $I->wait(5);
         $pageTree->openPath(['[1] Congratulations']);
         // Due to slow response time.
-        $I->wait(180);
+        $I->wait(5);
         $I->switchToContentFrame();
         $I->waitForText('Page information', 10);
     }
