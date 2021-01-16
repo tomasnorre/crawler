@@ -82,7 +82,7 @@ jobs:
       #    path: php.log.txt
 
       - uses: shallwefootball/s3-upload-action@master
-        if: ${{ failure() }}
+        #if: ${{ failure() }}
         with:
           aws_key_id: ${{ secrets.AWS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
