@@ -11,16 +11,16 @@ return [
         'Connections' => [
             'Default' => [
                 'charset' => 'utf8mb4',
-                'dbname' => getenv('typo3DatabaseName') . '_gh',
+                'dbname' => 'crawler_gh',
                 'driver' => 'mysqli',
-                'host' => getenv('typo3DatabaseHost'),
-                'password' => getenv('typo3DatabasePassword'),
+                'host' => 'localhost',
+                'password' => 'root',
                 'port' => 3306,
                 'tableoptions' => [
                     'charset' => 'utf8mb4',
                     'collate' => 'utf8mb4_unicode_ci',
                 ],
-                'user' => getenv('typo3DatabaseUsername'),
+                'user' => 'root',
             ],
         ],
     ],
