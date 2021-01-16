@@ -27,6 +27,9 @@ jobs:
       - name: Start MySQL
         run: sudo /etc/init.d/mysql start
 
+      - name: Initialize TYPO3 environment
+        run: cp Build/envs/.env.github .env
+
       - name: Cache dependencies
         uses: actions/cache@v1
         with:
