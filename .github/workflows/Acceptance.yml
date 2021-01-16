@@ -35,6 +35,7 @@ jobs:
           ddevDir: ".devbox"
       - run: |
           cd .devbox
+          rm -rf .Build composer.lock
           ddev composer require aoepeople/crawler:dev-${{ env.BRANCH_NAME }} nimut/typo3-complete=${{ matrix.typo3 }}
           ddev start
           ddev exec bin/typo3cms install:fixfolderstructure
@@ -42,6 +43,7 @@ jobs:
           ddev exec bin/typo3cms database:updateschema
           ddev exec bin/typo3cms cache:flush
           cd .. # Going back to "root" directory
+          rm -rf .Build composer.lock
           composer require nimut/typo3-complete=${{ matrix.typo3 }}
           wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
           chmod +x wait-for-it.sh
