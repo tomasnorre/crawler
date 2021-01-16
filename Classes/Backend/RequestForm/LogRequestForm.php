@@ -314,8 +314,6 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
      * @param array $logEntriesOfPage Log items of one page
      * @param string $titleString Title string
      *
-     * @return ((Icon[]|\TYPO3\CMS\Core\Http\Uri[]|mixed[]|string)[][]|int[]|string)[][] HTML <tr> content (one or more)
-     *
      * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
      *
      * @psalm-return non-empty-list<array{titleRowSpan: positive-int, colSpan: int, title: string, noEntries?: string, trClass?: string, qid?: array{link: \TYPO3\CMS\Core\Http\Uri, link-text: string}, refresh?: array{link: \TYPO3\CMS\Core\Http\Uri, link-text: Icon, warning: Icon|string}, columns?: array{url: mixed|string, scheduled: string, exec_time: string, result_log: string, result_status: string, feUserGroupList: string, procInstructions: string, set_id: string, tsfe_id: string, tsfe_gr_list: string}}>
