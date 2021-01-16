@@ -71,10 +71,17 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: codeception-results
-          path: Tests/Acceptance/_output/
+          path: Tests/Acceptance/_output/*.png
       - name: Upload PHP log
         if: ${{ failure() }}
         uses: actions/upload-artifact@v2
         with:
           name: php-log
           path: php.log.txt
+
+      - uses: shallwefootball/s3-upload-action@master
+        with:
+          aws_key_id: ${{ secrets.AWS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+          aws_bucket: ${{ secrets.AWS_BUCKET }}
+          source_dir: 'Tests/Acceptance/_output/'                          
