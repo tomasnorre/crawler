@@ -48,8 +48,6 @@ jobs:
       - name: Initialize TYPO3 environment
         run: |
           mkdir config && cd config && ln -s ../Build/sites && cd -
-          ls -l
-          ls -l Build
           cp Build/LocalConfiguration.php .Build/Web/typo3conf/
           .Build/bin/typo3cms install:generatepackagestates
           .Build/bin/typo3cms database:update
