@@ -12,7 +12,7 @@ suites:
                     wait: 10
                     host: localhost
                     window_size: 1920x1080
-                    extendedDebugging: true
+                    #extendedDebugging: true
                     clear_cookies: true
                     cleanSession: true
                 - \Helper\Acceptance
