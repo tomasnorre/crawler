@@ -65,21 +65,21 @@ jobs:
         run: nohup $CHROMEWEBDRIVER/chromedriver --url-base=/wd/hub /dev/null 2>&1 &
       - name: Codeception Acceptance Tests
         run: |
-          .Build/bin/codecept run -c codeception.yml
+          .Build/bin/codecept run
 
-      - name: Upload Codeception output
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@v2
-        with:
-          name: codeception-results
-          path: Tests/Acceptance/_output/
+      #- name: Upload Codeception output
+      #  if: ${{ failure() }}
+      #  uses: actions/upload-artifact@v2
+      #  with:
+      #    name: codeception-results
+      #    path: Tests/Acceptance/_output/
 
-      - name: Upload PHP log
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@v2
-        with:
-          name: php-log
-          path: php.log.txt
+      #- name: Upload PHP log
+      #  if: ${{ failure() }}
+      #  uses: actions/upload-artifact@v2
+      #  with:
+      #    name: php-log
+      #    path: php.log.txt
 
       - uses: shallwefootball/s3-upload-action@master
         if: ${{ failure() }}
@@ -88,3 +88,4 @@ jobs:
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
           aws_bucket: ${{ secrets.AWS_BUCKET }}
           source_dir: 'Tests/Acceptance/_output/'
+          target_dir: ''
