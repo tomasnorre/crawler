@@ -314,7 +314,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
      * @param array $logEntriesOfPage Log items of one page
      * @param string $titleString Title string
      *
-     * @return ((Icon|\TYPO3\CMS\Core\Http\Uri|mixed|string)[]|int|string)[][] HTML <tr> content (one or more)
+     * @return ((Icon[]|\TYPO3\CMS\Core\Http\Uri[]|mixed[]|string)[][]|int[]|string)[][] HTML <tr> content (one or more)
      *
      * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
      *

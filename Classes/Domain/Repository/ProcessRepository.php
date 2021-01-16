@@ -78,8 +78,6 @@ class ProcessRepository extends Repository
 
     /**
      * This method is used to find all cli processes within a limit.
-     *
-     * @return ProcessCollection
      */
     public function findAll(): ProcessCollection
     {

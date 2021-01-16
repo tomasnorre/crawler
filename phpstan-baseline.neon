@@ -26,12 +26,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$search of function array_key_exists expects array, array\\|true given\\.$#"
-			count: 1
-			path: Classes/Backend/Helper/ResultHandler.php
-
-		-
-			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\Helper\\\\ResultHandler\\:\\:getResStatus\\(\\) has parameter \\$requestContent with no typehint specified\\.$#"
-			count: 1
+			count: 2
 			path: Classes/Backend/Helper/ResultHandler.php
 
 		-
@@ -84,15 +79,6 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message:
-				"""
-					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
-				"""
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
 			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
@@ -109,11 +95,6 @@ parameters:
 
 		-
 			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:drawLog_addRows\\(\\)\" is 39, keep it under 8$#"
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
-			message: "#^PHPDoc tag @return with type string is incompatible with native type array\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
@@ -143,17 +124,17 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
+			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:drawLog_addRows\\(\\) should return array\\<int, array\\('titleRowSpan' \\=\\> int\\<1, max\\>, 'colSpan' \\=\\> int, 'title' \\=\\> string, \\?'noEntries' \\=\\> string, \\?'trClass' \\=\\> string, \\?'qid' \\=\\> array\\('link' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, 'link\\-text' \\=\\> string\\), \\?'refresh' \\=\\> array\\('link' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, 'link\\-text' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon, 'warning' \\=\\> string\\|TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon\\), \\?'columns' \\=\\> array\\('url' \\=\\> mixed, 'scheduled' \\=\\> string, 'exec_time' \\=\\> string, 'result_log' \\=\\> string, 'result_status' \\=\\> string, 'feUserGroupList' \\=\\> string, 'procInstructions' \\=\\> string, 'set_id' \\=\\> string, \\.\\.\\.\\)\\)\\>&nonEmpty but returns array\\<int, array\\('colSpan' \\=\\> 8\\|9\\|11\\|12, 'columns' \\=\\> array\\<string, mixed\\>&nonEmpty, 'qid' \\=\\> array\\('link' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, 'link\\-text' \\=\\> string\\), 'refresh' \\=\\> array\\('link' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, 'link\\-text' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon, 'warning' \\=\\> ''\\|TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon\\), 'title' \\=\\> string, 'titleRowSpan' \\=\\> int\\<1, max\\>, 'trClass' \\=\\> ''\\|'bg\\-danger'\\)\\|array\\('titleRowSpan' \\=\\> 1, 'colSpan' \\=\\> 8\\|9\\|11\\|12, 'title' \\=\\> string, 'noEntries' \\=\\> string\\)\\>\\.$#"
+			count: 1
+			path: Classes/Backend/RequestForm/LogRequestForm.php
+
+		-
 			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\MultiProcessRequestForm\\:\\:render\\(\\) has parameter \\$id with no typehint specified\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/MultiProcessRequestForm.php
 
 		-
-			message: "#^PHPDoc tag @var for variable \\$hookObj contains unknown class AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\CrawlerHookInterface\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/MultiProcessRequestForm.php
-
-		-
-			message: "#^Call to method crawler_init\\(\\) on an unknown class AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\CrawlerHookInterface\\.$#"
+			message: "#^In method \"AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\MultiProcessRequestForm\\:\\:processOverviewAction\", caught \"Throwable\" must be rethrown\\. Either catch a more specific exception or add a \"throw\" clause in the \"catch\" block to propagate the exception\\. More info\\: http\\://bit\\.ly/failloud$#"
 			count: 1
 			path: Classes/Backend/RequestForm/MultiProcessRequestForm.php
 
@@ -212,7 +193,7 @@ parameters:
 			path: Classes/Command/BuildQueueCommand.php
 
 		-
-			message: "#^Parameter \\#1 \\$theInt of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\MathUtility\\:\\:forceIntegerInRange\\(\\) expects int, array\\<string\\>\\|string\\|null given\\.$#"
+			message: "#^Cannot cast array\\<string\\>\\|string\\|null to int\\.$#"
 			count: 1
 			path: Classes/Command/BuildQueueCommand.php
 
@@ -237,13 +218,8 @@ parameters:
 			path: Classes/Command/BuildQueueCommand.php
 
 		-
-			message: "#^Parameter \\#1 \\$theInt of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\MathUtility\\:\\:forceIntegerInRange\\(\\) expects int, array\\<string\\>\\|bool\\|string\\|null given\\.$#"
-			count: 1
-			path: Classes/Command/BuildQueueCommand.php
-
-		-
-			message: "#^Parameter \\#1 \\$theInt of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\MathUtility\\:\\:forceIntegerInRange\\(\\) expects int, array\\<string\\>\\|int\\|string\\|true given\\.$#"
-			count: 1
+			message: "#^Cannot cast array\\<string\\>\\|bool\\|string\\|null to int\\.$#"
+			count: 2
 			path: Classes/Command/BuildQueueCommand.php
 
 		-
@@ -295,14 +271,14 @@ parameters:
 			path: Classes/Command/ProcessQueueCommand.php
 
 		-
-			message: "#^Parameter \\#1 \\$messages of method Symfony\\\\Component\\\\Console\\\\Output\\\\OutputInterface\\:\\:writeln\\(\\) expects iterable\\|string, int given\\.$#"
+			message: "#^In method \"AOE\\\\Crawler\\\\Command\\\\ProcessQueueCommand\\:\\:execute\", caught \"Throwable\" must be rethrown\\. Either catch a more specific exception or add a \"throw\" clause in the \"catch\" block to propagate the exception\\. More info\\: http\\://bit\\.ly/failloud$#"
 			count: 1
 			path: Classes/Command/ProcessQueueCommand.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Configuration\\\\ExtensionConfigurationProvider\\:\\:getExtensionConfiguration\\(\\) should return array but return statement is missing\\.$#"
+			message: "#^Parameter \\#1 \\$messages of method Symfony\\\\Component\\\\Console\\\\Output\\\\OutputInterface\\:\\:writeln\\(\\) expects iterable\\|string, int given\\.$#"
 			count: 1
-			path: Classes/Configuration/ExtensionConfigurationProvider.php
+			path: Classes/Command/ProcessQueueCommand.php
 
 		-
 			message: "#^Parameter \\#2 \\$uid of static method TYPO3\\\\CMS\\\\Backend\\\\Utility\\\\BackendUtility\\:\\:getRecordWSOL\\(\\) expects int, string given\\.$#"
@@ -334,22 +310,12 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
-			count: 1
-			path: Classes/Controller/CrawlerController.php
-
-		-
 			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:checkIfPageShouldBeSkipped\\(\\)\" is 12, keep it under 8$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
 		-
 			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:urlListFromUrlArray\\(\\)\" is 14, keep it under 8$#"
-			count: 1
-			path: Classes/Controller/CrawlerController.php
-
-		-
-			message: "#^Method AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:getPageTSconfigForId\\(\\) has parameter \\$id with no typehint specified\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -396,15 +362,6 @@ parameters:
 		-
 			message: "#^Offset 'paramExpanded' does not exist on array\\(\\)\\|array\\(\\?'origin' \\=\\> string, \\?'paramExpanded' \\=\\> array, \\?'paramParsed' \\=\\> array\\<string, string\\>, \\?'subCfg' \\=\\> array, \\?'URLs' \\=\\> array\\)\\.$#"
 			count: 1
-			path: Classes/Controller/CrawlerController.php
-
-		-
-			message:
-				"""
-					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
-				"""
-			count: 2
 			path: Classes/Controller/CrawlerController.php
 
 		-
@@ -478,7 +435,7 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:readUrl\\(\\) should return int but empty return statement found\\.$#"
+			message: "#^Method AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:readUrl\\(\\) should return int\\|null but empty return statement found\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -563,6 +520,11 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
+			message: "#^Do not throw the \\\\Exception base class\\. Instead, extend the \\\\Exception base class\\. More info\\: http\\://bit\\.ly/subtypeexception$#"
+			count: 1
+			path: Classes/Converter/JsonCompatibilityConverter.php
+
+		-
 			message: "#^Use custom exceptions instead of native \"Exception\"$#"
 			count: 1
 			path: Classes/Converter/JsonCompatibilityConverter.php
@@ -593,16 +555,6 @@ parameters:
 			path: Classes/CrawlStrategy/CrawlStrategy.php
 
 		-
-			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
-			count: 1
-			path: Classes/CrawlStrategy/CrawlStrategyFactory.php
-
-		-
-			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
-			count: 1
-			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
-
-		-
 			message: "#^Offset 'scheme' does not exist on array\\(\\?'scheme' \\=\\> string, \\?'host' \\=\\> string, \\?'port' \\=\\> int, \\?'user' \\=\\> string, \\?'pass' \\=\\> string, \\?'path' \\=\\> string, \\?'query' \\=\\> string, \\?'fragment' \\=\\> string\\)\\.$#"
 			count: 1
 			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
@@ -611,11 +563,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$variable_representation of function unserialize expects string, string\\|null given\\.$#"
 			count: 1
 			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
-
-		-
-			message: "#^Method AOE\\\\Crawler\\\\Domain\\\\Model\\\\Configuration\\:\\:getPidsOnly\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: Classes/Domain/Model/Configuration.php
 
 		-
 			message: "#^Method AOE\\\\Crawler\\\\Domain\\\\Model\\\\Configuration\\:\\:setPidsOnly\\(\\) has parameter \\$pidsOnly with no typehint specified\\.$#"
@@ -647,25 +594,7 @@ parameters:
 			path: Classes/Domain/Model/ProcessCollection.php
 
 		-
-			message:
-				"""
-					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
-				"""
-			count: 1
-			path: Classes/Domain/Repository/ConfigurationRepository.php
-
-		-
 			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
-			count: 1
-			path: Classes/Domain/Repository/ConfigurationRepository.php
-
-		-
-			message:
-				"""
-					#^Call to deprecated method fetchAll\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchAllNumeric\\(\\), fetchAllAssociative\\(\\) or fetchFirstColumn\\(\\) instead\\.$#
-				"""
 			count: 1
 			path: Classes/Domain/Repository/ConfigurationRepository.php
 
@@ -680,15 +609,6 @@ parameters:
 			path: Classes/Domain/Repository/ConfigurationRepository.php
 
 		-
-			message:
-				"""
-					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
-				"""
-			count: 4
-			path: Classes/Domain/Repository/ProcessRepository.php
-
-		-
 			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
 			count: 4
 			path: Classes/Domain/Repository/ProcessRepository.php
@@ -699,26 +619,8 @@ parameters:
 			path: Classes/Domain/Repository/ProcessRepository.php
 
 		-
-			message:
-				"""
-					#^Call to deprecated method fetchAll\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchAllNumeric\\(\\), fetchAllAssociative\\(\\) or fetchFirstColumn\\(\\) instead\\.$#
-				"""
-			count: 1
-			path: Classes/Domain/Repository/ProcessRepository.php
-
-		-
 			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
 			count: 1
-			path: Classes/Domain/Repository/ProcessRepository.php
-
-		-
-			message:
-				"""
-					#^Call to deprecated method fetchColumn\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchOne\\(\\) instead\\.$#
-				"""
-			count: 2
 			path: Classes/Domain/Repository/ProcessRepository.php
 
 		-
@@ -742,40 +644,13 @@ parameters:
 			path: Classes/Domain/Repository/ProcessRepository.php
 
 		-
-			message:
-				"""
-					#^Call to deprecated method fetchColumn\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchOne\\(\\) instead\\.$#
-				"""
-			count: 7
-			path: Classes/Domain/Repository/QueueRepository.php
-
-		-
 			message: "#^Cannot call method fetchColumn\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
 			count: 8
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
-			message:
-				"""
-					#^Call to deprecated method fetchAll\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchAllNumeric\\(\\), fetchAllAssociative\\(\\) or fetchFirstColumn\\(\\) instead\\.$#
-				"""
-			count: 4
-			path: Classes/Domain/Repository/QueueRepository.php
-
-		-
 			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
 			count: 4
-			path: Classes/Domain/Repository/QueueRepository.php
-
-		-
-			message:
-				"""
-					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
-				"""
-			count: 9
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
@@ -804,15 +679,6 @@ parameters:
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
-			message:
-				"""
-					#^Call to deprecated method andX\\(\\) of class Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\ExpressionBuilder\\:
-					Use `and\\(\\)` instead\\.$#
-				"""
-			count: 1
-			path: Classes/Domain/Repository/QueueRepository.php
-
-		-
 			message: "#^Function getQueueEntriesForPageId\\(\\) has an unused variable \\$query\\.$#"
 			count: 1
 			path: Classes/Domain/Repository/QueueRepository.php
@@ -832,12 +698,12 @@ parameters:
 			path: Classes/Hooks/IndexedSearchCrawlerFilesHook.php
 
 		-
-			message: "#^Class cognitive complexity for \"IndexedSearchCrawlerHook\" is 109, keep it under 50$#"
+			message: "#^Class cognitive complexity for \"IndexedSearchCrawlerHook\" is 110, keep it under 50$#"
 			count: 1
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
 		-
-			message: "#^Class cognitive complexity for \"IndexedSearchCrawlerHook\" is 109, keep it under 60$#"
+			message: "#^Class cognitive complexity for \"IndexedSearchCrawlerHook\" is 110, keep it under 60$#"
 			count: 1
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
@@ -952,7 +818,7 @@ parameters:
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Hooks\\\\IndexedSearchCrawlerHook\\:\\:generateNextIndexingTime\\(\\) should return int but returns float\\|int\\.$#"
+			message: "#^Empty catch block\\. If you are sure this is meant to be empty, please add a \"// @ignoreException\" comment in the catch block\\.$#"
 			count: 1
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
@@ -1013,21 +879,6 @@ parameters:
 			message: "#^Cannot access offset 'feUserGroupList' on array\\|bool\\.$#"
 			count: 1
 			path: Classes/Middleware/FrontendUserAuthenticator.php
-
-		-
-			message: "#^Property AOE\\\\Crawler\\\\QueueExecutor\\:\\:\\$crawlStrategy has unknown class AOE\\\\Crawler\\\\CrawlStrategy as its type\\.$#"
-			count: 1
-			path: Classes/QueueExecutor.php
-
-		-
-			message: "#^Property AOE\\\\Crawler\\\\QueueExecutor\\:\\:\\$crawlStrategy \\(AOE\\\\Crawler\\\\CrawlStrategy\\) does not accept AOE\\\\Crawler\\\\CrawlStrategy\\\\CrawlStrategy\\.$#"
-			count: 1
-			path: Classes/QueueExecutor.php
-
-		-
-			message: "#^Call to method fetchUrlContents\\(\\) on an unknown class AOE\\\\Crawler\\\\CrawlStrategy\\.$#"
-			count: 1
-			path: Classes/QueueExecutor.php
 
 		-
 			message: "#^Call to deprecated method emitSignal\\(\\) of class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
@@ -1157,6 +1008,16 @@ parameters:
 
 		-
 			message: "#^Trying to mock an undefined method drawURLs_PIfilter\\(\\) on class Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\.$#"
+			count: 1
+			path: Tests/Functional/Api/CrawlerApiTest.php
+
+		-
+			message: "#^In method \"AOE\\\\Crawler\\\\Tests\\\\Functional\\\\Api\\\\CrawlerApiTest\\:\\:writeSiteConfiguration\", caught \"Throwable\" must be rethrown\\. Either catch a more specific exception or add a \"throw\" clause in the \"catch\" block to propagate the exception\\. More info\\: http\\://bit\\.ly/failloud$#"
+			count: 1
+			path: Tests/Functional/Api/CrawlerApiTest.php
+
+		-
+			message: "#^In method \"AOE\\\\Crawler\\\\Tests\\\\Functional\\\\Api\\\\CrawlerApiTest\\:\\:mergeSiteConfiguration\", caught \"Throwable\" must be rethrown\\. Either catch a more specific exception or add a \"throw\" clause in the \"catch\" block to propagate the exception\\. More info\\: http\\://bit\\.ly/failloud$#"
 			count: 1
 			path: Tests/Functional/Api/CrawlerApiTest.php
 
@@ -1381,6 +1242,16 @@ parameters:
 
 		-
 			message: "#^Method AOE\\\\Crawler\\\\Tests\\\\Functional\\\\Service\\\\UrlServiceTest\\:\\:getUrlFromPageAndQueryParametersReturnExpectedUrl\\(\\) has parameter \\$queryString with no typehint specified\\.$#"
+			count: 1
+			path: Tests/Functional/Service/UrlServiceTest.php
+
+		-
+			message: "#^In method \"AOE\\\\Crawler\\\\Tests\\\\Functional\\\\Service\\\\UrlServiceTest\\:\\:writeSiteConfiguration\", caught \"Throwable\" must be rethrown\\. Either catch a more specific exception or add a \"throw\" clause in the \"catch\" block to propagate the exception\\. More info\\: http\\://bit\\.ly/failloud$#"
+			count: 1
+			path: Tests/Functional/Service/UrlServiceTest.php
+
+		-
+			message: "#^In method \"AOE\\\\Crawler\\\\Tests\\\\Functional\\\\Service\\\\UrlServiceTest\\:\\:mergeSiteConfiguration\", caught \"Throwable\" must be rethrown\\. Either catch a more specific exception or add a \"throw\" clause in the \"catch\" block to propagate the exception\\. More info\\: http\\://bit\\.ly/failloud$#"
 			count: 1
 			path: Tests/Functional/Service/UrlServiceTest.php
 
