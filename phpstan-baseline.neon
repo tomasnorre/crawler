@@ -26,12 +26,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$search of function array_key_exists expects array, array\\|true given\\.$#"
-			count: 1
-			path: Classes/Backend/Helper/ResultHandler.php
-
-		-
-			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\Helper\\\\ResultHandler\\:\\:getResStatus\\(\\) has parameter \\$requestContent with no typehint specified\\.$#"
-			count: 1
+			count: 2
 			path: Classes/Backend/Helper/ResultHandler.php
 
 		-
@@ -113,11 +108,6 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^PHPDoc tag @return with type string is incompatible with native type array\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
 			message: "#^Cannot access offset 'alturl' on array\\|bool\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
@@ -143,17 +133,12 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
+			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:drawLog_addRows\\(\\) should return array\\<int, array\\('titleRowSpan' \\=\\> int\\<1, max\\>, 'colSpan' \\=\\> int, 'title' \\=\\> string, \\?'noEntries' \\=\\> string, \\?'trClass' \\=\\> string, \\?'qid' \\=\\> array\\('link' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, 'link\\-text' \\=\\> string\\), \\?'refresh' \\=\\> array\\('link' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, 'link\\-text' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon, 'warning' \\=\\> string\\|TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon\\), \\?'columns' \\=\\> array\\('url' \\=\\> mixed, 'scheduled' \\=\\> string, 'exec_time' \\=\\> string, 'result_log' \\=\\> string, 'result_status' \\=\\> string, 'feUserGroupList' \\=\\> string, 'procInstructions' \\=\\> string, 'set_id' \\=\\> string, \\.\\.\\.\\)\\)\\>&nonEmpty but returns array\\<int, array\\('colSpan' \\=\\> 8\\|9\\|11\\|12, 'columns' \\=\\> array\\<string, mixed\\>&nonEmpty, 'qid' \\=\\> array\\('link' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, 'link\\-text' \\=\\> string\\), 'refresh' \\=\\> array\\('link' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, 'link\\-text' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon, 'warning' \\=\\> ''\\|TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon\\), 'title' \\=\\> string, 'titleRowSpan' \\=\\> int\\<1, max\\>, 'trClass' \\=\\> ''\\|'bg\\-danger'\\)\\|array\\('titleRowSpan' \\=\\> 1, 'colSpan' \\=\\> 8\\|9\\|11\\|12, 'title' \\=\\> string, 'noEntries' \\=\\> string\\)\\>\\.$#"
+			count: 1
+			path: Classes/Backend/RequestForm/LogRequestForm.php
+
+		-
 			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\MultiProcessRequestForm\\:\\:render\\(\\) has parameter \\$id with no typehint specified\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/MultiProcessRequestForm.php
-
-		-
-			message: "#^PHPDoc tag @var for variable \\$hookObj contains unknown class AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\CrawlerHookInterface\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/MultiProcessRequestForm.php
-
-		-
-			message: "#^Call to method crawler_init\\(\\) on an unknown class AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\CrawlerHookInterface\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/MultiProcessRequestForm.php
 
@@ -212,7 +197,7 @@ parameters:
 			path: Classes/Command/BuildQueueCommand.php
 
 		-
-			message: "#^Parameter \\#1 \\$theInt of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\MathUtility\\:\\:forceIntegerInRange\\(\\) expects int, array\\<string\\>\\|string\\|null given\\.$#"
+			message: "#^Cannot cast array\\<string\\>\\|string\\|null to int\\.$#"
 			count: 1
 			path: Classes/Command/BuildQueueCommand.php
 
@@ -237,13 +222,8 @@ parameters:
 			path: Classes/Command/BuildQueueCommand.php
 
 		-
-			message: "#^Parameter \\#1 \\$theInt of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\MathUtility\\:\\:forceIntegerInRange\\(\\) expects int, array\\<string\\>\\|bool\\|string\\|null given\\.$#"
-			count: 1
-			path: Classes/Command/BuildQueueCommand.php
-
-		-
-			message: "#^Parameter \\#1 \\$theInt of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\MathUtility\\:\\:forceIntegerInRange\\(\\) expects int, array\\<string\\>\\|int\\|string\\|true given\\.$#"
-			count: 1
+			message: "#^Cannot cast array\\<string\\>\\|bool\\|string\\|null to int\\.$#"
+			count: 2
 			path: Classes/Command/BuildQueueCommand.php
 
 		-
@@ -300,11 +280,6 @@ parameters:
 			path: Classes/Command/ProcessQueueCommand.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Configuration\\\\ExtensionConfigurationProvider\\:\\:getExtensionConfiguration\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: Classes/Configuration/ExtensionConfigurationProvider.php
-
-		-
 			message: "#^Parameter \\#2 \\$uid of static method TYPO3\\\\CMS\\\\Backend\\\\Utility\\\\BackendUtility\\:\\:getRecordWSOL\\(\\) expects int, string given\\.$#"
 			count: 1
 			path: Classes/ContextMenu/ItemProvider.php
@@ -334,22 +309,12 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
-			count: 1
-			path: Classes/Controller/CrawlerController.php
-
-		-
 			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:checkIfPageShouldBeSkipped\\(\\)\" is 12, keep it under 8$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
 		-
 			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:urlListFromUrlArray\\(\\)\" is 14, keep it under 8$#"
-			count: 1
-			path: Classes/Controller/CrawlerController.php
-
-		-
-			message: "#^Method AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:getPageTSconfigForId\\(\\) has parameter \\$id with no typehint specified\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -478,7 +443,7 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:readUrl\\(\\) should return int but empty return statement found\\.$#"
+			message: "#^Method AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:readUrl\\(\\) should return int\\|null but empty return statement found\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -593,16 +558,6 @@ parameters:
 			path: Classes/CrawlStrategy/CrawlStrategy.php
 
 		-
-			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
-			count: 1
-			path: Classes/CrawlStrategy/CrawlStrategyFactory.php
-
-		-
-			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
-			count: 1
-			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
-
-		-
 			message: "#^Offset 'scheme' does not exist on array\\(\\?'scheme' \\=\\> string, \\?'host' \\=\\> string, \\?'port' \\=\\> int, \\?'user' \\=\\> string, \\?'pass' \\=\\> string, \\?'path' \\=\\> string, \\?'query' \\=\\> string, \\?'fragment' \\=\\> string\\)\\.$#"
 			count: 1
 			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
@@ -611,11 +566,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$variable_representation of function unserialize expects string, string\\|null given\\.$#"
 			count: 1
 			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
-
-		-
-			message: "#^Method AOE\\\\Crawler\\\\Domain\\\\Model\\\\Configuration\\:\\:getPidsOnly\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: Classes/Domain/Model/Configuration.php
 
 		-
 			message: "#^Method AOE\\\\Crawler\\\\Domain\\\\Model\\\\Configuration\\:\\:setPidsOnly\\(\\) has parameter \\$pidsOnly with no typehint specified\\.$#"
@@ -952,11 +902,6 @@ parameters:
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Hooks\\\\IndexedSearchCrawlerHook\\:\\:generateNextIndexingTime\\(\\) should return int but returns float\\|int\\.$#"
-			count: 1
-			path: Classes/Hooks/IndexedSearchCrawlerHook.php
-
-		-
 			message: "#^Constant LF not found\\.$#"
 			count: 1
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
@@ -1013,21 +958,6 @@ parameters:
 			message: "#^Cannot access offset 'feUserGroupList' on array\\|bool\\.$#"
 			count: 1
 			path: Classes/Middleware/FrontendUserAuthenticator.php
-
-		-
-			message: "#^Property AOE\\\\Crawler\\\\QueueExecutor\\:\\:\\$crawlStrategy has unknown class AOE\\\\Crawler\\\\CrawlStrategy as its type\\.$#"
-			count: 1
-			path: Classes/QueueExecutor.php
-
-		-
-			message: "#^Property AOE\\\\Crawler\\\\QueueExecutor\\:\\:\\$crawlStrategy \\(AOE\\\\Crawler\\\\CrawlStrategy\\) does not accept AOE\\\\Crawler\\\\CrawlStrategy\\\\CrawlStrategy\\.$#"
-			count: 1
-			path: Classes/QueueExecutor.php
-
-		-
-			message: "#^Call to method fetchUrlContents\\(\\) on an unknown class AOE\\\\Crawler\\\\CrawlStrategy\\.$#"
-			count: 1
-			path: Classes/QueueExecutor.php
 
 		-
 			message: "#^Call to deprecated method emitSignal\\(\\) of class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"

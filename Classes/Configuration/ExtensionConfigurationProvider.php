@@ -32,8 +32,9 @@ class ExtensionConfigurationProvider implements LoggerAwareInterface
 
     /**
      * Return full extension configuration array.
+     * @return mixed|array
      */
-    public function getExtensionConfiguration(): array
+    public function getExtensionConfiguration()
     {
         try {
             return GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('crawler');

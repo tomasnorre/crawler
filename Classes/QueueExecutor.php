@@ -22,6 +22,7 @@ namespace AOE\Crawler;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy;
+use AOE\Crawler\CrawlStrategy\CrawlStrategy;
 use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
 use AOE\Crawler\Utility\SignalSlotUtility;
 use TYPO3\CMS\Core\Http\Uri;

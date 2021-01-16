@@ -50,7 +50,8 @@
         "slam/phpstan-extensions": "^5.0",
         "symfony/yaml": "^4.4 || ^5.0",
         "symplify/easy-coding-standard": "^8.3",
-        "typo3/testing-framework": "^4.14 || ^5.0"
+        "typo3/testing-framework": "^4.14 || ^5.0",
+        "vimeo/psalm": "^4.4"
     },
     "config": {
         "bin-dir": ".Build/bin",
@@ -122,6 +123,16 @@
         "rector": [
             "[ -e .Build/bin/rector ] || composer update",
             ".Build/bin/rector process --dry-run --config rector-ci.php"
+        ],
+        "psalm": [
+            "[ -e .Build/bin/psalm ] || composer update",
+            ".Build/bin/psalm"
+        ],
+        "static": [
+            "@analyse",
+            "@psalm",
+            "@cs-fix",
+            "@rector"
         ],
         "test:acceptance": [
             "[ -e .Build/bin/codecept ] || composer update",

@@ -172,7 +172,7 @@ class Configuration extends AbstractEntity
         $this->baseUrl = $baseUrl;
     }
 
-    public function getPidsOnly()
+    public function getPidsOnly(): string
     {
         return $this->pidsonly;
     }

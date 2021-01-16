@@ -718,7 +718,8 @@ class IndexedSearchCrawlerHook
      * Generate the unix time stamp for next visit.
      *
      * @param array $cfgRec Index configuration record
-     * @return int The next time stamp
+     *
+     * @return float|int The next time stamp
      */
     public function generateNextIndexingTime($cfgRec)
     {

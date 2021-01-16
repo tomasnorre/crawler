@@ -47,6 +47,9 @@ class ResultHandler
         return $content;
     }
 
+    /**
+     * @param array|bool $requestContent
+     */
     public static function getResStatus($requestContent): string
     {
         if (empty($requestContent)) {
