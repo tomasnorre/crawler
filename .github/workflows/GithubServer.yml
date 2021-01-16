@@ -89,7 +89,7 @@ jobs:
 
       - name: Find
         run: |
-          find . -name 'AOE.Crawler.Tests.Acceptance.BackendModule.BackendModuleCest.canSeeLoginMask.fail.png' type -f
+          find . -name 'AOE.Crawler.Tests.Acceptance.BackendModule.BackendModuleCest.canSeeLoginMask.fail.png' -type f
 
       - uses: shallwefootball/s3-upload-action@master
         #if: ${{ failure() }}
