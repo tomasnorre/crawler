@@ -128,6 +128,12 @@
             "[ -e .Build/bin/psalm ] || composer update",
             ".Build/bin/psalm"
         ],
+        "static": [
+            "@analyse",
+            "@psalm",
+            "@cs-fix",
+            "@rector"
+        ],
         "test:acceptance": [
             "[ -e .Build/bin/codecept ] || composer update",
             ".Build/bin/codecept run"

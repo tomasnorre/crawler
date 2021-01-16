@@ -68,8 +68,6 @@ class IndexedSearchCrawlerHook
             $GLOBALS['LANG'] = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Localization\LanguageService::class);
             $GLOBALS['LANG']->init($GLOBALS['BE_USER']->uc['lang']);
         }
-
-        defined('LF') ?: define('LF', chr(10));
     }
 
     /**

@@ -782,12 +782,12 @@ parameters:
 			path: Classes/Hooks/IndexedSearchCrawlerFilesHook.php
 
 		-
-			message: "#^Class cognitive complexity for \"IndexedSearchCrawlerHook\" is 110, keep it under 50$#"
+			message: "#^Class cognitive complexity for \"IndexedSearchCrawlerHook\" is 109, keep it under 50$#"
 			count: 1
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
 		-
-			message: "#^Class cognitive complexity for \"IndexedSearchCrawlerHook\" is 110, keep it under 60$#"
+			message: "#^Class cognitive complexity for \"IndexedSearchCrawlerHook\" is 109, keep it under 60$#"
 			count: 1
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
