@@ -6,7 +6,8 @@ suites:
         modules:
             enabled:
                 - WebDriver:
-                    url: http://web/typo3/
+                    # needs to be separated in github and local
+                    url: http://web:8000/typo3/
                     browser: chrome
                     wait: 10
                     host: localhost
