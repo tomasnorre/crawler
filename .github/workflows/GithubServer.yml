@@ -72,7 +72,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: codeception-results
-          path: Tests/Acceptance/_output/*.png
+          path: Tests/Acceptance/_output/
 
       - name: Upload PHP log
         if: ${{ failure() }}
