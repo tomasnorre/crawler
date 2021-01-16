@@ -130,7 +130,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             $crawlerController->registerQueueEntriesInternallyOnly = true;
         }
 
-        $pageId = MathUtility::forceIntegerInRange($input->getArgument('page'), 0);
+        $pageId = MathUtility::forceIntegerInRange((int)$input->getArgument('page'), 0);
         if ($pageId === 0) {
             $message = "Page ${pageId} is not a valid page, please check you root page id and try again.";
             MessageUtility::addErrorMessage($message);
@@ -160,9 +160,9 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
         $crawlerController->setID = (int) GeneralUtility::md5int(microtime());
         $crawlerController->getPageTreeAndUrls(
             $pageId,
-            MathUtility::forceIntegerInRange($input->getOption('depth'), 0, 99),
+            MathUtility::forceIntegerInRange((int)$input->getOption('depth'), 0, 99),
             $crawlerController->getCurrentTime(),
-            MathUtility::forceIntegerInRange($input->getOption('number') ?: 30, 1, 1000),
+            MathUtility::forceIntegerInRange((int)$input->getOption('number') ?: 30, 1, 1000),
             $mode === 'queue' || $mode === 'exec',
             $mode === 'url',
             [],

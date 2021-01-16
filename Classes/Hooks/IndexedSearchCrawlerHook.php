@@ -68,6 +68,8 @@ class IndexedSearchCrawlerHook
             $GLOBALS['LANG'] = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Localization\LanguageService::class);
             $GLOBALS['LANG']->init($GLOBALS['BE_USER']->uc['lang']);
         }
+
+        defined('LF') ?: define('LF', chr(10));
     }
 
     /**
@@ -718,7 +720,8 @@ class IndexedSearchCrawlerHook
      * Generate the unix time stamp for next visit.
      *
      * @param array $cfgRec Index configuration record
-     * @return int The next time stamp
+     *
+     * @return float|int The next time stamp
      */
     public function generateNextIndexingTime($cfgRec)
     {

@@ -83,13 +83,13 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
         $this->queueRepository = $objectManager->get(QueueRepository::class);
     }
 
-    public function render($id, string $currentValue, array $menuItems): string
+    public function render($id, string $elementName, array $menuItems): string
     {
         $quiPart = GeneralUtility::_GP('qid_details') ? '&qid_details=' . (int) GeneralUtility::_GP('qid_details') : '';
         $setId = (int) GeneralUtility::_GP('setID');
         $this->pageId = $id;
 
-        return $this->getDepthDropDownHtml($id, $currentValue, $menuItems)
+        return $this->getDepthDropDownHtml($id, $elementName, $menuItems)
             . $this->showLogAction($setId, $quiPart);
     }
 
@@ -313,8 +313,12 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
      *
      * @param array $logEntriesOfPage Log items of one page
      * @param string $titleString Title string
-     * @return string HTML <tr> content (one or more)
+     *
+     * @return ((Icon|\TYPO3\CMS\Core\Http\Uri|mixed|string)[]|int|string)[][] HTML <tr> content (one or more)
+     *
      * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
+     *
+     * @psalm-return non-empty-list<array{titleRowSpan: positive-int, colSpan: int, title: string, noEntries?: string, trClass?: string, qid?: array{link: \TYPO3\CMS\Core\Http\Uri, link-text: string}, refresh?: array{link: \TYPO3\CMS\Core\Http\Uri, link-text: Icon, warning: Icon|string}, columns?: array{url: mixed|string, scheduled: string, exec_time: string, result_log: string, result_status: string, feUserGroupList: string, procInstructions: string, set_id: string, tsfe_id: string, tsfe_gr_list: string}}>
      */
     private function drawLog_addRows(array $logEntriesOfPage, string $titleString): array
     {

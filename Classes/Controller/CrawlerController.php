@@ -547,7 +547,7 @@ class CrawlerController implements LoggerAwareInterface
         return false;
     }
 
-    public function getPageTSconfigForId($id): array
+    public function getPageTSconfigForId(int $id): array
     {
         if (! $this->MP) {
             $pageTSconfig = BackendUtility::getPagesTSconfig($id);
@@ -1175,7 +1175,8 @@ class CrawlerController implements LoggerAwareInterface
      *
      * @param integer $queueId
      * @param boolean $force If set, will process even if exec_time has been set!
-     * @return integer
+     *
+     * @return int|null
      */
     public function readUrl($queueId, $force = false)
     {

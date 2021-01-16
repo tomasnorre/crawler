@@ -174,7 +174,7 @@ class ProcessCleanUpHook implements CrawlerHookInterface
         } else {
             // Windows
             exec('tasklist | find "' . $pid . '"', $returnArray, $returnValue);
-            if (count($returnArray) > 0 && preg_match('/php/i', $returnValue[0])) {
+            if (count($returnArray) > 0 && false !== stripos($returnArray[0], "php")) {
                 $doProcessStillExists = true;
             }
         }
