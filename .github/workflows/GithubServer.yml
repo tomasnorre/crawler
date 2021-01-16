@@ -65,6 +65,11 @@ jobs:
         run: nohup $CHROMEWEBDRIVER/chromedriver --url-base=/wd/hub /dev/null 2>&1 &
       - name: Codeception Acceptance Tests
         run: |
+          export APP_IP=`ip addr show eth0 | grep -Po 'inet \K[\d.]+'`
+          curl "$APP_IP:8888"
+          wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
+          chmod +x wait-for-it.sh
+          ./wait-for-it.sh -t 60 $APP_IP:8888
           .Build/bin/codecept run || exit 0
 
       #- name: Upload Codeception output
