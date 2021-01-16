@@ -81,5 +81,5 @@ jobs:
                     php-version: 7.4
                     coverage: none
 
-            -   name: Psalm
-                uses: docker://vimeo/psalm-github-actions
+            -   run: composer install --no-scripts --no-progress
+            -   run: .Build/bin/psalm
