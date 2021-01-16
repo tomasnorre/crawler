@@ -8,7 +8,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        typo3: [ ^9.5, ^10.4 ]
+        typo3: [ ^10.4 ]
     steps:
       - name: Get branch name (merge)
         if: github.event_name != 'pull_request'
@@ -56,4 +56,4 @@ jobs:
           aws_key_id: ${{ secrets.AWS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
           aws_bucket: ${{ secrets.AWS_BUCKET }}
-          source_dir: '.'
+          source_dir: 'Tests/Acceptance/_output/'
