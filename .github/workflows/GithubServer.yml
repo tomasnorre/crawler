@@ -54,7 +54,7 @@ jobs:
       - name: Run PHP webserver
         run: |
           export APP_IP=`ip addr show eth0 | grep -Po 'inet \K[\d.]+'`
-          sed -i -e "s/GITHUB_DOMAIN/$APP_IP:8888/" Tests/Acceptance/_envs/github.yml
+          sed -i -e "s/GITHUB_DOMAIN/$APP_IP:8888/" codeception.yml
           php -S 0.0.0.0:8888 -t .Build/Web/ &> php.log.txt &
           sleep 2;
       - name: Test PHP webserver and initialize TYPO3 cache

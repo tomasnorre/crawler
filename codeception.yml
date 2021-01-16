@@ -6,8 +6,11 @@ suites:
         modules:
             enabled:
                 - WebDriver:
+                    #extendedDebugging: true
+                    port: 9515
+                    url: 'http://GITHUB_DOMAIN/typo3'
                     # needs to be separated in github and local
-                    url: http://web:8888/typo3/
+                    #url: http://web:8888/typo3/
                     browser: chrome
                     wait: 10
                     host: localhost
