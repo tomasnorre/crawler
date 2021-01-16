@@ -65,7 +65,7 @@ jobs:
         run: nohup $CHROMEWEBDRIVER/chromedriver --url-base=/wd/hub /dev/null 2>&1 &
       - name: Codeception Acceptance Tests
         run: |
-          .Build/bin/codecept run Backend --env=github -c codeception.yml
+          .Build/bin/codecept run -c codeception.yml
       - name: Upload Codeception output
         if: ${{ failure() }}
         uses: actions/upload-artifact@v2
