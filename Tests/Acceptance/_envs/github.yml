@@ -2,16 +2,14 @@ modules:
   enabled:
     - WebDriver:
         host: 'localhost'
-        extendedDebugging: true
         port: 9515
         url: 'http://GITHUB_DOMAIN/typo3'
         clear_cookies: true
         cleanSession: true
         browser: chrome
-        window_size: '1850x1024'
+        window_size: '1920x1080'
         capabilities:
-          name: 'container tests'
-          extendedDebugging: true
+          name: 'crawler tests'
           chromeOptions:
             w3c: false
             args: ["--disable-gpu", "--headless", "--disable-dev-shm-usage", "--no-sandbox", "--disable-extensions", "--hide-scrollbars"]

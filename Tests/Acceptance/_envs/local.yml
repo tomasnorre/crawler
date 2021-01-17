@@ -1,0 +1,14 @@
+modules:
+  config:
+    WebDriver:
+      url: http://web/typo3/
+      browser: chrome
+      host: 'localhost'
+      clear_cookies: true
+      cleanSession: true
+      window_size: '1920x1080'
+      capabilities:
+        name: 'tests'
+        chromeOptions:
+          w3c: false
+          args: [ "--disable-gpu", "--headless", "--disable-dev-shm-usage", "--no-sandbox", "--disable-extensions", "--hide-scrollbars" ]
