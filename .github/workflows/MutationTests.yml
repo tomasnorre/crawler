@@ -1,52 +1,52 @@
-#name: "Mutation tests"
-#
-#on:
-#  pull_request:
-#  push:
-#
-#jobs:
-#  mutation-tests:
-#    name: "Mutation tests"
-#
-#    runs-on: ${{ matrix.operating-system }}
-#
-#    strategy:
-#      matrix:
-#        php-version:
-#          - "7.4"
-#        operating-system:
-#          - "ubuntu-latest"
-#
-#    steps:
-#      - name: "Checkout"
-#        uses: "actions/checkout@v2"
-#        with:
-#          fetch-depth: 0
-#
-#      - name: "Install PHP"
-#        uses: "shivammathur/setup-php@v2"
-#        with:
-#          coverage: "xdebug"
-#          php-version: "${{ matrix.php-version }}"
-#          ini-values: memory_limit=-1
-#          tools: composer:v2, cs2pr
-#
-#      - name: "Cache dependencies"
-#        uses: "actions/cache@v2"
-#        with:
-#          path: |
-#            ~/.composer/cache
-#            .Build
-#          key: "php-${{ matrix.php-version }}-${{ matrix.dependencies }}"
-#          restore-keys: "php-${{ matrix.php-version }}-${{ matrix.dependencies }}"
-#
-#      - name: "Install dependencies"
-#        run: "composer require --dev infection/infection:^0.16"
-#
-#      - name: "Infection"
-#        # --min-msi and --min-covered-msi can be moved to infection.json.dist when upgrading to ^0.16
-#        run: ".Build/bin/infection --min-msi=16 --min-covered-msi=94 --threads=8"
-#        env:
-#          #INFECTION_BADGE_API_KEY: ${{ secrets.INFECTION_BADGE_API_KEY }}
-#          STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
-#
+name: "Mutation tests"
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  mutation-tests:
+    name: "Mutation tests"
+
+    runs-on: ${{ matrix.operating-system }}
+
+    strategy:
+      matrix:
+        php-version:
+          - "7.4"
+        operating-system:
+          - "ubuntu-latest"
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v2"
+        with:
+          fetch-depth: 0
+
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          coverage: "xdebug"
+          php-version: "${{ matrix.php-version }}"
+          ini-values: memory_limit=-1
+          tools: composer:v2, cs2pr
+
+      - name: "Cache dependencies"
+        uses: "actions/cache@v2"
+        with:
+          path: |
+            ~/.composer/cache
+            .Build
+          key: "php-${{ matrix.php-version }}-${{ matrix.dependencies }}"
+          restore-keys: "php-${{ matrix.php-version }}-${{ matrix.dependencies }}"
+
+      - name: "Install dependencies"
+        run: "composer require --dev infection/infection:^0.16"
+
+      - name: "Infection"
+        # --min-msi and --min-covered-msi can be moved to infection.json.dist when upgrading to ^0.16
+        run: ".Build/bin/infection --min-msi=16 --min-covered-msi=94 --threads=8"
+        env:
+          #INFECTION_BADGE_API_KEY: ${{ secrets.INFECTION_BADGE_API_KEY }}
+          STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
+

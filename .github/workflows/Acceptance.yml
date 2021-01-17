@@ -8,7 +8,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        typo3: [ ^10.4 ]
+        typo3: [ ^9.5, ^10.4 ]
     steps:
       - name: Get branch name (merge)
         if: github.event_name != 'pull_request'
@@ -51,9 +51,17 @@ jobs:
           ./wait-for-it.sh -t 60 127.0.0.1:80
           ./wait-for-it.sh -t 60 127.0.0.1:443
           ./wait-for-it.sh -t 60 localhost:4444
-          php .Build/bin/codecept run || exit 0
+          php .Build/bin/codecept run
+
+      - name: Upload Codeception output
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: codeception-results
+          path: Tests/Acceptance/_output/
 
       - uses: shallwefootball/s3-upload-action@master
+        if: ${{ failure() }}
         with:
           aws_key_id: ${{ secrets.AWS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
