@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace AOE\Crawler\Tests\Acceptance\Support\Helper;
@@ -37,8 +38,11 @@ abstract class AbstractPageTree
 {
     // Selectors
     public static $pageTreeFrameSelector = '#typo3-pagetree';
+
     public static $pageTreeSelector = '#typo3-pagetree-treeContainer';
+
     public static $treeItemSelector = 'g.nodes > .node';
+
     public static $treeItemAnchorSelector = 'text.node-name';
 
     /**
@@ -57,7 +61,7 @@ abstract class AbstractPageTree
      *
      * @param string[] $path
      */
-    public function openPath(array $path)
+    public function openPath(array $path): void
     {
         $context = $this->getPageTreeElement();
         foreach ($path as $pageName) {
@@ -83,8 +87,6 @@ abstract class AbstractPageTree
     /**
      * Search for an element with the given link text in the provided context.
      *
-     * @param string $nodeText
-     * @param RemoteWebElement $context
      * @return RemoteWebElement
      */
     protected function ensureTreeNodeIsOpen(string $nodeText, RemoteWebElement $context)
