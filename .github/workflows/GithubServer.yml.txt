@@ -1,0 +1,104 @@
+name: GithubServer
+
+# thanks go to derhansen for demo extension https://github.com/derhansen/gha_demo
+# and blog https://www.derhansen.de/2020/05/typo3-extension-testing-with-github-actions.html
+
+on: [ push, pull_request ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        typo3: [ ^9.5, ^10.4 ]
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Get branch name (merge)
+        if: github.event_name != 'pull_request'
+        shell: bash
+        run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/} | tr / -)" >> $GITHUB_ENV
+
+      - name: Get branch name (pull request)
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: echo "BRANCH_NAME=$(echo ${GITHUB_HEAD_REF} | tr / -)" >> $GITHUB_ENV
+
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
+
+
+      # start db
+      - name: Start MySQL
+        run: sudo /etc/init.d/mysql start
+
+      - name: Initialize TYPO3 environment
+        run: cp Build/envs/.env.github .env
+
+      - name: Cache dependencies
+        uses: actions/cache@v1
+        with:
+          path: ~/.composer/cache
+          key: dependencies-composer-${{ hashFiles('composer.json') }}
+
+      - name: Install composer dependencies
+        run: composer require --dev helhum/typo3-console nimut/typo3-complete=${{ matrix.typo3 }} --no-progress
+
+      # acceptance
+      - name: Setup Runner Database
+        run: |
+          mysql -uroot -h127.0.0.1 -proot -e 'CREATE DATABASE IF NOT EXISTS crawler_gh;'
+          gzip -dc .devbox/build-files/db.sql.gz | mysql -uroot -proot -h127.0.0.1 crawler_gh
+
+      - name: Initialize TYPO3 environment
+        run: |
+          mkdir config && cd config && ln -s ../Build/sites && cd -
+          cp Build/LocalConfiguration.php .Build/Web/typo3conf/
+          .Build/bin/typo3cms install:generatepackagestates
+          .Build/bin/typo3cms database:update
+      - name: Run PHP webserver
+        run: |
+          export APP_IP=`ip addr show eth0 | grep -Po 'inet \K[\d.]+'`
+          sed -i -e "s/GITHUB_DOMAIN/$APP_IP:8888/" Tests/Acceptance/_envs/github.yml
+          php -S 0.0.0.0:8888 -t .Build/Web/ &> php.log.txt &
+          sleep 2;
+      - name: Test PHP webserver and initialize TYPO3 cache
+        run: |
+          export APP_IP=`ip addr show eth0 | grep -Po 'inet \K[\d.]+'`
+          curl "$APP_IP:8888"
+      - name: Run chromedriver
+        run: nohup $CHROMEWEBDRIVER/chromedriver --url-base=/wd/hub /dev/null 2>&1 &
+
+      - name: Codeception Acceptance Tests
+        run: |
+          export APP_IP=`ip addr show eth0 | grep -Po 'inet \K[\d.]+'`
+          curl "$APP_IP:8888"
+          wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
+          chmod +x wait-for-it.sh
+          ./wait-for-it.sh -t 60 $APP_IP:8888
+          ./wait-for-it.sh -t 60 localhost:9515
+          .Build/bin/codecept run --env=github
+
+      - name: Upload Codeception output
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: codeception-results
+          path: Tests/Acceptance/_output/
+
+      - uses: shallwefootball/s3-upload-action@master
+        if: ${{ failure() }}
+        with:
+          aws_key_id: ${{ secrets.AWS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+          aws_bucket: ${{ secrets.AWS_BUCKET }}
+          source_dir: 'Tests/Acceptance/_output/'
+          destination_dir: ''

@@ -30,7 +30,6 @@ namespace AOE\Crawler\Tests\Acceptance\Support\Helper;
  */
 
 use AOE\Crawler\Tests\Acceptance\Support\BackendTester;
-use TYPO3\TestingFramework\Core\Acceptance\Helper\AbstractPageTree;
 
 /**
  * @see AbstractPageTree

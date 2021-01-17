@@ -1,38 +1,38 @@
 # suite config
 suites:
-    acceptance:
-        actor: AcceptanceTester
-        path: .
-        modules:
-            enabled:
-                - WebDriver:
-                    url: http://web/typo3/
-                    browser: chrome
-                    wait: 10
-                    host: localhost
-                    window_size: 1920x1080
-                - \Helper\Acceptance
-        step_decorators:
-            - Codeception\Step\ConditionalAssertion
-            - Codeception\Step\TryTo
-            - Codeception\Step\Retry
-
+  Acceptance:
+    actor: AcceptanceTester
+    path: .
+    modules:
+      enabled:
+        - WebDriver:
+            url: http://web/typo3/
+            browser: chrome
+            wait: 10
+            host: localhost
+            window_size: 1920x1080
+        - \Helper\Acceptance
+    step_decorators:
+      - Codeception\Step\ConditionalAssertion
+      - Codeception\Step\TryTo
+      - Codeception\Step\Retry
+actor_suffix: Tester
 extensions:
-    enabled: [Codeception\Extension\RunFailed]
+  enabled: [ Codeception\Extension\RunFailed ]
 
 params:
-    - env
+  - env
 
-gherkin: []
+gherkin: [ ]
 
 # additional paths
 paths:
-    tests: Tests/Acceptance
-    output: Tests/Acceptance/_output
-    data: Tests/Acceptance/_data
-    support: Tests/Acceptance/Support
-    envs: Tests/Acceptance/_envs
+  tests: Tests/Acceptance
+  output: Tests/Acceptance/_output
+  data: Tests/Acceptance/_data
+  support: Tests/Acceptance/Support
+  envs: Tests/Acceptance/_envs
 
 settings:
-    shuffle: false
-    lint: true
+  shuffle: false
+  lint: true

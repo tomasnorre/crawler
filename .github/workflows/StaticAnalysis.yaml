@@ -83,3 +83,4 @@ jobs:
 
             -   run: composer install --no-scripts --no-progress
             -   run: .Build/bin/psalm --shepherd
+
