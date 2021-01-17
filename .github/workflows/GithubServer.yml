@@ -54,7 +54,7 @@ jobs:
       - name: Run PHP webserver
         run: |
           export APP_IP=`ip addr show eth0 | grep -Po 'inet \K[\d.]+'`
-          sed -i -e "s/GITHUB_DOMAIN/$APP_IP:8888/" codeception.yml
+          sed -i -e "s/GITHUB_DOMAIN/$APP_IP:8888/" Tests/Acceptance/_envs/github.yml
           php -S 0.0.0.0:8888 -t .Build/Web/ &> php.log.txt &
           sleep 2;
       - name: Test PHP webserver and initialize TYPO3 cache
@@ -72,24 +72,17 @@ jobs:
           chmod +x wait-for-it.sh
           ./wait-for-it.sh -t 60 $APP_IP:8888
           ./wait-for-it.sh -t 60 localhost:9515
-          .Build/bin/codecept run --env=github || exit 0
+          .Build/bin/codecept run --env=github
 
-      #- name: Upload Codeception output
-      #  if: ${{ failure() }}
-      #  uses: actions/upload-artifact@v2
-      #  with:
-      #    name: codeception-results
-      #    path: Tests/Acceptance/_output/
-
-      #- name: Upload PHP log
-      #  if: ${{ failure() }}
-      #  uses: actions/upload-artifact@v2
-      #  with:
-      #    name: php-log
-      #    path: php.log.txt
+      - name: Upload Codeception output
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: codeception-results
+          path: Tests/Acceptance/_output/
 
       - uses: shallwefootball/s3-upload-action@master
-        #if: ${{ failure() }}
+        if: ${{ failure() }}
         with:
           aws_key_id: ${{ secrets.AWS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
