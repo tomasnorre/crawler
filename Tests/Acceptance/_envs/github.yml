@@ -1,15 +1,19 @@
 modules:
-  enabled:
-    - WebDriver:
-        host: 'localhost'
-        port: 9515
-        url: 'http://GITHUB_DOMAIN/typo3'
-        clear_cookies: true
-        cleanSession: true
-        browser: chrome
-        window_size: '1920x1080'
-        capabilities:
-          name: 'crawler tests'
-          chromeOptions:
-            w3c: false
-            args: ["--disable-gpu", "--headless", "--disable-dev-shm-usage", "--no-sandbox", "--disable-extensions", "--hide-scrollbars"]
+  config:
+    WebDriver:
+      url: 'http://GITHUB_DOMAIN/typo3'
+      browser: chrome
+      host: 'localhost'
+      port: 9515
+      clear_cookies: true
+      cleanSession: true
+      window_size: '1920x1080'
+      capabilities:
+        name: 'crawler tests'
+        chromeOptions:
+          w3c: false
+          args: [ "--disable-gpu", "--headless", "--disable-dev-shm-usage", "--no-sandbox", "--disable-extensions", "--hide-scrollbars"]
+step_decorators:
+  - Codeception\Step\ConditionalAssertion
+  - Codeception\Step\TryTo
+  - Codeception\Step\Retry
