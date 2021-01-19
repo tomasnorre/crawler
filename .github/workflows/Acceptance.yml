@@ -10,29 +10,17 @@ jobs:
       matrix:
         typo3: [ ^9.5, ^10.4 ]
     steps:
-
-      - uses: FranzDiebold/github-env-vars-action@v1.2.0
-      - name: Print environment variables
-        run: |
-          echo "GITHUB_REPOSITORY_SLUG=$GITHUB_REPOSITORY_SLUG"
-          echo "GITHUB_REPOSITORY_OWNER=$GITHUB_REPOSITORY_OWNER"
-          echo "GITHUB_REPOSITORY_OWNER_SLUG=$GITHUB_REPOSITORY_OWNER_SLUG"
-          echo "GITHUB_REPOSITORY_NAME=$GITHUB_REPOSITORY_NAME"
-          echo "GITHUB_REPOSITORY_NAME_SLUG=$GITHUB_REPOSITORY_NAME_SLUG"
-          echo "GITHUB_REF_SLUG=$GITHUB_REF_SLUG"
-          echo "GITHUB_REF_NAME=$GITHUB_REF_NAME"
-          echo "GITHUB_REF_NAME_SLUG=$GITHUB_REF_NAME_SLUG"
-          echo "GITHUB_SHA_SHORT=$GITHUB_SHA_SHORT"
-          
-      - name: Get branch name (merge)
+      # extract branch name
+      - name: Extract branch name
         if: github.event_name != 'pull_request'
         shell: bash
-        run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/} | tr / -)" >> $GITHUB_ENV
+        run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
 
-      - name: Get branch name (pull request)
+      # extract branch name on pull request
+      - name: Print branch name
         if: github.event_name == 'pull_request'
-        shell: bash
-        run: echo "BRANCH_NAME=$(echo ${GITHUB_HEAD_REF})" >> $GITHUB_ENV
+        run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_HEAD_REF})"
 
       - uses: shivammathur/setup-php@v2
         with:
@@ -50,7 +38,7 @@ jobs:
       - run: |
           cd .devbox
           rm -rf vendor composer.lock
-          ddev composer require aoepeople/crawler:dev-${{ env.BRANCH_NAME }} nimut/typo3-complete=${{ matrix.typo3 }}
+          ddev composer require aoepeople/crawler:dev-$BRANCH_NAME nimut/typo3-complete=${{ matrix.typo3 }}
           ddev start
           ddev exec bin/typo3cms install:fixfolderstructure
           ddev exec bin/typo3cms install:extensionsetupifpossible
