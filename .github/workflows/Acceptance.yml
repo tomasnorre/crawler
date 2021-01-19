@@ -10,17 +10,16 @@ jobs:
       matrix:
         typo3: [ ^9.5, ^10.4 ]
     steps:
-      # extract branch name
-      - name: Extract branch name
-        if: github.event_name != 'pull_request'
-        shell: bash
-        run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_REF#refs/heads/})"
-        id: extract_branch
 
-      # extract branch name on pull request
-      - name: Print branch name
+      - name: "Determine Branch name (merge)"
+        id: "determine-branch"
+        if: github.event_name != 'pull_request'
+        run: "echo \"::set-output name=tag::${GITHUB_REF#refs/heads/}\""
+
+      - name: "Determine Branch name (pr)"
+        id: "determine-branch"
         if: github.event_name == 'pull_request'
-        run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_HEAD_REF})"
+        run: "echo \"::set-output name=tag::${GITHUB_HEAD_REF}\""
 
       - uses: shivammathur/setup-php@v2
         with:
@@ -38,7 +37,7 @@ jobs:
       - run: |
           cd .devbox
           rm -rf vendor composer.lock
-          ddev composer require aoepeople/crawler:dev-$BRANCH_NAME nimut/typo3-complete=${{ matrix.typo3 }}
+          ddev composer require aoepeople/crawler:dev-${{ steps.determine-branch.outputs.tag }} nimut/typo3-complete=${{ matrix.typo3 }}
           ddev start
           ddev exec bin/typo3cms install:fixfolderstructure
           ddev exec bin/typo3cms install:extensionsetupifpossible
