@@ -1,20 +1,15 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 9.2.2-dev
+## Crawler 9.2.2
+Crawler 9.2.2 was released on January 26th, 2021
 
 ### Added
 * AccessService::hasGroupAccess()
-
-### Changed
-*
 
 ### Deprecated
 #### Functions & Properties
 * CrawlerController->CLI_releaseProcesses()
 * CrawlerController->hasGroupAccess()
-
-#### Classes
-*
 
 ### Fixed
 * buildQueue with `--mode exec` resulted in a 503
