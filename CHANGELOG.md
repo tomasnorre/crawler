@@ -17,7 +17,7 @@
 *
 
 ### Fixed
-*
+* buildQueue with `--mode exec` resulted in a 503
 
 ## Crawler 9.2.1
 Crawler 9.2.1 was released on December 27th, 2020

@@ -1285,7 +1285,7 @@ class CrawlerController implements LoggerAwareInterface
             $this->tableName,
             $field_array
         );
-        $queueId = $connectionForCrawlerQueue->lastInsertId($this->tableName, 'qid');
+        $queueId = $field_array['qid'] = $connectionForCrawlerQueue->lastInsertId($this->tableName, 'qid');
         $result = $this->queueExecutor->executeQueueItem($field_array, $this);
 
         // Set result in log which also denotes the end of the processing of this entry.
