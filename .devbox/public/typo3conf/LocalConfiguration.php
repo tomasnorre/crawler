@@ -75,7 +75,7 @@ return [
             'phpBinary' => 'php',
             'phpPath' => '',
             'processDebug' => '0',
-            'processLimit' => '2',
+            'processLimit' => '4',
             'processMaxRunTime' => '25',
             'processVerbose' => '0',
             'purgeQueueDays' => '14',
