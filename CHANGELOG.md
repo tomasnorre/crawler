@@ -18,6 +18,7 @@
 
 ### Fixed
 * buildQueue with `--mode exec` resulted in a 503
+* Set content in `fetchUrlContents()` to false if null, to prevent serializing from failing
 
 ## Crawler 9.2.1
 Crawler 9.2.1 was released on December 27th, 2020

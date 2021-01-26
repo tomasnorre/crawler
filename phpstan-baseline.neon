@@ -563,11 +563,6 @@ parameters:
 			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
 
 		-
-			message: "#^Parameter \\#1 \\$variable_representation of function unserialize expects string, string\\|null given\\.$#"
-			count: 1
-			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
-
-		-
 			message: "#^Method AOE\\\\Crawler\\\\Domain\\\\Model\\\\Configuration\\:\\:setPidsOnly\\(\\) has parameter \\$pidsOnly with no typehint specified\\.$#"
 			count: 1
 			path: Classes/Domain/Model/Configuration.php

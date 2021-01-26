@@ -95,6 +95,9 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
         $content = $this->executeShellCommand($cmd);
         $this->logger->info($url . ' ' . (microtime(true) - $startTime));
 
+        if ($content === null) {
+            return false;
+        }
         return unserialize($content);
     }
 
