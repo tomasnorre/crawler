@@ -23,11 +23,15 @@
         "typo3/cms-belog": "^9.5 || ^10.4",
         "bk2k/bootstrap-package": "^10.0 || ^11.0",
         "helhum/typo3-console": "*",
-        "aoepeople/crawler": "dev-main",
+        "aoepeople/crawler": "*@dev",
         "typo3/cms-beuser": "^9.5 || ^10.4",
         "georgringer/news": "*"
     },
     "repositories": [
+        {
+            "type": "path",
+            "url": "../"
+        },
         {
             "type": "git",
             "url": "https://github.com/tomasnorre/bootstrap_package.git"
