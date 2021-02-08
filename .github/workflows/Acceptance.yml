@@ -43,7 +43,7 @@ jobs:
       - run: |
           cd .devbox
           rm -rf vendor composer.lock
-          ddev composer require aoepeople/crawler:dev-${{ env.BRANCH_NAME }} nimut/typo3-complete=${{ matrix.typo3 }}
+          ddev composer require nimut/typo3-complete=${{ matrix.typo3 }}
           ddev start
           ddev exec bin/typo3cms install:fixfolderstructure
           ddev exec bin/typo3cms install:extensionsetupifpossible
