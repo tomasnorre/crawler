@@ -64,7 +64,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
 
         $this->objectManager = GeneralUtility::makeInstance(ObjectManager::class);
 
-        /** @var ProcessCleanUpHook subject */
+        /** @var ProcessCleanUpHook $subject */
         $this->subject = $this->objectManager->get(ProcessCleanUpHook::class);
         $this->processRepository = $this->objectManager->get(ProcessRepository::class);
         $this->queueRepository = $this->objectManager->get(QueueRepository::class);

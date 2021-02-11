@@ -1096,41 +1096,14 @@ parameters:
 			path: Tests/Functional/Api/CrawlerApiTest.php
 
 		-
-			message:
-				"""
-					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
-					since TYPO3 10\\.4, will be removed in version 12\\.0$#
-				"""
+			message: "#^Constant TYPO3_REQUESTTYPE_BE not found\\.$#"
 			count: 1
-			path: Tests/Functional/Command/BuildQueueCommandTest.php
+			path: Tests/Functional/Backend/RequestForm/StartRequestFormTest.php
 
 		-
-			message: "#^Cannot call method count\\(\\) on array\\|TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface\\.$#"
+			message: "#^Constant TYPO3_REQUESTTYPE_BE not found\\.$#"
 			count: 1
-			path: Tests/Functional/Command/BuildQueueCommandTest.php
-
-		-
-			message:
-				"""
-					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
-					since TYPO3 10\\.4, will be removed in version 12\\.0$#
-				"""
-			count: 1
-			path: Tests/Functional/Command/FlushQueueCommandTest.php
-
-		-
-			message: "#^Cannot call method count\\(\\) on array\\|TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface\\.$#"
-			count: 1
-			path: Tests/Functional/Command/FlushQueueCommandTest.php
-
-		-
-			message:
-				"""
-					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
-					since TYPO3 10\\.4, will be removed in version 12\\.0$#
-				"""
-			count: 1
-			path: Tests/Functional/Command/ProcessQueueCommandTest.php
+			path: Tests/Functional/Controller/CrawlerControllerTest.php
 
 		-
 			message: "#^Property AOE\\\\Crawler\\\\Tests\\\\Functional\\\\Controller\\\\CrawlerControllerTest\\:\\:\\$subject \\(AOE\\\\Crawler\\\\Controller\\\\CrawlerController&Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface&PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\) does not accept Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface&PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
@@ -1193,6 +1166,43 @@ parameters:
 					since TYPO3 10\\.4, will be removed in version 12\\.0$#
 				"""
 			count: 1
+			path: Tests/Functional/Command/BuildQueueCommandTest.php
+
+		-
+			message: "#^Cannot call method count\\(\\) on array\\|TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface\\.$#"
+			count: 1
+			path: Tests/Functional/Command/BuildQueueCommandTest.php
+
+		-
+			message:
+				"""
+					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+					since TYPO3 10\\.4, will be removed in version 12\\.0$#
+				"""
+			count: 1
+			path: Tests/Functional/Command/FlushQueueCommandTest.php
+
+		-
+			message: "#^Cannot call method count\\(\\) on array\\|TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface\\.$#"
+			count: 1
+			path: Tests/Functional/Command/FlushQueueCommandTest.php
+
+		-
+			message:
+				"""
+					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+					since TYPO3 10\\.4, will be removed in version 12\\.0$#
+				"""
+			count: 1
+			path: Tests/Functional/Command/ProcessQueueCommandTest.php
+
+		-
+			message:
+				"""
+					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+					since TYPO3 10\\.4, will be removed in version 12\\.0$#
+				"""
+			count: 1
 			path: Tests/Functional/Domain/Repository/ConfigurationRepositoryTest.php
 
 		-
@@ -1245,6 +1255,11 @@ parameters:
 					since TYPO3 10\\.4, will be removed in version 12\\.0$#
 				"""
 			count: 3
+			path: Tests/Functional/Hooks/ProcessCleanUpHookTest.php
+
+		-
+			message: "#^Variable \\$subject in PHPDoc tag @var does not exist\\.$#"
+			count: 1
 			path: Tests/Functional/Hooks/ProcessCleanUpHookTest.php
 
 		-
