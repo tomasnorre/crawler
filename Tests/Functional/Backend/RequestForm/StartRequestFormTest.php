@@ -19,17 +19,25 @@ namespace AOE\Crawler\Tests\Functional\Backend\RequestForm;
  * The TYPO3 project - inspiring people to share!
  */
 
+use _generated\BackendTesterActions;
 use AOE\Crawler\Backend\RequestForm\StartRequestForm;
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
+use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Backend\Routing\Router;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Localization\LanguageService;
+use TYPO3\CMS\Core\Routing\Route;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Info\Controller\InfoModuleController;
 
 class StartRequestFormTest extends FunctionalTestCase
 {
+    use BackendRequestTestTrait;
+
     /**
      * @var array
      */
@@ -52,6 +60,7 @@ class StartRequestFormTest extends FunctionalTestCase
         $this->setupExtensionSettings();
         $this->SetupBackendUser();
         $this->setupLanguageService();
+        $this->setupBackendRequest();
         $view = $this->setupView();
         $infoModuleController = GeneralUtility::makeInstance(InfoModuleController::class);
         $extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
