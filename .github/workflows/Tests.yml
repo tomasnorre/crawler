@@ -52,34 +52,17 @@ jobs:
       - name: Lint PHP
         run: find . -name \*.php ! -path "./.Build/*" ! -path "./scripts/*" ! -path "./typo3_src/*" | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \;
 
-      - name: Unit Tests without coverage
-        if: matrix.typo3 != '^10.4' && matrix.typo3 != 'dev-master'
-        run: |
-          export "UNIT_XML"=.Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml
-          .Build/bin/phpunit --colors -c $UNIT_XML Tests/Unit
-
-      - name: Unit Tests with coverage
-        if: matrix.typo3 == '^10.4' && matrix.php == '7.4'
+      - name: Unit Tests
+        if: matrix.typo3 != 'dev-master'
         run: |
           export "UNIT_XML"=.Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml
           .Build/bin/phpunit --whitelist Classes --coverage-clover=unittest-coverage.clover --colors -c $UNIT_XML Tests/Unit
 
-      - name: Functional Tests without coverage
-        run: |
-          export "FUNCTIONAL_XML"=.Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml
-          .Build/bin/phpunit --whitelist Classes --colors -c $FUNCTIONAL_XML Tests/Functional
-        if: matrix.typo3 != '^10.4' && matrix.typo3 != 'dev-master'
-        env:
-          typo3DatabaseHost: 127.0.0.1
-          typo3DatabaseName: typo3
-          typo3DatabasePassword: root
-          typo3DatabaseUsername: root
-
-      - name: Functional Tests with coverage
+      - name: Functional Tests
         run: |
           export "FUNCTIONAL_XML"=.Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml
           .Build/bin/phpunit --whitelist Classes --coverage-clover=functional-coverage.clover --colors -c $FUNCTIONAL_XML Tests/Functional
-        if: matrix.typo3 == '^10.4' && matrix.php == '7.4'
+        if: matrix.typo3 != 'dev-master'
         env:
           typo3DatabaseHost: 127.0.0.1
           typo3DatabaseName: typo3
