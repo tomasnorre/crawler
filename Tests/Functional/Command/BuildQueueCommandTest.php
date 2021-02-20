@@ -20,7 +20,6 @@ namespace AOE\Crawler\Tests\Functional\Command;
  */
 
 use AOE\Crawler\Domain\Repository\QueueRepository;
-use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -58,8 +57,7 @@ class BuildQueueCommandTest extends AbstractCommandTests
      */
     public function buildQueueCommandTest(array $parameters, string $expectedOutput, int $expectedCount): void
     {
-
-        if (!$this->isTYPO3v10OrLower()) {
+        if (! $this->isTYPO3v10OrLower()) {
             self::markTestSkipped('These tests are not working in TYPO3 11. As the backend request has changed. The tests can be activated again when
             either the CrawlerController is restructured, or the depedency from BuildCommand to CrawlerController is removed.');
         }
