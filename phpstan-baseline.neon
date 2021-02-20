@@ -40,12 +40,12 @@ parameters:
 			path: Classes/Backend/Helper/ResultHandler.php
 
 		-
-			message: "#^Class cognitive complexity for \"LogRequestForm\" is 67, keep it under 50$#"
+			message: "#^Class cognitive complexity for \"LogRequestForm\" is 72, keep it under 50$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Class cognitive complexity for \"LogRequestForm\" is 67, keep it under 60$#"
+			message: "#^Class cognitive complexity for \"LogRequestForm\" is 72, keep it under 60$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
@@ -74,7 +74,7 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:showLogAction\\(\\)\" is 26, keep it under 8$#"
+			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:showLogAction\\(\\)\" is 31, keep it under 8$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
