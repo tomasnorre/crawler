@@ -30,6 +30,7 @@ namespace AOE\Crawler\Tests\Functional\Controller;
 
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use AOE\Crawler\Value\QueueFilter;
 use Nimut\TestingFramework\MockObject\AccessibleMockObjectInterface;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
@@ -46,6 +47,8 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  */
 class CrawlerControllerTest extends FunctionalTestCase
 {
+    use BackendRequestTestTrait;
+
     /**
      * @var array
      */
@@ -59,6 +62,8 @@ class CrawlerControllerTest extends FunctionalTestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        $this->setupBackendRequest();
 
         $this->importDataSet(__DIR__ . '/../Fixtures/pages.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_configuration.xml');

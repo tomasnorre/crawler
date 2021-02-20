@@ -61,7 +61,6 @@ class QueueTest extends UnitTestCase
         $resultData = '{row: success}';
         $processIdCompleted = 'as234sa';
 
-        /** @var Queue subject */
         $this->subject = new Queue();
         $this->subject->setExecTime($execTime);
         $this->subject->setConfiguration($configuration);

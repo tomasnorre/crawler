@@ -155,7 +155,9 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                 if (is_array($q_entry['result_data'])) {
                     $q_entry['result_data']['content'] = $this->jsonCompatibilityConverter->convert($q_entry['result_data']['content']);
                     if (! $this->infoModuleController->MOD_SETTINGS['log_resultLog']) {
-                        unset($q_entry['result_data']['content']['log']);
+                        if (is_array($q_entry['result_data']['content'])) {
+                            unset($q_entry['result_data']['content']['log']);
+                        }
                     }
                 }
 
