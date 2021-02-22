@@ -49,6 +49,9 @@ Page TSconfig Reference (tx\_crawler.crawlerCfg)
              - Keyword " **\_PID** ": Value is optional page id to look in (default
                is current page).
 
+             - Keyword " **\_RECURSIVE** ": Optional flag to set recursive crawl
+               depth. Default is 0.
+
              - Keyword " **\_FIELD** ": Value is field name to use for the value
                (default is uid).
 
