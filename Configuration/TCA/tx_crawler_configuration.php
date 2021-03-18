@@ -72,7 +72,6 @@ return [
                 'type' => 'select',
                 'renderType' => 'selectCheckBox',
                 'itemsProcFunc' => AOE\Crawler\Utility\TcaUtility::class . '->getProcessingInstructions',
-                'eval' => 'required',
                 'maxitems' => 100,
             ],
         ],
