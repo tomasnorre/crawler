@@ -44,12 +44,12 @@
         "phpstan/extension-installer": "^1.0",
         "phpstan/phpstan": "^0.12.67",
         "phpstan/phpstan-deprecation-rules": "^0.12.5",
-        "rector/rector": "^0.8",
+        "rector/rector-prefixed": "^0.10",
         "roave/security-advisories": "dev-latest",
         "saschaegerer/phpstan-typo3": "^0.13.1",
         "slam/phpstan-extensions": "^5.0",
         "symfony/yaml": "^4.4 || ^5.0",
-        "symplify/easy-coding-standard": "^8.3",
+        "symplify/easy-coding-standard": "^9.0",
         "typo3/testing-framework": "^4.14 || ^5.0",
         "vimeo/psalm": "^4.4"
     },
@@ -103,7 +103,7 @@
         ],
         "cs-fix": [
             "[ -e .Build/bin/ecs ] || composer update",
-            ".Build/bin/ecs check Classes Configuration Tests"
+            ".Build/bin/ecs check"
         ],
         "extension-create-libs": [
             "@composer install -d Resources/Private/Php/Libraries"

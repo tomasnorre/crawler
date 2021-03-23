@@ -124,9 +124,6 @@ class ProcessService
      */
     private $verbose;
 
-    /**
-     * the constructor
-     */
     public function __construct()
     {
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);

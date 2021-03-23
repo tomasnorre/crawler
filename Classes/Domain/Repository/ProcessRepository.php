@@ -60,9 +60,6 @@ class ProcessRepository extends Repository
      */
     protected $extensionSettings = [];
 
-    /**
-     * QueueRepository constructor.
-     */
     public function __construct()
     {
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);

@@ -291,7 +291,6 @@ class CrawlerController implements LoggerAwareInterface
         $settings = $configurationProvider->getExtensionConfiguration();
         $this->extensionSettings = is_array($settings) ? $settings : [];
 
-        // set defaults:
         if (MathUtility::convertToPositiveInteger($this->extensionSettings['countInARun']) === 0) {
             $this->extensionSettings['countInARun'] = 100;
         }
@@ -1183,7 +1182,7 @@ class CrawlerController implements LoggerAwareInterface
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
         $ret = 0;
         $this->logger->debug('crawler-readurl start ' . microtime(true));
-        // Get entry:
+
         $queryBuilder
             ->select('*')
             ->from('tx_crawler_queue')

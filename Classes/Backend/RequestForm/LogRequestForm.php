@@ -207,7 +207,6 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                 $count = 0;
                 $logEntriesPerPage = [];
                 foreach ($tree->tree as $data) {
-                    // Get result:
                     $logEntriesOfPage = $this->queueRepository->getQueueEntriesForPageId(
                         (int) $data['row']['uid'],
                         $itemsPerPage,
