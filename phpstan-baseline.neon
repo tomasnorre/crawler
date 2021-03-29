@@ -177,10 +177,6 @@ parameters:
 			count: 1
 			path: Classes/Backend/RequestForm/StartRequestForm.php
 
-		-
-			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\StartRequestForm\\:\\:getScheduledTime\\(\\) should return int but returns int\\|false\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/StartRequestForm.php
 
 		-
 			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Command\\\\BuildQueueCommand\\:\\:execute\\(\\)\" is 19, keep it under 8$#"

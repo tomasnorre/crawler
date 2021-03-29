@@ -239,6 +239,12 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
                 $scheduledTime = time();
                 break;
         }
+
+        if (!$scheduledTime)
+        {
+            return time();
+        }
+
         return $scheduledTime;
     }
 }
