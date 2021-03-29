@@ -59,7 +59,7 @@ It will remove queue entries and perform a cleanup.' . chr(10) . chr(10) .
             'p',
             InputOption::VALUE_OPTIONAL,
             'Page to start - deprecated since v9.1.5, will be removed in v11.x',
-            0
+            '0'
         );
     }
 

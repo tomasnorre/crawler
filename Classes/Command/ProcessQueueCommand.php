@@ -129,7 +129,7 @@ class ProcessQueueCommand extends Command
             '',
             InputOption::VALUE_OPTIONAL,
             'How many pages should be crawled during that run',
-            0
+            '0'
         );
 
         $this->addOption(
@@ -137,7 +137,7 @@ class ProcessQueueCommand extends Command
             '',
             InputOption::VALUE_OPTIONAL,
             'Amount of milliseconds which the system should use to relax between crawls',
-            0
+            '0'
         );
 
         $this->addOption(

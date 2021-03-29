@@ -75,7 +75,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             'd',
             InputOption::VALUE_OPTIONAL,
             'Tree depth, 0-99\', "How many levels under the \'page_id\' to include.',
-            0
+            '0'
         );
 
         $this->addOption(
@@ -90,7 +90,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             '',
             InputOption::VALUE_OPTIONAL,
             'Specifies how many items are put in the queue per minute. Only valid for output mode "queue"',
-            0
+            '0'
         );
     }
 
