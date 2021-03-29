@@ -1,5 +1,21 @@
 # Changelog TYPO3 Crawler
 
+## Crawler 9.2.4-dev
+
+### Added
+
+### Changed
+
+### Fixed
+
+### Deprecated
+#### Classes
+#### Functions & Properties
+
+### Removed
+#### Classes
+#### Functions & Properties
+
 ## Crawler 9.2.3
 Crawler 9.2.3 was released on March 29th, 2021
 
