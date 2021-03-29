@@ -1,22 +1,13 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 9.2.3-dev
-
-###Added
+## Crawler 9.2.3
+Crawler 9.2.3 was released on March 29th, 2021
 
 ###Changed
 * Default fields in `tx_crawler_configuration` are remove from `ext_table.sql` as they are obsolete, will be added from TCA
 
-###Deprecated
-#### Functions & Properties
-
-###Removed
-#### Functions & Properties
-
 ###Fixed
 * Removed required for `processing_instruction_filter` in `tx_crawler_configuration`
-
-###Security
 
 ## Crawler 9.2.2
 Crawler 9.2.2 was released on January 26th, 2021
