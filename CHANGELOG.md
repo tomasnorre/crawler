@@ -14,6 +14,7 @@
 #### Functions & Properties
 
 ###Fixed
+* Removed required for `processing_instruction_filter` in `tx_crawler_configuration`
 
 ###Security
 
