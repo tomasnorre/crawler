@@ -157,7 +157,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             $queueRepository->cleanUpOldQueueEntries();
         }
 
-        $crawlerController->setID = (int) GeneralUtility::md5int(microtime());
+        $crawlerController->setID = GeneralUtility::md5int(microtime());
         $crawlerController->getPageTreeAndUrls(
             $pageId,
             MathUtility::forceIntegerInRange((int) $input->getOption('depth'), 0, 99),
