@@ -73,7 +73,6 @@ class QueueExecutor implements SingletonInterface
             // Regular FE request
             $crawlerId = $this->generateCrawlerIdFromQueueItem($queueItem);
 
-            // Get result:
             $url = new Uri($parameters['url']);
             $result = $this->crawlStrategy->fetchUrlContents($url, $crawlerId);
             if ($result !== false) {

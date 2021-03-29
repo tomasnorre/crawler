@@ -24,9 +24,6 @@ use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
-/**
- * Class ConfigurationRepositoryTest
- */
 class ConfigurationRepositoryTest extends FunctionalTestCase
 {
     private const PAGE_WITHOUT_CONFIGURATIONS = 11;

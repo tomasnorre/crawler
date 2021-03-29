@@ -18,26 +18,44 @@ use PhpCsFixer\Fixer\Phpdoc\GeneralPhpdocAnnotationRemoveFixer;
 use PhpCsFixer\Fixer\Phpdoc\NoBlankLinesAfterPhpdocFixer;
 use PhpCsFixer\Fixer\Whitespace\NoExtraBlankLinesFixer;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symplify\CodingStandard\Fixer\ArrayNotation\StandaloneLineInMultilineArrayFixer;
+use Symplify\EasyCodingStandard\ValueObject\Option;
+use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
     $parameters = $containerConfigurator->parameters();
 
-    $parameters->set('sets', ['psr12', 'php70', 'php71', 'common']);
+    $parameters->set(
+        Option::SETS,
+        [
+            SetList::PSR_12,
+            SetList::COMMON
+        ]
+    );
 
-    $parameters->set('skip', [
-        'PhpCsFixer\Fixer\Whitespace\ArrayIndentationFixer' => null,
-        'PHP_CodeSniffer\Standards\Generic\Sniffs\CodeAnalysis\AssignmentInConditionSniff.FoundInWhileCondition' => null,
-        PhpUnitStrictFixer::class => null,
-        PhpUnitTestAnnotationFixer::class => null,
-        'SlevomatCodingStandard\Sniffs\Classes\TraitUseSpacingSniff.IncorrectLinesCountAfterLastUse' => null,
-        'Symplify\CodingStandard\Fixer\ArrayNotation\ArrayOpenerAndCloserNewlineFixer' => null,
-        'Symplify\CodingStandard\Fixer\ArrayNotation\ArrayListItemNewlineFixer' => null,
-        UnaryOperatorSpacesFixer::class => null,
-    ]);
+    $parameters->set(Option::SKIP,
+        [
+            __DIR__ . '/Tests/Acceptance/Support/_generated',
+            'PhpCsFixer\Fixer\Whitespace\ArrayIndentationFixer' => null,
+            'PHP_CodeSniffer\Standards\Generic\Sniffs\CodeAnalysis\AssignmentInConditionSniff.FoundInWhileCondition' => null,
+            PhpUnitStrictFixer::class => null,
+            PhpUnitTestAnnotationFixer::class => null,
+            'SlevomatCodingStandard\Sniffs\Classes\TraitUseSpacingSniff.IncorrectLinesCountAfterLastUse' => null,
+            'Symplify\CodingStandard\Fixer\ArrayNotation\ArrayOpenerAndCloserNewlineFixer' => null,
+            'Symplify\CodingStandard\Fixer\ArrayNotation\ArrayListItemNewlineFixer' => null,
+            UnaryOperatorSpacesFixer::class => null,
+            StandaloneLineInMultilineArrayFixer::class => null,
+        ]
+    );
 
-    $parameters->set('paths', [__DIR__ . '/Classes', __DIR__ . '/Configuration', __DIR__ . '/Tests']);
-
-    $parameters->set('exclude_files', ['Tests/Acceptance/Support/_generated/*Actions.php']);
+    $parameters->set(
+        Option::PATHS,
+        [
+            __DIR__ . '/Classes',
+            __DIR__ . '/Configuration',
+            __DIR__ . '/Tests',
+        ]
+    );
 
     $services = $containerConfigurator->services();
 

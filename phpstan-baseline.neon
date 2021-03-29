@@ -40,12 +40,12 @@ parameters:
 			path: Classes/Backend/Helper/ResultHandler.php
 
 		-
-			message: "#^Class cognitive complexity for \"LogRequestForm\" is 72, keep it under 50$#"
+			message: "#^Class cognitive complexity is 72, keep it under 50$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Class cognitive complexity for \"LogRequestForm\" is 72, keep it under 60$#"
+			message: "#^Class cognitive complexity is 72, keep it under 60$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
@@ -285,12 +285,12 @@ parameters:
 			path: Classes/ContextMenu/ItemProvider.php
 
 		-
-			message: "#^Class cognitive complexity for \"CrawlerController\" is 274, keep it under 50$#"
+			message: "#^Class cognitive complexity is 274, keep it under 50$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Class cognitive complexity for \"CrawlerController\" is 274, keep it under 60$#"
+			message: "#^Class cognitive complexity is 274, keep it under 60$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -528,11 +528,6 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Use custom exceptions instead of native \"Exception\"$#"
-			count: 1
-			path: Classes/Converter/JsonCompatibilityConverter.php
-
-		-
 			message: "#^Call to function is_object\\(\\) with mixed will always evaluate to false\\.$#"
 			count: 1
 			path: Classes/Converter/JsonCompatibilityConverter.php
@@ -584,11 +579,6 @@ parameters:
 		-
 			message: "#^Method AOE\\\\Crawler\\\\Domain\\\\Model\\\\ProcessCollection\\:\\:offsetSet\\(\\) has parameter \\$index with no typehint specified\\.$#"
 			count: 1
-			path: Classes/Domain/Model/ProcessCollection.php
-
-		-
-			message: "#^Use custom exceptions instead of native \"InvalidArgumentException\"$#"
-			count: 2
 			path: Classes/Domain/Model/ProcessCollection.php
 
 		-
@@ -777,12 +767,12 @@ parameters:
 			path: Classes/Hooks/IndexedSearchCrawlerFilesHook.php
 
 		-
-			message: "#^Class cognitive complexity for \"IndexedSearchCrawlerHook\" is 109, keep it under 50$#"
+			message: "#^Class cognitive complexity is 109, keep it under 50$#"
 			count: 1
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
 		-
-			message: "#^Class cognitive complexity for \"IndexedSearchCrawlerHook\" is 109, keep it under 60$#"
+			message: "#^Class cognitive complexity is 109, keep it under 60$#"
 			count: 1
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
@@ -1004,11 +994,6 @@ parameters:
 			path: Classes/Service/ProcessService.php
 
 		-
-			message: "#^Use custom exceptions instead of native \"RuntimeException\"$#"
-			count: 1
-			path: Classes/Service/ProcessService.php
-
-		-
 			message: "#^Strict comparison using \\=\\=\\= between string and false will always evaluate to false\\.$#"
 			count: 1
 			path: Classes/Service/ProcessService.php
@@ -1076,12 +1061,12 @@ parameters:
 			path: Tests/Functional/Api/CrawlerApiTest.php
 
 		-
-			message: "#^Trying to mock an undefined method getCurrentTime\\(\\) on class Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\.$#"
-			count: 1
+			message: "#^Call to an undefined method Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\|PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:expects\\(\\)\\.$#"
+			count: 2
 			path: Tests/Functional/Api/CrawlerApiTest.php
 
 		-
-			message: "#^Trying to mock an undefined method drawURLs_PIfilter\\(\\) on class Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\.$#"
+			message: "#^Method AOE\\\\Crawler\\\\Tests\\\\Functional\\\\Api\\\\CrawlerApiTest\\:\\:getMockedCrawlerAPI\\(\\) should return AOE\\\\Crawler\\\\Api\\\\CrawlerApi but returns PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
 			count: 1
 			path: Tests/Functional/Api/CrawlerApiTest.php
 
@@ -1091,9 +1076,14 @@ parameters:
 			path: Tests/Functional/Api/CrawlerApiTest.php
 
 		-
-			message: "#^Use custom exceptions instead of native \"LogicException\"$#"
-			count: 1
-			path: Tests/Functional/Api/CrawlerApiTest.php
+			message: "#^Parameter \\#2 \\$view of static method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\RequestFormFactory\\:\\:create\\(\\) expects TYPO3\\\\CMS\\\\Fluid\\\\View\\\\StandaloneView, PHPUnit\\\\Framework\\\\MockObject\\\\MockObject given\\.$#"
+			count: 3
+			path: Tests/Functional/Backend/RequestForm/RequestFormFactoryTest.php
+
+		-
+			message: "#^Parameter \\#3 \\$infoModuleController of static method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\RequestFormFactory\\:\\:create\\(\\) expects TYPO3\\\\CMS\\\\Info\\\\Controller\\\\InfoModuleController, PHPUnit\\\\Framework\\\\MockObject\\\\MockObject given\\.$#"
+			count: 3
+			path: Tests/Functional/Backend/RequestForm/RequestFormFactoryTest.php
 
 		-
 			message: "#^Constant TYPO3_REQUESTTYPE_BE not found\\.$#"
@@ -1102,11 +1092,6 @@ parameters:
 
 		-
 			message: "#^Constant TYPO3_REQUESTTYPE_BE not found\\.$#"
-			count: 1
-			path: Tests/Functional/Controller/CrawlerControllerTest.php
-
-		-
-			message: "#^Property AOE\\\\Crawler\\\\Tests\\\\Functional\\\\Controller\\\\CrawlerControllerTest\\:\\:\\$subject \\(AOE\\\\Crawler\\\\Controller\\\\CrawlerController&Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface&PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\) does not accept Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface&PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
 			count: 1
 			path: Tests/Functional/Controller/CrawlerControllerTest.php
 
@@ -1125,7 +1110,22 @@ parameters:
 			path: Tests/Functional/Controller/CrawlerControllerTest.php
 
 		-
+			message: "#^Call to an undefined method AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\|Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\|PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:_call\\(\\)\\.$#"
+			count: 1
+			path: Tests/Functional/Controller/CrawlerControllerTest.php
+
+		-
+			message: "#^Call to an undefined method AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\|Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\|PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:getLogEntriesForPageId\\(\\)\\.$#"
+			count: 1
+			path: Tests/Functional/Controller/CrawlerControllerTest.php
+
+		-
 			message: "#^Call to deprecated method getLogEntriesForPageId\\(\\) of class AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\.$#"
+			count: 1
+			path: Tests/Functional/Controller/CrawlerControllerTest.php
+
+		-
+			message: "#^Call to an undefined method AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\|Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\|PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:getLogEntriesForSetId\\(\\)\\.$#"
 			count: 1
 			path: Tests/Functional/Controller/CrawlerControllerTest.php
 
@@ -1135,27 +1135,42 @@ parameters:
 			path: Tests/Functional/Controller/CrawlerControllerTest.php
 
 		-
-			message: "#^Trying to mock an undefined method getCurrentTime\\(\\) on class Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\.$#"
+			message: "#^Call to an undefined method AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\|Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\|PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:getConfigurationsForBranch\\(\\)\\.$#"
 			count: 1
 			path: Tests/Functional/Controller/CrawlerControllerTest.php
 
 		-
-			message: "#^Call to an undefined method Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface&PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:setExtensionSettings\\(\\)\\.$#"
+			message: "#^Call to an undefined method Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\|PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:expects\\(\\)\\.$#"
+			count: 2
+			path: Tests/Functional/Controller/CrawlerControllerTest.php
+
+		-
+			message: "#^Call to an undefined method Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\|PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:setExtensionSettings\\(\\)\\.$#"
 			count: 1
 			path: Tests/Functional/Controller/CrawlerControllerTest.php
 
 		-
-			message: "#^Method Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\:\\:_call\\(\\) invoked with 3 parameters, 1 required\\.$#"
+			message: "#^Call to an undefined method Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\|PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:_call\\(\\)\\.$#"
 			count: 1
 			path: Tests/Functional/Controller/CrawlerControllerTest.php
 
 		-
-			message: "#^Trying to mock an undefined method getDuplicateQueueItemsIfExists\\(\\) on class Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\.$#"
+			message: "#^Call to an undefined method Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\|PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:_set\\(\\)\\.$#"
+			count: 2
+			path: Tests/Functional/Controller/CrawlerControllerTest.php
+
+		-
+			message: "#^Call to an undefined method Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\|PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:addUrl\\(\\)\\.$#"
 			count: 1
 			path: Tests/Functional/Controller/CrawlerControllerTest.php
 
 		-
-			message: "#^Call to an undefined method Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface&PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:addUrl\\(\\)\\.$#"
+			message: "#^Call to an undefined method AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\|Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\|PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:expandParameters\\(\\)\\.$#"
+			count: 1
+			path: Tests/Functional/Controller/CrawlerControllerTest.php
+
+		-
+			message: "#^Call to an undefined method AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\|Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\|PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:expandExcludeString\\(\\)\\.$#"
 			count: 1
 			path: Tests/Functional/Controller/CrawlerControllerTest.php
 
@@ -1215,11 +1230,6 @@ parameters:
 			path: Tests/Functional/Domain/Repository/ProcessRepositoryTest.php
 
 		-
-			message: "#^You should use assertCount\\(\\$expectedCount, \\$variable\\) instead of assertSame\\(\\$expectedCount, \\$variable\\-\\>count\\(\\)\\)\\.$#"
-			count: 5
-			path: Tests/Functional/Domain/Repository/ProcessRepositoryTest.php
-
-		-
 			message:
 				"""
 					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
@@ -1229,7 +1239,7 @@ parameters:
 			path: Tests/Functional/Domain/Repository/QueueRepositoryTest.php
 
 		-
-			message: "#^Method Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\:\\:_call\\(\\) invoked with 4 parameters, 1 required\\.$#"
+			message: "#^Call to an undefined method Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\|PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:_call\\(\\)\\.$#"
 			count: 1
 			path: Tests/Functional/Domain/Repository/QueueRepositoryTest.php
 
@@ -1249,17 +1259,28 @@ parameters:
 			path: Tests/Functional/Domain/Repository/QueueRepositoryTest.php
 
 		-
-			message:
-				"""
-					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
-					since TYPO3 10\\.4, will be removed in version 12\\.0$#
-				"""
+			message: "#^Access to an undefined property AOE\\\\Crawler\\\\Hooks\\\\ProcessCleanUpHook\\:\\:\\$objectManager\\.$#"
 			count: 3
 			path: Tests/Functional/Hooks/ProcessCleanUpHookTest.php
 
 		-
-			message: "#^Variable \\$subject in PHPDoc tag @var does not exist\\.$#"
+			message: "#^Access to an undefined property AOE\\\\Crawler\\\\Hooks\\\\ProcessCleanUpHook\\:\\:\\$subject\\.$#"
 			count: 1
+			path: Tests/Functional/Hooks/ProcessCleanUpHookTest.php
+
+		-
+			message: "#^Access to protected property AOE\\\\Crawler\\\\Hooks\\\\ProcessCleanUpHook\\:\\:\\$processRepository\\.$#"
+			count: 1
+			path: Tests/Functional/Hooks/ProcessCleanUpHookTest.php
+
+		-
+			message: "#^Access to protected property AOE\\\\Crawler\\\\Hooks\\\\ProcessCleanUpHook\\:\\:\\$queueRepository\\.$#"
+			count: 1
+			path: Tests/Functional/Hooks/ProcessCleanUpHookTest.php
+
+		-
+			message: "#^Call to an undefined method AOE\\\\Crawler\\\\Hooks\\\\ProcessCleanUpHook\\:\\:importDataSet\\(\\)\\.$#"
+			count: 2
 			path: Tests/Functional/Hooks/ProcessCleanUpHookTest.php
 
 		-
@@ -1277,12 +1298,17 @@ parameters:
 			path: Tests/Functional/Service/ProcessServiceTest.php
 
 		-
-			message: "#^Trying to mock an undefined method getCurrentTime\\(\\) on class Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\.$#"
+			message: "#^Call to an undefined method Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\|PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:method\\(\\)\\.$#"
 			count: 1
 			path: Tests/Functional/Service/QueueServiceTest.php
 
 		-
-			message: "#^Parameter \\#1 \\$crawlerController of method AOE\\\\Crawler\\\\Service\\\\QueueService\\:\\:injectCrawlerController\\(\\) expects AOE\\\\Crawler\\\\Controller\\\\CrawlerController, Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface&PHPUnit\\\\Framework\\\\MockObject\\\\MockObject given\\.$#"
+			message: "#^Property AOE\\\\Crawler\\\\Tests\\\\Functional\\\\Service\\\\QueueServiceTest\\:\\:\\$subject \\(AOE\\\\Crawler\\\\Service\\\\QueueService\\) does not accept PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
+			count: 1
+			path: Tests/Functional/Service/QueueServiceTest.php
+
+		-
+			message: "#^Call to an undefined method PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:injectCrawlerController\\(\\)\\.$#"
 			count: 1
 			path: Tests/Functional/Service/QueueServiceTest.php
 
@@ -1330,17 +1356,17 @@ parameters:
 			path: Tests/Functional/Service/UrlServiceTest.php
 
 		-
-			message: "#^Use custom exceptions instead of native \"LogicException\"$#"
-			count: 1
-			path: Tests/Functional/Service/UrlServiceTest.php
-
-		-
-			message: "#^Trying to mock an undefined method sL\\(\\) on class Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\.$#"
+			message: "#^Call to an undefined method Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\|PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:expects\\(\\)\\.$#"
 			count: 1
 			path: Tests/Unit/Backend/BackendModuleTest.php
 
 		-
-			message: "#^Property AOE\\\\Crawler\\\\Tests\\\\Unit\\\\Backend\\\\BackendModuleTest\\:\\:\\$subject \\(AOE\\\\Crawler\\\\Backend\\\\BackendModule\\) does not accept Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface&PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
+			message: "#^Property AOE\\\\Crawler\\\\Tests\\\\Unit\\\\Backend\\\\BackendModuleTest\\:\\:\\$subject \\(AOE\\\\Crawler\\\\Backend\\\\BackendModule\\) does not accept Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\|PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
+			count: 1
+			path: Tests/Unit/Backend/BackendModuleTest.php
+
+		-
+			message: "#^Call to an undefined method Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\|PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:_set\\(\\)\\.$#"
 			count: 1
 			path: Tests/Unit/Backend/BackendModuleTest.php
 
@@ -1357,6 +1383,16 @@ parameters:
 			message: "#^Method AOE\\\\Crawler\\\\Tests\\\\Unit\\\\Backend\\\\Helper\\\\ResultHandlerTest\\:\\:getResStatus\\(\\) has parameter \\$requestContent with no typehint specified\\.$#"
 			count: 1
 			path: Tests/Unit/Backend/Helper/ResultHandlerTest.php
+
+		-
+			message: "#^Property AOE\\\\Crawler\\\\Tests\\\\Unit\\\\Controller\\\\CrawlerControllerTest\\:\\:\\$crawlerController \\(AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\) does not accept PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
+			count: 1
+			path: Tests/Unit/Controller/CrawlerControllerTest.php
+
+		-
+			message: "#^Call to an undefined method PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:setLogger\\(\\)\\.$#"
+			count: 1
+			path: Tests/Unit/Controller/CrawlerControllerTest.php
 
 		-
 			message: "#^Call to deprecated method setAccessMode\\(\\) of class AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\.$#"
@@ -1389,17 +1425,52 @@ parameters:
 			path: Tests/Unit/Controller/CrawlerControllerTest.php
 
 		-
-			message: "#^Method Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\:\\:_call\\(\\) invoked with 2 parameters, 1 required\\.$#"
-			count: 3
+			message: "#^Call to an undefined method AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\|PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:expects\\(\\)\\.$#"
+			count: 2
 			path: Tests/Unit/Controller/CrawlerControllerTest.php
 
 		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			message: "#^Call to an undefined method AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\|PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:getUrlsForPageRow\\(\\)\\.$#"
+			count: 1
+			path: Tests/Unit/Controller/CrawlerControllerTest.php
+
+		-
+			message: "#^Call to an undefined method Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\|PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:_call\\(\\)\\.$#"
+			count: 4
+			path: Tests/Unit/Controller/CrawlerControllerTest.php
+
+		-
+			message: "#^Call to an undefined method Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\|PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:_set\\(\\)\\.$#"
+			count: 1
+			path: Tests/Unit/Controller/CrawlerControllerTest.php
+
+		-
+			message: "#^Parameter \\#3 \\$crawlerController of method AOE\\\\Crawler\\\\CrawlStrategy\\\\CallbackExecutionStrategy\\:\\:fetchByCallback\\(\\) expects AOE\\\\Crawler\\\\Controller\\\\CrawlerController, PHPUnit\\\\Framework\\\\MockObject\\\\MockObject given\\.$#"
+			count: 1
+			path: Tests/Unit/CrawlStrategy/CallbackExecutionStrategyTest.php
+
+		-
+			message: "#^Property AOE\\\\Crawler\\\\Tests\\\\Unit\\\\CrawlStrategy\\\\GuzzleExecutionStrategyTest\\:\\:\\$guzzleExecutionStrategy \\(AOE\\\\Crawler\\\\CrawlStrategy\\\\GuzzleExecutionStrategy\\) does not accept PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
+			count: 1
+			path: Tests/Unit/CrawlStrategy/GuzzleExecutionStrategyTest.php
+
+		-
+			message: "#^Call to an undefined method Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\|PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:_call\\(\\)\\.$#"
 			count: 1
 			path: Tests/Unit/CrawlStrategy/SubProcessExecutionStrategyTest.php
 
 		-
+			message: "#^Property AOE\\\\Crawler\\\\Tests\\\\Unit\\\\Domain\\\\Model\\\\ConfigurationTest\\:\\:\\$subject \\(AOE\\\\Crawler\\\\Domain\\\\Model\\\\Configuration\\) does not accept PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
+			count: 1
+			path: Tests/Unit/Domain/Model/ConfigurationTest.php
+
+		-
 			message: "#^Parameter \\#1 \\$subject of method AOE\\\\Crawler\\\\Domain\\\\Model\\\\ProcessCollection\\:\\:append\\(\\) expects AOE\\\\Crawler\\\\Domain\\\\Model\\\\Process, stdClass given\\.$#"
+			count: 1
+			path: Tests/Unit/Domain/Model/ProcessCollectionTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$subject of method AOE\\\\Crawler\\\\Domain\\\\Model\\\\ProcessCollection\\:\\:append\\(\\) expects AOE\\\\Crawler\\\\Domain\\\\Model\\\\Process, AOE\\\\Crawler\\\\Domain\\\\Model\\\\Process\\|PHPUnit\\\\Framework\\\\MockObject\\\\MockObject given\\.$#"
 			count: 1
 			path: Tests/Unit/Domain/Model/ProcessCollectionTest.php
 
@@ -1409,8 +1480,53 @@ parameters:
 			path: Tests/Unit/Domain/Model/ProcessCollectionTest.php
 
 		-
-			message: "#^Trying to mock an undefined method findYoungestEntryForProcess\\(\\) on class Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\.$#"
-			count: 2
+			message: "#^Parameter \\#2 \\$subject of method AOE\\\\Crawler\\\\Domain\\\\Model\\\\ProcessCollection\\:\\:offsetSet\\(\\) expects AOE\\\\Crawler\\\\Domain\\\\Model\\\\Process, AOE\\\\Crawler\\\\Domain\\\\Model\\\\Process\\|PHPUnit\\\\Framework\\\\MockObject\\\\MockObject given\\.$#"
+			count: 1
+			path: Tests/Unit/Domain/Model/ProcessCollectionTest.php
+
+		-
+			message: "#^Property AOE\\\\Crawler\\\\Tests\\\\Unit\\\\Domain\\\\Model\\\\ProcessTest\\:\\:\\$subject \\(AOE\\\\Crawler\\\\Domain\\\\Model\\\\Process\\) does not accept PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
+			count: 1
+			path: Tests/Unit/Domain/Model/ProcessTest.php
+
+		-
+			message: "#^Call to an undefined method PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:setActive\\(\\)\\.$#"
+			count: 1
+			path: Tests/Unit/Domain/Model/ProcessTest.php
+
+		-
+			message: "#^Call to an undefined method PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:setProcessId\\(\\)\\.$#"
+			count: 1
+			path: Tests/Unit/Domain/Model/ProcessTest.php
+
+		-
+			message: "#^Call to an undefined method PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:setTtl\\(\\)\\.$#"
+			count: 1
+			path: Tests/Unit/Domain/Model/ProcessTest.php
+
+		-
+			message: "#^Call to an undefined method PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:setAssignedItemsCount\\(\\)\\.$#"
+			count: 1
+			path: Tests/Unit/Domain/Model/ProcessTest.php
+
+		-
+			message: "#^Call to an undefined method AOE\\\\Crawler\\\\Domain\\\\Model\\\\Process\\|PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:expects\\(\\)\\.$#"
+			count: 4
+			path: Tests/Unit/Domain/Model/ProcessTest.php
+
+		-
+			message: "#^Call to an undefined method AOE\\\\Crawler\\\\Domain\\\\Model\\\\Process\\|PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:getState\\(\\)\\.$#"
+			count: 1
+			path: Tests/Unit/Domain/Model/ProcessTest.php
+
+		-
+			message: "#^Call to an undefined method AOE\\\\Crawler\\\\Domain\\\\Model\\\\Process\\|PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:getProgress\\(\\)\\.$#"
+			count: 1
+			path: Tests/Unit/Domain/Model/ProcessTest.php
+
+		-
+			message: "#^Call to an undefined method Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\|PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:method\\(\\)\\.$#"
+			count: 4
 			path: Tests/Unit/Domain/Model/ProcessTest.php
 
 		-
@@ -1419,12 +1535,12 @@ parameters:
 			path: Tests/Unit/Domain/Model/ProcessTest.php
 
 		-
-			message: "#^Trying to mock an undefined method findOldestEntryForProcess\\(\\) on class Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\.$#"
+			message: "#^Call to deprecated method getTimeForLastItem\\(\\) of class AOE\\\\Crawler\\\\Domain\\\\Model\\\\Process\\.$#"
 			count: 2
 			path: Tests/Unit/Domain/Model/ProcessTest.php
 
 		-
-			message: "#^Call to deprecated method getTimeForLastItem\\(\\) of class AOE\\\\Crawler\\\\Domain\\\\Model\\\\Process\\.$#"
+			message: "#^Call to an undefined method AOE\\\\Crawler\\\\Domain\\\\Repository\\\\QueueRepository\\|PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:expects\\(\\)\\.$#"
 			count: 2
 			path: Tests/Unit/Domain/Model/ProcessTest.php
 
@@ -1477,7 +1593,7 @@ parameters:
 			path: Tests/Unit/Hooks/IndexedSearchCrawlerHookTest.php
 
 		-
-			message: "#^Property AOE\\\\Crawler\\\\Tests\\\\Unit\\\\Hooks\\\\IndexedSearchCrawlerHookTest\\:\\:\\$subject \\(AOE\\\\Crawler\\\\Hooks\\\\IndexedSearchCrawlerHook\\) does not accept Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface&PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
+			message: "#^Property AOE\\\\Crawler\\\\Tests\\\\Unit\\\\Hooks\\\\IndexedSearchCrawlerHookTest\\:\\:\\$subject \\(AOE\\\\Crawler\\\\Hooks\\\\IndexedSearchCrawlerHook\\) does not accept Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\|PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
 			count: 1
 			path: Tests/Unit/Hooks/IndexedSearchCrawlerHookTest.php
 
@@ -1497,7 +1613,7 @@ parameters:
 			path: Tests/Unit/Hooks/IndexedSearchCrawlerHookTest.php
 
 		-
-			message: "#^Property AOE\\\\Crawler\\\\Tests\\\\Unit\\\\Middleware\\\\FrontendUserAuthenticatorTest\\:\\:\\$subject \\(AOE\\\\Crawler\\\\Middleware\\\\FrontendUserAuthenticator\\) does not accept Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface&PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
+			message: "#^Property AOE\\\\Crawler\\\\Tests\\\\Unit\\\\Middleware\\\\FrontendUserAuthenticatorTest\\:\\:\\$subject \\(AOE\\\\Crawler\\\\Middleware\\\\FrontendUserAuthenticator\\) does not accept Nimut\\\\TestingFramework\\\\MockObject\\\\AccessibleMockObjectInterface\\|PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
 			count: 1
 			path: Tests/Unit/Middleware/FrontendUserAuthenticatorTest.php
 
@@ -1522,6 +1638,21 @@ parameters:
 			path: Tests/Unit/Middleware/FrontendUserAuthenticatorTest.php
 
 		-
+			message: "#^Property AOE\\\\Crawler\\\\Tests\\\\Unit\\\\QueueExecutorTest\\:\\:\\$mockedCrawlerController \\(AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\) does not accept PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
+			count: 1
+			path: Tests/Unit/QueueExecutorTest.php
+
+		-
+			message: "#^Property AOE\\\\Crawler\\\\Tests\\\\Unit\\\\Service\\\\ProcessServiceTest\\:\\:\\$subject \\(AOE\\\\Crawler\\\\Service\\\\ProcessService\\) does not accept PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
+			count: 1
+			path: Tests/Unit/Service/ProcessServiceTest.php
+
+		-
+			message: "#^Property AOE\\\\Crawler\\\\Tests\\\\Unit\\\\Service\\\\ProcessServiceTest\\:\\:\\$crawlerController \\(AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\) does not accept PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
+			count: 1
+			path: Tests/Unit/Service/ProcessServiceTest.php
+
+		-
 			message: "#^Call to deprecated method multiProcess\\(\\) of class AOE\\\\Crawler\\\\Service\\\\ProcessService\\.$#"
 			count: 1
 			path: Tests/Unit/Service/ProcessServiceTest.php
@@ -1533,6 +1664,11 @@ parameters:
 
 		-
 			message: "#^Access to private property AOE\\\\Crawler\\\\Service\\\\ProcessService\\:\\:\\$processRepository\\.$#"
+			count: 1
+			path: Tests/Unit/Service/ProcessServiceTest.php
+
+		-
+			message: "#^Property AOE\\\\Crawler\\\\Service\\\\ProcessService\\:\\:\\$processRepository \\(AOE\\\\Crawler\\\\Domain\\\\Repository\\\\ProcessRepository\\) does not accept PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
 			count: 1
 			path: Tests/Unit/Service/ProcessServiceTest.php
 

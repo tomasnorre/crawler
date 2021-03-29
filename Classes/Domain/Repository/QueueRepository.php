@@ -567,12 +567,8 @@ class QueueRepository extends Repository implements LoggerAwareInterface
      * This method is used to count if there are ANY unprocessed queue entries
      * of a given page_id and the configuration which matches a given hash.
      * If there if none, we can skip an inner detail check
-     *
-     * @param int $uid
-     * @param string $configurationHash
-     * @return boolean
      */
-    public function noUnprocessedQueueEntriesForPageWithConfigurationHashExist($uid, $configurationHash): bool
+    public function noUnprocessedQueueEntriesForPageWithConfigurationHashExist(int $uid, string $configurationHash): bool
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
         $noUnprocessedQueueEntriesFound = true;
@@ -581,7 +577,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ->count('*')
             ->from($this->tableName)
             ->where(
-                $queryBuilder->expr()->eq('page_id', (int) $uid),
+                $queryBuilder->expr()->eq('page_id', $uid),
                 $queryBuilder->expr()->eq('configuration_hash', $queryBuilder->createNamedParameter($configurationHash)),
                 $queryBuilder->expr()->eq('exec_time', 0)
             )

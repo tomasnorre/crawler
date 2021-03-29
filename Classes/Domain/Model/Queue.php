@@ -30,9 +30,6 @@ namespace AOE\Crawler\Domain\Model;
 
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
-/**
- * Class Queue
- */
 class Queue extends AbstractEntity
 {
     /**

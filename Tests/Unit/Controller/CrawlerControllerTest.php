@@ -489,15 +489,15 @@ class CrawlerControllerTest extends UnitTestCase
     {
         return [
             'cliObject with no -conf' => [
-                'config' => [(string) '-d' => 4, (string) '-o' => 'url'],
+                'config' => ['-d' => 4, '-o' => 'url'],
                 'expected' => [],
             ],
             'cliObject with one -conf' => [
-                'config' => [(string) '-d' => 4, (string) '-o' => 'url', (string) '-conf' => 'default'],
+                'config' => ['-d' => 4, '-o' => 'url', '-conf' => 'default'],
                 'expected' => ['default'],
             ],
             'cliObject with two -conf' => [
-                'config' => [(string) '-d' => 4, (string) '-o' => 'url', (string) '-conf' => 'default,news'],
+                'config' => ['-d' => 4, '-o' => 'url', '-conf' => 'default,news'],
                 'expected' => ['default', 'news'],
             ],
         ];

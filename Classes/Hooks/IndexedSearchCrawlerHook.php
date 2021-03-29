@@ -58,9 +58,6 @@ class IndexedSearchCrawlerHook
      */
     public $callBack = self::class;
 
-    /**
-     * The constructor
-     */
     public function __construct()
     {
         // To make sure the backend charset is available:
@@ -363,7 +360,7 @@ class IndexedSearchCrawlerHook
                 $directoryList = GeneralUtility::get_dirs($readpath);
                 if (is_array($directoryList) && $params['depth'] < $cfgRec['depth']) {
                     foreach ($directoryList as $subdir) {
-                        if ((string) $subdir !== '') {
+                        if ($subdir !== '') {
                             $files[] = $readpath . $subdir . '/';
                         }
                     }

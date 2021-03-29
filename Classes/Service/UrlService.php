@@ -37,7 +37,7 @@ class UrlService
      */
     public function getUrlFromPageAndQueryParameters(int $pageId, string $queryString, ?string $alternativeBaseUrl, int $httpsOrHttp): UriInterface
     {
-        $site = GeneralUtility::makeInstance(SiteMatcher::class)->matchByPageId((int) $pageId);
+        $site = GeneralUtility::makeInstance(SiteMatcher::class)->matchByPageId($pageId);
         if ($site instanceof Site) {
             $queryString = ltrim($queryString, '?&');
             $queryParts = [];

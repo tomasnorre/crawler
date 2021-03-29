@@ -242,9 +242,6 @@ class CrawlerApi
         return $statement->execute()->fetchAll();
     }
 
-    /**
-     * Get queue statistics
-     */
     public function getQueueStatistics(): array
     {
         return [
