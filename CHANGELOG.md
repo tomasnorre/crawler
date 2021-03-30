@@ -7,6 +7,7 @@
 ### Changed
 
 ### Fixed
+* Date parsing for immediate queue entries
 
 ### Deprecated
 #### Classes
