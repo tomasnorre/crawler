@@ -208,8 +208,10 @@ class ProcessService
             $completePath = '(' . $this->getCrawlerCliPath() . ' &) > /dev/null';
         }
 
-        $fileHandler = CommandUtility::exec($completePath);
-        if ($fileHandler === false) {
+        $output = null;
+        $returnValue = 0;
+        CommandUtility::exec($completePath, $output, $returnValue);
+        if ($returnValue !== 0) {
             throw new ProcessException('could not start process!');
         }
         for ($i = 0; $i < 10; $i++) {
@@ -273,11 +275,9 @@ class ProcessService
         }
         for ($i = 0; $i < $startProcessCount; $i++) {
             usleep(100);
-            if ($this->startProcess()) {
-                if ($this->verbose) {
-                    echo '.';
-                    $ret = true;
-                }
+            if ($this->startProcess() && $this->verbose) {
+                echo '.';
+                $ret = true;
             }
         }
         if ($this->verbose) {
