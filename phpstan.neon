@@ -9,7 +9,6 @@ parameters:
     paths:
         - "Classes/"
         - "Configuration/"
-        - "Tests/"
     excludes_analyse:
         - Tests/Acceptance
         - Classes/Worker/CrawlerWorker.php

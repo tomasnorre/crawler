@@ -1228,26 +1228,25 @@ class CrawlerController implements LoggerAwareInterface
             /** @var JsonCompatibilityConverter $jsonCompatibilityConverter */
             $jsonCompatibilityConverter = GeneralUtility::makeInstance(JsonCompatibilityConverter::class);
             $resultData = $jsonCompatibilityConverter->convert($result['content']);
-        }
 
-        //atm there's no need to point to specific pollable extensions
-        if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'])) {
-            foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'] as $pollable) {
-                // only check the success value if the instruction is runnig
-                // it is important to name the pollSuccess key same as the procInstructions key
-                if (is_array($resultData['parameters']['procInstructions'])
-                    && in_array(
-                        $pollable,
-                        $resultData['parameters']['procInstructions'], true
-                    )
-                ) {
-                    if (! empty($resultData['success'][$pollable]) && $resultData['success'][$pollable]) {
-                        $ret |= self::CLI_STATUS_POLLABLE_PROCESSED;
+            //atm there's no need to point to specific pollable extensions
+            if (is_array($resultData) && is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'])) {
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'] as $pollable) {
+                    // only check the success value if the instruction is runnig
+                    // it is important to name the pollSuccess key same as the procInstructions key
+                    if (is_array($resultData['parameters']['procInstructions'])
+                        && in_array(
+                            $pollable,
+                            $resultData['parameters']['procInstructions'], true
+                        )
+                    ) {
+                        if (! empty($resultData['success'][$pollable]) && $resultData['success'][$pollable]) {
+                            $ret |= self::CLI_STATUS_POLLABLE_PROCESSED;
+                        }
                     }
                 }
             }
         }
-
         // Set result in log which also denotes the end of the processing of this entry.
         $field_array = ['result_data' => json_encode($result)];
 

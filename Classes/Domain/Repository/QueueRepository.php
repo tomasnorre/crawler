@@ -511,7 +511,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
         }
     }
 
-    public function fetchRecordsToBeCrawled(int $countInARun)
+    public function fetchRecordsToBeCrawled(int $countInARun): array
     {
         $queryBuilderSelect = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
         return $queryBuilderSelect
