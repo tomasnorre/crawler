@@ -128,7 +128,17 @@
                                         <td>{logEntry.columns.result_log}</td>
                                     </f:then>
                                     <f:else>
-                                        <td>{logEntry.columns.scheduled -> f:format.date(format: 'd.m.Y H:i')}</td>
+                                        <f:if condition="{logEntry.columns.scheduled} == '0'">
+                                            <f:then>
+                                                <td>
+                                                    <f:translate
+                                                    key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.immediate"/>
+                                                </td>
+                                            </f:then>
+                                            <f:else>
+                                                <td>{logEntry.columns.scheduled -> f:format.date(format: 'd.m.Y H:i')}</td>
+                                            </f:else>
+                                        </f:if>
                                         <f:if condition="{logEntry.columns.exec_time} = '-'">
                                             <f:then>
                                                 <td>{logEntry.columns.exec_time}</td>
