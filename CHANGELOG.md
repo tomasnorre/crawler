@@ -1,21 +1,10 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 9.2.4-dev
-
-### Added
-
-### Changed
+## Crawler 9.2.4
+Crawler 9.2.4 was released on April 9th, 2021
 
 ### Fixed
 * Date parsing for immediate queue entries
-
-### Deprecated
-#### Classes
-#### Functions & Properties
-
-### Removed
-#### Classes
-#### Functions & Properties
 
 ## Crawler 9.2.3
 Crawler 9.2.3 was released on March 29th, 2021
