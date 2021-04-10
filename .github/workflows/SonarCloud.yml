@@ -9,7 +9,7 @@ on:
 jobs:
   Sonar-cloud:
     name: Sonar Cloud
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
 
     steps:
       -   name: Start database server
