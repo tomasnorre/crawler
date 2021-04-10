@@ -8,6 +8,9 @@ exemptLabels:
   - security
   - "On Hold"
   - feature 
+  - "Priority 1"
+  - "Priority 2"
+  - "Priority 3"
 # Label to use when marking an issue as stale
 staleLabel: staled
 # Comment to post when marking an issue as stale. Set to `false` to disable
