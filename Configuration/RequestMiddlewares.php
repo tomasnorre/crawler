@@ -26,8 +26,8 @@ return [
         'aoe/crawler/content-finisher' => [
             'target' => ContentFinisher::class,
             'before' => [
-                'typo3/cms-frontend/timetracker'
-            ]
+                'typo3/cms-frontend/timetracker',
+            ],
         ],
     ],
 ];
