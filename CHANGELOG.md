@@ -7,7 +7,7 @@
 ### Changed
 
 ### Fixed
-* Date parsing for immediate queue entries
+* Add new middleware for content finish
 
 ### Deprecated
 #### Classes
