@@ -77,12 +77,6 @@ class ProcessServiceTest extends UnitTestCase
      */
     public function startProcess(): void
     {
-        // Extension Settings
-        $extensionSettings = [
-            'phpBinary' => 'php',
-            'processMaxRunTime' => 7,
-        ];
-
         $mockedProcessRepository = $this->createPartialMock(ProcessRepository::class, ['countNotTimeouted']);
         // This is done to fake that the process is started, the process start itself isn't tested, but the code around it is.
         $mockedProcessRepository->expects($this->exactly(2))->method('countNotTimeouted')->will($this->onConsecutiveCalls(1, 2));

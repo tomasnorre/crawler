@@ -48,6 +48,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             __DIR__ . '/Tests/Functional/Api/CrawlerApiTest.php',
             __DIR__ . '/Tests/Acceptance',
             Rector\DeadCode\Rector\If_\RemoveDeadInstanceOfRector::class => null,
+            Rector\DeadCode\Rector\Assign\RemoveUnusedVariableAssignRector::class => [
+                __DIR__ . '/Classes/Domain/Repository/QueueRepository.php'
+            ],
         ]
     );
 

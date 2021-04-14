@@ -44,7 +44,7 @@
         "phpstan/extension-installer": "^1.0",
         "phpstan/phpstan": "^0.12.67",
         "phpstan/phpstan-deprecation-rules": "^0.12.5",
-        "rector/rector-prefixed": "^0.10",
+        "rector/rector-prefixed": "0.10.6",
         "roave/security-advisories": "dev-latest",
         "saschaegerer/phpstan-typo3": "^0.13.1",
         "slam/phpstan-extensions": "^5.0",
