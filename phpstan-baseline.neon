@@ -98,11 +98,6 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Function showLogAction\\(\\) has an unused variable \\$code\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
 			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:drawLog_addRows\\(\\)\" is 39, keep it under 8$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php

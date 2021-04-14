@@ -203,7 +203,6 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                 }
 
                 // Traverse page tree:
-                $code = '';
                 $count = 0;
                 $logEntriesPerPage = [];
                 foreach ($tree->tree as $data) {
