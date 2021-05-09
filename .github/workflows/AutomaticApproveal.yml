@@ -12,4 +12,3 @@ jobs:
         with:
           token: ${{ secrets.CRAWLER_GITHUB_TOKEN }}
           workflows: "Acceptance.yml,Deploy.yml,MutationTests.yml,Requirement.yml,SonarCloud.yml,StaticAnalysis.yaml,Tests.yml"
-          dangerous_files: "build.js"
