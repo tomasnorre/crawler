@@ -25,6 +25,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Provides a ContextMenu item
+ * @internal since v9.2.5
  */
 class ItemProvider extends AbstractProvider
 {

@@ -26,6 +26,9 @@ use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExis
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+ /**
+  * @internal since v9.2.5
+  */
 class ExtensionConfigurationProvider implements LoggerAwareInterface
 {
     use LoggerAwareTrait;

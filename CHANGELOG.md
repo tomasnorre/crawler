@@ -5,6 +5,17 @@
 ### Added
 
 ### Changed
+* Following classes are marked as internal
+  Backend/Helper/ResultHandler.php
+  Backend/Helper/UrlBuilder.php
+  Configuration/ExtensionConfigurationProvider.php
+  ContextMenu/ItemProvider.php
+  Converter/JsonCompatibilityConverter.php
+  Service/ConfigurationService.php
+  Service/ProcessService.php
+  Service/QueueService.php
+  Service/UrlService.php
+  Service/UserService.php
 
 ### Fixed
 * Date parsing for immediate queue entries

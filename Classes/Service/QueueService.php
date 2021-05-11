@@ -23,6 +23,9 @@ use AOE\Crawler\Controller\CrawlerController;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+/**
+ * @internal since v9.2.5
+ */
 class QueueService
 {
     /**
