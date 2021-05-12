@@ -49,7 +49,7 @@ jobs:
       - name: Install dependencies with nimut/typo3-complete:${{ matrix.typo3 }}
         if: matrix.typo3 != 'dev-master'
         run: |
-          composer require --dev nimut/typo3-complete:${{ matrix.typo3 }} doctrine/dbal:~2.11.0 --no-progress
+          composer require --dev nimut/typo3-complete:${{ matrix.typo3 }} --no-progress
           git checkout composer.json
           ln -nfs .Build/vendor/typo3/cms/typo3 typo3
 
