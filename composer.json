@@ -38,11 +38,12 @@
         "codeception/module-phpbrowser": "^1.0",
         "codeception/module-webdriver": "^1.0",
         "infection/infection": "^0.15.3",
+        "nikic/php-parser": "4.10.4",
         "nimut/phpunit-merger": "^1.1",
         "nimut/testing-framework": "^5.0",
         "nimut/typo3-complete": "^10.4",
         "phpstan/extension-installer": "^1.0",
-        "phpstan/phpstan": "^0.12.67",
+        "phpstan/phpstan": "0.12.85",
         "phpstan/phpstan-deprecation-rules": "^0.12.5",
         "rector/rector-prefixed": "0.10.6",
         "roave/security-advisories": "dev-latest",
@@ -50,7 +51,7 @@
         "slam/phpstan-extensions": "^5.0",
         "symfony/yaml": "^4.4 || ^5.0",
         "symplify/easy-coding-standard": "^9.0",
-        "symplify/phpstan-rules": "^8.3 || ^9.2",
+        "symplify/phpstan-rules": "^8.3 || 9.3.4",
         "typo3/testing-framework": "^4.14 || ^5.0",
         "vimeo/psalm": "^4.4"
     },
@@ -153,6 +154,12 @@
             "TYPO3_PATH_WEB=.Build/Web .Build/bin/phpunit --colors -c .Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/Unit"
         ]
     },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/symplify/phpstan-rules"
+        }
+    ],
     "support": {
         "issues": "https://github.com/AOEpeople/crawler/issues"
     }
