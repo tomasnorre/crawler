@@ -33,7 +33,7 @@ use AOE\Crawler\Exception\NoIndexFoundException;
 /**
  * Class ProcessCollection
  *
- * @package AOE\Crawler\Domain\Model
+ * @internal since v9.2.5
  */
 class ProcessCollection extends \ArrayObject
 {

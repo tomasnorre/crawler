@@ -25,6 +25,9 @@ use AOE\Crawler\Exception\ExtensionSettingsException;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+/**
+ * @internal since v9.2.5
+ */
 class PhpBinaryUtility
 {
     public static function getPhpBinary(): string

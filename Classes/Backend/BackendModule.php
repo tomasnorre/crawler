@@ -47,6 +47,8 @@ use TYPO3\CMS\Info\Controller\InfoModuleController;
  * - List of all queued items
  * - Log functionality
  * - Process overview
+ *
+ * @internal since v9.2.5
  */
 class BackendModule
 {

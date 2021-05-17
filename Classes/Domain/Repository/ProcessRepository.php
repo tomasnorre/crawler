@@ -39,9 +39,7 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
 /**
- * Class ProcessRepository
- *
- * @package AOE\Crawler\Domain\Repository
+ * @internal since v9.2.5
  */
 class ProcessRepository extends Repository
 {

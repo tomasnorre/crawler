@@ -37,8 +37,8 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 /**
  * Class Process
  *
- * @package AOE\Crawler\Domain\Model
  * @ignoreAnnotation("noRector")
+ * @internal since v9.2.5
  */
 class Process extends AbstractEntity
 {
