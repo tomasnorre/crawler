@@ -3,6 +3,7 @@
 ## Crawler 9.2.5-dev
 
 ### Added
+* Added Troubleshooting information about Crawler Module
 
 ### Changed
 * Following classes are marked as internal

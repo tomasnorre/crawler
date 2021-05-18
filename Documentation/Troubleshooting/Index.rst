@@ -100,3 +100,28 @@ In this case you have to set the path to your PHP in the Extension configuration
 
 Please be sure to add the correct path to your PHP. The path in this screenshot
 might be different to your PHP path.
+
+Info Module throws htmlspecialchars() expects parameter 1 to be string
+======================================================================
+
+We have had a bug in the Crawler for a while, which I had difficulties
+figuring out. The bug is cause by a problem with the CrawlerHook in the
+TYPO3 Core, as this is remove in TYPO3 11.
+
+I will not try to provide a fix for this, but only a workaround.
+
+Workaround
+----------
+   The problem appears when the Crawler Configuration and the Indexed_Search Configuration are stored on the same page. The workaround is then to move the Indexed_Search Configuration to a different page. I have not experience any side-effects on this change, but if you do so, please report them to me.
+
+This workaround is for these two bugs:
+
+https://github.com/AOEpeople/crawler/issues/576 and
+https://github.com/AOEpeople/crawler/issues/739
+
+If you would like to know more about what's going it, you can look at the core:
+
+https://github.com/TYPO3/TYPO3.CMS/blob/10.4/typo3/sysext/indexed_search/Classes/Hook/CrawlerHook.php#L156
+
+Here a int value is submitted instead of a String. This is a change that goes more than 8 years back.
+So surprised that it never was a problem before.
