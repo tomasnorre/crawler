@@ -13,6 +13,7 @@ nbproject
 .webprj
 
 # Ignore PHP/composer stuff
+composer.lock
 .Build
 composer.lock
 .php_cs.cache
