@@ -1686,15 +1686,7 @@ class CrawlerController implements LoggerAwareInterface
 
         // if there are less than allowed active processes then add a new one
         if ($processCount < (int) $this->extensionSettings['processLimit']) {
-            GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('tx_crawler_process')->insert(
-                'tx_crawler_process',
-                [
-                    'process_id' => $id,
-                    'active' => 1,
-                    'ttl' => $currentTime + (int) $this->extensionSettings['processMaxRunTime'],
-                    'system_process_id' => $systemProcessId,
-                ]
-            );
+            $this->processRepository->addProcess($id, $systemProcessId);
         } else {
             $ret = false;
         }

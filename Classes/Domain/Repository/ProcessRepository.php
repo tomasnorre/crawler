@@ -31,6 +31,7 @@ namespace AOE\Crawler\Domain\Repository;
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Domain\Model\ProcessCollection;
+use PDO;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
@@ -111,7 +112,7 @@ class ProcessRepository extends Repository
             ->select('*')
             ->from($this->tableName)
             ->where(
-                $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId, \PDO::PARAM_STR))
+                $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId, PDO::PARAM_STR))
             )->execute()->fetch(0);
     }
 
@@ -155,7 +156,7 @@ class ProcessRepository extends Repository
         $queryBuilder
             ->delete($this->tableName)
             ->where(
-                $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId, \PDO::PARAM_STR))
+                $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId, PDO::PARAM_STR))
             )->execute();
     }
 
@@ -313,5 +314,18 @@ class ProcessRepository extends Repository
             )
             ->set('active', 0)
             ->execute();
+    }
+
+    public function addProcess(string $processId, int $systemProcessId): void
+    {
+        GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable($this->tableName)->insert(
+            'tx_crawler_process',
+            [
+                'process_id' => $processId,
+                'active' => 1,
+                'ttl' => time() + (int) $this->extensionSettings['processMaxRunTime'],
+                'system_process_id' => $systemProcessId,
+            ]
+        );
     }
 }

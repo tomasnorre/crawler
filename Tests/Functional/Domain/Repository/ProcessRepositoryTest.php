@@ -263,4 +263,37 @@ class ProcessRepositoryTest extends FunctionalTestCase
             $processAfter['assigned_items_count']
         );
     }
+
+    /**
+     * @test
+     */
+    public function addProcessAddProcess(): void
+    {
+        $processId = md5('processId');
+        $systemProcessId = 12345;
+        self::assertFalse($this->subject->findByProcessId($processId));
+
+        $this->subject->addProcess($processId, $systemProcessId);
+
+        $process = $this->subject->findByProcessId($processId);
+        self::assertEquals(
+            $processId,
+            $process['process_id']
+        );
+
+        self::assertEquals(
+            true,
+            $process['active']
+        );
+
+        self::assertGreaterThan(
+            time(),
+            $process['ttl']
+        );
+
+        self::assertEquals(
+            $systemProcessId,
+            $process['system_process_id']
+        );
+    }
 }
