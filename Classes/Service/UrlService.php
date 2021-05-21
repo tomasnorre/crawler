@@ -80,4 +80,31 @@ class UrlService
 
         return $url;
     }
+
+    /**
+     * Compiling URLs from parameter array (output of expandParameters())
+     * The number of URLs will be the multiplication of the number of parameter values for each key
+     *
+     * @param array $paramArray Output of expandParameters(): Array with keys (GET var names) and for each an array of values
+     * @param array $urls URLs accumulated in this array (for recursion)
+     */
+    public function compileUrls(array $paramArray, array $urls, int $maxUrlToCompile = 1): array
+    {
+        if (empty($paramArray)) {
+            return $urls;
+        }
+        $varName = key($paramArray);
+        $valueSet = array_shift($paramArray);
+
+        // Traverse value set:
+        $newUrls = [];
+        foreach ($urls as $url) {
+            foreach ($valueSet as $val) {
+                if (count($newUrls) < $maxUrlToCompile) {
+                    $newUrls[] = $url . (strcmp((string) $val, '') ? '&' . rawurlencode($varName) . '=' . rawurlencode((string) $val) : '');
+                }
+            }
+        }
+        return $this->compileUrls($paramArray, $newUrls, $maxUrlToCompile);
+    }
 }

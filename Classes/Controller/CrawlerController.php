@@ -212,7 +212,7 @@ class CrawlerController implements LoggerAwareInterface
     /**
      * @var int
      */
-    protected $maximumUrlsToCompile = 10000;
+    protected $maximumUrlsToCompile = 1;
 
     /**
      * @var IconFactory
@@ -223,6 +223,7 @@ class CrawlerController implements LoggerAwareInterface
      * @var string[]
      */
     private $deprecatedPublicMethods = [
+        'compileUrls' => 'Using CrawlerController->compileUrls() is deprecated since 9.2.5, and will be removed in v11.x',
         'cleanUpOldQueueEntries' => 'Using CrawlerController::cleanUpOldQueueEntries() is deprecated since 9.0.1 and will be removed in v11.x, please use QueueRepository->cleanUpOldQueueEntries() instead.',
         'CLI_buildProcessId' => 'Using CrawlerController->CLI_buildProcessId() is deprecated since 9.2.5 and will be removed in v11.x',
         'CLI_checkAndAcquireNewProcess' => 'Using CrawlerController->CLI_checkAndAcquireNewProcess() is deprecated since 9.2.5 and will be removed in v11.x',
@@ -242,6 +243,8 @@ class CrawlerController implements LoggerAwareInterface
         'setProcessFilename' => 'Using CrawlerController->setProcessFilename() is deprecated since 9.1.3 and will be removed in v11.x',
         'getDuplicateRowsIfExist' => 'Using CrawlerController->getDuplicateRowsIfExist() is deprecated since 9.1.4 and will be remove in v11.x, please use QueueRepository->getDuplicateQueueItemsIfExists() instead',
         'checkIfPageShouldBeSkipped' => 'Using CrawlerController->checkIfPageShouldBeSkipped() is deprecated since 9.2.5 and will be removed in v11.x',
+        'swapIfFirstIsLargerThanSecond' => 'Using CrawlerController->swapIfFirstIsLargerThanSecond() is deprecated since 9.2.5, and will be removed in v11.x',
+        'expandParameters' => 'Using CrawlerController->expandParameters() is deprecated since 9.2.5, and will be removed in v11.x',
     ];
 
     /**
@@ -287,6 +290,16 @@ class CrawlerController implements LoggerAwareInterface
      */
     private $crawler;
 
+    /**
+     * @var ConfigurationService
+     */
+    private $configurationService;
+
+    /**
+     * @var UrlService
+     */
+    private $urlService;
+
     /************************************
      *
      * Getting URLs based on Page TSconfig
@@ -304,6 +317,8 @@ class CrawlerController implements LoggerAwareInterface
         $this->queueExecutor = GeneralUtility::makeInstance(QueueExecutor::class, $crawlStrategyFactory);
         $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
         $this->crawler = GeneralUtility::makeInstance(Crawler::class);
+        $this->configurationService = GeneralUtility::makeInstance(ConfigurationService::class);
+        $this->urlService = GeneralUtility::makeInstance(UrlService::class);
 
         $this->processFilename = Environment::getVarPath() . '/lock/tx_crawler.proc';
 
@@ -573,41 +588,8 @@ class CrawlerController implements LoggerAwareInterface
 
         $res = [];
 
-        // Fetch Crawler Configuration from pageTSconfig
-        $crawlerCfg = $pageTSconfig['tx_crawler.']['crawlerCfg.']['paramSets.'] ?? [];
-        foreach ($crawlerCfg as $key => $values) {
-            if (! is_array($values)) {
-                continue;
-            }
-            $key = str_replace('.', '', $key);
-            // Sub configuration for a single configuration string:
-            $subCfg = (array) $crawlerCfg[$key . '.'];
-            $subCfg['key'] = $key;
-
-            if (strcmp($subCfg['procInstrFilter'] ?? '', '')) {
-                $subCfg['procInstrFilter'] = implode(',', GeneralUtility::trimExplode(',', $subCfg['procInstrFilter']));
-            }
-            $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $subCfg['pidsOnly'], true));
-
-            // process configuration if it is not page-specific or if the specific page is the current page:
-            // TODO: Check if $pidOnlyList can be kept as Array instead of imploded
-            if (! strcmp((string) $subCfg['pidsOnly'], '') || GeneralUtility::inList($pidOnlyList, strval($pageId))) {
-
-                // Explode, process etc.:
-                $res[$key] = [];
-                $res[$key]['subCfg'] = $subCfg;
-                $res[$key]['paramParsed'] = GeneralUtility::explodeUrl2Array($crawlerCfg[$key]);
-                $res[$key]['paramExpanded'] = $this->expandParameters($res[$key]['paramParsed'], $pageId);
-                $res[$key]['origin'] = 'pagets';
-
-                // recognize MP value
-                if (! $this->MP) {
-                    $res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'], ['?id=' . $pageId]);
-                } else {
-                    $res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'], ['?id=' . $pageId . '&MP=' . $this->MP]);
-                }
-            }
-        }
+        // Fetch Crawler Configuration from pageTSConfig
+        $res = $this->configurationService->getConfigurationFromPageTS($pageTSconfig, $pageId, $res);
 
         // Get configuration from tx_crawler_configuration records up the rootline
         $crawlerConfigurations = $this->configurationRepository->getCrawlerConfigurationRecordsFromRootLine($pageId);
@@ -643,8 +625,8 @@ class CrawlerController implements LoggerAwareInterface
                             $res[$key] = [];
                             $res[$key]['subCfg'] = $subCfg;
                             $res[$key]['paramParsed'] = GeneralUtility::explodeUrl2Array($configurationRecord['configuration']);
-                            $res[$key]['paramExpanded'] = $this->expandParameters($res[$key]['paramParsed'], $pageId);
-                            $res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'], ['?id=' . $pageId]);
+                            $res[$key]['paramExpanded'] = $this->configurationService->expandParameters($res[$key]['paramParsed'], $pageId);
+                            $res[$key]['URLs'] = $this->urlService->compileUrls($res[$key]['paramExpanded'], ['?id=' . $pageId], $this->getMaximumUrlsToCompile());
                             $res[$key]['origin'] = 'tx_crawler_configuration_' . $configurationRecord['uid'];
                         }
                     }
@@ -736,6 +718,7 @@ class CrawlerController implements LoggerAwareInterface
      * @param array $paramArray Array with key (GET var name) and values (value of GET var which is configuration for expansion)
      * @param integer $pid Current page ID
      * @return array
+     * @deprecated
      *
      * TODO: Write Functional Tests
      */
@@ -876,26 +859,11 @@ class CrawlerController implements LoggerAwareInterface
      *
      * @param array $paramArray Output of expandParameters(): Array with keys (GET var names) and for each an array of values
      * @param array $urls URLs accumulated in this array (for recursion)
-     * @return array
+     * @deprecated
      */
-    public function compileUrls($paramArray, array $urls)
+    public function compileUrls(array $paramArray, array $urls): array
     {
-        if (empty($paramArray)) {
-            return $urls;
-        }
-        $varName = key($paramArray);
-        $valueSet = array_shift($paramArray);
-
-        // Traverse value set:
-        $newUrls = [];
-        foreach ($urls as $url) {
-            foreach ($valueSet as $val) {
-                if (count($newUrls) < $this->getMaximumUrlsToCompile()) {
-                    $newUrls[] = $url . (strcmp((string) $val, '') ? '&' . rawurlencode($varName) . '=' . rawurlencode((string) $val) : '');
-                }
-            }
-        }
-        return $this->compileUrls($paramArray, $newUrls);
+        return $this->urlService->compileUrls($paramArray, $urls, $this->getMaximumUrlsToCompile());
     }
 
     /************************************
@@ -1929,6 +1897,9 @@ class CrawlerController implements LoggerAwareInterface
         return $urlService->getUrlFromPageAndQueryParameters($pageId, $queryString, $alternativeBaseUrl, $httpsOrHttp);
     }
 
+    /**
+     * @deprecated
+     */
     protected function swapIfFirstIsLargerThanSecond(array $reg): array
     {
         // Swap if first is larger than last:
