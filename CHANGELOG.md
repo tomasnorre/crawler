@@ -7,6 +7,7 @@
 
 ### Changed
 * Switch to Constants for Repository TableNames
+* Use ConfigurationRepository function instead of queries in CrawlerController
 * Following classes are marked as internal
   * Backend/BackendModule.php
   * Backend/Helper/ResultHandler.php

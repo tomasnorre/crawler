@@ -698,17 +698,10 @@ class CrawlerController implements LoggerAwareInterface
             $pids[] = $node['row']['uid'];
         }
 
-        $queryBuilder = $this->getQueryBuilder(ConfigurationRepository::TABLE_NAME);
-        $statement = $queryBuilder
-            ->select('name')
-            ->from(ConfigurationRepository::TABLE_NAME)
-            ->where(
-                $queryBuilder->expr()->in('pid', $queryBuilder->createNamedParameter($pids, Connection::PARAM_INT_ARRAY))
-            )
-            ->execute();
+        $configurations = $this->configurationRepository->getCrawlerConfigurationRecordsFromRootLine($rootid, $pids);
 
-        while ($row = $statement->fetch()) {
-            $configurationsForBranch[] = $row['name'];
+        foreach($configurations as $configuration) {
+            $configurationsForBranch[] = $configuration['name'];
         }
         return $configurationsForBranch;
     }
