@@ -4,6 +4,7 @@
 
 ### Added
 * Added Troubleshooting information about Crawler Module
+* Added PageService
 
 ### Changed
 * Switch to Constants for Repository TableNames
@@ -48,6 +49,7 @@
 ### Deprecated
 #### Classes
 #### Functions & Properties
+* CrawlerController->checkIfPageShouldBeSkipped()
 
 ### Removed
 #### Classes
