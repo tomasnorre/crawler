@@ -20,6 +20,7 @@ namespace AOE\Crawler\Tests\Unit\Controller;
  */
 
 use AOE\Crawler\Controller\CrawlerController;
+use AOE\Crawler\Service\PageService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
@@ -160,9 +161,12 @@ class CrawlerControllerTest extends UnitTestCase
      */
     public function getUrlsForPageRow(bool $checkIfPageSkipped, array $getUrlsForPages, array $pageRow, string $skipMessage, array $expected): void
     {
+        $mockedPageService = $this->createPartialMock(PageService::class, ['checkIfPageShouldBeSkipped']);
+        $mockedPageService->expects($this->any())->method('checkIfPageShouldBeSkipped')->will($this->returnValue($checkIfPageSkipped));
+
         /** @var MockObject|CrawlerController $crawlerController */
-        $crawlerController = $this->createPartialMock(CrawlerController::class, ['checkIfPageShouldBeSkipped', 'getUrlsForPageId']);
-        $crawlerController->expects($this->any())->method('checkIfPageShouldBeSkipped')->will($this->returnValue($checkIfPageSkipped));
+        $crawlerController = $this->createPartialMock(CrawlerController::class, ['getPageService', 'getUrlsForPageId']);
+        $crawlerController->expects($this->any())->method('getPageService')->will($this->returnValue($mockedPageService));
         $crawlerController->expects($this->any())->method('getUrlsForPageId')->will($this->returnValue($getUrlsForPages));
 
         self::assertEquals(
@@ -297,23 +301,6 @@ class CrawlerControllerTest extends UnitTestCase
 
     /**
      * @test
-     *
-     * @dataProvider checkIfPageShouldBeSkippedDataProvider
-     */
-    public function checkIfPageShouldBeSkipped(array $extensionSetting, array $pageRow, array $excludeDoktype, array $pageVeto, string $expected): void
-    {
-        $this->crawlerController->setExtensionSettings($extensionSetting);
-        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['excludeDoktype'] = $excludeDoktype;
-        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pageVeto'] = $pageVeto;
-
-        self::assertEquals(
-            $expected,
-            $this->crawlerController->checkIfPageShouldBeSkipped($pageRow)
-        );
-    }
-
-    /**
-     * @test
      */
     public function cLIBuildProcessIdIsSetReturnsValue(): void
     {
@@ -389,95 +376,6 @@ class CrawlerControllerTest extends UnitTestCase
                     'URLs' => 'Value not important, but different than test case before',
                 ],
                 'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22',
-            ],
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function checkIfPageShouldBeSkippedDataProvider()
-    {
-        return [
-            'Page of doktype 1 - Standand' => [
-                'extensionSetting' => [],
-                'pageRow' => [
-                    'doktype' => 1,
-                    'hidden' => 0,
-                ],
-                'excludeDoktype' => [],
-                'pageVeto' => [],
-                'expected' => false,
-            ],
-            'Extension Setting do not crawl hidden pages and page is hidden' => [
-                'extensionSetting' => ['crawlHiddenPages' => false],
-                'pageRow' => [
-                    'doktype' => 1,
-                    'hidden' => 1,
-                ],
-                'excludeDoktype' => [],
-                'pageVeto' => [],
-                'expected' => 'Because page is hidden',
-            ],
-            'Page of doktype 3 - External Url' => [
-                'extensionSettings' => [],
-                'pageRow' => [
-                    'doktype' => 3,
-                    'hidden' => 0,
-                ],
-                'excludeDoktype' => [],
-                'pageVeto' => [],
-                'expected' => 'Because doktype is not allowed',
-            ],
-            'Page of doktype 4 - Shortcut' => [
-                'extensionSettings' => [],
-                'pageRow' => [
-                    'doktype' => 4,
-                    'hidden' => 0,
-                ],
-                'excludeDoktype' => [],
-                'pageVeto' => [],
-                'expected' => 'Because doktype is not allowed',
-            ],
-            'Page of doktype 155 - Custom' => [
-                'extensionSettings' => [],
-                'pageRow' => [
-                    'doktype' => 155,
-                    'hidden' => 0,
-                ],
-                'excludeDoktype' => ['custom' => 155],
-                'pageVeto' => [],
-                'expected' => 'Doktype was excluded by "custom"',
-            ],
-            'Page of doktype 255 - Out of allowed range' => [
-                'extensionSettings' => [],
-                'pageRow' => [
-                    'doktype' => 255,
-                    'hidden' => 0,
-                ],
-                'excludeDoktype' => [],
-                'pageVeto' => [],
-                'expected' => 'Because doktype is not allowed',
-            ],
-            'Page veto exists' => [
-                'extensionSettings' => [],
-                'pageRow' => [
-                    'doktype' => 1,
-                    'hidden' => 0,
-                ],
-                'excludeDoktype' => [],
-                'pageVeto' => ['veto-func' => VetoHookTestHelper::class . '->returnTrue'],
-                'expected' => 'Veto from hook "veto-func"',
-            ],
-            'Page veto exists - string' => [
-                'extensionSettings' => [],
-                'pageRow' => [
-                    'doktype' => 1,
-                    'hidden' => 0,
-                ],
-                'excludeDoktype' => [],
-                'pageVeto' => ['veto-func' => VetoHookTestHelper::class . '->returnString'],
-                'expected' => 'Veto because of {"pageRow":{"doktype":1,"hidden":0}}',
             ],
         ];
     }
