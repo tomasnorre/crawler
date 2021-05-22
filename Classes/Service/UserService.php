@@ -21,6 +21,9 @@ namespace AOE\Crawler\Service;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+/**
+ * @internal since v9.2.5
+ */
 class UserService
 {
     public static function hasGroupAccess(string $groupList, string $accessList): bool

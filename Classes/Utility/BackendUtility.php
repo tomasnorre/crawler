@@ -26,9 +26,8 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Class BackendUtility
- *
  * @codeCoverageIgnore
+ * @internal since v9.2.5
  */
 class BackendUtility
 {

@@ -23,6 +23,9 @@ use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+/**
+ * @internal since v9.2.5
+ */
 final class Crawler implements SingletonInterface
 {
     /**

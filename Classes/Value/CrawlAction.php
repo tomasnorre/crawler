@@ -21,6 +21,9 @@ namespace AOE\Crawler\Value;
 
 use Assert\Assert;
 
+/**
+ * @internal since v9.2.5
+ */
 final class CrawlAction
 {
     /**

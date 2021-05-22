@@ -25,6 +25,9 @@ use TYPO3\CMS\Core\Routing\SiteMatcher;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+/**
+ * @internal since v9.2.5
+ */
 class UrlService
 {
     /**

@@ -19,6 +19,9 @@ namespace AOE\Crawler\Converter;
  * The TYPO3 project - inspiring people to share!
  */
 
+/**
+ * @internal since v9.2.5
+ */
 class JsonCompatibilityConverter
 {
     /**

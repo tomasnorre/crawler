@@ -21,6 +21,9 @@ namespace AOE\Crawler\Writer\FileWriter\CsvWriter;
 
 use TYPO3\CMS\Core\Utility\CsvUtility;
 
+/**
+ * @internal since v9.2.5
+ */
 final class CrawlerCsvWriter implements CsvWriterInterface
 {
     public const CARRIAGE_RETURN = 13;

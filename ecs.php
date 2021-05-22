@@ -37,6 +37,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         [
             __DIR__ . '/Tests/Acceptance/Support/_generated',
             'PhpCsFixer\Fixer\Whitespace\ArrayIndentationFixer' => null,
+            'PhpCsFixer\Fixer\FunctionNotation\MethodArgumentSpaceFixer' => null,
             'PHP_CodeSniffer\Standards\Generic\Sniffs\CodeAnalysis\AssignmentInConditionSniff.FoundInWhileCondition' => null,
             PhpUnitStrictFixer::class => null,
             PhpUnitTestAnnotationFixer::class => null,

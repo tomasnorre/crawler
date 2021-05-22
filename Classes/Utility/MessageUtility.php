@@ -23,6 +23,9 @@ use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+/**
+ * @internal since v9.2.5
+ */
 class MessageUtility
 {
     /**

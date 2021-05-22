@@ -19,12 +19,14 @@ namespace AOE\Crawler\ContextMenu;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use TYPO3\CMS\Backend\ContextMenu\ItemProviders\AbstractProvider;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Provides a ContextMenu item
+ * @internal since v9.2.5
  */
 class ItemProvider extends AbstractProvider
 {
@@ -45,7 +47,7 @@ class ItemProvider extends AbstractProvider
      */
     public function canHandle(): bool
     {
-        return $this->table === 'tx_crawler_configuration';
+        return $this->table === ConfigurationRepository::TABLE_NAME;
     }
 
     /**

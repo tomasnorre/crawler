@@ -22,6 +22,9 @@ namespace AOE\Crawler\Backend\Helper;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+/**
+ * @internal since v9.2.5
+ */
 class ResultHandler
 {
     /**
