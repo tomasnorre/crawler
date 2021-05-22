@@ -25,6 +25,9 @@ use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
+/**
+ * @internal since v9.2.5
+ */
 class DataHandlerHook
 {
     /**

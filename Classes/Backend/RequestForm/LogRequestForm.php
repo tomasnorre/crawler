@@ -77,7 +77,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
         $this->view = $view;
         $this->infoModuleController = $infoModuleController;
         $this->jsonCompatibilityConverter = new JsonCompatibilityConverter();
-        $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tx_crawler_queue');
+        $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(QueueRepository::TABLE_NAME);
         $this->csvWriter = new CrawlerCsvWriter();
         $this->extensionSettings = $extensionSettings;
         $this->queueRepository = $objectManager->get(QueueRepository::class);
@@ -140,7 +140,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
             if ($queueId) {
                 // Get entry record:
                 $q_entry = $this->queryBuilder
-                    ->from('tx_crawler_queue')
+                    ->from(QueueRepository::TABLE_NAME)
                     ->select('*')
                     ->where(
                         $this->queryBuilder->expr()->eq('qid', $this->queryBuilder->createNamedParameter($queueId))

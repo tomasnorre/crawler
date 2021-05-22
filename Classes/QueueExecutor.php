@@ -31,6 +31,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Fetches a URL based on the selected strategy or via a callback.
+ * @internal since v9.2.5
  */
 class QueueExecutor implements SingletonInterface
 {

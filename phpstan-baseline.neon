@@ -118,6 +118,11 @@ parameters:
 			path: Classes/Backend/RequestForm/MultiProcessRequestForm.php
 
 		-
+			message: "#^Unable to resolve the template type T in call to method static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\)$#"
+			count: 1
+			path: Classes/Backend/RequestForm/MultiProcessRequestForm.php
+
+		-
 			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\RequestFormInterface\\:\\:render\\(\\) has parameter \\$id with no typehint specified\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/RequestFormInterface.php
@@ -428,17 +433,27 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
+			message: "#^Unable to resolve the template type T in call to method static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\)$#"
+			count: 2
+			path: Classes/Controller/CrawlerController.php
+
+		-
 			message: "#^Call to function is_object\\(\\) with mixed will always evaluate to false\\.$#"
 			count: 1
 			path: Classes/Converter/JsonCompatibilityConverter.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:crawler_execute\\(\\)\\.$#"
+			message: "#^Method AOE\\\\Crawler\\\\CrawlStrategy\\\\CallbackExecutionStrategy\\:\\:fetchByCallback\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\CrawlStrategy\\\\CallbackExecutionStrategy\\:\\:fetchByCallback\\(\\) has no return typehint specified\\.$#"
+			message: "#^Parameter \\#1 \\$className of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\) expects class\\-string\\<mixed\\>, string given\\.$#"
+			count: 1
+			path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
+
+		-
+			message: "#^Unable to resolve the template type T in call to method static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\)$#"
 			count: 1
 			path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
 
@@ -693,16 +708,6 @@ parameters:
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:indexOperation\\(\\)\\.$#"
-			count: 1
-			path: Classes/Hooks/IndexedSearchCrawlerHook.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:initMessage\\(\\)\\.$#"
-			count: 1
-			path: Classes/Hooks/IndexedSearchCrawlerHook.php
-
-		-
 			message: "#^Call to an undefined method object\\:\\:urlListFromUrlArray\\(\\)\\.$#"
 			count: 1
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
@@ -768,6 +773,11 @@ parameters:
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
 		-
+			message: "#^Unable to resolve the template type T in call to method static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\)$#"
+			count: 2
+			path: Classes/Hooks/IndexedSearchCrawlerHook.php
+
+		-
 			message: "#^Undefined variable\\: \\$message$#"
 			count: 1
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
@@ -785,11 +795,6 @@ parameters:
 				"""
 			count: 2
 			path: Classes/Hooks/ProcessCleanUpHook.php
-
-		-
-			message: "#^Call to an undefined method TYPO3\\\\CMS\\\\Core\\\\Context\\\\AspectInterface\\:\\:getGroupIds\\(\\)\\.$#"
-			count: 1
-			path: Classes/Middleware/CrawlerInitialization.php
 
 		-
 			message:

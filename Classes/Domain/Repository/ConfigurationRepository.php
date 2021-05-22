@@ -28,10 +28,16 @@ use TYPO3\CMS\Core\Database\Query\Restriction\HiddenRestriction;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
+/**
+ * @internal since v9.2.5
+ */
 class ConfigurationRepository extends Repository
 {
+    public const TABLE_NAME = 'tx_crawler_configuration';
+
     /**
      * @var string
+     * @deprecated Since v9.2.5 - This will be remove in v10
      */
     protected $tableName = 'tx_crawler_configuration';
 
@@ -41,7 +47,7 @@ class ConfigurationRepository extends Repository
         $queryBuilder = $this->createQueryBuilder();
         $statement = $queryBuilder
             ->select('*')
-            ->from($this->tableName)
+            ->from(self::TABLE_NAME)
             ->execute();
 
         while ($row = $statement->fetch()) {
@@ -70,7 +76,7 @@ class ConfigurationRepository extends Repository
             ->add(GeneralUtility::makeInstance(HiddenRestriction::class));
         $configurationRecordsForCurrentPage = $queryBuilder
             ->select('*')
-            ->from($this->tableName)
+            ->from(self::TABLE_NAME)
             ->where(
                 $queryBuilder->expr()->in('pid', $queryBuilder->createNamedParameter($pageIdsInRootLine, Connection::PARAM_INT_ARRAY))
             )
@@ -81,6 +87,6 @@ class ConfigurationRepository extends Repository
 
     protected function createQueryBuilder(): QueryBuilder
     {
-        return GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        return GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
     }
 }

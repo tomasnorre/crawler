@@ -26,7 +26,7 @@ composer require aoepeople/crawler
 | 9.x.y  | 9.5-11.0  | 7.2-7.4 |Features, Bugfixes, Security Updates
 | 8.x.y  |    |  | Releases do not exist
 | 7.x.y  |    |  | Releases do not exist
-| 6.x.y  | 7.6-8.7   | 5.6-7.3 | Bugfixes, Security Updates
+| 6.x.y  | 7.6-8.7   | 5.6-7.3 | Security Updates
 
 ### Documentation
 Please read the [documentation](https://docs.typo3.org/typo3cms/extensions/crawler/)

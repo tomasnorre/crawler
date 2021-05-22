@@ -3,19 +3,43 @@
 ## Crawler 9.2.5-dev
 
 ### Added
+* Added Troubleshooting information about Crawler Module
 
 ### Changed
+* Switch to Constants for Repository TableNames
 * Following classes are marked as internal
-  Backend/Helper/ResultHandler.php
-  Backend/Helper/UrlBuilder.php
-  Configuration/ExtensionConfigurationProvider.php
-  ContextMenu/ItemProvider.php
-  Converter/JsonCompatibilityConverter.php
-  Service/ConfigurationService.php
-  Service/ProcessService.php
-  Service/QueueService.php
-  Service/UrlService.php
-  Service/UserService.php
+  * Backend/BackendModule.php
+  * Backend/Helper/ResultHandler.php
+  * Backend/Helper/UrlBuilder.php
+  * Configuration/ExtensionConfigurationProvider.php
+  * ContextMenu/ItemProvider.php
+  * Converter/JsonCompatibilityConverter.php
+  * Crawler.php
+  * Domain/Model/Configuration.php
+  * Domain/Model/Process.php
+  * Domain/Model/ProcessCollection.php
+  * Domain/Model/Queue.php
+  * Domain/Model/Reason.php
+  * Domain/Repository/ConfigurationRepository.php
+  * Domain/Repository/ProcessRepository.php
+  * Domain/Repository/QueueRepository.php
+  * Hooks/DataHandlerHook.php
+  * Hooks/ProcessCleanUpHook.php
+  * QueueExecutor.php
+  * Service/ConfigurationService.php
+  * Service/ProcessService.php
+  * Service/QueueService.php
+  * Service/UrlService.php
+  * Service/UserService.php
+  * Service/ProcessService.php
+  * Utility/BackendUtility.php
+  * Utility/HookUtility.php
+  * Utility/MessageUtility.php
+  * Utility/PhpBinaryUtility.php
+  * Utility/TcaUtility.php
+  * Value/CrawlAction.php
+  * Value/QueueFilter.php
+  * Writer/FileWriter/CsvWriter/CrawlerCsvWriter.php
 
 ### Fixed
 * Date parsing for immediate queue entries

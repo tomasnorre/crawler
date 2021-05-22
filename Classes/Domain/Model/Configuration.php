@@ -21,6 +21,9 @@ namespace AOE\Crawler\Domain\Model;
 
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
+/**
+ * @internal since v9.2.5
+ */
 class Configuration extends AbstractEntity
 {
     /**

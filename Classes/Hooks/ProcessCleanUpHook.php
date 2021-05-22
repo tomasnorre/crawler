@@ -27,8 +27,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
- * Class ProcessCleanUpHook
- * @package AOE\Crawler\Hooks
+ * @internal since v9.2.5
  */
 class ProcessCleanUpHook implements CrawlerHookInterface
 {

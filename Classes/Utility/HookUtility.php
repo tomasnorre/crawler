@@ -22,9 +22,8 @@ namespace AOE\Crawler\Utility;
 use AOE\Crawler\Hooks\ProcessCleanUpHook;
 
 /**
- * Class HookUtility
- *
  * @codeCoverageIgnore
+ * @internal since v9.2.5
  */
 class HookUtility
 {
