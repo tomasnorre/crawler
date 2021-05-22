@@ -6,6 +6,7 @@
 * Added Troubleshooting information about Crawler Module
 
 ### Changed
+* Switch to Constants for Repository TableNames
 * Following classes are marked as internal
   * Backend/BackendModule.php
   * Backend/Helper/ResultHandler.php

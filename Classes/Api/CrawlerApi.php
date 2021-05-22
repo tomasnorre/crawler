@@ -186,9 +186,9 @@ class CrawlerApi
     {
         $uid = intval($uid);
 
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(QueueRepository::TABLE_NAME);
         $query = $queryBuilder
-            ->from($this->tableName)
+            ->from(QueueRepository::TABLE_NAME)
             ->selectLiteral('max(scheduled) as latest')
             ->where(
                 $queryBuilder->expr()->eq('page_id', $queryBuilder->createNamedParameter($uid))
@@ -228,9 +228,9 @@ class CrawlerApi
         $uid = intval($uid);
         $limit = intval($limit);
 
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(QueueRepository::TABLE_NAME);
         $statement = $queryBuilder
-            ->from($this->tableName)
+            ->from(QueueRepository::TABLE_NAME)
             ->select('scheduled', 'exec_time', 'set_id')
             ->where(
                 $queryBuilder->expr()->eq('page_id', $queryBuilder->createNamedParameter($uid, \PDO::PARAM_INT))

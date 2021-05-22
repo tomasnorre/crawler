@@ -94,7 +94,7 @@ class BackendModule
     {
         $objectManger = GeneralUtility::makeInstance(ObjectManager::class);
         $this->processManager = $objectManger->get(ProcessService::class);
-        $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tx_crawler_queue');
+        $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(QueueRepository::TABLE_NAME);
         $this->queueRepository = $objectManger->get(QueueRepository::class);
         $this->initializeView();
         $this->extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
