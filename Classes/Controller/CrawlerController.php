@@ -184,6 +184,7 @@ class CrawlerController implements LoggerAwareInterface
 
     /**
      * @var string
+     * @deprecated Since v9.2.5 - This will be remove in v10
      */
     protected $tableName = 'tx_crawler_queue';
 
@@ -697,10 +698,10 @@ class CrawlerController implements LoggerAwareInterface
             $pids[] = $node['row']['uid'];
         }
 
-        $queryBuilder = $this->getQueryBuilder('tx_crawler_configuration');
+        $queryBuilder = $this->getQueryBuilder(ConfigurationRepository::TABLE_NAME);
         $statement = $queryBuilder
             ->select('name')
-            ->from('tx_crawler_configuration')
+            ->from(ConfigurationRepository::TABLE_NAME)
             ->where(
                 $queryBuilder->expr()->in('pid', $queryBuilder->createNamedParameter($pids, Connection::PARAM_INT_ARRAY))
             )
@@ -1036,9 +1037,9 @@ class CrawlerController implements LoggerAwareInterface
         }
         $params['_CALLBACKOBJ'] = $callBack;
 
-        GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('tx_crawler_queue')
+        GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(QueueRepository::TABLE_NAME)
             ->insert(
-                'tx_crawler_queue',
+                QueueRepository::TABLE_NAME,
                 [
                     'page_id' => (int) $page_id,
                     'parameters' => json_encode($params),
@@ -1125,12 +1126,12 @@ class CrawlerController implements LoggerAwareInterface
             }
 
             if (empty($rows)) {
-                $connectionForCrawlerQueue = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('tx_crawler_queue');
+                $connectionForCrawlerQueue = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(QueueRepository::TABLE_NAME);
                 $connectionForCrawlerQueue->insert(
-                    'tx_crawler_queue',
+                    QueueRepository::TABLE_NAME,
                     $fieldArray
                 );
-                $uid = $connectionForCrawlerQueue->lastInsertId('tx_crawler_queue', 'qid');
+                $uid = $connectionForCrawlerQueue->lastInsertId(QueueRepository::TABLE_NAME, 'qid');
                 $rows[] = $uid;
                 $urlAdded = true;
 
@@ -1179,13 +1180,13 @@ class CrawlerController implements LoggerAwareInterface
      */
     public function readUrl($queueId, $force = false)
     {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(QueueRepository::TABLE_NAME);
         $ret = 0;
         $this->logger->debug('crawler-readurl start ' . microtime(true));
 
         $queryBuilder
             ->select('*')
-            ->from('tx_crawler_queue')
+            ->from(QueueRepository::TABLE_NAME)
             ->where(
                 $queryBuilder->expr()->eq('qid', $queryBuilder->createNamedParameter($queueId, PDO::PARAM_INT))
             );
@@ -1214,9 +1215,9 @@ class CrawlerController implements LoggerAwareInterface
             $field_array['process_id_completed'] = $this->processID;
         }
 
-        GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('tx_crawler_queue')
+        GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(QueueRepository::TABLE_NAME)
             ->update(
-                'tx_crawler_queue',
+                QueueRepository::TABLE_NAME,
                 $field_array,
                 ['qid' => (int) $queueId]
             );
@@ -1256,9 +1257,9 @@ class CrawlerController implements LoggerAwareInterface
             [$queueId, &$field_array]
         );
 
-        GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('tx_crawler_queue')
+        GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(QueueRepository::TABLE_NAME)
             ->update(
-                'tx_crawler_queue',
+                QueueRepository::TABLE_NAME,
                 $field_array,
                 ['qid' => (int) $queueId]
             );
@@ -1278,12 +1279,12 @@ class CrawlerController implements LoggerAwareInterface
     {
         // Set exec_time to lock record:
         $field_array['exec_time'] = $this->getCurrentTime();
-        $connectionForCrawlerQueue = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable($this->tableName);
+        $connectionForCrawlerQueue = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(QueueRepository::TABLE_NAME);
         $connectionForCrawlerQueue->insert(
-            $this->tableName,
+            QueueRepository::TABLE_NAME,
             $field_array
         );
-        $queueId = $field_array['qid'] = $connectionForCrawlerQueue->lastInsertId($this->tableName, 'qid');
+        $queueId = $field_array['qid'] = $connectionForCrawlerQueue->lastInsertId(QueueRepository::TABLE_NAME, 'qid');
         $result = $this->queueExecutor->executeQueueItem($field_array, $this);
 
         // Set result in log which also denotes the end of the processing of this entry.
@@ -1296,7 +1297,7 @@ class CrawlerController implements LoggerAwareInterface
         );
 
         $connectionForCrawlerQueue->update(
-            $this->tableName,
+            QueueRepository::TABLE_NAME,
             $field_array,
             ['qid' => $queueId]
         );
@@ -1723,8 +1724,9 @@ class CrawlerController implements LoggerAwareInterface
 
         // mark all processes as deleted which have no "waiting" queue-entires and which are not active
 
+        // ReleaseQueueEntries
         $queryBuilder
-            ->update($this->tableName, 'q')
+            ->update(QueueRepository::TABLE_NAME, 'q')
             ->where(
                 'q.process_id IN(SELECT p.process_id FROM tx_crawler_process as p WHERE p.active = 0)'
             )
@@ -1735,8 +1737,9 @@ class CrawlerController implements LoggerAwareInterface
         // FIXME: Not entirely sure that this is equivalent to the previous version
         $queryBuilder->resetQueryPart('set');
 
+        // ReleaseProcessEntries
         $queryBuilder
-            ->update('tx_crawler_process')
+            ->update(ProcessRepository::TABLE_NAME)
             ->where(
                 $queryBuilder->expr()->eq('active', 0),
                 'process_id IN(SELECT q.process_id FROM tx_crawler_queue as q WHERE q.exec_time = 0)'
@@ -1862,7 +1865,7 @@ class CrawlerController implements LoggerAwareInterface
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
         $queryBuilder
             ->select('qid')
-            ->from('tx_crawler_queue');
+            ->from(QueueRepository::TABLE_NAME);
         //if this entry is scheduled with "now"
         if ($tstamp <= $currentTime) {
             if ($this->extensionSettings['enableTimeslot']) {

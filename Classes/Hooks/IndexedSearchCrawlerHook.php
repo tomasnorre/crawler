@@ -20,6 +20,7 @@ namespace AOE\Crawler\Hooks;
  */
 
 use AOE\Crawler\Controller\CrawlerController;
+use AOE\Crawler\Domain\Repository\QueueRepository;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\Connection;
@@ -519,10 +520,10 @@ class IndexedSearchCrawlerHook
         // for execution and if none, clear the "set_id" (means; Processing was DONE)
         foreach ($runningIndexingConfigurations as $cfgRec) {
             // Look for ended processes:
-            $queued_items = $connectionPool->getConnectionForTable('tx_crawler_queue')
+            $queued_items = $connectionPool->getConnectionForTable(QueueRepository::TABLE_NAME)
                 ->count(
                     '*',
-                    'tx_crawler_queue',
+                    QueueRepository::TABLE_NAME,
                     [
                         'set_id' => (int) $cfgRec['set_id'],
                         'exec_time' => 0,
