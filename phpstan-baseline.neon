@@ -359,7 +359,7 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Class cognitive complexity is 267, keep it under 60$#"
+			message: "#^Class cognitive complexity is 247, keep it under 60$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -399,26 +399,6 @@ parameters:
 
 		-
 			message: "#^Method AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:readUrl\\(\\) should return int\\|null but empty return statement found\\.$#"
-			count: 1
-			path: Classes/Controller/CrawlerController.php
-
-		-
-			message: "#^Offset 'paramExpanded' does not exist on array\\(\\)\\|array\\(\\?'origin' \\=\\> 'pagets', \\?'paramExpanded' \\=\\> array, \\?'paramParsed' \\=\\> array\\<string, string\\>, \\?'subCfg' \\=\\> array&nonEmpty, \\?'URLs' \\=\\> array\\)\\.$#"
-			count: 2
-			path: Classes/Controller/CrawlerController.php
-
-		-
-			message: "#^Offset 'paramExpanded' does not exist on array\\(\\)\\|array\\(\\?'origin' \\=\\> string, \\?'paramExpanded' \\=\\> array, \\?'paramParsed' \\=\\> array\\<string, string\\>, \\?'subCfg' \\=\\> array, \\?'URLs' \\=\\> array\\)\\.$#"
-			count: 1
-			path: Classes/Controller/CrawlerController.php
-
-		-
-			message: "#^Offset 'paramParsed' does not exist on array\\(\\)\\|array\\(\\?'origin' \\=\\> 'pagets', \\?'paramExpanded' \\=\\> array, \\?'paramParsed' \\=\\> array\\<string, string\\>, \\?'subCfg' \\=\\> array&nonEmpty, \\?'URLs' \\=\\> array\\)\\.$#"
-			count: 1
-			path: Classes/Controller/CrawlerController.php
-
-		-
-			message: "#^Offset 'paramParsed' does not exist on array\\(\\)\\|array\\(\\?'origin' \\=\\> string, \\?'paramExpanded' \\=\\> array, \\?'paramParsed' \\=\\> array\\<string, string\\>, \\?'subCfg' \\=\\> array, \\?'URLs' \\=\\> array\\)\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -475,11 +455,6 @@ parameters:
 		-
 			message: "#^Parameter \\#4 \\$permClause of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\QueryGenerator\\:\\:getTreeList\\(\\) expects string, int given\\.$#"
 			count: 1
-			path: Classes/Controller/CrawlerController.php
-
-		-
-			message: "#^Possibly invalid array key type \\(array\\|string\\)\\.$#"
-			count: 4
 			path: Classes/Controller/CrawlerController.php
 
 		-
@@ -884,6 +859,21 @@ parameters:
 			message: "#^Fetching class constant SIGNAL_URL_CRAWLED of deprecated class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
 			count: 1
 			path: Classes/QueueExecutor.php
+
+		-
+			message: "#^Class cognitive complexity is 76, keep it under 60$#"
+			count: 1
+			path: Classes/Service/ConfigurationService.php
+
+		-
+			message: "#^Parameter \\#4 \\$permClause of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\QueryGenerator\\:\\:getTreeList\\(\\) expects string, int given\\.$#"
+			count: 1
+			path: Classes/Service/ConfigurationService.php
+
+		-
+			message: "#^Possibly invalid array key type \\(array\\|string\\)\\.$#"
+			count: 4
+			path: Classes/Service/ConfigurationService.php
 
 		-
 			message: "#^Access to deprecated property \\$countInARun of class AOE\\\\Crawler\\\\Service\\\\ProcessService\\.$#"
