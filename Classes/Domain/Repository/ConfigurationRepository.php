@@ -50,7 +50,7 @@ class ConfigurationRepository extends Repository
             ->from(self::TABLE_NAME)
             ->execute();
 
-        while ($row = $statement->fetch()) {
+        while ($row = $statement->fetchAssociative()) {
             $records[] = $row;
         }
 
