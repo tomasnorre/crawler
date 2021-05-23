@@ -88,7 +88,7 @@ class UrlService
      * @param array $paramArray Output of expandParameters(): Array with keys (GET var names) and for each an array of values
      * @param array $urls URLs accumulated in this array (for recursion)
      */
-    public function compileUrls(array $paramArray, array $urls, int $maxUrlToCompile = 1): array
+    public function compileUrls(array $paramArray, array $urls, int $maxUrlToCompile = 10): array
     {
         if (empty($paramArray)) {
             return $urls;

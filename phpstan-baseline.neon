@@ -339,6 +339,11 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
+			message: "#^Call to function is_string\\(\\) with bool will always evaluate to false\\.$#"
+			count: 1
+			path: Classes/Controller/CrawlerController.php
+
+		-
 			message: "#^Call to method emitSignal\\(\\) of deprecated class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
 			count: 5
 			path: Classes/Controller/CrawlerController.php
@@ -359,7 +364,7 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Class cognitive complexity is 247, keep it under 60$#"
+			message: "#^Class cognitive complexity is 211, keep it under 60$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -403,11 +408,6 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Offset 'usergroup_cached…' does not exist on array\\|null\\.$#"
-			count: 1
-			path: Classes/Controller/CrawlerController.php
-
-		-
 			message: "#^Parameter \\#1 \\$id of static method TYPO3\\\\CMS\\\\Backend\\\\Utility\\\\BackendUtility\\:\\:getPagesTSconfig\\(\\) expects int, string given\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
@@ -423,17 +423,7 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Parameter \\#1 \\$uid of method TYPO3\\\\CMS\\\\Backend\\\\Tree\\\\View\\\\AbstractTreeView\\:\\:getTree\\(\\) expects int, string given\\.$#"
-			count: 1
-			path: Classes/Controller/CrawlerController.php
-
-		-
 			message: "#^Parameter \\#1 \\$where of method AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:flushQueue\\(\\) expects string, Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression\\|string given\\.$#"
-			count: 1
-			path: Classes/Controller/CrawlerController.php
-
-		-
-			message: "#^Parameter \\#2 \\$depth of method TYPO3\\\\CMS\\\\Backend\\\\Tree\\\\View\\\\AbstractTreeView\\:\\:getTree\\(\\) expects int, int\\|string given\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -861,7 +851,70 @@ parameters:
 			path: Classes/QueueExecutor.php
 
 		-
-			message: "#^Class cognitive complexity is 76, keep it under 60$#"
+			message:
+				"""
+					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
+					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
+				"""
+			count: 1
+			path: Classes/Service/ConfigurationService.php
+
+		-
+			message:
+				"""
+					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+					since TYPO3 10\\.4, will be removed in version 12\\.0$#
+				"""
+			count: 1
+			path: Classes/Service/ConfigurationService.php
+
+		-
+			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
+			count: 1
+			path: Classes/Service/ConfigurationService.php
+
+		-
+			message: "#^Class cognitive complexity is 110, keep it under 60$#"
+			count: 1
+			path: Classes/Service/ConfigurationService.php
+
+		-
+			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
+			count: 1
+			path: Classes/Service/ConfigurationService.php
+
+		-
+			message: "#^Method AOE\\\\Crawler\\\\Service\\\\ConfigurationService\\:\\:runExpandParametersHook\\(\\) has parameter \\$parameter with no typehint specified\\.$#"
+			count: 1
+			path: Classes/Service/ConfigurationService.php
+
+		-
+			message: "#^Method AOE\\\\Crawler\\\\Service\\\\ConfigurationService\\:\\:runExpandParametersHook\\(\\) has parameter \\$path with no typehint specified\\.$#"
+			count: 1
+			path: Classes/Service/ConfigurationService.php
+
+		-
+			message: "#^Offset 'usergroup_cached…' does not exist on array\\|null\\.$#"
+			count: 1
+			path: Classes/Service/ConfigurationService.php
+
+		-
+			message: "#^PHPDoc tag @param has invalid value \\(\\$parameter\\)\\: Unexpected token \"\\$parameter\", expected type at offset 18$#"
+			count: 1
+			path: Classes/Service/ConfigurationService.php
+
+		-
+			message: "#^PHPDoc tag @param has invalid value \\(\\$path\\)\\: Unexpected token \"\\$path\", expected type at offset 43$#"
+			count: 1
+			path: Classes/Service/ConfigurationService.php
+
+		-
+			message: "#^Parameter \\#1 \\$uid of method TYPO3\\\\CMS\\\\Backend\\\\Tree\\\\View\\\\AbstractTreeView\\:\\:getTree\\(\\) expects int, string given\\.$#"
+			count: 1
+			path: Classes/Service/ConfigurationService.php
+
+		-
+			message: "#^Parameter \\#2 \\$depth of method TYPO3\\\\CMS\\\\Backend\\\\Tree\\\\View\\\\AbstractTreeView\\:\\:getTree\\(\\) expects int, int\\|string given\\.$#"
 			count: 1
 			path: Classes/Service/ConfigurationService.php
 
@@ -872,7 +925,7 @@ parameters:
 
 		-
 			message: "#^Possibly invalid array key type \\(array\\|string\\)\\.$#"
-			count: 4
+			count: 3
 			path: Classes/Service/ConfigurationService.php
 
 		-
