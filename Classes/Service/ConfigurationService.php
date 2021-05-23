@@ -191,17 +191,8 @@ class ConfigurationService
                     }
 
                     $pidList[] = (int) $pid;
-
                     if ($depth > 0) {
-                        if (empty($treeCache[$pid][$depth])) {
-                            $tree->reset();
-                            $tree->getTree($pid, $depth);
-                            $treeCache[$pid][$depth] = $tree->tree;
-                        }
-
-                        foreach ($treeCache[$pid][$depth] as $data) {
-                            $pidList[] = (int) $data['row']['uid'];
-                        }
+                        $pidList = $this->expandPidList($treeCache, $pid, $depth, $tree, $pidList);
                     }
                 }
             }
@@ -421,5 +412,22 @@ class ConfigurationService
             }
         }
         return $paramArray;
+    }
+
+    /**
+     * @param $depth
+     */
+    private function expandPidList(array $treeCache, string $pid, $depth, PageTreeView $tree, array $pidList): array
+    {
+        if (empty($treeCache[$pid][$depth])) {
+            $tree->reset();
+            $tree->getTree($pid, $depth);
+            $treeCache[$pid][$depth] = $tree->tree;
+        }
+
+        foreach ($treeCache[$pid][$depth] as $data) {
+            $pidList[] = (int) $data['row']['uid'];
+        }
+        return $pidList;
     }
 }

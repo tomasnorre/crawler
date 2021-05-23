@@ -874,7 +874,7 @@ parameters:
 			path: Classes/Service/ConfigurationService.php
 
 		-
-			message: "#^Class cognitive complexity is 102, keep it under 60$#"
+			message: "#^Class cognitive complexity is 98, keep it under 60$#"
 			count: 1
 			path: Classes/Service/ConfigurationService.php
 
@@ -885,6 +885,11 @@ parameters:
 
 		-
 			message: "#^Method AOE\\\\Crawler\\\\Service\\\\ConfigurationService\\:\\:addValuesInRange\\(\\) has parameter \\$parameter with no typehint specified\\.$#"
+			count: 1
+			path: Classes/Service/ConfigurationService.php
+
+		-
+			message: "#^Method AOE\\\\Crawler\\\\Service\\\\ConfigurationService\\:\\:expandPidList\\(\\) has parameter \\$depth with no typehint specified\\.$#"
 			count: 1
 			path: Classes/Service/ConfigurationService.php
 
@@ -904,6 +909,11 @@ parameters:
 			path: Classes/Service/ConfigurationService.php
 
 		-
+			message: "#^PHPDoc tag @param has invalid value \\(\\$depth\\)\\: Unexpected token \"\\$depth\", expected type at offset 18$#"
+			count: 1
+			path: Classes/Service/ConfigurationService.php
+
+		-
 			message: "#^PHPDoc tag @param has invalid value \\(\\$parameter\\)\\: Unexpected token \"\\$parameter\", expected type at offset 18$#"
 			count: 2
 			path: Classes/Service/ConfigurationService.php
@@ -915,11 +925,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$uid of method TYPO3\\\\CMS\\\\Backend\\\\Tree\\\\View\\\\AbstractTreeView\\:\\:getTree\\(\\) expects int, string given\\.$#"
-			count: 1
-			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: "#^Parameter \\#2 \\$depth of method TYPO3\\\\CMS\\\\Backend\\\\Tree\\\\View\\\\AbstractTreeView\\:\\:getTree\\(\\) expects int, int\\|string given\\.$#"
 			count: 1
 			path: Classes/Service/ConfigurationService.php
 
