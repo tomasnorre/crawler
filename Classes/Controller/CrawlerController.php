@@ -719,8 +719,8 @@ class CrawlerController implements LoggerAwareInterface
      * @param integer $pid Current page ID
      * @return array
      * @deprecated
+     * @codeCoverageIgnore
      *
-     * TODO: Write Functional Tests
      */
     public function expandParameters($paramArray, $pid)
     {
@@ -860,6 +860,7 @@ class CrawlerController implements LoggerAwareInterface
      * @param array $paramArray Output of expandParameters(): Array with keys (GET var names) and for each an array of values
      * @param array $urls URLs accumulated in this array (for recursion)
      * @deprecated
+     * @codeCoverageIgnore
      */
     public function compileUrls(array $paramArray, array $urls): array
     {
