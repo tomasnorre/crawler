@@ -226,6 +226,11 @@ parameters:
 			path: Classes/Command/FlushQueueCommand.php
 
 		-
+			message: "#^Call to an undefined method object\\:\\:crawler_init\\(\\)\\.$#"
+			count: 1
+			path: Classes/Command/ProcessQueueCommand.php
+
+		-
 			message:
 				"""
 					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
@@ -240,7 +245,53 @@ parameters:
 			path: Classes/Command/ProcessQueueCommand.php
 
 		-
+			message:
+				"""
+					#^Fetching deprecated class constant CLI_STATUS_ABORTED of class AOE\\\\Crawler\\\\Command\\\\ProcessQueueCommand\\:
+					since 9\\.2\\.5 will be made private in v11\\.x$#
+				"""
+			count: 6
+			path: Classes/Command/ProcessQueueCommand.php
+
+		-
+			message:
+				"""
+					#^Fetching deprecated class constant CLI_STATUS_NOTHING_PROCCESSED of class AOE\\\\Crawler\\\\Command\\\\ProcessQueueCommand\\:
+					since 9\\.2\\.5 will be made private in v11\\.x$#
+				"""
+			count: 2
+			path: Classes/Command/ProcessQueueCommand.php
+
+		-
+			message:
+				"""
+					#^Fetching deprecated class constant CLI_STATUS_PROCESSED of class AOE\\\\Crawler\\\\Command\\\\ProcessQueueCommand\\:
+					since 9\\.2\\.5 will be made private in v11\\.x$#
+				"""
+			count: 1
+			path: Classes/Command/ProcessQueueCommand.php
+
+		-
+			message:
+				"""
+					#^Fetching deprecated class constant CLI_STATUS_REMAIN of class AOE\\\\Crawler\\\\Command\\\\ProcessQueueCommand\\:
+					since 9\\.2\\.5 will be made private in v11\\.x$#
+				"""
+			count: 1
+			path: Classes/Command/ProcessQueueCommand.php
+
+		-
+			message: "#^Parameter \\#1 \\$input of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:shortMD5\\(\\) expects string, float given\\.$#"
+			count: 1
+			path: Classes/Command/ProcessQueueCommand.php
+
+		-
 			message: "#^Parameter \\#1 \\$messages of method Symfony\\\\Component\\\\Console\\\\Output\\\\OutputInterface\\:\\:writeln\\(\\) expects iterable\\|string, int given\\.$#"
+			count: 1
+			path: Classes/Command/ProcessQueueCommand.php
+
+		-
+			message: "#^Unable to resolve the template type T in call to method static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\)$#"
 			count: 1
 			path: Classes/Command/ProcessQueueCommand.php
 
@@ -262,11 +313,6 @@ parameters:
 		-
 			message: "#^Call to an undefined method object\\:\\:crawler_init\\(\\)\\.$#"
 			count: 2
-			path: Classes/Controller/CrawlerController.php
-
-		-
-			message: "#^Call to deprecated method CLI_debug\\(\\) of class AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\.$#"
-			count: 1
 			path: Classes/Controller/CrawlerController.php
 
 		-
@@ -334,6 +380,15 @@ parameters:
 
 		-
 			message: "#^Fetching class constant SIGNAL_URL_ADDED_TO_QUEUE of deprecated class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
+			count: 1
+			path: Classes/Controller/CrawlerController.php
+
+		-
+			message:
+				"""
+					#^Fetching deprecated class constant CLI_STATUS_POLLABLE_PROCESSED of class AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:
+					since 9\\.2\\.5 will be removed in v11\\.x$#
+				"""
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
