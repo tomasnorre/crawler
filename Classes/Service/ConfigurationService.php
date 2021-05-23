@@ -230,7 +230,7 @@ class ConfigurationService
             $parameterValue = trim($parameterValue);
 
             // If value is encapsulated in square brackets it means there are some ranges of values to find, otherwise the value is literal
-            if (strpos($parameterValue, '[') === 0 && substr($parameterValue, -1) === ']') {
+            if ($this->isWrappedInSquareBrackets($parameterValue)) {
                 // So, find the value inside brackets and reset the paramArray value as an array.
                 $parameterValue = substr($parameterValue, 1, -1);
                 $paramArray[$parameter] = [];
@@ -242,17 +242,7 @@ class ConfigurationService
                     // Look for integer range: (fx. 1-34 or -40--30 // reads minus 40 to minus 30)
                     if (preg_match('/^(-?[0-9]+)\s*-\s*(-?[0-9]+)$/', trim($part), $reg)) {
                         $reg = $this->swapIfFirstIsLargerThanSecond($reg);
-
-                        // Traverse range, add values:
-                        // Limit to size of range!
-                        $runAwayBrake = 1000;
-                        for ($a = $reg[1]; $a <= $reg[2]; $a++) {
-                            $paramArray[$parameter][] = $a;
-                            $runAwayBrake--;
-                            if ($runAwayBrake <= 0) {
-                                break;
-                            }
-                        }
+                        $paramArray = $this->addValuesInRange($reg, $paramArray, $parameter);
                     } elseif (strpos(trim($part), '_TABLE:') === 0) {
 
                         // Parse parameters:
@@ -265,7 +255,7 @@ class ConfigurationService
 
                         // Table exists:
                         if (isset($GLOBALS['TCA'][$subpartParams['_TABLE']])) {
-                            $lookUpPid = isset($subpartParams['_PID']) ? intval($subpartParams['_PID']) : intval($pid);
+                            $lookUpPid = isset($subpartParams['_PID']) ? intval($subpartParams['_PID']) : $pid;
                             $recursiveDepth = isset($subpartParams['_RECURSIVE']) ? intval($subpartParams['_RECURSIVE']) : 0;
                             $pidField = isset($subpartParams['_PIDFIELD']) ? trim($subpartParams['_PIDFIELD']) : 'pid';
                             $where = $subpartParams['_WHERE'] ?? '';
@@ -274,15 +264,7 @@ class ConfigurationService
                             $fieldName = $subpartParams['_FIELD'] ?: 'uid';
                             if ($fieldName === 'uid' || $GLOBALS['TCA'][$subpartParams['_TABLE']]['columns'][$fieldName]) {
                                 $queryBuilder = $this->getQueryBuilder($subpartParams['_TABLE']);
-
-                                if ($recursiveDepth > 0) {
-                                    /** @var QueryGenerator $queryGenerator */
-                                    $queryGenerator = GeneralUtility::makeInstance(QueryGenerator::class);
-                                    $pidList = $queryGenerator->getTreeList($lookUpPid, $recursiveDepth, 0, 1);
-                                    $pidArray = GeneralUtility::intExplode(',', $pidList);
-                                } else {
-                                    $pidArray = [(string) $lookUpPid];
-                                }
+                                $pidArray = $this->getPidArray($recursiveDepth, $lookUpPid);
 
                                 $queryBuilder->getRestrictions()
                                     ->removeAll()
@@ -341,6 +323,11 @@ class ConfigurationService
         }
 
         return $paramArray;
+    }
+
+    private function isWrappedInSquareBrackets(string $string): bool
+    {
+        return (strpos($string, '[') === 0 && substr($string, -1) === ']');
     }
 
     private function swapIfFirstIsLargerThanSecond(array $reg): array
@@ -402,5 +389,37 @@ class ConfigurationService
     protected function getUrlService(): UrlService
     {
         return $this->urlService ?? GeneralUtility::makeInstance(UrlService::class);
+    }
+
+    private function getPidArray(int $recursiveDepth, int $lookUpPid): array
+    {
+        if ($recursiveDepth > 0) {
+            /** @var QueryGenerator $queryGenerator */
+            $queryGenerator = GeneralUtility::makeInstance(QueryGenerator::class);
+            $pidList = $queryGenerator->getTreeList($lookUpPid, $recursiveDepth, 0, 1);
+            $pidArray = GeneralUtility::intExplode(',', $pidList);
+        } else {
+            $pidArray = [$lookUpPid];
+        }
+        return $pidArray;
+    }
+
+    /**
+     * @param $parameter
+     *
+     * Traverse range, add values:
+     * Limit to size of range!
+     */
+    private function addValuesInRange(array $reg, array $paramArray, $parameter): array
+    {
+        $runAwayBrake = 1000;
+        for ($a = $reg[1]; $a <= $reg[2]; $a++) {
+            $paramArray[$parameter][] = $a;
+            $runAwayBrake--;
+            if ($runAwayBrake <= 0) {
+                break;
+            }
+        }
+        return $paramArray;
     }
 }

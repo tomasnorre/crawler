@@ -874,12 +874,17 @@ parameters:
 			path: Classes/Service/ConfigurationService.php
 
 		-
-			message: "#^Class cognitive complexity is 110, keep it under 60$#"
+			message: "#^Class cognitive complexity is 102, keep it under 60$#"
 			count: 1
 			path: Classes/Service/ConfigurationService.php
 
 		-
 			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
+			count: 1
+			path: Classes/Service/ConfigurationService.php
+
+		-
+			message: "#^Method AOE\\\\Crawler\\\\Service\\\\ConfigurationService\\:\\:addValuesInRange\\(\\) has parameter \\$parameter with no typehint specified\\.$#"
 			count: 1
 			path: Classes/Service/ConfigurationService.php
 
@@ -900,7 +905,7 @@ parameters:
 
 		-
 			message: "#^PHPDoc tag @param has invalid value \\(\\$parameter\\)\\: Unexpected token \"\\$parameter\", expected type at offset 18$#"
-			count: 1
+			count: 2
 			path: Classes/Service/ConfigurationService.php
 
 		-
