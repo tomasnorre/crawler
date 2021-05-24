@@ -60,13 +60,17 @@ class ConfigurationRepository extends Repository
     /**
      * Traverses up the rootline of a page and fetches all crawler records.
      */
-    public function getCrawlerConfigurationRecordsFromRootLine(int $pageId): array
+    public function getCrawlerConfigurationRecordsFromRootLine(int $pageId, array $parentIds = []): array
     {
-        $pageIdsInRootLine = [];
-        $rootLine = BackendUtility::BEgetRootLine($pageId);
+        if (empty($parentIds)) {
+            $pageIdsInRootLine = [];
+            $rootLine = BackendUtility::BEgetRootLine($pageId);
 
-        foreach ($rootLine as $pageInRootLine) {
-            $pageIdsInRootLine[] = (int) $pageInRootLine['uid'];
+            foreach ($rootLine as $pageInRootLine) {
+                $pageIdsInRootLine[] = (int) $pageInRootLine['uid'];
+            }
+        } else {
+            $pageIdsInRootLine = $parentIds;
         }
 
         $queryBuilder = $this->createQueryBuilder();

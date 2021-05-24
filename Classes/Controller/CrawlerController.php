@@ -38,6 +38,7 @@ use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\QueueExecutor;
 use AOE\Crawler\Service\ConfigurationService;
+use AOE\Crawler\Service\PageService;
 use AOE\Crawler\Service\UrlService;
 use AOE\Crawler\Service\UserService;
 use AOE\Crawler\Utility\SignalSlotUtility;
@@ -222,6 +223,7 @@ class CrawlerController implements LoggerAwareInterface
         'getProcessFilename' => 'Using CrawlerController->getProcessFilename() is deprecated since 9.1.3 and will be removed in v11.x',
         'setProcessFilename' => 'Using CrawlerController->setProcessFilename() is deprecated since 9.1.3 and will be removed in v11.x',
         'getDuplicateRowsIfExist' => 'Using CrawlerController->getDuplicateRowsIfExist() is deprecated since 9.1.4 and will be remove in v11.x, please use QueueRepository->getDuplicateQueueItemsIfExists() instead',
+        'checkIfPageShouldBeSkipped' => 'Using CrawlerController->checkIfPageShouldBeSkipped() is deprecated since 9.2.5 and will be removed in v11.x'
     ];
 
     /**
@@ -377,40 +379,12 @@ class CrawlerController implements LoggerAwareInterface
      * Check if the given page should be crawled
      *
      * @return false|string false if the page should be crawled (not excluded), true / skipMessage if it should be skipped
+     * @deprecated
      */
     public function checkIfPageShouldBeSkipped(array $pageRow)
     {
-        // if page is hidden
-        if (! $this->extensionSettings['crawlHiddenPages'] && $pageRow['hidden']) {
-            return 'Because page is hidden';
-        }
-
-        if (GeneralUtility::inList('3,4,199,254,255', $pageRow['doktype'])) {
-            return 'Because doktype is not allowed';
-        }
-
-        foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['excludeDoktype'] ?? [] as $key => $doktypeList) {
-            if (GeneralUtility::inList($doktypeList, $pageRow['doktype'])) {
-                return 'Doktype was excluded by "' . $key . '"';
-            }
-        }
-
-        // veto hook
-        foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pageVeto'] ?? [] as $key => $func) {
-            $params = [
-                'pageRow' => $pageRow,
-            ];
-            // expects "false" if page is ok and "true" or a skipMessage if this page should _not_ be crawled
-            $veto = GeneralUtility::callUserFunction($func, $params, $this);
-            if ($veto !== false) {
-                if (is_string($veto)) {
-                    return $veto;
-                }
-                return 'Veto from hook "' . htmlspecialchars($key) . '"';
-            }
-        }
-
-        return false;
+        $pageService = GeneralUtility::makeInstance(PageService::class);
+        return $pageService->checkIfPageShouldBeSkipped($pageRow);
     }
 
     /**
@@ -429,7 +403,7 @@ class CrawlerController implements LoggerAwareInterface
             return [];
         }
 
-        $message = $this->checkIfPageShouldBeSkipped($pageRow);
+        $message = $this->getPageService()->checkIfPageShouldBeSkipped($pageRow);
         if ($message === false) {
             $res = $this->getUrlsForPageId($pageRow['uid']);
             $skipMessage = '';
@@ -698,17 +672,10 @@ class CrawlerController implements LoggerAwareInterface
             $pids[] = $node['row']['uid'];
         }
 
-        $queryBuilder = $this->getQueryBuilder(ConfigurationRepository::TABLE_NAME);
-        $statement = $queryBuilder
-            ->select('name')
-            ->from(ConfigurationRepository::TABLE_NAME)
-            ->where(
-                $queryBuilder->expr()->in('pid', $queryBuilder->createNamedParameter($pids, Connection::PARAM_INT_ARRAY))
-            )
-            ->execute();
+        $configurations = $this->configurationRepository->getCrawlerConfigurationRecordsFromRootLine($rootid, $pids);
 
-        while ($row = $statement->fetch()) {
-            $configurationsForBranch[] = $row['name'];
+        foreach($configurations as $configuration) {
+            $configurationsForBranch[] = $configuration['name'];
         }
         return $configurationsForBranch;
     }
@@ -1946,6 +1913,11 @@ class CrawlerController implements LoggerAwareInterface
         }
 
         return $reg;
+    }
+
+    protected function getPageService(): PageService
+    {
+        return new PageService();
     }
 
     private function getMaximumUrlsToCompile(): int

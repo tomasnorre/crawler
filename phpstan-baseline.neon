@@ -73,7 +73,7 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\ForwardCompatibility\\\\DriverStatement\\|int\\.$#"
+			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
@@ -280,7 +280,7 @@ parameters:
 					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
 					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
 				"""
-			count: 2
+			count: 1
 			path: Classes/Controller/CrawlerController.php
 
 		-
@@ -304,7 +304,7 @@ parameters:
 
 		-
 			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
-			count: 3
+			count: 2
 			path: Classes/Controller/CrawlerController.php
 
 		-
@@ -313,7 +313,7 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Class cognitive complexity is 279, keep it under 60$#"
+			message: "#^Class cognitive complexity is 267, keep it under 60$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
