@@ -152,6 +152,10 @@
         "test:unit": [
             "[ -e .Build/bin/phpunit ] || composer update",
             "TYPO3_PATH_WEB=.Build/Web .Build/bin/phpunit --colors -c .Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/Unit"
+        ],
+        "test:mutation": [
+            "[ -e .Build/bin/infection ] || composer update",
+            "XDEBUG_MODE=coverage .Build/bin/infection --min-msi=18 --min-covered-msi=92 --threads=8"
         ]
     },
     "repositories": [
