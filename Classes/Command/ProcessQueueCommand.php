@@ -326,18 +326,17 @@ class ProcessQueueCommand extends Command
 
     private function getCrawlerController(): CrawlerController
     {
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        return $this->crawlerController ?? $objectManager->get(CrawlerController::class);
+        return $this->crawlerController ?? GeneralUtility::makeInstance(CrawlerController::class);
     }
 
     private function getProcessRepository(): ProcessRepository
     {
-        return $this->processRepository ?? new ProcessRepository();
+        return $this->processRepository ?? GeneralUtility::makeInstance(ProcessRepository::class);
     }
 
     private function getQueueRepository(): QueueRepository
     {
-        return $this->queueRepository ?? new QueueRepository();
+        return $this->queueRepository ?? GeneralUtility::makeInstance(QueueRepository::class);
     }
 
     private function getExtensionSettings(): array
