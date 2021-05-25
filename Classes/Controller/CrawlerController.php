@@ -83,17 +83,32 @@ class CrawlerController implements LoggerAwareInterface
     use PublicMethodDeprecationTrait;
     use PublicPropertyDeprecationTrait;
 
+    /**
+     * @deprecated since 9.2.5 will be removed in v11.x
+     */
     public const CLI_STATUS_NOTHING_PROCCESSED = 0;
 
-    //queue not empty
+    /**
+     * queue not empty
+     * @deprecated since 9.2.5 will be removed in v11.x
+     */
     public const CLI_STATUS_REMAIN = 1;
 
-    //(some) queue items where processed
+    /**
+     * (some) queue items where processed
+     * @deprecated since 9.2.5 will be removed in v11.x
+     */
     public const CLI_STATUS_PROCESSED = 2;
 
-    //instance didn't finish
+    /**
+     * instance didn't finish
+     * @deprecated since 9.2.5 will be removed in v11.x
+     */
     public const CLI_STATUS_ABORTED = 4;
 
+    /**
+     * @deprecated since 9.2.5 will be removed in v11.x
+     */
     public const CLI_STATUS_POLLABLE_PROCESSED = 8;
 
     /**
@@ -209,8 +224,11 @@ class CrawlerController implements LoggerAwareInterface
      */
     private $deprecatedPublicMethods = [
         'cleanUpOldQueueEntries' => 'Using CrawlerController::cleanUpOldQueueEntries() is deprecated since 9.0.1 and will be removed in v11.x, please use QueueRepository->cleanUpOldQueueEntries() instead.',
+        'CLI_buildProcessId' => 'Using CrawlerController->CLI_buildProcessId() is deprecated since 9.2.5 and will be removed in v11.x',
+        'CLI_checkAndAcquireNewProcess' => 'Using CrawlerController->CLI_checkAndAcquireNewProcess() is deprecated since 9.2.5 and will be removed in v11.x',
         'CLI_debug' => 'Using CrawlerController->CLI_debug() is deprecated since 9.1.3 and will be removed in v11.x',
         'CLI_releaseProcesses' => 'Using CrawlerController->CLI_releaseProcesses() is deprecated since 9.2.2 and will be removed in v11.x',
+        'CLI_run' => 'Using CrawlerController->CLI_run() is deprecated since 9.2.2 and will be removed in v11.x',
         'CLI_runHooks' => 'Using CrawlerController->CLI_runHooks() is deprecated since 9.1.5 and will be removed in v11.x',
         'getAccessMode' => 'Using CrawlerController->getAccessMode() is deprecated since 9.1.3 and will be removed in v11.x',
         'getLogEntriesForPageId' => 'Using CrawlerController->getLogEntriesForPageId() is deprecated since 9.1.5 and will be remove in v11.x',
@@ -223,7 +241,7 @@ class CrawlerController implements LoggerAwareInterface
         'getProcessFilename' => 'Using CrawlerController->getProcessFilename() is deprecated since 9.1.3 and will be removed in v11.x',
         'setProcessFilename' => 'Using CrawlerController->setProcessFilename() is deprecated since 9.1.3 and will be removed in v11.x',
         'getDuplicateRowsIfExist' => 'Using CrawlerController->getDuplicateRowsIfExist() is deprecated since 9.1.4 and will be remove in v11.x, please use QueueRepository->getDuplicateQueueItemsIfExists() instead',
-        'checkIfPageShouldBeSkipped' => 'Using CrawlerController->checkIfPageShouldBeSkipped() is deprecated since 9.2.5 and will be removed in v11.x'
+        'checkIfPageShouldBeSkipped' => 'Using CrawlerController->checkIfPageShouldBeSkipped() is deprecated since 9.2.5 and will be removed in v11.x',
     ];
 
     /**
@@ -1535,6 +1553,8 @@ class CrawlerController implements LoggerAwareInterface
 
     /**
      * Running the functionality of the CLI (crawling URLs from queue)
+     * @deprecated
+     * @codeCoverageIgnore
      */
     public function CLI_run(int $countInARun, int $sleepTime, int $sleepAfterFinish): int
     {
@@ -1610,6 +1630,7 @@ class CrawlerController implements LoggerAwareInterface
     /**
      * Activate hooks
      * @deprecated
+     * @codeCoverageIgnore
      */
     public function CLI_runHooks(): void
     {
@@ -1627,6 +1648,8 @@ class CrawlerController implements LoggerAwareInterface
      * @param string $id identification string for the process
      * @return boolean
      * @todo preemption might not be the most elegant way to clean up
+     * @deprecated
+     * @codeCoverageIgnore
      */
     public function CLI_checkAndAcquireNewProcess($id)
     {
@@ -1672,6 +1695,7 @@ class CrawlerController implements LoggerAwareInterface
      * @param mixed $releaseIds string with a single process-id or array with multiple process-ids
      * @return boolean
      * @deprecated
+     * @codeCoverageIgnore
      */
     public function CLI_releaseProcesses($releaseIds)
     {
@@ -1724,6 +1748,8 @@ class CrawlerController implements LoggerAwareInterface
      * Create a unique Id for the current process
      *
      * @return string the ID
+     * @deprecated
+     * @codeCoverageIgnore
      */
     public function CLI_buildProcessId()
     {

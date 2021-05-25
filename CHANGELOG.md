@@ -50,6 +50,9 @@
 #### Classes
 #### Functions & Properties
 * CrawlerController->checkIfPageShouldBeSkipped()
+* CrawlerController->CLI_buildProcessId()
+* CrawlerController->CLI_checkAndAcquireNewProcess()
+* CrawlerController->CLI_run()
 
 ### Removed
 #### Classes
