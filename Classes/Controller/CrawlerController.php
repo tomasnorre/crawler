@@ -40,7 +40,6 @@ use AOE\Crawler\QueueExecutor;
 use AOE\Crawler\Service\ConfigurationService;
 use AOE\Crawler\Service\PageService;
 use AOE\Crawler\Service\UrlService;
-use AOE\Crawler\Service\UserService;
 use AOE\Crawler\Utility\SignalSlotUtility;
 use AOE\Crawler\Value\QueueFilter;
 use PDO;
@@ -66,7 +65,6 @@ use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Routing\InvalidRouteArgumentsException;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Type\Bitmask\Permission;
-use TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
@@ -223,6 +221,7 @@ class CrawlerController implements LoggerAwareInterface
      * @var string[]
      */
     private $deprecatedPublicMethods = [
+        'compileUrls' => 'Using CrawlerController->compileUrls() is deprecated since 9.2.5, and will be removed in v11.x',
         'cleanUpOldQueueEntries' => 'Using CrawlerController::cleanUpOldQueueEntries() is deprecated since 9.0.1 and will be removed in v11.x, please use QueueRepository->cleanUpOldQueueEntries() instead.',
         'CLI_buildProcessId' => 'Using CrawlerController->CLI_buildProcessId() is deprecated since 9.2.5 and will be removed in v11.x',
         'CLI_checkAndAcquireNewProcess' => 'Using CrawlerController->CLI_checkAndAcquireNewProcess() is deprecated since 9.2.5 and will be removed in v11.x',
@@ -230,6 +229,7 @@ class CrawlerController implements LoggerAwareInterface
         'CLI_releaseProcesses' => 'Using CrawlerController->CLI_releaseProcesses() is deprecated since 9.2.2 and will be removed in v11.x',
         'CLI_run' => 'Using CrawlerController->CLI_run() is deprecated since 9.2.2 and will be removed in v11.x',
         'CLI_runHooks' => 'Using CrawlerController->CLI_runHooks() is deprecated since 9.1.5 and will be removed in v11.x',
+        'expandExcludeString' => 'Using CrawlerController->expandExcludeString() is deprecated since 9.2.5 and will be removed in v11.x',
         'getAccessMode' => 'Using CrawlerController->getAccessMode() is deprecated since 9.1.3 and will be removed in v11.x',
         'getLogEntriesForPageId' => 'Using CrawlerController->getLogEntriesForPageId() is deprecated since 9.1.5 and will be remove in v11.x',
         'getLogEntriesForSetId' => 'Using crawlerController::getLogEntriesForSetId() is deprecated since 9.0.1 and will be removed in v11.x',
@@ -242,6 +242,8 @@ class CrawlerController implements LoggerAwareInterface
         'setProcessFilename' => 'Using CrawlerController->setProcessFilename() is deprecated since 9.1.3 and will be removed in v11.x',
         'getDuplicateRowsIfExist' => 'Using CrawlerController->getDuplicateRowsIfExist() is deprecated since 9.1.4 and will be remove in v11.x, please use QueueRepository->getDuplicateQueueItemsIfExists() instead',
         'checkIfPageShouldBeSkipped' => 'Using CrawlerController->checkIfPageShouldBeSkipped() is deprecated since 9.2.5 and will be removed in v11.x',
+        'swapIfFirstIsLargerThanSecond' => 'Using CrawlerController->swapIfFirstIsLargerThanSecond() is deprecated since 9.2.5, and will be removed in v11.x',
+        'expandParameters' => 'Using CrawlerController->expandParameters() is deprecated since 9.2.5, and will be removed in v11.x',
     ];
 
     /**
@@ -287,6 +289,16 @@ class CrawlerController implements LoggerAwareInterface
      */
     private $crawler;
 
+    /**
+     * @var ConfigurationService
+     */
+    private $configurationService;
+
+    /**
+     * @var UrlService
+     */
+    private $urlService;
+
     /************************************
      *
      * Getting URLs based on Page TSconfig
@@ -304,6 +316,8 @@ class CrawlerController implements LoggerAwareInterface
         $this->queueExecutor = GeneralUtility::makeInstance(QueueExecutor::class, $crawlStrategyFactory);
         $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
         $this->crawler = GeneralUtility::makeInstance(Crawler::class);
+        $this->configurationService = GeneralUtility::makeInstance(ConfigurationService::class);
+        $this->urlService = GeneralUtility::makeInstance(UrlService::class);
 
         $this->processFilename = Environment::getVarPath() . '/lock/tx_crawler.proc';
 
@@ -571,86 +585,15 @@ class CrawlerController implements LoggerAwareInterface
         // Get page TSconfig for page ID
         $pageTSconfig = $this->getPageTSconfigForId($pageId);
 
+        $mountPoint = is_string($this->MP) ? $this->MP : '';
+
         $res = [];
 
-        // Fetch Crawler Configuration from pageTSconfig
-        $crawlerCfg = $pageTSconfig['tx_crawler.']['crawlerCfg.']['paramSets.'] ?? [];
-        foreach ($crawlerCfg as $key => $values) {
-            if (! is_array($values)) {
-                continue;
-            }
-            $key = str_replace('.', '', $key);
-            // Sub configuration for a single configuration string:
-            $subCfg = (array) $crawlerCfg[$key . '.'];
-            $subCfg['key'] = $key;
-
-            if (strcmp($subCfg['procInstrFilter'] ?? '', '')) {
-                $subCfg['procInstrFilter'] = implode(',', GeneralUtility::trimExplode(',', $subCfg['procInstrFilter']));
-            }
-            $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $subCfg['pidsOnly'], true));
-
-            // process configuration if it is not page-specific or if the specific page is the current page:
-            // TODO: Check if $pidOnlyList can be kept as Array instead of imploded
-            if (! strcmp((string) $subCfg['pidsOnly'], '') || GeneralUtility::inList($pidOnlyList, strval($pageId))) {
-
-                // Explode, process etc.:
-                $res[$key] = [];
-                $res[$key]['subCfg'] = $subCfg;
-                $res[$key]['paramParsed'] = GeneralUtility::explodeUrl2Array($crawlerCfg[$key]);
-                $res[$key]['paramExpanded'] = $this->expandParameters($res[$key]['paramParsed'], $pageId);
-                $res[$key]['origin'] = 'pagets';
-
-                // recognize MP value
-                if (! $this->MP) {
-                    $res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'], ['?id=' . $pageId]);
-                } else {
-                    $res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'], ['?id=' . $pageId . '&MP=' . $this->MP]);
-                }
-            }
-        }
+        // Fetch Crawler Configuration from pageTSConfig
+        $res = $this->configurationService->getConfigurationFromPageTS($pageTSconfig, $pageId, $res, $mountPoint);
 
         // Get configuration from tx_crawler_configuration records up the rootline
-        $crawlerConfigurations = $this->configurationRepository->getCrawlerConfigurationRecordsFromRootLine($pageId);
-        foreach ($crawlerConfigurations as $configurationRecord) {
-
-            // check access to the configuration record
-            if (empty($configurationRecord['begroups']) || $this->getBackendUser()->isAdmin() || UserService::hasGroupAccess($this->getBackendUser()->user['usergroup_cached_list'], $configurationRecord['begroups'])) {
-                $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $configurationRecord['pidsonly'], true));
-
-                // process configuration if it is not page-specific or if the specific page is the current page:
-                // TODO: Check if $pidOnlyList can be kept as Array instead of imploded
-                if (! strcmp($configurationRecord['pidsonly'], '') || GeneralUtility::inList($pidOnlyList, strval($pageId))) {
-                    $key = $configurationRecord['name'];
-
-                    // don't overwrite previously defined paramSets
-                    if (! isset($res[$key])) {
-
-                        /* @var $TSparserObject TypoScriptParser */
-                        $TSparserObject = GeneralUtility::makeInstance(TypoScriptParser::class);
-                        $TSparserObject->parse($configurationRecord['processing_instruction_parameters_ts']);
-
-                        $subCfg = [
-                            'procInstrFilter' => $configurationRecord['processing_instruction_filter'],
-                            'procInstrParams.' => $TSparserObject->setup,
-                            'baseUrl' => $configurationRecord['base_url'],
-                            'force_ssl' => (int) $configurationRecord['force_ssl'],
-                            'userGroups' => $configurationRecord['fegroups'],
-                            'exclude' => $configurationRecord['exclude'],
-                            'key' => $key,
-                        ];
-
-                        if (! in_array($pageId, $this->expandExcludeString($subCfg['exclude']), true)) {
-                            $res[$key] = [];
-                            $res[$key]['subCfg'] = $subCfg;
-                            $res[$key]['paramParsed'] = GeneralUtility::explodeUrl2Array($configurationRecord['configuration']);
-                            $res[$key]['paramExpanded'] = $this->expandParameters($res[$key]['paramParsed'], $pageId);
-                            $res[$key]['URLs'] = $this->compileUrls($res[$key]['paramExpanded'], ['?id=' . $pageId]);
-                            $res[$key]['origin'] = 'tx_crawler_configuration_' . $configurationRecord['uid'];
-                        }
-                    }
-                }
-            }
-        }
+        $res = $this->configurationService->getConfigurationFromDatabase($pageId, $res);
 
         foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['processUrls'] ?? [] as $func) {
             $params = [
@@ -736,8 +679,9 @@ class CrawlerController implements LoggerAwareInterface
      * @param array $paramArray Array with key (GET var name) and values (value of GET var which is configuration for expansion)
      * @param integer $pid Current page ID
      * @return array
+     * @deprecated
+     * @codeCoverageIgnore
      *
-     * TODO: Write Functional Tests
      */
     public function expandParameters($paramArray, $pid)
     {
@@ -876,26 +820,12 @@ class CrawlerController implements LoggerAwareInterface
      *
      * @param array $paramArray Output of expandParameters(): Array with keys (GET var names) and for each an array of values
      * @param array $urls URLs accumulated in this array (for recursion)
-     * @return array
+     * @deprecated
+     * @codeCoverageIgnore
      */
-    public function compileUrls($paramArray, array $urls)
+    public function compileUrls(array $paramArray, array $urls): array
     {
-        if (empty($paramArray)) {
-            return $urls;
-        }
-        $varName = key($paramArray);
-        $valueSet = array_shift($paramArray);
-
-        // Traverse value set:
-        $newUrls = [];
-        foreach ($urls as $url) {
-            foreach ($valueSet as $val) {
-                if (count($newUrls) < $this->getMaximumUrlsToCompile()) {
-                    $newUrls[] = $url . (strcmp((string) $val, '') ? '&' . rawurlencode($varName) . '=' . rawurlencode((string) $val) : '');
-                }
-            }
-        }
-        return $this->compileUrls($paramArray, $newUrls);
+        return $this->urlService->compileUrls($paramArray, $urls, $this->getMaximumUrlsToCompile());
     }
 
     /************************************
@@ -1394,51 +1324,11 @@ class CrawlerController implements LoggerAwareInterface
      *
      * @param string $excludeString Exclude string
      * @return array
+     * @deprecated
      */
     public function expandExcludeString($excludeString)
     {
-        // internal static caches;
-        static $expandedExcludeStringCache;
-        static $treeCache;
-
-        if (empty($expandedExcludeStringCache[$excludeString])) {
-            $pidList = [];
-
-            if (! empty($excludeString)) {
-                /** @var PageTreeView $tree */
-                $tree = GeneralUtility::makeInstance(PageTreeView::class);
-                $tree->init('AND ' . $this->getBackendUser()->getPagePermsClause(Permission::PAGE_SHOW));
-
-                $excludeParts = GeneralUtility::trimExplode(',', $excludeString);
-
-                foreach ($excludeParts as $excludePart) {
-                    [$pid, $depth] = GeneralUtility::trimExplode('+', $excludePart);
-
-                    // default is "page only" = "depth=0"
-                    if (empty($depth)) {
-                        $depth = (stristr($excludePart, '+')) ? 99 : 0;
-                    }
-
-                    $pidList[] = (int) $pid;
-
-                    if ($depth > 0) {
-                        if (empty($treeCache[$pid][$depth])) {
-                            $tree->reset();
-                            $tree->getTree($pid, $depth);
-                            $treeCache[$pid][$depth] = $tree->tree;
-                        }
-
-                        foreach ($treeCache[$pid][$depth] as $data) {
-                            $pidList[] = (int) $data['row']['uid'];
-                        }
-                    }
-                }
-            }
-
-            $expandedExcludeStringCache[$excludeString] = array_unique($pidList);
-        }
-
-        return $expandedExcludeStringCache[$excludeString];
+        return $this->configurationService->expandExcludeString($excludeString);
     }
 
     /**
@@ -1466,7 +1356,7 @@ class CrawlerController implements LoggerAwareInterface
                     $titleClm = '';
                 }
 
-                if (! in_array($pageRow['uid'], $this->expandExcludeString($confArray['subCfg']['exclude']), true)) {
+                if (! in_array($pageRow['uid'], $this->configurationService->expandExcludeString($confArray['subCfg']['exclude']), true)) {
 
                     // URL list:
                     $urlList = $this->urlListFromUrlArray(
@@ -1929,6 +1819,9 @@ class CrawlerController implements LoggerAwareInterface
         return $urlService->getUrlFromPageAndQueryParameters($pageId, $queryString, $alternativeBaseUrl, $httpsOrHttp);
     }
 
+    /**
+     * @deprecated
+     */
     protected function swapIfFirstIsLargerThanSecond(array $reg): array
     {
         // Swap if first is larger than last:
