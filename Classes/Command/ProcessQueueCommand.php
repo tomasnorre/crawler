@@ -331,12 +331,14 @@ class ProcessQueueCommand extends Command
 
     private function getProcessRepository(): ProcessRepository
     {
-        return $this->processRepository ?? GeneralUtility::makeInstance(ProcessRepository::class);
+        $this->processRepository = $this->processRepository ?? GeneralUtility::makeInstance(ProcessRepository::class);
+        return $this->processRepository;
     }
 
     private function getQueueRepository(): QueueRepository
     {
-        return $this->queueRepository ?? GeneralUtility::makeInstance(QueueRepository::class);
+        $this->queueRepository = $this->queueRepository ?? GeneralUtility::makeInstance(QueueRepository::class);
+        return $this->queueRepository;
     }
 
     private function getExtensionSettings(): array
