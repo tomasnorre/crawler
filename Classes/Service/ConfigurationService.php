@@ -379,7 +379,8 @@ class ConfigurationService
 
     protected function getUrlService(): UrlService
     {
-        return $this->urlService ?? GeneralUtility::makeInstance(UrlService::class);
+        $this->urlService = $this->urlService ?? GeneralUtility::makeInstance(UrlService::class);
+        return $this->urlService;
     }
 
     private function getPidArray(int $recursiveDepth, int $lookUpPid): array
