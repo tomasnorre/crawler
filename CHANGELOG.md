@@ -53,6 +53,10 @@
 * CrawlerController->CLI_buildProcessId()
 * CrawlerController->CLI_checkAndAcquireNewProcess()
 * CrawlerController->CLI_run()
+* CrawlerController->compileUrls()
+* CrawlerController->expandExcludeString()
+* CrawlerController->expandParameters()
+* CrawlerController->swapIfFirstIsLargerThanSecond()
 
 ### Removed
 #### Classes
