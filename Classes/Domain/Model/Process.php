@@ -294,6 +294,7 @@ class Process extends AbstractEntity
 
     private function getQueueRepository(): QueueRepository
     {
-        return $this->queueRepository ?? GeneralUtility::makeInstance(QueueRepository::class);
+        $this->queueRepository = $this->queueRepository ?? GeneralUtility::makeInstance(QueueRepository::class);
+        return $this->queueRepository;
     }
 }
