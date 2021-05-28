@@ -1,6 +1,7 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 9.2.5-dev
+## Crawler 9.2.5
+Crawler 9.2.5 was released on May 28th, 2021
 
 ### Added
 * Added Troubleshooting information about Crawler Module
@@ -57,10 +58,6 @@
 * CrawlerController->expandExcludeString()
 * CrawlerController->expandParameters()
 * CrawlerController->swapIfFirstIsLargerThanSecond()
-
-### Removed
-#### Classes
-#### Functions & Properties
 
 ## Crawler 9.2.4
 Crawler 9.2.4 was released on April 9th, 2021
