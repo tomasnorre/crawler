@@ -67,7 +67,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-main": "9.2.x-dev"
+            "dev-main": "10.0.x-dev"
         },
         "typo3/class-alias-loader": {
             "class-alias-maps": [
