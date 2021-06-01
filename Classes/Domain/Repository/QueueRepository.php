@@ -50,12 +50,6 @@ class QueueRepository extends Repository implements LoggerAwareInterface
     public const TABLE_NAME = 'tx_crawler_queue';
 
     /**
-     * @var string
-     * @deprecated Since v9.2.5 - This will be remove in v10
-     */
-    protected $tableName = 'tx_crawler_queue';
-
-    /**
      * @var array
      */
     protected $extensionSettings;

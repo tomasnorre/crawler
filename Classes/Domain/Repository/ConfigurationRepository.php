@@ -35,12 +35,6 @@ class ConfigurationRepository extends Repository
 {
     public const TABLE_NAME = 'tx_crawler_configuration';
 
-    /**
-     * @var string
-     * @deprecated Since v9.2.5 - This will be remove in v10
-     */
-    protected $tableName = 'tx_crawler_configuration';
-
     public function getCrawlerConfigurationRecords(): array
     {
         $records = [];

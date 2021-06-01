@@ -197,12 +197,6 @@ class CrawlerController implements LoggerAwareInterface
     protected $configurationRepository;
 
     /**
-     * @var string
-     * @deprecated Since v9.2.5 - This will be remove in v10
-     */
-    protected $tableName = 'tx_crawler_queue';
-
-    /**
      * @var QueueExecutor
      */
     protected $queueExecutor;
@@ -847,17 +841,17 @@ class CrawlerController implements LoggerAwareInterface
      */
     public function getLogEntriesForPageId($id, QueueFilter $queueFilter, $doFlush = false, $doFullFlush = false, $itemsPerPage = 10)
     {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(QueueRepository::TABLE_NAME);
         $queryBuilder
             ->select('*')
-            ->from($this->tableName)
+            ->from(QueueRepository::TABLE_NAME)
             ->where(
                 $queryBuilder->expr()->eq('page_id', $queryBuilder->createNamedParameter($id, PDO::PARAM_INT))
             )
             ->orderBy('scheduled', 'DESC');
 
         $expressionBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getConnectionForTable($this->tableName)
+            ->getConnectionForTable(QueueRepository::TABLE_NAME)
             ->getExpressionBuilder();
         $query = $expressionBuilder->andX();
         // PHPStorm adds the highlight that the $addWhere is immediately overwritten,
@@ -896,17 +890,17 @@ class CrawlerController implements LoggerAwareInterface
      */
     public function getLogEntriesForSetId(int $set_id, string $filter = '', bool $doFlush = false, bool $doFullFlush = false, int $itemsPerPage = 10)
     {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(QueueRepository::TABLE_NAME);
         $queryBuilder
             ->select('*')
-            ->from($this->tableName)
+            ->from(QueueRepository::TABLE_NAME)
             ->where(
                 $queryBuilder->expr()->eq('set_id', $queryBuilder->createNamedParameter($set_id, PDO::PARAM_INT))
             )
             ->orderBy('scheduled', 'DESC');
 
         $expressionBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getConnectionForTable($this->tableName)
+            ->getConnectionForTable(QueueRepository::TABLE_NAME)
             ->getExpressionBuilder();
         $query = $expressionBuilder->andX();
         // PHPStorm adds the highlight that the $addWhere is immediately overwritten,
@@ -1589,7 +1583,7 @@ class CrawlerController implements LoggerAwareInterface
      */
     public function CLI_releaseProcesses($releaseIds)
     {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(QueueRepository::TABLE_NAME);
 
         if (! is_array($releaseIds)) {
             $releaseIds = [$releaseIds];
@@ -1693,11 +1687,11 @@ class CrawlerController implements LoggerAwareInterface
     {
         $realWhere = strlen((string) $where) > 0 ? $where : '1=1';
 
-        $queryBuilder = $this->getQueryBuilder($this->tableName);
+        $queryBuilder = $this->getQueryBuilder(QueueRepository::TABLE_NAME);
 
         $groups = $queryBuilder
             ->selectLiteral('DISTINCT set_id')
-            ->from($this->tableName)
+            ->from(QueueRepository::TABLE_NAME)
             ->where($realWhere)
             ->execute()
             ->fetchAll();
@@ -1705,7 +1699,7 @@ class CrawlerController implements LoggerAwareInterface
             foreach ($groups as $group) {
                 $subSet = $queryBuilder
                     ->select('qid', 'set_id')
-                    ->from($this->tableName)
+                    ->from(QueueRepository::TABLE_NAME)
                     ->where(
                         $realWhere,
                         $queryBuilder->expr()->eq('set_id', $group['set_id'])
@@ -1723,7 +1717,7 @@ class CrawlerController implements LoggerAwareInterface
         }
 
         $queryBuilder
-            ->delete($this->tableName)
+            ->delete(QueueRepository::TABLE_NAME)
             ->where($realWhere)
             ->execute();
     }
@@ -1745,7 +1739,7 @@ class CrawlerController implements LoggerAwareInterface
 
         $currentTime = $this->getCurrentTime();
 
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->tableName);
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(QueueRepository::TABLE_NAME);
         $queryBuilder
             ->select('qid')
             ->from(QueueRepository::TABLE_NAME);
