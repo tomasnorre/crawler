@@ -158,21 +158,6 @@
             "[ -e .Build/bin/infection ] || composer update",
             "XDEBUG_MODE=coverage .Build/bin/infection --min-msi=18 --min-covered-msi=92 --threads=8"
         ],
-        "test:acceptance": [
-            "[ -e .Build/bin/codecept ] || composer update",
-            ".Build/bin/codecept run"
-        ],
-        "extension-release": [
-            "@extension-create-libs",
-            "rm -rf .devbox",
-            "rm -rf Tests/",
-            "rm .gitignore",
-            "rm .scrutinizer.yml",
-            "rm disabled.travis.yml"
-        ],
-        "extension-create-libs": [
-            "@composer install -d Resources/Private/Php/Libraries"
-        ],
         "roave-bcb": [
             "docker run --rm -v `pwd`:/app nyholm/roave-bc-check --from=HEAD~1"
         ]
