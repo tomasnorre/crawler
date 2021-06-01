@@ -15,6 +15,10 @@
 ### Removed
 #### Classes
 #### Functions & Properties
+* CrawlerController->tableName
+* ConfigurationRepository->tableName
+* ProcessRepository->tableName
+* QueueRepository->tableName
 
 ## Crawler 9.2.5
 Crawler 9.2.5 was released on May 28th, 2021
