@@ -1350,7 +1350,7 @@ class CrawlerController implements LoggerAwareInterface
                     $titleClm = '';
                 }
 
-                if (! in_array($pageRow['uid'], $this->configurationService->expandExcludeString($confArray['subCfg']['exclude']), true)) {
+                if (! in_array($pageRow['uid'], $this->configurationService->expandExcludeString($confArray['subCfg']['exclude'] ?? ''), true)) {
 
                     // URL list:
                     $urlList = $this->urlListFromUrlArray(
