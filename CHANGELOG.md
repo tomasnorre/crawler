@@ -8,6 +8,8 @@
 
 ### Fixed
 
+* Fix type error when exclude subcfg is not defined
+
 ### Deprecated
 #### Classes
 #### Functions & Properties
