@@ -6,6 +6,8 @@
 * Added information about indexed_search money pool
 
 ### Changed
+* !!! CrawlerController->drawURLs_addRowsForPage() is now returning an array instead of HTML-string
+* !!! CrawlerController->getPageTreeAndUrls() is now returning an array instead of HTML-string
 
 ### Fixed
 * Fix type error when exclude subcfg is not defined

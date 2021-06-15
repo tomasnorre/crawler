@@ -62,8 +62,35 @@
 					</tr>
 					</thead>
 					<tbody>
-					{code -> f:format.raw()}
-					</tbody>
+                    <f:for each="{code}" as="queueRow">
+                        <f:for each="{queueRow}" as="row">
+                            <f:if condition="{row.message} == ''">
+                                <f:then>
+                                    <tr>
+                                        <td>{row.pageTitleHTML -> f:format.raw()} {row.pageTitle}</td>
+                                        <td>{row.configurationKey}</td>
+                                        <td>{row.parameterConfig -> f:format.raw()}</td>
+                                        <td>{row.valuesExpanded -> f:format.raw()}</td>
+                                        <td>{row.urls}</td>
+                                        <td>
+                                            <f:for each="{row.options}" as="option">
+                                                {option}<br />
+                                            </f:for>
+                                        </td>
+                                        <td>{row.parameters -> f:format.raw()}</td>
+                                    </tr>
+                                </f:then>
+                                <f:else>
+                                    <tr>
+                                        <!-- Todo: Configurationkey is missing -->
+                                        <td>{row.pageTitleHTML -> f:format.raw()} {row.pageTitle}</td>
+                                        <td colspan="6"><em>No entries:</em> {row.message}</td>
+                                    </tr>
+                                </f:else>
+                            </f:if>
+                        </f:for>
+                    </f:for>
+                    </tbody>
 				</table>
 			</f:if>
 		</f:else>
