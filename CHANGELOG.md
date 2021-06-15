@@ -3,6 +3,7 @@
 ## Crawler 10.0.x-dev
 
 ### Added
+* Added information about indexed_search money pool
 
 ### Changed
 
