@@ -467,7 +467,8 @@ class CrawlerController implements LoggerAwareInterface
         array &$duplicateTrack,
         array &$downloadUrls,
         array $incomingProcInstructions
-    ) {
+    )
+    {
         if (! is_array($vv['URLs'])) {
             return 'ERROR - no URL generated';
         }
@@ -984,7 +985,8 @@ class CrawlerController implements LoggerAwareInterface
         $tstamp,
         $configurationHash = '',
         $skipInnerDuplicationCheck = false
-    ) {
+    )
+    {
         $urlAdded = false;
         $rows = [];
 
@@ -1240,7 +1242,8 @@ class CrawlerController implements LoggerAwareInterface
         $downloadCrawlUrls,
         array $incomingProcInstructions,
         array $configurationSelection
-    ) {
+    )
+    {
         $this->scheduledTime = $scheduledTime;
         $this->reqMinute = $reqMinute;
         $this->submitCrawlUrls = $submitCrawlUrls;
@@ -1331,7 +1334,7 @@ class CrawlerController implements LoggerAwareInterface
      * Create the rows for display of the page tree
      * For each page a number of rows are shown displaying GET variable configuration
      */
-    public function drawURLs_addRowsForPage(array $pageRow, string $pageTitle, string $pageTitleHTML = null): array
+    public function drawURLs_addRowsForPage(array $pageRow, string $pageTitle, string $pageTitleHTML = ''): array
     {
         $skipMessage = '';
 
@@ -1341,7 +1344,6 @@ class CrawlerController implements LoggerAwareInterface
 
         // Traverse parameter combinations:
         $c = 0;
-        $content = '';
 
         $queueRowCollection = [];
 
@@ -1350,12 +1352,10 @@ class CrawlerController implements LoggerAwareInterface
 
                 // Title column:
                 if (! $c) {
-                    //$titleClm = '<td rowspan="' . count($configurations) . '">' . $pageTitleHTML .  $pageTitle . '</td>';
                     $queueRow = new QueueRow($pageTitle);
                     $queueRow->setPageTitleHTML($pageTitleHTML);
                 } else {
-                    //$titleClm = '';
-                    $queueRow = new QueueRow('');
+                    $queueRow = new QueueRow();
                     $queueRow->setPageTitleHTML($pageTitleHTML);
                 }
 
@@ -1398,11 +1398,9 @@ class CrawlerController implements LoggerAwareInterface
                     $queueRowOptionCollection = [];
                     if ($confArray['subCfg']['userGroups']) {
                         $queueRowOptionCollection[] = 'User Groups: ' . $confArray['subCfg']['userGroups'];
-                        //$optionValues .= 'User Groups: ' . $confArray['subCfg']['userGroups'] . '<br/>';
                     }
                     if ($confArray['subCfg']['procInstrFilter']) {
                         $queueRowOptionCollection[] = 'ProcInstr: ' . $confArray['subCfg']['procInstrFilter'];
-                        //$optionValues .= 'ProcInstr: ' . $confArray['subCfg']['procInstrFilter'] . '<br/>';
                     }
 
                     $parameterConfig = nl2br(htmlspecialchars(rawurldecode(trim(str_replace('&', chr(10) . '&', GeneralUtility::implodeArrayForUrl('', $confArray['paramParsed']))))));
@@ -1410,32 +1408,11 @@ class CrawlerController implements LoggerAwareInterface
                     $queueRow->setConfigurationKey($confKey);
                     $queueRow->setUrls($urlList);
                     $queueRow->setOptions($queueRowOptionCollection);
-                    $queueRow->setParameters(DebugUtility::viewArray($confArray['subCfg']['procInstrParams.']) );
+                    $queueRow->setParameters(DebugUtility::viewArray($confArray['subCfg']['procInstrParams.']));
                     $queueRow->setParameterConfig($parameterConfig);
-
-                    /*
-                    // Compile row:
-                    $content .= '
-                        <tr>
-                            ' . $titleClm . '
-                            <td>' . htmlspecialchars($confKey) . '</td>
-                            <td>' . nl2br(htmlspecialchars(rawurldecode(trim(str_replace('&', chr(10) . '&', GeneralUtility::implodeArrayForUrl('', $confArray['paramParsed'])))))) . '</td>
-                            <td>' . $paramExpanded . '</td>
-                            <td nowrap="nowrap">' . $urlList . '</td>
-                            <td nowrap="nowrap">' . $optionValues . '</td>
-                            <td nowrap="nowrap">' . DebugUtility::viewArray($confArray['subCfg']['procInstrParams.']) . '</td>
-                        </tr>';
-                    */
 
                     $queueRowCollection[] = $queueRow;
                 } else {
-                    /*
-                    $content .= '<tr>
-                            ' . $titleClm . '
-                            <td>' . htmlspecialchars($confKey) . '</td>
-                            <td colspan="5"><em>No entries</em> (Page is excluded in this configuration)</td>
-                        </tr>';
-                    */
                     $queueRow->setConfigurationKey($confKey);
                     $queueRow->setMessage('(Page is excluded in this configuration)');
                     $queueRowCollection[] = $queueRow;
@@ -1445,15 +1422,6 @@ class CrawlerController implements LoggerAwareInterface
             }
         } else {
             $message = ! empty($skipMessage) ? ' (' . $skipMessage . ')' : '';
-            /*
-            // Compile row:
-            $content .= '
-                <tr>
-                    <td>' . $pageTitle . '</td>
-                    <td colspan="6"><em>No entries</em>' . $message . '</td>
-                </tr>';
-            */
-
             $queueRow = new QueueRow($pageTitle);
             $queueRow->setPageTitleHTML($pageTitleHTML);
             $queueRow->setMessage($message);
