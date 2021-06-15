@@ -8,8 +8,8 @@
 ### Changed
 
 ### Fixed
-
 * Fix type error when exclude subcfg is not defined
+* Sites/URLs get crawled but not indexed [@twestner](https://github.com/twestner)
 
 ### Deprecated
 #### Classes
