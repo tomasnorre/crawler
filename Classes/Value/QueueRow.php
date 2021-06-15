@@ -51,7 +51,7 @@ class QueueRow
     /** @var string */
     public $parameters;
 
-    public function __construct(string $title)
+    public function __construct(string $title = '')
     {
         $this->pageTitle = $title;
     }

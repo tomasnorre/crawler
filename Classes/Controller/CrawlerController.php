@@ -1271,9 +1271,9 @@ class CrawlerController implements LoggerAwareInterface
             $tree->getTree($id, $depth, '');
         }
 
-        // Traverse page tree:
-        $code = [];
+        $queueRows = [];
 
+        // Traverse page tree:
         foreach ($tree->tree as $data) {
             $this->MP = false;
 
@@ -1289,11 +1289,11 @@ class CrawlerController implements LoggerAwareInterface
                 $mountTree->getTree($mountpage[0]['mount_pid'], $depth);
 
                 foreach ($mountTree->tree as $mountData) {
-                    $code[] = $this->drawURLs_addRowsForPage(
+                    $queueRows = array_merge($queueRows, $this->drawURLs_addRowsForPage(
                         $mountData['row'],
                         BackendUtility::getRecordTitle('pages', $mountData['row'], true),
                         (string) $data['HTML']
-                    );
+                    ));
                 }
 
                 // replace page when mount_pid_ol is enabled
@@ -1305,14 +1305,14 @@ class CrawlerController implements LoggerAwareInterface
                 }
             }
 
-            $code[] = $this->drawURLs_addRowsForPage(
+            $queueRows = array_merge($queueRows, $this->drawURLs_addRowsForPage(
                 $data['row'],
                 BackendUtility::getRecordTitle('pages', $data['row'], true),
                 (string) $data['HTML']
-            );
+            ));
         }
 
-        return $code;
+        return $queueRows;
     }
 
     /**

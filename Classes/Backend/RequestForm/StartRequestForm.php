@@ -95,7 +95,7 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
         $this->crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
         $this->crawlerController->setID = GeneralUtility::md5int(microtime());
 
-        $code = '';
+        $queueRows = '';
         $noConfigurationSelected = empty($this->incomingConfigurationSelection)
             || (count($this->incomingConfigurationSelection) === 1 && empty($this->incomingConfigurationSelection[0]));
         if ($noConfigurationSelected) {
@@ -114,7 +114,7 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
                 );
             }
 
-            $code = $this->crawlerController->getPageTreeAndUrls(
+            $queueRows = $this->crawlerController->getPageTreeAndUrls(
                 $pageId,
                 $this->infoModuleController->MOD_SETTINGS['depth'],
                 $scheduledTime,
@@ -135,7 +135,7 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
         $this->view->assign('submitCrawlUrls', $submitCrawlUrls);
         $this->view->assign('amountOfUrls', count($duplicateTrack));
         $this->view->assign('selectors', $this->generateConfigurationSelectors($pageId));
-        $this->view->assign('code', $code);
+        $this->view->assign('queueRows', $queueRows);
         $this->view->assign('displayActions', 0);
 
         // Download Urls to crawl:

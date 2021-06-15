@@ -222,14 +222,12 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
 
     private function outputUrls(array $queueRows, OutputInterface $output): void
     {
-        foreach ($queueRows as $queueRow) {
-            /** @var QueueRow $row */
-            foreach ($queueRow as $row) {
-                if (empty($row->message)) {
-                    $output->writeln('<info>' . $row->urls . '</info>');
-                } else {
-                    $output->writeln('<warning>' . $row->pageTitle . ': ' . $row->message . '</warning>');
-                }
+        /** @var QueueRow $row */
+        foreach ($queueRows as $row) {
+            if (empty($row->message)) {
+                $output->writeln('<info>' . $row->urls . '</info>');
+            } else {
+                $output->writeln('<warning>' . $row->pageTitle . ': ' . $row->message . '</warning>');
             }
         }
     }

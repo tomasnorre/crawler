@@ -62,8 +62,7 @@
 					</tr>
 					</thead>
 					<tbody>
-                    <f:for each="{code}" as="queueRow">
-                        <f:for each="{queueRow}" as="row">
+                        <f:for each="{queueRows}" as="row">
                             <f:if condition="{row.message} == ''">
                                 <f:then>
                                     <tr>
@@ -89,7 +88,6 @@
                                 </f:else>
                             </f:if>
                         </f:for>
-                    </f:for>
                     </tbody>
 				</table>
 			</f:if>
