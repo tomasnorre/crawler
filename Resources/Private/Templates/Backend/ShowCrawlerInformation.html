@@ -81,9 +81,9 @@
                                 </f:then>
                                 <f:else>
                                     <tr>
-                                        <!-- Todo: Configurationkey is missing -->
                                         <td>{row.pageTitleHTML -> f:format.raw()} {row.pageTitle}</td>
-                                        <td colspan="6"><em>No entries:</em> {row.message}</td>
+                                        <td>{row.configurationKey}</td>
+                                        <td colspan="5"><em>No entries:</em> {row.message}</td>
                                     </tr>
                                 </f:else>
                             </f:if>
