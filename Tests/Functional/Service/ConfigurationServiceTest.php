@@ -51,5 +51,4 @@ class ConfigurationServiceTest extends FunctionalTestCase
             self::assertIsInt($excluded);
         }
     }
-
 }

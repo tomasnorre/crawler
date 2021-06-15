@@ -647,7 +647,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
         $queryBuilder
             ->select('qid')
-            ->from(QueueRepository::TABLE_NAME);
+            ->from(self::TABLE_NAME);
         //if this entry is scheduled with "now"
         if ($timestamp <= $currentTime) {
             if ($enableTimeslot) {

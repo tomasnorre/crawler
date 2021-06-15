@@ -629,7 +629,7 @@ class CrawlerController implements LoggerAwareInterface
 
         $configurations = $this->configurationRepository->getCrawlerConfigurationRecordsFromRootLine($rootid, $pids);
 
-        foreach($configurations as $configuration) {
+        foreach ($configurations as $configuration) {
             $configurationsForBranch[] = $configuration['name'];
         }
         return $configurationsForBranch;
@@ -675,7 +675,6 @@ class CrawlerController implements LoggerAwareInterface
      * @return array
      * @deprecated
      * @codeCoverageIgnore
-     *
      */
     public function expandParameters($paramArray, $pid)
     {
