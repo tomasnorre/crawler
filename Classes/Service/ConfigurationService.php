@@ -203,6 +203,12 @@ class ConfigurationService
         return $expandedExcludeStringCache[$excludeString];
     }
 
+    protected function getUrlService(): UrlService
+    {
+        $this->urlService = $this->urlService ?? GeneralUtility::makeInstance(UrlService::class);
+        return $this->urlService;
+    }
+
     /**
      * Will expand the parameters configuration to individual values. This follows a certain syntax of the value of each parameter.
      * Syntax of values:
@@ -375,12 +381,6 @@ class ConfigurationService
             }
         }
         return $paramArray;
-    }
-
-    protected function getUrlService(): UrlService
-    {
-        $this->urlService = $this->urlService ?? GeneralUtility::makeInstance(UrlService::class);
-        return $this->urlService;
     }
 
     private function getPidArray(int $recursiveDepth, int $lookUpPid): array

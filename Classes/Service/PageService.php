@@ -41,7 +41,7 @@ class PageService
             return 'Because page is hidden';
         }
 
-        if (in_array($pageRow['doktype'], $this->getDisallowedDokTypes())) {
+        if (in_array($pageRow['doktype'], $this->getDisallowedDokTypes(), true)) {
             return 'Because doktype is not allowed';
         }
 
@@ -72,6 +72,6 @@ class PageService
     private function getDisallowedDokTypes(): array
     {
         // Todo: Use PageRepository::DOKTYPE_ when dropping support for TYPO3 v9
-        return [3,4,199,254,255];
+        return [3, 4, 199, 254, 255];
     }
 }
