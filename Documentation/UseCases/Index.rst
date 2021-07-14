@@ -16,4 +16,5 @@ to make a PR or issue on `https://github.com/AOEpeople/crawler
    :glob:
 
    CacheWarmup/Index
+   IndexedSearch/Index
 

@@ -25,13 +25,8 @@ use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
 return static function (ContainerConfigurator $containerConfigurator): void {
     $parameters = $containerConfigurator->parameters();
 
-    $parameters->set(
-        Option::SETS,
-        [
-            SetList::PSR_12,
-            SetList::COMMON
-        ]
-    );
+    $containerConfigurator->import(SetList::PSR_12);
+    $containerConfigurator->import(SetList::COMMON);
 
     $parameters->set(Option::SKIP,
         [

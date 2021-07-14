@@ -3,12 +3,13 @@
 ## Crawler 10.0.x-dev
 
 ### Added
+* Added information about indexed_search money pool
 
 ### Changed
 
 ### Fixed
-
 * Fix type error when exclude subcfg is not defined
+* Sites/URLs get crawled but not indexed [@twestner](https://github.com/twestner)
 
 ### Deprecated
 #### Classes
@@ -21,6 +22,12 @@
 * ConfigurationRepository->tableName
 * ProcessRepository->tableName
 * QueueRepository->tableName
+
+## Crawler 9.2.6
+Crawler 9.2.6 was released on July 14th, 2021
+
+### Fixed
+* Added
 
 ## Crawler 9.2.5
 Crawler 9.2.5 was released on May 28th, 2021
