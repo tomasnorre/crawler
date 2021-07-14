@@ -11,7 +11,7 @@ $libsRequirements = json_decode(file_get_contents($libsComposerJson), true);
 foreach ($mainRequirements['require'] as $package => $version) {
 
     if (
-        false !== strpos($package, 'php')
+        $package === 'php'
         || false !==  strpos($package, 'ext-')
         || false !==  strpos($package, 'typo3/cms')
     ) {

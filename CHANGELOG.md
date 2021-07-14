@@ -25,6 +25,12 @@
 * ProcessRepository->tableName
 * QueueRepository->tableName
 
+## Crawler 9.2.6
+Crawler 9.2.6 was released on July 14th, 2021
+
+### Fixed
+* Added
+
 ## Crawler 9.2.5
 Crawler 9.2.5 was released on May 28th, 2021
 
