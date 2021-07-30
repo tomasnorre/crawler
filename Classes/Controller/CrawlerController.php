@@ -1083,7 +1083,6 @@ class CrawlerController implements LoggerAwareInterface
      *
      * @param integer $queueId
      * @param boolean $force If set, will process even if exec_time has been set!
-     * @param string $processId
      *
      * @return int|null
      */
@@ -1119,7 +1118,7 @@ class CrawlerController implements LoggerAwareInterface
         // Set exec_time to lock record:
         $field_array = ['exec_time' => $this->getCurrentTime()];
 
-        if (!empty($processId)) {
+        if (! empty($processId)) {
             //if mulitprocessing is used we need to store the id of the process which has handled this entry
             $field_array['process_id_completed'] = $processId;
         }
