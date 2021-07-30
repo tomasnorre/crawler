@@ -391,6 +391,15 @@ class CrawlerController implements LoggerAwareInterface
     }
 
     /**
+     * @param string $processID
+     * @deprecated
+     */
+    public function setProcessID($processID): void
+    {
+        $this->processID = $processID;
+    }
+
+    /**
      * @return string
      * @deprecated
      */
@@ -1124,6 +1133,8 @@ class CrawlerController implements LoggerAwareInterface
 
         // Set exec_time to lock record:
         $field_array = ['exec_time' => $this->getCurrentTime()];
+
+        $this->setProcessID($queueRec['process_id']);
 
         if (isset($this->processID)) {
             //if mulitprocessing is used we need to store the id of the process which has handled this entry
