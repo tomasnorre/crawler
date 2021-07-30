@@ -99,5 +99,6 @@ class BackendModuleCest
         $this->crawlerAddProcess($I, $adminStep, $pageTree);
         $I->click('Show finished and terminated processes');
         $I->waitForText('Process completed successfully', 60);
+        $I->dontSee('Process was cancelled');
     }
 }

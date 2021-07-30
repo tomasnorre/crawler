@@ -8,6 +8,7 @@
 ### Changed
 
 ### Fixed
+* Add processId to finished QueueEntries to ensure the process will been seen as successful instead of cancelled.
 * Fix type error when exclude subcfg is not defined
 * Sites/URLs get crawled but not indexed [@twestner](https://github.com/twestner)
 
