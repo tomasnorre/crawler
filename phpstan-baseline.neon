@@ -73,7 +73,7 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
+			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\ForwardCompatibility\\\\DriverStatement\\|int\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
@@ -187,21 +187,6 @@ parameters:
 			path: Classes/Command/BuildQueueCommand.php
 
 		-
-			message: "#^Cannot cast array\\<string\\>\\|bool\\|string\\|null to int\\.$#"
-			count: 2
-			path: Classes/Command/BuildQueueCommand.php
-
-		-
-			message: "#^Cannot cast array\\<string\\>\\|string\\|null to int\\.$#"
-			count: 1
-			path: Classes/Command/BuildQueueCommand.php
-
-		-
-			message: "#^Cannot cast array\\<string\\>\\|string\\|null to string\\.$#"
-			count: 1
-			path: Classes/Command/BuildQueueCommand.php
-
-		-
 			message: "#^Fetching class constant SIGNAL_INVOKE_QUEUE_CHANGE of deprecated class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
 			count: 1
 			path: Classes/Command/BuildQueueCommand.php
@@ -221,11 +206,6 @@ parameters:
 			path: Classes/Command/FlushQueueCommand.php
 
 		-
-			message: "#^Parameter \\#1 \\$queueFilter of class AOE\\\\Crawler\\\\Value\\\\QueueFilter constructor expects string, array\\<string\\>\\|string\\|null given\\.$#"
-			count: 1
-			path: Classes/Command/FlushQueueCommand.php
-
-		-
 			message: "#^Call to an undefined method object\\:\\:crawler_init\\(\\)\\.$#"
 			count: 1
 			path: Classes/Command/ProcessQueueCommand.php
@@ -237,11 +217,6 @@ parameters:
 					since TYPO3 10\\.4, will be removed in version 12\\.0$#
 				"""
 			count: 2
-			path: Classes/Command/ProcessQueueCommand.php
-
-		-
-			message: "#^Cannot cast \\(array\\<string\\>&nonEmpty\\)\\|string\\|true to int\\.$#"
-			count: 3
 			path: Classes/Command/ProcessQueueCommand.php
 
 		-
@@ -986,6 +961,11 @@ parameters:
 			message: "#^Constant TYPO3_MODE not found\\.$#"
 			count: 1
 			path: Classes/Utility/HookUtility.php
+
+		-
+			message: "#^Parameter \\#1 \\$row of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\CsvUtility\\:\\:csvValues\\(\\) expects array\\<string\\>, array\\<int, int\\|string\\> given\\.$#"
+			count: 1
+			path: Classes/Writer/FileWriter/CsvWriter/CrawlerCsvWriter.php
 
 		-
 			message: "#^Constant TYPO3_version not found\\.$#"
