@@ -62,7 +62,9 @@ jobs:
 
       - name: Database Dump
         if: ${{ failure() }}
-        run: ddev export-db --gzip=false --file=Tests/Acceptance/_output/db.sql
+        run: |
+          cd .devbox
+          ddev export-db --gzip=false --file=Tests/Acceptance/_output/db.sql
 
       - name: Upload Codeception output
         if: ${{ failure() }}
