@@ -84,9 +84,8 @@ class BackendModuleCest
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
         $I->selectOption('configurationSelection[]', 'default');
-        $I->selectOption('SET[depth]', 99);
         $I->click('Crawl URLs');
-        $I->waitForText('43 URLs submitted', 15);
+        $I->waitForText('1 URLs submitted', 15);
 
         // Navigate to Process View
         $I->selectOption('SET[crawlaction]', 'multiprocess');
