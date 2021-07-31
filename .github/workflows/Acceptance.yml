@@ -64,7 +64,7 @@ jobs:
         if: ${{ failure() }}
         run: |
           cd .devbox
-          ddev export-db --gzip=false --file=Tests/Acceptance/_output/db.sql
+          ddev export-db --gzip=false --file=../Tests/Acceptance/_output/db.sql
 
       - name: Upload Codeception output
         if: ${{ failure() }}
