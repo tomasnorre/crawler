@@ -61,6 +61,7 @@ jobs:
           php .Build/bin/codecept run
 
       - name: Database Dump
+        if: ${{ failure() }}
         run: ddev export-db --gzip=false --file=Tests/Acceptance/_output/db.sql
 
       - name: Upload Codeception output
