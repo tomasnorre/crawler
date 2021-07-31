@@ -60,6 +60,9 @@ jobs:
           ./wait-for-it.sh -t 60 localhost:4444
           php .Build/bin/codecept run
 
+      - name: Database Dump
+        run: ddev export-db --gzip=false --file=Tests/Acceptance/_output/db.sql
+
       - name: Upload Codeception output
         if: ${{ failure() }}
         uses: actions/upload-artifact@v2
