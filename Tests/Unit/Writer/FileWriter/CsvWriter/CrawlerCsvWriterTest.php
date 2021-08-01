@@ -52,7 +52,7 @@ class CrawlerCsvWriterTest extends UnitTestCase
         next($records);
 
         self::assertEquals(
-            '"Page Title","Page Uid"' . chr(13) . chr(10) . '"Home","1"',
+            '"Page Title","Page Uid"' . chr(13) . chr(10) . '"Home",1',
             $this->subject->arrayToCsv($records)
         );
     }
