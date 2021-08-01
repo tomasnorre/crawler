@@ -21,6 +21,7 @@ jobs:
         include:
           - php: 7.4
             typo3: dev-master
+            mysql: 5.7
 
     steps:
       - name: Set up MySQL ${{ matrix.mysql }}
