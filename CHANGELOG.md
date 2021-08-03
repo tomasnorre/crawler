@@ -1,20 +1,15 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 10.0.x-dev
+## Crawler 10.0.0
+Crawler 10.0.0 was released on August 3rd, 2021
 
 ### Added
 * Added information about indexed_search money pool
-
-### Changed
 
 ### Fixed
 * Add processId to finished QueueEntries to ensure the process will been seen as successful instead of cancelled.
 * Fix type error when exclude subcfg is not defined
 * Sites/URLs get crawled but not indexed [@twestner](https://github.com/twestner)
-
-### Deprecated
-#### Classes
-#### Functions & Properties
 
 ### Removed
 #### Classes
