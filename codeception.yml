@@ -18,7 +18,10 @@ suites:
       - Codeception\Step\Retry
 actor_suffix: Tester
 extensions:
-  enabled: [ Codeception\Extension\RunFailed ]
+  enabled:
+    - Codeception\Extension\RunFailed
+    - Codeception\Extension\Recorder:
+        delete_successful: true
 
 params:
   - env
