@@ -115,8 +115,7 @@
             "rm -rf .devbox",
             "rm -rf Tests/",
             "rm .gitignore",
-            "rm .scrutinizer.yml",
-            "rm disabled.travis.yml"
+            "rm .scrutinizer.yml"
         ],
         "phpstan-baseline": [
             "[ -e .Build/bin/phpstan ] || composer update",

@@ -11,7 +11,7 @@ on:
 
 jobs:
   Acceptance:
-    runs-on: ubuntu-18.04    # supported: ubuntu-16.04 and ubuntu-18.04
+    runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
       matrix:
@@ -43,7 +43,7 @@ jobs:
       - run: |
           cd .devbox
           rm -rf vendor composer.lock
-          ddev composer require nimut/typo3-complete=${{ matrix.typo3 }}
+          ddev composer require nimut/typo3-complete=${{ matrix.typo3 }} aoepeople/crawler="dev-${{ env.BRANCH_NAME }}"
           ddev start
           ddev exec bin/typo3cms install:fixfolderstructure
           ddev exec bin/typo3cms install:extensionsetupifpossible
@@ -60,6 +60,12 @@ jobs:
           ./wait-for-it.sh -t 60 localhost:4444
           php .Build/bin/codecept run
 
+      - name: Database Dump
+        if: ${{ failure() }}
+        run: |
+          cd .devbox
+          ddev export-db --gzip=false --file=../Tests/Acceptance/_output/db.sql
+
       - name: Upload Codeception output
         if: ${{ failure() }}
         uses: actions/upload-artifact@v2
@@ -74,4 +80,4 @@ jobs:
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
           aws_bucket: ${{ secrets.AWS_BUCKET }}
           source_dir: 'Tests/Acceptance/_output/'
-          destination_dir: ''
+          destination_dir: '${{ matrix.typo3 }}'
