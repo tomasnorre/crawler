@@ -164,6 +164,8 @@ class QueueRepositoryTest extends FunctionalTestCase
             2,
             $this->subject->countNonExecutedItemsByProcess($process)
         );
+
+        self::assertIsInt($this->subject->countNonExecutedItemsByProcess($process));
     }
 
     /**
@@ -186,6 +188,8 @@ class QueueRepositoryTest extends FunctionalTestCase
             8,
             $this->subject->countAllPendingItems()
         );
+
+        self::assertIsInt($this->subject->countAllPendingItems());
     }
 
     /**
@@ -197,6 +201,8 @@ class QueueRepositoryTest extends FunctionalTestCase
             3,
             $this->subject->countAllAssignedPendingItems()
         );
+
+        self::assertIsInt($this->subject->countAllAssignedPendingItems());
     }
 
     /**
@@ -208,6 +214,8 @@ class QueueRepositoryTest extends FunctionalTestCase
             5,
             $this->subject->countAllUnassignedPendingItems()
         );
+
+        self::assertIsInt($this->subject->countAllUnassignedPendingItems());
     }
 
     /**
