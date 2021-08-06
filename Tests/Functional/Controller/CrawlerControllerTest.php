@@ -79,14 +79,19 @@ class CrawlerControllerTest extends FunctionalTestCase
             $configurationsForBranch
         );
 
+        // sort is done as MySQL and SQLite doesn't sort the same way even though sorting is by "name ASC"
+        sort($configurationsForBranch);
+        $expected = [
+            'default',
+            'Not hidden or deleted',
+            'Not hidden or deleted - uid 5',
+            'Not hidden or deleted - uid 6',
+        ];
+        sort($expected);
+
         self::assertEquals(
-            $configurationsForBranch,
-            [
-                'Not hidden or deleted',
-                'Not hidden or deleted - uid 5',
-                'Not hidden or deleted - uid 6',
-                'default',
-            ]
+            $expected,
+            $configurationsForBranch
         );
     }
 

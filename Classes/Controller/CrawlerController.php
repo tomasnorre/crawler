@@ -256,14 +256,15 @@ class CrawlerController implements LoggerAwareInterface
      */
     public function getUrlsForPageRow(array $pageRow, &$skipMessage = '')
     {
-        if (! is_int($pageRow['uid'])) {
-            $skipMessage = 'PageUid ' . $pageRow['uid'] . ' was not an integer';
+        $pageRowUid = intval($pageRow['uid']);
+        if (!$pageRowUid) {
+            $skipMessage = 'PageUid "' . $pageRow['uid'] . '" was not an integer';
             return [];
         }
 
         $message = $this->getPageService()->checkIfPageShouldBeSkipped($pageRow);
         if ($message === false) {
-            $res = $this->getUrlsForPageId($pageRow['uid']);
+            $res = $this->getUrlsForPageId($pageRowUid);
             $skipMessage = '';
         } else {
             $skipMessage = $message;
@@ -580,8 +581,7 @@ class CrawlerController implements LoggerAwareInterface
                     $fieldArray['parameters_hash']
                 );
             }
-
-            if (empty($rows)) {
+            if ([] === $rows) {
                 $connectionForCrawlerQueue = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(QueueRepository::TABLE_NAME);
                 $connectionForCrawlerQueue->insert(
                     QueueRepository::TABLE_NAME,
@@ -646,7 +646,7 @@ class CrawlerController implements LoggerAwareInterface
         }
 
         /** @var BeforeQueueItemAddedEvent $event */
-        $event = $this->eventDispatcher->dispatch(new BeforeQueueItemAddedEvent($queueId, $queueRec));
+        $event = $this->eventDispatcher->dispatch(new BeforeQueueItemAddedEvent((int)$queueId, $queueRec));
         $queueRec = $event->getQueueRecord();
 
         // Set exec_time to lock record:
