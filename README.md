@@ -19,6 +19,11 @@ You can include the crawler in your TYPO3 project with composer or from [TER](ht
 composer require aoepeople/crawler
 ```
 
+## Disclaimer
+
+The TYPO3 Crawler is currently not working with *SQLite*, and isn't tested with *PostgreSQL*. *MariaDB* and *MySQL* we don't have any known issues.
+
+
 ## Versions and Support
 
 | Release  | TYPO3 | PHP   | Fixes will contain
