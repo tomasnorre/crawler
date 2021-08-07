@@ -21,7 +21,9 @@ composer require aoepeople/crawler
 
 ## Disclaimer
 
-The TYPO3 Crawler is currently not working with *SQLite*, and isn't tested with *PostgreSQL*. *MariaDB* and *MySQL* we don't have any known issues.
+The TYPO3 Crawler is currently not working with *SQLite*, and isn't tested with *PostgreSQL*, see [1]. *MariaDB* and *MySQL* we don't have any known issues.
+
+1) https://github.com/AOEpeople/crawler/issues/773
 
 
 ## Versions and Support
