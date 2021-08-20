@@ -69,6 +69,20 @@ class BackendModuleCest
         $I->waitForText('Count: 1', 15);
     }
 
+    /**
+     * Ensure that Crawler Configurations with Exclude pages set to: e.g. 6+3 is working
+     * https://github.com/AOEpeople/crawler/issues/777
+     */
+    public function CrawlerConfigurationWithExcludePageSixPlusThree(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    {
+        $adminStep->loginAsAdmin();
+        $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
+        $I->selectOption('configurationSelection[]', 'excludepages-6-plus-3');
+        $I->click('Update');
+        $I->dontSee('TypeError');
+        $I->waitForText('Count: 1', 15);
+    }
+
     public function updateUrlButtonSetDepth(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();

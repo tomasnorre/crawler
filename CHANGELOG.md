@@ -15,6 +15,7 @@
 #### Functions & Properties
 
 ### Fixed
+* Exclude Pages in Crawler configs accepts e.g. `6+3` again, page id 6 & depth 3
 
 ## Crawler 10.0.0
 Crawler 10.0.0 was released on August 3rd, 2021

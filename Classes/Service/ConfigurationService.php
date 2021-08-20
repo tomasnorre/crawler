@@ -170,7 +170,7 @@ class ConfigurationService
     {
         // internal static caches;
         static $expandedExcludeStringCache;
-        static $treeCache;
+        static $treeCache = [];
 
         if (empty($expandedExcludeStringCache[$excludeString])) {
             $pidList = [];
