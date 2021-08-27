@@ -1,18 +1,7 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 10.0.1-dev
-
-### Added
-
-### Changed
-
-### Deprecated
-#### Classes
-#### Functions & Properties
-
-### Removed
-#### Classes
-#### Functions & Properties
+## Crawler 10.0.1
+Crawler 10.0.1 was released on August 27th, 2021
 
 ### Fixed
 * Exclude Pages in Crawler configs accepts e.g. `6+3` again, page id 6 & depth 3
