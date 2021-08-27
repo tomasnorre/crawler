@@ -1,12 +1,12 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
+			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
 			count: 1
 			path: Classes/Api/CrawlerApi.php
 
 		-
-			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
+			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
 			count: 1
 			path: Classes/Api/CrawlerApi.php
 
@@ -329,12 +329,12 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
+			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
 			count: 2
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
+			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
 			count: 4
 			path: Classes/Controller/CrawlerController.php
 
@@ -510,12 +510,12 @@ parameters:
 			path: Classes/Domain/Repository/ConfigurationRepository.php
 
 		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
+			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
 			count: 1
 			path: Classes/Domain/Repository/ConfigurationRepository.php
 
 		-
-			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
+			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
 			count: 1
 			path: Classes/Domain/Repository/ConfigurationRepository.php
 
@@ -552,17 +552,17 @@ parameters:
 			path: Classes/Domain/Repository/ProcessRepository.php
 
 		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
+			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
 			count: 4
 			path: Classes/Domain/Repository/ProcessRepository.php
 
 		-
-			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
+			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
 			count: 1
 			path: Classes/Domain/Repository/ProcessRepository.php
 
 		-
-			message: "#^Cannot call method fetchColumn\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
+			message: "#^Cannot call method fetchColumn\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
 			count: 2
 			path: Classes/Domain/Repository/ProcessRepository.php
 
@@ -614,17 +614,17 @@ parameters:
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
+			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
 			count: 9
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
-			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
+			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
 			count: 4
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
-			message: "#^Cannot call method fetchColumn\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
+			message: "#^Cannot call method fetchColumn\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
 			count: 8
 			path: Classes/Domain/Repository/QueueRepository.php
 
@@ -649,7 +649,7 @@ parameters:
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
-			message: "#^Strict comparison using \\=\\=\\= between Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int and false will always evaluate to false\\.$#"
+			message: "#^Strict comparison using \\=\\=\\= between Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int and false will always evaluate to false\\.$#"
 			count: 2
 			path: Classes/Domain/Repository/QueueRepository.php
 
@@ -723,17 +723,17 @@ parameters:
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
 		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
+			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
 			count: 5
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
 		-
-			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
+			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
 			count: 3
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
 		-
-			message: "#^Cannot call method fetchColumn\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
+			message: "#^Cannot call method fetchColumn\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
 			count: 1
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
@@ -844,7 +844,7 @@ parameters:
 			path: Classes/Service/ConfigurationService.php
 
 		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
+			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
 			count: 1
 			path: Classes/Service/ConfigurationService.php
 
