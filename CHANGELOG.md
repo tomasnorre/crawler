@@ -1,5 +1,22 @@
 # Changelog TYPO3 Crawler
 
+## Crawler 10.0.2-dev
+
+### Added
+
+### Changed
+
+### Deprecated
+#### Classes
+#### Functions & Properties
+
+### Removed
+#### Classes
+#### Functions & Properties
+
+### Fixed
+
+
 ## Crawler 10.0.1
 Crawler 10.0.1 was released on August 27th, 2021
 
