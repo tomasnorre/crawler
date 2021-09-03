@@ -59,11 +59,8 @@
                    value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.triggerDownload')}">
             <br><br>
             <p>
-                <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.count"/>
-                : {amountOfUrls}<br>
-                <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.curtime"/>
-                :
-                <f:format.date format="H:i:s">now</f:format.date>
+                <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.count"/>: {amountOfUrls}<br>
+                <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.curtime"/>: <f:format.date format="H:i:s">now</f:format.date>
             </p>
             <f:if condition="{noConfigurationSelected} == false">
                 <table class="table table-striped table-hover">
