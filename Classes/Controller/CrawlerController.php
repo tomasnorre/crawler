@@ -467,8 +467,7 @@ class CrawlerController implements LoggerAwareInterface
         array &$duplicateTrack,
         array &$downloadUrls,
         array $incomingProcInstructions
-    )
-    {
+    ) {
         if (! is_array($vv['URLs'])) {
             return 'ERROR - no URL generated';
         }
@@ -986,8 +985,7 @@ class CrawlerController implements LoggerAwareInterface
         $tstamp,
         $configurationHash = '',
         $skipInnerDuplicationCheck = false
-    )
-    {
+    ) {
         $urlAdded = false;
         $rows = [];
 
@@ -1243,8 +1241,7 @@ class CrawlerController implements LoggerAwareInterface
         $downloadCrawlUrls,
         array $incomingProcInstructions,
         array $configurationSelection
-    )
-    {
+    ) {
         $this->scheduledTime = $scheduledTime;
         $this->reqMinute = $reqMinute;
         $this->submitCrawlUrls = $submitCrawlUrls;
