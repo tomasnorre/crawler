@@ -66,7 +66,7 @@ class BackendModuleCest
         $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
         $I->selectOption('configurationSelection[]', 'default');
         $I->click('Update');
-        $I->waitForText('Count: 1', 15);
+        $I->waitForText('Count : 1', 15);
     }
 
     /**
@@ -80,7 +80,7 @@ class BackendModuleCest
         $I->selectOption('configurationSelection[]', 'excludepages-6-plus-3');
         $I->click('Update');
         $I->dontSee('TypeError');
-        $I->waitForText('Count: 1', 15);
+        $I->waitForText('Count : 1', 15);
     }
 
     public function updateUrlButtonSetDepth(BackendModule $I, Admin $adminStep, PageTree $pageTree): void

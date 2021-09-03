@@ -525,6 +525,7 @@ class CrawlerController implements LoggerAwareInterface
             $duplicateTrack[$uKey] = true;
         }
 
+        // Todo: Find a better option to have this correct in both backend (<br>) and cli (<new line>)
         return implode('<br>', $urlLog);
     }
 
@@ -1396,19 +1397,18 @@ class CrawlerController implements LoggerAwareInterface
 
                     // Options
                     $queueRowOptionCollection = [];
-                    if ($confArray['subCfg']['userGroups']) {
-                        $queueRowOptionCollection[] = 'User Groups: ' . $confArray['subCfg']['userGroups'];
-                    }
-                    if ($confArray['subCfg']['procInstrFilter']) {
-                        $queueRowOptionCollection[] = 'ProcInstr: ' . $confArray['subCfg']['procInstrFilter'];
-                    }
+                    $queueRowOptionCollection[] = $confArray['subCfg']['userGroups'] ? 'User Groups: ' . $confArray['subCfg']['userGroups'] : '';
+                    $queueRowOptionCollection[] = $confArray['subCfg']['procInstrFilter'] ? 'ProcInstr: ' . $confArray['subCfg']['procInstrFilter'] : '';
 
-                    $parameterConfig = nl2br(htmlspecialchars(rawurldecode(trim(str_replace('&', chr(10) . '&', GeneralUtility::implodeArrayForUrl('', $confArray['paramParsed']))))));
+                    // Remove empty array entries;
+                    $queueRowOptionCollection = array_filter($queueRowOptionCollection);
+
+                    $parameterConfig = nl2br(htmlspecialchars(rawurldecode(trim(str_replace('&', chr(10) . '&', GeneralUtility::implodeArrayForUrl('', $confArray['paramParsed'] ?? []))))));
                     $queueRow->setValuesExpanded($paramExpanded);
                     $queueRow->setConfigurationKey($confKey);
                     $queueRow->setUrls($urlList);
                     $queueRow->setOptions($queueRowOptionCollection);
-                    $queueRow->setParameters(DebugUtility::viewArray($confArray['subCfg']['procInstrParams.']));
+                    $queueRow->setParameters(DebugUtility::viewArray($confArray['subCfg']['procInstrParams.'] ?? []));
                     $queueRow->setParameterConfig($parameterConfig);
 
                     $queueRowCollection[] = $queueRow;
