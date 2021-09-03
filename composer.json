@@ -50,7 +50,7 @@
         "saschaegerer/phpstan-typo3": "^0.13.1",
         "slam/phpstan-extensions": "^5.0",
         "symfony/yaml": "^4.4 || ^5.0",
-        "symplify/easy-coding-standard": "^9.0",
+        "symplify/easy-coding-standard": "9.4.32",
         "symplify/phpstan-rules": "^8.3 || 9.3.4",
         "typo3/testing-framework": "^4.14 || ^5.0",
         "vimeo/psalm": "^4.4"
@@ -115,8 +115,7 @@
             "rm -rf .devbox",
             "rm -rf Tests/",
             "rm .gitignore",
-            "rm .scrutinizer.yml",
-            "rm disabled.travis.yml"
+            "rm .scrutinizer.yml"
         ],
         "phpstan-baseline": [
             "[ -e .Build/bin/phpstan ] || composer update",
@@ -156,6 +155,9 @@
         "test:mutation": [
             "[ -e .Build/bin/infection ] || composer update",
             "XDEBUG_MODE=coverage .Build/bin/infection --min-msi=18 --min-covered-msi=92 --threads=8"
+        ],
+        "roave-bcb": [
+            "docker run --rm -v `pwd`:/app nyholm/roave-bc-check --from=HEAD~1"
         ]
     },
     "repositories": [

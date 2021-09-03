@@ -238,7 +238,7 @@ class ProcessQueueCommand extends Command
             }
 
             foreach ($records as $record) {
-                $result |= $this->getCrawlerController()->readUrl($record['qid']);
+                $result |= $this->getCrawlerController()->readUrl($record['qid'], false, $processId);
 
                 $counter++;
                 // Just to relax the system

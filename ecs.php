@@ -31,6 +31,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $parameters->set(Option::SKIP,
         [
             __DIR__ . '/Tests/Acceptance/Support/_generated',
+            'PhpCsFixer\Fixer\ClassNotation\ClassAttributesSeparationFixer' => null,
             'PhpCsFixer\Fixer\Whitespace\ArrayIndentationFixer' => null,
             'PhpCsFixer\Fixer\FunctionNotation\MethodArgumentSpaceFixer' => null,
             'PHP_CodeSniffer\Standards\Generic\Sniffs\CodeAnalysis\AssignmentInConditionSniff.FoundInWhileCondition' => null,

@@ -1089,7 +1089,7 @@ class CrawlerController implements LoggerAwareInterface
      *
      * @return int|null
      */
-    public function readUrl($queueId, $force = false)
+    public function readUrl($queueId, $force = false, string $processId = '')
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(QueueRepository::TABLE_NAME);
         $ret = 0;
@@ -1121,9 +1121,9 @@ class CrawlerController implements LoggerAwareInterface
         // Set exec_time to lock record:
         $field_array = ['exec_time' => $this->getCurrentTime()];
 
-        if (isset($this->processID)) {
+        if (! empty($processId)) {
             //if mulitprocessing is used we need to store the id of the process which has handled this entry
-            $field_array['process_id_completed'] = $this->processID;
+            $field_array['process_id_completed'] = $processId;
         }
 
         GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(QueueRepository::TABLE_NAME)

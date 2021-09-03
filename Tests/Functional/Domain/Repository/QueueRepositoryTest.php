@@ -180,11 +180,35 @@ class QueueRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
+    public function countAllPendingItemsExpectedNone(): void
+    {
+        $this->subject->flushQueue(new QueueFilter());
+        self::assertSame(
+            0,
+            $this->subject->countAllPendingItems()
+        );
+    }
+
+    /**
+     * @test
+     */
     public function countAllPendingItems(): void
     {
         self::assertSame(
             8,
             $this->subject->countAllPendingItems()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function countAllAssignedPendingItemsExpectedNone(): void
+    {
+        $this->subject->flushQueue(new QueueFilter());
+        self::assertSame(
+            0,
+            $this->subject->countAllAssignedPendingItems()
         );
     }
 
