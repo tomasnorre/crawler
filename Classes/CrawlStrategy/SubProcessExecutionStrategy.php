@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\CrawlStrategy;
+namespace TomasNorre\Crawler\CrawlStrategy;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,11 +19,11 @@ namespace AOE\Crawler\CrawlStrategy;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
-use AOE\Crawler\Utility\PhpBinaryUtility;
 use Psr\Http\Message\UriInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
+use TomasNorre\Crawler\Configuration\ExtensionConfigurationProvider;
+use TomasNorre\Crawler\Utility\PhpBinaryUtility;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;

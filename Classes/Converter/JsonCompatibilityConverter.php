@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Converter;
+namespace TomasNorre\Crawler\Converter;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>

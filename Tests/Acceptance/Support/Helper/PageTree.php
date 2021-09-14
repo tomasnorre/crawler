@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Acceptance\Support\Helper;
+namespace TomasNorre\Crawler\Tests\Acceptance\Support\Helper;
 
 /**
  * This file is copied from
@@ -29,7 +29,7 @@ namespace AOE\Crawler\Tests\Acceptance\Support\Helper;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Tests\Acceptance\Support\BackendTester;
+use TomasNorre\Crawler\Tests\Acceptance\Support\BackendTester;
 
 /**
  * @see AbstractPageTree

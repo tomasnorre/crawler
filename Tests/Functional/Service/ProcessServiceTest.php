@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Functional\Service;
+namespace TomasNorre\Crawler\Tests\Functional\Service;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,15 +19,15 @@ namespace AOE\Crawler\Tests\Functional\Service;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Service\ProcessService;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use TomasNorre\Crawler\Service\ProcessService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class ProcessServiceTest
  *
- * @package AOE\Crawler\Tests\Unit\Domain\Model
+ * @package TomasNorre\Crawler\Tests\Unit\Domain\Model
  */
 class ProcessServiceTest extends FunctionalTestCase
 {

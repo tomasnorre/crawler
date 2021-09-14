@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Unit\CrawlStrategy;
+namespace TomasNorre\Crawler\Tests\Unit\CrawlStrategy;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,10 +19,10 @@ namespace AOE\Crawler\Tests\Unit\CrawlStrategy;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
-use AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategy;
-use AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategy;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TomasNorre\Crawler\CrawlStrategy\CrawlStrategyFactory;
+use TomasNorre\Crawler\CrawlStrategy\GuzzleExecutionStrategy;
+use TomasNorre\Crawler\CrawlStrategy\SubProcessExecutionStrategy;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class CrawlStrategyFactoryTest extends UnitTestCase

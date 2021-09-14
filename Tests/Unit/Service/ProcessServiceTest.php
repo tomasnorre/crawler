@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Unit\Service;
+namespace TomasNorre\Crawler\Tests\Unit\Service;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,15 +19,15 @@ namespace AOE\Crawler\Tests\Unit\Service;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Controller\CrawlerController;
-use AOE\Crawler\Domain\Repository\ProcessRepository;
-use AOE\Crawler\Service\ProcessService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TomasNorre\Crawler\Controller\CrawlerController;
+use TomasNorre\Crawler\Domain\Repository\ProcessRepository;
+use TomasNorre\Crawler\Service\ProcessService;
 
 /**
  * Class ProcessServiceTest
  *
- * @package AOE\Crawler\Tests\Unit\Domain\Model
+ * @package TomasNorre\Crawler\Tests\Unit\Domain\Model
  */
 class ProcessServiceTest extends UnitTestCase
 {

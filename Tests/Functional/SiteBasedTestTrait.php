@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Functional;
+namespace TomasNorre\Crawler\Tests\Functional;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>

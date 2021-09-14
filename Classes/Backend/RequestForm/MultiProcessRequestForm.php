@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Backend\RequestForm;
+namespace TomasNorre\Crawler\Backend\RequestForm;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,16 +19,16 @@ namespace AOE\Crawler\Backend\RequestForm;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Backend\Helper\UrlBuilder;
-use AOE\Crawler\Controller\CrawlerController;
-use AOE\Crawler\Crawler;
-use AOE\Crawler\Domain\Repository\ProcessRepository;
-use AOE\Crawler\Domain\Repository\QueueRepository;
-use AOE\Crawler\Exception\ProcessException;
-use AOE\Crawler\Hooks\CrawlerHookInterface;
-use AOE\Crawler\Service\ProcessService;
-use AOE\Crawler\Utility\MessageUtility;
 use Psr\Http\Message\UriInterface;
+use TomasNorre\Crawler\Backend\Helper\UrlBuilder;
+use TomasNorre\Crawler\Controller\CrawlerController;
+use TomasNorre\Crawler\Crawler;
+use TomasNorre\Crawler\Domain\Repository\ProcessRepository;
+use TomasNorre\Crawler\Domain\Repository\QueueRepository;
+use TomasNorre\Crawler\Exception\ProcessException;
+use TomasNorre\Crawler\Hooks\CrawlerHookInterface;
+use TomasNorre\Crawler\Service\ProcessService;
+use TomasNorre\Crawler\Utility\MessageUtility;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;

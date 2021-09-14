@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Unit;
+namespace TomasNorre\Crawler\Tests\Unit;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,8 +19,8 @@ namespace AOE\Crawler\Tests\Unit;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Crawler;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TomasNorre\Crawler\Crawler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class CrawlerTest extends UnitTestCase

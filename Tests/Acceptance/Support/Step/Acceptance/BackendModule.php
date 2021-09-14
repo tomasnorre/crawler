@@ -19,8 +19,8 @@ namespace Step\Acceptance;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Tests\Acceptance\Support\Helper\PageTree;
-use AOE\Crawler\Tests\Acceptance\Support\Step\Acceptance\Admin;
+use TomasNorre\Crawler\Tests\Acceptance\Support\Helper\PageTree;
+use TomasNorre\Crawler\Tests\Acceptance\Support\Step\Acceptance\Admin;
 
 class BackendModule extends \AcceptanceTester
 {

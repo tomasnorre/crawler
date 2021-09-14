@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Unit\Middleware;
+namespace TomasNorre\Crawler\Tests\Unit\Middleware;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,8 +19,8 @@ namespace AOE\Crawler\Tests\Unit\Middleware;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Middleware\FrontendUserAuthenticator;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TomasNorre\Crawler\Middleware\FrontendUserAuthenticator;
 
 class FrontendUserAuthenticatorTest extends UnitTestCase
 {

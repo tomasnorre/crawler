@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Unit\Utility;
+namespace TomasNorre\Crawler\Tests\Unit\Utility;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,8 +19,8 @@ namespace AOE\Crawler\Tests\Unit\Utility;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Utility\PhpBinaryUtility;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TomasNorre\Crawler\Utility\PhpBinaryUtility;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 
 class PhpBinaryUtilityTest extends UnitTestCase

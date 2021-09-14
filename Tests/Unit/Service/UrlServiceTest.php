@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Unit\Service;
+namespace TomasNorre\Crawler\Tests\Unit\Service;
 
 /*
  * (c) 2021 AOE GmbH <dev@aoe.com>
@@ -19,8 +19,8 @@ namespace AOE\Crawler\Tests\Unit\Service;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Service\UrlService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TomasNorre\Crawler\Service\UrlService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class UrlServiceTest extends UnitTestCase

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Functional\Api;
+namespace TomasNorre\Crawler\Tests\Functional\Api;
 
 /***************************************************************
  *  Copyright notice
@@ -28,18 +28,18 @@ namespace AOE\Crawler\Tests\Functional\Api;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use AOE\Crawler\Api\CrawlerApi;
-use AOE\Crawler\Controller\CrawlerController;
-use AOE\Crawler\Domain\Repository\QueueRepository;
-use AOE\Crawler\Tests\Functional\SiteBasedTestTrait;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use TomasNorre\Crawler\Api\CrawlerApi;
+use TomasNorre\Crawler\Controller\CrawlerController;
+use TomasNorre\Crawler\Domain\Repository\QueueRepository;
+use TomasNorre\Crawler\Tests\Functional\SiteBasedTestTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class CrawlerApiTest
  *
- * @package AOE\Crawler\Tests\Functional\Api
+ * @package TomasNorre\Crawler\Tests\Functional\Api
  */
 class CrawlerApiTest extends FunctionalTestCase
 {

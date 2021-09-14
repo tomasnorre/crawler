@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Controller;
+namespace TomasNorre\Crawler\Controller;
 
 /***************************************************************
  *  Copyright notice
@@ -28,24 +28,24 @@ namespace AOE\Crawler\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
-use AOE\Crawler\Converter\JsonCompatibilityConverter;
-use AOE\Crawler\Crawler;
-use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
-use AOE\Crawler\Domain\Model\Process;
-use AOE\Crawler\Domain\Repository\ConfigurationRepository;
-use AOE\Crawler\Domain\Repository\ProcessRepository;
-use AOE\Crawler\Domain\Repository\QueueRepository;
-use AOE\Crawler\QueueExecutor;
-use AOE\Crawler\Service\ConfigurationService;
-use AOE\Crawler\Service\PageService;
-use AOE\Crawler\Service\UrlService;
-use AOE\Crawler\Utility\SignalSlotUtility;
-use AOE\Crawler\Value\QueueFilter;
 use PDO;
 use Psr\Http\Message\UriInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
+use TomasNorre\Crawler\Configuration\ExtensionConfigurationProvider;
+use TomasNorre\Crawler\Converter\JsonCompatibilityConverter;
+use TomasNorre\Crawler\Crawler;
+use TomasNorre\Crawler\CrawlStrategy\CrawlStrategyFactory;
+use TomasNorre\Crawler\Domain\Model\Process;
+use TomasNorre\Crawler\Domain\Repository\ConfigurationRepository;
+use TomasNorre\Crawler\Domain\Repository\ProcessRepository;
+use TomasNorre\Crawler\Domain\Repository\QueueRepository;
+use TomasNorre\Crawler\QueueExecutor;
+use TomasNorre\Crawler\Service\ConfigurationService;
+use TomasNorre\Crawler\Service\PageService;
+use TomasNorre\Crawler\Service\UrlService;
+use TomasNorre\Crawler\Utility\SignalSlotUtility;
+use TomasNorre\Crawler\Value\QueueFilter;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
@@ -73,7 +73,7 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 /**
  * Class CrawlerController
  *
- * @package AOE\Crawler\Controller
+ * @package TomasNorre\Crawler\Controller
  */
 class CrawlerController implements LoggerAwareInterface
 {

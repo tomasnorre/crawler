@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Command;
+namespace TomasNorre\Crawler\Command;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,19 +19,19 @@ namespace AOE\Crawler\Command;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
-use AOE\Crawler\Controller\CrawlerController;
-use AOE\Crawler\Converter\JsonCompatibilityConverter;
-use AOE\Crawler\Domain\Model\Reason;
-use AOE\Crawler\Domain\Repository\QueueRepository;
-use AOE\Crawler\Utility\MessageUtility;
-use AOE\Crawler\Utility\SignalSlotUtility;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use TomasNorre\Crawler\Configuration\ExtensionConfigurationProvider;
+use TomasNorre\Crawler\Controller\CrawlerController;
+use TomasNorre\Crawler\Converter\JsonCompatibilityConverter;
+use TomasNorre\Crawler\Domain\Model\Reason;
+use TomasNorre\Crawler\Domain\Repository\QueueRepository;
+use TomasNorre\Crawler\Utility\MessageUtility;
+use TomasNorre\Crawler\Utility\SignalSlotUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;

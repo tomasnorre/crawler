@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Unit\Hooks;
+namespace TomasNorre\Crawler\Tests\Unit\Hooks;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,8 +19,8 @@ namespace AOE\Crawler\Tests\Unit\Hooks;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Hooks\IndexedSearchCrawlerHook;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TomasNorre\Crawler\Hooks\IndexedSearchCrawlerHook;
 
 class IndexedSearchCrawlerHookTest extends UnitTestCase
 {

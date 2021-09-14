@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Unit\Backend\Helper;
+namespace TomasNorre\Crawler\Tests\Unit\Backend\Helper;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,8 +19,8 @@ namespace AOE\Crawler\Tests\Unit\Backend\Helper;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Backend\Helper\ResultHandler;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TomasNorre\Crawler\Backend\Helper\ResultHandler;
 
 class ResultHandlerTest extends UnitTestCase
 {

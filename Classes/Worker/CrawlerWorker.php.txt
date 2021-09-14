@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Worker;
+namespace TomasNorre\Crawler\Worker;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,8 +19,8 @@ namespace AOE\Crawler\Worker;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Controller\CrawlerController;
-use AOE\Crawler\Hooks\IndexedSearchCrawlerFilesHook;
+use TomasNorre\Crawler\Controller\CrawlerController;
+use TomasNorre\Crawler\Hooks\IndexedSearchCrawlerFilesHook;
 use TYPO3\CMS\Core\TimeTracker\TimeTracker;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\IndexedSearch\Worker\WorkerInterface;

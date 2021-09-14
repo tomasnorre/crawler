@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Backend\RequestForm;
+namespace TomasNorre\Crawler\Backend\RequestForm;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,7 +19,7 @@ namespace AOE\Crawler\Backend\RequestForm;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Value\CrawlAction;
+use TomasNorre\Crawler\Value\CrawlAction;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Info\Controller\InfoModuleController;

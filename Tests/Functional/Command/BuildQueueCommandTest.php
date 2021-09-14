@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Functional\Command;
+namespace TomasNorre\Crawler\Tests\Functional\Command;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,7 +19,7 @@ namespace AOE\Crawler\Tests\Functional\Command;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Domain\Repository\QueueRepository;
+use TomasNorre\Crawler\Domain\Repository\QueueRepository;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;

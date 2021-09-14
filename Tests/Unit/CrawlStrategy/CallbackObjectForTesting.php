@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Unit\CrawlStrategy;
+namespace TomasNorre\Crawler\Tests\Unit\CrawlStrategy;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,7 +19,7 @@ namespace AOE\Crawler\Tests\Unit\CrawlStrategy;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Controller\CrawlerController;
+use TomasNorre\Crawler\Controller\CrawlerController;
 
 /**
  * @codeCoverageIgnore

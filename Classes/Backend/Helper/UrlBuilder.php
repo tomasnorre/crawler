@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Backend\Helper;
+namespace TomasNorre\Crawler\Backend\Helper;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>

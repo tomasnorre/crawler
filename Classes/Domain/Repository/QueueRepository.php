@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Domain\Repository;
+namespace TomasNorre\Crawler\Domain\Repository;
 
 /***************************************************************
  *  Copyright notice
@@ -28,12 +28,12 @@ namespace AOE\Crawler\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
-use AOE\Crawler\Domain\Model\Process;
-use AOE\Crawler\Value\QueueFilter;
 use PDO;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
+use TomasNorre\Crawler\Configuration\ExtensionConfigurationProvider;
+use TomasNorre\Crawler\Domain\Model\Process;
+use TomasNorre\Crawler\Value\QueueFilter;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;

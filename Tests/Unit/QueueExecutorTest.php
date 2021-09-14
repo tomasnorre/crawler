@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Unit;
+namespace TomasNorre\Crawler\Tests\Unit;
 
 /*
  * This file is part of the TYPO3 Crawler Extension.
@@ -17,11 +17,11 @@ namespace AOE\Crawler\Tests\Unit;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Controller\CrawlerController;
-use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
-use AOE\Crawler\QueueExecutor;
-use AOE\Crawler\Tests\Unit\CrawlStrategy\CallbackObjectForTesting;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TomasNorre\Crawler\Controller\CrawlerController;
+use TomasNorre\Crawler\CrawlStrategy\CrawlStrategyFactory;
+use TomasNorre\Crawler\QueueExecutor;
+use TomasNorre\Crawler\Tests\Unit\CrawlStrategy\CallbackObjectForTesting;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class QueueExecutorTest extends UnitTestCase

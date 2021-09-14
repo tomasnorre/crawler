@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Functional\Controller;
+namespace TomasNorre\Crawler\Tests\Functional\Controller;
 
 /***************************************************************
  *  Copyright notice
@@ -28,13 +28,13 @@ namespace AOE\Crawler\Tests\Functional\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use AOE\Crawler\Controller\CrawlerController;
-use AOE\Crawler\Domain\Repository\QueueRepository;
-use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
-use AOE\Crawler\Value\QueueFilter;
 use Nimut\TestingFramework\MockObject\AccessibleMockObjectInterface;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use TomasNorre\Crawler\Controller\CrawlerController;
+use TomasNorre\Crawler\Domain\Repository\QueueRepository;
+use TomasNorre\Crawler\Tests\Functional\BackendRequestTestTrait;
+use TomasNorre\Crawler\Value\QueueFilter;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -43,7 +43,7 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 /**
  * Class CrawlerControllerTest
  *
- * @package AOE\Crawler\Tests\Functional\Controller
+ * @package TomasNorre\Crawler\Tests\Functional\Controller
  */
 class CrawlerControllerTest extends FunctionalTestCase
 {

@@ -83,22 +83,22 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:drawLog_addRows\\(\\) should return array\\<int, array\\('titleRowSpan' \\=\\> int\\<1, max\\>, 'colSpan' \\=\\> int, 'title' \\=\\> string, \\?'noEntries' \\=\\> string, \\?'trClass' \\=\\> string, \\?'qid' \\=\\> array\\('link' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, 'link\\-text' \\=\\> string\\), \\?'refresh' \\=\\> array\\('link' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, 'link\\-text' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon, 'warning' \\=\\> string\\|TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon\\), \\?'columns' \\=\\> array\\('url' \\=\\> mixed, 'scheduled' \\=\\> string, 'exec_time' \\=\\> string, 'result_log' \\=\\> string, 'result_status' \\=\\> string, 'feUserGroupList' \\=\\> string, 'procInstructions' \\=\\> string, 'set_id' \\=\\> string, \\.\\.\\.\\)\\)\\>&nonEmpty but returns array\\<int, array\\('colSpan' \\=\\> 8\\|9\\|11\\|12, 'columns' \\=\\> array\\<string, mixed\\>&nonEmpty, 'qid' \\=\\> array\\('link' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, 'link\\-text' \\=\\> string\\), 'refresh' \\=\\> array\\('link' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, 'link\\-text' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon, 'warning' \\=\\> ''\\|TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon\\), 'title' \\=\\> string, 'titleRowSpan' \\=\\> int\\<1, max\\>, 'trClass' \\=\\> ''\\|'bg\\-danger'\\)\\|array\\('titleRowSpan' \\=\\> 1, 'colSpan' \\=\\> 8\\|9\\|11\\|12, 'title' \\=\\> string, 'noEntries' \\=\\> string\\)\\>\\.$#"
+			message: "#^Method TomasNorre\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:drawLog_addRows\\(\\) should return array\\<int, array\\('titleRowSpan' \\=\\> int\\<1, max\\>, 'colSpan' \\=\\> int, 'title' \\=\\> string, \\?'noEntries' \\=\\> string, \\?'trClass' \\=\\> string, \\?'qid' \\=\\> array\\('link' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, 'link\\-text' \\=\\> string\\), \\?'refresh' \\=\\> array\\('link' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, 'link\\-text' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon, 'warning' \\=\\> string\\|TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon\\), \\?'columns' \\=\\> array\\('url' \\=\\> mixed, 'scheduled' \\=\\> string, 'exec_time' \\=\\> string, 'result_log' \\=\\> string, 'result_status' \\=\\> string, 'feUserGroupList' \\=\\> string, 'procInstructions' \\=\\> string, 'set_id' \\=\\> string, \\.\\.\\.\\)\\)\\>&nonEmpty but returns array\\<int, array\\('colSpan' \\=\\> 8\\|9\\|11\\|12, 'columns' \\=\\> array\\<string, mixed\\>&nonEmpty, 'qid' \\=\\> array\\('link' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, 'link\\-text' \\=\\> string\\), 'refresh' \\=\\> array\\('link' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, 'link\\-text' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon, 'warning' \\=\\> ''\\|TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon\\), 'title' \\=\\> string, 'titleRowSpan' \\=\\> int\\<1, max\\>, 'trClass' \\=\\> ''\\|'bg\\-danger'\\)\\|array\\('titleRowSpan' \\=\\> 1, 'colSpan' \\=\\> 8\\|9\\|11\\|12, 'title' \\=\\> string, 'noEntries' \\=\\> string\\)\\>\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:getDepthDropDownHtml\\(\\) has parameter \\$id with no typehint specified\\.$#"
+			message: "#^Method TomasNorre\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:getDepthDropDownHtml\\(\\) has parameter \\$id with no typehint specified\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:render\\(\\) has parameter \\$id with no typehint specified\\.$#"
+			message: "#^Method TomasNorre\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:render\\(\\) has parameter \\$id with no typehint specified\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Parameter \\#1 \\$resultData of static method AOE\\\\Crawler\\\\Backend\\\\Helper\\\\ResultHandler\\:\\:getResFeVars\\(\\) expects array, array\\|true given\\.$#"
+			message: "#^Parameter \\#1 \\$resultData of static method TomasNorre\\\\Crawler\\\\Backend\\\\Helper\\\\ResultHandler\\:\\:getResFeVars\\(\\) expects array, array\\|true given\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
@@ -108,12 +108,12 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Property AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:\\$queryBuilder \\(Doctrine\\\\DBAL\\\\Query\\\\QueryBuilder\\) does not accept TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\.$#"
+			message: "#^Property TomasNorre\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:\\$queryBuilder \\(Doctrine\\\\DBAL\\\\Query\\\\QueryBuilder\\) does not accept TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\MultiProcessRequestForm\\:\\:render\\(\\) has parameter \\$id with no typehint specified\\.$#"
+			message: "#^Method TomasNorre\\\\Crawler\\\\Backend\\\\RequestForm\\\\MultiProcessRequestForm\\:\\:render\\(\\) has parameter \\$id with no typehint specified\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/MultiProcessRequestForm.php
 
@@ -123,12 +123,12 @@ parameters:
 			path: Classes/Backend/RequestForm/MultiProcessRequestForm.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\RequestFormInterface\\:\\:render\\(\\) has parameter \\$id with no typehint specified\\.$#"
+			message: "#^Method TomasNorre\\\\Crawler\\\\Backend\\\\RequestForm\\\\RequestFormInterface\\:\\:render\\(\\) has parameter \\$id with no typehint specified\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/RequestFormInterface.php
 
 		-
-			message: "#^Call to deprecated method emitSignal\\(\\) of class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
+			message: "#^Call to deprecated method emitSignal\\(\\) of class TomasNorre\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/StartRequestForm.php
 
@@ -138,17 +138,17 @@ parameters:
 			path: Classes/Backend/RequestForm/StartRequestForm.php
 
 		-
-			message: "#^Call to method emitSignal\\(\\) of deprecated class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
+			message: "#^Call to method emitSignal\\(\\) of deprecated class TomasNorre\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/StartRequestForm.php
 
 		-
-			message: "#^Fetching class constant SIGNAL_INVOKE_QUEUE_CHANGE of deprecated class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
+			message: "#^Fetching class constant SIGNAL_INVOKE_QUEUE_CHANGE of deprecated class TomasNorre\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/StartRequestForm.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\StartRequestForm\\:\\:render\\(\\) has parameter \\$id with no typehint specified\\.$#"
+			message: "#^Method TomasNorre\\\\Crawler\\\\Backend\\\\RequestForm\\\\StartRequestForm\\:\\:render\\(\\) has parameter \\$id with no typehint specified\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/StartRequestForm.php
 
@@ -158,7 +158,7 @@ parameters:
 			path: Classes/Backend/RequestForm/StartRequestForm.php
 
 		-
-			message: "#^Call to deprecated method emitSignal\\(\\) of class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
+			message: "#^Call to deprecated method emitSignal\\(\\) of class TomasNorre\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
 			count: 1
 			path: Classes/Command/BuildQueueCommand.php
 
@@ -172,7 +172,7 @@ parameters:
 			path: Classes/Command/BuildQueueCommand.php
 
 		-
-			message: "#^Call to method emitSignal\\(\\) of deprecated class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
+			message: "#^Call to method emitSignal\\(\\) of deprecated class TomasNorre\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
 			count: 1
 			path: Classes/Command/BuildQueueCommand.php
 
@@ -187,7 +187,7 @@ parameters:
 			path: Classes/Command/BuildQueueCommand.php
 
 		-
-			message: "#^Fetching class constant SIGNAL_INVOKE_QUEUE_CHANGE of deprecated class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
+			message: "#^Fetching class constant SIGNAL_INVOKE_QUEUE_CHANGE of deprecated class TomasNorre\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
 			count: 1
 			path: Classes/Command/BuildQueueCommand.php
 
@@ -222,7 +222,7 @@ parameters:
 		-
 			message:
 				"""
-					#^Fetching deprecated class constant CLI_STATUS_ABORTED of class AOE\\\\Crawler\\\\Command\\\\ProcessQueueCommand\\:
+					#^Fetching deprecated class constant CLI_STATUS_ABORTED of class TomasNorre\\\\Crawler\\\\Command\\\\ProcessQueueCommand\\:
 					since 9\\.2\\.5 will be made private in v11\\.x$#
 				"""
 			count: 6
@@ -231,7 +231,7 @@ parameters:
 		-
 			message:
 				"""
-					#^Fetching deprecated class constant CLI_STATUS_NOTHING_PROCCESSED of class AOE\\\\Crawler\\\\Command\\\\ProcessQueueCommand\\:
+					#^Fetching deprecated class constant CLI_STATUS_NOTHING_PROCCESSED of class TomasNorre\\\\Crawler\\\\Command\\\\ProcessQueueCommand\\:
 					since 9\\.2\\.5 will be made private in v11\\.x$#
 				"""
 			count: 2
@@ -240,7 +240,7 @@ parameters:
 		-
 			message:
 				"""
-					#^Fetching deprecated class constant CLI_STATUS_PROCESSED of class AOE\\\\Crawler\\\\Command\\\\ProcessQueueCommand\\:
+					#^Fetching deprecated class constant CLI_STATUS_PROCESSED of class TomasNorre\\\\Crawler\\\\Command\\\\ProcessQueueCommand\\:
 					since 9\\.2\\.5 will be made private in v11\\.x$#
 				"""
 			count: 1
@@ -249,7 +249,7 @@ parameters:
 		-
 			message:
 				"""
-					#^Fetching deprecated class constant CLI_STATUS_REMAIN of class AOE\\\\Crawler\\\\Command\\\\ProcessQueueCommand\\:
+					#^Fetching deprecated class constant CLI_STATUS_REMAIN of class TomasNorre\\\\Crawler\\\\Command\\\\ProcessQueueCommand\\:
 					since 9\\.2\\.5 will be made private in v11\\.x$#
 				"""
 			count: 1
@@ -281,7 +281,7 @@ parameters:
 			path: Classes/ContextMenu/ItemProvider.php
 
 		-
-			message: "#^Access to deprecated property \\$processFilename of class AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\.$#"
+			message: "#^Access to deprecated property \\$processFilename of class TomasNorre\\\\Crawler\\\\Controller\\\\CrawlerController\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -291,7 +291,7 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Call to deprecated method emitSignal\\(\\) of class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
+			message: "#^Call to deprecated method emitSignal\\(\\) of class TomasNorre\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
 			count: 5
 			path: Classes/Controller/CrawlerController.php
 
@@ -319,7 +319,7 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Call to method emitSignal\\(\\) of deprecated class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
+			message: "#^Call to method emitSignal\\(\\) of deprecated class TomasNorre\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
 			count: 5
 			path: Classes/Controller/CrawlerController.php
 
@@ -344,29 +344,29 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Fetching class constant SIGNAL_DUPLICATE_URL_IN_QUEUE of deprecated class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
+			message: "#^Fetching class constant SIGNAL_DUPLICATE_URL_IN_QUEUE of deprecated class TomasNorre\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Fetching class constant SIGNAL_QUEUEITEM_POSTPROCESS of deprecated class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
+			message: "#^Fetching class constant SIGNAL_QUEUEITEM_POSTPROCESS of deprecated class TomasNorre\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
 			count: 2
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Fetching class constant SIGNAL_QUEUEITEM_PREPROCESS of deprecated class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
+			message: "#^Fetching class constant SIGNAL_QUEUEITEM_PREPROCESS of deprecated class TomasNorre\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Fetching class constant SIGNAL_URL_ADDED_TO_QUEUE of deprecated class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
+			message: "#^Fetching class constant SIGNAL_URL_ADDED_TO_QUEUE of deprecated class TomasNorre\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
 		-
 			message:
 				"""
-					#^Fetching deprecated class constant CLI_STATUS_POLLABLE_PROCESSED of class AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:
+					#^Fetching deprecated class constant CLI_STATUS_POLLABLE_PROCESSED of class TomasNorre\\\\Crawler\\\\Controller\\\\CrawlerController\\:
 					since 9\\.2\\.5 will be removed in v11\\.x$#
 				"""
 			count: 1
@@ -378,7 +378,7 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:readUrl\\(\\) should return int\\|null but empty return statement found\\.$#"
+			message: "#^Method TomasNorre\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:readUrl\\(\\) should return int\\|null but empty return statement found\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -398,7 +398,7 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Parameter \\#1 \\$where of method AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:flushQueue\\(\\) expects string, Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression\\|string given\\.$#"
+			message: "#^Parameter \\#1 \\$where of method TomasNorre\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:flushQueue\\(\\) expects string, Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression\\|string given\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -423,7 +423,7 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Property AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:\\$MP \\(bool\\) does not accept string\\.$#"
+			message: "#^Property TomasNorre\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:\\$MP \\(bool\\) does not accept string\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -438,7 +438,7 @@ parameters:
 			path: Classes/Converter/JsonCompatibilityConverter.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\CrawlStrategy\\\\CallbackExecutionStrategy\\:\\:fetchByCallback\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method TomasNorre\\\\Crawler\\\\CrawlStrategy\\\\CallbackExecutionStrategy\\:\\:fetchByCallback\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
 
@@ -453,12 +453,12 @@ parameters:
 			path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
 
 		-
-			message: "#^Interface AOE\\\\Crawler\\\\CrawlStrategy\\\\CrawlStrategy should end with \"Interface\" suffix\\.$#"
+			message: "#^Interface TomasNorre\\\\Crawler\\\\CrawlStrategy\\\\CrawlStrategy should end with \"Interface\" suffix\\.$#"
 			count: 1
 			path: Classes/CrawlStrategy/CrawlStrategy.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\CrawlStrategy\\\\CrawlStrategy\\:\\:fetchUrlContents\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method TomasNorre\\\\Crawler\\\\CrawlStrategy\\\\CrawlStrategy\\:\\:fetchUrlContents\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: Classes/CrawlStrategy/CrawlStrategy.php
 
@@ -478,7 +478,7 @@ parameters:
 			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Domain\\\\Model\\\\Configuration\\:\\:setPidsOnly\\(\\) has parameter \\$pidsOnly with no typehint specified\\.$#"
+			message: "#^Method TomasNorre\\\\Crawler\\\\Domain\\\\Model\\\\Configuration\\:\\:setPidsOnly\\(\\) has parameter \\$pidsOnly with no typehint specified\\.$#"
 			count: 1
 			path: Classes/Domain/Model/Configuration.php
 
@@ -567,12 +567,12 @@ parameters:
 			path: Classes/Domain/Repository/ProcessRepository.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Domain\\\\Repository\\\\ProcessRepository\\:\\:findByProcessId\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method TomasNorre\\\\Crawler\\\\Domain\\\\Repository\\\\ProcessRepository\\:\\:findByProcessId\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: Classes/Domain/Repository/ProcessRepository.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Domain\\\\Repository\\\\ProcessRepository\\:\\:updateProcessAssignItemsCount\\(\\) has parameter \\$numberOfAffectedRows with no typehint specified\\.$#"
+			message: "#^Method TomasNorre\\\\Crawler\\\\Domain\\\\Repository\\\\ProcessRepository\\:\\:updateProcessAssignItemsCount\\(\\) has parameter \\$numberOfAffectedRows with no typehint specified\\.$#"
 			count: 1
 			path: Classes/Domain/Repository/ProcessRepository.php
 
@@ -639,7 +639,7 @@ parameters:
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Domain\\\\Repository\\\\QueueRepository\\:\\:updateProcessIdAndSchedulerForQueueIds\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method TomasNorre\\\\Crawler\\\\Domain\\\\Repository\\\\QueueRepository\\:\\:updateProcessIdAndSchedulerForQueueIds\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: Classes/Domain/Repository/QueueRepository.php
 
@@ -668,7 +668,7 @@ parameters:
 			path: Classes/Hooks/IndexedSearchCrawlerFilesHook.php
 
 		-
-			message: "#^Access to an undefined property AOE\\\\Crawler\\\\Hooks\\\\IndexedSearchCrawlerHook\\:\\:\\$pObj\\.$#"
+			message: "#^Access to an undefined property TomasNorre\\\\Crawler\\\\Hooks\\\\IndexedSearchCrawlerHook\\:\\:\\$pObj\\.$#"
 			count: 2
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
@@ -748,7 +748,7 @@ parameters:
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
 		-
-			message: "#^Parameter \\#1 \\$id of method AOE\\\\Crawler\\\\Hooks\\\\IndexedSearchCrawlerHook\\:\\:deleteFromIndex\\(\\) expects int, string given\\.$#"
+			message: "#^Parameter \\#1 \\$id of method TomasNorre\\\\Crawler\\\\Hooks\\\\IndexedSearchCrawlerHook\\:\\:deleteFromIndex\\(\\) expects int, string given\\.$#"
 			count: 2
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
@@ -811,17 +811,17 @@ parameters:
 			path: Classes/Middleware/FrontendUserAuthenticator.php
 
 		-
-			message: "#^Call to deprecated method emitSignal\\(\\) of class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
+			message: "#^Call to deprecated method emitSignal\\(\\) of class TomasNorre\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
 			count: 1
 			path: Classes/QueueExecutor.php
 
 		-
-			message: "#^Call to method emitSignal\\(\\) of deprecated class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
+			message: "#^Call to method emitSignal\\(\\) of deprecated class TomasNorre\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
 			count: 1
 			path: Classes/QueueExecutor.php
 
 		-
-			message: "#^Fetching class constant SIGNAL_URL_CRAWLED of deprecated class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
+			message: "#^Fetching class constant SIGNAL_URL_CRAWLED of deprecated class TomasNorre\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
 			count: 1
 			path: Classes/QueueExecutor.php
 
@@ -859,22 +859,22 @@ parameters:
 			path: Classes/Service/ConfigurationService.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Service\\\\ConfigurationService\\:\\:addValuesInRange\\(\\) has parameter \\$parameter with no typehint specified\\.$#"
+			message: "#^Method TomasNorre\\\\Crawler\\\\Service\\\\ConfigurationService\\:\\:addValuesInRange\\(\\) has parameter \\$parameter with no typehint specified\\.$#"
 			count: 1
 			path: Classes/Service/ConfigurationService.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Service\\\\ConfigurationService\\:\\:expandPidList\\(\\) has parameter \\$depth with no typehint specified\\.$#"
+			message: "#^Method TomasNorre\\\\Crawler\\\\Service\\\\ConfigurationService\\:\\:expandPidList\\(\\) has parameter \\$depth with no typehint specified\\.$#"
 			count: 1
 			path: Classes/Service/ConfigurationService.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Service\\\\ConfigurationService\\:\\:runExpandParametersHook\\(\\) has parameter \\$parameter with no typehint specified\\.$#"
+			message: "#^Method TomasNorre\\\\Crawler\\\\Service\\\\ConfigurationService\\:\\:runExpandParametersHook\\(\\) has parameter \\$parameter with no typehint specified\\.$#"
 			count: 1
 			path: Classes/Service/ConfigurationService.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Service\\\\ConfigurationService\\:\\:runExpandParametersHook\\(\\) has parameter \\$path with no typehint specified\\.$#"
+			message: "#^Method TomasNorre\\\\Crawler\\\\Service\\\\ConfigurationService\\:\\:runExpandParametersHook\\(\\) has parameter \\$path with no typehint specified\\.$#"
 			count: 1
 			path: Classes/Service/ConfigurationService.php
 
@@ -914,22 +914,22 @@ parameters:
 			path: Classes/Service/ConfigurationService.php
 
 		-
-			message: "#^Access to deprecated property \\$countInARun of class AOE\\\\Crawler\\\\Service\\\\ProcessService\\.$#"
+			message: "#^Access to deprecated property \\$countInARun of class TomasNorre\\\\Crawler\\\\Service\\\\ProcessService\\.$#"
 			count: 1
 			path: Classes/Service/ProcessService.php
 
 		-
-			message: "#^Access to deprecated property \\$processLimit of class AOE\\\\Crawler\\\\Service\\\\ProcessService\\.$#"
+			message: "#^Access to deprecated property \\$processLimit of class TomasNorre\\\\Crawler\\\\Service\\\\ProcessService\\.$#"
 			count: 1
 			path: Classes/Service/ProcessService.php
 
 		-
-			message: "#^Access to deprecated property \\$queueRepository of class AOE\\\\Crawler\\\\Service\\\\ProcessService\\.$#"
+			message: "#^Access to deprecated property \\$queueRepository of class TomasNorre\\\\Crawler\\\\Service\\\\ProcessService\\.$#"
 			count: 1
 			path: Classes/Service/ProcessService.php
 
 		-
-			message: "#^Access to deprecated property \\$verbose of class AOE\\\\Crawler\\\\Service\\\\ProcessService\\.$#"
+			message: "#^Access to deprecated property \\$verbose of class TomasNorre\\\\Crawler\\\\Service\\\\ProcessService\\.$#"
 			count: 1
 			path: Classes/Service/ProcessService.php
 

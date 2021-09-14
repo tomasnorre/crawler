@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Unit\Backend;
+namespace TomasNorre\Crawler\Tests\Unit\Backend;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,9 +19,9 @@ namespace AOE\Crawler\Tests\Unit\Backend;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Backend\BackendModule;
-use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TomasNorre\Crawler\Backend\BackendModule;
+use TomasNorre\Crawler\Converter\JsonCompatibilityConverter;
 use TYPO3\CMS\Core\Localization\LanguageService;
 
 class BackendModuleTest extends UnitTestCase

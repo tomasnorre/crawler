@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Unit\Service;
+namespace TomasNorre\Crawler\Tests\Unit\Service;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>

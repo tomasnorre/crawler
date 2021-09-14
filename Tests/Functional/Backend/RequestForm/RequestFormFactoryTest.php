@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Functional\Backend\RequestForm;
+namespace TomasNorre\Crawler\Tests\Functional\Backend\RequestForm;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,12 +19,12 @@ namespace AOE\Crawler\Tests\Functional\Backend\RequestForm;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Backend\RequestForm\LogRequestForm;
-use AOE\Crawler\Backend\RequestForm\MultiProcessRequestForm;
-use AOE\Crawler\Backend\RequestForm\RequestFormFactory;
-use AOE\Crawler\Backend\RequestForm\StartRequestForm;
-use AOE\Crawler\Value\CrawlAction;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use TomasNorre\Crawler\Backend\RequestForm\LogRequestForm;
+use TomasNorre\Crawler\Backend\RequestForm\MultiProcessRequestForm;
+use TomasNorre\Crawler\Backend\RequestForm\RequestFormFactory;
+use TomasNorre\Crawler\Backend\RequestForm\StartRequestForm;
+use TomasNorre\Crawler\Value\CrawlAction;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Info\Controller\InfoModuleController;
 

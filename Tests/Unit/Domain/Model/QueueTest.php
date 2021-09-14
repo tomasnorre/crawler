@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Unit\Domain\Model;
+namespace TomasNorre\Crawler\Tests\Unit\Domain\Model;
 
 /***************************************************************
  *  Copyright notice
@@ -28,12 +28,12 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use AOE\Crawler\Domain\Model\Queue;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TomasNorre\Crawler\Domain\Model\Queue;
 
 /**
  * Class QueueTest
- * @package AOE\Crawler\Tests\Unit\Domain\Model
+ * @package TomasNorre\Crawler\Tests\Unit\Domain\Model
  */
 class QueueTest extends UnitTestCase
 {

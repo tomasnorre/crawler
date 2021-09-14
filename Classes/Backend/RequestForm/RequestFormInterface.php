@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Backend\RequestForm;
+namespace TomasNorre\Crawler\Backend\RequestForm;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>

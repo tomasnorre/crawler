@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Command;
+namespace TomasNorre\Crawler\Command;
 
 /***************************************************************
  *  Copyright notice
@@ -28,16 +28,16 @@ namespace AOE\Crawler\Command;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
-use AOE\Crawler\Controller\CrawlerController;
-use AOE\Crawler\Crawler;
-use AOE\Crawler\Domain\Model\Process;
-use AOE\Crawler\Domain\Repository\ProcessRepository;
-use AOE\Crawler\Domain\Repository\QueueRepository;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use TomasNorre\Crawler\Configuration\ExtensionConfigurationProvider;
+use TomasNorre\Crawler\Controller\CrawlerController;
+use TomasNorre\Crawler\Crawler;
+use TomasNorre\Crawler\Domain\Model\Process;
+use TomasNorre\Crawler\Domain\Repository\ProcessRepository;
+use TomasNorre\Crawler\Domain\Repository\QueueRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Functional\Service;
+namespace TomasNorre\Crawler\Tests\Functional\Service;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,10 +19,10 @@ namespace AOE\Crawler\Tests\Functional\Service;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Controller\CrawlerController;
-use AOE\Crawler\Domain\Repository\QueueRepository;
-use AOE\Crawler\Service\QueueService;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use TomasNorre\Crawler\Controller\CrawlerController;
+use TomasNorre\Crawler\Domain\Repository\QueueRepository;
+use TomasNorre\Crawler\Service\QueueService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Api;
+namespace TomasNorre\Crawler\Api;
 
 /***************************************************************
  *  Copyright notice
@@ -28,11 +28,11 @@ namespace AOE\Crawler\Api;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use AOE\Crawler\Controller\CrawlerController;
-use AOE\Crawler\Domain\Repository\ProcessRepository;
-use AOE\Crawler\Domain\Repository\QueueRepository;
-use AOE\Crawler\Exception\CrawlerObjectException;
-use AOE\Crawler\Exception\TimeStampException;
+use TomasNorre\Crawler\Controller\CrawlerController;
+use TomasNorre\Crawler\Domain\Repository\ProcessRepository;
+use TomasNorre\Crawler\Domain\Repository\QueueRepository;
+use TomasNorre\Crawler\Exception\CrawlerObjectException;
+use TomasNorre\Crawler\Exception\TimeStampException;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
@@ -42,7 +42,7 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 /**
  * Class CrawlerApi
  *
- * @package AOE\Crawler\Api
+ * @package TomasNorre\Crawler\Api
  * @deprecated Since v9.2.0 - This class will be removed when dropping support for TYPO3 9LTS and 10LTS
  */
 class CrawlerApi

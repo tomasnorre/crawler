@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Unit\Converter;
+namespace TomasNorre\Crawler\Tests\Unit\Converter;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,8 +19,8 @@ namespace AOE\Crawler\Tests\Unit\Converter;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TomasNorre\Crawler\Converter\JsonCompatibilityConverter;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class JsonCompatibilityConverterTest extends UnitTestCase

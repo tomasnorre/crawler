@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Functional\Backend\RequestForm;
+namespace TomasNorre\Crawler\Tests\Functional\Backend\RequestForm;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,10 +19,10 @@ namespace AOE\Crawler\Tests\Functional\Backend\RequestForm;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Backend\RequestForm\StartRequestForm;
-use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
-use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use TomasNorre\Crawler\Backend\RequestForm\StartRequestForm;
+use TomasNorre\Crawler\Configuration\ExtensionConfigurationProvider;
+use TomasNorre\Crawler\Tests\Functional\BackendRequestTestTrait;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;

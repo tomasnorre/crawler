@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\CrawlStrategy;
+namespace TomasNorre\Crawler\CrawlStrategy;
 
-use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
+use TomasNorre\Crawler\Configuration\ExtensionConfigurationProvider;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 final class CrawlStrategyFactory

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Unit\Controller;
+namespace TomasNorre\Crawler\Tests\Unit\Controller;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,16 +19,16 @@ namespace AOE\Crawler\Tests\Unit\Controller;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Controller\CrawlerController;
-use AOE\Crawler\Service\PageService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
+use TomasNorre\Crawler\Controller\CrawlerController;
+use TomasNorre\Crawler\Service\PageService;
 
 /**
  * Class CrawlerLibTest
  *
- * @package AOE\Crawler\Tests
+ * @package TomasNorre\Crawler\Tests
  */
 class CrawlerControllerTest extends UnitTestCase
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Unit\Writer\FileWriter\CsvWriter;
+namespace TomasNorre\Crawler\Tests\Unit\Writer\FileWriter\CsvWriter;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,8 +19,8 @@ namespace AOE\Crawler\Tests\Unit\Writer\FileWriter\CsvWriter;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Writer\FileWriter\CsvWriter\CrawlerCsvWriter;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TomasNorre\Crawler\Writer\FileWriter\CsvWriter\CrawlerCsvWriter;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class CrawlerCsvWriterTest extends UnitTestCase

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Functional\Domain\Repository;
+namespace TomasNorre\Crawler\Tests\Functional\Domain\Repository;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,15 +19,15 @@ namespace AOE\Crawler\Tests\Functional\Domain\Repository;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Domain\Repository\ProcessRepository;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use TomasNorre\Crawler\Domain\Repository\ProcessRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class ProcessRepositoryTest
  *
- * @package AOE\Crawler\Tests\Functional\Domain\Repository
+ * @package TomasNorre\Crawler\Tests\Functional\Domain\Repository
  */
 class ProcessRepositoryTest extends FunctionalTestCase
 {

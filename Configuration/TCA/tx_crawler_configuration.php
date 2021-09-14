@@ -71,7 +71,7 @@ return [
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectCheckBox',
-                'itemsProcFunc' => AOE\Crawler\Utility\TcaUtility::class . '->getProcessingInstructions',
+                'itemsProcFunc' => TomasNorre\Crawler\Utility\TcaUtility::class . '->getProcessingInstructions',
                 'maxitems' => 100,
             ],
         ],

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Functional\Command;
+namespace TomasNorre\Crawler\Tests\Functional\Command;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,9 +19,9 @@ namespace AOE\Crawler\Tests\Functional\Command;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Command\FlushQueueCommand;
-use AOE\Crawler\Domain\Repository\QueueRepository;
 use Symfony\Component\Console\Tester\CommandTester;
+use TomasNorre\Crawler\Command\FlushQueueCommand;
+use TomasNorre\Crawler\Domain\Repository\QueueRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 

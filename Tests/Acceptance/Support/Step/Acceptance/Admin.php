@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Acceptance\Support\Step\Acceptance;
+namespace TomasNorre\Crawler\Tests\Acceptance\Support\Step\Acceptance;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Unit\Value;
+namespace TomasNorre\Crawler\Tests\Unit\Value;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,8 +19,8 @@ namespace AOE\Crawler\Tests\Unit\Value;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Value\QueueFilter;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TomasNorre\Crawler\Value\QueueFilter;
 
 class QueueFilterTest extends UnitTestCase
 {

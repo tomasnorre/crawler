@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use AOE\Crawler\Middleware\CrawlerInitialization;
-use AOE\Crawler\Middleware\FrontendUserAuthenticator;
+use TomasNorre\Crawler\Middleware\CrawlerInitialization;
+use TomasNorre\Crawler\Middleware\FrontendUserAuthenticator;
 
 return [
     'frontend' => [

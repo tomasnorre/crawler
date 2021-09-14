@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Backend\RequestForm;
+namespace TomasNorre\Crawler\Backend\RequestForm;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,9 +19,9 @@ namespace AOE\Crawler\Backend\RequestForm;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Controller\CrawlerController;
-use AOE\Crawler\Utility\MessageUtility;
-use AOE\Crawler\Utility\PhpBinaryUtility;
+use TomasNorre\Crawler\Controller\CrawlerController;
+use TomasNorre\Crawler\Utility\MessageUtility;
+use TomasNorre\Crawler\Utility\PhpBinaryUtility;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;

@@ -1,10 +1,12 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 10.0.2-dev
+## Crawler 11.0.0-dev
 
 ### Added
 
 ### Changed
+* !!! Namespace change from AOE to TomasNorre
+* !!! Switch composer package name to tomasnorre/crawler
 
 ### Deprecated
 #### Classes

@@ -4,20 +4,20 @@ services:
         autoconfigure: true
         public: false
 
-    AOE\Crawler\:
+    TomasNorre\Crawler\:
         resource: '../Classes/*'
 
-    AOE\Crawler\Command\BuildQueueCommand:
+    TomasNorre\Crawler\Command\BuildQueueCommand:
         tags:
             - name: 'console.command'
               command: 'crawler:buildQueue'
 
-    AOE\Crawler\Command\FlushQueueCommand:
+    TomasNorre\Crawler\Command\FlushQueueCommand:
         tags:
             - name: 'console.command'
               command: 'crawler:flushQueue'
 
-    AOE\Crawler\Command\ProcessQueueCommand:
+    TomasNorre\Crawler\Command\ProcessQueueCommand:
         tags:
             - name: 'console.command'
               command: 'crawler:processQueue'

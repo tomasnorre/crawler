@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Functional\Hooks;
+namespace TomasNorre\Crawler\Tests\Functional\Hooks;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,17 +19,17 @@ namespace AOE\Crawler\Tests\Functional\Hooks;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Domain\Repository\ProcessRepository;
-use AOE\Crawler\Domain\Repository\QueueRepository;
-use AOE\Crawler\Hooks\ProcessCleanUpHook;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use TomasNorre\Crawler\Domain\Repository\ProcessRepository;
+use TomasNorre\Crawler\Domain\Repository\QueueRepository;
+use TomasNorre\Crawler\Hooks\ProcessCleanUpHook;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class ProcessCleanUpHookTest
  *
- * @package AOE\Crawler\Tests\Functional\Hooks
+ * @package TomasNorre\Crawler\Tests\Functional\Hooks
  */
 class ProcessCleanUpHookTest extends FunctionalTestCase
 {

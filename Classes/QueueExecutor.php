@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler;
+namespace TomasNorre\Crawler;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,12 +19,12 @@ namespace AOE\Crawler;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Controller\CrawlerController;
-use AOE\Crawler\Converter\JsonCompatibilityConverter;
-use AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy;
-use AOE\Crawler\CrawlStrategy\CrawlStrategy;
-use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
-use AOE\Crawler\Utility\SignalSlotUtility;
+use TomasNorre\Crawler\Controller\CrawlerController;
+use TomasNorre\Crawler\Converter\JsonCompatibilityConverter;
+use TomasNorre\Crawler\CrawlStrategy\CallbackExecutionStrategy;
+use TomasNorre\Crawler\CrawlStrategy\CrawlStrategy;
+use TomasNorre\Crawler\CrawlStrategy\CrawlStrategyFactory;
+use TomasNorre\Crawler\Utility\SignalSlotUtility;
 use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;

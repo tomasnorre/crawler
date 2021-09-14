@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Command;
+namespace TomasNorre\Crawler\Command;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,13 +19,13 @@ namespace AOE\Crawler\Command;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Domain\Repository\QueueRepository;
-use AOE\Crawler\Value\QueueFilter;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use TomasNorre\Crawler\Domain\Repository\QueueRepository;
+use TomasNorre\Crawler\Value\QueueFilter;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 

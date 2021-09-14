@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Acceptance\Support;
+namespace TomasNorre\Crawler\Tests\Acceptance\Support;
 
 /**
  * This file is copied from

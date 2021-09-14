@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Service;
+namespace TomasNorre\Crawler\Service;
 
 /***************************************************************
  *  Copyright notice
@@ -28,12 +28,12 @@ namespace AOE\Crawler\Service;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
-use AOE\Crawler\Controller\CrawlerController;
-use AOE\Crawler\Domain\Repository\ProcessRepository;
-use AOE\Crawler\Domain\Repository\QueueRepository;
-use AOE\Crawler\Exception\ProcessException;
-use AOE\Crawler\Utility\PhpBinaryUtility;
+use TomasNorre\Crawler\Configuration\ExtensionConfigurationProvider;
+use TomasNorre\Crawler\Controller\CrawlerController;
+use TomasNorre\Crawler\Domain\Repository\ProcessRepository;
+use TomasNorre\Crawler\Domain\Repository\QueueRepository;
+use TomasNorre\Crawler\Exception\ProcessException;
+use TomasNorre\Crawler\Utility\PhpBinaryUtility;
 use TYPO3\CMS\Core\Compatibility\PublicMethodDeprecationTrait;
 use TYPO3\CMS\Core\Compatibility\PublicPropertyDeprecationTrait;
 use TYPO3\CMS\Core\Core\Environment;
@@ -43,7 +43,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
- * @package AOE\Crawler\Service
+ * @package TomasNorre\Crawler\Service
  * @ignoreAnnotation("noRector")
  *
  * @internal since v9.2.5
@@ -103,13 +103,13 @@ class ProcessService
     private $crawlerController;
 
     /**
-     * @var \AOE\Crawler\Domain\Repository\QueueRepository
+     * @var \TomasNorre\Crawler\Domain\Repository\QueueRepository
      * @deprecated
      */
     private $queueRepository;
 
     /**
-     * @var \AOE\Crawler\Domain\Repository\ProcessRepository
+     * @var \TomasNorre\Crawler\Domain\Repository\ProcessRepository
      */
     private $processRepository;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Middleware;
+namespace TomasNorre\Crawler\Middleware;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,12 +19,12 @@ namespace AOE\Crawler\Middleware;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Converter\JsonCompatibilityConverter;
-use AOE\Crawler\Domain\Repository\QueueRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use TomasNorre\Crawler\Converter\JsonCompatibilityConverter;
+use TomasNorre\Crawler\Domain\Repository\QueueRepository;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\UserAspect;
 use TYPO3\CMS\Core\Utility\GeneralUtility;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Functional\Domain\Repository;
+namespace TomasNorre\Crawler\Tests\Functional\Domain\Repository;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,10 +19,10 @@ namespace AOE\Crawler\Tests\Functional\Domain\Repository;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Domain\Model\Process;
-use AOE\Crawler\Domain\Repository\QueueRepository;
-use AOE\Crawler\Value\QueueFilter;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use TomasNorre\Crawler\Domain\Model\Process;
+use TomasNorre\Crawler\Domain\Repository\QueueRepository;
+use TomasNorre\Crawler\Value\QueueFilter;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
@@ -30,7 +30,7 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 /**
  * Class QueryRepositoryTest
  *
- * @package AOE\Crawler\Tests\Functional\Domain\Repository
+ * @package TomasNorre\Crawler\Tests\Functional\Domain\Repository
  */
 class QueueRepositoryTest extends FunctionalTestCase
 {
@@ -383,7 +383,7 @@ class QueueRepositoryTest extends FunctionalTestCase
      */
     public function isPageInQueueThrowInvalidArgumentException(): void
     {
-        $this->expectExceptionMessage('Argument 1 passed to AOE\Crawler\Domain\Repository\QueueRepository::isPageInQueue() must be of the type int');
+        $this->expectExceptionMessage('Argument 1 passed to TomasNorre\Crawler\Domain\Repository\QueueRepository::isPageInQueue() must be of the type int');
         $this->subject->isPageInQueue('Cannot be interpreted as integer');
     }
 

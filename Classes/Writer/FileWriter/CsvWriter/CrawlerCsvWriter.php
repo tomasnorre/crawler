@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Writer\FileWriter\CsvWriter;
+namespace TomasNorre\Crawler\Writer\FileWriter\CsvWriter;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>

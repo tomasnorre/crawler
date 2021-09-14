@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Service;
+namespace TomasNorre\Crawler\Service;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,7 +19,7 @@ namespace AOE\Crawler\Service;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Controller\CrawlerController;
+use TomasNorre\Crawler\Controller\CrawlerController;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 

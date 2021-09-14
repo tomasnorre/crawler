@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Backend;
+namespace TomasNorre\Crawler\Backend;
 
 /***************************************************************
  *  Copyright notice
@@ -28,11 +28,11 @@ namespace AOE\Crawler\Backend;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use AOE\Crawler\Backend\RequestForm\RequestFormFactory;
-use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
-use AOE\Crawler\Domain\Repository\QueueRepository;
-use AOE\Crawler\Service\ProcessService;
-use AOE\Crawler\Value\CrawlAction;
+use TomasNorre\Crawler\Backend\RequestForm\RequestFormFactory;
+use TomasNorre\Crawler\Configuration\ExtensionConfigurationProvider;
+use TomasNorre\Crawler\Domain\Repository\QueueRepository;
+use TomasNorre\Crawler\Service\ProcessService;
+use TomasNorre\Crawler\Value\CrawlAction;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;

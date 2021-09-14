@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Hooks;
+namespace TomasNorre\Crawler\Hooks;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>

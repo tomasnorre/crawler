@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Utility;
+namespace TomasNorre\Crawler\Utility;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,7 +19,7 @@ namespace AOE\Crawler\Utility;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Hooks\ProcessCleanUpHook;
+use TomasNorre\Crawler\Hooks\ProcessCleanUpHook;
 
 /**
  * @codeCoverageIgnore

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use AOE\Crawler\Command\BuildQueueCommand;
-use AOE\Crawler\Command\FlushQueueCommand;
-use AOE\Crawler\Command\ProcessQueueCommand;
+use TomasNorre\Crawler\Command\BuildQueueCommand;
+use TomasNorre\Crawler\Command\FlushQueueCommand;
+use TomasNorre\Crawler\Command\ProcessQueueCommand;
 
 // This file can be removed when compatibility with TYPO3 v9 is dropped.
 // The configuration can now also be found in Configuration/Services.yaml

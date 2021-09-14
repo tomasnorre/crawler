@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Utility;
+namespace TomasNorre\Crawler\Utility;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,9 +19,9 @@ namespace AOE\Crawler\Utility;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
-use AOE\Crawler\Exception\CommandNotFoundException;
-use AOE\Crawler\Exception\ExtensionSettingsException;
+use TomasNorre\Crawler\Configuration\ExtensionConfigurationProvider;
+use TomasNorre\Crawler\Exception\CommandNotFoundException;
+use TomasNorre\Crawler\Exception\ExtensionSettingsException;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 

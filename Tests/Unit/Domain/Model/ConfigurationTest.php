@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Unit\Domain\Model;
+namespace TomasNorre\Crawler\Tests\Unit\Domain\Model;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,8 +19,8 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Domain\Model\Configuration;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TomasNorre\Crawler\Domain\Model\Configuration;
 
 class ConfigurationTest extends UnitTestCase
 {

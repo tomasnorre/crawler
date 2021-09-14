@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Unit\Hooks;
+namespace TomasNorre\Crawler\Tests\Unit\Hooks;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,11 +19,11 @@ namespace AOE\Crawler\Tests\Unit\Hooks;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Domain\Repository\QueueRepository;
-use AOE\Crawler\Hooks\DataHandlerHook;
-use AOE\Crawler\Service\QueueService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Prophecy\Argument;
+use TomasNorre\Crawler\Domain\Repository\QueueRepository;
+use TomasNorre\Crawler\Hooks\DataHandlerHook;
+use TomasNorre\Crawler\Service\QueueService;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 use TYPO3\CMS\Core\DataHandling\DataHandler;

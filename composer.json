@@ -1,14 +1,14 @@
 {
-    "name": "aoepeople/crawler",
+    "name": "tomasnorre/crawler",
     "type": "typo3-cms-extension",
     "description": "Crawler extension for TYPO3",
-    "homepage": "https://github.com/AOEpeople/crawler",
+    "homepage": "https://github.com/tomasnorre/crawler",
     "license": "GPL-3.0",
     "authors": [
         {
-            "name": "AOEpeople",
-            "email": "dev@aoe.com",
-            "homepage": "https://www.aoe.com/",
+            "name": "Tomas Norre Mikkelsen",
+            "email": "tomasnorre@gmail.com",
+            "homepage": "https://github.com/tomasnorre",
             "role": "Developer"
         }
     ],
@@ -82,12 +82,12 @@
     },
     "autoload": {
         "psr-4": {
-            "AOE\\Crawler\\": "Classes"
+            "TomasNorre\\Crawler\\": "Classes"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "AOE\\Crawler\\Tests\\": "Tests",
+            "TomasNorre\\Crawler\\Tests\\": "Tests",
             "TYPO3\\CMS\\Core\\Tests\\": ".Build/Web/typo3/sysext/core/Tests"
         }
     },
@@ -167,6 +167,6 @@
         }
     ],
     "support": {
-        "issues": "https://github.com/AOEpeople/crawler/issues"
+        "issues": "https://github.com/tomasnorre/crawler/issues"
     }
 }

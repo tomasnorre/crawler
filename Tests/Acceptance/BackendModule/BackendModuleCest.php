@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Acceptance\BackendModule;
+namespace TomasNorre\Crawler\Tests\Acceptance\BackendModule;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,9 +19,9 @@ namespace AOE\Crawler\Tests\Acceptance\BackendModule;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Tests\Acceptance\Support\Helper\PageTree;
-use AOE\Crawler\Tests\Acceptance\Support\Step\Acceptance\Admin;
 use Step\Acceptance\BackendModule;
+use TomasNorre\Crawler\Tests\Acceptance\Support\Helper\PageTree;
+use TomasNorre\Crawler\Tests\Acceptance\Support\Step\Acceptance\Admin;
 
 class BackendModuleCest
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Unit\CrawlStrategy;
+namespace TomasNorre\Crawler\Tests\Unit\CrawlStrategy;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,8 +19,8 @@ namespace AOE\Crawler\Tests\Unit\CrawlStrategy;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategy;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TomasNorre\Crawler\CrawlStrategy\GuzzleExecutionStrategy;
 use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Http\Stream;
 use TYPO3\CMS\Core\Http\Uri;

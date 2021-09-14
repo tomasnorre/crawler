@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Domain\Repository;
+namespace TomasNorre\Crawler\Domain\Repository;
 
 /***************************************************************
  *  Copyright notice
@@ -28,10 +28,10 @@ namespace AOE\Crawler\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
-use AOE\Crawler\Domain\Model\Process;
-use AOE\Crawler\Domain\Model\ProcessCollection;
 use PDO;
+use TomasNorre\Crawler\Configuration\ExtensionConfigurationProvider;
+use TomasNorre\Crawler\Domain\Model\Process;
+use TomasNorre\Crawler\Domain\Model\ProcessCollection;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;

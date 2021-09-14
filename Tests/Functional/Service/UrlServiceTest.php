@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Functional\Service;
+namespace TomasNorre\Crawler\Tests\Functional\Service;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
@@ -19,9 +19,9 @@ namespace AOE\Crawler\Tests\Functional\Service;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Service\UrlService;
-use AOE\Crawler\Tests\Functional\SiteBasedTestTrait;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use TomasNorre\Crawler\Service\UrlService;
+use TomasNorre\Crawler\Tests\Functional\SiteBasedTestTrait;
 use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler;
+namespace TomasNorre\Crawler;
 
 /*
  * (c) 2020 AOE GmbH <dev@aoe.com>
