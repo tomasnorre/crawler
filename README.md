@@ -16,7 +16,7 @@ Libraries and scripts for crawling the TYPO3 page tree. Used for re-caching, re-
 You can include the crawler in your TYPO3 project with composer or from [TER](https://extensions.typo3.org)
 
 ```shell script
-composer require aoepeople/crawler
+composer require tomasnorre/crawler
 ```
 
 ## Disclaimer
