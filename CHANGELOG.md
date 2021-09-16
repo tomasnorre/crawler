@@ -1,21 +1,13 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 10.0.2-dev
+## Crawler 10.0.2
+Crawler 10.0.2 was released on September 16th, 2021
 
 ### Added
+* Replace in composer for aoepeople/crawler
 
 ### Changed
-
-### Deprecated
-#### Classes
-#### Functions & Properties
-
-### Removed
-#### Classes
-#### Functions & Properties
-
-### Fixed
-
+* Changed composer package name to tomasnorre/crawler
 
 ## Crawler 10.0.1
 Crawler 10.0.1 was released on August 27th, 2021
