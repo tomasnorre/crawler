@@ -1,17 +1,16 @@
 {
-    "name": "aoepeople/crawler-devbox",
+    "name": "tomasnorre/crawler-devbox",
     "type": "project",
     "description": "Devbox for Crawler extension for TYPO3v9",
-    "homepage": "https://github.com/AOEpeople/crawler",
+    "homepage": "https://github.com/tomasnorre/crawler",
     "support": {
-        "issues": "https://github.com/AOEpeople/crawler/issues"
+        "issues": "https://github.com/tomasnorre/crawler/issues"
     },
     "license": "GPL-3.0",
     "authors": [
         {
-            "name": "AOEpeople",
-            "email": "dev@aoe.com",
-            "homepage": "https://www.aoe.com/",
+            "name": "Tomas Norre Mikkelsen",
+            "email": "tomasnorre@gmail.com",
             "role": "Developer"
         }
     ],
@@ -23,7 +22,7 @@
         "typo3/cms-belog": "^9.5 || ^10.4",
         "bk2k/bootstrap-package": "^10.0 || ^11.0",
         "helhum/typo3-console": "*",
-        "aoepeople/crawler": "*@dev",
+        "tomasnorre/crawler": "*@dev",
         "typo3/cms-beuser": "^9.5 || ^10.4",
         "georgringer/news": "*"
     },
