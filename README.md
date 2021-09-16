@@ -37,7 +37,7 @@ The TYPO3 Crawler is currently not working with *SQLite*, and isn't tested with 
 | 6.x.y  | 7.6-8.7   | 5.6-7.3 | Security Updates
 
 ### Documentation
-Please read the [documentation](https://docs.typo3.org/typo3cms/extensions/crawler/)
+Please read the [documentation](https://docs.typo3.org/p/tomasnorre/crawler/master/en-us/)
 
 To render the documentation locally, please use the official TYPO3 Documentation rendering Docker Tool.
 <https://github.com/t3docs/docker-render-documentation>
