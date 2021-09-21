@@ -93,7 +93,7 @@ class ConfigurationServiceTest extends UnitTestCase
                 'mountPoint' => '',
                 'expected' => [],
             ],
-            'PageTSConfig with mountPoint false' => [
+            'PageTSConfig with empty mountPoint returning no URLs' => [
                 'pageTSConfig' => [
                     'tx_crawler.' => [
                         'crawlerCfg.' => [
@@ -127,7 +127,46 @@ class ConfigurationServiceTest extends UnitTestCase
                     ],
                 ],
             ],
-            'PageTSConfig with mountPoint string' => [
+            'PageTSConfig with empty mountPoint returning URLs' => [
+                'pageTSConfig' => [
+                    'tx_crawler.' => [
+                        'crawlerCfg.' => [
+                            'paramSets.' => [
+                                'myConfigurationKeyName' => '&S=CRAWL&L=[0-1]',
+                                'myConfigurationKeyName.' => [
+                                    'pidsOnly' => '1',
+                                    'procInstrFilter' => 'tx_indexedsearch_reindex',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                'pageId' => 1,
+                'mountPoint' => '',
+                'expected' => [
+                    'myConfigurationKeyName' => [
+                        'subCfg' => [
+                            'pidsOnly' => '1',
+                            'procInstrFilter' => 'tx_indexedsearch_reindex',
+                            'key' => 'myConfigurationKeyName',
+                        ],
+                        'paramParsed' => [
+                            'S' => 'CRAWL',
+                            'L' => '[0-1]',
+                        ],
+                        'paramExpanded' => [
+                            'S' => ['CRAWL'],
+                            'L' => [0, 1],
+                        ],
+                        'origin' => 'pagets',
+                        'URLs' => [
+                            '?id=1&L=0&S=CRAWL',
+                            '?id=1&L=1&S=CRAWL',
+                        ],
+                    ],
+                ],
+            ],
+            'PageTSConfig with mountPoint given' => [
                 'pageTSConfig' => [
                     'tx_crawler.' => [
                         'crawlerCfg.' => [

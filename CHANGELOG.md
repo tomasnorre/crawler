@@ -7,6 +7,7 @@
 ### Changed
 
 ### Fixed
+* Avoid empty mountpoint parameter in URL when building the queue
 
 ### Deprecated
 #### Classes
