@@ -154,7 +154,7 @@
         ],
         "test:mutation": [
             "[ -e .Build/bin/infection ] || composer update",
-            "XDEBUG_MODE=coverage .Build/bin/infection --min-msi=18 --min-covered-msi=92 --threads=8"
+            "XDEBUG_MODE=coverage .Build/bin/infection --min-msi=18 --min-covered-msi=86 --threads=8"
         ],
         "roave-bcb": [
             "docker run --rm -v `pwd`:/app nyholm/roave-bc-check --from=HEAD~1"
