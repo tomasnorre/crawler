@@ -39,7 +39,7 @@ Crawler 10.0.0 was released on August 3rd, 2021
 * Added information about indexed_search money pool
 
 ### Fixed
-* Add processId to finished QueueEntries to ensure the process will been seen as successful instead of cancelled.
+* Add processId to finished QueueEntries to ensure the process will be seen as successful instead of cancelled.
 * Fix type error when exclude subcfg is not defined
 * Sites/URLs get crawled but not indexed [@twestner](https://github.com/twestner)
 
