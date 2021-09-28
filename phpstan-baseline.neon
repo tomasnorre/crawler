@@ -854,11 +854,6 @@ parameters:
 			path: Classes/Service/ConfigurationService.php
 
 		-
-			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
-			count: 1
-			path: Classes/Service/ConfigurationService.php
-
-		-
 			message: "#^Method AOE\\\\Crawler\\\\Service\\\\ConfigurationService\\:\\:addValuesInRange\\(\\) has parameter \\$parameter with no typehint specified\\.$#"
 			count: 1
 			path: Classes/Service/ConfigurationService.php

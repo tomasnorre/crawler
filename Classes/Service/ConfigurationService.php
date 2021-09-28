@@ -111,7 +111,7 @@ class ConfigurationService
                 $res[$key]['origin'] = 'pagets';
 
                 $url = '?id=' . $pageId;
-                $url .= is_string($mountPoint) ? '&MP=' . $mountPoint : '';
+                $url .= $mountPoint !== '' ? '&MP=' . $mountPoint : '';
                 $res[$key]['URLs'] = $this->getUrlService()->compileUrls($res[$key]['paramExpanded'], [$url], $maxUrlsToCompile);
             }
         }

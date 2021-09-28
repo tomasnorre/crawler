@@ -1,12 +1,15 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 10.0.2-dev
+## Crawler 10.0.3-dev
 
 ### Added
 
 ### Changed
 * !!! CrawlerController->drawURLs_addRowsForPage() is now returning an array instead of HTML-string
 * !!! CrawlerController->getPageTreeAndUrls() is now returning an array instead of HTML-string
+
+### Fixed
+* Avoid empty mountpoint parameter in URL when building the queue
 
 ### Deprecated
 #### Classes
@@ -16,8 +19,14 @@
 #### Classes
 #### Functions & Properties
 
-### Fixed
+## Crawler 10.0.2
+Crawler 10.0.2 was released on September 16th, 2021
 
+### Added
+* Replace in composer for aoepeople/crawler
+
+### Changed
+* Changed composer package name to tomasnorre/crawler
 
 ## Crawler 10.0.1
 Crawler 10.0.1 was released on August 27th, 2021
