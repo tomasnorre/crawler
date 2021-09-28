@@ -8,6 +8,7 @@
 
 ### Fixed
 * Avoid empty mountpoint parameter in URL when building the queue
+* Add description to crawler:commands for TYPO3 10+
 
 ### Deprecated
 #### Classes
