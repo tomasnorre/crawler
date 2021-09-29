@@ -21,6 +21,7 @@ namespace AOE\Crawler\Service;
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
  * @internal since v9.2.5
@@ -71,7 +72,12 @@ class PageService
 
     private function getDisallowedDokTypes(): array
     {
-        // Todo: Use PageRepository::DOKTYPE_ when dropping support for TYPO3 v9
-        return [3, 4, 199, 254, 255];
+        return [
+            PageRepository::DOKTYPE_LINK,
+            PageRepository::DOKTYPE_SHORTCUT,
+            PageRepository::DOKTYPE_SPACER,
+            PageRepository::DOKTYPE_SYSFOLDER,
+            PageRepository::DOKTYPE_RECYCLER,
+        ];
     }
 }
