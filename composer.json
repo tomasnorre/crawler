@@ -22,7 +22,7 @@
         "symfony/console": "^4.3 || ^5.0",
         "symfony/polyfill-php80": "^1.20",
         "typo3/cms-backend": "*",
-        "typo3/cms-core": "~9.5.14 || ^10.4 || ^11.0 || dev-master",
+        "typo3/cms-core": "^10.4 || ^11.0 || dev-master",
         "typo3/cms-frontend": "*",
         "typo3/cms-info": "*",
         "typo3/cms-seo": "*"
@@ -67,7 +67,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-main": "10.0.x-dev"
+            "dev-main": "11.0.x-dev"
         },
         "typo3/class-alias-loader": {
             "class-alias-maps": [
