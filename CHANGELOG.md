@@ -1,22 +1,11 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 10.0.3-dev
-
-### Added
-
-### Changed
+## Crawler 10.0.3
+Crawler 10.0.2 was released on September 29th, 2021
 
 ### Fixed
 * Avoid empty mountpoint parameter in URL when building the queue
 * Add description to crawler:commands for TYPO3 10+
-
-### Deprecated
-#### Classes
-#### Functions & Properties
-
-### Removed
-#### Classes
-#### Functions & Properties
 
 ## Crawler 10.0.2
 Crawler 10.0.2 was released on September 16th, 2021
