@@ -18,6 +18,8 @@
 #### Classes
 #### Functions & Properties
 * FlushQueueCommand --page parameter is removed
+* Process->getTimeForFirstItem()
+* Process->getTimeForLastItem()
 
 ## Crawler 10.0.3
 Crawler 10.0.2 was released on September 29th, 2021
