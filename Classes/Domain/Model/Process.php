@@ -32,7 +32,6 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  */
 class Process extends AbstractEntity
 {
-
     public const STATE_RUNNING = 'running';
 
     public const STATE_CANCELLED = 'cancelled';
