@@ -13,10 +13,11 @@
 #### Functions & Properties
 
 ### Removed
+* Support for TYPO3 9
+
 #### Classes
 #### Functions & Properties
-
-* Support for TYPO3 9
+* FlushQueueCommand --page parameter is removed
 
 ## Crawler 10.0.3
 Crawler 10.0.2 was released on September 29th, 2021

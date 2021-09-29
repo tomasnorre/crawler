@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AOE\Crawler\Command;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -41,10 +41,10 @@ class FlushQueueCommand extends Command
 It will remove queue entries and perform a cleanup.' . chr(10) . chr(10) .
             '
             Examples:
-              --- Remove all finished queue-entries in the sub-branch of page 5
-              $ typo3 crawler:flushQueue finished --page 5
+              --- Remove all finished queue-entries
+              $ typo3 crawler:flushQueue finished
 
-              --- Remove all pending queue-entries for all pages
+              --- Remove all pending queue-entries
               $ typo3 crawler:flushQueue pending
             '
         );
@@ -52,14 +52,6 @@ It will remove queue entries and perform a cleanup.' . chr(10) . chr(10) .
             'mode',
             InputArgument::REQUIRED,
             'What to clear: all, finished, pending'
-        );
-
-        $this->addOption(
-            'page',
-            'p',
-            InputOption::VALUE_OPTIONAL,
-            'Page to start - deprecated since v9.1.5, will be removed in v11.x',
-            '0'
         );
     }
 
@@ -71,8 +63,8 @@ It will remove queue entries and perform a cleanup.' . chr(10) . chr(10) .
      *
      * Examples:
      *
-     * --- Remove all finished queue-entries in the sub-branch of page 5
-     * $ typo3 crawler:flushQueue finished --page 5
+     * --- Remove all finished queue-entries
+     * $ typo3 crawler:flushQueue finished
      *
      * --- Remove all pending queue-entries for all pages
      * $ typo3 crawler:flushQueue pending
@@ -85,12 +77,6 @@ It will remove queue entries and perform a cleanup.' . chr(10) . chr(10) .
 
         /** @var QueueRepository $queueRepository */
         $queueRepository = $objectManager->get(QueueRepository::class);
-
-        $pageId = $input->getOption('page');
-        if ($pageId) {
-            $output->writeln('<error>The --page option is deprecated since v9.1.5 and will be removed in v11.x</error>');
-            trigger_error('The --page option is deprecated since v9.1.5 and will be removed in v11.x', E_USER_DEPRECATED);
-        }
 
         switch ($queueFilter) {
             case 'all':
