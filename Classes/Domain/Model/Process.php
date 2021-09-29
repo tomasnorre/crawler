@@ -20,7 +20,6 @@ namespace AOE\Crawler\Domain\Model;
  */
 
 use AOE\Crawler\Domain\Repository\QueueRepository;
-use TYPO3\CMS\Core\Compatibility\PublicMethodDeprecationTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
@@ -33,7 +32,6 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  */
 class Process extends AbstractEntity
 {
-    use PublicMethodDeprecationTrait;
 
     public const STATE_RUNNING = 'running';
 
