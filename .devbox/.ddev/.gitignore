@@ -1,24 +1,29 @@
 #ddev-generated: Automatically generated ddev .gitignore.
 # You can remove the above line if you want to edit and maintain this file yourself.
+/.gitignore
 
-/commands/*/*.example
-/commands/*/README.txt
+/**/*.example
+/.dbimageBuild
+/.dbimageExtra
+/.ddev-docker-*.yaml
+/.*downloads
+/.global_commands
+/.homeadditions
+/.sshimageBuild
+/.webimageBuild
+/.webimageExtra
+/apache/apache-site.conf
+/commands/.gitattributes
+/commands/db/mysql
 /commands/host/launch
 /commands/web/xdebug
-/commands/db/mysql
-/homeadditions/*.example
-/homeadditions/README.txt
-/.gitignore
-/import.yaml
-/.ddev-docker-compose-base.yaml
-/.ddev-docker-compose-full.yaml
-/db_snapshots
-/sequelpro.spf
-/import-db
+/commands/web/live
 /config.*.y*ml
-/.webimageBuild
-/.dbimageBuild
-/.sshimageBuild
-/.webimageExtra
-/.dbimageExtra
-/*-build/Dockerfile.example
+/db_snapshots
+/import-db
+/import.yaml
+/mutagen
+/nginx_full/nginx-site.conf
+/sequelpro.spf
+/xhprof
+/**/README.*
