@@ -17,6 +17,31 @@
 
 #### Classes
 #### Functions & Properties
+* CrawlerController->accessMode
+* CrawlerController->processFilename
+* CrawlerController->compileUrls()
+* CrawlerController::cleanUpOldQueueEntries()
+* CrawlerController->CLI_buildProcessId()
+* CrawlerController->CLI_checkAndAcquireNewProcess()
+* CrawlerController->CLI_debug()
+* CrawlerController->CLI_releaseProcesses()
+* CrawlerController->CLI_run()
+* CrawlerController->CLI_runHooks()
+* CrawlerController->expandExcludeString()
+* CrawlerController->getAccessMode()
+* CrawlerController->getLogEntriesForPageId()
+* crawlerController::getLogEntriesForSetId()
+* CrawlerController->getLogEntriesForPageId()
+* CrawlerController::flushQueue()
+* CrawlerController->setAccessMode()
+* CrawlerController->getDisabled()
+* CrawlerController->setDisabled()
+* CrawlerController->getProcessFilename()
+* CrawlerController->setProcessFilename()
+* CrawlerController->getDuplicateRowsIfExist()
+* CrawlerController->checkIfPageShouldBeSkipped()
+* CrawlerController->swapIfFirstIsLargerThanSecond()
+* CrawlerController->expandParameters()
 * FlushQueueCommand --page parameter is removed
 * Process->getTimeForFirstItem()
 * Process->getTimeForLastItem()
