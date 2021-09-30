@@ -4,29 +4,20 @@ declare(strict_types=1);
 
 namespace AOE\Crawler\Domain\Repository;
 
-/***************************************************************
- *  Copyright notice
+/*
+ * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
- *  (c) 2020 AOE GmbH <dev@aoe.com>
+ * This file is part of the TYPO3 Crawler Extension.
  *
- *  All rights reserved
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
  *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 3 of the License, or
- *  (at your option) any later version.
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
  *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ * The TYPO3 project - inspiring people to share!
+ */
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Model\Process;
@@ -145,19 +136,6 @@ class QueueRepository extends Repository implements LoggerAwareInterface
                 $queryBuilder->expr()->eq('exec_time', 0)
             )
             ->execute()->fetchAll();
-    }
-
-    /**
-     * Count items which have not been processed yet
-     * @deprecated Using QueueRepository->countUnprocessedItems() is deprecated since 9.1.5 and will be removed in v11.x, please use count(QueueRepository->getUnprocessedItems()) instead
-     */
-    public function countUnprocessedItems(): int
-    {
-        trigger_error(
-            'Using QueueRepository->countUnprocessedItems() is deprecated since 9.1.5 and will be removed in v11.x, please use count(QueueRepository->getUnprocessedItems()) instead',
-            E_USER_DEPRECATED
-        );
-        return count($this->getUnprocessedItems());
     }
 
     /**
@@ -614,30 +592,6 @@ class QueueRepository extends Repository implements LoggerAwareInterface
         $queryBuilder
             ->delete(self::TABLE_NAME)
             ->execute();
-    }
-
-    /**
-     * @param string $processId
-     *
-     * @return bool|string
-     * @deprecated Using QueueRepository->countAllByProcessId() is deprecated since 9.1.5 and will be removed in v11.x, please use QueueRepository->findByProcessId()->count() instead
-     */
-    public function countAllByProcessId($processId)
-    {
-        trigger_error(
-            'Using QueueRepository->countAllByProcessId() is deprecated since 9.1.5 and will be removed in v11.x, please use QueueRepository->findByProcessId()->count() instead',
-            E_USER_DEPRECATED
-        );
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
-
-        return $queryBuilder
-            ->count('*')
-            ->from(self::TABLE_NAME)
-            ->where(
-                $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId, \PDO::PARAM_STR))
-            )
-            ->execute()
-            ->fetchColumn(0);
     }
 
     public function getDuplicateQueueItemsIfExists(bool $enableTimeslot, int $timestamp, int $currentTime, int $pageId, string $parametersHash): array
