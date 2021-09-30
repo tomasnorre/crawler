@@ -58,6 +58,8 @@ class CrawlerController implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
+    public const CLI_STATUS_POLLABLE_PROCESSED = 8;
+
     /**
      * @var integer
      */
