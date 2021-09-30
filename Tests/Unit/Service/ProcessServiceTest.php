@@ -19,7 +19,6 @@ namespace AOE\Crawler\Tests\Unit\Service;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Service\ProcessService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
