@@ -92,25 +92,6 @@ class CrawlerControllerTest extends FunctionalTestCase
 
     /**
      * @test
-     * @dataProvider getDuplicateRowsIfExistDataProvider
-     */
-    public function getDuplicateRowsIfExist(bool $timeslotActive, int $tstamp, int $current, array $fieldArray, array $expected): void
-    {
-        $mockedCrawlerController = $this->getAccessibleMock(CrawlerController::class, ['getCurrentTime']);
-        $mockedCrawlerController->expects($this->any())->method('getCurrentTime')->willReturn($current);
-
-        $mockedCrawlerController->setExtensionSettings([
-            'enableTimeslot' => $timeslotActive,
-        ]);
-
-        self::assertSame(
-            $expected,
-            $mockedCrawlerController->_call('getDuplicateRowsIfExist', $tstamp, $fieldArray)
-        );
-    }
-
-    /**
-     * @test
      * @dataProvider addUrlDataProvider
      */
     public function addUrl(int $id, string $url, array $subCfg, int $tstamp, string $configurationHash, bool $skipInnerDuplicationCheck, array $mockedDuplicateRowResult, bool $registerQueueEntriesInternallyOnly, bool $expected): void
@@ -182,62 +163,6 @@ class CrawlerControllerTest extends FunctionalTestCase
                 'mockedDuplicateRowResult' => ['duplicate-exists' => true],
                 'registerQueueEntriesInternallyOnly' => true,
                 'expected' => false,
-            ],
-        ];
-    }
-
-    public function getDuplicateRowsIfExistDataProvider(): array
-    {
-        return [
-            'EnableTimeslot is true and timestamp is <= current' => [
-                'timeslotActive' => true,
-                'tstamp' => 10,
-                'current' => 12,
-                'fieldArray' => [
-                    'page_id' => 10,
-                    'parameters_hash' => '',
-                ],
-                'expected' => [18, 20],
-            ],
-            'EnableTimeslot is false and timestamp is <= current' => [
-                'timeslotActive' => false,
-                'tstamp' => 11,
-                'current' => 11,
-                'fieldArray' => [
-                    'page_id' => 10,
-                    'parameters_hash' => '',
-                ],
-                'expected' => [18],
-            ],
-            'EnableTimeslot is true and timestamp is > current' => [
-                'timeslotActive' => true,
-                'tstamp' => 12,
-                'current' => 10,
-                'fieldArray' => [
-                    'page_id' => 10,
-                    'parameters_hash' => '',
-                ],
-                'expected' => [20],
-            ],
-            'EnableTimeslot is false and timestamp is > current' => [
-                'timeslotActive' => false,
-                'tstamp' => 12,
-                'current' => 10,
-                'fieldArray' => [
-                    'page_id' => 10,
-                    'parameters_hash' => '',
-                ],
-                'expected' => [20],
-            ],
-            'EnableTimeslot is false and timestamp is > current and parameters_hash is set' => [
-                'timeslotActive' => false,
-                'tstamp' => 12,
-                'current' => 10,
-                'fieldArray' => [
-                    'page_id' => 10,
-                    'parameters_hash' => 'NotReallyAHashButWillDoForTesting',
-                ],
-                'expected' => [19],
             ],
         ];
     }
