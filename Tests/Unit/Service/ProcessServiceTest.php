@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AOE\Crawler\Tests\Unit\Service;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -37,11 +37,6 @@ class ProcessServiceTest extends UnitTestCase
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     /**
-     * @var CrawlerController
-     */
-    protected $crawlerController;
-
-    /**
      * @var ProcessService
      */
     protected $subject;
@@ -55,21 +50,6 @@ class ProcessServiceTest extends UnitTestCase
 
         $this->subject = $this->createPartialMock(ProcessService::class, ['getCrawlerCliPath']);
         $this->subject->expects($this->any())->method('getCrawlerCliPath')->willReturn('php');
-        $this->crawlerController = $this->createPartialMock(CrawlerController::class, ['dummyMethod']);
-    }
-
-    /**
-     * @test
-     */
-    public function multiProcessThrowsException(): void
-    {
-        $this->expectException(\RuntimeException::class);
-
-        $timeOut = 1;
-        $this->crawlerController->setExtensionSettings([
-            'processLimit' => 1,
-        ]);
-        $this->subject->multiProcess($timeOut);
     }
 
     /**
@@ -80,7 +60,7 @@ class ProcessServiceTest extends UnitTestCase
         $mockedProcessRepository = $this->createPartialMock(ProcessRepository::class, ['countNotTimeouted']);
         // This is done to fake that the process is started, the process start itself isn't tested, but the code around it is.
         $mockedProcessRepository->expects($this->exactly(2))->method('countNotTimeouted')->will($this->onConsecutiveCalls(1, 2));
-        $this->subject->processRepository = $mockedProcessRepository;
+        $this->subject->setProcessRepository($mockedProcessRepository);
 
         self::assertTrue($this->subject->startProcess());
     }
