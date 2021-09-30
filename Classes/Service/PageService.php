@@ -21,7 +21,7 @@ namespace AOE\Crawler\Service;
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Frontend\Page\PageRepository;
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 
 /**
  * @internal since v9.2.5
