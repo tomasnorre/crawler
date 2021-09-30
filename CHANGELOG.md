@@ -20,6 +20,15 @@
 * FlushQueueCommand --page parameter is removed
 * Process->getTimeForFirstItem()
 * Process->getTimeForLastItem()
+* ProcessService->queueRepository
+* ProcessService->crawlerController
+* ProcessService->countInARun
+* ProcessService->processLimit
+* ProcessService->verbose
+* ProcessService->multiProcess()
+* ProcessService->reportItemStatus()
+* ProcessService->startRequiredProcesses()
+
 * QueueRepository->countUnprocessedItems()
 * QueueRepository->countAllByProcessId()
 
