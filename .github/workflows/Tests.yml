@@ -20,7 +20,7 @@ jobs:
         mysql: ['5.7']
         include:
           - php: 7.4
-            typo3: dev-master
+            typo3: ^11.4
             mysql: 5.7
 
     steps:
