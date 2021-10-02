@@ -47,7 +47,7 @@
         "phpstan/phpstan-deprecation-rules": "^0.12.5",
         "rector/rector-prefixed": "0.10.6",
         "roave/security-advisories": "dev-latest",
-        "saschaegerer/phpstan-typo3": "^0.13.1",
+        "saschaegerer/phpstan-typo3": "^0.13.3",
         "slam/phpstan-extensions": "^5.0",
         "symfony/yaml": "^4.4 || ^5.0",
         "symplify/easy-coding-standard": "9.4.32",
