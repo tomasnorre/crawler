@@ -53,7 +53,7 @@
         "symplify/easy-coding-standard": "9.4.32",
         "symplify/phpstan-rules": "^8.3 || 9.3.4",
         "typo3/testing-framework": "^4.14 || ^5.0",
-        "vimeo/psalm": "^4.4"
+        "vimeo/psalm": "^4.7"
     },
     "config": {
         "bin-dir": ".Build/bin",
