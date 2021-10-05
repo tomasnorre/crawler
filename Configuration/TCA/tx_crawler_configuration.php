@@ -20,9 +20,6 @@ return [
             'default' => 'tx-crawler',
         ],
     ],
-    'interface' => [
-        'showRecordFieldList' => 'hidden,name,force_ssl,processing_instruction_filter,processing_instruction_parameters_ts,configuration,base_url,pidsonly,begroups,exclude',
-    ],
     'columns' => [
         'hidden' => [
             'exclude' => true,
