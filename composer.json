@@ -28,8 +28,8 @@
         "typo3/cms-seo": "*"
     },
     "replace": {
-        "typo3-ter/crawler": "self.version",
-        "aoepeople/crawler": "self.version"
+        "aoepeople/crawler": "self.version",
+        "typo3-ter/crawler": "self.version"
     },
     "require-dev": {
         "codeception/codeception": "^4.1",
@@ -54,6 +54,9 @@
         "symplify/phpstan-rules": "^8.3 || 9.3.4",
         "typo3/testing-framework": "^4.14 || ^5.0",
         "vimeo/psalm": "^4.7"
+    },
+    "suggest": {
+        "typo3/cms-seo": "Enables the posibility to priorities your Crawler Queue + You have seo features in the CMS it self."
     },
     "config": {
         "bin-dir": ".Build/bin",
@@ -91,6 +94,12 @@
             "TYPO3\\CMS\\Core\\Tests\\": ".Build/Web/typo3/sysext/core/Tests"
         }
     },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/symplify/phpstan-rules"
+        }
+    ],
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
@@ -121,13 +130,16 @@
             "[ -e .Build/bin/phpstan ] || composer update",
             ".Build/bin/phpstan analyse --generate-baseline"
         ],
+        "psalm": [
+            "[ -e .Build/bin/psalm ] || composer update",
+            ".Build/bin/psalm"
+        ],
         "rector": [
             "[ -e .Build/bin/rector ] || composer update",
             ".Build/bin/rector process --dry-run --config rector-ci.php"
         ],
-        "psalm": [
-            "[ -e .Build/bin/psalm ] || composer update",
-            ".Build/bin/psalm"
+        "roave-bcb": [
+            "docker run --rm -v `pwd`:/app nyholm/roave-bc-check --from=HEAD~1"
         ],
         "static": [
             "@analyse",
@@ -148,24 +160,15 @@
             "[ -e .Build/bin/phpunit ] || composer update",
             "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseName=crawler typo3DatabaseHost=127.0.0.1 typo3DatabaseUsername=root typo3DatabasePassword=root .Build/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml Tests/Functional"
         ],
-        "test:unit": [
-            "[ -e .Build/bin/phpunit ] || composer update",
-            "TYPO3_PATH_WEB=.Build/Web .Build/bin/phpunit --colors -c .Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/Unit"
-        ],
         "test:mutation": [
             "[ -e .Build/bin/infection ] || composer update",
             "XDEBUG_MODE=coverage .Build/bin/infection --min-msi=18 --min-covered-msi=86 --threads=8"
         ],
-        "roave-bcb": [
-            "docker run --rm -v `pwd`:/app nyholm/roave-bc-check --from=HEAD~1"
+        "test:unit": [
+            "[ -e .Build/bin/phpunit ] || composer update",
+            "TYPO3_PATH_WEB=.Build/Web .Build/bin/phpunit --colors -c .Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/Unit"
         ]
     },
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/symplify/phpstan-rules"
-        }
-    ],
     "support": {
         "issues": "https://github.com/tomasnorre/crawler/issues"
     }
