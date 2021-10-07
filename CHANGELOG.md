@@ -14,6 +14,7 @@
 
 ### Removed
 * Support for TYPO3 9
+* PHP support for `<7.4`
 
 #### Classes
 #### Functions & Properties

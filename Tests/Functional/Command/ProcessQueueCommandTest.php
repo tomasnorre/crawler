@@ -35,7 +35,7 @@ class ProcessQueueCommandTest extends AbstractCommandTests
     /**
      * @var array
      */
-    protected $coreExtensionsToLoad = ['cms', 'core', 'frontend', 'version', 'lang', 'fluid'];
+    protected $coreExtensionsToLoad = ['cms', 'version', 'lang'];
 
     /**
      * @var QueueRepository
@@ -69,6 +69,7 @@ class ProcessQueueCommandTest extends AbstractCommandTests
         if (! empty($parameters)) {
             $arguments = $parameters;
         }
+
         $this->commandTester->execute($arguments);
         $commandOutput = $this->commandTester->getDisplay();
 
