@@ -38,7 +38,7 @@ class LogRequestFormTest extends FunctionalTestCase
     /**
      * @var array
      */
-    protected $coreExtensionsToLoad = ['cms', 'core', 'frontend', 'version', 'lang', 'fluid', 'info'];
+    protected $coreExtensionsToLoad = ['cms', 'version', 'lang', 'info'];
 
     /**
      * @var LogRequestForm

@@ -52,15 +52,15 @@ class ResultHandlerTest extends UnitTestCase
                 'expected' => 'Content index does not exists in requestContent array',
             ],
             'errorlog is present but empty' => [
-                'requestContent' => ['content' => json_encode(['errorlog' => []])],
+                'requestContent' => ['content' => json_encode(['errorlog' => []], JSON_THROW_ON_ERROR)],
                 'expected' => 'OK',
             ],
             'errorlog is present and not empty (1 Element)' => [
-                'requestContent' => ['content' => json_encode(['errorlog' => ['500 Internal Server error']])],
+                'requestContent' => ['content' => json_encode(['errorlog' => ['500 Internal Server error']], JSON_THROW_ON_ERROR)],
                 'expected' => '500 Internal Server error',
             ],
             'errorlog is present and not empty (2 Element)' => [
-                'requestContent' => ['content' => json_encode(['errorlog' => ['500 Internal Server Error', '503 Service Unavailable']])],
+                'requestContent' => ['content' => json_encode(['errorlog' => ['500 Internal Server Error', '503 Service Unavailable']], JSON_THROW_ON_ERROR)],
                 'expected' => '500 Internal Server Error' . chr(10) . '503 Service Unavailable',
             ],
             'requestResult is boolean' => [
@@ -93,19 +93,19 @@ class ResultHandlerTest extends UnitTestCase
             ],
             'result data does not contain vars' => [
                 'resultData' => [
-                    'content' => json_encode(['not-vars' => 'some value']),
+                    'content' => json_encode(['not-vars' => 'some value'], JSON_THROW_ON_ERROR),
                 ],
                 'expected' => [],
             ],
             'Result data vars is present by empty, therefore empty array is returned' => [
                 'resultData' => [
-                    'content' => json_encode(['vars' => []]),
+                    'content' => json_encode(['vars' => []], JSON_THROW_ON_ERROR),
                 ],
                 'expected' => [],
             ],
             'Result data vars is present and not empty' => [
                 'resultData' => [
-                    'content' => json_encode(['vars' => ['fe-one', 'fe-two']]),
+                    'content' => json_encode(['vars' => ['fe-one', 'fe-two']], JSON_THROW_ON_ERROR),
                 ],
                 'expected' => ['fe-one', 'fe-two'],
             ],
@@ -142,25 +142,25 @@ class ResultHandlerTest extends UnitTestCase
             /* Bug We don't handle when result row doesn't contain content key */
             'ResultRow key result_data exits, is not empty, but does not contain content key' => [
                 'resultRow' => [
-                    'result_data' => json_encode(['not-content' => 'value']),
+                    'result_data' => json_encode(['not-content' => 'value'], JSON_THROW_ON_ERROR),
                 ],
                 'expected' => '',
             ],
             'ResultRow key result_data exits and is not empty, does not contain log' => [
                 'resultRow' => [
-                    'result_data' => json_encode(['content' => json_encode(['not-log' => ['ok']])]),
+                    'result_data' => json_encode(['content' => json_encode(['not-log' => ['ok']], JSON_THROW_ON_ERROR)], JSON_THROW_ON_ERROR),
                 ],
                 'expected' => '',
             ],
             'ResultRow key result_data exits and is not empty, does contain log (1 element)' => [
                 'resultRow' => [
-                    'result_data' => json_encode(['content' => json_encode(['log' => ['ok']])]),
+                    'result_data' => json_encode(['content' => json_encode(['log' => ['ok']], JSON_THROW_ON_ERROR)], JSON_THROW_ON_ERROR),
                 ],
                 'expected' => 'ok',
             ],
             'ResultRow key result_data exits and is not empty, does contain log (2 elements)' => [
                 'resultRow' => [
-                    'result_data' => json_encode(['content' => json_encode(['log' => ['ok', 'success']])]),
+                    'result_data' => json_encode(['content' => json_encode(['log' => ['ok', 'success']], JSON_THROW_ON_ERROR)], JSON_THROW_ON_ERROR),
                 ],
                 'expected' => 'ok' . chr(10) . 'success',
             ],

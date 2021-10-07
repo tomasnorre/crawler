@@ -28,7 +28,7 @@ class VetoHookTestHelper
 
     public function returnString(array $params): string
     {
-        $string = json_encode($params);
+        $string = json_encode($params, JSON_THROW_ON_ERROR);
         return 'Veto because of ' . $string;
     }
 }
