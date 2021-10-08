@@ -39,7 +39,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
     /**
      * @var array
      */
-    protected $coreExtensionsToLoad = ['cms', 'core', 'frontend', 'version', 'lang', 'fluid', 'extbase'];
+    protected $coreExtensionsToLoad = ['cms', 'version', 'lang'];
 
     /**
      * @var ProcessRepository

@@ -883,8 +883,3 @@ parameters:
 			count: 1
 			path: Classes/Writer/FileWriter/CsvWriter/CrawlerCsvWriter.php
 
-		-
-			message: "#^Constant TYPO3_version not found\\.$#"
-			count: 1
-			path: Configuration/TCA/Overrides/pages.php
-

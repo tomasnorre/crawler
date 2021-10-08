@@ -61,10 +61,9 @@ CREATE TABLE tx_crawler_configuration (
 
 #
 # Table structure for table 'pages'
-# This is added to reuse the information from typo3/cms-seo, the sitemap_priority is first
-# introduced in TYPO3 10LTS, therefore we add it here, to have it supported in 9LTS as well.
-# It has zero impact on SEO for TYPO3 9 LTS, as the surrounding feature is not implemented.
-# This is re-used to make the upgrade easier later.
+# This is added to reuse the information from typo3/cms-seo.
+# As we don't have a dependency for typo3/cms-seo it's added here to ensure that the
+# database queries isn't breaking
 #
 CREATE TABLE pages
 (

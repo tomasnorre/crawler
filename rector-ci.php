@@ -24,6 +24,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         Option::SETS,
         [
             SetList::DEAD_CODE,
+            SetList::PHP_72,
+            SetList::PHP_73,
         ]
     );
 
@@ -51,6 +53,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             Rector\DeadCode\Rector\Assign\RemoveUnusedVariableAssignRector::class => [
                 __DIR__ . '/Classes/Domain/Repository/QueueRepository.php'
             ],
+            \Rector\Php73\Rector\FuncCall\JsonThrowOnErrorRector::class,
         ]
     );
 

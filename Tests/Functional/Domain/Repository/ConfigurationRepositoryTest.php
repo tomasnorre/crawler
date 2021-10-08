@@ -36,7 +36,7 @@ class ConfigurationRepositoryTest extends FunctionalTestCase
     /**
      * @var array
      */
-    protected $coreExtensionsToLoad = ['cms', 'core', 'frontend', 'version', 'lang', 'fluid'];
+    protected $coreExtensionsToLoad = ['cms', 'version', 'lang'];
 
     /**
      * @var ConfigurationRepository

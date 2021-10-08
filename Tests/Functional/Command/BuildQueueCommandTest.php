@@ -35,7 +35,7 @@ class BuildQueueCommandTest extends AbstractCommandTests
     /**
      * @var array
      */
-    protected $coreExtensionsToLoad = ['cms', 'core', 'frontend', 'version', 'lang', 'fluid'];
+    protected $coreExtensionsToLoad = ['cms', 'version', 'lang'];
 
     /**
      * @var QueueRepository
