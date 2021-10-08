@@ -13,11 +13,6 @@
             <directory>../Tests/Unit</directory>
         </testsuite>
     </testsuites>
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">../Classes</directory>
-        </whitelist>
-    </filter>
     <php>
         <ini name="error_reporting" value="E_ALL"/>
     </php>
