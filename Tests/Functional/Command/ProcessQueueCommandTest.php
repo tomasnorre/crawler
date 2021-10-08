@@ -73,7 +73,7 @@ class ProcessQueueCommandTest extends AbstractCommandTests
         $this->commandTester->execute($arguments);
         $commandOutput = $this->commandTester->getDisplay();
 
-        self::assertContains($expectedOutput, $commandOutput);
+        self::assertStringContainsString($expectedOutput, $commandOutput);
     }
 
     public function processQueueCommandDataProvider(): array

@@ -66,7 +66,7 @@ class BuildQueueCommandTest extends AbstractCommandTests
         $cliCommand = $this->getTypo3TestBinaryCommand() . ' crawler:buildQueue ' . implode(' ', $parameters);
         CommandUtility::exec($cliCommand . ' 2>&1', $commandOutput);
 
-        self::assertContains($expectedOutput, $commandOutput);
+        self::assertStringContainsString($expectedOutput, $commandOutput);
         self::assertEquals(
             $expectedCount,
             $this->queueRepository->findAll()->count()

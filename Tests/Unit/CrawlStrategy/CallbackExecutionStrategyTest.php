@@ -31,7 +31,7 @@ class CallbackExecutionStrategyTest extends UnitTestCase
      */
     public function callbackExecutionStrategyTest(): void
     {
-        $crawlerController = $this->createPartialMock(CrawlerController::class, ['dummy']);
+        $crawlerController = $this->createPartialMock(CrawlerController::class, []);
 
         self::assertEquals(
             'Hi, it works!',

@@ -32,7 +32,7 @@ class ConfigurationTest extends UnitTestCase
 
     protected function setUp(): void
     {
-        $this->subject = $this->createPartialMock(Configuration::class, ['dummy']);
+        $this->subject = $this->createPartialMock(Configuration::class, []);
     }
 
     /**

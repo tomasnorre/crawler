@@ -30,7 +30,7 @@ class PageServiceTest extends UnitTestCase
      */
     protected $subject;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subject = GeneralUtility::makeInstance(PageService::class);
     }
@@ -42,6 +42,10 @@ class PageServiceTest extends UnitTestCase
      */
     public function checkIfPageShouldBeSkipped(array $extensionSetting, array $pageRow, array $excludeDoktype, array $pageVeto, string $expected): void
     {
+        if (empty($expected)) {
+            $expected = false;
+        }
+
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = $extensionSetting;
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['excludeDoktype'] = $excludeDoktype;
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pageVeto'] = $pageVeto;
@@ -66,7 +70,7 @@ class PageServiceTest extends UnitTestCase
                 ],
                 'excludeDoktype' => [],
                 'pageVeto' => [],
-                'expected' => false,
+                'expected' => '',
             ],
             'Extension Setting do not crawl hidden pages and page is hidden' => [
                 'extensionSetting' => ['crawlHiddenPages' => false],

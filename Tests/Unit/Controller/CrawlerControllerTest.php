@@ -44,7 +44,7 @@ class CrawlerControllerTest extends UnitTestCase
     {
         $this->crawlerController = $this->createPartialMock(
             CrawlerController::class,
-            ['buildRequestHeaderArray', 'executeShellCommand', 'getFrontendBasePath']
+            []
         );
         $this->crawlerController->setLogger(new NullLogger());
 
@@ -154,7 +154,7 @@ class CrawlerControllerTest extends UnitTestCase
                 'expected' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
             ],
             'Message string not empty, returns empty array' => [
-                'checkIfPageSkipped' => 'Because page is hidden',
+                'checkIfPageSkipped' => true,
                 'getUrlsForPages' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
                 'pageRow' => ['uid' => 2001],
                 '$skipMessage' => 'Just variable placeholder, not used in tests as parsed as reference',
@@ -166,11 +166,9 @@ class CrawlerControllerTest extends UnitTestCase
     /**
      * @test
      *
-     * @param string $expected
-     *
      * @dataProvider getConfigurationHasReturnsExpectedValueDataProvider
      */
-    public function getConfigurationHasReturnsExpectedValue(array $configuration, $expected): void
+    public function getConfigurationHasReturnsExpectedValue(array $configuration, string $expected): void
     {
         $crawlerLib = $this->getAccessibleMock(CrawlerController::class, ['dummy'], [], '', false);
 
