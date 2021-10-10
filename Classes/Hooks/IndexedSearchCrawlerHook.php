@@ -597,7 +597,7 @@ class IndexedSearchCrawlerHook
         $url = preg_replace('/\\/\\/$/', '/', $url);
         [$url] = explode('#', $url);
         if ((strpos($url, '../') === false)
-            && GeneralUtility::isFirstPartOfStr($url, $baseUrl)
+            && str_starts_with($url, $baseUrl)
             && ! in_array($url, $urlLog, true)) {
             return $url;
         }
@@ -745,7 +745,7 @@ class IndexedSearchCrawlerHook
         if ($url_deny) {
             $url_denyArray = GeneralUtility::trimExplode(LF, $url_deny, true);
             foreach ($url_denyArray as $testurl) {
-                if (GeneralUtility::isFirstPartOfStr($url, $testurl)) {
+                if (str_starts_with($url, $testurl)) {
                     return true;
                 }
             }
