@@ -6,6 +6,7 @@ use Rector\Core\Configuration\Option;
 use Rector\DeadCode\Rector\Property\RemoveSetterOnlyPropertyAndMethodCallRector;
 use Rector\DeadCode\Rector\Property\RemoveUnusedPrivatePropertyRector;
 use Rector\Set\ValueObject\SetList;
+use Ssch\TYPO3Rector\Set\Typo3SetList;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
@@ -20,14 +21,12 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ]
     );
 
-    $parameters->set(
-        Option::SETS,
-        [
-            SetList::DEAD_CODE,
-            SetList::PHP_72,
-            SetList::PHP_73,
-        ]
-    );
+    $containerConfigurator->import(SetList::DEAD_CODE);
+    $containerConfigurator->import(SetList::PHP_72);
+    $containerConfigurator->import(SetList::PHP_73);
+    $containerConfigurator->import(Typo3SetList::TYPO3_76);
+    $containerConfigurator->import(Typo3SetList::TYPO3_87);
+    $containerConfigurator->import(Typo3SetList::TYPO3_95);
 
     $parameters->set(Option::AUTO_IMPORT_NAMES, false);
 
@@ -57,13 +56,14 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             \Rector\DeadCode\Rector\Stmt\RemoveUnreachableStatementRector::class => [
                 __DIR__ . '/Tests/Unit/CrawlStrategy/SubProcessExecutionStrategyTest.php'
             ],
+            RemoveUnusedPrivatePropertyRector::class => [
+                __DIR__ . '/Classes/Hooks/ProcessCleanUpHook.php'
+            ],
         ]
     );
 
     $services = $containerConfigurator->services();
 
     $services->set(RemoveUnusedPrivatePropertyRector::class);
-
-    $services->set(RemoveSetterOnlyPropertyAndMethodCallRector::class);
 
 };

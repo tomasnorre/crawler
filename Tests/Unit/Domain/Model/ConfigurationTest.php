@@ -29,7 +29,6 @@ class ConfigurationTest extends UnitTestCase
 {
     /**
      * @var Configuration
-     * @inject
      */
     protected $subject;
 
@@ -114,5 +113,10 @@ class ConfigurationTest extends UnitTestCase
             $excludes,
             $this->subject->getExclude()
         );
+    }
+
+    public function injectSubject(Configuration $subject): void
+    {
+        $this->subject = $subject;
     }
 }
