@@ -48,7 +48,6 @@ jobs:
         run: "composer install"
 
       - name: "Infection"
-        # --min-msi and --min-covered-msi can be moved to infection.json.dist when upgrading to ^0.16
         run: "composer test:mutation"
         env:
           #INFECTION_BADGE_API_KEY: ${{ secrets.INFECTION_BADGE_API_KEY }}

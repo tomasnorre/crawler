@@ -163,7 +163,7 @@
         ],
         "test:mutation": [
             "[ -e .Build/bin/infection ] || composer update",
-            "XDEBUG_MODE=coverage .Build/bin/infection --min-msi=18 --min-covered-msi=86 --threads=8"
+            "XDEBUG_MODE=coverage .Build/bin/infection --threads=8"
         ],
         "test:unit": [
             "[ -e .Build/bin/phpunit ] || composer update",
