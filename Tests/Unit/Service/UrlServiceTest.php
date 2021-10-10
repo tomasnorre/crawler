@@ -23,6 +23,9 @@ use AOE\Crawler\Service\UrlService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+/**
+ * @covers \AOE\Crawler\Service\UrlService
+ */
 class UrlServiceTest extends UnitTestCase
 {
     /**

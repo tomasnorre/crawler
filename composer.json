@@ -37,14 +37,15 @@
         "codeception/module-filesystem": "^1.0",
         "codeception/module-phpbrowser": "^1.0",
         "codeception/module-webdriver": "^1.0",
-        "infection/infection": "^0.15.3",
+        "infection/infection": "^0.19",
         "nikic/php-parser": "4.10.4",
         "nimut/phpunit-merger": "^1.1",
-        "nimut/testing-framework": "^5.0",
+        "nimut/testing-framework": "6.x-dev",
         "nimut/typo3-complete": "^10.4",
         "phpstan/extension-installer": "^1.0",
         "phpstan/phpstan": "0.12.85",
         "phpstan/phpstan-deprecation-rules": "^0.12.5",
+        "phpunit/phpunit": "^9.5",
         "rector/rector-prefixed": "0.10.6",
         "roave/security-advisories": "dev-latest",
         "saschaegerer/phpstan-typo3": "^0.13.3",
@@ -52,7 +53,7 @@
         "symfony/yaml": "^4.4 || ^5.0",
         "symplify/easy-coding-standard": "9.4.32",
         "symplify/phpstan-rules": "^8.3 || 9.3.4",
-        "typo3/testing-framework": "^4.14 || ^5.0",
+        "typo3/testing-framework": "^6.11",
         "vimeo/psalm": "^4.7"
     },
     "suggest": {
@@ -162,7 +163,7 @@
         ],
         "test:mutation": [
             "[ -e .Build/bin/infection ] || composer update",
-            "XDEBUG_MODE=coverage .Build/bin/infection --min-msi=18 --min-covered-msi=86 --threads=8"
+            "XDEBUG_MODE=coverage .Build/bin/infection --threads=8"
         ],
         "test:unit": [
             "[ -e .Build/bin/phpunit ] || composer update",

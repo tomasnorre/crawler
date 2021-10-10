@@ -27,6 +27,7 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
  * Class ProcessServiceTest
  *
  * @package AOE\Crawler\Tests\Unit\Domain\Model
+ * @covers \AOE\Crawler\Service\ProcessService
  */
 class ProcessServiceTest extends UnitTestCase
 {

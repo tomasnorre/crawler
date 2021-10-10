@@ -27,6 +27,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 /**
  * Class Process
  * @package AOE\Crawler\Tests\Unit\Domain\Model
+ * @covers \AOE\Crawler\Domain\Model\Process
  */
 class ProcessTest extends UnitTestCase
 {
@@ -38,7 +39,7 @@ class ProcessTest extends UnitTestCase
 
     protected function setUp(): void
     {
-        $this->subject = $this->createPartialMock(Process::class, ['dummy']);
+        $this->subject = $this->createPartialMock(Process::class, []);
         $this->subject->setActive(true);
         $this->subject->setProcessId('1234');
         $this->subject->setTtl(300);
@@ -193,12 +194,12 @@ class ProcessTest extends UnitTestCase
                 'expectedProgress' => 100.0,
             ],
             'Comma numbers' => [
-                'countItemsAssigned' => 15.56,
+                'countItemsAssigned' => 15,
                 'countItemsProcessed' => 14,
                 'expectedProgress' => 93.0,
             ],
             'Comma number that would round down' => [
-                'countItemsAssigned' => 14.3,
+                'countItemsAssigned' => 14,
                 'countItemsProcessed' => 14,
                 'expectedProgress' => 100.0,
             ],

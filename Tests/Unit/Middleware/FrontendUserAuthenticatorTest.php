@@ -22,6 +22,9 @@ namespace AOE\Crawler\Tests\Unit\Middleware;
 use AOE\Crawler\Middleware\FrontendUserAuthenticator;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
+/**
+ * @covers \AOE\Crawler\Middleware\FrontendUserAuthenticator
+ */
 class FrontendUserAuthenticatorTest extends UnitTestCase
 {
     /**

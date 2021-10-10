@@ -54,6 +54,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
                 __DIR__ . '/Classes/Domain/Repository/QueueRepository.php'
             ],
             \Rector\Php73\Rector\FuncCall\JsonThrowOnErrorRector::class,
+            \Rector\DeadCode\Rector\Stmt\RemoveUnreachableStatementRector::class => [
+                __DIR__ . '/Tests/Unit/CrawlStrategy/SubProcessExecutionStrategyTest.php'
+            ],
         ]
     );
 

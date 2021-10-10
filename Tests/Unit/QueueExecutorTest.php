@@ -24,6 +24,14 @@ use AOE\Crawler\Tests\Unit\CrawlStrategy\CallbackObjectForTesting;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+/**
+ * @covers \AOE\Crawler\QueueExecutor
+ * @covers \AOE\Crawler\Configuration\ExtensionConfigurationProvider::getExtensionConfiguration
+ * @covers \AOE\Crawler\Converter\JsonCompatibilityConverter::convert
+ * @covers \AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy::fetchByCallback
+ * @covers \AOE\Crawler\CrawlStrategy\CrawlStrategyFactory::__construct
+ * @covers \AOE\Crawler\CrawlStrategy\CrawlStrategyFactory::create
+ */
 class QueueExecutorTest extends UnitTestCase
 {
     /**

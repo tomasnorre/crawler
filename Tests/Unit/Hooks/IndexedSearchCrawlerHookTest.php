@@ -22,6 +22,9 @@ namespace AOE\Crawler\Tests\Unit\Hooks;
 use AOE\Crawler\Hooks\IndexedSearchCrawlerHook;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
+/**
+ * @covers \AOE\Crawler\Hooks\IndexedSearchCrawlerFilesHook
+ */
 class IndexedSearchCrawlerHookTest extends UnitTestCase
 {
     /**

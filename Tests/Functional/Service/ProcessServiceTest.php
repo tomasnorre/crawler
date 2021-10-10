@@ -62,7 +62,7 @@ class ProcessServiceTest extends FunctionalTestCase
             'phpPath' => '/usr/local/bin/foobar-binary-to-be-able-to-differ-the-test',
             'phpBinary' => '/usr/local/bin/php74',
         ];
-        self::assertContains(
+        self::assertStringContainsString(
             '/usr/local/bin/foobar-binary-to-be-able-to-differ-the-test',
             $this->subject->getCrawlerCliPath()
         );
@@ -72,7 +72,7 @@ class ProcessServiceTest extends FunctionalTestCase
             'phpBinary' => 'php',
 
         ];
-        self::assertContains(
+        self::assertStringContainsString(
             'php',
             $this->subject->getCrawlerCliPath()
         );

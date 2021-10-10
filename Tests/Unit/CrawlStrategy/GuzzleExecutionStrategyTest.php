@@ -25,6 +25,9 @@ use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Http\Stream;
 use TYPO3\CMS\Core\Http\Uri;
 
+/**
+ * @covers \AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategy
+ */
 class GuzzleExecutionStrategyTest extends UnitTestCase
 {
     /**

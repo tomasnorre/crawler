@@ -21,6 +21,8 @@ composer.lock
 var/log
 var/tests
 infection.log
+/Tests/.phpunit.cache/
+/Infection/
 
 # Devbox
 .devbox/.ddev/config.local.yaml

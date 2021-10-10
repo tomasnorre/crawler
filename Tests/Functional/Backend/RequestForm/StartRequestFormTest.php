@@ -67,7 +67,7 @@ class StartRequestFormTest extends FunctionalTestCase
      */
     public function renderWithNoConfigurationSelected(): void
     {
-        self::assertContains(
+        self::assertStringContainsString(
             'Please select at least one configuration',
             $this->startRequestForm->render(1, '', [])
         );

@@ -52,7 +52,7 @@ class QueueServiceTest extends FunctionalTestCase
         $crawlerController = $this->getAccessibleMock(CrawlerController::class, ['getCurrentTime'], [], '');
         $crawlerController->method('getCurrentTime')->willReturn(100000);
 
-        $this->subject = $this->createPartialMock(QueueService::class, ['dummy']);
+        $this->subject = $this->createPartialMock(QueueService::class, []);
         $this->subject->injectCrawlerController($crawlerController);
         $this->queueRepository = GeneralUtility::makeInstance(ObjectManager::class)->get(QueueRepository::class);
     }
