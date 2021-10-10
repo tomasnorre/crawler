@@ -26,6 +26,7 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
  * Class ProcessRepositoryTest
  *
  * @package AOE\Crawler\Tests\Unit\Domain\Repository
+ * @covers \AOE\Crawler\Domain\Repository\ProcessRepository
  */
 class ProcessRepositoryTest extends UnitTestCase
 {

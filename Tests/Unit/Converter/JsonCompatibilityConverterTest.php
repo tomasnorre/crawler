@@ -23,6 +23,9 @@ use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+/**
+ * @covers \AOE\Crawler\Converter\JsonCompatibilityConverter
+ */
 class JsonCompatibilityConverterTest extends UnitTestCase
 {
     /**

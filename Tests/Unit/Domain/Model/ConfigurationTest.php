@@ -22,6 +22,9 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
 use AOE\Crawler\Domain\Model\Configuration;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
+/**
+ * @covers \AOE\Crawler\Domain\Model\Configuration
+ */
 class ConfigurationTest extends UnitTestCase
 {
     /**

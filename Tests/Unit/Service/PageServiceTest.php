@@ -23,6 +23,10 @@ use AOE\Crawler\Service\PageService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+/**
+ * @covers \AOE\Crawler\Service\PageService
+ * @covers \AOE\Crawler\Configuration\ExtensionConfigurationProvider::getExtensionConfiguration
+ */
 class PageServiceTest extends UnitTestCase
 {
     /**

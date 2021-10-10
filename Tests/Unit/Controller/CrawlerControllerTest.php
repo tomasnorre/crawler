@@ -29,6 +29,7 @@ use Psr\Log\NullLogger;
  * Class CrawlerLibTest
  *
  * @package AOE\Crawler\Tests
+ * @covers \AOE\Crawler\Controller\CrawlerController
  */
 class CrawlerControllerTest extends UnitTestCase
 {

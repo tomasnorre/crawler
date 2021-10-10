@@ -27,6 +27,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 /**
  * Class Process
  * @package AOE\Crawler\Tests\Unit\Domain\Model
+ * @covers \AOE\Crawler\Domain\Model\Process
  */
 class ProcessTest extends UnitTestCase
 {

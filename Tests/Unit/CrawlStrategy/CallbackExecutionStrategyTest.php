@@ -28,6 +28,7 @@ class CallbackExecutionStrategyTest extends UnitTestCase
 {
     /**
      * @test
+     * @covers \AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy
      */
     public function callbackExecutionStrategyTest(): void
     {

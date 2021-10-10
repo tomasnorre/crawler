@@ -22,6 +22,9 @@ namespace AOE\Crawler\Tests\Unit\CrawlStrategy;
 use AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategy;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
+/**
+ * @covers \AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategy
+ */
 class SubProcessExecutionStrategyTest extends UnitTestCase
 {
     /**
