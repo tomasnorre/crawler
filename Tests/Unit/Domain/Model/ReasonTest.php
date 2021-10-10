@@ -22,6 +22,9 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
 use AOE\Crawler\Domain\Model\Reason;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
+/**
+ * @covers \AOE\Crawler\Domain\Model\Reason
+ */
 class ReasonTest extends UnitTestCase
 {
     protected function setUp(): void

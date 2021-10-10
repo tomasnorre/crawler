@@ -29,6 +29,9 @@ use PHPUnit\Framework\MockObject\MockObject;
  * Class ProcessCollectionTest
  *
  * @package AOE\Crawler\Tests\Unit\Domain\Model
+ * @covers \AOE\Crawler\Domain\Model\ProcessCollection
+ * @covers \AOE\Crawler\Domain\Model\Process::getProcessId
+ * @covers \AOE\Crawler\Domain\Model\Process::setProcessId
  */
 class ProcessCollectionTest extends UnitTestCase
 {

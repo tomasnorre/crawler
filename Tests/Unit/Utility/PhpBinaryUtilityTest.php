@@ -23,6 +23,10 @@ use AOE\Crawler\Utility\PhpBinaryUtility;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 
+/**
+ * @covers \AOE\Crawler\Utility\PhpBinaryUtility
+ * @covers \AOE\Crawler\Configuration\ExtensionConfigurationProvider::getExtensionConfiguration
+ */
 class PhpBinaryUtilityTest extends UnitTestCase
 {
     /**

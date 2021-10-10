@@ -37,8 +37,8 @@ class RequestFormFactoryTest extends FunctionalTestCase
     {
         $this->setupExtensionSettings();
 
-        $view = $this->createPartialMock(StandaloneView::class, ['dummy']);
-        $infoModule = $this->createPartialMock(InfoModuleController::class, ['dummy']);
+        $view = $this->createPartialMock(StandaloneView::class, []);
+        $infoModule = $this->createPartialMock(InfoModuleController::class, []);
 
         $crawlActionLog = new CrawlAction('log');
         self::assertInstanceOf(

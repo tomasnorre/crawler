@@ -22,6 +22,9 @@ namespace AOE\Crawler\Tests\Unit\Service;
 use AOE\Crawler\Service\UserService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
+/**
+ * @covers \AOE\Crawler\Service\UserService
+ */
 class UserServiceTest extends UnitTestCase
 {
     /**
