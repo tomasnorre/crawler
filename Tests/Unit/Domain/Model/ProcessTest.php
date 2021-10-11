@@ -33,7 +33,6 @@ class ProcessTest extends UnitTestCase
 {
     /**
      * @var Process
-     * @inject
      */
     protected $subject;
 
@@ -267,5 +266,10 @@ class ProcessTest extends UnitTestCase
                 'expected' => -75,
             ],
         ];
+    }
+
+    public function injectSubject(Process $subject): void
+    {
+        $this->subject = $subject;
     }
 }
