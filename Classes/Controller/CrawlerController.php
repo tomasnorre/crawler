@@ -687,7 +687,7 @@ class CrawlerController implements LoggerAwareInterface
                             $resultData['parameters']['procInstructions'], true
                         )
                     ) {
-                        if (! empty($resultData['success'][$pollable]) && $resultData['success'][$pollable]) {
+                        if (! empty($resultData['success'][$pollable])) {
                             $ret |= self::CLI_STATUS_POLLABLE_PROCESSED;
                         }
                     }
