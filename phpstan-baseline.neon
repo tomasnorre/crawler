@@ -83,7 +83,7 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:drawLog_addRows\\(\\) should return array\\<int, array\\('titleRowSpan' \\=\\> int\\<1, max\\>, 'colSpan' \\=\\> int, 'title' \\=\\> string, \\?'noEntries' \\=\\> string, \\?'trClass' \\=\\> string, \\?'qid' \\=\\> array\\('link' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, 'link\\-text' \\=\\> string\\), \\?'refresh' \\=\\> array\\('link' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, 'link\\-text' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon, 'warning' \\=\\> string\\|TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon\\), \\?'columns' \\=\\> array\\('url' \\=\\> mixed, 'scheduled' \\=\\> string, 'exec_time' \\=\\> string, 'result_log' \\=\\> string, 'result_status' \\=\\> string, 'feUserGroupList' \\=\\> string, 'procInstructions' \\=\\> string, 'set_id' \\=\\> string, \\.\\.\\.\\)\\)\\>&nonEmpty but returns array\\<int, array\\('colSpan' \\=\\> 8\\|9\\|11\\|12, 'columns' \\=\\> array\\<string, mixed\\>&nonEmpty, 'qid' \\=\\> array\\('link' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, 'link\\-text' \\=\\> string\\), 'refresh' \\=\\> array\\('link' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, 'link\\-text' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon, 'warning' \\=\\> ''\\|TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon\\), 'title' \\=\\> string, 'titleRowSpan' \\=\\> int\\<1, max\\>, 'trClass' \\=\\> ''\\|'bg\\-danger'\\)\\|array\\('titleRowSpan' \\=\\> 1, 'colSpan' \\=\\> 8\\|9\\|11\\|12, 'title' \\=\\> string, 'noEntries' \\=\\> string\\)\\>\\.$#"
+			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:drawLog_addRows\\(\\) should return array\\<int, array\\('titleRowSpan' \\=\\> int\\<1, max\\>, 'colSpan' \\=\\> int, 'title' \\=\\> string, \\?'noEntries' \\=\\> string, \\?'trClass' \\=\\> string, \\?'qid' \\=\\> array\\('link' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, 'link\\-text' \\=\\> string\\), \\?'refresh' \\=\\> array\\('link' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, 'link\\-text' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon, 'warning' \\=\\> string\\|TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon\\), \\?'columns' \\=\\> array\\('url' \\=\\> mixed, 'scheduled' \\=\\> string, 'exec_time' \\=\\> string, 'result_log' \\=\\> string, 'result_status' \\=\\> string, 'feUserGroupList' \\=\\> string, 'procInstructions' \\=\\> string, 'set_id' \\=\\> string, \\.\\.\\.\\)\\)\\>&nonEmpty but returns array\\<int, array\\('colSpan' \\=\\> 8\\|9\\|11\\|12, 'columns' \\=\\> array\\<literal\\-string&non\\-empty\\-string, mixed\\>&nonEmpty, 'qid' \\=\\> array\\('link' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, 'link\\-text' \\=\\> string\\), 'refresh' \\=\\> array\\('link' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, 'link\\-text' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon, 'warning' \\=\\> ''\\|TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon\\), 'title' \\=\\> string, 'titleRowSpan' \\=\\> int\\<1, max\\>, 'trClass' \\=\\> ''\\|'bg\\-danger'\\)\\|array\\('titleRowSpan' \\=\\> 1, 'colSpan' \\=\\> 8\\|9\\|11\\|12, 'title' \\=\\> string, 'noEntries' \\=\\> string\\)\\>\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
@@ -324,7 +324,7 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Class cognitive complexity is 99, keep it under 60$#"
+			message: "#^Class cognitive complexity is 98, keep it under 60$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
