@@ -3,225 +3,221 @@
   <file source-language="en" datatype="plaintext" original="EXT:crawler/Resources/Private/Language/Backend.xlf" date="2016-11-04T16:17:39Z" product-name="crawler" target-language="da">
     <header/>
     <body>
-      <trans-unit id="moduleFunction.tx_crawler_modfunc1" resname="moduleFunction.tx_crawler_modfunc1">
+      <trans-unit id="moduleFunction.tx_crawler_modfunc1" resname="moduleFunction.tx_crawler_modfunc1" approved="yes">
         <source>Site Crawler</source>
-        <target state="needs-translation">Site Crawler</target>
+        <target state="final">Side Crawler</target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration" resname="tx_crawler_configuration">
+      <trans-unit id="tx_crawler_configuration" resname="tx_crawler_configuration" approved="yes">
         <source>Crawler Configuration</source>
-        <target state="needs-translation">Crawler Configuration</target>
+        <target state="final">Crawler konfiguration</target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration.name" resname="tx_crawler_configuration.name">
+      <trans-unit id="tx_crawler_configuration.name" resname="tx_crawler_configuration.name" approved="yes">
         <source>Name</source>
-        <target state="needs-translation">Name</target>
+        <target state="final">Navn</target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration.crawling_protocol" resname="tx_crawler_configuration.crawling_protocol">
+      <trans-unit id="tx_crawler_configuration.crawling_protocol" resname="tx_crawler_configuration.crawling_protocol" approved="yes">
         <source>Protocol for crawling</source>
-        <target state="needs-translation">Protocol for crawling</target>
+        <target state="final">Protokol til crawling</target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration.crawling_protocol.http" resname="tx_crawler_configuration.crawling_protocol.http">
+      <trans-unit id="tx_crawler_configuration.crawling_protocol.http" resname="tx_crawler_configuration.crawling_protocol.http" approved="yes">
         <source>Force HTTP for all pages</source>
-        <target state="needs-translation">Force HTTP for all pages</target>
+        <target state="final">Tving HTTP for alle sider</target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration.crawling_protocol.page_config" resname="tx_crawler_configuration.crawling_protocol.page_config">
+      <trans-unit id="tx_crawler_configuration.crawling_protocol.page_config" resname="tx_crawler_configuration.crawling_protocol.page_config" approved="yes">
         <source>Keeps page configured protocol</source>
-        <target state="needs-translation">Keeps page configured protocol</target>
+        <target state="final">Bruger den side-konfigurerede protokol</target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration.crawling_protocol.https" resname="tx_crawler_configuration.crawling_protocol.https">
+      <trans-unit id="tx_crawler_configuration.crawling_protocol.https" resname="tx_crawler_configuration.crawling_protocol.https" approved="yes">
         <source>Force HTTPS for all pages</source>
-        <target state="needs-translation">Force HTTPS for all pages</target>
+        <target state="final">Tving HTTPS for alle sider</target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration.processing_instruction_filter" resname="tx_crawler_configuration.processing_instruction_filter">
+      <trans-unit id="tx_crawler_configuration.processing_instruction_filter" resname="tx_crawler_configuration.processing_instruction_filter" approved="yes">
         <source>Processing instruction filter</source>
-        <target state="needs-translation">Processing instruction filter</target>
+        <target state="final">Procesinstruktions filter</target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration.processing_instruction_filter.description" resname="tx_crawler_configuration.processing_instruction_filter.description">
+      <trans-unit id="tx_crawler_configuration.processing_instruction_filter.description" resname="tx_crawler_configuration.processing_instruction_filter.description" approved="yes">
         <source>List of processing instructions to send for the request. Processing instructions are necessary
                     for the request to perform any meaningful action, since they activate third party activity.
                 </source>
-        <target state="needs-translation">List of processing instructions to send for the request. Processing instructions are necessary
-                    for the request to perform any meaningful action, since they activate third party activity.
-                </target>
+        <target state="final">Liste af process instruktioner som udføres ved request. Process instruktionerne er nødvendige for at forespørgslen kan udføre nogen handlinger da de trigger aktiviter for tredjeparts udvidelser.                </target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration.processing_instruction_parameters_ts" resname="tx_crawler_configuration.processing_instruction_parameters_ts">
+      <trans-unit id="tx_crawler_configuration.processing_instruction_parameters_ts" resname="tx_crawler_configuration.processing_instruction_parameters_ts" approved="yes">
         <source>Processing instruction parameters</source>
-        <target state="needs-translation">Processing instruction parameters</target>
+        <target state="final">Procesinstruktions parameter</target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration.configuration" resname="tx_crawler_configuration.configuration">
+      <trans-unit id="tx_crawler_configuration.configuration" resname="tx_crawler_configuration.configuration" approved="yes">
         <source>Configuration</source>
-        <target state="needs-translation">Configuration</target>
+        <target state="final">Konfiguration</target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration.base_url" resname="tx_crawler_configuration.base_url">
+      <trans-unit id="tx_crawler_configuration.base_url" resname="tx_crawler_configuration.base_url" approved="yes">
         <source>Base URL</source>
-        <target state="needs-translation">Base URL</target>
+        <target state="final">Base URL</target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration.base_url.description" resname="tx_crawler_configuration.base_url.description">
+      <trans-unit id="tx_crawler_configuration.base_url.description" resname="tx_crawler_configuration.base_url.description" approved="yes">
         <source>Leave empty for fetching the base URL from the Site Configuration.</source>
-        <target state="needs-translation">Leave empty for fetching the base URL from the Site Configuration.</target>
+        <target state="final">Efterlad den være tom, bruges Base URL fra sidekonfiguration.</target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration.pidsonly" resname="tx_crawler_configuration.pidsonly">
+      <trans-unit id="tx_crawler_configuration.pidsonly" resname="tx_crawler_configuration.pidsonly" approved="yes">
         <source>Pids only</source>
-        <target state="needs-translation">Pids only</target>
+        <target state="final">Kun Pids</target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration.pidsonly.description" resname="tx_crawler_configuration.pidsonly.description">
+      <trans-unit id="tx_crawler_configuration.pidsonly.description" resname="tx_crawler_configuration.pidsonly.description" approved="yes">
         <source>List of page IDs to limit this configuration to.</source>
-        <target state="needs-translation">List of page IDs to limit this configuration to.</target>
+        <target state="final">Liste over side IDer som begrænses til denne konfiguration.</target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration.begroups" resname="tx_crawler_configuration.begroups">
+      <trans-unit id="tx_crawler_configuration.begroups" resname="tx_crawler_configuration.begroups" approved="yes">
         <source>Restrict access to</source>
-        <target state="needs-translation">Restrict access to</target>
+        <target state="final">Begræns adgang til</target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration.begroups.description" resname="tx_crawler_configuration.begroups.description">
+      <trans-unit id="tx_crawler_configuration.begroups.description" resname="tx_crawler_configuration.begroups.description" approved="yes">
         <source>Restrict access to this configuration record to selected backend user groups. Empty means no
                     restriction is set.
                 </source>
-        <target state="needs-translation">Restrict access to this configuration record to selected backend user groups. Empty means no
-                    restriction is set.
-                </target>
+        <target state="final">Begræns adgang til denne konfiguration for bestemte backend brugergrupper. Tom betyder ingen adgangs begrænsning.                </target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration.fegroups" resname="tx_crawler_configuration.fegroups">
+      <trans-unit id="tx_crawler_configuration.fegroups" resname="tx_crawler_configuration.fegroups" approved="yes">
         <source>Crawl with FE user groups</source>
-        <target state="needs-translation">Crawl with FE user groups</target>
+        <target state="final">Crawl med FE brugergrupper</target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration.fegroups.description" resname="tx_crawler_configuration.fegroups.description">
+      <trans-unit id="tx_crawler_configuration.fegroups.description" resname="tx_crawler_configuration.fegroups.description" approved="yes">
         <source>Frontend user groups to set for the request.</source>
-        <target state="needs-translation">Frontend user groups to set for the request.</target>
+        <target state="final">Frontend brugergrupper til brug for forespørgslen.</target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration.exclude" resname="tx_crawler_configuration.exclude">
+      <trans-unit id="tx_crawler_configuration.exclude" resname="tx_crawler_configuration.exclude" approved="yes">
         <source>Exclude pages</source>
-        <target state="needs-translation">Exclude pages</target>
+        <target state="final">Ekskludér sider</target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration.exclude.description" resname="tx_crawler_configuration.exclude.description">
+      <trans-unit id="tx_crawler_configuration.exclude.description" resname="tx_crawler_configuration.exclude.description" approved="yes">
         <source>Comma separated list of page IDs which should not be crawled.</source>
-        <target state="needs-translation">Comma separated list of page IDs which should not be crawled.</target>
+        <target state="final">Kommasepareret liste med side IDer, som ikke skal crawles.</target>
       </trans-unit>
-      <trans-unit id="crawler_im.name" resname="crawler_im.name">
+      <trans-unit id="crawler_im.name" resname="crawler_im.name" approved="yes">
         <source>Crawler queue</source>
-        <target state="needs-translation">Crawler queue</target>
+        <target state="final">Crawler kø</target>
       </trans-unit>
-      <trans-unit id="crawler_im.description" resname="crawler_im.description">
+      <trans-unit id="crawler_im.description" resname="crawler_im.description" approved="yes">
         <source>Running the crawler queue process to collect the relevant entries.</source>
-        <target state="needs-translation">Running the crawler queue process to collect the relevant entries.</target>
+        <target state="final">Kør crawler kø processen for at samle de relevante poster/informationer.</target>
       </trans-unit>
-      <trans-unit id="crawler_im.startPage" resname="crawler_im.startPage">
+      <trans-unit id="crawler_im.startPage" resname="crawler_im.startPage" approved="yes">
         <source>Start page</source>
-        <target state="needs-translation">Start page</target>
+        <target state="final">Start side</target>
       </trans-unit>
-      <trans-unit id="crawler_im.depth" resname="crawler_im.depth">
+      <trans-unit id="crawler_im.depth" resname="crawler_im.depth" approved="yes">
         <source>Depth</source>
-        <target state="needs-translation">Depth</target>
+        <target state="final">Dybde</target>
       </trans-unit>
-      <trans-unit id="crawler_im.invalidStartPage" resname="crawler_im.invalidStartPage">
+      <trans-unit id="crawler_im.invalidStartPage" resname="crawler_im.invalidStartPage" approved="yes">
         <source>Start page must be a positive integer!</source>
-        <target state="needs-translation">Start page must be a positive integer!</target>
+        <target state="final">Start siden skal være en positiv integer!</target>
       </trans-unit>
-      <trans-unit id="crawler_im.invalidDepth" resname="crawler_im.invalidDepth">
+      <trans-unit id="crawler_im.invalidDepth" resname="crawler_im.invalidDepth" approved="yes">
         <source>There is no depth set, please set it to an value!</source>
-        <target state="needs-translation">There is no depth set, please set it to an value!</target>
+        <target state="final">Der er ikke sat nogen dybde, sæt venligst en!</target>
       </trans-unit>
-      <trans-unit id="crawler_im.conf" resname="crawler_im.conf">
+      <trans-unit id="crawler_im.conf" resname="crawler_im.conf" approved="yes">
         <source>Configuration records</source>
-        <target state="needs-translation">Configuration records</target>
+        <target state="final">Konfigurationselement</target>
       </trans-unit>
-      <trans-unit id="crawler_im.invalidConfiguration" resname="crawler_im.invalidConfiguration">
+      <trans-unit id="crawler_im.invalidConfiguration" resname="crawler_im.invalidConfiguration" approved="yes">
         <source>There is no configuration record selected, please choose at least one or more!</source>
-        <target state="needs-translation">There is no configuration record selected, please choose at least one or more!</target>
+        <target state="final">Der er ikke valgt noget konfigurationselement, vælg venligst mindst en!</target>
       </trans-unit>
-      <trans-unit id="crawler_im.timeOut" resname="crawler_im.timeOut">
+      <trans-unit id="crawler_im.timeOut" resname="crawler_im.timeOut" approved="yes">
         <source>Time out</source>
-        <target state="needs-translation">Time out</target>
+        <target state="final">Timeout</target>
       </trans-unit>
-      <trans-unit id="crawler_im.sleepTime" resname="crawler_im.sleepTime">
+      <trans-unit id="crawler_im.sleepTime" resname="crawler_im.sleepTime" approved="yes">
         <source>Sleep time</source>
-        <target state="needs-translation">Sleep time</target>
+        <target state="final">Ventetid</target>
       </trans-unit>
-      <trans-unit id="crawler_im.invalidTimeOut" resname="crawler_im.invalidTimeOut">
+      <trans-unit id="crawler_im.invalidTimeOut" resname="crawler_im.invalidTimeOut" approved="yes">
         <source>The time out must be a positive integer!</source>
-        <target state="needs-translation">The time out must be a positive integer!</target>
+        <target state="final">Ventetiden skal være en positiv integer!</target>
       </trans-unit>
-      <trans-unit id="crawler_im.invalidSleepTime" resname="crawler_im.invalidSleepTime">
+      <trans-unit id="crawler_im.invalidSleepTime" resname="crawler_im.invalidSleepTime" approved="yes">
         <source>The sleep time must be a positive integer!</source>
-        <target state="needs-translation">The sleep time must be a positive integer!</target>
+        <target state="final">Ventetiden skal være en positiv integer!</target>
       </trans-unit>
-      <trans-unit id="crawler_im.sleepAfterFinish" resname="crawler_im.sleepAfterFinish">
+      <trans-unit id="crawler_im.sleepAfterFinish" resname="crawler_im.sleepAfterFinish" approved="yes">
         <source>Sleep after finish</source>
-        <target state="needs-translation">Sleep after finish</target>
+        <target state="final">Venter efter afslutning</target>
       </trans-unit>
-      <trans-unit id="crawler_im.invalidSleepAfterFinish" resname="crawler_im.invalidSleepAfterFinish">
+      <trans-unit id="crawler_im.invalidSleepAfterFinish" resname="crawler_im.invalidSleepAfterFinish" approved="yes">
         <source>The sleep after finish must be a positive integer!</source>
-        <target state="needs-translation">The sleep after finish must be a positive integer!</target>
+        <target state="final">Ventetiden efter afslutning skal være en positiv integer!</target>
       </trans-unit>
-      <trans-unit id="crawler_im.countInARun" resname="crawler_im.countInARun">
+      <trans-unit id="crawler_im.countInARun" resname="crawler_im.countInARun" approved="yes">
         <source>Count in a run</source>
-        <target state="needs-translation">Count in a run</target>
+        <target state="final">Antal pr. gennemløb</target>
       </trans-unit>
-      <trans-unit id="crawler_im.invalidCountInARun" resname="crawler_im.invalidCountInARun">
+      <trans-unit id="crawler_im.invalidCountInARun" resname="crawler_im.invalidCountInARun" approved="yes">
         <source>The count in a run must be a positive integer!</source>
-        <target state="needs-translation">The count in a run must be a positive integer!</target>
+        <target state="final">Antallet pr. gennemløb skal være en positiv integer!</target>
       </trans-unit>
-      <trans-unit id="crawler_crawlMultiProcess.name" resname="crawler_crawlMultiProcess.name">
+      <trans-unit id="crawler_crawlMultiProcess.name" resname="crawler_crawlMultiProcess.name" approved="yes">
         <source>Crawler Run Multi Process</source>
-        <target state="needs-translation">Crawler Run Multi Process</target>
+        <target state="final">Crawler Multi Process</target>
       </trans-unit>
-      <trans-unit id="crawler_crawl.name" resname="crawler_crawl.name">
+      <trans-unit id="crawler_crawl.name" resname="crawler_crawl.name" approved="yes">
         <source>Crawler Run</source>
-        <target state="needs-translation">Crawler Run</target>
+        <target state="final">Kør Crawler</target>
       </trans-unit>
-      <trans-unit id="crawler_crawl.description" resname="crawler_crawl.description">
+      <trans-unit id="crawler_crawl.description" resname="crawler_crawl.description" approved="yes">
         <source>Running the crawler to extension to process it's queue-entries.</source>
-        <target state="needs-translation">Running the crawler to extension to process it's queue-entries.</target>
+        <target state="final">Kører crawleren for at forlænge behandlingen af kø-indlæsninger.</target>
       </trans-unit>
-      <trans-unit id="crawler_flush.name" resname="crawler_flush.name">
+      <trans-unit id="crawler_flush.name" resname="crawler_flush.name" approved="yes">
         <source>Crawler Queue Flush</source>
-        <target state="needs-translation">Crawler Queue Flush</target>
+        <target state="final">Crawler tøm køen</target>
       </trans-unit>
-      <trans-unit id="crawler_flush.description" resname="crawler_flush.description">
+      <trans-unit id="crawler_flush.description" resname="crawler_flush.description" approved="yes">
         <source>Cleanup the crawler queue and remove unwanted or finished entries.</source>
-        <target state="needs-translation">Cleanup the crawler queue and remove unwanted or finished entries.</target>
+        <target state="final">Ryd crawler køen og fjern uønskede eller færdige poster.</target>
       </trans-unit>
-      <trans-unit id="crawler_flush.mode" resname="crawler_flush.mode">
+      <trans-unit id="crawler_flush.mode" resname="crawler_flush.mode" approved="yes">
         <source>Flush mode</source>
-        <target state="needs-translation">Flush mode</target>
+        <target state="final">Ryd modus</target>
       </trans-unit>
-      <trans-unit id="crawler_flush.modeAll" resname="crawler_flush.modeAll">
+      <trans-unit id="crawler_flush.modeAll" resname="crawler_flush.modeAll" approved="yes">
         <source>Flush all entries</source>
-        <target state="needs-translation">Flush all entries</target>
+        <target state="final">Ryd alle poster</target>
       </trans-unit>
-      <trans-unit id="crawler_flush.modeFinished" resname="crawler_flush.modeFinished">
+      <trans-unit id="crawler_flush.modeFinished" resname="crawler_flush.modeFinished" approved="yes">
         <source>Flush finished entries</source>
-        <target state="needs-translation">Flush finished entries</target>
+        <target state="final">Ryd færdige poster</target>
       </trans-unit>
-      <trans-unit id="crawler_flush.modePending" resname="crawler_flush.modePending">
+      <trans-unit id="crawler_flush.modePending" resname="crawler_flush.modePending" approved="yes">
         <source>Flush pending entries</source>
-        <target state="needs-translation">Flush pending entries</target>
+        <target state="final">Ryd afventende poster</target>
       </trans-unit>
-      <trans-unit id="crawler_processCleanup.name" resname="crawler_processCleanup.name">
+      <trans-unit id="crawler_processCleanup.name" resname="crawler_processCleanup.name" approved="yes">
         <source>Remove Processes</source>
-        <target state="needs-translation">Remove Processes</target>
+        <target state="final">Fjern processerne</target>
       </trans-unit>
-      <trans-unit id="crawler_processCleanup.description" resname="crawler_processCleanup.description">
+      <trans-unit id="crawler_processCleanup.description" resname="crawler_processCleanup.description" approved="yes">
         <source>Remove Orphan processes and processes that are older than one hour</source>
-        <target state="needs-translation">Remove Orphan processes and processes that are older than one hour</target>
+        <target state="final">Fjern forældreløse processer og processer ældre end en time</target>
       </trans-unit>
-      <trans-unit id="contextMenu.label" resname="contextMenu.label">
+      <trans-unit id="contextMenu.label" resname="contextMenu.label" approved="yes">
         <source>Crawl</source>
-        <target state="needs-translation">Crawl</target>
+        <target state="final">Crawl</target>
       </trans-unit>
       <!-- For Crawler Priority - Will be remove when support for 9 LTS is dropped -->
-      <trans-unit id="pages_crawler.priority_label" resname="pages_crawler.priority_label">
+      <trans-unit id="pages_crawler.priority_label" resname="pages_crawler.priority_label" approved="yes">
         <source>Page priority</source>
-        <target state="needs-translation">Page priority</target>
+        <target state="final">Sideprioritet</target>
       </trans-unit>
-      <trans-unit id="pages_crawler.priority" resname="pages_crawler.priority">
+      <trans-unit id="pages_crawler.priority" resname="pages_crawler.priority" approved="yes">
         <source>Priority</source>
-        <target state="needs-translation">Priority</target>
+        <target state="final">Prioritet</target>
       </trans-unit>
-      <trans-unit id="pages_crawler.priority.description" resname="pages_crawler.priority.description">
+      <trans-unit id="pages_crawler.priority.description" resname="pages_crawler.priority.description" approved="yes">
         <source>The higher the number, the earlier will it be crawled. This is a reuse of the sitemap_priority
                     field introduced in 10LTS, to ensure compatibility after upgrade, we reuse the field.
                 </source>
-        <target state="needs-translation">The higher the number, the earlier will it be crawled. This is a reuse of the sitemap_priority
-                    field introduced in 10LTS, to ensure compatibility after upgrade, we reuse the field.
+        <target state="final">Jo højere tal, jo tidligere vil det blive kravlet. Dette er en genbrug af feltet sitemap_priority
+                    introduceret i 10LTS. For at sikre kompatibilitet efter opgradering, genbruger vi feltet.
                 </target>
       </trans-unit>
     </body>
