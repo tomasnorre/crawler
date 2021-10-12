@@ -107,13 +107,13 @@
         <source>Values Expanded</source>
         <target state="needs-translation">Values Expanded</target>
       </trans-unit>
-      <trans-unit id="labels.url" resname="labels.url">
+      <trans-unit id="labels.url" resname="labels.url" approved="yes">
         <source>URL</source>
-        <target state="needs-translation">URL</target>
+        <target state="final">URL</target>
       </trans-unit>
-      <trans-unit id="labels.urls" resname="labels.urls">
+      <trans-unit id="labels.urls" resname="labels.urls" approved="yes">
         <source>URLs</source>
-        <target state="needs-translation">URLs</target>
+        <target state="final">URLs</target>
       </trans-unit>
       <trans-unit id="labels.options" resname="labels.options" approved="yes">
         <source>Options</source>
@@ -167,9 +167,9 @@
         <source>Run-time</source>
         <target state="final">Laufzeit</target>
       </trans-unit>
-      <trans-unit id="labels.status" resname="labels.status">
+      <trans-unit id="labels.status" resname="labels.status" approved="yes">
         <source>Status</source>
-        <target state="needs-translation">Status</target>
+        <target state="final">Status</target>
       </trans-unit>
       <trans-unit id="labels.groups" resname="labels.groups" approved="yes">
         <source>Groups</source>
