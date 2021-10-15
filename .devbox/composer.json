@@ -24,7 +24,7 @@
         "helhum/typo3-console": "*",
         "tomasnorre/crawler": "*@dev",
         "typo3/cms-beuser": "^10.4",
-        "georgringer/news": "dev-11.x-dev"
+        "georgringer/news": "11.x-dev"
     },
     "repositories": [
         {
