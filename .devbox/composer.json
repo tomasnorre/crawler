@@ -23,7 +23,7 @@
         "bk2k/bootstrap-package": "^12",
         "helhum/typo3-console": "*",
         "tomasnorre/crawler": "*@dev",
-        "typo3/cms-beuser": "^10.4",
+        "typo3/cms-beuser": "^10.4 || ^11.5",
         "georgringer/news": "11.x-dev"
     },
     "repositories": [
