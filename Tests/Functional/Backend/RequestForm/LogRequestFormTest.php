@@ -54,15 +54,27 @@ class LogRequestFormTest extends FunctionalTestCase
         $this->SetupBackendUser();
         $this->setupLanguageService();
         $view = $this->setupView();
-        $infoModuleController = GeneralUtility::makeInstance(
-            InfoModuleController::class,
-            $this->prophesize(IconFactory::class)->reveal(),
-            $this->prophesize(PageRenderer::class)->reveal(),
-            $this->prophesize(UriBuilder::class)->reveal(),
-            $this->prophesize(FlashMessageService::class)->reveal(),
-            $this->prophesize(ContainerInterface::class)->reveal(),
-            $this->prophesize(ModuleTemplateFactory::class)->reveal()
-        );
+        $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
+        if ($typo3Version->getMajorVersion() === 10) {
+            $infoModuleController = GeneralUtility::makeInstance(
+                InfoModuleController::class,
+                $this->prophesize(ModuleTemplateFactory::class)->reveal()
+                $this->prophesize(UriBuilder::class)->reveal(),
+                $this->prophesize(FlashMessageService::class)->reveal(),
+                $this->prophesize(ContainerInterface::class)->reveal()
+            );
+        } else {
+            // version 11+
+            $infoModuleController = GeneralUtility::makeInstance(
+                InfoModuleController::class,
+                $this->prophesize(IconFactory::class)->reveal(),
+                $this->prophesize(PageRenderer::class)->reveal(),
+                $this->prophesize(UriBuilder::class)->reveal(),
+                $this->prophesize(FlashMessageService::class)->reveal(),
+                $this->prophesize(ContainerInterface::class)->reveal(),
+                $this->prophesize(ModuleTemplateFactory::class)->reveal()
+            );
+        }
         $extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
         $this->logRequestForm = GeneralUtility::makeInstance(LogRequestForm::class, $view, $infoModuleController, $extensionSettings);
     }

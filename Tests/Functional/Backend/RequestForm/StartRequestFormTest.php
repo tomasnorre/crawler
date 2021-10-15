@@ -28,6 +28,7 @@ use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Page\PageRenderer;
@@ -58,15 +59,29 @@ class StartRequestFormTest extends FunctionalTestCase
         $this->setupLanguageService();
         $this->setupBackendRequest();
         $view = $this->setupView();
-        $infoModuleController = GeneralUtility::makeInstance(
-            InfoModuleController::class,
-            $this->prophesize(IconFactory::class)->reveal(),
-            $this->prophesize(PageRenderer::class)->reveal(),
-            $this->prophesize(UriBuilder::class)->reveal(),
-            $this->prophesize(FlashMessageService::class)->reveal(),
-            $this->prophesize(ContainerInterface::class)->reveal(),
-            $this->prophesize(ModuleTemplateFactory::class)->reveal()
-        );
+
+        $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
+        if ($typo3Version->getMajorVersion() === 10) {
+            $infoModuleController = GeneralUtility::makeInstance(
+                InfoModuleController::class,
+                $this->prophesize(ModuleTemplateFactory::class)->reveal()
+                $this->prophesize(UriBuilder::class)->reveal(),
+                $this->prophesize(FlashMessageService::class)->reveal(),
+                $this->prophesize(ContainerInterface::class)->reveal()
+            );
+        } else {
+            // version 11+
+            $infoModuleController = GeneralUtility::makeInstance(
+                InfoModuleController::class,
+                $this->prophesize(IconFactory::class)->reveal(),
+                $this->prophesize(PageRenderer::class)->reveal(),
+                $this->prophesize(UriBuilder::class)->reveal(),
+                $this->prophesize(FlashMessageService::class)->reveal(),
+                $this->prophesize(ContainerInterface::class)->reveal(),
+                $this->prophesize(ModuleTemplateFactory::class)->reveal()
+            );
+        }
+
         $extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
         $this->startRequestForm = GeneralUtility::makeInstance(StartRequestForm::class, $view, $infoModuleController, $extensionSettings);
     }
