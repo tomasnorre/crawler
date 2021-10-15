@@ -22,8 +22,14 @@ namespace AOE\Crawler\Tests\Functional\Backend\RequestForm;
 use AOE\Crawler\Backend\RequestForm\LogRequestForm;
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use Psr\Container\ContainerInterface;
+use TYPO3\CMS\Backend\Routing\UriBuilder;
+use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Localization\LanguageService;
+use TYPO3\CMS\Core\Messaging\FlashMessageService;
+use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Info\Controller\InfoModuleController;
@@ -48,7 +54,15 @@ class LogRequestFormTest extends FunctionalTestCase
         $this->SetupBackendUser();
         $this->setupLanguageService();
         $view = $this->setupView();
-        $infoModuleController = GeneralUtility::makeInstance(InfoModuleController::class);
+        $infoModuleController = GeneralUtility::makeInstance(
+            InfoModuleController::class,
+            $this->prophesize(IconFactory::class)->reveal(),
+            $this->prophesize(PageRenderer::class)->reveal(),
+            $this->prophesize(UriBuilder::class)->reveal(),
+            $this->prophesize(FlashMessageService::class)->reveal(),
+            $this->prophesize(ContainerInterface::class)->reveal(),
+            $this->prophesize(ModuleTemplateFactory::class)->reveal()
+        );
         $extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
         $this->logRequestForm = GeneralUtility::makeInstance(LogRequestForm::class, $view, $infoModuleController, $extensionSettings);
     }
