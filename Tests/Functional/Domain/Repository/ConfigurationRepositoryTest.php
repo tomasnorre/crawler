@@ -34,11 +34,6 @@ class ConfigurationRepositoryTest extends FunctionalTestCase
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     /**
-     * @var array
-     */
-    protected $coreExtensionsToLoad = ['cms', 'version', 'lang'];
-
-    /**
      * @var ConfigurationRepository
      */
     protected $subject;

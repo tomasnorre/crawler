@@ -37,11 +37,6 @@ class ProcessRepositoryTest extends FunctionalTestCase
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     /**
-     * @var array
-     */
-    protected $coreExtensionsToLoad = ['cms', 'version', 'lang'];
-
-    /**
      * @var ProcessRepository
      */
     protected $subject;

@@ -33,11 +33,6 @@ class BuildQueueCommandTest extends AbstractCommandTests
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     /**
-     * @var array
-     */
-    protected $coreExtensionsToLoad = ['cms', 'version', 'lang'];
-
-    /**
      * @var QueueRepository
      */
     protected $queueRepository;

@@ -39,11 +39,6 @@ class StartRequestFormTest extends FunctionalTestCase
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     /**
-     * @var array
-     */
-    protected $coreExtensionsToLoad = ['cms', 'version', 'lang', 'info'];
-
-    /**
      * @var StartRequestForm
      */
     protected $startRequestForm;
