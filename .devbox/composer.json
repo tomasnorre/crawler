@@ -15,16 +15,16 @@
         }
     ],
     "require": {
-        "typo3/minimal": "^10.4",
+        "typo3/minimal": "^10.4 || ^11.5",
         "typo3/cms-introduction": "~4.0",
-        "typo3/cms-tstemplate": "^10.4",
-        "typo3/cms-info": "^10.4",
-        "typo3/cms-belog": "^10.4",
-        "bk2k/bootstrap-package": "^10.0 || ^11.0",
+        "typo3/cms-tstemplate": "^10.4 || ^11.5",
+        "typo3/cms-info": "^10.4 || ^11.5",
+        "typo3/cms-belog": "^10.4 || ^11.5",
+        "bk2k/bootstrap-package": "^12",
         "helhum/typo3-console": "*",
         "tomasnorre/crawler": "*@dev",
         "typo3/cms-beuser": "^10.4",
-        "georgringer/news": "*"
+        "georgringer/news": "dev-11.x-dev"
     },
     "repositories": [
         {
