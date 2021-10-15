@@ -58,7 +58,7 @@ class LogRequestFormTest extends FunctionalTestCase
         if ($typo3Version->getMajorVersion() === 10) {
             $infoModuleController = GeneralUtility::makeInstance(
                 InfoModuleController::class,
-                $this->prophesize(ModuleTemplateFactory::class)->reveal()
+                $this->prophesize(ModuleTemplateFactory::class)->reveal(),
                 $this->prophesize(UriBuilder::class)->reveal(),
                 $this->prophesize(FlashMessageService::class)->reveal(),
                 $this->prophesize(ContainerInterface::class)->reveal()
