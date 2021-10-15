@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AOE\Crawler\Tests\Functional\Backend\RequestForm;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -22,8 +22,10 @@ namespace AOE\Crawler\Tests\Functional\Backend\RequestForm;
 use AOE\Crawler\Backend\RequestForm\MultiProcessRequestForm;
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
+use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Imaging\IconFactory;
@@ -37,6 +39,8 @@ use TYPO3\CMS\Info\Controller\InfoModuleController;
 
 class MultiProcessRequestFormTest extends FunctionalTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var array
      */
@@ -60,7 +64,7 @@ class MultiProcessRequestFormTest extends FunctionalTestCase
         if ($typo3Version->getMajorVersion() === 10) {
             $infoModuleController = GeneralUtility::makeInstance(
                 InfoModuleController::class,
-                $this->prophesize(ModuleTemplateFactory::class)->reveal(),
+                $this->prophesize(ModuleTemplate::class)->reveal(),
                 $this->prophesize(UriBuilder::class)->reveal(),
                 $this->prophesize(FlashMessageService::class)->reveal(),
                 $this->prophesize(ContainerInterface::class)->reveal()

@@ -41,7 +41,7 @@
         "nikic/php-parser": "4.10.4",
         "nimut/phpunit-merger": "^1.1",
         "nimut/testing-framework": "6.x-dev",
-        "nimut/typo3-complete": "^10.4 || ^11.5",
+        "nimut/typo3-complete": "^10.4",
         "phpspec/prophecy-phpunit": "^2.0",
         "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan": "0.12.99",
