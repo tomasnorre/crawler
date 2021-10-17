@@ -42,6 +42,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             'Symplify\CodingStandard\Fixer\ArrayNotation\ArrayListItemNewlineFixer' => null,
             UnaryOperatorSpacesFixer::class => null,
             StandaloneLineInMultilineArrayFixer::class => null,
+            PhpCsFixer\Fixer\Operator\NotOperatorWithSuccessorSpaceFixer::class => null,
         ]
     );
 
