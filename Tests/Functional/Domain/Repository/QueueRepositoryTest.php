@@ -364,15 +364,6 @@ class QueueRepositoryTest extends FunctionalTestCase
 
     /**
      * @test
-     */
-    public function isPageInQueueThrowInvalidArgumentException(): void
-    {
-        $this->expectExceptionMessage('Argument 1 passed to AOE\Crawler\Domain\Repository\QueueRepository::isPageInQueue() must be of the type int');
-        $this->subject->isPageInQueue('Cannot be interpreted as integer');
-    }
-
-    /**
-     * @test
      *
      * @dataProvider isPageInQueueDataProvider
      */
