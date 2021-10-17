@@ -26,13 +26,12 @@ use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
-use AOE\Crawler\Value\QueueFilter;
-use AOE\Crawler\Value\QueueRow;
 use AOE\Crawler\QueueExecutor;
 use AOE\Crawler\Service\ConfigurationService;
 use AOE\Crawler\Service\PageService;
 use AOE\Crawler\Service\UrlService;
 use AOE\Crawler\Utility\SignalSlotUtility;
+use AOE\Crawler\Value\QueueRow;
 use PDO;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
@@ -921,8 +920,12 @@ class CrawlerController implements LoggerAwareInterface
 
                     // Options
                     $queueRowOptionCollection = [];
-                    $queueRowOptionCollection[] = $confArray['subCfg']['userGroups'] ? 'User Groups: ' . $confArray['subCfg']['userGroups'] : '';
-                    $queueRowOptionCollection[] = $confArray['subCfg']['procInstrFilter'] ? 'ProcInstr: ' . $confArray['subCfg']['procInstrFilter'] : '';
+                    if ($confArray['subCfg']['userGroups'] ?? false) {
+                        $queueRowOptionCollection[] = 'User Groups: ' . $confArray['subCfg']['userGroups'];
+                    }
+                    if ($confArray['subCfg']['procInstrFilter'] ?? false) {
+                        $queueRowOptionCollection[] = 'ProcInstr: ' . $confArray['subCfg']['procInstrFilter'];
+                    }
 
                     // Remove empty array entries;
                     $queueRowOptionCollection = array_filter($queueRowOptionCollection);
