@@ -97,7 +97,13 @@ class ProcessService
     public function getCrawlerCliPath(): string
     {
         $phpPath = PhpBinaryUtility::getPhpBinary();
-        $typo3BinaryPath = ExtensionManagementUtility::extPath('core') . 'bin/';
+
+        if (TYPO3_COMPOSER_MODE) {
+            $typo3BinaryPath = $this->getComposerBinPath();
+        } else {
+            $typo3BinaryPath = ExtensionManagementUtility::extPath('core') . 'bin/';
+        }
+
         $cliPart = 'typo3 crawler:processQueue';
         // Don't like the spacing, but don't have an better idea for now
         $scriptPath = $phpPath . ' ' . $typo3BinaryPath . $cliPart;
@@ -112,5 +118,13 @@ class ProcessService
     public function setProcessRepository(ProcessRepository $processRepository): void
     {
         $this->processRepository = $processRepository;
+    }
+
+    private function getComposerBinPath(): string
+    {
+        $composerRootPath = Environment::getComposerRootPath();
+        $composerJson = json_decode(file_get_contents($composerRootPath . '/composer.json'), true);
+        $binDir = $composerJson['config']['bin-dir'] ?? 'vendor/bin';
+        return $composerRootPath . '/' . $binDir . '/';
     }
 }
