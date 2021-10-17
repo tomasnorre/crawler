@@ -7,6 +7,7 @@
 ### Changed
 
 ### Fixed
+* Add Process button isn't shown when no entries in queue
 
 ### Deprecated
 #### Classes
