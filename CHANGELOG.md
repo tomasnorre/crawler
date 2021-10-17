@@ -7,6 +7,8 @@
 ### Changed
 
 ### Fixed
+* Add Process button isn't shown when no entries in queue
+* Calculating the typo3 cli path based on composer is active
 
 ### Deprecated
 #### Classes

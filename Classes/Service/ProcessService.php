@@ -24,6 +24,7 @@ use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Exception\ProcessException;
 use AOE\Crawler\Utility\PhpBinaryUtility;
 use TYPO3\CMS\Core\Core\Environment;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -96,8 +97,15 @@ class ProcessService
      */
     public function getCrawlerCliPath(): string
     {
+        $typo3MajorVersion = (new Typo3Version())->getMajorVersion();
         $phpPath = PhpBinaryUtility::getPhpBinary();
-        $typo3BinaryPath = ExtensionManagementUtility::extPath('core') . 'bin/';
+
+        if ($typo3MajorVersion === 10 || !TYPO3_COMPOSER_MODE) {
+            $typo3BinaryPath = ExtensionManagementUtility::extPath('core') . 'bin/';
+        } else {
+            $typo3BinaryPath = $this->getComposerBinPath();
+        }
+
         $cliPart = 'typo3 crawler:processQueue';
         // Don't like the spacing, but don't have an better idea for now
         $scriptPath = $phpPath . ' ' . $typo3BinaryPath . $cliPart;
@@ -112,5 +120,23 @@ class ProcessService
     public function setProcessRepository(ProcessRepository $processRepository): void
     {
         $this->processRepository = $processRepository;
+    }
+
+    private function getComposerBinPath(): ?string
+    {
+        // copied and modified from @see
+        // https://github.com/TYPO3/typo3/blob/8a9c80b9d85ef986f5f369f1744fc26a6b607dda/typo3/sysext/scheduler/Classes/Controller/SchedulerModuleController.php#L402
+        $composerJsonFile = getenv('TYPO3_PATH_COMPOSER_ROOT') . '/composer.json';
+        if (!file_exists($composerJsonFile) || !($jsonContent = file_get_contents($composerJsonFile))) {
+            return null;
+        }
+        $jsonConfig = @json_decode($jsonContent, true);
+        if (empty($jsonConfig) || !is_array($jsonConfig)) {
+            return null;
+        }
+        $vendorDir = trim($jsonConfig['config']['vendor-dir'] ?? 'vendor', '/');
+        $binDir = trim($jsonConfig['config']['bin-dir'] ?? $vendorDir . '/bin', '/');
+
+        return sprintf('%s/%s/', getenv('TYPO3_PATH_COMPOSER_ROOT'), $binDir);
     }
 }
