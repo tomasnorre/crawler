@@ -28,4 +28,4 @@ Flush queue
 ::
 
    # replace vendor/bin/typo3 with your own cli runner
-   $ vendor/bin/typo3 crawler:flushQueue <pending|finished|all> [--page <id of top page>]
+   $ vendor/bin/typo3 crawler:flushQueue <pending|finished|all>

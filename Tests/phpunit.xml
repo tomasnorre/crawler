@@ -1,24 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="../.Build/vendor/phpunit/phpunit/phpunit.xsd"
-    bootstrap="../.Build/vendor/nimut/testing-framework/res/Configuration/UnitTestsBootstrap.php"
-    colors="true"
-    executionOrder="default"
-    resolveDependencies="true"
-    processIsolation="true"
->
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd"
+         bootstrap="../.Build/vendor/nimut/testing-framework/res/Configuration/UnitTestsBootstrap.php"
+         cacheResultFile=".phpunit.cache/test-results"
+         executionOrder="depends,defects"
+         forceCoversAnnotation="true"
+         beStrictAboutCoversAnnotation="true"
+         beStrictAboutOutputDuringTests="true"
+         beStrictAboutTodoAnnotatedTests="true"
+         failOnRisky="true"
+         failOnWarning="true"
+         verbose="true">
     <testsuites>
-        <testsuite name="unit">
+        <testsuite name="default">
             <directory>../Tests/Unit</directory>
         </testsuite>
     </testsuites>
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
+
+    <coverage cacheDirectory=".phpunit.cache/code-coverage"
+              processUncoveredFiles="true">
+        <include>
             <directory suffix=".php">../Classes</directory>
-        </whitelist>
-    </filter>
-    <php>
-        <ini name="error_reporting" value="E_ALL"/>
-    </php>
+        </include>
+    </coverage>
 </phpunit>

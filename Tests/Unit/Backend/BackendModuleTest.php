@@ -24,6 +24,9 @@ use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Localization\LanguageService;
 
+/**
+ * @covers \AOE\Crawler\Backend\BackendModule
+ */
 class BackendModuleTest extends UnitTestCase
 {
     /**

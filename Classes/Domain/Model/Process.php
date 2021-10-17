@@ -4,32 +4,22 @@ declare(strict_types=1);
 
 namespace AOE\Crawler\Domain\Model;
 
-/***************************************************************
- *  Copyright notice
+/*
+ * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
- *  (c) 2020 AOE GmbH <dev@aoe.com>
+ * This file is part of the TYPO3 Crawler Extension.
  *
- *  All rights reserved
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
  *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 3 of the License, or
- *  (at your option) any later version.
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
  *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ * The TYPO3 project - inspiring people to share!
+ */
 
 use AOE\Crawler\Domain\Repository\QueueRepository;
-use TYPO3\CMS\Core\Compatibility\PublicMethodDeprecationTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
@@ -42,8 +32,6 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  */
 class Process extends AbstractEntity
 {
-    use PublicMethodDeprecationTrait;
-
     public const STATE_RUNNING = 'running';
 
     public const STATE_CANCELLED = 'cancelled';
@@ -84,16 +72,6 @@ class Process extends AbstractEntity
      * @var QueueRepository
      */
     protected $queueRepository;
-
-    /**
-     * @var string[]
-     * @noRector \Rector\DeadCode\Rector\Property\RemoveUnusedPrivatePropertyRector
-     * @noRector \Rector\DeadCode\Rector\Property\RemoveSetterOnlyPropertyAndMethodCallRector
-     */
-    private $deprecatedPublicMethods = [
-        'getTimeForFirstItem' => 'Using Process::getTimeForFirstItem() is deprecated since 9.0.1 and will be removed in v11.x',
-        'getTimeForLastItem' => 'Using Process::getTimeForLastItem() is deprecated since 9.0.1 and will be removed in v11.x',
-    ];
 
     public function __construct()
     {
@@ -207,24 +185,6 @@ class Process extends AbstractEntity
         $lastItem = $this->getQueueRepository()->findOldestEntryForProcess($this);
         $firstItem = $this->getQueueRepository()->findYoungestEntryForProcess($this);
         return $lastItem['exec_time'] - $firstItem['exec_time'];
-    }
-
-    /**
-     * @deprecated
-     */
-    public function getTimeForLastItem(): int
-    {
-        $entry = $this->getQueueRepository()->findOldestEntryForProcess($this);
-        return $entry['exec_time'] ?? 0;
-    }
-
-    /**
-     * @deprecated
-     */
-    public function getTimeForFirstItem(): int
-    {
-        $entry = $this->getQueueRepository()->findYoungestEntryForProcess($this);
-        return $entry['exec_time'] ?? 0;
     }
 
     /**

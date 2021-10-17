@@ -20,7 +20,10 @@ composer.lock
 /Resources/Private/Php/Libraries/composer.lock
 var/log
 var/tests
+var/
 infection.log
+/Tests/.phpunit.cache/
+/Infection/
 
 # Devbox
 .devbox/.ddev/config.local.yaml
@@ -34,6 +37,12 @@ infection.log
 .devbox/public/typo3conf/ext
 .devbox/public/typo3conf/PackageStates.php
 .devbox/public/typo3temp
+.devbox/.ddev/.global_commands/
+.devbox/.ddev/.homeadditions/
+.devbox/.ddev/apache/
+.devbox/.ddev/nginx_full/
+.devbox/.ddev/providers/
+.devbox/.ddev/xhprof/
 
 # Codeception Files
 Tests/Acceptance/_data/*

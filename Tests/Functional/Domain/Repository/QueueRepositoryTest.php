@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AOE\Crawler\Tests\Functional\Domain\Repository;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -34,11 +34,6 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  */
 class QueueRepositoryTest extends FunctionalTestCase
 {
-    /**
-     * @var array
-     */
-    protected $coreExtensionsToLoad = ['cms', 'core', 'frontend', 'version', 'lang', 'fluid'];
-
     /**
      * @var array
      */
@@ -163,17 +158,6 @@ class QueueRepositoryTest extends FunctionalTestCase
         self::assertSame(
             2,
             $this->subject->countNonExecutedItemsByProcess($process)
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function countUnprocessedItems(): void
-    {
-        self::assertCount(
-            8,
-            $this->subject->getUnprocessedItems()
         );
     }
 

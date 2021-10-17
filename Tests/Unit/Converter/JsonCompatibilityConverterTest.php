@@ -23,6 +23,9 @@ use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+/**
+ * @covers \AOE\Crawler\Converter\JsonCompatibilityConverter
+ */
 class JsonCompatibilityConverterTest extends UnitTestCase
 {
     /**
@@ -83,7 +86,7 @@ class JsonCompatibilityConverterTest extends UnitTestCase
     {
         self::expectExceptionCode(1593758307);
         self::expectException(\Throwable::class);
-        self::expectExceptionMessageRegExp('#.*__PHP_Incomplete_Class.*#');
+        self::expectExceptionMessageMatches('#.*__PHP_Incomplete_Class.*#');
 
         $object = new \stdClass();
         $object->title = 'Test';

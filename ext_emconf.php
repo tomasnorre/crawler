@@ -10,10 +10,10 @@ $EM_CONF[$_EXTKEY] = [
     'author' => 'Kasper Skaarhoj, Daniel Poetzinger, Fabrizio Branca, Tolleiv Nietsch, Timo Schmidt, Michael Klapper, Stefan Rotsch, Tomas Norre Mikkelsen, Tizian Schmidlin',
     'author_email' => 'tomasnorre@gmail.com',
     'author_company' => '',
-    'version' => '10.0.2',
+    'version' => '10.0.3',
     'constraints' => [
         'depends' => [
-            'typo3' => '9.5.14-11.0.99',
+            'typo3' => '10.4.0-11.0.99',
         ],
         'conflicts' => [],
         'suggests' => [],

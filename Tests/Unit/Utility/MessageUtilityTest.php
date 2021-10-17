@@ -25,6 +25,9 @@ use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+/**
+ * @covers \AOE\Crawler\Utility\MessageUtility
+ */
 class MessageUtilityTest extends UnitTestCase
 {
     /**

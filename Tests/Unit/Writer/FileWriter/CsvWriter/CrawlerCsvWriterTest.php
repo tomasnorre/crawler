@@ -23,6 +23,9 @@ use AOE\Crawler\Writer\FileWriter\CsvWriter\CrawlerCsvWriter;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+/**
+ * @covers \AOE\Crawler\Writer\FileWriter\CsvWriter\CrawlerCsvWriter
+ */
 class CrawlerCsvWriterTest extends UnitTestCase
 {
     /**

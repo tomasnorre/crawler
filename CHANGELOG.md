@@ -1,6 +1,6 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 10.0.3-dev
+## Crawler 11.0.0-dev
 
 ### Added
 
@@ -9,15 +9,63 @@
 * !!! CrawlerController->getPageTreeAndUrls() is now returning an array instead of HTML-string
 
 ### Fixed
-* Avoid empty mountpoint parameter in URL when building the queue
 
 ### Deprecated
 #### Classes
 #### Functions & Properties
 
 ### Removed
+* Support for TYPO3 9
+* PHP support for `<7.4`
+
 #### Classes
 #### Functions & Properties
+* CrawlerController->accessMode
+* CrawlerController->processFilename
+* CrawlerController->compileUrls()
+* CrawlerController::cleanUpOldQueueEntries()
+* CrawlerController->CLI_buildProcessId()
+* CrawlerController->CLI_checkAndAcquireNewProcess()
+* CrawlerController->CLI_debug()
+* CrawlerController->CLI_releaseProcesses()
+* CrawlerController->CLI_run()
+* CrawlerController->CLI_runHooks()
+* CrawlerController->expandExcludeString()
+* CrawlerController->getAccessMode()
+* CrawlerController->getLogEntriesForPageId()
+* crawlerController::getLogEntriesForSetId()
+* CrawlerController->getLogEntriesForPageId()
+* CrawlerController::flushQueue()
+* CrawlerController->setAccessMode()
+* CrawlerController->getDisabled()
+* CrawlerController->setDisabled()
+* CrawlerController->getProcessFilename()
+* CrawlerController->setProcessFilename()
+* CrawlerController->getDuplicateRowsIfExist()
+* CrawlerController->checkIfPageShouldBeSkipped()
+* CrawlerController->swapIfFirstIsLargerThanSecond()
+* CrawlerController->expandParameters()
+* FlushQueueCommand --page parameter is removed
+* Process->getTimeForFirstItem()
+* Process->getTimeForLastItem()
+* ProcessService->queueRepository
+* ProcessService->crawlerController
+* ProcessService->countInARun
+* ProcessService->processLimit
+* ProcessService->verbose
+* ProcessService->multiProcess()
+* ProcessService->reportItemStatus()
+* ProcessService->startRequiredProcesses()
+
+* QueueRepository->countUnprocessedItems()
+* QueueRepository->countAllByProcessId()
+
+## Crawler 10.0.3
+Crawler 10.0.2 was released on September 29th, 2021
+
+### Fixed
+* Avoid empty mountpoint parameter in URL when building the queue
+* Add description to crawler:commands for TYPO3 10+
 
 ## Crawler 10.0.2
 Crawler 10.0.2 was released on September 16th, 2021

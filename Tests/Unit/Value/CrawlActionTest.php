@@ -22,6 +22,9 @@ namespace AOE\Crawler\Tests\Unit\Value;
 use AOE\Crawler\Value\CrawlAction;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
+/**
+ * @covers \AOE\Crawler\Value\CrawlAction
+ */
 class CrawlActionTest extends UnitTestCase
 {
     public const VALID_VALUE = 'start';

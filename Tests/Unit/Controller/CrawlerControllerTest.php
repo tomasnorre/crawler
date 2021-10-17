@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AOE\Crawler\Tests\Unit\Controller;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -29,6 +29,7 @@ use Psr\Log\NullLogger;
  * Class CrawlerLibTest
  *
  * @package AOE\Crawler\Tests
+ * @covers \AOE\Crawler\Controller\CrawlerController
  */
 class CrawlerControllerTest extends UnitTestCase
 {
@@ -44,7 +45,7 @@ class CrawlerControllerTest extends UnitTestCase
     {
         $this->crawlerController = $this->createPartialMock(
             CrawlerController::class,
-            ['buildRequestHeaderArray', 'executeShellCommand', 'getFrontendBasePath']
+            []
         );
         $this->crawlerController->setLogger(new NullLogger());
 
@@ -76,69 +77,6 @@ class CrawlerControllerTest extends UnitTestCase
     protected function tearDown(): void
     {
         unset($this->crawlerController);
-    }
-
-    /**
-     * @test
-     */
-    public function setAndGet(): void
-    {
-        $accessMode = 'cli';
-        $this->crawlerController->setAccessMode($accessMode);
-
-        self::assertEquals(
-            $accessMode,
-            $this->crawlerController->getAccessMode()
-        );
-    }
-
-    /**
-     * @test
-     *
-     * @dataProvider setAndGetDisabledDataProvider
-     */
-    public function setAndGetDisabled(?bool $disabled, bool $expected): void
-    {
-        $filenameWithPath = tempnam('/tmp', 'test_foo') ?: 'FileNameIsForceIfTempNamReturnedFalse.txt';
-        $this->crawlerController->setProcessFilename($filenameWithPath);
-
-        // Not that elegant but testing that called without params gives the expected default.
-        if ($disabled === null) {
-            $this->crawlerController->setDisabled();
-        } else {
-            $this->crawlerController->setDisabled($disabled);
-        }
-
-        self::assertEquals(
-            $expected,
-            $this->crawlerController->getDisabled()
-        );
-
-        self::assertSame(
-            $expected,
-            is_file($filenameWithPath)
-        );
-
-        if ($disabled) {
-            self::assertSame(
-                'disabled',
-                file_get_contents($filenameWithPath)
-            );
-        }
-    }
-
-    /**
-     * @test
-     */
-    public function setAndGetProcessFilename(): void
-    {
-        $filenameWithPath = tempnam('/tmp', 'test_foo') ?: 'FileNameIsForceIfTempNamReturnedFalse.txt';
-        $this->crawlerController->setProcessFilename($filenameWithPath);
-
-        self::assertEquals(
-            $filenameWithPath,
-            $this->crawlerController->getProcessFilename()
-        );
     }
 
     /**
@@ -217,7 +155,7 @@ class CrawlerControllerTest extends UnitTestCase
                 'expected' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
             ],
             'Message string not empty, returns empty array' => [
-                'checkIfPageSkipped' => 'Because page is hidden',
+                'checkIfPageSkipped' => true,
                 'getUrlsForPages' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
                 'pageRow' => ['uid' => 2001],
                 '$skipMessage' => 'Just variable placeholder, not used in tests as parsed as reference',
@@ -228,27 +166,10 @@ class CrawlerControllerTest extends UnitTestCase
 
     /**
      * @test
-     */
-    public function cLIBuildProcessIdIsSetReturnsValue(): void
-    {
-        $processId = '12297a261b';
-        $crawlerController = $this->getAccessibleMock(CrawlerController::class, ['dummy'], [], '', false);
-        $crawlerController->_set('processID', $processId);
-
-        self::assertEquals(
-            $processId,
-            $crawlerController->_call('CLI_buildProcessId')
-        );
-    }
-
-    /**
-     * @test
-     *
-     * @param string $expected
      *
      * @dataProvider getConfigurationHasReturnsExpectedValueDataProvider
      */
-    public function getConfigurationHasReturnsExpectedValue(array $configuration, $expected): void
+    public function getConfigurationHasReturnsExpectedValue(array $configuration, string $expected): void
     {
         $crawlerLib = $this->getAccessibleMock(CrawlerController::class, ['dummy'], [], '', false);
 
@@ -324,27 +245,6 @@ class CrawlerControllerTest extends UnitTestCase
             'cliObject with two -conf' => [
                 'config' => ['-d' => 4, '-o' => 'url', '-conf' => 'default,news'],
                 'expected' => ['default', 'news'],
-            ],
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function setAndGetDisabledDataProvider()
-    {
-        return [
-            'no value given' => [
-                'disabled' => null,
-                'expected' => true,
-            ],
-            'setDisabled with true param' => [
-                'disabled' => true,
-                'expected' => true,
-            ],
-            'setDisabled with false param' => [
-                'disabled' => false,
-                'expected' => false,
             ],
         ];
     }
