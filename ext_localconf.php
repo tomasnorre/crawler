@@ -1,5 +1,5 @@
 <?php
-defined('TYPO3_MODE') or die();
+defined('TYPO3') or die();
 
 \AOE\Crawler\Utility\HookUtility::registerHooks('crawler');
 \AOE\Crawler\Utility\BackendUtility::registerIcons();
