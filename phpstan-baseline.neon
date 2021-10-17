@@ -1,12 +1,12 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
+			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
 			count: 1
 			path: Classes/Api/CrawlerApi.php
 
 		-
-			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
+			message: "#^Cannot call method fetchAssociative\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
 			count: 1
 			path: Classes/Api/CrawlerApi.php
 
@@ -37,15 +37,6 @@ parameters:
 		-
 			message:
 				"""
-					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
-				"""
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
-			message:
-				"""
 					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
 					since TYPO3 10\\.4, will be removed in version 12\\.0$#
 				"""
@@ -63,6 +54,11 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
+			message: "#^Cannot access offset 'parameters' on array\\<string, mixed\\>\\|false\\.$#"
+			count: 2
+			path: Classes/Backend/RequestForm/LogRequestForm.php
+
+		-
 			message: "#^Cannot access offset 'procInstructions' on array\\|bool\\.$#"
 			count: 2
 			path: Classes/Backend/RequestForm/LogRequestForm.php
@@ -73,7 +69,7 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\ForwardCompatibility\\\\DriverStatement\\|int\\.$#"
+			message: "#^Cannot call method fetchAssociative\\(\\) on Doctrine\\\\DBAL\\\\ForwardCompatibility\\\\DriverStatement\\|int\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
@@ -288,15 +284,6 @@ parameters:
 		-
 			message:
 				"""
-					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
-				"""
-			count: 1
-			path: Classes/Controller/CrawlerController.php
-
-		-
-			message:
-				"""
 					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
 					since TYPO3 10\\.4, will be removed in version 12\\.0$#
 				"""
@@ -319,7 +306,7 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
+			message: "#^Cannot call method fetchAssociative\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -435,23 +422,9 @@ parameters:
 		-
 			message:
 				"""
-					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
-				"""
-			count: 1
-			path: Classes/Domain/Repository/ConfigurationRepository.php
-
-		-
-			message:
-				"""
 					#^Call to deprecated method fetchAll\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
 					Use fetchAllNumeric\\(\\), fetchAllAssociative\\(\\) or fetchFirstColumn\\(\\) instead\\.$#
 				"""
-			count: 1
-			path: Classes/Domain/Repository/ConfigurationRepository.php
-
-		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
 			count: 1
 			path: Classes/Domain/Repository/ConfigurationRepository.php
 
@@ -461,18 +434,14 @@ parameters:
 			path: Classes/Domain/Repository/ConfigurationRepository.php
 
 		-
-			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
+			message: "#^Cannot call method fetchAssociative\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
 			count: 1
 			path: Classes/Domain/Repository/ConfigurationRepository.php
 
 		-
-			message:
-				"""
-					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
-				"""
-			count: 4
-			path: Classes/Domain/Repository/ProcessRepository.php
+			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
+			count: 1
+			path: Classes/Domain/Repository/ConfigurationRepository.php
 
 		-
 			message:
@@ -493,13 +462,13 @@ parameters:
 			path: Classes/Domain/Repository/ProcessRepository.php
 
 		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 4
+			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
+			count: 1
 			path: Classes/Domain/Repository/ProcessRepository.php
 
 		-
-			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 1
+			message: "#^Cannot call method fetchAssociative\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
+			count: 4
 			path: Classes/Domain/Repository/ProcessRepository.php
 
 		-
@@ -530,15 +499,6 @@ parameters:
 		-
 			message:
 				"""
-					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
-				"""
-			count: 9
-			path: Classes/Domain/Repository/QueueRepository.php
-
-		-
-			message:
-				"""
 					#^Call to deprecated method fetchAll\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
 					Use fetchAllNumeric\\(\\), fetchAllAssociative\\(\\) or fetchFirstColumn\\(\\) instead\\.$#
 				"""
@@ -555,13 +515,13 @@ parameters:
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 9
+			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
+			count: 4
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
-			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 4
+			message: "#^Cannot call method fetchAssociative\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
+			count: 9
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
@@ -664,13 +624,13 @@ parameters:
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
 		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 5
+			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
+			count: 3
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
 		-
-			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 3
+			message: "#^Cannot call method fetchAssociative\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
+			count: 5
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
 		-
@@ -769,15 +729,6 @@ parameters:
 		-
 			message:
 				"""
-					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
-				"""
-			count: 1
-			path: Classes/Service/ConfigurationService.php
-
-		-
-			message:
-				"""
 					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
 					since TYPO3 10\\.4, will be removed in version 12\\.0$#
 				"""
@@ -785,7 +736,7 @@ parameters:
 			path: Classes/Service/ConfigurationService.php
 
 		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
+			message: "#^Cannot call method fetchAssociative\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
 			count: 1
 			path: Classes/Service/ConfigurationService.php
 
