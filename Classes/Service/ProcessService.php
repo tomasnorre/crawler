@@ -24,6 +24,7 @@ use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Exception\ProcessException;
 use AOE\Crawler\Utility\PhpBinaryUtility;
 use TYPO3\CMS\Core\Core\Environment;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -96,12 +97,14 @@ class ProcessService
      */
     public function getCrawlerCliPath(): string
     {
+
+        $typo3MajorVersion = (new Typo3Version())->getMajorVersion();
         $phpPath = PhpBinaryUtility::getPhpBinary();
 
-        if (TYPO3_COMPOSER_MODE) {
-            $typo3BinaryPath = $this->getComposerBinPath();
-        } else {
+        if ($typo3MajorVersion == 10 || !TYPO3_COMPOSER_MODE) {
             $typo3BinaryPath = ExtensionManagementUtility::extPath('core') . 'bin/';
+        } else {
+            $typo3BinaryPath = $this->getComposerBinPath();
         }
 
         $cliPart = 'typo3 crawler:processQueue';
