@@ -97,11 +97,10 @@ class ProcessService
      */
     public function getCrawlerCliPath(): string
     {
-
         $typo3MajorVersion = (new Typo3Version())->getMajorVersion();
         $phpPath = PhpBinaryUtility::getPhpBinary();
 
-        if ($typo3MajorVersion == 10 || !TYPO3_COMPOSER_MODE) {
+        if ($typo3MajorVersion === 10 || !TYPO3_COMPOSER_MODE) {
             $typo3BinaryPath = ExtensionManagementUtility::extPath('core') . 'bin/';
         } else {
             $typo3BinaryPath = $this->getComposerBinPath();
@@ -123,11 +122,21 @@ class ProcessService
         $this->processRepository = $processRepository;
     }
 
-    private function getComposerBinPath(): string
+    private function getComposerBinPath(): ?string
     {
-        $composerRootPath = Environment::getComposerRootPath();
-        $composerJson = json_decode(file_get_contents($composerRootPath . '/composer.json'), true);
-        $binDir = $composerJson['config']['bin-dir'] ?? 'vendor/bin';
-        return $composerRootPath . '/' . $binDir . '/';
+        // copied and modified from @see
+        // https://github.com/TYPO3/typo3/blob/8a9c80b9d85ef986f5f369f1744fc26a6b607dda/typo3/sysext/scheduler/Classes/Controller/SchedulerModuleController.php#L402
+        $composerJsonFile = getenv('TYPO3_PATH_COMPOSER_ROOT') . '/composer.json';
+        if (!file_exists($composerJsonFile) || !($jsonContent = file_get_contents($composerJsonFile))) {
+            return null;
+        }
+        $jsonConfig = @json_decode($jsonContent, true);
+        if (empty($jsonConfig) || !is_array($jsonConfig)) {
+            return null;
+        }
+        $vendorDir = trim($jsonConfig['config']['vendor-dir'] ?? 'vendor', '/');
+        $binDir = trim($jsonConfig['config']['bin-dir'] ?? $vendorDir . '/bin', '/');
+
+        return sprintf('%s/%s/', getenv('TYPO3_PATH_COMPOSER_ROOT'), $binDir);
     }
 }
