@@ -9,7 +9,9 @@
 	<div>
 		{refreshLink -> f:format.raw()}
 		{enableDisableToggle -> f:format.raw()}
-		{addLink -> f:format.raw()}
+        <f:if condition="{totalUnprocessedItemCount} > 0">
+            {addLink -> f:format.raw()}
+        </f:if>
 		{modeLink -> f:format.raw()}
 	</div>
 	<h3>

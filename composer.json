@@ -22,7 +22,7 @@
         "symfony/console": "^5.0",
         "symfony/polyfill-php80": "^1.23",
         "typo3/cms-backend": "*",
-        "typo3/cms-core": "^10.4 || ^11.5",
+        "typo3/cms-core": "^10.4.11 || ^11.5",
         "typo3/cms-frontend": "*",
         "typo3/cms-info": "*",
         "typo3/cms-seo": "*"
