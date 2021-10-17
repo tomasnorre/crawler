@@ -20,6 +20,7 @@ composer.lock
 /Resources/Private/Php/Libraries/composer.lock
 var/log
 var/tests
+var/
 infection.log
 /Tests/.phpunit.cache/
 /Infection/

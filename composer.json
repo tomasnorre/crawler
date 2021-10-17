@@ -12,7 +12,7 @@
         }
     ],
     "require": {
-        "php": "^7.4",
+        "php": "^7.4 || ^8.0",
         "ext-json": "*",
         "ext-pdo": "*",
         "beberlei/assert": "^3.3",
@@ -22,7 +22,7 @@
         "symfony/console": "^5.0",
         "symfony/polyfill-php80": "^1.23",
         "typo3/cms-backend": "*",
-        "typo3/cms-core": "^10.4 || ^11.0 || dev-master",
+        "typo3/cms-core": "^10.4 || ^11.5",
         "typo3/cms-frontend": "*",
         "typo3/cms-info": "*",
         "typo3/cms-seo": "*"
@@ -42,6 +42,7 @@
         "nimut/phpunit-merger": "^1.1",
         "nimut/testing-framework": "6.x-dev",
         "nimut/typo3-complete": "^10.4",
+        "phpspec/prophecy-phpunit": "^2.0",
         "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan": "0.12.99",
         "phpstan/phpstan-deprecation-rules": "^0.12.5",

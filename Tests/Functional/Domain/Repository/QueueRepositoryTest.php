@@ -37,11 +37,6 @@ class QueueRepositoryTest extends FunctionalTestCase
     /**
      * @var array
      */
-    protected $coreExtensionsToLoad = ['cms', 'version', 'lang'];
-
-    /**
-     * @var array
-     */
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     /**

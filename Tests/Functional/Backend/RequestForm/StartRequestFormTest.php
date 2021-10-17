@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AOE\Crawler\Tests\Functional\Backend\RequestForm;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -23,8 +23,17 @@ use AOE\Crawler\Backend\RequestForm\StartRequestForm;
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Psr\Container\ContainerInterface;
+use TYPO3\CMS\Backend\Routing\UriBuilder;
+use TYPO3\CMS\Backend\Template\ModuleTemplate;
+use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Localization\LanguageService;
+use TYPO3\CMS\Core\Messaging\FlashMessageService;
+use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Info\Controller\InfoModuleController;
@@ -32,16 +41,12 @@ use TYPO3\CMS\Info\Controller\InfoModuleController;
 class StartRequestFormTest extends FunctionalTestCase
 {
     use BackendRequestTestTrait;
+    use ProphecyTrait;
 
     /**
      * @var array
      */
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
-
-    /**
-     * @var array
-     */
-    protected $coreExtensionsToLoad = ['cms', 'version', 'lang', 'info'];
 
     /**
      * @var StartRequestForm
@@ -57,7 +62,29 @@ class StartRequestFormTest extends FunctionalTestCase
         $this->setupLanguageService();
         $this->setupBackendRequest();
         $view = $this->setupView();
-        $infoModuleController = GeneralUtility::makeInstance(InfoModuleController::class);
+
+        $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
+        if ($typo3Version->getMajorVersion() === 10) {
+            $infoModuleController = GeneralUtility::makeInstance(
+                InfoModuleController::class,
+                $this->prophesize(ModuleTemplate::class)->reveal(),
+                $this->prophesize(UriBuilder::class)->reveal(),
+                $this->prophesize(FlashMessageService::class)->reveal(),
+                $this->prophesize(ContainerInterface::class)->reveal()
+            );
+        } else {
+            // version 11+
+            $infoModuleController = GeneralUtility::makeInstance(
+                InfoModuleController::class,
+                $this->prophesize(IconFactory::class)->reveal(),
+                $this->prophesize(PageRenderer::class)->reveal(),
+                $this->prophesize(UriBuilder::class)->reveal(),
+                $this->prophesize(FlashMessageService::class)->reveal(),
+                $this->prophesize(ContainerInterface::class)->reveal(),
+                $this->prophesize(ModuleTemplateFactory::class)->reveal()
+            );
+        }
+
         $extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
         $this->startRequestForm = GeneralUtility::makeInstance(StartRequestForm::class, $view, $infoModuleController, $extensionSettings);
     }
