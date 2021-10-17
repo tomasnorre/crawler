@@ -206,7 +206,7 @@ class CrawlerApi
             );
         }
 
-        $row = $query->execute()->fetch(0);
+        $row = $query->execute()->fetchAssociative(0);
         if ($row['latest']) {
             $res = $row['latest'];
         } else {

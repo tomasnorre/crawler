@@ -293,7 +293,7 @@ class ConfigurationService
                                 $statement = $queryBuilder->execute();
 
                                 $rows = [];
-                                while ($row = $statement->fetch()) {
+                                while ($row = $statement->fetchAssociative()) {
                                     $rows[$row[$fieldName]] = $row;
                                 }
 
