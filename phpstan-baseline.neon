@@ -801,21 +801,11 @@ parameters:
 			path: Classes/Service/ConfigurationService.php
 
 		-
-			message: "#^Call to an undefined static method TYPO3\\\\CMS\\\\Core\\\\Core\\\\Environment\\:\\:getComposerRootPath\\(\\)\\.$#"
-			count: 1
-			path: Classes/Service/ProcessService.php
-
-		-
 			message:
 				"""
 					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
 					since TYPO3 10\\.4, will be removed in version 12\\.0$#
 				"""
-			count: 1
-			path: Classes/Service/ProcessService.php
-
-		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
 			count: 1
 			path: Classes/Service/ProcessService.php
 
