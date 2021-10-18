@@ -83,7 +83,8 @@ class ConfigurationService
 
     public function getConfigurationFromPageTS(array $pageTSConfig, int $pageId, array $res, string $mountPoint = ''): array
     {
-        $maxUrlsToCompile = MathUtility::forceIntegerInRange($this->extensionSettings['maxCompileUrls'], 1, 1000000000, 10000);
+        $defaultCompileUrls = 10_000;
+        $maxUrlsToCompile = MathUtility::forceIntegerInRange($this->extensionSettings['maxCompileUrls'] ?? $defaultCompileUrls, 1, 1_000_000_000, $defaultCompileUrls);
         $crawlerCfg = $pageTSConfig['tx_crawler.']['crawlerCfg.']['paramSets.'] ?? [];
         foreach ($crawlerCfg as $key => $values) {
             if (! is_array($values)) {
@@ -183,7 +184,9 @@ class ConfigurationService
                 $excludeParts = GeneralUtility::trimExplode(',', $excludeString);
 
                 foreach ($excludeParts as $excludePart) {
-                    [$pid, $depth] = GeneralUtility::trimExplode('+', $excludePart);
+                    $explodedExcludePart = GeneralUtility::trimExplode('+', $excludePart);
+                    $pid = $explodedExcludePart[0];
+                    $depth = $explodedExcludePart[1] ?? null;
 
                     // default is "page only" = "depth=0"
                     if (empty($depth)) {
@@ -368,7 +371,7 @@ class ConfigurationService
      */
     private function runExpandParametersHook(array $paramArray, $parameter, $path, int $pid): array
     {
-        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/class.tx_crawler_lib.php']['expandParameters'])) {
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/class.tx_crawler_lib.php']['expandParameters'] ?? null)) {
             $_params = [
                 'pObj' => &$this,
                 'paramArray' => &$paramArray,

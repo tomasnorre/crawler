@@ -37,13 +37,15 @@ class ConfigurationServiceTest extends FunctionalTestCase
 
     /**
      * @test
+     * @runInSeparateProcess
      */
     public function expandExcludeStringReturnsArraysOfIntegers(): void
     {
         $GLOBALS['BE_USER'] = $this->getMockBuilder(BackendUserAuthentication::class)
             ->disableOriginalConstructor()
-            ->setMethods(['isAdmin', 'getTSConfig', 'getPagePermsClause', 'isInWebMount', 'backendCheckLogin'])
+            ->onlyMethods(['isAdmin', 'getTSConfig', 'getPagePermsClause', 'isInWebMount', 'backendCheckLogin'])
             ->getMock();
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename'] = 'foo';
 
         $excludeStringArray = $this->subject->expandExcludeString('1,2,4,6,8');
 
