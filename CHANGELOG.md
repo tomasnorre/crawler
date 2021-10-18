@@ -4,6 +4,7 @@
 
 ### Added
 * Display error messages in buildQeueu command in CLI
+* PHP 8.0 Support
 
 ### Changed
 * !!! CrawlerController->drawURLs_addRowsForPage() is now returning an array instead of HTML-string
