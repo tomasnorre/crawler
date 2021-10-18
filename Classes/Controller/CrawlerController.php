@@ -671,7 +671,7 @@ class CrawlerController implements LoggerAwareInterface
             );
 
         $result = $this->queueExecutor->executeQueueItem($queueRec, $this);
-        if ($result['content'] === null) {
+        if ($result === 'ERROR' || ($result['content'] ?? null) === null) {
             $resultData = 'An errors happened';
         } else {
             /** @var JsonCompatibilityConverter $jsonCompatibilityConverter */
@@ -697,7 +697,7 @@ class CrawlerController implements LoggerAwareInterface
             }
         }
         // Set result in log which also denotes the end of the processing of this entry.
-        $field_array = ['result_data' => json_encode($result)];
+        $field_array = ['result_data' => json_encode($resultData)];
 
         SignalSlotUtility::emitSignal(
             self::class,

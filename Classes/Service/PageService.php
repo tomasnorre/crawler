@@ -38,7 +38,7 @@ class PageService
         $extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
 
         // if page is hidden
-        if (! $extensionSettings['crawlHiddenPages'] && $pageRow['hidden']) {
+        if (! ($extensionSettings['crawlHiddenPages'] ?? false) && ($pageRow['hidden'] ?? false)) {
             return 'Because page is hidden';
         }
 
