@@ -3,8 +3,11 @@
 ## Crawler 11.0.0-dev
 
 ### Added
+* Display error messages in buildQeueu command in CLI
 
 ### Changed
+* !!! CrawlerController->drawURLs_addRowsForPage() is now returning an array instead of HTML-string
+* !!! CrawlerController->getPageTreeAndUrls() is now returning an array instead of HTML-string
 
 ### Fixed
 * Add Process button isn't shown when no entries in queue

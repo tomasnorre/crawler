@@ -26,6 +26,7 @@ use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Utility\MessageUtility;
 use AOE\Crawler\Utility\SignalSlotUtility;
+use AOE\Crawler\Value\QueueRow;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
@@ -158,7 +159,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
         }
 
         $crawlerController->setID = GeneralUtility::md5int(microtime());
-        $crawlerController->getPageTreeAndUrls(
+        $queueRows = $crawlerController->getPageTreeAndUrls(
             $pageId,
             MathUtility::forceIntegerInRange((int) $input->getOption('depth'), 0, 99),
             $crawlerController->getCurrentTime(),
@@ -174,7 +175,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
         } elseif ($mode === 'exec') {
             $progressBar = new ProgressBar($output);
             $output->writeln('<info>Executing ' . count($crawlerController->urlList) . ' requests right away:</info>');
-            $output->writeln('<info>' . implode(PHP_EOL, $crawlerController->urlList) . '</info>' . PHP_EOL);
+            $this->outputUrls($queueRows, $output);
             $output->writeln('<info>Processing</info>' . PHP_EOL);
 
             foreach ($progressBar->iterate($crawlerController->queueEntries) as $queueRec) {
@@ -201,10 +202,10 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             $output->writeln('');
         } elseif ($mode === 'queue') {
             $output->writeln('<info>Putting ' . count($crawlerController->urlList) . ' entries in queue:</info>' . PHP_EOL);
-            $output->writeln('<info>' . implode(PHP_EOL, $crawlerController->urlList) . '</info>' . PHP_EOL);
+            $this->outputUrls($queueRows, $output);
         } else {
             $output->writeln('<info>' . count($crawlerController->urlList) . ' entries found for processing. (Use "mode" to decide action):</info>' . PHP_EOL);
-            $output->writeln('<info>' . implode(PHP_EOL, $crawlerController->urlList) . '</info>' . PHP_EOL);
+            $this->outputUrls($queueRows, $output);
         }
 
         return 0;
@@ -217,5 +218,17 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
     {
         $parameter = trim($conf);
         return ($parameter !== '' ? GeneralUtility::trimExplode(',', $parameter) : []);
+    }
+
+    private function outputUrls(array $queueRows, OutputInterface $output): void
+    {
+        /** @var QueueRow $row */
+        foreach ($queueRows as $row) {
+            if (empty($row->message)) {
+                $output->writeln('<info>' . $row->urls . '</info>');
+            } else {
+                $output->writeln('<warning>' . $row->pageTitle . ': ' . $row->message . '</warning>');
+            }
+        }
     }
 }
