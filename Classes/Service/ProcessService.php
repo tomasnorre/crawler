@@ -100,7 +100,7 @@ class ProcessService
         $typo3MajorVersion = (new Typo3Version())->getMajorVersion();
         $phpPath = PhpBinaryUtility::getPhpBinary();
 
-        if ($typo3MajorVersion === 10 || !TYPO3_COMPOSER_MODE) {
+        if ($typo3MajorVersion === 10 || !Environment::isComposerMode()) {
             $typo3BinaryPath = ExtensionManagementUtility::extPath('core') . 'bin/';
         } else {
             $typo3BinaryPath = $this->getComposerBinPath();
