@@ -3,7 +3,8 @@
 ## Crawler 11.0.0-dev
 
 ### Added
-* Display error messages in buildQeueu command in CLI
+* Display error messages in buildQueue command in CLI
+* PSR-14 ModifySkipPageEvent
 
 ### Changed
 * !!! CrawlerController->drawURLs_addRowsForPage() is now returning an array instead of HTML-string
@@ -14,6 +15,8 @@
 * Calculating the typo3 cli path based on composer is active
 
 ### Deprecated
+* pageVeto-hook is marked as deprecated, will be removed in 13.x
+
 #### Classes
 #### Functions & Properties
 
