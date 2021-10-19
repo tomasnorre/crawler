@@ -6,6 +6,7 @@
 * Display error messages in buildQueue command in CLI
 * PHP 8.0 Support
 * PSR-14 ModifySkipPageEvent
+* PSR-14 AfterUrlCrawledEvent
 
 ### Changed
 * !!! CrawlerController->drawURLs_addRowsForPage() is now returning an array instead of HTML-string

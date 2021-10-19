@@ -21,6 +21,8 @@ namespace AOE\Crawler\Tests\Unit\Service;
 
 use AOE\Crawler\Service\PageService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -29,6 +31,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class PageServiceTest extends UnitTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var PageService
      */
@@ -36,7 +40,10 @@ class PageServiceTest extends UnitTestCase
 
     protected function setUp(): void
     {
-        $this->subject = GeneralUtility::makeInstance(PageService::class);
+        $this->subject = GeneralUtility::makeInstance(
+            PageService::class,
+            $this->prophesize(EventDispatcher::class)->reveal()
+        );
     }
 
     /**

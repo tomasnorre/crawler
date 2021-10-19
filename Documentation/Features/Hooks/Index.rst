@@ -21,9 +21,9 @@ being crawled:
 pageVeto Hook
 =============
 
-**Deprecated since 11.0.0, will be removed in 13.x**
 
-Please migrate to the PSR-14 Event :ref:`psr14-modify-skip-page-event`
+.. warning::
+   Deprecated since 11.0.0, will be removed in 13.x, please migrate to the PSR-14 Event :ref:`psr14-modify-skip-page-event`.
 
 You can also decide whether a page should not be crawled in an
 individual userfunction. Register your function here:
