@@ -43,8 +43,6 @@ class SignalSlotUtility
 
     public const SIGNAL_DUPLICATE_URL_IN_QUEUE = 'duplicateUrlInQueue';
 
-    public const SIGNAL_URL_CRAWLED = 'urlCrawled';
-
     public const SIGNAL_QUEUE_ENTRY_FLUSH = 'queueEntryFlush';
 
     /**

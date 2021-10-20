@@ -25,6 +25,7 @@
 ### Removed
 * Support for TYPO3 9
 * PHP support for `<7.4`
+* SignalSlotUtility::SIGNAL_URL_CRAWLED
 
 #### Classes
 #### Functions & Properties
@@ -64,7 +65,6 @@
 * ProcessService->multiProcess()
 * ProcessService->reportItemStatus()
 * ProcessService->startRequiredProcesses()
-
 * QueueRepository->countUnprocessedItems()
 * QueueRepository->countAllByProcessId()
 
