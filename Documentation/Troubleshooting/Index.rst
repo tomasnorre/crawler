@@ -61,7 +61,7 @@ Please check the :guilabel:`Upgrade Wizard`, and check if the
 :guilabel:`Introduce URL parts ("slugs") to all existing pages` is marked as
 done, if not you should perform this step.
 
-See related issue: `[BUG] Crawling Depth not respected #464 <https://github.com/AOEpeople/crawler/issues/464>`_
+See related issue: `[BUG] Crawling Depth not respected #464 <https://github.com/tomasnorre/crawler/issues/464>`_
 
 
 Update from older versions
@@ -116,8 +116,8 @@ Workaround
 
 This workaround is for these two bugs:
 
-https://github.com/AOEpeople/crawler/issues/576 and
-https://github.com/AOEpeople/crawler/issues/739
+https://github.com/tomasnorre/crawler/issues/576 and
+https://github.com/tomasnorre/crawler/issues/739
 
 If you would like to know more about what's going it, you can look at the core:
 
