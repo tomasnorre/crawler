@@ -1,10 +1,12 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 11.0.0-dev
+## Crawler 11.0.0
+Crawler 11.0.0 was released on October 22nd, 2021
 
 ### Added
-* Display error messages in buildQueue command in CLI
+* Support for TYPO3 11 LTS
 * PHP 8.0 Support
+* Display error messages in buildQueue command in CLI
 * PSR-14 ModifySkipPageEvent
 * PSR-14 AfterUrlCrawledEvent
 * PSR-14 InvokeQueueChangeEvent
