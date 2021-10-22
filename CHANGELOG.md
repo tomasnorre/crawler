@@ -3,8 +3,14 @@
 ## Crawler 11.0.0-dev
 
 ### Added
-* Display error messages in buildQeueu command in CLI
+* Display error messages in buildQueue command in CLI
 * PHP 8.0 Support
+* PSR-14 ModifySkipPageEvent
+* PSR-14 AfterUrlCrawledEvent
+* PSR-14 InvokeQueueChangeEvent
+* PSR-14 AfterUrlCrawledEvent
+* PSR-14 BeforeQueueItemAddedEvent
+* PSR-14 AfterQueueItemAddedEvent
 
 ### Changed
 * !!! CrawlerController->drawURLs_addRowsForPage() is now returning an array instead of HTML-string
@@ -15,14 +21,25 @@
 * Calculating the typo3 cli path based on composer is active
 
 ### Deprecated
+* pageVeto-hook is marked as deprecated, will be removed in 13.0
+
 #### Classes
 #### Functions & Properties
 
 ### Removed
 * Support for TYPO3 9
 * PHP support for `<7.4`
+* SignalSlotUtility::SIGNAL_URL_CRAWLED
+* SignalSlotUtility::SIGNAL_INVOKE_QUEUE_CHANGE
+* SignalSlotUtility::SIGNAL_URL_ADDED_TO_QUEUE
+* SignalSlotUtility::SIGNAL_DUPLICATE_URL_IN_QUEUE
+* SignalSlotUtility::SIGNAL_QUEUEITEM_PREPROCESS
+* SignalSlotUtility::SIGNAL_QUEUEITEM_POSTPROCESS
+* SignalSlotUtility::SIGNAL_QUEUE_ENTRY_FLUSH
 
 #### Classes
+* SignalSlotUtility
+
 #### Functions & Properties
 * CrawlerController->accessMode
 * CrawlerController->processFilename
@@ -60,7 +77,6 @@
 * ProcessService->multiProcess()
 * ProcessService->reportItemStatus()
 * ProcessService->startRequiredProcesses()
-
 * QueueRepository->countUnprocessedItems()
 * QueueRepository->countAllByProcessId()
 

@@ -21,8 +21,9 @@ namespace AOE\Crawler\Backend\RequestForm;
 
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Model\Reason;
+use AOE\Crawler\Event\InvokeQueueChangeEvent;
 use AOE\Crawler\Utility\MessageUtility;
-use AOE\Crawler\Utility\SignalSlotUtility;
+use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Info\Controller\InfoModuleController;
@@ -44,16 +45,23 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
      */
     private $reqMinute = 1000;
 
+    private EventDispatcher $eventDispatcher;
+
     /**
      * @var array holds the selection of configuration from the configuration selector box
      */
     private $incomingConfigurationSelection = [];
 
-    public function __construct(StandaloneView $view, InfoModuleController $infoModuleController, array $extensionSettings)
-    {
+    public function __construct(
+        StandaloneView $view,
+        InfoModuleController $infoModuleController,
+        array $extensionSettings,
+        EventDispatcher $eventDispatcher = null
+    ) {
         $this->view = $view;
         $this->infoModuleController = $infoModuleController;
         $this->extensionSettings = $extensionSettings;
+        $this->eventDispatcher = $eventDispatcher ?? GeneralUtility::makeInstance(EventDispatcher::class);
     }
 
     public function render($id, string $elementName, array $menuItems): string
@@ -105,13 +113,7 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
                 $reason = new Reason();
                 $reason->setReason(Reason::REASON_GUI_SUBMIT);
                 $reason->setDetailText('The user ' . $GLOBALS['BE_USER']->user['username'] . ' added pages to the crawler queue manually');
-
-                $signalPayload = ['reason' => $reason];
-                SignalSlotUtility::emitSignal(
-                    self::class,
-                    SignalSlotUtility::SIGNAL_INVOKE_QUEUE_CHANGE,
-                    $signalPayload
-                );
+                $this->eventDispatcher->dispatch(new InvokeQueueChangeEvent($reason));
             }
 
             $queueRows = $this->crawlerController->getPageTreeAndUrls(

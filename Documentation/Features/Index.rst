@@ -14,5 +14,6 @@ Features
    PollableProcessingInstructions/Index
    MultiprocessSupport/Index
    Hooks/Index
+   Events/Index
    PriorityCrawling/Index
 

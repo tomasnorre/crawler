@@ -45,7 +45,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             __DIR__ . '/Classes/Command/ProcessQueueCommand.php',
             __DIR__ . '/Classes/Controller/CrawlerController.php',
             __DIR__ . '/Classes/Domain/Model/Reason.php',
-            __DIR__ . '/Classes/Utility/SignalSlotUtility.php',
             __DIR__ . '/Tests/Functional/Api/CrawlerApiTest.php',
             __DIR__ . '/Tests/Acceptance',
             Rector\DeadCode\Rector\If_\RemoveDeadInstanceOfRector::class => null,
