@@ -22,14 +22,21 @@ namespace AOE\Crawler\Event;
 final class AfterUrlCrawledEvent
 {
     private string $url;
+    private array $result;
 
-    public function __construct(string $url)
+    public function __construct(string $url, array $result)
     {
         $this->url = $url;
+        $this->result = $result;
     }
 
     public function getUrl(): string
     {
         return $this->url;
+    }
+
+    public function getResult(): array
+    {
+        return $this->result;
     }
 }

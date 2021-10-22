@@ -31,7 +31,7 @@ class AfterUrlCrawledEventTest extends UnitTestCase
 
     protected function setUp(): void
     {
-        $this->subject = new AfterUrlCrawledEvent('/contact');
+        $this->subject = new AfterUrlCrawledEvent('/contact', []);
     }
 
     /**
@@ -42,6 +42,11 @@ class AfterUrlCrawledEventTest extends UnitTestCase
         self::assertEquals(
             '/contact',
             $this->subject->getUrl()
+        );
+
+        self::assertEquals(
+            [],
+            $this->subject->getResult()
         );
     }
 }
