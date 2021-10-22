@@ -30,8 +30,13 @@ final class InvokeQueueChangeEvent
         $this->reason = $reason;
     }
 
-    public function getReason(): Reason
+    public function getReasonDetailedText(): string
     {
-        return $this->reason;
+        return $this->reason->getDetailText();
+    }
+
+    public function getReasonText(): string
+    {
+        return $this->reason->getReason();
     }
 }

@@ -34,6 +34,8 @@ class InvokeQueueChangeEventTest extends UnitTestCase
     protected function setUp(): void
     {
         $reason = new Reason();
+        $reason->setReason(Reason::REASON_CLI_SUBMIT);
+        $reason->setDetailText('More detailed text');
         $this->subject = new InvokeQueueChangeEvent($reason);
     }
 
@@ -42,6 +44,14 @@ class InvokeQueueChangeEventTest extends UnitTestCase
      */
     public function defaultValueTest(): void
     {
-        self::assertInstanceOf(Reason::class, $this->subject->getReason());
+        self::assertEquals(
+            Reason::REASON_CLI_SUBMIT,
+            $this->subject->getReasonText()
+        );
+
+        self::assertEquals(
+            'More detailed text',
+            $this->subject->getReasonDetailedText()
+        );
     }
 }

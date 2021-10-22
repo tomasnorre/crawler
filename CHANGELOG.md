@@ -21,7 +21,7 @@
 * Calculating the typo3 cli path based on composer is active
 
 ### Deprecated
-* pageVeto-hook is marked as deprecated, will be removed in 13.x
+* pageVeto-hook is marked as deprecated, will be removed in 13.0
 
 #### Classes
 #### Functions & Properties

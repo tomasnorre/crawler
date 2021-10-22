@@ -45,4 +45,14 @@ class ModifySkipPageEventTest extends UnitTestCase
             $this->subject->getPageRow()
         );
     }
+
+    /**
+     * @test
+     */
+    public function setterTest(): void
+    {
+        self::assertFalse($this->subject->isSkipped());
+        $this->subject->setSkipped(true);
+        self::assertTrue($this->subject->isSkipped());
+    }
 }

@@ -5,26 +5,23 @@
 PSR-14 Events
 =============
 
-Since 11.0.0
+.. versionadded:: 11.0.0
 
 You can register your own PSR-14 Event Listener and extend the functionality of the
 TYPO3 Crawler. In this section you will see which events that you can listen too.
 
 **Events within the Crawler**
 
-* :ref:`psr14-modify-skip-page-event`
-* :ref:`psr14-after-url-crawled-event`
-* :ref:`psr14-invoke-queue-change-event`
-* :ref:`psr14-after-urla-added-to-queue-event`
-* :ref:`psr14-before-queue-items-added-event`
-* :ref:`psr14-after-queue-items-added-event`
+.. contents::
+   :depth: 1
+   :local:
 
 .. _psr14-modify-skip-page-event:
 
 ModifySkipPageEvent
 ===================
 
-With this event, you can implement your own logic weather a page should be skipped
+With this event, you can implement your own logic whether a page should be skipped
 or not, this can be basically a skip by uid, like in the example below. It can
 also be a more complex logic that determines if it should be skipped or not.
 
@@ -49,7 +46,6 @@ already implemented.
               if($modifySkipPageEvent->getPageRow()['uid'] === 42) {
                   $modifySkipPageEvent->setSkipped('Page with uid "42" is excluded by ModifySkipPageEvent');
               }
-              return false;
           }
       }
 
@@ -142,7 +138,7 @@ whom.
                    identifier: 'ext-extension-key/InvokeQueueChangeEventListener'
                    event: AOE\Crawler\Event\InvokeQueueChangeEvent
 
-.. _psr14-after-urla-added-to-queue-event:
+.. _psr14-after-url-added-to-queue-event:
 
 AfterUrlAddedToQueueEvent
 =========================
@@ -185,7 +181,7 @@ BeforeQueueItemAddedEvent
 =========================
 
 This event can be used to check or modify a queue record before adding it to
-the queue. This can be useful if you want certain actions in place based on lets
+the queue. This can be useful if you want certain actions in place based on, let's
 say `Doktype` or SEO Priority.
 
 .. rst-class:: bignums-xxl

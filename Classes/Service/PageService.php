@@ -64,7 +64,7 @@ class PageService
         // veto hook
         foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pageVeto'] ?? [] as $key => $func) {
             trigger_error(
-                'The pageVeto-hook of the TYPO3 Crawler is deprecated since v11.0.0 and will be removed in v13.x,
+                'The pageVeto-hook of the TYPO3 Crawler is deprecated since v11.0.0 and will be removed in v13.0,
                 please use the PSR-14 ModifySkipPageEvent instead.',
                 E_USER_DEPRECATED
             );
