@@ -5,6 +5,8 @@
 PSR-14 Events
 =============
 
+Since 11.0.0
+
 You can register your own PSR-14 Event Listener and extend the functionality of the
 TYPO3 Crawler. In this section you will see which events that you can listen too.
 
