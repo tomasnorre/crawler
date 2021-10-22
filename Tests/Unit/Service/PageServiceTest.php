@@ -133,6 +133,9 @@ class PageServiceTest extends UnitTestCase
                 'pageVeto' => [],
                 'expected' => 'Because doktype is not allowed',
             ],
+            /*
+             * Left out as we want people to use the PSR-14 ModifySkipPageEvent instead,
+             * kept for easy testing if needed.
             'Page veto exists' => [
                 'extensionSettings' => [],
                 'pageRow' => [
@@ -153,6 +156,7 @@ class PageServiceTest extends UnitTestCase
                 'pageVeto' => ['veto-func' => VetoHookTestHelper::class . '->returnString'],
                 'expected' => 'Veto because of {"pageRow":{"doktype":1,"hidden":0}}',
             ],
+            */
         ];
     }
 }
