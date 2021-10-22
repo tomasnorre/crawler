@@ -24,8 +24,8 @@ use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Event\InvokeQueueChangeEvent;
 use AOE\Crawler\Utility\MessageUtility;
-use AOE\Crawler\Utility\SignalSlotUtility;
 use AOE\Crawler\Value\QueueRow;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -33,6 +33,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
@@ -119,7 +120,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
         $mode = $input->getOption('mode') ?? 'queue';
 
         $extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
-
+        $eventDispatcher = GeneralUtility::makeInstance(EventDispatcher::class);
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
 
         /** @var CrawlerController $crawlerController */
@@ -145,13 +146,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             $reason = new Reason();
             $reason->setReason(Reason::REASON_CLI_SUBMIT);
             $reason->setDetailText('The cli script of the crawler added to the queue');
-
-            $signalPayload = ['reason' => $reason];
-            SignalSlotUtility::emitSignal(
-                self::class,
-                SignalSlotUtility::SIGNAL_INVOKE_QUEUE_CHANGE,
-                $signalPayload
-            );
+            $eventDispatcher->dispatch(new InvokeQueueChangeEvent($reason));
         }
 
         if ($extensionSettings['cleanUpOldQueueEntries']) {

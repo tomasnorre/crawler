@@ -19,6 +19,7 @@ namespace AOE\Crawler\Tests\Unit\Service;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Event\ModifySkipPageEvent;
 use AOE\Crawler\Service\PageService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -40,9 +41,15 @@ class PageServiceTest extends UnitTestCase
 
     protected function setUp(): void
     {
+        $modifySkipPageEvent = new ModifySkipPageEvent([]);
+        $modifySkipPageEvent->setSkipped(false);
+
+        $mockedEventDispatcher = $this->createStub(EventDispatcher::class);
+        $mockedEventDispatcher->method('dispatch')->willReturn($modifySkipPageEvent);
+
         $this->subject = GeneralUtility::makeInstance(
             PageService::class,
-            $this->prophesize(EventDispatcher::class)->reveal()
+            $mockedEventDispatcher
         );
     }
 
