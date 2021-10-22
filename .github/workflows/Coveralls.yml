@@ -1,0 +1,47 @@
+name: Test Coveralls
+
+on: ["push", "pull_request"]
+
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up MySQL 5.7
+        uses: mirromutth/mysql-action@v1.1
+        with:
+          mysql version: 5.7
+          mysql root password: 'root'
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up PHP Version 7.4
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer install --no-progress
+
+      - name: Unit Tests
+        run: |
+          export "UNIT_XML"=.Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml
+          .Build/bin/phpunit --whitelist Classes --coverage-clover=unittest-coverage.clover --colors -c $UNIT_XML Tests/Unit
+
+      - name: Functional Tests
+        run: |
+          export "FUNCTIONAL_XML"=.Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml
+          .Build/bin/phpunit --whitelist Classes --coverage-clover=functional-coverage.clover --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
+        env:
+          typo3DatabaseHost: 127.0.0.1
+          typo3DatabaseName: typo3
+          typo3DatabasePassword: root
+          typo3DatabaseUsername: root
+
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.CRAWLER_GITHUB_TOKEN }}
