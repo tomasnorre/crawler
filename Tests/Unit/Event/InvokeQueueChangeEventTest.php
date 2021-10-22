@@ -24,6 +24,7 @@ use AOE\Crawler\Event\InvokeQueueChangeEvent;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
 /**
+ * @covers \AOE\Crawler\Domain\Model\Reason
  * @covers \AOE\Crawler\Event\InvokeQueueChangeEvent
  */
 class InvokeQueueChangeEventTest extends UnitTestCase

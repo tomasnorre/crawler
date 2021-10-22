@@ -27,8 +27,9 @@ use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * @covers \AOE\Crawler\Service\PageService
  * @covers \AOE\Crawler\Configuration\ExtensionConfigurationProvider::getExtensionConfiguration
+ * @covers \AOE\Crawler\Event\ModifySkipPageEvent
+ * @covers \AOE\Crawler\Service\PageService
  */
 class PageServiceTest extends UnitTestCase
 {
