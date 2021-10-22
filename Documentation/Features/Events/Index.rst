@@ -5,7 +5,7 @@
 PSR-14 Events
 =============
 
-You can register you own PSR-14 Event Listener and extend the functionality of the
+You can register your own PSR-14 Event Listener and extend the functionality of the
 TYPO3 Crawler. In this section you will see which events that you can listen too.
 
 **Events within the Crawler**
@@ -22,7 +22,7 @@ TYPO3 Crawler. In this section you will see which events that you can listen too
 ModifySkipPageEvent
 ===================
 
-With this event, you can implement you own logic weather a page should be skipped
+With this event, you can implement your own logic weather a page should be skipped
 or not, this can be basically a skip by uid, like in the example below. It can
 also be a more complex logic that determines if it should be skipped or not.
 
@@ -106,7 +106,7 @@ InvokeQueueChangeEvent
 ======================
 
 The InvokeQueueChangeEvent enables you to act on queue changes, it can be
-e.g. automatically add new processes. The event takes a `Reason` as arguments
+e.g. automatically adding new processes. The event takes a `Reason` as arguments
 which gives you more information about what has happened and for GUI also by
 whom.
 
