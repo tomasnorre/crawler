@@ -6,7 +6,6 @@ build:
                     version: 7.4
                     pecl_extensions:
                       - zip
-                      - json
                       - pdo
             tests:
                 override:
