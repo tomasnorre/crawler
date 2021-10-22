@@ -22,6 +22,9 @@ namespace AOE\Crawler\Tests\Unit\Event;
 use AOE\Crawler\Event\ModifySkipPageEvent;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
+/**
+ * @covers \AOE\Crawler\Event\ModifySkipPageEvent
+ */
 class ModifySkipPageEventTest extends UnitTestCase
 {
     private ModifySkipPageEvent $subject;

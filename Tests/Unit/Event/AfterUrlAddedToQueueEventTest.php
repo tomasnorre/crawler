@@ -22,6 +22,9 @@ namespace AOE\Crawler\Tests\Unit\Event;
 use AOE\Crawler\Event\AfterUrlAddedToQueueEvent;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
+/**
+ * @covers \AOE\Crawler\Event\AfterUrlAddedToQueueEvent
+ */
 class AfterUrlAddedToQueueEventTest extends UnitTestCase
 {
     private AfterUrlAddedToQueueEvent $subject;

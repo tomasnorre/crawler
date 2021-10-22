@@ -23,6 +23,9 @@ use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Event\InvokeQueueChangeEvent;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
+/**
+ * @covers \AOE\Crawler\Event\InvokeQueueChangeEvent
+ */
 class InvokeQueueChangeEventTest extends UnitTestCase
 {
     private InvokeQueueChangeEvent $subject;
