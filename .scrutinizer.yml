@@ -4,9 +4,6 @@ build:
             environment:
                 php:
                     version: 8.0
-                    pecl_extensions:
-                      - zip
-                      - pdo
             tests:
                 override:
                     - php-scrutinizer-run
