@@ -142,6 +142,5 @@ class BackendModuleCest
         $I->click('Continue and show Log');
         $I->waitForText('https://crawler-devbox.ddev.site/', 15);
         $I->dontSee('Content index does not exists in requestContent');
-
     }
 }
