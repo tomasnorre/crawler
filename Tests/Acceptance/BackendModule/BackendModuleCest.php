@@ -83,24 +83,6 @@ class BackendModuleCest
         $I->waitForText('Count: 1', 15);
     }
 
-    /**
-     * Ensures that Result logs are writing correctly
-     * https://github.com/tomasnorre/crawler/issues/826
-     */
-    public function SeeCrawlerLogWithOutErrors(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
-    {
-        $adminStep->loginAsAdmin();
-        // Add queue item
-        $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
-        $I->selectOption('configurationSelection[]', 'default');
-        $I->click('Crawl URLs');
-        $I->waitForText('1 URLs submitted', 15);
-        // Check Result
-        $I->click('Continue and show Log');
-        $I->waitForText('https://crawler-devbox.ddev.site/', 15);
-        $I->dontSee('Content index does not exists in requestContent');
-    }
-
     public function EnsureNoUserGroupsAndNoProcInstAreDisplayed(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();
@@ -142,5 +124,24 @@ class BackendModuleCest
         $I->click('Show finished and terminated processes');
         $I->waitForText('Process completed successfully', 60);
         $I->dontSee('Process was cancelled');
+    }
+
+    /**
+     * Ensures that Result logs are writing correctly
+     * https://github.com/tomasnorre/crawler/issues/826
+     */
+    public function SeeCrawlerLogWithOutErrors(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    {
+        $adminStep->loginAsAdmin();
+        // Add queue item
+        $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
+        $I->selectOption('configurationSelection[]', 'default');
+        $I->click('Crawl URLs');
+        $I->waitForText('1 URLs submitted', 15);
+        // Check Result
+        $I->click('Continue and show Log');
+        $I->waitForText('https://crawler-devbox.ddev.site/', 15);
+        $I->dontSee('Content index does not exists in requestContent');
+
     }
 }
