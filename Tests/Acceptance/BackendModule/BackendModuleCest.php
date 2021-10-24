@@ -132,15 +132,10 @@ class BackendModuleCest
      */
     public function SeeCrawlerLogWithOutErrors(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
-        $adminStep->loginAsAdmin();
-        // Add queue item
-        $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
-        $I->selectOption('configurationSelection[]', 'default');
-        $I->click('Crawl URLs');
-        $I->waitForText('1 URLs submitted', 15);
+        $this->crawlerAddProcess($I, $adminStep, $pageTree);
         // Check Result
-        $I->click('Continue and show Log');
-        $I->waitForText('https://crawler-devbox.ddev.site/', 15);
+        $I->selectOption('SET[crawlaction]', 'log');
+        $I->waitForText('OK');
         $I->dontSee('Content index does not exists in requestContent');
     }
 }
