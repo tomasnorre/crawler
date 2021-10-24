@@ -689,7 +689,7 @@ class CrawlerController implements LoggerAwareInterface
             }
         }
         // Set result in log which also denotes the end of the processing of this entry.
-        $field_array = ['result_data' => json_encode($resultData)];
+        $field_array = ['result_data' => json_encode($result)];
 
         /** @var AfterQueueItemAddedEvent $event */
         $event = $this->eventDispatcher->dispatch(new AfterQueueItemAddedEvent($queueId, $field_array));
