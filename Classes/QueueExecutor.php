@@ -85,7 +85,7 @@ class QueueExecutor implements SingletonInterface
             }
 
             if (!is_array($result)) {
-                return 'Result is not an array';
+                $result = ['content' => json_encode('')];
             }
 
             $this->eventDispatcher->dispatch(new AfterUrlCrawledEvent($parameters['url'], $result));
