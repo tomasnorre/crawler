@@ -19,16 +19,22 @@ namespace AOE\Crawler\Tests\Unit\Service;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Event\ModifySkipPageEvent;
 use AOE\Crawler\Service\PageService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * @covers \AOE\Crawler\Service\PageService
  * @covers \AOE\Crawler\Configuration\ExtensionConfigurationProvider::getExtensionConfiguration
+ * @covers \AOE\Crawler\Event\ModifySkipPageEvent
+ * @covers \AOE\Crawler\Service\PageService
  */
 class PageServiceTest extends UnitTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var PageService
      */
@@ -36,7 +42,16 @@ class PageServiceTest extends UnitTestCase
 
     protected function setUp(): void
     {
-        $this->subject = GeneralUtility::makeInstance(PageService::class);
+        $modifySkipPageEvent = new ModifySkipPageEvent([]);
+        $modifySkipPageEvent->setSkipped(false);
+
+        $mockedEventDispatcher = $this->createStub(EventDispatcher::class);
+        $mockedEventDispatcher->method('dispatch')->willReturn($modifySkipPageEvent);
+
+        $this->subject = GeneralUtility::makeInstance(
+            PageService::class,
+            $mockedEventDispatcher
+        );
     }
 
     /**
@@ -126,6 +141,9 @@ class PageServiceTest extends UnitTestCase
                 'pageVeto' => [],
                 'expected' => 'Because doktype is not allowed',
             ],
+            /*
+             * Left out as we want people to use the PSR-14 ModifySkipPageEvent instead,
+             * kept for easy testing if needed.
             'Page veto exists' => [
                 'extensionSettings' => [],
                 'pageRow' => [
@@ -146,6 +164,7 @@ class PageServiceTest extends UnitTestCase
                 'pageVeto' => ['veto-func' => VetoHookTestHelper::class . '->returnString'],
                 'expected' => 'Veto because of {"pageRow":{"doktype":1,"hidden":0}}',
             ],
+            */
         ];
     }
 }

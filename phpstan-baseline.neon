@@ -124,22 +124,7 @@ parameters:
 			path: Classes/Backend/RequestForm/RequestFormInterface.php
 
 		-
-			message: "#^Call to deprecated method emitSignal\\(\\) of class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/StartRequestForm.php
-
-		-
 			message: "#^Call to function is_array\\(\\) with string will always evaluate to false\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/StartRequestForm.php
-
-		-
-			message: "#^Call to method emitSignal\\(\\) of deprecated class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/StartRequestForm.php
-
-		-
-			message: "#^Fetching class constant SIGNAL_INVOKE_QUEUE_CHANGE of deprecated class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/StartRequestForm.php
 
@@ -154,11 +139,6 @@ parameters:
 			path: Classes/Backend/RequestForm/StartRequestForm.php
 
 		-
-			message: "#^Call to deprecated method emitSignal\\(\\) of class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
-			count: 1
-			path: Classes/Command/BuildQueueCommand.php
-
-		-
 			message:
 				"""
 					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
@@ -168,22 +148,12 @@ parameters:
 			path: Classes/Command/BuildQueueCommand.php
 
 		-
-			message: "#^Call to method emitSignal\\(\\) of deprecated class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
-			count: 1
-			path: Classes/Command/BuildQueueCommand.php
-
-		-
 			message: "#^Cannot access offset 'procInstructions' on array\\|bool\\.$#"
 			count: 1
 			path: Classes/Command/BuildQueueCommand.php
 
 		-
 			message: "#^Cannot access offset 'url' on array\\|bool\\.$#"
-			count: 1
-			path: Classes/Command/BuildQueueCommand.php
-
-		-
-			message: "#^Fetching class constant SIGNAL_INVOKE_QUEUE_CHANGE of deprecated class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
 			count: 1
 			path: Classes/Command/BuildQueueCommand.php
 
@@ -277,11 +247,6 @@ parameters:
 			path: Classes/ContextMenu/ItemProvider.php
 
 		-
-			message: "#^Call to deprecated method emitSignal\\(\\) of class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
-			count: 5
-			path: Classes/Controller/CrawlerController.php
-
-		-
 			message:
 				"""
 					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
@@ -296,11 +261,6 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Call to method emitSignal\\(\\) of deprecated class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
-			count: 5
-			path: Classes/Controller/CrawlerController.php
-
-		-
 			message: "#^Cannot call method debug\\(\\) on Psr\\\\Log\\\\LoggerInterface\\|null\\.$#"
 			count: 2
 			path: Classes/Controller/CrawlerController.php
@@ -311,27 +271,7 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Class cognitive complexity is 98, keep it under 60$#"
-			count: 1
-			path: Classes/Controller/CrawlerController.php
-
-		-
-			message: "#^Fetching class constant SIGNAL_DUPLICATE_URL_IN_QUEUE of deprecated class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
-			count: 1
-			path: Classes/Controller/CrawlerController.php
-
-		-
-			message: "#^Fetching class constant SIGNAL_QUEUEITEM_POSTPROCESS of deprecated class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
-			count: 2
-			path: Classes/Controller/CrawlerController.php
-
-		-
-			message: "#^Fetching class constant SIGNAL_QUEUEITEM_PREPROCESS of deprecated class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
-			count: 1
-			path: Classes/Controller/CrawlerController.php
-
-		-
-			message: "#^Fetching class constant SIGNAL_URL_ADDED_TO_QUEUE of deprecated class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
+			message: "#^Class cognitive complexity is 97, keep it under 60$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -710,21 +650,6 @@ parameters:
 			message: "#^Offset 'parameters' does not exist on array\\|null\\.$#"
 			count: 1
 			path: Classes/Middleware/FrontendUserAuthenticator.php
-
-		-
-			message: "#^Call to deprecated method emitSignal\\(\\) of class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
-			count: 1
-			path: Classes/QueueExecutor.php
-
-		-
-			message: "#^Call to method emitSignal\\(\\) of deprecated class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
-			count: 1
-			path: Classes/QueueExecutor.php
-
-		-
-			message: "#^Fetching class constant SIGNAL_URL_CRAWLED of deprecated class AOE\\\\Crawler\\\\Utility\\\\SignalSlotUtility\\.$#"
-			count: 1
-			path: Classes/QueueExecutor.php
 
 		-
 			message:

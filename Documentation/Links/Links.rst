@@ -10,7 +10,7 @@ Links
     	https://extensions.typo3.org/extension/crawler/
 
 :Bug Tracker:
-    	https://github.com/AOEpeople/crawler/issues
+    	https://github.com/tomasnorre/crawler/issues
 
 :Git Repository:
-    	https://github.com/AOEpeople/crawler.git
+    	https://github.com/tomasnorre/crawler.git

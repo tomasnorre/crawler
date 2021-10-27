@@ -13,7 +13,7 @@ Crawler
 :Keywords:        crawling, cache
 :Copyright:       2019
 :Author:          Kasper Skårhøj, Daniel Pötzinger, Fabrizio Branca, Tolleiv Nietsch, Timo Schmidt, Michael Klapper, Stefan Rotsch, Tomas Norre Mikkelsen
-:Email:           dev@aoe.com
+:Email:           tomasnorre@gmail.com
 :License:         This document is published under the Open Content License available from
                   https://www.opencontent.org/openpub/
 :Rendered:        |today|

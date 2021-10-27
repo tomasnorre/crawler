@@ -1,6 +1,6 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 11.0.0-dev
+## Crawler 11.0.1-dev
 
 ### Added
 
@@ -13,10 +13,51 @@
 #### Functions & Properties
 
 ### Removed
-* Support for TYPO3 9
-* PHP support for `<7.4`
+#### Classes
+#### Functions & Properties
+
+## Crawler 11.0.0
+Crawler 11.0.0 was released on October 22nd, 2021
+
+### Added
+* Support for TYPO3 11 LTS
+* PHP 8.0 Support
+* Display error messages in buildQueue command in CLI
+* PSR-14 ModifySkipPageEvent
+* PSR-14 AfterUrlCrawledEvent
+* PSR-14 InvokeQueueChangeEvent
+* PSR-14 AfterUrlCrawledEvent
+* PSR-14 BeforeQueueItemAddedEvent
+* PSR-14 AfterQueueItemAddedEvent
+
+### Changed
+* !!! CrawlerController->drawURLs_addRowsForPage() is now returning an array instead of HTML-string
+* !!! CrawlerController->getPageTreeAndUrls() is now returning an array instead of HTML-string
+
+### Fixed
+* Add Process button isn't shown when no entries in queue
+* Calculating the typo3 cli path based on composer is active
+
+### Deprecated
+* pageVeto-hook is marked as deprecated, will be removed in 13.0
 
 #### Classes
+#### Functions & Properties
+
+### Removed
+* Support for TYPO3 9
+* PHP support for `<7.4`
+* SignalSlotUtility::SIGNAL_URL_CRAWLED
+* SignalSlotUtility::SIGNAL_INVOKE_QUEUE_CHANGE
+* SignalSlotUtility::SIGNAL_URL_ADDED_TO_QUEUE
+* SignalSlotUtility::SIGNAL_DUPLICATE_URL_IN_QUEUE
+* SignalSlotUtility::SIGNAL_QUEUEITEM_PREPROCESS
+* SignalSlotUtility::SIGNAL_QUEUEITEM_POSTPROCESS
+* SignalSlotUtility::SIGNAL_QUEUE_ENTRY_FLUSH
+
+#### Classes
+* SignalSlotUtility
+
 #### Functions & Properties
 * CrawlerController->accessMode
 * CrawlerController->processFilename
@@ -54,7 +95,6 @@
 * ProcessService->multiProcess()
 * ProcessService->reportItemStatus()
 * ProcessService->startRequiredProcesses()
-
 * QueueRepository->countUnprocessedItems()
 * QueueRepository->countAllByProcessId()
 

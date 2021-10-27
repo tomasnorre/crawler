@@ -83,6 +83,17 @@ class BackendModuleCest
         $I->waitForText('Count: 1', 15);
     }
 
+    public function EnsureNoUserGroupsAndNoProcInstAreDisplayed(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    {
+        $adminStep->loginAsAdmin();
+        $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
+        $I->selectOption('configurationSelection[]', 'excludepages-6-plus-3');
+        $I->click('Update');
+        $I->dontSee('User Groups: ');
+        $I->dontSee('ProcInstr:: ');
+        $I->waitForText('Count: 1', 15);
+    }
+
     public function updateUrlButtonSetDepth(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();

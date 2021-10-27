@@ -26,11 +26,14 @@ use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Event\AfterQueueItemAddedEvent;
+use AOE\Crawler\Event\AfterUrlAddedToQueueEvent;
+use AOE\Crawler\Event\BeforeQueueItemAddedEvent;
 use AOE\Crawler\QueueExecutor;
 use AOE\Crawler\Service\ConfigurationService;
 use AOE\Crawler\Service\PageService;
 use AOE\Crawler\Service\UrlService;
-use AOE\Crawler\Utility\SignalSlotUtility;
+use AOE\Crawler\Value\QueueRow;
 use PDO;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
@@ -41,6 +44,7 @@ use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Type\Bitmask\Permission;
@@ -193,6 +197,8 @@ class CrawlerController implements LoggerAwareInterface
      */
     private $urlService;
 
+    private EventDispatcher $eventDispatcher;
+
     /************************************
      *
      * Getting URLs based on Page TSconfig
@@ -212,6 +218,7 @@ class CrawlerController implements LoggerAwareInterface
         $this->crawler = GeneralUtility::makeInstance(Crawler::class);
         $this->configurationService = GeneralUtility::makeInstance(ConfigurationService::class);
         $this->urlService = GeneralUtility::makeInstance(UrlService::class);
+        $this->eventDispatcher = GeneralUtility::makeInstance(EventDispatcher::class);
 
         /** @var ExtensionConfigurationProvider $configurationProvider */
         $configurationProvider = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
@@ -349,6 +356,7 @@ class CrawlerController implements LoggerAwareInterface
             $duplicateTrack[$uKey] = true;
         }
 
+        // Todo: Find a better option to have this correct in both backend (<br>) and cli (<new line>)
         return implode('<br>', $urlLog);
     }
 
@@ -581,19 +589,7 @@ class CrawlerController implements LoggerAwareInterface
                 $rows[] = $uid;
                 $urlAdded = true;
 
-                $signalPayload = ['uid' => $uid, 'fieldArray' => $fieldArray];
-                SignalSlotUtility::emitSignal(
-                    self::class,
-                    SignalSlotUtility::SIGNAL_URL_ADDED_TO_QUEUE,
-                    $signalPayload
-                );
-            } else {
-                $signalPayload = ['rows' => $rows, 'fieldArray' => $fieldArray];
-                SignalSlotUtility::emitSignal(
-                    self::class,
-                    SignalSlotUtility::SIGNAL_DUPLICATE_URL_IN_QUEUE,
-                    $signalPayload
-                );
+                $this->eventDispatcher->dispatch(new AfterUrlAddedToQueueEvent($uid, $fieldArray));
             }
         }
 
@@ -647,11 +643,9 @@ class CrawlerController implements LoggerAwareInterface
             return;
         }
 
-        SignalSlotUtility::emitSignal(
-            self::class,
-            SignalSlotUtility::SIGNAL_QUEUEITEM_PREPROCESS,
-            [$queueId, &$queueRec]
-        );
+        /** @var BeforeQueueItemAddedEvent $event */
+        $event = $this->eventDispatcher->dispatch(new BeforeQueueItemAddedEvent($queueId, $queueRec));
+        $queueRec = $event->getQueueRecord();
 
         // Set exec_time to lock record:
         $field_array = ['exec_time' => $this->getCurrentTime()];
@@ -669,7 +663,7 @@ class CrawlerController implements LoggerAwareInterface
             );
 
         $result = $this->queueExecutor->executeQueueItem($queueRec, $this);
-        if ($result['content'] === null) {
+        if ($result === 'ERROR' || ($result['content'] ?? null) === null) {
             $resultData = 'An errors happened';
         } else {
             /** @var JsonCompatibilityConverter $jsonCompatibilityConverter */
@@ -695,13 +689,11 @@ class CrawlerController implements LoggerAwareInterface
             }
         }
         // Set result in log which also denotes the end of the processing of this entry.
-        $field_array = ['result_data' => json_encode($result)];
+        $field_array = ['result_data' => json_encode($resultData)];
 
-        SignalSlotUtility::emitSignal(
-            self::class,
-            SignalSlotUtility::SIGNAL_QUEUEITEM_POSTPROCESS,
-            [$queueId, &$field_array]
-        );
+        /** @var AfterQueueItemAddedEvent $event */
+        $event = $this->eventDispatcher->dispatch(new AfterQueueItemAddedEvent($queueId, $field_array));
+        $field_array = $event->getFieldArray();
 
         GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(QueueRepository::TABLE_NAME)
             ->update(
@@ -736,11 +728,9 @@ class CrawlerController implements LoggerAwareInterface
         // Set result in log which also denotes the end of the processing of this entry.
         $field_array = ['result_data' => json_encode($result)];
 
-        SignalSlotUtility::emitSignal(
-            self::class,
-            SignalSlotUtility::SIGNAL_QUEUEITEM_POSTPROCESS,
-            [$queueId, &$field_array]
-        );
+        /** @var AfterQueueItemAddedEvent $event */
+        $event = $this->eventDispatcher->dispatch(new AfterQueueItemAddedEvent($queueId, $field_array));
+        $field_array = $event->getFieldArray();
 
         $connectionForCrawlerQueue->update(
             QueueRepository::TABLE_NAME,
@@ -766,7 +756,7 @@ class CrawlerController implements LoggerAwareInterface
      * @param boolean $downloadCrawlUrls If set (and submitcrawlUrls is false) will fill $downloadUrls with entries)
      * @param array $incomingProcInstructions Array of processing instructions
      * @param array $configurationSelection Array of configuration keys
-     * @return string
+     * @return array
      */
     public function getPageTreeAndUrls(
         $id,
@@ -808,9 +798,9 @@ class CrawlerController implements LoggerAwareInterface
             $tree->getTree($id, $depth, '');
         }
 
-        // Traverse page tree:
-        $code = '';
+        $queueRows = [];
 
+        // Traverse page tree:
         foreach ($tree->tree as $data) {
             $this->MP = false;
 
@@ -826,10 +816,11 @@ class CrawlerController implements LoggerAwareInterface
                 $mountTree->getTree($mountpage[0]['mount_pid'], $depth);
 
                 foreach ($mountTree->tree as $mountData) {
-                    $code .= $this->drawURLs_addRowsForPage(
+                    $queueRows = array_merge($queueRows, $this->drawURLs_addRowsForPage(
                         $mountData['row'],
-                        $mountData['HTML'] . BackendUtility::getRecordTitle('pages', $mountData['row'], true)
-                    );
+                        BackendUtility::getRecordTitle('pages', $mountData['row'], true),
+                        (string) $data['HTML']
+                    ));
                 }
 
                 // replace page when mount_pid_ol is enabled
@@ -841,20 +832,21 @@ class CrawlerController implements LoggerAwareInterface
                 }
             }
 
-            $code .= $this->drawURLs_addRowsForPage(
+            $queueRows = array_merge($queueRows, $this->drawURLs_addRowsForPage(
                 $data['row'],
-                $data['HTML'] . BackendUtility::getRecordTitle('pages', $data['row'], true)
-            );
+                BackendUtility::getRecordTitle('pages', $data['row'], true),
+                (string) $data['HTML']
+            ));
         }
 
-        return $code;
+        return $queueRows;
     }
 
     /**
      * Create the rows for display of the page tree
      * For each page a number of rows are shown displaying GET variable configuration
      */
-    public function drawURLs_addRowsForPage(array $pageRow, string $pageTitle): string
+    public function drawURLs_addRowsForPage(array $pageRow, string $pageTitle, string $pageTitleHTML = ''): array
     {
         $skipMessage = '';
 
@@ -864,15 +856,19 @@ class CrawlerController implements LoggerAwareInterface
 
         // Traverse parameter combinations:
         $c = 0;
-        $content = '';
+
+        $queueRowCollection = [];
+
         if (! empty($configurations)) {
             foreach ($configurations as $confKey => $confArray) {
 
                 // Title column:
                 if (! $c) {
-                    $titleClm = '<td rowspan="' . count($configurations) . '">' . $pageTitle . '</td>';
+                    $queueRow = new QueueRow($pageTitle);
+                    $queueRow->setPageTitleHTML($pageTitleHTML);
                 } else {
-                    $titleClm = '';
+                    $queueRow = new QueueRow();
+                    $queueRow->setPageTitleHTML($pageTitleHTML);
                 }
 
                 if (! in_array($pageRow['uid'], $this->configurationService->expandExcludeString($confArray['subCfg']['exclude'] ?? ''), true)) {
@@ -911,47 +907,43 @@ class CrawlerController implements LoggerAwareInterface
                     $paramExpanded .= 'Comb: ' . implode('*', $calcAccu) . '=' . $calcRes;
 
                     // Options
-                    $optionValues = '';
-                    if ($confArray['subCfg']['userGroups']) {
-                        $optionValues .= 'User Groups: ' . $confArray['subCfg']['userGroups'] . '<br/>';
+                    $queueRowOptionCollection = [];
+                    if ($confArray['subCfg']['userGroups'] ?? false) {
+                        $queueRowOptionCollection[] = 'User Groups: ' . $confArray['subCfg']['userGroups'];
                     }
-                    if ($confArray['subCfg']['procInstrFilter']) {
-                        $optionValues .= 'ProcInstr: ' . $confArray['subCfg']['procInstrFilter'] . '<br/>';
+                    if ($confArray['subCfg']['procInstrFilter'] ?? false) {
+                        $queueRowOptionCollection[] = 'ProcInstr: ' . $confArray['subCfg']['procInstrFilter'];
                     }
 
-                    // Compile row:
-                    $content .= '
-                        <tr>
-                            ' . $titleClm . '
-                            <td>' . htmlspecialchars($confKey) . '</td>
-                            <td>' . nl2br(htmlspecialchars(rawurldecode(trim(str_replace('&', chr(10) . '&', GeneralUtility::implodeArrayForUrl('', $confArray['paramParsed'])))))) . '</td>
-                            <td>' . $paramExpanded . '</td>
-                            <td nowrap="nowrap">' . $urlList . '</td>
-                            <td nowrap="nowrap">' . $optionValues . '</td>
-                            <td nowrap="nowrap">' . DebugUtility::viewArray($confArray['subCfg']['procInstrParams.']) . '</td>
-                        </tr>';
+                    // Remove empty array entries;
+                    $queueRowOptionCollection = array_filter($queueRowOptionCollection);
+
+                    $parameterConfig = nl2br(htmlspecialchars(rawurldecode(trim(str_replace('&', chr(10) . '&', GeneralUtility::implodeArrayForUrl('', $confArray['paramParsed'] ?? []))))));
+                    $queueRow->setValuesExpanded($paramExpanded);
+                    $queueRow->setConfigurationKey($confKey);
+                    $queueRow->setUrls($urlList);
+                    $queueRow->setOptions($queueRowOptionCollection);
+                    $queueRow->setParameters(DebugUtility::viewArray($confArray['subCfg']['procInstrParams.'] ?? []));
+                    $queueRow->setParameterConfig($parameterConfig);
+
+                    $queueRowCollection[] = $queueRow;
                 } else {
-                    $content .= '<tr>
-                            ' . $titleClm . '
-                            <td>' . htmlspecialchars($confKey) . '</td>
-                            <td colspan="5"><em>No entries</em> (Page is excluded in this configuration)</td>
-                        </tr>';
+                    $queueRow->setConfigurationKey($confKey);
+                    $queueRow->setMessage('(Page is excluded in this configuration)');
+                    $queueRowCollection[] = $queueRow;
                 }
 
                 $c++;
             }
         } else {
             $message = ! empty($skipMessage) ? ' (' . $skipMessage . ')' : '';
-
-            // Compile row:
-            $content .= '
-                <tr>
-                    <td>' . $pageTitle . '</td>
-                    <td colspan="6"><em>No entries</em>' . $message . '</td>
-                </tr>';
+            $queueRow = new QueueRow($pageTitle);
+            $queueRow->setPageTitleHTML($pageTitleHTML);
+            $queueRow->setMessage($message);
+            $queueRowCollection[] = $queueRow;
         }
 
-        return $content;
+        return $queueRowCollection;
     }
 
     /**

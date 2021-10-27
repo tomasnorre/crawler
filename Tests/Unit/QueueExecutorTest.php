@@ -24,6 +24,8 @@ use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
 use AOE\Crawler\QueueExecutor;
 use AOE\Crawler\Tests\Unit\CrawlStrategy\CallbackObjectForTesting;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -36,6 +38,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class QueueExecutorTest extends UnitTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var QueueExecutor
      */
@@ -51,7 +55,11 @@ class QueueExecutorTest extends UnitTestCase
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [];
         $this->mockedCrawlerController = $this->createMock(CrawlerController::class);
         $crawlStrategyFactory = GeneralUtility::makeInstance(CrawlStrategyFactory::class);
-        $this->queueExecutor = new QueueExecutor($crawlStrategyFactory);
+
+        $this->queueExecutor = new QueueExecutor(
+            $crawlStrategyFactory,
+            $this->prophesize(EventDispatcher::class)->reveal()
+        );
     }
 
     /**
