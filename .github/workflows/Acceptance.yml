@@ -11,7 +11,7 @@ on:
 
 jobs:
   Acceptance:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
       matrix:
@@ -43,7 +43,7 @@ jobs:
       - run: |
           cd .devbox
           rm -rf vendor composer.lock
-          ddev composer require nimut/typo3-complete=${{ matrix.typo3 }} tomasnorre/crawler="dev-${{ env.BRANCH_NAME }}" --no-progress
+          ddev composer require nimut/typo3-complete=${{ matrix.typo3 }} tomasnorre/crawler="dev-${{ env.BRANCH_NAME }}"
           ddev start
           ddev exec bin/typo3cms install:fixfolderstructure
           ddev exec bin/typo3cms install:extensionsetupifpossible
@@ -51,7 +51,7 @@ jobs:
           ddev exec bin/typo3cms cache:flush
           cd .. # Going back to "root" directory
           rm -rf .Build composer.lock
-          composer require nimut/typo3-complete=${{ matrix.typo3 }} --no-progress
+          composer require nimut/typo3-complete=${{ matrix.typo3 }}
           wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
           chmod +x wait-for-it.sh
           docker ps
