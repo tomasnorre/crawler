@@ -8,8 +8,7 @@
 /Build export-ignore
 /codeception.yml export-ignore
 /crowdin.yml export-ignore
-/disabled.travis.yml export-ignore
-/ecs.yaml export-ignore
+/ecs.php export-ignore
 /infection.json.dist export-ignore
 /phpstan.neon export-ignore
 /phpstan-baseline.neon export-ignore
