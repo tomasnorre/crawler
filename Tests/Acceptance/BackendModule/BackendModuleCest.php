@@ -133,6 +133,8 @@ class BackendModuleCest
     public function SeeCrawlerLogWithOutErrors(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $this->crawlerAddProcess($I, $adminStep, $pageTree);
+        $I->click('Show finished and terminated processes');
+        $I->waitForText('Process completed successfully', 60);
         // Check Result
         $I->selectOption('SET[crawlaction]', 'log');
         $I->waitForText('OK');
