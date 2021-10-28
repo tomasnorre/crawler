@@ -117,15 +117,9 @@ class FrontendUserAuthenticator implements MiddlewareInterface
      */
     private function getFrontendUser(string $grList, ServerRequestInterface $request)
     {
-        $currentTYPO3VersionAsInteger = VersionNumberUtility::convertVersionNumberToInteger(VersionNumberUtility::getNumericTypo3Version());
-        if ($currentTYPO3VersionAsInteger < 10000000) {
-            $frontendUser = $GLOBALS['TSFE']->fe_user;
-            $frontendUser->user[$frontendUser->usergroup_column] = $grList;
-        } else {
-            $frontendUser = $request->getAttribute('frontend.user');
-            $frontendUser->user[$frontendUser->usergroup_column] = '0,-2,' . $grList;
-            $frontendUser->user['uid'] = PHP_INT_MAX;
-        }
+        $frontendUser = $request->getAttribute('frontend.user');
+        $frontendUser->user[$frontendUser->usergroup_column] = '0,-2,' . $grList;
+        $frontendUser->user['uid'] = PHP_INT_MAX;
         return $frontendUser;
     }
 }
