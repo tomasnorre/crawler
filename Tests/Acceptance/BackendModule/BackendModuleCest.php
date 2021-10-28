@@ -135,6 +135,7 @@ class BackendModuleCest
         $this->crawlerAddProcess($I, $adminStep, $pageTree);
         $I->click('Show finished and terminated processes');
         $I->waitForText('Process completed successfully', 60);
+        $I->wait(300);
         // Check Result
         $I->selectOption('SET[crawlaction]', 'log');
         $I->waitForText('OK');
