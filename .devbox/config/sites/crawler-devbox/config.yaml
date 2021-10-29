@@ -1,8 +1,4 @@
-base: 'https://crawler-devbox.ddev.site/'
-baseVariants:
-  -
-    base: 'http://web'
-    condition: 'applicationContext == "Development"'
+base: /
 languages:
   -
     title: Default
