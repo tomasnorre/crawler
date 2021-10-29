@@ -2,10 +2,8 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Functional\Service;
-
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -18,6 +16,8 @@ namespace AOE\Crawler\Tests\Functional\Service;
  *
  * The TYPO3 project - inspiring people to share!
  */
+
+namespace AOE\Crawler\Tests\Functional\Service;
 
 use AOE\Crawler\Service\ProcessService;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;

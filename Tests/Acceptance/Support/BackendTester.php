@@ -2,20 +2,8 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Acceptance\Support;
-
-/**
- * This file is copied from
- * TYPO3\CMS\Core\Tests\Acceptance\Support\BackendTester
- *
- * The file my at any point later than 2020-03-28
- * differ from the copied content
- *
- * Tomas Norre Mikkelsen
- */
-
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -27,6 +15,18 @@ namespace AOE\Crawler\Tests\Acceptance\Support;
  * LICENSE.txt file that was distributed with this source code.
  *
  * The TYPO3 project - inspiring people to share!
+ */
+
+namespace AOE\Crawler\Tests\Acceptance\Support;
+
+/**
+ * This file is copied from
+ * TYPO3\CMS\Core\Tests\Acceptance\Support\BackendTester
+ *
+ * The file my at any point later than 2020-03-28
+ * differ from the copied content
+ *
+ * Tomas Norre Mikkelsen
  */
 
 use _generated\BackendTesterActions;

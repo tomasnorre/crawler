@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Functional\Backend\RequestForm;
-
 /*
  * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
@@ -18,6 +16,8 @@ namespace AOE\Crawler\Tests\Functional\Backend\RequestForm;
  *
  * The TYPO3 project - inspiring people to share!
  */
+
+namespace AOE\Crawler\Tests\Functional\Backend\RequestForm;
 
 use AOE\Crawler\Backend\RequestForm\MultiProcessRequestForm;
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;

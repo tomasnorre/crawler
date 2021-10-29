@@ -2,10 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Step\Acceptance;
-
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -18,6 +16,8 @@ namespace Step\Acceptance;
  *
  * The TYPO3 project - inspiring people to share!
  */
+
+namespace Step\Acceptance;
 
 use AOE\Crawler\Tests\Acceptance\Support\Helper\PageTree;
 use AOE\Crawler\Tests\Acceptance\Support\Step\Acceptance\Admin;

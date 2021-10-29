@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Domain\Model;
-
 /*
  * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
@@ -18,6 +16,8 @@ namespace AOE\Crawler\Domain\Model;
  *
  * The TYPO3 project - inspiring people to share!
  */
+
+namespace AOE\Crawler\Domain\Model;
 
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;

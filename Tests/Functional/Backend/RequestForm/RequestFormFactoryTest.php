@@ -2,10 +2,8 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Functional\Backend\RequestForm;
-
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -18,6 +16,8 @@ namespace AOE\Crawler\Tests\Functional\Backend\RequestForm;
  *
  * The TYPO3 project - inspiring people to share!
  */
+
+namespace AOE\Crawler\Tests\Functional\Backend\RequestForm;
 
 use AOE\Crawler\Backend\RequestForm\LogRequestForm;
 use AOE\Crawler\Backend\RequestForm\MultiProcessRequestForm;

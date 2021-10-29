@@ -2,6 +2,21 @@
 
 declare(strict_types=1);
 
+/*
+ * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
+ *
+ * This file is part of the TYPO3 Crawler Extension.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
+
 namespace AOE\Crawler\Tests\Acceptance\Support\Helper;
 
 /**
@@ -12,19 +27,6 @@ namespace AOE\Crawler\Tests\Acceptance\Support\Helper;
  * @see https://github.com/TYPO3/testing-framework/blob/9/Classes/Core/Acceptance/Helper/AbstractPageTree.php
  *
  * Tomas Norre Mikkelsen
- */
-
-/*
- * This file is part of the TYPO3 CMS project.
- *
- * It is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License, either version 2
- * of the License, or any later version.
- *
- * For the full copyright and license information, please read the
- * LICENSE.txt file that was distributed with this source code.
- *
- * The TYPO3 project - inspiring people to share!
  */
 
 use AcceptanceTester;

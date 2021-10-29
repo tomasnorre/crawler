@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Command;
-
 /*
  * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
@@ -18,6 +16,8 @@ namespace AOE\Crawler\Command;
  *
  * The TYPO3 project - inspiring people to share!
  */
+
+namespace AOE\Crawler\Command;
 
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Value\QueueFilter;
