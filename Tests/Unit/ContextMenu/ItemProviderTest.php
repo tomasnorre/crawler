@@ -28,14 +28,6 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
  */
 class ItemProviderTest extends UnitTestCase
 {
-
-    private ItemProvider $subject;
-
-    public function setUp(): void
-    {
-        $this->subject = new ItemProvider('tx_crawler_configuration', 'identifier');
-    }
-
     /**
      * @test
      */
