@@ -1,6 +1,8 @@
 base: 'https://crawler-devbox.ddev.site/'
-baseVariants: {  }
-errorHandling: {  }
+baseVariants:
+  -
+    base: 'http://web'
+    condition: 'applicationContext == "Development"'
 languages:
   -
     title: Default
@@ -13,30 +15,34 @@ languages:
     hreflang: ''
     direction: ''
     flag: global
-    languageId: '0'
+    languageId: 0
 rootPageId: 1
-routes: {  }
 routeEnhancers:
   News:
     type: Extbase
     extension: News
     plugin: Pi1
     routes:
-      - routePath: '/'
+      -
+        routePath: /
         _controller: 'News::list'
-      - routePath: '/page-{page}'
+      -
+        routePath: '/page-{page}'
         _controller: 'News::list'
         _arguments:
           page: '@widget_0/currentPage'
-      - routePath: '/{news-title}'
+      -
+        routePath: '/{news-title}'
         _controller: 'News::detail'
         _arguments:
           news-title: news
-      - routePath: '/{category-name}'
+      -
+        routePath: '/{category-name}'
         _controller: 'News::list'
         _arguments:
           category-name: overwriteDemand/categories
-      - routePath: '/{tag-name}'
+      -
+        routePath: '/{tag-name}'
         _controller: 'News::list'
         _arguments:
           tag-name: overwriteDemand/tags
@@ -60,3 +66,4 @@ routeEnhancers:
         type: PersistedAliasMapper
         tableName: tx_news_domain_model_tag
         routeFieldName: slug
+websiteTitle: ''

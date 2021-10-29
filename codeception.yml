@@ -6,7 +6,7 @@ suites:
     modules:
       enabled:
         - WebDriver:
-            url: http://web/typo3/
+            url: http://web/
             browser: chrome
             wait: 10
             host: localhost

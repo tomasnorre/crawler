@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Acceptance\Support\Step\Acceptance;
+namespace AOE\Crawler\Tests\Acceptance\BackendModule;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2021 AOE GmbH <dev@aoe.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -19,16 +19,14 @@ namespace AOE\Crawler\Tests\Acceptance\Support\Step\Acceptance;
  * The TYPO3 project - inspiring people to share!
  */
 
-class Admin extends \AcceptanceTester
+use AOE\Crawler\Tests\Acceptance\Support\Step\Acceptance\FrontendUser;
+
+
+class FrontendCest
 {
-    public function loginAsAdmin(): void
+    public function canSeeHomePage(FrontendUser $I): void
     {
-        $I = $this;
-        $I->amOnPage('/typo3');
-        $I->waitForText('Login', 30);
-        $I->fillField('#t3-username', 'admin');
-        $I->fillField('#t3-password', 'password');
-        $I->click('#t3-login-submit-section > button');
-        $I->seeCookie('be_typo_user');
+        $I->amOnPage('/');
+        $I->waitForText('Let us introduce you to TYPO3', 1);
     }
 }
