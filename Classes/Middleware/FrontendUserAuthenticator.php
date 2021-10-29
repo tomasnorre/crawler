@@ -46,6 +46,14 @@ class FrontendUserAuthenticator implements MiddlewareInterface
      */
     protected $context;
 
+    /**
+     * @var QueueRepository
+     * This is not used by the Crawler.
+     * This is only kept, to not have a breaking change is this bugfix release.
+     * Will be removed in v12.0
+     */
+    protected $queueRepository;
+
     public function __construct(?Context $context = null)
     {
         $this->context = $context ?? GeneralUtility::makeInstance(Context::class);
