@@ -137,11 +137,6 @@ class BackendModuleCest
         $I->waitForText('Process completed successfully', 60);
         // Check Result
         $I->selectOption('SET[crawlaction]', 'log');
-        $I->wait(10);
-        $I->click('Reload list');
-        $I->wait(10);
-        $I->click('Reload list');
-        $I->waitForText('OK', 60);
         $I->dontSee('Content index does not exists in requestContent');
     }
 }
