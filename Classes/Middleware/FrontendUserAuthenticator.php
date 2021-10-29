@@ -27,8 +27,8 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\UserAspect;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Frontend\Controller\ErrorController;
 
 /**
@@ -46,15 +46,9 @@ class FrontendUserAuthenticator implements MiddlewareInterface
      */
     protected $context;
 
-    /**
-     * @var QueueRepository
-     */
-    protected $queueRepository;
-
     public function __construct(?Context $context = null)
     {
         $this->context = $context ?? GeneralUtility::makeInstance(Context::class);
-        $this->queueRepository = GeneralUtility::makeInstance(ObjectManager::class)->get(QueueRepository::class);
     }
 
     /**
@@ -75,7 +69,7 @@ class FrontendUserAuthenticator implements MiddlewareInterface
         // Authenticate crawler request:
         //@todo: ask service to exclude current call for special reasons: for example no relevance because the language version is not affected
         [$queueId, $hash] = explode(':', $crawlerInformation);
-        $queueRec = $this->queueRepository->findByQueueId($queueId);
+        $queueRec = $this->findByQueueId($queueId);
 
         // If a crawler record was found and hash was matching, set it up
         if (! $this->isRequestHashMatchingQueueRecord($queueRec, $hash)) {
@@ -120,5 +114,19 @@ class FrontendUserAuthenticator implements MiddlewareInterface
         $frontendUser->user[$frontendUser->usergroup_column] = '0,-2,' . $grList;
         $frontendUser->user['uid'] = PHP_INT_MAX;
         return $frontendUser;
+    }
+
+    private function findByQueueId(string $queueId): array
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(QueueRepository::TABLE_NAME);
+        $queueRec = $queryBuilder
+            ->select('*')
+            ->from(QueueRepository::TABLE_NAME)
+            ->where(
+                $queryBuilder->expr()->eq('qid', $queryBuilder->createNamedParameter($queueId))
+            )
+            ->execute()
+            ->fetchAssociative();
+        return is_array($queueRec) ? $queueRec : [];
     }
 }
