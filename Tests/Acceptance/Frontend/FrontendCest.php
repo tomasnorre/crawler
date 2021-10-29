@@ -28,4 +28,10 @@ class FrontendCest
         $I->amOnPage('/');
         $I->waitForText('Let us introduce you to TYPO3', 1);
     }
+
+    public function canSeeNewsPage(FrontendUser $I): void
+    {
+        $I->amOnPage('/news');
+        $I->waitForText('No news available.');
+    }
 }
