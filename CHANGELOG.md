@@ -5,6 +5,7 @@
 ### Added
 
 ### Changed
+* Use more expressive message for excluded doktypes when building queue
 
 ### Fixed
 * Set `result_data` back to `json_encode($result)` to ensure correct result handling in backend
