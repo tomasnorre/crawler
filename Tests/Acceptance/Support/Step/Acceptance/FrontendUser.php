@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AOE\Crawler\Tests\Acceptance\Support\Step\Acceptance;
 
 /*

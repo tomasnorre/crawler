@@ -15,7 +15,7 @@ languages:
     hreflang: ''
     direction: ''
     flag: global
-    languageId: 0
+    languageId: '0'
 rootPageId: 1
 routeEnhancers:
   News:

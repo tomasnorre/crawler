@@ -21,7 +21,6 @@ namespace AOE\Crawler\Tests\Acceptance\BackendModule;
 
 use AOE\Crawler\Tests\Acceptance\Support\Step\Acceptance\FrontendUser;
 
-
 class FrontendCest
 {
     public function canSeeHomePage(FrontendUser $I): void
