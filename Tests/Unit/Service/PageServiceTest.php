@@ -75,96 +75,120 @@ class PageServiceTest extends UnitTestCase
         );
     }
 
-    /**
-     * @return array
-     */
-    public function checkIfPageShouldBeSkippedDataProvider()
+    public function checkIfPageShouldBeSkippedDataProvider(): iterable
     {
-        return [
-            'Page of doktype 1 - Standard' => [
-                'extensionSetting' => [],
-                'pageRow' => [
-                    'doktype' => 1,
-                    'hidden' => 0,
-                ],
-                'excludeDoktype' => [],
-                'pageVeto' => [],
-                'expected' => '',
+        yield 'Page of doktype 1 - Standard' => [
+            'extensionSetting' => [],
+            'pageRow' => [
+                'doktype' => 1,
+                'hidden' => 0,
             ],
-            'Extension Setting do not crawl hidden pages and page is hidden' => [
-                'extensionSetting' => ['crawlHiddenPages' => false],
-                'pageRow' => [
-                    'doktype' => 1,
-                    'hidden' => 1,
-                ],
-                'excludeDoktype' => [],
-                'pageVeto' => [],
-                'expected' => 'Because page is hidden',
-            ],
-            'Page of doktype 3 - External Url' => [
-                'extensionSettings' => [],
-                'pageRow' => [
-                    'doktype' => 3,
-                    'hidden' => 0,
-                ],
-                'excludeDoktype' => [],
-                'pageVeto' => [],
-                'expected' => 'Because doktype is not allowed',
-            ],
-            'Page of doktype 4 - Shortcut' => [
-                'extensionSettings' => [],
-                'pageRow' => [
-                    'doktype' => 4,
-                    'hidden' => 0,
-                ],
-                'excludeDoktype' => [],
-                'pageVeto' => [],
-                'expected' => 'Because doktype is not allowed',
-            ],
-            'Page of doktype 155 - Custom' => [
-                'extensionSettings' => [],
-                'pageRow' => [
-                    'doktype' => 155,
-                    'hidden' => 0,
-                ],
-                'excludeDoktype' => ['custom' => 155],
-                'pageVeto' => [],
-                'expected' => 'Doktype was excluded by "custom"',
-            ],
-            'Page of doktype 255 - Out of allowed range' => [
-                'extensionSettings' => [],
-                'pageRow' => [
-                    'doktype' => 255,
-                    'hidden' => 0,
-                ],
-                'excludeDoktype' => [],
-                'pageVeto' => [],
-                'expected' => 'Because doktype is not allowed',
-            ],
-            /*
-             * Left out as we want people to use the PSR-14 ModifySkipPageEvent instead,
-             * kept for easy testing if needed.
-            'Page veto exists' => [
-                'extensionSettings' => [],
-                'pageRow' => [
-                    'doktype' => 1,
-                    'hidden' => 0,
-                ],
-                'excludeDoktype' => [],
-                'pageVeto' => ['veto-func' => VetoHookTestHelper::class . '->returnTrue'],
-                'expected' => 'Veto from hook "veto-func"',
-            ],
-            'Page veto exists - string' => [
-                'extensionSettings' => [],
-                'pageRow' => [
-                    'doktype' => 1,
-                    'hidden' => 0,
-                ],
-                'excludeDoktype' => [],
-                'pageVeto' => ['veto-func' => VetoHookTestHelper::class . '->returnString'],
-                'expected' => 'Veto because of {"pageRow":{"doktype":1,"hidden":0}}',
-            ],
-            */
+            'excludeDoktype' => [],
+            'pageVeto' => [],
+            'expected' => '',
         ];
+
+        yield 'Extension Setting do not crawl hidden pages and page is hidden' => [
+            'extensionSetting' => ['crawlHiddenPages' => false],
+            'pageRow' => [
+                'doktype' => 1,
+                'hidden' => 1,
+            ],
+            'excludeDoktype' => [],
+            'pageVeto' => [],
+            'expected' => 'Because page is hidden',
+        ];
+
+        yield 'Page of doktype 3 - External Url' => [
+            'extensionSettings' => [],
+            'pageRow' => [
+                'doktype' => 3,
+                'hidden' => 0,
+            ],
+            'excludeDoktype' => [],
+            'pageVeto' => [],
+            'expected' => 'Because doktype "3" is not allowed',
+        ];
+
+        yield 'Page of doktype 4 - Shortcut' => [
+            'extensionSettings' => [],
+            'pageRow' => [
+                'doktype' => 4,
+                'hidden' => 0,
+            ],
+            'excludeDoktype' => [],
+            'pageVeto' => [],
+            'expected' => 'Because doktype "4" is not allowed',
+        ];
+
+        yield 'Page of doktype 155 - Custom' => [
+            'extensionSettings' => [],
+            'pageRow' => [
+                'doktype' => 155,
+                'hidden' => 0,
+            ],
+            'excludeDoktype' => ['custom' => 155],
+            'pageVeto' => [],
+            'expected' => 'Doktype "155" was excluded by excludeDoktype configuration key "custom"',
+        ];
+
+        yield 'Page of doktype 199 - Spacer' => [
+            'extensionSettings' => [],
+            'pageRow' => [
+                'doktype' => 199,
+                'hidden' => 0,
+            ],
+            'excludeDoktype' => [],
+            'pageVeto' => [],
+            'expected' => 'Because doktype "199" is not allowed',
+        ];
+
+        yield 'Page of doktype 254 - Folder' => [
+            'extensionSettings' => [],
+            'pageRow' => [
+                'doktype' => 254,
+                'hidden' => 0,
+            ],
+            'excludeDoktype' => [],
+            'pageVeto' => [],
+            'expected' => 'Because doktype "254" is not allowed',
+        ];
+
+        yield 'Page of doktype 255 - Recycler' => [
+            'extensionSettings' => [],
+            'pageRow' => [
+                'doktype' => 255,
+                'hidden' => 0,
+            ],
+            'excludeDoktype' => [],
+            'pageVeto' => [],
+            'expected' => 'Because doktype "255" is not allowed',
+        ];
+
+        /*
+         * Left out as we want people to use the PSR-14 ModifySkipPageEvent instead,
+         * kept for easy testing if needed.
+        yield 'Page veto exists' => [
+            'extensionSettings' => [],
+            'pageRow' => [
+                'doktype' => 1,
+                'hidden' => 0,
+            ],
+            'excludeDoktype' => [],
+            'pageVeto' => ['veto-func' => VetoHookTestHelper::class . '->returnTrue'],
+            'expected' => 'Veto from hook "veto-func"',
+        ];
+
+        yield 'Page veto exists - string' => [
+            'extensionSettings' => [],
+            'pageRow' => [
+                'doktype' => 1,
+                'hidden' => 0,
+            ],
+            'excludeDoktype' => [],
+            'pageVeto' => ['veto-func' => VetoHookTestHelper::class . '->returnString'],
+            'expected' => 'Veto because of {"pageRow":{"doktype":1,"hidden":0}}',
+        ];
+        */
     }
 }

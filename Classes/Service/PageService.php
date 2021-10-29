@@ -52,12 +52,12 @@ class PageService
         }
 
         if (in_array($pageRow['doktype'], $this->getDisallowedDokTypes(), true)) {
-            return 'Because doktype is not allowed';
+            return sprintf('Because doktype "%d" is not allowed', $pageRow['doktype']);
         }
 
         foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['excludeDoktype'] ?? [] as $key => $doktypeList) {
             if (GeneralUtility::inList($doktypeList, $pageRow['doktype'])) {
-                return 'Doktype was excluded by "' . $key . '"';
+                return sprintf('Doktype "%d" was excluded by excludeDoktype configuration key "%s"', $pageRow['doktype'], $key);
             }
         }
 
