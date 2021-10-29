@@ -7,6 +7,7 @@
 ### Changed
 
 ### Fixed
+* Set `result_data` back to `json_encode($result)` to ensure correct result handling in backend
 
 ### Deprecated
 #### Classes

@@ -125,4 +125,18 @@ class BackendModuleCest
         $I->waitForText('Process completed successfully', 60);
         $I->dontSee('Process was cancelled');
     }
+
+    /**
+     * Ensures that Result logs are writing correctly
+     * https://github.com/tomasnorre/crawler/issues/826
+     */
+    public function SeeCrawlerLogWithOutErrors(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    {
+        $this->crawlerAddProcess($I, $adminStep, $pageTree);
+        $I->click('Show finished and terminated processes');
+        $I->waitForText('Process completed successfully', 60);
+        // Check Result
+        $I->selectOption('SET[crawlaction]', 'log');
+        $I->dontSee('Content index does not exists in requestContent');
+    }
 }
