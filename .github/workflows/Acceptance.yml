@@ -16,6 +16,10 @@ jobs:
       fail-fast: false
       matrix:
         typo3: [ ^10.4, ^11.5 ]
+        php: [ '7.4' ]
+        include:
+          - php: 8.0
+            typo3: ^11.5
     steps:
       - name: Get branch name (merge)
         if: github.event_name != 'pull_request'
@@ -29,7 +33,7 @@ jobs:
 
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: 7.4
+          php-version: ${{ matrix.php }}
 
       - name: Version information
         run: |
@@ -42,6 +46,7 @@ jobs:
           ddevDir: ".devbox"
       - run: |
           cd .devbox
+          sed -i 's/php_version: "7.4"/php_version: "${{ matrix.php }}"/g' .ddev/config.yaml
           rm -rf vendor composer.lock
           ddev composer require nimut/typo3-complete=${{ matrix.typo3 }} tomasnorre/crawler="dev-${{ env.BRANCH_NAME }}"
           ddev start
