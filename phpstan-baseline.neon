@@ -652,11 +652,6 @@ parameters:
 			path: Classes/Middleware/FrontendUserAuthenticator.php
 
 		-
-			message: "#^Parameter \\#2 \\$result of class AOE\\\\Crawler\\\\Event\\\\AfterUrlCrawledEvent constructor expects array, array\\<string, bool\\|string\\>\\|false given\\.$#"
-			count: 1
-			path: Classes/QueueExecutor.php
-
-		-
 			message:
 				"""
 					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
