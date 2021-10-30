@@ -21,6 +21,8 @@ namespace AOE\Crawler\Tests\Unit\ContextMenu;
 
 use AOE\Crawler\ContextMenu\ItemProvider;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Localization\LanguageService;
 
 /**
  * Class ItemProviderTest
@@ -28,6 +30,30 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
  */
 class ItemProviderTest extends UnitTestCase
 {
+    /**
+     * @var BackendUserAuthentication|null
+     */
+    private $oldBackendUser;
+
+    protected function setUp(): void
+    {
+        $mockedLanguageService = self::getAccessibleMock(LanguageService::class, ['sL'], [], '', false);
+        $mockedLanguageService->expects($this->any())->method('sL')->willReturn('language string');
+        $GLOBALS['LANG'] = $mockedLanguageService;
+        $this->oldBackendUser = $GLOBALS['BE_USER'] ?? null;
+        $backendUserStub = $this->createStub(BackendUserAuthentication::class);
+        $GLOBALS['BE_USER'] = $backendUserStub;
+    }
+
+    protected function tearDown(): void
+    {
+        if ($this->oldBackendUser) {
+            $GLOBALS['BE_USER'] = $this->oldBackendUser;
+        } else {
+            unset($GLOBALS['BE_USER']);
+        }
+    }
+
     /**
      * @test
      */
