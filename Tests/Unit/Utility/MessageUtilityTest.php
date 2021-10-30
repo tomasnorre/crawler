@@ -21,12 +21,21 @@ namespace AOE\Crawler\Tests\Unit\Utility;
 
 use AOE\Crawler\Utility\MessageUtility;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+/**
+ * @covers \AOE\Crawler\Utility\MessageUtility
+ */
 class MessageUtilityTest extends UnitTestCase
 {
+    /**
+     * @var BackendUserAuthentication|null
+     */
+    private $oldBackendUser;
+
     /**
      * @var FlashMessageService
      */
@@ -37,6 +46,19 @@ class MessageUtilityTest extends UnitTestCase
         $this->flashMessageQueue = GeneralUtility::makeInstance(FlashMessageService::class)->getMessageQueueByIdentifier();
         // Done to have the queue cleared to not stack the messages
         $this->flashMessageQueue->clear();
+
+        $this->oldBackendUser = $GLOBALS['BE_USER'] ?? null;
+        $backendUserStub = $this->createStub(BackendUserAuthentication::class);
+        $GLOBALS['BE_USER'] = $backendUserStub;
+    }
+
+    protected function tearDown(): void
+    {
+        if ($this->oldBackendUser) {
+            $GLOBALS['BE_USER'] = $this->oldBackendUser;
+        } else {
+            unset($GLOBALS['BE_USER']);
+        }
     }
 
     /**

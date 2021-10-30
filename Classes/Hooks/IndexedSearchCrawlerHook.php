@@ -91,7 +91,7 @@ class IndexedSearchCrawlerHook
             ->execute();
 
         // For each configuration, check if it should be executed and if so, start:
-        while ($cfgRec = $result->fetch()) {
+        while ($cfgRec = $result->fetchAssociative()) {
             // Generate a unique set-ID:
             $setId = GeneralUtility::md5int(microtime());
             // Get next time:
@@ -210,7 +210,7 @@ class IndexedSearchCrawlerHook
                     )
                 )
                 ->execute()
-                ->fetch();
+                ->fetchAssociative();
             if (is_array($cfgRec)) {
                 // Unpack session data:
                 $session_data = unserialize($cfgRec['session_data']);
@@ -304,7 +304,7 @@ class IndexedSearchCrawlerHook
                 ->execute();
 
             // Traverse:
-            while ($row = $result->fetch()) {
+            while ($row = $result->fetchAssociative()) {
                 // Index single record:
                 $this->indexSingleRecord($row, $cfgRec, $rootLine);
                 // Update the UID we last processed:
@@ -467,7 +467,7 @@ class IndexedSearchCrawlerHook
                 )
                 ->execute();
             // Traverse subpages and add to queue:
-            while ($row = $result->fetch()) {
+            while ($row = $result->fetchAssociative()) {
                 $this->instanceCounter++;
                 $url = 'pages:' . $row['uid'] . ': ' . $row['title'];
                 $session_data['urlLog'][] = $url;
@@ -597,7 +597,7 @@ class IndexedSearchCrawlerHook
         $url = preg_replace('/\\/\\/$/', '/', $url);
         [$url] = explode('#', $url);
         if ((strpos($url, '../') === false)
-            && GeneralUtility::isFirstPartOfStr($url, $baseUrl)
+            && str_starts_with($url, $baseUrl)
             && ! in_array($url, $urlLog, true)) {
             return $url;
         }
@@ -745,7 +745,7 @@ class IndexedSearchCrawlerHook
         if ($url_deny) {
             $url_denyArray = GeneralUtility::trimExplode(LF, $url_deny, true);
             foreach ($url_denyArray as $testurl) {
-                if (GeneralUtility::isFirstPartOfStr($url, $testurl)) {
+                if (str_starts_with($url, $testurl)) {
                     return true;
                 }
             }
@@ -904,7 +904,7 @@ class IndexedSearchCrawlerHook
                 )
                 ->execute();
 
-            while ($cfgRec = $result->fetch()) {
+            while ($cfgRec = $result->fetchAssociative()) {
                 $this->indexSingleRecord($currentRecord, $cfgRec);
             }
         }

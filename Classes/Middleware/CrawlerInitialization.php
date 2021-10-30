@@ -58,6 +58,7 @@ class CrawlerInitialization implements MiddlewareInterface
             return $handler->handle($request);
         }
 
+        $GLOBALS['TSFE']->applicationData['forceIndexing'] = true;
         $GLOBALS['TSFE']->applicationData['tx_crawler']['running'] = true;
         $GLOBALS['TSFE']->applicationData['tx_crawler']['parameters'] = $queueParameters;
         $GLOBALS['TSFE']->applicationData['tx_crawler']['log'] = [

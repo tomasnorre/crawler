@@ -47,12 +47,6 @@ class ProcessRepository extends Repository
     public const TABLE_NAME = 'tx_crawler_process';
 
     /**
-     * @var string
-     * @deprecated Since v9.2.5 - This will be remove in v10
-     */
-    protected $tableName = 'tx_crawler_process';
-
-    /**
      * @var QueryBuilder
      */
     protected $queryBuilder;
@@ -90,7 +84,7 @@ class ProcessRepository extends Repository
             ->orderBy('ttl', 'DESC')
             ->execute();
 
-        while ($row = $statement->fetch()) {
+        while ($row = $statement->fetchAssociative()) {
             $process = GeneralUtility::makeInstance(Process::class);
             $process->setProcessId($row['process_id']);
             $process->setActive($row['active']);
@@ -116,7 +110,7 @@ class ProcessRepository extends Repository
             ->from(self::TABLE_NAME)
             ->where(
                 $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId, PDO::PARAM_STR))
-            )->execute()->fetch(0);
+            )->execute()->fetchAssociative(0);
     }
 
     public function findAllActive(): ProcessCollection
@@ -135,7 +129,7 @@ class ProcessRepository extends Repository
             ->orderBy('ttl', 'DESC')
             ->execute();
 
-        while ($row = $statement->fetch()) {
+        while ($row = $statement->fetchAssociative()) {
             $process = new Process();
             $process->setProcessId($row['process_id']);
             $process->setActive($row['active']);
@@ -194,7 +188,7 @@ class ProcessRepository extends Repository
             )
             ->execute();
 
-        while ($row = $statement->fetch()) {
+        while ($row = $statement->fetchAssociative()) {
             $activeProcesses[] = $row;
         }
 

@@ -45,11 +45,10 @@ jobs:
           restore-keys: "php-${{ matrix.php-version }}-${{ matrix.dependencies }}"
 
       - name: "Install dependencies"
-        run: "composer require --dev infection/infection:^0.16"
+        run: "composer install"
 
       - name: "Infection"
-        # --min-msi and --min-covered-msi can be moved to infection.json.dist when upgrading to ^0.16
-        run: ".Build/bin/infection --min-msi=16 --min-covered-msi=94 --threads=8"
+        run: "composer test:mutation"
         env:
           #INFECTION_BADGE_API_KEY: ${{ secrets.INFECTION_BADGE_API_KEY }}
           STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}

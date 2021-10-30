@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace AOE\Crawler\Tests\Unit;
 
 /*
+ * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
+ *
  * This file is part of the TYPO3 Crawler Extension.
  *
  * It is free software; you can redistribute it and/or modify it under
@@ -22,10 +24,22 @@ use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
 use AOE\Crawler\QueueExecutor;
 use AOE\Crawler\Tests\Unit\CrawlStrategy\CallbackObjectForTesting;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+/**
+ * @covers \AOE\Crawler\QueueExecutor
+ * @covers \AOE\Crawler\Configuration\ExtensionConfigurationProvider::getExtensionConfiguration
+ * @covers \AOE\Crawler\Converter\JsonCompatibilityConverter::convert
+ * @covers \AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy::fetchByCallback
+ * @covers \AOE\Crawler\CrawlStrategy\CrawlStrategyFactory::__construct
+ * @covers \AOE\Crawler\CrawlStrategy\CrawlStrategyFactory::create
+ */
 class QueueExecutorTest extends UnitTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var QueueExecutor
      */
@@ -41,7 +55,11 @@ class QueueExecutorTest extends UnitTestCase
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [];
         $this->mockedCrawlerController = $this->createMock(CrawlerController::class);
         $crawlStrategyFactory = GeneralUtility::makeInstance(CrawlStrategyFactory::class);
-        $this->queueExecutor = new QueueExecutor($crawlStrategyFactory);
+
+        $this->queueExecutor = new QueueExecutor(
+            $crawlStrategyFactory,
+            $this->prophesize(EventDispatcher::class)->reveal()
+        );
     }
 
     /**

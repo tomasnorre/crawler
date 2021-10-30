@@ -101,7 +101,7 @@ class UrlServiceTest extends FunctionalTestCase
             $actual->getPort()
         );
 
-        self::assertContains(
+        self::assertStringContainsString(
             $expected->getQuery(),
             $actual->getQuery()
         );

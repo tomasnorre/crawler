@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AOE\Crawler\Tests\Unit\Controller;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -20,6 +20,7 @@ namespace AOE\Crawler\Tests\Unit\Controller;
  */
 
 use AOE\Crawler\Controller\CrawlerController;
+use AOE\Crawler\Service\PageService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
@@ -28,6 +29,7 @@ use Psr\Log\NullLogger;
  * Class CrawlerLibTest
  *
  * @package AOE\Crawler\Tests
+ * @covers \AOE\Crawler\Controller\CrawlerController
  */
 class CrawlerControllerTest extends UnitTestCase
 {
@@ -43,7 +45,7 @@ class CrawlerControllerTest extends UnitTestCase
     {
         $this->crawlerController = $this->createPartialMock(
             CrawlerController::class,
-            ['buildRequestHeaderArray', 'executeShellCommand', 'getFrontendBasePath']
+            []
         );
         $this->crawlerController->setLogger(new NullLogger());
 
@@ -79,69 +81,6 @@ class CrawlerControllerTest extends UnitTestCase
 
     /**
      * @test
-     */
-    public function setAndGet(): void
-    {
-        $accessMode = 'cli';
-        $this->crawlerController->setAccessMode($accessMode);
-
-        self::assertEquals(
-            $accessMode,
-            $this->crawlerController->getAccessMode()
-        );
-    }
-
-    /**
-     * @test
-     *
-     * @dataProvider setAndGetDisabledDataProvider
-     */
-    public function setAndGetDisabled(?bool $disabled, bool $expected): void
-    {
-        $filenameWithPath = tempnam('/tmp', 'test_foo') ?: 'FileNameIsForceIfTempNamReturnedFalse.txt';
-        $this->crawlerController->setProcessFilename($filenameWithPath);
-
-        // Not that elegant but testing that called without params gives the expected default.
-        if ($disabled === null) {
-            $this->crawlerController->setDisabled();
-        } else {
-            $this->crawlerController->setDisabled($disabled);
-        }
-
-        self::assertEquals(
-            $expected,
-            $this->crawlerController->getDisabled()
-        );
-
-        self::assertSame(
-            $expected,
-            is_file($filenameWithPath)
-        );
-
-        if ($disabled) {
-            self::assertSame(
-                'disabled',
-                file_get_contents($filenameWithPath)
-            );
-        }
-    }
-
-    /**
-     * @test
-     */
-    public function setAndGetProcessFilename(): void
-    {
-        $filenameWithPath = tempnam('/tmp', 'test_foo') ?: 'FileNameIsForceIfTempNamReturnedFalse.txt';
-        $this->crawlerController->setProcessFilename($filenameWithPath);
-
-        self::assertEquals(
-            $filenameWithPath,
-            $this->crawlerController->getProcessFilename()
-        );
-    }
-
-    /**
-     * @test
      *
      * @dataProvider drawURLs_PIfilterDataProvider
      */
@@ -160,9 +99,12 @@ class CrawlerControllerTest extends UnitTestCase
      */
     public function getUrlsForPageRow(bool $checkIfPageSkipped, array $getUrlsForPages, array $pageRow, string $skipMessage, array $expected): void
     {
+        $mockedPageService = $this->createPartialMock(PageService::class, ['checkIfPageShouldBeSkipped']);
+        $mockedPageService->expects($this->any())->method('checkIfPageShouldBeSkipped')->will($this->returnValue($checkIfPageSkipped));
+
         /** @var MockObject|CrawlerController $crawlerController */
-        $crawlerController = $this->createPartialMock(CrawlerController::class, ['checkIfPageShouldBeSkipped', 'getUrlsForPageId']);
-        $crawlerController->expects($this->any())->method('checkIfPageShouldBeSkipped')->will($this->returnValue($checkIfPageSkipped));
+        $crawlerController = $this->createPartialMock(CrawlerController::class, ['getPageService', 'getUrlsForPageId']);
+        $crawlerController->expects($this->any())->method('getPageService')->will($this->returnValue($mockedPageService));
         $crawlerController->expects($this->any())->method('getUrlsForPageId')->will($this->returnValue($getUrlsForPages));
 
         self::assertEquals(
@@ -213,7 +155,7 @@ class CrawlerControllerTest extends UnitTestCase
                 'expected' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
             ],
             'Message string not empty, returns empty array' => [
-                'checkIfPageSkipped' => 'Because page is hidden',
+                'checkIfPageSkipped' => true,
                 'getUrlsForPages' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
                 'pageRow' => ['uid' => 2001],
                 '$skipMessage' => 'Just variable placeholder, not used in tests as parsed as reference',
@@ -225,116 +167,9 @@ class CrawlerControllerTest extends UnitTestCase
     /**
      * @test
      *
-     * @dataProvider compileUrlsDataProvider
-     */
-    public function compileUrls(array $paramArray, array $urls, array $expected, int $expectedCount): void
-    {
-        $maxUrlsToCompile = 8;
-
-        $this->crawlerController->setMaximumUrlsToCompile($maxUrlsToCompile);
-
-        self::assertEquals(
-            $expected,
-            $this->crawlerController->compileUrls($paramArray, $urls)
-        );
-
-        self::assertCount(
-            $expectedCount,
-            $this->crawlerController->compileUrls($paramArray, $urls)
-        );
-    }
-
-    /**
-     * @return array
-     */
-    public function compileUrlsDataProvider()
-    {
-        return [
-            'Empty Params array' => [
-                'paramArray' => [],
-                'urls' => ['/home', '/search', '/about'],
-                'expected' => ['/home', '/search', '/about'],
-                'expectedCount' => 3,
-            ],
-            'Empty Urls array' => [
-                'paramArray' => ['pagination' => [1, 2, 3, 4]],
-                'urls' => [],
-                'expected' => [],
-                'expectedCount' => 0,
-            ],
-            'case' => [
-                'paramArray' => ['pagination' => [1, 2, 3, 4]],
-                'urls' => ['index.php?id=10', 'index.php?id=11'],
-                'expected' => [
-                    'index.php?id=10&pagination=1',
-                    'index.php?id=10&pagination=2',
-                    'index.php?id=10&pagination=3',
-                    'index.php?id=10&pagination=4',
-                    'index.php?id=11&pagination=1',
-                    'index.php?id=11&pagination=2',
-                    'index.php?id=11&pagination=3',
-                    'index.php?id=11&pagination=4',
-                ],
-                'expectedCount' => 8,
-            ],
-            'More urls than maximumUrlsToCompile' => [
-                'paramArray' => ['pagination' => [1, 2, 3, 4]],
-                'urls' => ['index.php?id=10', 'index.php?id=11', 'index.php?id=12'],
-                'expected' => [
-                    'index.php?id=10&pagination=1',
-                    'index.php?id=10&pagination=2',
-                    'index.php?id=10&pagination=3',
-                    'index.php?id=10&pagination=4',
-                    'index.php?id=11&pagination=1',
-                    'index.php?id=11&pagination=2',
-                    'index.php?id=11&pagination=3',
-                    'index.php?id=11&pagination=4',
-                ],
-                'expectedCount' => 8,
-            ],
-        ];
-    }
-
-    /**
-     * @test
-     *
-     * @dataProvider checkIfPageShouldBeSkippedDataProvider
-     */
-    public function checkIfPageShouldBeSkipped(array $extensionSetting, array $pageRow, array $excludeDoktype, array $pageVeto, string $expected): void
-    {
-        $this->crawlerController->setExtensionSettings($extensionSetting);
-        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['excludeDoktype'] = $excludeDoktype;
-        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pageVeto'] = $pageVeto;
-
-        self::assertEquals(
-            $expected,
-            $this->crawlerController->checkIfPageShouldBeSkipped($pageRow)
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function cLIBuildProcessIdIsSetReturnsValue(): void
-    {
-        $processId = '12297a261b';
-        $crawlerController = $this->getAccessibleMock(CrawlerController::class, ['dummy'], [], '', false);
-        $crawlerController->_set('processID', $processId);
-
-        self::assertEquals(
-            $processId,
-            $crawlerController->_call('CLI_buildProcessId')
-        );
-    }
-
-    /**
-     * @test
-     *
-     * @param string $expected
-     *
      * @dataProvider getConfigurationHasReturnsExpectedValueDataProvider
      */
-    public function getConfigurationHasReturnsExpectedValue(array $configuration, $expected): void
+    public function getConfigurationHasReturnsExpectedValue(array $configuration, string $expected): void
     {
         $crawlerLib = $this->getAccessibleMock(CrawlerController::class, ['dummy'], [], '', false);
 
@@ -396,95 +231,6 @@ class CrawlerControllerTest extends UnitTestCase
     /**
      * @return array
      */
-    public function checkIfPageShouldBeSkippedDataProvider()
-    {
-        return [
-            'Page of doktype 1 - Standand' => [
-                'extensionSetting' => [],
-                'pageRow' => [
-                    'doktype' => 1,
-                    'hidden' => 0,
-                ],
-                'excludeDoktype' => [],
-                'pageVeto' => [],
-                'expected' => false,
-            ],
-            'Extension Setting do not crawl hidden pages and page is hidden' => [
-                'extensionSetting' => ['crawlHiddenPages' => false],
-                'pageRow' => [
-                    'doktype' => 1,
-                    'hidden' => 1,
-                ],
-                'excludeDoktype' => [],
-                'pageVeto' => [],
-                'expected' => 'Because page is hidden',
-            ],
-            'Page of doktype 3 - External Url' => [
-                'extensionSettings' => [],
-                'pageRow' => [
-                    'doktype' => 3,
-                    'hidden' => 0,
-                ],
-                'excludeDoktype' => [],
-                'pageVeto' => [],
-                'expected' => 'Because doktype is not allowed',
-            ],
-            'Page of doktype 4 - Shortcut' => [
-                'extensionSettings' => [],
-                'pageRow' => [
-                    'doktype' => 4,
-                    'hidden' => 0,
-                ],
-                'excludeDoktype' => [],
-                'pageVeto' => [],
-                'expected' => 'Because doktype is not allowed',
-            ],
-            'Page of doktype 155 - Custom' => [
-                'extensionSettings' => [],
-                'pageRow' => [
-                    'doktype' => 155,
-                    'hidden' => 0,
-                ],
-                'excludeDoktype' => ['custom' => 155],
-                'pageVeto' => [],
-                'expected' => 'Doktype was excluded by "custom"',
-            ],
-            'Page of doktype 255 - Out of allowed range' => [
-                'extensionSettings' => [],
-                'pageRow' => [
-                    'doktype' => 255,
-                    'hidden' => 0,
-                ],
-                'excludeDoktype' => [],
-                'pageVeto' => [],
-                'expected' => 'Because doktype is not allowed',
-            ],
-            'Page veto exists' => [
-                'extensionSettings' => [],
-                'pageRow' => [
-                    'doktype' => 1,
-                    'hidden' => 0,
-                ],
-                'excludeDoktype' => [],
-                'pageVeto' => ['veto-func' => VetoHookTestHelper::class . '->returnTrue'],
-                'expected' => 'Veto from hook "veto-func"',
-            ],
-            'Page veto exists - string' => [
-                'extensionSettings' => [],
-                'pageRow' => [
-                    'doktype' => 1,
-                    'hidden' => 0,
-                ],
-                'excludeDoktype' => [],
-                'pageVeto' => ['veto-func' => VetoHookTestHelper::class . '->returnString'],
-                'expected' => 'Veto because of {"pageRow":{"doktype":1,"hidden":0}}',
-            ],
-        ];
-    }
-
-    /**
-     * @return array
-     */
     public function getConfigurationKeysDataProvider()
     {
         return [
@@ -499,27 +245,6 @@ class CrawlerControllerTest extends UnitTestCase
             'cliObject with two -conf' => [
                 'config' => ['-d' => 4, '-o' => 'url', '-conf' => 'default,news'],
                 'expected' => ['default', 'news'],
-            ],
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function setAndGetDisabledDataProvider()
-    {
-        return [
-            'no value given' => [
-                'disabled' => null,
-                'expected' => true,
-            ],
-            'setDisabled with true param' => [
-                'disabled' => true,
-                'expected' => true,
-            ],
-            'setDisabled with false param' => [
-                'disabled' => false,
-                'expected' => false,
             ],
         ];
     }

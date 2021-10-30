@@ -1,40 +1,34 @@
 {
-    "name": "aoepeople/crawler-devbox",
+    "name": "tomasnorre/crawler-devbox",
     "type": "project",
     "description": "Devbox for Crawler extension for TYPO3v9",
-    "homepage": "https://github.com/AOEpeople/crawler",
+    "homepage": "https://github.com/tomasnorre/crawler",
     "support": {
-        "issues": "https://github.com/AOEpeople/crawler/issues"
+        "issues": "https://github.com/tomasnorre/crawler/issues"
     },
     "license": "GPL-3.0",
     "authors": [
         {
-            "name": "AOEpeople",
-            "email": "dev@aoe.com",
-            "homepage": "https://www.aoe.com/",
+            "name": "Tomas Norre Mikkelsen",
+            "email": "tomasnorre@gmail.com",
             "role": "Developer"
         }
     ],
     "require": {
-        "typo3/minimal": "^9.5 || ^10.4",
+        "typo3/minimal": "^10.4 || ^11.5",
         "typo3/cms-introduction": "~4.0",
-        "typo3/cms-tstemplate": "^9.5 || ^10.4",
-        "typo3/cms-info": "^9.5 || ^10.4",
-        "typo3/cms-belog": "^9.5 || ^10.4",
-        "bk2k/bootstrap-package": "^10.0 || ^11.0",
+        "typo3/cms-tstemplate": "^10.4 || ^11.5",
+        "typo3/cms-info": "^10.4 || ^11.5",
+        "typo3/cms-belog": "^10.4 || ^11.5",
+        "bk2k/bootstrap-package": "^12",
         "helhum/typo3-console": "*",
-        "aoepeople/crawler": "*@dev",
-        "typo3/cms-beuser": "^9.5 || ^10.4",
-        "georgringer/news": "*"
+        "tomasnorre/crawler": "*@dev",
+        "typo3/cms-beuser": "^10.4 || ^11.5"
     },
     "repositories": [
         {
             "type": "path",
             "url": "../"
-        },
-        {
-            "type": "git",
-            "url": "https://github.com/tomasnorre/bootstrap_package.git"
         }
     ],
     "config": {

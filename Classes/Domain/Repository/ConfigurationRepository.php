@@ -35,12 +35,6 @@ class ConfigurationRepository extends Repository
 {
     public const TABLE_NAME = 'tx_crawler_configuration';
 
-    /**
-     * @var string
-     * @deprecated Since v9.2.5 - This will be remove in v10
-     */
-    protected $tableName = 'tx_crawler_configuration';
-
     public function getCrawlerConfigurationRecords(): array
     {
         $records = [];
@@ -50,7 +44,7 @@ class ConfigurationRepository extends Repository
             ->from(self::TABLE_NAME)
             ->execute();
 
-        while ($row = $statement->fetch()) {
+        while ($row = $statement->fetchAssociative()) {
             $records[] = $row;
         }
 
@@ -60,13 +54,17 @@ class ConfigurationRepository extends Repository
     /**
      * Traverses up the rootline of a page and fetches all crawler records.
      */
-    public function getCrawlerConfigurationRecordsFromRootLine(int $pageId): array
+    public function getCrawlerConfigurationRecordsFromRootLine(int $pageId, array $parentIds = []): array
     {
-        $pageIdsInRootLine = [];
-        $rootLine = BackendUtility::BEgetRootLine($pageId);
+        if (empty($parentIds)) {
+            $pageIdsInRootLine = [];
+            $rootLine = BackendUtility::BEgetRootLine($pageId);
 
-        foreach ($rootLine as $pageInRootLine) {
-            $pageIdsInRootLine[] = (int) $pageInRootLine['uid'];
+            foreach ($rootLine as $pageInRootLine) {
+                $pageIdsInRootLine[] = (int) $pageInRootLine['uid'];
+            }
+        } else {
+            $pageIdsInRootLine = $parentIds;
         }
 
         $queryBuilder = $this->createQueryBuilder();

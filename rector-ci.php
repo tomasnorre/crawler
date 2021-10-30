@@ -6,6 +6,7 @@ use Rector\Core\Configuration\Option;
 use Rector\DeadCode\Rector\Property\RemoveSetterOnlyPropertyAndMethodCallRector;
 use Rector\DeadCode\Rector\Property\RemoveUnusedPrivatePropertyRector;
 use Rector\Set\ValueObject\SetList;
+use Ssch\TYPO3Rector\Set\Typo3SetList;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
@@ -20,12 +21,12 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ]
     );
 
-    $parameters->set(
-        Option::SETS,
-        [
-            SetList::DEAD_CODE,
-        ]
-    );
+    $containerConfigurator->import(SetList::DEAD_CODE);
+    $containerConfigurator->import(SetList::PHP_72);
+    $containerConfigurator->import(SetList::PHP_73);
+    $containerConfigurator->import(Typo3SetList::TYPO3_76);
+    $containerConfigurator->import(Typo3SetList::TYPO3_87);
+    $containerConfigurator->import(Typo3SetList::TYPO3_95);
 
     $parameters->set(Option::AUTO_IMPORT_NAMES, false);
 
@@ -44,12 +45,18 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             __DIR__ . '/Classes/Command/ProcessQueueCommand.php',
             __DIR__ . '/Classes/Controller/CrawlerController.php',
             __DIR__ . '/Classes/Domain/Model/Reason.php',
-            __DIR__ . '/Classes/Utility/SignalSlotUtility.php',
             __DIR__ . '/Tests/Functional/Api/CrawlerApiTest.php',
             __DIR__ . '/Tests/Acceptance',
             Rector\DeadCode\Rector\If_\RemoveDeadInstanceOfRector::class => null,
             Rector\DeadCode\Rector\Assign\RemoveUnusedVariableAssignRector::class => [
                 __DIR__ . '/Classes/Domain/Repository/QueueRepository.php'
+            ],
+            \Rector\Php73\Rector\FuncCall\JsonThrowOnErrorRector::class,
+            \Rector\DeadCode\Rector\Stmt\RemoveUnreachableStatementRector::class => [
+                __DIR__ . '/Tests/Unit/CrawlStrategy/SubProcessExecutionStrategyTest.php'
+            ],
+            RemoveUnusedPrivatePropertyRector::class => [
+                __DIR__ . '/Classes/Hooks/ProcessCleanUpHook.php'
             ],
         ]
     );
@@ -57,7 +64,5 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services = $containerConfigurator->services();
 
     $services->set(RemoveUnusedPrivatePropertyRector::class);
-
-    $services->set(RemoveSetterOnlyPropertyAndMethodCallRector::class);
 
 };

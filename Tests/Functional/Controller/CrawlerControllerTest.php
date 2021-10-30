@@ -4,29 +4,20 @@ declare(strict_types=1);
 
 namespace AOE\Crawler\Tests\Functional\Controller;
 
-/***************************************************************
- *  Copyright notice
+/*
+ * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
- *  (c) 2019 AOE GmbH <dev@aoe.com>
+ * This file is part of the TYPO3 Crawler Extension.
  *
- *  All rights reserved
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
  *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 3 of the License, or
- *  (at your option) any later version.
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
  *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ * The TYPO3 project - inspiring people to share!
+ */
 
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\QueueRepository;
@@ -36,9 +27,6 @@ use Nimut\TestingFramework\MockObject\AccessibleMockObjectInterface;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
-use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class CrawlerControllerTest
@@ -76,78 +64,6 @@ class CrawlerControllerTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function cleanUpOldQueueEntries(): void
-    {
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $queryRepository = $objectManager->get(QueueRepository::class);
-
-        $recordsFromFixture = 15;
-        $expectedRemainingRecords = 2;
-
-        // Add records to queue repository to ensure we always have records,
-        // that will not be deleted with the cleanUpOldQueueEntries-function
-        $connectionForCrawlerQueue = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('tx_crawler_queue');
-
-        // Done for performance reason, as it gets repeated often
-        $time = time() + (7 * 24 * 60 * 60);
-
-        for ($i = 0; $i < $expectedRemainingRecords; $i++) {
-            $connectionForCrawlerQueue
-                ->insert(
-                    'tx_crawler_queue',
-                    [
-                        'exec_time' => $time,
-                        'scheduled' => $time,
-                        'parameters' => 'not important parameters',
-                        'result_data' => 'not important result_data',
-                    ]
-                );
-        }
-
-        // Check total entries before cleanup
-        self::assertSame(
-            $recordsFromFixture + $expectedRemainingRecords,
-            $queryRepository->findAll()->count()
-        );
-
-        $this->subject->_call('cleanUpOldQueueEntries');
-
-        // Check total entries after cleanup
-        self::assertSame(
-            $expectedRemainingRecords,
-            $queryRepository->findAll()->count()
-        );
-    }
-
-    /**
-     * @test
-     *
-     * @dataProvider getLogEntriesForPageIdDataProvider
-     */
-    public function getLogEntriesForPageId(int $id, QueueFilter $queueFilter, bool $doFlush, bool $doFullFlush, int $itemsPerPage, array $expected): void
-    {
-        self::assertEquals(
-            $expected,
-            $this->subject->getLogEntriesForPageId($id, $queueFilter, $doFlush, $doFullFlush, $itemsPerPage)
-        );
-    }
-
-    /**
-     * @test
-     *
-     * @dataProvider getLogEntriesForSetIdDataProvider
-     */
-    public function getLogEntriesForSetId(int $setId, string $filter, bool $doFlush, bool $doFullFlush, int $itemsPerPage, array $expected): void
-    {
-        self::assertEquals(
-            $expected,
-            $this->subject->getLogEntriesForSetId($setId, $filter, $doFlush, $doFullFlush, $itemsPerPage)
-        );
-    }
-
-    /**
-     * @test
-     */
     public function getConfigurationsForBranch(): void
     {
         $GLOBALS['BE_USER'] = $this->getMockBuilder(BackendUserAuthentication::class)
@@ -176,25 +92,6 @@ class CrawlerControllerTest extends FunctionalTestCase
 
     /**
      * @test
-     * @dataProvider getDuplicateRowsIfExistDataProvider
-     */
-    public function getDuplicateRowsIfExist(bool $timeslotActive, int $tstamp, int $current, array $fieldArray, array $expected): void
-    {
-        $mockedCrawlerController = $this->getAccessibleMock(CrawlerController::class, ['getCurrentTime']);
-        $mockedCrawlerController->expects($this->any())->method('getCurrentTime')->willReturn($current);
-
-        $mockedCrawlerController->setExtensionSettings([
-            'enableTimeslot' => $timeslotActive,
-        ]);
-
-        self::assertSame(
-            $expected,
-            $mockedCrawlerController->_call('getDuplicateRowsIfExist', $tstamp, $fieldArray)
-        );
-    }
-
-    /**
-     * @test
      * @dataProvider addUrlDataProvider
      */
     public function addUrl(int $id, string $url, array $subCfg, int $tstamp, string $configurationHash, bool $skipInnerDuplicationCheck, array $mockedDuplicateRowResult, bool $registerQueueEntriesInternallyOnly, bool $expected): void
@@ -211,92 +108,6 @@ class CrawlerControllerTest extends FunctionalTestCase
             $expected,
             $mockedCrawlerController->addUrl($id, $url, $subCfg, $tstamp, $configurationHash, $skipInnerDuplicationCheck)
         );
-    }
-
-    /**
-     * @test
-     * @dataProvider expandParametersDataProvider
-     */
-    public function expandParameters(array $paramArray, int $pid, array $expected): void
-    {
-        $output = $this->subject->expandParameters($paramArray, $pid);
-
-        self::assertEquals(
-            $expected,
-            $output
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function expandExcludeStringReturnsArraysOfIntegers(): void
-    {
-        $GLOBALS['BE_USER'] = $this->getMockBuilder(BackendUserAuthentication::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['isAdmin', 'getTSConfig', 'getPagePermsClause', 'isInWebMount', 'backendCheckLogin'])
-            ->getMock();
-
-        $excludeStringArray = $this->subject->expandExcludeString('1,2,4,6,8');
-
-        foreach ($excludeStringArray as $excluded) {
-            self::assertIsInt($excluded);
-        }
-    }
-
-    public function expandParametersDataProvider(): array
-    {
-        return [
-            'Parameters with range' => [
-                'paramArray' => ['range' => '[1-5]'],
-                'pid' => 1,
-                'expected' => [
-                    'range' => [1, 2, 3, 4, 5],
-                ],
-            ],
-            'Parameters with _TABLE _PID & _WHERE (hidden = 0)' => [
-                'paramArray' => ['table' => '[_TABLE:pages;_PID:5;_WHERE: hidden = 0]'],
-                'pid' => 1,
-                'expected' => [
-                    'table' => [7],
-                ],
-            ],
-            'Parameters with _TABLE _PID & _WHERE (hidden = 1)' => [
-                'paramArray' => ['table' => '[_TABLE:pages;_PID:5:_WHERE: hidden = 1]'],
-                'pid' => 1,
-                'expected' => [
-                    'table' => [7, 8],
-                ],
-            ],
-            'Parameters with _TABLE no _PID, then pid from input is used' => [
-                'paramArray' => ['table' => '[_TABLE:pages]'],
-                'pid' => 1,
-                'expected' => [
-                    'table' => [2, 3, 4, 5],
-                ],
-            ],
-            'Parameters with _TABLE _PID _RECURSIVE(:0) & _WHERE (hidden = 0)' => [
-                'paramArray' => ['table' => '[_TABLE:tt_content;_PID:5;_RECURSIVE:0;_WHERE: hidden = 0]'],
-                'pid' => 1,
-                'expected' => [
-                    'table' => [1, 2],
-                ],
-            ],
-            'Parameters with _TABLE _PID _RECURSIVE(:1) & _WHERE (hidden = 0)' => [
-                'paramArray' => ['table' => '[_TABLE:tt_content;_PID:5;_RECURSIVE:1;_WHERE: hidden = 0]'],
-                'pid' => 1,
-                'expected' => [
-                    'table' => [1, 2, 3],
-                ],
-            ],
-            'Parameters with _TABLE _PID _RECURSIVE(:2) & _WHERE (hidden = 0)' => [
-                'paramArray' => ['table' => '[_TABLE:tt_content;_PID:5;_RECURSIVE:2;_WHERE: hidden = 0]'],
-                'pid' => 1,
-                'expected' => [
-                    'table' => [1, 2, 3, 5, 6],
-                ],
-            ],
-        ];
     }
 
     public function addUrlDataProvider(): array
@@ -352,62 +163,6 @@ class CrawlerControllerTest extends FunctionalTestCase
                 'mockedDuplicateRowResult' => ['duplicate-exists' => true],
                 'registerQueueEntriesInternallyOnly' => true,
                 'expected' => false,
-            ],
-        ];
-    }
-
-    public function getDuplicateRowsIfExistDataProvider(): array
-    {
-        return [
-            'EnableTimeslot is true and timestamp is <= current' => [
-                'timeslotActive' => true,
-                'tstamp' => 10,
-                'current' => 12,
-                'fieldArray' => [
-                    'page_id' => 10,
-                    'parameters_hash' => '',
-                ],
-                'expected' => [18, 20],
-            ],
-            'EnableTimeslot is false and timestamp is <= current' => [
-                'timeslotActive' => false,
-                'tstamp' => 11,
-                'current' => 11,
-                'fieldArray' => [
-                    'page_id' => 10,
-                    'parameters_hash' => '',
-                ],
-                'expected' => [18],
-            ],
-            'EnableTimeslot is true and timestamp is > current' => [
-                'timeslotActive' => true,
-                'tstamp' => 12,
-                'current' => 10,
-                'fieldArray' => [
-                    'page_id' => 10,
-                    'parameters_hash' => '',
-                ],
-                'expected' => [20],
-            ],
-            'EnableTimeslot is false and timestamp is > current' => [
-                'timeslotActive' => false,
-                'tstamp' => 12,
-                'current' => 10,
-                'fieldArray' => [
-                    'page_id' => 10,
-                    'parameters_hash' => '',
-                ],
-                'expected' => [20],
-            ],
-            'EnableTimeslot is false and timestamp is > current and parameters_hash is set' => [
-                'timeslotActive' => false,
-                'tstamp' => 12,
-                'current' => 10,
-                'fieldArray' => [
-                    'page_id' => 10,
-                    'parameters_hash' => 'NotReallyAHashButWillDoForTesting',
-                ],
-                'expected' => [19],
             ],
         ];
     }

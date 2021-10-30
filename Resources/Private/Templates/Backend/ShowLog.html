@@ -122,7 +122,7 @@
                             </f:then>
                             <f:else>
                                 <td><a href="{logEntry.qid.link}">{logEntry.qid.link-text}</a></td>
-                                <td><a href="{logEntry.refresh.link}">{logEntry.refresh.link-text -> f:format.raw()}</a> {logEntry.refresh.warning -> f:format.raw()}</td>
+                                <td><a href="{logEntry.refresh.link}" class="refreshLink">{logEntry.refresh.link-text -> f:format.raw()}</a> {logEntry.refresh.warning -> f:format.raw()}</td>
                                 <f:if condition="{showResultLog}">
                                     <f:then>
                                         <td>{logEntry.columns.result_log}</td>

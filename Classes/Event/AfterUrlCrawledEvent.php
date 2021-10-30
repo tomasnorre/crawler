@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Unit\Controller;
+namespace AOE\Crawler\Event;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -19,16 +19,24 @@ namespace AOE\Crawler\Tests\Unit\Controller;
  * The TYPO3 project - inspiring people to share!
  */
 
-class VetoHookTestHelper
+final class AfterUrlCrawledEvent
 {
-    public function returnTrue(array $params): bool
+    private string $url;
+    private array $result;
+
+    public function __construct(string $url, array $result)
     {
-        return is_array($params);
+        $this->url = $url;
+        $this->result = $result;
     }
 
-    public function returnString(array $params): string
+    public function getUrl(): string
     {
-        $string = json_encode($params);
-        return 'Veto because of ' . $string;
+        return $this->url;
+    }
+
+    public function getResult(): array
+    {
+        return $this->result;
     }
 }

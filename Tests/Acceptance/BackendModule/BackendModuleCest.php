@@ -69,6 +69,31 @@ class BackendModuleCest
         $I->waitForText('Count: 1', 15);
     }
 
+    /**
+     * Ensure that Crawler Configurations with Exclude pages set to: e.g. 6+3 is working
+     * https://github.com/AOEpeople/crawler/issues/777
+     */
+    public function CrawlerConfigurationWithExcludePageSixPlusThree(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    {
+        $adminStep->loginAsAdmin();
+        $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
+        $I->selectOption('configurationSelection[]', 'excludepages-6-plus-3');
+        $I->click('Update');
+        $I->dontSee('TypeError');
+        $I->waitForText('Count: 1', 15);
+    }
+
+    public function EnsureNoUserGroupsAndNoProcInstAreDisplayed(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    {
+        $adminStep->loginAsAdmin();
+        $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
+        $I->selectOption('configurationSelection[]', 'excludepages-6-plus-3');
+        $I->click('Update');
+        $I->dontSee('User Groups: ');
+        $I->dontSee('ProcInstr:: ');
+        $I->waitForText('Count: 1', 15);
+    }
+
     public function updateUrlButtonSetDepth(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();
@@ -84,9 +109,8 @@ class BackendModuleCest
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
         $I->selectOption('configurationSelection[]', 'default');
-        $I->selectOption('SET[depth]', 99);
         $I->click('Crawl URLs');
-        $I->waitForText('43 URLs submitted', 15);
+        $I->waitForText('1 URLs submitted', 15);
 
         // Navigate to Process View
         $I->selectOption('SET[crawlaction]', 'multiprocess');
@@ -99,5 +123,32 @@ class BackendModuleCest
         $this->crawlerAddProcess($I, $adminStep, $pageTree);
         $I->click('Show finished and terminated processes');
         $I->waitForText('Process completed successfully', 60);
+        $I->dontSee('Process was cancelled');
+    }
+
+    /**
+     * Ensures that Result logs are writing correctly
+     * https://github.com/tomasnorre/crawler/issues/826
+     */
+    public function seeCrawlerLogWithOutErrors(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    {
+        $this->crawlerAddProcess($I, $adminStep, $pageTree);
+        $I->click('Show finished and terminated processes');
+        $I->waitForText('Process completed successfully', 60);
+        // Check Result
+        $I->selectOption('SET[crawlaction]', 'log');
+        $I->dontSee('Content index does not exists in requestContent');
+    }
+
+    public function manualTriggerCrawlerFromLog(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    {
+        $this->crawlerAddProcess($I, $adminStep, $pageTree);
+        $I->click('Show finished and terminated processes');
+        $I->waitForText('Process completed successfully', 60);
+        $I->selectOption('SET[crawlaction]', 'log');
+        // Click on "refresh" for given record
+        $I->click('.refreshLink');
+        $I->dontSee('Whoops, looks like something went wrong.');
+        $I->waitForText('OK', 15);
     }
 }

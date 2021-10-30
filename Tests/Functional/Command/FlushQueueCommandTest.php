@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AOE\Crawler\Tests\Functional\Command;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -31,11 +31,6 @@ class FlushQueueCommandTest extends AbstractCommandTests
      * @var array
      */
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
-
-    /**
-     * @var array
-     */
-    protected $coreExtensionsToLoad = ['cms', 'core', 'frontend', 'version', 'lang', 'fluid'];
 
     /**
      * @var QueueRepository
@@ -70,7 +65,7 @@ class FlushQueueCommandTest extends AbstractCommandTests
         $this->commandTester->execute($arguments);
         $commandOutput = $this->commandTester->getDisplay();
 
-        self::assertContains($expectedOutput, $commandOutput);
+        self::assertStringContainsString($expectedOutput, $commandOutput);
         self::assertEquals(
             $expectedCount,
             $this->queueRepository->findAll()->count()

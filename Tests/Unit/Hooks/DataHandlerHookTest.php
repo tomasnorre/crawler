@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AOE\Crawler\Tests\Unit\Hooks;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -24,6 +24,7 @@ use AOE\Crawler\Hooks\DataHandlerHook;
 use AOE\Crawler\Service\QueueService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
@@ -31,8 +32,13 @@ use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
+/**
+ * @covers \AOE\Crawler\Hooks\DataHandlerHook
+ */
 class DataHandlerHookTest extends UnitTestCase
 {
+    use ProphecyTrait;
+
     /**
      * Page with ID 1 is not in queue, should be added
      * Page with ID 2 is already in queue. Should NOT be added.
@@ -41,9 +47,6 @@ class DataHandlerHookTest extends UnitTestCase
      */
     public function itShouldAddPageToQueue(): void
     {
-        if ($this->isTYPO3v9()) {
-            self::markTestSkipped('Test is not working anymore in TYPO3 9LTS as we have a class_alias for the PageRepository');
-        }
         $dataHandlerHook = new DataHandlerHook();
 
         $queueService = $this->prophesize(QueueService::class);
@@ -88,9 +91,6 @@ class DataHandlerHookTest extends UnitTestCase
      */
     public function itShouldAddPageToQueueWithMorePages(): void
     {
-        if ($this->isTYPO3v9()) {
-            self::markTestSkipped('Test is not working anymore in TYPO3 9LTS as we have a class_alias for the PageRepository');
-        }
         $dataHandlerHook = new DataHandlerHook();
         $queueService = $this->prophesize(QueueService::class);
         $queueService->addPageToQueue(1)->shouldBeCalled();
@@ -137,9 +137,6 @@ class DataHandlerHookTest extends UnitTestCase
      */
     public function nothingToBeAddedAsPageDoNotExists(): void
     {
-        if ($this->isTYPO3v9()) {
-            self::markTestSkipped('Test is not working anymore in TYPO3 9LTS as we have a class_alias for the PageRepository');
-        }
         $dataHandlerHook = new DataHandlerHook();
         $queueService = $this->prophesize(QueueService::class);
         $queueService->addPageToQueue(1)->shouldBeCalled();
@@ -172,10 +169,5 @@ class DataHandlerHookTest extends UnitTestCase
             ],
             $dataHandler
         );
-    }
-
-    private function isTYPO3v9(): bool
-    {
-        return class_exists(\TYPO3\CMS\Frontend\Page\PageRepository::class);
     }
 }

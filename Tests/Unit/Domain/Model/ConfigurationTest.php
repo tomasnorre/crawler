@@ -22,17 +22,19 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
 use AOE\Crawler\Domain\Model\Configuration;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
+/**
+ * @covers \AOE\Crawler\Domain\Model\Configuration
+ */
 class ConfigurationTest extends UnitTestCase
 {
     /**
      * @var Configuration
-     * @inject
      */
     protected $subject;
 
     protected function setUp(): void
     {
-        $this->subject = $this->createPartialMock(Configuration::class, ['dummy']);
+        $this->subject = $this->createPartialMock(Configuration::class, []);
     }
 
     /**
@@ -111,5 +113,10 @@ class ConfigurationTest extends UnitTestCase
             $excludes,
             $this->subject->getExclude()
         );
+    }
+
+    public function injectSubject(Configuration $subject): void
+    {
+        $this->subject = $subject;
     }
 }

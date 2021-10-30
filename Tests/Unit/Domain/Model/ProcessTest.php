@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AOE\Crawler\Tests\Unit\Domain\Model;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -27,18 +27,18 @@ use PHPUnit\Framework\MockObject\MockObject;
 /**
  * Class Process
  * @package AOE\Crawler\Tests\Unit\Domain\Model
+ * @covers \AOE\Crawler\Domain\Model\Process
  */
 class ProcessTest extends UnitTestCase
 {
     /**
      * @var Process
-     * @inject
      */
     protected $subject;
 
     protected function setUp(): void
     {
-        $this->subject = $this->createPartialMock(Process::class, ['dummy']);
+        $this->subject = $this->createPartialMock(Process::class, []);
         $this->subject->setActive(true);
         $this->subject->setProcessId('1234');
         $this->subject->setTtl(300);
@@ -193,12 +193,12 @@ class ProcessTest extends UnitTestCase
                 'expectedProgress' => 100.0,
             ],
             'Comma numbers' => [
-                'countItemsAssigned' => 15.56,
+                'countItemsAssigned' => 15,
                 'countItemsProcessed' => 14,
                 'expectedProgress' => 93.0,
             ],
             'Comma number that would round down' => [
-                'countItemsAssigned' => 14.3,
+                'countItemsAssigned' => 14,
                 'countItemsProcessed' => 14,
                 'expectedProgress' => 100.0,
             ],
@@ -213,68 +213,6 @@ class ProcessTest extends UnitTestCase
                 'expectedProgress' => 89.0,
             ],
         ];
-    }
-
-    /**
-     * @test
-     */
-    public function getTimeForFirstItemReturnsInt(): void
-    {
-        $expectedExecTime = 1588934231;
-        $mockedQueueRepository = self::getAccessibleMock(QueueRepository::class, ['findYoungestEntryForProcess'], [], '', false);
-        $mockedQueueRepository->method('findYoungestEntryForProcess')->willReturn(['exec_time' => $expectedExecTime]);
-        $this->subject->_setProperty('queueRepository', $mockedQueueRepository);
-
-        self::assertEquals(
-            $expectedExecTime,
-            $this->subject->getTimeForFirstItem()
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function getTimeForFirstItemReturnZeroAsProcessEmpty(): void
-    {
-        $mockedQueueRepository = self::getAccessibleMock(QueueRepository::class, ['findYoungestEntryForProcess'], [], '', false);
-        $mockedQueueRepository->method('findYoungestEntryForProcess')->willReturn([]);
-        $this->subject->_setProperty('queueRepository', $mockedQueueRepository);
-
-        self::assertEquals(
-            0,
-            $this->subject->getTimeForFirstItem()
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function getTimeForLastItemReturnsInt(): void
-    {
-        $expectedExecTime = 1588934231;
-        $mockedQueueRepository = self::getAccessibleMock(QueueRepository::class, ['findOldestEntryForProcess'], [], '', false);
-        $mockedQueueRepository->method('findOldestEntryForProcess')->willReturn(['exec_time' => $expectedExecTime]);
-        $this->subject->_setProperty('queueRepository', $mockedQueueRepository);
-
-        self::assertEquals(
-            $expectedExecTime,
-            $this->subject->getTimeForLastItem()
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function getTimeForLastItemReturnZeroAsProcessEmpty(): void
-    {
-        $mockedQueueRepository = self::getAccessibleMock(QueueRepository::class, ['findOldestEntryForProcess'], [], '', false);
-        $mockedQueueRepository->method('findOldestEntryForProcess')->willReturn([]);
-        $this->subject->_setProperty('queueRepository', $mockedQueueRepository);
-
-        self::assertEquals(
-            0,
-            $this->subject->getTimeForLastItem()
-        );
     }
 
     /**
@@ -328,5 +266,10 @@ class ProcessTest extends UnitTestCase
                 'expected' => -75,
             ],
         ];
+    }
+
+    public function injectSubject(Process $subject): void
+    {
+        $this->subject = $subject;
     }
 }

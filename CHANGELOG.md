@@ -1,12 +1,162 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 9.2.5-dev
+## Crawler 11.0.1-dev
+
+### Added
+
+### Changed
+* Use more expressive message for excluded doktypes when building queue
+
+### Fixed
+* Set `result_data` back to `json_encode($result)` to ensure correct result handling in backend
+
+### Deprecated
+#### Classes
+#### Functions & Properties
+
+### Removed
+#### Classes
+#### Functions & Properties
+
+## Crawler 11.0.0
+Crawler 11.0.0 was released on October 22nd, 2021
+
+### Added
+* Support for TYPO3 11 LTS
+* PHP 8.0 Support
+* Display error messages in buildQueue command in CLI
+* PSR-14 ModifySkipPageEvent
+* PSR-14 AfterUrlCrawledEvent
+* PSR-14 InvokeQueueChangeEvent
+* PSR-14 AfterUrlCrawledEvent
+* PSR-14 BeforeQueueItemAddedEvent
+* PSR-14 AfterQueueItemAddedEvent
+
+### Changed
+* !!! CrawlerController->drawURLs_addRowsForPage() is now returning an array instead of HTML-string
+* !!! CrawlerController->getPageTreeAndUrls() is now returning an array instead of HTML-string
+
+### Fixed
+* Add Process button isn't shown when no entries in queue
+* Calculating the typo3 cli path based on composer is active
+
+### Deprecated
+* pageVeto-hook is marked as deprecated, will be removed in 13.0
+
+#### Classes
+#### Functions & Properties
+
+### Removed
+* Support for TYPO3 9
+* PHP support for `<7.4`
+* SignalSlotUtility::SIGNAL_URL_CRAWLED
+* SignalSlotUtility::SIGNAL_INVOKE_QUEUE_CHANGE
+* SignalSlotUtility::SIGNAL_URL_ADDED_TO_QUEUE
+* SignalSlotUtility::SIGNAL_DUPLICATE_URL_IN_QUEUE
+* SignalSlotUtility::SIGNAL_QUEUEITEM_PREPROCESS
+* SignalSlotUtility::SIGNAL_QUEUEITEM_POSTPROCESS
+* SignalSlotUtility::SIGNAL_QUEUE_ENTRY_FLUSH
+
+#### Classes
+* SignalSlotUtility
+
+#### Functions & Properties
+* CrawlerController->accessMode
+* CrawlerController->processFilename
+* CrawlerController->compileUrls()
+* CrawlerController::cleanUpOldQueueEntries()
+* CrawlerController->CLI_buildProcessId()
+* CrawlerController->CLI_checkAndAcquireNewProcess()
+* CrawlerController->CLI_debug()
+* CrawlerController->CLI_releaseProcesses()
+* CrawlerController->CLI_run()
+* CrawlerController->CLI_runHooks()
+* CrawlerController->expandExcludeString()
+* CrawlerController->getAccessMode()
+* CrawlerController->getLogEntriesForPageId()
+* crawlerController::getLogEntriesForSetId()
+* CrawlerController->getLogEntriesForPageId()
+* CrawlerController::flushQueue()
+* CrawlerController->setAccessMode()
+* CrawlerController->getDisabled()
+* CrawlerController->setDisabled()
+* CrawlerController->getProcessFilename()
+* CrawlerController->setProcessFilename()
+* CrawlerController->getDuplicateRowsIfExist()
+* CrawlerController->checkIfPageShouldBeSkipped()
+* CrawlerController->swapIfFirstIsLargerThanSecond()
+* CrawlerController->expandParameters()
+* FlushQueueCommand --page parameter is removed
+* Process->getTimeForFirstItem()
+* Process->getTimeForLastItem()
+* ProcessService->queueRepository
+* ProcessService->crawlerController
+* ProcessService->countInARun
+* ProcessService->processLimit
+* ProcessService->verbose
+* ProcessService->multiProcess()
+* ProcessService->reportItemStatus()
+* ProcessService->startRequiredProcesses()
+* QueueRepository->countUnprocessedItems()
+* QueueRepository->countAllByProcessId()
+
+## Crawler 10.0.3
+Crawler 10.0.2 was released on September 29th, 2021
+
+### Fixed
+* Avoid empty mountpoint parameter in URL when building the queue
+* Add description to crawler:commands for TYPO3 10+
+
+## Crawler 10.0.2
+Crawler 10.0.2 was released on September 16th, 2021
+
+### Added
+* Replace in composer for aoepeople/crawler
+
+### Changed
+* Changed composer package name to tomasnorre/crawler
+
+## Crawler 10.0.1
+Crawler 10.0.1 was released on August 27th, 2021
+
+### Fixed
+* Exclude Pages in Crawler configs accepts e.g. `6+3` again, page id 6 & depth 3
+
+## Crawler 10.0.0
+Crawler 10.0.0 was released on August 3rd, 2021
+
+### Added
+* Added information about indexed_search money pool
+
+### Fixed
+* Add processId to finished QueueEntries to ensure the process will be seen as successful instead of cancelled.
+* Fix type error when exclude subcfg is not defined
+* Sites/URLs get crawled but not indexed [@twestner](https://github.com/twestner)
+
+### Removed
+#### Classes
+#### Functions & Properties
+* CrawlerController->tableName
+* ConfigurationRepository->tableName
+* ProcessRepository->tableName
+* QueueRepository->tableName
+
+## Crawler 9.2.6
+Crawler 9.2.6 was released on July 14th, 2021
+
+### Fixed
+* Added missing symfony/polyfill-php80 to non-composer versions
+
+## Crawler 9.2.5
+Crawler 9.2.5 was released on May 28th, 2021
 
 ### Added
 * Added Troubleshooting information about Crawler Module
+* Added PageService
 
 ### Changed
 * Switch to Constants for Repository TableNames
+* Use ConfigurationRepository function instead of queries in CrawlerController
 * Following classes are marked as internal
   * Backend/BackendModule.php
   * Backend/Helper/ResultHandler.php
@@ -47,10 +197,14 @@
 ### Deprecated
 #### Classes
 #### Functions & Properties
-
-### Removed
-#### Classes
-#### Functions & Properties
+* CrawlerController->checkIfPageShouldBeSkipped()
+* CrawlerController->CLI_buildProcessId()
+* CrawlerController->CLI_checkAndAcquireNewProcess()
+* CrawlerController->CLI_run()
+* CrawlerController->compileUrls()
+* CrawlerController->expandExcludeString()
+* CrawlerController->expandParameters()
+* CrawlerController->swapIfFirstIsLargerThanSecond()
 
 ## Crawler 9.2.4
 Crawler 9.2.4 was released on April 9th, 2021

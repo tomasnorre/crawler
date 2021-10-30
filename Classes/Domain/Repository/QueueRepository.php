@@ -4,29 +4,20 @@ declare(strict_types=1);
 
 namespace AOE\Crawler\Domain\Repository;
 
-/***************************************************************
- *  Copyright notice
+/*
+ * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
- *  (c) 2020 AOE GmbH <dev@aoe.com>
+ * This file is part of the TYPO3 Crawler Extension.
  *
- *  All rights reserved
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
  *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 3 of the License, or
- *  (at your option) any later version.
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
  *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ * The TYPO3 project - inspiring people to share!
+ */
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Model\Process;
@@ -48,12 +39,6 @@ class QueueRepository extends Repository implements LoggerAwareInterface
     use LoggerAwareTrait;
 
     public const TABLE_NAME = 'tx_crawler_queue';
-
-    /**
-     * @var string
-     * @deprecated Since v9.2.5 - This will be remove in v10
-     */
-    protected $tableName = 'tx_crawler_queue';
 
     /**
      * @var array
@@ -151,19 +136,6 @@ class QueueRepository extends Repository implements LoggerAwareInterface
                 $queryBuilder->expr()->eq('exec_time', 0)
             )
             ->execute()->fetchAll();
-    }
-
-    /**
-     * Count items which have not been processed yet
-     * @deprecated Using QueueRepository->countUnprocessedItems() is deprecated since 9.1.5 and will be removed in v11.x, please use count(QueueRepository->getUnprocessedItems()) instead
-     */
-    public function countUnprocessedItems(): int
-    {
-        trigger_error(
-            'Using QueueRepository->countUnprocessedItems() is deprecated since 9.1.5 and will be removed in v11.x, please use count(QueueRepository->getUnprocessedItems()) instead',
-            E_USER_DEPRECATED
-        );
-        return count($this->getUnprocessedItems());
     }
 
     /**
@@ -265,7 +237,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ->execute();
 
         $setIds = [];
-        while ($row = $statement->fetch()) {
+        while ($row = $statement->fetchAssociative()) {
             $setIds[] = intval($row['set_id']);
         }
 
@@ -293,7 +265,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
                 ->groupBy('configuration')
                 ->execute();
 
-            while ($row = $statement->fetch()) {
+            while ($row = $statement->fetchAssociative()) {
                 $totals[$row['configuration']] = $row['c'];
             }
         }
@@ -317,7 +289,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ->execute();
 
         $rows = [];
-        while ($row = $statement->fetch()) {
+        while ($row = $statement->fetchAssociative()) {
             $rows[] = $row['exec_time'];
         }
 
@@ -340,7 +312,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ->execute();
 
         $rows = [];
-        while (($row = $statement->fetch()) !== false) {
+        while (($row = $statement->fetchAssociative()) !== false) {
             $rows[] = $row;
         }
 
@@ -371,7 +343,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ->execute();
 
         $rows = [];
-        while ($row = $statement->fetch()) {
+        while ($row = $statement->fetchAssociative()) {
             $rows[$row['process_id_completed']] = $row;
         }
 
@@ -444,7 +416,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ->execute();
 
         $rows = [];
-        while ($row = $statement->fetch()) {
+        while ($row = $statement->fetchAssociative()) {
             $rows[] = $row;
         }
 
@@ -461,7 +433,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
                 $queryBuilder->expr()->eq('qid', $queryBuilder->createNamedParameter($queueId))
             )
             ->execute()
-            ->fetch();
+            ->fetchAssociative();
         return is_array($queueRec) ? $queueRec : null;
     }
 
@@ -622,30 +594,6 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ->execute();
     }
 
-    /**
-     * @param string $processId
-     *
-     * @return bool|string
-     * @deprecated Using QueueRepository->countAllByProcessId() is deprecated since 9.1.5 and will be removed in v11.x, please use QueueRepository->findByProcessId()->count() instead
-     */
-    public function countAllByProcessId($processId)
-    {
-        trigger_error(
-            'Using QueueRepository->countAllByProcessId() is deprecated since 9.1.5 and will be removed in v11.x, please use QueueRepository->findByProcessId()->count() instead',
-            E_USER_DEPRECATED
-        );
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
-
-        return $queryBuilder
-            ->count('*')
-            ->from(self::TABLE_NAME)
-            ->where(
-                $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId, \PDO::PARAM_STR))
-            )
-            ->execute()
-            ->fetchColumn(0);
-    }
-
     public function getDuplicateQueueItemsIfExists(bool $enableTimeslot, int $timestamp, int $currentTime, int $pageId, string $parametersHash): array
     {
         $rows = [];
@@ -653,7 +601,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
         $queryBuilder
             ->select('qid')
-            ->from(QueueRepository::TABLE_NAME);
+            ->from(self::TABLE_NAME);
         //if this entry is scheduled with "now"
         if ($timestamp <= $currentTime) {
             if ($enableTimeslot) {
@@ -688,7 +636,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
 
         $statement = $queryBuilder->execute();
 
-        while ($row = $statement->fetch()) {
+        while ($row = $statement->fetchAssociative()) {
             $rows[] = $row['qid'];
         }
 
@@ -749,7 +697,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             )
             ->setMaxResults(1)
             ->addOrderBy($orderByField, $orderBySorting)
-            ->execute()->fetch(0);
+            ->execute()->fetchAssociative(0);
 
         return $first ?: [];
     }

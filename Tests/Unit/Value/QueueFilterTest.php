@@ -22,6 +22,9 @@ namespace AOE\Crawler\Tests\Unit\Value;
 use AOE\Crawler\Value\QueueFilter;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
+/**
+ * @covers \AOE\Crawler\Value\QueueFilter
+ */
 class QueueFilterTest extends UnitTestCase
 {
     public const VALID_VALUE = 'finished';

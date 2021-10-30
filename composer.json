@@ -1,34 +1,34 @@
 {
-    "name": "aoepeople/crawler",
+    "name": "tomasnorre/crawler",
     "type": "typo3-cms-extension",
     "description": "Crawler extension for TYPO3",
-    "homepage": "https://github.com/AOEpeople/crawler",
+    "homepage": "https://github.com/tomasnorre/crawler",
     "license": "GPL-3.0",
     "authors": [
         {
-            "name": "AOEpeople",
-            "email": "dev@aoe.com",
-            "homepage": "https://www.aoe.com/",
+            "name": "Tomas Norre Mikkelsen",
+            "email": "tomasnorre@gmail.com",
             "role": "Developer"
         }
     ],
     "require": {
-        "php": "^7.2",
+        "php": "^7.4 || ^8.0",
         "ext-json": "*",
         "ext-pdo": "*",
-        "beberlei/assert": "^3.2",
+        "beberlei/assert": "^3.3",
         "guzzlehttp/guzzle": "^6.4.1 || ^7.2",
         "psr/http-message": "^1.0",
         "psr/log": "^1.0",
-        "symfony/console": "^4.3 || ^5.0",
-        "symfony/polyfill-php80": "^1.20",
+        "symfony/console": "^5.0",
+        "symfony/polyfill-php80": "^1.23",
         "typo3/cms-backend": "*",
-        "typo3/cms-core": "~9.5.14 || ^10.4 || ^11.0 || dev-master",
+        "typo3/cms-core": "^10.4.11 || ^11.5",
         "typo3/cms-frontend": "*",
         "typo3/cms-info": "*",
         "typo3/cms-seo": "*"
     },
     "replace": {
+        "aoepeople/crawler": "self.version",
         "typo3-ter/crawler": "self.version"
     },
     "require-dev": {
@@ -37,23 +37,28 @@
         "codeception/module-filesystem": "^1.0",
         "codeception/module-phpbrowser": "^1.0",
         "codeception/module-webdriver": "^1.0",
-        "infection/infection": "^0.15.3",
+        "infection/infection": "^0.19",
         "nikic/php-parser": "4.10.4",
         "nimut/phpunit-merger": "^1.1",
-        "nimut/testing-framework": "^5.0",
+        "nimut/testing-framework": "6.x-dev",
         "nimut/typo3-complete": "^10.4",
-        "phpstan/extension-installer": "^1.0",
-        "phpstan/phpstan": "0.12.85",
+        "phpspec/prophecy-phpunit": "^2.0",
+        "phpstan/extension-installer": "^1.1",
+        "phpstan/phpstan": "0.12.99",
         "phpstan/phpstan-deprecation-rules": "^0.12.5",
-        "rector/rector-prefixed": "0.10.6",
+        "phpunit/phpunit": "^9.5",
+        "rector/rector": "0.11.57",
         "roave/security-advisories": "dev-latest",
-        "saschaegerer/phpstan-typo3": "^0.13.1",
-        "slam/phpstan-extensions": "^5.0",
+        "saschaegerer/phpstan-typo3": "^0.13.3",
+        "slam/phpstan-extensions": "^5.1",
         "symfony/yaml": "^4.4 || ^5.0",
-        "symplify/easy-coding-standard": "^9.0",
-        "symplify/phpstan-rules": "^8.3 || 9.3.4",
-        "typo3/testing-framework": "^4.14 || ^5.0",
-        "vimeo/psalm": "^4.4"
+        "symplify/easy-coding-standard": "9.4.32",
+        "symplify/phpstan-rules": "9.3.0",
+        "typo3/testing-framework": "^6.11",
+        "vimeo/psalm": "^4.7"
+    },
+    "suggest": {
+        "typo3/cms-seo": "Enables the posibility to priorities your Crawler Queue + You have seo features in the CMS it self."
     },
     "config": {
         "bin-dir": ".Build/bin",
@@ -67,7 +72,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-main": "9.2.x-dev"
+            "dev-main": "11.0.x-dev"
         },
         "typo3/class-alias-loader": {
             "class-alias-maps": [
@@ -91,6 +96,12 @@
             "TYPO3\\CMS\\Core\\Tests\\": ".Build/Web/typo3/sysext/core/Tests"
         }
     },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/symplify/phpstan-rules"
+        }
+    ],
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
@@ -115,20 +126,22 @@
             "rm -rf .devbox",
             "rm -rf Tests/",
             "rm .gitignore",
-            "rm .scrutinizer.yml",
-            "rm disabled.travis.yml"
+            "rm .scrutinizer.yml"
         ],
         "phpstan-baseline": [
             "[ -e .Build/bin/phpstan ] || composer update",
             ".Build/bin/phpstan analyse --generate-baseline"
         ],
+        "psalm": [
+            "[ -e .Build/bin/psalm ] || composer update",
+            ".Build/bin/psalm"
+        ],
         "rector": [
             "[ -e .Build/bin/rector ] || composer update",
             ".Build/bin/rector process --dry-run --config rector-ci.php"
         ],
-        "psalm": [
-            "[ -e .Build/bin/psalm ] || composer update",
-            ".Build/bin/psalm"
+        "roave-bcb": [
+            "docker run --rm -v `pwd`:/app nyholm/roave-bc-check --from=HEAD~1"
         ],
         "static": [
             "@analyse",
@@ -149,18 +162,16 @@
             "[ -e .Build/bin/phpunit ] || composer update",
             "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseName=crawler typo3DatabaseHost=127.0.0.1 typo3DatabaseUsername=root typo3DatabasePassword=root .Build/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml Tests/Functional"
         ],
+        "test:mutation": [
+            "[ -e .Build/bin/infection ] || composer update",
+            "XDEBUG_MODE=coverage .Build/bin/infection --threads=8"
+        ],
         "test:unit": [
             "[ -e .Build/bin/phpunit ] || composer update",
             "TYPO3_PATH_WEB=.Build/Web .Build/bin/phpunit --colors -c .Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/Unit"
         ]
     },
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/symplify/phpstan-rules"
-        }
-    ],
     "support": {
-        "issues": "https://github.com/AOEpeople/crawler/issues"
+        "issues": "https://github.com/tomasnorre/crawler/issues"
     }
 }
