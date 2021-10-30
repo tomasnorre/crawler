@@ -60,3 +60,4 @@ routeEnhancers:
         type: PersistedAliasMapper
         tableName: tx_news_domain_model_tag
         routeFieldName: slug
+websiteTitle: ''
