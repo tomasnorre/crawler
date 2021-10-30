@@ -149,6 +149,6 @@ class BackendModuleCest
         // Click on "refresh" for given record
         $I->click('.refreshLink');
         $I->dontSee('Whoops, looks like something went wrong.');
-        $I->waitForText('OK', 5);
+        $I->waitForText('OK', 15);
     }
 }
