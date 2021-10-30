@@ -1,4 +1,6 @@
 base: /
+baseVariants: {  }
+errorHandling: {  }
 languages:
   -
     title: Default
