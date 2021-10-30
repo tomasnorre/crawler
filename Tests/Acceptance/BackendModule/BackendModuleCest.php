@@ -130,7 +130,7 @@ class BackendModuleCest
      * Ensures that Result logs are writing correctly
      * https://github.com/tomasnorre/crawler/issues/826
      */
-    public function SeeCrawlerLogWithOutErrors(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    public function seeCrawlerLogWithOutErrors(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $this->crawlerAddProcess($I, $adminStep, $pageTree);
         $I->click('Show finished and terminated processes');
@@ -138,5 +138,18 @@ class BackendModuleCest
         // Check Result
         $I->selectOption('SET[crawlaction]', 'log');
         $I->dontSee('Content index does not exists in requestContent');
+    }
+
+    public function manualTriggerCrawlerFromLog(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    {
+        $this->crawlerAddProcess($I, $adminStep, $pageTree);
+        $I->click('Show finished and terminated processes');
+        $I->waitForText('Process completed successfully', 60);
+        $I->selectOption('SET[crawlaction]', 'log');
+        // Click on "refresh" for given record
+        $I->click('.refreshLink');
+        $I->dontSee('Whoops, looks like something went wrong.');
+        $I->waitForText('OK', 5);
+
     }
 }
