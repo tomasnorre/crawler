@@ -84,7 +84,6 @@ class QueueExecutor implements SingletonInterface
                 $result = ['content' => json_encode($result)];
                 $this->eventDispatcher->dispatch(new AfterUrlCrawledEvent($parameters['url'], $result));
             }
-
         }
         return $result;
     }

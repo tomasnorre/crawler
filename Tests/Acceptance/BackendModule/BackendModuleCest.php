@@ -150,6 +150,5 @@ class BackendModuleCest
         $I->click('.refreshLink');
         $I->dontSee('Whoops, looks like something went wrong.');
         $I->waitForText('OK', 5);
-
     }
 }
