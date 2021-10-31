@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AOE\Crawler\Tests\Unit\Middleware;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -50,7 +50,7 @@ class FrontendUserAuthenticatorTest extends UnitTestCase
         );
     }
 
-    public function isRequestHashMatchingQueueRecordDataProvider(): array
+    public function isRequestHashMatchingQueueRecordDataProvider(): iterable
     {
         $queueRecord = [
             'qid' => '1234',
@@ -60,22 +60,20 @@ class FrontendUserAuthenticatorTest extends UnitTestCase
         // Faking the TYPO3 Encryption key as the DataProvider doesn't know about the TYPO3_CONF array
         $encryptionKey = md5('this_is_an_insecure_encryption_key');
 
-        return [
-            'Hash match' => [
-                'queueRecord' => $queueRecord,
-                'hash' => md5($queueRecord['qid'] . '|' . $queueRecord['set_id'] . '|' . $encryptionKey),
-                'expected' => true,
-            ],
-            'Hash does not match' => [
-                'queueRecord' => $queueRecord,
-                'hash' => md5('qid' . '|' . 'set_id' . '|' . $encryptionKey),
-                'expected' => false,
-            ],
-            'queueRecord is not an array, there returning false' => [
-                'queueRecord' => null,
-                'hash' => '',
-                'expected' => false,
-            ],
+        yield 'Hash match' => [
+            'queueRecord' => $queueRecord,
+            'hash' => md5($queueRecord['qid'] . '|' . $queueRecord['set_id'] . '|' . $encryptionKey),
+            'expected' => true,
+        ];
+        yield 'Hash does not match' => [
+            'queueRecord' => $queueRecord,
+            'hash' => md5('qid' . '|' . 'set_id' . '|' . $encryptionKey),
+            'expected' => false,
+        ];
+        yield 'queueRecord is not an array, there returning false' => [
+            'queueRecord' => null,
+            'hash' => '',
+            'expected' => false,
         ];
     }
 }

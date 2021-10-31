@@ -635,8 +635,8 @@ parameters:
 		-
 			message:
 				"""
-					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
-					since TYPO3 10\\.4, will be removed in version 12\\.0$#
+					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
+					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
 				"""
 			count: 1
 			path: Classes/Middleware/FrontendUserAuthenticator.php
@@ -647,7 +647,7 @@ parameters:
 			path: Classes/Middleware/FrontendUserAuthenticator.php
 
 		-
-			message: "#^Offset 'parameters' does not exist on array\\|null\\.$#"
+			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
 			count: 1
 			path: Classes/Middleware/FrontendUserAuthenticator.php
 

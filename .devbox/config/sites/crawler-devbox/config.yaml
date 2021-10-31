@@ -15,28 +15,32 @@ languages:
     flag: global
     languageId: '0'
 rootPageId: 1
-routes: {  }
 routeEnhancers:
   News:
     type: Extbase
     extension: News
     plugin: Pi1
     routes:
-      - routePath: '/'
+      -
+        routePath: /
         _controller: 'News::list'
-      - routePath: '/page-{page}'
+      -
+        routePath: '/page-{page}'
         _controller: 'News::list'
         _arguments:
           page: '@widget_0/currentPage'
-      - routePath: '/{news-title}'
+      -
+        routePath: '/{news-title}'
         _controller: 'News::detail'
         _arguments:
           news-title: news
-      - routePath: '/{category-name}'
+      -
+        routePath: '/{category-name}'
         _controller: 'News::list'
         _arguments:
           category-name: overwriteDemand/categories
-      - routePath: '/{tag-name}'
+      -
+        routePath: '/{tag-name}'
         _controller: 'News::list'
         _arguments:
           tag-name: overwriteDemand/tags
