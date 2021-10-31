@@ -3,8 +3,11 @@
 declare(strict_types=1);
 
 use Rector\Core\Configuration\Option;
+use Rector\DeadCode\Rector\Cast\RecastingRemovalRector;
 use Rector\DeadCode\Rector\Property\RemoveSetterOnlyPropertyAndMethodCallRector;
 use Rector\DeadCode\Rector\Property\RemoveUnusedPrivatePropertyRector;
+use Rector\DeadCode\Rector\Stmt\RemoveUnreachableStatementRector;
+use Rector\Php73\Rector\FuncCall\JsonThrowOnErrorRector;
 use Rector\Set\ValueObject\SetList;
 use Ssch\TYPO3Rector\Set\Typo3SetList;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -51,13 +54,16 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             Rector\DeadCode\Rector\Assign\RemoveUnusedVariableAssignRector::class => [
                 __DIR__ . '/Classes/Domain/Repository/QueueRepository.php'
             ],
-            \Rector\Php73\Rector\FuncCall\JsonThrowOnErrorRector::class,
-            \Rector\DeadCode\Rector\Stmt\RemoveUnreachableStatementRector::class => [
+            JsonThrowOnErrorRector::class,
+            RemoveUnreachableStatementRector::class => [
                 __DIR__ . '/Tests/Unit/CrawlStrategy/SubProcessExecutionStrategyTest.php'
             ],
             RemoveUnusedPrivatePropertyRector::class => [
                 __DIR__ . '/Classes/Hooks/ProcessCleanUpHook.php'
             ],
+            RecastingRemovalRector::class => [
+                __DIR__ . '/Classes/Backend/RequestForm/LogRequestForm.php'
+            ]
         ]
     );
 

@@ -67,7 +67,7 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
             return false;
         }
 
-        if (! in_array($parsedUrl['scheme'], ['', 'http', 'https'], true)) {
+        if (! isset($parsedUrl['scheme']) || ! in_array($parsedUrl['scheme'], ['', 'http', 'https'], true)) {
             $this->logger->debug(
                 sprintf('Scheme does not match for url "%s"', $url),
                 ['crawlerId' => $crawlerId]
@@ -104,7 +104,7 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
     private function buildRequestHeaders(array $url, string $crawlerId): array
     {
         $reqHeaders = [];
-        $reqHeaders[] = 'GET ' . $url['path'] . ($url['query'] ? '?' . $url['query'] : '') . ' HTTP/1.0';
+        $reqHeaders[] = 'GET ' . $url['path'] . (isset($url['query']) ? '?' . $url['query'] : '') . ' HTTP/1.0';
         $reqHeaders[] = 'Host: ' . $url['host'];
         $reqHeaders[] = 'Connection: close';
         if (isset($url['user'], $url['pass']) && $url['user'] !== '' && $url['pass'] !== '') {

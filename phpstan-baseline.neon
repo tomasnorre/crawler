@@ -74,7 +74,7 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Class cognitive complexity is 72, keep it under 60$#"
+			message: "#^Class cognitive complexity is 71, keep it under 60$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
@@ -271,7 +271,7 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Class cognitive complexity is 97, keep it under 60$#"
+			message: "#^Class cognitive complexity is 98, keep it under 60$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -337,11 +337,6 @@ parameters:
 
 		-
 			message: "#^Cannot call method info\\(\\) on Psr\\\\Log\\\\LoggerInterface\\|null\\.$#"
-			count: 1
-			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
-
-		-
-			message: "#^Offset 'scheme' does not exist on array\\(\\?'scheme' \\=\\> string, \\?'host' \\=\\> string, \\?'port' \\=\\> int, \\?'user' \\=\\> string, \\?'pass' \\=\\> string, \\?'path' \\=\\> string, \\?'query' \\=\\> string, \\?'fragment' \\=\\> string\\)\\.$#"
 			count: 1
 			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
 
@@ -650,11 +645,6 @@ parameters:
 			message: "#^Offset 'parameters' does not exist on array\\|null\\.$#"
 			count: 1
 			path: Classes/Middleware/FrontendUserAuthenticator.php
-
-		-
-			message: "#^Parameter \\#2 \\$result of class AOE\\\\Crawler\\\\Event\\\\AfterUrlCrawledEvent constructor expects array, array\\<string, bool\\|string\\>\\|false given\\.$#"
-			count: 1
-			path: Classes/QueueExecutor.php
 
 		-
 			message:

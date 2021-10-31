@@ -392,7 +392,10 @@ class CrawlerController implements LoggerAwareInterface
         }
 
         // Call a hook to alter configuration
-        if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['getPageTSconfigForId'])) {
+        if (
+            isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['getPageTSconfigForId'])
+            && is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['getPageTSconfigForId'])
+        ) {
             $params = [
                 'pageId' => $id,
                 'pageTSConfig' => &$pageTSconfig,
