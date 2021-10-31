@@ -1,7 +1,7 @@
 modules:
   config:
     WebDriver:
-      url: http://web/typo3/
+      url: http://web/
       browser: chrome
       host: 'localhost'
       clear_cookies: true
