@@ -22,7 +22,6 @@ namespace AOE\Crawler\Tests\Unit\CrawlStrategy;
 use AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategy;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Http\Response;
-use TYPO3\CMS\Core\Http\Stream;
 use TYPO3\CMS\Core\Http\Uri;
 
 /**
