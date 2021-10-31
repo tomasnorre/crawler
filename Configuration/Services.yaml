@@ -24,3 +24,12 @@ services:
             - name: 'console.command'
               command: 'crawler:processQueue'
               description: 'Trigger the crawler to process the queue entries'
+
+    queryBuilder.tx_crawler_queue:
+        class: 'TYPO3\CMS\Core\Database\Query\QueryBuilder'
+        factory: ['@TYPO3\CMS\Core\Database\ConnectionPool', 'getQueryBuilderForTable']
+        arguments: ['tx_crawler_queue']
+
+    AOE\Crawler\Middleware\FrontendUserAuthenticator:
+        arguments:
+            $queryBuilder: '@queryBuilder.tx_crawler_queue'

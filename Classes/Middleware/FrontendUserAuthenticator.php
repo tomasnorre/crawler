@@ -27,7 +27,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\UserAspect;
-use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Controller\ErrorController;
 
@@ -49,13 +49,16 @@ class FrontendUserAuthenticator implements MiddlewareInterface
     /**
      * @var QueueRepository
      * This is not used by the Crawler.
-     * This is only kept, to not have a breaking change is this bugfix release.
+     * This is only kept, to not have a breaking change in this bugfix release.
      * Will be removed in v12.0
      */
     protected $queueRepository;
 
-    public function __construct(?Context $context = null)
+    private QueryBuilder $queryBuilder;
+
+    public function __construct(QueryBuilder $queryBuilder, ?Context $context = null)
     {
+        $this->queryBuilder = $queryBuilder;
         $this->context = $context ?? GeneralUtility::makeInstance(Context::class);
     }
 
@@ -126,15 +129,14 @@ class FrontendUserAuthenticator implements MiddlewareInterface
 
     private function findByQueueId(string $queueId): array
     {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(QueueRepository::TABLE_NAME);
-        $queueRec = $queryBuilder
+        $queueRec = $this->queryBuilder
             ->select('*')
             ->from(QueueRepository::TABLE_NAME)
             ->where(
-                $queryBuilder->expr()->eq('qid', $queryBuilder->createNamedParameter($queueId))
+                $this->queryBuilder->expr()->eq('qid', $this->queryBuilder->createNamedParameter($queueId))
             )
             ->execute()
-            ->fetchAssociative();
+            ->fetch();
         return is_array($queueRec) ? $queueRec : [];
     }
 }

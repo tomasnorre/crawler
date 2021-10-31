@@ -633,12 +633,21 @@ parameters:
 			path: Classes/Hooks/ProcessCleanUpHook.php
 
 		-
+			message:
+				"""
+					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
+					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
+				"""
+			count: 1
+			path: Classes/Middleware/FrontendUserAuthenticator.php
+
+		-
 			message: "#^Cannot access offset 'feUserGroupList' on array\\|bool\\.$#"
 			count: 1
 			path: Classes/Middleware/FrontendUserAuthenticator.php
 
 		-
-			message: "#^Cannot call method fetchAssociative\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
+			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
 			count: 1
 			path: Classes/Middleware/FrontendUserAuthenticator.php
 
