@@ -18,8 +18,8 @@ jobs:
         typo3: [ ^10.4, ^11.5 ]
         php: [ '7.4' ]
         include:
-          - php: '8.0'
-            typo3: ^11.5
+          - typo3: ^11.5
+            php: '8.0'
     steps:
       - name: Get branch name (merge)
         if: github.event_name != 'pull_request'
