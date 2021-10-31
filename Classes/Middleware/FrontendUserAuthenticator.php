@@ -54,11 +54,8 @@ class FrontendUserAuthenticator implements MiddlewareInterface
      */
     protected $queueRepository;
 
-    private QueryBuilder $queryBuilder;
-
-    public function __construct(QueryBuilder $queryBuilder, ?Context $context = null)
+    public function __construct(?Context $context = null)
     {
-        $this->queryBuilder = $queryBuilder;
         $this->context = $context ?? GeneralUtility::makeInstance(Context::class);
     }
 
@@ -129,11 +126,12 @@ class FrontendUserAuthenticator implements MiddlewareInterface
 
     private function findByQueueId(string $queueId): array
     {
-        $queueRec = $this->queryBuilder
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(QueueRepository::TABLE_NAME);
+        $queueRec = $queryBuilder
             ->select('*')
             ->from(QueueRepository::TABLE_NAME)
             ->where(
-                $this->queryBuilder->expr()->eq('qid', $this->queryBuilder->createNamedParameter($queueId))
+                $queryBuilder->expr()->eq('qid', $queryBuilder->createNamedParameter($queueId))
             )
             ->execute()
             ->fetch();
