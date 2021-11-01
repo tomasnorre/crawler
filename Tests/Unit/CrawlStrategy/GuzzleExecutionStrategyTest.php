@@ -22,7 +22,6 @@ namespace AOE\Crawler\Tests\Unit\CrawlStrategy;
 use AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategy;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Http\Response;
-use TYPO3\CMS\Core\Http\Stream;
 use TYPO3\CMS\Core\Http\Uri;
 
 /**
@@ -42,13 +41,9 @@ class GuzzleExecutionStrategyTest extends UnitTestCase
             ['getResponse']
         );
 
-        $body = $this->createPartialMock(Stream::class, ['getContents']);
-        $body->method('getContents')
+        $response = $this->createPartialMock(Response::class, ['getHeaderLine']);
+        $response->method('getHeaderLine')
             ->willReturn(serialize('Crawler extension for TYPO3'));
-
-        $response = $this->createPartialMock(Response::class, ['getBody']);
-        $response->method('getBody')
-            ->willReturn($body);
 
         $this->guzzleExecutionStrategy
             ->method('getResponse')
