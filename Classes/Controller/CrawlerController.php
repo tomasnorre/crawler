@@ -392,7 +392,10 @@ class CrawlerController implements LoggerAwareInterface
         }
 
         // Call a hook to alter configuration
-        if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['getPageTSconfigForId'])) {
+        if (
+            isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['getPageTSconfigForId'])
+            && is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['getPageTSconfigForId'])
+        ) {
             $params = [
                 'pageId' => $id,
                 'pageTSConfig' => &$pageTSconfig,
@@ -671,7 +674,11 @@ class CrawlerController implements LoggerAwareInterface
             $resultData = $jsonCompatibilityConverter->convert($result['content']);
 
             //atm there's no need to point to specific pollable extensions
-            if (is_array($resultData) && is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'])) {
+            if (
+                is_array($resultData)
+                && isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'])
+                && is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'])
+            ) {
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'] as $pollable) {
                     // only check the success value if the instruction is runnig
                     // it is important to name the pollSuccess key same as the procInstructions key
