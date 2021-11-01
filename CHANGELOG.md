@@ -1,7 +1,23 @@
 # Changelog TYPO3 Crawler
 
+## Crawler 11.0.2-dev
+
+### Added
+
+### Changed
+
+### Fixed
+
+### Deprecated
+#### Classes
+#### Functions & Properties
+
+### Removed
+#### Classes
+#### Functions & Properties
+
 ## Crawler 11.0.1
-Crawler 11.0.0 was released on November 1st, 2021
+Crawler 11.0.1 was released on November 1st, 2021
 
 ### Changed
 * Use more expressive message for excluded doktypes when building queue
