@@ -40,9 +40,6 @@ jobs:
           php -v
           composer --version
 
-      - name: Remove conflicting PHP package
-        run: sudo apt remove -y php${{ matrix.php }}-uploadprogress
-
       - uses: actions/checkout@v1
       - uses: jonaseberle/github-action-setup-ddev@v1
         with:
@@ -53,6 +50,7 @@ jobs:
           rm -rf vendor composer.lock
           ddev composer require nimut/typo3-complete=${{ matrix.typo3 }} tomasnorre/crawler="dev-${{ env.BRANCH_NAME }}"
           ddev start
+          ddev exec apt remove -y php${{ matrix.php }}-uploadprogress
           ddev exec bin/typo3cms install:fixfolderstructure
           ddev exec bin/typo3cms install:extensionsetupifpossible
           ddev exec bin/typo3cms database:updateschema
