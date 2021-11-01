@@ -13,6 +13,7 @@
 * PHP 8.0 compatibility problems. Undefined indexes resolved
 * Change requests to write to Header to ensure StaticFileCache is working
 * Switched back to fetch() instead of fetchAssociative() to keep support for legacy TYPO3 installations
+* Crawler Status on direct requests showing correct statuses again
 
 ### Deprecated
 #### Classes

@@ -98,7 +98,8 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
         if ($content === null) {
             return false;
         }
-        return unserialize($content);
+
+        return ['content' => $content];
     }
 
     private function buildRequestHeaders(array $url, string $crawlerId): array
