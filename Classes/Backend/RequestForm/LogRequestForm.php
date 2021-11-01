@@ -146,7 +146,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                         $this->queryBuilder->expr()->eq('qid', $this->queryBuilder->createNamedParameter($queueId))
                     )
                     ->execute()
-                    ->fetchAssociative();
+                    ->fetch();
 
                 // Explode values
                 $q_entry['parameters'] = $this->jsonCompatibilityConverter->convert($q_entry['parameters']);
