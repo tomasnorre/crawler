@@ -71,21 +71,19 @@ class PhpBinaryUtilityTest extends UnitTestCase
         );
     }
 
-    public function getPhpBinaryDataProvider(): array
+    public function getPhpBinaryDataProvider(): iterable
     {
-        return [
-            'php set to standard PHP' => [
-                'phpPath' => '',
-                'phpBinary' => 'php',
-                // Done to accept that travis stores PHP binaries elsewhere as standard unix
-                'expected' => CommandUtility::getCommand('php'),
-            ],
+        yield 'php set to standard PHP' => [
+            'phpPath' => '',
+            'phpBinary' => 'php',
+            // Done to accept that travis stores PHP binaries elsewhere as standard unix
+            'expected' => CommandUtility::getCommand('php'),
+        ];
 
-            'phpPath is set' => [
-                'phpPath' => '/complete/path/to/php',
-                'phpBinary' => '/this/value/is/not/important/as/phpPath/is/set',
-                'expected' => '/complete/path/to/php',
-            ],
+        yield 'phpPath is set' => [
+            'phpPath' => '/complete/path/to/php',
+            'phpBinary' => '/this/value/is/not/important/as/phpPath/is/set',
+            'expected' => '/complete/path/to/php',
         ];
     }
 }

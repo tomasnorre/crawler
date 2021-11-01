@@ -42,33 +42,31 @@ class ConfigurationServiceTest extends UnitTestCase
         );
     }
 
-    public function removeDisallowedConfigurationsDataProvider(): array
+    public function removeDisallowedConfigurationsDataProvider(): iterable
     {
-        return [
-            'both allowed and configuration is empty' => [
-                'allowed' => [],
-                'configurations' => [],
-                'expected' => [],
+        yield 'both allowed and configuration is empty' => [
+            'allowed' => [],
+            'configurations' => [],
+            'expected' => [],
+        ];
+        yield 'allowed is empty' => [
+            'allowed' => [],
+            'configurations' => [
+                'default' => 'configuration-text',
+                'news' => 'configuration-text',
             ],
-            'allowed is empty' => [
-                'allowed' => [],
-                'configurations' => [
-                    'default' => 'configuration-text',
-                    'news' => 'configuration-text',
-                ],
-                'expected' => [
-                    'default' => 'configuration-text',
-                    'news' => 'configuration-text',
-                ],
+            'expected' => [
+                'default' => 'configuration-text',
+                'news' => 'configuration-text',
             ],
-            'news is not allowed' => [
-                'allowed' => ['default'],
-                'configurations' => [
-                    'default' => 'configuration-text',
-                    'news' => 'configuration-text',
-                ],
-                'expected' => ['default' => 'configuration-text'],
+        ];
+        yield 'news is not allowed' => [
+            'allowed' => ['default'],
+            'configurations' => [
+                'default' => 'configuration-text',
+                'news' => 'configuration-text',
             ],
+            'expected' => ['default' => 'configuration-text'],
         ];
     }
 
@@ -88,124 +86,122 @@ class ConfigurationServiceTest extends UnitTestCase
         );
     }
 
-    public function getConfigurationFromPageTSDataProvider(): array
+    public function getConfigurationFromPageTSDataProvider(): iterable
     {
-        return [
-            'Empty Array' => [
-                'pageTSConfig' => [],
-                'pageId' => 1,
-                'mountPoint' => '',
-                'expected' => [],
-            ],
-            'PageTSConfig with empty mountPoint returning no URLs' => [
-                'pageTSConfig' => [
-                    'tx_crawler.' => [
-                        'crawlerCfg.' => [
-                            'paramSets.' => [
-                                'myConfigurationKeyName' => '&tx_myext[items]=[_TABLE:tt_myext_items;_PID:15;_WHERE: hidden = 0]',
-                                'myConfigurationKeyName.' => [
-                                    'pidsOnly' => '1',
-                                    'procInstrFilter' => 'tx_indexedsearch_reindex',
-                                ],
+        yield 'Empty Array' => [
+            'pageTSConfig' => [],
+            'pageId' => 1,
+            'mountPoint' => '',
+            'expected' => [],
+        ];
+        yield 'PageTSConfig with empty mountPoint returning no URLs' => [
+            'pageTSConfig' => [
+                'tx_crawler.' => [
+                    'crawlerCfg.' => [
+                        'paramSets.' => [
+                            'myConfigurationKeyName' => '&tx_myext[items]=[_TABLE:tt_myext_items;_PID:15;_WHERE: hidden = 0]',
+                            'myConfigurationKeyName.' => [
+                                'pidsOnly' => '1',
+                                'procInstrFilter' => 'tx_indexedsearch_reindex',
                             ],
                         ],
                     ],
                 ],
-                'pageId' => 1,
-                'mountPoint' => '',
-                'expected' => [
-                    'myConfigurationKeyName' => [
-                        'subCfg' => [
-                            'pidsOnly' => '1',
-                            'procInstrFilter' => 'tx_indexedsearch_reindex',
-                            'key' => 'myConfigurationKeyName',
-                        ],
-                        'paramParsed' => [
-                            'tx_myext[items]' => '[_TABLE:tt_myext_items;_PID:15;_WHERE: hidden = 0]',
-                        ],
-                        'paramExpanded' => [
-                            'tx_myext[items]' => [],
-                        ],
-                        'origin' => 'pagets',
-                        'URLs' => [],
+            ],
+            'pageId' => 1,
+            'mountPoint' => '',
+            'expected' => [
+                'myConfigurationKeyName' => [
+                    'subCfg' => [
+                        'pidsOnly' => '1',
+                        'procInstrFilter' => 'tx_indexedsearch_reindex',
+                        'key' => 'myConfigurationKeyName',
                     ],
+                    'paramParsed' => [
+                        'tx_myext[items]' => '[_TABLE:tt_myext_items;_PID:15;_WHERE: hidden = 0]',
+                    ],
+                    'paramExpanded' => [
+                        'tx_myext[items]' => [],
+                    ],
+                    'origin' => 'pagets',
+                    'URLs' => [],
                 ],
             ],
-            'PageTSConfig with empty mountPoint returning URLs' => [
-                'pageTSConfig' => [
-                    'tx_crawler.' => [
-                        'crawlerCfg.' => [
-                            'paramSets.' => [
-                                'myConfigurationKeyName' => '&S=CRAWL&L=[0-1]',
-                                'myConfigurationKeyName.' => [
-                                    'pidsOnly' => '1',
-                                    'procInstrFilter' => 'tx_indexedsearch_reindex',
-                                ],
+        ];
+        yield 'PageTSConfig with empty mountPoint returning URLs' => [
+            'pageTSConfig' => [
+                'tx_crawler.' => [
+                    'crawlerCfg.' => [
+                        'paramSets.' => [
+                            'myConfigurationKeyName' => '&S=CRAWL&L=[0-1]',
+                            'myConfigurationKeyName.' => [
+                                'pidsOnly' => '1',
+                                'procInstrFilter' => 'tx_indexedsearch_reindex',
                             ],
                         ],
                     ],
                 ],
-                'pageId' => 1,
-                'mountPoint' => '',
-                'expected' => [
-                    'myConfigurationKeyName' => [
-                        'subCfg' => [
-                            'pidsOnly' => '1',
-                            'procInstrFilter' => 'tx_indexedsearch_reindex',
-                            'key' => 'myConfigurationKeyName',
-                        ],
-                        'paramParsed' => [
-                            'S' => 'CRAWL',
-                            'L' => '[0-1]',
-                        ],
-                        'paramExpanded' => [
-                            'S' => ['CRAWL'],
-                            'L' => [0, 1],
-                        ],
-                        'origin' => 'pagets',
-                        'URLs' => [
-                            '?id=1&L=0&S=CRAWL',
-                            '?id=1&L=1&S=CRAWL',
-                        ],
+            ],
+            'pageId' => 1,
+            'mountPoint' => '',
+            'expected' => [
+                'myConfigurationKeyName' => [
+                    'subCfg' => [
+                        'pidsOnly' => '1',
+                        'procInstrFilter' => 'tx_indexedsearch_reindex',
+                        'key' => 'myConfigurationKeyName',
+                    ],
+                    'paramParsed' => [
+                        'S' => 'CRAWL',
+                        'L' => '[0-1]',
+                    ],
+                    'paramExpanded' => [
+                        'S' => ['CRAWL'],
+                        'L' => [0, 1],
+                    ],
+                    'origin' => 'pagets',
+                    'URLs' => [
+                        '?id=1&L=0&S=CRAWL',
+                        '?id=1&L=1&S=CRAWL',
                     ],
                 ],
             ],
-            'PageTSConfig with mountPoint given' => [
-                'pageTSConfig' => [
-                    'tx_crawler.' => [
-                        'crawlerCfg.' => [
-                            'paramSets.' => [
-                                'myConfigurationKeyName' => '&S=CRAWL&L=[0-1]',
-                                'myConfigurationKeyName.' => [
-                                    'pidsOnly' => '1',
-                                    'procInstrFilter' => 'tx_indexedsearch_reindex',
-                                ],
+        ];
+        yield 'PageTSConfig with mountPoint given' => [
+            'pageTSConfig' => [
+                'tx_crawler.' => [
+                    'crawlerCfg.' => [
+                        'paramSets.' => [
+                            'myConfigurationKeyName' => '&S=CRAWL&L=[0-1]',
+                            'myConfigurationKeyName.' => [
+                                'pidsOnly' => '1',
+                                'procInstrFilter' => 'tx_indexedsearch_reindex',
                             ],
                         ],
                     ],
                 ],
-                'pageId' => 1,
-                'mountPoint' => 'mpstring',
-                'expected' => [
-                    'myConfigurationKeyName' => [
-                        'subCfg' => [
-                            'pidsOnly' => '1',
-                            'procInstrFilter' => 'tx_indexedsearch_reindex',
-                            'key' => 'myConfigurationKeyName',
-                        ],
-                        'paramParsed' => [
-                            'S' => 'CRAWL',
-                            'L' => '[0-1]',
-                        ],
-                        'paramExpanded' => [
-                            'S' => ['CRAWL'],
-                            'L' => [0, 1],
-                        ],
-                        'origin' => 'pagets',
-                        'URLs' => [
-                            '?id=1&MP=mpstring&L=0&S=CRAWL',
-                            '?id=1&MP=mpstring&L=1&S=CRAWL',
-                        ],
+            ],
+            'pageId' => 1,
+            'mountPoint' => 'mpstring',
+            'expected' => [
+                'myConfigurationKeyName' => [
+                    'subCfg' => [
+                        'pidsOnly' => '1',
+                        'procInstrFilter' => 'tx_indexedsearch_reindex',
+                        'key' => 'myConfigurationKeyName',
+                    ],
+                    'paramParsed' => [
+                        'S' => 'CRAWL',
+                        'L' => '[0-1]',
+                    ],
+                    'paramExpanded' => [
+                        'S' => ['CRAWL'],
+                        'L' => [0, 1],
+                    ],
+                    'origin' => 'pagets',
+                    'URLs' => [
+                        '?id=1&MP=mpstring&L=0&S=CRAWL',
+                        '?id=1&MP=mpstring&L=1&S=CRAWL',
                     ],
                 ],
             ],

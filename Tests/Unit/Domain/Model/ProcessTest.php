@@ -86,32 +86,27 @@ class ProcessTest extends UnitTestCase
         );
     }
 
-    /**
-     * @return array
-     */
-    public function getStateDataProvider()
+    public function getStateDataProvider(): iterable
     {
-        return [
-            'Check that state is running, Active and less than 100%' => [
-                'active' => 1,
-                'processes' => 90,
-                'expectedState' => Process::STATE_RUNNING,
-            ],
-            'Check that state is cancelled, Inactive and less than 100%' => [
-                'active' => 0,
-                'processes' => 90,
-                'expectedState' => Process::STATE_CANCELLED,
-            ],
-            'Check that state is completed, Active and 100%' => [
-                'active' => 1,
-                'processes' => 100,
-                'expectedState' => Process::STATE_COMPLETED,
-            ],
-            'Check that state is completed, Inactive and 100%' => [
-                'active' => 0,
-                'processes' => 100,
-                'expectedState' => Process::STATE_COMPLETED,
-            ],
+        yield 'Check that state is running, Active and less than 100%' => [
+            'active' => 1,
+            'processes' => 90,
+            'expectedState' => Process::STATE_RUNNING,
+        ];
+        yield 'Check that state is cancelled, Inactive and less than 100%' => [
+            'active' => 0,
+            'processes' => 90,
+            'expectedState' => Process::STATE_CANCELLED,
+        ];
+        yield 'Check that state is completed, Active and 100%' => [
+            'active' => 1,
+            'processes' => 100,
+            'expectedState' => Process::STATE_COMPLETED,
+        ];
+        yield 'Check that state is completed, Inactive and 100%' => [
+            'active' => 0,
+            'processes' => 100,
+            'expectedState' => Process::STATE_COMPLETED,
         ];
     }
 
@@ -151,67 +146,62 @@ class ProcessTest extends UnitTestCase
         );
     }
 
-    /**
-     * @return array
-     */
-    public function getProgressReturnsExpectedPercentageDataProvider()
+    public function getProgressReturnsExpectedPercentageDataProvider(): iterable
     {
-        return [
-            'CountItemsAssigned is negative number' => [
-                'countItemsAssigned' => -2,
-                'countItemsProcessed' => 8,
-                'expectedProgress' => 0.0,
-            ],
-            'CountItemsAssigned is 0' => [
-                'countItemsAssigned' => 0,
-                'countItemsProcessed' => 8,
-                'expectedProgress' => 0.0,
-            ],
-            'CountItemsAssigned is higher than countItemsProcessed' => [
-                'countItemsAssigned' => 100,
-                'countItemsProcessed' => 8,
-                'expectedProgress' => 8.0,
-            ],
-            'CountItemsAssigned are equal countItemsProcessed' => [
-                'countItemsAssigned' => 15,
-                'countItemsProcessed' => 15,
-                'expectedProgress' => 100.0,
-            ],
-            'CountItemsAssigned is lower than countItemsProcessed' => [
-                'countItemsAssigned' => 15,
-                'countItemsProcessed' => 20,
-                'expectedProgress' => 100.0,
-            ],
-            '100%' => [
-                'countItemsAssigned' => 100,
-                'countItemsProcessed' => 100,
-                'expectedProgress' => 100.0,
-            ],
-            'result higher than 100, Testing the round if $res > 100' => [
-                'countItemsAssigned' => 100,
-                'countItemsProcessed' => 101,
-                'expectedProgress' => 100.0,
-            ],
-            'Comma numbers' => [
-                'countItemsAssigned' => 15,
-                'countItemsProcessed' => 14,
-                'expectedProgress' => 93.0,
-            ],
-            'Comma number that would round down' => [
-                'countItemsAssigned' => 14,
-                'countItemsProcessed' => 14,
-                'expectedProgress' => 100.0,
-            ],
-            'To make sure that floor() break the result (mutation)' => [
-                'countItemsAssigned' => 99,
-                'countItemsProcessed' => 98,
-                'expectedProgress' => 99.0,
-            ],
-            'To make sure that ceil() break the result (mutation)' => [
-                'countItemsAssigned' => 95,
-                'countItemsProcessed' => 85,
-                'expectedProgress' => 89.0,
-            ],
+        yield 'CountItemsAssigned is negative number' => [
+            'countItemsAssigned' => -2,
+            'countItemsProcessed' => 8,
+            'expectedProgress' => 0.0,
+        ];
+        yield 'CountItemsAssigned is 0' => [
+            'countItemsAssigned' => 0,
+            'countItemsProcessed' => 8,
+            'expectedProgress' => 0.0,
+        ];
+        yield 'CountItemsAssigned is higher than countItemsProcessed' => [
+            'countItemsAssigned' => 100,
+            'countItemsProcessed' => 8,
+            'expectedProgress' => 8.0,
+        ];
+        yield 'CountItemsAssigned are equal countItemsProcessed' => [
+            'countItemsAssigned' => 15,
+            'countItemsProcessed' => 15,
+            'expectedProgress' => 100.0,
+        ];
+        yield 'CountItemsAssigned is lower than countItemsProcessed' => [
+            'countItemsAssigned' => 15,
+            'countItemsProcessed' => 20,
+            'expectedProgress' => 100.0,
+        ];
+        yield '100%' => [
+            'countItemsAssigned' => 100,
+            'countItemsProcessed' => 100,
+            'expectedProgress' => 100.0,
+        ];
+        yield 'result higher than 100, Testing the round if $res > 100' => [
+            'countItemsAssigned' => 100,
+            'countItemsProcessed' => 101,
+            'expectedProgress' => 100.0,
+        ];
+        yield 'Comma numbers' => [
+            'countItemsAssigned' => 15,
+            'countItemsProcessed' => 14,
+            'expectedProgress' => 93.0,
+        ];
+        yield 'Comma number that would round down' => [
+            'countItemsAssigned' => 14,
+            'countItemsProcessed' => 14,
+            'expectedProgress' => 100.0,
+        ];
+        yield 'To make sure that floor() break the result (mutation)' => [
+            'countItemsAssigned' => 99,
+            'countItemsProcessed' => 98,
+            'expectedProgress' => 99.0,
+        ];
+        yield 'To make sure that ceil() break the result (mutation)' => [
+            'countItemsAssigned' => 95,
+            'countItemsProcessed' => 85,
+            'expectedProgress' => 89.0,
         ];
     }
 
@@ -234,37 +224,32 @@ class ProcessTest extends UnitTestCase
         );
     }
 
-    /**
-     * @return array
-     */
-    public function getRuntimeReturnsIntegerDataProvider()
+    public function getRuntimeReturnsIntegerDataProvider(): iterable
     {
-        return [
-            'getTimeForFirstItem is bigger than getTimeForLastItem' => [
-                'getTimeForFirstItem' => ['exec_time' => 75],
-                'getTimeForLastItem' => ['exec_time' => 50],
-                'expected' => -25,
-            ],
-            'getTimeForFirstItem is smaller than getTimeForLastItem' => [
-                'getTimeForFirstItem' => ['exec_time' => 55],
-                'getTimeForLastItem' => ['exec_time' => 85],
-                'expected' => 30,
-            ],
-            'getTimeForFirstItem is equal to getTimeForLastItem' => [
-                'getTimeForFirstItem' => ['exec_time' => 45],
-                'getTimeForLastItem' => ['exec_time' => 45],
-                'expected' => 0,
-            ],
-            'getTimeForFirstItem is negative number and getTimeForLastItem is positive' => [
-                'getTimeForFirstItem' => ['exec_time' => -25],
-                'getTimeForLastItem' => ['exec_time' => 50],
-                'expected' => 75,
-            ],
-            'getTimeForFirstItem is positive number and getTimeForLastItem is negative' => [
-                'getTimeForFirstItem' => ['exec_time' => 25],
-                'getTimeForLastItem' => ['exec_time' => -50],
-                'expected' => -75,
-            ],
+        yield 'getTimeForFirstItem is bigger than getTimeForLastItem' => [
+            'getTimeForFirstItem' => ['exec_time' => 75],
+            'getTimeForLastItem' => ['exec_time' => 50],
+            'expected' => -25,
+        ];
+        yield 'getTimeForFirstItem is smaller than getTimeForLastItem' => [
+            'getTimeForFirstItem' => ['exec_time' => 55],
+            'getTimeForLastItem' => ['exec_time' => 85],
+            'expected' => 30,
+        ];
+        yield 'getTimeForFirstItem is equal to getTimeForLastItem' => [
+            'getTimeForFirstItem' => ['exec_time' => 45],
+            'getTimeForLastItem' => ['exec_time' => 45],
+            'expected' => 0,
+        ];
+        yield 'getTimeForFirstItem is negative number and getTimeForLastItem is positive' => [
+            'getTimeForFirstItem' => ['exec_time' => -25],
+            'getTimeForLastItem' => ['exec_time' => 50],
+            'expected' => 75,
+        ];
+        yield 'getTimeForFirstItem is positive number and getTimeForLastItem is negative' => [
+            'getTimeForFirstItem' => ['exec_time' => 25],
+            'getTimeForLastItem' => ['exec_time' => -50],
+            'expected' => -75,
         ];
     }
 
