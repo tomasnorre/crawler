@@ -40,6 +40,9 @@ jobs:
           php -v
           composer --version
 
+      - name: Remove conflicting PHP package
+        run: sudo apt remove -y php${{ matrix.php }}-uploadprogress
+
       - uses: actions/checkout@v1
       - uses: jonaseberle/github-action-setup-ddev@v1
         with:
