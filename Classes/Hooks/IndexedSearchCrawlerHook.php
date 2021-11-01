@@ -91,7 +91,7 @@ class IndexedSearchCrawlerHook
             ->execute();
 
         // For each configuration, check if it should be executed and if so, start:
-        while ($cfgRec = $result->fetchAssociative()) {
+        while ($cfgRec = $result->fetch()) {
             // Generate a unique set-ID:
             $setId = GeneralUtility::md5int(microtime());
             // Get next time:
@@ -210,7 +210,7 @@ class IndexedSearchCrawlerHook
                     )
                 )
                 ->execute()
-                ->fetchAssociative();
+                ->fetch();
             if (is_array($cfgRec)) {
                 // Unpack session data:
                 $session_data = unserialize($cfgRec['session_data']);
@@ -304,7 +304,7 @@ class IndexedSearchCrawlerHook
                 ->execute();
 
             // Traverse:
-            while ($row = $result->fetchAssociative()) {
+            while ($row = $result->fetch()) {
                 // Index single record:
                 $this->indexSingleRecord($row, $cfgRec, $rootLine);
                 // Update the UID we last processed:
@@ -467,7 +467,7 @@ class IndexedSearchCrawlerHook
                 )
                 ->execute();
             // Traverse subpages and add to queue:
-            while ($row = $result->fetchAssociative()) {
+            while ($row = $result->fetch()) {
                 $this->instanceCounter++;
                 $url = 'pages:' . $row['uid'] . ': ' . $row['title'];
                 $session_data['urlLog'][] = $url;
@@ -904,7 +904,7 @@ class IndexedSearchCrawlerHook
                 )
                 ->execute();
 
-            while ($cfgRec = $result->fetchAssociative()) {
+            while ($cfgRec = $result->fetch()) {
                 $this->indexSingleRecord($currentRecord, $cfgRec);
             }
         }
