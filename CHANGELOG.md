@@ -9,6 +9,8 @@
 
 ### Fixed
 * Set `result_data` back to `json_encode($result)` to ensure correct result handling in backend
+* Removes QueueRepository from FrontendUserAuthenticator Middleware, to ensure FE plugins can be rendered
+* PHP 8.0 compatibility problems. Undefined indexes resolved
 
 ### Deprecated
 #### Classes

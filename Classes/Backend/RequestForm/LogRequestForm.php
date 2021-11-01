@@ -228,8 +228,8 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                 $this->outputCsvFile();
             }
         }
-        $this->view->assign('showResultLog', (bool) $this->infoModuleController->MOD_SETTINGS['log_resultLog']);
-        $this->view->assign('showFeVars', (bool) $this->infoModuleController->MOD_SETTINGS['log_feVars']);
+        $this->view->assign('showResultLog', (bool) isset($this->infoModuleController->MOD_SETTINGS['log_resultLog']) ? $this->infoModuleController->MOD_SETTINGS['log_resultLog'] : false);
+        $this->view->assign('showFeVars', (bool) isset($this->infoModuleController->MOD_SETTINGS['log_feVars']) ? $this->infoModuleController->MOD_SETTINGS['log_feVars'] : false);
         $this->view->assign('displayActions', 1);
         $this->view->assign('displayLogFilterHtml', $this->getDisplayLogFilterHtml($setId));
         $this->view->assign('itemPerPageHtml', $this->getItemsPerPageDropDownHtml());
@@ -287,10 +287,12 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
 
     private function getShowResultLogCheckBoxHtml(int $setId, string $quiPart): string
     {
+        $currentValue = $this->infoModuleController->MOD_SETTINGS['log_resultLog'] ?? '';
+
         return BackendUtility::getFuncCheck(
                 $this->pageId,
                 'SET[log_resultLog]',
-                $this->infoModuleController->MOD_SETTINGS['log_resultLog'],
+                $currentValue,
                 'index.php',
                 '&setID=' . $setId . $quiPart
             ) . '&nbsp;' . $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showresultlog');
@@ -298,10 +300,11 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
 
     private function getShowFeVarsCheckBoxHtml(int $setId, string $quiPart): string
     {
+        $currentValue = $this->infoModuleController->MOD_SETTINGS['log_feVars'] ?? '';
         return BackendUtility::getFuncCheck(
                 $this->pageId,
                 'SET[log_feVars]',
-                $this->infoModuleController->MOD_SETTINGS['log_feVars'],
+                $currentValue,
                 'index.php',
                 '&setID=' . $setId . $quiPart
             ) . '&nbsp;' . $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showfevars');
@@ -325,8 +328,8 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
 
         $contentArray['titleRowSpan'] = 1;
         $contentArray['colSpan'] = 9
-            + ($this->infoModuleController->MOD_SETTINGS['log_resultLog'] ? -1 : 0)
-            + ($this->infoModuleController->MOD_SETTINGS['log_feVars'] ? 3 : 0);
+            + (isset($this->infoModuleController->MOD_SETTINGS['log_resultLog']) ? -1 : 0)
+            + (isset($this->infoModuleController->MOD_SETTINGS['log_feVars']) ? 3 : 0);
 
         if (! empty($logEntriesOfPage)) {
             $setId = (int) GeneralUtility::_GP('setID');
@@ -357,7 +360,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
 
                 // Put data into array:
                 $rowData = [];
-                if ($this->infoModuleController->MOD_SETTINGS['log_resultLog']) {
+                if (isset($this->infoModuleController->MOD_SETTINGS['log_resultLog'])) {
                     $rowData['result_log'] = $resLog;
                 } else {
                     $rowData['scheduled'] = ($vv['scheduled'] > 0) ? BackendUtility::datetime($vv['scheduled']) : 0;
@@ -366,14 +369,14 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                 $rowData['result_status'] = GeneralUtility::fixed_lgd_cs($resStatus, 50);
                 $url = htmlspecialchars($parameters['url'] ?? $parameters['alturl'], ENT_QUOTES | ENT_HTML5);
                 $rowData['url'] = '<a href="' . $url . '" target="_newWIndow">' . $url . '</a>';
-                $rowData['feUserGroupList'] = $parameters['feUserGroupList'] ?: '';
+                $rowData['feUserGroupList'] = $parameters['feUserGroupList'] ?? '';
                 $rowData['procInstructions'] = is_array($parameters['procInstructions']) ? implode('; ', $parameters['procInstructions']) : '';
                 $rowData['set_id'] = (string) $vv['set_id'];
 
-                if ($this->infoModuleController->MOD_SETTINGS['log_feVars']) {
+                if (isset($this->infoModuleController->MOD_SETTINGS['log_feVars'])) {
                     $resFeVars = ResultHandler::getResFeVars($resultData ?: []);
-                    $rowData['tsfe_id'] = $resFeVars['id'] ?: '';
-                    $rowData['tsfe_gr_list'] = $resFeVars['gr_list'] ?: '';
+                    $rowData['tsfe_id'] = $resFeVars['id'] ?? '';
+                    $rowData['tsfe_gr_list'] = $resFeVars['gr_list'] ?? '';
                 }
 
                 $trClass = '';

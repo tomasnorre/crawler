@@ -184,7 +184,9 @@ class Process extends AbstractEntity
     {
         $lastItem = $this->getQueueRepository()->findOldestEntryForProcess($this);
         $firstItem = $this->getQueueRepository()->findYoungestEntryForProcess($this);
-        return $lastItem['exec_time'] - $firstItem['exec_time'];
+        $startTime = $firstItem['exec_time'] ?? 0;
+        $endTime = $lastItem['exec_time'] ?? 0;
+        return $endTime - $startTime;
     }
 
     /**

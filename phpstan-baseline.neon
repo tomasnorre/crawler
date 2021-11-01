@@ -74,7 +74,7 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Class cognitive complexity is 72, keep it under 60$#"
+			message: "#^Class cognitive complexity is 71, keep it under 60$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
@@ -271,7 +271,7 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Class cognitive complexity is 97, keep it under 60$#"
+			message: "#^Class cognitive complexity is 99, keep it under 60$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -337,11 +337,6 @@ parameters:
 
 		-
 			message: "#^Cannot call method info\\(\\) on Psr\\\\Log\\\\LoggerInterface\\|null\\.$#"
-			count: 1
-			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
-
-		-
-			message: "#^Offset 'scheme' does not exist on array\\(\\?'scheme' \\=\\> string, \\?'host' \\=\\> string, \\?'port' \\=\\> int, \\?'user' \\=\\> string, \\?'pass' \\=\\> string, \\?'path' \\=\\> string, \\?'query' \\=\\> string, \\?'fragment' \\=\\> string\\)\\.$#"
 			count: 1
 			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
 
@@ -635,8 +630,8 @@ parameters:
 		-
 			message:
 				"""
-					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
-					since TYPO3 10\\.4, will be removed in version 12\\.0$#
+					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
+					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
 				"""
 			count: 1
 			path: Classes/Middleware/FrontendUserAuthenticator.php
@@ -647,7 +642,7 @@ parameters:
 			path: Classes/Middleware/FrontendUserAuthenticator.php
 
 		-
-			message: "#^Offset 'parameters' does not exist on array\\|null\\.$#"
+			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
 			count: 1
 			path: Classes/Middleware/FrontendUserAuthenticator.php
 

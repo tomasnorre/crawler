@@ -27,7 +27,7 @@ class BackendModuleCest
 {
     public function canSeeLoginMask(Admin $I): void
     {
-        $I->amOnPage('/');
+        $I->amOnPage('/typo3');
         $I->waitForText('Login', 5);
     }
 

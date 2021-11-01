@@ -125,3 +125,20 @@ https://github.com/TYPO3/TYPO3.CMS/blob/10.4/typo3/sysext/indexed_search/Classes
 
 Here a int value is submitted instead of a String. This is a change that goes more than 8 years back.
 So surprised that it never was a problem before.
+
+Crawler Log shows "-" as result
+===============================
+
+In Crawler v11.0.0 after introducing PHP 8.0 compatibility. We are influenced by a bug in the PHP itself
+https://bugs.php.net/bug.php?id=81320, this bugs make the Crawler status an invalid JSON and can therefore
+not render the correct result. It will display the result in the Crawler Log as `-`.
+
+Even though the page is correct crawler, the status is incorrect, which is of course not desired.
+
+Workaround
+----------
+
+On solution can be to remove the `php8.0-uploadprogress` package from your server. If this version is below
+1.1.4, this will trigger the problem. Removing the package can of course be a problem if you are depending on it.
+
+If possible, better update it to 1.1.4 or higher, then the problem should be solved as well.

@@ -68,7 +68,7 @@ class QueueExecutor implements SingletonInterface
         if (! is_array($parameters) || empty($parameters)) {
             return 'ERROR';
         }
-        if ($parameters['_CALLBACKOBJ']) {
+        if (isset($parameters['_CALLBACKOBJ'])) {
             $className = $parameters['_CALLBACKOBJ'];
             unset($parameters['_CALLBACKOBJ']);
             $result = GeneralUtility::makeInstance(CallbackExecutionStrategy::class)
