@@ -1,8 +1,7 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 11.0.1-dev
-
-### Added
+## Crawler 11.0.1
+Crawler 11.0.0 was released on November 1st, 2021
 
 ### Changed
 * Use more expressive message for excluded doktypes when building queue
@@ -14,14 +13,6 @@
 * Change requests to write to Header to ensure StaticFileCache is working
 * Switched back to fetch() instead of fetchAssociative() to keep support for legacy TYPO3 installations
 * Crawler Status on direct requests showing correct statuses again
-
-### Deprecated
-#### Classes
-#### Functions & Properties
-
-### Removed
-#### Classes
-#### Functions & Properties
 
 ## Crawler 11.0.0
 Crawler 11.0.0 was released on October 22nd, 2021
