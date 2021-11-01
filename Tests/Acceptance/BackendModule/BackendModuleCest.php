@@ -27,7 +27,7 @@ class BackendModuleCest
 {
     public function canSeeLoginMask(Admin $I): void
     {
-        $I->amOnPage('/');
+        $I->amOnPage('/typo3');
         $I->waitForText('Login', 5);
     }
 
@@ -124,5 +124,31 @@ class BackendModuleCest
         $I->click('Show finished and terminated processes');
         $I->waitForText('Process completed successfully', 60);
         $I->dontSee('Process was cancelled');
+    }
+
+    /**
+     * Ensures that Result logs are writing correctly
+     * https://github.com/tomasnorre/crawler/issues/826
+     */
+    public function seeCrawlerLogWithOutErrors(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    {
+        $this->crawlerAddProcess($I, $adminStep, $pageTree);
+        $I->click('Show finished and terminated processes');
+        $I->waitForText('Process completed successfully', 60);
+        // Check Result
+        $I->selectOption('SET[crawlaction]', 'log');
+        $I->dontSee('Content index does not exists in requestContent');
+    }
+
+    public function manualTriggerCrawlerFromLog(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    {
+        $this->crawlerAddProcess($I, $adminStep, $pageTree);
+        $I->click('Show finished and terminated processes');
+        $I->waitForText('Process completed successfully', 60);
+        $I->selectOption('SET[crawlaction]', 'log');
+        // Click on "refresh" for given record
+        $I->click('.refreshLink');
+        $I->dontSee('Whoops, looks like something went wrong.');
+        $I->waitForText('OK', 15);
     }
 }

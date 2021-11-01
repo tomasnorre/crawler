@@ -24,7 +24,7 @@ class Admin extends \AcceptanceTester
     public function loginAsAdmin(): void
     {
         $I = $this;
-        $I->amOnPage('/');
+        $I->amOnPage('/typo3');
         $I->waitForText('Login', 30);
         $I->fillField('#t3-username', 'admin');
         $I->fillField('#t3-password', 'password');

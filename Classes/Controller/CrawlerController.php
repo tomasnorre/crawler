@@ -26,11 +26,13 @@ use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Event\AfterQueueItemAddedEvent;
+use AOE\Crawler\Event\AfterUrlAddedToQueueEvent;
+use AOE\Crawler\Event\BeforeQueueItemAddedEvent;
 use AOE\Crawler\QueueExecutor;
 use AOE\Crawler\Service\ConfigurationService;
 use AOE\Crawler\Service\PageService;
 use AOE\Crawler\Service\UrlService;
-use AOE\Crawler\Utility\SignalSlotUtility;
 use AOE\Crawler\Value\QueueRow;
 use PDO;
 use Psr\Log\LoggerAwareInterface;
@@ -42,6 +44,7 @@ use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Type\Bitmask\Permission;
@@ -194,6 +197,8 @@ class CrawlerController implements LoggerAwareInterface
      */
     private $urlService;
 
+    private EventDispatcher $eventDispatcher;
+
     /************************************
      *
      * Getting URLs based on Page TSconfig
@@ -213,6 +218,7 @@ class CrawlerController implements LoggerAwareInterface
         $this->crawler = GeneralUtility::makeInstance(Crawler::class);
         $this->configurationService = GeneralUtility::makeInstance(ConfigurationService::class);
         $this->urlService = GeneralUtility::makeInstance(UrlService::class);
+        $this->eventDispatcher = GeneralUtility::makeInstance(EventDispatcher::class);
 
         /** @var ExtensionConfigurationProvider $configurationProvider */
         $configurationProvider = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
@@ -386,7 +392,10 @@ class CrawlerController implements LoggerAwareInterface
         }
 
         // Call a hook to alter configuration
-        if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['getPageTSconfigForId'])) {
+        if (
+            isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['getPageTSconfigForId'])
+            && is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['getPageTSconfigForId'])
+        ) {
             $params = [
                 'pageId' => $id,
                 'pageTSConfig' => &$pageTSconfig,
@@ -583,19 +592,7 @@ class CrawlerController implements LoggerAwareInterface
                 $rows[] = $uid;
                 $urlAdded = true;
 
-                $signalPayload = ['uid' => $uid, 'fieldArray' => $fieldArray];
-                SignalSlotUtility::emitSignal(
-                    self::class,
-                    SignalSlotUtility::SIGNAL_URL_ADDED_TO_QUEUE,
-                    $signalPayload
-                );
-            } else {
-                $signalPayload = ['rows' => $rows, 'fieldArray' => $fieldArray];
-                SignalSlotUtility::emitSignal(
-                    self::class,
-                    SignalSlotUtility::SIGNAL_DUPLICATE_URL_IN_QUEUE,
-                    $signalPayload
-                );
+                $this->eventDispatcher->dispatch(new AfterUrlAddedToQueueEvent($uid, $fieldArray));
             }
         }
 
@@ -643,17 +640,15 @@ class CrawlerController implements LoggerAwareInterface
                 ->andWhere('exec_time = 0')
                 ->andWhere('process_scheduled > 0');
         }
-        $queueRec = $queryBuilder->execute()->fetchAssociative();
+        $queueRec = $queryBuilder->execute()->fetch();
 
         if (! is_array($queueRec)) {
             return;
         }
 
-        SignalSlotUtility::emitSignal(
-            self::class,
-            SignalSlotUtility::SIGNAL_QUEUEITEM_PREPROCESS,
-            [$queueId, &$queueRec]
-        );
+        /** @var BeforeQueueItemAddedEvent $event */
+        $event = $this->eventDispatcher->dispatch(new BeforeQueueItemAddedEvent($queueId, $queueRec));
+        $queueRec = $event->getQueueRecord();
 
         // Set exec_time to lock record:
         $field_array = ['exec_time' => $this->getCurrentTime()];
@@ -679,7 +674,11 @@ class CrawlerController implements LoggerAwareInterface
             $resultData = $jsonCompatibilityConverter->convert($result['content']);
 
             //atm there's no need to point to specific pollable extensions
-            if (is_array($resultData) && is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'])) {
+            if (
+                is_array($resultData)
+                && isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'])
+                && is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'])
+            ) {
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'] as $pollable) {
                     // only check the success value if the instruction is runnig
                     // it is important to name the pollSuccess key same as the procInstructions key
@@ -697,13 +696,11 @@ class CrawlerController implements LoggerAwareInterface
             }
         }
         // Set result in log which also denotes the end of the processing of this entry.
-        $field_array = ['result_data' => json_encode($resultData)];
+        $field_array = ['result_data' => json_encode($result)];
 
-        SignalSlotUtility::emitSignal(
-            self::class,
-            SignalSlotUtility::SIGNAL_QUEUEITEM_POSTPROCESS,
-            [$queueId, &$field_array]
-        );
+        /** @var AfterQueueItemAddedEvent $event */
+        $event = $this->eventDispatcher->dispatch(new AfterQueueItemAddedEvent($queueId, $field_array));
+        $field_array = $event->getFieldArray();
 
         GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(QueueRepository::TABLE_NAME)
             ->update(
@@ -738,11 +735,9 @@ class CrawlerController implements LoggerAwareInterface
         // Set result in log which also denotes the end of the processing of this entry.
         $field_array = ['result_data' => json_encode($result)];
 
-        SignalSlotUtility::emitSignal(
-            self::class,
-            SignalSlotUtility::SIGNAL_QUEUEITEM_POSTPROCESS,
-            [$queueId, &$field_array]
-        );
+        /** @var AfterQueueItemAddedEvent $event */
+        $event = $this->eventDispatcher->dispatch(new AfterQueueItemAddedEvent($queueId, $field_array));
+        $field_array = $event->getFieldArray();
 
         $connectionForCrawlerQueue->update(
             QueueRepository::TABLE_NAME,

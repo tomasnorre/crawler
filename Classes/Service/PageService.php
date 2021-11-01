@@ -20,7 +20,9 @@ namespace AOE\Crawler\Service;
  */
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
+use AOE\Crawler\Event\ModifySkipPageEvent;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -28,6 +30,13 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class PageService
 {
+    private EventDispatcher $eventDispatcher;
+
+    public function __construct(EventDispatcher $eventDispatcher = null)
+    {
+        $this->eventDispatcher = $eventDispatcher ?? GeneralUtility::makeInstance(EventDispatcher::class);
+    }
+
     /**
      * Check if the given page should be crawled
      *
@@ -43,17 +52,23 @@ class PageService
         }
 
         if (in_array($pageRow['doktype'], $this->getDisallowedDokTypes(), true)) {
-            return 'Because doktype is not allowed';
+            return sprintf('Because doktype "%d" is not allowed', $pageRow['doktype']);
         }
 
         foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['excludeDoktype'] ?? [] as $key => $doktypeList) {
             if (GeneralUtility::inList($doktypeList, $pageRow['doktype'])) {
-                return 'Doktype was excluded by "' . $key . '"';
+                return sprintf('Doktype "%d" was excluded by excludeDoktype configuration key "%s"', $pageRow['doktype'], $key);
             }
         }
 
         // veto hook
         foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pageVeto'] ?? [] as $key => $func) {
+            trigger_error(
+                'The pageVeto-hook of the TYPO3 Crawler is deprecated since v11.0.0 and will be removed in v13.0,
+                please use the PSR-14 ModifySkipPageEvent instead.',
+                E_USER_DEPRECATED
+            );
+
             $params = [
                 'pageRow' => $pageRow,
             ];
@@ -67,7 +82,9 @@ class PageService
             }
         }
 
-        return false;
+        /** @var ModifySkipPageEvent $event */
+        $event = $this->eventDispatcher->dispatch(new ModifySkipPageEvent($pageRow));
+        return $event->isSkipped();
     }
 
     private function getDisallowedDokTypes(): array

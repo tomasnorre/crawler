@@ -4,7 +4,7 @@
 Priority Crawling
 =================
 
-Since 9.1.0
+.. versionadded:: 9.1.0
 
 Some website has a quite large number of pages. Some pages are logically more
 important than others e.g. the start-, support-, product-, you name it-pages.

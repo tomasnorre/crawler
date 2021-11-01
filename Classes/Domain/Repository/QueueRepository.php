@@ -237,7 +237,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ->execute();
 
         $setIds = [];
-        while ($row = $statement->fetchAssociative()) {
+        while ($row = $statement->fetch()) {
             $setIds[] = intval($row['set_id']);
         }
 
@@ -265,7 +265,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
                 ->groupBy('configuration')
                 ->execute();
 
-            while ($row = $statement->fetchAssociative()) {
+            while ($row = $statement->fetch()) {
                 $totals[$row['configuration']] = $row['c'];
             }
         }
@@ -289,7 +289,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ->execute();
 
         $rows = [];
-        while ($row = $statement->fetchAssociative()) {
+        while ($row = $statement->fetch()) {
             $rows[] = $row['exec_time'];
         }
 
@@ -312,7 +312,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ->execute();
 
         $rows = [];
-        while (($row = $statement->fetchAssociative()) !== false) {
+        while (($row = $statement->fetch()) !== false) {
             $rows[] = $row;
         }
 
@@ -343,7 +343,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ->execute();
 
         $rows = [];
-        while ($row = $statement->fetchAssociative()) {
+        while ($row = $statement->fetch()) {
             $rows[$row['process_id_completed']] = $row;
         }
 
@@ -416,7 +416,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ->execute();
 
         $rows = [];
-        while ($row = $statement->fetchAssociative()) {
+        while ($row = $statement->fetch()) {
             $rows[] = $row;
         }
 
@@ -433,7 +433,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
                 $queryBuilder->expr()->eq('qid', $queryBuilder->createNamedParameter($queueId))
             )
             ->execute()
-            ->fetchAssociative();
+            ->fetch();
         return is_array($queueRec) ? $queueRec : null;
     }
 
@@ -636,7 +636,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
 
         $statement = $queryBuilder->execute();
 
-        while ($row = $statement->fetchAssociative()) {
+        while ($row = $statement->fetch()) {
             $rows[] = $row['qid'];
         }
 
@@ -697,7 +697,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             )
             ->setMaxResults(1)
             ->addOrderBy($orderByField, $orderBySorting)
-            ->execute()->fetchAssociative(0);
+            ->execute()->fetch(0);
 
         return $first ?: [];
     }

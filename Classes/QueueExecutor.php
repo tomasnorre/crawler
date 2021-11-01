@@ -24,7 +24,8 @@ use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy;
 use AOE\Crawler\CrawlStrategy\CrawlStrategy;
 use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
-use AOE\Crawler\Utility\SignalSlotUtility;
+use AOE\Crawler\Event\AfterUrlCrawledEvent;
+use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -40,9 +41,12 @@ class QueueExecutor implements SingletonInterface
      */
     protected $crawlStrategy;
 
-    public function __construct(CrawlStrategyFactory $crawlStrategyFactory)
+    private EventDispatcher $eventDispatcher;
+
+    public function __construct(CrawlStrategyFactory $crawlStrategyFactory, EventDispatcher $eventDispatcher = null)
     {
         $this->crawlStrategy = $crawlStrategyFactory->create();
+        $this->eventDispatcher = $eventDispatcher ?? GeneralUtility::makeInstance(EventDispatcher::class);
     }
 
     /**
@@ -64,7 +68,7 @@ class QueueExecutor implements SingletonInterface
         if (! is_array($parameters) || empty($parameters)) {
             return 'ERROR';
         }
-        if ($parameters['_CALLBACKOBJ']) {
+        if (isset($parameters['_CALLBACKOBJ'])) {
             $className = $parameters['_CALLBACKOBJ'];
             unset($parameters['_CALLBACKOBJ']);
             $result = GeneralUtility::makeInstance(CallbackExecutionStrategy::class)
@@ -78,14 +82,8 @@ class QueueExecutor implements SingletonInterface
             $result = $this->crawlStrategy->fetchUrlContents($url, $crawlerId);
             if ($result !== false) {
                 $result = ['content' => json_encode($result)];
+                $this->eventDispatcher->dispatch(new AfterUrlCrawledEvent($parameters['url'], $result));
             }
-
-            $signalPayload = ['url' => $parameters['url'], 'result' => $result];
-            SignalSlotUtility::emitSignal(
-                self::class,
-                SignalSlotUtility::SIGNAL_URL_CRAWLED,
-                $signalPayload
-            );
         }
         return $result;
     }

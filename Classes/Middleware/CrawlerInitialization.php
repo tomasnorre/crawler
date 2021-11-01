@@ -66,7 +66,7 @@ class CrawlerInitialization implements MiddlewareInterface
         ];
 
         // Execute the frontend request as is
-        $handler->handle($request);
+        $response = $handler->handle($request);
 
         $GLOBALS['TSFE']->applicationData['tx_crawler']['vars'] = [
             'id' => $GLOBALS['TSFE']->id,
@@ -76,12 +76,8 @@ class CrawlerInitialization implements MiddlewareInterface
 
         $this->runPollSuccessHooks();
 
-        // Output log data for crawler (serialized content):
-        $content = serialize($GLOBALS['TSFE']->applicationData['tx_crawler']);
-        $response = new Response();
-        $response->getBody()->write($content);
-
-        return $response;
+        // Send log data for crawler (serialized content)
+        return $response->withHeader('X-T3Crawler-Meta', serialize($GLOBALS['TSFE']->applicationData['tx_crawler']));
     }
 
     /**

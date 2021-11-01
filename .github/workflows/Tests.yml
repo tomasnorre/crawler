@@ -19,8 +19,8 @@ jobs:
         php: [ '7.4' ]
         mysql: ['5.7']
         include:
-          - php: 8.0
-            typo3: ^11.5
+          - typo3: ^11.5
+            php: 8.0
             mysql: 5.7
 
     steps:
