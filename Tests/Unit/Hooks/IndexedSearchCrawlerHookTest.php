@@ -51,63 +51,61 @@ class IndexedSearchCrawlerHookTest extends UnitTestCase
         );
     }
 
-    public function checkUrlDataProvider(): array
+    public function checkUrlDataProvider(): iterable
     {
-        return [
-            'Url with // at the end of Url' => [
-                'url' => 'example.com/page-one//',
-                'urlLog' => [],
-                'baseUrl' => 'example.com',
-                'expected' => 'example.com/page-one/',
-            ],
-            'Url with // and # in url' => [
-                'url' => 'example.com/page-one//#marker',
-                'urlLog' => [],
-                'baseUrl' => 'example.com',
-                'expected' => 'example.com/page-one//',
-            ],
-            'Url without // at the end' => [
-                'url' => 'example.com/page-one',
-                'urlLog' => [],
-                'baseUrl' => 'example.com',
-                'expected' => 'example.com/page-one',
-            ],
-            'Url without // but with #' => [
-                'url' => 'example.com/page-one#marker',
-                'urlLog' => [],
-                'baseUrl' => 'example.com',
-                'expected' => 'example.com/page-one',
-            ],
-            'Url with ../' => [
-                'url' => '/../fileadmin/images.png',
-                'urlLog' => [],
-                'baseUrl' => '',
-                'expected' => false,
-            ],
-            'url as part of baseUrl' => [
-                'url' => 'example.com/page-one',
-                'urlLog' => [],
-                'baseUrl' => 'example.com',
-                'expected' => 'example.com/page-one',
-            ],
-            'Url not part of baseUrl' => [
-                'url' => 'example.com',
-                'urlLog' => [],
-                'baseUrl' => 'example.tld',
-                'expected' => false,
-            ],
-            'Url in UrlLog' => [
-                'url' => 'example.com/page-one',
-                'urlLog' => ['example.com/page-one'],
-                'baseUrl' => '',
-                'expected' => false,
-            ],
-            'Url not in UrlLog' => [
-                'url' => 'example.com/page-one',
-                'urlLog' => ['example.com/page-two'],
-                'baseUrl' => 'example.com',
-                'expected' => 'example.com/page-one',
-            ],
+        yield 'Url with // at the end of Url' => [
+            'url' => 'example.com/page-one//',
+            'urlLog' => [],
+            'baseUrl' => 'example.com',
+            'expected' => 'example.com/page-one/',
+        ];
+        yield 'Url with // and # in url' => [
+            'url' => 'example.com/page-one//#marker',
+            'urlLog' => [],
+            'baseUrl' => 'example.com',
+            'expected' => 'example.com/page-one//',
+        ];
+        yield 'Url without // at the end' => [
+            'url' => 'example.com/page-one',
+            'urlLog' => [],
+            'baseUrl' => 'example.com',
+            'expected' => 'example.com/page-one',
+        ];
+        yield 'Url without // but with #' => [
+            'url' => 'example.com/page-one#marker',
+            'urlLog' => [],
+            'baseUrl' => 'example.com',
+            'expected' => 'example.com/page-one',
+        ];
+        yield 'Url with ../' => [
+            'url' => '/../fileadmin/images.png',
+            'urlLog' => [],
+            'baseUrl' => '',
+            'expected' => false,
+        ];
+        yield 'url as part of baseUrl' => [
+            'url' => 'example.com/page-one',
+            'urlLog' => [],
+            'baseUrl' => 'example.com',
+            'expected' => 'example.com/page-one',
+        ];
+        yield 'Url not part of baseUrl' => [
+            'url' => 'example.com',
+            'urlLog' => [],
+            'baseUrl' => 'example.tld',
+            'expected' => false,
+        ];
+        yield 'Url in UrlLog' => [
+            'url' => 'example.com/page-one',
+            'urlLog' => ['example.com/page-one'],
+            'baseUrl' => '',
+            'expected' => false,
+        ];
+        yield 'Url not in UrlLog' => [
+            'url' => 'example.com/page-one',
+            'urlLog' => ['example.com/page-two'],
+            'baseUrl' => 'example.com',
+            'expected' => 'example.com/page-one',
         ];
     }
 
@@ -129,99 +127,97 @@ class IndexedSearchCrawlerHookTest extends UnitTestCase
         );
     }
 
-    public function generateNextIndexingTimeDataProvider(): array
+    public function generateNextIndexingTimeDataProvider(): iterable
     {
-        return [
-            'Timer Frequency less than 24 hours (5 hours)' => [
-                'configurationRecord' => [
-                    'timer_frequency' => 18000,
-                    'timer_next_indexing' => 1591638558,
-                    'timer_offset' => 60,
-                ],
-                'atMidnightTimestamp' => 1593475200,
-                'expected' => 1591639260,
+        yield 'Timer Frequency less than 24 hours (5 hours)' => [
+            'configurationRecord' => [
+                'timer_frequency' => 18000,
+                'timer_next_indexing' => 1591638558,
+                'timer_offset' => 60,
             ],
-            'Timer frequency more than 24 hours (26 hours)' => [
-                'configurationRecord' => [
-                    'timer_frequency' => 93600,
-                    'timer_next_indexing' => 1591638558,
-                    'timer_offset' => 60,
-                ],
-                'atMidnightTimestamp' => 1591574400,
-                'expected' => 1591668060,
+            'atMidnightTimestamp' => 1593475200,
+            'expected' => 1591639260,
+        ];
+        yield 'Timer frequency more than 24 hours (26 hours)' => [
+            'configurationRecord' => [
+                'timer_frequency' => 93600,
+                'timer_next_indexing' => 1591638558,
+                'timer_offset' => 60,
             ],
-            'Offset at minimum in range' => [
-                'configurationRecord' => [
-                    'timer_frequency' => 500,
-                    'timer_next_indexing' => 1591638558,
-                    'timer_offset' => 0,
-                ],
-                'atMidnightTimestamp' => 1591574400,
-                'expected' => 1591637400,
+            'atMidnightTimestamp' => 1591574400,
+            'expected' => 1591668060,
+        ];
+        yield 'Offset at minimum in range' => [
+            'configurationRecord' => [
+                'timer_frequency' => 500,
+                'timer_next_indexing' => 1591638558,
+                'timer_offset' => 0,
             ],
-            'Offset at maximum in range' => [
-                'configurationRecord' => [
-                    'timer_frequency' => 500,
-                    'timer_next_indexing' => 1591638558,
-                    'timer_offset' => 86400,
-                ],
-                'atMidnightTimestamp' => 1591574400,
-                'expected' => 1591637300,
+            'atMidnightTimestamp' => 1591574400,
+            'expected' => 1591637400,
+        ];
+        yield 'Offset at maximum in range' => [
+            'configurationRecord' => [
+                'timer_frequency' => 500,
+                'timer_next_indexing' => 1591638558,
+                'timer_offset' => 86400,
             ],
-            'Offset at smaller than rangen' => [
-                'configurationRecord' => [
-                    'timer_frequency' => 500,
-                    'timer_next_indexing' => 1591638558,
-                    'timer_offset' => -1,
-                ],
-                'atMidnightTimestamp' => 1591574400,
-                'expected' => 1591637400,
+            'atMidnightTimestamp' => 1591574400,
+            'expected' => 1591637300,
+        ];
+        yield 'Offset at smaller than rangen' => [
+            'configurationRecord' => [
+                'timer_frequency' => 500,
+                'timer_next_indexing' => 1591638558,
+                'timer_offset' => -1,
             ],
-            'Offset larger than range' => [
-                'configurationRecord' => [
-                    'timer_frequency' => 500,
-                    'timer_next_indexing' => 1591638558,
-                    'timer_offset' => 86401,
-                ],
-                'atMidnightTimestamp' => 1591574400,
-                'expected' => 1591637300,
+            'atMidnightTimestamp' => 1591574400,
+            'expected' => 1591637400,
+        ];
+        yield 'Offset larger than range' => [
+            'configurationRecord' => [
+                'timer_frequency' => 500,
+                'timer_next_indexing' => 1591638558,
+                'timer_offset' => 86401,
             ],
-            'Timer frequency as numeric string' => [
-                'configurationRecord' => [
-                    'timer_frequency' => '500',
-                    'timer_next_indexing' => 1591638558,
-                    'timer_offset' => 60,
-                ],
-                'atMidnightTimestamp' => 1591574400,
-                'expected' => 1591637460,
+            'atMidnightTimestamp' => 1591574400,
+            'expected' => 1591637300,
+        ];
+        yield 'Timer frequency as numeric string' => [
+            'configurationRecord' => [
+                'timer_frequency' => '500',
+                'timer_next_indexing' => 1591638558,
+                'timer_offset' => 60,
             ],
-            'Timer frequency as numeric value' => [
-                'configurationRecord' => [
-                    'timer_frequency' => 500,
-                    'timer_next_indexing' => 1591638558,
-                    'timer_offset' => 60,
-                ],
-                'atMidnightTimestamp' => 1591574400,
-                'expected' => 1591637460,
+            'atMidnightTimestamp' => 1591574400,
+            'expected' => 1591637460,
+        ];
+        yield 'Timer frequency as numeric value' => [
+            'configurationRecord' => [
+                'timer_frequency' => 500,
+                'timer_next_indexing' => 1591638558,
+                'timer_offset' => 60,
             ],
-            'Timer next indexing set to positive' => [
-                'configurationRecord' => [
-                    'timer_frequency' => 500,
-                    'timer_next_indexing' => 1591638558,
-                    'timer_offset' => 60,
-                ],
-                'atMidnightTimestamp' => 1591574400,
-                'expected' => 1591637460,
+            'atMidnightTimestamp' => 1591574400,
+            'expected' => 1591637460,
+        ];
+        yield 'Timer next indexing set to positive' => [
+            'configurationRecord' => [
+                'timer_frequency' => 500,
+                'timer_next_indexing' => 1591638558,
+                'timer_offset' => 60,
             ],
-            'Timer next indexing set to negative' => [
-                'configurationRecord' => [
-                    'timer_frequency' => 500,
-                    'timer_next_indexing' => -1,
-                    'timer_offset' => 60,
-                ],
-                'atMidnightTimestamp' => 1591574400,
-                'expected' => 1591637460,
+            'atMidnightTimestamp' => 1591574400,
+            'expected' => 1591637460,
+        ];
+        yield 'Timer next indexing set to negative' => [
+            'configurationRecord' => [
+                'timer_frequency' => 500,
+                'timer_next_indexing' => -1,
+                'timer_offset' => 60,
             ],
+            'atMidnightTimestamp' => 1591574400,
+            'expected' => 1591637460,
         ];
     }
 
@@ -237,64 +233,62 @@ class IndexedSearchCrawlerHookTest extends UnitTestCase
         );
     }
 
-    public function checkDeniedSubUrlsDataProvider(): array
+    public function checkDeniedSubUrlsDataProvider(): iterable
     {
-        return [
-            'Url not part of url_deny' => [
-                'url' => 'example.com',
-                'url_deny' => 'example.tld',
-                'expected' => false,
-            ],
-            'Url part of url_deny (1 element in list)' => [
-                'url' => 'example.com',
-                'url_deny' => 'example.com',
-                'expected' => true,
-            ],
-            'Url part of url_deny (2 elements in list)' => [
-                'url' => 'example.com',
-                'url_deny' => 'example.tld' . chr(10) . 'example.com',
-                'expected' => true,
-            ],
-            'Url part of url_deny one to one the same' => [
-                'url' => 'example.com/page-one/',
-                'url_deny' => 'example.com/page-one/',
-                'expected' => true,
-            ],
-            'Url part of url_deny only domain the same' => [
-                'url' => 'example.com/page-one/',
-                'url_deny' => 'example.com',
-                'expected' => true,
-            ],
-            'url_deny that needs trimming left' => [
-                'url' => 'example.com/page-one/',
-                'url_deny' => chr(10) . 'example.com',
-                'expected' => true,
-            ],
-            'url_deny that needs trimming right' => [
-                'url' => 'example.com/page-one/',
-                'url_deny' => 'example.com' . chr(10),
-                'expected' => true,
-            ],
-            'url_deny that needs trimming left and right' => [
-                'url' => 'example.com/page-one/',
-                'url_deny' => chr(10) . 'example.com' . chr(10),
-                'expected' => true,
-            ],
-            'url_deny that needs trimming - multiple whitespace' => [
-                'url' => 'example.com/page-one/',
-                'url_deny' => chr(10) . chr(10) . 'example.com' . chr(10) . chr(10) . chr(10),
-                'expected' => true,
-            ],
-            'url_deny with more domains, denied' => [
-                'url' => 'example.com/page-one/',
-                'url_deny' => ' example.tld ' . chr(10) . chr(10) . ' example.com     ',
-                'expected' => true,
-            ],
-            'url_deny with more domains, not denied' => [
-                'url' => 'example.com/page-one/',
-                'url_deny' => ' example.tld' . chr(10) . ' example-site.com     ',
-                'expected' => false,
-            ],
+        yield 'Url not part of url_deny' => [
+            'url' => 'example.com',
+            'url_deny' => 'example.tld',
+            'expected' => false,
+        ];
+        yield 'Url part of url_deny (1 element in list)' => [
+            'url' => 'example.com',
+            'url_deny' => 'example.com',
+            'expected' => true,
+        ];
+        yield 'Url part of url_deny (2 elements in list)' => [
+            'url' => 'example.com',
+            'url_deny' => 'example.tld' . chr(10) . 'example.com',
+            'expected' => true,
+        ];
+        yield 'Url part of url_deny one to one the same' => [
+            'url' => 'example.com/page-one/',
+            'url_deny' => 'example.com/page-one/',
+            'expected' => true,
+        ];
+        yield 'Url part of url_deny only domain the same' => [
+            'url' => 'example.com/page-one/',
+            'url_deny' => 'example.com',
+            'expected' => true,
+        ];
+        yield 'url_deny that needs trimming left' => [
+            'url' => 'example.com/page-one/',
+            'url_deny' => chr(10) . 'example.com',
+            'expected' => true,
+        ];
+        yield 'url_deny that needs trimming right' => [
+            'url' => 'example.com/page-one/',
+            'url_deny' => 'example.com' . chr(10),
+            'expected' => true,
+        ];
+        yield 'url_deny that needs trimming left and right' => [
+            'url' => 'example.com/page-one/',
+            'url_deny' => chr(10) . 'example.com' . chr(10),
+            'expected' => true,
+        ];
+        yield 'url_deny that needs trimming - multiple whitespace' => [
+            'url' => 'example.com/page-one/',
+            'url_deny' => chr(10) . chr(10) . 'example.com' . chr(10) . chr(10) . chr(10),
+            'expected' => true,
+        ];
+        yield 'url_deny with more domains, denied' => [
+            'url' => 'example.com/page-one/',
+            'url_deny' => ' example.tld ' . chr(10) . chr(10) . ' example.com     ',
+            'expected' => true,
+        ];
+        yield 'url_deny with more domains, not denied' => [
+            'url' => 'example.com/page-one/',
+            'url_deny' => ' example.tld' . chr(10) . ' example-site.com     ',
+            'expected' => false,
         ];
     }
 }

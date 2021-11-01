@@ -52,7 +52,7 @@ class BuildQueueCommandTest extends AbstractCommandTests
      */
     public function buildQueueCommandTest(array $parameters, string $expectedOutput, int $expectedCount): void
     {
-        if (! $this->isTYPO3v10OrLower()) {
+        if (!$this->isTYPO3v10OrLower()) {
             self::markTestSkipped('These tests are not working in TYPO3 11. As the backend request has changed. The tests can be activated again when
             either the CrawlerController is restructured, or the depedency from BuildCommand to CrawlerController is removed.');
         }
@@ -68,41 +68,39 @@ class BuildQueueCommandTest extends AbstractCommandTests
         );
     }
 
-    public function buildQueueCommandDataProvider(): array
+    public function buildQueueCommandDataProvider(): iterable
     {
         $crawlerConfiguration = 'default';
 
-        return [
-            'Start page 1' => [
-                'parameters' => [1, $crawlerConfiguration],
-                'expectedOutput' => 'Putting 1 entries in queue:',
-                'expectedCount' => 1,
-            ],
-            'Start page 1, depth 99' => [
-                'parameters' => [1, $crawlerConfiguration, '--depth 99'],
-                'expectedOutput' => 'Putting 9 entries in queue:',
-                'expectedCount' => 9,
-            ],
-            'Start page 1, --mode queue (default)' => [
-                'parameters' => [1, $crawlerConfiguration],
-                'expectedOutput' => 'Putting 1 entries in queue:',
-                'expectedCount' => 1,
-            ],
-            'Start page 1, --mode url' => [
-                'parameters' => [1, $crawlerConfiguration, '--mode url'],
-                'expectedOutput' => 'https://www.example.com/index.php?id=1',
-                'expectedCount' => 0,
-            ],
-            'Start page 1,  --mode exec' => [
-                'parameters' => [1, $crawlerConfiguration, '--mode exec'],
-                'expectedOutput' => 'Executing 1 requests right away:',
-                'expectedCount' => 1,
-            ],
-            'Start page 0, expecting error' => [
-                'parameters' => [0, $crawlerConfiguration, '--mode queue'],
-                'expectedOutput' => 'Page 0 is not a valid page, please check you root page id and try again.',
-                'expectedCount' => 0,
-            ],
+        yield 'Start page 1' => [
+            'parameters' => [1, $crawlerConfiguration],
+            'expectedOutput' => 'Putting 1 entries in queue:',
+            'expectedCount' => 1,
+        ];
+        yield 'Start page 1, depth 99' => [
+            'parameters' => [1, $crawlerConfiguration, '--depth 99'],
+            'expectedOutput' => 'Putting 9 entries in queue:',
+            'expectedCount' => 9,
+        ];
+        yield 'Start page 1, --mode queue (default)' => [
+            'parameters' => [1, $crawlerConfiguration],
+            'expectedOutput' => 'Putting 1 entries in queue:',
+            'expectedCount' => 1,
+        ];
+        yield 'Start page 1, --mode url' => [
+            'parameters' => [1, $crawlerConfiguration, '--mode url'],
+            'expectedOutput' => 'https://www.example.com/index.php?id=1',
+            'expectedCount' => 0,
+        ];
+        yield 'Start page 1,  --mode exec' => [
+            'parameters' => [1, $crawlerConfiguration, '--mode exec'],
+            'expectedOutput' => 'Executing 1 requests right away:',
+            'expectedCount' => 1,
+        ];
+        yield 'Start page 0, expecting error' => [
+            'parameters' => [0, $crawlerConfiguration, '--mode queue'],
+            'expectedOutput' => 'Page 0 is not a valid page, please check you root page id and try again.',
+            'expectedCount' => 0,
         ];
     }
 

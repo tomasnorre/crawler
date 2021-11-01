@@ -141,26 +141,21 @@ class CrawlerControllerTest extends UnitTestCase
         );
     }
 
-    /**
-     * @return array
-     */
-    public function getUrlsForPageRowDataProvider()
+    public function getUrlsForPageRowDataProvider(): iterable
     {
-        return [
-            'Message equals false, returns Urls from getUrlsForPages()' => [
-                'checkIfPageSkipped' => false,
-                'getUrlsForPages' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
-                'pageRow' => ['uid' => 2001],
-                '$skipMessage' => 'Just variable placeholder, not used in tests as parsed as reference',
-                'expected' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
-            ],
-            'Message string not empty, returns empty array' => [
-                'checkIfPageSkipped' => true,
-                'getUrlsForPages' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
-                'pageRow' => ['uid' => 2001],
-                '$skipMessage' => 'Just variable placeholder, not used in tests as parsed as reference',
-                'expected' => [],
-            ],
+        yield 'Message equals false, returns Urls from getUrlsForPages()' => [
+            'checkIfPageSkipped' => false,
+            'getUrlsForPages' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
+            'pageRow' => ['uid' => 2001],
+            '$skipMessage' => 'Just variable placeholder, not used in tests as parsed as reference',
+            'expected' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
+        ];
+        yield 'Message string not empty, returns empty array' => [
+            'checkIfPageSkipped' => true,
+            'getUrlsForPages' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
+            'pageRow' => ['uid' => 2001],
+            '$skipMessage' => 'Just variable placeholder, not used in tests as parsed as reference',
+            'expected' => [],
         ];
     }
 
@@ -179,116 +174,101 @@ class CrawlerControllerTest extends UnitTestCase
         );
     }
 
-    /**
-     * @return array
-     */
-    public function getConfigurationHasReturnsExpectedValueDataProvider()
+    public function getConfigurationHasReturnsExpectedValueDataProvider(): iterable
     {
-        return [
-            'Configuration with either paramExpanded nor URLs set' => [
-                'configuration' => [
-                    'testKey' => 'testValue',
-                    'paramExpanded' => '',
-                    'URLs' => '',
-                ],
-                'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22',
+        yield 'Configuration with either paramExpanded nor URLs set' => [
+            'configuration' => [
+                'testKey' => 'testValue',
+                'paramExpanded' => '',
+                'URLs' => '',
             ],
-            'Configuration with only paramExpanded set' => [
-                'configuration' => [
-                    'testKey' => 'testValue',
-                    'paramExpanded' => 'Value not important',
-                    'URLs' => '',
-                ],
-                'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22',
+            'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22',
+        ];
+        yield 'Configuration with only paramExpanded set' => [
+            'configuration' => [
+                'testKey' => 'testValue',
+                'paramExpanded' => 'Value not important',
+                'URLs' => '',
             ],
-            'Configuration with only URLS set' => [
-                'configuration' => [
-                    'testKey' => 'testValue',
-                    'paramExpanded' => '',
-                    'URLs' => 'Value not important',
-                ],
-                'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22',
+            'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22',
+        ];
+        yield 'Configuration with only URLS set' => [
+            'configuration' => [
+                'testKey' => 'testValue',
+                'paramExpanded' => '',
+                'URLs' => 'Value not important',
             ],
-            'Configuration with both paramExpanded and URLS set' => [
-                'configuration' => [
-                    'testKey' => 'testValue',
-                    'paramExpanded' => 'Value not important',
-                    'URLs' => 'Value not important',
-                ],
-                'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22',
+            'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22',
+        ];
+        yield 'Configuration with both paramExpanded and URLS set' => [
+            'configuration' => [
+                'testKey' => 'testValue',
+                'paramExpanded' => 'Value not important',
+                'URLs' => 'Value not important',
             ],
-            'Configuration with both paramExpanded and URLS set, will return same hash' => [
-                'configuration' => [
-                    'testKey' => 'testValue',
-                    'paramExpanded' => 'Value not important, but different than test case before',
-                    'URLs' => 'Value not important, but different than test case before',
-                ],
-                'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22',
+            'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22',
+        ];
+        yield 'Configuration with both paramExpanded and URLS set, will return same hash' => [
+            'configuration' => [
+                'testKey' => 'testValue',
+                'paramExpanded' => 'Value not important, but different than test case before',
+                'URLs' => 'Value not important, but different than test case before',
             ],
+            'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22',
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function getConfigurationKeysDataProvider()
+    public function getConfigurationKeysDataProvider(): iterable
     {
-        return [
-            'cliObject with no -conf' => [
-                'config' => ['-d' => 4, '-o' => 'url'],
-                'expected' => [],
-            ],
-            'cliObject with one -conf' => [
-                'config' => ['-d' => 4, '-o' => 'url', '-conf' => 'default'],
-                'expected' => ['default'],
-            ],
-            'cliObject with two -conf' => [
-                'config' => ['-d' => 4, '-o' => 'url', '-conf' => 'default,news'],
-                'expected' => ['default', 'news'],
-            ],
+        yield 'cliObject with no -conf' => [
+            'config' => ['-d' => 4, '-o' => 'url'],
+            'expected' => [],
+        ];
+        yield 'cliObject with one -conf' => [
+            'config' => ['-d' => 4, '-o' => 'url', '-conf' => 'default'],
+            'expected' => ['default'],
+        ];
+        yield 'cliObject with two -conf' => [
+            'config' => ['-d' => 4, '-o' => 'url', '-conf' => 'default,news'],
+            'expected' => ['default', 'news'],
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function drawURLs_PIfilterDataProvider()
+    public function drawURLs_PIfilterDataProvider(): iterable
     {
-        return [
-            'Not in list' => [
-                'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
-                'incomingProcInstructions' => [
-                    'tx_unknown_extension_instruction',
-                ],
-                'expected' => false,
+        yield 'Not in list' => [
+            'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
+            'incomingProcInstructions' => [
+                'tx_unknown_extension_instruction',
             ],
-            'In list' => [
-                'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
-                'incomingProcInstructions' => [
-                    'tx_indexedsearch_reindex',
-                ],
-                'expected' => true,
+            'expected' => false,
+        ];
+        yield 'In list' => [
+            'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
+            'incomingProcInstructions' => [
+                'tx_indexedsearch_reindex',
             ],
-            'Twice in list' => [
-                'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
-                'incomingProcInstructions' => [
-                    'tx_indexedsearch_reindex',
-                    'tx_indexedsearch_reindex',
-                ],
-                'expected' => true,
+            'expected' => true,
+        ];
+        yield 'Twice in list' => [
+            'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
+            'incomingProcInstructions' => [
+                'tx_indexedsearch_reindex',
+                'tx_indexedsearch_reindex',
             ],
-            'Empty incomingProcInstructions' => [
-                'piString' => '',
-                'incomingProcInstructions' => [],
-                'expected' => true,
+            'expected' => true,
+        ];
+        yield 'Empty incomingProcInstructions' => [
+            'piString' => '',
+            'incomingProcInstructions' => [],
+            'expected' => true,
+        ];
+        yield 'In list CAPITALIZED' => [
+            'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
+            'incomingProcInstructions' => [
+                'TX_INDEXEDSEARCH_REINDES',
             ],
-            'In list CAPITALIZED' => [
-                'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
-                'incomingProcInstructions' => [
-                    'TX_INDEXEDSEARCH_REINDES',
-                ],
-                'expected' => false,
-            ],
+            'expected' => false,
         ];
     }
 }
