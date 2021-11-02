@@ -42,7 +42,6 @@ use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Imaging\Icon;
@@ -970,11 +969,6 @@ class CrawlerController implements LoggerAwareInterface
         return new PageService();
     }
 
-    private function getMaximumUrlsToCompile(): int
-    {
-        return $this->maximumUrlsToCompile;
-    }
-
     /**
      * @return BackendUserAuthentication
      */
@@ -986,15 +980,5 @@ class CrawlerController implements LoggerAwareInterface
             $this->backendUser = $GLOBALS['BE_USER'];
         }
         return $this->backendUser;
-    }
-
-    /**
-     * Get querybuilder for given table
-     *
-     * @return QueryBuilder
-     */
-    private function getQueryBuilder(string $table)
-    {
-        return GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($table);
     }
 }
