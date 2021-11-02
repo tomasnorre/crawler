@@ -970,11 +970,6 @@ class CrawlerController implements LoggerAwareInterface
         return new PageService();
     }
 
-    private function getMaximumUrlsToCompile(): int
-    {
-        return $this->maximumUrlsToCompile;
-    }
-
     /**
      * @return BackendUserAuthentication
      */
@@ -986,15 +981,5 @@ class CrawlerController implements LoggerAwareInterface
             $this->backendUser = $GLOBALS['BE_USER'];
         }
         return $this->backendUser;
-    }
-
-    /**
-     * Get querybuilder for given table
-     *
-     * @return QueryBuilder
-     */
-    private function getQueryBuilder(string $table)
-    {
-        return GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($table);
     }
 }
