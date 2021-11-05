@@ -104,8 +104,29 @@ jobs:
           composer --version
 
       - uses: actions/checkout@v1
+      - uses: jonaseberle/github-action-setup-ddev@v1
+        with:
+          ddevDir: ".devbox"
       - run: |
-          composer install --no-progress
+          cd .devbox
+          sed -i 's/php_version: "7.4"/php_version: "${{ matrix.php }}"/g' .ddev/config.yaml
+          rm -rf vendor composer.lock
+          ddev composer require nimut/typo3-complete=${{ matrix.typo3 }} tomasnorre/crawler="dev-${{ env.BRANCH_NAME }}"
+          ddev start
+          ddev exec sudo apt remove -y php${{ matrix.php }}-uploadprogress
+          ddev exec bin/typo3cms install:fixfolderstructure
+          ddev exec bin/typo3cms install:extensionsetupifpossible
+          ddev exec bin/typo3cms database:updateschema
+          ddev exec bin/typo3cms cache:flush
+          cd .. # Going back to "root" directory
+          rm -rf .Build composer.lock
+          composer require nimut/typo3-complete=${{ matrix.typo3 }}
+          wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
+          chmod +x wait-for-it.sh
+          docker ps
+          ./wait-for-it.sh -t 60 127.0.0.1:80
+          ./wait-for-it.sh -t 60 127.0.0.1:443
+          ./wait-for-it.sh -t 60 localhost:4444
           php .Build/bin/codecept run --env=v11-non-composer
 
       - name: Upload Codeception output
