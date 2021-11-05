@@ -90,36 +90,36 @@ jobs:
 
   NonComposerV11:
     runs-on: ubuntu-20.04
-      strategy:
-        fail-fast: false
+    strategy:
+      fail-fast: false
 
-      steps:
-        - uses: shivammathur/setup-php@v2
-          with:
-            php-version: '7.4'
+    steps:
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
 
-        - name: Version information
-          run: |
-            php -v
-            composer --version
+      - name: Version information
+        run: |
+          php -v
+          composer --version
 
-        - uses: actions/checkout@v1
-        - run: |
-            composer install --no-progress
-            php .Build/bin/codecept run --env=v11-non-composer
+      - uses: actions/checkout@v1
+      - run: |
+          composer install --no-progress
+          php .Build/bin/codecept run --env=v11-non-composer
 
-        - name: Upload Codeception output
-          if: ${{ failure() }}
-          uses: actions/upload-artifact@v2
-          with:
-            name: codeception-results
-            path: Tests/Acceptance/_output/
+      - name: Upload Codeception output
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: codeception-results
+          path: Tests/Acceptance/_output/
 
-        - uses: shallwefootball/s3-upload-action@master
-          if: ${{ failure() }}
-          with:
-            aws_key_id: ${{ secrets.AWS_KEY_ID }}
-            aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
-            aws_bucket: ${{ secrets.AWS_BUCKET }}
-            source_dir: 'Tests/Acceptance/_output/'
-            destination_dir: 'v11-non-composer'
+      - uses: shallwefootball/s3-upload-action@master
+        if: ${{ failure() }}
+        with:
+          aws_key_id: ${{ secrets.AWS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+          aws_bucket: ${{ secrets.AWS_BUCKET }}
+          source_dir: 'Tests/Acceptance/_output/'
+          destination_dir: 'v11-non-composer'
