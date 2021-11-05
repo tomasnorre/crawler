@@ -88,7 +88,7 @@ jobs:
           source_dir: 'Tests/Acceptance/_output/'
           destination_dir: '${{ matrix.typo3 }}-${{ matrix.php }}'
 
-  NonComposerV11:
+  NonComposer:
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
