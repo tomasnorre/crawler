@@ -1,7 +1,7 @@
 modules:
   config:
     WebDriver:
-      url: http://v10.typo3-crawler.com/
+      url: https://v10.typo3-crawler.com/
       browser: chrome
       host: 'localhost'
       clear_cookies: true
