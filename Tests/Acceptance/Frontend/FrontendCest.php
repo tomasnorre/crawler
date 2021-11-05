@@ -26,7 +26,8 @@ class FrontendCest
     public function canSeeHomePage(FrontendUser $I): void
     {
         $I->amOnPage('/');
-        $I->waitForText('Let us introduce you to TYPO3', 1);
+        $I->waitForText('Features', 1);
+        $I->waitForText('Customizing', 1);
     }
 
     public function canSeeNewsPage(FrontendUser $I): void
