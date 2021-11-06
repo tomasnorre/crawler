@@ -17,6 +17,9 @@ declare(strict_types=1);
  * The TYPO3 project - inspiring people to share!
  */
 
+use Facebook\WebDriver\Remote\RemoteWebDriver;
+use Facebook\WebDriver\Remote\RemoteWebElement;
+use Facebook\WebDriver\WebDriverBy;
 use TYPO3\TestingFramework\Core\Acceptance\Step\FrameSteps;
 
 /**
@@ -49,15 +52,11 @@ class AcceptanceTester extends \Codeception\Actor
     {
         $I = $this;
         $value = false;
-        $I->executeInSelenium(function(\Facebook\WebDriver\Remote\RemoteWebDriver $webDriver)use($element, &$value)
-        {
-            try
-            {
-                $element = $webDriver->findElement(\Facebook\WebDriver\WebDriverBy::cssSelector($element));
-                $value = $element instanceof \Facebook\WebDriver\Remote\RemoteWebElement;
-            }
-            catch (Exception $e)
-            {
+        $I->executeInSelenium(function (RemoteWebDriver $webDriver) use ($element, &$value) {
+            try {
+                $element = $webDriver->findElement(WebDriverBy::cssSelector($element));
+                $value = $element instanceof RemoteWebElement;
+            } catch (Exception $e) {
                 // Swallow exception silently
             }
         });
