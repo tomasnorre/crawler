@@ -31,15 +31,8 @@ class Admin extends \AcceptanceTester
         $I->click('#t3-login-submit-section > button');
         $I->seeCookie('be_typo_user');
 
-        // This isn't optimal, but haven't found a better solution yet.
-        // https://stackoverflow.com/a/34347854/1210799
-        try {
-            $I->canSeeElement('button.btn.btn-notice');
+        if ($I->haveVisible('button.btn.btn-notice')) {
             $I->click('button.btn.btn-notice');
-        } catch (\Exception $e) {
-            // This is left empty intentionally.
-            // If the module for notification isn't shown the tests will not break an
-            // continue like nothing happened
         }
     }
 }

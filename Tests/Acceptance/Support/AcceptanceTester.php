@@ -41,4 +41,26 @@ class AcceptanceTester extends \Codeception\Actor
     /**
      * Define custom actions here
      */
+
+    /**
+     * @see https://maslosoft.com/blog/2018/04/04/codeception-acceptance-check-if-element-is-visible/
+     */
+    public function haveVisible($element): bool
+    {
+        $I = $this;
+        $value = false;
+        $I->executeInSelenium(function(\Facebook\WebDriver\Remote\RemoteWebDriver $webDriver)use($element, &$value)
+        {
+            try
+            {
+                $element = $webDriver->findElement(\Facebook\WebDriver\WebDriverBy::cssSelector($element));
+                $value = $element instanceof \Facebook\WebDriver\Remote\RemoteWebElement;
+            }
+            catch (Exception $e)
+            {
+                // Swallow exception silently
+            }
+        });
+        return $value;
+    }
 }
