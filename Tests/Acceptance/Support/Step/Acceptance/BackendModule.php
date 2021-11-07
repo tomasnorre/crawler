@@ -29,7 +29,7 @@ class BackendModule extends \AcceptanceTester
         $I->click('#web_info');
         // Due to slow response time.
         $I->waitForElementNotVisible('#nprogress', 120);
-        $I->waitForElement('#typo3-pagetree-treeContainer', 60);
+        $I->waitForElement('#typo3-pagetree-treeContainer', 120);
         $pageTree->openPath(['[1] Congratulations']);
         // Due to slow response time.
         $I->waitForElementNotVisible('#nprogress', 120);
