@@ -114,7 +114,7 @@ class BackendModuleCest
 
         // Navigate to Process View
         $I->selectOption('SET[crawlaction]', 'multiprocess');
-        $I->waitForText('CLI-Path');
+        $I->waitForText('CLI-Path',15);
         $I->addProcessOnMultiProcess($adminStep, $pageTree);
     }
 

@@ -93,8 +93,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        typo3: [ 'v11' ]
-        #typo3: [ 'v10', 'v11', 'v11p80' ]
+        typo3: [ 'v10', 'v11', 'v11p80' ]
 
     steps:
       - uses: shivammathur/setup-php@v2

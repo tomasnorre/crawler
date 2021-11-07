@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Step\Acceptance;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -40,6 +40,7 @@ class BackendModule extends \AcceptanceTester
     {
         $this->openCrawlerBackendModule($I, $pageTree);
         $I->selectOption('SET[crawlaction]', 'start');
+        $I->waitForElementNotVisible('#nprogress', 120);
         $I->waitForText('Please select at least one configuration');
     }
 
@@ -47,6 +48,7 @@ class BackendModule extends \AcceptanceTester
     {
         $this->openCrawlerBackendModule($I, $pageTree);
         $I->selectOption('SET[crawlaction]', 'log');
+        $I->waitForElementNotVisible('#nprogress', 120);
         $I->waitForText('Crawler log');
     }
 
@@ -54,6 +56,7 @@ class BackendModule extends \AcceptanceTester
     {
         $this->openCrawlerBackendModule($I, $pageTree);
         $I->selectOption('SET[crawlaction]', 'multiprocess');
+        $I->waitForElementNotVisible('#nprogress', 120);
         $I->waitForText('CLI-Path');
     }
 
@@ -63,6 +66,7 @@ class BackendModule extends \AcceptanceTester
     public function addProcessOnMultiProcess(Admin $I, PageTree $pageTree): void
     {
         $I->click('Add process');
+        $I->waitForElementNotVisible('#nprogress', 120);
         $I->waitForText('New process has been started');
     }
 }
