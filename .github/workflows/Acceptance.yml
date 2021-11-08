@@ -111,7 +111,7 @@ jobs:
           docker-compose -f docker-compose.selenium.yaml up -d
           cd ../.. # Going back to "root" directory
           rm -rf .Build composer.lock
-          composer install --no-progress
+          composer require nimut/typo3-complete:^11.5
           wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
           chmod +x wait-for-it.sh
           docker ps
