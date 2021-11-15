@@ -129,7 +129,9 @@ class BackendModuleCest
         // Navigate to Process View
         $I->selectOption('SET[crawlaction]', 'multiprocess');
         $I->waitForText('CLI-Path',15);
-        $I->addProcessOnMultiProcess($adminStep, $pageTree);
+        $I->click('Add process');
+        $I->waitForElementNotVisible('#nprogress', 120);
+        $I->waitForText('New process has been started');
         $I->click('Show finished and terminated processes');
         $I->waitForText('Process completed successfully', 60);
         $I->dontSee('Process was cancelled');
@@ -150,7 +152,9 @@ class BackendModuleCest
         // Navigate to Process View
         $I->selectOption('SET[crawlaction]', 'multiprocess');
         $I->waitForText('CLI-Path',15);
-        $I->addProcessOnMultiProcess($adminStep, $pageTree);
+        $I->click('Add process');
+        $I->waitForElementNotVisible('#nprogress', 120);
+        $I->waitForText('New process has been started');
         $I->click('Show finished and terminated processes');
         $I->waitForText('Process completed successfully', 60);
         // Check Result
