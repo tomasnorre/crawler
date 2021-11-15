@@ -120,7 +120,16 @@ class BackendModuleCest
 
     public function processSuccessful(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
-        $this->crawlerAddProcess($I, $adminStep, $pageTree);
+        $adminStep->loginAsAdmin();
+        $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
+        $I->selectOption('configurationSelection[]', 'default');
+        $I->click('Crawl URLs');
+        $I->waitForText('1 URLs submitted', 15);
+
+        // Navigate to Process View
+        $I->selectOption('SET[crawlaction]', 'multiprocess');
+        $I->waitForText('CLI-Path',15);
+        $I->addProcessOnMultiProcess($adminStep, $pageTree);
         $I->click('Show finished and terminated processes');
         $I->waitForText('Process completed successfully', 60);
         $I->dontSee('Process was cancelled');
@@ -132,7 +141,16 @@ class BackendModuleCest
      */
     public function seeCrawlerLogWithOutErrors(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
-        $this->crawlerAddProcess($I, $adminStep, $pageTree);
+        $adminStep->loginAsAdmin();
+        $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
+        $I->selectOption('configurationSelection[]', 'default');
+        $I->click('Crawl URLs');
+        $I->waitForText('1 URLs submitted', 15);
+
+        // Navigate to Process View
+        $I->selectOption('SET[crawlaction]', 'multiprocess');
+        $I->waitForText('CLI-Path',15);
+        $I->addProcessOnMultiProcess($adminStep, $pageTree);
         $I->click('Show finished and terminated processes');
         $I->waitForText('Process completed successfully', 60);
         // Check Result
@@ -142,7 +160,16 @@ class BackendModuleCest
 
     public function manualTriggerCrawlerFromLog(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
-        $this->crawlerAddProcess($I, $adminStep, $pageTree);
+        $adminStep->loginAsAdmin();
+        $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
+        $I->selectOption('configurationSelection[]', 'default');
+        $I->click('Crawl URLs');
+        $I->waitForText('1 URLs submitted', 15);
+
+        // Navigate to Process View
+        $I->selectOption('SET[crawlaction]', 'multiprocess');
+        $I->waitForText('CLI-Path',15);
+        $I->addProcessOnMultiProcess($adminStep, $pageTree);
         $I->click('Show finished and terminated processes');
         $I->waitForText('Process completed successfully', 60);
         $I->selectOption('SET[crawlaction]', 'log');
