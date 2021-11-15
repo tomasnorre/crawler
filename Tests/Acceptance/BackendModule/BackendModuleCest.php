@@ -165,13 +165,6 @@ class BackendModuleCest
         $I->selectOption('configurationSelection[]', 'default');
         $I->click('Crawl URLs');
         $I->waitForText('1 URLs submitted', 15);
-
-        // Navigate to Process View
-        $I->selectOption('SET[crawlaction]', 'multiprocess');
-        $I->waitForText('CLI-Path',15);
-        $I->addProcessOnMultiProcess($adminStep, $pageTree);
-        $I->click('Show finished and terminated processes');
-        $I->waitForText('Process completed successfully', 60);
         $I->selectOption('SET[crawlaction]', 'log');
         // Click on "refresh" for given record
         $I->click('.refreshLink');
