@@ -153,9 +153,6 @@ class BackendModuleCest
     }
 
     /**
-     * @param BackendModule $I
-     * @param Admin $adminStep
-     * @param PageTree $pageTree
      * @throws \Exception
      */
     private function addQueueEntry(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
@@ -167,7 +164,6 @@ class BackendModuleCest
     }
 
     /**
-     * @param BackendModule $I
      * @throws \Exception
      */
     private function addProcess(BackendModule $I): void
