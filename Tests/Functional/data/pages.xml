@@ -20,4 +20,15 @@
 		<sys_language_uid>0</sys_language_uid>
 		<l10n_parent>0</l10n_parent>
 	</pages>
+    <pages>
+        <uid>1234</uid>
+        <pid>1</pid>
+        <title>Page UID 1234</title>
+        <deleted>0</deleted>
+        <slug>/pageuid-1234</slug>
+        <is_siteroot>0</is_siteroot>
+        <sys_language_uid>0</sys_language_uid>
+        <l10n_parent>0</l10n_parent>
+    </pages>
+
 </dataset>

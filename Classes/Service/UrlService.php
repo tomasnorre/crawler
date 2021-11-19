@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AOE\Crawler\Service;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2021 AOE GmbH <dev@aoe.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -40,6 +40,7 @@ class UrlService
      */
     public function getUrlFromPageAndQueryParameters(int $pageId, string $queryString, ?string $alternativeBaseUrl, int $httpsOrHttp): UriInterface
     {
+        $url = new Uri();
         $site = GeneralUtility::makeInstance(SiteMatcher::class)->matchByPageId($pageId);
         if ($site instanceof Site) {
             $queryString = ltrim($queryString, '?&');
@@ -64,12 +65,6 @@ class UrlService
                     $url = $url->withUserInfo($userInfo);
                 }
             }
-        } else {
-            // Technically this is not possible with site handling, but kept for backwards-compatibility reasons
-            // Once EXT:crawler is v10-only compatible, this should be removed completely
-            $baseUrl = ($alternativeBaseUrl ?: GeneralUtility::getIndpEnv('TYPO3_SITE_URL'));
-            $url = rtrim($baseUrl, '/') . '/index.php' . $queryString;
-            $url = new Uri($url);
         }
 
         if ($httpsOrHttp === -1) {
