@@ -107,20 +107,19 @@ class BackendModuleCest
     public function crawlerAddProcess(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();
-        $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
-        $I->selectOption('configurationSelection[]', 'default');
-        $I->click('Crawl URLs');
-        $I->waitForText('1 URLs submitted', 15);
+        $this->addQueueEntry($I, $adminStep, $pageTree);
 
         // Navigate to Process View
         $I->selectOption('SET[crawlaction]', 'multiprocess');
-        $I->waitForText('CLI-Path');
+        $I->waitForText('CLI-Path',15);
         $I->addProcessOnMultiProcess($adminStep, $pageTree);
     }
 
     public function processSuccessful(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
-        $this->crawlerAddProcess($I, $adminStep, $pageTree);
+        $adminStep->loginAsAdmin();
+        $this->addQueueEntry($I, $adminStep, $pageTree);
+        $this->addProcess($I);
         $I->click('Show finished and terminated processes');
         $I->waitForText('Process completed successfully', 60);
         $I->dontSee('Process was cancelled');
@@ -132,7 +131,9 @@ class BackendModuleCest
      */
     public function seeCrawlerLogWithOutErrors(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
-        $this->crawlerAddProcess($I, $adminStep, $pageTree);
+        $adminStep->loginAsAdmin();
+        $this->addQueueEntry($I, $adminStep, $pageTree);
+        $this->addProcess($I);
         $I->click('Show finished and terminated processes');
         $I->waitForText('Process completed successfully', 60);
         // Check Result
@@ -142,13 +143,35 @@ class BackendModuleCest
 
     public function manualTriggerCrawlerFromLog(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
-        $this->crawlerAddProcess($I, $adminStep, $pageTree);
-        $I->click('Show finished and terminated processes');
-        $I->waitForText('Process completed successfully', 60);
+        $adminStep->loginAsAdmin();
+        $this->addQueueEntry($I, $adminStep, $pageTree);
         $I->selectOption('SET[crawlaction]', 'log');
         // Click on "refresh" for given record
         $I->click('.refreshLink');
         $I->dontSee('Whoops, looks like something went wrong.');
         $I->waitForText('OK', 15);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function addQueueEntry(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    {
+        $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
+        $I->selectOption('configurationSelection[]', 'default');
+        $I->click('Crawl URLs');
+        $I->waitForText('1 URLs submitted', 15);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function addProcess(BackendModule $I): void
+    {
+        $I->selectOption('SET[crawlaction]', 'multiprocess');
+        $I->waitForText('CLI-Path', 15);
+        $I->click('Add process');
+        $I->waitForElementNotVisible('#nprogress', 120);
+        $I->waitForText('New process has been started');
     }
 }

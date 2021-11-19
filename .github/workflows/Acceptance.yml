@@ -87,3 +87,50 @@ jobs:
           aws_bucket: ${{ secrets.AWS_BUCKET }}
           source_dir: 'Tests/Acceptance/_output/'
           destination_dir: '${{ matrix.typo3 }}-${{ matrix.php }}'
+
+  NonComposer:
+    runs-on: self-hosted
+    strategy:
+      fail-fast: false
+      matrix:
+        typo3: [ 'v10', 'v11', 'v11p80' ]
+
+    steps:
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          tools: composer:v2
+
+      - name: Version information
+        run: |
+          php -v
+          composer --version
+
+      - uses: actions/checkout@v1
+      - run: |
+          cd .devbox/.ddev
+          docker-compose -f docker-compose.selenium.yaml up -d
+          cd ../.. # Going back to "root" directory
+          rm -rf .Build composer.lock
+          composer require nimut/typo3-complete:^11.5
+          wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
+          chmod +x wait-for-it.sh
+          docker ps
+          ./wait-for-it.sh -t 60 localhost:4444
+          php .Build/bin/codecept run --env=${{ matrix.typo3 }}-non-composer
+
+      - name: Upload Codeception output
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: codeception-results
+          path: Tests/Acceptance/_output/
+
+      - uses: shallwefootball/s3-upload-action@master
+        if: ${{ failure() }}
+        with:
+          aws_key_id: ${{ secrets.AWS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+          aws_bucket: ${{ secrets.AWS_BUCKET }}
+          source_dir: 'Tests/Acceptance/_output/'
+          destination_dir: '${{ matrix.typo3 }}-non-composer'

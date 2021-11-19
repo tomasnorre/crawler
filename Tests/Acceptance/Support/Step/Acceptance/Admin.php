@@ -30,5 +30,9 @@ class Admin extends \AcceptanceTester
         $I->fillField('#t3-password', 'password');
         $I->click('#t3-login-submit-section > button');
         $I->seeCookie('be_typo_user');
+
+        if ($I->haveVisible('button.btn.btn-notice')) {
+            $I->click('button.btn.btn-notice');
+        }
     }
 }

@@ -17,6 +17,9 @@ declare(strict_types=1);
  * The TYPO3 project - inspiring people to share!
  */
 
+use Facebook\WebDriver\Remote\RemoteWebDriver;
+use Facebook\WebDriver\Remote\RemoteWebElement;
+use Facebook\WebDriver\WebDriverBy;
 use TYPO3\TestingFramework\Core\Acceptance\Step\FrameSteps;
 
 /**
@@ -41,4 +44,22 @@ class AcceptanceTester extends \Codeception\Actor
     /**
      * Define custom actions here
      */
+
+    /**
+     * @see https://maslosoft.com/blog/2018/04/04/codeception-acceptance-check-if-element-is-visible/
+     */
+    public function haveVisible($element): bool
+    {
+        $I = $this;
+        $value = false;
+        $I->executeInSelenium(function (RemoteWebDriver $webDriver) use ($element, &$value) {
+            try {
+                $element = $webDriver->findElement(WebDriverBy::cssSelector($element));
+                $value = $element instanceof RemoteWebElement;
+            } catch (Exception $e) {
+                // Swallow exception silently
+            }
+        });
+        return $value;
+    }
 }
