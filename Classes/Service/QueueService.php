@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AOE\Crawler\Service;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -41,16 +41,11 @@ class QueueService
 
     public function addPageToQueue(int $pageUid, int $time = 0): void
     {
-        /**
-         * Todo: Switch back to getPage(); when dropping support for TYPO3 9 LTS - TNM
-         * This switch to getPage_noCheck() is needed as TYPO3 9 LTS doesn't return dokType < 200, therefore automatically
-         * adding pages to crawler queue when editing page-titles from the page tree directly was not working.
-         */
-        $pageData = GeneralUtility::makeInstance(PageRepository::class)->getPage_noCheck($pageUid, true);
+        $pageData = GeneralUtility::makeInstance(PageRepository::class)->getPage($pageUid, true);
         $configurations = $this->crawlerController->getUrlsForPageRow($pageData);
         // Currently this is only used from the DataHandlerHook, and we don't know of any allowed/disallowed configurations,
         // when clearing the cache, therefore we allow all configurations in this case.
-        // This next lines could be skipped as it will return the incomming configurations, but for visibility and
+        // This next lines could be skipped as it will return the incoming configurations, but for visibility and
         // later implementation it's kept as it do no harm.
         $allowedConfigurations = [];
         $configurations = ConfigurationService::removeDisallowedConfigurations($allowedConfigurations, $configurations);
