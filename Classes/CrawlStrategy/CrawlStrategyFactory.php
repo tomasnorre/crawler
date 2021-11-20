@@ -26,9 +26,9 @@ final class CrawlStrategyFactory
 
         if ($extensionSettings['makeDirectRequests'] ?? false) {
             /** @var CrawlStrategyInterface $instance */
-            $instance = GeneralUtility::makeInstance(SubProcessExecutionStrategyInterface::class);
+            $instance = GeneralUtility::makeInstance(SubProcessExecutionStrategy::class);
         } else {
-            $instance = GeneralUtility::makeInstance(GuzzleExecutionStrategyInterface::class);
+            $instance = GeneralUtility::makeInstance(GuzzleExecutionStrategy::class);
         }
 
         return $instance;

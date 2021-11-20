@@ -296,17 +296,17 @@ parameters:
 		-
 			message: "#^Cannot call method debug\\(\\) on Psr\\\\Log\\\\LoggerInterface\\|null\\.$#"
 			count: 1
-			path: Classes/CrawlStrategy/GuzzleExecutionStrategyInterface.php
+			path: Classes/CrawlStrategy/GuzzleExecutionStrategy.php
 
 		-
 			message: "#^Cannot call method debug\\(\\) on Psr\\\\Log\\\\LoggerInterface\\|null\\.$#"
 			count: 2
-			path: Classes/CrawlStrategy/SubProcessExecutionStrategyInterface.php
+			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
 
 		-
 			message: "#^Cannot call method info\\(\\) on Psr\\\\Log\\\\LoggerInterface\\|null\\.$#"
 			count: 1
-			path: Classes/CrawlStrategy/SubProcessExecutionStrategyInterface.php
+			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
 
 		-
 			message:
