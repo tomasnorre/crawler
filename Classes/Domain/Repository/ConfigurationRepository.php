@@ -72,7 +72,7 @@ class ConfigurationRepository extends Repository
             ->getRestrictions()->removeAll()
             ->add(GeneralUtility::makeInstance(DeletedRestriction::class))
             ->add(GeneralUtility::makeInstance(HiddenRestriction::class));
-        return  $queryBuilder
+        return $queryBuilder
             ->select('*')
             ->from(self::TABLE_NAME)
             ->where(
