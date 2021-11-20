@@ -20,21 +20,6 @@ parameters:
 			path: Classes/Backend/BackendModule.php
 
 		-
-			message: "#^Cannot access offset 'vars' on array\\|bool\\.$#"
-			count: 1
-			path: Classes/Backend/Helper/ResultHandler.php
-
-		-
-			message: "#^Parameter \\#2 \\$search of function array_key_exists expects array, array\\|true given\\.$#"
-			count: 2
-			path: Classes/Backend/Helper/ResultHandler.php
-
-		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
-			count: 1
-			path: Classes/Backend/Helper/ResultHandler.php
-
-		-
 			message:
 				"""
 					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:

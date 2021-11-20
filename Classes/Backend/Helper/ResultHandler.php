@@ -38,7 +38,7 @@ class ResultHandler
         $content = '';
         if (is_array($resultRow) && array_key_exists('result_data', $resultRow)) {
             $requestContent = self::getJsonCompatibilityConverter()->convert($resultRow['result_data']) ?: [];
-            if (! array_key_exists('content', $requestContent)) {
+            if (is_bool($requestContent) || ! array_key_exists('content', $requestContent)) {
                 return $content;
             }
             $requestResult = self::getJsonCompatibilityConverter()->convert($requestContent['content']);
@@ -58,7 +58,7 @@ class ResultHandler
         if (empty($requestContent)) {
             return '-';
         }
-        if (! array_key_exists('content', $requestContent)) {
+        if (is_bool($requestContent) || ! array_key_exists('content', $requestContent)) {
             return 'Content index does not exists in requestContent array';
         }
 
@@ -70,11 +70,7 @@ class ResultHandler
             return implode("\n", $requestResult['errorlog']);
         }
 
-        if (is_bool($requestResult)) {
-            return 'Error - no info, sorry!';
-        }
-
-        return 'Error: ' . substr(preg_replace('/\s+/', ' ', strip_tags($requestResult)), 0, 10000) . '...';
+        return 'Error - no info, sorry!';
     }
 
     /**
@@ -86,6 +82,9 @@ class ResultHandler
             return [];
         }
         $requestResult = self::getJsonCompatibilityConverter()->convert($resultData['content']);
+        if (is_bool($requestResult)) {
+            return [];
+        }
         return $requestResult['vars'] ?? [];
     }
 
