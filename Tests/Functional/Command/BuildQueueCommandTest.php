@@ -20,6 +20,7 @@ namespace AOE\Crawler\Tests\Functional\Command;
  */
 
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Tests\Functional\SiteBasedTestTrait;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -27,6 +28,18 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 class BuildQueueCommandTest extends AbstractCommandTests
 {
+    use SiteBasedTestTrait;
+
+    /**
+     * @noRector
+     * @noRector \Rector\DeadCode\Rector\ClassConst\RemoveUnusedClassConstantRector
+     */
+    protected const LANGUAGE_PRESETS = [
+        'EN' => ['id' => 0, 'title' => 'English', 'locale' => 'en_US.UTF8', 'iso' => 'en', 'hrefLang' => 'en-US', 'direction' => ''],
+        'FR' => ['id' => 1, 'title' => 'French', 'locale' => 'fr_FR.UTF8', 'iso' => 'fr', 'hrefLang' => 'fr-FR', 'direction' => ''],
+        'FR-CA' => ['id' => 2, 'title' => 'Franco-Canadian', 'locale' => 'fr_CA.UTF8', 'iso' => 'fr', 'hrefLang' => 'fr-CA', 'direction' => ''],
+    ];
+
     /**
      * @var array
      */
@@ -44,6 +57,16 @@ class BuildQueueCommandTest extends AbstractCommandTests
         $this->importDataSet(__DIR__ . '/../Fixtures/pages.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_configuration.xml');
         $this->queueRepository = GeneralUtility::makeInstance(ObjectManager::class)->get(QueueRepository::class);
+
+        $this->writeSiteConfiguration(
+            'acme-com',
+            $this->buildSiteConfiguration(1, 'https://acme.com/'),
+            [
+                $this->buildDefaultLanguageConfiguration('EN', 'https://acme.us/'),
+                $this->buildLanguageConfiguration('FR', 'https://acme.fr/', ['EN']),
+                $this->buildLanguageConfiguration('FR-CA', 'https://acme.ca/', ['FR', 'EN']),
+            ]
+        );
     }
 
     /**
@@ -52,11 +75,6 @@ class BuildQueueCommandTest extends AbstractCommandTests
      */
     public function buildQueueCommandTest(array $parameters, string $expectedOutput, int $expectedCount): void
     {
-        if (!$this->isTYPO3v10OrLower()) {
-            self::markTestSkipped('These tests are not working in TYPO3 11. As the backend request has changed. The tests can be activated again when
-            either the CrawlerController is restructured, or the depedency from BuildCommand to CrawlerController is removed.');
-        }
-
         $commandOutput = '';
         $cliCommand = $this->getTypo3TestBinaryCommand() . ' crawler:buildQueue ' . implode(' ', $parameters);
         CommandUtility::exec($cliCommand . ' 2>&1', $commandOutput);
@@ -89,7 +107,7 @@ class BuildQueueCommandTest extends AbstractCommandTests
         ];
         yield 'Start page 1, --mode url' => [
             'parameters' => [1, $crawlerConfiguration, '--mode url'],
-            'expectedOutput' => 'https://www.example.com/index.php?id=1',
+            'expectedOutput' => 'https://www.example.com/',
             'expectedCount' => 0,
         ];
         yield 'Start page 1,  --mode exec' => [
@@ -102,11 +120,5 @@ class BuildQueueCommandTest extends AbstractCommandTests
             'expectedOutput' => 'Page 0 is not a valid page, please check you root page id and try again.',
             'expectedCount' => 0,
         ];
-    }
-
-    private function isTYPO3v10OrLower(): bool
-    {
-        $typo3Version = new Typo3Version();
-        return $typo3Version->getMajorVersion() <= 10;
     }
 }
