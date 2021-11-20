@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AOE\Crawler\Domain\Repository;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -72,7 +72,7 @@ class ConfigurationRepository extends Repository
             ->getRestrictions()->removeAll()
             ->add(GeneralUtility::makeInstance(DeletedRestriction::class))
             ->add(GeneralUtility::makeInstance(HiddenRestriction::class));
-        $configurationRecordsForCurrentPage = $queryBuilder
+        return  $queryBuilder
             ->select('*')
             ->from(self::TABLE_NAME)
             ->where(
@@ -80,7 +80,6 @@ class ConfigurationRepository extends Repository
             )
             ->execute()
             ->fetchAll();
-        return is_array($configurationRecordsForCurrentPage) ? $configurationRecordsForCurrentPage : [];
     }
 
     protected function createQueryBuilder(): QueryBuilder

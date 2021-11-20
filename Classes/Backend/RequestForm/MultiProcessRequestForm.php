@@ -79,7 +79,7 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
         $this->crawler = GeneralUtility::makeInstance(Crawler::class);
     }
 
-    public function render($id, string $elementName, array $menuItems): string
+    public function render(int $id, string $elementName, array $menuItems): string
     {
         return $this->processOverviewAction();
     }

@@ -522,7 +522,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ->where(
                 $queryBuilderUpdate->expr()->in('qid', $quidList)
             )
-            ->set('process_scheduled', time())
+            ->set('process_scheduled', (string) time())
             ->set('process_id', $processId)
             ->execute();
     }
@@ -536,7 +536,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
                 $queryBuilder->expr()->eq('exec_time', 0),
                 $queryBuilder->expr()->in('process_id', $queryBuilder->createNamedParameter($processIds, Connection::PARAM_STR_ARRAY))
             )
-            ->set('process_scheduled', 0)
+            ->set('process_scheduled', '0')
             ->set('process_id', '')
             ->execute();
     }

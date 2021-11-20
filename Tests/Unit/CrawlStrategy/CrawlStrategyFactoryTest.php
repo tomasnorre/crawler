@@ -20,15 +20,15 @@ namespace AOE\Crawler\Tests\Unit\CrawlStrategy;
  */
 
 use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
-use AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategy;
-use AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategy;
+use AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategyInterface;
+use AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategyInterface;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * @covers \AOE\Crawler\CrawlStrategy\CrawlStrategyFactory
  * @covers \AOE\Crawler\Configuration\ExtensionConfigurationProvider
- * @covers \AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategy
+ * @covers \AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategyInterface
  */
 class CrawlStrategyFactoryTest extends UnitTestCase
 {
@@ -45,7 +45,7 @@ class CrawlStrategyFactoryTest extends UnitTestCase
         $crawlStrategy = GeneralUtility::makeInstance(CrawlStrategyFactory::class)->create();
 
         self::assertInstanceOf(
-            GuzzleExecutionStrategy::class,
+            GuzzleExecutionStrategyInterface::class,
             $crawlStrategy
         );
     }
@@ -63,7 +63,7 @@ class CrawlStrategyFactoryTest extends UnitTestCase
         $crawlStrategy = GeneralUtility::makeInstance(CrawlStrategyFactory::class)->create();
 
         self::assertInstanceOf(
-            SubProcessExecutionStrategy::class,
+            SubProcessExecutionStrategyInterface::class,
             $crawlStrategy
         );
     }

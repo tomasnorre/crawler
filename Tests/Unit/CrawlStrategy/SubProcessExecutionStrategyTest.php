@@ -19,11 +19,11 @@ namespace AOE\Crawler\Tests\Unit\CrawlStrategy;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategy;
+use AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategyInterface;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
 /**
- * @covers \AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategy
+ * @covers \AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategyInterface
  */
 class SubProcessExecutionStrategyTest extends UnitTestCase
 {
@@ -34,7 +34,7 @@ class SubProcessExecutionStrategyTest extends UnitTestCase
     public function buildRequestHeadersReturnsArray(array $url, string $crawlerId, array $expected): void
     {
         self::markTestSkipped('This is skipped as buildRequestHeaders() is now private, I need to change the test to ensure it is tested as part of the fetchUrlContents()');
-        $subProcessExecutionStrategy = $this->getAccessibleMock(SubProcessExecutionStrategy::class, [], [], '', false);
+        $subProcessExecutionStrategy = $this->getAccessibleMock(SubProcessExecutionStrategyInterface::class, [], [], '', false);
 
         self::assertEquals(
             $expected,

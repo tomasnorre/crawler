@@ -78,11 +78,6 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:render\\(\\) has parameter \\$id with no typehint specified\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
 			message: "#^Parameter \\#1 \\$resultData of static method AOE\\\\Crawler\\\\Backend\\\\Helper\\\\ResultHandler\\:\\:getResFeVars\\(\\) expects array, array\\|true given\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
@@ -98,27 +93,12 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\MultiProcessRequestForm\\:\\:render\\(\\) has parameter \\$id with no typehint specified\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/MultiProcessRequestForm.php
-
-		-
 			message: "#^Unable to resolve the template type T in call to method static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\)$#"
 			count: 1
 			path: Classes/Backend/RequestForm/MultiProcessRequestForm.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\RequestFormInterface\\:\\:render\\(\\) has parameter \\$id with no typehint specified\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/RequestFormInterface.php
-
-		-
 			message: "#^Call to function is_array\\(\\) with string will always evaluate to false\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/StartRequestForm.php
-
-		-
-			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\StartRequestForm\\:\\:render\\(\\) has parameter \\$id with no typehint specified\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/StartRequestForm.php
 
@@ -134,16 +114,6 @@ parameters:
 					since TYPO3 10\\.4, will be removed in version 12\\.0$#
 				"""
 			count: 2
-			path: Classes/Command/BuildQueueCommand.php
-
-		-
-			message: "#^Cannot access offset 'procInstructions' on array\\|bool\\.$#"
-			count: 1
-			path: Classes/Command/BuildQueueCommand.php
-
-		-
-			message: "#^Cannot access offset 'url' on array\\|bool\\.$#"
-			count: 1
 			path: Classes/Command/BuildQueueCommand.php
 
 		-
@@ -319,29 +289,24 @@ parameters:
 			path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
 
 		-
-			message: "#^Interface AOE\\\\Crawler\\\\CrawlStrategy\\\\CrawlStrategy should end with \"Interface\" suffix\\.$#"
+			message: "#^Method AOE\\\\Crawler\\\\CrawlStrategy\\\\CrawlStrategyInterface\\:\\:fetchUrlContents\\(\\) has no return typehint specified\\.$#"
 			count: 1
-			path: Classes/CrawlStrategy/CrawlStrategy.php
+			path: Classes/CrawlStrategy/CrawlStrategyInterface.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\CrawlStrategy\\\\CrawlStrategy\\:\\:fetchUrlContents\\(\\) has no return typehint specified\\.$#"
+			message: "#^Cannot call method debug\\(\\) on Psr\\\\Log\\\\LoggerInterface\\|null\\.$#"
 			count: 1
-			path: Classes/CrawlStrategy/CrawlStrategy.php
+			path: Classes/CrawlStrategy/GuzzleExecutionStrategyInterface.php
 
 		-
 			message: "#^Cannot call method debug\\(\\) on Psr\\\\Log\\\\LoggerInterface\\|null\\.$#"
 			count: 2
-			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
+			path: Classes/CrawlStrategy/SubProcessExecutionStrategyInterface.php
 
 		-
 			message: "#^Cannot call method info\\(\\) on Psr\\\\Log\\\\LoggerInterface\\|null\\.$#"
 			count: 1
-			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
-
-		-
-			message: "#^Method AOE\\\\Crawler\\\\Domain\\\\Model\\\\Configuration\\:\\:setPidsOnly\\(\\) has parameter \\$pidsOnly with no typehint specified\\.$#"
-			count: 1
-			path: Classes/Domain/Model/Configuration.php
+			path: Classes/CrawlStrategy/SubProcessExecutionStrategyInterface.php
 
 		-
 			message:
@@ -377,11 +342,6 @@ parameters:
 
 		-
 			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 1
-			path: Classes/Domain/Repository/ConfigurationRepository.php
-
-		-
-			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
 			count: 1
 			path: Classes/Domain/Repository/ConfigurationRepository.php
 
@@ -443,11 +403,6 @@ parameters:
 			path: Classes/Domain/Repository/ProcessRepository.php
 
 		-
-			message: "#^Parameter \\#2 \\$value of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:set\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: Classes/Domain/Repository/ProcessRepository.php
-
-		-
 			message:
 				"""
 					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
@@ -502,11 +457,6 @@ parameters:
 		-
 			message: "#^Method AOE\\\\Crawler\\\\Domain\\\\Repository\\\\QueueRepository\\:\\:updateProcessIdAndSchedulerForQueueIds\\(\\) has no return typehint specified\\.$#"
 			count: 1
-			path: Classes/Domain/Repository/QueueRepository.php
-
-		-
-			message: "#^Parameter \\#2 \\$value of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:set\\(\\) expects string, int given\\.$#"
-			count: 2
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-

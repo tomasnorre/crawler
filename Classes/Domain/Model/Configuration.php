@@ -177,7 +177,7 @@ class Configuration extends AbstractEntity
         return $this->pidsonly;
     }
 
-    public function setPidsOnly($pidsOnly): void
+    public function setPidsOnly(string $pidsOnly): void
     {
         $this->pidsonly = $pidsOnly;
     }

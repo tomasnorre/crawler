@@ -19,25 +19,25 @@ namespace AOE\Crawler\Tests\Unit\CrawlStrategy;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategy;
+use AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategyInterface;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Http\Uri;
 
 /**
- * @covers \AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategy
+ * @covers \AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategyInterface
  */
 class GuzzleExecutionStrategyTest extends UnitTestCase
 {
     /**
-     * @var GuzzleExecutionStrategy
+     * @var GuzzleExecutionStrategyInterface
      */
     protected $guzzleExecutionStrategy;
 
     protected function setUp(): void
     {
         $this->guzzleExecutionStrategy = $this->createPartialMock(
-            GuzzleExecutionStrategy::class,
+            GuzzleExecutionStrategyInterface::class,
             ['getResponse']
         );
 
