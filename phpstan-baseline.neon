@@ -779,11 +779,6 @@ parameters:
 			path: Classes/Service/ProcessService.php
 
 		-
-			message: "#^Method TYPO3\\\\CMS\\\\Core\\\\Domain\\\\Repository\\\\PageRepository\\:\\:getPage_noCheck\\(\\) invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: Classes/Service/QueueService.php
-
-		-
 			message: "#^Function getUrlFromPageAndQueryParameters\\(\\) has an unused variable \\$siteLanguage\\.$#"
 			count: 1
 			path: Classes/Service/UrlService.php
