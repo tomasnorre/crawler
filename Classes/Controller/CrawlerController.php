@@ -788,7 +788,7 @@ class CrawlerController implements LoggerAwareInterface
         /* @var PageTreeView $tree */
         $tree = GeneralUtility::makeInstance(PageTreeView::class);
         $perms_clause = $this->getBackendUser()->getPagePermsClause(Permission::PAGE_SHOW);
-        $tree->init('AND ' . $perms_clause);
+        $tree->init(empty($perms_clause) ? '' : ('AND ' . $perms_clause));
 
         $pageInfo = BackendUtility::readPageAccess($id, $perms_clause);
         if (is_array($pageInfo)) {
@@ -818,7 +818,7 @@ class CrawlerController implements LoggerAwareInterface
                 $this->MP = $mountpage[0]['mount_pid'] . '-' . $data['row']['uid'];
 
                 $mountTree = GeneralUtility::makeInstance(PageTreeView::class);
-                $mountTree->init('AND ' . $perms_clause);
+                $mountTree->init(empty($perms_clause) ? '' : ('AND ' . $perms_clause));
                 $mountTree->getTree($mountpage[0]['mount_pid'], $depth);
 
                 foreach ($mountTree->tree as $mountData) {
