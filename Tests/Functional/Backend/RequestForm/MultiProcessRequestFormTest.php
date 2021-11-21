@@ -88,9 +88,14 @@ class MultiProcessRequestFormTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function renderWithNoConfigurationSelected(): void
+    public function renderWithNoPageSelected(): void
     {
         self::markTestSkipped('Please implement');
+        /*self::assertStringContainsString(
+            'Please select a page in the pagetree ',
+            $this->multiProcessRequestForm->render(0, '', [])
+        );*/
+
     }
 
     private function setupExtensionSettings(): void

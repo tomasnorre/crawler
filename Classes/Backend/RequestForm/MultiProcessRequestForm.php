@@ -81,6 +81,7 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
 
     public function render($id, string $elementName, array $menuItems): string
     {
+        $this->id = $id;
         return $this->processOverviewAction();
     }
 
@@ -95,6 +96,11 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
         $this->view->setTemplate('ProcessOverview');
         $this->runRefreshHooks();
         $this->makeCrawlerProcessableChecks($this->extensionSettings);
+
+        if (empty($this->id) || $this->id === 0) {
+            $this->isErrorDetected = true;
+            MessageUtility::addErrorMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noPageSelected'));
+        }
 
         try {
             $this->handleProcessOverviewActions();
