@@ -19,8 +19,11 @@ namespace AOE\Crawler\Tests\Functional\Command;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Command\BuildQueueCommand;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Tests\Functional\SiteBasedTestTrait;
+use Symfony\Component\Console\Tester\CommandTester;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
@@ -49,9 +52,12 @@ class BuildQueueCommandTest extends AbstractCommandTests
      */
     protected $queueRepository;
 
+    protected CommandTester $commandTester;
+
     protected function setUp(): void
     {
         parent::setUp();
+        $this->setupBackendUser();
 
         $this->importDataSet(__DIR__ . '/../Fixtures/pages.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_configuration.xml');
@@ -66,6 +72,9 @@ class BuildQueueCommandTest extends AbstractCommandTests
                 $this->buildLanguageConfiguration('FR-CA', 'https://acme.ca/', ['FR', 'EN']),
             ]
         );
+
+        $command = new BuildQueueCommand();
+        $this->commandTester = new CommandTester($command);
     }
 
     /**
@@ -74,11 +83,25 @@ class BuildQueueCommandTest extends AbstractCommandTests
      */
     public function buildQueueCommandTest(array $parameters, string $expectedOutput, int $expectedCount): void
     {
+        /*
         $commandOutput = '';
         $cliCommand = $this->getTypo3TestBinaryCommand() . ' crawler:buildQueue ' . implode(' ', $parameters);
         CommandUtility::exec($cliCommand . ' 2>&1', $commandOutput);
 
         self::assertContains($expectedOutput, $commandOutput);
+        */
+
+        $arguments = [];
+        if (!empty($parameters)) {
+            $arguments = $parameters;
+        }
+
+        $this->commandTester->execute($arguments);
+
+        self::assertStringContainsString(
+            $expectedOutput,
+            $this->commandTester->getDisplay()
+        );
         self::assertEquals(
             $expectedCount,
             $this->queueRepository->findAll()->count()
@@ -90,34 +113,64 @@ class BuildQueueCommandTest extends AbstractCommandTests
         $crawlerConfiguration = 'default';
 
         yield 'Start page 1' => [
-            'parameters' => [1, $crawlerConfiguration],
+            'parameters' => [
+                'page' => 1,
+                'conf' => $crawlerConfiguration,
+            ],
             'expectedOutput' => 'Putting 1 entries in queue:',
             'expectedCount' => 1,
         ];
         yield 'Start page 1, depth 99' => [
-            'parameters' => [1, $crawlerConfiguration, '--depth 99'],
+            'parameters' => [
+                'page' => 1,
+                'conf' => $crawlerConfiguration,
+                '--depth' => 99,
+            ],
             'expectedOutput' => 'Putting 9 entries in queue:',
             'expectedCount' => 9,
         ];
         yield 'Start page 1, --mode queue (default)' => [
-            'parameters' => [1, $crawlerConfiguration],
+            'parameters' => [
+                'page' => 1,
+                'conf' => $crawlerConfiguration,
+            ],
             'expectedOutput' => 'Putting 1 entries in queue:',
             'expectedCount' => 1,
         ];
         yield 'Start page 1, --mode url' => [
-            'parameters' => [1, $crawlerConfiguration, '--mode url'],
+            'parameters' => [
+                'page' => 1,
+                'conf' => $crawlerConfiguration,
+                '--mode' => 'url',
+            ],
             'expectedOutput' => 'https://www.example.com/',
             'expectedCount' => 0,
         ];
         yield 'Start page 1,  --mode exec' => [
-            'parameters' => [1, $crawlerConfiguration, '--mode exec'],
+            'parameters' => [
+                'page' => 1,
+                'conf' => $crawlerConfiguration,
+                '--mode' => 'exec',
+            ],
             'expectedOutput' => 'Executing 1 requests right away:',
             'expectedCount' => 1,
         ];
         yield 'Start page 0, expecting error' => [
-            'parameters' => [0, $crawlerConfiguration, '--mode queue'],
+            'parameters' => [
+                'page' => 0,
+                'conf' => $crawlerConfiguration,
+                '--mode' => 'queue',
+            ],
             'expectedOutput' => 'Page 0 is not a valid page, please check you root page id and try again.',
             'expectedCount' => 0,
         ];
+    }
+
+    private function setupBackendUser(): void
+    {
+        $GLOBALS['BE_USER'] = $this->getMockBuilder(BackendUserAuthentication::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['isAdmin', 'getTSConfig', 'getPagePermsClause', 'isInWebMount', 'backendCheckLogin'])
+            ->getMock();
     }
 }
