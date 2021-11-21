@@ -116,7 +116,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
     private function showLogAction(int $setId, string $quiPath): string
     {
         $this->view->setTemplate('ShowLog');
-        if (empty($this->pageId) || $this->pageId === 0) {
+        if (empty($this->pageId)) {
             $this->isErrorDetected = true;
             $this->view->assign('noPageSelected', true);
             MessageUtility::addErrorMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noPageSelected'));

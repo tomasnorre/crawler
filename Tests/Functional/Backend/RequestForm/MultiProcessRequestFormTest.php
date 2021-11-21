@@ -95,7 +95,6 @@ class MultiProcessRequestFormTest extends FunctionalTestCase
             'Please select a page in the pagetree ',
             $this->multiProcessRequestForm->render(0, '', [])
         );*/
-
     }
 
     private function setupExtensionSettings(): void

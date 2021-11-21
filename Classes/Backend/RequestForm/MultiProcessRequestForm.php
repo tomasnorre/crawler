@@ -97,7 +97,7 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
         $this->runRefreshHooks();
         $this->makeCrawlerProcessableChecks($this->extensionSettings);
 
-        if (empty($this->id) || $this->id === 0) {
+        if (empty($this->id)) {
             $this->isErrorDetected = true;
             MessageUtility::addErrorMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noPageSelected'));
         }
