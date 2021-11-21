@@ -118,6 +118,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
         $this->view->setTemplate('ShowLog');
         if (empty($this->pageId)) {
             $this->isErrorDetected = true;
+            $this->view->assign('noPageSelected', true);
             MessageUtility::addErrorMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noPageSelected'));
         } else {
             $this->findCrawler()->setID = GeneralUtility::md5int(microtime());
@@ -136,6 +137,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
             $queueId = GeneralUtility::_GP('qid_details');
             $this->view->assign('queueId', $queueId);
             $this->view->assign('setId', $showSetId);
+            $this->view->assign('noPageSelected', false);
             // Show details:
             if ($queueId) {
                 // Get entry record:
@@ -175,6 +177,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                     $this->pageId,
                     $perms_clause
                 );
+
                 $HTML = $this->getIconFactory()->getIconForRecord('pages', $pageinfo, Icon::SIZE_SMALL)->render();
                 $tree->tree[] = [
                     'row' => $pageinfo,
