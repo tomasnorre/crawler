@@ -24,7 +24,6 @@ use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Tests\Functional\SiteBasedTestTrait;
 use Symfony\Component\Console\Tester\CommandTester;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
-use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
@@ -83,14 +82,6 @@ class BuildQueueCommandTest extends AbstractCommandTests
      */
     public function buildQueueCommandTest(array $parameters, string $expectedOutput, int $expectedCount): void
     {
-        /*
-        $commandOutput = '';
-        $cliCommand = $this->getTypo3TestBinaryCommand() . ' crawler:buildQueue ' . implode(' ', $parameters);
-        CommandUtility::exec($cliCommand . ' 2>&1', $commandOutput);
-
-        self::assertContains($expectedOutput, $commandOutput);
-        */
-
         $arguments = [];
         if (!empty($parameters)) {
             $arguments = $parameters;
