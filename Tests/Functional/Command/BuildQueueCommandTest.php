@@ -172,5 +172,7 @@ class BuildQueueCommandTest extends AbstractCommandTests
             ->disableOriginalConstructor()
             ->setMethods(['isAdmin', 'getTSConfig', 'getPagePermsClause', 'isInWebMount', 'backendCheckLogin'])
             ->getMock();
+
+        $GLOBALS['BE_USER']->method('isInWebMount')->willReturn(true);
     }
 }
