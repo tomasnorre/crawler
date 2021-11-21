@@ -33,7 +33,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * Executes another process via shell_exec() to include cli/bootstrap.php which in turn
  * includes the index.php for frontend.
  */
-class SubProcessExecutionStrategy implements LoggerAwareInterface, CrawlStrategyInterface
+class SubProcessExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
 {
     use LoggerAwareTrait;
 

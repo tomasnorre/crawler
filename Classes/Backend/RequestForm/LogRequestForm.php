@@ -83,7 +83,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
         $this->queueRepository = $objectManager->get(QueueRepository::class);
     }
 
-    public function render(int $id, string $elementName, array $menuItems): string
+    public function render($id, string $elementName, array $menuItems): string
     {
         $quiPart = GeneralUtility::_GP('qid_details') ? '&qid_details=' . (int) GeneralUtility::_GP('qid_details') : '';
         $setId = (int) GeneralUtility::_GP('setID');

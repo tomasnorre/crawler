@@ -78,6 +78,11 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
+			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:render\\(\\) has parameter \\$id with no typehint specified\\.$#"
+			count: 1
+			path: Classes/Backend/RequestForm/LogRequestForm.php
+
+		-
 			message: "#^Parameter \\#1 \\$resultData of static method AOE\\\\Crawler\\\\Backend\\\\Helper\\\\ResultHandler\\:\\:getResFeVars\\(\\) expects array, array\\|true given\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
@@ -93,12 +98,27 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
+			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\MultiProcessRequestForm\\:\\:render\\(\\) has parameter \\$id with no typehint specified\\.$#"
+			count: 1
+			path: Classes/Backend/RequestForm/MultiProcessRequestForm.php
+
+		-
 			message: "#^Unable to resolve the template type T in call to method static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\)$#"
 			count: 1
 			path: Classes/Backend/RequestForm/MultiProcessRequestForm.php
 
 		-
+			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\RequestFormInterface\\:\\:render\\(\\) has parameter \\$id with no typehint specified\\.$#"
+			count: 1
+			path: Classes/Backend/RequestForm/RequestFormInterface.php
+
+		-
 			message: "#^Call to function is_array\\(\\) with string will always evaluate to false\\.$#"
+			count: 1
+			path: Classes/Backend/RequestForm/StartRequestForm.php
+
+		-
+			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\StartRequestForm\\:\\:render\\(\\) has parameter \\$id with no typehint specified\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/StartRequestForm.php
 
@@ -289,14 +309,14 @@ parameters:
 			path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\CrawlStrategy\\\\CrawlStrategyInterface\\:\\:fetchUrlContents\\(\\) has no return typehint specified\\.$#"
+			message: "#^Interface AOE\\\\Crawler\\\\CrawlStrategy\\\\CrawlStrategy should end with \"Interface\" suffix\\.$#"
 			count: 1
-			path: Classes/CrawlStrategy/CrawlStrategyInterface.php
+			path: Classes/CrawlStrategy/CrawlStrategy.php
 
 		-
-			message: "#^Cannot call method debug\\(\\) on Psr\\\\Log\\\\LoggerInterface\\|null\\.$#"
+			message: "#^Method AOE\\\\Crawler\\\\CrawlStrategy\\\\CrawlStrategy\\:\\:fetchUrlContents\\(\\) has no return typehint specified\\.$#"
 			count: 1
-			path: Classes/CrawlStrategy/GuzzleExecutionStrategy.php
+			path: Classes/CrawlStrategy/CrawlStrategy.php
 
 		-
 			message: "#^Cannot call method debug\\(\\) on Psr\\\\Log\\\\LoggerInterface\\|null\\.$#"

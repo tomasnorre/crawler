@@ -21,7 +21,7 @@ namespace AOE\Crawler\CrawlStrategy;
 
 use Psr\Http\Message\UriInterface;
 
-interface CrawlStrategyInterface
+interface CrawlStrategy
 {
     public function fetchUrlContents(UriInterface $url, string $crawlerId);
 }
