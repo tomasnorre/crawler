@@ -20,21 +20,6 @@ parameters:
 			path: Classes/Backend/BackendModule.php
 
 		-
-			message: "#^Cannot access offset 'vars' on array\\|bool\\.$#"
-			count: 1
-			path: Classes/Backend/Helper/ResultHandler.php
-
-		-
-			message: "#^Parameter \\#2 \\$search of function array_key_exists expects array, array\\|true given\\.$#"
-			count: 2
-			path: Classes/Backend/Helper/ResultHandler.php
-
-		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
-			count: 1
-			path: Classes/Backend/Helper/ResultHandler.php
-
-		-
 			message:
 				"""
 					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
@@ -149,16 +134,6 @@ parameters:
 					since TYPO3 10\\.4, will be removed in version 12\\.0$#
 				"""
 			count: 2
-			path: Classes/Command/BuildQueueCommand.php
-
-		-
-			message: "#^Cannot access offset 'procInstructions' on array\\|bool\\.$#"
-			count: 1
-			path: Classes/Command/BuildQueueCommand.php
-
-		-
-			message: "#^Cannot access offset 'url' on array\\|bool\\.$#"
-			count: 1
 			path: Classes/Command/BuildQueueCommand.php
 
 		-
@@ -354,11 +329,6 @@ parameters:
 			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Domain\\\\Model\\\\Configuration\\:\\:setPidsOnly\\(\\) has parameter \\$pidsOnly with no typehint specified\\.$#"
-			count: 1
-			path: Classes/Domain/Model/Configuration.php
-
-		-
 			message:
 				"""
 					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
@@ -392,11 +362,6 @@ parameters:
 
 		-
 			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 1
-			path: Classes/Domain/Repository/ConfigurationRepository.php
-
-		-
-			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
 			count: 1
 			path: Classes/Domain/Repository/ConfigurationRepository.php
 
@@ -458,11 +423,6 @@ parameters:
 			path: Classes/Domain/Repository/ProcessRepository.php
 
 		-
-			message: "#^Parameter \\#2 \\$value of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:set\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: Classes/Domain/Repository/ProcessRepository.php
-
-		-
 			message:
 				"""
 					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
@@ -517,11 +477,6 @@ parameters:
 		-
 			message: "#^Method AOE\\\\Crawler\\\\Domain\\\\Repository\\\\QueueRepository\\:\\:updateProcessIdAndSchedulerForQueueIds\\(\\) has no return typehint specified\\.$#"
 			count: 1
-			path: Classes/Domain/Repository/QueueRepository.php
-
-		-
-			message: "#^Parameter \\#2 \\$value of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:set\\(\\) expects string, int given\\.$#"
-			count: 2
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
