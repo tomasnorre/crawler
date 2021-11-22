@@ -142,3 +142,29 @@ On solution can be to remove the `php8.0-uploadprogress` package from your serve
 1.1.4, this will trigger the problem. Removing the package can of course be a problem if you are depending on it.
 
 If possible, better update it to 1.1.4 or higher, then the problem should be solved as well.
+
+Site config baseVariants not used
+=================================
+
+An issue was reported for the Crawler, that the Site Config baseVariants was not respected by the Crawler.
+https://github.com/tomasnorre/crawler/issues/851, it turned out that crawler had problems with `ApplicationContexts`
+set in `.htaccess` like in example.
+
+.. code-block:: text
+
+    <IfModule mod_rewrite.c>
+       # Rules to set ApplicationContext based on hostname
+       RewriteCond %{HTTP_HOST} ^(.*)\.my\-site\.localhost$
+       RewriteRule .? - [E=TYPO3_CONTEXT:Development]
+       RewriteCond %{HTTP_HOST} ^(.*)\.mysite\.info$
+       RewriteRule .? - [E=TYPO3_CONTEXT:Production/Staging]
+       RewriteCond %{HTTP_HOST} ^(.*)\.my\-site\.info$
+       RewriteRule .? - [E=TYPO3_CONTEXT:Production]
+    </IfModule>
+
+Workaround
+----------
+
+this problem isn't solved, but it can be bypassed by using the `helhum/dotenv-connector`
+https://github.com/helhum/dotenv-connector
+

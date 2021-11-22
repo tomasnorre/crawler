@@ -3,6 +3,7 @@
 ## Crawler 11.0.2-dev
 
 ### Added
+* Troubleshooting - Site based baseVariants not used
 
 ### Changed
 
