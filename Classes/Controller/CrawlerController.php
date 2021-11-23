@@ -754,6 +754,9 @@ class CrawlerController implements LoggerAwareInterface
      *****************************/
 
     /**
+     *
+     * This draws the pageTree with URLs for e.g the Backend Log Module
+     *
      * @param integer $id Root page id to start from.
      * @param integer $depth Depth of tree, 0=only id-page, 1= on sublevel, 99 = infinite
      * @param integer $scheduledTime Unix Time when the URL is timed to be visited when put in queue
