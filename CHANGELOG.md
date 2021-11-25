@@ -3,7 +3,8 @@
 ## Crawler 11.0.2-dev
 
 ### Added
-* Troubleshooting - Site based baseVariants not used
+* Docs: Troubleshooting - Site based baseVariants not used
+* Docs: Example on how to exclude pages recursively from being crawled
 
 ### Changed
 
