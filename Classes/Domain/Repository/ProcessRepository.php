@@ -46,15 +46,8 @@ class ProcessRepository extends Repository
 {
     public const TABLE_NAME = 'tx_crawler_process';
 
-    /**
-     * @var QueryBuilder
-     */
-    protected $queryBuilder;
-
-    /**
-     * @var array
-     */
-    protected $extensionSettings = [];
+    protected QueryBuilder $queryBuilder;
+    protected array $extensionSettings = [];
 
     public function __construct()
     {

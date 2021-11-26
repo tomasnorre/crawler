@@ -50,24 +50,9 @@ use TYPO3\CMS\Info\Controller\InfoModuleController;
  */
 class BackendModule
 {
-    /**
-     * @var InfoModuleController Contains a reference to the parent calling object
-     */
-    protected $pObj;
-
-    /**
-     * The current page ID
-     * @var int
-     */
-    protected $id;
-
-    /**
-     * Holds the configuration from ext_conf_template loaded by getExtensionConfiguration()
-     *
-     * @var array
-     */
-    protected $extensionSettings = [];
-
+    protected InfoModuleController $pObj;
+    protected int $id;
+    protected array $extensionSettings = [];
     protected ProcessService $processManager;
     protected QueryBuilder $queryBuilder;
     protected QueueRepository $queueRepository;

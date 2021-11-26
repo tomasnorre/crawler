@@ -37,10 +37,7 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
 {
     use LoggerAwareTrait;
 
-    /**
-     * @var array
-     */
-    protected $extensionSettings;
+    protected array $extensionSettings;
 
     public function __construct(?ExtensionConfigurationProvider $configurationProvider = null)
     {

@@ -26,10 +26,7 @@ use Assert\Assert;
  */
 class QueueFilter
 {
-    /**
-     * @var string
-     */
-    private $queueFilter;
+    private string $queueFilter;
 
     public function __construct(string $queueFilter = 'all')
     {

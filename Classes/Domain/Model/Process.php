@@ -32,9 +32,7 @@ use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 class Process extends AbstractEntity
 {
     public const STATE_RUNNING = 'running';
-
     public const STATE_CANCELLED = 'cancelled';
-
     public const STATE_COMPLETED = 'completed';
 
     /**
@@ -46,16 +44,8 @@ class Process extends AbstractEntity
      * @var bool
      */
     protected $active = false;
-
-    /**
-     * @var int
-     */
-    protected $ttl = 0;
-
-    /**
-     * @var int
-     */
-    protected $assignedItemsCount = 0;
+    protected int $ttl = 0;
+    protected int $assignedItemsCount = 0;
 
     /**
      * @var bool
@@ -66,11 +56,7 @@ class Process extends AbstractEntity
      * @var string
      */
     protected $systemProcessId = '';
-
-    /**
-     * @var QueueRepository
-     */
-    protected $queueRepository;
+    protected QueueRepository$queueRepository;
 
     public function __construct()
     {

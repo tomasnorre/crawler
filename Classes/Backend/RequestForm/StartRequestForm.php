@@ -30,21 +30,9 @@ use TYPO3\CMS\Info\Controller\InfoModuleController;
 
 final class StartRequestForm extends AbstractRequestForm implements RequestFormInterface
 {
-    /**
-     * @var StandaloneView
-     */
-    private $view;
-
-    /**
-     * @var InfoModuleController
-     */
-    private $infoModuleController;
-
-    /**
-     * @var int
-     */
-    private $reqMinute = 1000;
-
+    private StandaloneView $view;
+    private InfoModuleController $infoModuleController;
+    private int $reqMinute = 1000;
     private EventDispatcher $eventDispatcher;
 
     /**

@@ -63,139 +63,41 @@ class CrawlerController implements LoggerAwareInterface
 
     public const CLI_STATUS_POLLABLE_PROCESSED = 8;
 
-    /**
-     * @var integer
-     */
-    public $setID = 0;
-
-    /**
-     * @var string
-     */
-    public $processID = '';
-
-    /**
-     * @var array
-     */
-    public $duplicateTrack = [];
-
-    /**
-     * @var array
-     */
-    public $downloadUrls = [];
-
-    /**
-     * @var array
-     */
-    public $incomingProcInstructions = [];
-
-    /**
-     * @var array
-     */
-    public $incomingConfigurationSelection = [];
-
-    /**
-     * @var bool
-     */
-    public $registerQueueEntriesInternallyOnly = false;
-
-    /**
-     * @var array
-     */
-    public $queueEntries = [];
-
-    /**
-     * @var array
-     */
-    public $urlList = [];
-
-    /**
-     * @var array
-     */
-    public $extensionSettings = [];
+    public int $setID = 0;
+    public string $processID = '';
+    public array $duplicateTrack = [];
+    public array $downloadUrls = [];
+    public array $incomingProcInstructions = [];
+    public array $incomingConfigurationSelection = [];
+    public bool $registerQueueEntriesInternallyOnly = false;
+    public array $queueEntries = [];
+    public array $urlList = [];
+    public array $extensionSettings = [];
 
     /**
      * Mount Point
-     *
-     * @var bool
      * Todo: Check what this is used for and adjust the type hint or code, as bool doesn't match the current code.
      */
-    public $MP = false;
-
-    /**
-     * @var QueueRepository
-     */
-    protected $queueRepository;
-
-    /**
-     * @var ProcessRepository
-     */
-    protected $processRepository;
-
-    /**
-     * @var ConfigurationRepository
-     */
-    protected $configurationRepository;
-
-    /**
-     * @var QueueExecutor
-     */
-    protected $queueExecutor;
-
-    /**
-     * @var int
-     */
-    protected $maximumUrlsToCompile = 10000;
-
-    /**
-     * @var IconFactory
-     */
-    protected $iconFactory;
+    public bool $MP = false;
+    protected QueueRepository $queueRepository;
+    protected ProcessRepository $processRepository;
+    protected ConfigurationRepository $configurationRepository;
+    protected QueueExecutor $queueExecutor;
+    protected int $maximumUrlsToCompile = 10000;
+    protected IconFactory $iconFactory;
 
     /**
      * @var BackendUserAuthentication|null
      */
     private $backendUser;
-
-    /**
-     * @var integer
-     */
-    private $scheduledTime = 0;
-
-    /**
-     * @var integer
-     */
-    private $reqMinute = 0;
-
-    /**
-     * @var bool
-     */
-    private $submitCrawlUrls = false;
-
-    /**
-     * @var bool
-     */
-    private $downloadCrawlUrls = false;
-
-    /**
-     * @var PageRepository
-     */
-    private $pageRepository;
-
-    /**
-     * @var Crawler
-     */
-    private $crawler;
-
-    /**
-     * @var ConfigurationService
-     */
-    private $configurationService;
-
-    /**
-     * @var UrlService
-     */
-    private $urlService;
-
+    private int $scheduledTime = 0;
+    private int $reqMinute = 0;
+    private bool $submitCrawlUrls = false;
+    private bool $downloadCrawlUrls = false;
+    private PageRepository $pageRepository;
+    private Crawler $crawler;
+    private ConfigurationService $configurationService;
+    private UrlService $urlService;
     private EventDispatcher $eventDispatcher;
 
     /************************************

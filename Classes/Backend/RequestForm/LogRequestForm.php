@@ -12,10 +12,10 @@ use AOE\Crawler\Utility\MessageUtility;
 use AOE\Crawler\Value\QueueFilter;
 use AOE\Crawler\Writer\FileWriter\CsvWriter\CrawlerCsvWriter;
 use AOE\Crawler\Writer\FileWriter\CsvWriter\CsvWriterInterface;
-use Doctrine\DBAL\Query\QueryBuilder;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\DebugUtility;
@@ -25,45 +25,14 @@ use TYPO3\CMS\Info\Controller\InfoModuleController;
 
 final class LogRequestForm extends AbstractRequestForm implements RequestFormInterface
 {
-    /**
-     * @var StandaloneView
-     */
-    private $view;
-
-    /**
-     * @var JsonCompatibilityConverter
-     */
-    private $jsonCompatibilityConverter;
-
-    /**
-     * @var int
-     */
-    private $pageId;
-
-    /**
-     * @var bool
-     */
-    private $CSVExport = false;
-
-    /**
-     * @var InfoModuleController
-     */
-    private $infoModuleController;
-
-    /**
-     * @var QueryBuilder
-     */
-    private $queryBuilder;
-
-    /**
-     * @var CsvWriterInterface
-     */
-    private $csvWriter;
-
-    /**
-     * @var QueueRepository
-     */
-    private $queueRepository;
+    private StandaloneView $view;
+    private JsonCompatibilityConverter $jsonCompatibilityConverter;
+    private int $pageId;
+    private bool $CSVExport = false;
+    private InfoModuleController $infoModuleController;
+    private QueryBuilder $queryBuilder;
+    private CsvWriterInterface $csvWriter;
+    private QueueRepository $queueRepository;
 
     /**
      * @var array

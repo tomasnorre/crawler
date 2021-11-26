@@ -39,35 +39,16 @@ use TYPO3\CMS\Info\Controller\InfoModuleController;
 
 final class MultiProcessRequestForm extends AbstractRequestForm implements RequestFormInterface
 {
-    /**
-     * @var StandaloneView
-     */
-    private $view;
-
-    /**
-     * @var ProcessService
-     */
-    private $processService;
-
-    /**
-     * @var IconFactory
-     */
-    private $iconFactory;
-
-    /**
-     * @var InfoModuleController
-     */
-    private $infoModuleController;
+    private StandaloneView $view;
+    private ProcessService $processService;
+    private IconFactory $iconFactory;
+    private InfoModuleController $infoModuleController;
 
     /**
      * @var int
      */
     private $id;
-
-    /**
-     * @var Crawler
-     */
-    private $crawler;
+    private Crawler $crawler;
 
     public function __construct(
         StandaloneView $view,

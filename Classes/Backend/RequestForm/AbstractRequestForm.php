@@ -28,20 +28,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class AbstractRequestForm
 {
-    /**
-     * @var CrawlerController
-     */
-    protected $crawlerController;
-
-    /**
-     * @var bool
-     */
-    protected $isErrorDetected = false;
-
-    /**
-     * @var array
-     */
-    protected $extensionSettings = [];
+    protected CrawlerController $crawlerController;
+    protected bool $isErrorDetected = false;
+    protected array $extensionSettings = [];
 
     protected function findCrawler(): CrawlerController
     {

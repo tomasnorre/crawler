@@ -43,14 +43,9 @@ class ConfigurationService
      * @var BackendUserAuthentication|null
      */
     private $backendUser;
-
     private UrlService $urlService;
     private ConfigurationRepository $configurationRepository;
-
-    /**
-     * @var array
-     */
-    private $extensionSettings;
+    private array $extensionSettings;
 
     public function __construct(
         UrlService $urlService,

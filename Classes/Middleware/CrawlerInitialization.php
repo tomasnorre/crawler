@@ -37,10 +37,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class CrawlerInitialization implements MiddlewareInterface
 {
-    /**
-     * @var Context
-     */
-    protected $context;
+    protected Context $context;
 
     public function __construct(?Context $context = null)
     {

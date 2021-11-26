@@ -24,50 +24,15 @@ namespace AOE\Crawler\Value;
  */
 class QueueRow
 {
-    /**
-     * @var string
-     */
-    public $pageTitle = '';
-
-    /**
-     * @var string
-     */
-    public $pageTitleHTML = '';
-
-    /**
-     * @var string
-     */
-    public $message;
-
-    /**
-     * @var string
-     */
-    public $configurationKey;
-
-    /**
-     * @var string
-     */
-    public $parameterConfig;
-
-    /**
-     * @var string
-     */
-    public $valuesExpanded;
-
-    /**
-     * @var string
-     */
-    public $urls;
-
-    /**
-     * @var array
-     */
-    public $options;
-
-    /**
-     * @var string
-     */
-    public $parameters;
+    public string $pageTitle = '';
+    public string $pageTitleHTML = '';
+    public string $message;
+    public string $configurationKey;
+    public string $parameterConfig;
+    public string $valuesExpanded;
+    public string $urls;
+    public array $options;
+    public string $parameters;
 
     public function __construct(string $title = '')
     {

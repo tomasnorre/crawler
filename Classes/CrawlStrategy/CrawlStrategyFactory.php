@@ -9,10 +9,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 final class CrawlStrategyFactory
 {
-    /**
-     * @var ExtensionConfigurationProvider
-     */
-    private $configurationProvider;
+    private ExtensionConfigurationProvider $configurationProvider;
 
     public function __construct(?ExtensionConfigurationProvider $configurationProvider = null)
     {

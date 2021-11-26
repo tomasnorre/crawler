@@ -26,10 +26,7 @@ use Assert\Assert;
  */
 final class CrawlAction
 {
-    /**
-     * @var string
-     */
-    private $crawlAction;
+    private string $crawlAction;
 
     public function __construct(string $crawlAction)
     {
