@@ -754,7 +754,6 @@ class CrawlerController implements LoggerAwareInterface
      *****************************/
 
     /**
-     *
      * This draws the pageTree with URLs for e.g the Backend Log Module
      *
      * @param integer $id Root page id to start from.
