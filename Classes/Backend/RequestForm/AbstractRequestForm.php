@@ -28,7 +28,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class AbstractRequestForm
 {
-    protected CrawlerController $crawlerController;
+    protected ?CrawlerController $crawlerController = null;
     protected bool $isErrorDetected = false;
     protected array $extensionSettings = [];
 

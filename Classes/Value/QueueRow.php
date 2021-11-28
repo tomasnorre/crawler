@@ -26,13 +26,13 @@ class QueueRow
 {
     public string $pageTitle = '';
     public string $pageTitleHTML = '';
-    public string $message;
-    public string $configurationKey;
-    public string $parameterConfig;
-    public string $valuesExpanded;
-    public string $urls;
-    public array $options;
-    public string $parameters;
+    public string $message = '';
+    public string $configurationKey = '';
+    public string $parameterConfig = '';
+    public string $valuesExpanded = '';
+    public string $urls = '';
+    public array $options = [];
+    public string $parameters = '';
 
     public function __construct(string $title = '')
     {
