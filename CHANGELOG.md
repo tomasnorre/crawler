@@ -9,6 +9,7 @@
 ### Changed
 
 ### Fixed
+* PHP8 undefined array keys in CrawlerController and ConfigurationService
 
 ### Deprecated
 #### Classes
