@@ -310,7 +310,7 @@ class CrawlerController implements LoggerAwareInterface
         $urlService = new UrlService();
 
         foreach ($vv['URLs'] as $urlQuery) {
-            if (! $this->drawURLs_PIfilter($vv['subCfg']['procInstrFilter'], $incomingProcInstructions)) {
+            if (! $this->drawURLs_PIfilter($vv['subCfg']['procInstrFilter'] ?? '', $incomingProcInstructions)) {
                 continue;
             }
             $url = (string) $urlService->getUrlFromPageAndQueryParameters(
@@ -321,7 +321,7 @@ class CrawlerController implements LoggerAwareInterface
             );
 
             // Create key by which to determine unique-ness:
-            $uKey = $url . '|' . $vv['subCfg']['userGroups'] . '|' . $vv['subCfg']['procInstrFilter'];
+            $uKey = $url . '|' . ($vv['subCfg']['userGroups'] ?? '') . '|' . ($vv['subCfg']['procInstrFilter'] ?? '');
 
             if (isset($duplicateTrack[$uKey])) {
                 //if the url key is registered just display it and do not resubmit is
@@ -541,14 +541,14 @@ class CrawlerController implements LoggerAwareInterface
         ];
 
         // fe user group simulation:
-        $uGs = implode(',', array_unique(GeneralUtility::intExplode(',', $subCfg['userGroups'], true)));
+        $uGs = implode(',', array_unique(GeneralUtility::intExplode(',', $subCfg['userGroups'] ?? '', true)));
         if ($uGs) {
             $parameters['feUserGroupList'] = $uGs;
         }
 
         // Setting processing instructions
-        $parameters['procInstructions'] = GeneralUtility::trimExplode(',', $subCfg['procInstrFilter']);
-        if (is_array($subCfg['procInstrParams.'])) {
+        $parameters['procInstructions'] = GeneralUtility::trimExplode(',', $subCfg['procInstrFilter'] ?? '');
+        if (is_array($subCfg['procInstrParams.'] ?? false)) {
             $parameters['procInstrParams'] = $subCfg['procInstrParams.'];
         }
 
