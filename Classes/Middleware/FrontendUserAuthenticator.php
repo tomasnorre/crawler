@@ -88,7 +88,7 @@ class FrontendUserAuthenticator implements MiddlewareInterface
         $request = $request->withAttribute('tx_crawler', $queueParameters);
 
         // Now ensure to set the proper user groups
-        $grList = $queueParameters['feUserGroupList'];
+        $grList = $queueParameters['feUserGroupList'] ?? '';
         if ($grList) {
             $frontendUser = $this->getFrontendUser($grList, $request);
 
