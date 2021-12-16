@@ -51,3 +51,13 @@ To render the documentation locally, please use the official TYPO3 Documentation
 ### Contributions
 
 Please see [CONTRIBUTING.md](https://github.com/tomasnorre/crawler/blob/main/CONTRIBUTING.md)
+
+### Honorable Previous Maintainers
+
+* Kasper Skaarhoj
+* Daniel Poetzinger
+* Fabrizio Branca
+* Tolleiv Nietsch
+* Timo Schmidt
+* Michael Klapper
+* Stefan Rotsch
