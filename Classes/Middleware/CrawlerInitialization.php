@@ -62,7 +62,7 @@ class CrawlerInitialization implements MiddlewareInterface
         $GLOBALS['TSFE']->applicationData['tx_crawler']['running'] = true;
         $GLOBALS['TSFE']->applicationData['tx_crawler']['parameters'] = $queueParameters;
         $GLOBALS['TSFE']->applicationData['tx_crawler']['log'] = [
-            'User Groups: ' . $queueParameters['feUserGroupList'],
+            'User Groups: ' . ($queueParameters['feUserGroupList'] ?? ''),
         ];
 
         // Execute the frontend request as is
@@ -86,7 +86,7 @@ class CrawlerInitialization implements MiddlewareInterface
      */
     protected function runPollSuccessHooks(): void
     {
-        if (! is_array($GLOBALS['TSFE']->applicationData['tx_crawler']['content']['parameters']['procInstructions'])) {
+        if (! is_array($GLOBALS['TSFE']->applicationData['tx_crawler']['content']['parameters']['procInstructions'] ?? false)) {
             return;
         }
         foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'] ?? [] as $pollable) {
