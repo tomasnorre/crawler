@@ -6,6 +6,7 @@
 * Docs: Troubleshooting - Site based baseVariants not used
 * Docs: Example on how to exclude pages recursively from being crawled
 * Docs: Respecting Categories in News to prevent double indexing
+* Docs: Set correct main branch name
 
 ### Changed
 
