@@ -366,7 +366,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                 if (isset($this->infoModuleController->MOD_SETTINGS['log_resultLog'])) {
                     $rowData['result_log'] = $resLog;
                 } else {
-                    $rowData['scheduled'] = ($vv['scheduled'] > 0) ? BackendUtility::datetime($vv['scheduled']) : 0;
+                    $rowData['scheduled'] = ($vv['scheduled'] > 0) ? BackendUtility::datetime($vv['scheduled']) : '-';
                     $rowData['exec_time'] = $execTime;
                 }
                 $rowData['result_status'] = GeneralUtility::fixed_lgd_cs($resStatus, 50);

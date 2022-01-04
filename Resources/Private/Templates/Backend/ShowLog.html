@@ -144,17 +144,10 @@
                                                 </td>
                                             </f:then>
                                             <f:else>
-                                                <td>{logEntry.columns.scheduled -> f:format.date(format: 'd.m.Y H:i')}</td>
+                                                <td>{logEntry.columns.scheduled}</td>
                                             </f:else>
                                         </f:if>
-                                        <f:if condition="{logEntry.columns.exec_time} = '-'">
-                                            <f:then>
-                                                <td>{logEntry.columns.exec_time}</td>
-                                            </f:then>
-                                            <f:else>
-                                                <td>{logEntry.columns.exec_time -> f:format.date(format: 'd.m.Y H:i')}</td>
-                                            </f:else>
-                                        </f:if>
+                                        <td>{logEntry.columns.exec_time}</td>
                                     </f:else>
                                 </f:if>
                                 <td>{logEntry.columns.result_status}</td>
