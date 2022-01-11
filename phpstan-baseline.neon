@@ -11,6 +11,16 @@ parameters:
 			path: Classes/Api/CrawlerApi.php
 
 		-
+			message: "#^Parameter \\#1 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
+			count: 2
+			path: Classes/Api/CrawlerApi.php
+
+		-
+			message: "#^Parameter \\#1 \\.\\.\\.\\$where of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:andWhere\\(\\) expects array\\<int, string\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
+			count: 2
+			path: Classes/Api/CrawlerApi.php
+
+		-
 			message:
 				"""
 					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
@@ -22,7 +32,7 @@ parameters:
 		-
 			message:
 				"""
-					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
+					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\ForwardCompatibility\\\\Result\\:
 					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
 				"""
 			count: 1
@@ -58,7 +68,7 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\ForwardCompatibility\\\\DriverStatement\\|int\\.$#"
+			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\ForwardCompatibility\\\\Result\\|int\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
@@ -279,6 +289,16 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
+			message: "#^Parameter \\#1 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
+			count: 1
+			path: Classes/Controller/CrawlerController.php
+
+		-
+			message: "#^Parameter \\#1 \\.\\.\\.\\$where of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:andWhere\\(\\) expects array\\<int, string\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
+			count: 2
+			path: Classes/Controller/CrawlerController.php
+
+		-
 			message: "#^Parameter \\#2 \\$str of function explode expects string, true given\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
@@ -366,6 +386,11 @@ parameters:
 			path: Classes/Domain/Repository/ConfigurationRepository.php
 
 		-
+			message: "#^Parameter \\#1 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
+			count: 1
+			path: Classes/Domain/Repository/ConfigurationRepository.php
+
+		-
 			message:
 				"""
 					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
@@ -419,6 +444,21 @@ parameters:
 
 		-
 			message: "#^PHPDoc tag @param has invalid value \\(\\$numberOfAffectedRows\\)\\: Unexpected token \"\\$numberOfAffectedRows\", expected type at offset 18$#"
+			count: 1
+			path: Classes/Domain/Repository/ProcessRepository.php
+
+		-
+			message: "#^Parameter \\#1 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
+			count: 10
+			path: Classes/Domain/Repository/ProcessRepository.php
+
+		-
+			message: "#^Parameter \\#2 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
+			count: 5
+			path: Classes/Domain/Repository/ProcessRepository.php
+
+		-
+			message: "#^Parameter \\#3 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
 			count: 1
 			path: Classes/Domain/Repository/ProcessRepository.php
 
@@ -477,6 +517,31 @@ parameters:
 		-
 			message: "#^Method AOE\\\\Crawler\\\\Domain\\\\Repository\\\\QueueRepository\\:\\:updateProcessIdAndSchedulerForQueueIds\\(\\) has no return typehint specified\\.$#"
 			count: 1
+			path: Classes/Domain/Repository/QueueRepository.php
+
+		-
+			message: "#^Parameter \\#1 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
+			count: 24
+			path: Classes/Domain/Repository/QueueRepository.php
+
+		-
+			message: "#^Parameter \\#1 \\.\\.\\.\\$where of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:andWhere\\(\\) expects array\\<int, string\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
+			count: 11
+			path: Classes/Domain/Repository/QueueRepository.php
+
+		-
+			message: "#^Parameter \\#1 \\.\\.\\.\\$where of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:orWhere\\(\\) expects array\\<int, string\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
+			count: 1
+			path: Classes/Domain/Repository/QueueRepository.php
+
+		-
+			message: "#^Parameter \\#2 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
+			count: 13
+			path: Classes/Domain/Repository/QueueRepository.php
+
+		-
+			message: "#^Parameter \\#3 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
+			count: 6
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
@@ -589,12 +654,32 @@ parameters:
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
 		-
+			message: "#^Parameter \\#1 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
+			count: 10
+			path: Classes/Hooks/IndexedSearchCrawlerHook.php
+
+		-
 			message: "#^Parameter \\#2 \\$str of function explode expects string, string\\|null given\\.$#"
 			count: 1
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
 		-
+			message: "#^Parameter \\#2 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
+			count: 4
+			path: Classes/Hooks/IndexedSearchCrawlerHook.php
+
+		-
 			message: "#^Parameter \\#3 \\$length of function substr expects int, int\\<0, max\\>\\|false given\\.$#"
+			count: 1
+			path: Classes/Hooks/IndexedSearchCrawlerHook.php
+
+		-
+			message: "#^Parameter \\#3 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
+			count: 1
+			path: Classes/Hooks/IndexedSearchCrawlerHook.php
+
+		-
+			message: "#^Parameter \\#5 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
 			count: 1
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
@@ -638,6 +723,11 @@ parameters:
 
 		-
 			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
+			count: 1
+			path: Classes/Middleware/FrontendUserAuthenticator.php
+
+		-
+			message: "#^Parameter \\#1 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
 			count: 1
 			path: Classes/Middleware/FrontendUserAuthenticator.php
 
@@ -711,6 +801,21 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$uid of method TYPO3\\\\CMS\\\\Backend\\\\Tree\\\\View\\\\AbstractTreeView\\:\\:getTree\\(\\) expects int, string given\\.$#"
+			count: 1
+			path: Classes/Service/ConfigurationService.php
+
+		-
+			message: "#^Parameter \\#1 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
+			count: 1
+			path: Classes/Service/ConfigurationService.php
+
+		-
+			message: "#^Parameter \\#1 \\.\\.\\.\\$where of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:andWhere\\(\\) expects array\\<int, string\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
+			count: 1
+			path: Classes/Service/ConfigurationService.php
+
+		-
+			message: "#^Parameter \\#2 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
 			count: 1
 			path: Classes/Service/ConfigurationService.php
 
