@@ -39,7 +39,6 @@
         "codeception/module-webdriver": "^1.0",
         "infection/infection": "^0.25",
         "nikic/php-parser": "^4.13",
-        "nimut/phpunit-merger": "^1.1",
         "nimut/testing-framework": "6.x-dev",
         "nimut/typo3-complete": "^10.4",
         "phpspec/prophecy-phpunit": "^2.0",
