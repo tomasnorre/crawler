@@ -13,6 +13,7 @@
 ### Fixed
 * DateTime parse error in backend module when displaying log
 * PHP8 undefined array keys in CrawlerController, ConfigurationService and middlewares
+* Text not displayed in confirm dialog in backend module
 
 ### Deprecated
 #### Classes
