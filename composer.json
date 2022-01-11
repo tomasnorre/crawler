@@ -131,9 +131,20 @@
         "extension-release": [
             "@extension-create-libs",
             "rm -rf .devbox",
+            "rm -rf Build",
             "rm -rf Tests/",
-            "rm .gitignore",
-            "rm .scrutinizer.yml"
+            "rm -f .gitignore",
+            "rm -f .scrutinizer.yml",
+            "rm -f infection.json.dist",
+            "rm -f phpstan.neon",
+            "rm -f phpstan-baseline.neon",
+            "rm -f ecs.php",
+            "rm -f rector-ci.php",
+            "rm -f sonar-project.properties",
+            "rm -f psalm.xml",
+            "rm -f psalm-baseline.xml",
+            "rm -f codeception.yml",
+            "rm -f crowdin.yml"
         ],
         "phpstan-baseline": [
             "[ -e .Build/bin/phpstan ] || composer update",
