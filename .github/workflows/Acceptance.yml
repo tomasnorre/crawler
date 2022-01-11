@@ -48,6 +48,7 @@ jobs:
           cd .devbox
           sed -i 's/php_version: "7.4"/php_version: "${{ matrix.php }}"/g' .ddev/config.yaml
           rm -rf vendor composer.lock
+          ddev composer composer repositories.branch git https://github.com/${{ github.repository }}
           ddev composer require nimut/typo3-complete=${{ matrix.typo3 }} tomasnorre/crawler="dev-${{ env.BRANCH_NAME }}"
           ddev start
           ddev exec sudo apt remove -y php${{ matrix.php }}-uploadprogress
