@@ -98,11 +98,11 @@ class ConfigurationService
             if (strcmp($subCfg['procInstrFilter'] ?? '', '')) {
                 $subCfg['procInstrFilter'] = implode(',', GeneralUtility::trimExplode(',', $subCfg['procInstrFilter']));
             }
-            $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $subCfg['pidsOnly'], true));
+            $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $subCfg['pidsOnly'] ?? '', true));
 
             // process configuration if it is not page-specific or if the specific page is the current page:
             // TODO: Check if $pidOnlyList can be kept as Array instead of imploded
-            if (! strcmp((string) $subCfg['pidsOnly'], '') || GeneralUtility::inList($pidOnlyList, strval($pageId))) {
+            if (! strcmp((string) ($subCfg['pidsOnly'] ?? ''), '') || GeneralUtility::inList($pidOnlyList, strval($pageId))) {
 
                 // Explode, process etc.:
                 $res[$key] = [];
@@ -261,7 +261,7 @@ class ConfigurationService
                             $where = $subpartParams['_WHERE'] ?? '';
                             $addTable = $subpartParams['_ADDTABLE'] ?? '';
 
-                            $fieldName = $subpartParams['_FIELD'] ?: 'uid';
+                            $fieldName = ($subpartParams['_FIELD'] ?? '') ?: 'uid';
                             if ($fieldName === 'uid' || $GLOBALS['TCA'][$subpartParams['_TABLE']]['columns'][$fieldName]) {
                                 $queryBuilder = $this->getQueryBuilder($subpartParams['_TABLE']);
                                 $pidArray = $this->getPidArray($recursiveDepth, $lookUpPid);
@@ -284,7 +284,7 @@ class ConfigurationService
                                 }
                                 $transOrigPointerField = $GLOBALS['TCA'][$subpartParams['_TABLE']]['ctrl']['transOrigPointerField'];
 
-                                if ($subpartParams['_ENABLELANG'] && $transOrigPointerField) {
+                                if (($subpartParams['_ENABLELANG'] ?? false) && $transOrigPointerField) {
                                     $queryBuilder->andWhere(
                                         $queryBuilder->expr()->lte(
                                             $transOrigPointerField,

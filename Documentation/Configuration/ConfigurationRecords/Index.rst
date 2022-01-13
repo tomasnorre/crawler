@@ -46,7 +46,10 @@ Pids only
    :ref:`paramSets.[key].pidsOnly <crawler-tsconfig-paramSets-key-pidsOnly>`
 
 Exclude pages
-   Comma separated list of page ids which should not be crawled
+   Comma separated list of page ids which should not be crawled.
+   You can do recursive exclusion by adding `uid`+`depth` e.g. 6+3,
+   this will ensure that all pages including pageUid 6 and 3 levels down
+   will not be crawled.
 
 Configuration
    Parameter configuration. The values of GET variables are according to a

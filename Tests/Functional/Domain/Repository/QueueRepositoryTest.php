@@ -579,21 +579,19 @@ class QueueRepositoryTest extends FunctionalTestCase
         );
     }
 
-    public function flushQueueDataProvider(): array
+    public function flushQueueDataProvider(): iterable
     {
-        return [
-            'Flush Entire Queue' => [
-                'filter' => new QueueFilter('all'),
-                'expected' => 0,
-            ],
-            'Flush Pending entries' => [
-                'filter' => new QueueFilter('pending'),
-                'expected' => 7,
-            ],
-            'Flush Finished entries' => [
-                'filter' => new QueueFilter('finished'),
-                'expected' => 8,
-            ],
+        yield 'Flush Entire Queue' => [
+            'filter' => new QueueFilter('all'),
+            'expected' => 0,
+        ];
+        yield 'Flush Pending entries' => [
+            'filter' => new QueueFilter('pending'),
+            'expected' => 7,
+        ];
+        yield 'Flush Finished entries' => [
+            'filter' => new QueueFilter('finished'),
+            'expected' => 8,
         ];
     }
 
@@ -609,241 +607,218 @@ class QueueRepositoryTest extends FunctionalTestCase
         );
     }
 
-    public function getDuplicateQueueItemsIfExistsDataProvider(): array
+    public function getDuplicateQueueItemsIfExistsDataProvider(): iterable
     {
-        return [
-            'EnableTimeslot is true and timestamp is <= current' => [
-                'timeslotActive' => true,
-                'tstamp' => 10,
-                'current' => 12,
-                'page_id' => 10,
-                'parameters_hash' => '',
-                'expected' => [18, 20],
-            ],
-            'EnableTimeslot is false and timestamp is <= current' => [
-                'timeslotActive' => false,
-                'tstamp' => 11,
-                'current' => 11,
-                'page_id' => 10,
-                'parameters_hash' => '',
-                'expected' => [18],
-            ],
-            'EnableTimeslot is true and timestamp is > current' => [
-                'timeslotActive' => true,
-                'tstamp' => 12,
-                'current' => 10,
-                'page_id' => 10,
-                'parameters_hash' => '',
-                'expected' => [20],
-            ],
-            'EnableTimeslot is false and timestamp is > current' => [
-                'timeslotActive' => false,
-                'tstamp' => 12,
-                'current' => 10,
-                'page_id' => 10,
-                'parameters_hash' => '',
-                'expected' => [20],
-            ],
-            'EnableTimeslot is false and timestamp is > current and parameters_hash is set' => [
-                'timeslotActive' => false,
-                'tstamp' => 12,
-                'current' => 10,
-                'page_id' => 10,
-                'parameters_hash' => 'NotReallyAHashButWillDoForTesting',
-                'expected' => [19],
-            ],
+        yield 'EnableTimeslot is true and timestamp is <= current' => [
+            'timeslotActive' => true,
+            'tstamp' => 10,
+            'current' => 12,
+            'page_id' => 10,
+            'parameters_hash' => '',
+            'expected' => [18, 20],
+        ];
+        yield 'EnableTimeslot is false and timestamp is <= current' => [
+            'timeslotActive' => false,
+            'tstamp' => 11,
+            'current' => 11,
+            'page_id' => 10,
+            'parameters_hash' => '',
+            'expected' => [18],
+        ];
+        yield 'EnableTimeslot is true and timestamp is > current' => [
+            'timeslotActive' => true,
+            'tstamp' => 12,
+            'current' => 10,
+            'page_id' => 10,
+            'parameters_hash' => '',
+            'expected' => [20],
+        ];
+        yield 'EnableTimeslot is false and timestamp is > current' => [
+            'timeslotActive' => false,
+            'tstamp' => 12,
+            'current' => 10,
+            'page_id' => 10,
+            'parameters_hash' => '',
+            'expected' => [20],
+        ];
+        yield 'EnableTimeslot is false and timestamp is > current and parameters_hash is set' => [
+            'timeslotActive' => false,
+            'tstamp' => 12,
+            'current' => 10,
+            'page_id' => 10,
+            'parameters_hash' => 'NotReallyAHashButWillDoForTesting',
+            'expected' => [19],
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function isPageInQueueDataProvider()
+    public function isPageInQueueDataProvider(): iterable
     {
-        return [
-            'Unprocessed Only' => [
-                'uid' => 10,
-                'unprocessed_only' => true,
-                'timed_only' => false,
-                'timestamp' => 0,
-                'expected' => true,
-            ],
-            'Timed Only' => [
-                'uid' => 16,
-                'unprocessed_only' => false,
-                'timed_only' => true,
-                'timestamp' => 0,
-                'expected' => true,
-            ],
-            'Timestamp Only' => [
-                'uid' => 17,
-                'unprocessed_only' => false,
-                'timed_only' => false,
-                'timestamp' => 4321,
-                'expected' => true,
-            ],
-            'Not existing page' => [
-                'uid' => 40000,
-                'unprocessed_only' => false,
-                'timed_only' => false,
-                'timestamp' => 0,
-                'expected' => false,
-            ],
+        yield 'Unprocessed Only' => [
+            'uid' => 10,
+            'unprocessed_only' => true,
+            'timed_only' => false,
+            'timestamp' => 0,
+            'expected' => true,
+        ];
+        yield 'Timed Only' => [
+            'uid' => 16,
+            'unprocessed_only' => false,
+            'timed_only' => true,
+            'timestamp' => 0,
+            'expected' => true,
+        ];
+        yield 'Timestamp Only' => [
+            'uid' => 17,
+            'unprocessed_only' => false,
+            'timed_only' => false,
+            'timestamp' => 4321,
+            'expected' => true,
+        ];
+        yield 'Not existing page' => [
+            'uid' => 40000,
+            'unprocessed_only' => false,
+            'timed_only' => false,
+            'timestamp' => 0,
+            'expected' => false,
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function getFirstOrLastObjectByProcessDataProvider()
+    public function getFirstOrLastObjectByProcessDataProvider(): iterable
     {
-        return [
-            'Known process_id, get first' => [
-                'processId' => 'qwerty',
-                'orderBy' => 'process_id',
-                'orderDirection' => 'ASC',
-                'expected' => [
-                    'qid' => '2',
-                    'page_id' => '1002',
-                    'parameters' => '',
-                    'parameters_hash' => '',
-                    'configuration_hash' => '',
-                    'scheduled' => '0',
-                    'exec_time' => '10',
-                    'set_id' => '0',
-                    'result_data' => '',
-                    'process_scheduled' => '0',
-                    'process_id' => '1002',
-                    'process_id_completed' => 'qwerty',
-                    'configuration' => 'ThirdConfiguration',
-                ],
+        yield 'Known process_id, get first' => [
+            'processId' => 'qwerty',
+            'orderBy' => 'process_id',
+            'orderDirection' => 'ASC',
+            'expected' => [
+                'qid' => '2',
+                'page_id' => '1002',
+                'parameters' => '',
+                'parameters_hash' => '',
+                'configuration_hash' => '',
+                'scheduled' => '0',
+                'exec_time' => '10',
+                'set_id' => '0',
+                'result_data' => '',
+                'process_scheduled' => '0',
+                'process_id' => '1002',
+                'process_id_completed' => 'qwerty',
+                'configuration' => 'ThirdConfiguration',
             ],
-            'Known process_id, get last' => [
-                'processId' => 'qwerty',
-                'orderBy' => 'process_id',
-                'orderDirection' => 'DESC',
-                'expected' => [
-                    'qid' => '3',
-                    'page_id' => '0',
-                    'parameters' => '',
-                    'parameters_hash' => '',
-                    'configuration_hash' => '',
-                    'scheduled' => '0',
-                    'exec_time' => '20',
-                    'set_id' => '0',
-                    'result_data' => '',
-                    'process_scheduled' => '0',
-                    'process_id' => '1003',
-                    'process_id_completed' => 'qwerty',
-                    'configuration' => 'FirstConfiguration',
-                ],
+        ];
+        yield 'Known process_id, get last' => [
+            'processId' => 'qwerty',
+            'orderBy' => 'process_id',
+            'orderDirection' => 'DESC',
+            'expected' => [
+                'qid' => '3',
+                'page_id' => '0',
+                'parameters' => '',
+                'parameters_hash' => '',
+                'configuration_hash' => '',
+                'scheduled' => '0',
+                'exec_time' => '20',
+                'set_id' => '0',
+                'result_data' => '',
+                'process_scheduled' => '0',
+                'process_id' => '1003',
+                'process_id_completed' => 'qwerty',
+                'configuration' => 'FirstConfiguration',
             ],
-            'Unknown process_id' => [
-                'processId' => 'unknown_id',
-                'orderBy' => 'process_id',
-                'orderDirection' => '',
-                'expected' => [],
-            ],
+        ];
+        yield 'Unknown process_id' => [
+            'processId' => 'unknown_id',
+            'orderBy' => 'process_id',
+            'orderDirection' => '',
+            'expected' => [],
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function noUnprocessedQueueEntriesForPageWithConfigurationHashExistDataProvider()
+    public function noUnprocessedQueueEntriesForPageWithConfigurationHashExistDataProvider(): iterable
     {
-        return [
-            'No record found, uid not present' => [
-                'uid' => 3000,
-                'configurationHash' => '7b6919e533f334550b6f19034dfd2f81',
-                'expected' => true,
-            ],
-            'No record found, configurationHash not present' => [
-                'uid' => 2001,
-                'configurationHash' => 'invalidConfigurationHash',
-                'expected' => true,
-            ],
-            'Record found - uid and configurationHash is present' => [
-                'uid' => 2001,
-                'configurationHash' => '7b6919e533f334550b6f19034dfd2f81',
-                'expected' => false,
-            ],
+        yield 'No record found, uid not present' => [
+            'uid' => 3000,
+            'configurationHash' => '7b6919e533f334550b6f19034dfd2f81',
+            'expected' => true,
+        ];
+        yield 'No record found, configurationHash not present' => [
+            'uid' => 2001,
+            'configurationHash' => 'invalidConfigurationHash',
+            'expected' => true,
+        ];
+        yield 'Record found - uid and configurationHash is present' => [
+            'uid' => 2001,
+            'configurationHash' => '7b6919e533f334550b6f19034dfd2f81',
+            'expected' => false,
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function getQueueEntriesForPageIdDataProvider()
+    public function getQueueEntriesForPageIdDataProvider(): iterable
     {
-        return [
-            'Do Flush' => [
-                'id' => 1002,
-                'itemsPerPage' => 5,
-                'queueFilter' => new QueueFilter('pending'),
-                'expected' => [],
-            ],
-            'Do Full Flush' => [
-                'id' => 1002,
-                'itemsPerPage' => 5,
-                'queueFilter' => new QueueFilter('finished'),
-                'expected' => [[
-                    'qid' => 2,
-                    'page_id' => 1002,
-                    'parameters' => '',
-                    'parameters_hash' => '',
-                    'configuration_hash' => '',
-                    'scheduled' => 0,
-                    'exec_time' => 10,
-                    'result_data' => '',
-                    'process_scheduled' => 0,
-                    'process_id' => '1002',
-                    'process_id_completed' => 'qwerty',
-                    'configuration' => 'ThirdConfiguration',
-                    'set_id' => 0,
-                ]],
-            ],
-            'Check that doFullFlush do not flush if doFlush is not true' => [
-                'id' => 2,
-                'itemsPerPage' => 5,
-                'queueFilter' => new QueueFilter(),
-                'expected' => [[
-                    'qid' => '6',
-                    'page_id' => '2',
-                    'parameters' => '',
-                    'parameters_hash' => '',
-                    'configuration_hash' => '7b6919e533f334550b6f19034dfd2f81',
-                    'scheduled' => '0',
-                    'exec_time' => '0',
-                    'set_id' => '123',
-                    'result_data' => '',
-                    'process_scheduled' => '0',
-                    'process_id' => '1006',
-                    'process_id_completed' => 'qwerty',
-                    'configuration' => 'SecondConfiguration',
-                ]],
-            ],
-            'Get entries for page_id 2001' => [
-                'id' => 2,
-                'itemsPerPage' => 1,
-                'queueFilter' => new QueueFilter(),
-                'expected' => [[
-                    'qid' => '6',
-                    'page_id' => '2',
-                    'parameters' => '',
-                    'parameters_hash' => '',
-                    'configuration_hash' => '7b6919e533f334550b6f19034dfd2f81',
-                    'scheduled' => '0',
-                    'exec_time' => '0',
-                    'set_id' => '123',
-                    'result_data' => '',
-                    'process_scheduled' => '0',
-                    'process_id' => '1006',
-                    'process_id_completed' => 'qwerty',
-                    'configuration' => 'SecondConfiguration',
-                ]],
-            ],
-
+        yield 'Do Flush' => [
+            'id' => 1002,
+            'itemsPerPage' => 5,
+            'queueFilter' => new QueueFilter('pending'),
+            'expected' => [],
+        ];
+        yield 'Do Full Flush' => [
+            'id' => 1002,
+            'itemsPerPage' => 5,
+            'queueFilter' => new QueueFilter('finished'),
+            'expected' => [[
+                'qid' => 2,
+                'page_id' => 1002,
+                'parameters' => '',
+                'parameters_hash' => '',
+                'configuration_hash' => '',
+                'scheduled' => 0,
+                'exec_time' => 10,
+                'result_data' => '',
+                'process_scheduled' => 0,
+                'process_id' => '1002',
+                'process_id_completed' => 'qwerty',
+                'configuration' => 'ThirdConfiguration',
+                'set_id' => 0,
+            ]],
+        ];
+        yield 'Check that doFullFlush do not flush if doFlush is not true' => [
+            'id' => 2,
+            'itemsPerPage' => 5,
+            'queueFilter' => new QueueFilter(),
+            'expected' => [[
+                'qid' => '6',
+                'page_id' => '2',
+                'parameters' => '',
+                'parameters_hash' => '',
+                'configuration_hash' => '7b6919e533f334550b6f19034dfd2f81',
+                'scheduled' => '0',
+                'exec_time' => '0',
+                'set_id' => '123',
+                'result_data' => '',
+                'process_scheduled' => '0',
+                'process_id' => '1006',
+                'process_id_completed' => 'qwerty',
+                'configuration' => 'SecondConfiguration',
+            ]],
+        ];
+        yield 'Get entries for page_id 2001' => [
+            'id' => 2,
+            'itemsPerPage' => 1,
+            'queueFilter' => new QueueFilter(),
+            'expected' => [[
+                'qid' => '6',
+                'page_id' => '2',
+                'parameters' => '',
+                'parameters_hash' => '',
+                'configuration_hash' => '7b6919e533f334550b6f19034dfd2f81',
+                'scheduled' => '0',
+                'exec_time' => '0',
+                'set_id' => '123',
+                'result_data' => '',
+                'process_scheduled' => '0',
+                'process_id' => '1006',
+                'process_id_completed' => 'qwerty',
+                'configuration' => 'SecondConfiguration',
+            ]],
         ];
     }
 }

@@ -309,7 +309,7 @@ class ProcessRepository extends Repository
                 $queryBuilder->expr()->in('process_id', $queryBuilder->createNamedParameter($processIds, Connection::PARAM_STR_ARRAY)),
                 $queryBuilder->expr()->eq('deleted', 0)
             )
-            ->set('active', 0)
+            ->set('active', '0')
             ->execute();
     }
 

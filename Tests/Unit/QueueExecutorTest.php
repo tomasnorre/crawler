@@ -87,26 +87,25 @@ class QueueExecutorTest extends UnitTestCase
         self::assertStringContainsString('Hi, it works!', $result['content']);
     }
 
-    public function invalidArgumentsReturnErrorInExecuteQueueItemDataProvider(): array
+    public function invalidArgumentsReturnErrorInExecuteQueueItemDataProvider(): iterable
     {
-        return [
-            'No parameters set' => [
-                'queueItem' => [],
+        yield 'No parameters set' => [
+            'queueItem' => [],
+        ];
+
+        yield 'Parameters set, but empty' => [
+            'queueItem' => [
+                'parameters' => '',
             ],
-            'Parameters set, but empty' => [
-                'queueItem' => [
-                    'parameters' => '',
-                ],
+        ];
+        yield 'Parameters set, can be converted' => [
+            'queueItem' => [
+                'parameters' => serialize('Simple string'),
             ],
-            'Parameters set, can be converted' => [
-                'queueItem' => [
-                    'parameters' => serialize('Simple string'),
-                ],
-            ],
-            'Parameters set, cannot be converted' => [
-                'queueItem' => [
-                    'parameters' => 'A simple string not encoded',
-                ],
+        ];
+        yield 'Parameters set, cannot be converted' => [
+            'queueItem' => [
+                'parameters' => 'A simple string not encoded',
             ],
         ];
     }

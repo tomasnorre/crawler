@@ -110,214 +110,202 @@ class CrawlerControllerTest extends FunctionalTestCase
         );
     }
 
-    public function addUrlDataProvider(): array
+    public function addUrlDataProvider(): iterable
     {
-        return [
-            'Queue entry added' => [
-                'id' => 0,
-                'url' => '',
-                'subCfg' => [
-                    'key' => 'some-key',
-                    'procInstrFilter' => 'tx_crawler_post',
-                    'procInstrParams.' => [
-                        'action' => true,
-                    ],
-                    'userGroups' => '12,14',
+        yield 'Queue entry added' => [
+            'id' => 0,
+            'url' => '',
+            'subCfg' => [
+                'key' => 'some-key',
+                'procInstrFilter' => 'tx_crawler_post',
+                'procInstrParams.' => [
+                    'action' => true,
                 ],
-                'tstamp' => 1563287062,
-                'configurationHash' => '',
-                'skipInnerDuplicationCheck' => false,
-                'mockedDuplicateRowResult' => [],
-                'registerQueueEntriesInternallyOnly' => false,
-                'expected' => true,
+                'userGroups' => '12,14',
             ],
-            'Queue entry is NOT added, due to duplication check return not empty array (mocked)' => [
-                'id' => 0,
-                'url' => '',
-                'subCfg' => ['key' => 'some-key'],
-                'tstamp' => 1563287062,
-                'configurationHash' => '',
-                'skipInnerDuplicationCheck' => false,
-                'mockedDuplicateRowResult' => ['duplicate-exists' => true],
-                'registerQueueEntriesInternallyOnly' => false,
-                'expected' => false,
-            ],
-            'Queue entry is added, due to duplication is ignored' => [
-                'id' => 0,
-                'url' => '',
-                'subCfg' => ['key' => 'some-key'],
-                'tstamp' => 1563287062,
-                'configurationHash' => '',
-                'skipInnerDuplicationCheck' => true,
-                'mockedDuplicateRowResult' => ['duplicate-exists' => true],
-                'registerQueueEntriesInternallyOnly' => false,
-                'expected' => true,
-            ],
-            'Queue entry is NOT added, due to registerQueueEntriesInternalOnly' => [
-                'id' => 0,
-                'url' => '',
-                'subCfg' => ['key' => 'some-key'],
-                'tstamp' => 1563287062,
-                'configurationHash' => '',
-                'skipInnerDuplicationCheck' => true,
-                'mockedDuplicateRowResult' => ['duplicate-exists' => true],
-                'registerQueueEntriesInternallyOnly' => true,
-                'expected' => false,
-            ],
+            'tstamp' => 1563287062,
+            'configurationHash' => '',
+            'skipInnerDuplicationCheck' => false,
+            'mockedDuplicateRowResult' => [],
+            'registerQueueEntriesInternallyOnly' => false,
+            'expected' => true,
+        ];
+        yield 'Queue entry is NOT added, due to duplication check return not empty array (mocked)' => [
+            'id' => 0,
+            'url' => '',
+            'subCfg' => ['key' => 'some-key'],
+            'tstamp' => 1563287062,
+            'configurationHash' => '',
+            'skipInnerDuplicationCheck' => false,
+            'mockedDuplicateRowResult' => ['duplicate-exists' => true],
+            'registerQueueEntriesInternallyOnly' => false,
+            'expected' => false,
+        ];
+        yield 'Queue entry is added, due to duplication is ignored' => [
+            'id' => 0,
+            'url' => '',
+            'subCfg' => ['key' => 'some-key'],
+            'tstamp' => 1563287062,
+            'configurationHash' => '',
+            'skipInnerDuplicationCheck' => true,
+            'mockedDuplicateRowResult' => ['duplicate-exists' => true],
+            'registerQueueEntriesInternallyOnly' => false,
+            'expected' => true,
+        ];
+        yield 'Queue entry is NOT added, due to registerQueueEntriesInternalOnly' => [
+            'id' => 0,
+            'url' => '',
+            'subCfg' => ['key' => 'some-key'],
+            'tstamp' => 1563287062,
+            'configurationHash' => '',
+            'skipInnerDuplicationCheck' => true,
+            'mockedDuplicateRowResult' => ['duplicate-exists' => true],
+            'registerQueueEntriesInternallyOnly' => true,
+            'expected' => false,
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function getLogEntriesForSetIdDataProvider()
+    public function getLogEntriesForSetIdDataProvider(): iterable
     {
-        return [
-            'Do Flush' => [
-                'setId' => 456,
-                'filter' => '',
-                'doFlush' => true,
-                'doFullFlush' => false,
-                'itemsPerPage' => 5,
-                'expected' => [],
-            ],
-            'Do Full Flush' => [
-                'setId' => 456,
-                'filter' => '',
-                'doFlush' => true,
-                'doFullFlush' => true,
-                'itemsPerPage' => 5,
-                'expected' => [],
-            ],
-            'Check that doFullFlush do not flush if doFlush is not true' => [
-                'setId' => 456,
-                'filter' => '',
-                'doFlush' => false,
-                'doFullFlush' => true,
-                'itemsPerPage' => 5,
-                'expected' => [[
-                    'qid' => '8',
-                    'page_id' => '3',
-                    'parameters' => '',
-                    'parameters_hash' => '',
-                    'configuration_hash' => '',
-                    'scheduled' => '0',
-                    'exec_time' => '0',
-                    'set_id' => '456',
-                    'result_data' => '',
-                    'process_scheduled' => '0',
-                    'process_id' => '1007',
-                    'process_id_completed' => 'asdfgh',
-                    'configuration' => 'ThirdConfiguration',
-                ]],
-            ],
-            'Get entries for set_id 456' => [
-                'setId' => 456,
-                'filter' => '',
-                'doFlush' => false,
-                'doFullFlush' => false,
-                'itemsPerPage' => 1,
-                'expected' => [[
-                    'qid' => '8',
-                    'page_id' => '3',
-                    'parameters' => '',
-                    'parameters_hash' => '',
-                    'configuration_hash' => '',
-                    'scheduled' => '0',
-                    'exec_time' => '0',
-                    'set_id' => '456',
-                    'result_data' => '',
-                    'process_scheduled' => '0',
-                    'process_id' => '1007',
-                    'process_id_completed' => 'asdfgh',
-                    'configuration' => 'ThirdConfiguration',
-                ]],
-            ],
-            'Do Flush Pending' => [
-                'setId' => 456,
-                'filter' => 'pending',
-                'doFlush' => true,
-                'doFullFlush' => false,
-                'itemsPerPage' => 5,
-                'expected' => [],
-            ],
-            'Do Flush Finished' => [
-                'setId' => 456,
-                'filter' => 'finished',
-                'doFlush' => true,
-                'doFullFlush' => false,
-                'itemsPerPage' => 5,
-                'expected' => [],
-            ],
+        yield 'Do Flush' => [
+            'setId' => 456,
+            'filter' => '',
+            'doFlush' => true,
+            'doFullFlush' => false,
+            'itemsPerPage' => 5,
+            'expected' => [],
+        ];
+        yield 'Do Full Flush' => [
+            'setId' => 456,
+            'filter' => '',
+            'doFlush' => true,
+            'doFullFlush' => true,
+            'itemsPerPage' => 5,
+            'expected' => [],
+        ];
+        yield 'Check that doFullFlush do not flush if doFlush is not true' => [
+            'setId' => 456,
+            'filter' => '',
+            'doFlush' => false,
+            'doFullFlush' => true,
+            'itemsPerPage' => 5,
+            'expected' => [[
+                'qid' => '8',
+                'page_id' => '3',
+                'parameters' => '',
+                'parameters_hash' => '',
+                'configuration_hash' => '',
+                'scheduled' => '0',
+                'exec_time' => '0',
+                'set_id' => '456',
+                'result_data' => '',
+                'process_scheduled' => '0',
+                'process_id' => '1007',
+                'process_id_completed' => 'asdfgh',
+                'configuration' => 'ThirdConfiguration',
+            ]],
+        ];
+        yield 'Get entries for set_id 456' => [
+            'setId' => 456,
+            'filter' => '',
+            'doFlush' => false,
+            'doFullFlush' => false,
+            'itemsPerPage' => 1,
+            'expected' => [[
+                'qid' => '8',
+                'page_id' => '3',
+                'parameters' => '',
+                'parameters_hash' => '',
+                'configuration_hash' => '',
+                'scheduled' => '0',
+                'exec_time' => '0',
+                'set_id' => '456',
+                'result_data' => '',
+                'process_scheduled' => '0',
+                'process_id' => '1007',
+                'process_id_completed' => 'asdfgh',
+                'configuration' => 'ThirdConfiguration',
+            ]],
+        ];
+        yield 'Do Flush Pending' => [
+            'setId' => 456,
+            'filter' => 'pending',
+            'doFlush' => true,
+            'doFullFlush' => false,
+            'itemsPerPage' => 5,
+            'expected' => [],
+        ];
+        yield 'Do Flush Finished' => [
+            'setId' => 456,
+            'filter' => 'finished',
+            'doFlush' => true,
+            'doFullFlush' => false,
+            'itemsPerPage' => 5,
+            'expected' => [],
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function getLogEntriesForPageIdDataProvider()
+    public function getLogEntriesForPageIdDataProvider(): iterable
     {
-        return [
-            'Do Flush' => [
-                'id' => 1002,
-                'filter' => new QueueFilter(),
-                'doFlush' => true,
-                'doFullFlush' => false,
-                'itemsPerPage' => 5,
-                'expected' => [],
-            ],
-            'Do Full Flush' => [
-                'id' => 1002,
-                'filter' => new QueueFilter(),
-                'doFlush' => true,
-                'doFullFlush' => true,
-                'itemsPerPage' => 5,
-                'expected' => [],
-            ],
-            'Check that doFullFlush do not flush if doFlush is not true' => [
-                'id' => 2,
-                'filter' => new QueueFilter(),
-                'doFlush' => false,
-                'doFullFlush' => true,
-                'itemsPerPage' => 5,
-                'expected' => [[
-                    'qid' => '6',
-                    'page_id' => '2',
-                    'parameters' => '',
-                    'parameters_hash' => '',
-                    'configuration_hash' => '7b6919e533f334550b6f19034dfd2f81',
-                    'scheduled' => '0',
-                    'exec_time' => '0',
-                    'set_id' => '123',
-                    'result_data' => '',
-                    'process_scheduled' => '0',
-                    'process_id' => '1006',
-                    'process_id_completed' => 'qwerty',
-                    'configuration' => 'SecondConfiguration',
-                ]],
-            ],
-            'Get entries for page_id 2001' => [
-                'id' => 2,
-                'filter' => new QueueFilter(),
-                'doFlush' => false,
-                'doFullFlush' => false,
-                'itemsPerPage' => 1,
-                'expected' => [[
-                    'qid' => '6',
-                    'page_id' => '2',
-                    'parameters' => '',
-                    'parameters_hash' => '',
-                    'configuration_hash' => '7b6919e533f334550b6f19034dfd2f81',
-                    'scheduled' => '0',
-                    'exec_time' => '0',
-                    'set_id' => '123',
-                    'result_data' => '',
-                    'process_scheduled' => '0',
-                    'process_id' => '1006',
-                    'process_id_completed' => 'qwerty',
-                    'configuration' => 'SecondConfiguration',
-                ]],
-            ],
+        yield 'Do Flush' => [
+            'id' => 1002,
+            'filter' => new QueueFilter(),
+            'doFlush' => true,
+            'doFullFlush' => false,
+            'itemsPerPage' => 5,
+            'expected' => [],
+        ];
+        yield 'Do Full Flush' => [
+            'id' => 1002,
+            'filter' => new QueueFilter(),
+            'doFlush' => true,
+            'doFullFlush' => true,
+            'itemsPerPage' => 5,
+            'expected' => [],
+        ];
+        yield 'Check that doFullFlush do not flush if doFlush is not true' => [
+            'id' => 2,
+            'filter' => new QueueFilter(),
+            'doFlush' => false,
+            'doFullFlush' => true,
+            'itemsPerPage' => 5,
+            'expected' => [[
+                'qid' => '6',
+                'page_id' => '2',
+                'parameters' => '',
+                'parameters_hash' => '',
+                'configuration_hash' => '7b6919e533f334550b6f19034dfd2f81',
+                'scheduled' => '0',
+                'exec_time' => '0',
+                'set_id' => '123',
+                'result_data' => '',
+                'process_scheduled' => '0',
+                'process_id' => '1006',
+                'process_id_completed' => 'qwerty',
+                'configuration' => 'SecondConfiguration',
+            ]],
+        ];
+        yield 'Get entries for page_id 2001' => [
+            'id' => 2,
+            'filter' => new QueueFilter(),
+            'doFlush' => false,
+            'doFullFlush' => false,
+            'itemsPerPage' => 1,
+            'expected' => [[
+                'qid' => '6',
+                'page_id' => '2',
+                'parameters' => '',
+                'parameters_hash' => '',
+                'configuration_hash' => '7b6919e533f334550b6f19034dfd2f81',
+                'scheduled' => '0',
+                'exec_time' => '0',
+                'set_id' => '123',
+                'result_data' => '',
+                'process_scheduled' => '0',
+                'process_id' => '1006',
+                'process_id_completed' => 'qwerty',
+                'configuration' => 'SecondConfiguration',
+            ]],
         ];
     }
 }

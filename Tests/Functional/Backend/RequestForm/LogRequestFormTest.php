@@ -54,6 +54,7 @@ class LogRequestFormTest extends FunctionalTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        $this->importDataSet(__DIR__ . '/../../data/pages.xml');
 
         $this->setupExtensionSettings();
         $this->SetupBackendUser();
@@ -87,9 +88,21 @@ class LogRequestFormTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function renderWithNoConfigurationSelected(): void
+    public function render(): void
     {
-        self::markTestSkipped('Please implement');
+        $this->markTestSkipped('Please implement');
+    }
+
+    /**
+     * @test
+     */
+    public function renderWithNoPageSelected(): void
+    {
+        //self::markTestSkipped('Please implement');
+        self::assertStringContainsString(
+            'Please select a page in the pagetree',
+            $this->logRequestForm->render(0, '', [])
+        );
     }
 
     private function setupExtensionSettings(): void

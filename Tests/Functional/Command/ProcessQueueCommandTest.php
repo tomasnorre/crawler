@@ -61,7 +61,7 @@ class ProcessQueueCommandTest extends AbstractCommandTests
     public function processQueueCommandTest(array $parameters, string $expectedOutput): void
     {
         $arguments = [];
-        if (! empty($parameters)) {
+        if (!empty($parameters)) {
             $arguments = $parameters;
         }
 
@@ -71,19 +71,17 @@ class ProcessQueueCommandTest extends AbstractCommandTests
         self::assertStringContainsString($expectedOutput, $commandOutput);
     }
 
-    public function processQueueCommandDataProvider(): array
+    public function processQueueCommandDataProvider(): iterable
     {
-        return [
-            'No params' => [
-                'parameters' => [],
-                'expectedOutput' => 'Unprocessed Items remaining:0',
+        yield 'No params' => [
+            'parameters' => [],
+            'expectedOutput' => 'Unprocessed Items remaining:0',
+        ];
+        yield '--amount 5' => [
+            'parameters' => [
+                '--amount' => 5,
             ],
-            '--amount 5' => [
-                'parameters' => [
-                    '--amount' => 5,
-                ],
-                'expectedOutput' => 'Unprocessed Items remaining:3',
-            ],
+            'expectedOutput' => 'Unprocessed Items remaining:3',
         ];
     }
 }

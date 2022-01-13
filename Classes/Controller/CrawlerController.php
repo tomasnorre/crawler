@@ -42,7 +42,6 @@ use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Imaging\Icon;
@@ -311,7 +310,7 @@ class CrawlerController implements LoggerAwareInterface
         $urlService = new UrlService();
 
         foreach ($vv['URLs'] as $urlQuery) {
-            if (! $this->drawURLs_PIfilter($vv['subCfg']['procInstrFilter'], $incomingProcInstructions)) {
+            if (! $this->drawURLs_PIfilter($vv['subCfg']['procInstrFilter'] ?? '', $incomingProcInstructions)) {
                 continue;
             }
             $url = (string) $urlService->getUrlFromPageAndQueryParameters(
@@ -322,7 +321,7 @@ class CrawlerController implements LoggerAwareInterface
             );
 
             // Create key by which to determine unique-ness:
-            $uKey = $url . '|' . $vv['subCfg']['userGroups'] . '|' . $vv['subCfg']['procInstrFilter'];
+            $uKey = $url . '|' . ($vv['subCfg']['userGroups'] ?? '') . '|' . ($vv['subCfg']['procInstrFilter'] ?? '');
 
             if (isset($duplicateTrack[$uKey])) {
                 //if the url key is registered just display it and do not resubmit is
@@ -542,14 +541,14 @@ class CrawlerController implements LoggerAwareInterface
         ];
 
         // fe user group simulation:
-        $uGs = implode(',', array_unique(GeneralUtility::intExplode(',', $subCfg['userGroups'], true)));
+        $uGs = implode(',', array_unique(GeneralUtility::intExplode(',', $subCfg['userGroups'] ?? '', true)));
         if ($uGs) {
             $parameters['feUserGroupList'] = $uGs;
         }
 
         // Setting processing instructions
-        $parameters['procInstructions'] = GeneralUtility::trimExplode(',', $subCfg['procInstrFilter']);
-        if (is_array($subCfg['procInstrParams.'])) {
+        $parameters['procInstructions'] = GeneralUtility::trimExplode(',', $subCfg['procInstrFilter'] ?? '');
+        if (is_array($subCfg['procInstrParams.'] ?? false)) {
             $parameters['procInstrParams'] = $subCfg['procInstrParams.'];
         }
 
@@ -755,6 +754,8 @@ class CrawlerController implements LoggerAwareInterface
      *****************************/
 
     /**
+     * This draws the pageTree with URLs for e.g the Backend Log Module
+     *
      * @param integer $id Root page id to start from.
      * @param integer $depth Depth of tree, 0=only id-page, 1= on sublevel, 99 = infinite
      * @param integer $scheduledTime Unix Time when the URL is timed to be visited when put in queue
@@ -789,7 +790,7 @@ class CrawlerController implements LoggerAwareInterface
         /* @var PageTreeView $tree */
         $tree = GeneralUtility::makeInstance(PageTreeView::class);
         $perms_clause = $this->getBackendUser()->getPagePermsClause(Permission::PAGE_SHOW);
-        $tree->init('AND ' . $perms_clause);
+        $tree->init(empty($perms_clause) ? '' : ('AND ' . $perms_clause));
 
         $pageInfo = BackendUtility::readPageAccess($id, $perms_clause);
         if (is_array($pageInfo)) {
@@ -819,7 +820,7 @@ class CrawlerController implements LoggerAwareInterface
                 $this->MP = $mountpage[0]['mount_pid'] . '-' . $data['row']['uid'];
 
                 $mountTree = GeneralUtility::makeInstance(PageTreeView::class);
-                $mountTree->init('AND ' . $perms_clause);
+                $mountTree->init(empty($perms_clause) ? '' : ('AND ' . $perms_clause));
                 $mountTree->getTree($mountpage[0]['mount_pid'], $depth);
 
                 foreach ($mountTree->tree as $mountData) {
@@ -970,11 +971,6 @@ class CrawlerController implements LoggerAwareInterface
         return new PageService();
     }
 
-    private function getMaximumUrlsToCompile(): int
-    {
-        return $this->maximumUrlsToCompile;
-    }
-
     /**
      * @return BackendUserAuthentication
      */
@@ -986,15 +982,5 @@ class CrawlerController implements LoggerAwareInterface
             $this->backendUser = $GLOBALS['BE_USER'];
         }
         return $this->backendUser;
-    }
-
-    /**
-     * Get querybuilder for given table
-     *
-     * @return QueryBuilder
-     */
-    private function getQueryBuilder(string $table)
-    {
-        return GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($table);
     }
 }

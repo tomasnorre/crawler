@@ -81,7 +81,7 @@
             </trans-unit>
             <trans-unit id="tx_crawler_configuration.exclude.description"
                         resname="tx_crawler_configuration.exclude.description">
-                <source>Comma separated list of page IDs which should not be crawled.</source>
+                <source>Comma separated list of page IDs which should not be crawled. You can do recursive exclusion by adding uid+depth e.g. 6+3</source>
             </trans-unit>
             <trans-unit id="crawler_im.name" resname="crawler_im.name">
                 <source>Crawler queue</source>

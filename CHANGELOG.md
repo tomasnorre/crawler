@@ -1,6 +1,6 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 11.0.2-dev
+## Crawler 11.0.3-dev
 
 ### Added
 
@@ -15,6 +15,20 @@
 ### Removed
 #### Classes
 #### Functions & Properties
+
+## Crawler 11.0.2
+Crawler 11.0.2 was released on January 11th, 2022
+
+### Added
+* Docs: Troubleshooting - Site based baseVariants not used
+* Docs: Example on how to exclude pages recursively from being crawled
+* Docs: Respecting Categories in News to prevent double indexing
+* Docs: Set correct main branch name
+
+### Fixed
+* DateTime parse error in backend module when displaying log
+* PHP8 undefined array keys in CrawlerController, ConfigurationService and middlewares
+* Text not displayed in confirm dialog in backend module
 
 ## Crawler 11.0.1
 Crawler 11.0.1 was released on November 1st, 2021

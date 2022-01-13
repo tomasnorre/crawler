@@ -72,24 +72,22 @@ class FlushQueueCommandTest extends AbstractCommandTests
         );
     }
 
-    public function flushQueueDataProvider(): array
+    public function flushQueueDataProvider(): iterable
     {
-        return [
-            'Flush All' => [
-                'mode' => 'all',
-                'expectedOutput' => 'All entries in Crawler queue will be flushed',
-                'expectedCount' => 0,
-            ],
-            'Flush Pending' => [
-                'mode' => 'pending',
-                'expectedOutput' => 'All entries in Crawler queue, with status: "pending" will be flushed',
-                'expectedCount' => 7,
-            ],
-            'Flush Finished' => [
-                'mode' => 'finished',
-                'expectedOutput' => 'All entries in Crawler queue, with status: "finished" will be flushed',
-                'expectedCount' => 8,
-            ],
+        yield 'Flush All' => [
+            'mode' => 'all',
+            'expectedOutput' => 'All entries in Crawler queue will be flushed',
+            'expectedCount' => 0,
+        ];
+        yield 'Flush Pending' => [
+            'mode' => 'pending',
+            'expectedOutput' => 'All entries in Crawler queue, with status: "pending" will be flushed',
+            'expectedCount' => 7,
+        ];
+        yield 'Flush Finished' => [
+            'mode' => 'finished',
+            'expectedOutput' => 'All entries in Crawler queue, with status: "finished" will be flushed',
+            'expectedCount' => 8,
         ];
     }
 }

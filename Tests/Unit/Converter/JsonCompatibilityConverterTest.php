@@ -53,7 +53,7 @@ class JsonCompatibilityConverterTest extends UnitTestCase
         );
     }
 
-    public function jsonCompatibilityConverterDataProvider(): array
+    public function jsonCompatibilityConverterDataProvider(): iterable
     {
         $testData = [
             'keyString' => 'valueString',
@@ -62,19 +62,17 @@ class JsonCompatibilityConverterTest extends UnitTestCase
             'keyBool' => false,
         ];
 
-        return [
-            'serialize() data as input' => [
-                'dataString' => serialize($testData),
-                'expected' => $testData,
-            ],
-            'json_encode() data as input' => [
-                'dataString' => json_encode($testData),
-                'expected' => $testData,
-            ],
-            'neither serialize() nor json_encodee' => [
-                'dataString' => 'This is just a plain string',
-                'expected' => false,
-            ],
+        yield 'serialize() data as input' => [
+            'dataString' => serialize($testData),
+            'expected' => $testData,
+        ];
+        yield 'json_encode() data as input' => [
+            'dataString' => json_encode($testData),
+            'expected' => $testData,
+        ];
+        yield 'neither serialize() nor json_encodee' => [
+            'dataString' => 'This is just a plain string',
+            'expected' => false,
         ];
     }
 

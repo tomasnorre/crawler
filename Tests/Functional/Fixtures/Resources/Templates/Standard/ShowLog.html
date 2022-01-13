@@ -11,7 +11,6 @@
     </f:if>
 </f:section>
 
-
 <f:section name="DisplayActions">
     <br/>
     <br/>
@@ -61,11 +60,11 @@
             <input type="submit" class="btn btn-default"
                    value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.flushvisiblequeue')}"
                    name="_flush"
-                   onclick="return confirm('{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.confirmyouresure')}')"/>
+                   onclick="return confirm('{f:translate(key: 'crawler/Resources/Private/Language/locallang.xlf:labels.confirmyouresure')}')"/>
             <input type="submit" class="btn btn-default"
                    value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.flushfullqueue')}"
                    name="_flush_all"
-                   onclick="return confirm('{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.confirmyouresure')}')"/>
+                   onclick="return confirm('{f:translate(key: 'crawler/Resources/Private/Language/locallang.xlf:labels.confirmyouresure')}')"/>
             <br>
             <br>
             <table class="table table-hover">
@@ -144,10 +143,17 @@
                                                 </td>
                                             </f:then>
                                             <f:else>
-                                                <td>{logEntry.columns.scheduled}</td>
+                                                <td>{logEntry.columns.scheduled -> f:format.date(format: 'd.m.Y H:i')}</td>
                                             </f:else>
                                         </f:if>
-                                        <td>{logEntry.columns.exec_time}</td>
+                                        <f:if condition="{logEntry.columns.exec_time} = '-'">
+                                            <f:then>
+                                                <td>{logEntry.columns.exec_time}</td>
+                                            </f:then>
+                                            <f:else>
+                                                <td>{logEntry.columns.exec_time -> f:format.date(format: 'd.m.Y H:i')}</td>
+                                            </f:else>
+                                        </f:if>
                                     </f:else>
                                 </f:if>
                                 <td>{logEntry.columns.result_status}</td>

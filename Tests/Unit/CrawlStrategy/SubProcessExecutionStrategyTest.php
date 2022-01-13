@@ -42,7 +42,7 @@ class SubProcessExecutionStrategyTest extends UnitTestCase
         );
     }
 
-    public function buildRequestHandlersDataProvider(): array
+    public function buildRequestHandlersDataProvider(): iterable
     {
         $path = '/path/to/page';
         $query = 'q=keyword';
@@ -51,70 +51,68 @@ class SubProcessExecutionStrategyTest extends UnitTestCase
         $pass = 'password';
         $crawlerId = 'as23dr32a';
 
-        return [
-            'No Username' => [
-                'url' => [
-                    'path' => $path,
-                    'query' => $query,
-                    'host' => $host,
-                    'pass' => $pass,
-                ],
-                'crawlerId' => $crawlerId,
-                'expected' => [
-                    'GET ' . $path . '?' . $query . ' HTTP/1.0',
-                    'Host: ' . $host,
-                    'Connection: close',
-                    'X-T3crawler: ' . $crawlerId,
-                    'User-Agent: TYPO3 crawler',
-                ],
+        yield 'No Username' => [
+            'url' => [
+                'path' => $path,
+                'query' => $query,
+                'host' => $host,
+                'pass' => $pass,
             ],
-            'No Password' => [
-                'url' => [
-                    'path' => $path,
-                    'query' => $query,
-                    'host' => $host,
-                    'user' => $user,
-                ],
-                'crawlerId' => $crawlerId,
-                'expected' => [
-                    'GET ' . $path . '?' . $query . ' HTTP/1.0',
-                    'Host: ' . $host,
-                    'Connection: close',
-                    'X-T3crawler: ' . $crawlerId,
-                    'User-Agent: TYPO3 crawler',
-                ],
+            'crawlerId' => $crawlerId,
+            'expected' => [
+                'GET ' . $path . '?' . $query . ' HTTP/1.0',
+                'Host: ' . $host,
+                'Connection: close',
+                'X-T3crawler: ' . $crawlerId,
+                'User-Agent: TYPO3 crawler',
             ],
-            'Username and Password' => [
-                'url' => [
-                    'path' => $path,
-                    'query' => $query,
-                    'host' => $host,
-                    'user' => $user,
-                    'pass' => $pass,
-                ],
-                'crawlerId' => $crawlerId,
-                'expected' => [
-                    'GET ' . $path . '?' . $query . ' HTTP/1.0',
-                    'Host: ' . $host,
-                    'Connection: close',
-                    'Authorization: Basic ' . base64_encode($user . ':' . $pass),
-                    'X-T3crawler: ' . $crawlerId,
-                    'User-Agent: TYPO3 crawler',
-                ],
+        ];
+        yield 'No Password' => [
+            'url' => [
+                'path' => $path,
+                'query' => $query,
+                'host' => $host,
+                'user' => $user,
             ],
-            'Without query' => [
-                'url' => [
-                    'path' => $path,
-                    'host' => $host,
-                ],
-                'crawlerId' => $crawlerId,
-                'expected' => [
-                    'GET ' . $path . ' HTTP/1.0',
-                    'Host: ' . $host,
-                    'Connection: close',
-                    'X-T3crawler: ' . $crawlerId,
-                    'User-Agent: TYPO3 crawler',
-                ],
+            'crawlerId' => $crawlerId,
+            'expected' => [
+                'GET ' . $path . '?' . $query . ' HTTP/1.0',
+                'Host: ' . $host,
+                'Connection: close',
+                'X-T3crawler: ' . $crawlerId,
+                'User-Agent: TYPO3 crawler',
+            ],
+        ];
+        yield 'Username and Password' => [
+            'url' => [
+                'path' => $path,
+                'query' => $query,
+                'host' => $host,
+                'user' => $user,
+                'pass' => $pass,
+            ],
+            'crawlerId' => $crawlerId,
+            'expected' => [
+                'GET ' . $path . '?' . $query . ' HTTP/1.0',
+                'Host: ' . $host,
+                'Connection: close',
+                'Authorization: Basic ' . base64_encode($user . ':' . $pass),
+                'X-T3crawler: ' . $crawlerId,
+                'User-Agent: TYPO3 crawler',
+            ],
+        ];
+        yield 'Without query' => [
+            'url' => [
+                'path' => $path,
+                'host' => $host,
+            ],
+            'crawlerId' => $crawlerId,
+            'expected' => [
+                'GET ' . $path . ' HTTP/1.0',
+                'Host: ' . $host,
+                'Connection: close',
+                'X-T3crawler: ' . $crawlerId,
+                'User-Agent: TYPO3 crawler',
             ],
         ];
     }

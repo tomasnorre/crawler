@@ -6,7 +6,7 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/tomasnorre/crawler/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/tomasnorre/crawler/?branch=main)
 [![Code Coverage](https://scrutinizer-ci.com/g/tomasnorre/crawler/badges/coverage.png?b=main)](https://scrutinizer-ci.com/g/tomasnorre/crawler/?branch=main)
 [![Coverage Status](https://coveralls.io/repos/github/tomasnorre/crawler/badge.svg)](https://coveralls.io/github/tomasnorre/crawler)
-[![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FAOEpeople%2Fcrawler%2Fmain)](https://dashboard.stryker-mutator.io/reports/github.com/tomasnorre/crawler/main)
+[![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Ftomasnorre%2Fcrawler%2Fmain)](https://dashboard.stryker-mutator.io/reports/github.com/tomasnorre/crawler/main)
 ![Psalm coverage](https://shepherd.dev/github/tomasnorre/crawler/coverage.svg)
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/tomasnorre/crawler.svg)](http://isitmaintained.com/project/tomasnorre/crawler "Average time to resolve an issue")
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/tomasnorre/crawler.svg)](http://isitmaintained.com/project/tomasnorre/crawler "Percentage of issues still open")
@@ -19,6 +19,10 @@ You can include the crawler in your TYPO3 project with composer or from [TER](ht
 ```shell script
 composer require tomasnorre/crawler
 ```
+
+**Crawler processes**
+
+![backend_processlist](https://user-images.githubusercontent.com/1212481/142763110-936be57c-1e9e-4d62-afbe-4134b139fd56.png)
 
 ## Disclaimer
 
@@ -47,3 +51,13 @@ To render the documentation locally, please use the official TYPO3 Documentation
 ### Contributions
 
 Please see [CONTRIBUTING.md](https://github.com/tomasnorre/crawler/blob/main/CONTRIBUTING.md)
+
+### Honorable Previous Maintainers
+
+* Kasper Skaarhoj
+* Daniel Poetzinger
+* Fabrizio Branca
+* Tolleiv Nietsch
+* Timo Schmidt
+* Michael Klapper
+* Stefan Rotsch

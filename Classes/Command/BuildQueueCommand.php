@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AOE\Crawler\Command;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -175,6 +175,9 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
 
             foreach ($progressBar->iterate($crawlerController->queueEntries) as $queueRec) {
                 $p = $jsonCompatibilityConverter->convert($queueRec['parameters']);
+                if (is_bool($p)) {
+                    continue;
+                }
 
                 $progressBar->clear();
                 $output->writeln('<info>' . $p['url'] . ' (' . implode(',', $p['procInstructions']) . ') => ' . '</info>' . PHP_EOL);

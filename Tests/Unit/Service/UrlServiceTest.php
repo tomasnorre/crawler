@@ -67,54 +67,49 @@ class UrlServiceTest extends UnitTestCase
         );
     }
 
-    /**
-     * @return array
-     */
-    public function compileUrlsDataProvider()
+    public function compileUrlsDataProvider(): iterable
     {
-        return [
-            'Empty Params array' => [
-                'paramArray' => [],
-                'urls' => ['/home', '/search', '/about'],
-                'expected' => ['/home', '/search', '/about'],
-                'expectedCount' => 3,
+        yield 'Empty Params array' => [
+            'paramArray' => [],
+            'urls' => ['/home', '/search', '/about'],
+            'expected' => ['/home', '/search', '/about'],
+            'expectedCount' => 3,
+        ];
+        yield 'Empty Urls array' => [
+            'paramArray' => ['pagination' => [1, 2, 3, 4]],
+            'urls' => [],
+            'expected' => [],
+            'expectedCount' => 0,
+        ];
+        yield 'case' => [
+            'paramArray' => ['pagination' => [1, 2, 3, 4]],
+            'urls' => ['index.php?id=10', 'index.php?id=11'],
+            'expected' => [
+                'index.php?id=10&pagination=1',
+                'index.php?id=10&pagination=2',
+                'index.php?id=10&pagination=3',
+                'index.php?id=10&pagination=4',
+                'index.php?id=11&pagination=1',
+                'index.php?id=11&pagination=2',
+                'index.php?id=11&pagination=3',
+                'index.php?id=11&pagination=4',
             ],
-            'Empty Urls array' => [
-                'paramArray' => ['pagination' => [1, 2, 3, 4]],
-                'urls' => [],
-                'expected' => [],
-                'expectedCount' => 0,
+            'expectedCount' => 8,
+        ];
+        yield 'More urls than maximumUrlsToCompile' => [
+            'paramArray' => ['pagination' => [1, 2, 3, 4]],
+            'urls' => ['index.php?id=10', 'index.php?id=11', 'index.php?id=12'],
+            'expected' => [
+                'index.php?id=10&pagination=1',
+                'index.php?id=10&pagination=2',
+                'index.php?id=10&pagination=3',
+                'index.php?id=10&pagination=4',
+                'index.php?id=11&pagination=1',
+                'index.php?id=11&pagination=2',
+                'index.php?id=11&pagination=3',
+                'index.php?id=11&pagination=4',
             ],
-            'case' => [
-                'paramArray' => ['pagination' => [1, 2, 3, 4]],
-                'urls' => ['index.php?id=10', 'index.php?id=11'],
-                'expected' => [
-                    'index.php?id=10&pagination=1',
-                    'index.php?id=10&pagination=2',
-                    'index.php?id=10&pagination=3',
-                    'index.php?id=10&pagination=4',
-                    'index.php?id=11&pagination=1',
-                    'index.php?id=11&pagination=2',
-                    'index.php?id=11&pagination=3',
-                    'index.php?id=11&pagination=4',
-                ],
-                'expectedCount' => 8,
-            ],
-            'More urls than maximumUrlsToCompile' => [
-                'paramArray' => ['pagination' => [1, 2, 3, 4]],
-                'urls' => ['index.php?id=10', 'index.php?id=11', 'index.php?id=12'],
-                'expected' => [
-                    'index.php?id=10&pagination=1',
-                    'index.php?id=10&pagination=2',
-                    'index.php?id=10&pagination=3',
-                    'index.php?id=10&pagination=4',
-                    'index.php?id=11&pagination=1',
-                    'index.php?id=11&pagination=2',
-                    'index.php?id=11&pagination=3',
-                    'index.php?id=11&pagination=4',
-                ],
-                'expectedCount' => 8,
-            ],
+            'expectedCount' => 8,
         ];
     }
 }
