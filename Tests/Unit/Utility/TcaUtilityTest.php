@@ -35,7 +35,7 @@ class TcaUtilityTest extends UnitTestCase
     {
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'] = $procInstructions;
 
-        $subject =  $this->createPartialMock(TcaUtility::class, ['getExtensionIcon']);
+        $subject = $this->createPartialMock(TcaUtility::class, ['getExtensionIcon']);
         $subject->expects($this->any())
             ->method('getExtensionIcon')
             ->willReturn('ext/crawler/Resources/Public/Icons/Extension.svg');
@@ -44,25 +44,22 @@ class TcaUtilityTest extends UnitTestCase
             $expected,
             $subject->getProcessingInstructions($configuration)
         );
-
     }
 
     public function getProcessingInstructionsDataProvider(): \Iterator
     {
-        $configuration = [];
-
-        yield "All Empty" => [
+        yield 'All Empty' => [
             'procInstructions' => [],
             'configuration' => [],
             'expected' => [],
         ];
 
-        yield "procInstructions no configuration" => [
+        yield 'procInstructions no configuration' => [
             'procInstructions' => [
                 'crawler' => [
                     'key' => 'crawler',
                     'value' => 'Fake Value',
-                ]
+                ],
             ],
             'configuration' => [],
             'expected' => [
@@ -70,18 +67,18 @@ class TcaUtilityTest extends UnitTestCase
                     [
                         'Fake Value [crawler]',
                         'crawler',
-                        'ext/crawler/Resources/Public/Icons/Extension.svg'
-                    ]
-                ]
+                        'ext/crawler/Resources/Public/Icons/Extension.svg',
+                    ],
+                ],
             ],
         ];
 
-        yield "procInstructions with one configuration" => [
+        yield 'procInstructions with one configuration' => [
             'procInstructions' => [
                 'crawler' => [
                     'key' => 'crawler',
                     'value' => 'Fake Value',
-                ]
+                ],
             ],
             'configuration' => ['default'],
             'expected' => [
@@ -90,9 +87,9 @@ class TcaUtilityTest extends UnitTestCase
                     [
                         'Fake Value [crawler]',
                         'crawler',
-                        'ext/crawler/Resources/Public/Icons/Extension.svg'
-                    ]
-                ]
+                        'ext/crawler/Resources/Public/Icons/Extension.svg',
+                    ],
+                ],
             ],
         ];
     }
