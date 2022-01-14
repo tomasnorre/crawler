@@ -13,7 +13,7 @@
         "configDir": "Tests\/"
     },
     "minMsi": 17,
-    "minCoveredMsi": 83,
+    "minCoveredMsi": 85,
     "logs": {
         "text": "infection.log",
         "github": true,

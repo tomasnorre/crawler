@@ -137,6 +137,7 @@ class ProcessCollectionTest extends UnitTestCase
     {
         self::expectException(NoIndexFoundException::class);
         self::expectExceptionCode(1593714823);
+        self::expectExceptionMessageMatches('/^Index.*100.*Process are not available$/');
         $correctObjectType = $this->getAccessibleMock(Process::class, ['dummy'], [], '', false);
 
         self::assertEquals(
