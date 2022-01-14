@@ -4,6 +4,9 @@ build:
             environment:
                 php:
                     version: 7.4
+            dependencies:
+                override:
+                    - composer install --ignore-platform-req=ext-zip
             tests:
                 override:
                     - php-scrutinizer-run
