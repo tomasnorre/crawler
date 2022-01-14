@@ -22,6 +22,7 @@ namespace AOE\Crawler\Utility;
 use AOE\Crawler\Backend\BackendModule;
 use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
 use TYPO3\CMS\Core\Imaging\IconRegistry;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -49,9 +50,13 @@ class BackendUtility
      */
     public static function registerIcons(): void
     {
-        self::registerCrawlerIcon();
-        self::registerStartIcon();
-        self::registerStopIcon();
+        if ((new Typo3Version())->getMajorVersion() === 10) {
+            // This method can be deleted once compatibility with TYPO3 v10 is removed.
+            // See Configuration/Icons.php for the way to go in TYPO3 v11+
+            self::registerCrawlerIcon();
+            self::registerStartIcon();
+            self::registerStopIcon();
+        }
     }
 
     /**
