@@ -3,6 +3,7 @@
 ## Crawler 11.0.3-dev
 
 ### Added
+* PHP 8.1 compatibility
 
 ### Changed
 
