@@ -45,13 +45,13 @@ jobs:
       - uses: jonaseberle/github-action-setup-ddev@v1
         with:
           ddevDir: ".devbox"
-        env:
-          FROM_PATH: '../../'
-          TO_PATH: $GITHUB_WORKSPACE
       - run: |
+          export FROM_PATH='../../'
+          export TO_PATH=$(echo $GITHUB_WORKSPACE)
           cd .devbox
           sed -i 's/php_version: "7.4"/php_version: "${{ matrix.php }}"/g' .ddev/config.yaml
           sed -i "s|$FROM_PATH|$TO_PATH|g" .ddev/docker-compose.volume.yaml
+          cat .ddev/docker-compose.volume.yaml
           rm -rf vendor composer.lock
           ddev composer require nimut/typo3-complete=${{ matrix.typo3 }}
           ddev start
