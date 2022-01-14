@@ -29,12 +29,16 @@
     "repositories": [
         {
             "type": "path",
-            "url": "../"
+            "url": "./packages"
         }
     ],
     "config": {
         "vendor-dir": "vendor",
-        "bin-dir": "bin"
+        "bin-dir": "bin",
+        "allow-plugins": {
+            "typo3/cms-composer-installers": true,
+            "typo3/class-alias-loader": true
+        }
     },
     "extra": {
         "typo3/cms": {

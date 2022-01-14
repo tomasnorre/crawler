@@ -49,6 +49,7 @@ jobs:
       - run: |
           cd .devbox
           sed -i 's/php_version: "7.4"/php_version: "${{ matrix.php }}"/g' .ddev/config.yaml
+          sed -i 's//../..//${{ GITHUB_WORKSPACE }}/g' .ddev/docker-compose.volume.yaml
           rm -rf vendor composer.lock
           ddev composer config repositories.branch git https://github.com/${{ github.repository }}
           ddev composer require nimut/typo3-complete=${{ matrix.typo3 }} tomasnorre/crawler="dev-${{ env.BRANCH_NAME }}"
