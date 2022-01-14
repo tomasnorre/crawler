@@ -84,7 +84,8 @@ class JsonCompatibilityConverterTest extends UnitTestCase
     {
         self::expectExceptionCode(1593758307);
         self::expectException(\Throwable::class);
-        self::expectExceptionMessageMatches('#.*__PHP_Incomplete_Class.*#');
+        self::expectExceptionMessageMatches('#^Objects are not allowed:.*__PHP_Incomplete_Class.*#');
+        self::expectExceptionMessage('This is a test object');
 
         $object = new \stdClass();
         $object->title = 'Test';

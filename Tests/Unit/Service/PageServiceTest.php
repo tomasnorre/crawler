@@ -99,6 +99,16 @@ class PageServiceTest extends UnitTestCase
             'expected' => 'Because page is hidden',
         ];
 
+        yield 'Extension Setting empty and hidden is not set for page' => [
+            'extensionSetting' => [],
+            'pageRow' => [
+                'doktype' => 1,
+            ],
+            'excludeDoktype' => [],
+            'pageVeto' => [],
+            'expected' => '',
+        ];
+
         yield 'Page of doktype 3 - External Url' => [
             'extensionSettings' => [],
             'pageRow' => [

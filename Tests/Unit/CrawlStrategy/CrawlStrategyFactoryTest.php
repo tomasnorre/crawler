@@ -67,4 +67,21 @@ class CrawlStrategyFactoryTest extends UnitTestCase
             $crawlStrategy
         );
     }
+
+    /**
+     * @test
+     */
+    public function crawlerStrategyFactoryReturnsGuzzleExecutionStrategyAsItIsDefault(): void
+    {
+        $configuration = [
+            'frontendBasePath' => '/',
+        ];
+        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = $configuration;
+        $crawlStrategy = GeneralUtility::makeInstance(CrawlStrategyFactory::class)->create();
+
+        self::assertInstanceOf(
+            GuzzleExecutionStrategy::class,
+            $crawlStrategy
+        );
+    }
 }

@@ -54,16 +54,14 @@ class UrlServiceTest extends UnitTestCase
      */
     public function compileUrls(array $paramArray, array $urls, array $expected, int $expectedCount): void
     {
-        $maxUrlsToCompile = 8;
-
         self::assertEquals(
             $expected,
-            $this->urlService->compileUrls($paramArray, $urls, $maxUrlsToCompile)
+            $this->urlService->compileUrls($paramArray, $urls)
         );
 
         self::assertCount(
             $expectedCount,
-            $this->urlService->compileUrls($paramArray, $urls, $maxUrlsToCompile)
+            $this->urlService->compileUrls($paramArray, $urls)
         );
     }
 
@@ -81,35 +79,39 @@ class UrlServiceTest extends UnitTestCase
             'expected' => [],
             'expectedCount' => 0,
         ];
-        yield 'case' => [
-            'paramArray' => ['pagination' => [1, 2, 3, 4]],
+        yield 'Exactly number of URLs matches maximumUrlsToCompile' => [
+            'paramArray' => ['pagination' => [1, 2, 3, 4, 5]],
             'urls' => ['index.php?id=10', 'index.php?id=11'],
             'expected' => [
                 'index.php?id=10&pagination=1',
                 'index.php?id=10&pagination=2',
                 'index.php?id=10&pagination=3',
                 'index.php?id=10&pagination=4',
+                'index.php?id=10&pagination=5',
                 'index.php?id=11&pagination=1',
                 'index.php?id=11&pagination=2',
                 'index.php?id=11&pagination=3',
                 'index.php?id=11&pagination=4',
+                'index.php?id=11&pagination=5',
             ],
-            'expectedCount' => 8,
+            'expectedCount' => 10,
         ];
         yield 'More urls than maximumUrlsToCompile' => [
-            'paramArray' => ['pagination' => [1, 2, 3, 4]],
+            'paramArray' => ['pagination' => [1, 2, 3, 4, 5]],
             'urls' => ['index.php?id=10', 'index.php?id=11', 'index.php?id=12'],
             'expected' => [
                 'index.php?id=10&pagination=1',
                 'index.php?id=10&pagination=2',
                 'index.php?id=10&pagination=3',
                 'index.php?id=10&pagination=4',
+                'index.php?id=10&pagination=5',
                 'index.php?id=11&pagination=1',
                 'index.php?id=11&pagination=2',
                 'index.php?id=11&pagination=3',
                 'index.php?id=11&pagination=4',
+                'index.php?id=11&pagination=5',
             ],
-            'expectedCount' => 8,
+            'expectedCount' => 10,
         ];
     }
 }

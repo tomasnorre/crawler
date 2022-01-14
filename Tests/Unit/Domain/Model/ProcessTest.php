@@ -251,6 +251,11 @@ class ProcessTest extends UnitTestCase
             'getTimeForLastItem' => ['exec_time' => -50],
             'expected' => -75,
         ];
+        yield 'getTimeForFirstItem and getTimeForLastItem are both invalid arrays' => [
+            'getTimeForFirstItem' => ['invalid_exec_time' => 0],
+            'getTimeForLastItem' => ['invalid_exec_time' => 0],
+            'expected' => 0,
+        ];
     }
 
     public function injectSubject(Process $subject): void
