@@ -8,6 +8,7 @@
 ### Changed
 
 ### Fixed
+* PHP8 undefined array key when creating/updating/saving configuration record
 
 ### Deprecated
 #### Classes
