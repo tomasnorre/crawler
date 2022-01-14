@@ -35,7 +35,7 @@ The TYPO3 Crawler is currently not working with *SQLite*, and isn't tested with 
 
 | Release  | TYPO3 | PHP   | Fixes will contain
 |---|---|---|---|
-| 11.x.y  | 10.4-11.5 | 7.4-8.0 |Features, Bugfixes, Security Updates
+| 11.x.y  | 10.4-11.5 | 7.4-8.1 |Features, Bugfixes, Security Updates, Since 11.0.3 PHP 8.1
 | 10.x.y  | 9.5-11.0 | 7.2-7.4 |Security Updates
 | 9.x.y  | 9.5-11.0  | 7.2-7.4 |As this version has same requirements as 10.x.y, there will be no further releases of this version, please update instead.
 | 8.x.y  |    |  | Releases do not exist
