@@ -2,15 +2,14 @@
 daysUntilStale: 60
 # Number of days of inactivity before a stale issue is closed
 daysUntilClose: 7
+# Only issues or pull requests with all of these labels are check if stale. Defaults to `[]` (disabled)
+onlyLabels: []
 # Issues with these labels will never be considered stale
 exemptLabels:
   - pinned
   - security
   - "On Hold"
   - feature 
-  - "Priority 1"
-  - "Priority 2"
-  - "Priority 3"
 # Label to use when marking an issue as stale
 staleLabel: staled
 # Comment to post when marking an issue as stale. Set to `false` to disable
