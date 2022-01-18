@@ -243,8 +243,8 @@ class QueueRepositoryTest extends FunctionalTestCase
 
         $actualArray = $this->subject->countPendingItemsGroupedByConfigurationKey();
 
-        foreach ($actualArray as $item ) {
-            self::assertTrue(in_array($item, $expectedArray));
+        foreach ($actualArray as $item) {
+            self::assertTrue(in_array($item, $expectedArray, true));
         }
     }
 
@@ -262,7 +262,7 @@ class QueueRepositoryTest extends FunctionalTestCase
 
         $actualArray = $this->subject->getSetIdWithUnprocessedEntries();
         foreach ($actualArray as $item) {
-            self::assertTrue(in_array($item, $expectedArray));
+            self::assertTrue(in_array($item, $expectedArray, true));
         }
     }
 
@@ -607,7 +607,7 @@ class QueueRepositoryTest extends FunctionalTestCase
         $actual = $this->subject->getDuplicateQueueItemsIfExists($enableTimeslot, $timestamp, $currentTime, $pageId, $parametersHash);
 
         foreach ($actual as $item) {
-            self::assertTrue(in_array($item, $expected));
+            self::assertTrue(in_array($item, $expected, true));
         }
     }
 

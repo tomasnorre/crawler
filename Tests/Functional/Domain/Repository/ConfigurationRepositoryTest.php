@@ -74,7 +74,7 @@ class ConfigurationRepositoryTest extends FunctionalTestCase
         );
 
         foreach ($configurations as $configuration) {
-            self::assertContains((int)$configuration['uid'], [1, 5, 6, 8]);
+            self::assertContains((int) $configuration['uid'], [1, 5, 6, 8]);
         }
     }
 

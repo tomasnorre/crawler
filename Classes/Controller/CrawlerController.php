@@ -581,7 +581,7 @@ class CrawlerController implements LoggerAwareInterface
                     $fieldArray['parameters_hash']
                 );
             }
-            if ([] === $rows) {
+            if ($rows === []) {
                 $connectionForCrawlerQueue = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(QueueRepository::TABLE_NAME);
                 $connectionForCrawlerQueue->insert(
                     QueueRepository::TABLE_NAME,
@@ -646,7 +646,7 @@ class CrawlerController implements LoggerAwareInterface
         }
 
         /** @var BeforeQueueItemAddedEvent $event */
-        $event = $this->eventDispatcher->dispatch(new BeforeQueueItemAddedEvent((int)$queueId, $queueRec));
+        $event = $this->eventDispatcher->dispatch(new BeforeQueueItemAddedEvent((int) $queueId, $queueRec));
         $queueRec = $event->getQueueRecord();
 
         // Set exec_time to lock record:
