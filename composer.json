@@ -113,10 +113,6 @@
         {
             "type": "git",
             "url": "https://github.com/symplify/phpstan-rules"
-        },
-        {
-            "type": "git",
-            "url": "https://github.com/tomasnorre/testing-framework.git"
         }
     ],
     "minimum-stability": "dev",
