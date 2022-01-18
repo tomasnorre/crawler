@@ -241,10 +241,11 @@ class QueueRepositoryTest extends FunctionalTestCase
             ],
         ];
 
-        self::assertEquals(
-            $expectedArray,
-            $this->subject->countPendingItemsGroupedByConfigurationKey()
-        );
+        $actualArray = $this->subject->countPendingItemsGroupedByConfigurationKey();
+
+        foreach ($actualArray as $item ) {
+            self::assertTrue(in_array($item, $expectedArray));
+        }
     }
 
     /**
@@ -259,10 +260,10 @@ class QueueRepositoryTest extends FunctionalTestCase
             3 => 789,
         ];
 
-        self::assertSame(
-            $expectedArray,
-            $this->subject->getSetIdWithUnprocessedEntries()
-        );
+        $actualArray = $this->subject->getSetIdWithUnprocessedEntries();
+        foreach ($actualArray as $item) {
+            self::assertTrue(in_array($item, $expectedArray));
+        }
     }
 
     /**
@@ -603,10 +604,11 @@ class QueueRepositoryTest extends FunctionalTestCase
      */
     public function getDuplicateQueueItemsIfExists(bool $enableTimeslot, int $timestamp, int $currentTime, int $pageId, string $parametersHash, array $expected): void
     {
-        self::assertEquals(
-            $expected,
-            $this->subject->getDuplicateQueueItemsIfExists($enableTimeslot, $timestamp, $currentTime, $pageId, $parametersHash)
-        );
+        $actual = $this->subject->getDuplicateQueueItemsIfExists($enableTimeslot, $timestamp, $currentTime, $pageId, $parametersHash);
+
+        foreach ($actual as $item) {
+            self::assertTrue(in_array($item, $expected));
+        }
     }
 
     public function getDuplicateQueueItemsIfExistsDataProvider(): iterable
