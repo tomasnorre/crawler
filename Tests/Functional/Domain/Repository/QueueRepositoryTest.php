@@ -87,7 +87,7 @@ class QueueRepositoryTest extends FunctionalTestCase
 
         self::assertEquals(
             [
-                'qid' => '2',
+                'qid' => '1002',
                 'page_id' => '1002',
                 'parameters' => '',
                 'parameters_hash' => '',
@@ -115,7 +115,7 @@ class QueueRepositoryTest extends FunctionalTestCase
 
         self::assertEquals(
             [
-                'qid' => '3',
+                'qid' => '1003',
                 'page_id' => '0',
                 'parameters' => '',
                 'parameters_hash' => '',
@@ -305,7 +305,7 @@ class QueueRepositoryTest extends FunctionalTestCase
      */
     public function getLastProcessedEntries(): void
     {
-        $expectedArray = [3, 17];
+        $expectedArray = [1003, 1017];
 
         $processedEntries = $this->subject->getLastProcessedEntries(2);
         $actually = [];
@@ -410,7 +410,7 @@ class QueueRepositoryTest extends FunctionalTestCase
      */
     public function findByQueueId(): void
     {
-        $queueRecord = $this->subject->findByQueueId('15');
+        $queueRecord = $this->subject->findByQueueId('1015');
         self::assertSame(
             12,
             (int) $queueRecord['scheduled']
@@ -511,7 +511,7 @@ class QueueRepositoryTest extends FunctionalTestCase
      */
     public function updateProcessIdAndSchedulerForQueueIds(): void
     {
-        $qidToUpdate = [4, 8, 15, 18];
+        $qidToUpdate = [1004, 1008, 1015, 1018];
         $processId = md5('this-is-the-process-id');
 
         self::assertSame(
@@ -617,7 +617,7 @@ class QueueRepositoryTest extends FunctionalTestCase
             'current' => 12,
             'page_id' => 10,
             'parameters_hash' => '',
-            'expected' => [18, 20],
+            'expected' => [1018, 1020],
         ];
         yield 'EnableTimeslot is false and timestamp is <= current' => [
             'timeslotActive' => false,
@@ -625,7 +625,7 @@ class QueueRepositoryTest extends FunctionalTestCase
             'current' => 11,
             'page_id' => 10,
             'parameters_hash' => '',
-            'expected' => [18],
+            'expected' => [1018],
         ];
         yield 'EnableTimeslot is true and timestamp is > current' => [
             'timeslotActive' => true,
@@ -633,7 +633,7 @@ class QueueRepositoryTest extends FunctionalTestCase
             'current' => 10,
             'page_id' => 10,
             'parameters_hash' => '',
-            'expected' => [20],
+            'expected' => [1020],
         ];
         yield 'EnableTimeslot is false and timestamp is > current' => [
             'timeslotActive' => false,
@@ -641,7 +641,7 @@ class QueueRepositoryTest extends FunctionalTestCase
             'current' => 10,
             'page_id' => 10,
             'parameters_hash' => '',
-            'expected' => [20],
+            'expected' => [1020],
         ];
         yield 'EnableTimeslot is false and timestamp is > current and parameters_hash is set' => [
             'timeslotActive' => false,
@@ -649,7 +649,7 @@ class QueueRepositoryTest extends FunctionalTestCase
             'current' => 10,
             'page_id' => 10,
             'parameters_hash' => 'NotReallyAHashButWillDoForTesting',
-            'expected' => [19],
+            'expected' => [1019],
         ];
     }
 
@@ -692,7 +692,7 @@ class QueueRepositoryTest extends FunctionalTestCase
             'orderBy' => 'process_id',
             'orderDirection' => 'ASC',
             'expected' => [
-                'qid' => '2',
+                'qid' => '1002',
                 'page_id' => '1002',
                 'parameters' => '',
                 'parameters_hash' => '',
@@ -712,7 +712,7 @@ class QueueRepositoryTest extends FunctionalTestCase
             'orderBy' => 'process_id',
             'orderDirection' => 'DESC',
             'expected' => [
-                'qid' => '3',
+                'qid' => '1003',
                 'page_id' => '0',
                 'parameters' => '',
                 'parameters_hash' => '',
@@ -767,7 +767,7 @@ class QueueRepositoryTest extends FunctionalTestCase
             'itemsPerPage' => 5,
             'queueFilter' => new QueueFilter('finished'),
             'expected' => [[
-                'qid' => 2,
+                'qid' => '1002',
                 'page_id' => 1002,
                 'parameters' => '',
                 'parameters_hash' => '',
@@ -787,7 +787,7 @@ class QueueRepositoryTest extends FunctionalTestCase
             'itemsPerPage' => 5,
             'queueFilter' => new QueueFilter(),
             'expected' => [[
-                'qid' => '6',
+                'qid' => '1006',
                 'page_id' => '2',
                 'parameters' => '',
                 'parameters_hash' => '',
@@ -807,7 +807,7 @@ class QueueRepositoryTest extends FunctionalTestCase
             'itemsPerPage' => 1,
             'queueFilter' => new QueueFilter(),
             'expected' => [[
-                'qid' => '6',
+                'qid' => '1006',
                 'page_id' => '2',
                 'parameters' => '',
                 'parameters_hash' => '',
