@@ -100,7 +100,7 @@ jobs:
       - name: Set up MariaDB ${{ matrix.mariadb }}
         uses: getong/mariadb-action@v1.1
         with:
-          mysql version: ${{ matrix.mariadb }}
+          mariadb version: ${{ matrix.mariadb }}
           mysql root password: 'root'
 
       - name: Checkout
