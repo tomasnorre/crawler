@@ -40,7 +40,7 @@
         "codeception/module-webdriver": "^1.0",
         "infection/infection": "^0.26",
         "nikic/php-parser": "^4.13",
-        "nimut/testing-framework": "^6.0 || dev-php81-compat",
+        "nimut/testing-framework": "^6.0 || dev-main",
         "nimut/typo3-complete": "^10.4",
         "phpspec/prophecy-phpunit": "^2.0",
         "phpstan/extension-installer": "^1.1",
