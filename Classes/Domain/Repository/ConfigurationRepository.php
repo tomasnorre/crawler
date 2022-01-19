@@ -78,6 +78,7 @@ class ConfigurationRepository extends Repository
             ->where(
                 $queryBuilder->expr()->in('pid', $queryBuilder->createNamedParameter($pageIdsInRootLine, Connection::PARAM_INT_ARRAY))
             )
+            ->orderBy('name')
             ->execute()
             ->fetchAll();
     }

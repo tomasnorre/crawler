@@ -12,8 +12,9 @@ foreach ($mainRequirements['require'] as $package => $version) {
 
     if (
         $package === 'php'
-        || false !==  strpos($package, 'ext-')
-        || false !==  strpos($package, 'typo3/cms')
+        || false !== strpos($package, 'ext-')
+        || false !== strpos($package, 'typo3/cms')
+        || false !== strpos($package, 'cweagans/composer-patches')
     ) {
         continue;
     }

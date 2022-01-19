@@ -1,0 +1,14 @@
+diff --git a/src/TestingFramework/TestSystem/AbstractTestSystem.php b/src/TestingFramework/TestSystem/AbstractTestSystem.php
+index 65d0dd9..ce9702c 100644
+--- a/src/TestingFramework/TestSystem/AbstractTestSystem.php
++++ b/src/TestingFramework/TestSystem/AbstractTestSystem.php
+@@ -670,6 +670,10 @@ abstract class AbstractTestSystem
+                     $originalConfigurationArray['DB']['Connections']['Default']['path'] = $this->systemPath . 'test.sqlite';
+                     $originalConfigurationArray['DB']['Connections']['Default']['initCommands'] = '';
+                 }
++                if ($databaseDriver === 'pdo_pgsql') {
++                    $originalConfigurationArray['SYS']['setDBinit'] = '';
++                    $originalConfigurationArray['DB']['Connections']['Default']['initCommands'] = '';
++                }
+             }
+         }

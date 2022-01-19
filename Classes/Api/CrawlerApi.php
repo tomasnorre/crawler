@@ -245,7 +245,7 @@ class CrawlerApi
     public function getQueueStatistics(): array
     {
         return [
-            'assignedButUnprocessed' => $this->queueRepository->countAllAssignedPendingItems(),
+            'assigned_but_unprocessed' => $this->queueRepository->countAllAssignedPendingItems(),
             'unprocessed' => $this->queueRepository->countAllPendingItems(),
         ];
     }
@@ -253,7 +253,7 @@ class CrawlerApi
     /**
      * Get queue statistics by configuration
      *
-     * @return array array of array('configuration' => <>, 'assignedButUnprocessed' => <>, 'unprocessed' => <>)
+     * @return array array of array('configuration' => <>, 'assigned_but_unprocessed' => <>, 'unprocessed' => <>)
      * @codeCoverageIgnore
      */
     public function getQueueStatisticsByConfiguration()
