@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace AOE\Crawler\Tests\Unit\Service;
@@ -20,7 +21,6 @@ namespace AOE\Crawler\Tests\Unit\Service;
 
 use AOE\Crawler\Service\ProcessInstructionService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
-
 
 /**
  * @covers \AOE\Crawler\Service\ProcessInstructionService
