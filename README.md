@@ -24,13 +24,6 @@ composer require tomasnorre/crawler
 
 ![backend_processlist](https://user-images.githubusercontent.com/1212481/142763110-936be57c-1e9e-4d62-afbe-4134b139fd56.png)
 
-## Disclaimer
-
-The TYPO3 Crawler is currently not working with *SQLite*, and isn't tested with *PostgreSQL*, see [1]. *MariaDB* and *MySQL* we don't have any known issues.
-
-1) https://github.com/tomasnorre/crawler/issues/773
-
-
 ## Versions and Support
 
 | Release  | TYPO3 | PHP   | Fixes will contain
