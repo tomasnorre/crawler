@@ -32,6 +32,7 @@
 ### Deprecated
 #### Classes
 #### Functions & Properties
+* CrawlerController->drawURLs_PIfilter()
 
 ### Removed
 * Obsolete columns (first and last time) from Process Overview

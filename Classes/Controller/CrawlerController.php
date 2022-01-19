@@ -32,6 +32,7 @@ use AOE\Crawler\Event\BeforeQueueItemAddedEvent;
 use AOE\Crawler\QueueExecutor;
 use AOE\Crawler\Service\ConfigurationService;
 use AOE\Crawler\Service\PageService;
+use AOE\Crawler\Service\ProcessInstructionService;
 use AOE\Crawler\Service\UrlService;
 use AOE\Crawler\Value\QueueRow;
 use PDO;
@@ -226,9 +227,10 @@ class CrawlerController implements LoggerAwareInterface
         );
 
         $urlService = new UrlService();
+        $processInstructionService = new ProcessInstructionService();
 
         foreach ($vv['URLs'] as $urlQuery) {
-            if (! $this->drawURLs_PIfilter($vv['subCfg']['procInstrFilter'] ?? '', $incomingProcInstructions)) {
+            if (! $processInstructionService->isAllowed($vv['subCfg']['procInstrFilter'] ?? '', $incomingProcInstructions)) {
                 continue;
             }
             $url = $urlService->getUrlFromPageAndQueryParameters(
@@ -289,19 +291,12 @@ class CrawlerController implements LoggerAwareInterface
      * @param string $piString PI to test
      * @param array $incomingProcInstructions Processing instructions
      * @return boolean
+     * @deprecated since 11.0.3 will be removed in v13.x
      */
     public function drawURLs_PIfilter(string $piString, array $incomingProcInstructions)
     {
-        if (empty($incomingProcInstructions)) {
-            return true;
-        }
-
-        foreach ($incomingProcInstructions as $pi) {
-            if (GeneralUtility::inList($piString, $pi)) {
-                return true;
-            }
-        }
-        return false;
+        $processInstructionService = new ProcessInstructionService();
+        return $processInstructionService->isAllowed($piString, $incomingProcInstructions);
     }
 
     public function getPageTSconfigForId(int $id): array
