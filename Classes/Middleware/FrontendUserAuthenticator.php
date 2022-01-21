@@ -29,6 +29,7 @@ use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\UserAspect;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 use TYPO3\CMS\Frontend\Controller\ErrorController;
 
 /**
@@ -118,8 +119,10 @@ class FrontendUserAuthenticator implements MiddlewareInterface
      */
     private function getFrontendUser(string $grList, ServerRequestInterface $request)
     {
+        /** @var FrontendUserAuthentication $frontendUser */
         $frontendUser = $request->getAttribute('frontend.user');
         $frontendUser->user[$frontendUser->usergroup_column] = '0,-2,' . $grList;
+        $frontendUser->fetchGroupData($request);
         $frontendUser->user['uid'] = PHP_INT_MAX;
         return $frontendUser;
     }
