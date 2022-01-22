@@ -1,9 +1,8 @@
 {
     "name": "tomasnorre/crawler",
-    "type": "typo3-cms-extension",
     "description": "Crawler extension for TYPO3",
-    "homepage": "https://github.com/tomasnorre/crawler",
     "license": "GPL-3.0",
+    "type": "typo3-cms-extension",
     "authors": [
         {
             "name": "Tomas Norre Mikkelsen",
@@ -11,6 +10,10 @@
             "role": "Developer"
         }
     ],
+    "homepage": "https://github.com/tomasnorre/crawler",
+    "support": {
+        "issues": "https://github.com/tomasnorre/crawler/issues"
+    },
     "require": {
         "php": "^7.4 || ^8.0",
         "ext-json": "*",
@@ -27,10 +30,6 @@
         "typo3/cms-frontend": "*",
         "typo3/cms-info": "*",
         "typo3/cms-seo": "*"
-    },
-    "replace": {
-        "aoepeople/crawler": "self.version",
-        "typo3-ter/crawler": "self.version"
     },
     "require-dev": {
         "codeception/codeception": "^4.1",
@@ -57,47 +56,21 @@
         "typo3/testing-framework": "^6.11",
         "vimeo/psalm": "^4.18"
     },
+    "replace": {
+        "aoepeople/crawler": "self.version",
+        "typo3-ter/crawler": "self.version"
+    },
     "suggest": {
         "typo3/cms-seo": "Enables the posibility to priorities your Crawler Queue + You have seo features in the CMS it self."
     },
-    "config": {
-        "bin-dir": ".Build/bin",
-        "preferred-install": {
-            "typo3/cms-core": "source",
-            "*": "dist"
-        },
-        "process-timeout": 0,
-        "sort-packages": true,
-        "vendor-dir": ".Build/vendor",
-        "allow-plugins": {
-            "phpstan/extension-installer": true,
-            "typo3/class-alias-loader": true,
-            "typo3/cms-composer-installers": true,
-            "infection/extension-installer": true,
-            "composer/package-versions-deprecated": true,
-            "cweagans/composer-patches": true
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/symplify/phpstan-rules"
         }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-main": "11.0.x-dev"
-        },
-        "typo3/class-alias-loader": {
-            "class-alias-maps": [
-                "Migrations/Code/ClassAliasMap.php"
-            ]
-        },
-        "typo3/cms": {
-            "cms-package-dir": "{$vendor-dir}/typo3/cms",
-            "extension-key": "crawler",
-            "web-dir": ".Build/Web"
-        },
-        "patches": {
-            "nimut/testing-framework": {
-                "Reset setDBInit + initCommands for PostgreSQL": "Build/nimut-testing-framework-postgresql.patch"
-            }
-        }
-    },
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "AOE\\Crawler\\": "Classes"
@@ -109,14 +82,44 @@
             "TYPO3\\CMS\\Core\\Tests\\": ".Build/Web/typo3/sysext/core/Tests"
         }
     },
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/symplify/phpstan-rules"
+    "config": {
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true,
+            "cweagans/composer-patches": true,
+            "infection/extension-installer": true,
+            "phpstan/extension-installer": true,
+            "typo3/class-alias-loader": true,
+            "typo3/cms-composer-installers": true
+        },
+        "bin-dir": ".Build/bin",
+        "preferred-install": {
+            "*": "dist",
+            "typo3/cms-core": "source"
+        },
+        "process-timeout": 0,
+        "sort-packages": true,
+        "vendor-dir": ".Build/vendor"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "11.0.x-dev"
+        },
+        "patches": {
+            "nimut/testing-framework": {
+                "Reset setDBInit + initCommands for PostgreSQL": "Build/nimut-testing-framework-postgresql.patch"
+            }
+        },
+        "typo3/class-alias-loader": {
+            "class-alias-maps": [
+                "Migrations/Code/ClassAliasMap.php"
+            ]
+        },
+        "typo3/cms": {
+            "cms-package-dir": "{$vendor-dir}/typo3/cms",
+            "extension-key": "crawler",
+            "web-dir": ".Build/Web"
         }
-    ],
-    "minimum-stability": "dev",
-    "prefer-stable": true,
+    },
     "scripts": {
         "post-autoload-dump": [
             "mkdir -p .Build/Web/typo3conf/ext/",
@@ -183,13 +186,6 @@
             "@test:functional-sqlite",
             "@test:acceptance"
         ],
-        "test:reset-vars": [
-            "export typo3DatabaseName=''",
-            "export typo3DatabaseHost=''",
-            "export typo3DatabaseUsername=''",
-            "export typo3DatabasePassword=''",
-            "export typo3DatabaseDriver=''"
-        ],
         "test:functional": [
             "@test:reset-vars",
             "@extension-create-libs",
@@ -208,16 +204,20 @@
             "[ -e .Build/bin/phpunit ] || composer update",
             "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseDriver=pdo_sqlite typo3DatabaseName=test .Build/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml Tests/Functional"
         ],
-        "test:unit": [
-            "[ -e .Build/bin/phpunit ] || composer update",
-            "TYPO3_PATH_WEB=.Build/Web .Build/bin/phpunit --colors -c .Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/Unit"
-        ],
         "test:mutation": [
             "[ -e .Build/bin/infection ] || composer update",
             "XDEBUG_MODE=coverage .Build/bin/infection --threads=8"
+        ],
+        "test:reset-vars": [
+            "export typo3DatabaseName=''",
+            "export typo3DatabaseHost=''",
+            "export typo3DatabaseUsername=''",
+            "export typo3DatabasePassword=''",
+            "export typo3DatabaseDriver=''"
+        ],
+        "test:unit": [
+            "[ -e .Build/bin/phpunit ] || composer update",
+            "TYPO3_PATH_WEB=.Build/Web .Build/bin/phpunit --colors -c .Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/Unit"
         ]
-    },
-    "support": {
-        "issues": "https://github.com/tomasnorre/crawler/issues"
     }
 }
