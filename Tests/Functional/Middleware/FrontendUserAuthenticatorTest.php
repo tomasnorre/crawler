@@ -20,10 +20,12 @@ namespace AOE\Crawler\Tests\Functional\Middleware;
  */
 
 use AOE\Crawler\Middleware\FrontendUserAuthenticator;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
-use TYPO3\CMS\Core\Http\ServerRequest;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use TYPO3\CMS\Core\Http\Response;
+use TYPO3\CMS\Core\Routing\SiteRouteResult;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
  * @covers \AOE\Crawler\Middleware\FrontendUserAuthenticator
@@ -31,28 +33,42 @@ use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 class FrontendUserAuthenticatorTest extends FunctionalTestCase
 {
     /**
+     * @var array
+     */
+    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+
+    /**
+     * @var FrontendUserAuthenticator
+     */
+    private $subject;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->subject = GeneralUtility::makeInstance(FrontendUserAuthenticator::class);
+        $this->importDataSet(__DIR__ . '/Fixtures/ProcessHandlesFeGroups/pages.xml');
+        $this->importDataSet(__DIR__ . '/Fixtures/ProcessHandlesFeGroups/tt_content.xml');
+        $this->importDataSet(__DIR__ . '/Fixtures/ProcessHandlesFeGroups/tx_crawler_queue.xml');
+    }
+
+    /**
      * @test
      */
-    public function getFrontendUserReturnFrontendUser(): void
+    public function processReturnExpectedResponse(): void
     {
-        $feUser = GeneralUtility::makeInstance(FrontendUserAuthentication::class);
-        $request = new ServerRequest();
-        $request = $request->withAttribute('frontend.user', $feUser);
-        $class = new FrontendUserAuthenticator();
-        /** @var FrontendUserAuthentication $user */
-        $user = $this->invokeMethod($class, 'getFrontendUser', ['12,13', $request]);
+        $request = $this->prophesize(ServerRequestInterface::class);
+        $request->getHeaderLine('X-T3CRAWLER')->willReturn('1006:28f6fd71036abbe3452a0bf9ca10ee38');
+
+        $handlerResponse = new Response();
+        $handler = $this->prophesize(RequestHandlerInterface::class);
+        $handler->handle($request->reveal())->willReturn($handlerResponse);
+
+        $response = $this->subject->process($request->reveal(), $handler->reveal());
 
         self::assertEquals(
-            '0,-2,12,13',
-            $user->user['usergroup']
+            200,
+            $response->getStatusCode()
         );
     }
 
-    private function invokeMethod(&$object, string $methodName, array $parameters = [])
-    {
-        $reflection = new \ReflectionClass(get_class($object));
-        $method = $reflection->getMethod($methodName);
-        $method->setAccessible(true);
-        return $method->invokeArgs($object, $parameters);
-    }
 }

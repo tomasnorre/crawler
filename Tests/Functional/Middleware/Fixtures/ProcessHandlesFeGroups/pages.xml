@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataset>
+    <pages>
+        <uid>1</uid>
+        <pid>0</pid>
+        <title>Page 1 - Uid 1</title>
+        <is_siteroot>1</is_siteroot>
+        <slug>/</slug>
+        <sys_language_uid>0</sys_language_uid>
+        <l10n_parent>0</l10n_parent>
+        <sitemap_priority>1.0</sitemap_priority>
+    </pages>
+</dataset>
