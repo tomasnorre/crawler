@@ -24,7 +24,6 @@ jobs:
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           passphrase: ${{ secrets.DEPLOY_SSH_KEY_PASSPHRASE }}
           port: ${{ secrets.DEPLOY_SSH_PORT }}
-          debug: true
           script: |
             date
             ls -l
