@@ -82,10 +82,10 @@ class FrontendUserAuthenticatorTest extends FunctionalTestCase
         $this->importDataSet(__DIR__ . '/Fixtures/ProcessHandlesFeGroups/tx_crawler_queue.xml');
 
         $queueParameters = [
-            "url" => "https://crawler-devbox.ddev.site",
-            "feUserGroupList" => $feGroups,
-            "procInstructions" => [ "" ],
-            "procInstrParams" => [],
+            'url' => 'https://crawler-devbox.ddev.site',
+            'feUserGroupList' => $feGroups,
+            'procInstructions' => [''],
+            'procInstrParams' => [],
         ];
 
         $request = $this->prophesize(ServerRequestInterface::class);
@@ -102,7 +102,7 @@ class FrontendUserAuthenticatorTest extends FunctionalTestCase
 
         $feGroupsArray = explode(',', $feGroups);
 
-        foreach($feGroupsArray as $feGroup) {
+        foreach ($feGroupsArray as $feGroup) {
             self::assertContains(
                 $feGroup,
                 $this->subject->getContext()->getAspect('frontend.user')->get('groupIds')
@@ -118,13 +118,13 @@ class FrontendUserAuthenticatorTest extends FunctionalTestCase
     public function processSetsExpectedUserGroupsDataProvider(): iterable
     {
         yield 'One FE Group' => [
-            'feGroups'  => '1',
-            'headerLine' => '1006:28f6fd71036abbe3452a0bf9ca10ee38'
+            'feGroups' => '1',
+            'headerLine' => '1006:28f6fd71036abbe3452a0bf9ca10ee38',
         ];
 
         yield 'Two FE Groups' => [
-            'feGroups'  => '1,2',
-            'headerLine' => '1007:8e6edae3da393a9412898ef59e6cf925'
+            'feGroups' => '1,2',
+            'headerLine' => '1007:8e6edae3da393a9412898ef59e6cf925',
         ];
     }
 }

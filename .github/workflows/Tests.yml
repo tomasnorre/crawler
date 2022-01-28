@@ -56,6 +56,7 @@ jobs:
           composer require --dev nimut/typo3-complete:${{ matrix.typo3 }} --no-progress
           git checkout composer.json
           ln -nfs .Build/vendor/typo3/cms/typo3 typo3
+          composer extension-create-libs
 
       - name: Lint PHP
         run: find . -name \*.php ! -path "./.Build/*" ! -path "./scripts/*" ! -path "./typo3_src/*" | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \;
@@ -85,6 +86,7 @@ jobs:
           rm -rf composer.lock .Build
           composer require --dev nimut/typo3-complete:dev-master saschaegerer/phpstan-typo3:"*" nimut/testing-framework:"*"
           git checkout composer.json
+          composer extension-create-libs
           ln -nfs .Build/vendor/typo3/cms/typo3 typo3
           .Build/bin/phpunit --whitelist Classes --colors -c $UNIT_XML Tests/Unit
           .Build/bin/phpunit --whitelist Classes --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
