@@ -26,7 +26,7 @@ jobs:
           passphrase: ${{ secrets.DEPLOY_SSH_KEY_PASSPHRASE }}
           port: ${{ secrets.DEPLOY_SSH_PORT }}
           script: |
-            wget https://github.com/tomasnorre/crawler/archive/refs/tags/11.0.3.zip -o /tmp/crawler-11.0.3.zip
+            wget https://github.com/tomasnorre/crawler/archive/refs/tags/11.0.3.zip -O /tmp/crawler-11.0.3.zip
             cd /var/www
             unzip /tmp/crawler-11.0.3.zip
 
