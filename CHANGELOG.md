@@ -9,6 +9,7 @@
 
 ### Fixed
 * PHP8 undefined array key when creating/updating/saving configuration record
+* RestrictedPages is getting crawled when Crawler Configuration contains the belonging UserGroup
 
 ### Deprecated
 #### Classes

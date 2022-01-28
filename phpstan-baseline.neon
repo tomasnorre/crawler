@@ -727,6 +727,11 @@ parameters:
 			path: Classes/Middleware/FrontendUserAuthenticator.php
 
 		-
+			message: "#^Method TYPO3\\\\CMS\\\\Frontend\\\\Authentication\\\\FrontendUserAuthentication\\:\\:fetchGroupData\\(\\) invoked with 1 parameter, 0 required\\.$#"
+			count: 1
+			path: Classes/Middleware/FrontendUserAuthenticator.php
+
+		-
 			message: "#^Parameter \\#1 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
 			count: 1
 			path: Classes/Middleware/FrontendUserAuthenticator.php

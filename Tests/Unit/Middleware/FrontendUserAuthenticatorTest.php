@@ -21,12 +21,18 @@ namespace AOE\Crawler\Tests\Unit\Middleware;
 
 use AOE\Crawler\Middleware\FrontendUserAuthenticator;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use TYPO3\CMS\Core\Http\Response;
 
 /**
  * @covers \AOE\Crawler\Middleware\FrontendUserAuthenticator
  */
 class FrontendUserAuthenticatorTest extends UnitTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var FrontendUserAuthenticator
      */
@@ -36,6 +42,23 @@ class FrontendUserAuthenticatorTest extends UnitTestCase
     {
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'] = md5('this_is_an_insecure_encryption_key');
         $this->subject = self::getAccessibleMock(FrontendUserAuthenticator::class, ['dummy'], [], '', false);
+    }
+
+    /**
+     * @test
+     */
+    public function processRequestNotHandled(): void
+    {
+        $request = $this->prophesize(ServerRequestInterface::class);
+        $request->getHeaderLine('X-T3CRAWLER')->willReturn(null);
+
+        $handlerResponse = new Response();
+        $handler = $this->prophesize(RequestHandlerInterface::class);
+        $handler->handle($request->reveal())->willReturn($handlerResponse);
+
+        $response = $this->subject->process($request->reveal(), $handler->reveal());
+
+        self::assertSame($handlerResponse, $response);
     }
 
     /**
