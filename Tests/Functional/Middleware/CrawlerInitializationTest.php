@@ -27,11 +27,14 @@ use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+/**
+ * @covers \AOE\Crawler\Middleware\CrawlerInitialization
+ */
 class CrawlerInitializationTest extends FunctionalTestCase
 {
     use ProphecyTrait;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->subject = GeneralUtility::makeInstance(CrawlerInitialization::class);
@@ -85,12 +88,12 @@ class CrawlerInitializationTest extends FunctionalTestCase
     {
         yield 'FE Groups set' => [
             'feGroups' => '1,2',
-            'expectedGroups' => ['User Groups: 1,2']
+            'expectedGroups' => ['User Groups: 1,2'],
         ];
 
         yield 'No FE Groups set' => [
             'feGroups' => '',
-            'expectedGroups' => ['User Groups: ']
+            'expectedGroups' => ['User Groups: '],
         ];
     }
 }

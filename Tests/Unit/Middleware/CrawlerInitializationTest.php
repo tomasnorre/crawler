@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace AOE\Crawler\Tests\Unit\Middleware;
@@ -25,6 +26,9 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Http\Response;
 
+/**
+ * @covers \AOE\Crawler\Middleware\CrawlerInitialization
+ */
 class CrawlerInitializationTest extends UnitTestCase
 {
     use ProphecyTrait;
@@ -47,5 +51,4 @@ class CrawlerInitializationTest extends UnitTestCase
 
         self::assertSame($handlerResponse, $response);
     }
-
 }
