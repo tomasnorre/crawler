@@ -26,6 +26,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
  * @covers \AOE\Crawler\Middleware\CrawlerInitialization
@@ -38,6 +39,8 @@ class CrawlerInitializationTest extends FunctionalTestCase
     {
         parent::setUp();
         $this->subject = GeneralUtility::makeInstance(CrawlerInitialization::class);
+        $tsfe = $this->prophesize(TypoScriptFrontendController::class);
+        $GLOBALS['TSFE'] = $tsfe->reveal();
     }
 
     /**
