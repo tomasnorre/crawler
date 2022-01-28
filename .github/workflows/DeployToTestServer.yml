@@ -1,0 +1,61 @@
+name: Deploy to Test Server
+
+#on:
+#  push:
+#    tags:
+#      - "**"
+on:
+  pull_request:
+    branches:
+      - "**"
+
+jobs:
+  Deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Start ssh-agent but set it to use the same ssh_auth_sock value.
+      # The agent will be running in all steps after this, so it
+      # should be one of the first.
+      - name: Setup SSH passphrase
+        env:
+          SSH_PASSPHRASE: ${{secrets.DEPLOY_SSH_KEY_PASSPHRASE}}
+          SSH_PRIVATE_KEY: ${{secrets.DEPLOY_SSH_KEY}}
+        run: |
+          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+          echo '#!/bin/sh' > ~/.ssh_askpass
+          echo 'echo $SSH_PASSPHRASE' >> ~/.ssh_askpass && chmod +x ~/.ssh_askpass
+          echo "$SSH_PRIVATE_KEY" | tr -d '\r' | DISPLAY=None SSH_ASKPASS=~/.ssh_askpass ssh-add - >/dev/null
+
+      - name: "Determine tag"
+        id: "determine-tag"
+        run: "echo \"::set-output name=tag::${GITHUB_REF#refs/tags/}\""
+
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEPLOY_SSH_HOST }}
+          username: ${{secrets.DEPLOY_SSH_KEY}}
+          passphrase: ${{secrets.DEPLOY_SSH_KEY_PASSPHRASE}}
+          port: ${{ secrets.DEPLOY_SSH_PORT }}
+          script: |
+            date
+            ls -l
+
+      #- name: Deploy to Test Server
+      #  run: |
+      #    if [ -n "${{ secrets.TYPO3_ORG_USERNAME }}" ] && [ -n "${{ secrets.TYPO3_ORG_PASSWORD }}" ]; then
+      #      echo -e "Preparing upload of release ${{ steps.determine-tag.outputs.tag }} to TER\n";
+
+            # Install ter client
+      #      composer global require helhum/ter-client
+
+            # Build extension files
+      #      composer extension-release
+
+            # Upload
+      #      TAG_MESSAGE=`git log -1 --pretty=%B`
+      #      echo "Tag-Message: ${TAG_MESSAGE}"
+      #      echo "Uploading release ${{ steps.determine-tag.outputs.tag }} to TER"
+      #      $HOME/.composer/vendor/helhum/ter-client/ter-client upload crawler . -u "${{ secrets.TYPO3_ORG_USERNAME }}" -p "${{ secrets.TYPO3_ORG_PASSWORD }}" -m "$TAG_MESSAGE"
+      #    fi;
+
