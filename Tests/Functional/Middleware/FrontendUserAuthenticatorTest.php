@@ -20,13 +20,13 @@ namespace AOE\Crawler\Tests\Functional\Middleware;
  */
 
 use AOE\Crawler\Middleware\FrontendUserAuthenticator;
+use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
-use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
  * @covers \AOE\Crawler\Middleware\FrontendUserAuthenticator

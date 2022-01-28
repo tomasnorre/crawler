@@ -32,7 +32,6 @@ jobs:
       - name: Install dependencies
         run: |
           composer install --no-progress
-          composer extension-create-libs
 
       - name: Unit Tests
         run: |

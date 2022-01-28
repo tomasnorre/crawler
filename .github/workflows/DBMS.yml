@@ -37,7 +37,6 @@ jobs:
           composer require --dev nimut/typo3-complete:${{ matrix.typo3 }} --no-progress
           git checkout composer.json
           ln -nfs .Build/vendor/typo3/cms/typo3 typo3
-          composer extension-create-libs
 
       - name: Wait for PostgreSQL
         run: |
@@ -118,7 +117,6 @@ jobs:
           composer require --dev nimut/typo3-complete:${{ matrix.typo3 }} --no-progress
           git checkout composer.json
           ln -nfs .Build/vendor/typo3/cms/typo3 typo3
-          composer extension-create-libs
 
       - name: Functional Tests
         run: |
@@ -160,7 +158,6 @@ jobs:
           composer require --dev nimut/typo3-complete:${{ matrix.typo3 }} --no-progress
           git checkout composer.json
           ln -nfs .Build/vendor/typo3/cms/typo3 typo3
-          composer extension-create-libs
 
       - name: Functional Tests
         run: |
