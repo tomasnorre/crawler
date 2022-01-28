@@ -1,23 +1,14 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 11.0.3-dev
+## Crawler 11.0.3
+Crawler 11.0.3 was released on January 28th, 2022
 
 ### Added
 * PHP 8.1 compatibility
 
-### Changed
-
 ### Fixed
 * PHP8 undefined array key when creating/updating/saving configuration record
 * RestrictedPages is getting crawled when Crawler Configuration contains the belonging UserGroup
-
-### Deprecated
-#### Classes
-#### Functions & Properties
-
-### Removed
-#### Classes
-#### Functions & Properties
 
 ## Crawler 11.0.2
 Crawler 11.0.2 was released on January 11th, 2022
