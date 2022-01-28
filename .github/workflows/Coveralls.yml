@@ -30,8 +30,7 @@ jobs:
           tools: composer:v2
 
       - name: Install dependencies
-        run: |
-          composer install --no-progress
+        run: composer install --no-progress
 
       - name: Unit Tests
         run: |
