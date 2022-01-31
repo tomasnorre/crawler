@@ -20,6 +20,7 @@ namespace AOE\Crawler\Service;
  */
 
 use Psr\Http\Message\UriInterface;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Routing\SiteMatcher;
 use TYPO3\CMS\Core\Site\Entity\Site;
@@ -37,8 +38,10 @@ class UrlService
      * @param int $httpsOrHttp see tx_crawler_configuration.force_ssl
      * @throws \TYPO3\CMS\Core\Exception\SiteNotFoundException
      * @throws \TYPO3\CMS\Core\Routing\InvalidRouteArgumentsException
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\DBAL\Driver\Exception
      */
-    public function getUrlFromPageAndQueryParameters(int $pageId, string $queryString, ?string $alternativeBaseUrl, int $httpsOrHttp): UriInterface
+    public function getUrlFromPageAndQueryParameters(int $pageId, string $queryString, ?string $alternativeBaseUrl, int $httpsOrHttp): ?UriInterface
     {
         $url = new Uri();
         $site = GeneralUtility::makeInstance(SiteMatcher::class)->matchByPageId($pageId);
@@ -47,6 +50,24 @@ class UrlService
             $queryParts = [];
             parse_str($queryString, $queryParts);
             unset($queryParts['id']);
+
+            if (isset($queryParts['L']) && ! empty($queryParts['L'])) {
+                $requestedLanguage = $site->getLanguageById((int) $queryParts['L']);
+                $languages = array_merge([$queryParts['L']], $requestedLanguage->getFallbackLanguageIds());
+
+                $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('pages');
+                $query = $queryBuilder->select('*')
+                    ->from('pages')
+                    ->where($queryBuilder->expr()->in('sys_language_uid', $languages))
+                    ->andWhere($queryBuilder->expr()->eq('l10n_parent', $pageId))
+                    ->execute();
+                $rows = $query->fetch();
+
+                if (empty($rows)) {
+                    return null;
+                }
+            }
+
             // workaround as long as we don't have native language support in crawler configurations
             if (isset($queryParts['L'])) {
                 $queryParts['_language'] = $queryParts['L'];
