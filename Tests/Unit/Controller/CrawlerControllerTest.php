@@ -94,6 +94,19 @@ class CrawlerControllerTest extends UnitTestCase
 
     /**
      * @test
+     */
+    public function getUrlsForPageRowSetsSkipMessageIfUidNotAnInteger(): void
+    {
+        $skipMessage = '';
+        $this->crawlerController->getUrlsForPageRow(['uid' => 'string'], $skipMessage);
+        self::assertEquals(
+            'PageUid "string" was not an integer',
+            $skipMessage
+        );
+    }
+
+    /**
+     * @test
      *
      * @dataProvider getUrlsForPageRowDataProvider
      */
