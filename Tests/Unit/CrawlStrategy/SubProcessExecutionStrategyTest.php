@@ -19,14 +19,39 @@ namespace AOE\Crawler\Tests\Unit\CrawlStrategy;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategy;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * @covers \AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategy
  */
 class SubProcessExecutionStrategyTest extends UnitTestCase
 {
+    use ProphecyTrait;
+
+    /**
+     * @test
+     */
+    public function constructorTest(): void
+    {
+        $configuration = [
+            'makeDirectRequests' => 0,
+            'frontendBasePath' => '/',
+        ];
+
+        $extensionConfigurationProvider = $this->prophesize(ExtensionConfigurationProvider::class);
+        $extensionConfigurationProvider->getExtensionConfiguration()->willReturn($configuration);
+        $crawlStrategy = GeneralUtility::makeInstance(SubProcessExecutionStrategy::class, $extensionConfigurationProvider->reveal());
+
+        self::assertInstanceOf(
+            SubProcessExecutionStrategy::class,
+            $crawlStrategy
+        );
+    }
+
     /**
      * @test
      * @dataProvider buildRequestHandlersDataProvider
