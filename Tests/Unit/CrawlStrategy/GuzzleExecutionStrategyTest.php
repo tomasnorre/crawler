@@ -21,6 +21,8 @@ namespace AOE\Crawler\Tests\Unit\CrawlStrategy;
 
 use AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategy;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Psr\Log\LoggerInterface;
 use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Http\Uri;
 
@@ -29,6 +31,8 @@ use TYPO3\CMS\Core\Http\Uri;
  */
 class GuzzleExecutionStrategyTest extends UnitTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var GuzzleExecutionStrategy
      */
@@ -61,6 +65,31 @@ class GuzzleExecutionStrategyTest extends UnitTestCase
         self::assertStringContainsString(
             'Crawler extension for TYPO3',
             $this->guzzleExecutionStrategy->fetchUrlContents($url, $crawlerId)
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function fetchUrlContentThrowsException(): void
+    {
+        $logger = $this->prophesize(LoggerInterface::class);
+        $logger->debug(
+            'Error while opening "https://not-important.tld" - 0 cURL error 6: Could not resolve host: not-important.tld (see https://curl.haxx.se/libcurl/c/libcurl-errors.html)',
+            ['crawlerId' => '2981d019ade833a37995c1b569ef87b6b5af7287']
+        )->shouldBeCalledOnce();
+
+        $crawlerId = sha1('this-is-testing');
+        $url = new Uri('https://not-important.tld');
+        $guzzleExecutionStrategy = $this->createPartialMock(
+            GuzzleExecutionStrategy::class,
+            []
+        );
+        $guzzleExecutionStrategy->setLogger($logger->reveal());
+
+        self::assertEquals(
+            '0 cURL error 6: Could not resolve host: not-important.tld (see https://curl.haxx.se/libcurl/c/libcurl-errors.html)',
+            $guzzleExecutionStrategy->fetchUrlContents($url, $crawlerId)
         );
     }
 }
