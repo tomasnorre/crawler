@@ -2,7 +2,11 @@ name: "Backwards Compatibility Check"
 
 on:
   pull_request:
+    branches:
+      - "**"
   push:
+    branches:
+      - "main"
 
 jobs:
   BC-Breaks:
@@ -40,7 +44,6 @@ jobs:
       - name: "Roave Backward Compatibility Check"
         run: |
           # To ensure compability with the roave tool.
-          rm -rf .Build composer.lock
           composer remove --dev nimut/typo3-complete nimut/testing-framework rector/rector symplify/easy-coding-standard typo3/testing-framework
           rm -rf .Build composer.lock
           composer require --dev roave/backward-compatibility-check:"6.0.x-dev"
