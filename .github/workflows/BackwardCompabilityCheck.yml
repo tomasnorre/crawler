@@ -11,8 +11,8 @@ jobs:
 
     strategy:
       matrix:
-        php-version:
-          - "8.0"
+        php-version: '8.0'
+        extensions: curl
 
     steps:
       - name: "Checkout"
