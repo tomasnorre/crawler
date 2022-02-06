@@ -75,4 +75,16 @@ class ItemProviderTest extends UnitTestCase
             $subject->canHandle()
         );
     }
+
+    /**
+     * @test
+     */
+    public function getPriorityReturnsExpectedValue(): void
+    {
+        $subject = new ItemProvider('tx_crawler_configuration', 'identifier');
+        self::assertEquals(
+            50,
+            $subject->getPriority()
+        );
+    }
 }

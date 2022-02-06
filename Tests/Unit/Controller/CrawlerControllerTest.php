@@ -298,4 +298,23 @@ class CrawlerControllerTest extends UnitTestCase
             'expected' => false,
         ];
     }
+
+    /**
+     * @test
+     */
+    public function setExtensionSettings(): void
+    {
+        $extensionSettings = [
+            'makeDirectRequests' => 0,
+            'frontendBasePath' => '/',
+        ];
+
+        /** @var CrawlerController $crawlerController */
+        $crawlerController = $this->getAccessibleMock(CrawlerController::class, ['dummy'], [], '', false);
+        $crawlerController->setExtensionSettings($extensionSettings);
+        self::assertEquals(
+            $extensionSettings,
+            $crawlerController->extensionSettings
+        );
+    }
 }

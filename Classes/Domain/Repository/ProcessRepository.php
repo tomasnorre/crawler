@@ -236,6 +236,7 @@ class ProcessRepository extends Repository
     /**
      * Get limit clause
      * @deprecated Using ProcessRepository::getLimitFromItemCountAndOffset() is deprecated since 9.1.1 and will be removed in v11.x, was not used, so will be removed
+     * @codeCoverageIgnore
      */
     public static function getLimitFromItemCountAndOffset(int $itemCount, int $offset): string
     {
