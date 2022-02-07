@@ -360,15 +360,6 @@ parameters:
 		-
 			message:
 				"""
-					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
-				"""
-			count: 1
-			path: Classes/Domain/Repository/ConfigurationRepository.php
-
-		-
-			message:
-				"""
 					#^Call to deprecated method fetchAll\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
 					Use fetchAllNumeric\\(\\), fetchAllAssociative\\(\\) or fetchFirstColumn\\(\\) instead\\.$#
 				"""
@@ -396,7 +387,7 @@ parameters:
 					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
 					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
 				"""
-			count: 4
+			count: 3
 			path: Classes/Domain/Repository/ProcessRepository.php
 
 		-
@@ -468,7 +459,7 @@ parameters:
 					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
 					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
 				"""
-			count: 9
+			count: 2
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
@@ -477,7 +468,7 @@ parameters:
 					#^Call to deprecated method fetchAll\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
 					Use fetchAllNumeric\\(\\), fetchAllAssociative\\(\\) or fetchFirstColumn\\(\\) instead\\.$#
 				"""
-			count: 4
+			count: 3
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
@@ -486,7 +477,7 @@ parameters:
 					#^Call to deprecated method fetchColumn\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
 					Use fetchOne\\(\\) instead\\.$#
 				"""
-			count: 7
+			count: 6
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
