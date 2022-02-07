@@ -51,15 +51,18 @@ class UrlService
             parse_str($queryString, $queryParts);
             unset($queryParts['id']);
 
-            if (isset($queryParts['L']) && ! empty($queryParts['L'])) {
+            if (isset($queryParts['L']) && !empty($queryParts['L'])) {
                 $requestedLanguage = $site->getLanguageById((int) $queryParts['L']);
-                $languages = array_merge([$queryParts['L']], $requestedLanguage->getFallbackLanguageIds());
+                $languages = array_merge([(int) $queryParts['L']], $requestedLanguage->getFallbackLanguageIds());
 
                 $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('pages');
                 $query = $queryBuilder->select('*')
                     ->from('pages')
-                    ->where($queryBuilder->expr()->in('sys_language_uid', $languages))
-                    ->andWhere($queryBuilder->expr()->eq('l10n_parent', $pageId))
+                    ->orWhere(
+                        $queryBuilder->expr()->eq('uid', $pageId),
+                        $queryBuilder->expr()->eq('l10n_parent', $pageId)
+                    )
+                    ->andWhere($queryBuilder->expr()->in('sys_language_uid', $languages))
                     ->execute();
                 $rows = $query->fetch();
 
@@ -77,7 +80,7 @@ class UrlService
                 $siteLanguage = $site->getDefaultLanguage();
             }
             $url = $site->getRouter()->generateUri($pageId, $queryParts);
-            if (! empty($alternativeBaseUrl)) {
+            if (!empty($alternativeBaseUrl)) {
                 $alternativeBaseUrl = new Uri($alternativeBaseUrl);
                 $url = $url->withHost($alternativeBaseUrl->getHost());
                 $url = $url->withScheme($alternativeBaseUrl->getScheme());

@@ -321,6 +321,10 @@ class CrawlerController implements LoggerAwareInterface
                 $vv['subCfg']['force_ssl'] ?? 0
             );
 
+            if ($url === null) {
+                continue;
+            }
+
             // Create key by which to determine unique-ness:
             $uKey = $url . '|' . ($vv['subCfg']['userGroups'] ?? '') . '|' . ($vv['subCfg']['procInstrFilter'] ?? '');
 
