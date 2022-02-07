@@ -100,6 +100,7 @@ class ProcessRepository extends Repository
 
     /**
      * @param string $processId
+     * @deprecated since 11.0.4 will be removed v13.x
      */
     public function findByProcessId($processId)
     {
