@@ -19,6 +19,7 @@ namespace AOE\Crawler\CrawlStrategy;
  * The TYPO3 project - inspiring people to share!
  */
 
+use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
@@ -56,6 +57,14 @@ class GuzzleExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
             $message = ($response ? $response->getStatusCode() : 0)
                 . chr(32)
                 . ($response ? $response->getReasonPhrase() : $e->getMessage());
+
+            $this->logger->debug(
+                sprintf('Error while opening "%s" - ' . $message, $url),
+                ['crawlerId' => $crawlerId]
+            );
+            return $message;
+        } catch (ConnectException $e) {
+            $message = $e->getCode() . chr(32) . $e->getMessage();
 
             $this->logger->debug(
                 sprintf('Error while opening "%s" - ' . $message, $url),

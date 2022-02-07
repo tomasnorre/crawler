@@ -206,5 +206,45 @@ class ConfigurationServiceTest extends UnitTestCase
                 ],
             ],
         ];
+
+        yield 'PageTSConfig with mountPoint given, but with params that needs trimming' => [
+            'pageTSConfig' => [
+                'tx_crawler.' => [
+                    'crawlerCfg.' => [
+                        'paramSets.' => [
+                            'myConfigurationKeyName' => '&S=CRAWL&L=[0-1]',
+                            'myConfigurationKeyName.' => [
+                                'pidsOnly' => '1',
+                                'procInstrFilter' => ' tx_indexedsearch_reindex ',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'pageId' => 1,
+            'mountPoint' => 'mpstring',
+            'expected' => [
+                'myConfigurationKeyName' => [
+                    'subCfg' => [
+                        'pidsOnly' => '1',
+                        'procInstrFilter' => 'tx_indexedsearch_reindex',
+                        'key' => 'myConfigurationKeyName',
+                    ],
+                    'paramParsed' => [
+                        'S' => 'CRAWL',
+                        'L' => '[0-1]',
+                    ],
+                    'paramExpanded' => [
+                        'S' => ['CRAWL'],
+                        'L' => [0, 1],
+                    ],
+                    'origin' => 'pagets',
+                    'URLs' => [
+                        '?id=1&MP=mpstring&L=0&S=CRAWL',
+                        '?id=1&MP=mpstring&L=1&S=CRAWL',
+                    ],
+                ],
+            ],
+        ];
     }
 }

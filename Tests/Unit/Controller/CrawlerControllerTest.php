@@ -94,6 +94,19 @@ class CrawlerControllerTest extends UnitTestCase
 
     /**
      * @test
+     */
+    public function getUrlsForPageRowSetsSkipMessageIfUidNotAnInteger(): void
+    {
+        $skipMessage = '';
+        $this->crawlerController->getUrlsForPageRow(['uid' => 'string'], $skipMessage);
+        self::assertEquals(
+            'PageUid "string" was not an integer',
+            $skipMessage
+        );
+    }
+
+    /**
+     * @test
      *
      * @dataProvider getUrlsForPageRowDataProvider
      */
@@ -284,5 +297,24 @@ class CrawlerControllerTest extends UnitTestCase
             ],
             'expected' => false,
         ];
+    }
+
+    /**
+     * @test
+     */
+    public function setExtensionSettings(): void
+    {
+        $extensionSettings = [
+            'makeDirectRequests' => 0,
+            'frontendBasePath' => '/',
+        ];
+
+        /** @var CrawlerController $crawlerController */
+        $crawlerController = $this->getAccessibleMock(CrawlerController::class, ['dummy'], [], '', false);
+        $crawlerController->setExtensionSettings($extensionSettings);
+        self::assertEquals(
+            $extensionSettings,
+            $crawlerController->extensionSettings
+        );
     }
 }
