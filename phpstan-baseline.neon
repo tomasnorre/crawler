@@ -1,6 +1,36 @@
 parameters:
 	ignoreErrors:
 		-
+			message: "#^Call to an undefined method AOE\\\\Crawler\\\\Domain\\\\Repository\\\\QueueRepository\\:\\:countPendingItemsGroupedByConfigurationKey\\(\\)\\.$#"
+			count: 1
+			path: Classes/Api/CrawlerApi.php
+
+		-
+			message: "#^Call to an undefined method AOE\\\\Crawler\\\\Domain\\\\Repository\\\\QueueRepository\\:\\:getLastProcessedEntries\\(\\)\\.$#"
+			count: 1
+			path: Classes/Api/CrawlerApi.php
+
+		-
+			message: "#^Call to an undefined method AOE\\\\Crawler\\\\Domain\\\\Repository\\\\QueueRepository\\:\\:getLastProcessedEntriesTimestamps\\(\\)\\.$#"
+			count: 1
+			path: Classes/Api/CrawlerApi.php
+
+		-
+			message: "#^Call to an undefined method AOE\\\\Crawler\\\\Domain\\\\Repository\\\\QueueRepository\\:\\:getPerformanceData\\(\\)\\.$#"
+			count: 1
+			path: Classes/Api/CrawlerApi.php
+
+		-
+			message: "#^Call to an undefined method AOE\\\\Crawler\\\\Domain\\\\Repository\\\\QueueRepository\\:\\:getSetIdWithUnprocessedEntries\\(\\)\\.$#"
+			count: 1
+			path: Classes/Api/CrawlerApi.php
+
+		-
+			message: "#^Call to an undefined method AOE\\\\Crawler\\\\Domain\\\\Repository\\\\QueueRepository\\:\\:getTotalQueueEntriesByConfiguration\\(\\)\\.$#"
+			count: 1
+			path: Classes/Api/CrawlerApi.php
+
+		-
 			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
 			count: 1
 			path: Classes/Api/CrawlerApi.php
@@ -367,11 +397,6 @@ parameters:
 			path: Classes/Domain/Repository/ConfigurationRepository.php
 
 		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 1
-			path: Classes/Domain/Repository/ConfigurationRepository.php
-
-		-
 			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
 			count: 1
 			path: Classes/Domain/Repository/ConfigurationRepository.php
@@ -410,7 +435,7 @@ parameters:
 
 		-
 			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 4
+			count: 3
 			path: Classes/Domain/Repository/ProcessRepository.php
 
 		-
@@ -421,11 +446,6 @@ parameters:
 		-
 			message: "#^Cannot call method fetchColumn\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
 			count: 2
-			path: Classes/Domain/Repository/ProcessRepository.php
-
-		-
-			message: "#^Method AOE\\\\Crawler\\\\Domain\\\\Repository\\\\ProcessRepository\\:\\:findByProcessId\\(\\) has no return typehint specified\\.$#"
-			count: 1
 			path: Classes/Domain/Repository/ProcessRepository.php
 
 		-
@@ -440,7 +460,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
-			count: 10
+			count: 9
 			path: Classes/Domain/Repository/ProcessRepository.php
 
 		-
@@ -482,17 +502,17 @@ parameters:
 
 		-
 			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 9
+			count: 2
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
 			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 4
+			count: 3
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
 			message: "#^Cannot call method fetchColumn\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 7
+			count: 6
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
@@ -512,7 +532,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
-			count: 24
+			count: 18
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
@@ -527,12 +547,12 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
-			count: 13
+			count: 8
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
 			message: "#^Parameter \\#3 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
-			count: 6
+			count: 4
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-

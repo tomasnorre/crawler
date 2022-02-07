@@ -98,22 +98,6 @@ class ProcessRepository extends Repository
         return $collection;
     }
 
-    /**
-     * @param string $processId
-     * @deprecated since 11.0.4 will be removed v13.x
-     */
-    public function findByProcessId($processId)
-    {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
-
-        return $queryBuilder
-            ->select('*')
-            ->from(self::TABLE_NAME)
-            ->where(
-                $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId, PDO::PARAM_STR))
-            )->execute()->fetch(0);
-    }
-
     public function findAllActive(): ProcessCollection
     {
         /** @var ProcessCollection $collection */
@@ -156,18 +140,6 @@ class ProcessRepository extends Repository
             ->where(
                 $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId, PDO::PARAM_STR))
             )->execute();
-    }
-
-    /**
-     * Returns the number of active processes.
-     *
-     * @return int
-     * @deprecated Using ProcessRepository->countActive() is deprecated since 9.1.1 and will be removed in v11.x, please use ProcessRepository->findAllActive->count() instead
-     * @codeCoverageIgnore
-     */
-    public function countActive()
-    {
-        return $this->findAllActive()->count();
     }
 
     /**
@@ -232,19 +204,6 @@ class ProcessRepository extends Repository
             )
             ->execute()
             ->fetchColumn(0);
-    }
-
-    /**
-     * Get limit clause
-     * @deprecated Using ProcessRepository::getLimitFromItemCountAndOffset() is deprecated since 9.1.1 and will be removed in v11.x, was not used, so will be removed
-     * @codeCoverageIgnore
-     */
-    public static function getLimitFromItemCountAndOffset(int $itemCount, int $offset): string
-    {
-        $itemCount = filter_var($itemCount, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'default' => 20]]);
-        $offset = filter_var($offset, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0, 'default' => 0]]);
-
-        return $offset . ', ' . $itemCount;
     }
 
     public function deleteProcessesWithoutItemsAssigned(): void

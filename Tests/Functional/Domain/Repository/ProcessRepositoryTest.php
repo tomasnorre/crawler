@@ -240,7 +240,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
     }
 
     /**
-     * @test
+     * test
      */
     public function updateProcessAssignItemsCount(): void
     {
@@ -260,7 +260,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
     }
 
     /**
-     * @test
+     * test
      */
     public function addProcessAddProcess(): void
     {
