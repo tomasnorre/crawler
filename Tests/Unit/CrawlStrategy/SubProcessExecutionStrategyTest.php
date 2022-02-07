@@ -23,6 +23,8 @@ use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategy;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Psr\Log\LoggerInterface;
+use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -49,6 +51,30 @@ class SubProcessExecutionStrategyTest extends UnitTestCase
         self::assertInstanceOf(
             SubProcessExecutionStrategy::class,
             $crawlStrategy
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function fetchUrlContentsInvalidSchema(): void
+    {
+        $logger = $this->prophesize(LoggerInterface::class);
+        $logger->debug(
+            'Scheme does not match for url "/not-an-url"',
+            ['crawlerId' => '2981d019ade833a37995c1b569ef87b6b5af7287']
+        )->shouldBeCalledOnce();
+
+        $crawlerId = sha1('this-is-testing');
+        $url = new Uri('not-an-url');
+        $subProcessExecutionStrategy = $this->createPartialMock(
+            SubProcessExecutionStrategy::class,
+            []
+        );
+        $subProcessExecutionStrategy->setLogger($logger->reveal());
+
+        self::assertFalse(
+            $subProcessExecutionStrategy->fetchUrlContents($url, $crawlerId)
         );
     }
 
