@@ -321,7 +321,7 @@ class CrawlerController implements LoggerAwareInterface
                 $vv['subCfg']['force_ssl'] ?? 0
             );
 
-            if ($url === null) {
+            if ($url == null) {
                 continue;
             }
 
