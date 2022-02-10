@@ -7,10 +7,24 @@
 ### Changed
 
 ### Fixed
+* Crawler could not index frontend because of trustedHostPattern mismatch
+* Fatal PHP error is thrown in the backend crawler log
 
 ### Deprecated
 #### Classes
 #### Functions & Properties
+* ConfigurationRepository->getCrawlerConfigurationRecords()
+* ProcessRepository->findByProcessId()
+* QueueRepository->countAllUnassignedPendingItems()
+* QueueRepository->countPendingItemsGroupedByConfigurationKey()
+* QueueRepository->getSetIdWithUnprocessedEntries()
+* QueueRepository->getTotalQueueEntriesByConfiguration()
+* QueueRepository->getLastProcessedEntriesTimestamps()
+* QueueRepository->getLastProcessedEntries()
+* QueueRepository->getPerformanceData()
+* QueueRepository->isPageInQueueTimed()
+* QueueRepository->getAvailableSets()
+* QueueRepository->findByQueueId()
 
 ### Removed
 #### Classes
