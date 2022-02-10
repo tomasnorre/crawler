@@ -9,6 +9,7 @@
 ### Fixed
 * Crawler could not index frontend because of trustedHostPattern mismatch
 * Fatal PHP error is thrown in the backend crawler log
+* Prevent buildQueue from creating entries for non-localized pages
 
 ### Deprecated
 #### Classes
