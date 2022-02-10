@@ -370,7 +370,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                     $rowData['exec_time'] = $execTime;
                 }
                 $rowData['result_status'] = GeneralUtility::fixed_lgd_cs($resStatus, 50);
-                $url = htmlspecialchars($parameters['url'] ?? $parameters['alturl'], ENT_QUOTES | ENT_HTML5);
+                $url = htmlspecialchars((string)($parameters['url'] ?? $parameters['alturl']), ENT_QUOTES | ENT_HTML5);
                 $rowData['url'] = '<a href="' . $url . '" target="_newWIndow">' . $url . '</a>';
                 $rowData['feUserGroupList'] = $parameters['feUserGroupList'] ?? '';
                 $rowData['procInstructions'] = is_array($parameters['procInstructions']) ? implode('; ', $parameters['procInstructions']) : '';

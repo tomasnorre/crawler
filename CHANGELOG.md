@@ -7,6 +7,7 @@
 ### Changed
 
 ### Fixed
+* Fatal PHP error is thrown in the backend crawler log
 
 ### Deprecated
 #### Classes
