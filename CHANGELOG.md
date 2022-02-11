@@ -1,7 +1,24 @@
 # Changelog TYPO3 Crawler
 
+## Crawler 11.0.5-dev
+
+### Added
+
+### Changed
+
+### Fixed
+
+### Deprecated
+#### Classes
+#### Functions & Properties
+
+### Removed
+#### Classes
+#### Functions & Properties
+
+
 ## Crawler 11.0.4
-Crawler 11.0.4 was released on January 28th, 2022
+Crawler 11.0.4 was released on February 11th, 2022
 
 ### Fixed
 * Crawler could not index frontend because of trustedHostPattern mismatch
