@@ -35,6 +35,7 @@ use AOE\Crawler\Service\PageService;
 use AOE\Crawler\Service\UrlService;
 use AOE\Crawler\Value\QueueRow;
 use PDO;
+use Psr\Http\Message\UriInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
@@ -314,16 +315,18 @@ class CrawlerController implements LoggerAwareInterface
             if (! $this->drawURLs_PIfilter($vv['subCfg']['procInstrFilter'] ?? '', $incomingProcInstructions)) {
                 continue;
             }
-            $url = (string) $urlService->getUrlFromPageAndQueryParameters(
+            $url = $urlService->getUrlFromPageAndQueryParameters(
                 $pageId,
                 $urlQuery,
                 $vv['subCfg']['baseUrl'] ?? null,
                 $vv['subCfg']['force_ssl'] ?? 0
             );
 
-            if ($url == null) {
+            if (! $url instanceof UriInterface) {
                 continue;
             }
+
+            $url = (string) $url;
 
             // Create key by which to determine unique-ness:
             $uKey = $url . '|' . ($vv['subCfg']['userGroups'] ?? '') . '|' . ($vv['subCfg']['procInstrFilter'] ?? '');
