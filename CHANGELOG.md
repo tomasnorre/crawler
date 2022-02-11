@@ -1,10 +1,7 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 11.0.4-dev
-
-### Added
-
-### Changed
+## Crawler 11.0.4
+Crawler 11.0.4 was released on January 28th, 2022
 
 ### Fixed
 * Crawler could not index frontend because of trustedHostPattern mismatch
@@ -13,7 +10,6 @@
 * CrawlerController checking if URL is correct ObjectType fixed
 
 ### Deprecated
-#### Classes
 #### Functions & Properties
 * ConfigurationRepository->getCrawlerConfigurationRecords()
 * ProcessRepository->findByProcessId()
@@ -27,10 +23,6 @@
 * QueueRepository->isPageInQueueTimed()
 * QueueRepository->getAvailableSets()
 * QueueRepository->findByQueueId()
-
-### Removed
-#### Classes
-#### Functions & Properties
 
 ## Crawler 11.0.3
 Crawler 11.0.3 was released on January 28th, 2022
