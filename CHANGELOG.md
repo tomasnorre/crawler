@@ -13,6 +13,8 @@
 #### Functions & Properties
 
 ### Removed
+* Obsolete columns (first and last time) from Process Overview
+
 #### Classes
 #### Functions & Properties
 
