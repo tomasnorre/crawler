@@ -35,14 +35,22 @@ class TcaUtilityTest extends UnitTestCase
     {
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'] = $procInstructions;
 
-        $subject = $this->createPartialMock(TcaUtility::class, ['getExtensionIcon']);
-        $subject->expects($this->any())
-            ->method('getExtensionIcon')
-            ->willReturn('ext/crawler/Resources/Public/Icons/Extension.svg');
+        $subject = new TcaUtility();
+
+        if (!empty($expected['items'][0][2])) {
+            self::assertStringContainsString('ext/crawler/Resources/Public/Icons/Extension.svg', $expected['items'][0][2]);
+            unset($expected['items'][0][2]);
+        }
+
+        $actual = $subject->getProcessingInstructions($configuration);
+        // Remove the Extension Icon if present, as already tested
+        if (!empty($actual['items'][0][2])) {
+            unset($actual['items'][0][2]);
+        }
 
         self::assertEquals(
             $expected,
-            $subject->getProcessingInstructions($configuration)
+            $actual
         );
     }
 
