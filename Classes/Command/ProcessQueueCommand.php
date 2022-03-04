@@ -34,33 +34,11 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 class ProcessQueueCommand extends Command
 {
-    /**
-     * @deprecated since 9.2.5 will be made private in v11.x
-     */
-    public const CLI_STATUS_NOTHING_PROCCESSED = 0;
-
-    /**
-     * queue not empty
-     * @deprecated since 9.2.5 will be made private in v11.x
-     */
-    public const CLI_STATUS_REMAIN = 1;
-
-    /**
-     * (some) queue items where processed
-     * @deprecated since 9.2.5 will be made private in v11.x
-     */
-    public const CLI_STATUS_PROCESSED = 2;
-
-    /**
-     * instance didn't finish
-     * @deprecated since 9.2.5 will be made private in v11.x
-     */
-    public const CLI_STATUS_ABORTED = 4;
-
-    /**
-     * @deprecated since 9.2.5 will be made private in v11.x
-     */
-    public const CLI_STATUS_POLLABLE_PROCESSED = 8;
+    private const CLI_STATUS_NOTHING_PROCCESSED = 0;
+    private const CLI_STATUS_REMAIN = 1;
+    private const CLI_STATUS_PROCESSED = 2;
+    private const CLI_STATUS_ABORTED = 4;
+    private const CLI_STATUS_POLLABLE_PROCESSED = 8;
 
     /**
      * @var Crawler

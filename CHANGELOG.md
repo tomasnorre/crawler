@@ -5,6 +5,7 @@
 ### Added
 
 ### Changed
+* !!! Switch constants in ProcessQueueCommand from public to private
 
 ### Fixed
 
