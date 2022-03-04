@@ -124,7 +124,8 @@
         "post-autoload-dump": [
             "mkdir -p .Build/Web/typo3conf/ext/",
             "[ -L .Build/Web/typo3conf/ext/crawler ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/crawler",
-            "export TYPO3_PATH_WEB=$PWD/.Build/Web"
+            "export TYPO3_PATH_WEB=$PWD/.Build/Web",
+            "@extension-create-libs"
         ],
         "analyse": [
             "[ -e .Build/bin/phpstan ] || composer update",
