@@ -20,9 +20,10 @@ namespace AOE\Crawler\Tests\Functional\Command;
  */
 
 use AOE\Crawler\Command\ProcessQueueCommand;
+use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class ProcessQueueCommandTest extends AbstractCommandTests
+class ProcessQueueCommandTest extends FunctionalTestCase
 {
     /**
      * @var array
