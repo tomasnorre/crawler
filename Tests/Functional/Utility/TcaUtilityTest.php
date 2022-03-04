@@ -20,7 +20,7 @@ namespace AOE\Crawler\Tests\Functional\Utility;
  */
 
 use AOE\Crawler\Utility\TcaUtility;
-use Nimut\TestingFramework\v10\TestCase\FunctionalTestCase;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
  * @covers \AOE\Crawler\Utility\TcaUtility
