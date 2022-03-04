@@ -222,19 +222,6 @@ class ProcessRepository extends Repository
             ->fetchColumn(0);
     }
 
-    /**
-     * Get limit clause
-     * @deprecated Using ProcessRepository::getLimitFromItemCountAndOffset() is deprecated since 9.1.1 and will be removed in v11.x, was not used, so will be removed
-     * @codeCoverageIgnore
-     */
-    public static function getLimitFromItemCountAndOffset(int $itemCount, int $offset): string
-    {
-        $itemCount = filter_var($itemCount, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'default' => 20]]);
-        $offset = filter_var($offset, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0, 'default' => 0]]);
-
-        return $offset . ', ' . $itemCount;
-    }
-
     public function deleteProcessesWithoutItemsAssigned(): void
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);

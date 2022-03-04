@@ -23,6 +23,7 @@
 #### Functions & Properties
 * !!! ConfigurationRepository->getCrawlerConfigurationRecords()
 * !!! ProcessRepository->countActive()
+* !!! ProcessRepository->getLimitFromItemCountAndOffset()
 * !!! ProcessQueueCommandTest->queueRepository
 
 ## Crawler 11.0.4
