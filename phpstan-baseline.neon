@@ -165,42 +165,6 @@ parameters:
 			path: Classes/Command/ProcessQueueCommand.php
 
 		-
-			message:
-				"""
-					#^Fetching deprecated class constant CLI_STATUS_ABORTED of class AOE\\\\Crawler\\\\Command\\\\ProcessQueueCommand\\:
-					since 9\\.2\\.5 will be made private in v11\\.x$#
-				"""
-			count: 6
-			path: Classes/Command/ProcessQueueCommand.php
-
-		-
-			message:
-				"""
-					#^Fetching deprecated class constant CLI_STATUS_NOTHING_PROCCESSED of class AOE\\\\Crawler\\\\Command\\\\ProcessQueueCommand\\:
-					since 9\\.2\\.5 will be made private in v11\\.x$#
-				"""
-			count: 2
-			path: Classes/Command/ProcessQueueCommand.php
-
-		-
-			message:
-				"""
-					#^Fetching deprecated class constant CLI_STATUS_PROCESSED of class AOE\\\\Crawler\\\\Command\\\\ProcessQueueCommand\\:
-					since 9\\.2\\.5 will be made private in v11\\.x$#
-				"""
-			count: 1
-			path: Classes/Command/ProcessQueueCommand.php
-
-		-
-			message:
-				"""
-					#^Fetching deprecated class constant CLI_STATUS_REMAIN of class AOE\\\\Crawler\\\\Command\\\\ProcessQueueCommand\\:
-					since 9\\.2\\.5 will be made private in v11\\.x$#
-				"""
-			count: 1
-			path: Classes/Command/ProcessQueueCommand.php
-
-		-
 			message: "#^Parameter \\#1 \\$input of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:shortMD5\\(\\) expects string, float given\\.$#"
 			count: 1
 			path: Classes/Command/ProcessQueueCommand.php
