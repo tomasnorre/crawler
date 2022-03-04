@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Unit\Utility;
+namespace AOE\Crawler\Tests\Functional\Utility;
 
 /*
  * (c) 2022 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
@@ -20,13 +20,15 @@ namespace AOE\Crawler\Tests\Unit\Utility;
  */
 
 use AOE\Crawler\Utility\TcaUtility;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use Nimut\TestingFramework\v10\TestCase\FunctionalTestCase;
 
 /**
  * @covers \AOE\Crawler\Utility\TcaUtility
  */
-class TcaUtilityTest extends UnitTestCase
+class TcaUtilityTest extends FunctionalTestCase
 {
+    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+
     /**
      * @test
      * @dataProvider getProcessingInstructionsDataProvider
