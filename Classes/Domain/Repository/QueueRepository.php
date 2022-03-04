@@ -182,7 +182,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
      * This method can be used to count all queue entries which are
      * scheduled for now or an earlier date and are not assigned to a process.
      *
-     * @deprecated since 11.0.4 will be removed v12.x
+     * @deprecated since 11.0.4 will be removed when CrawlerApi is removed
      */
     public function countAllUnassignedPendingItems(): int
     {
@@ -202,7 +202,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
 
     /**
      * Count pending queue entries grouped by configuration key
-     * @deprecated since 11.0.4 will be removed v12.x
+     * @deprecated since 11.0.4 will be removed when CrawlerApi is removed
      */
     public function countPendingItemsGroupedByConfigurationKey(): array
     {
@@ -225,7 +225,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
      * Get set id with unprocessed entries
      *
      * @return array array of set ids
-     * @deprecated since 11.0.4 will be removed v12.x
+     * @deprecated since 11.0.4 will be removed when CrawlerApi is removed
      */
     public function getSetIdWithUnprocessedEntries(): array
     {
@@ -252,7 +252,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
      * Get total queue entries by configuration
      *
      * @return array totals by configuration (keys)
-     * @deprecated since 11.0.4 will be removed v12.x
+     * @deprecated since 11.0.4 will be removed when CrawlerApi is removed
      */
     public function getTotalQueueEntriesByConfiguration(array $setIds): array
     {
@@ -282,7 +282,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
      * Get the timestamps of the last processed entries
      *
      * @param int $limit
-     * @deprecated since 11.0.4 will be removed v12.x
+     * @deprecated since 11.0.4 will be removed when CrawlerApi is removed
      */
     public function getLastProcessedEntriesTimestamps($limit = 100): array
     {
@@ -304,7 +304,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
 
     /**
      * Get the last processed entries
-     * @deprecated since 11.0.4 will be removed v12.x
+     * @deprecated since 11.0.4 will be removed when CrawlerApi is removed
      */
     public function getLastProcessedEntries(int $limit = 100): array
     {
@@ -331,7 +331,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
      * @param int $end timestamp
      *
      * @return array performance data
-     * @deprecated since 11.0.4 will be removed v12.x
+     * @deprecated since 11.0.4 will be removed when CrawlerApi is removed
      */
     public function getPerformanceData($start, $end): array
     {
@@ -402,39 +402,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
     }
 
     /**
-     * Method to check if a page is in the queue which is timed for a
-     * date when it should be crawled
-     * @deprecated since 11.0.4 will be removed v12.x
-     */
-    public function isPageInQueueTimed(int $uid, bool $show_unprocessed = true): bool
-    {
-        return $this->isPageInQueue($uid, $show_unprocessed);
-    }
-
-    /**
-     * @deprecated since 11.0.4 will be removed v12.x
-     */
-    public function getAvailableSets(): array
-    {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
-        $statement = $queryBuilder
-            ->selectLiteral('count(*) as count_value')
-            ->addSelect('set_id', 'scheduled')
-            ->from(self::TABLE_NAME)
-            ->orderBy('scheduled', 'desc')
-            ->groupBy('set_id', 'scheduled')
-            ->execute();
-
-        $rows = [];
-        while ($row = $statement->fetch()) {
-            $rows[] = $row;
-        }
-
-        return $rows;
-    }
-
-    /**
-     * @deprecated since 11.0.4 will be removed v12.x
+     * @deprecated since 11.0.4 will be removed when CrawlerApi is removed
      */
     public function findByQueueId(string $queueId): ?array
     {
