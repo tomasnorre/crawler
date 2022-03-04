@@ -1,6 +1,6 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 11.0.5-dev
+## Crawler 12.0.0-dev
 
 ### Added
 
