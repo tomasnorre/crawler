@@ -60,7 +60,7 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
     private $infoModuleController;
 
     /**
-     * @var int|mixed
+     * @var int
      */
     private $id;
 
@@ -79,7 +79,7 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
         $this->crawler = GeneralUtility::makeInstance(Crawler::class);
     }
 
-    public function render($id, string $elementName, array $menuItems): string
+    public function render(int $id, string $elementName, array $menuItems): string
     {
         $this->id = $id;
         return $this->processOverviewAction();
