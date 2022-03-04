@@ -26,5 +26,5 @@ interface RequestFormInterface
 {
     public function __construct(StandaloneView $view, InfoModuleController $infoModuleController, array $extensionSettings);
 
-    public function render($id, string $elementName, array $menuItems): string;
+    public function render(int $id, string $elementName, array $menuItems): string;
 }

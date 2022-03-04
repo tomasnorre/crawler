@@ -64,7 +64,7 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
         $this->eventDispatcher = $eventDispatcher ?? GeneralUtility::makeInstance(EventDispatcher::class);
     }
 
-    public function render($id, string $elementName, array $menuItems): string
+    public function render(int $id, string $elementName, array $menuItems): string
     {
         return $this->showCrawlerInformationAction($id);
     }
