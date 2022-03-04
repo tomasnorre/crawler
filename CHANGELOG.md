@@ -21,6 +21,7 @@
 * !!! AbstractCommandTests
 
 #### Functions & Properties
+* !!! ConfigurationRepository->getCrawlerConfigurationRecords()
 * !!! ProcessRepository->countActive()
 * !!! ProcessQueueCommandTest->queueRepository
 

@@ -36,25 +36,6 @@ class ConfigurationRepository extends Repository
     public const TABLE_NAME = 'tx_crawler_configuration';
 
     /**
-     * @deprecated since 11.0.4 will be removed v12.x
-     */
-    public function getCrawlerConfigurationRecords(): array
-    {
-        $records = [];
-        $queryBuilder = $this->createQueryBuilder();
-        $statement = $queryBuilder
-            ->select('*')
-            ->from(self::TABLE_NAME)
-            ->execute();
-
-        while ($row = $statement->fetch()) {
-            $records[] = $row;
-        }
-
-        return $records;
-    }
-
-    /**
      * Traverses up the rootline of a page and fetches all crawler records.
      */
     public function getCrawlerConfigurationRecordsFromRootLine(int $pageId, array $parentIds = []): array

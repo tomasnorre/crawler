@@ -306,11 +306,6 @@ parameters:
 			path: Classes/Domain/Repository/ConfigurationRepository.php
 
 		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 1
-			path: Classes/Domain/Repository/ConfigurationRepository.php
-
-		-
 			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
 			count: 1
 			path: Classes/Domain/Repository/ConfigurationRepository.php

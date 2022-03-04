@@ -77,15 +77,4 @@ class ConfigurationRepositoryTest extends FunctionalTestCase
             self::assertContains((int) $configuration['uid'], [1, 5, 6, 8]);
         }
     }
-
-    /**
-     * @test
-     */
-    public function getCrawlerConfigurationRecords(): void
-    {
-        self::assertCount(
-            4,
-            $this->subject->getCrawlerConfigurationRecords()
-        );
-    }
 }
