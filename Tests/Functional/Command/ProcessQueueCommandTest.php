@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AOE\Crawler\Tests\Functional\Command;
 
 /*
- * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
+ * (c) 2022 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -20,10 +20,7 @@ namespace AOE\Crawler\Tests\Functional\Command;
  */
 
 use AOE\Crawler\Command\ProcessQueueCommand;
-use AOE\Crawler\Domain\Repository\QueueRepository;
 use Symfony\Component\Console\Tester\CommandTester;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 class ProcessQueueCommandTest extends AbstractCommandTests
 {
@@ -31,11 +28,6 @@ class ProcessQueueCommandTest extends AbstractCommandTests
      * @var array
      */
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
-
-    /**
-     * @var QueueRepository
-     */
-    protected $queueRepository;
 
     /**
      * @var CommandTester
@@ -48,7 +40,6 @@ class ProcessQueueCommandTest extends AbstractCommandTests
 
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/pages.xml');
-        $this->queueRepository = GeneralUtility::makeInstance(ObjectManager::class)->get(QueueRepository::class);
 
         $command = new ProcessQueueCommand();
         $this->commandTester = new CommandTester($command);
