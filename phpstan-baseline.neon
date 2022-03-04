@@ -376,7 +376,7 @@ parameters:
 
 		-
 			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 9
+			count: 8
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
