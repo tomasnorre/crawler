@@ -22,8 +22,8 @@ namespace AOE\Crawler;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy;
-use AOE\Crawler\CrawlStrategy\CrawlStrategy;
 use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
+use AOE\Crawler\CrawlStrategy\CrawlStrategyInterface;
 use AOE\Crawler\Event\AfterUrlCrawledEvent;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Http\Uri;
@@ -37,7 +37,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class QueueExecutor implements SingletonInterface
 {
     /**
-     * @var CrawlStrategy
+     * @var CrawlStrategyInterface
      */
     protected $crawlStrategy;
 

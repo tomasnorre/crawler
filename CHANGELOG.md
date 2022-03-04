@@ -6,6 +6,7 @@
 
 ### Changed
 * !!! Switch constants in ProcessQueueCommand from public to private
+* !!! Add interface to CrawlStrategy filename
 
 ### Fixed
 
