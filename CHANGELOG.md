@@ -22,6 +22,7 @@
 
 #### Functions & Properties
 * !!! ConfigurationRepository->getCrawlerConfigurationRecords()
+* !!! FrontendUserAuthenticator->queueRepository
 * !!! ProcessRepository->countActive()
 * !!! ProcessRepository->getLimitFromItemCountAndOffset()
 * !!! ProcessQueueCommandTest->queueRepository
