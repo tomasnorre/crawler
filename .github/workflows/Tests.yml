@@ -58,7 +58,7 @@ jobs:
           ln -nfs .Build/vendor/typo3/cms/typo3 typo3
 
       - name: Lint PHP
-        run: find . -name \*.php ! -path "./.Build/*" ! -path "./scripts/*" ! -path "./typo3_src/*" | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \;
+        run: find . -name \*.php ! -path "./.Build/*" ! -path "./scripts/*" ! -path "./typo3_src/*" ! -path "./Resources  /*" | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \;
 
       - name: Unit Tests
         if: matrix.typo3 != 'dev-master'
