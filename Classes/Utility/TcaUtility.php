@@ -50,7 +50,7 @@ class TcaUtility
      * @param string $extensionKey Like staticfilecache or indexed_search
      * @return string
      */
-    protected function getExtensionIcon($extensionKey)
+    private function getExtensionIcon($extensionKey)
     {
         return ExtensionManagementUtility::getExtensionIcon(ExtensionManagementUtility::extPath($extensionKey), true);
     }
