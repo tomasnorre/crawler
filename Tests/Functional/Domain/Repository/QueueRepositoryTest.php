@@ -381,34 +381,6 @@ class QueueRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function isPageInQueueTimed(): void
-    {
-        self::assertTrue($this->subject->isPageInQueueTimed(10));
-    }
-
-    /**
-     * @test
-     */
-    public function getAvailableSets(): void
-    {
-        $availableSets = $this->subject->getAvailableSets();
-        self::assertEquals(
-            [
-                'count_value' => 1,
-                'set_id' => 0,
-                'scheduled' => 4321,
-            ],
-            $availableSets[0]
-        );
-        self::assertCount(
-            7,
-            $availableSets
-        );
-    }
-
-    /**
-     * @test
-     */
     public function findByQueueId(): void
     {
         $queueRecord = $this->subject->findByQueueId('1015');
