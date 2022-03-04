@@ -18,6 +18,8 @@
 * Obsolete columns (first and last time) from Process Overview
 
 #### Classes
+* !!! AbstractCommandTests
+
 #### Functions & Properties
 * !!! ProcessQueueCommandTest->queueRepository
 
