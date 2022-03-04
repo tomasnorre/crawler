@@ -273,14 +273,9 @@ parameters:
 			path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
 
 		-
-			message: "#^Interface AOE\\\\Crawler\\\\CrawlStrategy\\\\CrawlStrategy should end with \"Interface\" suffix\\.$#"
+			message: "#^Method AOE\\\\Crawler\\\\CrawlStrategy\\\\CrawlStrategyInterface\\:\\:fetchUrlContents\\(\\) has no return typehint specified\\.$#"
 			count: 1
-			path: Classes/CrawlStrategy/CrawlStrategy.php
-
-		-
-			message: "#^Method AOE\\\\Crawler\\\\CrawlStrategy\\\\CrawlStrategy\\:\\:fetchUrlContents\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: Classes/CrawlStrategy/CrawlStrategy.php
+			path: Classes/CrawlStrategy/CrawlStrategyInterface.php
 
 		-
 			message: "#^Cannot call method debug\\(\\) on Psr\\\\Log\\\\LoggerInterface\\|null\\.$#"
