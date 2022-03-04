@@ -159,18 +159,6 @@ class ProcessRepository extends Repository
     }
 
     /**
-     * Returns the number of active processes.
-     *
-     * @return int
-     * @deprecated Using ProcessRepository->countActive() is deprecated since 9.1.1 and will be removed in v11.x, please use ProcessRepository->findAllActive->count() instead
-     * @codeCoverageIgnore
-     */
-    public function countActive()
-    {
-        return $this->findAllActive()->count();
-    }
-
-    /**
      * @return array|null
      *
      * Function is moved from ProcessCleanUpHook

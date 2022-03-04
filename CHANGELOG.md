@@ -21,6 +21,7 @@
 * !!! AbstractCommandTests
 
 #### Functions & Properties
+* !!! ProcessRepository->countActive()
 * !!! ProcessQueueCommandTest->queueRepository
 
 ## Crawler 11.0.4
