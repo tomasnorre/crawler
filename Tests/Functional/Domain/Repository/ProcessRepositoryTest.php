@@ -123,17 +123,6 @@ class ProcessRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function countActive(): void
-    {
-        self::assertSame(
-            3,
-            $this->subject->findAllActive()->count()
-        );
-    }
-
-    /**
-     * @test
-     */
     public function countNotTimeouted(): void
     {
         self::assertSame(
