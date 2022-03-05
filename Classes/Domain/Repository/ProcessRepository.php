@@ -98,22 +98,6 @@ class ProcessRepository extends Repository
         return $collection;
     }
 
-    /**
-     * @param string $processId
-     * @deprecated since 11.0.4 will be removed v12.x
-     */
-    public function findByProcessId($processId)
-    {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
-
-        return $queryBuilder
-            ->select('*')
-            ->from(self::TABLE_NAME)
-            ->where(
-                $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId, PDO::PARAM_STR))
-            )->execute()->fetch(0);
-    }
-
     public function findAllActive(): ProcessCollection
     {
         /** @var ProcessCollection $collection */
