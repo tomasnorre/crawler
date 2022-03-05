@@ -319,7 +319,7 @@ parameters:
 
 		-
 			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 4
+			count: 3
 			path: Classes/Domain/Repository/ProcessRepository.php
 
 		-
@@ -330,11 +330,6 @@ parameters:
 		-
 			message: "#^Cannot call method fetchColumn\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
 			count: 2
-			path: Classes/Domain/Repository/ProcessRepository.php
-
-		-
-			message: "#^Method AOE\\\\Crawler\\\\Domain\\\\Repository\\\\ProcessRepository\\:\\:findByProcessId\\(\\) has no return typehint specified\\.$#"
-			count: 1
 			path: Classes/Domain/Repository/ProcessRepository.php
 
 		-

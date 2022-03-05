@@ -26,6 +26,7 @@
 * !!! ConfigurationRepository->getCrawlerConfigurationRecords()
 * !!! FrontendUserAuthenticator->queueRepository
 * !!! ProcessRepository->countActive()
+* !!! ProcessRepository->findByProcessId()
 * !!! ProcessRepository->getLimitFromItemCountAndOffset()
 * !!! ProcessQueueCommandTest->queueRepository
 * !!! QueueRepository->isPageInQueueTimed()

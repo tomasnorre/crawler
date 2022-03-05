@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AOE\Crawler\Tests\Functional\Domain\Repository;
 
 /*
- * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
+ * (c) 2022 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -21,6 +21,7 @@ namespace AOE\Crawler\Tests\Functional\Domain\Repository;
 
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
@@ -233,7 +234,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
      */
     public function updateProcessAssignItemsCount(): void
     {
-        $processBefore = $this->subject->findByProcessId('1002');
+        $processBefore = $this->findByProcessId('1002');
         self::assertEquals(
             1,
             $processBefore['assigned_items_count']
@@ -241,7 +242,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
 
         $this->subject->updateProcessAssignItemsCount(10, '1002');
 
-        $processAfter = $this->subject->findByProcessId('1002');
+        $processAfter = $this->findByProcessId('1002');
         self::assertEquals(
             10,
             $processAfter['assigned_items_count']
@@ -255,11 +256,11 @@ class ProcessRepositoryTest extends FunctionalTestCase
     {
         $processId = md5('processId');
         $systemProcessId = 12345;
-        self::assertFalse($this->subject->findByProcessId($processId));
+        self::assertFalse($this->findByProcessId($processId));
 
         $this->subject->addProcess($processId, $systemProcessId);
 
-        $process = $this->subject->findByProcessId($processId);
+        $process = $this->findByProcessId($processId);
         self::assertEquals(
             $processId,
             $process['process_id']
@@ -279,5 +280,21 @@ class ProcessRepositoryTest extends FunctionalTestCase
             $systemProcessId,
             $process['system_process_id']
         );
+    }
+
+    /**
+     * @return mixed
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    private function findByProcessId(string $processId)
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(ProcessRepository::TABLE_NAME);
+
+        return $queryBuilder
+            ->select('*')
+            ->from(ProcessRepository::TABLE_NAME)
+            ->where(
+                $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId, \PDO::PARAM_STR))
+            )->execute()->fetch(0);
     }
 }
