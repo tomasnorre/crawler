@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AOE\Crawler\Service;
 
 /*
- * (c) 2021 AOE GmbH <dev@aoe.com>
+ * (c) 2022 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -44,15 +44,8 @@ class ConfigurationService
      */
     private $backendUser;
 
-    /**
-     * @var UrlService
-     */
-    private $urlService;
-
-    /**
-     * @var ConfigurationRepository
-     */
-    private $configurationRepository;
+    private UrlService $urlService;
+    private ConfigurationRepository $configurationRepository;
 
     /**
      * @var array

@@ -69,27 +69,16 @@ class BackendModule
      */
     protected $extensionSettings = [];
 
-    /**
-     * @var ProcessService
-     */
-    protected $processManager;
+    protected ProcessService $processManager;
+    protected QueryBuilder $queryBuilder;
+    protected QueueRepository $queueRepository;
+    protected StandaloneView $view;
 
-    /**
-     * @var QueryBuilder
-     */
-    protected $queryBuilder;
-
-    /**
-     * @var QueueRepository
-     */
-    protected $queueRepository;
-
-    /**
-     * @var StandaloneView
-     */
-    protected $view;
-
-    public function __construct()
+    public function __construct(
+        ProcessService $processManager,
+        QueryBuilder $queryBuilder,
+        QueueRepository $queueRepository
+    )
     {
         $this->processManager = GeneralUtility::makeInstance(ProcessService::class);
         $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(QueueRepository::TABLE_NAME);
