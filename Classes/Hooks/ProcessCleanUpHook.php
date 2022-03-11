@@ -24,7 +24,6 @@ use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * @internal since v9.2.5
@@ -53,9 +52,8 @@ class ProcessCleanUpHook implements CrawlerHookInterface
 
     public function __construct()
     {
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->processRepository = $objectManager->get(ProcessRepository::class);
-        $this->queueRepository = $objectManager->get(QueueRepository::class);
+        $this->processRepository = GeneralUtility::makeInstance(ProcessRepository::class);
+        $this->queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
     }
 
     /**

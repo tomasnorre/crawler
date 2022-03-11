@@ -34,7 +34,6 @@ use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Tests\Functional\SiteBasedTestTrait;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class CrawlerApiTest
@@ -79,8 +78,6 @@ class CrawlerApiTest extends FunctionalTestCase
     {
         parent::setUp();
 
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-
         //restore old rootline
         $this->oldRootline = $GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields'];
         //clear rootline
@@ -107,8 +104,8 @@ class CrawlerApiTest extends FunctionalTestCase
         ];
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = $configuration;
 
-        $this->subject = $objectManager->get(CrawlerApi::class);
-        $this->queueRepository = $objectManager->get(QueueRepository::class);
+        $this->subject = GeneralUtility::makeInstance(CrawlerApi::class);
+        $this->queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
 
         $this->importDataSet(__DIR__ . '/../data/pages.xml');
         $this->importDataSet(__DIR__ . '/../data/sys_template.xml');

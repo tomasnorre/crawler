@@ -20,7 +20,6 @@ use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Info\Controller\InfoModuleController;
 
@@ -73,14 +72,13 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
 
     public function __construct(StandaloneView $view, InfoModuleController $infoModuleController, array $extensionSettings)
     {
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->view = $view;
         $this->infoModuleController = $infoModuleController;
         $this->jsonCompatibilityConverter = new JsonCompatibilityConverter();
         $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(QueueRepository::TABLE_NAME);
         $this->csvWriter = new CrawlerCsvWriter();
         $this->extensionSettings = $extensionSettings;
-        $this->queueRepository = $objectManager->get(QueueRepository::class);
+        $this->queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
     }
 
     public function render(int $id, string $elementName, array $menuItems): string

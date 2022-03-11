@@ -28,7 +28,6 @@ use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * @package AOE\Crawler\Service
@@ -55,8 +54,7 @@ class ProcessService
 
     public function __construct()
     {
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->processRepository = $objectManager->get(ProcessRepository::class);
+        $this->processRepository = GeneralUtility::makeInstance(ProcessRepository::class);
         $this->extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
         $this->timeToLive = (int) $this->extensionSettings['processMaxRunTime'];
     }

@@ -22,7 +22,6 @@ namespace AOE\Crawler\Domain\Model;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class Process
@@ -75,8 +74,7 @@ class Process extends AbstractEntity
 
     public function __construct()
     {
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->queueRepository = $objectManager->get(QueueRepository::class);
+        $this->queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
     }
 
     /**

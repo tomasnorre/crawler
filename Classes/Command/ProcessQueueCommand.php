@@ -30,7 +30,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 class ProcessQueueCommand extends Command
 {
@@ -86,15 +85,14 @@ class ProcessQueueCommand extends Command
         $sleeptime = $input->getOption('sleeptime');
         $sleepafter = $input->getOption('sleepafter');
 
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->extensionSettings = $this->getExtensionSettings();
 
         $result = self::CLI_STATUS_NOTHING_PROCCESSED;
 
         /** @var QueueRepository $queueRepository */
-        $queueRepository = $objectManager->get(QueueRepository::class);
+        $queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
         /** @var ProcessRepository $processRepository */
-        $processRepository = $objectManager->get(ProcessRepository::class);
+        $processRepository = GeneralUtility::makeInstance(ProcessRepository::class);
 
         /** @var Crawler $crawler */
         $crawler = GeneralUtility::makeInstance(Crawler::class);

@@ -33,7 +33,6 @@ use TYPO3\CMS\Core\Type\Bitmask\Permission;
 use TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * @internal since v9.2.5
@@ -62,9 +61,8 @@ class ConfigurationService
 
     public function __construct()
     {
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->urlService = GeneralUtility::makeInstance(UrlService::class);
-        $this->configurationRepository = $objectManager->get(ConfigurationRepository::class);
+        $this->configurationRepository = GeneralUtility::makeInstance(ConfigurationRepository::class);
         $this->extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
     }
 

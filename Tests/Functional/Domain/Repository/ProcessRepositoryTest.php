@@ -23,7 +23,6 @@ use AOE\Crawler\Domain\Repository\ProcessRepository;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class ProcessRepositoryTest
@@ -43,19 +42,13 @@ class ProcessRepositoryTest extends FunctionalTestCase
     protected $subject;
 
     /**
-     * @var \TYPO3\CMS\Extbase\Object\ObjectManagerInterface The object manager
-     */
-    protected $objectManager;
-
-    /**
      * Creates the test environment.
      */
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->subject = $this->objectManager->get(ProcessRepository::class);
+        $this->subject = GeneralUtility::makeInstance(ProcessRepository::class);
 
         $configuration = [
             'sleepTime' => '1000',

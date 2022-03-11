@@ -36,7 +36,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 class BuildQueueCommand extends Command
 {
@@ -121,12 +120,11 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
 
         $extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
         $eventDispatcher = GeneralUtility::makeInstance(EventDispatcher::class);
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
 
         /** @var CrawlerController $crawlerController */
-        $crawlerController = $objectManager->get(CrawlerController::class);
+        $crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
         /** @var QueueRepository $queueRepository */
-        $queueRepository = $objectManager->get(QueueRepository::class);
+        $queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
 
         if ($mode === 'exec') {
             $crawlerController->registerQueueEntriesInternallyOnly = true;
