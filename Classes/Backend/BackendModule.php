@@ -34,7 +34,6 @@ use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Service\ProcessService;
 use AOE\Crawler\Value\CrawlAction;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
-use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -74,15 +73,15 @@ class BackendModule
     protected QueueRepository $queueRepository;
     protected StandaloneView $view;
 
+    // Todo: Constuctor Properties not injected correctly. See TYPO3 backend module.
     public function __construct(
         ProcessService $processManager,
         QueryBuilder $queryBuilder,
         QueueRepository $queueRepository
-    )
-    {
-        $this->processManager = GeneralUtility::makeInstance(ProcessService::class);
-        $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(QueueRepository::TABLE_NAME);
-        $this->queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
+    ) {
+        $this->processManager = $processManager;
+        $this->queryBuilder = $queryBuilder;
+        $this->queueRepository = $queueRepository;
         $this->initializeView();
         $this->extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
     }
