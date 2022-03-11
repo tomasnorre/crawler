@@ -24,7 +24,6 @@ use AOE\Crawler\Tests\Functional\SiteBasedTestTrait;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 class UrlServiceTest extends FunctionalTestCase
 {
@@ -57,7 +56,7 @@ class UrlServiceTest extends FunctionalTestCase
     {
         parent::setUp();
 
-        $this->subject = GeneralUtility::makeInstance(ObjectManager::class)->get(UrlService::class);
+        $this->subject = GeneralUtility::makeInstance(UrlService::class);
 
         $this->importDataSet(__DIR__ . '/../data/pages.xml');
         $this->importDataSet(__DIR__ . '/../data/sys_template.xml');

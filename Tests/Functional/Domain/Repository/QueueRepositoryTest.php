@@ -25,7 +25,6 @@ use AOE\Crawler\Value\QueueFilter;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class QueryRepositoryTest
@@ -51,11 +50,10 @@ class QueueRepositoryTest extends FunctionalTestCase
     {
         parent::setUp();
 
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->importDataSet(__DIR__ . '/../../Fixtures/tx_crawler_queue.xml');
         $this->importDataSet(__DIR__ . '/../../Fixtures/pages.xml');
 
-        $this->subject = $objectManager->get(QueueRepository::class);
+        $this->subject = GeneralUtility::makeInstance(QueueRepository::class);
     }
 
     /**
@@ -544,8 +542,7 @@ class QueueRepositoryTest extends FunctionalTestCase
      */
     public function flushQueue(QueueFilter $queueFilter, int $expected): void
     {
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $queryRepository = $objectManager->get(QueueRepository::class);
+        $queryRepository = GeneralUtility::makeInstance(QueueRepository::class);
         $this->subject->flushQueue($queueFilter);
 
         self::assertSame(

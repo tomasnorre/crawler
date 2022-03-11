@@ -24,7 +24,6 @@ use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Service\QueueService;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 class QueueServiceTest extends FunctionalTestCase
 {
@@ -54,7 +53,7 @@ class QueueServiceTest extends FunctionalTestCase
 
         $this->subject = $this->createPartialMock(QueueService::class, []);
         $this->subject->injectCrawlerController($crawlerController);
-        $this->queueRepository = GeneralUtility::makeInstance(ObjectManager::class)->get(QueueRepository::class);
+        $this->queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
     }
 
     /**
