@@ -52,10 +52,12 @@ class ConfigurationService
      */
     private $extensionSettings;
 
-    public function __construct()
-    {
-        $this->urlService = GeneralUtility::makeInstance(UrlService::class);
-        $this->configurationRepository = GeneralUtility::makeInstance(ConfigurationRepository::class);
+    public function __construct(
+        UrlService $urlService,
+        ConfigurationRepository $configurationRepository
+    ) {
+        $this->urlService = $urlService;
+        $this->configurationRepository = $configurationRepository;
         $this->extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
     }
 

@@ -50,3 +50,21 @@ services:
             $queryBuilder: '@queryBuilder.tx_crawler_queue'
             $queueRepository: '@AOE\Crawler\Domain\Repository\QueueRepository'
         public: true
+
+    AOE\Crawler\Service\ConfigurationService:
+        arguments:
+            $urlService: '@AOE\Crawler\Service\UrlService'
+            $configurationRepository: '@AOE\Crawler\Domain\Repository\ConfigurationRepository'
+        public: true
+
+    AOE\Crawler\Service\PageService:
+        arguments:
+            $eventDispatcher: '@TYPO3\CMS\Core\EventDispatcher\EventDispatcher'
+        public: true
+
+    AOE\Crawler\Service\ProcessService:
+        arguments:
+            $processRepository: '@AOE\Crawler\Domain\Repository\ProcessRepository'
+        public: true
+
+

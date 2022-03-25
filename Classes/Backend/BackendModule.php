@@ -73,7 +73,6 @@ class BackendModule
     protected QueueRepository $queueRepository;
     protected StandaloneView $view;
 
-    // Todo: Constuctor Properties not injected correctly. See TYPO3 backend module.
     public function __construct(
         ProcessService $processManager,
         QueryBuilder $queryBuilder,

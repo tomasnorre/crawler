@@ -52,9 +52,10 @@ class ProcessService
      */
     private $extensionSettings;
 
-    public function __construct()
-    {
-        $this->processRepository = GeneralUtility::makeInstance(ProcessRepository::class);
+    public function __construct(
+        ProcessRepository $processRepository
+    ) {
+        $this->processRepository = $processRepository;
         $this->extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
         $this->timeToLive = (int) $this->extensionSettings['processMaxRunTime'];
     }
@@ -113,11 +114,6 @@ class ProcessService
         }
 
         return ltrim($scriptPath);
-    }
-
-    public function setProcessRepository(ProcessRepository $processRepository): void
-    {
-        $this->processRepository = $processRepository;
     }
 
     private function getComposerBinPath(): ?string
