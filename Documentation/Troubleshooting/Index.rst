@@ -1,4 +1,4 @@
-﻿.. include:: /Includes.txt
+﻿.. include:: /Includes.rst.txt
 
 ===============
 Troubleshooting
@@ -77,7 +77,7 @@ Make sure to delete all unnecessary fields from database tables. You can do
 this in the backend via :guilabel:`Analyze Database Structure` tool or if you
 have `TYPO3 Console <https://extensions.typo3.org/extension/typo3_console/>`_
 installed via command line command
-:shell:`vendor/bin/typo3cms database:updateschema`.
+:bash:`vendor/bin/typo3cms database:updateschema`.
 
 
 TYPO3 shows error if the PHP path is not correct
