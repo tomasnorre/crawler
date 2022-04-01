@@ -1,4 +1,4 @@
-﻿.. include:: /Includes.txt
+﻿.. include:: /Includes.rst.txt
 
 =============================
 Executing queue with cron-job
@@ -9,7 +9,7 @@ intervals.
 
 For this to become reality you must ideally have a cron-job set up.
 This assumes you are running on Unix architecture of some sort. The
-crontab is often edited by :shell:`crontab -e` and you should insert a line
+crontab is often edited by :bash:`crontab -e` and you should insert a line
 like this:
 
 ::

@@ -1,4 +1,4 @@
-﻿.. include:: /Includes.txt
+﻿.. include:: /Includes.rst.txt
 .. highlight:: php
 
 =====
@@ -51,3 +51,4 @@ Example::
          return false;
       }
    }
+
