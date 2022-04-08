@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AOE\Crawler;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2022 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -43,10 +43,10 @@ class QueueExecutor implements SingletonInterface
 
     private EventDispatcher $eventDispatcher;
 
-    public function __construct(CrawlStrategyFactory $crawlStrategyFactory, EventDispatcher $eventDispatcher = null)
+    public function __construct(CrawlStrategyFactory $crawlStrategyFactory, EventDispatcher $eventDispatcher)
     {
         $this->crawlStrategy = $crawlStrategyFactory->create();
-        $this->eventDispatcher = $eventDispatcher ?? GeneralUtility::makeInstance(EventDispatcher::class);
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
