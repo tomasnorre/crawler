@@ -19,11 +19,17 @@ namespace AOE\Crawler\Backend\RequestForm;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Domain\Repository\ProcessRepository;
+use AOE\Crawler\Helper\Sleeper\SystemSleeper;
+use AOE\Crawler\Service\ProcessService;
 use AOE\Crawler\Value\CrawlAction;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Info\Controller\InfoModuleController;
 
+/**
+ * @internal since v12.0.0
+ */
 final class RequestFormFactory
 {
     public static function create(CrawlAction $selectedAction, StandaloneView $view, InfoModuleController $infoModuleController, array $extensionSettings): RequestFormInterface
@@ -34,7 +40,9 @@ final class RequestFormFactory
                 $requestForm = GeneralUtility::makeInstance(LogRequestForm::class, $view, $infoModuleController, $extensionSettings);
                 break;
             case 'multiprocess':
-                $requestForm = GeneralUtility::makeInstance(MultiProcessRequestForm::class, $view, $infoModuleController, $extensionSettings);
+                $processRepository = GeneralUtility::makeInstance(ProcessRepository::class);
+                $processService = GeneralUtility::makeInstance(ProcessService::class,$processRepository, new SystemSleeper());
+                $requestForm = GeneralUtility::makeInstance(MultiProcessRequestForm::class, $view, $infoModuleController, $extensionSettings, $processService);
                 break;
             case 'start':
             default:

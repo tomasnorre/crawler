@@ -65,6 +65,11 @@ services:
     AOE\Crawler\Service\ProcessService:
         arguments:
             $processRepository: '@AOE\Crawler\Domain\Repository\ProcessRepository'
+            $sleeper: '@AOE\Crawler\Helper\Sleeper\SystemSleeper'
         public: true
 
-
+    AOE\Crawler\QueueExecutor:
+        arguments:
+            $crawlStrategyFactory: '@AOE\Crawler\CrawlStrategy\CrawlStrategyFactory'
+            $eventDispatcher: '@TYPO3\CMS\Core\EventDispatcher\EventDispatcher'
+        public: true
