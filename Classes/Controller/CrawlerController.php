@@ -211,12 +211,12 @@ class CrawlerController implements LoggerAwareInterface
         $this->processRepository = GeneralUtility::makeInstance(ProcessRepository::class);
         $this->configurationRepository = GeneralUtility::makeInstance(ConfigurationRepository::class);
         $this->pageRepository = GeneralUtility::makeInstance(PageRepository::class);
-        $this->queueExecutor = GeneralUtility::makeInstance(QueueExecutor::class, $crawlStrategyFactory);
+        $this->eventDispatcher = GeneralUtility::makeInstance(EventDispatcher::class);
+        $this->queueExecutor = GeneralUtility::makeInstance(QueueExecutor::class, $crawlStrategyFactory, $this->eventDispatcher);
         $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
         $this->crawler = GeneralUtility::makeInstance(Crawler::class);
         $this->configurationService = GeneralUtility::makeInstance(ConfigurationService::class);
         $this->urlService = GeneralUtility::makeInstance(UrlService::class);
-        $this->eventDispatcher = GeneralUtility::makeInstance(EventDispatcher::class);
 
         /** @var ExtensionConfigurationProvider $configurationProvider */
         $configurationProvider = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);

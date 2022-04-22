@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AOE\Crawler\Service;
 
 /*
- * (c) 2021 AOE GmbH <dev@aoe.com>
+ * (c) 2022 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -44,25 +44,20 @@ class ConfigurationService
      */
     private $backendUser;
 
-    /**
-     * @var UrlService
-     */
-    private $urlService;
-
-    /**
-     * @var ConfigurationRepository
-     */
-    private $configurationRepository;
+    private UrlService $urlService;
+    private ConfigurationRepository $configurationRepository;
 
     /**
      * @var array
      */
     private $extensionSettings;
 
-    public function __construct()
-    {
-        $this->urlService = GeneralUtility::makeInstance(UrlService::class);
-        $this->configurationRepository = GeneralUtility::makeInstance(ConfigurationRepository::class);
+    public function __construct(
+        UrlService $urlService,
+        ConfigurationRepository $configurationRepository
+    ) {
+        $this->urlService = $urlService;
+        $this->configurationRepository = $configurationRepository;
         $this->extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
     }
 

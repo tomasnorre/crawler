@@ -18,6 +18,7 @@
 
 ### Removed
 * Obsolete columns (first and last time) from Process Overview
+* !!! Remove constructor form RequestFormInterface
 
 #### Classes
 * !!! AbstractCommandTests

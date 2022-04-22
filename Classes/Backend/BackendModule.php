@@ -34,7 +34,6 @@ use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Service\ProcessService;
 use AOE\Crawler\Value\CrawlAction;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
-use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -69,31 +68,19 @@ class BackendModule
      */
     protected $extensionSettings = [];
 
-    /**
-     * @var ProcessService
-     */
-    protected $processManager;
+    protected ProcessService $processManager;
+    protected QueryBuilder $queryBuilder;
+    protected QueueRepository $queueRepository;
+    protected StandaloneView $view;
 
-    /**
-     * @var QueryBuilder
-     */
-    protected $queryBuilder;
-
-    /**
-     * @var QueueRepository
-     */
-    protected $queueRepository;
-
-    /**
-     * @var StandaloneView
-     */
-    protected $view;
-
-    public function __construct()
-    {
-        $this->processManager = GeneralUtility::makeInstance(ProcessService::class);
-        $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(QueueRepository::TABLE_NAME);
-        $this->queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
+    public function __construct(
+        ProcessService $processManager,
+        QueryBuilder $queryBuilder,
+        QueueRepository $queueRepository
+    ) {
+        $this->processManager = $processManager;
+        $this->queryBuilder = $queryBuilder;
+        $this->queueRepository = $queueRepository;
         $this->initializeView();
         $this->extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
     }

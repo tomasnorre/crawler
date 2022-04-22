@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Backend\RequestForm;
+namespace AOE\Crawler\Helper\Sleeper;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2022 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -19,7 +19,7 @@ namespace AOE\Crawler\Backend\RequestForm;
  * The TYPO3 project - inspiring people to share!
  */
 
-interface RequestFormInterface
+interface SleeperInterface
 {
-    public function render(int $id, string $elementName, array $menuItems): string;
+    public function sleep(int $seconds): void;
 }

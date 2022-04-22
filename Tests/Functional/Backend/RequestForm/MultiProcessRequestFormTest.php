@@ -21,6 +21,7 @@ namespace AOE\Crawler\Tests\Functional\Backend\RequestForm;
 
 use AOE\Crawler\Backend\RequestForm\MultiProcessRequestForm;
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
+use AOE\Crawler\Service\ProcessService;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
@@ -82,7 +83,9 @@ class MultiProcessRequestFormTest extends FunctionalTestCase
             );
         }
         $extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
-        $this->multiProcessRequestForm = GeneralUtility::makeInstance(MultiProcessRequestForm::class, $view, $infoModuleController, $extensionSettings);
+        $processService = $this->prophesize(ProcessService::class);
+
+        $this->multiProcessRequestForm = GeneralUtility::makeInstance(MultiProcessRequestForm::class, $view, $infoModuleController, $extensionSettings, $processService->reveal());
     }
 
     /**
