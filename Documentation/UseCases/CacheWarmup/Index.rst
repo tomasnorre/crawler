@@ -1,4 +1,4 @@
-.. include:: /Includes.txt
+.. include:: /Includes.rst.txt
 
 =============
 Cache warm up
@@ -14,9 +14,9 @@ which have been standard in TYPO3 for a while.
 
 There are 3 commands that can be of you benefit during deployments.
 
-* :shell:`vendor/bin/typo3 crawler:flushQueue`
-* :shell:`vendor/bin/typo3 crawler:buildQueue`
-* :shell:`vendor/bin/typo3 crawler:processQueue`
+* :bash:`vendor/bin/typo3 crawler:flushQueue`
+* :bash:`vendor/bin/typo3 crawler:buildQueue`
+* :bash:`vendor/bin/typo3 crawler:processQueue`
 
 You can see more on which parameters they take in :ref:`command-controller`,
 this example will provide suggestion on how you can set it up, and you can
@@ -38,7 +38,7 @@ adjust with additional parameters if you like.
 
       Crawler configuration record
 
-   
+
    .. hint::
       Let's say your website has frontend users with one or multiple Usergroups. In this case you need to create multiple crawler configurations: For every possible combination of Usergroups that a user can have you need to create a individual crawler configuration. All those crawler configurations need to be added to the `crawler:processQueue` command to be considered. If you miss this some user get a warmed up cache but those with a combination of Usergroups which was not taken into account in a crawler configuration will get an uncached page.
 
