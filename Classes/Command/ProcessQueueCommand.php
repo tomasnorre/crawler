@@ -149,7 +149,7 @@ class ProcessQueueCommand extends Command
             'sleepafter',
             '',
             InputOption::VALUE_OPTIONAL,
-            'Amount of milliseconds which the system should use to relax between crawls',
+            'Amount of seconds which the system should use to relax after all crawls are done',
             '0'
         );
 
@@ -157,7 +157,7 @@ class ProcessQueueCommand extends Command
             'sleeptime',
             '',
             InputOption::VALUE_OPTIONAL,
-            'Amount of seconds which the system should use to relax after all crawls are done.'
+            'Amount of microseconds which the system should use to relax between crawls'
         );
     }
 
