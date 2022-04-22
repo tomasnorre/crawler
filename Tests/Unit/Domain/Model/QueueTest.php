@@ -38,10 +38,7 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
  */
 class QueueTest extends UnitTestCase
 {
-    /**
-     * @var Queue
-     */
-    protected $subject;
+    protected ?\AOE\Crawler\Domain\Model\Queue $subject = null;
 
     /**
      * @test
@@ -55,10 +52,10 @@ class QueueTest extends UnitTestCase
         $pageId = 543;
         $parameters = 'ParameterOne, ParameterTwo';
         $parametersHash = sha1($parameters);
-        $qid = 9838247;
+        $qid = 9_838_247;
         $isScheduler = false;
         $isProcessScheduled = true;
-        $setId = 1234324;
+        $setId = 1_234_324;
         $resultData = '{row: success}';
         $processIdCompleted = 'as234sa';
 

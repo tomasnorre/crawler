@@ -51,10 +51,7 @@ class CrawlerApi
     protected QueryBuilder $queryBuilder;
     protected string $tableName = 'tx_crawler_queue';
 
-    /**
-     * @var CrawlerController
-     */
-    protected $crawlerController;
+    protected ?\AOE\Crawler\Controller\CrawlerController $crawlerController = null;
 
     public function __construct()
     {
@@ -334,7 +331,7 @@ class CrawlerApi
         $data['duration'] = $data['end'] - $data['start'];
 
         if ($data['duration'] < 1) {
-            throw new TimeStampException('End timestamp must be after start timestamp', 1512659945);
+            throw new TimeStampException('End timestamp must be after start timestamp', 1_512_659_945);
         }
 
         for ($slotStart = $start; $slotStart < $end; $slotStart += $resolution) {
@@ -391,7 +388,7 @@ class CrawlerApi
         if (is_object($this->crawlerController)) {
             return $this->crawlerController;
         }
-        throw new CrawlerObjectException('no crawler object', 1512659759);
+        throw new CrawlerObjectException('no crawler object', 1_512_659_759);
     }
 
     /**

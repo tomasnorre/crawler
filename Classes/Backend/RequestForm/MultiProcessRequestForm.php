@@ -44,10 +44,7 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
     private IconFactory $iconFactory;
     private InfoModuleController $infoModuleController;
 
-    /**
-     * @var int
-     */
-    private $id;
+    private ?int $id = null;
     private Crawler $crawler;
 
     public function __construct(
@@ -98,11 +95,7 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
         $queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
 
         $mode = GeneralUtility::_GP('processListMode') ?? $this->infoModuleController->MOD_SETTINGS['processListMode'];
-        if ($mode === 'simple') {
-            $allProcesses = $processRepository->findAllActive();
-        } else {
-            $allProcesses = $processRepository->findAll();
-        }
+        $allProcesses = $mode === 'simple' ? $processRepository->findAllActive() : $processRepository->findAll();
         $isCrawlerEnabled = ! $this->crawler->isDisabled() && ! $this->isErrorDetected;
         $currentActiveProcesses = $processRepository->findAllActive()->count();
         $maxActiveProcesses = MathUtility::forceIntegerInRange($this->extensionSettings['processLimit'], 1, 99, 1);

@@ -36,7 +36,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class QueueExecutor implements SingletonInterface
 {
-    protected CrawlStrategy $crawlStrategy;
+    protected CrawlStrategyInterface $crawlStrategy;
 
     private EventDispatcher $eventDispatcher;
 

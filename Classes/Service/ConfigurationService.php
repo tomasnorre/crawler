@@ -109,7 +109,7 @@ class ConfigurationService
 
     public function getConfigurationFromDatabase(int $pageId, array $res): array
     {
-        $maxUrlsToCompile = MathUtility::forceIntegerInRange($this->extensionSettings['maxCompileUrls'], 1, 1000000000, 10000);
+        $maxUrlsToCompile = MathUtility::forceIntegerInRange($this->extensionSettings['maxCompileUrls'], 1, 1_000_000_000, 10000);
 
         $crawlerConfigurations = $this->configurationRepository->getCrawlerConfigurationRecordsFromRootLine($pageId);
         foreach ($crawlerConfigurations as $configurationRecord) {
@@ -196,7 +196,7 @@ class ConfigurationService
 
     protected function getUrlService(): UrlService
     {
-        $this->urlService = $this->urlService ?? GeneralUtility::makeInstance(UrlService::class);
+        $this->urlService ??= GeneralUtility::makeInstance(UrlService::class);
         return $this->urlService;
     }
 

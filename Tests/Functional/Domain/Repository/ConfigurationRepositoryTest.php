@@ -32,10 +32,7 @@ class ConfigurationRepositoryTest extends FunctionalTestCase
      */
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    /**
-     * @var ConfigurationRepository
-     */
-    protected $subject;
+    protected \AOE\Crawler\Domain\Repository\ConfigurationRepository $subject;
 
     /**
      * Creates the test environment.

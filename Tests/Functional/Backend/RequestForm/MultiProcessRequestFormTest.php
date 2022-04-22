@@ -47,10 +47,7 @@ class MultiProcessRequestFormTest extends FunctionalTestCase
      */
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    /**
-     * @var MultiProcessRequestForm
-     */
-    protected $multiProcessRequestForm;
+    protected \AOE\Crawler\Backend\RequestForm\MultiProcessRequestForm $multiProcessRequestForm;
 
     protected function setUp(): void
     {

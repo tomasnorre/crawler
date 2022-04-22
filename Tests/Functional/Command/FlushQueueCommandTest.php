@@ -32,15 +32,9 @@ class FlushQueueCommandTest extends FunctionalTestCase
      */
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    /**
-     * @var QueueRepository
-     */
-    protected $queueRepository;
+    protected \AOE\Crawler\Domain\Repository\QueueRepository $queueRepository;
 
-    /**
-     * @var CommandTester
-     */
-    protected $commandTester;
+    protected \Symfony\Component\Console\Tester\CommandTester $commandTester;
 
     protected function setUp(): void
     {

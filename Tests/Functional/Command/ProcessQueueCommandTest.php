@@ -30,10 +30,7 @@ class ProcessQueueCommandTest extends FunctionalTestCase
      */
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    /**
-     * @var CommandTester
-     */
-    protected $commandTester;
+    protected \Symfony\Component\Console\Tester\CommandTester $commandTester;
 
     protected function setUp(): void
     {

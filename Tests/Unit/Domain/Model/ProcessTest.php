@@ -31,10 +31,7 @@ use PHPUnit\Framework\MockObject\MockObject;
  */
 class ProcessTest extends UnitTestCase
 {
-    /**
-     * @var Process
-     */
-    protected $subject;
+    protected \AOE\Crawler\Domain\Model\Process $subject;
 
     protected function setUp(): void
     {
@@ -119,7 +116,7 @@ class ProcessTest extends UnitTestCase
     {
         /** @var MockObject|Process $processMock */
         $processMock = self::getAccessibleMock(Process::class, ['isActive', 'getProgress'], [], '', false);
-        $processMock->expects($this->any())->method('isActive')->will($this->returnValue($active));
+        $processMock->expects($this->any())->method('isActive')->will($this->returnValue((bool) $active));
         $processMock->expects($this->any())->method('getProgress')->will($this->returnValue($processes));
 
         self::assertEquals(

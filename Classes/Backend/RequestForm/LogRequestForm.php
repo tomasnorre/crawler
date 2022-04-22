@@ -34,10 +34,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
     private CsvWriterInterface $csvWriter;
     private QueueRepository $queueRepository;
 
-    /**
-     * @var array
-     */
-    private $CSVaccu = [];
+    private array $CSVaccu = [];
 
     public function __construct(StandaloneView $view, InfoModuleController $infoModuleController, array $extensionSettings)
     {

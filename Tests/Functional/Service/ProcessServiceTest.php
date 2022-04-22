@@ -35,10 +35,7 @@ class ProcessServiceTest extends FunctionalTestCase
      */
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    /**
-     * @var ProcessService
-     */
-    protected $subject;
+    protected \AOE\Crawler\Service\ProcessService $subject;
 
     /**
      * Creates the test environment.

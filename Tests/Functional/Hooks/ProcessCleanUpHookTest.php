@@ -32,20 +32,11 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class ProcessCleanUpHookTest extends FunctionalTestCase
 {
-    /**
-     * @var ProcessCleanUpHook
-     */
-    protected $subject;
+    protected \AOE\Crawler\Hooks\ProcessCleanUpHook $subject;
 
-    /**
-     * @var ProcessRepository
-     */
-    protected $processRepository;
+    protected \AOE\Crawler\Domain\Repository\ProcessRepository $processRepository;
 
-    /**
-     * @var QueueRepository
-     */
-    protected $queueRepository;
+    protected \AOE\Crawler\Domain\Repository\QueueRepository $queueRepository;
 
     /**
      * @var array

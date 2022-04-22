@@ -36,10 +36,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
      */
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    /**
-     * @var ProcessRepository
-     */
-    protected $subject;
+    protected \AOE\Crawler\Domain\Repository\ProcessRepository $subject;
 
     /**
      * Creates the test environment.

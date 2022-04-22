@@ -13,7 +13,7 @@ parameters:
 		-
 			message:
 				"""
-					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\ForwardCompatibility\\\\Result\\:
+					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
 					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
 				"""
 			count: 1
@@ -40,7 +40,7 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\ForwardCompatibility\\\\Result\\|int\\|string\\.$#"
+			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
@@ -70,17 +70,17 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Property AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:\\$queryBuilder \\(Doctrine\\\\DBAL\\\\Query\\\\QueryBuilder\\) does not accept TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
 			message: "#^Unable to resolve the template type T in call to method static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\)$#"
 			count: 1
 			path: Classes/Backend/RequestForm/MultiProcessRequestForm.php
 
 		-
 			message: "#^Call to function is_array\\(\\) with string will always evaluate to false\\.$#"
+			count: 1
+			path: Classes/Backend/RequestForm/StartRequestForm.php
+
+		-
+			message: "#^Cannot call method getConfigurationsForBranch\\(\\) on AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\|null\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/StartRequestForm.php
 
@@ -567,6 +567,21 @@ parameters:
 			message: "#^Possibly invalid array key type \\(array\\|string\\)\\.$#"
 			count: 3
 			path: Classes/Service/ConfigurationService.php
+
+		-
+			message: "#^Cannot access property \\$registerQueueEntriesInternallyOnly on AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\|null\\.$#"
+			count: 1
+			path: Classes/Service/QueueService.php
+
+		-
+			message: "#^Cannot call method getUrlsForPageRow\\(\\) on AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\|null\\.$#"
+			count: 1
+			path: Classes/Service/QueueService.php
+
+		-
+			message: "#^Cannot call method urlListFromUrlArray\\(\\) on AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\|null\\.$#"
+			count: 1
+			path: Classes/Service/QueueService.php
 
 		-
 			message:
