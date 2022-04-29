@@ -24,6 +24,7 @@
 * !!! AbstractCommandTests
 
 #### Functions & Properties
+* !!! CrawlerController->modMenu()
 * !!! ConfigurationRepository->getCrawlerConfigurationRecords()
 * !!! FrontendUserAuthenticator->queueRepository
 * !!! ProcessRepository->countActive()

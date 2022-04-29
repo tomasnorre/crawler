@@ -152,6 +152,34 @@ class BackendModuleCest
         $I->waitForText('OK', 15);
     }
 
+    public function checkSelections(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    {
+        $adminStep->loginAsAdmin();
+        $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
+
+        // Action
+        $I->see('Start Crawling');
+        $I->see('Crawler Log');
+        $I->see('Crawling Processes');
+
+        // Configurations
+        $I->see('default');
+        $I->see('excludepages-6-plus-3');
+
+        // Depth
+        $I->see('This page');
+        $I->see('1 level');
+        $I->see('2 levels');
+        $I->see('3 levels');
+        $I->see('4 levels');
+        $I->see('Infinite');
+
+        // Scheduled
+        $I->see('Now');
+        $I->see('Midnight');
+        $I->see('4 AM');
+    }
+
     /**
      * @throws \Exception
      */
