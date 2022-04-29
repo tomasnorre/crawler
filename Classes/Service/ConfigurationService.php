@@ -173,8 +173,8 @@ class ConfigurationService
 
                 foreach ($excludeParts as $excludePart) {
                     $explodedExcludePart = GeneralUtility::trimExplode('+', $excludePart);
-                    $pid = (int) $explodedExcludePart[0];
-                    $depth = (int) $explodedExcludePart[1] ?? null;
+                    $pid = isset($explodedExcludePart[0]) ? (int) $explodedExcludePart[0] : null;
+                    $depth = isset($explodedExcludePart[1]) ? (int) $explodedExcludePart[1] : null;
 
                     // default is "page only" = "depth=0"
                     if (empty($depth)) {
@@ -190,8 +190,6 @@ class ConfigurationService
 
             $expandedExcludeStringCache[$excludeString] = array_unique($pidList);
         }
-
-        var_dump($pidList);
 
         return $expandedExcludeStringCache[$excludeString];
     }
