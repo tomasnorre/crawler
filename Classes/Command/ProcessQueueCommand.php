@@ -113,7 +113,7 @@ class ProcessQueueCommand extends Command
             $result |= self::CLI_STATUS_ABORTED;
         }
 
-        $output->writeln((string)$result);
+        $output->writeln((string) $result);
         return $result & self::CLI_STATUS_ABORTED;
     }
 
