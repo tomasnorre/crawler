@@ -81,17 +81,6 @@ class BackendModule
         $this->pObj->MOD_MENU = array_merge($this->pObj->MOD_MENU, $this->getModuleMenu());
     }
 
-    /**
-     * Additions to the function menu array
-     *
-     * @return array Menu array
-     * @deprecated Using BackendModule->modMenu() is deprecated since 9.1.3 and will be removed in v11.x
-     */
-    public function modMenu(): array
-    {
-        return $this->getModuleMenu();
-    }
-
     public function main(): string
     {
         if (empty($this->pObj->MOD_SETTINGS['processListMode'])) {
