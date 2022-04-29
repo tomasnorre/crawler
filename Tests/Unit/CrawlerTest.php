@@ -28,10 +28,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class CrawlerTest extends UnitTestCase
 {
-    /**
-     * @var Crawler
-     */
-    protected $crawler;
+    protected \AOE\Crawler\Crawler $crawler;
 
     protected function setUp(): void
     {

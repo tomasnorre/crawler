@@ -39,35 +39,13 @@ use TYPO3\CMS\Info\Controller\InfoModuleController;
 
 final class MultiProcessRequestForm extends AbstractRequestForm implements RequestFormInterface
 {
-    /**
-     * @var StandaloneView
-     */
-    private $view;
+    private StandaloneView $view;
+    private ProcessService $processService;
+    private IconFactory $iconFactory;
+    private InfoModuleController $infoModuleController;
 
-    /**
-     * @var ProcessService
-     */
-    private $processService;
-
-    /**
-     * @var IconFactory
-     */
-    private $iconFactory;
-
-    /**
-     * @var InfoModuleController
-     */
-    private $infoModuleController;
-
-    /**
-     * @var int
-     */
-    private $id;
-
-    /**
-     * @var Crawler
-     */
-    private $crawler;
+    private ?int $id = null;
+    private Crawler $crawler;
 
     public function __construct(
         StandaloneView $view,
@@ -90,12 +68,11 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
     }
 
     /**
-     * This method is used to show an overview about the active an the finished crawling processes
+     * This method is used to show an overview about the active and the finished crawling processes
      *
-     * @return string
      * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
      */
-    private function processOverviewAction()
+    private function processOverviewAction(): string
     {
         $this->view->setTemplate('ProcessOverview');
         $this->runRefreshHooks();
@@ -117,11 +94,7 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
         $queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
 
         $mode = GeneralUtility::_GP('processListMode') ?? $this->infoModuleController->MOD_SETTINGS['processListMode'];
-        if ($mode === 'simple') {
-            $allProcesses = $processRepository->findAllActive();
-        } else {
-            $allProcesses = $processRepository->findAll();
-        }
+        $allProcesses = $mode === 'simple' ? $processRepository->findAllActive() : $processRepository->findAll();
         $isCrawlerEnabled = ! $this->crawler->isDisabled() && ! $this->isErrorDetected;
         $currentActiveProcesses = $processRepository->findAllActive()->count();
         $maxActiveProcesses = MathUtility::forceIntegerInRange($this->extensionSettings['processLimit'], 1, 99, 1);
@@ -157,7 +130,7 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
     }
 
     /**
-     * Method to handle incomming actions of the process overview
+     * Method to handle incoming actions of the process overview
      *
      * @throws ProcessException
      */

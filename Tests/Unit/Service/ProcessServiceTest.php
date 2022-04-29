@@ -33,10 +33,7 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
  */
 class ProcessServiceTest extends UnitTestCase
 {
-    /**
-     * @var array
-     */
-    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+    protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     /**
      * @test

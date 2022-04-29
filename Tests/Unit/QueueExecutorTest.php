@@ -40,10 +40,7 @@ class QueueExecutorTest extends UnitTestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var QueueExecutor
-     */
-    protected $queueExecutor;
+    protected \AOE\Crawler\QueueExecutor $queueExecutor;
 
     /**
      * @var CrawlerController

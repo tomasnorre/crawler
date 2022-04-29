@@ -44,10 +44,7 @@ class UrlServiceTest extends FunctionalTestCase
      */
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    /**
-     * @var UrlService
-     */
-    protected $subject;
+    protected \AOE\Crawler\Service\UrlService $subject;
 
     /**
      * Creates the test environment.

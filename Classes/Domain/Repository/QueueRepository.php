@@ -40,10 +40,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
 
     public const TABLE_NAME = 'tx_crawler_queue';
 
-    /**
-     * @var array
-     */
-    protected $extensionSettings;
+    protected array $extensionSettings;
 
     public function __construct()
     {

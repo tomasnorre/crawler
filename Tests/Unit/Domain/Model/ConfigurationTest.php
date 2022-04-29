@@ -27,10 +27,7 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
  */
 class ConfigurationTest extends UnitTestCase
 {
-    /**
-     * @var Configuration
-     */
-    protected $subject;
+    protected \AOE\Crawler\Domain\Model\Configuration $subject;
 
     protected function setUp(): void
     {

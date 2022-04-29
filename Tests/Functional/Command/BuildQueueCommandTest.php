@@ -46,10 +46,7 @@ class BuildQueueCommandTest extends FunctionalTestCase
      */
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    /**
-     * @var QueueRepository
-     */
-    protected $queueRepository;
+    protected \AOE\Crawler\Domain\Repository\QueueRepository $queueRepository;
 
     protected CommandTester $commandTester;
 

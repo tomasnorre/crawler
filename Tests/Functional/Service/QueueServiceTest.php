@@ -37,10 +37,7 @@ class QueueServiceTest extends FunctionalTestCase
      */
     protected $subject;
 
-    /**
-     * @var QueueRepository
-     */
-    protected $queueRepository;
+    protected \AOE\Crawler\Domain\Repository\QueueRepository $queueRepository;
 
     protected function setUp(): void
     {

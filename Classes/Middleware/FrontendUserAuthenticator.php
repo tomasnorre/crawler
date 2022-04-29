@@ -39,7 +39,6 @@ class FrontendUserAuthenticator implements MiddlewareInterface
 {
     protected string $headerName = 'X-T3CRAWLER';
     protected Context $context;
-
     private QueryBuilder $queryBuilder;
 
     public function __construct(QueryBuilder $queryBuilder, ?Context $context = null)

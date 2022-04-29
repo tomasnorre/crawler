@@ -40,10 +40,7 @@ class FrontendUserAuthenticatorTest extends FunctionalTestCase
      */
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    /**
-     * @var FrontendUserAuthenticator
-     */
-    private $subject;
+    private \AOE\Crawler\Middleware\FrontendUserAuthenticator $subject;
 
     protected function setUp(): void
     {

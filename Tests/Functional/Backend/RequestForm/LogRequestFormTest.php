@@ -46,10 +46,7 @@ class LogRequestFormTest extends FunctionalTestCase
      */
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    /**
-     * @var LogRequestForm
-     */
-    protected $logRequestForm;
+    protected \AOE\Crawler\Backend\RequestForm\LogRequestForm $logRequestForm;
 
     protected function setUp(): void
     {

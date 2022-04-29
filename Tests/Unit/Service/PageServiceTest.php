@@ -35,10 +35,7 @@ class PageServiceTest extends UnitTestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var PageService
-     */
-    protected $subject;
+    protected \AOE\Crawler\Service\PageService $subject;
 
     protected function setUp(): void
     {

@@ -42,22 +42,15 @@ class IndexedSearchCrawlerHook
 {
     /**
      * Number of seconds to use as interval between queued indexing operations of URLs / files (types 2 & 3)
-     *
-     * @var int
      */
-    public $secondsPerExternalUrl = 3;
+    public int $secondsPerExternalUrl = 3;
 
     /**
      * Counts up for each added URL (type 3)
-     *
-     * @var int
      */
-    public $instanceCounter = 0;
+    public int $instanceCounter = 0;
 
-    /**
-     * @var string
-     */
-    public $callBack = self::class;
+    public string $callBack = self::class;
 
     public function __construct()
     {

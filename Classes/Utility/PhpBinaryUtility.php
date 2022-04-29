@@ -35,13 +35,13 @@ class PhpBinaryUtility
         $extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
 
         if (empty($extensionSettings)) {
-            throw new ExtensionSettingsException('ExtensionSettings are empty', 1587066853);
+            throw new ExtensionSettingsException('ExtensionSettings are empty', 1_587_066_853);
         }
 
         if (empty($extensionSettings['phpPath'])) {
             $phpPath = CommandUtility::getCommand($extensionSettings['phpBinary']);
             if ($phpPath === false) {
-                throw new CommandNotFoundException('The phpBinary: "' . $extensionSettings['phpBinary'] . '" could not be found!', 1587068215);
+                throw new CommandNotFoundException('The phpBinary: "' . $extensionSettings['phpBinary'] . '" could not be found!', 1_587_068_215);
             }
         } else {
             $phpPath = $extensionSettings['phpPath'];

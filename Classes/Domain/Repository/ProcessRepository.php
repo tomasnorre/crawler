@@ -46,15 +46,8 @@ class ProcessRepository extends Repository
 {
     public const TABLE_NAME = 'tx_crawler_process';
 
-    /**
-     * @var QueryBuilder
-     */
-    protected $queryBuilder;
-
-    /**
-     * @var array
-     */
-    protected $extensionSettings = [];
+    protected QueryBuilder $queryBuilder;
+    protected array $extensionSettings = [];
 
     public function __construct()
     {
@@ -87,11 +80,11 @@ class ProcessRepository extends Repository
         while ($row = $statement->fetch()) {
             $process = GeneralUtility::makeInstance(Process::class);
             $process->setProcessId($row['process_id']);
-            $process->setActive($row['active']);
-            $process->setTtl($row['ttl']);
-            $process->setAssignedItemsCount($row['assigned_items_count']);
-            $process->setDeleted($row['deleted']);
-            $process->setSystemProcessId($row['system_process_id']);
+            $process->setActive((bool) $row['active']);
+            $process->setTtl((int) $row['ttl']);
+            $process->setAssignedItemsCount((int) $row['assigned_items_count']);
+            $process->setDeleted((bool) $row['deleted']);
+            $process->setSystemProcessId((string) $row['system_process_id']);
             $collection->append($process);
         }
 
@@ -117,11 +110,11 @@ class ProcessRepository extends Repository
         while ($row = $statement->fetch()) {
             $process = new Process();
             $process->setProcessId($row['process_id']);
-            $process->setActive($row['active']);
-            $process->setTtl($row['ttl']);
-            $process->setAssignedItemsCount($row['assigned_items_count']);
-            $process->setDeleted($row['deleted']);
-            $process->setSystemProcessId($row['system_process_id']);
+            $process->setActive((bool) $row['active']);
+            $process->setTtl((int) $row['ttl']);
+            $process->setAssignedItemsCount((int) $row['assigned_items_count']);
+            $process->setDeleted((bool) $row['deleted']);
+            $process->setSystemProcessId((string) $row['system_process_id']);
             $collection->append($process);
         }
 

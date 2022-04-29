@@ -28,10 +28,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class QueueService
 {
-    /**
-     * @var CrawlerController
-     */
-    private $crawlerController;
+    private ?\AOE\Crawler\Controller\CrawlerController $crawlerController = null;
 
     public function injectCrawlerController(CrawlerController $crawlerController): void
     {

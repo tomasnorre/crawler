@@ -38,10 +38,7 @@ class QueueRepositoryTest extends FunctionalTestCase
      */
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    /**
-     * @var QueueRepository
-     */
-    protected $subject;
+    protected \AOE\Crawler\Domain\Repository\QueueRepository $subject;
 
     /**
      * Creates the test environment.

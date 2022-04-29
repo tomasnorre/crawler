@@ -37,7 +37,6 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 class ProcessService
 {
     private ProcessRepository $processRepository;
-
     private SleeperInterface $sleeper;
 
     public function __construct(
