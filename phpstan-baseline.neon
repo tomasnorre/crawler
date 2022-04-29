@@ -494,7 +494,7 @@ parameters:
 			path: Classes/Service/ConfigurationService.php
 
 		-
-			message: "#^Class cognitive complexity is 98, keep it under 60$#"
+			message: "#^Class cognitive complexity is 100, keep it under 60$#"
 			count: 1
 			path: Classes/Service/ConfigurationService.php
 
