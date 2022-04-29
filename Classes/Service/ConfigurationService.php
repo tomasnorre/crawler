@@ -191,6 +191,8 @@ class ConfigurationService
             $expandedExcludeStringCache[$excludeString] = array_unique($pidList);
         }
 
+        var_dump($pidList);
+
         return $expandedExcludeStringCache[$excludeString];
     }
 
