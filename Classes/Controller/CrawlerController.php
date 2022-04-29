@@ -151,8 +151,6 @@ class CrawlerController implements LoggerAwareInterface
      * It returns an array of configurations and no urls!
      *
      * @param array $pageRow Page record with at least dok-type and uid columns.
-     * @param string $skipMessage
-     * @return array
      * @see getUrlsForPageId()
      */
     public function getUrlsForPageRow(array $pageRow, string &$skipMessage = ''): array
@@ -200,8 +198,7 @@ class CrawlerController implements LoggerAwareInterface
         array &$duplicateTrack,
         array &$downloadUrls,
         array $incomingProcInstructions
-    ): string
-    {
+    ): string {
         if (! is_array($vv['URLs'])) {
             return 'ERROR - no URL generated';
         }
