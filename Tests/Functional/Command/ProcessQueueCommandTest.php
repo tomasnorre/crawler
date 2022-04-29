@@ -20,8 +20,13 @@ namespace AOE\Crawler\Tests\Functional\Command;
  */
 
 use AOE\Crawler\Command\ProcessQueueCommand;
+use AOE\Crawler\Controller\CrawlerController;
+use AOE\Crawler\Crawler;
+use AOE\Crawler\Domain\Repository\ProcessRepository;
+use AOE\Crawler\Domain\Repository\QueueRepository;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class ProcessQueueCommandTest extends FunctionalTestCase
 {
@@ -30,7 +35,7 @@ class ProcessQueueCommandTest extends FunctionalTestCase
      */
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    protected \Symfony\Component\Console\Tester\CommandTester $commandTester;
+    protected CommandTester $commandTester;
 
     protected function setUp(): void
     {
@@ -39,7 +44,14 @@ class ProcessQueueCommandTest extends FunctionalTestCase
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/pages.xml');
 
-        $command = new ProcessQueueCommand();
+        $crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
+
+        $command = new ProcessQueueCommand(
+            new Crawler(),
+            $crawlerController,
+            new ProcessRepository(),
+            new QueueRepository()
+        );
         $this->commandTester = new CommandTester($command);
     }
 
