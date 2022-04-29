@@ -113,7 +113,7 @@ class ProcessQueueCommand extends Command
             $result |= self::CLI_STATUS_ABORTED;
         }
 
-        $output->writeln($result);
+        $output->writeln((string)$result);
         return $result & self::CLI_STATUS_ABORTED;
     }
 
@@ -263,17 +263,6 @@ class ProcessQueueCommand extends Command
         $this->queueRepository->unsetProcessScheduledAndProcessIdForQueueEntries($orphanProcesses);
 
         return $returnValue;
-    }
-
-    /**
-     * Create a unique Id for the current process
-     */
-    private function getProcessId(): string
-    {
-        if (!$this->processId) {
-            $this->processId = GeneralUtility::shortMD5(microtime(true));
-        }
-        return $this->processId;
     }
 
     private function getExtensionSettings(): array

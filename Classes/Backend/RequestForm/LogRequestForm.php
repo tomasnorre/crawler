@@ -57,7 +57,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
             . $this->showLogAction($setId, $quiPart);
     }
 
-    private function getDepthDropDownHtml($id, string $currentValue, array $menuItems): string
+    private function getDepthDropDownHtml(int $id, string $currentValue, array $menuItems): string
     {
         return BackendUtility::getFuncMenu(
             $id,

@@ -313,7 +313,7 @@ class CrawlerController implements LoggerAwareInterface
     }
 
     /**
-     * This methods returns an array of configurations.
+     * This method returns an array of configurations.
      * Adds no urls!
      */
     public function getUrlsForPageId(int $pageId): array
