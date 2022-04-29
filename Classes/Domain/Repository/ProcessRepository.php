@@ -81,8 +81,8 @@ class ProcessRepository extends Repository
             $process = GeneralUtility::makeInstance(Process::class);
             $process->setProcessId($row['process_id']);
             $process->setActive((bool) $row['active']);
-            $process->setTtl($row['ttl']);
-            $process->setAssignedItemsCount($row['assigned_items_count']);
+            $process->setTtl((int)$row['ttl']);
+            $process->setAssignedItemsCount((int)$row['assigned_items_count']);
             $process->setDeleted((bool) $row['deleted']);
             $process->setSystemProcessId((string) $row['system_process_id']);
             $collection->append($process);
@@ -111,8 +111,8 @@ class ProcessRepository extends Repository
             $process = new Process();
             $process->setProcessId($row['process_id']);
             $process->setActive((bool) $row['active']);
-            $process->setTtl($row['ttl']);
-            $process->setAssignedItemsCount($row['assigned_items_count']);
+            $process->setTtl((int)$row['ttl']);
+            $process->setAssignedItemsCount((int)$row['assigned_items_count']);
             $process->setDeleted((bool) $row['deleted']);
             $process->setSystemProcessId((string) $row['system_process_id']);
             $collection->append($process);
