@@ -39,35 +39,27 @@ class ProcessQueueCommand extends Command
     private const CLI_STATUS_ABORTED = 4;
     private const CLI_STATUS_POLLABLE_PROCESSED = 8;
 
-    /**
-     * @var Crawler
-     */
-    private $crawler;
+    private Crawler $crawler;
+    private CrawlerController $crawlerController;
+    private ProcessRepository $processRepository;
+    private QueueRepository $queueRepository;
+    private string $processId;
+    private array $extensionSettings;
 
-    /**
-     * @var CrawlerController
-     */
-    private $crawlerController;
-
-    /**
-     * @var ProcessRepository
-     */
-    private $processRepository;
-
-    /**
-     * @var QueueRepository
-     */
-    private $queueRepository;
-
-    /**
-     * @var string
-     */
-    private $processId;
-
-    /**
-     * @var array
-     */
-    private $extensionSettings;
+    public function __construct(
+        Crawler $crawler,
+        CrawlerController $crawlerController,
+        ProcessRepository $processRepository,
+        QueueRepository $queueRepository,
+        string $name = null
+    ) {
+        parent::__construct($name);
+        $this->crawler = $crawler;
+        $this->crawlerController = $crawlerController;
+        $this->processRepository = $processRepository;
+        $this->queueRepository = $queueRepository;
+        $this->processId = GeneralUtility::shortMD5(microtime() . random_bytes(12));
+    }
 
     /**
      * Crawler Command - Crawling the URLs from the queue
@@ -97,7 +89,7 @@ class ProcessQueueCommand extends Command
         /** @var Crawler $crawler */
         $crawler = GeneralUtility::makeInstance(Crawler::class);
 
-        if (! $crawler->isDisabled() && $this->checkAndAcquireNewProcess($this->getProcessId())) {
+        if (!$crawler->isDisabled() && $this->checkAndAcquireNewProcess($this->processId)) {
             $countInARun = $amount ? (int) $amount : (int) $this->extensionSettings['countInARun'];
             $sleepAfterFinish = $sleepafter ? (int) $sleepafter : (int) $this->extensionSettings['sleepAfterFinish'];
             $sleepTime = $sleeptime ? (int) $sleeptime : (int) $this->extensionSettings['sleepTime'];
@@ -112,10 +104,10 @@ class ProcessQueueCommand extends Command
 
             // Cleanup
             $processRepository->deleteProcessesWithoutItemsAssigned();
-            $processRepository->markRequestedProcessesAsNotActive([$this->getProcessId()]);
-            $queueRepository->unsetProcessScheduledAndProcessIdForQueueEntries([$this->getProcessId()]);
+            $processRepository->markRequestedProcessesAsNotActive([$this->processId]);
+            $queueRepository->unsetProcessScheduledAndProcessIdForQueueEntries([$this->processId]);
 
-            $output->writeln('<info>Unprocessed Items remaining:' . count($queueRepository->getUnprocessedItems()) . ' (' . $this->getProcessId() . ')</info>');
+            $output->writeln('<info>Unprocessed Items remaining:' . count($queueRepository->getUnprocessedItems()) . ' (' . $this->processId . ')</info>');
             $result |= (count($queueRepository->getUnprocessedItems()) > 0 ? self::CLI_STATUS_REMAIN : self::CLI_STATUS_NOTHING_PROCCESSED);
         } else {
             $result |= self::CLI_STATUS_ABORTED;
@@ -177,35 +169,33 @@ class ProcessQueueCommand extends Command
             );
             $hookObj = GeneralUtility::makeInstance($objRef);
             if (is_object($hookObj)) {
-                $hookObj->crawler_init($this->getCrawlerController());
+                $hookObj->crawler_init($this->crawlerController);
             }
         }
 
         // Clean up the queue
-        $this->getQueueRepository()->cleanupQueue();
+        $this->queueRepository->cleanupQueue();
 
         // Select entries:
-        $records = $this->getQueueRepository()->fetchRecordsToBeCrawled($countInARun);
+        $records = $this->queueRepository->fetchRecordsToBeCrawled($countInARun);
 
-        if (! empty($records)) {
+        if (!empty($records)) {
             $quidList = [];
 
             foreach ($records as $record) {
                 $quidList[] = $record['qid'];
             }
 
-            $processId = $this->getProcessId();
-
             //save the number of assigned queue entries to determine how many have been processed later
-            $numberOfAffectedRows = $this->getQueueRepository()->updateProcessIdAndSchedulerForQueueIds($quidList, $processId);
-            $this->getProcessRepository()->updateProcessAssignItemsCount($numberOfAffectedRows, $processId);
+            $numberOfAffectedRows = $this->queueRepository->updateProcessIdAndSchedulerForQueueIds($quidList, $this->processId);
+            $this->processRepository->updateProcessAssignItemsCount($numberOfAffectedRows, $this->processId);
 
             if ($numberOfAffectedRows !== count($quidList)) {
                 return ($result | self::CLI_STATUS_ABORTED);
             }
 
             foreach ($records as $record) {
-                $result |= $this->getCrawlerController()->readUrl($record['qid'], false, $processId);
+                $result |= $this->crawlerController->readUrl($record['qid'], false, $this->processId);
 
                 $counter++;
                 // Just to relax the system
@@ -213,11 +203,11 @@ class ProcessQueueCommand extends Command
 
                 // if during the start and the current read url the cli has been disable we need to return from the function
                 // mark the process NOT as ended.
-                if ($this->getCrawler()->isDisabled()) {
+                if ($this->crawler->isDisabled()) {
                     return ($result | self::CLI_STATUS_ABORTED);
                 }
 
-                if (! $this->getProcessRepository()->isProcessActive($this->getProcessId())) {
+                if (!$this->processRepository->isProcessActive($this->processId)) {
                     $result |= self::CLI_STATUS_ABORTED;
                     //possible timeout
                     break;
@@ -243,14 +233,14 @@ class ProcessQueueCommand extends Command
         $returnValue = true;
 
         $systemProcessId = getmypid();
-        if (! $systemProcessId) {
+        if (!$systemProcessId) {
             return false;
         }
 
         $processCount = 0;
         $orphanProcesses = [];
 
-        $activeProcesses = $this->getProcessRepository()->findAllActive();
+        $activeProcesses = $this->processRepository->findAllActive();
 
         /** @var Process $process */
         foreach ($activeProcesses as $process) {
@@ -263,14 +253,14 @@ class ProcessQueueCommand extends Command
 
         // if there are less than allowed active processes then add a new one
         if ($processCount < (int) $this->extensionSettings['processLimit']) {
-            $this->getProcessRepository()->addProcess($id, $systemProcessId);
+            $this->processRepository->addProcess($id, $systemProcessId);
         } else {
             $returnValue = false;
         }
 
-        $this->getProcessRepository()->deleteProcessesMarkedAsDeleted();
-        $this->getProcessRepository()->markRequestedProcessesAsNotActive($orphanProcesses);
-        $this->getQueueRepository()->unsetProcessScheduledAndProcessIdForQueueEntries($orphanProcesses);
+        $this->processRepository->deleteProcessesMarkedAsDeleted();
+        $this->processRepository->markRequestedProcessesAsNotActive($orphanProcesses);
+        $this->queueRepository->unsetProcessScheduledAndProcessIdForQueueEntries($orphanProcesses);
 
         return $returnValue;
     }
@@ -280,33 +270,10 @@ class ProcessQueueCommand extends Command
      */
     private function getProcessId(): string
     {
-        if (! $this->processId) {
+        if (!$this->processId) {
             $this->processId = GeneralUtility::shortMD5(microtime(true));
         }
         return $this->processId;
-    }
-
-    // Todo: Switch to Dependency Injection
-    private function getCrawler(): Crawler
-    {
-        return $this->crawler ?? new Crawler();
-    }
-
-    private function getCrawlerController(): CrawlerController
-    {
-        return $this->crawlerController ?? GeneralUtility::makeInstance(CrawlerController::class);
-    }
-
-    private function getProcessRepository(): ProcessRepository
-    {
-        $this->processRepository = $this->processRepository ?? GeneralUtility::makeInstance(ProcessRepository::class);
-        return $this->processRepository;
-    }
-
-    private function getQueueRepository(): QueueRepository
-    {
-        $this->queueRepository = $this->queueRepository ?? GeneralUtility::makeInstance(QueueRepository::class);
-        return $this->queueRepository;
     }
 
     private function getExtensionSettings(): array
