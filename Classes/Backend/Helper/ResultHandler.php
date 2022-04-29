@@ -29,11 +29,8 @@ class ResultHandler
 {
     /**
      * Extract the log information from the current row and retrieve it as formatted string.
-     *
-     * @param array $resultRow
-     * @return string
      */
-    public static function getResultLog($resultRow)
+    public static function getResultLog(array $resultRow): string
     {
         $content = '';
         if (is_array($resultRow) && array_key_exists('result_data', $resultRow)) {

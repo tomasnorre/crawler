@@ -155,7 +155,7 @@ class CrawlerController implements LoggerAwareInterface
      * @return array
      * @see getUrlsForPageId()
      */
-    public function getUrlsForPageRow(array $pageRow, &$skipMessage = '')
+    public function getUrlsForPageRow(array $pageRow, string &$skipMessage = ''): array
     {
         $pageRowUid = intval($pageRow['uid']);
         if (!$pageRowUid) {
@@ -193,14 +193,15 @@ class CrawlerController implements LoggerAwareInterface
     public function urlListFromUrlArray(
         array $vv,
         array $pageRow,
-        $scheduledTime,
-        $reqMinute,
-        $submitCrawlUrls,
-        $downloadCrawlUrls,
+        int $scheduledTime,
+        int $reqMinute,
+        bool $submitCrawlUrls,
+        bool $downloadCrawlUrls,
         array &$duplicateTrack,
         array &$downloadUrls,
         array $incomingProcInstructions
-    ) {
+    ): string
+    {
         if (! is_array($vv['URLs'])) {
             return 'ERROR - no URL generated';
         }
@@ -274,7 +275,7 @@ class CrawlerController implements LoggerAwareInterface
      * @param array $incomingProcInstructions Processing instructions
      * @return boolean
      */
-    public function drawURLs_PIfilter($piString, array $incomingProcInstructions)
+    public function drawURLs_PIfilter(string $piString, array $incomingProcInstructions)
     {
         if (empty($incomingProcInstructions)) {
             return true;

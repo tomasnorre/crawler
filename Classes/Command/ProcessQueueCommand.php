@@ -286,6 +286,7 @@ class ProcessQueueCommand extends Command
         return $this->processId;
     }
 
+    // Todo: Switch to Dependency Injection
     private function getCrawler(): Crawler
     {
         return $this->crawler ?? new Crawler();

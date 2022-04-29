@@ -135,7 +135,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             $message = "Page ${pageId} is not a valid page, please check you root page id and try again.";
             MessageUtility::addErrorMessage($message);
             $output->writeln("<info>${message}</info>");
-            return 1;
+            return Command::FAILURE;
         }
 
         $configurationKeys = $this->getConfigurationKeys((string) $input->getArgument('conf'));
@@ -204,7 +204,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             $this->outputUrls($queueRows, $output);
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     /**

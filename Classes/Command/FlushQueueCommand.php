@@ -89,6 +89,6 @@ It will remove queue entries and perform a cleanup.' . chr(10) . chr(10) .
                 break;
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

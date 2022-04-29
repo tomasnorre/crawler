@@ -68,12 +68,12 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
     }
 
     /**
-     * This method is used to show an overview about the active an the finished crawling processes
+     * This method is used to show an overview about the active and the finished crawling processes
      *
      * @return string
      * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
      */
-    private function processOverviewAction()
+    private function processOverviewAction(): string
     {
         $this->view->setTemplate('ProcessOverview');
         $this->runRefreshHooks();
@@ -131,7 +131,7 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
     }
 
     /**
-     * Method to handle incomming actions of the process overview
+     * Method to handle incoming actions of the process overview
      *
      * @throws ProcessException
      */
