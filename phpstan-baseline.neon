@@ -55,11 +55,6 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:getDepthDropDownHtml\\(\\) has parameter \\$id with no typehint specified\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
 			message: "#^Parameter \\#1 \\$resultData of static method AOE\\\\Crawler\\\\Backend\\\\Helper\\\\ResultHandler\\:\\:getResFeVars\\(\\) expects array, array\\|true given\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
@@ -96,16 +91,6 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method object\\:\\:crawler_init\\(\\)\\.$#"
-			count: 1
-			path: Classes/Command/ProcessQueueCommand.php
-
-		-
-			message: "#^Parameter \\#1 \\$input of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:shortMD5\\(\\) expects string, float given\\.$#"
-			count: 1
-			path: Classes/Command/ProcessQueueCommand.php
-
-		-
-			message: "#^Parameter \\#1 \\$messages of method Symfony\\\\Component\\\\Console\\\\Output\\\\OutputInterface\\:\\:writeln\\(\\) expects iterable\\|string, int given\\.$#"
 			count: 1
 			path: Classes/Command/ProcessQueueCommand.php
 
@@ -509,57 +494,12 @@ parameters:
 			path: Classes/Service/ConfigurationService.php
 
 		-
-			message: "#^Class cognitive complexity is 98, keep it under 60$#"
-			count: 1
-			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: "#^Method AOE\\\\Crawler\\\\Service\\\\ConfigurationService\\:\\:addValuesInRange\\(\\) has parameter \\$parameter with no typehint specified\\.$#"
-			count: 1
-			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: "#^Method AOE\\\\Crawler\\\\Service\\\\ConfigurationService\\:\\:expandPidList\\(\\) has parameter \\$depth with no typehint specified\\.$#"
-			count: 1
-			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: "#^Method AOE\\\\Crawler\\\\Service\\\\ConfigurationService\\:\\:runExpandParametersHook\\(\\) has parameter \\$parameter with no typehint specified\\.$#"
-			count: 1
-			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: "#^Method AOE\\\\Crawler\\\\Service\\\\ConfigurationService\\:\\:runExpandParametersHook\\(\\) has parameter \\$path with no typehint specified\\.$#"
+			message: "#^Class cognitive complexity is 100, keep it under 60$#"
 			count: 1
 			path: Classes/Service/ConfigurationService.php
 
 		-
 			message: "#^Offset 'usergroup_cached…' does not exist on array\\|null\\.$#"
-			count: 1
-			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$depth\\)\\: Unexpected token \"\\$depth\", expected type at offset 18$#"
-			count: 1
-			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$parameter\\)\\: Unexpected token \"\\$parameter\", expected type at offset 18$#"
-			count: 2
-			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$path\\)\\: Unexpected token \"\\$path\", expected type at offset 43$#"
-			count: 1
-			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: "#^Parameter \\#1 \\$uid of method TYPO3\\\\CMS\\\\Backend\\\\Tree\\\\View\\\\AbstractTreeView\\:\\:getTree\\(\\) expects int, string given\\.$#"
-			count: 1
-			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: "#^Parameter \\#4 \\$permClause of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\QueryGenerator\\:\\:getTreeList\\(\\) expects string, int given\\.$#"
 			count: 1
 			path: Classes/Service/ConfigurationService.php
 

@@ -173,15 +173,15 @@ class ConfigurationService
 
                 foreach ($excludeParts as $excludePart) {
                     $explodedExcludePart = GeneralUtility::trimExplode('+', $excludePart);
-                    $pid = $explodedExcludePart[0];
-                    $depth = $explodedExcludePart[1] ?? null;
+                    $pid = isset($explodedExcludePart[0]) ? (int) $explodedExcludePart[0] : 0;
+                    $depth = isset($explodedExcludePart[1]) ? (int) $explodedExcludePart[1] : null;
 
                     // default is "page only" = "depth=0"
                     if (empty($depth)) {
                         $depth = (strpos($excludePart, '+') !== false) ? 99 : 0;
                     }
 
-                    $pidList[] = (int) $pid;
+                    $pidList[] = $pid;
                     if ($depth > 0) {
                         $pidList = $this->expandPidList($treeCache, $pid, $depth, $tree, $pidList);
                     }
@@ -354,10 +354,11 @@ class ConfigurationService
     }
 
     /**
-     * @param $parameter
-     * @param $path
+     * @param (int|string) $parameter
+     *
+     * @psalm-param array-key $parameter
      */
-    private function runExpandParametersHook(array $paramArray, $parameter, $path, int $pid): array
+    private function runExpandParametersHook(array $paramArray, $parameter, string $path, int $pid): array
     {
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/class.tx_crawler_lib.php']['expandParameters'] ?? null)) {
             $_params = [
@@ -379,7 +380,7 @@ class ConfigurationService
         if ($recursiveDepth > 0) {
             /** @var QueryGenerator $queryGenerator */
             $queryGenerator = GeneralUtility::makeInstance(QueryGenerator::class);
-            $pidList = $queryGenerator->getTreeList($lookUpPid, $recursiveDepth, 0, 1);
+            $pidList = $queryGenerator->getTreeList($lookUpPid, $recursiveDepth);
             $pidArray = GeneralUtility::intExplode(',', $pidList);
         } else {
             $pidArray = [$lookUpPid];
@@ -388,10 +389,11 @@ class ConfigurationService
     }
 
     /**
-     * @param $parameter
-     *
      * Traverse range, add values:
      * Limit to size of range!
+     * @param (int|string) $parameter
+     *
+     * @psalm-param array-key $parameter
      */
     private function addValuesInRange(array $reg, array $paramArray, $parameter): array
     {
@@ -406,10 +408,7 @@ class ConfigurationService
         return $paramArray;
     }
 
-    /**
-     * @param $depth
-     */
-    private function expandPidList(array $treeCache, string $pid, $depth, PageTreeView $tree, array $pidList): array
+    private function expandPidList(array $treeCache, int $pid, int $depth, PageTreeView $tree, array $pidList): array
     {
         if (empty($treeCache[$pid][$depth])) {
             $tree->reset();
