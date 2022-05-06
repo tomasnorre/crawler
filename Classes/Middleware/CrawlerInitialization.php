@@ -81,7 +81,7 @@ class CrawlerInitialization implements MiddlewareInterface
      * Required because some extensions (staticpub) might never be requested to run due to some Core side effects
      * and since this is considered as error the crawler should handle it properly
      */
-    protected function runPollSuccessHooks(): void
+    private function runPollSuccessHooks(): void
     {
         if (! is_array($GLOBALS['TSFE']->applicationData['tx_crawler']['content']['parameters']['procInstructions'] ?? false)) {
             return;
