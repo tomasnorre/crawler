@@ -9,6 +9,8 @@
 * !!! Add interface to CrawlStrategy filename
 * !!! Switch getExtensionIcon() in TcaUtility from protected to private
 * !!! Add Type Hints for id parameters on RequestForm Render method
+* !!! Switch runPollSuccessHooks() in CrawlerInitialization from protected to private
+* !!! Switch isRequestHashMatchingQueueRecord() in FrontendUserAuthenticator from protected to private
 
 ### Fixed
 

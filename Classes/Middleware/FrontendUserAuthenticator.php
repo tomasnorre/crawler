@@ -101,7 +101,7 @@ class FrontendUserAuthenticator implements MiddlewareInterface
         return $this->context;
     }
 
-    protected function isRequestHashMatchingQueueRecord(?array $queueRec, string $hash): bool
+    private function isRequestHashMatchingQueueRecord(?array $queueRec, string $hash): bool
     {
         return is_array($queueRec) && hash_equals($hash, md5($queueRec['qid'] . '|' . $queueRec['set_id'] . '|' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']));
     }
