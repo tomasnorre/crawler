@@ -60,43 +60,4 @@ class FrontendUserAuthenticatorTest extends UnitTestCase
 
         self::assertSame($handlerResponse, $response);
     }
-
-    /**
-     * @test
-     * @dataProvider isRequestHashMatchingQueueRecordDataProvider
-     */
-    public function isRequestHashMatchingQueueRecord($queueRecord, $hash, $expected): void
-    {
-        self::assertSame(
-            $this->subject->_call('isRequestHashMatchingQueueRecord', $queueRecord, $hash),
-            $expected
-        );
-    }
-
-    public function isRequestHashMatchingQueueRecordDataProvider(): iterable
-    {
-        $queueRecord = [
-            'qid' => '1234',
-            'set_id' => '4321',
-        ];
-
-        // Faking the TYPO3 Encryption key as the DataProvider doesn't know about the TYPO3_CONF array
-        $encryptionKey = md5('this_is_an_insecure_encryption_key');
-
-        yield 'Hash match' => [
-            'queueRecord' => $queueRecord,
-            'hash' => md5($queueRecord['qid'] . '|' . $queueRecord['set_id'] . '|' . $encryptionKey),
-            'expected' => true,
-        ];
-        yield 'Hash does not match' => [
-            'queueRecord' => $queueRecord,
-            'hash' => md5('qid' . '|' . 'set_id' . '|' . $encryptionKey),
-            'expected' => false,
-        ];
-        yield 'queueRecord is not an array, there returning false' => [
-            'queueRecord' => null,
-            'hash' => '',
-            'expected' => false,
-        ];
-    }
 }
