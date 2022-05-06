@@ -221,6 +221,51 @@ class ConfigurationServiceTest extends UnitTestCase
                 ],
             ],
         ];
+        yield 'PageTSConfig with empty mountPoint returning URLs, switching range parameters around' => [
+            'pageTSConfig' => [
+                'tx_crawler.' => [
+                    'crawlerCfg.' => [
+                        'paramSets.' => [
+                            'myConfigurationKeyName' => '&S=CRAWL&L=[0-1]&RANGE=[10-6]',
+                            'myConfigurationKeyName.' => [
+                                'pidsOnly' => '1',
+                                'procInstrFilter' => 'tx_indexedsearch_reindex',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'pageId' => 1,
+            'mountPoint' => '',
+            'compiledUrls' => [
+                '?id=1&L=0&S=CRAWL',
+                '?id=1&L=1&S=CRAWL',
+            ],
+            'expected' => [
+                'myConfigurationKeyName' => [
+                    'subCfg' => [
+                        'pidsOnly' => '1',
+                        'procInstrFilter' => 'tx_indexedsearch_reindex',
+                        'key' => 'myConfigurationKeyName',
+                    ],
+                    'paramParsed' => [
+                        'S' => 'CRAWL',
+                        'L' => '[0-1]',
+                        'RANGE' => '[10-6]',
+                    ],
+                    'paramExpanded' => [
+                        'S' => ['CRAWL'],
+                        'L' => [0, 1],
+                        'RANGE' => [6, 7, 8, 9, 10],
+                    ],
+                    'origin' => 'pagets',
+                    'URLs' => [
+                        '?id=1&L=0&S=CRAWL',
+                        '?id=1&L=1&S=CRAWL',
+                    ],
+                ],
+            ],
+        ];
         yield 'PageTSConfig with mountPoint given' => [
             'pageTSConfig' => [
                 'tx_crawler.' => [
