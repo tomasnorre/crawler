@@ -25,6 +25,7 @@ infection.log
 /Tests/.phpunit.cache/
 /Infection/
 /LOGGER-HTML
+reports/
 
 # Devbox
 .devbox/.ddev/config.local.yaml

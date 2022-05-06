@@ -19,17 +19,23 @@ namespace AOE\Crawler\Tests\Unit\Service;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Service\ConfigurationService;
 use AOE\Crawler\Service\UrlService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * @covers \AOE\Crawler\Service\ConfigurationService
  * @covers \AOE\Crawler\Service\UrlService::compileUrls
+ * @covers \AOE\Crawler\Configuration\ExtensionConfigurationProvider::getExtensionConfiguration
  */
 class ConfigurationServiceTest extends UnitTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      * @dataProvider removeDisallowedConfigurationsDataProvider
@@ -74,15 +80,22 @@ class ConfigurationServiceTest extends UnitTestCase
      * @test
      * @dataProvider getConfigurationFromPageTSDataProvider
      */
-    public function getConfigurationFromPageTS(array $pageTSConfig, int $pageId, string $mountPoint, array $expected): void
+    public function getConfigurationFromPageTS(array $pageTSConfig, int $pageId, string $mountPoint, array $compiledUrls, array $expected): void
     {
-        $urlService = GeneralUtility::makeInstance(UrlService::class);
-        $serviceConfiguration = $this->createPartialMock(ConfigurationService::class, ['getUrlService']);
-        $serviceConfiguration->expects($this->any())->method('getUrlService')->willReturn($urlService);
+        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [];
+
+        $urlService = $this->prophesize(UrlService::class);
+        $urlService->compileUrls(Argument::any(), Argument::any(), Argument::any())->willReturn($compiledUrls);
+        $configurationRepository = $this->prophesize(ConfigurationRepository::class);
+        $configurationService = GeneralUtility::makeInstance(
+            ConfigurationService::class,
+            $urlService->reveal(),
+            $configurationRepository->reveal()
+        );
 
         self::assertEquals(
             $expected,
-            $serviceConfiguration->getConfigurationFromPageTS($pageTSConfig, $pageId, [], $mountPoint)
+            $configurationService->getConfigurationFromPageTS($pageTSConfig, $pageId, [], $mountPoint)
         );
     }
 
@@ -92,6 +105,7 @@ class ConfigurationServiceTest extends UnitTestCase
             'pageTSConfig' => [],
             'pageId' => 1,
             'mountPoint' => '',
+            'compiledUrls' => [],
             'expected' => [],
         ];
         yield 'PageTSConfig with empty mountPoint returning no URLs' => [
@@ -110,6 +124,7 @@ class ConfigurationServiceTest extends UnitTestCase
             ],
             'pageId' => 1,
             'mountPoint' => '',
+            'compiledUrls' => [],
             'expected' => [
                 'myConfigurationKeyName' => [
                     'subCfg' => [
@@ -122,6 +137,41 @@ class ConfigurationServiceTest extends UnitTestCase
                     ],
                     'paramExpanded' => [
                         'tx_myext[items]' => [],
+                    ],
+                    'origin' => 'pagets',
+                    'URLs' => [],
+                ],
+            ],
+        ];
+        yield '_TABLE not at first position, returning the parts' => [
+            'pageTSConfig' => [
+                'tx_crawler.' => [
+                    'crawlerCfg.' => [
+                        'paramSets.' => [
+                            'myConfigurationKeyName' => '&tx_myext[items]=[_FIELD:custom;_TABLE:tt_myext_items;_PID:15;_WHERE: hidden = 0]',
+                            'myConfigurationKeyName.' => [
+                                'pidsOnly' => '1',
+                                'procInstrFilter' => 'tx_indexedsearch_reindex',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'pageId' => 1,
+            'mountPoint' => '',
+            'compiledUrls' => [],
+            'expected' => [
+                'myConfigurationKeyName' => [
+                    'subCfg' => [
+                        'pidsOnly' => '1',
+                        'procInstrFilter' => 'tx_indexedsearch_reindex',
+                        'key' => 'myConfigurationKeyName',
+                    ],
+                    'paramParsed' => [
+                        'tx_myext[items]' => '[_FIELD:custom;_TABLE:tt_myext_items;_PID:15;_WHERE: hidden = 0]',
+                    ],
+                    'paramExpanded' => [
+                        'tx_myext[items]' => ['_FIELD:custom;_TABLE:tt_myext_items;_PID:15;_WHERE: hidden = 0'],
                     ],
                     'origin' => 'pagets',
                     'URLs' => [],
@@ -144,6 +194,10 @@ class ConfigurationServiceTest extends UnitTestCase
             ],
             'pageId' => 1,
             'mountPoint' => '',
+            'compiledUrls' => [
+                '?id=1&L=0&S=CRAWL',
+                '?id=1&L=1&S=CRAWL',
+            ],
             'expected' => [
                 'myConfigurationKeyName' => [
                     'subCfg' => [
@@ -183,6 +237,10 @@ class ConfigurationServiceTest extends UnitTestCase
             ],
             'pageId' => 1,
             'mountPoint' => 'mpstring',
+            'compiledUrls' => [
+                '?id=1&MP=mpstring&L=0&S=CRAWL',
+                '?id=1&MP=mpstring&L=1&S=CRAWL',
+            ],
             'expected' => [
                 'myConfigurationKeyName' => [
                     'subCfg' => [
@@ -223,6 +281,10 @@ class ConfigurationServiceTest extends UnitTestCase
             ],
             'pageId' => 1,
             'mountPoint' => 'mpstring',
+            'compiledUrls' => [
+                '?id=1&MP=mpstring&L=0&S=CRAWL',
+                '?id=1&MP=mpstring&L=1&S=CRAWL',
+            ],
             'expected' => [
                 'myConfigurationKeyName' => [
                     'subCfg' => [

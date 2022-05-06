@@ -28,6 +28,7 @@
 #### Functions & Properties
 * !!! CrawlerController->modMenu()
 * !!! ConfigurationRepository->getCrawlerConfigurationRecords()
+* !!! ConfigurationService->getUrlService()
 * !!! FrontendUserAuthenticator->queueRepository
 * !!! ProcessRepository->countActive()
 * !!! ProcessRepository->findByProcessId()
