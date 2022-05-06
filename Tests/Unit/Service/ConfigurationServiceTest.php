@@ -30,6 +30,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * @covers \AOE\Crawler\Service\ConfigurationService
  * @covers \AOE\Crawler\Service\UrlService::compileUrls
+ * @covers \AOE\Crawler\Configuration\ExtensionConfigurationProvider::getExtensionConfiguration
  */
 class ConfigurationServiceTest extends UnitTestCase
 {
