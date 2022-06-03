@@ -122,23 +122,19 @@ and register a signal slot in your site package.
          $numOfDemandedCategories = \count($demandedCategories);
          $intersection = \array_intersect($itemCategoryIds, $demandedCategories);
          $numOfCommonItems = \count($intersection);
+
          switch ($categoryConjunction) {
                case 'AND':
                   return $numOfCommonItems === $numOfDemandedCategories;
-                  break;
                case 'OR':
                   return $numOfCommonItems > 0;
-                  break;
                case 'NOTAND':
                   return $numOfCommonItems < $numOfDemandedCategories;
-                  break;
                case 'NOTOR':
                   return $numOfCommonItems === 0;
-                  break;
-               default:
-                  return true;
-                  break;
          }
+
+         return true;
       }
     }
 
