@@ -3,13 +3,13 @@
   <file source-language="en" datatype="plaintext" original="EXT:crawler/Resources/Private/Language/Backend.xlf" date="2016-11-04T16:17:39Z" product-name="crawler" target-language="ja">
     <header/>
     <body>
-      <trans-unit id="moduleFunction.tx_crawler_modfunc1" resname="moduleFunction.tx_crawler_modfunc1">
+      <trans-unit id="moduleFunction.tx_crawler_modfunc1" resname="moduleFunction.tx_crawler_modfunc1" approved="yes">
         <source>Site Crawler</source>
-        <target state="needs-translation">Site Crawler</target>
+        <target state="final">サイトクローラー</target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration" resname="tx_crawler_configuration">
+      <trans-unit id="tx_crawler_configuration" resname="tx_crawler_configuration" approved="yes">
         <source>Crawler Configuration</source>
-        <target state="needs-translation">Crawler Configuration</target>
+        <target state="final">クローラーの設定</target>
       </trans-unit>
       <trans-unit id="tx_crawler_configuration.name" resname="tx_crawler_configuration.name">
         <source>Name</source>
