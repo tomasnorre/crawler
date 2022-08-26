@@ -431,9 +431,11 @@ class QueueRepository extends Repository implements LoggerAwareInterface
                 )->execute();
 
             if ($del === false) {
-                $this->logger->info(
-                    'Records could not be deleted.'
-                );
+                if ($this->logger !== null) {
+                    $this->logger->info(
+                        'Records could not be deleted.'
+                    );
+                }
             }
         }
     }
@@ -461,9 +463,11 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             )->execute();
 
         if ($del === false) {
-            $this->logger->info(
-                'Records could not be deleted.'
-            );
+            if ($this->logger !== null) {
+                $this->logger->info(
+                    'Records could not be deleted.'
+                );
+            }
         }
     }
 
