@@ -33,7 +33,7 @@ jobs:
           coverage: "xdebug"
           php-version: "${{ matrix.php-version }}"
           ini-values: memory_limit=-1
-          tools: composer:v2, cs2pr
+          tools: composer:v2, cs2pr, phive
 
       - name: "Cache dependencies"
         uses: "actions/cache@v2"
@@ -45,11 +45,13 @@ jobs:
           restore-keys: "php-${{ matrix.php-version }}-${{ matrix.dependencies }}"
 
       - name: "Install dependencies"
-        run: "composer install"
+        run: composer require --dev nimut/typo3-complete:^11.5 --no-progress
+
+      - name: "Install tools (Phive)"
+        run: "phive install --trust-gpg-keys 12CE0F1D262429A5,C5095986493B4AA0"
 
       - name: "Infection"
         run: "composer test:mutation"
         env:
-          #INFECTION_BADGE_API_KEY: ${{ secrets.INFECTION_BADGE_API_KEY }}
           STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
 

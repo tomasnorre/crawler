@@ -36,7 +36,6 @@
         "codeception/module-phpbrowser": "^1.0",
         "codeception/module-webdriver": "^1.0",
         "cweagans/composer-patches": "^1.7",
-        "infection/infection": "^0.26",
         "nikic/php-parser": "^4.13",
         "nimut/testing-framework": "^6.0 || dev-main",
         "nimut/typo3-complete": "^11.5",
@@ -84,7 +83,6 @@
         "allow-plugins": {
             "composer/package-versions-deprecated": true,
             "cweagans/composer-patches": true,
-            "infection/extension-installer": true,
             "phpstan/extension-installer": true,
             "typo3/class-alias-loader": true,
             "typo3/cms-composer-installers": true
@@ -204,8 +202,8 @@
             "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseDriver=pdo_sqlite typo3DatabaseName=test .Build/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml Tests/Functional"
         ],
         "test:mutation": [
-            "[ -e .Build/bin/infection ] || composer update",
-            "XDEBUG_MODE=coverage .Build/bin/infection --threads=8"
+            "[ -e tools/infection ] || phive install",
+            "XDEBUG_MODE=coverage tools/infection --threads=8"
         ],
         "test:reset-vars": [
             "export typo3DatabaseName=''",

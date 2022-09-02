@@ -89,7 +89,7 @@ jobs:
                     tools: phive
 
             -   name: "Install tools (Phive)"
-                run: "phive install --trust-gpg-keys 12CE0F1D262429A5"
+                run: "phive install --trust-gpg-keys 12CE0F1D262429A5,C5095986493B4AA0"
 
             -   run: composer require --dev nimut/typo3-complete:^11.5 --no-progress
             -   run: tools/psalm --shepherd
