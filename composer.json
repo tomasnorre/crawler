@@ -45,7 +45,6 @@
         "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan": "0.12.99",
         "phpstan/phpstan-deprecation-rules": "^0.12.5",
-        "phpunit/phpunit": "^9.5",
         "rector/rector": "0.11.57",
         "roave/security-advisories": "dev-latest",
         "saschaegerer/phpstan-typo3": "^0.13.3",
@@ -190,19 +189,19 @@
         "test:functional": [
             "@test:reset-vars",
             "@extension-create-libs",
-            "[ -e .Build/bin/phpunit ] || composer update",
+            "[ -e tools/phpunit ] || phive install",
             "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseName=crawler typo3DatabaseHost=127.0.0.1 typo3DatabaseUsername=root typo3DatabasePassword=root .Build/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml Tests/Functional"
         ],
         "test:functional-postgre": [
             "@test:reset-vars",
             "@extension-create-libs",
-            "[ -e .Build/bin/phpunit ] || composer update",
+            "[ -e tools/phpunit ] || phive install",
             "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseDriver=pdo_pgsql typo3DatabaseName=crawler typo3DatabaseHost=127.0.0.1 typo3DatabaseUsername=root typo3DatabasePassword=root .Build/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml Tests/Functional"
         ],
         "test:functional-sqlite": [
             "@test:reset-vars",
             "@extension-create-libs",
-            "[ -e .Build/bin/phpunit ] || composer update",
+            "[ -e tools/phpunit ] || phive install",
             "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseDriver=pdo_sqlite typo3DatabaseName=test .Build/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml Tests/Functional"
         ],
         "test:mutation": [
@@ -217,7 +216,7 @@
             "export typo3DatabaseDriver=''"
         ],
         "test:unit": [
-            "[ -e .Build/bin/phpunit ] || composer update",
+            "[ -e tools/phpunit ] || phive install",
             "TYPO3_PATH_WEB=.Build/Web .Build/bin/phpunit --colors -c .Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/Unit"
         ]
     }
