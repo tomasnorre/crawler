@@ -192,7 +192,15 @@ class ProcessCleanUpHook implements CrawlerHookInterface
         $returnArray = [];
         if (! Environment::isWindows()) {
             // Not windows
-            exec('ps aux | grep \'typo3 crawler:processQueue\'', $returnArray, $returnValue);
+            if (`which ps`) {
+                // ps command is defined
+                exec('ps aux | grep \'typo3 crawler:processQueue\'', $returnArray, $returnValue);
+            } else {
+                trigger_error(
+                    'Crawler is unable to locate the ps command to clean up orphaned crawler processes.',
+                    E_USER_WARNING
+                );
+            }
         } else {
             // Windows
             exec('tasklist | find \'typo3 crawler:processQueue\'', $returnArray, $returnValue);
