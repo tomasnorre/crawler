@@ -88,7 +88,7 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
         $this->incomingConfigurationSelection = GeneralUtility::_GP('configurationSelection');
         $this->incomingConfigurationSelection = is_array($this->incomingConfigurationSelection) ? $this->incomingConfigurationSelection : [];
 
-        $this->crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
+        $this->crawlerController = $this->getCrawlerController();
         $this->crawlerController->setID = GeneralUtility::md5int(microtime());
 
         $queueRows = '';
@@ -163,7 +163,7 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
         );
 
         // Configurations
-        $availableConfigurations = $this->crawlerController->getConfigurationsForBranch($pageId, (int) $this->infoModuleController->MOD_SETTINGS['depth'] ?: 0);
+        $availableConfigurations = $this->getCrawlerController()->getConfigurationsForBranch($pageId, (int) $this->infoModuleController->MOD_SETTINGS['depth'] ?: 0);
         $selectors['configurations'] = $this->selectorBox(
             empty($availableConfigurations) ? [] : array_combine($availableConfigurations, $availableConfigurations),
             'configurationSelection',
@@ -235,5 +235,14 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
         }
 
         return $scheduledTime;
+    }
+
+    private function getCrawlerController(): CrawlerController
+    {
+        if ($this->crawlerController === null) {
+            $this->crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
+        }
+
+        return $this->crawlerController;
     }
 }

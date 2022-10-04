@@ -45,7 +45,7 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Class cognitive complexity is 71, keep it under 60$#"
+			message: "#^Class cognitive complexity is 72, keep it under 60$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
@@ -60,22 +60,12 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Parameter \\#2 \\$row of method TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\IconFactory\\:\\:getIconForRecord\\(\\) expects array, array\\|false given\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
 			message: "#^Unable to resolve the template type T in call to method static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\)$#"
 			count: 1
 			path: Classes/Backend/RequestForm/MultiProcessRequestForm.php
 
 		-
 			message: "#^Call to function is_array\\(\\) with string will always evaluate to false\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/StartRequestForm.php
-
-		-
-			message: "#^Cannot call method getConfigurationsForBranch\\(\\) on AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\|null\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/StartRequestForm.php
 
@@ -103,11 +93,6 @@ parameters:
 			message: "#^Cannot call method error\\(\\) on Psr\\\\Log\\\\LoggerInterface\\|null\\.$#"
 			count: 2
 			path: Classes/Configuration/ExtensionConfigurationProvider.php
-
-		-
-			message: "#^Parameter \\#2 \\$uid of static method TYPO3\\\\CMS\\\\Backend\\\\Utility\\\\BackendUtility\\:\\:getRecordWSOL\\(\\) expects int, string given\\.$#"
-			count: 1
-			path: Classes/ContextMenu/ItemProvider.php
 
 		-
 			message:
@@ -307,11 +292,6 @@ parameters:
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
-			message: "#^Cannot call method info\\(\\) on Psr\\\\Log\\\\LoggerInterface\\|null\\.$#"
-			count: 2
-			path: Classes/Domain/Repository/QueueRepository.php
-
-		-
 			message: "#^Function getQueueEntriesForPageId\\(\\) has an unused variable \\$query\\.$#"
 			count: 1
 			path: Classes/Domain/Repository/QueueRepository.php
@@ -465,11 +445,6 @@ parameters:
 			path: Classes/Middleware/FrontendUserAuthenticator.php
 
 		-
-			message: "#^Cannot access offset 'feUserGroupList' on array\\|bool\\.$#"
-			count: 1
-			path: Classes/Middleware/FrontendUserAuthenticator.php
-
-		-
 			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
 			count: 1
 			path: Classes/Middleware/FrontendUserAuthenticator.php
@@ -507,21 +482,6 @@ parameters:
 			message: "#^Possibly invalid array key type \\(array\\|string\\)\\.$#"
 			count: 3
 			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: "#^Cannot access property \\$registerQueueEntriesInternallyOnly on AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\|null\\.$#"
-			count: 1
-			path: Classes/Service/QueueService.php
-
-		-
-			message: "#^Cannot call method getUrlsForPageRow\\(\\) on AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\|null\\.$#"
-			count: 1
-			path: Classes/Service/QueueService.php
-
-		-
-			message: "#^Cannot call method urlListFromUrlArray\\(\\) on AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\|null\\.$#"
-			count: 1
-			path: Classes/Service/QueueService.php
 
 		-
 			message:

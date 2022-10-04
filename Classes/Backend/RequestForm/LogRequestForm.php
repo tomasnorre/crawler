@@ -142,11 +142,13 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                     $perms_clause
                 );
 
-                $HTML = $this->getIconFactory()->getIconForRecord('pages', $pageinfo, Icon::SIZE_SMALL)->render();
-                $tree->tree[] = [
-                    'row' => $pageinfo,
-                    'HTML' => $HTML,
-                ];
+                if (is_array($pageinfo)) {
+                    $HTML = $this->getIconFactory()->getIconForRecord('pages', $pageinfo, Icon::SIZE_SMALL)->render();
+                    $tree->tree[] = [
+                        'row' => $pageinfo,
+                        'HTML' => $HTML,
+                    ];
+                }
 
                 // Get branch beneath:
                 if ($this->infoModuleController->MOD_SETTINGS['depth']) {
