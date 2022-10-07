@@ -23,8 +23,10 @@ final class AfterUrlAddedToQueueEvent
 {
     private array $fieldArray;
 
-    public function __construct(private string $uid, array $fieldArray)
-    {
+    public function __construct(
+        private string $uid,
+        array $fieldArray
+    ) {
         $this->fieldArray = $fieldArray;
     }
 

@@ -23,8 +23,10 @@ final class AfterUrlCrawledEvent
 {
     private array $result;
 
-    public function __construct(private string $url, array $result)
-    {
+    public function __construct(
+        private string $url,
+        array $result
+    ) {
         $this->result = $result;
     }
 

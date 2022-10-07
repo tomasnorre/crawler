@@ -23,8 +23,10 @@ final class BeforeQueueItemAddedEvent
 {
     private array $queueRecord;
 
-    public function __construct(private int $queueId, array $queueRecord)
-    {
+    public function __construct(
+        private int $queueId,
+        array $queueRecord
+    ) {
         $this->queueRecord = $queueRecord;
     }
 

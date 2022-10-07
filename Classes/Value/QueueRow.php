@@ -33,8 +33,9 @@ class QueueRow
     public array $options = [];
     public string $parameters = '';
 
-    public function __construct(public string $pageTitle = '')
-    {
+    public function __construct(
+        public string $pageTitle = ''
+    ) {
     }
 
     public function setPageTitleHTML(string $pageTitleHTML): void

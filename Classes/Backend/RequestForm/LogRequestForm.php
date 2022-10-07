@@ -34,8 +34,11 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
 
     private array $CSVaccu = [];
 
-    public function __construct(private StandaloneView $view, private InfoModuleController $infoModuleController, array $extensionSettings)
-    {
+    public function __construct(
+        private StandaloneView $view,
+        private InfoModuleController $infoModuleController,
+        array $extensionSettings
+    ) {
         $this->jsonCompatibilityConverter = new JsonCompatibilityConverter();
         $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(QueueRepository::TABLE_NAME);
         $this->csvWriter = new CrawlerCsvWriter();
