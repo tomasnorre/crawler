@@ -76,21 +76,11 @@ parameters:
 			path: Classes/Command/BuildQueueCommand.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:crawler_init\\(\\)\\.$#"
-			count: 1
-			path: Classes/Command/ProcessQueueCommand.php
-
-		-
 			message:
 				"""
 					#^Call to deprecated method shortMD5\\(\\) of class TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:
 					since v11, will be removed in v12\\.$#
 				"""
-			count: 1
-			path: Classes/Command/ProcessQueueCommand.php
-
-		-
-			message: "#^Unable to resolve the template type T in call to method static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\)$#"
 			count: 1
 			path: Classes/Command/ProcessQueueCommand.php
 

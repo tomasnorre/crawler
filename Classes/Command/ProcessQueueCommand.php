@@ -161,18 +161,6 @@ class ProcessQueueCommand extends Command
         $result = 0;
         $counter = 0;
 
-        // First, run hooks:
-        foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['cli_hooks'] ?? [] as $objRef) {
-            trigger_error(
-                'This hook (crawler/cli_hooks) is deprecated since 9.1.5 and will be removed when dropping support for TYPO3 9LTS and 10LTS',
-                E_USER_DEPRECATED
-            );
-            $hookObj = GeneralUtility::makeInstance($objRef);
-            if (is_object($hookObj)) {
-                $hookObj->crawler_init($this->crawlerController);
-            }
-        }
-
         // Clean up the queue
         $this->queueRepository->cleanupQueue();
 
