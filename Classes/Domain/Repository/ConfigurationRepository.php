@@ -63,8 +63,8 @@ class ConfigurationRepository extends Repository
                 $queryBuilder->expr()->in('pid', $queryBuilder->createNamedParameter($pageIdsInRootLine, Connection::PARAM_INT_ARRAY))
             )
             ->orderBy('name')
-            ->execute()
-            ->fetchAll();
+            ->executeQuery()
+            ->fetchAllAssociative();
     }
 
     protected function createQueryBuilder(): QueryBuilder

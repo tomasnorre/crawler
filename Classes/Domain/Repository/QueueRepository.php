@@ -60,7 +60,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
                 $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId))
             )
             ->set('process_id', '')
-            ->execute();
+            ->executeStatement();
     }
 
     /**
@@ -95,8 +95,8 @@ class QueueRepository extends Repository implements LoggerAwareInterface
                 $queryBuilder->expr()->eq('process_id_completed', $queryBuilder->createNamedParameter($process->getProcessId())),
                 $queryBuilder->expr()->gt('exec_time', 0)
             )
-            ->execute()
-            ->fetchColumn(0);
+            ->executeQuery()
+            ->fetchOne();
     }
 
     /**
@@ -115,8 +115,8 @@ class QueueRepository extends Repository implements LoggerAwareInterface
                 $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($process->getProcessId())),
                 $queryBuilder->expr()->eq('exec_time', 0)
             )
-            ->execute()
-            ->fetchColumn(0);
+            ->executeQuery()
+            ->fetchOne();
     }
 
     /**
@@ -132,7 +132,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ->where(
                 $queryBuilder->expr()->eq('exec_time', 0)
             )
-            ->execute()->fetchAll();
+            ->executeQuery()->fetchAllAssociative();
     }
 
     /**
@@ -151,8 +151,8 @@ class QueueRepository extends Repository implements LoggerAwareInterface
                 $queryBuilder->expr()->eq('exec_time', 0),
                 $queryBuilder->expr()->lte('scheduled', time())
             )
-            ->execute()
-            ->fetchColumn(0);
+            ->executeQuery()
+            ->fetchOne();
     }
 
     /**
@@ -171,8 +171,8 @@ class QueueRepository extends Repository implements LoggerAwareInterface
                 $queryBuilder->expr()->eq('exec_time', 0),
                 $queryBuilder->expr()->lte('scheduled', time())
             )
-            ->execute()
-            ->fetchColumn(0);
+            ->executeQuery()
+            ->fetchOne();
     }
 
     /**
@@ -193,8 +193,8 @@ class QueueRepository extends Repository implements LoggerAwareInterface
                 $queryBuilder->expr()->eq('exec_time', 0),
                 $queryBuilder->expr()->lte('scheduled', time())
             )
-            ->execute()
-            ->fetchColumn(0);
+            ->executeQuery()
+            ->fetchOne();
     }
 
     /**
@@ -213,9 +213,9 @@ class QueueRepository extends Repository implements LoggerAwareInterface
                 $queryBuilder->expr()->lt('scheduled', time())
             )
             ->groupBy('configuration')
-            ->execute();
+            ->executeQuery();
 
-        return $statement->fetchAll();
+        return $statement->fetchAllAssociative();
     }
 
     /**
@@ -235,10 +235,10 @@ class QueueRepository extends Repository implements LoggerAwareInterface
                 $queryBuilder->expr()->eq('exec_time', 0)
             )
             ->addGroupBy('set_id')
-            ->execute();
+            ->executeQuery();
 
         $setIds = [];
-        while ($row = $statement->fetch()) {
+        while ($row = $statement->fetchAssociative()) {
             $setIds[] = intval($row['set_id']);
         }
 
@@ -265,9 +265,9 @@ class QueueRepository extends Repository implements LoggerAwareInterface
                     $queryBuilder->expr()->lt('scheduled', time())
                 )
                 ->groupBy('configuration')
-                ->execute();
+                ->executeQuery();
 
-            while ($row = $statement->fetch()) {
+            while ($row = $statement->fetchAssociative()) {
                 $totals[$row['configuration']] = $row['c'];
             }
         }
@@ -289,10 +289,10 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ->from(self::TABLE_NAME)
             ->addOrderBy('exec_time', 'desc')
             ->setMaxResults($limit)
-            ->execute();
+            ->executeQuery();
 
         $rows = [];
-        while ($row = $statement->fetch()) {
+        while ($row = $statement->fetchAssociative()) {
             $rows[] = $row['exec_time'];
         }
 
@@ -311,10 +311,10 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ->select('*')
             ->orderBy('exec_time', 'desc')
             ->setMaxResults($limit)
-            ->execute();
+            ->executeQuery();
 
         $rows = [];
-        while (($row = $statement->fetch()) !== false) {
+        while (($row = $statement->fetchAssociative()) !== false) {
             $rows[] = $row;
         }
 
@@ -343,10 +343,10 @@ class QueueRepository extends Repository implements LoggerAwareInterface
                 $queryBuilder->expr()->lte('exec_time', $queryBuilder->createNamedParameter($end, \PDO::PARAM_INT))
             )
             ->groupBy('process_id_completed')
-            ->execute();
+            ->executeQuery();
 
         $rows = [];
-        while ($row = $statement->fetch()) {
+        while ($row = $statement->fetchAssociative()) {
             $rows[$row['process_id_completed']] = $row;
         }
 
@@ -388,8 +388,8 @@ class QueueRepository extends Repository implements LoggerAwareInterface
 
         // TODO: Currently it's not working if page doesn't exists. See tests
         $count = $statement
-            ->execute()
-            ->fetchColumn(0);
+            ->executeQuery()
+            ->fetchOne();
 
         if ($count !== false && $count > 0) {
             $isPageInQueue = true;
@@ -410,8 +410,8 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ->where(
                 $queryBuilder->expr()->eq('qid', $queryBuilder->createNamedParameter($queueId))
             )
-            ->execute()
-            ->fetch();
+            ->executeQuery()
+            ->fetchAssociative();
         return is_array($queueRec) ? $queueRec : null;
     }
 
@@ -428,12 +428,12 @@ class QueueRepository extends Repository implements LoggerAwareInterface
                 ->delete(self::TABLE_NAME)
                 ->where(
                     'exec_time != 0 AND exec_time < ' . $purgeDate
-                )->execute();
+                )->executeStatement();
 
-            if ($del === false) {
+            if ($del === 0) {
                 if ($this->logger !== null) {
                     $this->logger->info(
-                        'Records could not be deleted.'
+                        'No records was deleted'
                     );
                 }
             }
@@ -460,12 +460,12 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ->delete(self::TABLE_NAME)
             ->where(
                 $condition
-            )->execute();
+            )->executeStatement();
 
-        if ($del === false) {
+        if ($del === 0) {
             if ($this->logger !== null) {
                 $this->logger->info(
-                    'Records could not be deleted.'
+                    'No records was deleted.'
                 );
             }
         }
@@ -492,8 +492,8 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ->addOrderBy('scheduled')
             ->addOrderBy('qid')
             ->setMaxResults($countInARun)
-            ->execute()
-            ->fetchAll();
+            ->executeQuery()
+            ->fetchAllAssociative();
     }
 
     public function updateProcessIdAndSchedulerForQueueIds(array $quidList, string $processId)
@@ -506,7 +506,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             )
             ->set('process_scheduled', (string) time())
             ->set('process_id', $processId)
-            ->execute();
+            ->executeStatement();
     }
 
     public function unsetProcessScheduledAndProcessIdForQueueEntries(array $processIds): void
@@ -520,7 +520,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             )
             ->set('process_scheduled', '0')
             ->set('process_id', '')
-            ->execute();
+            ->executeStatement();
     }
 
     /**
@@ -541,8 +541,8 @@ class QueueRepository extends Repository implements LoggerAwareInterface
                 $queryBuilder->expr()->eq('configuration_hash', $queryBuilder->createNamedParameter($configurationHash)),
                 $queryBuilder->expr()->eq('exec_time', 0)
             )
-            ->execute()
-            ->fetchColumn();
+            ->executeQuery()
+            ->fetchOne();
 
         if ($result) {
             $noUnprocessedQueueEntriesFound = false;
@@ -573,7 +573,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
 
         $queryBuilder
             ->delete(self::TABLE_NAME)
-            ->execute();
+            ->executeStatement();
     }
 
     public function getDuplicateQueueItemsIfExists(bool $enableTimeslot, int $timestamp, int $currentTime, int $pageId, string $parametersHash): array
@@ -620,9 +620,9 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ->andWhere($queryBuilder->expr()->eq('page_id', $queryBuilder->createNamedParameter($pageId, \PDO::PARAM_INT)))
             ->andWhere($queryBuilder->expr()->eq('parameters_hash', $queryBuilder->createNamedParameter($parametersHash, \PDO::PARAM_STR)));
 
-        $statement = $queryBuilder->execute();
+        $statement = $queryBuilder->executeQuery();
 
-        while ($row = $statement->fetch()) {
+        while ($row = $statement->fetchAssociative()) {
             $rows[] = $row['qid'];
         }
 
@@ -661,7 +661,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
                 ->setMaxResults($itemsPerPage);
         }
 
-        return $queryBuilder->execute()->fetchAll();
+        return $queryBuilder->executeQuery()->fetchAllAssociative();
     }
 
     /**
@@ -683,7 +683,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             )
             ->setMaxResults(1)
             ->addOrderBy($orderByField, $orderBySorting)
-            ->execute()->fetch(0);
+            ->executeQuery()->fetchAssociative();
 
         return $first ?: [];
     }
