@@ -20,11 +20,7 @@ namespace AOE\Crawler\Utility;
  */
 
 use AOE\Crawler\Backend\BackendModule;
-use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
-use TYPO3\CMS\Core\Imaging\IconRegistry;
-use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * @codeCoverageIgnore
@@ -42,59 +38,6 @@ class BackendUtility
             BackendModule::class,
             null,
             'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:moduleFunction.tx_crawler_modfunc1'
-        );
-    }
-
-    /**
-     * Registers icons for use in the IconFactory
-     */
-    public static function registerIcons(): void
-    {
-        if ((new Typo3Version())->getMajorVersion() === 10) {
-            // This method can be deleted once compatibility with TYPO3 v10 is removed.
-            // See Configuration/Icons.php for the way to go in TYPO3 v11+
-            self::registerCrawlerIcon();
-            self::registerStartIcon();
-            self::registerStopIcon();
-        }
-    }
-
-    /**
-     * Register Start Icon
-     */
-    private static function registerStartIcon(): void
-    {
-        /** @var IconRegistry $iconRegistry */
-        $iconRegistry = GeneralUtility::makeInstance(IconRegistry::class);
-        $iconRegistry->registerIcon(
-            'tx-crawler-start',
-            SvgIconProvider::class,
-            ['source' => 'EXT:crawler/Resources/Public/Icons/crawler_start.svg']
-        );
-    }
-
-    /**
-     * Register Stop Icon
-     */
-    private static function registerStopIcon(): void
-    {
-        /** @var IconRegistry $iconRegistry */
-        $iconRegistry = GeneralUtility::makeInstance(IconRegistry::class);
-        $iconRegistry->registerIcon(
-            'tx-crawler-stop',
-            SvgIconProvider::class,
-            ['source' => 'EXT:crawler/Resources/Public/Icons/crawler_stop.svg']
-        );
-    }
-
-    private static function registerCrawlerIcon(): void
-    {
-        /** @var IconRegistry $iconRegistry */
-        $iconRegistry = GeneralUtility::makeInstance(IconRegistry::class);
-        $iconRegistry->registerIcon(
-            'tx-crawler',
-            SvgIconProvider::class,
-            ['source' => 'EXT:crawler/Resources/Public/Icons/crawler_configuration.svg']
         );
     }
 }
