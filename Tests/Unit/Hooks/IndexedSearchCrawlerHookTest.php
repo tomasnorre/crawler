@@ -27,10 +27,7 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
  */
 class IndexedSearchCrawlerHookTest extends UnitTestCase
 {
-    /**
-     * @var IndexedSearchCrawlerHook
-     */
-    protected $subject;
+    protected \Nimut\TestingFramework\MockObject\AccessibleMockObjectInterface|\PHPUnit\Framework\MockObject\MockObject $subject;
 
     protected function setUp(): void
     {

@@ -30,8 +30,6 @@ use TYPO3\CMS\Info\Controller\InfoModuleController;
 
 final class StartRequestForm extends AbstractRequestForm implements RequestFormInterface
 {
-    private StandaloneView $view;
-    private InfoModuleController $infoModuleController;
     private int $reqMinute = 1000;
     private EventDispatcher $eventDispatcher;
 
@@ -41,13 +39,11 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
     private $incomingConfigurationSelection = [];
 
     public function __construct(
-        StandaloneView $view,
-        InfoModuleController $infoModuleController,
+        private StandaloneView $view,
+        private InfoModuleController $infoModuleController,
         array $extensionSettings,
         EventDispatcher $eventDispatcher = null
     ) {
-        $this->view = $view;
-        $this->infoModuleController = $infoModuleController;
         $this->extensionSettings = $extensionSettings;
         $this->eventDispatcher = $eventDispatcher ?? GeneralUtility::makeInstance(EventDispatcher::class);
     }
@@ -191,12 +187,12 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
      *
      * @param array $optArray Options key(value) => label pairs
      * @param string $name Selector box name
-     * @param string|array $value Selector box value (array for multiple...)
+     * @param string|array|null $value Selector box value (array for multiple...)
      * @param boolean $multiple If set, will draw multiple box.
      *
      * @return string HTML select element
      */
-    private function selectorBox($optArray, $name, $value, bool $multiple): string
+    private function selectorBox($optArray, $name, string|array|null $value, bool $multiple): string
     {
         if (! is_string($value) || ! is_array($value)) {
             $value = '';
@@ -217,18 +213,11 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
      */
     private function getScheduledTime(string $time)
     {
-        switch ($time) {
-            case 'midnight':
-                $scheduledTime = mktime(0, 0, 0);
-                break;
-            case '04:00':
-                $scheduledTime = mktime(0, 0, 0) + 4 * 3600;
-                break;
-            case 'now':
-            default:
-                $scheduledTime = time();
-                break;
-        }
+        $scheduledTime = match ($time) {
+            'midnight' => mktime(0, 0, 0),
+            '04:00' => mktime(0, 0, 0) + 4 * 3600,
+            default => time(),
+        };
 
         if (! $scheduledTime) {
             return time();

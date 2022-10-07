@@ -39,24 +39,18 @@ use TYPO3\CMS\Info\Controller\InfoModuleController;
 
 final class MultiProcessRequestForm extends AbstractRequestForm implements RequestFormInterface
 {
-    private StandaloneView $view;
-    private ProcessService $processService;
     private IconFactory $iconFactory;
-    private InfoModuleController $infoModuleController;
 
     private ?int $id = null;
     private Crawler $crawler;
 
     public function __construct(
-        StandaloneView $view,
-        InfoModuleController $infoModuleController,
+        private StandaloneView $view,
+        private InfoModuleController $infoModuleController,
         array $extensionSettings,
-        ProcessService $processService
+        private ProcessService $processService
     ) {
-        $this->view = $view;
-        $this->processService = $processService;
         $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
-        $this->infoModuleController = $infoModuleController;
         $this->extensionSettings = $extensionSettings;
         $this->crawler = GeneralUtility::makeInstance(Crawler::class);
     }

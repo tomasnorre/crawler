@@ -36,15 +36,10 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
  */
 class ProcessService
 {
-    private ProcessRepository $processRepository;
-    private SleeperInterface $sleeper;
-
     public function __construct(
-        ProcessRepository $processRepository,
-        SleeperInterface $sleeper
+        private ProcessRepository $processRepository,
+        private SleeperInterface $sleeper
     ) {
-        $this->processRepository = $processRepository;
-        $this->sleeper = $sleeper;
     }
 
     /**

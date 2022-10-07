@@ -585,11 +585,11 @@ class IndexedSearchCrawlerHook
      * @param string $baseUrl Base URL of the indexing process (input URL must be "inside" the base URL!)
      * @return string|false Returls the URL if OK, otherwise FALSE
      */
-    public function checkUrl($url, $urlLog, $baseUrl)
+    public function checkUrl($url, $urlLog, $baseUrl): string|false
     {
         $url = preg_replace('/\\/\\/$/', '/', $url);
         [$url] = explode('#', $url);
-        if ((strpos($url, '../') === false)
+        if ((!str_contains($url, '../'))
             && str_starts_with($url, $baseUrl)
             && ! in_array($url, $urlLog, true)) {
             return $url;
@@ -699,7 +699,7 @@ class IndexedSearchCrawlerHook
             foreach ($tmpl->rootLine as $rlkey => $rldat) {
                 $rootLineUids[$rlkey] = $rldat['uid'];
             }
-        } catch (RootLineException $e) {
+        } catch (RootLineException) {
             // do nothing
         }
         return $rootLineUids;
@@ -712,7 +712,7 @@ class IndexedSearchCrawlerHook
      *
      * @return float|int The next time stamp
      */
-    public function generateNextIndexingTime($cfgRec)
+    public function generateNextIndexingTime($cfgRec): float|int
     {
         $currentTime = $GLOBALS['EXEC_TIME'];
         // Now, find a midnight time to use for offset calculation. This has to differ depending on whether we have frequencies within a day or more than a day; Less than a day, we don't care which day to use for offset, more than a day we want to respect the currently entered day as offset regardless of when the script is run - thus the day-of-week used in case "Weekly" is selected will be respected
@@ -903,10 +903,7 @@ class IndexedSearchCrawlerHook
         }
     }
 
-    /**
-     * @return false|float|int
-     */
-    protected function getMidnightTimestamp(array $cfgRec)
+    protected function getMidnightTimestamp(array $cfgRec): false|float|int
     {
         if ($cfgRec['timer_frequency'] <= 24 * 3600) {
             $aMidNight = mktime(0, 0, 0) - 1 * 24 * 3600;

@@ -21,6 +21,8 @@
 ### Removed
 * Obsolete columns (first and last time) from Process Overview
 * !!! Remove constructor form RequestFormInterface
+* !!! Support for TYPO3 10
+* !!! PHP support for `<8.0`
 
 #### Classes
 * !!! AbstractCommandTests

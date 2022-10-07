@@ -43,16 +43,12 @@ class ConfigurationService
      * @var BackendUserAuthentication|null
      */
     private $backendUser;
-    private UrlService $urlService;
-    private ConfigurationRepository $configurationRepository;
     private array $extensionSettings;
 
     public function __construct(
-        UrlService $urlService,
-        ConfigurationRepository $configurationRepository
+        private UrlService $urlService,
+        private ConfigurationRepository $configurationRepository
     ) {
-        $this->urlService = $urlService;
-        $this->configurationRepository = $configurationRepository;
         $this->extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
     }
 
@@ -183,7 +179,7 @@ class ConfigurationService
 
                 // default is "page only" = "depth=0"
                 if (empty($depth)) {
-                    $depth = (strpos($excludePart, '+') !== false) ? 99 : 0;
+                    $depth = (str_contains($excludePart, '+')) ? 99 : 0;
                 }
 
                 $pidList[] = $pid;
@@ -229,7 +225,7 @@ class ConfigurationService
                     if (preg_match('/^(-?[0-9]+)\s*-\s*(-?[0-9]+)$/', trim($part), $reg)) {
                         $reg = $this->swapIfFirstIsLargerThanSecond($reg);
                         $paramArray = $this->addValuesInRange($reg, $paramArray, $parameter);
-                    } elseif (strpos(trim($part), '_TABLE:') === 0) {
+                    } elseif (str_starts_with(trim($part), '_TABLE:')) {
 
                         // Parse parameters:
                         $subparts = GeneralUtility::trimExplode(';', $part);
@@ -265,7 +261,7 @@ class ConfigurationService
 
     private function isWrappedInSquareBrackets(string $string): bool
     {
-        return (strpos($string, '[') === 0 && substr($string, -1) === ']');
+        return (str_starts_with($string, '[') && str_ends_with($string, ']'));
     }
 
     private function swapIfFirstIsLargerThanSecond(array $reg): array
@@ -304,11 +300,9 @@ class ConfigurationService
     }
 
     /**
-     * @param (int|string) $parameter
-     *
      * @psalm-param array-key $parameter
      */
-    private function runExpandParametersHook(array $paramArray, $parameter, string $path, int $pid): array
+    private function runExpandParametersHook(array $paramArray, int|string $parameter, string $path, int $pid): array
     {
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/class.tx_crawler_lib.php']['expandParameters'] ?? null)) {
             $_params = [
@@ -341,11 +335,10 @@ class ConfigurationService
     /**
      * Traverse range, add values:
      * Limit to size of range!
-     * @param (int|string) $parameter
      *
      * @psalm-param array-key $parameter
      */
-    private function addValuesInRange(array $reg, array $paramArray, $parameter): array
+    private function addValuesInRange(array $reg, array $paramArray, int|string $parameter): array
     {
         $runAwayBrake = 1000;
         for ($a = $reg[1]; $a <= $reg[2]; $a++) {
@@ -373,10 +366,9 @@ class ConfigurationService
     }
 
     /**
-     * @param int|string $parameter
      * @throws \Doctrine\DBAL\DBALException
      */
-    private function extractParamsFromCustomTable(array $subpartParams, int $pid, array $paramArray, $parameter): array
+    private function extractParamsFromCustomTable(array $subpartParams, int $pid, array $paramArray, int|string $parameter): array
     {
         $lookUpPid = isset($subpartParams['_PID']) ? (int) $subpartParams['_PID'] : $pid;
         $recursiveDepth = isset($subpartParams['_RECURSIVE']) ? (int) $subpartParams['_RECURSIVE'] : 0;

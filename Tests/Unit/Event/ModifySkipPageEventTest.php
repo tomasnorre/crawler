@@ -51,8 +51,12 @@ class ModifySkipPageEventTest extends UnitTestCase
      */
     public function setterTest(): void
     {
+        $skippedReason = 'Skipped as in exclude list';
         self::assertFalse($this->subject->isSkipped());
-        $this->subject->setSkipped(true);
-        self::assertTrue($this->subject->isSkipped());
+        $this->subject->setSkipped($skippedReason);
+        self::assertEquals(
+            $skippedReason,
+            $this->subject->isSkipped()
+        );
     }
 }

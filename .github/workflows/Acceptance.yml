@@ -14,13 +14,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        typo3: [ ^10.4, ^11.5 ]
-        php: [ '7.4' ]
-        include:
-          - typo3: ^11.5
-            php: '8.0'
-          - typo3: ^11.5
-            php: '8.1'
+        typo3: [ ^11.5 ]
+        php: [ '8.0', '8.1' ]
+#        include:
+#          - typo3: ^12
+#            php: '8.1'
     steps:
       - name: Get branch name (merge)
         if: github.event_name != 'pull_request'
@@ -34,7 +32,7 @@ jobs:
 
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
+          php-version: '8.0'
 
       - name: Version information
         run: |
@@ -50,7 +48,7 @@ jobs:
           export FROM_PATH='../../'
           export TO_PATH=$(echo $GITHUB_WORKSPACE)
           cd .devbox
-          sed -i 's/php_version: "7.4"/php_version: "${{ matrix.php }}"/g' .ddev/config.yaml
+          sed -i 's/php_version: "8.0"/php_version: "${{ matrix.php }}"/g' .ddev/config.yaml
           sed -i "s|$FROM_PATH|$TO_PATH|g" .ddev/docker-compose.volume.yaml
           rm -rf vendor composer.lock
           ddev composer require nimut/typo3-complete=${{ matrix.typo3 }}
@@ -98,12 +96,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        typo3: [ 'v10', 'v11', 'v11p80' ]
+        typo3: [ 'v11', 'v11p80' ]
 
     steps:
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
+          php-version: '8.0'
           tools: composer:v2
 
       - name: Version information

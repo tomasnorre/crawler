@@ -15,7 +15,7 @@
         "issues": "https://github.com/tomasnorre/crawler/issues"
     },
     "require": {
-        "php": "^7.4 || ^8.0",
+        "php": "^8.0",
         "ext-json": "*",
         "ext-pdo": "*",
         "beberlei/assert": "^3.3",
@@ -23,9 +23,8 @@
         "psr/http-message": "^1.0",
         "psr/log": "^1.0",
         "symfony/console": "^5.0",
-        "symfony/polyfill-php80": "^1.23",
         "typo3/cms-backend": "*",
-        "typo3/cms-core": "^10.4.11 || ^11.5",
+        "typo3/cms-core": "^11.5 || ^12.0",
         "typo3/cms-frontend": "*",
         "typo3/cms-info": "*",
         "typo3/cms-seo": "*"
@@ -40,7 +39,7 @@
         "infection/infection": "^0.26",
         "nikic/php-parser": "^4.13",
         "nimut/testing-framework": "^6.0 || dev-main",
-        "nimut/typo3-complete": "^10.4",
+        "nimut/typo3-complete": "^11.5",
         "phpspec/prophecy-phpunit": "^2.0",
         "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan": "0.12.99",

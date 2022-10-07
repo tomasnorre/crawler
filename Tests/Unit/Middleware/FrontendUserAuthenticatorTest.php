@@ -33,10 +33,7 @@ class FrontendUserAuthenticatorTest extends UnitTestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var FrontendUserAuthenticator
-     */
-    protected $subject;
+    protected \Nimut\TestingFramework\MockObject\AccessibleMockObjectInterface|\PHPUnit\Framework\MockObject\MockObject $subject;
 
     protected function setUp(): void
     {

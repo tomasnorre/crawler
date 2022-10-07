@@ -21,12 +21,12 @@ namespace AOE\Crawler\Event;
 
 final class AfterUrlAddedToQueueEvent
 {
-    private string $uid;
     private array $fieldArray;
 
-    public function __construct(string $uid, array $fieldArray)
-    {
-        $this->uid = $uid;
+    public function __construct(
+        private string $uid,
+        array $fieldArray
+    ) {
         $this->fieldArray = $fieldArray;
     }
 

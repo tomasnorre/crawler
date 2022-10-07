@@ -23,28 +23,19 @@ final class ModifySkipPageEvent
 {
     private array $pageRow;
 
-    /**
-     * @var false|string
-     */
-    private $skipped = false;
+    private bool|string $skipped = false;
 
     public function __construct(array $pageRow)
     {
         $this->pageRow = $pageRow;
     }
 
-    /**
-     * @return false|string
-     */
-    public function isSkipped()
+    public function isSkipped(): false|string
     {
         return $this->skipped;
     }
 
-    /**
-     * @param false|string $skipped
-     */
-    public function setSkipped($skipped): void
+    public function setSkipped(false|string $skipped): void
     {
         $this->skipped = $skipped;
     }
