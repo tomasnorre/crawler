@@ -205,153 +205,6 @@ class QueueRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function countAllUnassignedPendingItems(): void
-    {
-        self::assertSame(
-            5,
-            $this->subject->countAllUnassignedPendingItems()
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function countPendingItemsGroupedByConfigurationKey(): void
-    {
-        $expectedArray = [
-            0 => [
-                'configuration' => 'FirstConfiguration',
-                'unprocessed' => 3,
-                'assigned_but_unprocessed' => 0,
-            ],
-            1 => [
-                'configuration' => 'SecondConfiguration',
-                'unprocessed' => 3,
-                'assigned_but_unprocessed' => 1,
-            ],
-            2 => [
-                'configuration' => 'ThirdConfiguration',
-                'unprocessed' => 2,
-                'assigned_but_unprocessed' => 2,
-            ],
-        ];
-
-        $actualArray = $this->subject->countPendingItemsGroupedByConfigurationKey();
-
-        foreach ($actualArray as $item) {
-            self::assertTrue(in_array($item, $expectedArray));
-        }
-    }
-
-    /**
-     * @test
-     */
-    public function getSetIdWithUnprocessedEntries(): void
-    {
-        $expectedArray = [
-            0 => 0,
-            1 => 123,
-            2 => 456,
-            3 => 789,
-        ];
-
-        $actualArray = $this->subject->getSetIdWithUnprocessedEntries();
-        foreach ($actualArray as $item) {
-            self::assertTrue(in_array($item, $expectedArray));
-        }
-    }
-
-    /**
-     * @test
-     */
-    public function getTotalQueueEntriesByConfiguration(): void
-    {
-        $setIds = [123, 789];
-
-        $expected = [
-            'ThirdConfiguration' => 1,
-            'SecondConfiguration' => 2,
-        ];
-
-        self::assertEquals(
-            $expected,
-            $this->subject->getTotalQueueEntriesByConfiguration($setIds)
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function getLastProcessedEntriesTimestamps(): void
-    {
-        $expectedArray = [
-            '0' => 20,
-            '1' => 20,
-            '2' => 18,
-        ];
-
-        self::assertEquals(
-            $expectedArray,
-            $this->subject->getLastProcessedEntriesTimestamps(3)
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function getLastProcessedEntries(): void
-    {
-        $expectedArray = [1003, 1017];
-
-        $processedEntries = $this->subject->getLastProcessedEntries(2);
-        $actually = [];
-        foreach ($processedEntries as $processedEntry) {
-            $actually[] = $processedEntry['qid'];
-        }
-
-        // Todo: Figure out why there is a diff here
-        // This is done as there is a difference in MySQL 5.6 and 8.0 in orders of the array.
-        // A self::assertSame($a,$b) wasn't working on MySQL 8.0
-        self::assertEmpty(
-            array_diff($expectedArray, $actually)
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function getPerformanceData(): void
-    {
-        $expected = [
-            'asdfgh' => [
-                'process_id_completed' => 'asdfgh',
-                'start' => 10,
-                'end' => 18,
-                'urlcount' => 3,
-            ],
-            'qwerty' => [
-                'process_id_completed' => 'qwerty',
-                'start' => 10,
-                'end' => 20,
-                'urlcount' => 2,
-            ],
-            'dvorak' => [
-                'process_id_completed' => 'dvorak',
-                'start' => 10,
-                'end' => 20,
-                'urlcount' => 2,
-            ],
-        ];
-
-        self::assertEquals(
-            $expected,
-            $this->subject->getPerformanceData(9, 21)
-        );
-    }
-
-    /**
-     * @test
-     */
     public function countAll(): void
     {
         self::assertSame(
@@ -370,18 +223,6 @@ class QueueRepositoryTest extends FunctionalTestCase
         self::assertSame(
             $expected,
             $this->subject->isPageInQueue($uid, $unprocessed_only, $timed_only, $timestamp)
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function findByQueueId(): void
-    {
-        $queueRecord = $this->subject->findByQueueId('1015');
-        self::assertSame(
-            12,
-            (int) $queueRecord['scheduled']
         );
     }
 
@@ -493,7 +334,7 @@ class QueueRepositoryTest extends FunctionalTestCase
      */
     public function unsetProcessScheduledAndProcessIdForQueueEntries(): void
     {
-        $unprocessedEntriesBefore = $this->subject->countAllUnassignedPendingItems();
+        $unprocessedEntriesBefore = $this->subject->countAllPendingItems() - $this->subject->countAllAssignedPendingItems();
         self::assertSame(
             5,
             $unprocessedEntriesBefore
@@ -501,7 +342,7 @@ class QueueRepositoryTest extends FunctionalTestCase
         $processIds = ['1007'];
         $this->subject->unsetProcessScheduledAndProcessIdForQueueEntries($processIds);
 
-        $unprocessedEntriesAfter = $this->subject->countAllUnassignedPendingItems();
+        $unprocessedEntriesAfter = $this->subject->countAllPendingItems() - $this->subject->countAllAssignedPendingItems();
         self::assertSame(
             7,
             $unprocessedEntriesAfter
