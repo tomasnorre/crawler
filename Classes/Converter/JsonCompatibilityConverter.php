@@ -31,22 +31,21 @@ class JsonCompatibilityConverter
      * in json from now on.
      * @see https://github.com/AOEpeople/crawler/issues/417
      *
-     * @return array|bool
      * @throws \Exception
      */
-    public function convert(string $dataString)
+    public function convert(string $dataString): array|bool
     {
         $unserialized = unserialize($dataString, ['allowed_classes' => false]);
         if (is_object($unserialized)) {
             throw new \Exception('Objects are not allowed: ' . var_export($unserialized, true), 1_593_758_307);
         }
 
-        if ($unserialized && ! is_object($unserialized)) {
+        if (is_array($unserialized)) {
             return $unserialized;
         }
 
         $decoded = json_decode($dataString, true);
-        if ($decoded) {
+        if (is_array($decoded)) {
             return $decoded;
         }
 

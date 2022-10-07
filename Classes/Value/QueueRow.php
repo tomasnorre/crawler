@@ -24,7 +24,6 @@ namespace AOE\Crawler\Value;
  */
 class QueueRow
 {
-    public string $pageTitle = '';
     public string $pageTitleHTML = '';
     public string $message = '';
     public string $configurationKey = '';
@@ -34,9 +33,8 @@ class QueueRow
     public array $options = [];
     public string $parameters = '';
 
-    public function __construct(string $title = '')
+    public function __construct(public string $pageTitle = '')
     {
-        $this->pageTitle = $title;
     }
 
     public function setPageTitleHTML(string $pageTitleHTML): void

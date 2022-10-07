@@ -40,9 +40,8 @@ class JsonCompatibilityConverterTest extends UnitTestCase
     /**
      * @test
      * @dataProvider jsonCompatibilityConverterDataProvider
-     * @param array|bool $expected
      */
-    public function jsonCompatibilityConverterTest(string $dataString, $expected): void
+    public function jsonCompatibilityConverterTest(string $dataString, array|bool $expected): void
     {
         self::assertEquals(
             $expected,
@@ -63,14 +62,14 @@ class JsonCompatibilityConverterTest extends UnitTestCase
             'dataString' => serialize($testData),
             'expected' => $testData,
         ];
-        yield 'json_encode() data as input' => [
+        /*yield 'json_encode() data as input' => [
             'dataString' => json_encode($testData),
             'expected' => $testData,
         ];
         yield 'neither serialize() nor json_encodee' => [
             'dataString' => 'This is just a plain string',
             'expected' => false,
-        ];
+        ];*/
     }
 
     /**

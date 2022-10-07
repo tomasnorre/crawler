@@ -78,7 +78,7 @@ class FrontendUserAuthenticatorTest extends FunctionalTestCase
     {
         $this->importDataSet(__DIR__ . '/Fixtures/ProcessHandlesFeGroups/tx_crawler_queue.xml');
 
-        $queueParameters = [
+        $queueParametersArray = [
             'url' => 'https://crawler-devbox.ddev.site',
             'feUserGroupList' => $feGroups,
             'procInstructions' => [''],
@@ -89,7 +89,8 @@ class FrontendUserAuthenticatorTest extends FunctionalTestCase
         $request->getHeaderLine('X-T3CRAWLER')->willReturn($headerLine);
         $crawlerRequest = $this->prophesize(ServerRequestInterface::class);
         $crawlerRequest->getAttribute('frontend.user')->willReturn($this->prophesize(FrontendUserAuthentication::class));
-        $request->withAttribute('tx_crawler', $queueParameters)->willReturn($crawlerRequest);
+        $request->withAttribute('tx_crawler', $queueParametersArray)->willReturn($crawlerRequest);
+        $request->withAttribute('tx_crawler', false)->willReturn($crawlerRequest);
 
         $handlerResponse = new Response();
         $handler = $this->prophesize(RequestHandlerInterface::class);

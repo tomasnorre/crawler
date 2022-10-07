@@ -270,10 +270,9 @@ class CrawlerApi
     /**
      * Get current crawling speed
      *
-     * @return int|float|bool
      * @codeCoverageIgnore
      */
-    public function getCurrentCrawlingSpeed()
+    public function getCurrentCrawlingSpeed(): int|float|bool
     {
         $lastProcessedEntries = $this->queueRepository->getLastProcessedEntriesTimestamps();
 

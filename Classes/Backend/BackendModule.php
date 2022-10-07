@@ -53,19 +53,13 @@ class BackendModule
     protected InfoModuleController $pObj;
     protected int $id;
     protected array $extensionSettings = [];
-    protected ProcessService $processManager;
-    protected QueryBuilder $queryBuilder;
-    protected QueueRepository $queueRepository;
     protected StandaloneView $view;
 
     public function __construct(
-        ProcessService $processManager,
-        QueryBuilder $queryBuilder,
-        QueueRepository $queueRepository
+        protected ProcessService $processManager,
+        protected QueryBuilder $queryBuilder,
+        protected QueueRepository $queueRepository
     ) {
-        $this->processManager = $processManager;
-        $this->queryBuilder = $queryBuilder;
-        $this->queueRepository = $queueRepository;
         $this->initializeView();
         $this->extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
     }

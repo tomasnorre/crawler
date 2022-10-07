@@ -39,11 +39,9 @@ class FrontendUserAuthenticator implements MiddlewareInterface
 {
     protected string $headerName = 'X-T3CRAWLER';
     protected Context $context;
-    private QueryBuilder $queryBuilder;
 
-    public function __construct(QueryBuilder $queryBuilder, ?Context $context = null)
+    public function __construct(private QueryBuilder $queryBuilder, ?Context $context = null)
     {
-        $this->queryBuilder = $queryBuilder;
         $this->context = $context ?? GeneralUtility::makeInstance(Context::class);
     }
 
@@ -57,7 +55,7 @@ class FrontendUserAuthenticator implements MiddlewareInterface
         /** @var JsonCompatibilityConverter $jsonCompatibilityConverter */
         $jsonCompatibilityConverter = GeneralUtility::makeInstance(JsonCompatibilityConverter::class);
 
-        $crawlerInformation = $request->getHeaderLine($this->headerName) ?? null;
+        $crawlerInformation = $request->getHeaderLine($this->headerName);
         if (empty($crawlerInformation)) {
             return $handler->handle($request);
         }
@@ -73,6 +71,10 @@ class FrontendUserAuthenticator implements MiddlewareInterface
         }
 
         $queueParameters = $jsonCompatibilityConverter->convert($queueRec['parameters']);
+
+        //var_dump($queueRec['parameters']);
+        //var_dump($queueParameters);
+
         $request = $request->withAttribute('tx_crawler', $queueParameters);
 
         // Now ensure to set the proper user groups

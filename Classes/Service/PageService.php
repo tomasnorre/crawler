@@ -42,7 +42,7 @@ class PageService
      *
      * @return false|string false if the page should be crawled (not excluded), true / skipMessage if it should be skipped
      */
-    public function checkIfPageShouldBeSkipped(array $pageRow)
+    public function checkIfPageShouldBeSkipped(array $pageRow): false|string
     {
         $extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
 

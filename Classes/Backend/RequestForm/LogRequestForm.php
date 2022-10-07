@@ -25,21 +25,17 @@ use TYPO3\CMS\Info\Controller\InfoModuleController;
 
 final class LogRequestForm extends AbstractRequestForm implements RequestFormInterface
 {
-    private StandaloneView $view;
     private JsonCompatibilityConverter $jsonCompatibilityConverter;
     private int $pageId;
     private bool $CSVExport = false;
-    private InfoModuleController $infoModuleController;
     private QueryBuilder $queryBuilder;
     private CsvWriterInterface $csvWriter;
     private QueueRepository $queueRepository;
 
     private array $CSVaccu = [];
 
-    public function __construct(StandaloneView $view, InfoModuleController $infoModuleController, array $extensionSettings)
+    public function __construct(private StandaloneView $view, private InfoModuleController $infoModuleController, array $extensionSettings)
     {
-        $this->view = $view;
-        $this->infoModuleController = $infoModuleController;
         $this->jsonCompatibilityConverter = new JsonCompatibilityConverter();
         $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(QueueRepository::TABLE_NAME);
         $this->csvWriter = new CrawlerCsvWriter();

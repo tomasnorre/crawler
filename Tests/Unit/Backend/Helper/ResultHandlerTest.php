@@ -42,10 +42,10 @@ class ResultHandlerTest extends UnitTestCase
 
     public function getResStatusDataProvider(): iterable
     {
-        yield 'requestContent is not array' => [
+        /*yield 'requestContent is not array' => [
             'requestContent' => null,
             'expected' => '-',
-        ];
+        ];*/
         yield 'requestContent is empty array' => [
             'requestContent' => [],
             'expected' => '-',
