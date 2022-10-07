@@ -21,10 +21,7 @@ namespace AOE\Crawler\Event;
 
 final class AfterQueueItemAddedEvent
 {
-    /**
-     * @var int|string
-     */
-    private $queueId;
+    private int|string $queueId;
     private array $fieldArray;
 
     /**

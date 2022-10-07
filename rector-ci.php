@@ -31,6 +31,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $containerConfigurator->import(Typo3SetList::TYPO3_76);
     $containerConfigurator->import(Typo3SetList::TYPO3_87);
     $containerConfigurator->import(Typo3SetList::TYPO3_95);
+    $containerConfigurator->import(Typo3SetList::TYPO3_104);
 
     $parameters->set(Option::AUTO_IMPORT_NAMES, false);
 

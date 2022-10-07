@@ -23,10 +23,7 @@ final class ModifySkipPageEvent
 {
     private array $pageRow;
 
-    /**
-     * @var false|string
-     */
-    private $skipped = false;
+    private bool|string $skipped = false;
 
     public function __construct(array $pageRow)
     {

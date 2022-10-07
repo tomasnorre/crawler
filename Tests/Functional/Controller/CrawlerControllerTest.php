@@ -42,10 +42,7 @@ class CrawlerControllerTest extends FunctionalTestCase
      */
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    /**
-     * @var MockObject|AccessibleMockObjectInterface|CrawlerController
-     */
-    protected $subject;
+    protected \Nimut\TestingFramework\MockObject\AccessibleMockObjectInterface|\PHPUnit\Framework\MockObject\MockObject $subject;
 
     protected function setUp(): void
     {
