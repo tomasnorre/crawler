@@ -75,7 +75,9 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
         if (empty($this->id)) {
             $this->isErrorDetected = true;
             MessageUtility::addErrorMessage(
-                $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noPageSelected')
+                $this->getLanguageService()->sL(
+                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noPageSelected'
+                )
             );
         }
 
@@ -144,7 +146,9 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
                     ));
                 }
                 MessageUtility::addNoticeMessage(
-                    $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.newprocess')
+                    $this->getLanguageService()->sL(
+                        'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.newprocess'
+                    )
                 );
                 break;
             case 'resumeCrawling':

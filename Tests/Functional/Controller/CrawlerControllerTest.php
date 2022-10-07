@@ -98,8 +98,7 @@ class CrawlerControllerTest extends FunctionalTestCase
         array $mockedDuplicateRowResult,
         bool $registerQueueEntriesInternallyOnly,
         bool $expected
-    ): void
-    {
+    ): void {
         $mockedQueueRepository = $this->getAccessibleMock(QueueRepository::class, ['getDuplicateQueueItemsIfExists']);
         $mockedQueueRepository->expects($this->any())->method('getDuplicateQueueItemsIfExists')->willReturn(
             $mockedDuplicateRowResult

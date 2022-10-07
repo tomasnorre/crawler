@@ -80,7 +80,9 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
             $this->isErrorDetected = true;
             $this->view->assign('noPageSelected', true);
             MessageUtility::addErrorMessage(
-                $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noPageSelected')
+                $this->getLanguageService()->sL(
+                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noPageSelected'
+                )
             );
         } else {
             $this->findCrawler()->setID = GeneralUtility::md5int(microtime());
@@ -217,7 +219,9 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
     {
         if (! count($this->CSVaccu)) {
             MessageUtility::addWarningMessage(
-                $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:message.canNotExportEmptyQueueToCsvText')
+                $this->getLanguageService()->sL(
+                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:message.canNotExportEmptyQueueToCsvText'
+                )
             );
             return;
         }

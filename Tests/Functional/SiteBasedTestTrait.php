@@ -53,7 +53,8 @@ trait SiteBasedTestTrait
         }
     }
 
-    protected function mergeSiteConfiguration(string $identifier, array $overrides): void {
+    protected function mergeSiteConfiguration(string $identifier, array $overrides): void
+    {
         $siteConfiguration = new SiteConfiguration($this->getInstancePath() . '/typo3conf/sites/');
         $configuration = $siteConfiguration->load($identifier);
         $configuration = array_merge($configuration, $overrides);
@@ -64,14 +65,16 @@ trait SiteBasedTestTrait
         }
     }
 
-    protected function buildSiteConfiguration(int $rootPageId, string $base = ''): array {
+    protected function buildSiteConfiguration(int $rootPageId, string $base = ''): array
+    {
         return [
             'rootPageId' => $rootPageId,
             'base' => $base,
         ];
     }
 
-    protected function buildDefaultLanguageConfiguration(string $identifier, string $base): array {
+    protected function buildDefaultLanguageConfiguration(string $identifier, string $base): array
+    {
         $configuration = $this->buildLanguageConfiguration($identifier, $base);
         $configuration['typo3Language'] = 'default';
         $configuration['flag'] = 'global';

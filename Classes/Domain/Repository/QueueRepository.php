@@ -184,8 +184,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
         bool $unprocessed_only = true,
         bool $timed_only = false,
         int $timestamp = 0
-    ): bool
-    {
+    ): bool {
         $isPageInQueue = false;
 
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
@@ -344,8 +343,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
     public function noUnprocessedQueueEntriesForPageWithConfigurationHashExist(
         int $uid,
         string $configurationHash
-    ): bool
-    {
+    ): bool {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
         $noUnprocessedQueueEntriesFound = true;
 
@@ -401,8 +399,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
         int $currentTime,
         int $pageId,
         string $parametersHash
-    ): array
-    {
+    ): array {
         $rows = [];
 
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);

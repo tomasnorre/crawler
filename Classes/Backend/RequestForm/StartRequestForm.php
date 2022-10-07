@@ -67,7 +67,9 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
         if (empty($pageId)) {
             $this->isErrorDetected = true;
             MessageUtility::addErrorMessage(
-                $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noPageSelected')
+                $this->getLanguageService()->sL(
+                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noPageSelected'
+                )
             );
             return '';
         }
@@ -96,7 +98,9 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
             || (count($this->incomingConfigurationSelection) === 1 && empty($this->incomingConfigurationSelection[0]));
         if ($noConfigurationSelected) {
             MessageUtility::addWarningMessage(
-                $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noConfigSelected')
+                $this->getLanguageService()->sL(
+                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noConfigSelected'
+                )
             );
         } else {
             if ($submitCrawlUrls) {
@@ -244,10 +248,7 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
         return '<select class="form-control" name="' . htmlspecialchars(
             $name . ($multiple ? '[]' : ''),
             ENT_QUOTES | ENT_HTML5
-        ) . '"' . ($multiple ? ' multiple' : '') . '>' . implode(
-            '',
-            $options
-        ) . '</select>';
+        ) . '"' . ($multiple ? ' multiple' : '') . '>' . implode('', $options) . '</select>';
     }
 
     /**

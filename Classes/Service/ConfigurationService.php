@@ -74,8 +74,7 @@ class ConfigurationService
         int $pageId,
         array $res,
         string $mountPoint = ''
-    ): array
-    {
+    ): array {
         $defaultCompileUrls = 10_000;
         $maxUrlsToCompile = MathUtility::forceIntegerInRange(
             $this->extensionSettings['maxCompileUrls'] ?? $defaultCompileUrls,
@@ -416,8 +415,7 @@ class ConfigurationService
         int $pid,
         array $paramArray,
         int|string $parameter
-    ): array
-    {
+    ): array {
         $lookUpPid = isset($subpartParams['_PID']) ? (int) $subpartParams['_PID'] : $pid;
         $recursiveDepth = isset($subpartParams['_RECURSIVE']) ? (int) $subpartParams['_RECURSIVE'] : 0;
         $pidField = isset($subpartParams['_PIDFIELD']) ? trim($subpartParams['_PIDFIELD']) : 'pid';

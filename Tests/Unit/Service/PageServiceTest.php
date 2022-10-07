@@ -59,8 +59,7 @@ class PageServiceTest extends UnitTestCase
         array $excludeDoktype,
         array $pageVeto,
         string $expected
-    ): void
-    {
+    ): void {
         if (empty($expected)) {
             $expected = false;
         }

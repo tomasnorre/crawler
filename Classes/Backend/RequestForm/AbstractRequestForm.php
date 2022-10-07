@@ -53,7 +53,9 @@ class AbstractRequestForm
         if (! $this->isPhpForkAvailable()) {
             $this->isErrorDetected = true;
             MessageUtility::addErrorMessage(
-                $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:message.noPhpForkAvailable')
+                $this->getLanguageService()->sL(
+                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:message.noPhpForkAvailable'
+                )
             );
         }
 
@@ -65,10 +67,7 @@ class AbstractRequestForm
             MessageUtility::addErrorMessage(
                 sprintf($this->getLanguageService()->sL(
                     'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:message.phpBinaryNotFound'
-                ), htmlspecialchars(
-                    $extensionSettings['phpPath'],
-                    ENT_QUOTES | ENT_HTML5
-                ))
+                ), htmlspecialchars($extensionSettings['phpPath'], ENT_QUOTES | ENT_HTML5))
             );
         }
     }

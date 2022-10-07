@@ -119,8 +119,7 @@ class ProcessTest extends UnitTestCase
         int $countItemsAssigned,
         int $countItemsProcessed,
         float $expectedProgress
-    ): void
-    {
+    ): void {
         /** @var MockObject|Process $processMock */
         $processMock = self::getAccessibleMock(
             Process::class,

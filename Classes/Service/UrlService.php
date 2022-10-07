@@ -46,8 +46,7 @@ class UrlService
         string $queryString,
         ?string $alternativeBaseUrl,
         int $httpsOrHttp
-    ): ?UriInterface
-    {
+    ): ?UriInterface {
         $url = new Uri();
         $site = GeneralUtility::makeInstance(SiteMatcher::class)->matchByPageId($pageId);
         if ($site instanceof Site) {

@@ -44,8 +44,7 @@ class ConfigurationServiceTest extends UnitTestCase
         array $allowed,
         array $configuration,
         array $expected
-    ): void
-    {
+    ): void {
         self::assertEquals(
             $expected,
             ConfigurationService::removeDisallowedConfigurations($allowed, $configuration)
@@ -90,8 +89,7 @@ class ConfigurationServiceTest extends UnitTestCase
         string $mountPoint,
         array $compiledUrls,
         array $expected
-    ): void
-    {
+    ): void {
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [];
 
         $urlService = $this->prophesize(UrlService::class);

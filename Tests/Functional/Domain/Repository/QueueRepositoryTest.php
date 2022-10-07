@@ -63,8 +63,7 @@ class QueueRepositoryTest extends FunctionalTestCase
         string $orderBy,
         string $orderDirection,
         array $expected
-    ): void
-    {
+    ): void {
         $process = new Process();
         $process->setProcessId($processId);
 
@@ -205,8 +204,7 @@ class QueueRepositoryTest extends FunctionalTestCase
         bool $timed_only,
         int $timestamp,
         bool $expected
-    ): void
-    {
+    ): void {
         self::assertSame(
             $expected,
             $this->subject->isPageInQueue($uid, $unprocessed_only, $timed_only, $timestamp)
@@ -321,8 +319,7 @@ class QueueRepositoryTest extends FunctionalTestCase
         int $uid,
         string $configurationHash,
         bool $expected
-    ): void
-    {
+    ): void {
         self::assertSame(
             $expected,
             $this->subject->noUnprocessedQueueEntriesForPageWithConfigurationHashExist($uid, $configurationHash)
@@ -339,8 +336,7 @@ class QueueRepositoryTest extends FunctionalTestCase
         int $itemsPerPage,
         QueueFilter $queueFilter,
         array $expected
-    ): void
-    {
+    ): void {
         self::assertEquals($expected, $this->subject->getQueueEntriesForPageId($id, $itemsPerPage, $queueFilter));
     }
 
@@ -384,8 +380,7 @@ class QueueRepositoryTest extends FunctionalTestCase
         int $pageId,
         string $parametersHash,
         array $expected
-    ): void
-    {
+    ): void {
         $actual = $this->subject->getDuplicateQueueItemsIfExists(
             $enableTimeslot,
             $timestamp,

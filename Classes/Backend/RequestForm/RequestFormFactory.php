@@ -37,8 +37,7 @@ final class RequestFormFactory
         StandaloneView $view,
         InfoModuleController $infoModuleController,
         array $extensionSettings
-    ): RequestFormInterface
-    {
+    ): RequestFormInterface {
         switch ($selectedAction->__toString()) {
             case 'log':
                 /** @var RequestFormInterface $requestForm */

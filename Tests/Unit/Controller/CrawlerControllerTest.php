@@ -110,8 +110,7 @@ class CrawlerControllerTest extends UnitTestCase
         array $pageRow,
         string $skipMessage,
         array $expected
-    ): void
-    {
+    ): void {
         $mockedPageService = $this->createPartialMock(PageService::class, ['checkIfPageShouldBeSkipped']);
         if ($checkIfPageSkipped) {
             $mockedPageService->expects($this->any())->method('checkIfPageShouldBeSkipped')->will(

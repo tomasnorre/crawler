@@ -77,8 +77,7 @@ class BackendModuleCest
         BackendModule $I,
         Admin $adminStep,
         PageTree $pageTree
-    ): void
-    {
+    ): void {
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
         $I->selectOption('configurationSelection[]', 'excludepages-6-plus-3');
@@ -91,8 +90,7 @@ class BackendModuleCest
         BackendModule $I,
         Admin $adminStep,
         PageTree $pageTree
-    ): void
-    {
+    ): void {
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
         $I->selectOption('configurationSelection[]', 'excludepages-6-plus-3');

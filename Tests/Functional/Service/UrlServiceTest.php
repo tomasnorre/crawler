@@ -79,8 +79,7 @@ class UrlServiceTest extends FunctionalTestCase
         $alternativeBaseUrl,
         $httpsOrHttp,
         Uri $expected
-    ): void
-    {
+    ): void {
         $actual = $this->subject->getUrlFromPageAndQueryParameters(
             $pageId,
             $queryString,
