@@ -62,14 +62,14 @@ class JsonCompatibilityConverterTest extends UnitTestCase
             'dataString' => serialize($testData),
             'expected' => $testData,
         ];
-        /*yield 'json_encode() data as input' => [
+        yield 'json_encode() data as input' => [
             'dataString' => json_encode($testData),
             'expected' => $testData,
         ];
         yield 'neither serialize() nor json_encodee' => [
             'dataString' => 'This is just a plain string',
             'expected' => false,
-        ];*/
+        ];
     }
 
     /**

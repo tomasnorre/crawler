@@ -71,10 +71,6 @@ class FrontendUserAuthenticator implements MiddlewareInterface
         }
 
         $queueParameters = $jsonCompatibilityConverter->convert($queueRec['parameters']);
-
-        //var_dump($queueRec['parameters']);
-        //var_dump($queueParameters);
-
         $request = $request->withAttribute('tx_crawler', $queueParameters);
 
         // Now ensure to set the proper user groups
