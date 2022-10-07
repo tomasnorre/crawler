@@ -67,10 +67,7 @@ class ProcessCollectionTest extends UnitTestCase
 
         $collection = new ProcessCollection($processes);
 
-        self::assertEquals(
-            ['11', '13'],
-            $collection->getProcessIds()
-        );
+        self::assertEquals(['11', '13'], $collection->getProcessIds());
     }
 
     /**
@@ -93,10 +90,7 @@ class ProcessCollectionTest extends UnitTestCase
         $correctObjectType = $this->getAccessibleMock(Process::class, ['dummy'], [], '', false);
         $this->subject->append($correctObjectType);
 
-        self::assertEquals(
-            $correctObjectType,
-            $this->subject->offsetGet(0)
-        );
+        self::assertEquals($correctObjectType, $this->subject->offsetGet(0));
     }
 
     /**
@@ -119,10 +113,7 @@ class ProcessCollectionTest extends UnitTestCase
         $correctObjectType = $this->getAccessibleMock(Process::class, ['dummy'], [], '', false);
         $this->subject->offsetSet(100, $correctObjectType);
 
-        self::assertEquals(
-            $correctObjectType,
-            $this->subject->offsetGet(100)
-        );
+        self::assertEquals($correctObjectType, $this->subject->offsetGet(100));
     }
 
     /**
@@ -137,9 +128,6 @@ class ProcessCollectionTest extends UnitTestCase
         self::expectExceptionMessageMatches('/^Index.*100.*Process are not available$/');
         $correctObjectType = $this->getAccessibleMock(Process::class, ['dummy'], [], '', false);
 
-        self::assertEquals(
-            $correctObjectType,
-            $this->subject->offsetGet(100)
-        );
+        self::assertEquals($correctObjectType, $this->subject->offsetGet(100));
     }
 }

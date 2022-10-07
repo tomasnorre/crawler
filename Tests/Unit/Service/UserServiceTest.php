@@ -34,10 +34,7 @@ class UserServiceTest extends UnitTestCase
      */
     public function hasGroupAccess(string $groupList, string $accessList, bool $expected): void
     {
-        self::assertEquals(
-            $expected,
-            UserService::hasGroupAccess($groupList, $accessList)
-        );
+        self::assertEquals($expected, UserService::hasGroupAccess($groupList, $accessList));
     }
 
     public function hasGroupAccessDataProvider(): iterable

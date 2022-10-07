@@ -34,10 +34,7 @@ class ResultHandlerTest extends UnitTestCase
      */
     public function getResStatus($requestContent, string $expected): void
     {
-        self::assertSame(
-            $expected,
-            ResultHandler::getResStatus($requestContent)
-        );
+        self::assertSame($expected, ResultHandler::getResStatus($requestContent));
     }
 
     public function getResStatusDataProvider(): iterable
@@ -55,11 +52,17 @@ class ResultHandlerTest extends UnitTestCase
             'expected' => 'OK',
         ];
         yield 'errorlog is present and not empty (1 Element)' => [
-            'requestContent' => ['content' => json_encode(['errorlog' => ['500 Internal Server error']], JSON_THROW_ON_ERROR)],
+            'requestContent' => ['content' => json_encode([
+                'errorlog' => ['500 Internal Server error'], ],
+                JSON_THROW_ON_ERROR
+            )],
             'expected' => '500 Internal Server error',
         ];
         yield 'errorlog is present and not empty (2 Element)' => [
-            'requestContent' => ['content' => json_encode(['errorlog' => ['500 Internal Server Error', '503 Service Unavailable']], JSON_THROW_ON_ERROR)],
+            'requestContent' => ['content' => json_encode([
+                'errorlog' => ['500 Internal Server Error', '503 Service Unavailable'], ],
+                JSON_THROW_ON_ERROR
+            )],
             'expected' => '500 Internal Server Error' . chr(10) . '503 Service Unavailable',
         ];
         yield 'requestResult is boolean' => [
@@ -75,10 +78,7 @@ class ResultHandlerTest extends UnitTestCase
      */
     public function getResFeVars(array $resultData, array $expected): void
     {
-        self::assertSame(
-            $expected,
-            ResultHandler::getResFeVars($resultData)
-        );
+        self::assertSame($expected, ResultHandler::getResFeVars($resultData));
     }
 
     public function getResFeVarsDataProvider(): iterable
@@ -113,10 +113,7 @@ class ResultHandlerTest extends UnitTestCase
      */
     public function getResultLog(array $resultLog, string $expected): void
     {
-        self::assertSame(
-            $expected,
-            ResultHandler::getResultLog($resultLog)
-        );
+        self::assertSame($expected, ResultHandler::getResultLog($resultLog));
     }
 
     public function getResultLogDataProvider(): iterable
@@ -142,19 +139,28 @@ class ResultHandlerTest extends UnitTestCase
         ];
         yield 'ResultRow key result_data exits and is not empty, does not contain log' => [
             'resultRow' => [
-                'result_data' => json_encode(['content' => json_encode(['not-log' => ['ok']], JSON_THROW_ON_ERROR)], JSON_THROW_ON_ERROR),
+                'result_data' => json_encode([
+                    'content' => json_encode(['not-log' => ['ok']], JSON_THROW_ON_ERROR), ],
+                    JSON_THROW_ON_ERROR
+                ),
             ],
             'expected' => '',
         ];
         yield 'ResultRow key result_data exits and is not empty, does contain log (1 element)' => [
             'resultRow' => [
-                'result_data' => json_encode(['content' => json_encode(['log' => ['ok']], JSON_THROW_ON_ERROR)], JSON_THROW_ON_ERROR),
+                'result_data' => json_encode([
+                    'content' => json_encode(['log' => ['ok']], JSON_THROW_ON_ERROR), ],
+                    JSON_THROW_ON_ERROR
+                ),
             ],
             'expected' => 'ok',
         ];
         yield 'ResultRow key result_data exits and is not empty, does contain log (2 elements)' => [
             'resultRow' => [
-                'result_data' => json_encode(['content' => json_encode(['log' => ['ok', 'success']], JSON_THROW_ON_ERROR)], JSON_THROW_ON_ERROR),
+                'result_data' => json_encode([
+                    'content' => json_encode(['log' => ['ok', 'success']], JSON_THROW_ON_ERROR), ],
+                    JSON_THROW_ON_ERROR
+                ),
             ],
             'expected' => 'ok' . chr(10) . 'success',
         ];

@@ -114,7 +114,11 @@ class CrawlerController implements LoggerAwareInterface
         $this->configurationRepository = GeneralUtility::makeInstance(ConfigurationRepository::class);
         $this->pageRepository = GeneralUtility::makeInstance(PageRepository::class);
         $this->eventDispatcher = GeneralUtility::makeInstance(EventDispatcher::class);
-        $this->queueExecutor = GeneralUtility::makeInstance(QueueExecutor::class, $crawlStrategyFactory, $this->eventDispatcher);
+        $this->queueExecutor = GeneralUtility::makeInstance(
+            QueueExecutor::class,
+            $crawlStrategyFactory,
+            $this->eventDispatcher
+        );
         $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
         $this->crawler = GeneralUtility::makeInstance(Crawler::class);
         $this->configurationService = GeneralUtility::makeInstance(ConfigurationService::class);
@@ -129,8 +133,15 @@ class CrawlerController implements LoggerAwareInterface
             $this->extensionSettings['countInARun'] = 100;
         }
 
-        $this->extensionSettings['processLimit'] = MathUtility::forceIntegerInRange($this->extensionSettings['processLimit'], 1, 99, 1);
-        $this->setMaximumUrlsToCompile(MathUtility::forceIntegerInRange($this->extensionSettings['maxCompileUrls'], 1, 1000000000, 10000));
+        $this->extensionSettings['processLimit'] = MathUtility::forceIntegerInRange(
+            $this->extensionSettings['processLimit'],
+            1,
+            99,
+            1
+        );
+        $this->setMaximumUrlsToCompile(
+            MathUtility::forceIntegerInRange($this->extensionSettings['maxCompileUrls'], 1, 1000000000, 10000)
+        );
     }
 
     public function setMaximumUrlsToCompile(int $maximumUrlsToCompile): void
@@ -205,7 +216,10 @@ class CrawlerController implements LoggerAwareInterface
         $urlLog = [];
         $pageId = (int) $pageRow['uid'];
         $configurationHash = $this->getConfigurationHash($vv);
-        $skipInnerCheck = $this->queueRepository->noUnprocessedQueueEntriesForPageWithConfigurationHashExist($pageId, $configurationHash);
+        $skipInnerCheck = $this->queueRepository->noUnprocessedQueueEntriesForPageWithConfigurationHashExist(
+            $pageId,
+            $configurationHash
+        );
 
         $urlService = new UrlService();
 
@@ -487,11 +501,10 @@ class CrawlerController implements LoggerAwareInterface
                 );
             }
             if ($rows === []) {
-                $connectionForCrawlerQueue = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(QueueRepository::TABLE_NAME);
-                $connectionForCrawlerQueue->insert(
-                    QueueRepository::TABLE_NAME,
-                    $fieldArray
+                $connectionForCrawlerQueue = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(
+                    QueueRepository::TABLE_NAME
                 );
+                $connectionForCrawlerQueue->insert(QueueRepository::TABLE_NAME, $fieldArray);
                 $uid = $connectionForCrawlerQueue->lastInsertId(QueueRepository::TABLE_NAME, 'qid');
                 $rows[] = $uid;
                 $urlAdded = true;
@@ -529,7 +542,9 @@ class CrawlerController implements LoggerAwareInterface
      */
     public function readUrl($queueId, $force = false, string $processId = '')
     {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(QueueRepository::TABLE_NAME);
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
+            QueueRepository::TABLE_NAME
+        );
         $ret = 0;
         $this->logger->debug('crawler-readurl start ' . microtime(true));
 
@@ -563,11 +578,7 @@ class CrawlerController implements LoggerAwareInterface
         }
 
         GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(QueueRepository::TABLE_NAME)
-            ->update(
-                QueueRepository::TABLE_NAME,
-                $field_array,
-                ['qid' => (int) $queueId]
-            );
+            ->update(QueueRepository::TABLE_NAME, $field_array, ['qid' => (int) $queueId]);
 
         $result = $this->queueExecutor->executeQueueItem($queueRec, $this);
         if ($result === 'ERROR' || ($result['content'] ?? null) === null) {
@@ -587,10 +598,7 @@ class CrawlerController implements LoggerAwareInterface
                     // only check the success value if the instruction is runnig
                     // it is important to name the pollSuccess key same as the procInstructions key
                     if (is_array($resultData['parameters']['procInstructions'])
-                        && in_array(
-                            $pollable,
-                            $resultData['parameters']['procInstructions'], true
-                        )
+                        && in_array($pollable, $resultData['parameters']['procInstructions'], true)
                     ) {
                         if (! empty($resultData['success'][$pollable])) {
                             $ret |= self::CLI_STATUS_POLLABLE_PROCESSED;
@@ -607,11 +615,7 @@ class CrawlerController implements LoggerAwareInterface
         $field_array = $event->getFieldArray();
 
         GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(QueueRepository::TABLE_NAME)
-            ->update(
-                QueueRepository::TABLE_NAME,
-                $field_array,
-                ['qid' => (int) $queueId]
-            );
+            ->update(QueueRepository::TABLE_NAME, $field_array, ['qid' => (int) $queueId]);
 
         $this->logger->debug('crawler-readurl stop ' . microtime(true));
         return $ret;
@@ -628,11 +632,10 @@ class CrawlerController implements LoggerAwareInterface
     {
         // Set exec_time to lock record:
         $field_array['exec_time'] = $this->getCurrentTime();
-        $connectionForCrawlerQueue = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(QueueRepository::TABLE_NAME);
-        $connectionForCrawlerQueue->insert(
-            QueueRepository::TABLE_NAME,
-            $field_array
+        $connectionForCrawlerQueue = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(
+            QueueRepository::TABLE_NAME
         );
+        $connectionForCrawlerQueue->insert(QueueRepository::TABLE_NAME, $field_array);
         $queueId = $field_array['qid'] = $connectionForCrawlerQueue->lastInsertId(QueueRepository::TABLE_NAME, 'qid');
         $result = $this->queueExecutor->executeQueueItem($field_array, $this);
 
@@ -643,11 +646,7 @@ class CrawlerController implements LoggerAwareInterface
         $event = $this->eventDispatcher->dispatch(new AfterQueueItemAddedEvent($queueId, $field_array));
         $field_array = $event->getFieldArray();
 
-        $connectionForCrawlerQueue->update(
-            QueueRepository::TABLE_NAME,
-            $field_array,
-            ['qid' => $queueId]
-        );
+        $connectionForCrawlerQueue->update(QueueRepository::TABLE_NAME, $field_array, ['qid' => $queueId]);
 
         return $result;
     }
@@ -765,7 +764,10 @@ class CrawlerController implements LoggerAwareInterface
 
         // Get list of configurations
         $configurations = $this->getUrlsForPageRow($pageRow, $skipMessage);
-        $configurations = ConfigurationService::removeDisallowedConfigurations($this->incomingConfigurationSelection, $configurations);
+        $configurations = ConfigurationService::removeDisallowedConfigurations(
+            $this->incomingConfigurationSelection,
+            $configurations
+        );
 
         // Traverse parameter combinations:
         $c = 0;
@@ -784,7 +786,11 @@ class CrawlerController implements LoggerAwareInterface
                     $queueRow->setPageTitleHTML($pageTitleHTML);
                 }
 
-                if (! in_array($pageRow['uid'], $this->configurationService->expandExcludeString($confArray['subCfg']['exclude'] ?? ''), true)) {
+                if (! in_array(
+                    $pageRow['uid'],
+                    $this->configurationService->expandExcludeString($confArray['subCfg']['exclude'] ?? ''),
+                    true
+                )) {
 
                     // URL list:
                     $urlList = $this->urlListFromUrlArray(
@@ -810,7 +816,9 @@ class CrawlerController implements LoggerAwareInterface
                                 <td>' . htmlspecialchars('&' . $gVar . '=') . '<br/>' .
                             '(' . count($gVal) . ')' .
                             '</td>
-                                <td nowrap="nowrap">' . nl2br(htmlspecialchars(implode(chr(10), $gVal))) . '</td>
+                                <td nowrap="nowrap">' . nl2br(
+                                    htmlspecialchars(implode(chr(10), $gVal))
+                                ) . '</td>
                             </tr>
                         ';
                         $calcRes *= count($gVal);
@@ -831,7 +839,15 @@ class CrawlerController implements LoggerAwareInterface
                     // Remove empty array entries;
                     $queueRowOptionCollection = array_filter($queueRowOptionCollection);
 
-                    $parameterConfig = nl2br(htmlspecialchars(rawurldecode(trim(str_replace('&', chr(10) . '&', GeneralUtility::implodeArrayForUrl('', $confArray['paramParsed'] ?? []))))));
+                    $parameterConfig = nl2br(
+                        htmlspecialchars(rawurldecode(
+                            trim(str_replace(
+                                '&',
+                                chr(10) . '&',
+                                GeneralUtility::implodeArrayForUrl('', $confArray['paramParsed'] ?? [])
+                            ))
+                        ))
+                    );
                     $queueRow->setValuesExpanded($paramExpanded);
                     $queueRow->setConfigurationKey($confKey);
                     $queueRow->setUrls($urlList);

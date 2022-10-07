@@ -78,8 +78,15 @@ class LogRequestFormTest extends FunctionalTestCase
                 $this->prophesize(ModuleTemplateFactory::class)->reveal()
             );
         }
-        $extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
-        $this->logRequestForm = GeneralUtility::makeInstance(LogRequestForm::class, $view, $infoModuleController, $extensionSettings);
+        $extensionSettings = GeneralUtility::makeInstance(
+            ExtensionConfigurationProvider::class
+        )->getExtensionConfiguration();
+        $this->logRequestForm = GeneralUtility::makeInstance(
+            LogRequestForm::class,
+            $view,
+            $infoModuleController,
+            $extensionSettings
+        );
     }
 
     /**

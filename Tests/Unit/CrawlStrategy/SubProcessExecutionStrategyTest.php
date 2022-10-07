@@ -46,12 +46,12 @@ class SubProcessExecutionStrategyTest extends UnitTestCase
 
         $extensionConfigurationProvider = $this->prophesize(ExtensionConfigurationProvider::class);
         $extensionConfigurationProvider->getExtensionConfiguration()->willReturn($configuration);
-        $crawlStrategy = GeneralUtility::makeInstance(SubProcessExecutionStrategy::class, $extensionConfigurationProvider->reveal());
-
-        self::assertInstanceOf(
+        $crawlStrategy = GeneralUtility::makeInstance(
             SubProcessExecutionStrategy::class,
-            $crawlStrategy
+            $extensionConfigurationProvider->reveal()
         );
+
+        self::assertInstanceOf(SubProcessExecutionStrategy::class, $crawlStrategy);
     }
 
     /**
@@ -67,15 +67,10 @@ class SubProcessExecutionStrategyTest extends UnitTestCase
 
         $crawlerId = sha1('this-is-testing');
         $url = new Uri('not-an-url');
-        $subProcessExecutionStrategy = $this->createPartialMock(
-            SubProcessExecutionStrategy::class,
-            []
-        );
+        $subProcessExecutionStrategy = $this->createPartialMock(SubProcessExecutionStrategy::class, []);
         $subProcessExecutionStrategy->setLogger($logger->reveal());
 
-        self::assertFalse(
-            $subProcessExecutionStrategy->fetchUrlContents($url, $crawlerId)
-        );
+        self::assertFalse($subProcessExecutionStrategy->fetchUrlContents($url, $crawlerId));
     }
 
     /**
@@ -84,7 +79,9 @@ class SubProcessExecutionStrategyTest extends UnitTestCase
      */
     public function buildRequestHeadersReturnsArray(array $url, string $crawlerId, array $expected): void
     {
-        self::markTestSkipped('This is skipped as buildRequestHeaders() is now private, I need to change the test to ensure it is tested as part of the fetchUrlContents()');
+        self::markTestSkipped(
+            'This is skipped as buildRequestHeaders() is now private, I need to change the test to ensure it is tested as part of the fetchUrlContents()'
+        );
         $subProcessExecutionStrategy = $this->getAccessibleMock(SubProcessExecutionStrategy::class, [], [], '', false);
 
         self::assertEquals(

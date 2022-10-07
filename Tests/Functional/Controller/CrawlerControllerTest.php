@@ -69,10 +69,7 @@ class CrawlerControllerTest extends FunctionalTestCase
         $configurationsForBranch = $this->subject->getConfigurationsForBranch(5, 99);
 
         self::assertNotEmpty($configurationsForBranch);
-        self::assertCount(
-            4,
-            $configurationsForBranch
-        );
+        self::assertCount(4, $configurationsForBranch);
 
         // sort is done as MySQL and SQLite doesn't sort the same way even though sorting is by "name ASC"
         sort($configurationsForBranch);
@@ -84,20 +81,28 @@ class CrawlerControllerTest extends FunctionalTestCase
         ];
         sort($expected);
 
-        self::assertEquals(
-            $expected,
-            $configurationsForBranch
-        );
+        self::assertEquals($expected, $configurationsForBranch);
     }
 
     /**
      * @test
      * @dataProvider addUrlDataProvider
      */
-    public function addUrl(int $id, string $url, array $subCfg, int $tstamp, string $configurationHash, bool $skipInnerDuplicationCheck, array $mockedDuplicateRowResult, bool $registerQueueEntriesInternallyOnly, bool $expected): void
-    {
+    public function addUrl(
+        int $id,
+        string $url,
+        array $subCfg,
+        int $tstamp,
+        string $configurationHash,
+        bool $skipInnerDuplicationCheck,
+        array $mockedDuplicateRowResult,
+        bool $registerQueueEntriesInternallyOnly,
+        bool $expected
+    ): void {
         $mockedQueueRepository = $this->getAccessibleMock(QueueRepository::class, ['getDuplicateQueueItemsIfExists']);
-        $mockedQueueRepository->expects($this->any())->method('getDuplicateQueueItemsIfExists')->willReturn($mockedDuplicateRowResult);
+        $mockedQueueRepository->expects($this->any())->method('getDuplicateQueueItemsIfExists')->willReturn(
+            $mockedDuplicateRowResult
+        );
 
         $mockedCrawlerController = $this->getAccessibleMock(CrawlerController::class, ['dummy']);
 
@@ -106,7 +111,14 @@ class CrawlerControllerTest extends FunctionalTestCase
 
         self::assertEquals(
             $expected,
-            $mockedCrawlerController->addUrl($id, $url, $subCfg, $tstamp, $configurationHash, $skipInnerDuplicationCheck)
+            $mockedCrawlerController->addUrl(
+                $id,
+                $url,
+                $subCfg,
+                $tstamp,
+                $configurationHash,
+                $skipInnerDuplicationCheck
+            )
         );
     }
 

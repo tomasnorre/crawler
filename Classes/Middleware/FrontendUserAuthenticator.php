@@ -69,7 +69,10 @@ class FrontendUserAuthenticator implements MiddlewareInterface
 
         // If a crawler record was found and hash was matching, set it up
         if (! $this->isRequestHashMatchingQueueRecord($queueRec, $hash)) {
-            return GeneralUtility::makeInstance(ErrorController::class)->unavailableAction($request, 'No crawler entry found');
+            return GeneralUtility::makeInstance(ErrorController::class)->unavailableAction(
+                $request,
+                'No crawler entry found'
+            );
         }
 
         $queueParameters = $jsonCompatibilityConverter->convert($queueRec['parameters']);
@@ -86,11 +89,7 @@ class FrontendUserAuthenticator implements MiddlewareInterface
                 // we need to add the groups 0, and -2 too, like the getGroupIds getter does.
                 $this->context->setAspect(
                     'frontend.user',
-                    GeneralUtility::makeInstance(
-                        UserAspect::class,
-                        $frontendUser,
-                        explode(',', '0,-2,' . $grList)
-                    )
+                    GeneralUtility::makeInstance(UserAspect::class, $frontendUser, explode(',', '0,-2,' . $grList))
                 );
             }
         }
@@ -105,7 +104,12 @@ class FrontendUserAuthenticator implements MiddlewareInterface
 
     private function isRequestHashMatchingQueueRecord(?array $queueRec, string $hash): bool
     {
-        return is_array($queueRec) && hash_equals($hash, md5($queueRec['qid'] . '|' . $queueRec['set_id'] . '|' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']));
+        return is_array($queueRec) && hash_equals(
+            $hash,
+            md5(
+                $queueRec['qid'] . '|' . $queueRec['set_id'] . '|' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']
+            )
+        );
     }
 
     /**
@@ -126,9 +130,7 @@ class FrontendUserAuthenticator implements MiddlewareInterface
         $queueRec = $this->queryBuilder
             ->select('*')
             ->from(QueueRepository::TABLE_NAME)
-            ->where(
-                $this->queryBuilder->expr()->eq('qid', $this->queryBuilder->createNamedParameter($queueId))
-            )
+            ->where($this->queryBuilder->expr()->eq('qid', $this->queryBuilder->createNamedParameter($queueId)))
             ->execute()
             ->fetch();
         return is_array($queueRec) ? $queueRec : [];

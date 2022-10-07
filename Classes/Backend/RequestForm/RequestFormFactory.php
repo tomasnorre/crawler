@@ -32,21 +32,45 @@ use TYPO3\CMS\Info\Controller\InfoModuleController;
  */
 final class RequestFormFactory
 {
-    public static function create(CrawlAction $selectedAction, StandaloneView $view, InfoModuleController $infoModuleController, array $extensionSettings): RequestFormInterface
-    {
+    public static function create(
+        CrawlAction $selectedAction,
+        StandaloneView $view,
+        InfoModuleController $infoModuleController,
+        array $extensionSettings
+    ): RequestFormInterface {
         switch ($selectedAction->__toString()) {
             case 'log':
                 /** @var RequestFormInterface $requestForm */
-                $requestForm = GeneralUtility::makeInstance(LogRequestForm::class, $view, $infoModuleController, $extensionSettings);
+                $requestForm = GeneralUtility::makeInstance(
+                    LogRequestForm::class,
+                    $view,
+                    $infoModuleController,
+                    $extensionSettings
+                );
                 break;
             case 'multiprocess':
                 $processRepository = GeneralUtility::makeInstance(ProcessRepository::class);
-                $processService = GeneralUtility::makeInstance(ProcessService::class,$processRepository, new SystemSleeper());
-                $requestForm = GeneralUtility::makeInstance(MultiProcessRequestForm::class, $view, $infoModuleController, $extensionSettings, $processService);
+                $processService = GeneralUtility::makeInstance(
+                    ProcessService::class,
+                    $processRepository,
+                    new SystemSleeper()
+                );
+                $requestForm = GeneralUtility::makeInstance(
+                    MultiProcessRequestForm::class,
+                    $view,
+                    $infoModuleController,
+                    $extensionSettings,
+                    $processService
+                );
                 break;
             case 'start':
             default:
-                $requestForm = GeneralUtility::makeInstance(StartRequestForm::class, $view, $infoModuleController, $extensionSettings);
+                $requestForm = GeneralUtility::makeInstance(
+                    StartRequestForm::class,
+                    $view,
+                    $infoModuleController,
+                    $extensionSettings
+                );
         }
 
         return $requestForm;

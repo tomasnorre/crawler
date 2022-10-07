@@ -89,4 +89,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->set(CyclomaticComplexitySniff::class)
         ->property('complexity', 20)
         ->property('absoluteComplexity', 20);
+
+    $services->set(\Symplify\CodingStandard\Fixer\LineLength\LineLengthFixer::class);
 };

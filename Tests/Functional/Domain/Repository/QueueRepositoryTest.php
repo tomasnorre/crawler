@@ -58,18 +58,19 @@ class QueueRepositoryTest extends FunctionalTestCase
      *
      * @dataProvider getFirstOrLastObjectByProcessDataProvider
      */
-    public function getFirstOrLastObjectByProcess(string $processId, string $orderBy, string $orderDirection, array $expected): void
-    {
+    public function getFirstOrLastObjectByProcess(
+        string $processId,
+        string $orderBy,
+        string $orderDirection,
+        array $expected
+    ): void {
         $process = new Process();
         $process->setProcessId($processId);
 
         $mockedRepository = $this->getAccessibleMock(QueueRepository::class, ['dummy'], [], '', false);
         $result = $mockedRepository->_call('getFirstOrLastObjectByProcess', $process, $orderBy, $orderDirection);
 
-        self::assertEquals(
-            $expected,
-            $result
-        );
+        self::assertEquals($expected, $result);
     }
 
     /**
@@ -136,10 +137,7 @@ class QueueRepositoryTest extends FunctionalTestCase
         $process = new Process();
         $process->setProcessId('qwerty');
 
-        self::assertSame(
-            2,
-            intval($this->subject->countExecutedItemsByProcess($process))
-        );
+        self::assertSame(2, intval($this->subject->countExecutedItemsByProcess($process)));
     }
 
     /**
@@ -150,10 +148,7 @@ class QueueRepositoryTest extends FunctionalTestCase
         $process = new Process();
         $process->setProcessId('1007');
 
-        self::assertSame(
-            2,
-            $this->subject->countNonExecutedItemsByProcess($process)
-        );
+        self::assertSame(2, $this->subject->countNonExecutedItemsByProcess($process));
     }
 
     /**
@@ -162,10 +157,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     public function countAllPendingItemsExpectedNone(): void
     {
         $this->subject->flushQueue(new QueueFilter());
-        self::assertSame(
-            0,
-            $this->subject->countAllPendingItems()
-        );
+        self::assertSame(0, $this->subject->countAllPendingItems());
     }
 
     /**
@@ -173,10 +165,7 @@ class QueueRepositoryTest extends FunctionalTestCase
      */
     public function countAllPendingItems(): void
     {
-        self::assertSame(
-            8,
-            $this->subject->countAllPendingItems()
-        );
+        self::assertSame(8, $this->subject->countAllPendingItems());
     }
 
     /**
@@ -185,10 +174,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     public function countAllAssignedPendingItemsExpectedNone(): void
     {
         $this->subject->flushQueue(new QueueFilter());
-        self::assertSame(
-            0,
-            $this->subject->countAllAssignedPendingItems()
-        );
+        self::assertSame(0, $this->subject->countAllAssignedPendingItems());
     }
 
     /**
@@ -196,10 +182,7 @@ class QueueRepositoryTest extends FunctionalTestCase
      */
     public function countAllAssignedPendingItems(): void
     {
-        self::assertSame(
-            3,
-            $this->subject->countAllAssignedPendingItems()
-        );
+        self::assertSame(3, $this->subject->countAllAssignedPendingItems());
     }
 
     /**
@@ -207,10 +190,7 @@ class QueueRepositoryTest extends FunctionalTestCase
      */
     public function countAll(): void
     {
-        self::assertSame(
-            15,
-            $this->subject->countAll()
-        );
+        self::assertSame(15, $this->subject->countAll());
     }
 
     /**
@@ -218,8 +198,13 @@ class QueueRepositoryTest extends FunctionalTestCase
      *
      * @dataProvider isPageInQueueDataProvider
      */
-    public function isPageInQueue(int $uid, bool $unprocessed_only, bool $timed_only, int $timestamp, bool $expected): void
-    {
+    public function isPageInQueue(
+        int $uid,
+        bool $unprocessed_only,
+        bool $timed_only,
+        int $timestamp,
+        bool $expected
+    ): void {
         self::assertSame(
             $expected,
             $this->subject->isPageInQueue($uid, $unprocessed_only, $timed_only, $timestamp)
@@ -246,7 +231,9 @@ class QueueRepositoryTest extends FunctionalTestCase
 
         // Add records to queue repository to ensure we always have records,
         // that will not be deleted with the cleanUpOldQueueEntries-function
-        $connectionForCrawlerQueue = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('tx_crawler_queue');
+        $connectionForCrawlerQueue = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(
+            'tx_crawler_queue'
+        );
 
         // Done for performance reason, as it gets repeated often
         $time = time() + (7 * 24 * 60 * 60);
@@ -265,18 +252,12 @@ class QueueRepositoryTest extends FunctionalTestCase
         }
 
         // Check total entries before cleanup
-        self::assertSame(
-            $recordsFromFixture + $expectedRemainingRecords,
-            $this->subject->findAll()->count()
-        );
+        self::assertSame($recordsFromFixture + $expectedRemainingRecords, $this->subject->findAll()->count());
 
         $this->subject->cleanUpOldQueueEntries();
 
         // Check total entries after cleanup
-        self::assertSame(
-            $expectedRemainingRecords,
-            $this->subject->findAll()->count()
-        );
+        self::assertSame($expectedRemainingRecords, $this->subject->findAll()->count());
     }
 
     /**
@@ -285,16 +266,10 @@ class QueueRepositoryTest extends FunctionalTestCase
     public function fetchRecordsToBeCrawled(): void
     {
         $recordsToBeCrawledLimitHigherThanRecordsCount = $this->subject->fetchRecordsToBeCrawled(10);
-        self::assertCount(
-            8,
-            $recordsToBeCrawledLimitHigherThanRecordsCount
-        );
+        self::assertCount(8, $recordsToBeCrawledLimitHigherThanRecordsCount);
 
         $recordsToBeCrawledLimitLowerThanRecordsCount = $this->subject->fetchRecordsToBeCrawled(3);
-        self::assertCount(
-            3,
-            $recordsToBeCrawledLimitLowerThanRecordsCount
-        );
+        self::assertCount(3, $recordsToBeCrawledLimitLowerThanRecordsCount);
     }
 
     /**
@@ -309,10 +284,7 @@ class QueueRepositoryTest extends FunctionalTestCase
             $actualArray[] = $record['page_id'];
         }
 
-        self::assertEquals(
-            [1, 3, 5, 2, 4],
-            $actualArray
-        );
+        self::assertEquals([1, 3, 5, 2, 4], $actualArray);
     }
 
     /**
@@ -323,10 +295,7 @@ class QueueRepositoryTest extends FunctionalTestCase
         $qidToUpdate = [1004, 1008, 1015, 1018];
         $processId = md5('this-is-the-process-id');
 
-        self::assertSame(
-            4,
-            $this->subject->updateProcessIdAndSchedulerForQueueIds($qidToUpdate, $processId)
-        );
+        self::assertSame(4, $this->subject->updateProcessIdAndSchedulerForQueueIds($qidToUpdate, $processId));
     }
 
     /**
@@ -335,25 +304,22 @@ class QueueRepositoryTest extends FunctionalTestCase
     public function unsetProcessScheduledAndProcessIdForQueueEntries(): void
     {
         $unprocessedEntriesBefore = $this->subject->countAllPendingItems() - $this->subject->countAllAssignedPendingItems();
-        self::assertSame(
-            5,
-            $unprocessedEntriesBefore
-        );
+        self::assertSame(5, $unprocessedEntriesBefore);
         $processIds = ['1007'];
         $this->subject->unsetProcessScheduledAndProcessIdForQueueEntries($processIds);
 
         $unprocessedEntriesAfter = $this->subject->countAllPendingItems() - $this->subject->countAllAssignedPendingItems();
-        self::assertSame(
-            7,
-            $unprocessedEntriesAfter
-        );
+        self::assertSame(7, $unprocessedEntriesAfter);
     }
 
     /**
      * @dataProvider noUnprocessedQueueEntriesForPageWithConfigurationHashExistDataProvider
      */
-    public function noUnprocessedQueueEntriesForPageWithConfigurationHashExist(int $uid, string $configurationHash, bool $expected): void
-    {
+    public function noUnprocessedQueueEntriesForPageWithConfigurationHashExist(
+        int $uid,
+        string $configurationHash,
+        bool $expected
+    ): void {
         self::assertSame(
             $expected,
             $this->subject->noUnprocessedQueueEntriesForPageWithConfigurationHashExist($uid, $configurationHash)
@@ -365,12 +331,13 @@ class QueueRepositoryTest extends FunctionalTestCase
      *
      * @dataProvider getQueueEntriesForPageIdDataProvider
      */
-    public function getQueueEntriesForPageId(int $id, int $itemsPerPage, QueueFilter $queueFilter, array $expected): void
-    {
-        self::assertEquals(
-            $expected,
-            $this->subject->getQueueEntriesForPageId($id, $itemsPerPage, $queueFilter)
-        );
+    public function getQueueEntriesForPageId(
+        int $id,
+        int $itemsPerPage,
+        QueueFilter $queueFilter,
+        array $expected
+    ): void {
+        self::assertEquals($expected, $this->subject->getQueueEntriesForPageId($id, $itemsPerPage, $queueFilter));
     }
 
     /**
@@ -383,10 +350,7 @@ class QueueRepositoryTest extends FunctionalTestCase
         $queryRepository = GeneralUtility::makeInstance(QueueRepository::class);
         $this->subject->flushQueue($queueFilter);
 
-        self::assertSame(
-            $expected,
-            $queryRepository->findAll()->count()
-        );
+        self::assertSame($expected, $queryRepository->findAll()->count());
     }
 
     public function flushQueueDataProvider(): iterable
@@ -409,9 +373,21 @@ class QueueRepositoryTest extends FunctionalTestCase
      * @test
      * @dataProvider getDuplicateQueueItemsIfExistsDataProvider
      */
-    public function getDuplicateQueueItemsIfExists(bool $enableTimeslot, int $timestamp, int $currentTime, int $pageId, string $parametersHash, array $expected): void
-    {
-        $actual = $this->subject->getDuplicateQueueItemsIfExists($enableTimeslot, $timestamp, $currentTime, $pageId, $parametersHash);
+    public function getDuplicateQueueItemsIfExists(
+        bool $enableTimeslot,
+        int $timestamp,
+        int $currentTime,
+        int $pageId,
+        string $parametersHash,
+        array $expected
+    ): void {
+        $actual = $this->subject->getDuplicateQueueItemsIfExists(
+            $enableTimeslot,
+            $timestamp,
+            $currentTime,
+            $pageId,
+            $parametersHash
+        );
 
         foreach ($actual as $item) {
             self::assertTrue(in_array($item, $expected));

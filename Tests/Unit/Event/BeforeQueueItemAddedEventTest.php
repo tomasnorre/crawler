@@ -41,15 +41,9 @@ class BeforeQueueItemAddedEventTest extends UnitTestCase
      */
     public function defaultValueTest(): void
     {
-        self::assertEquals(
-            1234,
-            $this->subject->getQueueId()
-        );
+        self::assertEquals(1234, $this->subject->getQueueId());
 
-        self::assertEquals(
-            ['simple' => 'array'],
-            $this->subject->getQueueRecord()
-        );
+        self::assertEquals(['simple' => 'array'], $this->subject->getQueueRecord());
     }
 
     /**
@@ -60,9 +54,6 @@ class BeforeQueueItemAddedEventTest extends UnitTestCase
         $differentArray = ['different' => 'array'];
         $this->subject->setQueueRecord($differentArray);
 
-        self::assertEquals(
-            $differentArray,
-            $this->subject->getQueueRecord()
-        );
+        self::assertEquals($differentArray, $this->subject->getQueueRecord());
     }
 }

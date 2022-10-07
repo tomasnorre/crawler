@@ -86,6 +86,8 @@ class QueueExecutor implements SingletonInterface
 
     protected function generateCrawlerIdFromQueueItem(array $queueItem): string
     {
-        return $queueItem['qid'] . ':' . md5($queueItem['qid'] . '|' . $queueItem['set_id'] . '|' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']);
+        return $queueItem['qid'] . ':' . md5(
+            $queueItem['qid'] . '|' . $queueItem['set_id'] . '|' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']
+        );
     }
 }

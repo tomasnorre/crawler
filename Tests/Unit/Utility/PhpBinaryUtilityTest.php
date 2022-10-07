@@ -66,10 +66,7 @@ class PhpBinaryUtilityTest extends UnitTestCase
             'phpBinary' => $phpBinary,
         ];
 
-        $this->assertEquals(
-            PhpBinaryUtility::getPhpBinary(),
-            $expected
-        );
+        $this->assertEquals(PhpBinaryUtility::getPhpBinary(), $expected);
     }
 
     public function getPhpBinaryDataProvider(): iterable

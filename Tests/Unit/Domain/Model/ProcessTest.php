@@ -62,25 +62,13 @@ class ProcessTest extends UnitTestCase
         self::assertFalse($this->subject->isDeleted());
         self::assertTrue($this->subject->isActive());
 
-        self::assertSame(
-            $processId,
-            $this->subject->getProcessId()
-        );
+        self::assertSame($processId, $this->subject->getProcessId());
 
-        self::assertSame(
-            $ttl,
-            $this->subject->getTtl()
-        );
+        self::assertSame($ttl, $this->subject->getTtl());
 
-        self::assertSame(
-            $assignedItemsCount,
-            $this->subject->getAssignedItemsCount()
-        );
+        self::assertSame($assignedItemsCount, $this->subject->getAssignedItemsCount());
 
-        self::assertSame(
-            $systemProcessId,
-            $this->subject->getSystemProcessId()
-        );
+        self::assertSame($systemProcessId, $this->subject->getSystemProcessId());
     }
 
     public function getStateDataProvider(): iterable
@@ -119,10 +107,7 @@ class ProcessTest extends UnitTestCase
         $processMock->expects($this->any())->method('isActive')->will($this->returnValue((bool) $active));
         $processMock->expects($this->any())->method('getProgress')->will($this->returnValue($processes));
 
-        self::assertEquals(
-            $expectedState,
-            $processMock->getState()
-        );
+        self::assertEquals($expectedState, $processMock->getState());
     }
 
     /**
@@ -130,17 +115,27 @@ class ProcessTest extends UnitTestCase
      *
      * @dataProvider getProgressReturnsExpectedPercentageDataProvider
      */
-    public function getProgressReturnsExpectedPercentage(int $countItemsAssigned, int $countItemsProcessed, float $expectedProgress): void
-    {
+    public function getProgressReturnsExpectedPercentage(
+        int $countItemsAssigned,
+        int $countItemsProcessed,
+        float $expectedProgress
+    ): void {
         /** @var MockObject|Process $processMock */
-        $processMock = self::getAccessibleMock(Process::class, ['getAssignedItemsCount', 'getAmountOfItemsProcessed'], [], '', false);
-        $processMock->expects($this->any())->method('getAssignedItemsCount')->will($this->returnValue($countItemsAssigned));
-        $processMock->expects($this->any())->method('getAmountOfItemsProcessed')->will($this->returnValue($countItemsProcessed));
-
-        self::assertEquals(
-            $expectedProgress,
-            $processMock->getProgress()
+        $processMock = self::getAccessibleMock(
+            Process::class,
+            ['getAssignedItemsCount', 'getAmountOfItemsProcessed'],
+            [],
+            '',
+            false
         );
+        $processMock->expects($this->any())->method('getAssignedItemsCount')->will(
+            $this->returnValue($countItemsAssigned)
+        );
+        $processMock->expects($this->any())->method('getAmountOfItemsProcessed')->will(
+            $this->returnValue($countItemsProcessed)
+        );
+
+        self::assertEquals($expectedProgress, $processMock->getProgress());
     }
 
     public function getProgressReturnsExpectedPercentageDataProvider(): iterable
@@ -210,15 +205,22 @@ class ProcessTest extends UnitTestCase
     public function getRuntimeReturnsInteger(array $getTimeForFirstItem, array $getTimeForLastItem, int $expected): void
     {
         /** @var MockObject|QueueRepository $queueRepositoryMock */
-        $queueRepositoryMock = self::getAccessibleMock(QueueRepository::class, ['findOldestEntryForProcess', 'findYoungestEntryForProcess'], [], '', false);
-        $queueRepositoryMock->expects($this->any())->method('findOldestEntryForProcess')->will($this->returnValue($getTimeForLastItem));
-        $queueRepositoryMock->expects($this->any())->method('findYoungestEntryForProcess')->will($this->returnValue($getTimeForFirstItem));
+        $queueRepositoryMock = self::getAccessibleMock(
+            QueueRepository::class,
+            ['findOldestEntryForProcess', 'findYoungestEntryForProcess'],
+            [],
+            '',
+            false
+        );
+        $queueRepositoryMock->expects($this->any())->method('findOldestEntryForProcess')->will(
+            $this->returnValue($getTimeForLastItem)
+        );
+        $queueRepositoryMock->expects($this->any())->method('findYoungestEntryForProcess')->will(
+            $this->returnValue($getTimeForFirstItem)
+        );
 
         $this->subject->_setProperty('queueRepository', $queueRepositoryMock);
-        self::assertEquals(
-            $expected,
-            $this->subject->getRuntime()
-        );
+        self::assertEquals($expected, $this->subject->getRuntime());
     }
 
     public function getRuntimeReturnsIntegerDataProvider(): iterable

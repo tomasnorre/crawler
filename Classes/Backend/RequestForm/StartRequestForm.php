@@ -66,7 +66,11 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
     {
         if (empty($pageId)) {
             $this->isErrorDetected = true;
-            MessageUtility::addErrorMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noPageSelected'));
+            MessageUtility::addErrorMessage(
+                $this->getLanguageService()->sL(
+                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noPageSelected'
+                )
+            );
             return '';
         }
 
@@ -82,7 +86,9 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
         $scheduledTime = $this->getScheduledTime((string) GeneralUtility::_GP('tstamp'));
 
         $this->incomingConfigurationSelection = GeneralUtility::_GP('configurationSelection');
-        $this->incomingConfigurationSelection = is_array($this->incomingConfigurationSelection) ? $this->incomingConfigurationSelection : [];
+        $this->incomingConfigurationSelection = is_array(
+            $this->incomingConfigurationSelection
+        ) ? $this->incomingConfigurationSelection : [];
 
         $this->crawlerController = $this->getCrawlerController();
         $this->crawlerController->setID = GeneralUtility::md5int(microtime());
@@ -91,12 +97,18 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
         $noConfigurationSelected = empty($this->incomingConfigurationSelection)
             || (count($this->incomingConfigurationSelection) === 1 && empty($this->incomingConfigurationSelection[0]));
         if ($noConfigurationSelected) {
-            MessageUtility::addWarningMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noConfigSelected'));
+            MessageUtility::addWarningMessage(
+                $this->getLanguageService()->sL(
+                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noConfigSelected'
+                )
+            );
         } else {
             if ($submitCrawlUrls) {
                 $reason = new Reason();
                 $reason->setReason(Reason::REASON_GUI_SUBMIT);
-                $reason->setDetailText('The user ' . $GLOBALS['BE_USER']->user['username'] . ' added pages to the crawler queue manually');
+                $reason->setDetailText(
+                    'The user ' . $GLOBALS['BE_USER']->user['username'] . ' added pages to the crawler queue manually'
+                );
                 $this->eventDispatcher->dispatch(new InvokeQueueChangeEvent($reason));
             }
 
@@ -146,12 +158,24 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
         $selectors = [];
         $selectors['depth'] = $this->selectorBox(
             [
-                0 => $this->getLanguageService()->sL('LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_0'),
-                1 => $this->getLanguageService()->sL('LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_1'),
-                2 => $this->getLanguageService()->sL('LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_2'),
-                3 => $this->getLanguageService()->sL('LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_3'),
-                4 => $this->getLanguageService()->sL('LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_4'),
-                99 => $this->getLanguageService()->sL('LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_infi'),
+                0 => $this->getLanguageService()->sL(
+                    'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_0'
+                ),
+                1 => $this->getLanguageService()->sL(
+                    'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_1'
+                ),
+                2 => $this->getLanguageService()->sL(
+                    'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_2'
+                ),
+                3 => $this->getLanguageService()->sL(
+                    'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_3'
+                ),
+                4 => $this->getLanguageService()->sL(
+                    'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_4'
+                ),
+                99 => $this->getLanguageService()->sL(
+                    'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_infi'
+                ),
             ],
             'SET[depth]',
             $this->infoModuleController->MOD_SETTINGS['depth'],
@@ -159,7 +183,10 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
         );
 
         // Configurations
-        $availableConfigurations = $this->getCrawlerController()->getConfigurationsForBranch($pageId, (int) $this->infoModuleController->MOD_SETTINGS['depth'] ?: 0);
+        $availableConfigurations = $this->getCrawlerController()->getConfigurationsForBranch(
+            $pageId,
+            (int) $this->infoModuleController->MOD_SETTINGS['depth'] ?: 0
+        );
         $selectors['configurations'] = $this->selectorBox(
             empty($availableConfigurations) ? [] : array_combine($availableConfigurations, $availableConfigurations),
             'configurationSelection',
@@ -170,9 +197,15 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
         // Scheduled time:
         $selectors['scheduled'] = $this->selectorBox(
             [
-                'now' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.time.now'),
-                'midnight' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.time.midnight'),
-                '04:00' => $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.time.4am'),
+                'now' => $this->getLanguageService()->sL(
+                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.time.now'
+                ),
+                'midnight' => $this->getLanguageService()->sL(
+                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.time.midnight'
+                ),
+                '04:00' => $this->getLanguageService()->sL(
+                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.time.4am'
+                ),
             ],
             'tstamp',
             GeneralUtility::_POST('tstamp'),
@@ -200,12 +233,22 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
 
         $options = [];
         foreach ($optArray as $key => $val) {
-            $selected = (! $multiple && ! strcmp($value, (string) $key)) || ($multiple && in_array($key, (array) $value, true));
+            $selected = (! $multiple && ! strcmp($value, (string) $key)) || ($multiple && in_array(
+                $key,
+                (array) $value,
+                true
+            ));
             $options[] = '
-                <option value="' . $key . '" ' . ($selected ? ' selected="selected"' : '') . '>' . htmlspecialchars($val, ENT_QUOTES | ENT_HTML5) . '</option>';
+                <option value="' . $key . '" ' . ($selected ? ' selected="selected"' : '') . '>' . htmlspecialchars(
+                    $val,
+                    ENT_QUOTES | ENT_HTML5
+                ) . '</option>';
         }
 
-        return '<select class="form-control" name="' . htmlspecialchars($name . ($multiple ? '[]' : ''), ENT_QUOTES | ENT_HTML5) . '"' . ($multiple ? ' multiple' : '') . '>' . implode('', $options) . '</select>';
+        return '<select class="form-control" name="' . htmlspecialchars(
+            $name . ($multiple ? '[]' : ''),
+            ENT_QUOTES | ENT_HTML5
+        ) . '"' . ($multiple ? ' multiple' : '') . '>' . implode('', $options) . '</select>';
     }
 
     /**

@@ -62,10 +62,7 @@ class ConfigurationRepositoryTest extends FunctionalTestCase
     {
         $configurations = $this->subject->getCrawlerConfigurationRecordsFromRootLine(5);
 
-        self::assertCount(
-            4,
-            $configurations
-        );
+        self::assertCount(4, $configurations);
 
         foreach ($configurations as $configuration) {
             self::assertContains((int) $configuration['uid'], [1, 5, 6, 8]);

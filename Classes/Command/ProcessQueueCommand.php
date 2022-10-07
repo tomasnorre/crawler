@@ -107,8 +107,14 @@ class ProcessQueueCommand extends Command
             $processRepository->markRequestedProcessesAsNotActive([$this->processId]);
             $queueRepository->unsetProcessScheduledAndProcessIdForQueueEntries([$this->processId]);
 
-            $output->writeln('<info>Unprocessed Items remaining:' . count($queueRepository->getUnprocessedItems()) . ' (' . $this->processId . ')</info>');
-            $result |= (count($queueRepository->getUnprocessedItems()) > 0 ? self::CLI_STATUS_REMAIN : self::CLI_STATUS_NOTHING_PROCCESSED);
+            $output->writeln(
+                '<info>Unprocessed Items remaining:' . count(
+                    $queueRepository->getUnprocessedItems()
+                ) . ' (' . $this->processId . ')</info>'
+            );
+            $result |= (count(
+                $queueRepository->getUnprocessedItems()
+            ) > 0 ? self::CLI_STATUS_REMAIN : self::CLI_STATUS_NOTHING_PROCCESSED);
         } else {
             $result |= self::CLI_STATUS_ABORTED;
         }
@@ -175,7 +181,10 @@ class ProcessQueueCommand extends Command
             }
 
             //save the number of assigned queue entries to determine how many have been processed later
-            $numberOfAffectedRows = $this->queueRepository->updateProcessIdAndSchedulerForQueueIds($quidList, $this->processId);
+            $numberOfAffectedRows = $this->queueRepository->updateProcessIdAndSchedulerForQueueIds(
+                $quidList,
+                $this->processId
+            );
             $this->processRepository->updateProcessAssignItemsCount($numberOfAffectedRows, $this->processId);
 
             if ($numberOfAffectedRows !== count($quidList)) {

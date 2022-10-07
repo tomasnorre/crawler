@@ -77,11 +77,7 @@ class GuzzleExecutionStrategy implements LoggerAwareInterface, CrawlStrategyInte
     protected function getResponse(string $url, array $options): ResponseInterface
     {
         return GeneralUtility::makeInstance(RequestFactory::class)
-            ->request(
-                $url,
-                'GET',
-                $options
-            );
+            ->request($url, 'GET', $options);
     }
 
     /**

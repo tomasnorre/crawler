@@ -60,10 +60,7 @@ class FlushQueueCommandTest extends FunctionalTestCase
         $commandOutput = $this->commandTester->getDisplay();
 
         self::assertStringContainsString($expectedOutput, $commandOutput);
-        self::assertEquals(
-            $expectedCount,
-            $this->queueRepository->findAll()->count()
-        );
+        self::assertEquals($expectedCount, $this->queueRepository->findAll()->count());
     }
 
     public function flushQueueDataProvider(): iterable

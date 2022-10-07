@@ -35,10 +35,7 @@ class CrawlActionTest extends UnitTestCase
     public function toStringWithValidValueReturnsOriginalValue(): void
     {
         $crawlAction = new CrawlAction(self::VALID_VALUE);
-        self::assertEquals(
-            self::VALID_VALUE,
-            $crawlAction->__toString()
-        );
+        self::assertEquals(self::VALID_VALUE, $crawlAction->__toString());
     }
 
     /**

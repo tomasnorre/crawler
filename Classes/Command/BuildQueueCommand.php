@@ -59,17 +59,9 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             '
         );
 
-        $this->addArgument(
-            'page',
-            InputArgument::REQUIRED,
-            'The page from where the queue building should start'
-        );
+        $this->addArgument('page', InputArgument::REQUIRED, 'The page from where the queue building should start');
 
-        $this->addArgument(
-            'conf',
-            InputArgument::REQUIRED,
-            'A comma separated list of crawler configurations'
-        );
+        $this->addArgument('conf', InputArgument::REQUIRED, 'A comma separated list of crawler configurations');
 
         $this->addOption(
             'depth',
@@ -118,7 +110,9 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
         $jsonCompatibilityConverter = GeneralUtility::makeInstance(JsonCompatibilityConverter::class);
         $mode = $input->getOption('mode') ?? 'queue';
 
-        $extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
+        $extensionSettings = GeneralUtility::makeInstance(
+            ExtensionConfigurationProvider::class
+        )->getExtensionConfiguration();
         $eventDispatcher = GeneralUtility::makeInstance(EventDispatcher::class);
 
         /** @var CrawlerController $crawlerController */
@@ -178,7 +172,9 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
                 }
 
                 $progressBar->clear();
-                $output->writeln('<info>' . $p['url'] . ' (' . implode(',', $p['procInstructions']) . ') => ' . '</info>' . PHP_EOL);
+                $output->writeln(
+                    '<info>' . $p['url'] . ' (' . implode(',', $p['procInstructions']) . ') => ' . '</info>' . PHP_EOL
+                );
                 $progressBar->display();
 
                 $result = $crawlerController->readUrlFromArray($queueRec);
@@ -188,19 +184,34 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
 
                 $progressBar->clear();
                 if (is_array($requestResult)) {
-                    $resLog = is_array($requestResult['log']) ? PHP_EOL . chr(9) . chr(9) . implode(PHP_EOL . chr(9) . chr(9), $requestResult['log']) : '';
+                    $resLog = is_array($requestResult['log']) ? PHP_EOL . chr(9) . chr(9) . implode(
+                        PHP_EOL . chr(9) . chr(9),
+                        $requestResult['log']
+                    ) : '';
                     $output->writeln('<info>OK: ' . $resLog . '</info>' . PHP_EOL);
                 } else {
-                    $output->writeln('<error>Error checking Crawler Result:  ' . substr(preg_replace('/\s+/', ' ', strip_tags($resultContent)), 0, 30000) . '...' . PHP_EOL . '</error>' . PHP_EOL);
+                    $output->writeln(
+                        '<error>Error checking Crawler Result:  ' . substr(
+                            preg_replace('/\s+/', ' ', strip_tags($resultContent)),
+                            0,
+                            30000
+                        ) . '...' . PHP_EOL . '</error>' . PHP_EOL
+                    );
                 }
                 $progressBar->display();
             }
             $output->writeln('');
         } elseif ($mode === 'queue') {
-            $output->writeln('<info>Putting ' . count($crawlerController->urlList) . ' entries in queue:</info>' . PHP_EOL);
+            $output->writeln(
+                '<info>Putting ' . count($crawlerController->urlList) . ' entries in queue:</info>' . PHP_EOL
+            );
             $this->outputUrls($queueRows, $output);
         } else {
-            $output->writeln('<info>' . count($crawlerController->urlList) . ' entries found for processing. (Use "mode" to decide action):</info>' . PHP_EOL);
+            $output->writeln(
+                '<info>' . count(
+                    $crawlerController->urlList
+                ) . ' entries found for processing. (Use "mode" to decide action):</info>' . PHP_EOL
+            );
             $this->outputUrls($queueRows, $output);
         }
 

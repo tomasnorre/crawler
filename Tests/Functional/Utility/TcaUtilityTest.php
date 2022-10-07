@@ -40,7 +40,10 @@ class TcaUtilityTest extends FunctionalTestCase
         $subject = new TcaUtility();
 
         if (!empty($expected['items'][0][2])) {
-            self::assertStringContainsString('ext/crawler/Resources/Public/Icons/Extension.svg', $expected['items'][0][2]);
+            self::assertStringContainsString(
+                'ext/crawler/Resources/Public/Icons/Extension.svg',
+                $expected['items'][0][2]
+            );
             unset($expected['items'][0][2]);
         }
 
@@ -50,10 +53,7 @@ class TcaUtilityTest extends FunctionalTestCase
             unset($actual['items'][0][2]);
         }
 
-        self::assertEquals(
-            $expected,
-            $actual
-        );
+        self::assertEquals($expected, $actual);
     }
 
     public function getProcessingInstructionsDataProvider(): \Iterator
@@ -74,11 +74,7 @@ class TcaUtilityTest extends FunctionalTestCase
             'configuration' => [],
             'expected' => [
                 'items' => [
-                    [
-                        'Fake Value [crawler]',
-                        'crawler',
-                        'ext/crawler/Resources/Public/Icons/Extension.svg',
-                    ],
+                    ['Fake Value [crawler]', 'crawler', 'ext/crawler/Resources/Public/Icons/Extension.svg'],
                 ],
             ],
         ];
@@ -94,11 +90,7 @@ class TcaUtilityTest extends FunctionalTestCase
             'expected' => [
                 'default',
                 'items' => [
-                    [
-                        'Fake Value [crawler]',
-                        'crawler',
-                        'ext/crawler/Resources/Public/Icons/Extension.svg',
-                    ],
+                    ['Fake Value [crawler]', 'crawler', 'ext/crawler/Resources/Public/Icons/Extension.svg'],
                 ],
             ],
         ];

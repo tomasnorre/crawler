@@ -116,15 +116,9 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         $processCountAfter = $this->processRepository->findAll()->count();
         $queueCountAfter = $this->queueRepository->findAll()->count();
 
-        self::assertEquals(
-            $processCountBefore,
-            $processCountAfter
-        );
+        self::assertEquals($processCountBefore, $processCountAfter);
 
-        self::assertEquals(
-            $queueCountBefore,
-            $queueCountAfter
-        );
+        self::assertEquals($queueCountBefore, $queueCountAfter);
     }
 
     /**
@@ -144,15 +138,9 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         $processCountAfter = $this->processRepository->findAll()->count();
         $queueCountAfter = $this->queueRepository->findAll()->count();
 
-        self::assertEquals(
-            $processCountBefore - $expectedProcessesToBeRemoved,
-            $processCountAfter
-        );
+        self::assertEquals($processCountBefore - $expectedProcessesToBeRemoved, $processCountAfter);
 
-        self::assertEquals(
-            $queueCountBefore - $expectedQueueRecordsToBeRemoved,
-            $queueCountAfter
-        );
+        self::assertEquals($queueCountBefore - $expectedQueueRecordsToBeRemoved, $queueCountAfter);
     }
 
     /**
@@ -171,20 +159,11 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         $processCountAfter = $this->processRepository->findAll()->count();
         $queueCountAfter = $this->queueRepository->findByProcessId($existingProcessId)->count();
 
-        self::assertEquals(
-            $processCountBefore - $expectedProcessesToBeRemoved,
-            $processCountAfter
-        );
+        self::assertEquals($processCountBefore - $expectedProcessesToBeRemoved, $processCountAfter);
 
-        self::assertEquals(
-            1,
-            $queueCountBefore
-        );
+        self::assertEquals(1, $queueCountBefore);
 
-        self::assertEquals(
-            0,
-            $queueCountAfter
-        );
+        self::assertEquals(0, $queueCountAfter);
     }
 
     /**

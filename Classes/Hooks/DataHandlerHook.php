@@ -33,8 +33,10 @@ class DataHandlerHook
     /**
      * @noRector \Rector\DeadCode\Rector\ClassMethod\RemoveUnusedParameterRector
      */
-    public function addFlushedPagesToCrawlerQueue(array $parameters, \TYPO3\CMS\Core\DataHandling\DataHandler $dataHandler): void
-    {
+    public function addFlushedPagesToCrawlerQueue(
+        array $parameters,
+        \TYPO3\CMS\Core\DataHandling\DataHandler $dataHandler
+    ): void {
         $pageIdsToBeFlushedFromCache = $parameters['pageIdArray'];
         if (empty($pageIdsToBeFlushedFromCache)) {
             return;

@@ -41,14 +41,8 @@ class AfterUrlAddedToQueueEventTest extends UnitTestCase
      */
     public function defaultValueTest(): void
     {
-        self::assertEquals(
-            'qwerty',
-            $this->subject->getUid()
-        );
+        self::assertEquals('qwerty', $this->subject->getUid());
 
-        self::assertEquals(
-            ['field' => 'array'],
-            $this->subject->getFieldArray()
-        );
+        self::assertEquals(['field' => 'array'], $this->subject->getFieldArray());
     }
 }

@@ -49,9 +49,7 @@ class CrawlerInitializationTest extends FunctionalTestCase
      */
     public function processSetsTSFEApplicationData(string $feGroups, array $expectedGroups): void
     {
-        self::assertNull(
-            $GLOBALS['TSFE']->applicationData['forceIndexing']
-        );
+        self::assertNull($GLOBALS['TSFE']->applicationData['forceIndexing']);
 
         $queueParameters = [
             'url' => 'https://crawler-devbox.ddev.site',
@@ -71,14 +69,8 @@ class CrawlerInitializationTest extends FunctionalTestCase
 
         self::assertTrue($GLOBALS['TSFE']->applicationData['forceIndexing']);
         self::assertTrue($GLOBALS['TSFE']->applicationData['tx_crawler']['running']);
-        self::assertEquals(
-            $queueParameters,
-            $GLOBALS['TSFE']->applicationData['tx_crawler']['parameters']
-        );
-        self::assertEquals(
-            $expectedGroups,
-            $GLOBALS['TSFE']->applicationData['tx_crawler']['log']
-        );
+        self::assertEquals($queueParameters, $GLOBALS['TSFE']->applicationData['tx_crawler']['parameters']);
+        self::assertEquals($expectedGroups, $GLOBALS['TSFE']->applicationData['tx_crawler']['log']);
 
         self::assertArrayHasKey('id', $GLOBALS['TSFE']->applicationData['tx_crawler']['vars']);
         self::assertArrayHasKey('gr_list', $GLOBALS['TSFE']->applicationData['tx_crawler']['vars']);

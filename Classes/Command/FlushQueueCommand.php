@@ -46,11 +46,7 @@ It will remove queue entries and perform a cleanup.' . chr(10) . chr(10) .
               $ typo3 crawler:flushQueue pending
             '
         );
-        $this->addArgument(
-            'mode',
-            InputArgument::REQUIRED,
-            'What to clear: all, finished, pending'
-        );
+        $this->addArgument('mode', InputArgument::REQUIRED, 'What to clear: all, finished, pending');
     }
 
     /**
@@ -82,10 +78,14 @@ It will remove queue entries and perform a cleanup.' . chr(10) . chr(10) .
             case 'finished':
             case 'pending':
                 $queueRepository->flushQueue($queueFilter);
-                $output->writeln('<info>All entries in Crawler queue, with status: "' . $queueFilter . '" will be flushed</info>');
+                $output->writeln(
+                    '<info>All entries in Crawler queue, with status: "' . $queueFilter . '" will be flushed</info>'
+                );
                 break;
             default:
-                $output->writeln('<info>No matching parameters found.' . PHP_EOL . 'Try "typo3 help crawler:flushQueue" to see your options</info>');
+                $output->writeln(
+                    '<info>No matching parameters found.' . PHP_EOL . 'Try "typo3 help crawler:flushQueue" to see your options</info>'
+                );
                 break;
         }
 

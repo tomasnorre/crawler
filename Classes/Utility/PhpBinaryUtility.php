@@ -32,7 +32,9 @@ class PhpBinaryUtility
 {
     public static function getPhpBinary(): string
     {
-        $extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
+        $extensionSettings = GeneralUtility::makeInstance(
+            ExtensionConfigurationProvider::class
+        )->getExtensionConfiguration();
 
         if (empty($extensionSettings)) {
             throw new ExtensionSettingsException('ExtensionSettings are empty', 1_587_066_853);
@@ -41,7 +43,10 @@ class PhpBinaryUtility
         if (empty($extensionSettings['phpPath'])) {
             $phpPath = CommandUtility::getCommand($extensionSettings['phpBinary']);
             if ($phpPath === false) {
-                throw new CommandNotFoundException('The phpBinary: "' . $extensionSettings['phpBinary'] . '" could not be found!', 1_587_068_215);
+                throw new CommandNotFoundException(
+                    'The phpBinary: "' . $extensionSettings['phpBinary'] . '" could not be found!',
+                    1_587_068_215
+                );
             }
         } else {
             $phpPath = $extensionSettings['phpPath'];

@@ -74,7 +74,11 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
 
         if (empty($this->id)) {
             $this->isErrorDetected = true;
-            MessageUtility::addErrorMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noPageSelected'));
+            MessageUtility::addErrorMessage(
+                $this->getLanguageService()->sL(
+                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noPageSelected'
+                )
+            );
         }
 
         try {
@@ -137,9 +141,15 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
                 break;
             case 'addProcess':
                 if ($this->processService->startProcess() === false) {
-                    throw new ProcessException($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.newprocesserror'));
+                    throw new ProcessException($this->getLanguageService()->sL(
+                        'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.newprocesserror'
+                    ));
                 }
-                MessageUtility::addNoticeMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.newprocess'));
+                MessageUtility::addNoticeMessage(
+                    $this->getLanguageService()->sL(
+                        'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.newprocess'
+                    )
+                );
                 break;
             case 'resumeCrawling':
             default:
@@ -177,7 +187,9 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
 
         return $this->getLinkButton(
             'actions-add',
-            $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.process.add'),
+            $this->getLanguageService()->sL(
+                'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.process.add'
+            ),
             UrlBuilder::getInfoModuleUrl(['action' => 'addProcess'])
         );
     }
@@ -190,13 +202,17 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
         if ($mode === 'detail') {
             return $this->getLinkButton(
                 'actions-document-view',
-                $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.show.running'),
+                $this->getLanguageService()->sL(
+                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.show.running'
+                ),
                 UrlBuilder::getInfoModuleUrl(['processListMode' => 'simple'])
             );
         } elseif ($mode === 'simple') {
             return $this->getLinkButton(
                 'actions-document-view',
-                $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.show.all'),
+                $this->getLanguageService()->sL(
+                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.show.all'
+                ),
                 UrlBuilder::getInfoModuleUrl(['processListMode' => 'detail'])
             );
         }
@@ -213,13 +229,17 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
         if ($isCrawlerEnabled) {
             return $this->getLinkButton(
                 'tx-crawler-stop',
-                $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.disablecrawling'),
+                $this->getLanguageService()->sL(
+                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.disablecrawling'
+                ),
                 UrlBuilder::getInfoModuleUrl(['action' => 'stopCrawling'])
             );
         }
         return $this->getLinkButton(
             'tx-crawler-start',
-            $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.enablecrawling'),
+            $this->getLanguageService()->sL(
+                'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.enablecrawling'
+            ),
             UrlBuilder::getInfoModuleUrl(['action' => 'resumeCrawling'])
         );
     }

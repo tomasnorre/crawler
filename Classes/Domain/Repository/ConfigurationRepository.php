@@ -60,7 +60,10 @@ class ConfigurationRepository extends Repository
             ->select('*')
             ->from(self::TABLE_NAME)
             ->where(
-                $queryBuilder->expr()->in('pid', $queryBuilder->createNamedParameter($pageIdsInRootLine, Connection::PARAM_INT_ARRAY))
+                $queryBuilder->expr()->in(
+                    'pid',
+                    $queryBuilder->createNamedParameter($pageIdsInRootLine, Connection::PARAM_INT_ARRAY)
+                )
             )
             ->orderBy('name')
             ->executeQuery()

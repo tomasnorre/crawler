@@ -86,14 +86,8 @@ class BuildQueueCommandTest extends FunctionalTestCase
 
         $this->commandTester->execute($arguments);
 
-        self::assertStringContainsString(
-            $expectedOutput,
-            $this->commandTester->getDisplay()
-        );
-        self::assertEquals(
-            $expectedCount,
-            $this->queueRepository->findAll()->count()
-        );
+        self::assertStringContainsString($expectedOutput, $this->commandTester->getDisplay());
+        self::assertEquals($expectedCount, $this->queueRepository->findAll()->count());
     }
 
     public function buildQueueCommandDataProvider(): iterable

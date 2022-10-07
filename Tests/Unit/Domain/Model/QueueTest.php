@@ -74,62 +74,29 @@ class QueueTest extends UnitTestCase
         $this->subject->setResultData($resultData);
         $this->subject->setProcessIdCompleted($processIdCompleted);
 
-        self::assertEquals(
-            $execTime,
-            $this->subject->getExecTime()
-        );
+        self::assertEquals($execTime, $this->subject->getExecTime());
 
-        self::assertSame(
-            $configuration,
-            $this->subject->getConfiguration()
-        );
+        self::assertSame($configuration, $this->subject->getConfiguration());
 
-        self::assertSame(
-            $configurationHash,
-            $this->subject->getConfigurationHash()
-        );
+        self::assertSame($configurationHash, $this->subject->getConfigurationHash());
 
-        self::assertSame(
-            $processId,
-            $this->subject->getProcessId()
-        );
+        self::assertSame($processId, $this->subject->getProcessId());
 
-        self::assertSame(
-            $pageId,
-            $this->subject->getPageId()
-        );
+        self::assertSame($pageId, $this->subject->getPageId());
 
-        self::assertSame(
-            $parameters,
-            $this->subject->getParameters()
-        );
+        self::assertSame($parameters, $this->subject->getParameters());
 
-        self::assertSame(
-            $parametersHash,
-            $this->subject->getParametersHash()
-        );
+        self::assertSame($parametersHash, $this->subject->getParametersHash());
 
-        self::assertSame(
-            $qid,
-            $this->subject->getQid()
-        );
+        self::assertSame($qid, $this->subject->getQid());
 
         self::assertFalse($this->subject->isScheduled());
         self::assertTrue($this->subject->isProcessScheduled());
 
-        self::assertSame(
-            $setId,
-            $this->subject->getSetId()
-        );
+        self::assertSame($setId, $this->subject->getSetId());
 
-        self::assertSame(
-            $resultData,
-            $this->subject->getResultData()
-        );
+        self::assertSame($resultData, $this->subject->getResultData());
 
-        self::assertSame(
-            $processIdCompleted,
-            $this->subject->getProcessIdCompleted()
-        );
+        self::assertSame($processIdCompleted, $this->subject->getProcessIdCompleted());
     }
 }

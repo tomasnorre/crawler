@@ -68,9 +68,6 @@ class ProcessServiceTest extends FunctionalTestCase
             'phpBinary' => 'php',
 
         ];
-        self::assertStringContainsString(
-            'php',
-            $this->subject->getCrawlerCliPath()
-        );
+        self::assertStringContainsString('php', $this->subject->getCrawlerCliPath());
     }
 }

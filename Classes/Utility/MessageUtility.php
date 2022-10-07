@@ -60,12 +60,7 @@ class MessageUtility
      */
     private static function addMessage(string $message, int $severity = FlashMessage::OK): void
     {
-        $message = GeneralUtility::makeInstance(
-            FlashMessage::class,
-            $message,
-            '',
-            $severity
-        );
+        $message = GeneralUtility::makeInstance(FlashMessage::class, $message, '', $severity);
 
         /** @var FlashMessageService $flashMessageService */
         $flashMessageService = GeneralUtility::makeInstance(FlashMessageService::class);

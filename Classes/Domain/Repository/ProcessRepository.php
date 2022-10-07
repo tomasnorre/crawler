@@ -55,7 +55,9 @@ class ProcessRepository extends Repository
 
         parent::__construct($objectManager);
 
-        $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
+        $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
+            self::TABLE_NAME
+        );
 
         /** @var ExtensionConfigurationProvider $configurationProvider */
         $configurationProvider = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
@@ -100,10 +102,7 @@ class ProcessRepository extends Repository
         $statement = $queryBuilder
             ->select('*')
             ->from(self::TABLE_NAME)
-            ->where(
-                $queryBuilder->expr()->eq('active', 1),
-                $queryBuilder->expr()->eq('deleted', 0)
-            )
+            ->where($queryBuilder->expr()->eq('active', 1), $queryBuilder->expr()->eq('deleted', 0))
             ->orderBy('ttl', 'DESC')
             ->executeQuery();
 
@@ -149,7 +148,10 @@ class ProcessRepository extends Repository
             ->select('process_id', 'system_process_id')
             ->from(self::TABLE_NAME)
             ->where(
-                $queryBuilder->expr()->lte('ttl', intval(time() - $this->extensionSettings['processMaxRunTime'] - 3600)),
+                $queryBuilder->expr()->lte(
+                    'ttl',
+                    intval(time() - $this->extensionSettings['processMaxRunTime'] - 3600)
+                ),
                 $queryBuilder->expr()->eq('active', 1)
             )
             ->executeQuery();
@@ -191,10 +193,7 @@ class ProcessRepository extends Repository
         return (int) $queryBuilder
             ->count('*')
             ->from(self::TABLE_NAME)
-            ->where(
-                $queryBuilder->expr()->eq('deleted', 0),
-                $queryBuilder->expr()->gt('ttl', intval($ttl))
-            )
+            ->where($queryBuilder->expr()->eq('deleted', 0), $queryBuilder->expr()->gt('ttl', intval($ttl)))
             ->executeQuery()
             ->fetchOne();
     }
@@ -204,9 +203,7 @@ class ProcessRepository extends Repository
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
         $queryBuilder
             ->delete(self::TABLE_NAME)
-            ->where(
-                $queryBuilder->expr()->eq('assigned_items_count', 0)
-            )
+            ->where($queryBuilder->expr()->eq('assigned_items_count', 0))
             ->executeStatement();
     }
 
@@ -215,9 +212,7 @@ class ProcessRepository extends Repository
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
         $queryBuilder
             ->delete(self::TABLE_NAME)
-            ->where(
-                $queryBuilder->expr()->eq('deleted', 1)
-            )
+            ->where($queryBuilder->expr()->eq('deleted', 1))
             ->executeStatement();
     }
 
@@ -227,9 +222,7 @@ class ProcessRepository extends Repository
         $isActive = $queryBuilder
             ->select('active')
             ->from(self::TABLE_NAME)
-            ->where(
-                $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId))
-            )
+            ->where($queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId)))
             ->orderBy('ttl')
             ->executeQuery()
             ->fetchFirstColumn();
@@ -260,7 +253,10 @@ class ProcessRepository extends Repository
                     WHERE tx_crawler_queue.process_id = tx_crawler_process.process_id
                     AND tx_crawler_queue.exec_time = 0
                 )',
-                $queryBuilder->expr()->in('process_id', $queryBuilder->createNamedParameter($processIds, Connection::PARAM_STR_ARRAY)),
+                $queryBuilder->expr()->in(
+                    'process_id',
+                    $queryBuilder->createNamedParameter($processIds, Connection::PARAM_STR_ARRAY)
+                ),
                 $queryBuilder->expr()->eq('deleted', 0)
             )
             ->set('active', '0')
