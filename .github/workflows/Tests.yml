@@ -92,6 +92,12 @@ jobs:
           typo3DatabasePassword: root
           typo3DatabaseUsername: root
 
+      - name: Set up PHP Version 7.4 for Scrutinizer Upload
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
+          tools: composer:v2
+
       - name: Upload coverage results to Scrutinizer
         if: matrix.typo3 == '^11.5' && matrix.php == '8.0'
         run: |
