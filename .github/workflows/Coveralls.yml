@@ -23,10 +23,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Set up PHP Version 7.4
+      - name: Set up PHP Version 8.0
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 7.4
+          php-version: 8.0
           tools: composer:v2
 
       - name: Install dependencies
