@@ -75,9 +75,9 @@ class ProcessRepository extends Repository
             ->select('*')
             ->from(self::TABLE_NAME)
             ->orderBy('ttl', 'DESC')
-            ->execute();
+            ->executeQuery();
 
-        while ($row = $statement->fetch()) {
+        while ($row = $statement->fetchAssociative()) {
             $process = GeneralUtility::makeInstance(Process::class);
             $process->setProcessId($row['process_id']);
             $process->setActive((bool) $row['active']);
@@ -105,9 +105,9 @@ class ProcessRepository extends Repository
                 $queryBuilder->expr()->eq('deleted', 0)
             )
             ->orderBy('ttl', 'DESC')
-            ->execute();
+            ->executeQuery();
 
-        while ($row = $statement->fetch()) {
+        while ($row = $statement->fetchAssociative()) {
             $process = new Process();
             $process->setProcessId($row['process_id']);
             $process->setActive((bool) $row['active']);
@@ -132,7 +132,7 @@ class ProcessRepository extends Repository
             ->delete(self::TABLE_NAME)
             ->where(
                 $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId, PDO::PARAM_STR))
-            )->execute();
+            )->executeStatement();
     }
 
     /**
@@ -152,9 +152,9 @@ class ProcessRepository extends Repository
                 $queryBuilder->expr()->lte('ttl', intval(time() - $this->extensionSettings['processMaxRunTime'] - 3600)),
                 $queryBuilder->expr()->eq('active', 1)
             )
-            ->execute();
+            ->executeQuery();
 
-        while ($row = $statement->fetch()) {
+        while ($row = $statement->fetchAssociative()) {
             $activeProcesses[] = $row;
         }
 
@@ -178,7 +178,7 @@ class ProcessRepository extends Repository
                 $queryBuilder->expr()->lte('ttl', intval(time() - $this->extensionSettings['processMaxRunTime'])),
                 $queryBuilder->expr()->eq('active', 1)
             )
-            ->execute()->fetchAll();
+            ->executeQuery()->fetchAllAssociative();
     }
 
     /**
@@ -195,8 +195,8 @@ class ProcessRepository extends Repository
                 $queryBuilder->expr()->eq('deleted', 0),
                 $queryBuilder->expr()->gt('ttl', intval($ttl))
             )
-            ->execute()
-            ->fetchColumn(0);
+            ->executeQuery()
+            ->fetchOne();
     }
 
     public function deleteProcessesWithoutItemsAssigned(): void
@@ -207,7 +207,7 @@ class ProcessRepository extends Repository
             ->where(
                 $queryBuilder->expr()->eq('assigned_items_count', 0)
             )
-            ->execute();
+            ->executeStatement();
     }
 
     public function deleteProcessesMarkedAsDeleted(): void
@@ -218,7 +218,7 @@ class ProcessRepository extends Repository
             ->where(
                 $queryBuilder->expr()->eq('deleted', 1)
             )
-            ->execute();
+            ->executeStatement();
     }
 
     public function isProcessActive(string $processId): bool
@@ -231,8 +231,8 @@ class ProcessRepository extends Repository
                 $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId))
             )
             ->orderBy('ttl')
-            ->execute()
-            ->fetchColumn(0);
+            ->executeQuery()
+            ->fetchFirstColumn();
 
         return (bool) $isActive;
     }
@@ -264,7 +264,7 @@ class ProcessRepository extends Repository
                 $queryBuilder->expr()->eq('deleted', 0)
             )
             ->set('active', '0')
-            ->execute();
+            ->executeStatement();
     }
 
     public function addProcess(string $processId, int $systemProcessId): void
