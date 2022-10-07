@@ -26,6 +26,7 @@
 
 #### Classes
 * !!! AbstractCommandTests
+* !!! IndexedSearchCrawlerHook
 
 #### Functions & Properties
 * !!! CrawlerController->modMenu()
