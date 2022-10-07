@@ -40,7 +40,11 @@ class ConfigurationServiceTest extends UnitTestCase
      * @test
      * @dataProvider removeDisallowedConfigurationsDataProvider
      */
-    public function removeDisallowedConfigurationsReturnsExpectedArray(array $allowed, array $configuration, array $expected): void
+    public function removeDisallowedConfigurationsReturnsExpectedArray(
+        array $allowed,
+        array $configuration,
+        array $expected
+    ): void
     {
         self::assertEquals(
             $expected,
@@ -80,7 +84,13 @@ class ConfigurationServiceTest extends UnitTestCase
      * @test
      * @dataProvider getConfigurationFromPageTSDataProvider
      */
-    public function getConfigurationFromPageTS(array $pageTSConfig, int $pageId, string $mountPoint, array $compiledUrls, array $expected): void
+    public function getConfigurationFromPageTS(
+        array $pageTSConfig,
+        int $pageId,
+        string $mountPoint,
+        array $compiledUrls,
+        array $expected
+    ): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [];
 
@@ -194,10 +204,7 @@ class ConfigurationServiceTest extends UnitTestCase
             ],
             'pageId' => 1,
             'mountPoint' => '',
-            'compiledUrls' => [
-                '?id=1&L=0&S=CRAWL',
-                '?id=1&L=1&S=CRAWL',
-            ],
+            'compiledUrls' => ['?id=1&L=0&S=CRAWL', '?id=1&L=1&S=CRAWL'],
             'expected' => [
                 'myConfigurationKeyName' => [
                     'subCfg' => [
@@ -214,10 +221,7 @@ class ConfigurationServiceTest extends UnitTestCase
                         'L' => [0, 1],
                     ],
                     'origin' => 'pagets',
-                    'URLs' => [
-                        '?id=1&L=0&S=CRAWL',
-                        '?id=1&L=1&S=CRAWL',
-                    ],
+                    'URLs' => ['?id=1&L=0&S=CRAWL', '?id=1&L=1&S=CRAWL'],
                 ],
             ],
         ];
@@ -237,10 +241,7 @@ class ConfigurationServiceTest extends UnitTestCase
             ],
             'pageId' => 1,
             'mountPoint' => '',
-            'compiledUrls' => [
-                '?id=1&L=0&S=CRAWL',
-                '?id=1&L=1&S=CRAWL',
-            ],
+            'compiledUrls' => ['?id=1&L=0&S=CRAWL', '?id=1&L=1&S=CRAWL'],
             'expected' => [
                 'myConfigurationKeyName' => [
                     'subCfg' => [
@@ -259,10 +260,7 @@ class ConfigurationServiceTest extends UnitTestCase
                         'RANGE' => [6, 7, 8, 9, 10],
                     ],
                     'origin' => 'pagets',
-                    'URLs' => [
-                        '?id=1&L=0&S=CRAWL',
-                        '?id=1&L=1&S=CRAWL',
-                    ],
+                    'URLs' => ['?id=1&L=0&S=CRAWL', '?id=1&L=1&S=CRAWL'],
                 ],
             ],
         ];
@@ -282,10 +280,7 @@ class ConfigurationServiceTest extends UnitTestCase
             ],
             'pageId' => 1,
             'mountPoint' => 'mpstring',
-            'compiledUrls' => [
-                '?id=1&MP=mpstring&L=0&S=CRAWL',
-                '?id=1&MP=mpstring&L=1&S=CRAWL',
-            ],
+            'compiledUrls' => ['?id=1&MP=mpstring&L=0&S=CRAWL', '?id=1&MP=mpstring&L=1&S=CRAWL'],
             'expected' => [
                 'myConfigurationKeyName' => [
                     'subCfg' => [
@@ -302,10 +297,7 @@ class ConfigurationServiceTest extends UnitTestCase
                         'L' => [0, 1],
                     ],
                     'origin' => 'pagets',
-                    'URLs' => [
-                        '?id=1&MP=mpstring&L=0&S=CRAWL',
-                        '?id=1&MP=mpstring&L=1&S=CRAWL',
-                    ],
+                    'URLs' => ['?id=1&MP=mpstring&L=0&S=CRAWL', '?id=1&MP=mpstring&L=1&S=CRAWL'],
                 ],
             ],
         ];
@@ -326,10 +318,7 @@ class ConfigurationServiceTest extends UnitTestCase
             ],
             'pageId' => 1,
             'mountPoint' => 'mpstring',
-            'compiledUrls' => [
-                '?id=1&MP=mpstring&L=0&S=CRAWL',
-                '?id=1&MP=mpstring&L=1&S=CRAWL',
-            ],
+            'compiledUrls' => ['?id=1&MP=mpstring&L=0&S=CRAWL', '?id=1&MP=mpstring&L=1&S=CRAWL'],
             'expected' => [
                 'myConfigurationKeyName' => [
                     'subCfg' => [
@@ -346,10 +335,7 @@ class ConfigurationServiceTest extends UnitTestCase
                         'L' => [0, 1],
                     ],
                     'origin' => 'pagets',
-                    'URLs' => [
-                        '?id=1&MP=mpstring&L=0&S=CRAWL',
-                        '?id=1&MP=mpstring&L=1&S=CRAWL',
-                    ],
+                    'URLs' => ['?id=1&MP=mpstring&L=0&S=CRAWL', '?id=1&MP=mpstring&L=1&S=CRAWL'],
                 ],
             ],
         ];

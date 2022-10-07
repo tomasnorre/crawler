@@ -41,15 +41,9 @@ class AfterQueueItemAddedEventTest extends UnitTestCase
      */
     public function defaultValuesTest(): void
     {
-        self::assertEquals(
-            'qwerty',
-            $this->subject->getQueueId()
-        );
+        self::assertEquals('qwerty', $this->subject->getQueueId());
 
-        self::assertEquals(
-            ['field' => 'array'],
-            $this->subject->getFieldArray()
-        );
+        self::assertEquals(['field' => 'array'], $this->subject->getFieldArray());
     }
 
     /**
@@ -59,9 +53,6 @@ class AfterQueueItemAddedEventTest extends UnitTestCase
     {
         $differentArray = ['different' => 'array'];
         $this->subject->setFieldArray($differentArray);
-        self::assertEquals(
-            $differentArray,
-            $this->subject->getFieldArray()
-        );
+        self::assertEquals($differentArray, $this->subject->getFieldArray());
     }
 }

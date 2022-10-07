@@ -45,7 +45,9 @@ class QueueRepository extends Repository implements LoggerAwareInterface
     public function __construct()
     {
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
+        $this->extensionSettings = GeneralUtility::makeInstance(
+            ExtensionConfigurationProvider::class
+        )->getExtensionConfiguration();
 
         parent::__construct($objectManager);
     }
@@ -56,9 +58,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
         $queryBuilder
             ->update(self::TABLE_NAME)
-            ->where(
-                $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId))
-            )
+            ->where($queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId)))
             ->set('process_id', '')
             ->executeStatement();
     }
@@ -92,7 +92,10 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ->count('*')
             ->from(self::TABLE_NAME)
             ->where(
-                $queryBuilder->expr()->eq('process_id_completed', $queryBuilder->createNamedParameter($process->getProcessId())),
+                $queryBuilder->expr()->eq(
+                    'process_id_completed',
+                    $queryBuilder->createNamedParameter($process->getProcessId())
+                ),
                 $queryBuilder->expr()->gt('exec_time', 0)
             )
             ->executeQuery()
@@ -129,9 +132,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
         return $queryBuilder
             ->select('*')
             ->from(self::TABLE_NAME)
-            ->where(
-                $queryBuilder->expr()->eq('exec_time', 0)
-            )
+            ->where($queryBuilder->expr()->eq('exec_time', 0))
             ->executeQuery()->fetchAllAssociative();
     }
 
@@ -178,7 +179,12 @@ class QueueRepository extends Repository implements LoggerAwareInterface
     /**
      * Determines if a page is queued
      */
-    public function isPageInQueue(int $uid, bool $unprocessed_only = true, bool $timed_only = false, int $timestamp = 0): bool
+    public function isPageInQueue(
+        int $uid,
+        bool $unprocessed_only = true,
+        bool $timed_only = false,
+        int $timestamp = 0
+    ): bool
     {
         $isPageInQueue = false;
 
@@ -191,15 +197,11 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             );
 
         if ($unprocessed_only !== false) {
-            $statement->andWhere(
-                $queryBuilder->expr()->eq('exec_time', 0)
-            );
+            $statement->andWhere($queryBuilder->expr()->eq('exec_time', 0));
         }
 
         if ($timed_only !== false) {
-            $statement->andWhere(
-                $queryBuilder->expr()->neq('scheduled', 0)
-            );
+            $statement->andWhere($queryBuilder->expr()->neq('scheduled', 0));
         }
 
         if ($timestamp) {
@@ -222,24 +224,24 @@ class QueueRepository extends Repository implements LoggerAwareInterface
 
     public function cleanupQueue(): void
     {
-        $extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
+        $extensionSettings = GeneralUtility::makeInstance(
+            ExtensionConfigurationProvider::class
+        )->getExtensionConfiguration();
         $purgeDays = (int) $extensionSettings['purgeQueueDays'];
 
         if ($purgeDays > 0) {
             $purgeDate = time() - 24 * 60 * 60 * $purgeDays;
 
-            $queryBuilderDelete = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
+            $queryBuilderDelete = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
+                self::TABLE_NAME
+            );
             $del = $queryBuilderDelete
                 ->delete(self::TABLE_NAME)
-                ->where(
-                    'exec_time != 0 AND exec_time < ' . $purgeDate
-                )->executeStatement();
+                ->where('exec_time != 0 AND exec_time < ' . $purgeDate)->executeStatement();
 
             if ($del === 0) {
                 if ($this->logger !== null) {
-                    $this->logger->info(
-                        'No records was deleted'
-                    );
+                    $this->logger->info('No records was deleted');
                 }
             }
         }
@@ -252,7 +254,9 @@ class QueueRepository extends Repository implements LoggerAwareInterface
      */
     public function cleanUpOldQueueEntries(): void
     {
-        $extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
+        $extensionSettings = GeneralUtility::makeInstance(
+            ExtensionConfigurationProvider::class
+        )->getExtensionConfiguration();
         // 24*60*60 Seconds in 24 hours
         $processedAgeInSeconds = $extensionSettings['cleanUpProcessedAge'] * 86400;
         $scheduledAgeInSeconds = $extensionSettings['cleanUpScheduledAge'] * 86400;
@@ -263,22 +267,20 @@ class QueueRepository extends Repository implements LoggerAwareInterface
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
         $del = $queryBuilder
             ->delete(self::TABLE_NAME)
-            ->where(
-                $condition
-            )->executeStatement();
+            ->where($condition)->executeStatement();
 
         if ($del === 0) {
             if ($this->logger !== null) {
-                $this->logger->info(
-                    'No records was deleted.'
-                );
+                $this->logger->info('No records was deleted.');
             }
         }
     }
 
     public function fetchRecordsToBeCrawled(int $countInARun): array
     {
-        $queryBuilderSelect = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
+        $queryBuilderSelect = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
+            self::TABLE_NAME
+        );
         return $queryBuilderSelect
             ->select('qid', 'scheduled', 'page_id', 'sitemap_priority')
             ->from(self::TABLE_NAME)
@@ -286,7 +288,10 @@ class QueueRepository extends Repository implements LoggerAwareInterface
                 self::TABLE_NAME,
                 'pages',
                 'p',
-                $queryBuilderSelect->expr()->eq('p.uid', $queryBuilderSelect->quoteIdentifier(self::TABLE_NAME . '.page_id'))
+                $queryBuilderSelect->expr()->eq(
+                    'p.uid',
+                    $queryBuilderSelect->quoteIdentifier(self::TABLE_NAME . '.page_id')
+                )
             )
             ->where(
                 $queryBuilderSelect->expr()->eq('exec_time', 0),
@@ -303,12 +308,12 @@ class QueueRepository extends Repository implements LoggerAwareInterface
 
     public function updateProcessIdAndSchedulerForQueueIds(array $quidList, string $processId)
     {
-        $queryBuilderUpdate = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
+        $queryBuilderUpdate = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
+            self::TABLE_NAME
+        );
         return $queryBuilderUpdate
             ->update(self::TABLE_NAME)
-            ->where(
-                $queryBuilderUpdate->expr()->in('qid', $quidList)
-            )
+            ->where($queryBuilderUpdate->expr()->in('qid', $quidList))
             ->set('process_scheduled', (string) time())
             ->set('process_id', $processId)
             ->executeStatement();
@@ -321,7 +326,10 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ->update(self::TABLE_NAME)
             ->where(
                 $queryBuilder->expr()->eq('exec_time', 0),
-                $queryBuilder->expr()->in('process_id', $queryBuilder->createNamedParameter($processIds, Connection::PARAM_STR_ARRAY))
+                $queryBuilder->expr()->in(
+                    'process_id',
+                    $queryBuilder->createNamedParameter($processIds, Connection::PARAM_STR_ARRAY)
+                )
             )
             ->set('process_scheduled', '0')
             ->set('process_id', '')
@@ -333,7 +341,10 @@ class QueueRepository extends Repository implements LoggerAwareInterface
      * of a given page_id and the configuration which matches a given hash.
      * If there if none, we can skip an inner detail check
      */
-    public function noUnprocessedQueueEntriesForPageWithConfigurationHashExist(int $uid, string $configurationHash): bool
+    public function noUnprocessedQueueEntriesForPageWithConfigurationHashExist(
+        int $uid,
+        string $configurationHash
+    ): bool
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
         $noUnprocessedQueueEntriesFound = true;
@@ -343,7 +354,10 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ->from(self::TABLE_NAME)
             ->where(
                 $queryBuilder->expr()->eq('page_id', $uid),
-                $queryBuilder->expr()->eq('configuration_hash', $queryBuilder->createNamedParameter($configurationHash)),
+                $queryBuilder->expr()->eq(
+                    'configuration_hash',
+                    $queryBuilder->createNamedParameter($configurationHash)
+                ),
                 $queryBuilder->expr()->eq('exec_time', 0)
             )
             ->executeQuery()
@@ -381,7 +395,13 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ->executeStatement();
     }
 
-    public function getDuplicateQueueItemsIfExists(bool $enableTimeslot, int $timestamp, int $currentTime, int $pageId, string $parametersHash): array
+    public function getDuplicateQueueItemsIfExists(
+        bool $enableTimeslot,
+        int $timestamp,
+        int $currentTime,
+        int $pageId,
+        string $parametersHash
+    ): array
     {
         $rows = [];
 
@@ -395,35 +415,30 @@ class QueueRepository extends Repository implements LoggerAwareInterface
                 $timeBegin = $currentTime - 100;
                 $timeEnd = $currentTime + 100;
                 $queryBuilder
-                    ->where(
-                        'scheduled BETWEEN ' . $timeBegin . ' AND ' . $timeEnd . ''
-                    )
-                    ->orWhere(
-                        $queryBuilder->expr()->lte('scheduled', $currentTime)
-                    );
+                    ->where('scheduled BETWEEN ' . $timeBegin . ' AND ' . $timeEnd . '')
+                    ->orWhere($queryBuilder->expr()->lte('scheduled', $currentTime));
             } else {
                 $queryBuilder
-                    ->where(
-                        $queryBuilder->expr()->lte('scheduled', $currentTime)
-                    );
+                    ->where($queryBuilder->expr()->lte('scheduled', $currentTime));
             }
         } elseif ($timestamp > $currentTime) {
             //entry with a timestamp in the future need to have the same schedule time
             $queryBuilder
-                ->where(
-                    $queryBuilder->expr()->eq('scheduled', $timestamp)
-                );
+                ->where($queryBuilder->expr()->eq('scheduled', $timestamp));
         }
 
         $queryBuilder
+            ->andWhere($queryBuilder->expr()->eq('exec_time', 0))
+            ->andWhere($queryBuilder->expr()->eq('process_id', "''"))
             ->andWhere(
-                $queryBuilder->expr()->eq('exec_time', 0)
+                $queryBuilder->expr()->eq('page_id', $queryBuilder->createNamedParameter($pageId, \PDO::PARAM_INT))
             )
             ->andWhere(
-                $queryBuilder->expr()->eq('process_id', "''")
-            )
-            ->andWhere($queryBuilder->expr()->eq('page_id', $queryBuilder->createNamedParameter($pageId, \PDO::PARAM_INT)))
-            ->andWhere($queryBuilder->expr()->eq('parameters_hash', $queryBuilder->createNamedParameter($parametersHash, \PDO::PARAM_STR)));
+                $queryBuilder->expr()->eq('parameters_hash', $queryBuilder->createNamedParameter(
+                    $parametersHash,
+                    \PDO::PARAM_STR
+                ))
+            );
 
         $statement = $queryBuilder->executeQuery();
 
@@ -440,9 +455,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
         $queryBuilder
             ->select('*')
             ->from(self::TABLE_NAME)
-            ->where(
-                $queryBuilder->expr()->eq('page_id', $queryBuilder->createNamedParameter($id, PDO::PARAM_INT))
-            )
+            ->where($queryBuilder->expr()->eq('page_id', $queryBuilder->createNamedParameter($id, PDO::PARAM_INT)))
             ->orderBy('scheduled', 'DESC');
 
         $expressionBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
@@ -483,7 +496,10 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ->select('*')
             ->from(self::TABLE_NAME)
             ->where(
-                $queryBuilder->expr()->eq('process_id_completed', $queryBuilder->createNamedParameter($process->getProcessId())),
+                $queryBuilder->expr()->eq(
+                    'process_id_completed',
+                    $queryBuilder->createNamedParameter($process->getProcessId())
+                ),
                 $queryBuilder->expr()->gt('exec_time', 0)
             )
             ->setMaxResults(1)

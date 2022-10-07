@@ -42,24 +42,16 @@ class CrawlerTest extends UnitTestCase
     public function setDisabledTest(): void
     {
         // Checking that default the crawler is enabled
-        self::assertFalse(
-            $this->crawler->isDisabled()
-        );
+        self::assertFalse($this->crawler->isDisabled());
 
         // Checking that setDisable is default true
         $this->crawler->setDisabled();
-        self::assertTrue(
-            $this->crawler->isDisabled()
-        );
+        self::assertTrue($this->crawler->isDisabled());
 
         $this->crawler->setDisabled(true);
-        self::assertTrue(
-            $this->crawler->isDisabled()
-        );
+        self::assertTrue($this->crawler->isDisabled());
 
         $this->crawler->setDisabled(false);
-        self::assertFalse(
-            $this->crawler->isDisabled()
-        );
+        self::assertFalse($this->crawler->isDisabled());
     }
 }

@@ -41,10 +41,7 @@ class GuzzleExecutionStrategyTest extends UnitTestCase
 
     protected function setUp(): void
     {
-        $this->guzzleExecutionStrategy = $this->createPartialMock(
-            GuzzleExecutionStrategy::class,
-            ['getResponse']
-        );
+        $this->guzzleExecutionStrategy = $this->createPartialMock(GuzzleExecutionStrategy::class, ['getResponse']);
 
         $response = $this->createPartialMock(Response::class, ['getHeaderLine']);
         $response->method('getHeaderLine')
@@ -80,17 +77,11 @@ class GuzzleExecutionStrategyTest extends UnitTestCase
         }
 
         $logger = $this->prophesize(LoggerInterface::class);
-        $logger->debug(
-            $message,
-            ['crawlerId' => '2981d019ade833a37995c1b569ef87b6b5af7287']
-        )->shouldBeCalledOnce();
+        $logger->debug($message, ['crawlerId' => '2981d019ade833a37995c1b569ef87b6b5af7287'])->shouldBeCalledOnce();
 
         $crawlerId = sha1('this-is-testing');
         $url = new Uri('https://not-important.tld');
-        $guzzleExecutionStrategy = $this->createPartialMock(
-            GuzzleExecutionStrategy::class,
-            []
-        );
+        $guzzleExecutionStrategy = $this->createPartialMock(GuzzleExecutionStrategy::class, []);
         $guzzleExecutionStrategy->setLogger($logger->reveal());
 
         self::assertStringContainsString(

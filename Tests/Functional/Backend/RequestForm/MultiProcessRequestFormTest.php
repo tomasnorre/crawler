@@ -79,10 +79,18 @@ class MultiProcessRequestFormTest extends FunctionalTestCase
                 $this->prophesize(ModuleTemplateFactory::class)->reveal()
             );
         }
-        $extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
+        $extensionSettings = GeneralUtility::makeInstance(
+            ExtensionConfigurationProvider::class
+        )->getExtensionConfiguration();
         $processService = $this->prophesize(ProcessService::class);
 
-        $this->multiProcessRequestForm = GeneralUtility::makeInstance(MultiProcessRequestForm::class, $view, $infoModuleController, $extensionSettings, $processService->reveal());
+        $this->multiProcessRequestForm = GeneralUtility::makeInstance(
+            MultiProcessRequestForm::class,
+            $view,
+            $infoModuleController,
+            $extensionSettings,
+            $processService->reveal()
+        );
     }
 
     /**

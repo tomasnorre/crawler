@@ -83,11 +83,17 @@ class CrawlerInitialization implements MiddlewareInterface
      */
     private function runPollSuccessHooks(): void
     {
-        if (! is_array($GLOBALS['TSFE']->applicationData['tx_crawler']['content']['parameters']['procInstructions'] ?? false)) {
+        if (! is_array(
+            $GLOBALS['TSFE']->applicationData['tx_crawler']['content']['parameters']['procInstructions'] ?? false
+        )) {
             return;
         }
         foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'] ?? [] as $pollable) {
-            if (in_array($pollable, $GLOBALS['TSFE']->applicationData['tx_crawler']['content']['parameters']['procInstructions'], true)) {
+            if (in_array(
+                $pollable,
+                $GLOBALS['TSFE']->applicationData['tx_crawler']['content']['parameters']['procInstructions'],
+                true
+            )) {
                 if (empty($GLOBALS['TSFE']->applicationData['tx_crawler']['success'][$pollable])) {
                     $GLOBALS['TSFE']->applicationData['tx_crawler']['errorlog'][] = 'Error: Pollable extension (' . $pollable . ') did not complete successfully.';
                 }

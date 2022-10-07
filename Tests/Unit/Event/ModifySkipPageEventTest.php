@@ -40,10 +40,7 @@ class ModifySkipPageEventTest extends UnitTestCase
     public function defaultValueTest(): void
     {
         self::assertFalse($this->subject->isSkipped());
-        self::assertEquals(
-            ['dummy' => 'array'],
-            $this->subject->getPageRow()
-        );
+        self::assertEquals(['dummy' => 'array'], $this->subject->getPageRow());
     }
 
     /**
@@ -54,9 +51,6 @@ class ModifySkipPageEventTest extends UnitTestCase
         $skippedReason = 'Skipped as in exclude list';
         self::assertFalse($this->subject->isSkipped());
         $this->subject->setSkipped($skippedReason);
-        self::assertEquals(
-            $skippedReason,
-            $this->subject->isSkipped()
-        );
+        self::assertEquals($skippedReason, $this->subject->isSkipped());
     }
 }

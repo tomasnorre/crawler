@@ -73,7 +73,11 @@ class BackendModuleCest
      * Ensure that Crawler Configurations with Exclude pages set to: e.g. 6+3 is working
      * https://github.com/AOEpeople/crawler/issues/777
      */
-    public function CrawlerConfigurationWithExcludePageSixPlusThree(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    public function CrawlerConfigurationWithExcludePageSixPlusThree(
+        BackendModule $I,
+        Admin $adminStep,
+        PageTree $pageTree
+    ): void
     {
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
@@ -83,7 +87,11 @@ class BackendModuleCest
         $I->waitForText('Count: 1', 15);
     }
 
-    public function EnsureNoUserGroupsAndNoProcInstAreDisplayed(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    public function EnsureNoUserGroupsAndNoProcInstAreDisplayed(
+        BackendModule $I,
+        Admin $adminStep,
+        PageTree $pageTree
+    ): void
     {
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);

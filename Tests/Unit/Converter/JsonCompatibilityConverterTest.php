@@ -43,10 +43,7 @@ class JsonCompatibilityConverterTest extends UnitTestCase
      */
     public function jsonCompatibilityConverterTest(string $dataString, array|bool $expected): void
     {
-        self::assertEquals(
-            $expected,
-            $this->subject->convert($dataString)
-        );
+        self::assertEquals($expected, $this->subject->convert($dataString));
     }
 
     public function jsonCompatibilityConverterDataProvider(): iterable

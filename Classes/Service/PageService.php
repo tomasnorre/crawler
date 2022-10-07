@@ -44,7 +44,9 @@ class PageService
      */
     public function checkIfPageShouldBeSkipped(array $pageRow): false|string
     {
-        $extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
+        $extensionSettings = GeneralUtility::makeInstance(
+            ExtensionConfigurationProvider::class
+        )->getExtensionConfiguration();
 
         // if page is hidden
         if (! ($extensionSettings['crawlHiddenPages'] ?? false) && ($pageRow['hidden'] ?? false)) {
@@ -57,7 +59,11 @@ class PageService
 
         foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['excludeDoktype'] ?? [] as $key => $doktypeList) {
             if (GeneralUtility::inList($doktypeList, $pageRow['doktype'])) {
-                return sprintf('Doktype "%d" was excluded by excludeDoktype configuration key "%s"', $pageRow['doktype'], $key);
+                return sprintf(
+                    'Doktype "%d" was excluded by excludeDoktype configuration key "%s"',
+                    $pageRow['doktype'],
+                    $key
+                );
             }
         }
 

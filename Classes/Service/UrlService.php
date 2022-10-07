@@ -41,7 +41,12 @@ class UrlService
      * @throws \Doctrine\DBAL\DBALException
      * @throws \Doctrine\DBAL\Driver\Exception
      */
-    public function getUrlFromPageAndQueryParameters(int $pageId, string $queryString, ?string $alternativeBaseUrl, int $httpsOrHttp): ?UriInterface
+    public function getUrlFromPageAndQueryParameters(
+        int $pageId,
+        string $queryString,
+        ?string $alternativeBaseUrl,
+        int $httpsOrHttp
+    ): ?UriInterface
     {
         $url = new Uri();
         $site = GeneralUtility::makeInstance(SiteMatcher::class)->matchByPageId($pageId);
@@ -120,7 +125,9 @@ class UrlService
         foreach ($urls as $url) {
             foreach ($valueSet as $val) {
                 if (count($newUrls) < $maxUrlToCompile) {
-                    $newUrls[] = $url . (strcmp((string) $val, '') ? '&' . rawurlencode($varName) . '=' . rawurlencode((string) $val) : '');
+                    $newUrls[] = $url . (strcmp((string) $val, '') ? '&' . rawurlencode($varName) . '=' . rawurlencode(
+                        (string) $val
+                    ) : '');
                 }
             }
         }

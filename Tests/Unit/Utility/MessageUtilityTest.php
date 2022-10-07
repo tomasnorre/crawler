@@ -40,7 +40,9 @@ class MessageUtilityTest extends UnitTestCase
 
     protected function setUp(): void
     {
-        $this->flashMessageQueue = GeneralUtility::makeInstance(FlashMessageService::class)->getMessageQueueByIdentifier();
+        $this->flashMessageQueue = GeneralUtility::makeInstance(
+            FlashMessageService::class
+        )->getMessageQueueByIdentifier();
         // Done to have the queue cleared to not stack the messages
         $this->flashMessageQueue->clear();
 
@@ -68,20 +70,11 @@ class MessageUtilityTest extends UnitTestCase
 
         $messages = self::getMessages();
 
-        self::assertCount(
-            1,
-            $messages
-        );
+        self::assertCount(1, $messages);
 
-        self::assertEquals(
-            $messageText,
-            $messages[0]->getMessage()
-        );
+        self::assertEquals($messageText, $messages[0]->getMessage());
 
-        self::assertEquals(
-            FlashMessage::NOTICE,
-            $messages[0]->getSeverity()
-        );
+        self::assertEquals(FlashMessage::NOTICE, $messages[0]->getSeverity());
     }
 
     /**
@@ -94,20 +87,11 @@ class MessageUtilityTest extends UnitTestCase
 
         $messages = self::getMessages();
 
-        self::assertCount(
-            1,
-            $messages
-        );
+        self::assertCount(1, $messages);
 
-        self::assertEquals(
-            $messageText,
-            $messages[0]->getMessage()
-        );
+        self::assertEquals($messageText, $messages[0]->getMessage());
 
-        self::assertEquals(
-            FlashMessage::ERROR,
-            $messages[0]->getSeverity()
-        );
+        self::assertEquals(FlashMessage::ERROR, $messages[0]->getSeverity());
     }
 
     /**
@@ -119,20 +103,11 @@ class MessageUtilityTest extends UnitTestCase
         MessageUtility::addWarningMessage($messageText);
 
         $messages = self::getMessages();
-        self::assertCount(
-            1,
-            $messages
-        );
+        self::assertCount(1, $messages);
 
-        self::assertEquals(
-            $messageText,
-            $messages[0]->getMessage()
-        );
+        self::assertEquals($messageText, $messages[0]->getMessage());
 
-        self::assertEquals(
-            FlashMessage::WARNING,
-            $messages[0]->getSeverity()
-        );
+        self::assertEquals(FlashMessage::WARNING, $messages[0]->getSeverity());
     }
 
     /**

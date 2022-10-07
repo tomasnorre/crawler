@@ -48,15 +48,9 @@ class UrlServiceTest extends UnitTestCase
      */
     public function compileUrls(array $paramArray, array $urls, array $expected, int $expectedCount): void
     {
-        self::assertEquals(
-            $expected,
-            $this->urlService->compileUrls($paramArray, $urls)
-        );
+        self::assertEquals($expected, $this->urlService->compileUrls($paramArray, $urls));
 
-        self::assertCount(
-            $expectedCount,
-            $this->urlService->compileUrls($paramArray, $urls)
-        );
+        self::assertCount($expectedCount, $this->urlService->compileUrls($paramArray, $urls));
     }
 
     public function compileUrlsDataProvider(): iterable

@@ -43,34 +43,19 @@ class RequestFormFactoryTest extends FunctionalTestCase
         $crawlActionLog = new CrawlAction('log');
         self::assertInstanceOf(
             LogRequestForm::class,
-            RequestFormFactory::create(
-                $crawlActionLog,
-                $view,
-                $infoModule,
-                []
-            )
+            RequestFormFactory::create($crawlActionLog, $view, $infoModule, [])
         );
 
         $crawlActionLog = new CrawlAction('multiprocess');
         self::assertInstanceOf(
             MultiProcessRequestForm::class,
-            RequestFormFactory::create(
-                $crawlActionLog,
-                $view,
-                $infoModule,
-                []
-            )
+            RequestFormFactory::create($crawlActionLog, $view, $infoModule, [])
         );
 
         $crawlActionLog = new CrawlAction('start');
         self::assertInstanceOf(
             StartRequestForm::class,
-            RequestFormFactory::create(
-                $crawlActionLog,
-                $view,
-                $infoModule,
-                []
-            )
+            RequestFormFactory::create($crawlActionLog, $view, $infoModule, [])
         );
     }
 

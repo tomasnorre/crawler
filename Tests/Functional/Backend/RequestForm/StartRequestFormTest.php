@@ -82,8 +82,15 @@ class StartRequestFormTest extends FunctionalTestCase
             );
         }
 
-        $extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
-        $this->startRequestForm = GeneralUtility::makeInstance(StartRequestForm::class, $view, $infoModuleController, $extensionSettings);
+        $extensionSettings = GeneralUtility::makeInstance(
+            ExtensionConfigurationProvider::class
+        )->getExtensionConfiguration();
+        $this->startRequestForm = GeneralUtility::makeInstance(
+            StartRequestForm::class,
+            $view,
+            $infoModuleController,
+            $extensionSettings
+        );
     }
 
     /**

@@ -60,9 +60,7 @@ class ItemProviderTest extends UnitTestCase
     public function canHandleTxCrawlerConfigurationTable(): void
     {
         $subject = new ItemProvider('tx_crawler_configuration', 'identifier');
-        self::assertTrue(
-            $subject->canHandle()
-        );
+        self::assertTrue($subject->canHandle());
     }
 
     /**
@@ -71,9 +69,7 @@ class ItemProviderTest extends UnitTestCase
     public function cannotHandleTxCrawlerQueueTable(): void
     {
         $subject = new ItemProvider('tx_crawler_queue', 'identifier');
-        self::assertFalse(
-            $subject->canHandle()
-        );
+        self::assertFalse($subject->canHandle());
     }
 
     /**
@@ -82,9 +78,6 @@ class ItemProviderTest extends UnitTestCase
     public function getPriorityReturnsExpectedValue(): void
     {
         $subject = new ItemProvider('tx_crawler_configuration', 'identifier');
-        self::assertEquals(
-            50,
-            $subject->getPriority()
-        );
+        self::assertEquals(50, $subject->getPriority());
     }
 }

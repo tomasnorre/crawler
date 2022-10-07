@@ -64,10 +64,7 @@ class FrontendUserAuthenticatorTest extends FunctionalTestCase
 
         $response = $this->subject->process($request->reveal(), $handler->reveal());
 
-        self::assertStringContainsString(
-            'No crawler entry found',
-            $response->getBody()->getContents()
-        );
+        self::assertStringContainsString('No crawler entry found', $response->getBody()->getContents());
     }
 
     /**
@@ -88,7 +85,9 @@ class FrontendUserAuthenticatorTest extends FunctionalTestCase
         $request = $this->prophesize(ServerRequestInterface::class);
         $request->getHeaderLine('X-T3CRAWLER')->willReturn($headerLine);
         $crawlerRequest = $this->prophesize(ServerRequestInterface::class);
-        $crawlerRequest->getAttribute('frontend.user')->willReturn($this->prophesize(FrontendUserAuthentication::class));
+        $crawlerRequest->getAttribute('frontend.user')->willReturn(
+            $this->prophesize(FrontendUserAuthentication::class)
+        );
         $request->withAttribute('tx_crawler', $queueParametersArray)->willReturn($crawlerRequest);
         $request->withAttribute('tx_crawler', false)->willReturn($crawlerRequest);
 
@@ -107,10 +106,7 @@ class FrontendUserAuthenticatorTest extends FunctionalTestCase
             );
         }
 
-        self::assertEquals(
-            200,
-            $response->getStatusCode()
-        );
+        self::assertEquals(200, $response->getStatusCode());
     }
 
     public function processSetsExpectedUserGroupsDataProvider(): iterable

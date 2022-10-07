@@ -61,49 +61,22 @@ class QueueRowTest extends UnitTestCase
         $queueRow->setOptions($options);
         $queueRow->setParameters($parameters);
 
-        self::assertEquals(
-            $pageTitle,
-            $queueRow->pageTitle
-        );
+        self::assertEquals($pageTitle, $queueRow->pageTitle);
 
-        self::assertEquals(
-            $pageTitleHtml,
-            $queueRow->pageTitleHTML
-        );
+        self::assertEquals($pageTitleHtml, $queueRow->pageTitleHTML);
 
-        self::assertEquals(
-            $message,
-            $queueRow->message
-        );
+        self::assertEquals($message, $queueRow->message);
 
-        self::assertEquals(
-            $configurationKey,
-            $queueRow->configurationKey
-        );
+        self::assertEquals($configurationKey, $queueRow->configurationKey);
 
-        self::assertEquals(
-            $parameterConfig,
-            $queueRow->parameterConfig
-        );
+        self::assertEquals($parameterConfig, $queueRow->parameterConfig);
 
-        self::assertEquals(
-            $valueExpanded,
-            $queueRow->valuesExpanded
-        );
+        self::assertEquals($valueExpanded, $queueRow->valuesExpanded);
 
-        self::assertEquals(
-            $urls,
-            $queueRow->urls
-        );
+        self::assertEquals($urls, $queueRow->urls);
 
-        self::assertEquals(
-            $options,
-            $queueRow->options
-        );
+        self::assertEquals($options, $queueRow->options);
 
-        self::assertEquals(
-            $parameters,
-            $queueRow->parameters
-        );
+        self::assertEquals($parameters, $queueRow->parameters);
     }
 }

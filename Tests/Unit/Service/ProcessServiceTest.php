@@ -40,10 +40,7 @@ class ProcessServiceTest extends UnitTestCase
      */
     public function startProcess(): void
     {
-        $mockedProcessRepository = $this->createPartialMock(
-            ProcessRepository::class,
-            ['countNotTimeouted']
-        );
+        $mockedProcessRepository = $this->createPartialMock(ProcessRepository::class, ['countNotTimeouted']);
 
         // This is done to fake that the process is started, the process start itself isn't tested, but the code around is.
         $mockedProcessRepository
@@ -70,10 +67,7 @@ class ProcessServiceTest extends UnitTestCase
         $this->expectException(ProcessException::class);
         $this->expectExceptionMessage('Something went wrong: process did not appear within 10 seconds.');
 
-        $mockedProcessRepository = $this->createPartialMock(
-            ProcessRepository::class,
-            ['countNotTimeouted']
-        );
+        $mockedProcessRepository = $this->createPartialMock(ProcessRepository::class, ['countNotTimeouted']);
 
         // This is done to fake that the process is started, the process start itself isn't tested, but the code around is.
         $mockedProcessRepository

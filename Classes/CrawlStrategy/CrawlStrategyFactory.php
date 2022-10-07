@@ -13,7 +13,9 @@ final class CrawlStrategyFactory
 
     public function __construct(?ExtensionConfigurationProvider $configurationProvider = null)
     {
-        $this->configurationProvider = $configurationProvider ?? GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
+        $this->configurationProvider = $configurationProvider ?? GeneralUtility::makeInstance(
+            ExtensionConfigurationProvider::class
+        );
     }
 
     public function create(): CrawlStrategyInterface

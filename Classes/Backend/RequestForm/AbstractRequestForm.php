@@ -52,19 +52,24 @@ class AbstractRequestForm
     {
         if (! $this->isPhpForkAvailable()) {
             $this->isErrorDetected = true;
-            MessageUtility::addErrorMessage($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:message.noPhpForkAvailable'));
+            MessageUtility::addErrorMessage(
+                $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:message.noPhpForkAvailable')
+            );
         }
 
         $exitCode = 0;
         $out = [];
-        CommandUtility::exec(
-            PhpBinaryUtility::getPhpBinary() . ' -v',
-            $out,
-            $exitCode
-        );
+        CommandUtility::exec(PhpBinaryUtility::getPhpBinary() . ' -v', $out, $exitCode);
         if ($exitCode > 0) {
             $this->isErrorDetected = true;
-            MessageUtility::addErrorMessage(sprintf($this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:message.phpBinaryNotFound'), htmlspecialchars($extensionSettings['phpPath'], ENT_QUOTES | ENT_HTML5)));
+            MessageUtility::addErrorMessage(
+                sprintf($this->getLanguageService()->sL(
+                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:message.phpBinaryNotFound'
+                ), htmlspecialchars(
+                    $extensionSettings['phpPath'],
+                    ENT_QUOTES | ENT_HTML5
+                ))
+            );
         }
     }
 

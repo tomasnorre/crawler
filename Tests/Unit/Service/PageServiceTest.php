@@ -45,10 +45,7 @@ class PageServiceTest extends UnitTestCase
         $mockedEventDispatcher = $this->createStub(EventDispatcher::class);
         $mockedEventDispatcher->method('dispatch')->willReturn($modifySkipPageEvent);
 
-        $this->subject = GeneralUtility::makeInstance(
-            PageService::class,
-            $mockedEventDispatcher
-        );
+        $this->subject = GeneralUtility::makeInstance(PageService::class, $mockedEventDispatcher);
     }
 
     /**
@@ -56,7 +53,13 @@ class PageServiceTest extends UnitTestCase
      *
      * @dataProvider checkIfPageShouldBeSkippedDataProvider
      */
-    public function checkIfPageShouldBeSkipped(array $extensionSetting, array $pageRow, array $excludeDoktype, array $pageVeto, string $expected): void
+    public function checkIfPageShouldBeSkipped(
+        array $extensionSetting,
+        array $pageRow,
+        array $excludeDoktype,
+        array $pageVeto,
+        string $expected
+    ): void
     {
         if (empty($expected)) {
             $expected = false;
@@ -66,10 +69,7 @@ class PageServiceTest extends UnitTestCase
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['excludeDoktype'] = $excludeDoktype;
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pageVeto'] = $pageVeto;
 
-        self::assertEquals(
-            $expected,
-            $this->subject->checkIfPageShouldBeSkipped($pageRow)
-        );
+        self::assertEquals($expected, $this->subject->checkIfPageShouldBeSkipped($pageRow));
     }
 
     public function checkIfPageShouldBeSkippedDataProvider(): iterable
