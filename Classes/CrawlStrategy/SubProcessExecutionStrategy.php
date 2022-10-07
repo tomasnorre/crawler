@@ -33,18 +33,15 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * Executes another process via shell_exec() to include cli/bootstrap.php which in turn
  * includes the index.php for frontend.
  */
-class SubProcessExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
+class SubProcessExecutionStrategy implements LoggerAwareInterface, CrawlStrategyInterface
 {
     use LoggerAwareTrait;
 
-    /**
-     * @var array
-     */
-    protected $extensionSettings;
+    protected array $extensionSettings;
 
     public function __construct(?ExtensionConfigurationProvider $configurationProvider = null)
     {
-        $configurationProvider = $configurationProvider ?? GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
+        $configurationProvider ??= GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
         $settings = $configurationProvider->getExtensionConfiguration();
         $this->extensionSettings = is_array($settings) ? $settings : [];
     }

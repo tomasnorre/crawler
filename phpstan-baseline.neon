@@ -1,51 +1,14 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
+			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Result\\|int\\.$#"
 			count: 1
 			path: Classes/Api/CrawlerApi.php
 
 		-
-			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
+			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Result\\|int\\.$#"
 			count: 1
 			path: Classes/Api/CrawlerApi.php
-
-		-
-			message: "#^Parameter \\#1 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
-			count: 2
-			path: Classes/Api/CrawlerApi.php
-
-		-
-			message: "#^Parameter \\#1 \\.\\.\\.\\$where of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:andWhere\\(\\) expects array\\<int, string\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
-			count: 2
-			path: Classes/Api/CrawlerApi.php
-
-		-
-			message:
-				"""
-					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
-					since TYPO3 10\\.4, will be removed in version 12\\.0$#
-				"""
-			count: 2
-			path: Classes/Backend/BackendModule.php
-
-		-
-			message:
-				"""
-					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\ForwardCompatibility\\\\Result\\:
-					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
-				"""
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
-			message:
-				"""
-					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
-					since TYPO3 10\\.4, will be removed in version 12\\.0$#
-				"""
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
 			message: "#^Cannot access offset 'alturl' on array\\|bool\\.$#"
@@ -68,12 +31,12 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\ForwardCompatibility\\\\Result\\|int\\.$#"
+			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Result\\|int\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Class cognitive complexity is 71, keep it under 60$#"
+			message: "#^Class cognitive complexity is 72, keep it under 60$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
@@ -83,12 +46,7 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:getDepthDropDownHtml\\(\\) has parameter \\$id with no typehint specified\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
-			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:render\\(\\) has parameter \\$id with no typehint specified\\.$#"
+			message: "#^Offset 'result_data' does not exist on array\\('parameters' \\=\\> array\\|bool\\)\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
@@ -98,37 +56,12 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Parameter \\#2 \\$row of method TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\IconFactory\\:\\:getIconForRecord\\(\\) expects array, array\\|false given\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
-			message: "#^Property AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:\\$queryBuilder \\(Doctrine\\\\DBAL\\\\Query\\\\QueryBuilder\\) does not accept TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
-			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\MultiProcessRequestForm\\:\\:render\\(\\) has parameter \\$id with no typehint specified\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/MultiProcessRequestForm.php
-
-		-
 			message: "#^Unable to resolve the template type T in call to method static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\)$#"
 			count: 1
 			path: Classes/Backend/RequestForm/MultiProcessRequestForm.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\RequestFormInterface\\:\\:render\\(\\) has parameter \\$id with no typehint specified\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/RequestFormInterface.php
-
-		-
 			message: "#^Call to function is_array\\(\\) with string will always evaluate to false\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/StartRequestForm.php
-
-		-
-			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\StartRequestForm\\:\\:render\\(\\) has parameter \\$id with no typehint specified\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/StartRequestForm.php
 
@@ -138,27 +71,9 @@ parameters:
 			path: Classes/Backend/RequestForm/StartRequestForm.php
 
 		-
-			message:
-				"""
-					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
-					since TYPO3 10\\.4, will be removed in version 12\\.0$#
-				"""
-			count: 2
-			path: Classes/Command/BuildQueueCommand.php
-
-		-
 			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|null given\\.$#"
 			count: 1
 			path: Classes/Command/BuildQueueCommand.php
-
-		-
-			message:
-				"""
-					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
-					since TYPO3 10\\.4, will be removed in version 12\\.0$#
-				"""
-			count: 1
-			path: Classes/Command/FlushQueueCommand.php
 
 		-
 			message: "#^Call to an undefined method object\\:\\:crawler_init\\(\\)\\.$#"
@@ -168,55 +83,9 @@ parameters:
 		-
 			message:
 				"""
-					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
-					since TYPO3 10\\.4, will be removed in version 12\\.0$#
+					#^Call to deprecated method shortMD5\\(\\) of class TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:
+					since v11, will be removed in v12\\.$#
 				"""
-			count: 2
-			path: Classes/Command/ProcessQueueCommand.php
-
-		-
-			message:
-				"""
-					#^Fetching deprecated class constant CLI_STATUS_ABORTED of class AOE\\\\Crawler\\\\Command\\\\ProcessQueueCommand\\:
-					since 9\\.2\\.5 will be made private in v11\\.x$#
-				"""
-			count: 6
-			path: Classes/Command/ProcessQueueCommand.php
-
-		-
-			message:
-				"""
-					#^Fetching deprecated class constant CLI_STATUS_NOTHING_PROCCESSED of class AOE\\\\Crawler\\\\Command\\\\ProcessQueueCommand\\:
-					since 9\\.2\\.5 will be made private in v11\\.x$#
-				"""
-			count: 2
-			path: Classes/Command/ProcessQueueCommand.php
-
-		-
-			message:
-				"""
-					#^Fetching deprecated class constant CLI_STATUS_PROCESSED of class AOE\\\\Crawler\\\\Command\\\\ProcessQueueCommand\\:
-					since 9\\.2\\.5 will be made private in v11\\.x$#
-				"""
-			count: 1
-			path: Classes/Command/ProcessQueueCommand.php
-
-		-
-			message:
-				"""
-					#^Fetching deprecated class constant CLI_STATUS_REMAIN of class AOE\\\\Crawler\\\\Command\\\\ProcessQueueCommand\\:
-					since 9\\.2\\.5 will be made private in v11\\.x$#
-				"""
-			count: 1
-			path: Classes/Command/ProcessQueueCommand.php
-
-		-
-			message: "#^Parameter \\#1 \\$input of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:shortMD5\\(\\) expects string, float given\\.$#"
-			count: 1
-			path: Classes/Command/ProcessQueueCommand.php
-
-		-
-			message: "#^Parameter \\#1 \\$messages of method Symfony\\\\Component\\\\Console\\\\Output\\\\OutputInterface\\:\\:writeln\\(\\) expects iterable\\|string, int given\\.$#"
 			count: 1
 			path: Classes/Command/ProcessQueueCommand.php
 
@@ -231,26 +100,17 @@ parameters:
 			path: Classes/Configuration/ExtensionConfigurationProvider.php
 
 		-
-			message: "#^Parameter \\#2 \\$uid of static method TYPO3\\\\CMS\\\\Backend\\\\Utility\\\\BackendUtility\\:\\:getRecordWSOL\\(\\) expects int, string given\\.$#"
+			message: "#^Offset 'name' does not exist on array\\|null\\.$#"
 			count: 1
 			path: Classes/ContextMenu/ItemProvider.php
 
 		-
 			message:
 				"""
-					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
+					#^Call to deprecated method shortMD5\\(\\) of class TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:
+					since v11, will be removed in v12\\.$#
 				"""
 			count: 1
-			path: Classes/Controller/CrawlerController.php
-
-		-
-			message:
-				"""
-					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
-					since TYPO3 10\\.4, will be removed in version 12\\.0$#
-				"""
-			count: 3
 			path: Classes/Controller/CrawlerController.php
 
 		-
@@ -264,12 +124,12 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
+			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Result\\|int\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Class cognitive complexity is 101, keep it under 60$#"
+			message: "#^Class cognitive complexity is 102, keep it under 60$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -289,17 +149,7 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Parameter \\#1 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
-			count: 1
-			path: Classes/Controller/CrawlerController.php
-
-		-
-			message: "#^Parameter \\#1 \\.\\.\\.\\$where of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:andWhere\\(\\) expects array\\<int, string\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
-			count: 2
-			path: Classes/Controller/CrawlerController.php
-
-		-
-			message: "#^Parameter \\#2 \\$str of function explode expects string, true given\\.$#"
+			message: "#^Parameter \\#2 \\$string of function explode expects string, true given\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -307,11 +157,6 @@ parameters:
 			message: "#^Property AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:\\$MP \\(bool\\) does not accept string\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
-
-		-
-			message: "#^Call to function is_object\\(\\) with mixed will always evaluate to false\\.$#"
-			count: 1
-			path: Classes/Converter/JsonCompatibilityConverter.php
 
 		-
 			message: "#^Method AOE\\\\Crawler\\\\CrawlStrategy\\\\CallbackExecutionStrategy\\:\\:fetchByCallback\\(\\) has no return typehint specified\\.$#"
@@ -329,14 +174,9 @@ parameters:
 			path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
 
 		-
-			message: "#^Interface AOE\\\\Crawler\\\\CrawlStrategy\\\\CrawlStrategy should end with \"Interface\" suffix\\.$#"
+			message: "#^Method AOE\\\\Crawler\\\\CrawlStrategy\\\\CrawlStrategyInterface\\:\\:fetchUrlContents\\(\\) has no return typehint specified\\.$#"
 			count: 1
-			path: Classes/CrawlStrategy/CrawlStrategy.php
-
-		-
-			message: "#^Method AOE\\\\Crawler\\\\CrawlStrategy\\\\CrawlStrategy\\:\\:fetchUrlContents\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: Classes/CrawlStrategy/CrawlStrategy.php
+			path: Classes/CrawlStrategy/CrawlStrategyInterface.php
 
 		-
 			message: "#^Cannot call method debug\\(\\) on Psr\\\\Log\\\\LoggerInterface\\|null\\.$#"
@@ -349,91 +189,17 @@ parameters:
 			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
 
 		-
-			message:
-				"""
-					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
-					since TYPO3 10\\.4, will be removed in version 12\\.0$#
-				"""
+			message: "#^Method AOE\\\\Crawler\\\\CrawlStrategy\\\\SubProcessExecutionStrategy\\:\\:executeShellCommand\\(\\) should return string\\|null but returns string\\|false\\|null\\.$#"
 			count: 1
-			path: Classes/Domain/Model/Process.php
+			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
 
 		-
 			message:
 				"""
-					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
+					#^Fetching class constant class of deprecated class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+					since v11, will be removed in v12\\. Use symfony DI and GeneralUtility\\:\\:makeInstance\\(\\) instead\\.
+					             See TYPO3 explained documentation for more information\\.$#
 				"""
-			count: 1
-			path: Classes/Domain/Repository/ConfigurationRepository.php
-
-		-
-			message:
-				"""
-					#^Call to deprecated method fetchAll\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchAllNumeric\\(\\), fetchAllAssociative\\(\\) or fetchFirstColumn\\(\\) instead\\.$#
-				"""
-			count: 1
-			path: Classes/Domain/Repository/ConfigurationRepository.php
-
-		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 1
-			path: Classes/Domain/Repository/ConfigurationRepository.php
-
-		-
-			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 1
-			path: Classes/Domain/Repository/ConfigurationRepository.php
-
-		-
-			message: "#^Parameter \\#1 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
-			count: 1
-			path: Classes/Domain/Repository/ConfigurationRepository.php
-
-		-
-			message:
-				"""
-					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
-				"""
-			count: 4
-			path: Classes/Domain/Repository/ProcessRepository.php
-
-		-
-			message:
-				"""
-					#^Call to deprecated method fetchAll\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchAllNumeric\\(\\), fetchAllAssociative\\(\\) or fetchFirstColumn\\(\\) instead\\.$#
-				"""
-			count: 1
-			path: Classes/Domain/Repository/ProcessRepository.php
-
-		-
-			message:
-				"""
-					#^Call to deprecated method fetchColumn\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchOne\\(\\) instead\\.$#
-				"""
-			count: 2
-			path: Classes/Domain/Repository/ProcessRepository.php
-
-		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 4
-			path: Classes/Domain/Repository/ProcessRepository.php
-
-		-
-			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 1
-			path: Classes/Domain/Repository/ProcessRepository.php
-
-		-
-			message: "#^Cannot call method fetchColumn\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 2
-			path: Classes/Domain/Repository/ProcessRepository.php
-
-		-
-			message: "#^Method AOE\\\\Crawler\\\\Domain\\\\Repository\\\\ProcessRepository\\:\\:findByProcessId\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: Classes/Domain/Repository/ProcessRepository.php
 
@@ -448,65 +214,13 @@ parameters:
 			path: Classes/Domain/Repository/ProcessRepository.php
 
 		-
-			message: "#^Parameter \\#1 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
-			count: 10
-			path: Classes/Domain/Repository/ProcessRepository.php
-
-		-
-			message: "#^Parameter \\#2 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
-			count: 5
-			path: Classes/Domain/Repository/ProcessRepository.php
-
-		-
-			message: "#^Parameter \\#3 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
+			message:
+				"""
+					#^Fetching class constant class of deprecated class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+					since v11, will be removed in v12\\. Use symfony DI and GeneralUtility\\:\\:makeInstance\\(\\) instead\\.
+					             See TYPO3 explained documentation for more information\\.$#
+				"""
 			count: 1
-			path: Classes/Domain/Repository/ProcessRepository.php
-
-		-
-			message:
-				"""
-					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
-				"""
-			count: 9
-			path: Classes/Domain/Repository/QueueRepository.php
-
-		-
-			message:
-				"""
-					#^Call to deprecated method fetchAll\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchAllNumeric\\(\\), fetchAllAssociative\\(\\) or fetchFirstColumn\\(\\) instead\\.$#
-				"""
-			count: 4
-			path: Classes/Domain/Repository/QueueRepository.php
-
-		-
-			message:
-				"""
-					#^Call to deprecated method fetchColumn\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchOne\\(\\) instead\\.$#
-				"""
-			count: 7
-			path: Classes/Domain/Repository/QueueRepository.php
-
-		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 9
-			path: Classes/Domain/Repository/QueueRepository.php
-
-		-
-			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 4
-			path: Classes/Domain/Repository/QueueRepository.php
-
-		-
-			message: "#^Cannot call method fetchColumn\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 7
-			path: Classes/Domain/Repository/QueueRepository.php
-
-		-
-			message: "#^Cannot call method info\\(\\) on Psr\\\\Log\\\\LoggerInterface\\|null\\.$#"
-			count: 2
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
@@ -520,40 +234,25 @@ parameters:
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
-			message: "#^Parameter \\#1 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
-			count: 24
-			path: Classes/Domain/Repository/QueueRepository.php
-
-		-
-			message: "#^Parameter \\#1 \\.\\.\\.\\$where of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:andWhere\\(\\) expects array\\<int, string\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
-			count: 11
-			path: Classes/Domain/Repository/QueueRepository.php
-
-		-
-			message: "#^Parameter \\#1 \\.\\.\\.\\$where of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:orWhere\\(\\) expects array\\<int, string\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
+			message: "#^Method AOE\\\\Crawler\\\\Event\\\\ModifySkipPageEvent\\:\\:isSkipped\\(\\) should return string\\|false but returns bool\\|string\\.$#"
 			count: 1
-			path: Classes/Domain/Repository/QueueRepository.php
-
-		-
-			message: "#^Parameter \\#2 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
-			count: 13
-			path: Classes/Domain/Repository/QueueRepository.php
-
-		-
-			message: "#^Parameter \\#3 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
-			count: 6
-			path: Classes/Domain/Repository/QueueRepository.php
-
-		-
-			message: "#^Strict comparison using \\=\\=\\= between Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int and false will always evaluate to false\\.$#"
-			count: 2
-			path: Classes/Domain/Repository/QueueRepository.php
+			path: Classes/Event/ModifySkipPageEvent.php
 
 		-
 			message:
 				"""
 					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
 					since TYPO3 10\\.4, will be removed in version 12\\.0$#
+				"""
+			count: 3
+			path: Classes/Hooks/DataHandlerHook.php
+
+		-
+			message:
+				"""
+					#^Fetching class constant class of deprecated class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+					since v11, will be removed in v12\\. Use symfony DI and GeneralUtility\\:\\:makeInstance\\(\\) instead\\.
+					             See TYPO3 explained documentation for more information\\.$#
 				"""
 			count: 3
 			path: Classes/Hooks/DataHandlerHook.php
@@ -619,17 +318,17 @@ parameters:
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
 		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
+			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Result\\|int\\.$#"
 			count: 5
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
 		-
-			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
+			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Result\\|int\\.$#"
 			count: 3
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
 		-
-			message: "#^Cannot call method fetchColumn\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
+			message: "#^Cannot call method fetchColumn\\(\\) on Doctrine\\\\DBAL\\\\Result\\|int\\.$#"
 			count: 1
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
@@ -654,32 +353,12 @@ parameters:
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
 		-
-			message: "#^Parameter \\#1 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
-			count: 10
-			path: Classes/Hooks/IndexedSearchCrawlerHook.php
-
-		-
-			message: "#^Parameter \\#2 \\$str of function explode expects string, string\\|null given\\.$#"
+			message: "#^Parameter \\#2 \\$string of function explode expects string, string\\|null given\\.$#"
 			count: 1
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
 		-
-			message: "#^Parameter \\#2 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
-			count: 4
-			path: Classes/Hooks/IndexedSearchCrawlerHook.php
-
-		-
-			message: "#^Parameter \\#3 \\$length of function substr expects int, int\\<0, max\\>\\|false given\\.$#"
-			count: 1
-			path: Classes/Hooks/IndexedSearchCrawlerHook.php
-
-		-
-			message: "#^Parameter \\#3 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
-			count: 1
-			path: Classes/Hooks/IndexedSearchCrawlerHook.php
-
-		-
-			message: "#^Parameter \\#5 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
+			message: "#^Parameter \\#3 \\$length of function substr expects int\\|null, int\\|false given\\.$#"
 			count: 1
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
@@ -699,83 +378,26 @@ parameters:
 			path: Classes/Hooks/IndexedSearchCrawlerHook.php
 
 		-
-			message:
-				"""
-					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
-					since TYPO3 10\\.4, will be removed in version 12\\.0$#
-				"""
-			count: 2
-			path: Classes/Hooks/ProcessCleanUpHook.php
-
-		-
-			message:
-				"""
-					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
-				"""
+			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Result\\|int\\.$#"
 			count: 1
 			path: Classes/Middleware/FrontendUserAuthenticator.php
 
 		-
-			message: "#^Cannot access offset 'feUserGroupList' on array\\|bool\\.$#"
+			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Result\\|int\\.$#"
 			count: 1
-			path: Classes/Middleware/FrontendUserAuthenticator.php
+			path: Classes/Service/ConfigurationService.php
 
 		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 1
-			path: Classes/Middleware/FrontendUserAuthenticator.php
-
-		-
-			message: "#^Parameter \\#1 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
-			count: 1
-			path: Classes/Middleware/FrontendUserAuthenticator.php
-
-		-
-			message:
-				"""
-					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
-				"""
+			message: "#^Class cognitive complexity is 84, keep it under 60$#"
 			count: 1
 			path: Classes/Service/ConfigurationService.php
 
 		-
 			message:
 				"""
-					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
-					since TYPO3 10\\.4, will be removed in version 12\\.0$#
+					#^Fetching class constant class of deprecated class TYPO3\\\\CMS\\\\Core\\\\Database\\\\QueryGenerator\\:
+					since v11, will be removed in v12$#
 				"""
-			count: 1
-			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 1
-			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: "#^Class cognitive complexity is 98, keep it under 60$#"
-			count: 1
-			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: "#^Method AOE\\\\Crawler\\\\Service\\\\ConfigurationService\\:\\:addValuesInRange\\(\\) has parameter \\$parameter with no typehint specified\\.$#"
-			count: 1
-			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: "#^Method AOE\\\\Crawler\\\\Service\\\\ConfigurationService\\:\\:expandPidList\\(\\) has parameter \\$depth with no typehint specified\\.$#"
-			count: 1
-			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: "#^Method AOE\\\\Crawler\\\\Service\\\\ConfigurationService\\:\\:runExpandParametersHook\\(\\) has parameter \\$parameter with no typehint specified\\.$#"
-			count: 1
-			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: "#^Method AOE\\\\Crawler\\\\Service\\\\ConfigurationService\\:\\:runExpandParametersHook\\(\\) has parameter \\$path with no typehint specified\\.$#"
 			count: 1
 			path: Classes/Service/ConfigurationService.php
 
@@ -785,58 +407,14 @@ parameters:
 			path: Classes/Service/ConfigurationService.php
 
 		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$depth\\)\\: Unexpected token \"\\$depth\", expected type at offset 18$#"
-			count: 1
-			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$parameter\\)\\: Unexpected token \"\\$parameter\", expected type at offset 18$#"
-			count: 2
-			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$path\\)\\: Unexpected token \"\\$path\", expected type at offset 43$#"
-			count: 1
-			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: "#^Parameter \\#1 \\$uid of method TYPO3\\\\CMS\\\\Backend\\\\Tree\\\\View\\\\AbstractTreeView\\:\\:getTree\\(\\) expects int, string given\\.$#"
-			count: 1
-			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: "#^Parameter \\#1 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
-			count: 1
-			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: "#^Parameter \\#1 \\.\\.\\.\\$where of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:andWhere\\(\\) expects array\\<int, string\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
-			count: 1
-			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: "#^Parameter \\#2 \\.\\.\\.\\$predicates of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder\\:\\:where\\(\\) expects array\\<int, mixed\\>\\|Doctrine\\\\DBAL\\\\Query\\\\Expression\\\\CompositeExpression, string given\\.$#"
-			count: 1
-			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: "#^Parameter \\#4 \\$permClause of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\QueryGenerator\\:\\:getTreeList\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: Classes/Service/ConfigurationService.php
-
-		-
 			message: "#^Possibly invalid array key type \\(array\\|string\\)\\.$#"
 			count: 3
 			path: Classes/Service/ConfigurationService.php
 
 		-
-			message:
-				"""
-					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
-					since TYPO3 10\\.4, will be removed in version 12\\.0$#
-				"""
+			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Result\\|int\\.$#"
 			count: 1
-			path: Classes/Service/ProcessService.php
+			path: Classes/Service/UrlService.php
 
 		-
 			message: "#^Function getUrlFromPageAndQueryParameters\\(\\) has an unused variable \\$siteLanguage\\.$#"
@@ -844,9 +422,9 @@ parameters:
 			path: Classes/Service/UrlService.php
 
 		-
-			message: "#^Parameter \\#1 \\$route of method TYPO3\\\\CMS\\\\Core\\\\Routing\\\\RouterInterface\\:\\:generateUri\\(\\) expects array\\|string, int given\\.$#"
+			message: "#^Parameter \\#3 \\$_unused of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\ExtensionManagementUtility\\:\\:insertModuleFunction\\(\\) expects string, null given\\.$#"
 			count: 1
-			path: Classes/Service/UrlService.php
+			path: Classes/Utility/BackendUtility.php
 
 		-
 			message: "#^Constant TYPO3_MODE not found\\.$#"

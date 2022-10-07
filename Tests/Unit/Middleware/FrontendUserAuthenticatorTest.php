@@ -21,16 +21,19 @@ namespace AOE\Crawler\Tests\Unit\Middleware;
 
 use AOE\Crawler\Middleware\FrontendUserAuthenticator;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use TYPO3\CMS\Core\Http\Response;
 
 /**
  * @covers \AOE\Crawler\Middleware\FrontendUserAuthenticator
  */
 class FrontendUserAuthenticatorTest extends UnitTestCase
 {
-    /**
-     * @var FrontendUserAuthenticator
-     */
-    protected $subject;
+    use ProphecyTrait;
+
+    protected \Nimut\TestingFramework\MockObject\AccessibleMockObjectInterface|\PHPUnit\Framework\MockObject\MockObject $subject;
 
     protected function setUp(): void
     {
@@ -40,40 +43,18 @@ class FrontendUserAuthenticatorTest extends UnitTestCase
 
     /**
      * @test
-     * @dataProvider isRequestHashMatchingQueueRecordDataProvider
      */
-    public function isRequestHashMatchingQueueRecord($queueRecord, $hash, $expected): void
+    public function processRequestNotHandled(): void
     {
-        self::assertSame(
-            $this->subject->_call('isRequestHashMatchingQueueRecord', $queueRecord, $hash),
-            $expected
-        );
-    }
+        $request = $this->prophesize(ServerRequestInterface::class);
+        $request->getHeaderLine('X-T3CRAWLER')->willReturn(null);
 
-    public function isRequestHashMatchingQueueRecordDataProvider(): iterable
-    {
-        $queueRecord = [
-            'qid' => '1234',
-            'set_id' => '4321',
-        ];
+        $handlerResponse = new Response();
+        $handler = $this->prophesize(RequestHandlerInterface::class);
+        $handler->handle($request->reveal())->willReturn($handlerResponse);
 
-        // Faking the TYPO3 Encryption key as the DataProvider doesn't know about the TYPO3_CONF array
-        $encryptionKey = md5('this_is_an_insecure_encryption_key');
+        $response = $this->subject->process($request->reveal(), $handler->reveal());
 
-        yield 'Hash match' => [
-            'queueRecord' => $queueRecord,
-            'hash' => md5($queueRecord['qid'] . '|' . $queueRecord['set_id'] . '|' . $encryptionKey),
-            'expected' => true,
-        ];
-        yield 'Hash does not match' => [
-            'queueRecord' => $queueRecord,
-            'hash' => md5('qid' . '|' . 'set_id' . '|' . $encryptionKey),
-            'expected' => false,
-        ];
-        yield 'queueRecord is not an array, there returning false' => [
-            'queueRecord' => null,
-            'hash' => '',
-            'expected' => false,
-        ];
+        self::assertSame($handlerResponse, $response);
     }
 }

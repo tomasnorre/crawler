@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Functional\Command;
+namespace AOE\Crawler\Helper\Sleeper;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2022 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -19,19 +19,13 @@ namespace AOE\Crawler\Tests\Functional\Command;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Service\ProcessService;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-
-/**
+/*
+ * @internal
  * @codeCoverageIgnore
  */
-class AbstractCommandTests extends FunctionalTestCase
+final class NullSleeper implements SleeperInterface
 {
-    protected function getTypo3TestBinaryCommand(): string
+    public function sleep(int $seconds): void
     {
-        $processService = GeneralUtility::makeInstance(ProcessService::class);
-
-        return substr($processService->getCrawlerCliPath(), 0, -21);
     }
 }

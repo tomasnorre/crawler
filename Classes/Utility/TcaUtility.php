@@ -34,7 +34,7 @@ class TcaUtility
      */
     public function getProcessingInstructions(array $configuration)
     {
-        $configuration = $configuration ?? ['items' => []];
+        $configuration ??= ['items' => []];
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'] ?? null)) {
             foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'] as $extensionKey => $extensionConfiguration) {
                 $configuration['items'][] = [$extensionConfiguration['value'] . ' [' . $extensionConfiguration['key'] . ']', $extensionConfiguration['key'], $this->getExtensionIcon($extensionKey)];
@@ -50,7 +50,7 @@ class TcaUtility
      * @param string $extensionKey Like staticfilecache or indexed_search
      * @return string
      */
-    protected function getExtensionIcon($extensionKey)
+    private function getExtensionIcon($extensionKey)
     {
         return ExtensionManagementUtility::getExtensionIcon(ExtensionManagementUtility::extPath($extensionKey), true);
     }

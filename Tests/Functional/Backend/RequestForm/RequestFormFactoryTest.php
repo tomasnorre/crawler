@@ -24,9 +24,9 @@ use AOE\Crawler\Backend\RequestForm\MultiProcessRequestForm;
 use AOE\Crawler\Backend\RequestForm\RequestFormFactory;
 use AOE\Crawler\Backend\RequestForm\StartRequestForm;
 use AOE\Crawler\Value\CrawlAction;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Info\Controller\InfoModuleController;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 class RequestFormFactoryTest extends FunctionalTestCase
 {

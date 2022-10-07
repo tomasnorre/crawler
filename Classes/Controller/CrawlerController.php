@@ -35,6 +35,7 @@ use AOE\Crawler\Service\PageService;
 use AOE\Crawler\Service\UrlService;
 use AOE\Crawler\Value\QueueRow;
 use PDO;
+use Psr\Http\Message\UriInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
@@ -50,7 +51,6 @@ use TYPO3\CMS\Core\Type\Bitmask\Permission;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class CrawlerController
@@ -63,139 +63,41 @@ class CrawlerController implements LoggerAwareInterface
 
     public const CLI_STATUS_POLLABLE_PROCESSED = 8;
 
-    /**
-     * @var integer
-     */
-    public $setID = 0;
-
-    /**
-     * @var string
-     */
-    public $processID = '';
-
-    /**
-     * @var array
-     */
-    public $duplicateTrack = [];
-
-    /**
-     * @var array
-     */
-    public $downloadUrls = [];
-
-    /**
-     * @var array
-     */
-    public $incomingProcInstructions = [];
-
-    /**
-     * @var array
-     */
-    public $incomingConfigurationSelection = [];
-
-    /**
-     * @var bool
-     */
-    public $registerQueueEntriesInternallyOnly = false;
-
-    /**
-     * @var array
-     */
-    public $queueEntries = [];
-
-    /**
-     * @var array
-     */
-    public $urlList = [];
-
-    /**
-     * @var array
-     */
-    public $extensionSettings = [];
+    public int $setID = 0;
+    public string $processID = '';
+    public array $duplicateTrack = [];
+    public array $downloadUrls = [];
+    public array $incomingProcInstructions = [];
+    public array $incomingConfigurationSelection = [];
+    public bool $registerQueueEntriesInternallyOnly = false;
+    public array $queueEntries = [];
+    public array $urlList = [];
+    public array $extensionSettings = [];
 
     /**
      * Mount Point
-     *
-     * @var bool
      * Todo: Check what this is used for and adjust the type hint or code, as bool doesn't match the current code.
      */
-    public $MP = false;
-
-    /**
-     * @var QueueRepository
-     */
-    protected $queueRepository;
-
-    /**
-     * @var ProcessRepository
-     */
-    protected $processRepository;
-
-    /**
-     * @var ConfigurationRepository
-     */
-    protected $configurationRepository;
-
-    /**
-     * @var QueueExecutor
-     */
-    protected $queueExecutor;
-
-    /**
-     * @var int
-     */
-    protected $maximumUrlsToCompile = 10000;
-
-    /**
-     * @var IconFactory
-     */
-    protected $iconFactory;
+    public bool $MP = false;
+    protected QueueRepository $queueRepository;
+    protected ProcessRepository $processRepository;
+    protected ConfigurationRepository $configurationRepository;
+    protected QueueExecutor $queueExecutor;
+    protected int $maximumUrlsToCompile = 10000;
+    protected IconFactory $iconFactory;
 
     /**
      * @var BackendUserAuthentication|null
      */
     private $backendUser;
-
-    /**
-     * @var integer
-     */
-    private $scheduledTime = 0;
-
-    /**
-     * @var integer
-     */
-    private $reqMinute = 0;
-
-    /**
-     * @var bool
-     */
-    private $submitCrawlUrls = false;
-
-    /**
-     * @var bool
-     */
-    private $downloadCrawlUrls = false;
-
-    /**
-     * @var PageRepository
-     */
-    private $pageRepository;
-
-    /**
-     * @var Crawler
-     */
-    private $crawler;
-
-    /**
-     * @var ConfigurationService
-     */
-    private $configurationService;
-
-    /**
-     * @var UrlService
-     */
-    private $urlService;
-
+    private int $scheduledTime = 0;
+    private int $reqMinute = 0;
+    private bool $submitCrawlUrls = false;
+    private bool $downloadCrawlUrls = false;
+    private PageRepository $pageRepository;
+    private Crawler $crawler;
+    private ConfigurationService $configurationService;
+    private UrlService $urlService;
     private EventDispatcher $eventDispatcher;
 
     /************************************
@@ -206,18 +108,17 @@ class CrawlerController implements LoggerAwareInterface
 
     public function __construct()
     {
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $crawlStrategyFactory = GeneralUtility::makeInstance(CrawlStrategyFactory::class);
-        $this->queueRepository = $objectManager->get(QueueRepository::class);
-        $this->processRepository = $objectManager->get(ProcessRepository::class);
-        $this->configurationRepository = $objectManager->get(ConfigurationRepository::class);
+        $this->queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
+        $this->processRepository = GeneralUtility::makeInstance(ProcessRepository::class);
+        $this->configurationRepository = GeneralUtility::makeInstance(ConfigurationRepository::class);
         $this->pageRepository = GeneralUtility::makeInstance(PageRepository::class);
-        $this->queueExecutor = GeneralUtility::makeInstance(QueueExecutor::class, $crawlStrategyFactory);
+        $this->eventDispatcher = GeneralUtility::makeInstance(EventDispatcher::class);
+        $this->queueExecutor = GeneralUtility::makeInstance(QueueExecutor::class, $crawlStrategyFactory, $this->eventDispatcher);
         $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
         $this->crawler = GeneralUtility::makeInstance(Crawler::class);
         $this->configurationService = GeneralUtility::makeInstance(ConfigurationService::class);
         $this->urlService = GeneralUtility::makeInstance(UrlService::class);
-        $this->eventDispatcher = GeneralUtility::makeInstance(EventDispatcher::class);
 
         /** @var ExtensionConfigurationProvider $configurationProvider */
         $configurationProvider = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
@@ -250,20 +151,19 @@ class CrawlerController implements LoggerAwareInterface
      * It returns an array of configurations and no urls!
      *
      * @param array $pageRow Page record with at least dok-type and uid columns.
-     * @param string $skipMessage
-     * @return array
      * @see getUrlsForPageId()
      */
-    public function getUrlsForPageRow(array $pageRow, &$skipMessage = '')
+    public function getUrlsForPageRow(array $pageRow, string &$skipMessage = ''): array
     {
-        if (! is_int($pageRow['uid'])) {
-            $skipMessage = 'PageUid ' . $pageRow['uid'] . ' was not an integer';
+        $pageRowUid = intval($pageRow['uid']);
+        if (!$pageRowUid) {
+            $skipMessage = 'PageUid "' . $pageRow['uid'] . '" was not an integer';
             return [];
         }
 
         $message = $this->getPageService()->checkIfPageShouldBeSkipped($pageRow);
         if ($message === false) {
-            $res = $this->getUrlsForPageId($pageRow['uid']);
+            $res = $this->getUrlsForPageId($pageRowUid);
             $skipMessage = '';
         } else {
             $skipMessage = $message;
@@ -291,14 +191,14 @@ class CrawlerController implements LoggerAwareInterface
     public function urlListFromUrlArray(
         array $vv,
         array $pageRow,
-        $scheduledTime,
-        $reqMinute,
-        $submitCrawlUrls,
-        $downloadCrawlUrls,
+        int $scheduledTime,
+        int $reqMinute,
+        bool $submitCrawlUrls,
+        bool $downloadCrawlUrls,
         array &$duplicateTrack,
         array &$downloadUrls,
         array $incomingProcInstructions
-    ) {
+    ): string {
         if (! is_array($vv['URLs'])) {
             return 'ERROR - no URL generated';
         }
@@ -313,12 +213,18 @@ class CrawlerController implements LoggerAwareInterface
             if (! $this->drawURLs_PIfilter($vv['subCfg']['procInstrFilter'] ?? '', $incomingProcInstructions)) {
                 continue;
             }
-            $url = (string) $urlService->getUrlFromPageAndQueryParameters(
+            $url = $urlService->getUrlFromPageAndQueryParameters(
                 $pageId,
                 $urlQuery,
                 $vv['subCfg']['baseUrl'] ?? null,
                 $vv['subCfg']['force_ssl'] ?? 0
             );
+
+            if (! $url instanceof UriInterface) {
+                continue;
+            }
+
+            $url = (string) $url;
 
             // Create key by which to determine unique-ness:
             $uKey = $url . '|' . ($vv['subCfg']['userGroups'] ?? '') . '|' . ($vv['subCfg']['procInstrFilter'] ?? '');
@@ -366,7 +272,7 @@ class CrawlerController implements LoggerAwareInterface
      * @param array $incomingProcInstructions Processing instructions
      * @return boolean
      */
-    public function drawURLs_PIfilter($piString, array $incomingProcInstructions)
+    public function drawURLs_PIfilter(string $piString, array $incomingProcInstructions)
     {
         if (empty($incomingProcInstructions)) {
             return true;
@@ -407,7 +313,7 @@ class CrawlerController implements LoggerAwareInterface
     }
 
     /**
-     * This methods returns an array of configurations.
+     * This method returns an array of configurations.
      * Adds no urls!
      */
     public function getUrlsForPageId(int $pageId): array
@@ -580,8 +486,7 @@ class CrawlerController implements LoggerAwareInterface
                     $fieldArray['parameters_hash']
                 );
             }
-
-            if (empty($rows)) {
+            if ($rows === []) {
                 $connectionForCrawlerQueue = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(QueueRepository::TABLE_NAME);
                 $connectionForCrawlerQueue->insert(
                     QueueRepository::TABLE_NAME,
@@ -646,7 +551,7 @@ class CrawlerController implements LoggerAwareInterface
         }
 
         /** @var BeforeQueueItemAddedEvent $event */
-        $event = $this->eventDispatcher->dispatch(new BeforeQueueItemAddedEvent($queueId, $queueRec));
+        $event = $this->eventDispatcher->dispatch(new BeforeQueueItemAddedEvent((int) $queueId, $queueRec));
         $queueRec = $event->getQueueRecord();
 
         // Set exec_time to lock record:

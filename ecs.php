@@ -34,6 +34,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             'PhpCsFixer\Fixer\ClassNotation\ClassAttributesSeparationFixer' => null,
             'PhpCsFixer\Fixer\Whitespace\ArrayIndentationFixer' => null,
             'PhpCsFixer\Fixer\FunctionNotation\MethodArgumentSpaceFixer' => null,
+            'PhpCsFixer\Fixer\Strict\StrictParamFixer' => null,
             'PHP_CodeSniffer\Standards\Generic\Sniffs\CodeAnalysis\AssignmentInConditionSniff.FoundInWhileCondition' => null,
             PhpUnitStrictFixer::class => null,
             PhpUnitTestAnnotationFixer::class => null,

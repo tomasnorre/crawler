@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AOE\Crawler\Middleware;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2022 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -37,10 +37,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class CrawlerInitialization implements MiddlewareInterface
 {
-    /**
-     * @var Context
-     */
-    protected $context;
+    protected Context $context;
 
     public function __construct(?Context $context = null)
     {
@@ -84,7 +81,7 @@ class CrawlerInitialization implements MiddlewareInterface
      * Required because some extensions (staticpub) might never be requested to run due to some Core side effects
      * and since this is considered as error the crawler should handle it properly
      */
-    protected function runPollSuccessHooks(): void
+    private function runPollSuccessHooks(): void
     {
         if (! is_array($GLOBALS['TSFE']->applicationData['tx_crawler']['content']['parameters']['procInstructions'] ?? false)) {
             return;

@@ -24,7 +24,6 @@ use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Hooks\ProcessCleanUpHook;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class ProcessCleanUpHookTest
@@ -33,25 +32,11 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  */
 class ProcessCleanUpHookTest extends FunctionalTestCase
 {
-    /**
-     * @var ProcessCleanUpHook
-     */
-    protected $subject;
+    protected \AOE\Crawler\Hooks\ProcessCleanUpHook $subject;
 
-    /**
-     * @var ProcessRepository
-     */
-    protected $processRepository;
+    protected \AOE\Crawler\Domain\Repository\ProcessRepository $processRepository;
 
-    /**
-     * @var QueueRepository
-     */
-    protected $queueRepository;
-
-    /**
-     * @var \TYPO3\CMS\Extbase\Object\ObjectManager
-     */
-    protected $objectManager;
+    protected \AOE\Crawler\Domain\Repository\QueueRepository $queueRepository;
 
     /**
      * @var array
@@ -62,12 +47,10 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
     {
         parent::setUp();
 
-        $this->objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-
         /** @var ProcessCleanUpHook $this->subject */
-        $this->subject = $this->objectManager->get(ProcessCleanUpHook::class);
-        $this->processRepository = $this->objectManager->get(ProcessRepository::class);
-        $this->queueRepository = $this->objectManager->get(QueueRepository::class);
+        $this->subject = GeneralUtility::makeInstance(ProcessCleanUpHook::class);
+        $this->processRepository = GeneralUtility::makeInstance(ProcessRepository::class);
+        $this->queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
 
         // Include Fixtures
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_process.xml');

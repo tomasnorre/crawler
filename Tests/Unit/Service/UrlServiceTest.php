@@ -28,15 +28,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class UrlServiceTest extends UnitTestCase
 {
-    /**
-     * @var array
-     */
-    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+    protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    /**
-     * @var UrlService
-     */
-    protected $urlService;
+    protected \AOE\Crawler\Service\UrlService $urlService;
 
     /**
      * Creates the test environment.

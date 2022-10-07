@@ -170,4 +170,47 @@ class DataHandlerHookTest extends UnitTestCase
             $dataHandler
         );
     }
+
+    /**
+     * Page with ID 1 is not in queue, should be added
+     * Page with ID 2 is already in queue. Should NOT be added.
+     *
+     * @test
+     */
+    public function ensureThatPageIdArrayIsConvertedToInteger(): void
+    {
+        $dataHandlerHook = new DataHandlerHook();
+
+        $queueService = $this->prophesize(QueueService::class);
+        $queueService->addPageToQueue(1)->shouldBeCalled();
+
+        $queueRepository = $this->prophesize(QueueRepository::class);
+        $queueRepository->isPageInQueue(1)->willReturn(false);
+        $queueRepository->isPageInQueue(2)->willReturn(true);
+
+        $pageRepository = $this->prophesize(PageRepository::class);
+        $pageRepository->getPage(1)->willReturn(['Faking that page exists as not empty array']);
+        $pageRepository->getPage(2)->willReturn(['Faking that page exists as not empty array']);
+
+        $objectManager = $this->prophesize(ObjectManager::class);
+        $objectManager->get(QueueRepository::class)->willReturn($queueRepository->reveal());
+        $objectManager->get(QueueService::class)->willReturn($queueService->reveal());
+        $objectManager->get(PageRepository::class)->willReturn($pageRepository->reveal());
+
+        $cacheManager = $this->prophesize(CacheManager::class);
+        $cacheManager->getCache(Argument::any())->willReturn($this->prophesize(FrontendInterface::class)->reveal());
+
+        GeneralUtility::setSingletonInstance(CacheManager::class, $cacheManager->reveal());
+        GeneralUtility::setSingletonInstance(ObjectManager::class, $objectManager->reveal());
+
+        $dataHandler = new DataHandler();
+
+        $dataHandlerHook->addFlushedPagesToCrawlerQueue(
+            [
+                'table' => 'pages',
+                'pageIdArray' => ['0', '1', '2'],
+            ],
+            $dataHandler
+        );
+    }
 }

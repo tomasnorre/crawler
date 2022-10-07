@@ -30,21 +30,7 @@ use TYPO3\CMS\Info\Controller\InfoModuleController;
 
 final class StartRequestForm extends AbstractRequestForm implements RequestFormInterface
 {
-    /**
-     * @var StandaloneView
-     */
-    private $view;
-
-    /**
-     * @var InfoModuleController
-     */
-    private $infoModuleController;
-
-    /**
-     * @var int
-     */
-    private $reqMinute = 1000;
-
+    private int $reqMinute = 1000;
     private EventDispatcher $eventDispatcher;
 
     /**
@@ -53,18 +39,16 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
     private $incomingConfigurationSelection = [];
 
     public function __construct(
-        StandaloneView $view,
-        InfoModuleController $infoModuleController,
+        private StandaloneView $view,
+        private InfoModuleController $infoModuleController,
         array $extensionSettings,
         EventDispatcher $eventDispatcher = null
     ) {
-        $this->view = $view;
-        $this->infoModuleController = $infoModuleController;
         $this->extensionSettings = $extensionSettings;
         $this->eventDispatcher = $eventDispatcher ?? GeneralUtility::makeInstance(EventDispatcher::class);
     }
 
-    public function render($id, string $elementName, array $menuItems): string
+    public function render(int $id, string $elementName, array $menuItems): string
     {
         return $this->showCrawlerInformationAction($id);
     }
@@ -100,7 +84,7 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
         $this->incomingConfigurationSelection = GeneralUtility::_GP('configurationSelection');
         $this->incomingConfigurationSelection = is_array($this->incomingConfigurationSelection) ? $this->incomingConfigurationSelection : [];
 
-        $this->crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
+        $this->crawlerController = $this->getCrawlerController();
         $this->crawlerController->setID = GeneralUtility::md5int(microtime());
 
         $queueRows = '';
@@ -175,7 +159,7 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
         );
 
         // Configurations
-        $availableConfigurations = $this->crawlerController->getConfigurationsForBranch($pageId, (int) $this->infoModuleController->MOD_SETTINGS['depth'] ?: 0);
+        $availableConfigurations = $this->getCrawlerController()->getConfigurationsForBranch($pageId, (int) $this->infoModuleController->MOD_SETTINGS['depth'] ?: 0);
         $selectors['configurations'] = $this->selectorBox(
             empty($availableConfigurations) ? [] : array_combine($availableConfigurations, $availableConfigurations),
             'configurationSelection',
@@ -203,12 +187,12 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
      *
      * @param array $optArray Options key(value) => label pairs
      * @param string $name Selector box name
-     * @param string|array $value Selector box value (array for multiple...)
+     * @param string|array|null $value Selector box value (array for multiple...)
      * @param boolean $multiple If set, will draw multiple box.
      *
      * @return string HTML select element
      */
-    private function selectorBox($optArray, $name, $value, bool $multiple): string
+    private function selectorBox($optArray, $name, string|array|null $value, bool $multiple): string
     {
         if (! is_string($value) || ! is_array($value)) {
             $value = '';
@@ -229,23 +213,25 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
      */
     private function getScheduledTime(string $time)
     {
-        switch ($time) {
-            case 'midnight':
-                $scheduledTime = mktime(0, 0, 0);
-                break;
-            case '04:00':
-                $scheduledTime = mktime(0, 0, 0) + 4 * 3600;
-                break;
-            case 'now':
-            default:
-                $scheduledTime = time();
-                break;
-        }
+        $scheduledTime = match ($time) {
+            'midnight' => mktime(0, 0, 0),
+            '04:00' => mktime(0, 0, 0) + 4 * 3600,
+            default => time(),
+        };
 
         if (! $scheduledTime) {
             return time();
         }
 
         return $scheduledTime;
+    }
+
+    private function getCrawlerController(): CrawlerController
+    {
+        if ($this->crawlerController === null) {
+            $this->crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
+        }
+
+        return $this->crawlerController;
     }
 }

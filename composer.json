@@ -1,9 +1,8 @@
 {
     "name": "tomasnorre/crawler",
-    "type": "typo3-cms-extension",
     "description": "Crawler extension for TYPO3",
-    "homepage": "https://github.com/tomasnorre/crawler",
     "license": "GPL-3.0",
+    "type": "typo3-cms-extension",
     "authors": [
         {
             "name": "Tomas Norre Mikkelsen",
@@ -11,8 +10,12 @@
             "role": "Developer"
         }
     ],
+    "homepage": "https://github.com/tomasnorre/crawler",
+    "support": {
+        "issues": "https://github.com/tomasnorre/crawler/issues"
+    },
     "require": {
-        "php": "^7.4 || ^8.0",
+        "php": "^8.0",
         "ext-json": "*",
         "ext-pdo": "*",
         "beberlei/assert": "^3.3",
@@ -20,16 +23,11 @@
         "psr/http-message": "^1.0",
         "psr/log": "^1.0",
         "symfony/console": "^5.0",
-        "symfony/polyfill-php80": "^1.23",
         "typo3/cms-backend": "*",
-        "typo3/cms-core": "^10.4.11 || ^11.5",
+        "typo3/cms-core": "^11.5 || ^12.0",
         "typo3/cms-frontend": "*",
         "typo3/cms-info": "*",
         "typo3/cms-seo": "*"
-    },
-    "replace": {
-        "aoepeople/crawler": "self.version",
-        "typo3-ter/crawler": "self.version"
     },
     "require-dev": {
         "codeception/codeception": "^4.1",
@@ -37,10 +35,11 @@
         "codeception/module-filesystem": "^1.0",
         "codeception/module-phpbrowser": "^1.0",
         "codeception/module-webdriver": "^1.0",
+        "cweagans/composer-patches": "^1.7",
         "infection/infection": "^0.26",
         "nikic/php-parser": "^4.13",
-        "nimut/testing-framework": "6.x-dev || dev-php81-compat",
-        "nimut/typo3-complete": "^10.4",
+        "nimut/testing-framework": "^6.0 || dev-main",
+        "nimut/typo3-complete": "^11.5",
         "phpspec/prophecy-phpunit": "^2.0",
         "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan": "0.12.99",
@@ -53,32 +52,60 @@
         "symfony/yaml": "^4.4 || ^5.0",
         "symplify/easy-coding-standard": "9.4.32",
         "symplify/phpstan-rules": "9.3.0",
-        "typo3/testing-framework": "^6.11",
-        "vimeo/psalm": "^4.18"
+        "typo3/testing-framework": "^6.11"
+    },
+    "replace": {
+        "aoepeople/crawler": "self.version",
+        "typo3-ter/crawler": "self.version"
     },
     "suggest": {
         "typo3/cms-seo": "Enables the posibility to priorities your Crawler Queue + You have seo features in the CMS it self."
     },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/symplify/phpstan-rules"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "AOE\\Crawler\\": "Classes"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "AOE\\Crawler\\Tests\\": "Tests",
+            "TYPO3\\CMS\\Core\\Tests\\": ".Build/Web/typo3/sysext/core/Tests"
+        }
+    },
     "config": {
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true,
+            "cweagans/composer-patches": true,
+            "infection/extension-installer": true,
+            "phpstan/extension-installer": true,
+            "typo3/class-alias-loader": true,
+            "typo3/cms-composer-installers": true
+        },
         "bin-dir": ".Build/bin",
         "preferred-install": {
-            "typo3/cms-core": "source",
-            "*": "dist"
+            "*": "dist",
+            "typo3/cms-core": "source"
         },
         "process-timeout": 0,
         "sort-packages": true,
-        "vendor-dir": ".Build/vendor",
-        "allow-plugins": {
-            "phpstan/extension-installer": true,
-            "typo3/class-alias-loader": true,
-            "typo3/cms-composer-installers": true,
-            "infection/extension-installer": true,
-            "composer/package-versions-deprecated": true
-        }
+        "vendor-dir": ".Build/vendor"
     },
     "extra": {
         "branch-alias": {
-            "dev-main": "11.0.x-dev"
+            "dev-main": "12.0.x-dev"
+        },
+        "patches": {
+            "nimut/testing-framework": {
+                "Reset setDBInit + initCommands for PostgreSQL": "Build/nimut-testing-framework-postgresql.patch"
+            }
         },
         "typo3/class-alias-loader": {
             "class-alias-maps": [
@@ -91,34 +118,12 @@
             "web-dir": ".Build/Web"
         }
     },
-    "autoload": {
-        "psr-4": {
-            "AOE\\Crawler\\": "Classes"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "AOE\\Crawler\\Tests\\": "Tests",
-            "TYPO3\\CMS\\Core\\Tests\\": ".Build/Web/typo3/sysext/core/Tests"
-        }
-    },
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/symplify/phpstan-rules"
-        },
-        {
-            "type": "git",
-            "url": "https://github.com/tomasnorre/testing-framework.git"
-        }
-    ],
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "scripts": {
         "post-autoload-dump": [
             "mkdir -p .Build/Web/typo3conf/ext/",
             "[ -L .Build/Web/typo3conf/ext/crawler ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/crawler",
-            "export TYPO3_PATH_WEB=$PWD/.Build/Web"
+            "export TYPO3_PATH_WEB=$PWD/.Build/Web",
+            "@extension-create-libs"
         ],
         "analyse": [
             "[ -e .Build/bin/phpstan ] || composer update",
@@ -154,8 +159,8 @@
             ".Build/bin/phpstan analyse --generate-baseline"
         ],
         "psalm": [
-            "[ -e .Build/bin/psalm ] || composer update",
-            ".Build/bin/psalm"
+            "[ -e tools/psalm ] || phive install",
+            "tools/psalm"
         ],
         "rector": [
             "[ -e .Build/bin/rector ] || composer update",
@@ -177,22 +182,41 @@
         "test:all": [
             "@test:unit",
             "@test:functional",
+            "@test:functional-sqlite",
             "@test:acceptance"
         ],
         "test:functional": [
+            "@test:reset-vars",
+            "@extension-create-libs",
             "[ -e .Build/bin/phpunit ] || composer update",
             "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseName=crawler typo3DatabaseHost=127.0.0.1 typo3DatabaseUsername=root typo3DatabasePassword=root .Build/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml Tests/Functional"
+        ],
+        "test:functional-postgre": [
+            "@test:reset-vars",
+            "@extension-create-libs",
+            "[ -e .Build/bin/phpunit ] || composer update",
+            "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseDriver=pdo_pgsql typo3DatabaseName=crawler typo3DatabaseHost=127.0.0.1 typo3DatabaseUsername=root typo3DatabasePassword=root .Build/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml Tests/Functional"
+        ],
+        "test:functional-sqlite": [
+            "@test:reset-vars",
+            "@extension-create-libs",
+            "[ -e .Build/bin/phpunit ] || composer update",
+            "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseDriver=pdo_sqlite typo3DatabaseName=test .Build/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml Tests/Functional"
         ],
         "test:mutation": [
             "[ -e .Build/bin/infection ] || composer update",
             "XDEBUG_MODE=coverage .Build/bin/infection --threads=8"
         ],
+        "test:reset-vars": [
+            "export typo3DatabaseName=''",
+            "export typo3DatabaseHost=''",
+            "export typo3DatabaseUsername=''",
+            "export typo3DatabasePassword=''",
+            "export typo3DatabaseDriver=''"
+        ],
         "test:unit": [
             "[ -e .Build/bin/phpunit ] || composer update",
             "TYPO3_PATH_WEB=.Build/Web .Build/bin/phpunit --colors -c .Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/Unit"
         ]
-    },
-    "support": {
-        "issues": "https://github.com/tomasnorre/crawler/issues"
     }
 }

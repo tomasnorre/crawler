@@ -25,7 +25,7 @@ enableTimeslot=1
 ## Processing
 #########
 
-# cat=Processing; type=int [0-10000]; label= Sleep time between requests: Time in milliseconds the crawler should sleep between requesting urls: low = faster / high = less stress for the server
+# cat=Processing; type=int [0-10000]; label= Sleep time between requests: Time in microseconds the crawler should sleep between requesting urls: low = faster / high = less stress for the server
 sleepTime = 1000
 
 # cat=Processing; type=int [0-100]; label= Sleep time after finishing: Time in seconds the crawler should sleep before finishing

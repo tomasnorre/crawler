@@ -12,78 +12,41 @@ use AOE\Crawler\Utility\MessageUtility;
 use AOE\Crawler\Value\QueueFilter;
 use AOE\Crawler\Writer\FileWriter\CsvWriter\CrawlerCsvWriter;
 use AOE\Crawler\Writer\FileWriter\CsvWriter\CsvWriterInterface;
-use Doctrine\DBAL\Query\QueryBuilder;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Info\Controller\InfoModuleController;
 
 final class LogRequestForm extends AbstractRequestForm implements RequestFormInterface
 {
-    /**
-     * @var StandaloneView
-     */
-    private $view;
+    private JsonCompatibilityConverter $jsonCompatibilityConverter;
+    private int $pageId;
+    private bool $CSVExport = false;
+    private QueryBuilder $queryBuilder;
+    private CsvWriterInterface $csvWriter;
+    private QueueRepository $queueRepository;
 
-    /**
-     * @var JsonCompatibilityConverter
-     */
-    private $jsonCompatibilityConverter;
+    private array $CSVaccu = [];
 
-    /**
-     * @var int
-     */
-    private $pageId;
-
-    /**
-     * @var bool
-     */
-    private $CSVExport = false;
-
-    /**
-     * @var InfoModuleController
-     */
-    private $infoModuleController;
-
-    /**
-     * @var QueryBuilder
-     */
-    private $queryBuilder;
-
-    /**
-     * @var CsvWriterInterface
-     */
-    private $csvWriter;
-
-    /**
-     * @var QueueRepository
-     */
-    private $queueRepository;
-
-    /**
-     * @var array
-     */
-    private $CSVaccu = [];
-
-    public function __construct(StandaloneView $view, InfoModuleController $infoModuleController, array $extensionSettings)
-    {
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->view = $view;
-        $this->infoModuleController = $infoModuleController;
+    public function __construct(
+        private StandaloneView $view,
+        private InfoModuleController $infoModuleController,
+        array $extensionSettings
+    ) {
         $this->jsonCompatibilityConverter = new JsonCompatibilityConverter();
         $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(QueueRepository::TABLE_NAME);
         $this->csvWriter = new CrawlerCsvWriter();
         $this->extensionSettings = $extensionSettings;
-        $this->queueRepository = $objectManager->get(QueueRepository::class);
+        $this->queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
     }
 
-    public function render($id, string $elementName, array $menuItems): string
+    public function render(int $id, string $elementName, array $menuItems): string
     {
         $quiPart = GeneralUtility::_GP('qid_details') ? '&qid_details=' . (int) GeneralUtility::_GP('qid_details') : '';
         $setId = (int) GeneralUtility::_GP('setID');
@@ -93,7 +56,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
             . $this->showLogAction($setId, $quiPart);
     }
 
-    private function getDepthDropDownHtml($id, string $currentValue, array $menuItems): string
+    private function getDepthDropDownHtml(int $id, string $currentValue, array $menuItems): string
     {
         return BackendUtility::getFuncMenu(
             $id,
@@ -178,11 +141,13 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                     $perms_clause
                 );
 
-                $HTML = $this->getIconFactory()->getIconForRecord('pages', $pageinfo, Icon::SIZE_SMALL)->render();
-                $tree->tree[] = [
-                    'row' => $pageinfo,
-                    'HTML' => $HTML,
-                ];
+                if (is_array($pageinfo)) {
+                    $HTML = $this->getIconFactory()->getIconForRecord('pages', $pageinfo, Icon::SIZE_SMALL)->render();
+                    $tree->tree[] = [
+                        'row' => $pageinfo,
+                        'HTML' => $HTML,
+                    ];
+                }
 
                 // Get branch beneath:
                 if ($this->infoModuleController->MOD_SETTINGS['depth']) {
@@ -370,7 +335,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                     $rowData['exec_time'] = $execTime;
                 }
                 $rowData['result_status'] = GeneralUtility::fixed_lgd_cs($resStatus, 50);
-                $url = htmlspecialchars($parameters['url'] ?? $parameters['alturl'], ENT_QUOTES | ENT_HTML5);
+                $url = htmlspecialchars((string) ($parameters['url'] ?? $parameters['alturl']), ENT_QUOTES | ENT_HTML5);
                 $rowData['url'] = '<a href="' . $url . '" target="_newWIndow">' . $url . '</a>';
                 $rowData['feUserGroupList'] = $parameters['feUserGroupList'] ?? '';
                 $rowData['procInstructions'] = is_array($parameters['procInstructions']) ? implode('; ', $parameters['procInstructions']) : '';

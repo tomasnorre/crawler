@@ -1,4 +1,4 @@
-.. include:: /Includes.txt
+.. include:: /Includes.rst.txt
 
 ========
 EXT:news
@@ -42,7 +42,7 @@ another page. In this case it would still be possible to view news of category A
 the detail page for category B (example.com/detail-page-for-category-B/news-of-category-A).
 That means that each news article would be crawled twice - once on the detail page
 for category A and once on the detail page for category B. It is possible to use a
-signal slot within news to prevent this.
+PSR-14 event with news to prevent this.
 
 On both detail pages include this typoscript setup:
 ::
@@ -56,32 +56,21 @@ On both detail pages include this typoscript setup:
         detail.errorHandling = pageNotFoundHandler
     }
 
-and register a signal slot in your site package.
+and register an event listener in your site package.
 
-:file:`ext/ext_localconf.php`
+:file:`ext/Configuration/Services.yaml`
 
-.. code-block:: php
+.. code-block:: yaml
 
-    <?php
+   services:
+     Vendor\Ext\EventListeners\NewsDetailEventListener:
+       tags:
+         - name: event.listener
+           identifier: 'myNewsDetailListener'
+           event: GeorgRinger\News\Event\NewsDetailActionEvent
 
-    defined('TYPO3_MODE') or die();
 
-    (function() {
-         if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('news') === true) {
-            $signalSlotDispatcher = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
-               TYPO3\CMS\Extbase\SignalSlot\Dispatcher::class
-            );
-            $signalSlotDispatcher->connect(
-               GeorgRinger\News\Controller\NewsController::class,
-               'detailAction',
-               Vendor\Ext\Slots\NewsDetailSlot::class,
-               'detailActionSlot',
-               true
-            );
-        }
-    })();
-
-:file:`ext/Classes/Slots/NewsDetailSlot.php`
+:file:`ext/Classes/EventListeners/NewsDetailEventListener.php`
 
 .. code-block:: php
 
@@ -89,57 +78,51 @@ and register a signal slot in your site package.
 
     declare(strict_types=1);
 
-    namespace Vendor\Ext\Slots;
+    namespace Vendor\Ext\EventListeners;
 
-    class NewsDetailSlot
+    use GeorgRinger\News\Event\NewsDetailActionEvent;
+
+    class NewsDetailEventListener
     {
-      public function detailActionSlot($newsItem, $currentPage, $demand, $settings, $extendedVariables): array
-      {
-         if (!\is_null($newsItem)) {
-               $demandedCategories = $demand->getCategories();
-               $itemCategories = $newsItem->getCategories()->toArray();
-               $itemCategoryIds = \array_map(function($category) {
-                  return (string)$category->getUid();
-               }, $itemCategories);
-               /**
-                * Unset the news article if necessary, which - in conjunction with the above TypoScript - will cause a 404 error
-                */
-               if (count($demandedCategories) > 0 && !$this->itemMatchesCategoryDemand($settings['categoryConjunction'], $itemCategoryIds, $demandedCategories)) {
-                  $newsItem = null;
-               }
-         }
-         return [
-               'newsItem' => $newsItem,
-               'currentPage' => $currentPage,
-               'demand' => $demand,
-               'settings' => $settings,
-               'extendedVariables' => $extendedVariables,
-         ];
-      }
+       public function __invoke(NewsDetailActionEvent $event): void
+       {
+          $assignedValues = $event->getAssignedValues();
+          $newsItem = $assignedValues['newsItem'];
+          $demand = $assignedValues['demand'];
+          $settings = $assignedValues['settings'];
 
-      protected function itemMatchesCategoryDemand(string $categoryConjunction, array $itemCategoryIds, array $demandedCategories): bool
-      {
-         $numOfDemandedCategories = \count($demandedCategories);
-         $intersection = \array_intersect($itemCategoryIds, $demandedCategories);
-         $numOfCommonItems = \count($intersection);
-         switch ($categoryConjunction) {
-               case 'AND':
-                  return $numOfCommonItems === $numOfDemandedCategories;
-                  break;
-               case 'OR':
-                  return $numOfCommonItems > 0;
-                  break;
-               case 'NOTAND':
-                  return $numOfCommonItems < $numOfDemandedCategories;
-                  break;
-               case 'NOTOR':
-                  return $numOfCommonItems === 0;
-                  break;
-               default:
-                  return true;
-                  break;
-         }
-      }
+          if (!\is_null($newsItem)) {
+             $demandedCategories = $demand->getCategories();
+             $itemCategories = $newsItem->getCategories()->toArray();
+             $itemCategoryIds = \array_map(function($category) {
+                return (string)$category->getUid();
+             }, $itemCategories);
+
+             if (count($demandedCategories) > 0 && !$this::itemMatchesCategoryDemand($settings['categoryConjunction'], $itemCategoryIds, $demandedCategories)) {
+                $assignedValues['newsItem'] = null;
+                $event->setAssignedValues($assignedValues);
+             }
+          }
+       }
+
+       protected static function itemMatchesCategoryDemand(string $categoryConjunction, array $itemCategoryIds, array $demandedCategories): bool
+       {
+          $numOfDemandedCategories = \count($demandedCategories);
+          $intersection = \array_intersect($itemCategoryIds, $demandedCategories);
+          $numOfCommonItems = \count($intersection);
+
+          switch ($categoryConjunction) {
+                case 'AND':
+                   return $numOfCommonItems === $numOfDemandedCategories;
+                case 'OR':
+                   return $numOfCommonItems > 0;
+                case 'NOTAND':
+                   return $numOfCommonItems < $numOfDemandedCategories;
+                case 'NOTOR':
+                   return $numOfCommonItems === 0;
+          }
+          return true;
+       }
     }
 
 .. warning::

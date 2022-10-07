@@ -10,10 +10,10 @@ $EM_CONF[$_EXTKEY] = [
     'author' => 'Tomas Norre Mikkelsen',
     'author_email' => 'tomasnorre@gmail.com',
     'author_company' => '',
-    'version' => '11.0.2',
+    'version' => '11.0.4',
     'constraints' => [
         'depends' => [
-            'typo3' => '10.4.11-11.5.99',
+            'typo3' => '11.5.0-11.5.99',
         ],
         'conflicts' => [],
         'suggests' => [],

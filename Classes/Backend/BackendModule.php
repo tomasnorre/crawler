@@ -34,11 +34,9 @@ use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Service\ProcessService;
 use AOE\Crawler\Value\CrawlAction;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
-use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Info\Controller\InfoModuleController;
 
@@ -52,50 +50,16 @@ use TYPO3\CMS\Info\Controller\InfoModuleController;
  */
 class BackendModule
 {
-    /**
-     * @var InfoModuleController Contains a reference to the parent calling object
-     */
-    protected $pObj;
+    protected InfoModuleController $pObj;
+    protected int $id;
+    protected array $extensionSettings = [];
+    protected StandaloneView $view;
 
-    /**
-     * The current page ID
-     * @var int
-     */
-    protected $id;
-
-    /**
-     * Holds the configuration from ext_conf_template loaded by getExtensionConfiguration()
-     *
-     * @var array
-     */
-    protected $extensionSettings = [];
-
-    /**
-     * @var ProcessService
-     */
-    protected $processManager;
-
-    /**
-     * @var QueryBuilder
-     */
-    protected $queryBuilder;
-
-    /**
-     * @var QueueRepository
-     */
-    protected $queueRepository;
-
-    /**
-     * @var StandaloneView
-     */
-    protected $view;
-
-    public function __construct()
-    {
-        $objectManger = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->processManager = $objectManger->get(ProcessService::class);
-        $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(QueueRepository::TABLE_NAME);
-        $this->queueRepository = $objectManger->get(QueueRepository::class);
+    public function __construct(
+        protected ProcessService $processManager,
+        protected QueryBuilder $queryBuilder,
+        protected QueueRepository $queueRepository
+    ) {
         $this->initializeView();
         $this->extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
     }
@@ -109,17 +73,6 @@ class BackendModule
         $this->id = (int) GeneralUtility::_GP('id');
         // Setting MOD_MENU items as we need them for logging:
         $this->pObj->MOD_MENU = array_merge($this->pObj->MOD_MENU, $this->getModuleMenu());
-    }
-
-    /**
-     * Additions to the function menu array
-     *
-     * @return array Menu array
-     * @deprecated Using BackendModule->modMenu() is deprecated since 9.1.3 and will be removed in v11.x
-     */
-    public function modMenu(): array
-    {
-        return $this->getModuleMenu();
     }
 
     public function main(): string

@@ -21,6 +21,7 @@ namespace AOE\Crawler\Tests\Functional\Backend\RequestForm;
 
 use AOE\Crawler\Backend\RequestForm\MultiProcessRequestForm;
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
+use AOE\Crawler\Service\ProcessService;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
@@ -46,10 +47,7 @@ class MultiProcessRequestFormTest extends FunctionalTestCase
      */
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    /**
-     * @var MultiProcessRequestForm
-     */
-    protected $multiProcessRequestForm;
+    protected \AOE\Crawler\Backend\RequestForm\MultiProcessRequestForm $multiProcessRequestForm;
 
     protected function setUp(): void
     {
@@ -82,7 +80,9 @@ class MultiProcessRequestFormTest extends FunctionalTestCase
             );
         }
         $extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
-        $this->multiProcessRequestForm = GeneralUtility::makeInstance(MultiProcessRequestForm::class, $view, $infoModuleController, $extensionSettings);
+        $processService = $this->prophesize(ProcessService::class);
+
+        $this->multiProcessRequestForm = GeneralUtility::makeInstance(MultiProcessRequestForm::class, $view, $infoModuleController, $extensionSettings, $processService->reveal());
     }
 
     /**
@@ -137,7 +137,7 @@ class MultiProcessRequestFormTest extends FunctionalTestCase
     /**
      * @return object|\Psr\Log\LoggerAwareInterface|\TYPO3\CMS\Core\SingletonInterface|StandaloneView
      */
-    private function setupView()
+    private function setupView(): \Psr\Log\LoggerAwareInterface|\TYPO3\CMS\Core\SingletonInterface|\TYPO3\CMS\Fluid\View\StandaloneView
     {
         $view = GeneralUtility::makeInstance(StandaloneView::class);
         $view->setLayoutRootPaths([__DIR__ . '/../../Fixtures/Resources/Layouts/']);

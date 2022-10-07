@@ -15,16 +15,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        typo3: [ '^10.4', '^11.5' ]
-        php: [ '7.4' ]
+        typo3: [ '^11.5' ]
+        php: [ '8.0', '8.1' ]
         mysql: ['5.7']
-        include:
-          - typo3: ^11.5
-            php: 8.0
-            mysql: 5.7
-          - typo3: ^11.5
-            php: 8.1
-            mysql: 5.7
+        #include:
+        #  - typo3: ^12
+        #    php: 8.1
+        #    mysql: 5.7
 
     steps:
       - name: Set up MySQL ${{ matrix.mysql }}
@@ -58,7 +55,7 @@ jobs:
           ln -nfs .Build/vendor/typo3/cms/typo3 typo3
 
       - name: Lint PHP
-        run: find . -name \*.php ! -path "./.Build/*" ! -path "./scripts/*" ! -path "./typo3_src/*" | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \;
+        run: find . -name \*.php ! -path "./.Build/*" ! -path "./scripts/*" ! -path "./typo3_src/*" ! -path "./Resources/*" | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \;
 
       - name: Unit Tests
         if: matrix.typo3 != 'dev-master'
@@ -96,7 +93,7 @@ jobs:
           typo3DatabaseUsername: root
 
       - name: Upload coverage results to Scrutinizer
-        if: matrix.typo3 == '^10.4' && matrix.php == '7.4'
+        if: matrix.typo3 == '^11.5' && matrix.php == '8.0'
         run: |
           wget https://scrutinizer-ci.com/ocular.phar
           php ocular.phar code-coverage:upload --format=php-clover unittest-coverage.clover

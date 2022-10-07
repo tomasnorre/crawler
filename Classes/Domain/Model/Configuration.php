@@ -26,55 +26,16 @@ use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
  */
 class Configuration extends AbstractEntity
 {
-    /**
-     * @var string
-     */
-    protected $name = '';
-
-    /**
-     * @var int
-     */
-    protected $forceSsl = 1;
-
-    /**
-     * @var string
-     */
-    protected $processingInstructionFilter = '';
-
-    /**
-     * @var string
-     */
-    protected $processingInstructionParameters = '';
-
-    /**
-     * @var string
-     */
-    protected $configuration = '';
-
-    /**
-     * @var string
-     */
-    protected $baseUrl = '';
-
-    /**
-     * @var string
-     */
-    protected $pidsonly = '';
-
-    /**
-     * @var string
-     */
-    protected $begroups = '';
-
-    /**
-     * @var string
-     */
-    protected $fegroups = '';
-
-    /**
-     * @var string
-     */
-    protected $exclude = '';
+    protected string $name = '';
+    protected int $forceSsl = 1;
+    protected string $processingInstructionFilter = '';
+    protected string $processingInstructionParameters = '';
+    protected string $configuration = '';
+    protected string $baseUrl = '';
+    protected string $pidsonly = '';
+    protected string $begroups = '';
+    protected string $fegroups = '';
+    protected string $exclude = '';
 
     /**
      * @return string

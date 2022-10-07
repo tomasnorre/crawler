@@ -94,13 +94,30 @@ class CrawlerControllerTest extends UnitTestCase
 
     /**
      * @test
+     */
+    public function getUrlsForPageRowSetsSkipMessageIfUidNotAnInteger(): void
+    {
+        $skipMessage = '';
+        $this->crawlerController->getUrlsForPageRow(['uid' => 'string'], $skipMessage);
+        self::assertEquals(
+            'PageUid "string" was not an integer',
+            $skipMessage
+        );
+    }
+
+    /**
+     * @test
      *
      * @dataProvider getUrlsForPageRowDataProvider
      */
     public function getUrlsForPageRow(bool $checkIfPageSkipped, array $getUrlsForPages, array $pageRow, string $skipMessage, array $expected): void
     {
         $mockedPageService = $this->createPartialMock(PageService::class, ['checkIfPageShouldBeSkipped']);
-        $mockedPageService->expects($this->any())->method('checkIfPageShouldBeSkipped')->will($this->returnValue($checkIfPageSkipped));
+        if ($checkIfPageSkipped) {
+            $mockedPageService->expects($this->any())->method('checkIfPageShouldBeSkipped')->will($this->returnValue($skipMessage));
+        } else {
+            $mockedPageService->expects($this->any())->method('checkIfPageShouldBeSkipped')->will($this->returnValue($checkIfPageSkipped));
+        }
 
         /** @var MockObject|CrawlerController $crawlerController */
         $crawlerController = $this->createPartialMock(CrawlerController::class, ['getPageService', 'getUrlsForPageId']);
@@ -155,6 +172,20 @@ class CrawlerControllerTest extends UnitTestCase
             'getUrlsForPages' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
             'pageRow' => ['uid' => 2001],
             '$skipMessage' => 'Just variable placeholder, not used in tests as parsed as reference',
+            'expected' => [],
+        ];
+        yield 'PageRow Uid is string with int value' => [
+            'checkIfPageSkipped' => false,
+            'getUrlsForPages' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
+            'pageRow' => ['uid' => '2001'],
+            '$skipMessage' => 'Just variable placeholder, not used in tests as parsed as reference',
+            'expected' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
+        ];
+        yield 'PageRow Uid is string with string value' => [
+            'checkIfPageSkipped' => true,
+            'getUrlsForPages' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
+            'pageRow' => ['uid' => 'string'],
+            '$skipMessage' => 'PageUid "string" was not an integer',
             'expected' => [],
         ];
     }
@@ -270,5 +301,24 @@ class CrawlerControllerTest extends UnitTestCase
             ],
             'expected' => false,
         ];
+    }
+
+    /**
+     * @test
+     */
+    public function setExtensionSettings(): void
+    {
+        $extensionSettings = [
+            'makeDirectRequests' => 0,
+            'frontendBasePath' => '/',
+        ];
+
+        /** @var CrawlerController $crawlerController */
+        $crawlerController = $this->getAccessibleMock(CrawlerController::class, ['dummy'], [], '', false);
+        $crawlerController->setExtensionSettings($extensionSettings);
+        self::assertEquals(
+            $extensionSettings,
+            $crawlerController->extensionSettings
+        );
     }
 }

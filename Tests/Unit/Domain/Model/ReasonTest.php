@@ -61,7 +61,7 @@ class ReasonTest extends UnitTestCase
         $reason = new Reason([]);
 
         $reason->setUid(321);
-        $reason->setCreationDate(1525456537);
+        $reason->setCreationDate(1_525_456_537);
         $reason->setBackendUserId(2);
         $reason->setReason(Reason::REASON_DEFAULT);
         $reason->setDetailText('This is the detail text');

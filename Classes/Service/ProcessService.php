@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AOE\Crawler\Service;
 
 /*
- * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
+ * (c) 2022 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -19,16 +19,14 @@ namespace AOE\Crawler\Service;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Exception\ProcessException;
+use AOE\Crawler\Helper\Sleeper\SleeperInterface;
 use AOE\Crawler\Utility\PhpBinaryUtility;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * @package AOE\Crawler\Service
@@ -38,36 +36,19 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  */
 class ProcessService
 {
-    /**
-     * @var int
-     */
-    private $timeToLive;
-
-    /**
-     * @var \AOE\Crawler\Domain\Repository\ProcessRepository
-     */
-    private $processRepository;
-
-    /**
-     * @var array
-     */
-    private $extensionSettings;
-
-    public function __construct()
-    {
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->processRepository = $objectManager->get(ProcessRepository::class);
-        $this->extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
-        $this->timeToLive = (int) $this->extensionSettings['processMaxRunTime'];
+    public function __construct(
+        private ProcessRepository $processRepository,
+        private SleeperInterface $sleeper
+    ) {
     }
 
     /**
      * starts new process
      * @throws ProcessException if no crawler process was started
      */
-    public function startProcess(): bool
+    public function startProcess(int $timeToLive = 300): bool
     {
-        $ttl = (time() + $this->timeToLive - 1);
+        $ttl = (time() + $timeToLive - 1);
         $current = $this->processRepository->countNotTimeouted($ttl);
 
         // Check whether OS is Windows
@@ -87,7 +68,7 @@ class ProcessService
             if ($this->processRepository->countNotTimeouted($ttl) > $current) {
                 return true;
             }
-            sleep(1);
+            $this->sleeper->sleep(1);
         }
         throw new ProcessException('Something went wrong: process did not appear within 10 seconds.');
     }
@@ -115,11 +96,6 @@ class ProcessService
         }
 
         return ltrim($scriptPath);
-    }
-
-    public function setProcessRepository(ProcessRepository $processRepository): void
-    {
-        $this->processRepository = $processRepository;
     }
 
     private function getComposerBinPath(): ?string

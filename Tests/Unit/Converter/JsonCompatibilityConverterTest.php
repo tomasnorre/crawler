@@ -28,10 +28,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class JsonCompatibilityConverterTest extends UnitTestCase
 {
-    /**
-     * @var JsonCompatibilityConverter
-     */
-    protected $subject;
+    protected \AOE\Crawler\Converter\JsonCompatibilityConverter $subject;
 
     protected function setUp(): void
     {
@@ -43,9 +40,8 @@ class JsonCompatibilityConverterTest extends UnitTestCase
     /**
      * @test
      * @dataProvider jsonCompatibilityConverterDataProvider
-     * @param array|bool $expected
      */
-    public function jsonCompatibilityConverterTest(string $dataString, $expected): void
+    public function jsonCompatibilityConverterTest(string $dataString, array|bool $expected): void
     {
         self::assertEquals(
             $expected,
@@ -82,7 +78,7 @@ class JsonCompatibilityConverterTest extends UnitTestCase
      */
     public function jsonCompatibilityConverterTestThrowException(): void
     {
-        self::expectExceptionCode(1593758307);
+        self::expectExceptionCode(1_593_758_307);
         self::expectException(\Throwable::class);
         self::expectExceptionMessageMatches('#^Objects are not allowed:.*__PHP_Incomplete_Class.*#');
         self::expectExceptionMessage('This is a test object');

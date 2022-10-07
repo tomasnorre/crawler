@@ -27,10 +27,7 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
  */
 class IndexedSearchCrawlerHookTest extends UnitTestCase
 {
-    /**
-     * @var IndexedSearchCrawlerHook
-     */
-    protected $subject;
+    protected \Nimut\TestingFramework\MockObject\AccessibleMockObjectInterface|\PHPUnit\Framework\MockObject\MockObject $subject;
 
     protected function setUp(): void
     {
@@ -118,7 +115,7 @@ class IndexedSearchCrawlerHookTest extends UnitTestCase
         $this->subject->method('getMidnightTimestamp')->willReturn($atMidnightTimestamp);
 
         // Force "current time"
-        $GLOBALS['EXEC_TIME'] = 1591637103;
+        $GLOBALS['EXEC_TIME'] = 1_591_637_103;
         date_default_timezone_set('UTC');
 
         self::assertSame(
@@ -132,83 +129,83 @@ class IndexedSearchCrawlerHookTest extends UnitTestCase
         yield 'Timer Frequency less than 24 hours (5 hours)' => [
             'configurationRecord' => [
                 'timer_frequency' => 18000,
-                'timer_next_indexing' => 1591638558,
+                'timer_next_indexing' => 1_591_638_558,
                 'timer_offset' => 60,
             ],
-            'atMidnightTimestamp' => 1593475200,
-            'expected' => 1591639260,
+            'atMidnightTimestamp' => 1_593_475_200,
+            'expected' => 1_591_639_260,
         ];
         yield 'Timer frequency more than 24 hours (26 hours)' => [
             'configurationRecord' => [
                 'timer_frequency' => 93600,
-                'timer_next_indexing' => 1591638558,
+                'timer_next_indexing' => 1_591_638_558,
                 'timer_offset' => 60,
             ],
-            'atMidnightTimestamp' => 1591574400,
-            'expected' => 1591668060,
+            'atMidnightTimestamp' => 1_591_574_400,
+            'expected' => 1_591_668_060,
         ];
         yield 'Offset at minimum in range' => [
             'configurationRecord' => [
                 'timer_frequency' => 500,
-                'timer_next_indexing' => 1591638558,
+                'timer_next_indexing' => 1_591_638_558,
                 'timer_offset' => 0,
             ],
-            'atMidnightTimestamp' => 1591574400,
-            'expected' => 1591637400,
+            'atMidnightTimestamp' => 1_591_574_400,
+            'expected' => 1_591_637_400,
         ];
         yield 'Offset at maximum in range' => [
             'configurationRecord' => [
                 'timer_frequency' => 500,
-                'timer_next_indexing' => 1591638558,
+                'timer_next_indexing' => 1_591_638_558,
                 'timer_offset' => 86400,
             ],
-            'atMidnightTimestamp' => 1591574400,
-            'expected' => 1591637300,
+            'atMidnightTimestamp' => 1_591_574_400,
+            'expected' => 1_591_637_300,
         ];
         yield 'Offset at smaller than rangen' => [
             'configurationRecord' => [
                 'timer_frequency' => 500,
-                'timer_next_indexing' => 1591638558,
+                'timer_next_indexing' => 1_591_638_558,
                 'timer_offset' => -1,
             ],
-            'atMidnightTimestamp' => 1591574400,
-            'expected' => 1591637400,
+            'atMidnightTimestamp' => 1_591_574_400,
+            'expected' => 1_591_637_400,
         ];
         yield 'Offset larger than range' => [
             'configurationRecord' => [
                 'timer_frequency' => 500,
-                'timer_next_indexing' => 1591638558,
+                'timer_next_indexing' => 1_591_638_558,
                 'timer_offset' => 86401,
             ],
-            'atMidnightTimestamp' => 1591574400,
-            'expected' => 1591637300,
+            'atMidnightTimestamp' => 1_591_574_400,
+            'expected' => 1_591_637_300,
         ];
         yield 'Timer frequency as numeric string' => [
             'configurationRecord' => [
                 'timer_frequency' => '500',
-                'timer_next_indexing' => 1591638558,
+                'timer_next_indexing' => 1_591_638_558,
                 'timer_offset' => 60,
             ],
-            'atMidnightTimestamp' => 1591574400,
-            'expected' => 1591637460,
+            'atMidnightTimestamp' => 1_591_574_400,
+            'expected' => 1_591_637_460,
         ];
         yield 'Timer frequency as numeric value' => [
             'configurationRecord' => [
                 'timer_frequency' => 500,
-                'timer_next_indexing' => 1591638558,
+                'timer_next_indexing' => 1_591_638_558,
                 'timer_offset' => 60,
             ],
-            'atMidnightTimestamp' => 1591574400,
-            'expected' => 1591637460,
+            'atMidnightTimestamp' => 1_591_574_400,
+            'expected' => 1_591_637_460,
         ];
         yield 'Timer next indexing set to positive' => [
             'configurationRecord' => [
                 'timer_frequency' => 500,
-                'timer_next_indexing' => 1591638558,
+                'timer_next_indexing' => 1_591_638_558,
                 'timer_offset' => 60,
             ],
-            'atMidnightTimestamp' => 1591574400,
-            'expected' => 1591637460,
+            'atMidnightTimestamp' => 1_591_574_400,
+            'expected' => 1_591_637_460,
         ];
         yield 'Timer next indexing set to negative' => [
             'configurationRecord' => [
@@ -216,8 +213,8 @@ class IndexedSearchCrawlerHookTest extends UnitTestCase
                 'timer_next_indexing' => -1,
                 'timer_offset' => 60,
             ],
-            'atMidnightTimestamp' => 1591574400,
-            'expected' => 1591637460,
+            'atMidnightTimestamp' => 1_591_574_400,
+            'expected' => 1_591_637_460,
         ];
     }
 

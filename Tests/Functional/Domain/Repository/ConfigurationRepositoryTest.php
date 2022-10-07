@@ -22,7 +22,6 @@ namespace AOE\Crawler\Tests\Functional\Domain\Repository;
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 class ConfigurationRepositoryTest extends FunctionalTestCase
 {
@@ -33,10 +32,7 @@ class ConfigurationRepositoryTest extends FunctionalTestCase
      */
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    /**
-     * @var ConfigurationRepository
-     */
-    protected $subject;
+    protected \AOE\Crawler\Domain\Repository\ConfigurationRepository $subject;
 
     /**
      * Creates the test environment.
@@ -44,9 +40,7 @@ class ConfigurationRepositoryTest extends FunctionalTestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->subject = $objectManager->get(ConfigurationRepository::class);
+        $this->subject = GeneralUtility::makeInstance(ConfigurationRepository::class);
         $this->importDataSet(__DIR__ . '/../../Fixtures/tx_crawler_configuration.xml');
         $this->importDataSet(__DIR__ . '/../../Fixtures/pages.xml');
     }
@@ -74,18 +68,7 @@ class ConfigurationRepositoryTest extends FunctionalTestCase
         );
 
         foreach ($configurations as $configuration) {
-            self::assertContains($configuration['uid'], [1, 5, 6, 8]);
+            self::assertContains((int) $configuration['uid'], [1, 5, 6, 8]);
         }
-    }
-
-    /**
-     * @test
-     */
-    public function getCrawlerConfigurationRecords(): void
-    {
-        self::assertCount(
-            4,
-            $this->subject->getCrawlerConfigurationRecords()
-        );
     }
 }

@@ -34,7 +34,7 @@ class PhpBinaryUtilityTest extends UnitTestCase
      */
     public function getPhpBinaryThrowExpectionAsExtensionSettingsIsEmpty(): void
     {
-        $this->expectExceptionCode(1587066853);
+        $this->expectExceptionCode(1_587_066_853);
         $this->expectExceptionMessage('ExtensionSettings are empty');
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [];
         PhpBinaryUtility::getPhpBinary();
@@ -45,7 +45,8 @@ class PhpBinaryUtilityTest extends UnitTestCase
      */
     public function getPhpBinaryThrowsExceptionAsBinaryDoesNotExist(): void
     {
-        $this->expectExceptionCode(1587068215);
+        $this->expectExceptionCode(1_587_068_215);
+        $this->expectExceptionMessage('The phpBinary: "non-existing-binary" could not be found!');
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [
             'phpPath' => '',
             'phpBinary' => 'non-existing-binary',

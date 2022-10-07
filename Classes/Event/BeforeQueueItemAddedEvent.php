@@ -21,12 +21,12 @@ namespace AOE\Crawler\Event;
 
 final class BeforeQueueItemAddedEvent
 {
-    private int $queueId;
     private array $queueRecord;
 
-    public function __construct(int $queueId, array $queueRecord)
-    {
-        $this->queueId = $queueId;
+    public function __construct(
+        private int $queueId,
+        array $queueRecord
+    ) {
         $this->queueRecord = $queueRecord;
     }
 

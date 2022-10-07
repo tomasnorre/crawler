@@ -26,7 +26,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 class FlushQueueCommand extends Command
 {
@@ -70,12 +69,10 @@ It will remove queue entries and perform a cleanup.' . chr(10) . chr(10) .
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-
         $queueFilter = new QueueFilter($input->getArgument('mode'));
 
         /** @var QueueRepository $queueRepository */
-        $queueRepository = $objectManager->get(QueueRepository::class);
+        $queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
 
         switch ($queueFilter) {
             case 'all':
@@ -92,6 +89,6 @@ It will remove queue entries and perform a cleanup.' . chr(10) . chr(10) .
                 break;
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

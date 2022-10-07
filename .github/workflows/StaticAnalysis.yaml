@@ -24,7 +24,7 @@ jobs:
                         ${{ runner.os }}-composer-
             -   uses: shivammathur/setup-php@v2
                 with:
-                    php-version: 7.4
+                    php-version: 8.0
                     coverage: none
             -   run: composer install --no-progress
             -   run: composer analyse
@@ -44,7 +44,7 @@ jobs:
                         ${{ runner.os }}-composer-
             -   uses: shivammathur/setup-php@v2
                 with:
-                    php-version: 7.4
+                    php-version: 8.0
                     coverage: none
             -   run: composer install --no-progress
             -   run: composer rector
@@ -64,7 +64,7 @@ jobs:
                         ${{ runner.os }}-composer-
             -   uses: shivammathur/setup-php@v2
                 with:
-                    php-version: 7.4
+                    php-version: 8.0
                     coverage: none
             -   run: composer install --no-progress
             -   run: composer cs-fix
@@ -84,9 +84,13 @@ jobs:
                         ${{ runner.os }}-composer-
             -   uses: shivammathur/setup-php@v2
                 with:
-                    php-version: 7.4
+                    php-version: 8.1
                     coverage: none
+                    tools: phive
 
-            -   run: composer install --no-scripts --no-progress
-            -   run: .Build/bin/psalm --shepherd
+            -   name: "Install tools (Phive)"
+                run: "phive install --trust-gpg-keys 12CE0F1D262429A5"
+
+            -   run: composer require --dev nimut/typo3-complete:^11.5 --no-progress
+            -   run: tools/psalm --shepherd
 

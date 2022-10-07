@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AOE\Crawler;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2022 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -22,8 +22,8 @@ namespace AOE\Crawler;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy;
-use AOE\Crawler\CrawlStrategy\CrawlStrategy;
 use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
+use AOE\Crawler\CrawlStrategy\CrawlStrategyInterface;
 use AOE\Crawler\Event\AfterUrlCrawledEvent;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Http\Uri;
@@ -36,17 +36,13 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class QueueExecutor implements SingletonInterface
 {
-    /**
-     * @var CrawlStrategy
-     */
-    protected $crawlStrategy;
+    protected CrawlStrategyInterface $crawlStrategy;
 
-    private EventDispatcher $eventDispatcher;
-
-    public function __construct(CrawlStrategyFactory $crawlStrategyFactory, EventDispatcher $eventDispatcher = null)
-    {
+    public function __construct(
+        CrawlStrategyFactory $crawlStrategyFactory,
+        private EventDispatcher $eventDispatcher
+    ) {
         $this->crawlStrategy = $crawlStrategyFactory->create();
-        $this->eventDispatcher = $eventDispatcher ?? GeneralUtility::makeInstance(EventDispatcher::class);
     }
 
     /**

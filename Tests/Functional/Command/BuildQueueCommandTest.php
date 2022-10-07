@@ -22,12 +22,12 @@ namespace AOE\Crawler\Tests\Functional\Command;
 use AOE\Crawler\Command\BuildQueueCommand;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Tests\Functional\SiteBasedTestTrait;
+use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
-class BuildQueueCommandTest extends AbstractCommandTests
+class BuildQueueCommandTest extends FunctionalTestCase
 {
     use SiteBasedTestTrait;
 
@@ -46,10 +46,7 @@ class BuildQueueCommandTest extends AbstractCommandTests
      */
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    /**
-     * @var QueueRepository
-     */
-    protected $queueRepository;
+    protected \AOE\Crawler\Domain\Repository\QueueRepository $queueRepository;
 
     protected CommandTester $commandTester;
 
@@ -60,7 +57,7 @@ class BuildQueueCommandTest extends AbstractCommandTests
 
         $this->importDataSet(__DIR__ . '/../Fixtures/pages.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_configuration.xml');
-        $this->queueRepository = GeneralUtility::makeInstance(ObjectManager::class)->get(QueueRepository::class);
+        $this->queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
 
         $this->writeSiteConfiguration(
             'acme-com',

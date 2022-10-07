@@ -66,16 +66,18 @@ $_SERVER['SCRIPT_FILENAME'] = $_SERVER['PATH_TRANSLATED'] = $typo3Root . 'index.
 $_SERVER['QUERY_STRING'] = (isset($urlParts['query']) ? $urlParts['query'] : '');
 $_SERVER['REQUEST_URI'] = $urlParts['path'] . (isset($urlParts['query']) ? '?' . $urlParts['query'] : '');
 $_SERVER['REQUEST_METHOD'] = 'GET';
+$_SERVER['SERVER_PORT'] = '80';
+
+    // Define HTTPS disposal:
+if ($urlParts['scheme'] === 'https') {
+    $_SERVER['HTTPS'] = 'on';
+    $_SERVER['SERVER_PORT'] = '443';
+}
 
     // Define a port if used in the URL:
 if (isset($urlParts['port'])) {
     $_SERVER['HTTP_HOST'] .= ':' . $urlParts['port'];
     $_SERVER['SERVER_PORT'] = (string)$urlParts['port'];
-}
-
-    // Define HTTPS disposal:
-if ($urlParts['scheme'] === 'https') {
-    $_SERVER['HTTPS'] = 'on';
 }
 
 chdir($typo3Root);

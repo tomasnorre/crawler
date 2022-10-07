@@ -21,25 +21,19 @@ namespace AOE\Crawler\Event;
 
 final class AfterQueueItemAddedEvent
 {
-    /**
-     * @var int|string
-     */
-    private $queueId;
     private array $fieldArray;
 
     /**
      * @param int|string $queueId
      */
-    public function __construct($queueId, array $fieldArray)
-    {
-        $this->queueId = $queueId;
+    public function __construct(
+        private $queueId,
+        array $fieldArray
+    ) {
         $this->fieldArray = $fieldArray;
     }
 
-    /**
-     * @return int|string
-     */
-    public function getQueueId()
+    public function getQueueId(): int|string
     {
         return $this->queueId;
     }

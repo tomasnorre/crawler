@@ -1,6 +1,6 @@
 name: Automatic Approve
 on:
-  schedule: 
+  schedule:
     - cron:  "*/15 * * * *"
 jobs:
   automatic-approve:
@@ -11,4 +11,4 @@ jobs:
         uses: mheap/automatic-approve-action@v1
         with:
           token: ${{ secrets.CRAWLER_GITHUB_TOKEN }}
-          workflows: "Acceptance.yml,Deploy.yml,MutationTests.yml,Requirement.yml,SonarCloud.yml,StaticAnalysis.yaml,Tests.yml"
+          workflows: "Acceptance.yml,AutoComment.yml,AutomaticApproval.yml,BackwardCompatibilityCheck.yml,Coveralls.yml,DBMS.yml,Deploy.yml,Greetings.yml,MutationTests.yml,Requirement.yml,SonarCloud.yml,StaticAnalysis.yaml,Tests.yml"

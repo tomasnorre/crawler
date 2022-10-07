@@ -1,22 +1,77 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 11.0.3-dev
+## Crawler 12.0.0-dev
 
 ### Added
-* PHP 8.1 compatibility
 
 ### Changed
+* !!! Switch constants in ProcessQueueCommand from public to private
+* !!! Add interface to CrawlStrategy filename
+* !!! Switch getExtensionIcon() in TcaUtility from protected to private
+* !!! Add Type Hints for id parameters on RequestForm Render method
+* !!! Switch runPollSuccessHooks() in CrawlerInitialization from protected to private
+* !!! Switch isRequestHashMatchingQueueRecord() in FrontendUserAuthenticator from protected to private
 
 ### Fixed
-* PHP8 undefined array key when creating/updating/saving configuration record
 
 ### Deprecated
 #### Classes
 #### Functions & Properties
 
 ### Removed
+* Obsolete columns (first and last time) from Process Overview
+* !!! Remove constructor form RequestFormInterface
+* !!! Support for TYPO3 10
+* !!! PHP support for `<8.0`
+
 #### Classes
+* !!! AbstractCommandTests
+
 #### Functions & Properties
+* !!! CrawlerController->modMenu()
+* !!! ConfigurationRepository->getCrawlerConfigurationRecords()
+* !!! ConfigurationService->getUrlService()
+* !!! FrontendUserAuthenticator->queueRepository
+* !!! ProcessRepository->countActive()
+* !!! ProcessRepository->findByProcessId()
+* !!! ProcessRepository->getLimitFromItemCountAndOffset()
+* !!! ProcessQueueCommandTest->queueRepository
+* !!! QueueRepository->isPageInQueueTimed()
+* !!! QueueRepository->getAvailableSets()
+
+## Crawler 11.0.4
+Crawler 11.0.4 was released on February 11th, 2022
+
+### Fixed
+* Crawler could not index frontend because of trustedHostPattern mismatch
+* Fatal PHP error is thrown in the backend crawler log
+* Prevent buildQueue from creating entries for non-localized pages
+* CrawlerController checking if URL is correct ObjectType fixed
+
+### Deprecated
+#### Functions & Properties
+* ConfigurationRepository->getCrawlerConfigurationRecords()
+* ProcessRepository->findByProcessId()
+* QueueRepository->countAllUnassignedPendingItems()
+* QueueRepository->countPendingItemsGroupedByConfigurationKey()
+* QueueRepository->getSetIdWithUnprocessedEntries()
+* QueueRepository->getTotalQueueEntriesByConfiguration()
+* QueueRepository->getLastProcessedEntriesTimestamps()
+* QueueRepository->getLastProcessedEntries()
+* QueueRepository->getPerformanceData()
+* QueueRepository->isPageInQueueTimed()
+* QueueRepository->getAvailableSets()
+* QueueRepository->findByQueueId()
+
+## Crawler 11.0.3
+Crawler 11.0.3 was released on January 28th, 2022
+
+### Added
+* PHP 8.1 compatibility
+
+### Fixed
+* PHP8 undefined array key when creating/updating/saving configuration record
+* RestrictedPages is getting crawled when Crawler Configuration contains the belonging UserGroup
 
 ## Crawler 11.0.2
 Crawler 11.0.2 was released on January 11th, 2022

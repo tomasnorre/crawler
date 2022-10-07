@@ -20,6 +20,8 @@ namespace AOE\Crawler\Tests\Unit\Service;
  */
 
 use AOE\Crawler\Domain\Repository\ProcessRepository;
+use AOE\Crawler\Exception\ProcessException;
+use AOE\Crawler\Helper\Sleeper\NullSleeper;
 use AOE\Crawler\Service\ProcessService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
@@ -31,37 +33,62 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
  */
 class ProcessServiceTest extends UnitTestCase
 {
-    /**
-     * @var array
-     */
-    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
-
-    /**
-     * @var ProcessService
-     */
-    protected $subject;
-
-    /**
-     * Creates the test environment.
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->subject = $this->createPartialMock(ProcessService::class, ['getCrawlerCliPath']);
-        $this->subject->expects($this->any())->method('getCrawlerCliPath')->willReturn('php');
-    }
+    protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     /**
      * @test
      */
     public function startProcess(): void
     {
-        $mockedProcessRepository = $this->createPartialMock(ProcessRepository::class, ['countNotTimeouted']);
-        // This is done to fake that the process is started, the process start itself isn't tested, but the code around it is.
-        $mockedProcessRepository->expects($this->exactly(2))->method('countNotTimeouted')->will($this->onConsecutiveCalls(1, 2));
-        $this->subject->setProcessRepository($mockedProcessRepository);
+        $mockedProcessRepository = $this->createPartialMock(
+            ProcessRepository::class,
+            ['countNotTimeouted']
+        );
 
-        self::assertTrue($this->subject->startProcess());
+        // This is done to fake that the process is started, the process start itself isn't tested, but the code around is.
+        $mockedProcessRepository
+            ->expects($this->exactly(2))
+            ->method('countNotTimeouted')
+            ->will($this->onConsecutiveCalls(1, 2));
+
+        $processService = $this->getAccessibleMock(
+            ProcessService::class,
+            ['getCrawlerCliPath'],
+            [$mockedProcessRepository, new NullSleeper()]
+        );
+
+        $processService->expects($this->any())->method('getCrawlerCliPath')->willReturn('php');
+
+        self::assertTrue($processService->startProcess());
+    }
+
+    /**
+     * @test
+     */
+    public function startProcessThrowsProcessException(): void
+    {
+        $this->expectException(ProcessException::class);
+        $this->expectExceptionMessage('Something went wrong: process did not appear within 10 seconds.');
+
+        $mockedProcessRepository = $this->createPartialMock(
+            ProcessRepository::class,
+            ['countNotTimeouted']
+        );
+
+        // This is done to fake that the process is started, the process start itself isn't tested, but the code around is.
+        $mockedProcessRepository
+            ->expects($this->exactly(11))
+            ->method('countNotTimeouted')
+            ->will($this->onConsecutiveCalls(1, 1,1,1,1,1,1,1,1,1,1,1));
+
+        $processService = $this->getAccessibleMock(
+            ProcessService::class,
+            ['getCrawlerCliPath'],
+            [$mockedProcessRepository, new NullSleeper()]
+        );
+
+        $processService->expects($this->any())->method('getCrawlerCliPath')->willReturn('php');
+
+        self::assertTrue($processService->startProcess());
     }
 }

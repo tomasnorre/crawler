@@ -23,11 +23,9 @@ use AOE\Crawler\Domain\Model\Reason;
 
 final class InvokeQueueChangeEvent
 {
-    private Reason $reason;
-
-    public function __construct(Reason $reason)
-    {
-        $this->reason = $reason;
+    public function __construct(
+        private Reason $reason
+    ) {
     }
 
     public function getReasonDetailedText(): string

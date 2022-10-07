@@ -24,12 +24,9 @@ use Assert\Assert;
 /**
  * @internal since v9.2.5
  */
-class QueueFilter
+class QueueFilter implements \Stringable
 {
-    /**
-     * @var string
-     */
-    private $queueFilter;
+    private string $queueFilter;
 
     public function __construct(string $queueFilter = 'all')
     {
@@ -39,7 +36,7 @@ class QueueFilter
         $this->queueFilter = $queueFilter;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->queueFilter;
     }

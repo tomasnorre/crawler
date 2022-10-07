@@ -46,10 +46,7 @@ class LogRequestFormTest extends FunctionalTestCase
      */
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    /**
-     * @var LogRequestForm
-     */
-    protected $logRequestForm;
+    protected \AOE\Crawler\Backend\RequestForm\LogRequestForm $logRequestForm;
 
     protected function setUp(): void
     {
@@ -145,7 +142,7 @@ class LogRequestFormTest extends FunctionalTestCase
     /**
      * @return object|\Psr\Log\LoggerAwareInterface|\TYPO3\CMS\Core\SingletonInterface|StandaloneView
      */
-    private function setupView()
+    private function setupView(): \Psr\Log\LoggerAwareInterface|\TYPO3\CMS\Core\SingletonInterface|\TYPO3\CMS\Fluid\View\StandaloneView
     {
         $view = GeneralUtility::makeInstance(StandaloneView::class);
         $view->setLayoutRootPaths([__DIR__ . '/../../Fixtures/Resources/Layouts/']);

@@ -27,9 +27,12 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $containerConfigurator->import(SetList::DEAD_CODE);
     $containerConfigurator->import(SetList::PHP_72);
     $containerConfigurator->import(SetList::PHP_73);
+    $containerConfigurator->import(SetList::PHP_74);
+    $containerConfigurator->import(SetList::PHP_80);
     $containerConfigurator->import(Typo3SetList::TYPO3_76);
     $containerConfigurator->import(Typo3SetList::TYPO3_87);
     $containerConfigurator->import(Typo3SetList::TYPO3_95);
+    $containerConfigurator->import(Typo3SetList::TYPO3_104);
 
     $parameters->set(Option::AUTO_IMPORT_NAMES, false);
 

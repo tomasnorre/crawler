@@ -11,3 +11,14 @@ services:
       - 3306:3306
     tmpfs:
       - /var/lib/mysql/:rw,noexec,nosuid
+
+  db_postgres:
+    image: postgres:13.5-alpine3.15
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: crawler
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      PGDATA: "/data/postgres"
+    ports:
+      - 5432:5432

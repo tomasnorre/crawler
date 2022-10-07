@@ -23,9 +23,7 @@ use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use AOE\Crawler\Value\QueueFilter;
-use Nimut\TestingFramework\MockObject\AccessibleMockObjectInterface;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
-use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 
 /**
@@ -42,10 +40,7 @@ class CrawlerControllerTest extends FunctionalTestCase
      */
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    /**
-     * @var MockObject|AccessibleMockObjectInterface|CrawlerController
-     */
-    protected $subject;
+    protected \Nimut\TestingFramework\MockObject\AccessibleMockObjectInterface|\PHPUnit\Framework\MockObject\MockObject $subject;
 
     protected function setUp(): void
     {
@@ -79,14 +74,19 @@ class CrawlerControllerTest extends FunctionalTestCase
             $configurationsForBranch
         );
 
+        // sort is done as MySQL and SQLite doesn't sort the same way even though sorting is by "name ASC"
+        sort($configurationsForBranch);
+        $expected = [
+            'default',
+            'Not hidden or deleted',
+            'Not hidden or deleted - uid 5',
+            'Not hidden or deleted - uid 6',
+        ];
+        sort($expected);
+
         self::assertEquals(
-            $configurationsForBranch,
-            [
-                'Not hidden or deleted',
-                'Not hidden or deleted - uid 5',
-                'Not hidden or deleted - uid 6',
-                'default',
-            ]
+            $expected,
+            $configurationsForBranch
         );
     }
 
@@ -123,7 +123,7 @@ class CrawlerControllerTest extends FunctionalTestCase
                 ],
                 'userGroups' => '12,14',
             ],
-            'tstamp' => 1563287062,
+            'tstamp' => 1_563_287_062,
             'configurationHash' => '',
             'skipInnerDuplicationCheck' => false,
             'mockedDuplicateRowResult' => [],
@@ -134,7 +134,7 @@ class CrawlerControllerTest extends FunctionalTestCase
             'id' => 0,
             'url' => '',
             'subCfg' => ['key' => 'some-key'],
-            'tstamp' => 1563287062,
+            'tstamp' => 1_563_287_062,
             'configurationHash' => '',
             'skipInnerDuplicationCheck' => false,
             'mockedDuplicateRowResult' => ['duplicate-exists' => true],
@@ -145,7 +145,7 @@ class CrawlerControllerTest extends FunctionalTestCase
             'id' => 0,
             'url' => '',
             'subCfg' => ['key' => 'some-key'],
-            'tstamp' => 1563287062,
+            'tstamp' => 1_563_287_062,
             'configurationHash' => '',
             'skipInnerDuplicationCheck' => true,
             'mockedDuplicateRowResult' => ['duplicate-exists' => true],
@@ -156,7 +156,7 @@ class CrawlerControllerTest extends FunctionalTestCase
             'id' => 0,
             'url' => '',
             'subCfg' => ['key' => 'some-key'],
-            'tstamp' => 1563287062,
+            'tstamp' => 1_563_287_062,
             'configurationHash' => '',
             'skipInnerDuplicationCheck' => true,
             'mockedDuplicateRowResult' => ['duplicate-exists' => true],

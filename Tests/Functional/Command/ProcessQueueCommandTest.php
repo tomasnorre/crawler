@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AOE\Crawler\Tests\Functional\Command;
 
 /*
- * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
+ * (c) 2022 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -20,27 +20,22 @@ namespace AOE\Crawler\Tests\Functional\Command;
  */
 
 use AOE\Crawler\Command\ProcessQueueCommand;
+use AOE\Crawler\Controller\CrawlerController;
+use AOE\Crawler\Crawler;
+use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
-class ProcessQueueCommandTest extends AbstractCommandTests
+class ProcessQueueCommandTest extends FunctionalTestCase
 {
     /**
      * @var array
      */
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    /**
-     * @var QueueRepository
-     */
-    protected $queueRepository;
-
-    /**
-     * @var CommandTester
-     */
-    protected $commandTester;
+    protected CommandTester $commandTester;
 
     protected function setUp(): void
     {
@@ -48,9 +43,15 @@ class ProcessQueueCommandTest extends AbstractCommandTests
 
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/pages.xml');
-        $this->queueRepository = GeneralUtility::makeInstance(ObjectManager::class)->get(QueueRepository::class);
 
-        $command = new ProcessQueueCommand();
+        $crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
+
+        $command = new ProcessQueueCommand(
+            new Crawler(),
+            $crawlerController,
+            new ProcessRepository(),
+            new QueueRepository()
+        );
         $this->commandTester = new CommandTester($command);
     }
 

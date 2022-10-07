@@ -137,7 +137,7 @@ trait SiteBasedTestTrait
         if (! isset(static::LANGUAGE_PRESETS[$identifier])) {
             throw new \LogicException(
                 sprintf('Undefined preset identifier "%s"', $identifier),
-                1533893665
+                1_533_893_665
             );
         }
         return static::LANGUAGE_PRESETS[$identifier];

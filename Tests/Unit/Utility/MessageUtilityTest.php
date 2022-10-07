@@ -36,10 +36,7 @@ class MessageUtilityTest extends UnitTestCase
      */
     private $oldBackendUser;
 
-    /**
-     * @var FlashMessageService
-     */
-    private $flashMessageQueue;
+    private \TYPO3\CMS\Core\Messaging\FlashMessageQueue $flashMessageQueue;
 
     protected function setUp(): void
     {

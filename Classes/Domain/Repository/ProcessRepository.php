@@ -46,15 +46,8 @@ class ProcessRepository extends Repository
 {
     public const TABLE_NAME = 'tx_crawler_process';
 
-    /**
-     * @var QueryBuilder
-     */
-    protected $queryBuilder;
-
-    /**
-     * @var array
-     */
-    protected $extensionSettings = [];
+    protected QueryBuilder $queryBuilder;
+    protected array $extensionSettings = [];
 
     public function __construct()
     {
@@ -82,35 +75,20 @@ class ProcessRepository extends Repository
             ->select('*')
             ->from(self::TABLE_NAME)
             ->orderBy('ttl', 'DESC')
-            ->execute();
+            ->executeQuery();
 
-        while ($row = $statement->fetch()) {
+        while ($row = $statement->fetchAssociative()) {
             $process = GeneralUtility::makeInstance(Process::class);
             $process->setProcessId($row['process_id']);
-            $process->setActive($row['active']);
-            $process->setTtl($row['ttl']);
-            $process->setAssignedItemsCount($row['assigned_items_count']);
-            $process->setDeleted($row['deleted']);
-            $process->setSystemProcessId($row['system_process_id']);
+            $process->setActive((bool) $row['active']);
+            $process->setTtl((int) $row['ttl']);
+            $process->setAssignedItemsCount((int) $row['assigned_items_count']);
+            $process->setDeleted((bool) $row['deleted']);
+            $process->setSystemProcessId((string) $row['system_process_id']);
             $collection->append($process);
         }
 
         return $collection;
-    }
-
-    /**
-     * @param string $processId
-     */
-    public function findByProcessId($processId)
-    {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
-
-        return $queryBuilder
-            ->select('*')
-            ->from(self::TABLE_NAME)
-            ->where(
-                $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId, PDO::PARAM_STR))
-            )->execute()->fetch(0);
     }
 
     public function findAllActive(): ProcessCollection
@@ -127,16 +105,16 @@ class ProcessRepository extends Repository
                 $queryBuilder->expr()->eq('deleted', 0)
             )
             ->orderBy('ttl', 'DESC')
-            ->execute();
+            ->executeQuery();
 
-        while ($row = $statement->fetch()) {
+        while ($row = $statement->fetchAssociative()) {
             $process = new Process();
             $process->setProcessId($row['process_id']);
-            $process->setActive($row['active']);
-            $process->setTtl($row['ttl']);
-            $process->setAssignedItemsCount($row['assigned_items_count']);
-            $process->setDeleted($row['deleted']);
-            $process->setSystemProcessId($row['system_process_id']);
+            $process->setActive((bool) $row['active']);
+            $process->setTtl((int) $row['ttl']);
+            $process->setAssignedItemsCount((int) $row['assigned_items_count']);
+            $process->setDeleted((bool) $row['deleted']);
+            $process->setSystemProcessId((string) $row['system_process_id']);
             $collection->append($process);
         }
 
@@ -154,19 +132,7 @@ class ProcessRepository extends Repository
             ->delete(self::TABLE_NAME)
             ->where(
                 $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId, PDO::PARAM_STR))
-            )->execute();
-    }
-
-    /**
-     * Returns the number of active processes.
-     *
-     * @return int
-     * @deprecated Using ProcessRepository->countActive() is deprecated since 9.1.1 and will be removed in v11.x, please use ProcessRepository->findAllActive->count() instead
-     * @codeCoverageIgnore
-     */
-    public function countActive()
-    {
-        return $this->findAllActive()->count();
+            )->executeStatement();
     }
 
     /**
@@ -186,9 +152,9 @@ class ProcessRepository extends Repository
                 $queryBuilder->expr()->lte('ttl', intval(time() - $this->extensionSettings['processMaxRunTime'] - 3600)),
                 $queryBuilder->expr()->eq('active', 1)
             )
-            ->execute();
+            ->executeQuery();
 
-        while ($row = $statement->fetch()) {
+        while ($row = $statement->fetchAssociative()) {
             $activeProcesses[] = $row;
         }
 
@@ -212,7 +178,7 @@ class ProcessRepository extends Repository
                 $queryBuilder->expr()->lte('ttl', intval(time() - $this->extensionSettings['processMaxRunTime'])),
                 $queryBuilder->expr()->eq('active', 1)
             )
-            ->execute()->fetchAll();
+            ->executeQuery()->fetchAllAssociative();
     }
 
     /**
@@ -222,27 +188,15 @@ class ProcessRepository extends Repository
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
 
-        return $queryBuilder
+        return (int) $queryBuilder
             ->count('*')
             ->from(self::TABLE_NAME)
             ->where(
                 $queryBuilder->expr()->eq('deleted', 0),
                 $queryBuilder->expr()->gt('ttl', intval($ttl))
             )
-            ->execute()
-            ->fetchColumn(0);
-    }
-
-    /**
-     * Get limit clause
-     * @deprecated Using ProcessRepository::getLimitFromItemCountAndOffset() is deprecated since 9.1.1 and will be removed in v11.x, was not used, so will be removed
-     */
-    public static function getLimitFromItemCountAndOffset(int $itemCount, int $offset): string
-    {
-        $itemCount = filter_var($itemCount, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'default' => 20]]);
-        $offset = filter_var($offset, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0, 'default' => 0]]);
-
-        return $offset . ', ' . $itemCount;
+            ->executeQuery()
+            ->fetchOne();
     }
 
     public function deleteProcessesWithoutItemsAssigned(): void
@@ -253,7 +207,7 @@ class ProcessRepository extends Repository
             ->where(
                 $queryBuilder->expr()->eq('assigned_items_count', 0)
             )
-            ->execute();
+            ->executeStatement();
     }
 
     public function deleteProcessesMarkedAsDeleted(): void
@@ -264,7 +218,7 @@ class ProcessRepository extends Repository
             ->where(
                 $queryBuilder->expr()->eq('deleted', 1)
             )
-            ->execute();
+            ->executeStatement();
     }
 
     public function isProcessActive(string $processId): bool
@@ -277,8 +231,8 @@ class ProcessRepository extends Repository
                 $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId))
             )
             ->orderBy('ttl')
-            ->execute()
-            ->fetchColumn(0);
+            ->executeQuery()
+            ->fetchFirstColumn();
 
         return (bool) $isActive;
     }
@@ -310,7 +264,7 @@ class ProcessRepository extends Repository
                 $queryBuilder->expr()->eq('deleted', 0)
             )
             ->set('active', '0')
-            ->execute();
+            ->executeStatement();
     }
 
     public function addProcess(string $processId, int $systemProcessId): void

@@ -37,7 +37,6 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class CrawlerApi
@@ -47,36 +46,16 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  */
 class CrawlerApi
 {
-    /**
-     * @var QueueRepository
-     */
-    protected $queueRepository;
+    protected QueueRepository $queueRepository;
+    protected array $allowedConfigurations = [];
+    protected QueryBuilder $queryBuilder;
+    protected string $tableName = 'tx_crawler_queue';
 
-    /**
-     * @var array
-     */
-    protected $allowedConfigurations = [];
-
-    /**
-     * @var QueryBuilder
-     */
-    protected $queryBuilder;
-
-    /**
-     * @var string
-     */
-    protected $tableName = 'tx_crawler_queue';
-
-    /**
-     * @var CrawlerController
-     */
-    protected $crawlerController;
+    protected ?\AOE\Crawler\Controller\CrawlerController $crawlerController = null;
 
     public function __construct()
     {
-        /** @var ObjectManager $objectManager */
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->queueRepository = $objectManager->get(QueueRepository::class);
+        $this->queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
     }
 
     /**
@@ -245,7 +224,7 @@ class CrawlerApi
     public function getQueueStatistics(): array
     {
         return [
-            'assignedButUnprocessed' => $this->queueRepository->countAllAssignedPendingItems(),
+            'assigned_but_unprocessed' => $this->queueRepository->countAllAssignedPendingItems(),
             'unprocessed' => $this->queueRepository->countAllPendingItems(),
         ];
     }
@@ -253,7 +232,7 @@ class CrawlerApi
     /**
      * Get queue statistics by configuration
      *
-     * @return array array of array('configuration' => <>, 'assignedButUnprocessed' => <>, 'unprocessed' => <>)
+     * @return array array of array('configuration' => <>, 'assigned_but_unprocessed' => <>, 'unprocessed' => <>)
      * @codeCoverageIgnore
      */
     public function getQueueStatisticsByConfiguration()
@@ -291,10 +270,9 @@ class CrawlerApi
     /**
      * Get current crawling speed
      *
-     * @return int|float|bool
      * @codeCoverageIgnore
      */
-    public function getCurrentCrawlingSpeed()
+    public function getCurrentCrawlingSpeed(): int|float|bool
     {
         $lastProcessedEntries = $this->queueRepository->getLastProcessedEntriesTimestamps();
 
@@ -352,7 +330,7 @@ class CrawlerApi
         $data['duration'] = $data['end'] - $data['start'];
 
         if ($data['duration'] < 1) {
-            throw new TimeStampException('End timestamp must be after start timestamp', 1512659945);
+            throw new TimeStampException('End timestamp must be after start timestamp', 1_512_659_945);
         }
 
         for ($slotStart = $start; $slotStart < $end; $slotStart += $resolution) {
@@ -409,7 +387,7 @@ class CrawlerApi
         if (is_object($this->crawlerController)) {
             return $this->crawlerController;
         }
-        throw new CrawlerObjectException('no crawler object', 1512659759);
+        throw new CrawlerObjectException('no crawler object', 1_512_659_759);
     }
 
     /**
@@ -447,6 +425,6 @@ class CrawlerApi
 
     private function getPageRepository(): PageRepository
     {
-        return GeneralUtility::makeInstance(ObjectManager::class)->get(PageRepository::class);
+        return GeneralUtility::makeInstance(PageRepository::class);
     }
 }
