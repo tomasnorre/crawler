@@ -28,6 +28,7 @@
 #### Classes
 * !!! AbstractCommandTests
 * !!! IndexedSearchCrawlerHook
+* !!! CrawlerApi
 
 #### Functions & Properties
 * !!! CrawlerController->modMenu()
@@ -40,6 +41,14 @@
 * !!! ProcessQueueCommandTest->queueRepository
 * !!! QueueRepository->isPageInQueueTimed()
 * !!! QueueRepository->getAvailableSets()
+* !!! QueueRepository->countAllUnassignedPendingItems()
+* !!! QueueRepository->countPendingItemsGroupedByConfigurationKey()
+* !!! QueueRepository->getSetIdWithUnprocessedEntries()
+* !!! QueueRepository->getTotalQueueEntriesByConfiguration()
+* !!! QueueRepository->getLastProcessedEntriesTimestamps()
+* !!! QueueRepository->getLastProcessedEntries()
+* !!! QueueRepository->getPerformanceData()
+* !!! QueueRepository->findByQueueId()
 
 ## Crawler 11.0.4
 Crawler 11.0.4 was released on February 11th, 2022
