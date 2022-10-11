@@ -1,5 +1,8 @@
 # Changelog TYPO3 Crawler
 
+### Added
+* Support for environment variables as base_url
+
 ## Crawler 11.0.4
 Crawler 11.0.4 was released on January 28th, 2022
 
