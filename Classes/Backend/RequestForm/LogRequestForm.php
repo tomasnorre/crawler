@@ -12,10 +12,13 @@ use AOE\Crawler\Utility\MessageUtility;
 use AOE\Crawler\Value\QueueFilter;
 use AOE\Crawler\Writer\FileWriter\CsvWriter\CrawlerCsvWriter;
 use AOE\Crawler\Writer\FileWriter\CsvWriter\CsvWriterInterface;
+use Doctrine\DBAL\Driver\ResultStatement;
+use Doctrine\DBAL\ForwardCompatibility\Result;
 use Doctrine\DBAL\Query\QueryBuilder;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Exception;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\DebugUtility;
@@ -112,6 +115,9 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
     /**
      * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
      * @throws \TYPO3\CMS\Extbase\Object\Exception
+     * @throws \TYPO3\CMS\Core\Exception
+     * @throws \Doctrine\DBAL\Exception
+     * @throws \Exception
      */
     private function showLogAction(int $setId, string $quiPath): string
     {
@@ -147,8 +153,13 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                     ->where(
                         $this->queryBuilder->expr()->eq('qid', $this->queryBuilder->createNamedParameter($queueId))
                     )
-                    ->execute()
-                    ->fetch();
+                    ->execute();
+
+                if (!$q_entry instanceof Result) {
+                    throw new Exception('Could not find Queue entry', 1665559362);
+                }
+
+                $q_entry = $q_entry->fetch();
 
                 // Explode values
                 $q_entry['parameters'] = $this->jsonCompatibilityConverter->convert($q_entry['parameters']);
@@ -319,9 +330,8 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
      *
      * @param array $logEntriesOfPage Log items of one page
      * @param string $titleString Title string
-     *
      * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
-     *
+     * @throws \Exception
      * @psalm-return non-empty-list<array{titleRowSpan: positive-int, colSpan: int, title: string, noEntries?: string, trClass?: string, qid?: array{link: \TYPO3\CMS\Core\Http\Uri, link-text: string}, refresh?: array{link: \TYPO3\CMS\Core\Http\Uri, link-text: Icon, warning: Icon|string}, columns?: array{url: mixed|string, scheduled: string, exec_time: string, result_log: string, result_status: string, feUserGroupList: string, procInstructions: string, set_id: string, tsfe_id: string, tsfe_gr_list: string}}>
      */
     private function drawLog_addRows(array $logEntriesOfPage, string $titleString): array
