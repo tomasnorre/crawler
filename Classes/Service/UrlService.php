@@ -82,7 +82,7 @@ class UrlService
             $url = $site->getRouter()->generateUri($pageId, $queryParts);
             if (!empty($alternativeBaseUrl)) {
                 if (strpos($alternativeBaseUrl, '$') === 0) {
-                    $alternativeBaseUrl = getenv(substr($alternativeBaseUrl, 1));
+                    $alternativeBaseUrl = getenv(substr($alternativeBaseUrl, 1)) ?: '';
                 }
                 $alternativeBaseUrl = new Uri($alternativeBaseUrl);
                 $url = $url->withHost($alternativeBaseUrl->getHost());

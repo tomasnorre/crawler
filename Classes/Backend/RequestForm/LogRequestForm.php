@@ -12,7 +12,6 @@ use AOE\Crawler\Utility\MessageUtility;
 use AOE\Crawler\Value\QueueFilter;
 use AOE\Crawler\Writer\FileWriter\CsvWriter\CrawlerCsvWriter;
 use AOE\Crawler\Writer\FileWriter\CsvWriter\CsvWriterInterface;
-use Doctrine\DBAL\Driver\ResultStatement;
 use Doctrine\DBAL\ForwardCompatibility\Result;
 use Doctrine\DBAL\Query\QueryBuilder;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
