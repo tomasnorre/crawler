@@ -230,9 +230,6 @@ class ProcessRepository extends Repository
         return (bool) $isActive;
     }
 
-    /**
-     * @param $numberOfAffectedRows
-     */
     public function updateProcessAssignItemsCount($numberOfAffectedRows, string $processId): void
     {
         GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(self::TABLE_NAME)

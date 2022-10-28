@@ -776,7 +776,6 @@ class CrawlerController implements LoggerAwareInterface
 
         if (! empty($configurations)) {
             foreach ($configurations as $confKey => $confArray) {
-
                 // Title column:
                 if (! $c) {
                     $queueRow = new QueueRow($pageTitle);
@@ -791,7 +790,6 @@ class CrawlerController implements LoggerAwareInterface
                     $this->configurationService->expandExcludeString($confArray['subCfg']['exclude'] ?? ''),
                     true
                 )) {
-
                     // URL list:
                     $urlList = $this->urlListFromUrlArray(
                         $confArray,
@@ -817,8 +815,8 @@ class CrawlerController implements LoggerAwareInterface
                             '(' . count($gVal) . ')' .
                             '</td>
                                 <td nowrap="nowrap">' . nl2br(
-                                    htmlspecialchars(implode(chr(10), $gVal))
-                                ) . '</td>
+                                htmlspecialchars(implode(chr(10), $gVal))
+                            ) . '</td>
                             </tr>
                         ';
                         $calcRes *= count($gVal);
