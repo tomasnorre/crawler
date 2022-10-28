@@ -23,7 +23,6 @@ use Symplify\EasyCodingStandard\ValueObject\Option;
 use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
 
 return static function (ECSConfig $ecsConfig): void {
-    $ecsConfig->parallel();
     $parameters = $ecsConfig->parameters();
 
     $ecsConfig->import(SetList::PSR_12);
