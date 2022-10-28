@@ -30,11 +30,11 @@
         "typo3/cms-seo": "*"
     },
     "require-dev": {
-        "codeception/codeception": "^4.1",
-        "codeception/module-asserts": "^1.1",
-        "codeception/module-filesystem": "^1.0",
-        "codeception/module-phpbrowser": "^1.0",
-        "codeception/module-webdriver": "^1.0",
+        "codeception/codeception": "^5.0",
+        "codeception/module-asserts": "^3.0",
+        "codeception/module-filesystem": "^3.0",
+        "codeception/module-phpbrowser": "^3.0",
+        "codeception/module-webdriver": "^3.0",
         "cweagans/composer-patches": "^1.7",
         "infection/infection": "^0.26",
         "nikic/php-parser": "^4.13",
