@@ -13,6 +13,7 @@
 * !!! Switch isRequestHashMatchingQueueRecord() in FrontendUserAuthenticator from protected to private
 
 ### Fixed
+* If indexed_search is installed activate procInstructions for indexed_search
 
 ### Deprecated
 #### Classes
