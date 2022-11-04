@@ -89,7 +89,7 @@ return static function (ECSConfig $ecsConfig): void {
 
     $services->set(CyclomaticComplexitySniff::class)
         ->property('complexity', 22)
-        ->property('absoluteComplexity', 20);
+        ->property('absoluteComplexity', 22);
 
     $services->set(\Symplify\CodingStandard\Fixer\LineLength\LineLengthFixer::class);
 };
