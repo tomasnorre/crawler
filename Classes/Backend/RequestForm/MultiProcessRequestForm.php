@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace AOE\Crawler\Backend\RequestForm;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2005-2021 AOE GmbH <dev@aoe.com>
+ * (c) 2021-     Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -20,7 +21,6 @@ namespace AOE\Crawler\Backend\RequestForm;
  */
 
 use AOE\Crawler\Backend\Helper\UrlBuilder;
-use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Crawler;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
@@ -249,12 +249,11 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
      */
     private function runRefreshHooks(): void
     {
-        $crawlerLib = GeneralUtility::makeInstance(CrawlerController::class);
         foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['refresh_hooks'] ?? [] as $objRef) {
             /** @var CrawlerHookInterface $hookObj */
             $hookObj = GeneralUtility::makeInstance($objRef);
             if (is_object($hookObj)) {
-                $hookObj->crawler_init($crawlerLib);
+                $hookObj->crawler_init();
             }
         }
     }

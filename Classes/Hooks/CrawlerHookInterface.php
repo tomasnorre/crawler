@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace AOE\Crawler\Hooks;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2005-2021 AOE GmbH <dev@aoe.com>
+ * (c) 2021-     Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -19,9 +20,7 @@ namespace AOE\Crawler\Hooks;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Controller\CrawlerController;
-
 interface CrawlerHookInterface
 {
-    public function crawler_init(CrawlerController $crawlerController): void;
+    public function crawler_init(): void;
 }
