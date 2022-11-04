@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace AOE\Crawler\Hooks;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2005-2021 AOE GmbH <dev@aoe.com>
+ * (c) 2021-     Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -19,7 +20,6 @@ namespace AOE\Crawler\Hooks;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use TYPO3\CMS\Core\Core\Environment;
@@ -32,8 +32,6 @@ class ProcessCleanUpHook implements CrawlerHookInterface
 {
     protected ProcessRepository $processRepository;
     protected QueueRepository $queueRepository;
-    private CrawlerController $crawlerController;
-    private array $extensionSettings;
 
     public function __construct()
     {
@@ -41,16 +39,8 @@ class ProcessCleanUpHook implements CrawlerHookInterface
         $this->queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
     }
 
-    /**
-     * Main function of process CleanUp Hook.
-     *
-     * @param CrawlerController $crawlerController Crawler Lib class
-     */
-    public function crawler_init(CrawlerController $crawlerController): void
+    public function crawler_init(): void
     {
-        $this->crawlerController = $crawlerController;
-        $this->extensionSettings = $this->crawlerController->extensionSettings;
-
         // Clean Up
         $this->removeActiveOrphanProcesses();
         $this->removeActiveProcessesOlderThanOneHour();
@@ -102,7 +92,7 @@ class ProcessCleanUpHook implements CrawlerHookInterface
                     $responseArray = $this->createResponseArray($process);
                     if ($systemProcessId === (int) $responseArray[1]) {
                         $processExists = true;
-                    };
+                    }
                 }
                 if (! $processExists) {
                     $this->removeProcessFromProcesslist($processId);

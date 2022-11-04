@@ -11,6 +11,7 @@
 * !!! Add Type Hints for id parameters on RequestForm Render method
 * !!! Switch runPollSuccessHooks() in CrawlerInitialization from protected to private
 * !!! Switch isRequestHashMatchingQueueRecord() in FrontendUserAuthenticator from protected to private
+* !!! CrawlerHookInterface doesn't take a CrawlerController as input anymore
 
 ### Fixed
 * If indexed_search is installed activate procInstructions for indexed_search
