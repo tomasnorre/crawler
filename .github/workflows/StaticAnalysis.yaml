@@ -13,7 +13,7 @@ jobs:
         name: PHPstan
         runs-on: ubuntu-latest
         steps:
-            -   uses: actions/checkout@v2
+            -   uses: actions/checkout@v3
             -   id: composer-cache
                 run: echo "::set-output name=dir::$(composer config cache-files-dir)"
             -   uses: actions/cache@v1
@@ -33,7 +33,7 @@ jobs:
         name: Rector
         runs-on: ubuntu-latest
         steps:
-            -   uses: actions/checkout@v2
+            -   uses: actions/checkout@v3
             -   id: composer-cache
                 run: echo "::set-output name=dir::$(composer config cache-files-dir)"
             -   uses: actions/cache@v1
@@ -53,7 +53,7 @@ jobs:
         name: Code Style
         runs-on: ubuntu-latest
         steps:
-            -   uses: actions/checkout@v2
+            -   uses: actions/checkout@v3
             -   id: composer-cache
                 run: echo "::set-output name=dir::$(composer config cache-files-dir)"
             -   uses: actions/cache@v1
@@ -73,7 +73,7 @@ jobs:
         name: Psalm
         runs-on: ubuntu-latest
         steps:
-            -   uses: actions/checkout@v2
+            -   uses: actions/checkout@v3
             -   id: composer-cache
                 run: echo "::set-output name=dir::$(composer config cache-files-dir)"
             -   uses: actions/cache@v1
