@@ -78,7 +78,7 @@ jobs:
         run: |
           export "FUNCTIONAL_XML"=.Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml
           export "UNIT_XML"=.Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml
-          composer remove --dev typo3/testing-framework rector/rector
+          composer remove --dev typo3/testing-framework ssch/typo3-rector
           rm -rf composer.lock .Build
           composer require --dev nimut/typo3-complete:dev-master saschaegerer/phpstan-typo3:"*" nimut/testing-framework:"*"
           git checkout composer.json
