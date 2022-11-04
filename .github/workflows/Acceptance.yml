@@ -39,7 +39,7 @@ jobs:
           php -v
           composer --version
 
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - uses: jonaseberle/github-action-setup-ddev@v1
         with:
           ddevDir: ".devbox"
@@ -109,7 +109,7 @@ jobs:
           php -v
           composer --version
 
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - run: |
           cd .devbox/.ddev
           docker-compose -f docker-compose.selenium.yaml up -d
