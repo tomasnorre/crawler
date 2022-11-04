@@ -30,6 +30,7 @@
 * !!! AbstractCommandTests
 * !!! IndexedSearchCrawlerHook
 * !!! CrawlerApi
+* !!! IndexedSearchCrawlerFilesHook
 
 #### Functions & Properties
 * !!! CrawlerController->modMenu()
