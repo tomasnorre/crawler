@@ -7,7 +7,7 @@ defined('TYPO3') or die();
 $GLOBALS['TYPO3_CONF_VARS']['BE']['ContextMenu']['ItemProviders'][1566472321] = \AOE\Crawler\ContextMenu\ItemProvider::class;
 
 if (!\TYPO3\CMS\Core\Core\Environment::isComposerMode()) {
-    require \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('crawler') . '/Resources/Private/Php/Libraries/vendor/autoload.php';
+    require \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('crawler') . 'Resources/Private/Php/Libraries/vendor/autoload.php';
 }
 
 # This is done to ensure that ProcInstructions are loaded correctly under TYPO3 11, as the CrawlerHooks etc is
