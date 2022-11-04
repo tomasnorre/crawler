@@ -38,6 +38,9 @@ jobs:
           git checkout composer.json
           ln -nfs .Build/vendor/typo3/cms/typo3 typo3
 
+      - name: Ensure Libs are installed too for non-composer
+        run: composer extension-create-libs
+
       - name: Wait for PostgreSQL
         run: |
           while ! nc -z localhost 5432; do
@@ -79,6 +82,9 @@ jobs:
         run: |
           composer require --dev nimut/typo3-complete:${{ matrix.typo3 }} --no-progress
 
+      - name: Ensure Libs are installed too for non-composer
+        run: composer extension-create-libs
+
       - name: Functional Tests
         run: composer test:functional-sqlite
 #        run: |
@@ -117,6 +123,9 @@ jobs:
           composer require --dev nimut/typo3-complete:${{ matrix.typo3 }} --no-progress
           git checkout composer.json
           ln -nfs .Build/vendor/typo3/cms/typo3 typo3
+
+      - name: Ensure Libs are installed too for non-composer
+        run: composer extension-create-libs
 
       - name: Functional Tests
         run: |
@@ -159,6 +168,9 @@ jobs:
           composer require --dev nimut/typo3-complete:${{ matrix.typo3 }} --no-progress
           git checkout composer.json
           ln -nfs .Build/vendor/typo3/cms/typo3 typo3
+
+      - name: Ensure Libs are installed too for non-composer
+        run: composer extension-create-libs
 
       - name: Functional Tests
         run: |
