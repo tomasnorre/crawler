@@ -113,7 +113,6 @@
             ]
         },
         "typo3/cms": {
-            "cms-package-dir": "{$vendor-dir}/typo3/cms",
             "extension-key": "crawler",
             "web-dir": ".Build/Web"
         }
