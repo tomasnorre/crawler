@@ -240,9 +240,9 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
             ));
             $options[] = '
                 <option value="' . $key . '" ' . ($selected ? ' selected="selected"' : '') . '>' . htmlspecialchars(
-                    $val,
-                    ENT_QUOTES | ENT_HTML5
-                ) . '</option>';
+                $val,
+                ENT_QUOTES | ENT_HTML5
+            ) . '</option>';
         }
 
         return '<select class="form-control" name="' . htmlspecialchars(

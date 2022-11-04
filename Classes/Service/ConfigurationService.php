@@ -103,7 +103,6 @@ class ConfigurationService
                 $pidOnlyList,
                 strval($pageId)
             )) {
-
                 // Explode, process etc.:
                 $res[$key] = [];
                 $res[$key]['subCfg'] = $subCfg;
@@ -134,7 +133,6 @@ class ConfigurationService
 
         $crawlerConfigurations = $this->configurationRepository->getCrawlerConfigurationRecordsFromRootLine($pageId);
         foreach ($crawlerConfigurations as $configurationRecord) {
-
             // check access to the configuration record
             if (empty($configurationRecord['begroups']) || $this->getBackendUser()->isAdmin() || UserService::hasGroupAccess(
                 $this->getBackendUser()->user['usergroup_cached_list'],
@@ -152,7 +150,6 @@ class ConfigurationService
 
                     // don't overwrite previously defined paramSets
                     if (!isset($res[$key])) {
-
                         /* @var $TSparserObject TypoScriptParser */
                         $TSparserObject = GeneralUtility::makeInstance(TypoScriptParser::class);
                         $TSparserObject->parse($configurationRecord['processing_instruction_parameters_ts']);
@@ -261,7 +258,6 @@ class ConfigurationService
                         $reg = $this->swapIfFirstIsLargerThanSecond($reg);
                         $paramArray = $this->addValuesInRange($reg, $paramArray, $parameter);
                     } elseif (str_starts_with(trim($part), '_TABLE:')) {
-
                         // Parse parameters:
                         $subparts = GeneralUtility::trimExplode(';', $part);
                         $subpartParams = [];

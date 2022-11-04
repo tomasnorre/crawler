@@ -17,16 +17,16 @@ use PhpCsFixer\Fixer\Phpdoc\AlignMultilineCommentFixer;
 use PhpCsFixer\Fixer\Phpdoc\GeneralPhpdocAnnotationRemoveFixer;
 use PhpCsFixer\Fixer\Phpdoc\NoBlankLinesAfterPhpdocFixer;
 use PhpCsFixer\Fixer\Whitespace\NoExtraBlankLinesFixer;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symplify\CodingStandard\Fixer\ArrayNotation\StandaloneLineInMultilineArrayFixer;
+use Symplify\EasyCodingStandard\Config\ECSConfig;
 use Symplify\EasyCodingStandard\ValueObject\Option;
 use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
 
-return static function (ContainerConfigurator $containerConfigurator): void {
-    $parameters = $containerConfigurator->parameters();
+return static function (ECSConfig $ecsConfig): void {
+    $parameters = $ecsConfig->parameters();
 
-    $containerConfigurator->import(SetList::PSR_12);
-    $containerConfigurator->import(SetList::COMMON);
+    $ecsConfig->import(SetList::PSR_12);
+    $ecsConfig->import(SetList::COMMON);
 
     $parameters->set(Option::SKIP,
         [
@@ -44,6 +44,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             UnaryOperatorSpacesFixer::class => null,
             StandaloneLineInMultilineArrayFixer::class => null,
             PhpCsFixer\Fixer\Operator\NotOperatorWithSuccessorSpaceFixer::class => null,
+            'PHP_CodeSniffer\Standards\Generic\Sniffs\CodeAnalysis\AssignmentInConditionSniff.Found' => null,
         ]
     );
 
@@ -56,7 +57,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ]
     );
 
-    $services = $containerConfigurator->services();
+    $services = $ecsConfig->services();
 
     $services->set(ArraySyntaxFixer::class)
         ->call('configure', [['syntax' => 'short']]);
@@ -87,8 +88,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->call('configure', [['imports_order' => ['class', 'const', 'function']]]);
 
     $services->set(CyclomaticComplexitySniff::class)
-        ->property('complexity', 20)
-        ->property('absoluteComplexity', 20);
+        ->property('complexity', 22)
+        ->property('absoluteComplexity', 22);
 
     $services->set(\Symplify\CodingStandard\Fixer\LineLength\LineLengthFixer::class);
 };

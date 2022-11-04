@@ -189,11 +189,6 @@ parameters:
 			path: Classes/Domain/Repository/ProcessRepository.php
 
 		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$numberOfAffectedRows\\)\\: Unexpected token \"\\$numberOfAffectedRows\", expected type at offset 18$#"
-			count: 1
-			path: Classes/Domain/Repository/ProcessRepository.php
-
-		-
 			message:
 				"""
 					#^Fetching class constant class of deprecated class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:

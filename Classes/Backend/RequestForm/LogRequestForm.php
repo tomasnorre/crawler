@@ -246,11 +246,11 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
             'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.display'
         ) . ': ' . BackendUtility::getFuncMenu(
             $this->pageId,
-                'SET[log_display]',
-                $this->infoModuleController->MOD_SETTINGS['log_display'],
-                $this->infoModuleController->MOD_MENU['log_display'],
-                'index.php',
-                '&setID=' . $setId
+            'SET[log_display]',
+            $this->infoModuleController->MOD_SETTINGS['log_display'],
+            $this->infoModuleController->MOD_MENU['log_display'],
+            'index.php',
+            '&setID=' . $setId
         );
     }
 
@@ -272,28 +272,28 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
         $currentValue = $this->infoModuleController->MOD_SETTINGS['log_resultLog'] ?? '';
 
         return BackendUtility::getFuncCheck(
-                $this->pageId,
-                'SET[log_resultLog]',
-                $currentValue,
-                'index.php',
-                '&setID=' . $setId . $quiPart
-            ) . '&nbsp;' . $this->getLanguageService()->sL(
-                'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showresultlog'
-            );
+            $this->pageId,
+            'SET[log_resultLog]',
+            $currentValue,
+            'index.php',
+            '&setID=' . $setId . $quiPart
+        ) . '&nbsp;' . $this->getLanguageService()->sL(
+            'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showresultlog'
+        );
     }
 
     private function getShowFeVarsCheckBoxHtml(int $setId, string $quiPart): string
     {
         $currentValue = $this->infoModuleController->MOD_SETTINGS['log_feVars'] ?? '';
         return BackendUtility::getFuncCheck(
-                $this->pageId,
-                'SET[log_feVars]',
-                $currentValue,
-                'index.php',
-                '&setID=' . $setId . $quiPart
-            ) . '&nbsp;' . $this->getLanguageService()->sL(
-                'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showfevars'
-            );
+            $this->pageId,
+            'SET[log_feVars]',
+            $currentValue,
+            'index.php',
+            '&setID=' . $setId . $quiPart
+        ) . '&nbsp;' . $this->getLanguageService()->sL(
+            'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showfevars'
+        );
     }
 
     /**

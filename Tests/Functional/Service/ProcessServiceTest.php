@@ -52,7 +52,6 @@ class ProcessServiceTest extends FunctionalTestCase
      */
     public function getCrawlerCliPathReturnsString(): void
     {
-
         // Check with phpPath set
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [
             'phpPath' => '/usr/local/bin/foobar-binary-to-be-able-to-differ-the-test',

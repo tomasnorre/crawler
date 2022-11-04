@@ -53,7 +53,6 @@ class FrontendUserAuthenticator implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-
         /** @var JsonCompatibilityConverter $jsonCompatibilityConverter */
         $jsonCompatibilityConverter = GeneralUtility::makeInstance(JsonCompatibilityConverter::class);
 
