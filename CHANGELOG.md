@@ -4,7 +4,7 @@ Crawler 11.0.5
 
 ### Fixed
 * If indexed_search is installed activate procInstructions for indexed_search
-* Ensure undefined indexes is not throwing a warning in PHP 8+
+* Ensure undefined indexes is not throwing a warning in PHP 8
 
 ## Crawler 11.0.4
 Crawler 11.0.4 was released on January 28th, 2022
