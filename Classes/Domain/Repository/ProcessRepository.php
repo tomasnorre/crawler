@@ -81,7 +81,7 @@ class ProcessRepository extends Repository
 
         while ($row = $statement->fetchAssociative()) {
             $process = GeneralUtility::makeInstance(Process::class);
-            $process->setProcessId($row['process_id']);
+            $process->setProcessId((string) $row['process_id']);
             $process->setActive((bool) $row['active']);
             $process->setTtl((int) $row['ttl']);
             $process->setAssignedItemsCount((int) $row['assigned_items_count']);
@@ -108,7 +108,7 @@ class ProcessRepository extends Repository
 
         while ($row = $statement->fetchAssociative()) {
             $process = new Process();
-            $process->setProcessId($row['process_id']);
+            $process->setProcessId((string) $row['process_id']);
             $process->setActive((bool) $row['active']);
             $process->setTtl((int) $row['ttl']);
             $process->setAssignedItemsCount((int) $row['assigned_items_count']);
@@ -230,12 +230,12 @@ class ProcessRepository extends Repository
         return (bool) $isActive;
     }
 
-    public function updateProcessAssignItemsCount($numberOfAffectedRows, string $processId): void
+    public function updateProcessAssignItemsCount(int $numberOfAffectedRows, string $processId): void
     {
         GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(self::TABLE_NAME)
             ->update(
                 self::TABLE_NAME,
-                ['assigned_items_count' => (int) $numberOfAffectedRows],
+                ['assigned_items_count' => $numberOfAffectedRows],
                 ['process_id' => $processId]
             );
     }

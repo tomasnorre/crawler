@@ -19,6 +19,7 @@ namespace AOE\Crawler\Utility;
  * The TYPO3 project - inspiring people to share!
  */
 
+use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -33,7 +34,7 @@ class MessageUtility
      */
     public static function addNoticeMessage(string $message): void
     {
-        self::addMessage($message, FlashMessage::NOTICE);
+        self::addMessage($message, AbstractMessage::NOTICE);
     }
 
     /**
@@ -41,7 +42,7 @@ class MessageUtility
      */
     public static function addErrorMessage(string $message): void
     {
-        self::addMessage($message, FlashMessage::ERROR);
+        self::addMessage($message, AbstractMessage::ERROR);
     }
 
     /**
@@ -49,7 +50,7 @@ class MessageUtility
      */
     public static function addWarningMessage(string $message): void
     {
-        self::addMessage($message, FlashMessage::WARNING);
+        self::addMessage($message, AbstractMessage::WARNING);
     }
 
     /**
@@ -58,7 +59,7 @@ class MessageUtility
      * @param string $message the message itself
      * @param int $severity message level (0 = success (default), -1 = info, -2 = notice, 1 = warning, 2 = error)
      */
-    private static function addMessage(string $message, int $severity = FlashMessage::OK): void
+    private static function addMessage(string $message, int $severity = AbstractMessage::OK): void
     {
         $message = GeneralUtility::makeInstance(FlashMessage::class, $message, '', $severity);
 

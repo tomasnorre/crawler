@@ -1,15 +1,15 @@
 includes:
     - phpstan-baseline.neon
-    # for cognitive rules
+    # For cognitive rules - These a include from the phpstan/extension-installer
+    #- .Build/vendor/symplify/phpstan-rules/config/packages/cognitive-complexity/cognitive-complexity-services.neon
     #- .Build/vendor/symplify/phpstan-rules/config/services/services.neon
-    #- .Build/vendor/symplify/phpstan-rules/packages/cognitive-complexity/config/cognitive-complexity-rules.neon
 
 parameters:
-    level: max
+    level: 8
     paths:
         - "Classes/"
         - "Configuration/"
-    excludes_analyse:
+    excludePaths:
         - Tests/Acceptance
         - Classes/Worker/CrawlerWorker.php
         - Classes/CrawlStrategy/GuzzleExecutionStrategy.php

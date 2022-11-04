@@ -44,14 +44,11 @@ class HookUtility
 
         // Env-dependent
         if (TYPO3_MODE === 'BE') {
-            self::registerBackendHooks($extKey);
+            self::registerBackendHooks();
         }
     }
 
-    /**
-     * @noRector \Rector\DeadCode\Rector\ClassMethod\RemoveUnusedParameterRector
-     */
-    private static function registerBackendHooks(string $extKey): void
+    private static function registerBackendHooks(): void
     {
         // DataHandler clear page cache pre-processing
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['clearPageCacheEval'][] =
