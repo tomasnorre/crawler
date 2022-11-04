@@ -12,7 +12,10 @@
     ],
     "homepage": "https://github.com/tomasnorre/crawler",
     "support": {
-        "issues": "https://github.com/tomasnorre/crawler/issues"
+        "docs": "https://docs.typo3.org/p/tomasnorre/crawler/main/en-us/",
+        "issues": "https://github.com/tomasnorre/crawler/issues",
+        "source": "https://github.com/tomasnorre/crawler/",
+        "chat": "https://typo3.slack.com/archives/C087NGBKM"
     },
     "require": {
         "php": "^8.0",
