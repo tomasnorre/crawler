@@ -146,7 +146,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
             // Show details:
             if ($queueId) {
                 // Get entry record:
-                $q_entry = $this->queryBuilder
+                $result = $this->queryBuilder
                     ->from(QueueRepository::TABLE_NAME)
                     ->select('*')
                     ->where(
@@ -154,11 +154,11 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                     )
                     ->execute();
 
-                if (!$q_entry instanceof Result) {
+                if (!$result instanceof Result) {
                     throw new Exception('Could not find Queue entry', 1665559362);
                 }
 
-                $q_entry = $q_entry->fetch();
+                $q_entry = $result->fetch();
 
                 // Explode values
                 $q_entry['parameters'] = $this->jsonCompatibilityConverter->convert($q_entry['parameters']);
