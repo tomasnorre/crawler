@@ -87,7 +87,7 @@ class ConfigurationService
             if (!is_array($values)) {
                 continue;
             }
-            $key = str_replace('.', '', $key);
+            $key = (string) str_replace('.', '', $key);
             // Sub configuration for a single configuration string:
             $subCfg = (array) $crawlerCfg[$key . '.'];
             $subCfg['key'] = $key;

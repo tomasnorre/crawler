@@ -6,17 +6,7 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Cannot access offset 'feUserGroupList' on array\\|bool\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
 			message: "#^Cannot access offset 'procInstructions' on array\\|bool\\.$#"
-			count: 2
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
-			message: "#^Cannot access offset 'url' on array\\|bool\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
@@ -31,12 +21,12 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:drawLog_addRows\\(\\) should return array\\<int, array\\('titleRowSpan' \\=\\> int\\<1, max\\>, 'colSpan' \\=\\> int, 'title' \\=\\> string, \\?'noEntries' \\=\\> string, \\?'trClass' \\=\\> string, \\?'qid' \\=\\> array\\('link' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, 'link\\-text' \\=\\> string\\), \\?'refresh' \\=\\> array\\('link' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, 'link\\-text' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon, 'warning' \\=\\> string\\|TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon\\), \\?'columns' \\=\\> array\\('url' \\=\\> mixed, 'scheduled' \\=\\> string, 'exec_time' \\=\\> string, 'result_log' \\=\\> string, 'result_status' \\=\\> string, 'feUserGroupList' \\=\\> string, 'procInstructions' \\=\\> string, 'set_id' \\=\\> string, \\.\\.\\.\\)\\)\\>&nonEmpty but returns array\\<int, array\\('colSpan' \\=\\> 8\\|9\\|11\\|12, 'columns' \\=\\> array\\<literal\\-string&non\\-empty\\-string, mixed\\>&nonEmpty, 'qid' \\=\\> array\\('link' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, 'link\\-text' \\=\\> string\\), 'refresh' \\=\\> array\\('link' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, 'link\\-text' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon, 'warning' \\=\\> ''\\|TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon\\), 'title' \\=\\> string, 'titleRowSpan' \\=\\> int\\<1, max\\>, 'trClass' \\=\\> ''\\|'bg\\-danger'\\)\\|array\\('titleRowSpan' \\=\\> 1, 'colSpan' \\=\\> 8\\|9\\|11\\|12, 'title' \\=\\> string, 'noEntries' \\=\\> string\\)\\>\\.$#"
+			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:drawLog_addRows\\(\\) should return non\\-empty\\-array\\<int, array\\{titleRowSpan\\: int\\<1, max\\>, colSpan\\: int, title\\: string, noEntries\\?\\: string, trClass\\?\\: string, qid\\?\\: array\\{link\\: TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, link\\-text\\: string\\}, refresh\\?\\: array\\{link\\: TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, link\\-text\\: TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon, warning\\: string\\|TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon\\}, columns\\?\\: array\\{url\\: mixed, scheduled\\: string, exec_time\\: string, result_log\\: string, result_status\\: string, feUserGroupList\\: string, procInstructions\\: string, set_id\\: string, \\.\\.\\.\\}\\}\\> but returns non\\-empty\\-array\\<int, array\\{titleRowSpan\\: 1, colSpan\\: 8\\|9\\|11\\|12, title\\: string, noEntries\\: string\\}\\|array\\{titleRowSpan\\: int\\<1, max\\>, colSpan\\: 8\\|9\\|11\\|12, title\\: string, trClass\\: ''\\|'bg\\-danger', qid\\: array\\{link\\: TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, link\\-text\\: string\\}, refresh\\: array\\{link\\: TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, link\\-text\\: TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon, warning\\: ''\\|TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon\\}, columns\\: non\\-empty\\-array\\<'exec_time'\\|'feUserGroupList'\\|'procInstructions'\\|'result_log'\\|'result_status'\\|'scheduled'\\|'set_id'\\|'tsfe_gr_list'\\|'tsfe_id'\\|'url', mixed\\>\\}\\>\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Offset 'result_data' does not exist on array\\('parameters' \\=\\> array\\|bool\\)\\.$#"
+			message: "#^Offset 'result_data' does not exist on array\\{parameters\\: array\\|bool\\}\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
@@ -66,11 +56,15 @@ parameters:
 			path: Classes/Command/BuildQueueCommand.php
 
 		-
-			message:
-				"""
-					#^Call to deprecated method shortMD5\\(\\) of class TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:
-					since v11, will be removed in v12\\.$#
-				"""
+			message: """
+				#^Call to deprecated method shortMD5\\(\\) of class TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:
+				since v11, will be removed in v12\\.$#
+			"""
+			count: 1
+			path: Classes/Command/ProcessQueueCommand.php
+
+		-
+			message: "#^Constant AOE\\\\Crawler\\\\Command\\\\ProcessQueueCommand\\:\\:CLI_STATUS_POLLABLE_PROCESSED is unused\\.$#"
 			count: 1
 			path: Classes/Command/ProcessQueueCommand.php
 
@@ -85,11 +79,10 @@ parameters:
 			path: Classes/ContextMenu/ItemProvider.php
 
 		-
-			message:
-				"""
-					#^Call to deprecated method shortMD5\\(\\) of class TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:
-					since v11, will be removed in v12\\.$#
-				"""
+			message: """
+				#^Call to deprecated method shortMD5\\(\\) of class TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:
+				since v11, will be removed in v12\\.$#
+			"""
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -110,6 +103,11 @@ parameters:
 
 		-
 			message: "#^Class cognitive complexity is 102, keep it under 60$#"
+			count: 1
+			path: Classes/Controller/CrawlerController.php
+
+		-
+			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -139,12 +137,27 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\CrawlStrategy\\\\CallbackExecutionStrategy\\:\\:fetchByCallback\\(\\) has no return typehint specified\\.$#"
+			message: "#^Property AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:\\$crawler is never read, only written\\.$#"
+			count: 1
+			path: Classes/Controller/CrawlerController.php
+
+		-
+			message: "#^Property AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:\\$urlService is never read, only written\\.$#"
+			count: 1
+			path: Classes/Controller/CrawlerController.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:crawler_execute\\(\\)\\.$#"
 			count: 1
 			path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
 
 		-
-			message: "#^Parameter \\#1 \\$className of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\) expects class\\-string\\<mixed\\>, string given\\.$#"
+			message: "#^Method AOE\\\\Crawler\\\\CrawlStrategy\\\\CallbackExecutionStrategy\\:\\:fetchByCallback\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
+
+		-
+			message: "#^Parameter \\#1 \\$className of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\) expects class\\-string\\<object\\>, string given\\.$#"
 			count: 1
 			path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
 
@@ -154,7 +167,12 @@ parameters:
 			path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\CrawlStrategy\\\\CrawlStrategyInterface\\:\\:fetchUrlContents\\(\\) has no return typehint specified\\.$#"
+			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
+			count: 1
+			path: Classes/CrawlStrategy/CrawlStrategyFactory.php
+
+		-
+			message: "#^Method AOE\\\\Crawler\\\\CrawlStrategy\\\\CrawlStrategyInterface\\:\\:fetchUrlContents\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Classes/CrawlStrategy/CrawlStrategyInterface.php
 
@@ -169,32 +187,30 @@ parameters:
 			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
 
 		-
+			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
+			count: 1
+			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
+
+		-
 			message: "#^Method AOE\\\\Crawler\\\\CrawlStrategy\\\\SubProcessExecutionStrategy\\:\\:executeShellCommand\\(\\) should return string\\|null but returns string\\|false\\|null\\.$#"
 			count: 1
 			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
 
 		-
-			message:
-				"""
-					#^Fetching class constant class of deprecated class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
-					since v11, will be removed in v12\\. Use symfony DI and GeneralUtility\\:\\:makeInstance\\(\\) instead\\.
-					             See TYPO3 explained documentation for more information\\.$#
-				"""
+			message: """
+				#^Fetching class constant class of deprecated class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+				since v11, will be removed in v12\\. Use symfony DI and GeneralUtility\\:\\:makeInstance\\(\\) instead\\.
+				             See TYPO3 explained documentation for more information\\.$#
+			"""
 			count: 1
 			path: Classes/Domain/Repository/ProcessRepository.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Domain\\\\Repository\\\\ProcessRepository\\:\\:updateProcessAssignItemsCount\\(\\) has parameter \\$numberOfAffectedRows with no typehint specified\\.$#"
-			count: 1
-			path: Classes/Domain/Repository/ProcessRepository.php
-
-		-
-			message:
-				"""
-					#^Fetching class constant class of deprecated class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
-					since v11, will be removed in v12\\. Use symfony DI and GeneralUtility\\:\\:makeInstance\\(\\) instead\\.
-					             See TYPO3 explained documentation for more information\\.$#
-				"""
+			message: """
+				#^Fetching class constant class of deprecated class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+				since v11, will be removed in v12\\. Use symfony DI and GeneralUtility\\:\\:makeInstance\\(\\) instead\\.
+				             See TYPO3 explained documentation for more information\\.$#
+			"""
 			count: 1
 			path: Classes/Domain/Repository/QueueRepository.php
 
@@ -204,33 +220,31 @@ parameters:
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Domain\\\\Repository\\\\QueueRepository\\:\\:updateProcessIdAndSchedulerForQueueIds\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: Classes/Domain/Repository/QueueRepository.php
-
-		-
 			message: "#^Method AOE\\\\Crawler\\\\Event\\\\ModifySkipPageEvent\\:\\:isSkipped\\(\\) should return string\\|false but returns bool\\|string\\.$#"
 			count: 1
 			path: Classes/Event/ModifySkipPageEvent.php
 
 		-
-			message:
-				"""
-					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
-					since TYPO3 10\\.4, will be removed in version 12\\.0$#
-				"""
+			message: """
+				#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+				since TYPO3 10\\.4, will be removed in version 12\\.0$#
+			"""
 			count: 3
 			path: Classes/Hooks/DataHandlerHook.php
 
 		-
-			message:
-				"""
-					#^Fetching class constant class of deprecated class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
-					since v11, will be removed in v12\\. Use symfony DI and GeneralUtility\\:\\:makeInstance\\(\\) instead\\.
-					             See TYPO3 explained documentation for more information\\.$#
-				"""
+			message: """
+				#^Fetching class constant class of deprecated class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+				since v11, will be removed in v12\\. Use symfony DI and GeneralUtility\\:\\:makeInstance\\(\\) instead\\.
+				             See TYPO3 explained documentation for more information\\.$#
+			"""
 			count: 3
 			path: Classes/Hooks/DataHandlerHook.php
+
+		-
+			message: "#^There is no request attribute \"tx_crawler\" configured so we can't figure out the exact type to return when calling Psr\\\\Http\\\\Message\\\\ServerRequestInterface\\:\\:getAttribute$#"
+			count: 1
+			path: Classes/Middleware/CrawlerInitialization.php
 
 		-
 			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Result\\|int\\.$#"
@@ -248,22 +262,16 @@ parameters:
 			path: Classes/Service/ConfigurationService.php
 
 		-
-			message:
-				"""
-					#^Fetching class constant class of deprecated class TYPO3\\\\CMS\\\\Core\\\\Database\\\\QueryGenerator\\:
-					since v11, will be removed in v12$#
-				"""
+			message: """
+				#^Fetching class constant class of deprecated class TYPO3\\\\CMS\\\\Core\\\\Database\\\\QueryGenerator\\:
+				since v11, will be removed in v12$#
+			"""
 			count: 1
 			path: Classes/Service/ConfigurationService.php
 
 		-
 			message: "#^Offset 'usergroup_cached…' does not exist on array\\|null\\.$#"
 			count: 1
-			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: "#^Possibly invalid array key type \\(array\\|string\\)\\.$#"
-			count: 3
 			path: Classes/Service/ConfigurationService.php
 
 		-
@@ -280,11 +288,6 @@ parameters:
 			message: "#^Parameter \\#3 \\$_unused of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\ExtensionManagementUtility\\:\\:insertModuleFunction\\(\\) expects string, null given\\.$#"
 			count: 1
 			path: Classes/Utility/BackendUtility.php
-
-		-
-			message: "#^Constant TYPO3_MODE not found\\.$#"
-			count: 1
-			path: Classes/Utility/HookUtility.php
 
 		-
 			message: "#^Parameter \\#1 \\$row of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\CsvUtility\\:\\:csvValues\\(\\) expects array\\<string\\>, array\\<int, int\\|string\\> given\\.$#"

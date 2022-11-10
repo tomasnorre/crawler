@@ -305,7 +305,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ->fetchAllAssociative();
     }
 
-    public function updateProcessIdAndSchedulerForQueueIds(array $quidList, string $processId)
+    public function updateProcessIdAndSchedulerForQueueIds(array $quidList, string $processId): int
     {
         $queryBuilderUpdate = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
             self::TABLE_NAME

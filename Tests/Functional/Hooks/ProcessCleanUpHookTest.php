@@ -127,7 +127,6 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
     public function removeProcessFromProcesslistRemoveOneProcessAndNoQueueRecords(): void
     {
         $expectedProcessesToBeRemoved = 1;
-        $expectedQueueRecordsToBeRemoved = 0;
 
         $processCountBefore = $this->processRepository->findAll()->count();
         $queueCountBefore = $this->queueRepository->findAll()->count();
@@ -139,8 +138,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         $queueCountAfter = $this->queueRepository->findAll()->count();
 
         self::assertEquals($processCountBefore - $expectedProcessesToBeRemoved, $processCountAfter);
-
-        self::assertEquals($queueCountBefore - $expectedQueueRecordsToBeRemoved, $queueCountAfter);
+        self::assertEquals($queueCountBefore, $queueCountAfter);
     }
 
     /**
