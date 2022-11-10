@@ -38,6 +38,9 @@ jobs:
           git checkout composer.json
           ln -nfs .Build/vendor/typo3/cms/typo3 typo3
 
+      - name: Ensure Libs are installed too for non-composer
+        run: composer extension-create-libs
+
       - name: Wait for PostgreSQL
         run: |
           while ! nc -z localhost 5432; do
@@ -48,7 +51,7 @@ jobs:
       - name: Functional Tests
         run: |
           export "FUNCTIONAL_XML"=.Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml
-          rm -rf .Build/Web/typo3temp/
+          rm -rf .Build/Web/typo3temp/ var/
           .Build/bin/phpunit --whitelist Classes --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
         env:
           typo3DatabaseDriver: pdo_pgsql
@@ -78,6 +81,9 @@ jobs:
       - name: Install dependencies with nimut/typo3-complete:${{ matrix.typo3 }}
         run: |
           composer require --dev nimut/typo3-complete:${{ matrix.typo3 }} --no-progress
+
+      - name: Ensure Libs are installed too for non-composer
+        run: composer extension-create-libs
 
       - name: Functional Tests
         run: composer test:functional-sqlite
@@ -118,9 +124,13 @@ jobs:
           git checkout composer.json
           ln -nfs .Build/vendor/typo3/cms/typo3 typo3
 
+      - name: Ensure Libs are installed too for non-composer
+        run: composer extension-create-libs
+
       - name: Functional Tests
         run: |
           export "FUNCTIONAL_XML"=.Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml
+          rm -rf .Build/Web/typo3temp/ var/
           .Build/bin/phpunit --whitelist Classes --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
         env:
           typo3DatabaseHost: 127.0.0.1
@@ -159,9 +169,13 @@ jobs:
           git checkout composer.json
           ln -nfs .Build/vendor/typo3/cms/typo3 typo3
 
+      - name: Ensure Libs are installed too for non-composer
+        run: composer extension-create-libs
+
       - name: Functional Tests
         run: |
           export "FUNCTIONAL_XML"=.Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml
+          rm -rf .Build/Web/typo3temp/ var/
           .Build/bin/phpunit --whitelist Classes --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
         env:
           typo3DatabaseHost: 127.0.0.1
