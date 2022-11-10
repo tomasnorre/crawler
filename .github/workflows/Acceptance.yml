@@ -16,9 +16,9 @@ jobs:
       matrix:
         typo3: [ ^11.5 ]
         php: [ '8.0', '8.1' ]
-#        include:
-#          - typo3: ^12
-#            php: '8.1'
+        include:
+          - typo3: 'dev-main'
+            php: '8.1'
     steps:
       - name: Get branch name (merge)
         if: github.event_name != 'pull_request'

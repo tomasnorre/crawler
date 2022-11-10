@@ -59,7 +59,8 @@ class ItemProviderTest extends UnitTestCase
      */
     public function canHandleTxCrawlerConfigurationTable(): void
     {
-        $subject = new ItemProvider('tx_crawler_configuration', 'identifier');
+        $subject = new ItemProvider();
+        $subject->setContext('tx_crawler_configuration', 'identifier');
         self::assertTrue($subject->canHandle());
     }
 
