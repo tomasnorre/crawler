@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff version="1.0">
+  <file source-language="en" datatype="plaintext" original="EXT:crawler/Resources/Private/Language/Backend.xlf" date="2016-11-04T16:17:39Z" product-name="crawler" target-language="vi">
+    <header/>
+    <body>
+      <trans-unit id="moduleFunction.tx_crawler_modfunc1" resname="moduleFunction.tx_crawler_modfunc1">
+        <source>Site Crawler</source>
+        <target state="needs-translation">Site Crawler</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration" resname="tx_crawler_configuration">
+        <source>Crawler Configuration</source>
+        <target state="needs-translation">Crawler Configuration</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.name" resname="tx_crawler_configuration.name">
+        <source>Name</source>
+        <target state="needs-translation">Name</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.crawling_protocol" resname="tx_crawler_configuration.crawling_protocol">
+        <source>Protocol for crawling</source>
+        <target state="needs-translation">Protocol for crawling</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.crawling_protocol.http" resname="tx_crawler_configuration.crawling_protocol.http">
+        <source>Force HTTP for all pages</source>
+        <target state="needs-translation">Force HTTP for all pages</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.crawling_protocol.page_config" resname="tx_crawler_configuration.crawling_protocol.page_config">
+        <source>Keeps page configured protocol</source>
+        <target state="needs-translation">Keeps page configured protocol</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.crawling_protocol.https" resname="tx_crawler_configuration.crawling_protocol.https">
+        <source>Force HTTPS for all pages</source>
+        <target state="needs-translation">Force HTTPS for all pages</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.processing_instruction_filter" resname="tx_crawler_configuration.processing_instruction_filter">
+        <source>Processing instruction filter</source>
+        <target state="needs-translation">Processing instruction filter</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.processing_instruction_filter.description" resname="tx_crawler_configuration.processing_instruction_filter.description">
+        <source>List of processing instructions to send for the request. Processing instructions are necessary
+                    for the request to perform any meaningful action, since they activate third party activity.
+                </source>
+        <target state="needs-translation">List of processing instructions to send for the request. Processing instructions are necessary
+                    for the request to perform any meaningful action, since they activate third party activity.
+                </target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.processing_instruction_parameters_ts" resname="tx_crawler_configuration.processing_instruction_parameters_ts">
+        <source>Processing instruction parameters</source>
+        <target state="needs-translation">Processing instruction parameters</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.configuration" resname="tx_crawler_configuration.configuration">
+        <source>Configuration</source>
+        <target state="needs-translation">Configuration</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.base_url" resname="tx_crawler_configuration.base_url">
+        <source>Base URL</source>
+        <target state="needs-translation">Base URL</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.base_url.description" resname="tx_crawler_configuration.base_url.description">
+        <source>Leave empty for fetching the base URL from the Site Configuration.</source>
+        <target state="needs-translation">Leave empty for fetching the base URL from the Site Configuration.</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.pidsonly" resname="tx_crawler_configuration.pidsonly">
+        <source>Pids only</source>
+        <target state="needs-translation">Pids only</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.pidsonly.description" resname="tx_crawler_configuration.pidsonly.description">
+        <source>List of page IDs to limit this configuration to.</source>
+        <target state="needs-translation">List of page IDs to limit this configuration to.</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.begroups" resname="tx_crawler_configuration.begroups">
+        <source>Restrict access to</source>
+        <target state="needs-translation">Restrict access to</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.begroups.description" resname="tx_crawler_configuration.begroups.description">
+        <source>Restrict access to this configuration record to selected backend user groups. Empty means no
+                    restriction is set.
+                </source>
+        <target state="needs-translation">Restrict access to this configuration record to selected backend user groups. Empty means no
+                    restriction is set.
+                </target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.fegroups" resname="tx_crawler_configuration.fegroups">
+        <source>Crawl with FE user groups</source>
+        <target state="needs-translation">Crawl with FE user groups</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.fegroups.description" resname="tx_crawler_configuration.fegroups.description">
+        <source>Frontend user groups to set for the request.</source>
+        <target state="needs-translation">Frontend user groups to set for the request.</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.exclude" resname="tx_crawler_configuration.exclude">
+        <source>Exclude pages</source>
+        <target state="needs-translation">Exclude pages</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.exclude.description" resname="tx_crawler_configuration.exclude.description">
+        <source>Comma separated list of page IDs which should not be crawled. You can do recursive exclusion by adding uid+depth e.g. 6+3</source>
+        <target state="needs-translation">Comma separated list of page IDs which should not be crawled. You can do recursive exclusion by adding uid+depth e.g. 6+3</target>
+      </trans-unit>
+      <trans-unit id="crawler_im.name" resname="crawler_im.name">
+        <source>Crawler queue</source>
+        <target state="needs-translation">Crawler queue</target>
+      </trans-unit>
+      <trans-unit id="crawler_im.description" resname="crawler_im.description">
+        <source>Running the crawler queue process to collect the relevant entries.</source>
+        <target state="needs-translation">Running the crawler queue process to collect the relevant entries.</target>
+      </trans-unit>
+      <trans-unit id="crawler_im.startPage" resname="crawler_im.startPage">
+        <source>Start page</source>
+        <target state="needs-translation">Start page</target>
+      </trans-unit>
+      <trans-unit id="crawler_im.depth" resname="crawler_im.depth">
+        <source>Depth</source>
+        <target state="needs-translation">Depth</target>
+      </trans-unit>
+      <trans-unit id="crawler_im.invalidStartPage" resname="crawler_im.invalidStartPage">
+        <source>Start page must be a positive integer!</source>
+        <target state="needs-translation">Start page must be a positive integer!</target>
+      </trans-unit>
+      <trans-unit id="crawler_im.invalidDepth" resname="crawler_im.invalidDepth">
+        <source>There is no depth set, please set it to an value!</source>
+        <target state="needs-translation">There is no depth set, please set it to an value!</target>
+      </trans-unit>
+      <trans-unit id="crawler_im.conf" resname="crawler_im.conf">
+        <source>Configuration records</source>
+        <target state="needs-translation">Configuration records</target>
+      </trans-unit>
+      <trans-unit id="crawler_im.invalidConfiguration" resname="crawler_im.invalidConfiguration">
+        <source>There is no configuration record selected, please choose at least one or more!</source>
+        <target state="needs-translation">There is no configuration record selected, please choose at least one or more!</target>
+      </trans-unit>
+      <trans-unit id="crawler_im.timeOut" resname="crawler_im.timeOut">
+        <source>Time out</source>
+        <target state="needs-translation">Time out</target>
+      </trans-unit>
+      <trans-unit id="crawler_im.sleepTime" resname="crawler_im.sleepTime">
+        <source>Sleep time</source>
+        <target state="needs-translation">Sleep time</target>
+      </trans-unit>
+      <trans-unit id="crawler_im.invalidTimeOut" resname="crawler_im.invalidTimeOut">
+        <source>The time out must be a positive integer!</source>
+        <target state="needs-translation">The time out must be a positive integer!</target>
+      </trans-unit>
+      <trans-unit id="crawler_im.invalidSleepTime" resname="crawler_im.invalidSleepTime">
+        <source>The sleep time must be a positive integer!</source>
+        <target state="needs-translation">The sleep time must be a positive integer!</target>
+      </trans-unit>
+      <trans-unit id="crawler_im.sleepAfterFinish" resname="crawler_im.sleepAfterFinish">
+        <source>Sleep after finish</source>
+        <target state="needs-translation">Sleep after finish</target>
+      </trans-unit>
+      <trans-unit id="crawler_im.invalidSleepAfterFinish" resname="crawler_im.invalidSleepAfterFinish">
+        <source>The sleep after finish must be a positive integer!</source>
+        <target state="needs-translation">The sleep after finish must be a positive integer!</target>
+      </trans-unit>
+      <trans-unit id="crawler_im.countInARun" resname="crawler_im.countInARun">
+        <source>Count in a run</source>
+        <target state="needs-translation">Count in a run</target>
+      </trans-unit>
+      <trans-unit id="crawler_im.invalidCountInARun" resname="crawler_im.invalidCountInARun">
+        <source>The count in a run must be a positive integer!</source>
+        <target state="needs-translation">The count in a run must be a positive integer!</target>
+      </trans-unit>
+      <trans-unit id="crawler_crawlMultiProcess.name" resname="crawler_crawlMultiProcess.name">
+        <source>Crawler Run Multi Process</source>
+        <target state="needs-translation">Crawler Run Multi Process</target>
+      </trans-unit>
+      <trans-unit id="crawler_crawl.name" resname="crawler_crawl.name">
+        <source>Crawler Run</source>
+        <target state="needs-translation">Crawler Run</target>
+      </trans-unit>
+      <trans-unit id="crawler_crawl.description" resname="crawler_crawl.description">
+        <source>Running the crawler to extension to process it's queue-entries.</source>
+        <target state="needs-translation">Running the crawler to extension to process it's queue-entries.</target>
+      </trans-unit>
+      <trans-unit id="crawler_flush.name" resname="crawler_flush.name">
+        <source>Crawler Queue Flush</source>
+        <target state="needs-translation">Crawler Queue Flush</target>
+      </trans-unit>
+      <trans-unit id="crawler_flush.description" resname="crawler_flush.description">
+        <source>Cleanup the crawler queue and remove unwanted or finished entries.</source>
+        <target state="needs-translation">Cleanup the crawler queue and remove unwanted or finished entries.</target>
+      </trans-unit>
+      <trans-unit id="crawler_flush.mode" resname="crawler_flush.mode">
+        <source>Flush mode</source>
+        <target state="needs-translation">Flush mode</target>
+      </trans-unit>
+      <trans-unit id="crawler_flush.modeAll" resname="crawler_flush.modeAll">
+        <source>Flush all entries</source>
+        <target state="needs-translation">Flush all entries</target>
+      </trans-unit>
+      <trans-unit id="crawler_flush.modeFinished" resname="crawler_flush.modeFinished">
+        <source>Flush finished entries</source>
+        <target state="needs-translation">Flush finished entries</target>
+      </trans-unit>
+      <trans-unit id="crawler_flush.modePending" resname="crawler_flush.modePending">
+        <source>Flush pending entries</source>
+        <target state="needs-translation">Flush pending entries</target>
+      </trans-unit>
+      <trans-unit id="crawler_processCleanup.name" resname="crawler_processCleanup.name">
+        <source>Remove Processes</source>
+        <target state="needs-translation">Remove Processes</target>
+      </trans-unit>
+      <trans-unit id="crawler_processCleanup.description" resname="crawler_processCleanup.description">
+        <source>Remove Orphan processes and processes that are older than one hour</source>
+        <target state="needs-translation">Remove Orphan processes and processes that are older than one hour</target>
+      </trans-unit>
+      <trans-unit id="contextMenu.label" resname="contextMenu.label">
+        <source>Crawl</source>
+        <target state="needs-translation">Crawl</target>
+      </trans-unit>
+      <!-- For Crawler Priority - Will be remove when support for 9 LTS is dropped -->
+      <trans-unit id="pages_crawler.priority_label" resname="pages_crawler.priority_label">
+        <source>Page priority</source>
+        <target state="needs-translation">Page priority</target>
+      </trans-unit>
+      <trans-unit id="pages_crawler.priority" resname="pages_crawler.priority">
+        <source>Priority</source>
+        <target state="needs-translation">Priority</target>
+      </trans-unit>
+      <trans-unit id="pages_crawler.priority.description" resname="pages_crawler.priority.description">
+        <source>The higher the number, the earlier will it be crawled. This is a reuse of the sitemap_priority
+                    field introduced in 10LTS, to ensure compatibility after upgrade, we reuse the field.
+                </source>
+        <target state="needs-translation">The higher the number, the earlier will it be crawled. This is a reuse of the sitemap_priority
+                    field introduced in 10LTS, to ensure compatibility after upgrade, we reuse the field.
+                </target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
