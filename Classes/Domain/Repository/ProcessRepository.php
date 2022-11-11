@@ -35,6 +35,7 @@ use PDO;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\Repository;
@@ -51,9 +52,13 @@ class ProcessRepository extends Repository
 
     public function __construct()
     {
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-
-        parent::__construct($objectManager);
+        $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
+        if($typo3Version->getMajorVersion() <= 11) {
+            $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+            parent::__construct($objectManager);
+        } else {
+            parent::__construct();
+        }
 
         $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
             self::TABLE_NAME

@@ -27,6 +27,7 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\Repository;
@@ -49,7 +50,13 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ExtensionConfigurationProvider::class
         )->getExtensionConfiguration();
 
-        parent::__construct($objectManager);
+        $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
+        if($typo3Version->getMajorVersion() <= 11) {
+            $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+            parent::__construct($objectManager);
+        } else {
+            parent::__construct();
+        }
     }
 
     // TODO: Should be a property on the QueueObject
