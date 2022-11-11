@@ -53,6 +53,13 @@
 * !!! QueueRepository->getPerformanceData()
 * !!! QueueRepository->findByQueueId()
 
+## Crawler 11.0.5
+Crawler 11.0.5 was released on November 11th, 2022
+
+### Fixed
+* If indexed_search is installed activate procInstructions for indexed_search
+* Ensure undefined indexes is not throwing a warning in PHP 8
+
 ## Crawler 11.0.4
 Crawler 11.0.4 was released on February 11th, 2022
 
