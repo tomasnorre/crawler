@@ -22,6 +22,7 @@ namespace AOE\Crawler\Tests\Unit\Utility;
 use AOE\Crawler\Utility\MessageUtility;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
@@ -75,7 +76,11 @@ class MessageUtilityTest extends UnitTestCase
 
         self::assertEquals($messageText, $messages[0]->getMessage());
 
-        self::assertEquals(ContextualFeedbackSeverity::NOTICE, $messages[0]->getSeverity());
+        if( is_int($messages[0]->getSeverity())) {
+            self::assertEquals(AbstractMessage::NOTICE, $messages[0]->getSeverity());
+        } else {
+            self::assertEquals(ContextualFeedbackSeverity::NOTICE, $messages[0]->getSeverity());
+        }
     }
 
     /**
@@ -92,7 +97,11 @@ class MessageUtilityTest extends UnitTestCase
 
         self::assertEquals($messageText, $messages[0]->getMessage());
 
-        self::assertEquals(ContextualFeedbackSeverity::ERROR, $messages[0]->getSeverity());
+        if( is_int($messages[0]->getSeverity())) {
+            self::assertEquals(AbstractMessage::ERROR, $messages[0]->getSeverity());
+        } else {
+            self::assertEquals(ContextualFeedbackSeverity::ERROR, $messages[0]->getSeverity());
+        }
     }
 
     /**
@@ -108,7 +117,13 @@ class MessageUtilityTest extends UnitTestCase
 
         self::assertEquals($messageText, $messages[0]->getMessage());
 
-        self::assertEquals(ContextualFeedbackSeverity::WARNING, $messages[0]->getSeverity());
+        if( is_int($messages[0]->getSeverity())) {
+            self::assertEquals(AbstractMessage::WARNING, $messages[0]->getSeverity());
+        } else {
+            self::assertEquals(ContextualFeedbackSeverity::WARNING, $messages[0]->getSeverity());
+        }
+
+
     }
 
     /**
