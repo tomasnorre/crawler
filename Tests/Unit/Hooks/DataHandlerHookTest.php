@@ -30,7 +30,6 @@ use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * @covers \AOE\Crawler\Hooks\DataHandlerHook
@@ -54,10 +53,7 @@ class DataHandlerHookTest extends UnitTestCase
         $queueRepositoryMock = $this->createMock(QueueRepository::class);
         $queueRepositoryMock->expects($this->exactly(2))->method('isPageInQueue')
             ->withConsecutive([1],[2])
-            ->willReturnOnConsecutiveCalls(
-                false,
-                true
-            );
+            ->willReturnOnConsecutiveCalls(false, true);
 
         $queueServiceMock = $this->createMock(QueueService::class);
         $queueServiceMock->expects($this->once())->method('addPageToQueue')->with(1);
@@ -96,11 +92,7 @@ class DataHandlerHookTest extends UnitTestCase
         $queueRepositoryMock = $this->createMock(QueueRepository::class);
         $queueRepositoryMock->method('isPageInQueue')
             ->withConsecutive([1],[2],[3])
-            ->willReturnOnConsecutiveCalls(
-                false,
-                true,
-                false
-            );
+            ->willReturnOnConsecutiveCalls(false, true, false);
 
         $queueServiceMock = $this->createMock(QueueService::class);
         $queueServiceMock->expects($this->exactly(2))->method('addPageToQueue')->withConsecutive([1],[3]);
@@ -139,7 +131,6 @@ class DataHandlerHookTest extends UnitTestCase
                 ['Faking that page exists as not empty array'],
                 [] // Empty array to act like pages doesn't exist
             );
-
 
         $queueRepositoryMock = $this->createMock(QueueRepository::class);
         $queueRepositoryMock->expects($this->once())->method('isPageInQueue')->with(1)->willReturn(false);
@@ -180,10 +171,7 @@ class DataHandlerHookTest extends UnitTestCase
         $queueRepositoryMock = $this->createMock(QueueRepository::class);
         $queueRepositoryMock->expects($this->exactly(2))->method('isPageInQueue')
             ->withConsecutive([1],[2])
-            ->willReturnOnConsecutiveCalls(
-                false,
-                true
-            );
+            ->willReturnOnConsecutiveCalls(false, true);
 
         $queueServiceMock = $this->createMock(QueueService::class);
         $queueServiceMock->expects($this->once())->method('addPageToQueue')->with(1);

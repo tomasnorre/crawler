@@ -32,8 +32,11 @@ class DataHandlerHook
     private QueueRepository $queueRepository;
     private QueueService $queueService;
 
-    public function __construct(PageRepository $pageRepository, QueueRepository $queueRepository, QueueService $queueService)
-    {
+    public function __construct(
+        PageRepository $pageRepository,
+        QueueRepository $queueRepository,
+        QueueService $queueService
+    ) {
         $this->pageRepository = $pageRepository;
         $this->queueRepository = $queueRepository;
         $this->queueService = $queueService;

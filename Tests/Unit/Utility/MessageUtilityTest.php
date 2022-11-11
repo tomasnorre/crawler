@@ -76,7 +76,7 @@ class MessageUtilityTest extends UnitTestCase
 
         self::assertEquals($messageText, $messages[0]->getMessage());
 
-        if( is_int($messages[0]->getSeverity())) {
+        if (is_int($messages[0]->getSeverity())) {
             self::assertEquals(AbstractMessage::NOTICE, $messages[0]->getSeverity());
         } else {
             self::assertEquals(ContextualFeedbackSeverity::NOTICE, $messages[0]->getSeverity());
@@ -97,7 +97,7 @@ class MessageUtilityTest extends UnitTestCase
 
         self::assertEquals($messageText, $messages[0]->getMessage());
 
-        if( is_int($messages[0]->getSeverity())) {
+        if (is_int($messages[0]->getSeverity())) {
             self::assertEquals(AbstractMessage::ERROR, $messages[0]->getSeverity());
         } else {
             self::assertEquals(ContextualFeedbackSeverity::ERROR, $messages[0]->getSeverity());
@@ -117,13 +117,11 @@ class MessageUtilityTest extends UnitTestCase
 
         self::assertEquals($messageText, $messages[0]->getMessage());
 
-        if( is_int($messages[0]->getSeverity())) {
+        if (is_int($messages[0]->getSeverity())) {
             self::assertEquals(AbstractMessage::WARNING, $messages[0]->getSeverity());
         } else {
             self::assertEquals(ContextualFeedbackSeverity::WARNING, $messages[0]->getSeverity());
         }
-
-
     }
 
     /**

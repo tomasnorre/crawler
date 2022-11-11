@@ -48,7 +48,6 @@ class ItemProviderTest extends UnitTestCase
         $backendUserStub = $this->createStub(BackendUserAuthentication::class);
         $GLOBALS['BE_USER'] = $backendUserStub;
         $this->typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
-
     }
 
     protected function tearDown(): void
