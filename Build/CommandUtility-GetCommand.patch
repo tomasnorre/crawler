@@ -1,0 +1,13 @@
+diff --git a/typo3/sysext/core/Classes/Utility/CommandUtility.php b/typo3/sysext/core/Classes/Utility/CommandUtility.php
+index 7a9e07f..b9a1fd8 100644
+--- a/typo3/sysext/core/Classes/Utility/CommandUtility.php
++++ b/typo3/sysext/core/Classes/Utility/CommandUtility.php
+@@ -75,7 +75,7 @@
+      *
+      * @var array<string, string|false>
+      */
+-    protected static array $paths;
++    protected static ?array $paths = null;
+
+     /**
+      * Wrapper function for php exec function

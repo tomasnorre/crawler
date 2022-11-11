@@ -21,6 +21,7 @@ namespace AOE\Crawler\Tests\Functional;
 
 use TYPO3\CMS\Core\Configuration\SiteConfiguration;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -46,8 +47,13 @@ trait SiteBasedTestTrait
             $configuration['errorHandling'] = $errorHandling;
         }
 
-        $eventDispatcher = GeneralUtility::makeInstance(EventDispatcher::class);
-        $siteConfiguration = new SiteConfiguration($this->getInstancePath() . '/typo3conf/sites/', $eventDispatcher);
+        $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
+        if ($typo3Version->getMajorVersion() <= 12 ) {
+            $siteConfiguration = new SiteConfiguration($this->getInstancePath() . '/typo3conf/sites/');
+        } else {
+            $eventDispatcher = GeneralUtility::makeInstance(EventDispatcher::class);
+            $siteConfiguration = new SiteConfiguration($this->getInstancePath() . '/typo3conf/sites/', $eventDispatcher);
+        }
 
         try {
             $siteConfiguration->write($identifier, $configuration);
