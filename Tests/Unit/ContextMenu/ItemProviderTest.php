@@ -22,7 +22,9 @@ namespace AOE\Crawler\Tests\Unit\ContextMenu;
 use AOE\Crawler\ContextMenu\ItemProvider;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Localization\LanguageService;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class ItemProviderTest
@@ -35,6 +37,8 @@ class ItemProviderTest extends UnitTestCase
      */
     private $oldBackendUser;
 
+    private Typo3Version $typo3Version;
+
     protected function setUp(): void
     {
         $mockedLanguageService = self::getAccessibleMock(LanguageService::class, ['sL'], [], '', false);
@@ -43,6 +47,8 @@ class ItemProviderTest extends UnitTestCase
         $this->oldBackendUser = $GLOBALS['BE_USER'] ?? null;
         $backendUserStub = $this->createStub(BackendUserAuthentication::class);
         $GLOBALS['BE_USER'] = $backendUserStub;
+        $this->typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
+
     }
 
     protected function tearDown(): void
@@ -59,8 +65,13 @@ class ItemProviderTest extends UnitTestCase
      */
     public function canHandleTxCrawlerConfigurationTable(): void
     {
-        $subject = new ItemProvider();
-        $subject->setContext('tx_crawler_configuration', 'identifier');
+        if ($this->typo3Version->getMajorVersion() < 11) {
+            $subject = new ItemProvider('tx_crawler_configuration', 'identifier');
+        } else {
+            $subject = new ItemProvider();
+            $subject->setContext('tx_crawler_configuration', 'identifier');
+        }
+
         self::assertTrue($subject->canHandle());
     }
 
@@ -69,7 +80,13 @@ class ItemProviderTest extends UnitTestCase
      */
     public function cannotHandleTxCrawlerQueueTable(): void
     {
-        $subject = new ItemProvider('tx_crawler_queue', 'identifier');
+        if ($this->typo3Version->getMajorVersion() < 11) {
+            $subject = new ItemProvider('tx_crawler_queue', 'identifier');
+        } else {
+            $subject = new ItemProvider();
+            $subject->setContext('tx_crawler_queue', 'identifier');
+        }
+
         self::assertFalse($subject->canHandle());
     }
 
@@ -78,7 +95,13 @@ class ItemProviderTest extends UnitTestCase
      */
     public function getPriorityReturnsExpectedValue(): void
     {
-        $subject = new ItemProvider('tx_crawler_configuration', 'identifier');
+        if ($this->typo3Version->getMajorVersion() < 11) {
+            $subject = new ItemProvider('tx_crawler_configuration', 'identifier');
+        } else {
+            $subject = new ItemProvider();
+            $subject->setContext('tx_crawler_configuration', 'identifier');
+        }
+
         self::assertEquals(50, $subject->getPriority());
     }
 }
