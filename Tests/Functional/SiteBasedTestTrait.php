@@ -48,7 +48,7 @@ trait SiteBasedTestTrait
         }
 
         $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
-        if ($typo3Version->getMajorVersion() <= 12 ) {
+        if ($typo3Version->getMajorVersion() <= 11 ) {
             $siteConfiguration = new SiteConfiguration($this->getInstancePath() . '/typo3conf/sites/');
         } else {
             $eventDispatcher = GeneralUtility::makeInstance(EventDispatcher::class);

@@ -28,12 +28,9 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
-use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
-use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
-use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Info\Controller\InfoModuleController;
@@ -72,15 +69,7 @@ class StartRequestFormTest extends FunctionalTestCase
             );
         } else {
             // version 11+
-            $infoModuleController = GeneralUtility::makeInstance(
-                InfoModuleController::class,
-                $this->prophesize(IconFactory::class)->reveal(),
-                $this->prophesize(PageRenderer::class)->reveal(),
-                $this->prophesize(UriBuilder::class)->reveal(),
-                $this->prophesize(FlashMessageService::class)->reveal(),
-                $this->prophesize(ContainerInterface::class)->reveal(),
-                $this->prophesize(ModuleTemplateFactory::class)->reveal()
-            );
+            $infoModuleController = $this->createMock(InfoModuleController::class);
         }
 
         $extensionSettings = GeneralUtility::makeInstance(
