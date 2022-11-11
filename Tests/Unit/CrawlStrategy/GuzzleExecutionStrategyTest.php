@@ -26,6 +26,7 @@ use Psr\Log\LoggerInterface;
 use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Information\Typo3Version;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * @covers \AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategy
@@ -71,7 +72,13 @@ class GuzzleExecutionStrategyTest extends UnitTestCase
      */
     public function fetchUrlContentThrowsException(): void
     {
-        $message = 'Error while opening "https://not-important.tld" - 0 cURL error 6: Could not resolve host: not-important.tld (see https://curl.haxx.se/libcurl/c/libcurl-errors.html) for https://not-important.tld';
+        $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
+        if($typo3Version->getMajorVersion() < 12) {
+            $message = 'Error while opening "https://not-important.tld" - 0 cURL error 6: Could not resolve host: not-important.tld (see https://curl.haxx.se/libcurl/c/libcurl-errors.html)';
+        } else {
+            $message = 'Error while opening "https://not-important.tld" - 0 cURL error 6: Could not resolve host: not-important.tld (see https://curl.haxx.se/libcurl/c/libcurl-errors.html) for https://not-important.tld';
+        }
+
         if ((new Typo3Version())->getMajorVersion() === 11) {
             $message .= ' for https://not-important.tld';
         }
