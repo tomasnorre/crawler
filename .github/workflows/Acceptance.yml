@@ -51,6 +51,7 @@ jobs:
           sed -i 's/php_version: "8.0"/php_version: "${{ matrix.php }}"/g' .ddev/config.yaml
           sed -i "s|$FROM_PATH|$TO_PATH|g" .ddev/docker-compose.volume.yaml
           rm -rf vendor composer.lock
+          php -v
           ddev composer require nimut/typo3-complete=${{ matrix.typo3 }}
           ddev start
           ddev exec sudo apt remove -y php${{ matrix.php }}-uploadprogress
@@ -67,6 +68,7 @@ jobs:
           ./wait-for-it.sh -t 60 127.0.0.1:80
           ./wait-for-it.sh -t 60 127.0.0.1:443
           ./wait-for-it.sh -t 60 localhost:4444
+          php -v
           php .Build/bin/codecept run
 
       - name: Database Dump
