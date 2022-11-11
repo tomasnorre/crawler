@@ -53,7 +53,7 @@ class ProcessRepository extends Repository
     public function __construct()
     {
         $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
-        if($typo3Version->getMajorVersion() <= 11) {
+        if ($typo3Version->getMajorVersion() <= 11) {
             $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
             parent::__construct($objectManager);
         } else {

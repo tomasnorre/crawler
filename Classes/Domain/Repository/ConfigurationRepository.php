@@ -25,7 +25,9 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\HiddenRestriction;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
 /**
@@ -34,6 +36,17 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
 class ConfigurationRepository extends Repository
 {
     public const TABLE_NAME = 'tx_crawler_configuration';
+
+    public function __construct()
+    {
+        $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
+        if ($typo3Version->getMajorVersion() <= 11) {
+            $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+            parent::__construct($objectManager);
+        } else {
+            parent::__construct();
+        }
+    }
 
     /**
      * Traverses up the rootline of a page and fetches all crawler records.

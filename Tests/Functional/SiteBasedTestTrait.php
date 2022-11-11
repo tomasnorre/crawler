@@ -20,6 +20,8 @@ namespace AOE\Crawler\Tests\Functional;
  */
 
 use TYPO3\CMS\Core\Configuration\SiteConfiguration;
+use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Trait used for test classes that want to set up (= write) site configuration files.
@@ -44,7 +46,8 @@ trait SiteBasedTestTrait
             $configuration['errorHandling'] = $errorHandling;
         }
 
-        $siteConfiguration = new SiteConfiguration($this->getInstancePath() . '/typo3conf/sites/');
+        $eventDispatcher = GeneralUtility::makeInstance(EventDispatcher::class);
+        $siteConfiguration = new SiteConfiguration($this->getInstancePath() . '/typo3conf/sites/', $eventDispatcher);
 
         try {
             $siteConfiguration->write($identifier, $configuration);

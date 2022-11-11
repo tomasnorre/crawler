@@ -26,7 +26,6 @@ use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 class ConfigurationServiceTest extends FunctionalTestCase
 {
@@ -70,10 +69,8 @@ class ConfigurationServiceTest extends FunctionalTestCase
     {
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [];
 
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-
         $urlService = GeneralUtility::makeInstance(UrlService::class);
-        $configurationRepository = GeneralUtility::makeInstance(ConfigurationRepository::class, $objectManager);
+        $configurationRepository = GeneralUtility::makeInstance(ConfigurationRepository::class);
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_configuration.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/pages.xml');
 

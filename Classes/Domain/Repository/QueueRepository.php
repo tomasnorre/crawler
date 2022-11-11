@@ -45,13 +45,12 @@ class QueueRepository extends Repository implements LoggerAwareInterface
 
     public function __construct()
     {
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->extensionSettings = GeneralUtility::makeInstance(
             ExtensionConfigurationProvider::class
         )->getExtensionConfiguration();
 
         $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
-        if($typo3Version->getMajorVersion() <= 11) {
+        if ($typo3Version->getMajorVersion() <= 11) {
             $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
             parent::__construct($objectManager);
         } else {

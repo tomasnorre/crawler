@@ -22,6 +22,7 @@ namespace AOE\Crawler\Tests\Functional\Backend\RequestForm;
 use AOE\Crawler\Backend\RequestForm\MultiProcessRequestForm;
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Service\ProcessService;
+use AOE\Crawler\Tests\Functional\LanguageServiceTestTrait;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
@@ -31,7 +32,6 @@ use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Information\Typo3Version;
-use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -40,6 +40,7 @@ use TYPO3\CMS\Info\Controller\InfoModuleController;
 
 class MultiProcessRequestFormTest extends FunctionalTestCase
 {
+    use LanguageServiceTestTrait;
     use ProphecyTrait;
 
     /**
@@ -135,11 +136,6 @@ class MultiProcessRequestFormTest extends FunctionalTestCase
             ->disableOriginalConstructor()
             ->setMethods(['isAdmin', 'getTSConfig', 'getPagePermsClause', 'isInWebMount', 'backendCheckLogin'])
             ->getMock();
-    }
-
-    private function setupLanguageService(): void
-    {
-        $GLOBALS['LANG'] = GeneralUtility::makeInstance(LanguageService::class);
     }
 
     /**

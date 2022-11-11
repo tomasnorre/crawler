@@ -21,12 +21,15 @@ namespace AOE\Crawler\Tests\Functional\Command;
 
 use AOE\Crawler\Command\FlushQueueCommand;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class FlushQueueCommandTest extends FunctionalTestCase
 {
+    use BackendRequestTestTrait;
+
     /**
      * @var array
      */
@@ -39,6 +42,7 @@ class FlushQueueCommandTest extends FunctionalTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        $this->setupBackendRequest();
 
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
         $this->queueRepository = GeneralUtility::makeInstance(QueueRepository::class);

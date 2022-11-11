@@ -27,7 +27,7 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
  */
 class TcaUtilityTest extends FunctionalTestCase
 {
-    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+    protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     /**
      * @test
