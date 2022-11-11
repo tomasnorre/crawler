@@ -65,7 +65,7 @@ class ItemProviderTest extends UnitTestCase
      */
     public function canHandleTxCrawlerConfigurationTable(): void
     {
-        if ($this->typo3Version->getMajorVersion() < 11) {
+        if ($this->typo3Version->getMajorVersion() < 12) {
             $subject = new ItemProvider('tx_crawler_configuration', 'identifier');
         } else {
             $subject = new ItemProvider();
@@ -80,7 +80,7 @@ class ItemProviderTest extends UnitTestCase
      */
     public function cannotHandleTxCrawlerQueueTable(): void
     {
-        if ($this->typo3Version->getMajorVersion() < 11) {
+        if ($this->typo3Version->getMajorVersion() < 12) {
             $subject = new ItemProvider('tx_crawler_queue', 'identifier');
         } else {
             $subject = new ItemProvider();
@@ -95,7 +95,7 @@ class ItemProviderTest extends UnitTestCase
      */
     public function getPriorityReturnsExpectedValue(): void
     {
-        if ($this->typo3Version->getMajorVersion() < 11) {
+        if ($this->typo3Version->getMajorVersion() < 12) {
             $subject = new ItemProvider('tx_crawler_configuration', 'identifier');
         } else {
             $subject = new ItemProvider();
