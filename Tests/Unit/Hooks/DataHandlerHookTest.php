@@ -47,29 +47,27 @@ class DataHandlerHookTest extends UnitTestCase
      */
     public function itShouldAddPageToQueue(): void
     {
-        $dataHandlerHook = new DataHandlerHook();
+        $pageRepositoryMock = $this->createMock(PageRepository::class);
+        $pageRepositoryMock->expects($this->exactly(2))->method('getPage')
+            ->willReturn(['Faking that page exists as not empty array']);
 
-        $queueService = $this->prophesize(QueueService::class);
-        $queueService->addPageToQueue(1)->shouldBeCalled();
+        $queueRepositoryMock = $this->createMock(QueueRepository::class);
+        $queueRepositoryMock->expects($this->exactly(2))->method('isPageInQueue')
+            ->withConsecutive([1],[2])
+            ->willReturnOnConsecutiveCalls(
+                false,
+                true
+            );
 
-        $queueRepository = $this->prophesize(QueueRepository::class);
-        $queueRepository->isPageInQueue(1)->willReturn(false);
-        $queueRepository->isPageInQueue(2)->willReturn(true);
+        $queueServiceMock = $this->createMock(QueueService::class);
+        $queueServiceMock->expects($this->once())->method('addPageToQueue')->with(1);
 
-        $pageRepository = $this->prophesize(PageRepository::class);
-        $pageRepository->getPage(1)->willReturn(['Faking that page exists as not empty array']);
-        $pageRepository->getPage(2)->willReturn(['Faking that page exists as not empty array']);
-
-        $objectManager = $this->prophesize(ObjectManager::class);
-        $objectManager->get(QueueRepository::class)->willReturn($queueRepository->reveal());
-        $objectManager->get(QueueService::class)->willReturn($queueService->reveal());
-        $objectManager->get(PageRepository::class)->willReturn($pageRepository->reveal());
+        $dataHandlerHook = new DataHandlerHook($pageRepositoryMock, $queueRepositoryMock, $queueServiceMock);
 
         $cacheManager = $this->prophesize(CacheManager::class);
         $cacheManager->getCache(Argument::any())->willReturn($this->prophesize(FrontendInterface::class)->reveal());
 
         GeneralUtility::setSingletonInstance(CacheManager::class, $cacheManager->reveal());
-        GeneralUtility::setSingletonInstance(ObjectManager::class, $objectManager->reveal());
 
         $dataHandler = new DataHandler();
 
@@ -91,31 +89,28 @@ class DataHandlerHookTest extends UnitTestCase
      */
     public function itShouldAddPageToQueueWithMorePages(): void
     {
-        $dataHandlerHook = new DataHandlerHook();
-        $queueService = $this->prophesize(QueueService::class);
-        $queueService->addPageToQueue(1)->shouldBeCalled();
-        $queueService->addPageToQueue(3)->shouldBeCalled();
+        $pageRepositoryMock = $this->createMock(PageRepository::class);
+        $pageRepositoryMock->expects($this->exactly(3))->method('getPage')
+            ->willReturn(['Faking that page exists as not empty array']);
 
-        $queueRepository = $this->prophesize(QueueRepository::class);
-        $queueRepository->isPageInQueue(1)->willReturn(false);
-        $queueRepository->isPageInQueue(2)->willReturn(true);
-        $queueRepository->isPageInQueue(3)->willReturn(false);
+        $queueRepositoryMock = $this->createMock(QueueRepository::class);
+        $queueRepositoryMock->method('isPageInQueue')
+            ->withConsecutive([1],[2],[3])
+            ->willReturnOnConsecutiveCalls(
+                false,
+                true,
+                false
+            );
 
-        $pageRepository = $this->prophesize(PageRepository::class);
-        $pageRepository->getPage(1)->willReturn(['Faking that page exists as not empty array']);
-        $pageRepository->getPage(2)->willReturn(['Faking that page exists as not empty array']);
-        $pageRepository->getPage(3)->willReturn(['Faking that page exists as not empty array']);
+        $queueServiceMock = $this->createMock(QueueService::class);
+        $queueServiceMock->expects($this->exactly(2))->method('addPageToQueue')->withConsecutive([1],[3]);
 
-        $objectManager = $this->prophesize(ObjectManager::class);
-        $objectManager->get(QueueRepository::class)->willReturn($queueRepository->reveal());
-        $objectManager->get(QueueService::class)->willReturn($queueService->reveal());
-        $objectManager->get(PageRepository::class)->willReturn($pageRepository->reveal());
+        $dataHandlerHook = new DataHandlerHook($pageRepositoryMock, $queueRepositoryMock, $queueServiceMock);
 
         $cacheManager = $this->prophesize(CacheManager::class);
         $cacheManager->getCache(Argument::any())->willReturn($this->prophesize(FrontendInterface::class)->reveal());
 
         GeneralUtility::setSingletonInstance(CacheManager::class, $cacheManager->reveal());
-        GeneralUtility::setSingletonInstance(ObjectManager::class, $objectManager->reveal());
 
         $dataHandler = new DataHandler();
 
@@ -137,28 +132,27 @@ class DataHandlerHookTest extends UnitTestCase
      */
     public function nothingToBeAddedAsPageDoNotExists(): void
     {
-        $dataHandlerHook = new DataHandlerHook();
-        $queueService = $this->prophesize(QueueService::class);
-        $queueService->addPageToQueue(1)->shouldBeCalled();
+        $pageRepositoryMock = $this->createMock(PageRepository::class);
+        $pageRepositoryMock->expects($this->exactly(2))->method('getPage')
+            ->withConsecutive([1],[3000])
+            ->willReturnOnConsecutiveCalls(
+                ['Faking that page exists as not empty array'],
+                [] // Empty array to act like pages doesn't exist
+            );
 
-        $queueRepository = $this->prophesize(QueueRepository::class);
-        $queueRepository->isPageInQueue(1)->willReturn(false);
 
-        $pageRepository = $this->prophesize(PageRepository::class);
-        $pageRepository->getPage(1)->willReturn(['Faking that page exists as not empty array']);
-        // Empty array to act like pages doesn't exist
-        $pageRepository->getPage(3000)->willReturn([]);
+        $queueRepositoryMock = $this->createMock(QueueRepository::class);
+        $queueRepositoryMock->expects($this->once())->method('isPageInQueue')->with(1)->willReturn(false);
 
-        $objectManager = $this->prophesize(ObjectManager::class);
-        $objectManager->get(QueueRepository::class)->willReturn($queueRepository->reveal());
-        $objectManager->get(QueueService::class)->willReturn($queueService->reveal());
-        $objectManager->get(PageRepository::class)->willReturn($pageRepository->reveal());
+        $queueServiceMock = $this->createMock(QueueService::class);
+        $queueServiceMock->expects($this->once())->method('addPageToQueue')->with(1);
+
+        $dataHandlerHook = new DataHandlerHook($pageRepositoryMock, $queueRepositoryMock, $queueServiceMock);
 
         $cacheManager = $this->prophesize(CacheManager::class);
         $cacheManager->getCache(Argument::any())->willReturn($this->prophesize(FrontendInterface::class)->reveal());
 
         GeneralUtility::setSingletonInstance(CacheManager::class, $cacheManager->reveal());
-        GeneralUtility::setSingletonInstance(ObjectManager::class, $objectManager->reveal());
 
         $dataHandler = new DataHandler();
 
@@ -179,29 +173,27 @@ class DataHandlerHookTest extends UnitTestCase
      */
     public function ensureThatPageIdArrayIsConvertedToInteger(): void
     {
-        $dataHandlerHook = new DataHandlerHook();
+        $pageRepositoryMock = $this->createMock(PageRepository::class);
+        $pageRepositoryMock->expects($this->exactly(2))->method('getPage')
+            ->willReturn(['Faking that page exists as not empty array']);
 
-        $queueService = $this->prophesize(QueueService::class);
-        $queueService->addPageToQueue(1)->shouldBeCalled();
+        $queueRepositoryMock = $this->createMock(QueueRepository::class);
+        $queueRepositoryMock->expects($this->exactly(2))->method('isPageInQueue')
+            ->withConsecutive([1],[2])
+            ->willReturnOnConsecutiveCalls(
+                false,
+                true
+            );
 
-        $queueRepository = $this->prophesize(QueueRepository::class);
-        $queueRepository->isPageInQueue(1)->willReturn(false);
-        $queueRepository->isPageInQueue(2)->willReturn(true);
+        $queueServiceMock = $this->createMock(QueueService::class);
+        $queueServiceMock->expects($this->once())->method('addPageToQueue')->with(1);
 
-        $pageRepository = $this->prophesize(PageRepository::class);
-        $pageRepository->getPage(1)->willReturn(['Faking that page exists as not empty array']);
-        $pageRepository->getPage(2)->willReturn(['Faking that page exists as not empty array']);
-
-        $objectManager = $this->prophesize(ObjectManager::class);
-        $objectManager->get(QueueRepository::class)->willReturn($queueRepository->reveal());
-        $objectManager->get(QueueService::class)->willReturn($queueService->reveal());
-        $objectManager->get(PageRepository::class)->willReturn($pageRepository->reveal());
+        $dataHandlerHook = new DataHandlerHook($pageRepositoryMock, $queueRepositoryMock, $queueServiceMock);
 
         $cacheManager = $this->prophesize(CacheManager::class);
         $cacheManager->getCache(Argument::any())->willReturn($this->prophesize(FrontendInterface::class)->reveal());
 
         GeneralUtility::setSingletonInstance(CacheManager::class, $cacheManager->reveal());
-        GeneralUtility::setSingletonInstance(ObjectManager::class, $objectManager->reveal());
 
         $dataHandler = new DataHandler();
 

@@ -7,6 +7,12 @@ services:
     AOE\Crawler\:
         resource: '../Classes/*'
 
+    AOE\Crawler\Hooks\DataHandlerHook:
+        arguments:
+            $pageRepository: 'TYPO3\CMS\Core\Domain\Repository\PageRepository'
+            $queueRepository: 'AOE\Crawler\Domain\Repository\QueueRepository'
+            $queueService: 'AOE\Crawler\Service\QueueService'
+
     AOE\Crawler\Command\BuildQueueCommand:
         tags:
             - name: 'console.command'

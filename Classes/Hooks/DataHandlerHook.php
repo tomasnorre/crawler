@@ -22,14 +22,23 @@ namespace AOE\Crawler\Hooks;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Service\QueueService;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * @internal since v9.2.5
  */
 class DataHandlerHook
 {
+    private PageRepository $pageRepository;
+    private QueueRepository $queueRepository;
+    private QueueService $queueService;
+
+    public function __construct(PageRepository $pageRepository, QueueRepository $queueRepository, QueueService $queueService)
+    {
+        $this->pageRepository = $pageRepository;
+        $this->queueRepository = $queueRepository;
+        $this->queueService = $queueService;
+    }
+
     /**
      * @noRector \Rector\DeadCode\Rector\ClassMethod\RemoveUnusedParameterRector
      */
@@ -43,28 +52,13 @@ class DataHandlerHook
         }
         foreach ($pageIdsToBeFlushedFromCache as $pageId) {
             $pageId = (int) $pageId;
-            if ($pageId < 1 || empty($this->getPageRepository()->getPage($pageId))) {
+            if ($pageId < 1 || empty($this->pageRepository->getPage($pageId))) {
                 continue;
             }
-            if ($this->getQueueRepository()->isPageInQueue($pageId)) {
+            if ($this->queueRepository->isPageInQueue($pageId)) {
                 continue;
             }
-            $this->getQueueService()->addPageToQueue($pageId);
+            $this->queueService->addPageToQueue($pageId);
         }
-    }
-
-    private function getQueueRepository(): QueueRepository
-    {
-        return GeneralUtility::makeInstance(ObjectManager::class)->get(QueueRepository::class);
-    }
-
-    private function getQueueService(): QueueService
-    {
-        return GeneralUtility::makeInstance(ObjectManager::class)->get(QueueService::class);
-    }
-
-    private function getPageRepository(): PageRepository
-    {
-        return GeneralUtility::makeInstance(ObjectManager::class)->get(PageRepository::class);
     }
 }
