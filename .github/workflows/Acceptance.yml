@@ -53,8 +53,8 @@ jobs:
           sed -i 's/php_version: "8.0"/php_version: "${{ matrix.php }}"/g' .ddev/config.yaml
           sed -i "s|$FROM_PATH|$TO_PATH|g" .ddev/docker-compose.volume.yaml
           ddev exec rm -rf vendor composer.lock
+          ddev restart
           ddev composer require nimut/typo3-complete=${{ matrix.typo3 }}
-          ddev start
           ddev exec sudo apt remove -y php${{ matrix.php }}-uploadprogress
           ddev exec bin/typo3cms install:fixfolderstructure
           ddev exec bin/typo3cms install:extensionsetupifpossible
