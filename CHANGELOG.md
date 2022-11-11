@@ -1,6 +1,7 @@
 # Changelog TYPO3 Crawler
 
-Crawler 11.0.5
+## Crawler 11.0.5
+Crawler 11.0.5 was released on November 11th, 2022
 
 ### Fixed
 * If indexed_search is installed activate procInstructions for indexed_search
