@@ -26,6 +26,7 @@
 * !!! Support for TYPO3 10
 * !!! PHP support for `<8.0`
 * Remove CLI_hooks from ProcessQueueCommand
+* !!! ClassAliasMap & LegacyClassesForIde Migrations
 
 #### Classes
 * !!! AbstractCommandTests
