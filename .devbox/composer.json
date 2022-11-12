@@ -20,7 +20,7 @@
         "typo3/cms-info": "^11.5 || 12.1.x-dev || dev-main",
         "typo3/cms-belog": "^11.5 || 12.1.x-dev || dev-main",
         "georgringer/news": "^9.0",
-        "helhum/typo3-console": "*",
+        "helhum/typo3-console": "dev-v12-compat",
         "tomasnorre/crawler": "dev-main",
         "tnm/crawler-devbox-sitepackage": "^0.0.2",
         "typo3/cms-beuser": "^11.5 || 12.1.x-dev || dev-main",
@@ -31,6 +31,10 @@
         {
             "type": "path",
             "url": "./packages"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/bmack/TYPO3-Console"
         }
     ],
     "minimum-stability": "dev",
