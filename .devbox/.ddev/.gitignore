@@ -9,6 +9,7 @@
 /.*downloads
 /.global_commands
 /.homeadditions
+/.importdb*
 /.sshimageBuild
 /.webimageBuild
 /.webimageExtra
@@ -24,6 +25,8 @@
 /import.yaml
 /mutagen
 /nginx_full/nginx-site.conf
+/postgres/postgresql.conf
+/providers/platform.yaml
 /sequelpro.spf
 /xhprof
 /**/README.*
