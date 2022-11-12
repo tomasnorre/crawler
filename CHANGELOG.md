@@ -1,5 +1,11 @@
 # Changelog TYPO3 Crawler
 
+## Crawler 11.0.6
+Crawler 11.0.6 was released on November 12th, 2022
+
+### Fixed
+* Zip extension with PHP 7.4 builds instead of PHP 8.1
+
 ## Crawler 11.0.5
 Crawler 11.0.5 was released on November 11th, 2022
 
