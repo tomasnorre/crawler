@@ -25,7 +25,7 @@
         "tnm/crawler-devbox-sitepackage": "^0.0.2",
         "typo3/cms-beuser": "^11.5 || 12.1.x-dev",
         "typo3/cms-indexed-search": "^11.5 || 12.1.x-dev",
-        "typo3/cms-felogin": "^11.5 || 12.1.x-dev",
+        "typo3/cms-felogin": "^11.5 || 12.1.x-dev"
     },
     "repositories": [
         {
