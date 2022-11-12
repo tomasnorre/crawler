@@ -15,17 +15,17 @@
         }
     ],
     "require": {
-        "typo3/minimal": "^11.5 || 12.1.x-dev",
-        "typo3/cms-tstemplate": "^11.5 || 12.1.x-dev",
-        "typo3/cms-info": "^11.5 || 12.1.x-dev",
-        "typo3/cms-belog": "^11.5 || 12.1.x-dev",
+        "typo3/minimal": "^11.5 || 12.1.x-dev || dev-main",
+        "typo3/cms-tstemplate": "^11.5 || 12.1.x-dev || dev-main",
+        "typo3/cms-info": "^11.5 || 12.1.x-dev || dev-main",
+        "typo3/cms-belog": "^11.5 || 12.1.x-dev || dev-main",
         "georgringer/news": "^9.0",
         "helhum/typo3-console": "*",
         "tomasnorre/crawler": "dev-main",
         "tnm/crawler-devbox-sitepackage": "^0.0.2",
-        "typo3/cms-beuser": "^11.5 || 12.1.x-dev",
-        "typo3/cms-indexed-search": "^11.5 || 12.1.x-dev",
-        "typo3/cms-felogin": "^11.5 || 12.1.x-dev"
+        "typo3/cms-beuser": "^11.5 || 12.1.x-dev || dev-main",
+        "typo3/cms-indexed-search": "^11.5 || 12.1.x-dev || dev-main",
+        "typo3/cms-felogin": "^11.5 || 12.1.x-dev || dev-main"
     },
     "repositories": [
         {
