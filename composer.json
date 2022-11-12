@@ -89,8 +89,8 @@
             "cweagans/composer-patches": true,
             "infection/extension-installer": true,
             "phpstan/extension-installer": true,
-            "typo3/class-alias-loader": true,
-            "typo3/cms-composer-installers": true
+            "typo3/cms-composer-installers": true,
+            "typo3/class-alias-loader": true
         },
         "bin-dir": ".Build/bin",
         "preferred-install": {
@@ -109,11 +109,6 @@
             "nimut/testing-framework": {
                 "Reset setDBInit + initCommands for PostgreSQL": "Build/nimut-testing-framework-postgresql.patch"
             }
-        },
-        "typo3/class-alias-loader": {
-            "class-alias-maps": [
-                "Migrations/Code/ClassAliasMap.php"
-            ]
         },
         "typo3/cms": {
             "extension-key": "crawler",
