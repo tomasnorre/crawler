@@ -20,6 +20,7 @@ namespace AOE\Crawler\Utility;
  */
 
 use AOE\Crawler\Hooks\ProcessCleanUpHook;
+use TYPO3\CMS\Core\Http\ApplicationType;
 
 /**
  * @codeCoverageIgnore
@@ -43,7 +44,7 @@ class HookUtility
             ProcessCleanUpHook::class;
 
         // Env-dependent
-        if (TYPO3_MODE === 'BE') {
+        if (ApplicationType::fromRequest($GLOBALS['TYPO3_REQUEST'])->isBackend()) {
             self::registerBackendHooks();
         }
     }
