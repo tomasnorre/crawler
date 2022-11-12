@@ -30,7 +30,7 @@ class BackendModule extends \AcceptanceTester
         // Due to slow response time.
         $I->waitForElementNotVisible('#nprogress', 120);
         $I->waitForElement('#typo3-pagetree-treeContainer', 120);
-        $pageTree->openPath(['[1] Congratulations']);
+        $pageTree->openPath(['Welcome']);
         // Due to slow response time.
         $I->waitForElementNotVisible('#nprogress', 120);
         $I->switchToContentFrame();
