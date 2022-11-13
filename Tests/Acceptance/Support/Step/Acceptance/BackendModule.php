@@ -34,6 +34,7 @@ class BackendModule extends \AcceptanceTester
         // Due to slow response time.
         $I->waitForElementNotVisible('#nprogress', 120);
         $I->switchToContentFrame();
+        $I->waitForElementNotVisible('#nprogress', 120);
         $I->selectOption('WebInfoJumpMenu', 'Site Crawler');
         $I->waitForElementNotVisible('#nprogress', 120);
         $I->waitForText('Page information', 10);
