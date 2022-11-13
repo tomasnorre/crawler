@@ -54,10 +54,10 @@ jobs:
           sed -i "s|$FROM_PATH|$TO_PATH|g" .ddev/docker-compose.volume.yaml
           ddev restart
           rm -rf vendor composer.lock
-          ddev composer require nimut/typo3-complete=${{ matrix.typo3 }}
+          ddev composer config repositories.branch git https://github.com/${{ github.repository }}
+          ddev composer require nimut/typo3-complete=${{ matrix.typo3 }} tomasnorre/crawler="dev-${{ env.BRANCH_NAME }}"
           ddev exec sudo apt remove -y php${{ matrix.php }}-uploadprogress
           ddev exec bin/typo3cms install:fixfolderstructure
-          ddev exec bin/typo3cms install:extensionsetupifpossible
           ddev exec bin/typo3cms database:updateschema
           ddev exec bin/typo3cms cache:flush
           cd .. # Going back to "root" directory
