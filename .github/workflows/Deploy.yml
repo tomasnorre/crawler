@@ -28,20 +28,6 @@ jobs:
         run: "echo \"::set-output name=tag::${GITHUB_REF#refs/tags/}\""
 
       - name: Deploy to TER
-        run: |
-          if [ -n "${{ secrets.TYPO3_ORG_USERNAME }}" ] && [ -n "${{ secrets.TYPO3_ORG_PASSWORD }}" ]; then
-            echo -e "Preparing upload of release ${{ steps.determine-tag.outputs.tag }} to TER\n";
-
-            # Install ter client
-            composer global require helhum/ter-client
-
-            # Build extension files
-            composer extension-release
-
-            # Upload
-            TAG_MESSAGE=`git log -1 --pretty=%B`
-            echo "Tag-Message: ${TAG_MESSAGE}"
-            echo "Uploading release ${{ steps.determine-tag.outputs.tag }} to TER"
-            $HOME/.composer/vendor/helhum/ter-client/ter-client upload crawler . -u "${{ secrets.TYPO3_ORG_USERNAME }}" -p "${{ secrets.TYPO3_ORG_PASSWORD }}" -m "$TAG_MESSAGE"
-          fi;
-
+      - uses: tomasnorre/typo3-upload-ter@v2
+          with:
+            api-token: ${{ secrets.TYPO3_API_TOKEN }}
