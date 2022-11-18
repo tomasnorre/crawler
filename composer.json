@@ -110,9 +110,6 @@
         "patches": {
             "nimut/testing-framework": {
                 "Reset setDBInit + initCommands for PostgreSQL": "Build/nimut-testing-framework-postgresql.patch"
-            },
-            "typo3/cms-core": {
-                "Ensure CommandUtility::getCommand works in PHP 8.1": "Build/CommandUtility-GetCommand.patch"
             }
         },
         "typo3/cms": {
