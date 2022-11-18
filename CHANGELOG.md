@@ -18,6 +18,8 @@
 
 ### Deprecated
 #### Classes
+* BackendUtility
+
 #### Functions & Properties
 
 ### Removed

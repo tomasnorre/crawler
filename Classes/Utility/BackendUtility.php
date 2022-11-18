@@ -25,6 +25,7 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 /**
  * @codeCoverageIgnore
  * @internal since v9.2.5
+ * @deprecated since 12.0.0 will be removed when dropping support for TYPO3 11
  */
 class BackendUtility
 {
