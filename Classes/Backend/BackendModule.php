@@ -40,6 +40,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Info\Controller\InfoModuleController;
 
+
 /**
  * Function for Info module, containing three main actions:
  * - List of all queued items
@@ -53,12 +54,12 @@ class BackendModule
     protected InfoModuleController $pObj;
     protected int $id;
     protected array $extensionSettings = [];
-    protected StandaloneView $view;
 
     public function __construct(
         protected ProcessService $processManager,
         protected QueryBuilder $queryBuilder,
-        protected QueueRepository $queueRepository
+        protected QueueRepository $queueRepository,
+        protected StandaloneView $view
     ) {
         $this->initializeView();
         $this->extensionSettings = GeneralUtility::makeInstance(
@@ -115,12 +116,9 @@ class BackendModule
 
     private function initializeView(): void
     {
-        $view = GeneralUtility::makeInstance(StandaloneView::class);
-        $view->setLayoutRootPaths(['EXT:crawler/Resources/Private/Layouts']);
-        $view->setPartialRootPaths(['EXT:crawler/Resources/Private/Partials']);
-        $view->setTemplateRootPaths(['EXT:crawler/Resources/Private/Templates/Backend']);
-        $view->getRequest()->setControllerExtensionName('Crawler');
-        $this->view = $view;
+        $this->view->setLayoutRootPaths(['EXT:crawler/Resources/Private/Layouts']);
+        $this->view->setPartialRootPaths(['EXT:crawler/Resources/Private/Partials']);
+        $this->view->setTemplateRootPaths(['EXT:crawler/Resources/Private/Templates/Backend']);
     }
 
     private function getModuleMenu(): array
