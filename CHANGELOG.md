@@ -1,5 +1,11 @@
 # Changelog TYPO3 Crawler
 
+## Crawler 11.0.7
+
+### Fixed
+* Ensure that array key is set before used in BuildQueueCommand (PHP 8.1)
+
+
 ## Crawler 11.0.6
 Crawler 11.0.6 was released on November 12th, 2022
 
