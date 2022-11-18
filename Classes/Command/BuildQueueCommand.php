@@ -184,7 +184,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
 
                 $progressBar->clear();
                 if (is_array($requestResult)) {
-                    $resLog = is_array($requestResult['log']) ? PHP_EOL . chr(9) . chr(9) . implode(
+                    $resLog = array_key_exists('log', $requestResult) && is_array($requestResult['log']) ? PHP_EOL . chr(9) . chr(9) . implode(
                         PHP_EOL . chr(9) . chr(9),
                         $requestResult['log']
                     ) : '';
