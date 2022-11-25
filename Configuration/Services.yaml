@@ -79,3 +79,6 @@ services:
             -   name: 'console.command'
                 command: 'crawler:processQueue'
                 description: 'Trigger the crawler to process the queue entries'
+
+    AOE\Crawler\Controller\BackendModuleController:
+        tags: [ 'backend.controller' ]

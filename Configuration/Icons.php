@@ -17,4 +17,8 @@ return [
         'provider' => SvgIconProvider::class,
         'source' => 'EXT:crawler/Resources/Public/Icons/crawler_stop.svg',
     ],
+    'tx-crawler-icon' => [
+        'provider' => SvgIconProvider::class,
+        'source' => 'EXT:crawler/Resources/Public/Icons/Extension.svg',
+    ]
 ];
