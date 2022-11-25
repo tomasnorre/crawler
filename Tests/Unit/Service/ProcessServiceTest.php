@@ -30,6 +30,7 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
  *
  * @package AOE\Crawler\Tests\Unit\Domain\Model
  * @covers \AOE\Crawler\Service\ProcessService
+ * @covers \AOE\Crawler\Helper\Sleeper\NullSleeper
  */
 class ProcessServiceTest extends UnitTestCase
 {
