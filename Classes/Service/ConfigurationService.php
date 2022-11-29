@@ -442,7 +442,7 @@ class ConfigurationService
                 // TODO: Check if this works as intended!
                 $queryBuilder->add('from', $addTable);
             }
-            $transOrigPointerField = $GLOBALS['TCA'][$subpartParams['_TABLE']]['ctrl']['transOrigPointerField'];
+            $transOrigPointerField = $GLOBALS['TCA'][$subpartParams['_TABLE']]['ctrl']['transOrigPointerField'] ?? false;
 
             if (($subpartParams['_ENABLELANG'] ?? false) && $transOrigPointerField) {
                 $queryBuilder->andWhere($queryBuilder->expr()->lte($transOrigPointerField, 0));
