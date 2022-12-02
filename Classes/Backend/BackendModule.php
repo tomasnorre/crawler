@@ -27,10 +27,16 @@ use AOE\Crawler\Service\ProcessService;
 use AOE\Crawler\Value\CrawlAction;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Backend\Routing\UriBuilder;
+use TYPO3\CMS\Backend\Template\Components\ButtonBar;
+use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Http\ResponseFactory;
+use TYPO3\CMS\Core\Imaging\Icon;
+use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
@@ -58,6 +64,8 @@ class BackendModule
         protected StandaloneView $view,
         protected InfoModuleController $pObj,
         protected BackendModuleSettings $backendModuleSettings,
+        protected IconFactory $iconFactory,
+        protected UriBuilder $uriBuilder,
         protected array $backendModuleMenu = []
     ) {
         $this->initializeView();
@@ -78,7 +86,7 @@ class BackendModule
         //$this->pObj->MOD_MENU = array_merge($this->pObj->MOD_MENU, $this->getModuleMenu());
     }
 
-    public function main(RequestInterface $request): ResponseInterface
+    public function main(ServerRequestInterface $request): ResponseInterface
     {
         $this->id = (int) GeneralUtility::_GP('id');
         $this->crawlAction = $request->getQueryParams()['SET']['crawlaction'] ?? null;
@@ -108,11 +116,56 @@ class BackendModule
         $moduleTemplate = (GeneralUtility::makeInstance(ModuleTemplateFactory::class))->create($request);
         $moduleTemplate->setContent($theOutput . $this->renderForm($selectedAction));
 
+        $this->setUpDocHeader($request, $moduleTemplate);
+
         $factory = GeneralUtility::makeInstance(ResponseFactory::class);
         $response = $factory->createResponse();
         $response->getBody()->write($moduleTemplate->renderContent());
 
         return $response;
+    }
+
+    private function setUpDocHeader(
+        ServerRequestInterface $request,
+        ModuleTemplate $view
+    ) {
+        $menuItems = [
+            'flash' => [
+                'controller' => 'Module',
+                'action' => 'flash',
+                'label' => $this->getLanguageService()->sL('LLL:EXT:examples/Resources/Private/Language/Module/locallang.xlf:module.menu.flash'),
+            ],
+            ];
+
+        $menu = $view->getDocHeaderComponent()->getMenuRegistry()->makeMenu();
+        $menu->setIdentifier('ExampleModuleMenu');
+
+        $context = '';
+        foreach ($menuItems as $menuItemConfig) {
+            $isActive = $request->getControllerActionName() === $menuItemConfig['action'];
+            $menuItem = $menu->makeMenuItem()
+                ->setTitle($menuItemConfig['label'])
+                ->setHref($this->uriBuilder->reset()->uriFor(
+                    $menuItemConfig['action'],
+                    [],
+                    $menuItemConfig['controller']
+                ))
+                ->setActive($isActive);
+            $menu->addMenuItem($menuItem);
+            if ($isActive) {
+                $context = $menuItemConfig['label'];
+            }
+        }
+
+        $view->getDocHeaderComponent()->getMenuRegistry()->addMenu($menu);
+
+        /*$list = $buttonBar->makeLinkButton()
+            ->setHref('<uri-builder-path>')
+            ->setTitle('A Title')
+            ->setShowLabelText('Link')
+            ->setIcon($this->iconFactory->getIcon('actions-extension-import', Icon::SIZE_SMALL));
+        $buttonBar->addButton($list, ButtonBar::BUTTON_POSITION_LEFT, 1);
+        */
     }
 
     private function getLanguageService(): LanguageService
