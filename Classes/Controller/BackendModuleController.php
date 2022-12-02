@@ -51,7 +51,7 @@ class BackendModuleController
         $moduleTemplate->assign('currentPageId', $request->getQueryParams()['id']);
         $moduleTemplate->setTitle('Crawler', $GLOBALS['LANG']->getLL('module.menu.log'));
 
-        return $moduleTemplate->renderResponse('Backend/ShowLog');
+        return $moduleTemplate->renderResponse('Backend/ProcessOverview');
     }
 
     private function setupView(ServerRequestInterface $request): ModuleTemplate
@@ -61,7 +61,7 @@ class BackendModuleController
         $moduleTemplate->getView()->setPartialRootPaths(['EXT:crawler/Resources/Private/Partials']);
         $moduleTemplate->getView()->setTemplateRootPaths(['EXT:crawler/Resources/Private/Templates/Backend']);
 
-        list($moduleTemplate, $context) = $this->setupMenu($request, $moduleTemplate);
+        [$moduleTemplate, $context] = $this->setupMenu($request, $moduleTemplate);
 
         $moduleTemplate->setTitle(
             $this->getLanguageService()->sL('LLL:EXT:examples/Resources/Private/Language/Module/locallang_mod.xlf:mlang_tabs_tab'),
@@ -76,12 +76,11 @@ class BackendModuleController
         if ($pageRecord) {
             $moduleTemplate->getDocHeaderComponent()->setMetaInformation($pageRecord);
         }
-        //$moduleTemplate->setFlashMessageQueue($this->getFlashMessageQueue());
 
         return $moduleTemplate;
     }
 
-    public function setupMenu(ServerRequestInterface $request, ModuleTemplate $moduleTemplate): array
+    private function setupMenu(ServerRequestInterface $request, ModuleTemplate $moduleTemplate): array
     {
         $menuItems = [
             'flash' => [
@@ -103,11 +102,7 @@ class BackendModuleController
             $isActive = false; //$request->getControllerActionName() === $menuItemConfig['action'];
             $menuItem = $menu->makeMenuItem()
                 ->setTitle($menuItemConfig['label'])
-                ->setHref($this->uriBuilder->reset()->uriFor(
-                    $menuItemConfig['action'],
-                    [],
-                    $menuItemConfig['controller']
-                ))
+                ->setHref('https://www.google.com')
                 ->setActive($isActive);
             $menu->addMenuItem($menuItem);
             if ($isActive) {
@@ -119,12 +114,12 @@ class BackendModuleController
         return array($moduleTemplate, $context);
     }
 
-    protected function getLanguageService(): LanguageService
+    private function getLanguageService(): LanguageService
     {
         return $GLOBALS['LANG'];
     }
 
-    protected function getBackendUserAuthentication(): BackendUserAuthentication
+    private function getBackendUserAuthentication(): BackendUserAuthentication
     {
         return $GLOBALS['BE_USER'];
     }
