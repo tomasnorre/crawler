@@ -8,18 +8,21 @@ use AOE\Crawler\Backend\BackendModule;
  * Definitions for modules provided by EXT:examples
  */
 return [
-    'web_info_crawler' => [
-        'parent' => 'web_info',
+    'web_site_crawler' => [
+        'parent' => 'web',
         'access' => 'user',
-        'path' => '/module/web/info/crawler',
-        'iconIdentifier' => 'module-info',
-        'labels' => [
-            'title' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:moduleFunction.tx_crawler_modfunc1',
-        ],
+        'position' => ['after' => 'web_info'],
+        'workspaces' => 'live',
+        'path' => '/module/page/crawler',
+        'extensionName' => 'Crawler',
+        'iconIdentifier' => 'tx-crawler-icon',
+        'labels' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf',
         'routes' => [
             '_default' => [
                 'target' => BackendModule::class . '::main',
             ],
         ],
     ],
+
+
 ];
