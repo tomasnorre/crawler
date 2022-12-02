@@ -4,37 +4,33 @@ declare(strict_types=1);
 
 namespace AOE\Crawler\Backend;
 
-/***************************************************************
- *  Copyright notice
+/*
+ * (c) 2005-2021 AOE GmbH <dev@aoe.com>
+ * (c) 2021-     Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
- *  (c) 2020 AOE GmbH <dev@aoe.com>
+ * This file is part of the TYPO3 Crawler Extension.
  *
- *  All rights reserved
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
  *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 3 of the License, or
- *  (at your option) any later version.
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
  *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ * The TYPO3 project - inspiring people to share!
+ */
 
 use AOE\Crawler\Backend\RequestForm\RequestFormFactory;
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Service\ProcessService;
 use AOE\Crawler\Value\CrawlAction;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Core\Http\ResponseFactory;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
@@ -51,20 +47,24 @@ use TYPO3\CMS\Info\Controller\InfoModuleController;
  */
 class BackendModule
 {
-    protected InfoModuleController $pObj;
     protected int $id;
+    protected ?string $crawlAction;
     protected array $extensionSettings = [];
 
     public function __construct(
         protected ProcessService $processManager,
         protected QueryBuilder $queryBuilder,
         protected QueueRepository $queueRepository,
-        protected StandaloneView $view
+        protected StandaloneView $view,
+        protected InfoModuleController $pObj,
+        protected BackendModuleSettings $backendModuleSettings,
+        protected array $backendModuleMenu = []
     ) {
         $this->initializeView();
         $this->extensionSettings = GeneralUtility::makeInstance(
             ExtensionConfigurationProvider::class
         )->getExtensionConfiguration();
+        $this->backendModuleMenu = $this->getModuleMenu();
     }
 
     /**
@@ -75,24 +75,27 @@ class BackendModule
         $this->pObj = $pObj;
         $this->id = (int) GeneralUtility::_GP('id');
         // Setting MOD_MENU items as we need them for logging:
-        $this->pObj->MOD_MENU = array_merge($this->pObj->MOD_MENU, $this->getModuleMenu());
+        //$this->pObj->MOD_MENU = array_merge($this->pObj->MOD_MENU, $this->getModuleMenu());
     }
 
-    public function main(): string
+    public function main(RequestInterface $request): ResponseInterface
     {
-        if (empty($this->pObj->MOD_SETTINGS['processListMode'])) {
-            $this->pObj->MOD_SETTINGS['processListMode'] = 'simple';
+        $this->id = (int) GeneralUtility::_GP('id');
+        $this->crawlAction = $request->getQueryParams()['SET']['crawlaction'] ?? null;
+
+        if (empty($this->backendModuleSettings->getProcessListMode())) {
+            $this->backendModuleSettings->setProcessListMode('simple');
         }
         $this->view->assign('currentPageId', $this->id);
 
-        $selectedAction = new CrawlAction($this->pObj->MOD_SETTINGS['crawlaction'] ?? 'start');
+        $selectedAction = new CrawlAction($this->crawlAction ?? 'start');
 
         // Type function menu:
         $actionDropdown = BackendUtility::getFuncMenu(
             $this->id,
             'SET[crawlaction]',
             $selectedAction->__toString(),
-            $this->pObj->MOD_MENU['crawlaction']
+            $this->backendModuleMenu['crawlaction']
         );
 
         $theOutput = '<h2>' . htmlspecialchars(
@@ -100,7 +103,16 @@ class BackendModule
             ENT_QUOTES | ENT_HTML5
         ) . '</h2>' . $actionDropdown;
 
-        return $theOutput . $this->renderForm($selectedAction);
+        //$theOutput . $this->renderForm($selectedAction);
+
+        $moduleTemplate = (GeneralUtility::makeInstance(ModuleTemplateFactory::class))->create($request);
+        $moduleTemplate->setContent($theOutput . $this->renderForm($selectedAction));
+
+        $factory = GeneralUtility::makeInstance(ResponseFactory::class);
+        $response = $factory->createResponse();
+        $response->getBody()->write($moduleTemplate->renderContent());
+
+        return $response;
     }
 
     private function getLanguageService(): LanguageService
@@ -188,7 +200,7 @@ class BackendModule
 
     private function renderForm(CrawlAction $selectedAction): string
     {
-        $requestForm = RequestFormFactory::create($selectedAction, $this->view, $this->pObj, $this->extensionSettings);
-        return $requestForm->render($this->id, $this->pObj->MOD_SETTINGS['depth'], $this->pObj->MOD_MENU['depth']);
+        $requestForm = RequestFormFactory::create($selectedAction, $this->view, $this->pObj, $this->extensionSettings, $this->backendModuleMenu);
+        return $requestForm->render($this->id, (string)$this->backendModuleSettings->getDepth(), $this->backendModuleMenu['depth']);
     }
 }

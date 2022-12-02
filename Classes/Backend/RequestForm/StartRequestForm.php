@@ -39,10 +39,11 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
     private $incomingConfigurationSelection = [];
 
     public function __construct(
-        private StandaloneView $view,
+        private StandaloneView       $view,
         private InfoModuleController $infoModuleController,
-        array $extensionSettings,
-        EventDispatcher $eventDispatcher = null
+        array                        $extensionSettings,
+        protected array              $backendModuleMenu,
+        EventDispatcher              $eventDispatcher = null
     ) {
         $this->extensionSettings = $extensionSettings;
         $this->eventDispatcher = $eventDispatcher ?? GeneralUtility::makeInstance(EventDispatcher::class);
@@ -114,7 +115,7 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
 
             $queueRows = $this->crawlerController->getPageTreeAndUrls(
                 $pageId,
-                $this->infoModuleController->MOD_SETTINGS['depth'],
+                $this->backendModuleMenu['depth'],
                 $scheduledTime,
                 $this->reqMinute,
                 $submitCrawlUrls,
@@ -178,14 +179,14 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
                 ),
             ],
             'SET[depth]',
-            $this->infoModuleController->MOD_SETTINGS['depth'],
+            $this->backendModuleMenu['depth'],
             false
         );
 
         // Configurations
         $availableConfigurations = $this->getCrawlerController()->getConfigurationsForBranch(
             $pageId,
-            (int) $this->infoModuleController->MOD_SETTINGS['depth'] ?: 0
+            (int) $this->backendModuleMenu['depth'] ?: 0
         );
         $selectors['configurations'] = $this->selectorBox(
             empty($availableConfigurations) ? [] : array_combine($availableConfigurations, $availableConfigurations),

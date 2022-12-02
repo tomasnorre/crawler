@@ -36,7 +36,8 @@ final class RequestFormFactory
         CrawlAction $selectedAction,
         StandaloneView $view,
         InfoModuleController $infoModuleController,
-        array $extensionSettings
+        array $extensionSettings,
+        array $backendModuleMenu
     ): RequestFormInterface {
         switch ($selectedAction->__toString()) {
             case 'log':
@@ -45,7 +46,8 @@ final class RequestFormFactory
                     LogRequestForm::class,
                     $view,
                     $infoModuleController,
-                    $extensionSettings
+                    $extensionSettings,
+                    $backendModuleMenu
                 );
                 break;
             case 'multiprocess':
@@ -60,6 +62,7 @@ final class RequestFormFactory
                     $view,
                     $infoModuleController,
                     $extensionSettings,
+                    $backendModuleMenu,
                     $processService
                 );
                 break;
@@ -69,7 +72,8 @@ final class RequestFormFactory
                     StartRequestForm::class,
                     $view,
                     $infoModuleController,
-                    $extensionSettings
+                    $extensionSettings,
+                    $backendModuleMenu
                 );
         }
 

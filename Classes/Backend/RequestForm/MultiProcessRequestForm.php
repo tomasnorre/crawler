@@ -45,10 +45,11 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
     private Crawler $crawler;
 
     public function __construct(
-        private StandaloneView $view,
+        private StandaloneView       $view,
         private InfoModuleController $infoModuleController,
-        array $extensionSettings,
-        private ProcessService $processService
+        array                        $extensionSettings,
+        protected array              $backendModuleMenu,
+        private ProcessService       $processService
     ) {
         $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
         $this->extensionSettings = $extensionSettings;
@@ -91,6 +92,7 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
         $processRepository = GeneralUtility::makeInstance(ProcessRepository::class);
         $queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
 
+        // Todo: Fix MOD_SETTINGS
         $mode = GeneralUtility::_GP('processListMode') ?? $this->infoModuleController->MOD_SETTINGS['processListMode'];
         $allProcesses = $mode === 'simple' ? $processRepository->findAllActive() : $processRepository->findAll();
         $isCrawlerEnabled = ! $this->crawler->isDisabled() && ! $this->isErrorDetected;

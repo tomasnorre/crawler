@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AOE\Crawler\Backend\RequestForm;
 
+use AOE\Crawler\Backend\BackendModuleSettings;
 use AOE\Crawler\Backend\Helper\ResultHandler;
 use AOE\Crawler\Backend\Helper\UrlBuilder;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
@@ -25,6 +26,7 @@ use TYPO3\CMS\Info\Controller\InfoModuleController;
 
 final class LogRequestForm extends AbstractRequestForm implements RequestFormInterface
 {
+    protected BackendModuleSettings $backendModuleSettings;
     private JsonCompatibilityConverter $jsonCompatibilityConverter;
     private int $pageId;
     private bool $CSVExport = false;
@@ -37,7 +39,8 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
     public function __construct(
         private StandaloneView $view,
         private InfoModuleController $infoModuleController,
-        array $extensionSettings
+        array $extensionSettings,
+        protected array $backendModuleMenu
     ) {
         $this->jsonCompatibilityConverter = new JsonCompatibilityConverter();
         $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
@@ -46,6 +49,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
         $this->csvWriter = new CrawlerCsvWriter();
         $this->extensionSettings = $extensionSettings;
         $this->queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
+        $this->backendModuleSettings = GeneralUtility::makeInstance(BackendModuleSettings::class);
     }
 
     public function render(int $id, string $elementName, array $menuItems): string
@@ -122,7 +126,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                     $q_entry['result_data']['content'] = $this->jsonCompatibilityConverter->convert(
                         $q_entry['result_data']['content']
                     );
-                    if (! $this->infoModuleController->MOD_SETTINGS['log_resultLog']) {
+                    if (! $this->backendModuleSettings->isLogResultLog()) {
                         if (is_array($q_entry['result_data']['content'])) {
                             unset($q_entry['result_data']['content']['log']);
                         }
@@ -150,8 +154,8 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                 }
 
                 // Get branch beneath:
-                if ($this->infoModuleController->MOD_SETTINGS['depth']) {
-                    $tree->getTree($this->pageId, $this->infoModuleController->MOD_SETTINGS['depth']);
+                if ($this->backendModuleSettings->getDepth()) {
+                    $tree->getTree($this->pageId, $this->backendModuleSettings->getDepth());
                 }
 
                 // If Flush button is pressed, flush tables instead of selecting entries:
@@ -159,12 +163,12 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                     $doFlush = true;
                 } elseif (GeneralUtility::_POST('_flush_all')) {
                     $doFlush = true;
-                    $this->infoModuleController->MOD_SETTINGS['log_display'] = 'all';
+                    $this->backendModuleSettings->setLogDisplay('all');
                 } else {
                     $doFlush = false;
                 }
-                $itemsPerPage = (int) $this->infoModuleController->MOD_SETTINGS['itemsPerPage'];
-                $queueFilter = new QueueFilter($this->infoModuleController->MOD_SETTINGS['log_display']);
+                $itemsPerPage = $this->backendModuleSettings->getItemPerPage();
+                $queueFilter = new QueueFilter($this->backendModuleSettings->getLogDisplay() ?? '');
 
                 if ($doFlush) {
                     $this->queueRepository->flushQueue($queueFilter);
@@ -198,11 +202,11 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
         }
         $this->view->assign(
             'showResultLog',
-            (bool) isset($this->infoModuleController->MOD_SETTINGS['log_resultLog']) ? $this->infoModuleController->MOD_SETTINGS['log_resultLog'] : false
+            $this->backendModuleSettings->isLogResultLog()
         );
         $this->view->assign(
             'showFeVars',
-            (bool) isset($this->infoModuleController->MOD_SETTINGS['log_feVars']) ? $this->infoModuleController->MOD_SETTINGS['log_feVars'] : false
+            $this->backendModuleSettings->isLogFeVars()
         );
         $this->view->assign('displayActions', 1);
         $this->view->assign('displayLogFilterHtml', $this->getDisplayLogFilterHtml($setId));
@@ -247,8 +251,8 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
         ) . ': ' . BackendUtility::getFuncMenu(
             $this->pageId,
             'SET[log_display]',
-            $this->infoModuleController->MOD_SETTINGS['log_display'],
-            $this->infoModuleController->MOD_MENU['log_display'],
+            $this->backendModuleSettings->getLogDisplay(),
+            $this->backendModuleMenu['log_display'],
             'index.php',
             '&setID=' . $setId
         );
@@ -262,14 +266,14 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
             BackendUtility::getFuncMenu(
                 $this->pageId,
                 'SET[itemsPerPage]',
-                $this->infoModuleController->MOD_SETTINGS['itemsPerPage'],
-                $this->infoModuleController->MOD_MENU['itemsPerPage']
+                $this->backendModuleSettings->getItemPerPage(),
+                $this->backendModuleMenu['itemsPerPage']
             );
     }
 
     private function getShowResultLogCheckBoxHtml(int $setId, string $quiPart): string
     {
-        $currentValue = $this->infoModuleController->MOD_SETTINGS['log_resultLog'] ?? '';
+        $currentValue = $this->backendModuleSettings->isLogResultLog();
 
         return BackendUtility::getFuncCheck(
             $this->pageId,
@@ -284,7 +288,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
 
     private function getShowFeVarsCheckBoxHtml(int $setId, string $quiPart): string
     {
-        $currentValue = $this->infoModuleController->MOD_SETTINGS['log_feVars'] ?? '';
+        $currentValue = $this->backendModuleSettings->isLogFeVars();
         return BackendUtility::getFuncCheck(
             $this->pageId,
             'SET[log_feVars]',
@@ -314,8 +318,8 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
 
         $contentArray['titleRowSpan'] = 1;
         $contentArray['colSpan'] = 9
-            + (isset($this->infoModuleController->MOD_SETTINGS['log_resultLog']) ? -1 : 0)
-            + (isset($this->infoModuleController->MOD_SETTINGS['log_feVars']) ? 3 : 0);
+            + ($this->backendModuleSettings->isLogResultLog() ? -1 : 0)
+            + ($this->backendModuleSettings->isLogFeVars() ? 3 : 0);
 
         if (! empty($logEntriesOfPage)) {
             $setId = (int) GeneralUtility::_GP('setID');
@@ -346,7 +350,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
 
                 // Put data into array:
                 $rowData = [];
-                if (isset($this->infoModuleController->MOD_SETTINGS['log_resultLog'])) {
+                if ($this->backendModuleSettings->isLogResultLog()) {
                     $rowData['result_log'] = $resLog;
                 } else {
                     $rowData['scheduled'] = ($vv['scheduled'] > 0) ? BackendUtility::datetime($vv['scheduled']) : '-';
@@ -362,7 +366,7 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                 ) : '';
                 $rowData['set_id'] = (string) $vv['set_id'];
 
-                if (isset($this->infoModuleController->MOD_SETTINGS['log_feVars'])) {
+                if ($this->backendModuleSettings->isLogFeVars()) {
                     $resFeVars = ResultHandler::getResFeVars($resultData ?: []);
                     $rowData['tsfe_id'] = $resFeVars['id'] ?? '';
                     $rowData['tsfe_gr_list'] = $resFeVars['gr_list'] ?? '';
