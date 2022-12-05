@@ -6,47 +6,19 @@ namespace AOE\Crawler\Backend\RequestForm;
 
 use AOE\Crawler\Backend\Helper\ResultHandler;
 use AOE\Crawler\Backend\Helper\UrlBuilder;
-use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Utility\MessageUtility;
 use AOE\Crawler\Value\QueueFilter;
-use AOE\Crawler\Writer\FileWriter\CsvWriter\CrawlerCsvWriter;
-use AOE\Crawler\Writer\FileWriter\CsvWriter\CsvWriterInterface;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
-use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Fluid\View\StandaloneView;
-use TYPO3\CMS\Info\Controller\InfoModuleController;
+
 
 final class LogRequestForm extends AbstractRequestForm implements RequestFormInterface
 {
-    private JsonCompatibilityConverter $jsonCompatibilityConverter;
-    private int $pageId;
-    private bool $CSVExport = false;
-    private QueryBuilder $queryBuilder;
-    private CsvWriterInterface $csvWriter;
-    private QueueRepository $queueRepository;
-
-    private array $CSVaccu = [];
-
-    public function __construct(
-        private StandaloneView $view,
-        private InfoModuleController $infoModuleController,
-        array $extensionSettings
-    ) {
-        $this->jsonCompatibilityConverter = new JsonCompatibilityConverter();
-        $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
-            QueueRepository::TABLE_NAME
-        );
-        $this->csvWriter = new CrawlerCsvWriter();
-        $this->extensionSettings = $extensionSettings;
-        $this->queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
-    }
 
     public function render(int $id, string $elementName, array $menuItems): string
     {

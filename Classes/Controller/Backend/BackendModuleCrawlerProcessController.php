@@ -37,7 +37,10 @@ use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 
-final class BackendModuleProcessController extends AbstractBackendModuleController implements BackendModuleControllerInterface
+/**
+ * @internal since v12.0.0
+ */
+final class BackendModuleCrawlerProcessController extends AbstractBackendModuleController implements BackendModuleControllerInterface
 {
     const BACKEND_MODULE='web_site_crawler_process';
 

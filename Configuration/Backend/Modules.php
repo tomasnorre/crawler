@@ -17,7 +17,8 @@ declare(strict_types=1);
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Controller\Backend\BackendModuleProcessController;
+use AOE\Crawler\Controller\Backend\BackendModuleCrawlerLogController;
+use AOE\Crawler\Controller\Backend\BackendModuleCrawlerProcessController;
 use AOE\Crawler\Controller\Backend\BackendModuleStartCrawlingController;
 use AOE\Crawler\Controller\BackendModuleController;
 
@@ -33,7 +34,7 @@ return [
         'iconIdentifier' => 'tx-crawler-icon',
         'routes' => [
             '_default' => [
-                'target' => BackendModuleProcessController::class . '::handleRequest',
+                'target' => BackendModuleCrawlerProcessController::class . '::handleRequest',
             ],
         ],
         'moduleData' => [
@@ -53,7 +54,7 @@ return [
         ],
         'routes' => [
             '_default' => [
-                'target' => BackendModuleProcessController::class . '::handleRequest',
+                'target' => BackendModuleCrawlerLogController::class . '::handleRequest',
             ],
         ],
     ],
@@ -86,7 +87,7 @@ return [
         ],
         'routes' => [
             '_default' => [
-                'target' => BackendModuleProcessController::class . '::handleRequest',
+                'target' => BackendModuleCrawlerProcessController::class . '::handleRequest',
             ],
         ],
     ],

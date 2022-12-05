@@ -19,6 +19,7 @@ namespace AOE\Crawler\Controller\Backend;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Backend\Helper\UrlBuilder;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Event\InvokeQueueChangeEvent;
@@ -26,12 +27,19 @@ use AOE\Crawler\Utility\MessageUtility;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Contracts\Service\Attribute\Required;
+use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
+use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class BackendModuleStartCrawlingController extends AbstractBackendModuleController implements BackendModuleControllerInterface
+/**
+ * @internal since v12.0.0
+ */
+final class BackendModuleStartCrawlingController extends AbstractBackendModuleController implements BackendModuleControllerInterface
 {
+    const BACKEND_MODULE='web_site_crawler_start';
+
     protected ?CrawlerController $crawlerController = null;
     private int $reqMinute = 1000;
     private EventDispatcher $eventDispatcher;
@@ -60,6 +68,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
 
     private function assignValues(): ModuleTemplate
     {
+        $crawlingDepth = GeneralUtility::_GP('crawlingDepth') ?? '0';
         $crawlParameter = GeneralUtility::_GP('_crawl');
         $downloadParameter = GeneralUtility::_GP('_download');
         $scheduledTime = $this->getScheduledTime((string) GeneralUtility::_GP('tstamp'));
@@ -94,8 +103,8 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
             }
 
             $queueRows = $this->crawlerController->getPageTreeAndUrls(
-                $pageId,
-                $this->infoModuleController->MOD_SETTINGS['depth'],
+                $this->pageUid,
+                $crawlingDepth,
                 $scheduledTime,
                 $this->reqMinute,
                 $submitCrawlUrls,
@@ -119,19 +128,21 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
         }
 
         return $this->moduleTemplate->assignMultiple([
+            'currentPageId' => $this->pageUid,
             'noConfigurationSelected' => $noConfigurationSelected,
             'submitCrawlUrls' => $submitCrawlUrls,
             'amountOfUrls' => count($this->crawlerController->duplicateTrack ?? []),
-            'selectors' => $this->generateConfigurationSelectors($this->pageUid),
+            'selectors' => $this->generateConfigurationSelectors($this->pageUid, $crawlingDepth),
             'queueRows' => $queueRows,
             'displayActions' => 0,
+            'actionUrl' => $this->getActionUrl(),
         ]);
     }
 
     /**
      * Generates the configuration selectors for compiling URLs:
      */
-    private function generateConfigurationSelectors(int $pageId): array
+    private function generateConfigurationSelectors(int $pageId, string $crawlingDepth): array
     {
         $selectors = [];
         $selectors['depth'] = $this->selectorBox(
@@ -155,15 +166,15 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
                     'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_infi'
                 ),
             ],
-            'SET[depth]',
-            $this->infoModuleController->MOD_SETTINGS['depth'],
+            'crawlingDepth',
+            $crawlingDepth,
             false
         );
 
         // Configurations
         $availableConfigurations = $this->getCrawlerController()->getConfigurationsForBranch(
             $pageId,
-            (int) $this->infoModuleController->MOD_SETTINGS['depth'] ?: 0
+            (int) $crawlingDepth,
         );
         $selectors['configurations'] = $this->selectorBox(
             empty($availableConfigurations) ? [] : array_combine($availableConfigurations, $availableConfigurations),
@@ -254,5 +265,14 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
         }
 
         return $this->crawlerController;
+    }
+
+    /**
+     * @throws RouteNotFoundException
+     */
+    private function getActionUrl(): Uri
+    {
+        return GeneralUtility::makeInstance(UrlBuilder::class)->getBackendModuleUrl([], self::BACKEND_MODULE);
+
     }
 }
