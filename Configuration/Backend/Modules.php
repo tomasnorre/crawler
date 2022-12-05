@@ -44,10 +44,10 @@ return [
         ],
     ],
 
-    'web_site_crawler_ShowLog' => [
+    'web_site_crawler_log' => [
         'parent' => 'web_site_crawler',
         'access' => 'user',
-        'path' => '/module/page/crawler/showlog',
+        'path' => '/module/page/crawler/log',
         'iconIdentifier' => 'crawler-log',
         'labels' => [
             'title' => 'Log',

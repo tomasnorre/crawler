@@ -38,7 +38,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 final class BackendModuleStartCrawlingController extends AbstractBackendModuleController implements BackendModuleControllerInterface
 {
-    const BACKEND_MODULE='web_site_crawler_start';
+    private const BACKEND_MODULE='web_site_crawler_start';
 
     protected ?CrawlerController $crawlerController = null;
     private int $reqMinute = 1000;
