@@ -94,6 +94,71 @@ abstract class AbstractBackendModuleController
         }
     }
 
+    protected function getModuleMenu(): array
+    {
+        return [
+            'depth' => [
+                0 => $this->getLanguageService()->sL(
+                    'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_0'
+                ),
+                1 => $this->getLanguageService()->sL(
+                    'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_1'
+                ),
+                2 => $this->getLanguageService()->sL(
+                    'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_2'
+                ),
+                3 => $this->getLanguageService()->sL(
+                    'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_3'
+                ),
+                4 => $this->getLanguageService()->sL(
+                    'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_4'
+                ),
+                99 => $this->getLanguageService()->sL(
+                    'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_infi'
+                ),
+            ],
+            'crawlaction' => [
+                'start' => $this->getLanguageService()->sL(
+                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.start'
+                ),
+                'log' => $this->getLanguageService()->sL(
+                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.log'
+                ),
+                'multiprocess' => $this->getLanguageService()->sL(
+                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.multiprocess'
+                ),
+            ],
+            'log_resultLog' => '',
+            'log_feVars' => '',
+            'processListMode' => '',
+            'log_display' => [
+                'all' => $this->getLanguageService()->sL(
+                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.all'
+                ),
+                'pending' => $this->getLanguageService()->sL(
+                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.pending'
+                ),
+                'finished' => $this->getLanguageService()->sL(
+                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.finished'
+                ),
+            ],
+            'itemsPerPage' => [
+                '5' => $this->getLanguageService()->sL(
+                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.itemsPerPage.5'
+                ),
+                '10' => $this->getLanguageService()->sL(
+                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.itemsPerPage.10'
+                ),
+                '50' => $this->getLanguageService()->sL(
+                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.itemsPerPage.50'
+                ),
+                '0' => $this->getLanguageService()->sL(
+                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.itemsPerPage.0'
+                ),
+            ],
+        ];
+    }
+
     /**
      * Indicate that the required PHP method "popen" is
      * available in the system.

@@ -1,17 +1,18 @@
 <f:layout name="Module" />
 
-<f:section name="Headline">
-    <f:if condition="{noConfigurationSelected}">
-        <f:then>
-            <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noConfigSelected"/>
-        </f:then>
-        <f:else>
-            <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.configuration"/>
-        </f:else>
-    </f:if>
-</f:section>
-
 <f:section name="Content">
+    <h3>
+        <f:if condition="{noConfigurationSelected}">
+            <f:then>
+                <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noConfigSelected"/>
+            </f:then>
+            <f:else>
+                <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.configuration"/>
+            </f:else>
+        </f:if>
+    </h3>
+
+
     <form action="{actionUrl}" METHOD="post">
     <input type="hidden" name="id" value="{currentPageId}">
 

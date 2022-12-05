@@ -31,6 +31,7 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
     private QueryBuilder $queryBuilder;
     private bool $CSVExport = false;
     private array $CSVaccu = [];
+    private array $backendModuleMenu = [];
 
     public function __construct(
         public BackendModuleSettings $backendModuleSettings,
@@ -38,7 +39,9 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
         private CsvWriterInterface $csvWriter,
         private JsonCompatibilityConverter $jsonCompatibilityConverter,
         private IconFactory $iconFactory,
-    ){}
+    ){
+        $this->backendModuleMenu = $this->getModuleMenu();
+    }
 
     #[Required]
     public function setQueryBuilder(): void
@@ -69,6 +72,15 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
         $setId = (int)GeneralUtility::_GP('setID');
         $quiPath = GeneralUtility::_GP('qid_details') ? '&qid_details=' . (int)GeneralUtility::_GP('qid_details') : '';
         $queueId = GeneralUtility::_GP('qid_details');
+
+        if(GeneralUtility::_GP('ShowResultLog') !== null) {
+            $this->backendModuleSettings->setShowResultLog((bool)GeneralUtility::_GP('ShowResultLog'));
+        }
+        if(GeneralUtility::_GP('ShowFeVars') !== null) {
+            $this->backendModuleSettings->setShowFeLog((bool)GeneralUtility::_GP('ShowFeVars'));
+        }
+
+
         // Look for set ID sent - if it is, we will display contents of that set:
         $showSetId = (int)GeneralUtility::_GP('setID');
 
@@ -151,7 +163,7 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
             'setId' => $showSetId,
             'noPageSelected' => false,
             'logEntriesPerPage' => $logEntriesPerPage,
-            'showResultLog' => $this->backendModuleSettings->isShowFeLog(),
+            'showResultLog' => $this->backendModuleSettings->isShowResultLog(),
             'showFeVars' => $this->backendModuleSettings->isShowFeLog(),
             'displayActions' => 1,
             'displayLogFilterHtml' => $this->getDisplayLogFilterHtml($setId),
@@ -167,9 +179,9 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
                 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.display'
             ) . ': ' . BackendUtility::getFuncMenu(
                 $this->pageUid,
-                'SET[log_display]',
+                'logDisplay',
                 $this->backendModuleSettings->getLogDisplay(),
-                $this->infoModuleController->MOD_MENU['log_display'],
+                $this->backendModuleMenu['log_display'],
                 'index.php',
                 '&setID=' . $setId
             );
@@ -182,9 +194,9 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
             ) . ': ' .
             BackendUtility::getFuncMenu(
                 $this->pageUid,
-                'SET[itemsPerPage]',
+                'itemsPerPage',
                 $this->backendModuleSettings->getItemsPerPage(),
-                $this->infoModuleController->MOD_MENU['itemsPerPage']
+                $this->backendModuleMenu['itemsPerPage']
             );
     }
 
@@ -192,7 +204,7 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
     {
         return BackendUtility::getFuncCheck(
                 $this->pageUid,
-                'SET[log_resultLog]',
+                'ShowResultLog',
                 $this->backendModuleSettings->isShowResultLog(),
                 'index.php',
                 '&setID=' . $setId . $quiPart
@@ -205,7 +217,7 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
     {
         return BackendUtility::getFuncCheck(
                 $this->pageUid,
-                'SET[log_feVars]',
+                'ShowFeVars',
                 $this->backendModuleSettings->isShowFeLog(),
                 'index.php',
                 '&setID=' . $setId . $quiPart
