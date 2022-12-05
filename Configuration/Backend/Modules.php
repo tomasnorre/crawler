@@ -17,6 +17,8 @@ declare(strict_types=1);
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Controller\Backend\BackendModuleProcessController;
+use AOE\Crawler\Controller\Backend\BackendModuleStartCrawlingController;
 use AOE\Crawler\Controller\BackendModuleController;
 
 return [
@@ -31,7 +33,60 @@ return [
         'iconIdentifier' => 'tx-crawler-icon',
         'routes' => [
             '_default' => [
-                'target' => BackendModuleController::class . '::handleRequest',
+                'target' => BackendModuleProcessController::class . '::handleRequest',
+            ],
+        ],
+        'moduleData' => [
+            'function' => 1,
+            'pages' => '0',
+            'depth' => 0,
+        ],
+    ],
+
+    'web_site_crawler_ShowLog' => [
+        'parent' => 'web_site_crawler',
+        'access' => 'user',
+        'path' => '/module/page/crawler/showlog',
+        'iconIdentifier' => 'crawler-log',
+        'labels' => [
+            'title' => 'Log',
+        ],
+        'routes' => [
+            '_default' => [
+                'target' => BackendModuleProcessController::class . '::handleRequest',
+            ],
+        ],
+    ],
+    'web_site_crawler_start' => [
+        'parent' => 'web_site_crawler',
+        'access' => 'user',
+        'path' => '/module/page/crawler/start',
+        'iconIdentifier' => 'crawler-start',
+        'labels' => [
+            'title' => 'Start',
+        ],
+        'routes' => [
+            '_default' => [
+                'target' => BackendModuleStartCrawlingController::class . '::handleRequest',
+            ],
+        ],
+        'moduleData' => [
+            'function' => 1,
+            'pages' => '0',
+            'depth' => 0,
+        ],
+    ],
+    'web_site_crawler_process' => [
+        'parent' => 'web_site_crawler',
+        'access' => 'user',
+        'path' => '/module/page/crawler/process',
+        'iconIdentifier' => 'crawler-process',
+        'labels' => [
+            'title' => 'Process',
+        ],
+        'routes' => [
+            '_default' => [
+                'target' => BackendModuleProcessController::class . '::handleRequest',
             ],
         ],
     ],

@@ -25,6 +25,7 @@ use AOE\Crawler\Value\QueueFilter;
 use PDO;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
+use Symfony\Contracts\Service\Attribute\Required;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -42,14 +43,12 @@ class QueueRepository extends Repository implements LoggerAwareInterface
 
     protected array $extensionSettings;
 
-    public function __construct()
+    #[Required]
+    public function setExtensionSettings(): void
     {
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->extensionSettings = GeneralUtility::makeInstance(
-            ExtensionConfigurationProvider::class
-        )->getExtensionConfiguration();
-
-        parent::__construct($objectManager);
+        /** @var ExtensionConfigurationProvider $configurationProvider */
+        $configurationProvider = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
+        $this->extensionSettings = $configurationProvider->getExtensionConfiguration();
     }
 
     // TODO: Should be a property on the QueueObject

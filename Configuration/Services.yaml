@@ -82,3 +82,9 @@ services:
 
     AOE\Crawler\Controller\BackendModuleController:
         tags: [ 'backend.controller' ]
+
+    AOE\Crawler\Controller\Backend\BackendModuleProcessController:
+        tags: [ 'backend.controller' ]
+
+    AOE\Crawler\Controller\Backend\BackendModuleStartCrawlingController:
+        tags: [ 'backend.controller' ]

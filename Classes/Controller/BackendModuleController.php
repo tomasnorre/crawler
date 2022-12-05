@@ -36,7 +36,6 @@ class BackendModuleController
 {
     private $pageUid;
 
-
     public function __construct(
         protected ModuleTemplateFactory $moduleTemplateFactory,
         protected IconFactory $iconFactory,
@@ -47,80 +46,7 @@ class BackendModuleController
 
     public function handleRequest(ServerRequestInterface $request): ResponseInterface
     {
-        $moduleTemplate = $this->setupView($request);
-        $moduleTemplate->assign('currentPageId', $request->getQueryParams()['id']);
-        $moduleTemplate->setTitle('Crawler', $GLOBALS['LANG']->getLL('module.menu.log'));
-
-        return $moduleTemplate->renderResponse('Backend/ProcessOverview');
     }
 
-    private function setupView(ServerRequestInterface $request): ModuleTemplate
-    {
-        $moduleTemplate = $this->moduleTemplateFactory->create($request);
-        $moduleTemplate->getView()->setLayoutRootPaths(['EXT:crawler/Resources/Private/Layouts']);
-        $moduleTemplate->getView()->setPartialRootPaths(['EXT:crawler/Resources/Private/Partials']);
-        $moduleTemplate->getView()->setTemplateRootPaths(['EXT:crawler/Resources/Private/Templates/Backend']);
 
-        [$moduleTemplate, $context] = $this->setupMenu($request, $moduleTemplate);
-
-        $moduleTemplate->setTitle(
-            $this->getLanguageService()->sL('LLL:EXT:examples/Resources/Private/Language/Module/locallang_mod.xlf:mlang_tabs_tab'),
-            $context
-        );
-
-        $permissionClause = $this->getBackendUserAuthentication()->getPagePermsClause(Permission::PAGE_SHOW);
-        $pageRecord = BackendUtility::readPageAccess(
-            $this->pageUid,
-            $permissionClause
-        );
-        if ($pageRecord) {
-            $moduleTemplate->getDocHeaderComponent()->setMetaInformation($pageRecord);
-        }
-
-        return $moduleTemplate;
-    }
-
-    private function setupMenu(ServerRequestInterface $request, ModuleTemplate $moduleTemplate): array
-    {
-        $menuItems = [
-            'flash' => [
-                'controller' => 'Module',
-                'action' => 'flash',
-                'label' => 'one',
-            ],
-            'tree' => [
-                'controller' => 'Module',
-                'action' => 'tree',
-                'label' => 'two',
-            ]
-        ];
-        $menu = $moduleTemplate->getDocHeaderComponent()->getMenuRegistry()->makeMenu();
-        $menu->setIdentifier('ExampleModuleMenu');
-
-        $context = '';
-        foreach ($menuItems as $menuItemConfig) {
-            $isActive = false; //$request->getControllerActionName() === $menuItemConfig['action'];
-            $menuItem = $menu->makeMenuItem()
-                ->setTitle($menuItemConfig['label'])
-                ->setHref('https://www.google.com')
-                ->setActive($isActive);
-            $menu->addMenuItem($menuItem);
-            if ($isActive) {
-                $context = $menuItemConfig['label'];
-            }
-        }
-
-        $moduleTemplate->getDocHeaderComponent()->getMenuRegistry()->addMenu($menu);
-        return array($moduleTemplate, $context);
-    }
-
-    private function getLanguageService(): LanguageService
-    {
-        return $GLOBALS['LANG'];
-    }
-
-    private function getBackendUserAuthentication(): BackendUserAuthentication
-    {
-        return $GLOBALS['BE_USER'];
-    }
 }

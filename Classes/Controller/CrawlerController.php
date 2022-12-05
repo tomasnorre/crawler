@@ -477,7 +477,7 @@ class CrawlerController implements LoggerAwareInterface
         $fieldArray = [
             'page_id' => (int) $id,
             'parameters' => $parameters_serialized,
-            'parameters_hash' => GeneralUtility::shortMD5($parameters_serialized),
+            'parameters_hash' => md5($parameters_serialized),
             'configuration_hash' => $configurationHash,
             'scheduled' => $tstamp,
             'exec_time' => 0,

@@ -35,13 +35,13 @@ class UrlBuilder
      *
      * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
      */
-    public static function getInfoModuleUrl(array $uriParameters = []): Uri
+    public static function getBackendModuleUrl(array $uriParameters = [], string $module = 'web_site_crawler'): Uri
     {
         if (GeneralUtility::_GP('id')) {
             $uriParameters['id'] = GeneralUtility::_GP('id');
         }
         /** @var UriBuilder $uriBuilder */
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
-        return $uriBuilder->buildUriFromRoute('web_info', $uriParameters);
+        return $uriBuilder->buildUriFromRoute($module, $uriParameters);
     }
 }

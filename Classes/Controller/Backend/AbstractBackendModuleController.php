@@ -1,0 +1,99 @@
+<?php
+
+declare(strict_types=1);
+
+namespace AOE\Crawler\Controller\Backend;
+
+use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
+use AOE\Crawler\Utility\MessageUtility;
+use AOE\Crawler\Utility\PhpBinaryUtility;
+use Psr\Http\Message\ServerRequestInterface;
+use Symfony\Contracts\Service\Attribute\Required;
+use TYPO3\CMS\Backend\Template\ModuleTemplate;
+use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Localization\LanguageService;
+use TYPO3\CMS\Core\Type\Bitmask\Permission;
+use TYPO3\CMS\Core\Utility\CommandUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+
+abstract class AbstractBackendModuleController
+{
+    protected bool $isErrorDetected = false;
+    protected int $pageUid;
+    protected ModuleTemplate $moduleTemplate;
+    protected array $extensionSettings = [];
+
+    #[Required]
+    public function setExtensionSettings(): void
+    {
+        /** @var ExtensionConfigurationProvider $configurationProvider */
+        $configurationProvider = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
+        $this->extensionSettings = $configurationProvider->getExtensionConfiguration();
+    }
+
+    protected function setupView(ServerRequestInterface $request, int $pageUid): ModuleTemplate
+    {
+        $moduleTemplate = (GeneralUtility::makeInstance(ModuleTemplateFactory::class))->create($request);
+        $moduleTemplate->getView()->setLayoutRootPaths(['EXT:crawler/Resources/Private/Layouts']);
+        $moduleTemplate->getView()->setPartialRootPaths(['EXT:crawler/Resources/Private/Partials']);
+        $moduleTemplate->getView()->setTemplateRootPaths(['EXT:crawler/Resources/Private/Templates/Backend']);
+
+        $permissionClause = $this->getBackendUserAuthentication()->getPagePermsClause(Permission::PAGE_SHOW);
+        $pageRecord = BackendUtility::readPageAccess(
+            $pageUid,
+            $permissionClause
+        );
+        if ($pageRecord) {
+            $moduleTemplate->getDocHeaderComponent()->setMetaInformation($pageRecord);
+        }
+
+        return $moduleTemplate;
+    }
+
+    protected function makeCrawlerProcessableChecks(array $extensionSettings): void
+    {
+        if (! $this->isPhpForkAvailable()) {
+            $this->isErrorDetected = true;
+            MessageUtility::addErrorMessage(
+                $this->getLanguageService()->sL(
+                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:message.noPhpForkAvailable'
+                )
+            );
+        }
+
+        $exitCode = 0;
+        $out = [];
+        CommandUtility::exec(PhpBinaryUtility::getPhpBinary() . ' -v', $out, $exitCode);
+        if ($exitCode > 0) {
+            $this->isErrorDetected = true;
+            MessageUtility::addErrorMessage(
+                sprintf($this->getLanguageService()->sL(
+                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:message.phpBinaryNotFound'
+                ), htmlspecialchars($extensionSettings['phpPath'], ENT_QUOTES | ENT_HTML5))
+            );
+        }
+    }
+
+    /**
+     * Indicate that the required PHP method "popen" is
+     * available in the system.
+     */
+    private function isPhpForkAvailable(): bool
+    {
+        return function_exists('popen');
+    }
+
+
+    protected function getLanguageService(): LanguageService
+    {
+        return $GLOBALS['LANG'];
+    }
+
+    protected function getBackendUserAuthentication(): BackendUserAuthentication
+    {
+        return $GLOBALS['BE_USER'];
+    }
+}

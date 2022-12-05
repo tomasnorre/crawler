@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Backend\RequestForm;
+namespace AOE\Crawler\Controller\Backend;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2022-     Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -23,13 +23,16 @@ use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Event\InvokeQueueChangeEvent;
 use AOE\Crawler\Utility\MessageUtility;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Symfony\Contracts\Service\Attribute\Required;
+use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Fluid\View\StandaloneView;
-use TYPO3\CMS\Info\Controller\InfoModuleController;
 
-final class StartRequestForm extends AbstractRequestForm implements RequestFormInterface
+class BackendModuleStartCrawlingController extends AbstractBackendModuleController implements BackendModuleControllerInterface
 {
+    protected ?CrawlerController $crawlerController = null;
     private int $reqMinute = 1000;
     private EventDispatcher $eventDispatcher;
 
@@ -38,52 +41,30 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
      */
     private $incomingConfigurationSelection = [];
 
-    public function __construct(
-        private StandaloneView $view,
-        private InfoModuleController $infoModuleController,
-        array $extensionSettings,
-        EventDispatcher $eventDispatcher = null
-    ) {
-        $this->extensionSettings = $extensionSettings;
-        $this->eventDispatcher = $eventDispatcher ?? GeneralUtility::makeInstance(EventDispatcher::class);
+    #[Required]
+    public function setEventDispatcher(): void
+    {
+        $this->eventDispatcher = GeneralUtility::makeInstance(EventDispatcher::class);
     }
 
-    public function render(int $id, string $elementName, array $menuItems): string
+    public function handleRequest(ServerRequestInterface $request): ResponseInterface
     {
-        return $this->showCrawlerInformationAction($id);
+        $this->makeCrawlerProcessableChecks($this->extensionSettings);
+        $this->pageUid = (int)($request->getQueryParams()['id'] ?? -1);
+        $this->moduleTemplate = $this->setupView($request, $this->pageUid);
+        $this->moduleTemplate = $this->moduleTemplate->makeDocHeaderModuleMenu(['id' => $request->getQueryParams()['id'] ?? -1]);
+        $this->moduleTemplate = $this->assignValues();
+
+        return $this->moduleTemplate->renderResponse('Backend/ShowCrawlerInformation');
     }
 
-    /*******************************
-     *
-     * Generate URLs for crawling:
-     *
-     ******************************/
-
-    /**
-     * Show a list of URLs to be crawled for each page
-     */
-    private function showCrawlerInformationAction(int $pageId): string
+    private function assignValues(): ModuleTemplate
     {
-        if (empty($pageId)) {
-            $this->isErrorDetected = true;
-            MessageUtility::addErrorMessage(
-                $this->getLanguageService()->sL(
-                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noPageSelected'
-                )
-            );
-            return '';
-        }
-
-        $this->view->setTemplate('ShowCrawlerInformation');
-
         $crawlParameter = GeneralUtility::_GP('_crawl');
         $downloadParameter = GeneralUtility::_GP('_download');
-
+        $scheduledTime = $this->getScheduledTime((string) GeneralUtility::_GP('tstamp'));
         $submitCrawlUrls = isset($crawlParameter);
         $downloadCrawlUrls = isset($downloadParameter);
-        $this->makeCrawlerProcessableChecks($this->extensionSettings);
-
-        $scheduledTime = $this->getScheduledTime((string) GeneralUtility::_GP('tstamp'));
 
         $this->incomingConfigurationSelection = GeneralUtility::_GP('configurationSelection');
         $this->incomingConfigurationSelection = is_array(
@@ -125,17 +106,8 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
             );
         }
 
-        $downloadUrls = $this->crawlerController->downloadUrls;
-        $duplicateTrack = $this->crawlerController->duplicateTrack;
-
-        $this->view->assign('noConfigurationSelected', $noConfigurationSelected);
-        $this->view->assign('submitCrawlUrls', $submitCrawlUrls);
-        $this->view->assign('amountOfUrls', count($duplicateTrack));
-        $this->view->assign('selectors', $this->generateConfigurationSelectors($pageId));
-        $this->view->assign('queueRows', $queueRows);
-        $this->view->assign('displayActions', 0);
-
         // Download Urls to crawl:
+        $downloadUrls = $this->crawlerController->downloadUrls;
         if ($downloadCrawlUrls) {
             // Creating output header:
             header('Content-Type: application/octet-stream');
@@ -146,7 +118,14 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
             exit;
         }
 
-        return $this->view->render();
+        return $this->moduleTemplate->assignMultiple([
+            'noConfigurationSelected' => $noConfigurationSelected,
+            'submitCrawlUrls' => $submitCrawlUrls,
+            'amountOfUrls' => count($this->crawlerController->duplicateTrack ?? []),
+            'selectors' => $this->generateConfigurationSelectors($this->pageUid),
+            'queueRows' => $queueRows,
+            'displayActions' => 0,
+        ]);
     }
 
     /**
@@ -233,21 +212,21 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
         $options = [];
         foreach ($optArray as $key => $val) {
             $selected = (! $multiple && ! strcmp($value, (string) $key)) || ($multiple && in_array(
-                $key,
-                (array) $value,
-                true
-            ));
+                        $key,
+                        (array) $value,
+                        true
+                    ));
             $options[] = '
                 <option value="' . $key . '" ' . ($selected ? ' selected="selected"' : '') . '>' . htmlspecialchars(
-                $val,
-                ENT_QUOTES | ENT_HTML5
-            ) . '</option>';
+                    $val,
+                    ENT_QUOTES | ENT_HTML5
+                ) . '</option>';
         }
 
         return '<select class="form-control" name="' . htmlspecialchars(
-            $name . ($multiple ? '[]' : ''),
-            ENT_QUOTES | ENT_HTML5
-        ) . '"' . ($multiple ? ' multiple' : '') . '>' . implode('', $options) . '</select>';
+                $name . ($multiple ? '[]' : ''),
+                ENT_QUOTES | ENT_HTML5
+            ) . '"' . ($multiple ? ' multiple' : '') . '>' . implode('', $options) . '</select>';
     }
 
     /**

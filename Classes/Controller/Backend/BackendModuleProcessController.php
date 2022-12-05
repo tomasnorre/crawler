@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Backend\RequestForm;
+namespace AOE\Crawler\Controller\Backend;
 
 /*
- * (c) 2005-2021 AOE GmbH <dev@aoe.com>
- * (c) 2021-     Tomas Norre Mikkelsen <tomasnorre@gmail.com>
+ * (c) 2022-     Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -21,6 +20,7 @@ namespace AOE\Crawler\Backend\RequestForm;
  */
 
 use AOE\Crawler\Backend\Helper\UrlBuilder;
+use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Crawler;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
@@ -28,59 +28,44 @@ use AOE\Crawler\Exception\ProcessException;
 use AOE\Crawler\Hooks\CrawlerHookInterface;
 use AOE\Crawler\Service\ProcessService;
 use AOE\Crawler\Utility\MessageUtility;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
-use TYPO3\CMS\Fluid\View\StandaloneView;
-use TYPO3\CMS\Info\Controller\InfoModuleController;
 
-final class MultiProcessRequestForm extends AbstractRequestForm implements RequestFormInterface
+final class BackendModuleProcessController extends AbstractBackendModuleController implements BackendModuleControllerInterface
 {
-    private IconFactory $iconFactory;
-
-    private ?int $id = null;
-    private Crawler $crawler;
+    const BACKEND_MODULE='web_site_crawler_process';
 
     public function __construct(
-        private StandaloneView $view,
-        private InfoModuleController $infoModuleController,
-        array $extensionSettings,
-        private ProcessService $processService
-    ) {
-        $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
-        $this->extensionSettings = $extensionSettings;
-        $this->crawler = GeneralUtility::makeInstance(Crawler::class);
+        private IconFactory $iconFactory,
+        private ProcessService $processService,
+        private ProcessRepository $processRepository,
+        private QueueRepository $queueRepository,
+        private Crawler $crawler
+    )
+    {
     }
 
-    public function render(int $id, string $elementName, array $menuItems): string
+    public function handleRequest(ServerRequestInterface $request): ResponseInterface
     {
-        $this->id = $id;
-        return $this->processOverviewAction();
-    }
-
-    /**
-     * This method is used to show an overview about the active and the finished crawling processes
-     *
-     * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
-     */
-    private function processOverviewAction(): string
-    {
-        $this->view->setTemplate('ProcessOverview');
+        $this->pageUid = (int) ($request->getQueryParams()['id'] ?? -1);
+        $this->moduleTemplate = $this->setupView($request, $this->pageUid);
+        $this->moduleTemplate->assign('currentPageId', $this->pageUid);
+        $this->moduleTemplate->setTitle('Crawler', $GLOBALS['LANG']->getLL('module.menu.log'));
+        $this->moduleTemplate = $this->moduleTemplate->makeDocHeaderModuleMenu(['id' => $request->getQueryParams()['id'] ?? -1]);
+        $this->moduleTemplate = $this->assignValues();
         $this->runRefreshHooks();
-        $this->makeCrawlerProcessableChecks($this->extensionSettings);
 
-        if (empty($this->id)) {
-            $this->isErrorDetected = true;
-            MessageUtility::addErrorMessage(
-                $this->getLanguageService()->sL(
-                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noPageSelected'
-                )
-            );
-        }
+        return $this->moduleTemplate->renderResponse('Backend/ProcessOverview');
+    }
 
+    private function assignValues(): ModuleTemplate
+    {
         try {
             $this->handleProcessOverviewActions();
         } catch (\Throwable $e) {
@@ -88,16 +73,14 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
             MessageUtility::addErrorMessage($e->getMessage());
         }
 
-        $processRepository = GeneralUtility::makeInstance(ProcessRepository::class);
-        $queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
-
-        $mode = GeneralUtility::_GP('processListMode') ?? $this->infoModuleController->MOD_SETTINGS['processListMode'];
-        $allProcesses = $mode === 'simple' ? $processRepository->findAllActive() : $processRepository->findAll();
+        $mode = GeneralUtility::_GP('processListMode') ?? 'simple';
+        $allProcesses = $mode === 'simple' ? $this->processRepository->findAllActive() : $this->processRepository->findAll();
         $isCrawlerEnabled = ! $this->crawler->isDisabled() && ! $this->isErrorDetected;
-        $currentActiveProcesses = $processRepository->findAllActive()->count();
+        $currentActiveProcesses = $this->processRepository->findAllActive()->count();
         $maxActiveProcesses = MathUtility::forceIntegerInRange($this->extensionSettings['processLimit'], 1, 99, 1);
-        $this->view->assignMultiple([
-            'pageId' => (int) $this->id,
+
+        return $this->moduleTemplate->assignMultiple([
+            'pageId' => (int) $this->pageUid,
             'refreshLink' => $this->getRefreshLink(),
             'addLink' => $this->getAddLink($currentActiveProcesses, $maxActiveProcesses, $isCrawlerEnabled),
             'modeLink' => $this->getModeLink($mode),
@@ -105,26 +88,13 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
             'processCollection' => $allProcesses,
             'cliPath' => $this->processService->getCrawlerCliPath(),
             'isCrawlerEnabled' => $isCrawlerEnabled,
-            'totalUnprocessedItemCount' => $queueRepository->countAllPendingItems(),
-            'assignedUnprocessedItemCount' => $queueRepository->countAllAssignedPendingItems(),
+            'totalUnprocessedItemCount' => $this->queueRepository->countAllPendingItems(),
+            'assignedUnprocessedItemCount' => $this->queueRepository->countAllAssignedPendingItems(),
             'activeProcessCount' => $currentActiveProcesses,
             'maxActiveProcessCount' => $maxActiveProcesses,
             'mode' => $mode,
             'displayActions' => 0,
         ]);
-
-        return $this->view->render();
-    }
-
-    private function getLinkButton(string $iconIdentifier, string $title, UriInterface $href): string
-    {
-        $moduleTemplate = GeneralUtility::makeInstance(ModuleTemplate::class);
-        $buttonBar = $moduleTemplate->getDocHeaderComponent()->getButtonBar();
-        return (string) $buttonBar->makeLinkButton()
-            ->setHref((string) $href)
-            ->setIcon($this->iconFactory->getIcon($iconIdentifier, Icon::SIZE_SMALL))
-            ->setTitle($title)
-            ->setShowLabelText(true);
     }
 
     /**
@@ -169,7 +139,7 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
         return $this->getLinkButton(
             'actions-refresh',
             $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.refresh'),
-            UrlBuilder::getInfoModuleUrl(['SET[\'crawleraction\']' => 'crawleraction', 'id' => $this->id])
+            UrlBuilder::getBackendModuleUrl(['SET[\'crawleraction\']' => 'crawleraction', 'id' => $this->pageUid], self::BACKEND_MODULE)
         );
     }
 
@@ -190,7 +160,7 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
             $this->getLanguageService()->sL(
                 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.process.add'
             ),
-            UrlBuilder::getInfoModuleUrl(['action' => 'addProcess'])
+            UrlBuilder::getBackendModuleUrl(['action' => 'addProcess'], self::BACKEND_MODULE)
         );
     }
 
@@ -205,7 +175,7 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
                 $this->getLanguageService()->sL(
                     'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.show.running'
                 ),
-                UrlBuilder::getInfoModuleUrl(['processListMode' => 'simple'])
+                UrlBuilder::getBackendModuleUrl(['processListMode' => 'simple'], self::BACKEND_MODULE)
             );
         } elseif ($mode === 'simple') {
             return $this->getLinkButton(
@@ -213,7 +183,7 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
                 $this->getLanguageService()->sL(
                     'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.show.all'
                 ),
-                UrlBuilder::getInfoModuleUrl(['processListMode' => 'detail'])
+                UrlBuilder::getBackendModuleUrl(['processListMode' => 'detail'], self::BACKEND_MODULE)
             );
         }
         return '';
@@ -232,7 +202,7 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
                 $this->getLanguageService()->sL(
                     'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.disablecrawling'
                 ),
-                UrlBuilder::getInfoModuleUrl(['action' => 'stopCrawling'])
+                UrlBuilder::getBackendModuleUrl(['action' => 'stopCrawling'], self::BACKEND_MODULE)
             );
         }
         return $this->getLinkButton(
@@ -240,7 +210,7 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
             $this->getLanguageService()->sL(
                 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.enablecrawling'
             ),
-            UrlBuilder::getInfoModuleUrl(['action' => 'resumeCrawling'])
+            UrlBuilder::getBackendModuleUrl(['action' => 'resumeCrawling'], self::BACKEND_MODULE)
         );
     }
 
@@ -257,4 +227,15 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
             }
         }
     }
+
+    private function getLinkButton(string $iconIdentifier, string $title, UriInterface $href): string
+    {
+        $buttonBar = $this->moduleTemplate->getDocHeaderComponent()->getButtonBar();
+        return (string) $buttonBar->makeLinkButton()
+            ->setHref((string) $href)
+            ->setIcon($this->iconFactory->getIcon($iconIdentifier, Icon::SIZE_SMALL))
+            ->setTitle($title)
+            ->setShowLabelText(true);
+    }
+
 }
