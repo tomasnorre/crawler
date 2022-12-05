@@ -7,6 +7,7 @@ namespace AOE\Crawler\Controller\Backend;
 use AOE\Crawler\Backend\Helper\ResultHandler;
 use AOE\Crawler\Backend\Helper\UrlBuilder;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
+use AOE\Crawler\Domain\Model\BackendModuleSettings;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Value\QueueFilter;
 use AOE\Crawler\Writer\FileWriter\CsvWriter\CsvWriterInterface;
@@ -32,13 +33,12 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
     private array $CSVaccu = [];
 
     public function __construct(
+        public BackendModuleSettings $backendModuleSettings,
         private QueueRepository $queueRepository,
         private CsvWriterInterface $csvWriter,
         private JsonCompatibilityConverter $jsonCompatibilityConverter,
-        private IconFactory $iconFactory
-    )
-    {
-    }
+        private IconFactory $iconFactory,
+    ){}
 
     #[Required]
     public function setQueryBuilder(): void
@@ -99,8 +99,8 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
             }
 
             // Get branch beneath:
-            if ($this->infoModuleController->MOD_SETTINGS['depth']) {
-                $tree->getTree($this->pageId, $this->infoModuleController->MOD_SETTINGS['depth']);
+            if ($this->backendModuleSettings->getDepth()) {
+                $tree->getTree($this->pageUid, $this->backendModuleSettings->getDepth());
             }
 
             // If Flush button is pressed, flush tables instead of selecting entries:
@@ -108,12 +108,12 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
                 $doFlush = true;
             } elseif (GeneralUtility::_POST('_flush_all')) {
                 $doFlush = true;
-                $this->infoModuleController->MOD_SETTINGS['log_display'] = 'all';
+                $this->backendModuleSettings->setLogDisplay('all');
             } else {
                 $doFlush = false;
             }
-            $itemsPerPage = (int) $this->infoModuleController->MOD_SETTINGS['itemsPerPage'];
-            $queueFilter = new QueueFilter($this->infoModuleController->MOD_SETTINGS['log_display'] ?? 'all');
+            $itemsPerPage = $this->backendModuleSettings->getItemsPerPage();
+            $queueFilter = new QueueFilter($this->backendModuleSettings->getLogDisplay());
 
             if ($doFlush) {
                 $this->queueRepository->flushQueue($queueFilter);
@@ -151,8 +151,8 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
             'setId' => $showSetId,
             'noPageSelected' => false,
             'logEntriesPerPage' => $logEntriesPerPage,
-            'showResultLog' => (bool)isset($this->infoModuleController->MOD_SETTINGS['log_resultLog']) ? $this->infoModuleController->MOD_SETTINGS['log_resultLog'] : false,
-            'showFeVars' => (bool)isset($this->infoModuleController->MOD_SETTINGS['log_feVars']) ? $this->infoModuleController->MOD_SETTINGS['log_feVars'] : false,
+            'showResultLog' => $this->backendModuleSettings->isShowFeLog(),
+            'showFeVars' => $this->backendModuleSettings->isShowFeLog(),
             'displayActions' => 1,
             'displayLogFilterHtml' => $this->getDisplayLogFilterHtml($setId),
             'itemPerPageHtml' => $this->getItemsPerPageDropDownHtml(),
@@ -168,7 +168,7 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
             ) . ': ' . BackendUtility::getFuncMenu(
                 $this->pageUid,
                 'SET[log_display]',
-                $this->infoModuleController->MOD_SETTINGS['log_display'],
+                $this->backendModuleSettings->getLogDisplay(),
                 $this->infoModuleController->MOD_MENU['log_display'],
                 'index.php',
                 '&setID=' . $setId
@@ -183,19 +183,17 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
             BackendUtility::getFuncMenu(
                 $this->pageUid,
                 'SET[itemsPerPage]',
-                $this->infoModuleController->MOD_SETTINGS['itemsPerPage'],
+                $this->backendModuleSettings->getItemsPerPage(),
                 $this->infoModuleController->MOD_MENU['itemsPerPage']
             );
     }
 
     private function getShowResultLogCheckBoxHtml(int $setId, string $quiPart): string
     {
-        $currentValue = $this->infoModuleController->MOD_SETTINGS['log_resultLog'] ?? '';
-
         return BackendUtility::getFuncCheck(
                 $this->pageUid,
                 'SET[log_resultLog]',
-                $currentValue,
+                $this->backendModuleSettings->isShowResultLog(),
                 'index.php',
                 '&setID=' . $setId . $quiPart
             ) . '&nbsp;' . $this->getLanguageService()->sL(
@@ -205,11 +203,10 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
 
     private function getShowFeVarsCheckBoxHtml(int $setId, string $quiPart): string
     {
-        $currentValue = $this->infoModuleController->MOD_SETTINGS['log_feVars'] ?? '';
         return BackendUtility::getFuncCheck(
                 $this->pageUid,
                 'SET[log_feVars]',
-                $currentValue,
+                $this->backendModuleSettings->isShowFeLog(),
                 'index.php',
                 '&setID=' . $setId . $quiPart
             ) . '&nbsp;' . $this->getLanguageService()->sL(
@@ -240,7 +237,7 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
             $q_entry['result_data']['content'] = $this->jsonCompatibilityConverter->convert(
                 $q_entry['result_data']['content']
             );
-            if (!$this->infoModuleController->MOD_SETTINGS['log_resultLog']) {
+            if (!$this->backendModuleSettings->isShowResultLog()) {
                 if (is_array($q_entry['result_data']['content'])) {
                     unset($q_entry['result_data']['content']['log']);
                 }
@@ -267,8 +264,8 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
 
         $contentArray['titleRowSpan'] = 1;
         $contentArray['colSpan'] = 9
-            + (isset($this->infoModuleController->MOD_SETTINGS['log_resultLog']) ? -1 : 0)
-            + (isset($this->infoModuleController->MOD_SETTINGS['log_feVars']) ? 3 : 0);
+            + ($this->backendModuleSettings->isShowResultLog() ? -1 : 0)
+            + ($this->backendModuleSettings->isShowFeLog() ? 3 : 0);
 
         if (! empty($logEntriesOfPage)) {
             $setId = (int) GeneralUtility::_GP('setID');
@@ -299,7 +296,7 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
 
                 // Put data into array:
                 $rowData = [];
-                if (isset($this->infoModuleController->MOD_SETTINGS['log_resultLog'])) {
+                if ($this->backendModuleSettings->isShowResultLog()) {
                     $rowData['result_log'] = $resLog;
                 } else {
                     $rowData['scheduled'] = ($vv['scheduled'] > 0) ? BackendUtility::datetime($vv['scheduled']) : '-';
@@ -315,7 +312,7 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
                 ) : '';
                 $rowData['set_id'] = (string) $vv['set_id'];
 
-                if (isset($this->infoModuleController->MOD_SETTINGS['log_feVars'])) {
+                if ($this->backendModuleSettings->isShowFeLog()) {
                     $resFeVars = ResultHandler::getResFeVars($resultData ?: []);
                     $rowData['tsfe_id'] = $resFeVars['id'] ?? '';
                     $rowData['tsfe_gr_list'] = $resFeVars['gr_list'] ?? '';
