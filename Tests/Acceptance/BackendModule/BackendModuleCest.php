@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace AOE\Crawler\Tests\Acceptance\BackendModule;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2005-2021 AOE GmbH <dev@aoe.com>
+ * (c) 2021-     Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -36,28 +37,28 @@ class BackendModuleCest
         $I->loginAsAdmin();
     }
 
-    public function canSeeInfoModule(Admin $I): void
+    public function canSeeCrawlerModule(Admin $I): void
     {
         $I->loginAsAdmin();
-        $I->canSee('Info', '#web_info');
+        $I->canSee('Crawler', '#web_site_crawler');
     }
 
-    public function canSelectInfoModuleStartCrawling(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    public function canSelectCrawlerModuleStartCrawling(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
     }
 
-    public function canSelectInfoModuleCrawlerLog(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    public function canSelectCrawlerModuleCrawlerLog(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleCrawlerLog($adminStep, $pageTree);
     }
 
-    public function canSelectInfoModuleMultiProcess(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    public function canSelectCrawlerModuleProcess(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();
-        $I->openCrawlerBackendModuleCrawlerMultiProcess($adminStep, $pageTree);
+        $I->openCrawlerBackendModuleCrawlerProcess($adminStep, $pageTree);
     }
 
     public function updateUrlButton(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
@@ -105,7 +106,7 @@ class BackendModuleCest
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
         $I->selectOption('configurationSelection[]', 'default');
-        $I->selectOption('SET[depth]', 99);
+        $I->selectOption('crawlingDepth', 99);
         $I->click('Update');
         $I->waitForElementVisible('.table-striped', 15);
     }
@@ -116,9 +117,9 @@ class BackendModuleCest
         $this->addQueueEntry($I, $adminStep, $pageTree);
 
         // Navigate to Process View
-        $I->selectOption('SET[crawlaction]', 'multiprocess');
+        $I->selectOption('moduleMenu', 'Process');
         $I->waitForText('CLI-Path',15);
-        $I->addProcessOnMultiProcess($adminStep, $pageTree);
+        $I->addProcessOnProcess($adminStep, $pageTree);
     }
 
     public function processSuccessful(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
@@ -143,19 +144,30 @@ class BackendModuleCest
         $I->click('Show finished and terminated processes');
         $I->waitForText('Process completed successfully', 60);
         // Check Result
-        $I->selectOption('SET[crawlaction]', 'log');
-        $I->dontSee('Content index does not exists in requestContent');
+        //$I->selectOption('moduleMenu', 'log');
+        //$I->dontSee('Content index does not exists in requestContent');
     }
 
     public function manualTriggerCrawlerFromLog(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();
         $this->addQueueEntry($I, $adminStep, $pageTree);
-        $I->selectOption('SET[crawlaction]', 'log');
+        $I->selectOption('moduleMenu', 'Log');
         // Click on "refresh" for given record
         $I->click('.refreshLink');
         $I->dontSee('Whoops, looks like something went wrong.');
         $I->waitForText('OK', 15);
+    }
+
+    public function crawlerUlsContinueAndShowLog(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    {
+        $adminStep->loginAsAdmin();
+        $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
+        $I->selectOption('configurationSelection[]', 'default');
+        $I->click('Crawl URLs');
+        $I->waitForText('1 URLs submitted', 15);
+        $I->click('Continue and show Log');
+        $I->waitForText('Crawler Log', 15);
     }
 
     public function checkSelections(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
@@ -164,9 +176,9 @@ class BackendModuleCest
         $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
 
         // Action
-        $I->see('Start Crawling');
-        $I->see('Crawler Log');
-        $I->see('Crawling Processes');
+        $I->see('Start');
+        $I->see('Log');
+        $I->see('Process');
 
         // Configurations
         $I->see('default');
@@ -202,7 +214,7 @@ class BackendModuleCest
      */
     private function addProcess(BackendModule $I): void
     {
-        $I->selectOption('SET[crawlaction]', 'multiprocess');
+        $I->selectOption('moduleMenu', 'Process');
         $I->waitForText('CLI-Path', 15);
         $I->click('Add process');
         $I->waitForElementNotVisible('#nprogress', 120);

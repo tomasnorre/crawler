@@ -28,7 +28,7 @@ class CrawlerCest
     public function canDisableAndEnableCrawler(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();
-        $I->openCrawlerBackendModuleCrawlerMultiProcess($adminStep, $pageTree);
+        $I->openCrawlerBackendModuleCrawlerProcess($adminStep, $pageTree);
         $I->canSee('Stop all processes and disable crawling');
         $I->click('Stop all processes and disable crawling');
         $I->canSee('Enable crawling');

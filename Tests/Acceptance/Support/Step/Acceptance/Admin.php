@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace AOE\Crawler\Tests\Acceptance\Support\Step\Acceptance;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2020-2021 AOE GmbH <dev@aoe.com>
+ * (c) 2021-     Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *

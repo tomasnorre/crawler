@@ -176,6 +176,7 @@
         ],
         "test:acceptance": [
             "[ -e .Build/bin/codecept ] || composer update",
+            ".Build/bin/codecept clean",
             ".Build/bin/codecept run --env=local"
         ],
         "test:all": [
