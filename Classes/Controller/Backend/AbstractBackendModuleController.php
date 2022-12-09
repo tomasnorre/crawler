@@ -59,10 +59,7 @@ abstract class AbstractBackendModuleController
         $moduleTemplate->getView()->setTemplateRootPaths(['EXT:crawler/Resources/Private/Templates/Backend']);
 
         $permissionClause = $this->getBackendUserAuthentication()->getPagePermsClause(Permission::PAGE_SHOW);
-        $pageRecord = BackendUtility::readPageAccess(
-            $pageUid,
-            $permissionClause
-        );
+        $pageRecord = BackendUtility::readPageAccess($pageUid, $permissionClause);
         if ($pageRecord) {
             $moduleTemplate->getDocHeaderComponent()->setMetaInformation($pageRecord);
         }
@@ -159,16 +156,6 @@ abstract class AbstractBackendModuleController
         ];
     }
 
-    /**
-     * Indicate that the required PHP method "popen" is
-     * available in the system.
-     */
-    private function isPhpForkAvailable(): bool
-    {
-        return function_exists('popen');
-    }
-
-
     protected function getLanguageService(): LanguageService
     {
         return $GLOBALS['LANG'];
@@ -177,5 +164,14 @@ abstract class AbstractBackendModuleController
     protected function getBackendUserAuthentication(): BackendUserAuthentication
     {
         return $GLOBALS['BE_USER'];
+    }
+
+    /**
+     * Indicate that the required PHP method "popen" is
+     * available in the system.
+     */
+    private function isPhpForkAvailable(): bool
+    {
+        return function_exists('popen');
     }
 }

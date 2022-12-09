@@ -38,7 +38,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 final class BackendModuleStartCrawlingController extends AbstractBackendModuleController implements BackendModuleControllerInterface
 {
-    private const BACKEND_MODULE='web_site_crawler_start';
+    private const BACKEND_MODULE = 'web_site_crawler_start';
 
     protected ?CrawlerController $crawlerController = null;
     private int $reqMinute = 1000;
@@ -58,9 +58,11 @@ final class BackendModuleStartCrawlingController extends AbstractBackendModuleCo
     public function handleRequest(ServerRequestInterface $request): ResponseInterface
     {
         $this->makeCrawlerProcessableChecks($this->extensionSettings);
-        $this->pageUid = (int)($request->getQueryParams()['id'] ?? -1);
+        $this->pageUid = (int) ($request->getQueryParams()['id'] ?? -1);
         $this->moduleTemplate = $this->setupView($request, $this->pageUid);
-        $this->moduleTemplate = $this->moduleTemplate->makeDocHeaderModuleMenu(['id' => $request->getQueryParams()['id'] ?? -1]);
+        $this->moduleTemplate = $this->moduleTemplate->makeDocHeaderModuleMenu(
+            ['id' => $request->getQueryParams()['id'] ?? -1]
+        );
         $this->moduleTemplate = $this->assignValues();
 
         return $this->moduleTemplate->renderResponse('Backend/ShowCrawlerInformation');
@@ -223,21 +225,21 @@ final class BackendModuleStartCrawlingController extends AbstractBackendModuleCo
         $options = [];
         foreach ($optArray as $key => $val) {
             $selected = (! $multiple && ! strcmp($value, (string) $key)) || ($multiple && in_array(
-                        $key,
-                        (array) $value,
-                        true
-                    ));
+                $key,
+                (array) $value,
+                true
+            ));
             $options[] = '
                 <option value="' . $key . '" ' . ($selected ? ' selected="selected"' : '') . '>' . htmlspecialchars(
-                    $val,
-                    ENT_QUOTES | ENT_HTML5
-                ) . '</option>';
+                $val,
+                ENT_QUOTES | ENT_HTML5
+            ) . '</option>';
         }
 
         return '<select class="form-control" name="' . htmlspecialchars(
-                $name . ($multiple ? '[]' : ''),
-                ENT_QUOTES | ENT_HTML5
-            ) . '"' . ($multiple ? ' multiple' : '') . '>' . implode('', $options) . '</select>';
+            $name . ($multiple ? '[]' : ''),
+            ENT_QUOTES | ENT_HTML5
+        ) . '"' . ($multiple ? ' multiple' : '') . '>' . implode('', $options) . '</select>';
     }
 
     /**
@@ -273,6 +275,5 @@ final class BackendModuleStartCrawlingController extends AbstractBackendModuleCo
     private function getActionUrl(): Uri
     {
         return GeneralUtility::makeInstance(UrlBuilder::class)->getBackendModuleUrl([], self::BACKEND_MODULE);
-
     }
 }

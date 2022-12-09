@@ -20,7 +20,6 @@ declare(strict_types=1);
 use AOE\Crawler\Controller\Backend\BackendModuleCrawlerLogController;
 use AOE\Crawler\Controller\Backend\BackendModuleCrawlerProcessController;
 use AOE\Crawler\Controller\Backend\BackendModuleStartCrawlingController;
-use AOE\Crawler\Controller\BackendModuleController;
 
 return [
     'web_site_crawler' => [

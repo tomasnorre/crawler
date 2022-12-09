@@ -20,7 +20,6 @@ namespace AOE\Crawler\Controller\Backend;
  */
 
 use AOE\Crawler\Backend\Helper\UrlBuilder;
-use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Crawler;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
@@ -42,7 +41,7 @@ use TYPO3\CMS\Core\Utility\MathUtility;
  */
 final class BackendModuleCrawlerProcessController extends AbstractBackendModuleController implements BackendModuleControllerInterface
 {
-    const BACKEND_MODULE='web_site_crawler_process';
+    public const BACKEND_MODULE = 'web_site_crawler_process';
 
     public function __construct(
         private IconFactory $iconFactory,
@@ -50,8 +49,7 @@ final class BackendModuleCrawlerProcessController extends AbstractBackendModuleC
         private ProcessRepository $processRepository,
         private QueueRepository $queueRepository,
         private Crawler $crawler
-    )
-    {
+    ) {
     }
 
     public function handleRequest(ServerRequestInterface $request): ResponseInterface
@@ -60,7 +58,9 @@ final class BackendModuleCrawlerProcessController extends AbstractBackendModuleC
         $this->moduleTemplate = $this->setupView($request, $this->pageUid);
         $this->moduleTemplate->assign('currentPageId', $this->pageUid);
         $this->moduleTemplate->setTitle('Crawler', $GLOBALS['LANG']->getLL('module.menu.log'));
-        $this->moduleTemplate = $this->moduleTemplate->makeDocHeaderModuleMenu(['id' => $request->getQueryParams()['id'] ?? -1]);
+        $this->moduleTemplate = $this->moduleTemplate->makeDocHeaderModuleMenu(
+            ['id' => $request->getQueryParams()['id'] ?? -1]
+        );
         $this->moduleTemplate = $this->assignValues();
         $this->runRefreshHooks();
 
@@ -142,7 +142,10 @@ final class BackendModuleCrawlerProcessController extends AbstractBackendModuleC
         return $this->getLinkButton(
             'actions-refresh',
             $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.refresh'),
-            UrlBuilder::getBackendModuleUrl(['SET[\'crawleraction\']' => 'crawleraction', 'id' => $this->pageUid], self::BACKEND_MODULE)
+            UrlBuilder::getBackendModuleUrl(
+                ['SET[\'crawleraction\']' => 'crawleraction', 'id' => $this->pageUid],
+                self::BACKEND_MODULE
+            )
         );
     }
 
@@ -240,5 +243,4 @@ final class BackendModuleCrawlerProcessController extends AbstractBackendModuleC
             ->setTitle($title)
             ->setShowLabelText(true);
     }
-
 }

@@ -7,7 +7,6 @@ namespace AOE\Crawler\Controller\Backend;
 use AOE\Crawler\Backend\Helper\ResultHandler;
 use AOE\Crawler\Backend\Helper\UrlBuilder;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
-use AOE\Crawler\Domain\Model\BackendModuleSettings;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Value\QueueFilter;
 use AOE\Crawler\Writer\FileWriter\CsvWriter\CsvWriterInterface;
@@ -21,25 +20,27 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Session\UserSession;
+use TYPO3\CMS\Core\Session\UserSessionManager;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class BackendModuleCrawlerLogController extends AbstractBackendModuleController implements BackendModuleControllerInterface
 {
-    private const BACKEND_MODULE='web_site_crawler_log';
+    private const BACKEND_MODULE = 'web_site_crawler_log';
 
     private QueryBuilder $queryBuilder;
     private bool $CSVExport = false;
     private array $CSVaccu = [];
     private array $backendModuleMenu = [];
+    private UserSession $session;
 
     public function __construct(
-        public BackendModuleSettings $backendModuleSettings,
         private QueueRepository $queueRepository,
         private CsvWriterInterface $csvWriter,
         private JsonCompatibilityConverter $jsonCompatibilityConverter,
-        private IconFactory $iconFactory,
-    ){
+        private IconFactory $iconFactory
+    ) {
         $this->backendModuleMenu = $this->getModuleMenu();
     }
 
@@ -53,9 +54,13 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
 
     public function handleRequest(ServerRequestInterface $request): ResponseInterface
     {
-        $this->pageUid = (int)($request->getQueryParams()['id'] ?? -1);
+        $sessionManager = UserSessionManager::create('BE');
+        $this->session = $sessionManager->createFromRequestOrAnonymous($request, '');
+        $this->pageUid = (int) ($request->getQueryParams()['id'] ?? -1);
         $this->moduleTemplate = $this->setupView($request, $this->pageUid);
-        $this->moduleTemplate = $this->moduleTemplate->makeDocHeaderModuleMenu(['id' => $request->getQueryParams()['id'] ?? -1]);
+        $this->moduleTemplate = $this->moduleTemplate->makeDocHeaderModuleMenu(
+            ['id' => $request->getQueryParams()['id'] ?? -1]
+        );
 
         if (!$this->pageUid) {
             $this->isErrorDetected = true;
@@ -67,22 +72,52 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
         return $this->moduleTemplate->renderResponse('Backend/ShowLog');
     }
 
+    public function getQueueEntry(mixed $queueId): array
+    {
+        $q_entry = $this->queryBuilder
+            ->from(QueueRepository::TABLE_NAME)
+            ->select('*')
+            ->where($this->queryBuilder->expr()->eq('qid', $this->queryBuilder->createNamedParameter($queueId)))
+            ->execute()
+            ->fetch();
+
+        // Explode values
+        $q_entry['parameters'] = $this->jsonCompatibilityConverter->convert($q_entry['parameters']);
+        $q_entry['result_data'] = $this->jsonCompatibilityConverter->convert($q_entry['result_data']);
+        $resStatus = ResultHandler::getResStatus($q_entry['result_data']);
+        if (is_array($q_entry['result_data'])) {
+            $q_entry['result_data']['content'] = $this->jsonCompatibilityConverter->convert(
+                $q_entry['result_data']['content']
+            );
+            if (!$this->session->get('showResultLog')) {
+                if (is_array($q_entry['result_data']['content'])) {
+                    unset($q_entry['result_data']['content']['log']);
+                }
+            }
+        }
+        return [$q_entry, $resStatus];
+    }
+
     private function assignValues(): ModuleTemplate
     {
-        $setId = (int)GeneralUtility::_GP('setID');
-        $quiPath = GeneralUtility::_GP('qid_details') ? '&qid_details=' . (int)GeneralUtility::_GP('qid_details') : '';
+        $setId = (int) GeneralUtility::_GP('setID');
+        $quiPath = GeneralUtility::_GP('qid_details') ? '&qid_details=' . (int) GeneralUtility::_GP('qid_details') : '';
         $queueId = GeneralUtility::_GP('qid_details');
+        $this->session->set('logDisplay', GeneralUtility::_GP('logDisplay') ?? 'all');
+        $this->session->set('itemsPerPage', (int) (GeneralUtility::_GP('itemsPerPage') ?? 10));
+        $this->session->set(
+            'showResultLog',
+            (string) (GeneralUtility::_GP('ShowResultLog') ?? $this->session->get('showResultLog'))
+        );
+        $this->session->set(
+            'showFeVars',
+            (string) (GeneralUtility::_GP('ShowFeVars') ?? $this->session->get('ShowFeVars'))
+        );
 
-        if(GeneralUtility::_GP('ShowResultLog') !== null) {
-            $this->backendModuleSettings->setShowResultLog((bool)GeneralUtility::_GP('ShowResultLog'));
-        }
-        if(GeneralUtility::_GP('ShowFeVars') !== null) {
-            $this->backendModuleSettings->setShowFeLog((bool)GeneralUtility::_GP('ShowFeVars'));
-        }
-
+        dump($this->session->getData());
 
         // Look for set ID sent - if it is, we will display contents of that set:
-        $showSetId = (int)GeneralUtility::_GP('setID');
+        $showSetId = (int) GeneralUtility::_GP('setID');
 
         if ($queueId) {
             // Get entry record:
@@ -91,7 +126,6 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
                 'queueStatus' => $resStatus,
                 'queueDetails' => DebugUtility::viewArray($q_entry),
             ]);
-
         } else {
             // Show list
             // Drawing tree:
@@ -111,8 +145,8 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
             }
 
             // Get branch beneath:
-            if ($this->backendModuleSettings->getDepth()) {
-                $tree->getTree($this->pageUid, $this->backendModuleSettings->getDepth());
+            if ($this->session->get('crawlingDepth')) {
+                $tree->getTree($this->pageUid, $this->session->get('crawlingDepth'));
             }
 
             // If Flush button is pressed, flush tables instead of selecting entries:
@@ -120,12 +154,11 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
                 $doFlush = true;
             } elseif (GeneralUtility::_POST('_flush_all')) {
                 $doFlush = true;
-                $this->backendModuleSettings->setLogDisplay('all');
+                $this->session->set('logDisplay', 'all');
             } else {
                 $doFlush = false;
             }
-            $itemsPerPage = $this->backendModuleSettings->getItemsPerPage();
-            $queueFilter = new QueueFilter($this->backendModuleSettings->getLogDisplay());
+            $queueFilter = new QueueFilter($this->session->get('logDisplay'));
 
             if ($doFlush) {
                 $this->queueRepository->flushQueue($queueFilter);
@@ -137,7 +170,7 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
             foreach ($tree->tree as $data) {
                 $logEntriesOfPage = $this->queueRepository->getQueueEntriesForPageId(
                     (int) $data['row']['uid'],
-                    $itemsPerPage,
+                    $this->session->get('itemsPerPage'),
                     $queueFilter
                 );
 
@@ -157,17 +190,17 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
             $this->outputCsvFile();
         }
 
-
         return $this->moduleTemplate->assignMultiple([
+            'actionUrl' => '',
             'queueId' => $queueId,
             'setId' => $showSetId,
             'noPageSelected' => false,
             'logEntriesPerPage' => $logEntriesPerPage,
-            'showResultLog' => $this->backendModuleSettings->isShowResultLog(),
-            'showFeVars' => $this->backendModuleSettings->isShowFeLog(),
+            'showResultLog' => $this->session->get('showResultLog'),
+            'showFeVars' => $this->session->get('showFeLog'),
             'displayActions' => 1,
             'displayLogFilterHtml' => $this->getDisplayLogFilterHtml($setId),
-            'itemPerPageHtml' => $this->getItemsPerPageDropDownHtml(),
+            'itemPerPageHtml' => $this->getItemsPerPageDropDownHtml($setId),
             'showResultLogHtml' => $this->getShowResultLogCheckBoxHtml($setId, $quiPath),
             'showFeVarsHtml' => $this->getShowFeVarsCheckBoxHtml($setId, $quiPath),
         ]);
@@ -176,86 +209,56 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
     private function getDisplayLogFilterHtml(int $setId): string
     {
         return $this->getLanguageService()->sL(
-                'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.display'
-            ) . ': ' . BackendUtility::getFuncMenu(
-                $this->pageUid,
-                'logDisplay',
-                $this->backendModuleSettings->getLogDisplay(),
-                $this->backendModuleMenu['log_display'],
-                'index.php',
-                '&setID=' . $setId
-            );
+            'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.display'
+        ) . ': ' . BackendUtility::getFuncMenu(
+            $this->pageUid,
+            'logDisplay',
+            $this->session->get('logDisplay'),
+            $this->backendModuleMenu['log_display'],
+            'index.php',
+            '&setID=' . $setId . '&itemsPerPage=' . $this->session->get('itemsPerPage')
+        );
     }
 
-    private function getItemsPerPageDropDownHtml(): string
+    private function getItemsPerPageDropDownHtml(int $setId): string
     {
         return $this->getLanguageService()->sL(
-                'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.itemsPerPage'
-            ) . ': ' .
+            'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.itemsPerPage'
+        ) . ': ' .
             BackendUtility::getFuncMenu(
                 $this->pageUid,
                 'itemsPerPage',
-                $this->backendModuleSettings->getItemsPerPage(),
-                $this->backendModuleMenu['itemsPerPage']
+                $this->session->get('itemsPerPage'),
+                $this->backendModuleMenu['itemsPerPage'],
+                'index.php',
+                '&setID=' . $setId . '&logDisplay=' . $this->session->get('logDisplay')
             );
     }
 
     private function getShowResultLogCheckBoxHtml(int $setId, string $quiPart): string
     {
         return BackendUtility::getFuncCheck(
-                $this->pageUid,
-                'ShowResultLog',
-                $this->backendModuleSettings->isShowResultLog(),
-                'index.php',
-                '&setID=' . $setId . $quiPart
-            ) . '&nbsp;' . $this->getLanguageService()->sL(
-                'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showresultlog'
-            );
+            $this->pageUid,
+            'ShowResultLog',
+            $this->session->get('showResultLog'),
+            'index.php',
+            '&setID=' . $setId . $quiPart
+        ) . '&nbsp;' . $this->getLanguageService()->sL(
+            'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showresultlog'
+        );
     }
 
     private function getShowFeVarsCheckBoxHtml(int $setId, string $quiPart): string
     {
         return BackendUtility::getFuncCheck(
-                $this->pageUid,
-                'ShowFeVars',
-                $this->backendModuleSettings->isShowFeLog(),
-                'index.php',
-                '&setID=' . $setId . $quiPart
-            ) . '&nbsp;' . $this->getLanguageService()->sL(
-                'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showfevars'
-            );
-    }
-
-    /**
-     * @param mixed $queueId
-     * @return array
-     */
-    public function getQueueEntry(mixed $queueId): array
-    {
-        $q_entry = $this->queryBuilder
-            ->from(QueueRepository::TABLE_NAME)
-            ->select('*')
-            ->where(
-                $this->queryBuilder->expr()->eq('qid', $this->queryBuilder->createNamedParameter($queueId))
-            )
-            ->execute()
-            ->fetch();
-
-        // Explode values
-        $q_entry['parameters'] = $this->jsonCompatibilityConverter->convert($q_entry['parameters']);
-        $q_entry['result_data'] = $this->jsonCompatibilityConverter->convert($q_entry['result_data']);
-        $resStatus = ResultHandler::getResStatus($q_entry['result_data']);
-        if (is_array($q_entry['result_data'])) {
-            $q_entry['result_data']['content'] = $this->jsonCompatibilityConverter->convert(
-                $q_entry['result_data']['content']
-            );
-            if (!$this->backendModuleSettings->isShowResultLog()) {
-                if (is_array($q_entry['result_data']['content'])) {
-                    unset($q_entry['result_data']['content']['log']);
-                }
-            }
-        }
-        return array($q_entry, $resStatus);
+            $this->pageUid,
+            'ShowFeVars',
+            $this->session->get('showFeLog'),
+            'index.php',
+            '&setID=' . $setId . $quiPart
+        ) . '&nbsp;' . $this->getLanguageService()->sL(
+            'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showfevars'
+        );
     }
 
     /**
@@ -276,10 +279,10 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
 
         $contentArray['titleRowSpan'] = 1;
         $contentArray['colSpan'] = 9
-            + ($this->backendModuleSettings->isShowResultLog() ? -1 : 0)
-            + ($this->backendModuleSettings->isShowFeLog() ? 3 : 0);
+            + ($this->session->get('showResultLog') ? -1 : 0)
+            + ($this->session->get('showFeLog') ? 3 : 0);
 
-        if (! empty($logEntriesOfPage)) {
+        if (!empty($logEntriesOfPage)) {
             $setId = (int) GeneralUtility::_GP('setID');
             $refreshIcon = $this->iconFactory->getIcon('actions-system-refresh', Icon::SIZE_SMALL);
             // Traverse parameter combinations:
@@ -308,7 +311,7 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
 
                 // Put data into array:
                 $rowData = [];
-                if ($this->backendModuleSettings->isShowResultLog()) {
+                if ($this->session->get('showResultLog')) {
                     $rowData['result_log'] = $resLog;
                 } else {
                     $rowData['scheduled'] = ($vv['scheduled'] > 0) ? BackendUtility::datetime($vv['scheduled']) : '-';
@@ -324,7 +327,7 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
                 ) : '';
                 $rowData['set_id'] = (string) $vv['set_id'];
 
-                if ($this->backendModuleSettings->isShowFeLog()) {
+                if ($this->session->get('showFeLog')) {
                     $resFeVars = ResultHandler::getResFeVars($resultData ?: []);
                     $rowData['tsfe_id'] = $resFeVars['id'] ?? '';
                     $rowData['tsfe_gr_list'] = $resFeVars['gr_list'] ?? '';
@@ -340,11 +343,17 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
                 // Put rows together:
                 $contentArray['trClass'] = $trClass;
                 $contentArray['qid'] = [
-                    'link' => UrlBuilder::getBackendModuleUrl(['qid_details' => $vv['qid'], 'setID' => $setId], self::BACKEND_MODULE),
+                    'link' => UrlBuilder::getBackendModuleUrl([
+                        'qid_details' => $vv['qid'], 'setID' => $setId, ],
+                        self::BACKEND_MODULE
+                    ),
                     'link-text' => htmlspecialchars((string) $vv['qid'], ENT_QUOTES | ENT_HTML5),
                 ];
                 $contentArray['refresh'] = [
-                    'link' => UrlBuilder::getBackendModuleUrl(['qid_read' => $vv['qid'], 'setID' => $setId], self::BACKEND_MODULE),
+                    'link' => UrlBuilder::getBackendModuleUrl([
+                        'qid_read' => $vv['qid'], 'setID' => $setId, ],
+                        self::BACKEND_MODULE
+                    ),
                     'link-text' => $refreshIcon,
                     'warning' => $warningIcon,
                 ];

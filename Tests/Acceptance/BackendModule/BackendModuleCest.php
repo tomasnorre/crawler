@@ -170,6 +170,72 @@ class BackendModuleCest
         $I->waitForText('Crawler Log', 15);
     }
 
+    public function CrawlerLogDisplayAndItemsPerPageDropdowns(
+        BackendModule $I,
+        Admin $adminStep,
+        PageTree $pageTree
+    ): void {
+        $adminStep->loginAsAdmin();
+        $I->openCrawlerBackendModuleCrawlerLog($adminStep, $pageTree);
+        $I->selectOption('moduleMenu', 'Log');
+        $I->waitForText('Crawler log', 15);
+
+        $I->selectOption('logDisplay', 'Pending');
+        $I->seeOptionIsSelected('logDisplay', 'Pending');
+        # Check the dropdowns work individually
+        $I->selectOption('logDisplay', 'Finished');
+        $I->seeOptionIsSelected('logDisplay', 'Finished');
+        $I->selectOption('itemsPerPage', 'limit to 5');
+        $I->seeOptionIsSelected('itemsPerPage', 'limit to 5');
+        $I->seeOptionIsSelected('logDisplay', 'Finished');
+
+        # Check that the second dropdown selection keeps selected.
+        $I->selectOption('itemsPerPage', 'no limit');
+        $I->seeOptionIsSelected('itemsPerPage', 'no limit');
+        $I->seeOptionIsSelected('logDisplay', 'Finished');
+        $I->selectOption('logDisplay', 'Pending');
+        $I->seeOptionIsSelected('itemsPerPage', 'no limit');
+        $I->seeOptionIsSelected('logDisplay', 'Pending');
+    }
+
+    public function CrawlerLogResultLogAndFEVarsCheckboxes(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    {
+        $adminStep->loginAsAdmin();
+        $I->openCrawlerBackendModuleCrawlerLog($adminStep, $pageTree);
+
+        # Check individually
+        $this->resetCheckboxes($I);
+        $I->checkOption('ShowResultLog');
+        $I->seeCheckboxIsChecked('ShowResultLog');
+        $I->dontSeeCheckboxIsChecked('showFeVars');
+
+        $this->resetCheckboxes($I);
+        $I->checkOption('showFeVars');
+        $I->seeCheckboxIsChecked('showFeVars');
+        $I->dontSeeCheckboxIsChecked('showResultLog');
+
+        # Check in combination
+        $this->resetCheckboxes($I);
+        $I->checkOption('ShowLogResult');
+        $I->checkOption('ShowFeVars');
+        $I->seeCheckboxIsChecked('ShowFeVars');
+        $I->seeCheckboxIsChecked('ShowResultLog');
+
+        $this->resetCheckboxes($I);
+        $I->checkOption('ShowLogResult');
+        $I->checkOption('ShowFeVars');
+        $I->uncheckOption('ShowFeVars');
+        $I->seeCheckboxIsChecked('ShowResultLog');
+        $I->dontSeeCheckboxIsChecked('ShowFeVars');
+
+        $this->resetCheckboxes($I);
+        $I->checkOption('ShowLogResult');
+        $I->checkOption('ShowFeVars');
+        $I->uncheckOption('ShowLogResult');
+        $I->seeCheckboxIsChecked('ShowFeVars');
+        $I->dontSeeCheckboxIsChecked('ShowLogResult');
+    }
+
     public function checkSelections(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();
@@ -196,6 +262,12 @@ class BackendModuleCest
         $I->see('Now');
         $I->see('Midnight');
         $I->see('4 AM');
+    }
+
+    private function resetCheckboxes(BackendModule $I): void
+    {
+        $I->uncheckOption('ShowResultLog');
+        $I->uncheckOption('ShowFeVars');
     }
 
     /**

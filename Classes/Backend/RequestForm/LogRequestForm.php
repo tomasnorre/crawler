@@ -16,10 +16,8 @@ use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-
 final class LogRequestForm extends AbstractRequestForm implements RequestFormInterface
 {
-
     public function render(int $id, string $elementName, array $menuItems): string
     {
         $quiPart = GeneralUtility::_GP('qid_details') ? '&qid_details=' . (int) GeneralUtility::_GP('qid_details') : '';
