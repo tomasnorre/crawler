@@ -107,8 +107,7 @@ class CrawlerController implements LoggerAwareInterface
         private QueueRepository $queueRepository,
         private ProcessRepository $processRepository,
         private IconFactory $iconFactory
-    )
-    {
+    ) {
         $crawlStrategyFactory = GeneralUtility::makeInstance(CrawlStrategyFactory::class);
         $this->configurationRepository = GeneralUtility::makeInstance(ConfigurationRepository::class);
         $this->pageRepository = GeneralUtility::makeInstance(PageRepository::class);

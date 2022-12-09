@@ -39,8 +39,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 final class BackendModuleStartCrawlingController extends AbstractBackendModuleController implements BackendModuleControllerInterface
 {
     private const BACKEND_MODULE = 'web_site_crawler_start';
-
-    protected ?CrawlerController $crawlerController = null;
     private int $reqMinute = 1000;
     private EventDispatcher $eventDispatcher;
 
@@ -48,6 +46,11 @@ final class BackendModuleStartCrawlingController extends AbstractBackendModuleCo
      * @var array holds the selection of configuration from the configuration selector box
      */
     private $incomingConfigurationSelection = [];
+
+    public function __construct(
+        private CrawlerController $crawlerController
+    ) {
+    }
 
     #[Required]
     public function setEventDispatcher(): void
@@ -82,7 +85,7 @@ final class BackendModuleStartCrawlingController extends AbstractBackendModuleCo
             $this->incomingConfigurationSelection
         ) ? $this->incomingConfigurationSelection : [];
 
-        $this->crawlerController = $this->getCrawlerController();
+        //$this->crawlerController = $this->getCrawlerController();
         $this->crawlerController->setID = GeneralUtility::md5int(microtime());
 
         $queueRows = '';
@@ -174,7 +177,7 @@ final class BackendModuleStartCrawlingController extends AbstractBackendModuleCo
         );
 
         // Configurations
-        $availableConfigurations = $this->getCrawlerController()->getConfigurationsForBranch(
+        $availableConfigurations = $this->crawlerController->getConfigurationsForBranch(
             $pageId,
             (int) $crawlingDepth,
         );
@@ -218,13 +221,13 @@ final class BackendModuleStartCrawlingController extends AbstractBackendModuleCo
      */
     private function selectorBox($optArray, $name, string|array|null $value, bool $multiple): string
     {
-        if (! is_string($value) || ! is_array($value)) {
+        if (!is_string($value) || !is_array($value)) {
             $value = '';
         }
 
         $options = [];
         foreach ($optArray as $key => $val) {
-            $selected = (! $multiple && ! strcmp($value, (string) $key)) || ($multiple && in_array(
+            $selected = (!$multiple && !strcmp($value, (string) $key)) || ($multiple && in_array(
                 $key,
                 (array) $value,
                 true
@@ -253,20 +256,11 @@ final class BackendModuleStartCrawlingController extends AbstractBackendModuleCo
             default => time(),
         };
 
-        if (! $scheduledTime) {
+        if (!$scheduledTime) {
             return time();
         }
 
         return $scheduledTime;
-    }
-
-    private function getCrawlerController(): CrawlerController
-    {
-        if ($this->crawlerController === null) {
-            $this->crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
-        }
-
-        return $this->crawlerController;
     }
 
     /**
