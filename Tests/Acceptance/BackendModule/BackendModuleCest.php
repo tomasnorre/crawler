@@ -207,12 +207,12 @@ class BackendModuleCest
         $this->resetCheckboxes($I);
         $I->checkOption('ShowResultLog');
         $I->seeCheckboxIsChecked('ShowResultLog');
-        $I->dontSeeCheckboxIsChecked('showFeVars');
+        $I->dontSeeCheckboxIsChecked('ShowFeVars');
 
         $this->resetCheckboxes($I);
-        $I->checkOption('showFeVars');
-        $I->seeCheckboxIsChecked('showFeVars');
-        $I->dontSeeCheckboxIsChecked('showResultLog');
+        $I->checkOption('ShowFeVars');
+        $I->seeCheckboxIsChecked('ShowFeVars');
+        $I->dontSeeCheckboxIsChecked('ShowResultLog');
 
         # Check in combination
         $this->resetCheckboxes($I);

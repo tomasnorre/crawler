@@ -4,6 +4,21 @@ declare(strict_types=1);
 
 namespace AOE\Crawler\Controller\Backend;
 
+/*
+ * (c) 2022-     Tomas Norre Mikkelsen <tomasnorre@gmail.com>
+ *
+ * This file is part of the TYPO3 Crawler Extension.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
+
 use AOE\Crawler\Backend\Helper\ResultHandler;
 use AOE\Crawler\Backend\Helper\UrlBuilder;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
@@ -20,8 +35,6 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
-use TYPO3\CMS\Core\Session\UserSession;
-use TYPO3\CMS\Core\Session\UserSessionManager;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -32,7 +45,7 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
     private QueryBuilder $queryBuilder;
     private bool $CSVExport = false;
     private array $CSVaccu = [];
-    private array $backendModuleMenu = [];
+    private array $backendModuleMenu;
     private int $setId;
     private string $quiPath;
     private string $qid_details;
@@ -62,10 +75,10 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
 
     public function handleRequest(ServerRequestInterface $request): ResponseInterface
     {
-        $this->pageUid = (int) ($request->getQueryParams()['id'] ?? -1);
+        $this->setPropertiesBasedOnPostVars($request);
         $this->moduleTemplate = $this->setupView($request, $this->pageUid);
         $this->moduleTemplate = $this->moduleTemplate->makeDocHeaderModuleMenu(
-            ['id' => $request->getQueryParams()['id'] ?? -1]
+            ['id' => $this->pageUid]
         );
 
         if (!$this->pageUid) {
@@ -95,7 +108,7 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
             $q_entry['result_data']['content'] = $this->jsonCompatibilityConverter->convert(
                 $q_entry['result_data']['content']
             );
-            if (!$this->session->get('showResultLog')) {
+            if (!$this->showResultLog) {
                 if (is_array($q_entry['result_data']['content'])) {
                     unset($q_entry['result_data']['content']['log']);
                 }
@@ -106,14 +119,7 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
 
     private function assignValues(): ModuleTemplate
     {
-        $this->setId = (int) GeneralUtility::_GP('setID');
-        $this->quiPath = GeneralUtility::_GP('qid_details') ? '&qid_details=' . (int) GeneralUtility::_GP('qid_details') : '';
-        $this->queueId = GeneralUtility::_GP('qid_details');
-        $this->logDisplay = GeneralUtility::_GP('logDisplay') ?? 'all';
-        $this->itemsPerPage = (int) (GeneralUtility::_GP('itemsPerPage') ?? 10);
-        $this->showResultLog = (string) (GeneralUtility::_GP('ShowResultLog') ?? 0);
-        $this->showFeVars = (string) (GeneralUtility::_GP('ShowFeVars') ?? 0);
-        $this->crawlingDepth = 99;
+
 
         // Look for set ID sent - if it is, we will display contents of that set:
         $this->showSetId = (int) GeneralUtility::_GP('setID');
@@ -169,7 +175,7 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
             foreach ($tree->tree as $data) {
                 $logEntriesOfPage = $this->queueRepository->getQueueEntriesForPageId(
                     (int) $data['row']['uid'],
-                    $itemsPerPage,
+                    $this->itemsPerPage,
                     $queueFilter
                 );
 
@@ -194,7 +200,7 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
             'queueId' => $this->queueId,
             'setId' => $this->showSetId,
             'noPageSelected' => false,
-            'logEntriesPerPage' => $this->logEntriesPerPage,
+            'logEntriesPerPage' => $logEntriesPerPage,
             'showResultLog' => $this->showResultLog,
             'showFeVars' => $this->showFeVars,
             'displayActions' => 1,
@@ -241,7 +247,7 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
             'ShowResultLog',
             $this->showResultLog,
             'index.php',
-            '&setID=' . $this->setId . $this->quiPath . '&ShowFeVars' . $this->showFeVars
+            '&setID=' . $this->setId . $this->quiPath . '&ShowFeVars=' . $this->showFeVars
         ) . '&nbsp;' . $this->getLanguageService()->sL(
             'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showresultlog'
         );
@@ -254,7 +260,7 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
             'ShowFeVars',
             $this->showFeVars,
             'index.php',
-            '&setID=' . $this->setId . $this->quiPath . '&ShowResultLog' . $this->showResultLog
+            '&setID=' . $this->setId . $this->quiPath . '&ShowResultLog=' . $this->showResultLog
         ) . '&nbsp;' . $this->getLanguageService()->sL(
             'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showfevars'
         );
@@ -278,8 +284,8 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
 
         $contentArray['titleRowSpan'] = 1;
         $contentArray['colSpan'] = 9
-            + ($this->session->get('showResultLog') ? -1 : 0)
-            + ($this->session->get('showFeLog') ? 3 : 0);
+            + ($this->showResultLog ? -1 : 0)
+            + ($this->showFeVars ? 3 : 0);
 
         if (!empty($logEntriesOfPage)) {
             $setId = (int) GeneralUtility::_GP('setID');
@@ -310,7 +316,7 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
 
                 // Put data into array:
                 $rowData = [];
-                if ($this->session->get('showResultLog')) {
+                if ($this->showResultLog) {
                     $rowData['result_log'] = $resLog;
                 } else {
                     $rowData['scheduled'] = ($vv['scheduled'] > 0) ? BackendUtility::datetime($vv['scheduled']) : '-';
@@ -326,7 +332,7 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
                 ) : '';
                 $rowData['set_id'] = (string) $vv['set_id'];
 
-                if ($this->session->get('showFeLog')) {
+                if ($this->showFeVars) {
                     $resFeVars = ResultHandler::getResFeVars($resultData ?: []);
                     $rowData['tsfe_id'] = $resFeVars['id'] ?? '';
                     $rowData['tsfe_gr_list'] = $resFeVars['gr_list'] ?? '';
@@ -393,5 +399,18 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
         }
 
         return $resultArray;
+    }
+
+    private function setPropertiesBasedOnPostVars(ServerRequestInterface $request): void
+    {
+        $this->pageUid = (int) ($request->getQueryParams()['id'] ?? -1);
+        $this->setId = (int)GeneralUtility::_GP('setID');
+        $this->quiPath = GeneralUtility::_GP('qid_details') ? '&qid_details=' . (int)GeneralUtility::_GP('qid_details') : '';
+        $this->queueId = GeneralUtility::_GP('qid_details');
+        $this->logDisplay = GeneralUtility::_GP('logDisplay') ?? 'all';
+        $this->itemsPerPage = (int)(GeneralUtility::_GP('itemsPerPage') ?? 10);
+        $this->showResultLog = (string)(GeneralUtility::_GP('ShowResultLog') ?? 0);
+        $this->showFeVars = (string)(GeneralUtility::_GP('ShowFeVars') ?? 0);
+        $this->crawlingDepth = 99;
     }
 }
