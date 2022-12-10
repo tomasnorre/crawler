@@ -216,24 +216,24 @@ class BackendModuleCest
 
         # Check in combination
         $this->resetCheckboxes($I);
-        $I->checkOption('ShowLogResult');
+        $I->checkOption('ShowResultLog');
         $I->checkOption('ShowFeVars');
         $I->seeCheckboxIsChecked('ShowFeVars');
         $I->seeCheckboxIsChecked('ShowResultLog');
 
         $this->resetCheckboxes($I);
-        $I->checkOption('ShowLogResult');
+        $I->checkOption('ShowResultLog');
         $I->checkOption('ShowFeVars');
         $I->uncheckOption('ShowFeVars');
         $I->seeCheckboxIsChecked('ShowResultLog');
         $I->dontSeeCheckboxIsChecked('ShowFeVars');
 
         $this->resetCheckboxes($I);
-        $I->checkOption('ShowLogResult');
+        $I->checkOption('ShowResultLog');
         $I->checkOption('ShowFeVars');
-        $I->uncheckOption('ShowLogResult');
+        $I->uncheckOption('ShowResultLog');
         $I->seeCheckboxIsChecked('ShowFeVars');
-        $I->dontSeeCheckboxIsChecked('ShowLogResult');
+        $I->dontSeeCheckboxIsChecked('ShowResultLog');
     }
 
     public function checkSelections(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
