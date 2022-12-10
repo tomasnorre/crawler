@@ -33,7 +33,15 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
     private bool $CSVExport = false;
     private array $CSVaccu = [];
     private array $backendModuleMenu = [];
-    private UserSession $session;
+    private int $setId;
+    private string $quiPath;
+    private string $qid_details;
+    private string $logDisplay;
+    private int $itemsPerPage;
+    private string $showResultLog;
+    private String $showFeVars;
+    private int $showSetId;
+    private int $crawlingDepth;
 
     public function __construct(
         private QueueRepository $queueRepository,
@@ -54,8 +62,6 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
 
     public function handleRequest(ServerRequestInterface $request): ResponseInterface
     {
-        $sessionManager = UserSessionManager::create('BE');
-        $this->session = $sessionManager->createFromRequestOrAnonymous($request, '');
         $this->pageUid = (int) ($request->getQueryParams()['id'] ?? -1);
         $this->moduleTemplate = $this->setupView($request, $this->pageUid);
         $this->moduleTemplate = $this->moduleTemplate->makeDocHeaderModuleMenu(
@@ -100,28 +106,21 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
 
     private function assignValues(): ModuleTemplate
     {
-        $setId = (int) GeneralUtility::_GP('setID');
-        $quiPath = GeneralUtility::_GP('qid_details') ? '&qid_details=' . (int) GeneralUtility::_GP('qid_details') : '';
-        $queueId = GeneralUtility::_GP('qid_details');
-        $this->session->set('logDisplay', GeneralUtility::_GP('logDisplay') ?? 'all');
-        $this->session->set('itemsPerPage', (int) (GeneralUtility::_GP('itemsPerPage') ?? 10));
-        $this->session->set(
-            'showResultLog',
-            (string) (GeneralUtility::_GP('ShowResultLog') ?? $this->session->get('showResultLog'))
-        );
-        $this->session->set(
-            'showFeVars',
-            (string) (GeneralUtility::_GP('ShowFeVars') ?? $this->session->get('ShowFeVars'))
-        );
-
-        dump($this->session->getData());
+        $this->setId = (int) GeneralUtility::_GP('setID');
+        $this->quiPath = GeneralUtility::_GP('qid_details') ? '&qid_details=' . (int) GeneralUtility::_GP('qid_details') : '';
+        $this->queueId = GeneralUtility::_GP('qid_details');
+        $this->logDisplay = GeneralUtility::_GP('logDisplay') ?? 'all';
+        $this->itemsPerPage = (int) (GeneralUtility::_GP('itemsPerPage') ?? 10);
+        $this->showResultLog = (string) (GeneralUtility::_GP('ShowResultLog') ?? 0);
+        $this->showFeVars = (string) (GeneralUtility::_GP('ShowFeVars') ?? 0);
+        $this->crawlingDepth = 99;
 
         // Look for set ID sent - if it is, we will display contents of that set:
-        $showSetId = (int) GeneralUtility::_GP('setID');
+        $this->showSetId = (int) GeneralUtility::_GP('setID');
 
-        if ($queueId) {
+        if ($this->queueId) {
             // Get entry record:
-            [$q_entry, $resStatus] = $this->getQueueEntry($queueId);
+            [$q_entry, $resStatus] = $this->getQueueEntry($this->queueId);
             $this->moduleTemplate->assignMultiple([
                 'queueStatus' => $resStatus,
                 'queueDetails' => DebugUtility::viewArray($q_entry),
@@ -145,8 +144,8 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
             }
 
             // Get branch beneath:
-            if ($this->session->get('crawlingDepth')) {
-                $tree->getTree($this->pageUid, $this->session->get('crawlingDepth'));
+            if ($this->crawlingDepth) {
+                $tree->getTree($this->pageUid, $this->crawlingDepth);
             }
 
             // If Flush button is pressed, flush tables instead of selecting entries:
@@ -154,11 +153,11 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
                 $doFlush = true;
             } elseif (GeneralUtility::_POST('_flush_all')) {
                 $doFlush = true;
-                $this->session->set('logDisplay', 'all');
+                $logDisplay = 'all';
             } else {
                 $doFlush = false;
             }
-            $queueFilter = new QueueFilter($this->session->get('logDisplay'));
+            $queueFilter = new QueueFilter($this->logDisplay);
 
             if ($doFlush) {
                 $this->queueRepository->flushQueue($queueFilter);
@@ -170,7 +169,7 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
             foreach ($tree->tree as $data) {
                 $logEntriesOfPage = $this->queueRepository->getQueueEntriesForPageId(
                     (int) $data['row']['uid'],
-                    $this->session->get('itemsPerPage'),
+                    $itemsPerPage,
                     $queueFilter
                 );
 
@@ -192,35 +191,35 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
 
         return $this->moduleTemplate->assignMultiple([
             'actionUrl' => '',
-            'queueId' => $queueId,
-            'setId' => $showSetId,
+            'queueId' => $this->queueId,
+            'setId' => $this->showSetId,
             'noPageSelected' => false,
-            'logEntriesPerPage' => $logEntriesPerPage,
-            'showResultLog' => $this->session->get('showResultLog'),
-            'showFeVars' => $this->session->get('showFeLog'),
+            'logEntriesPerPage' => $this->logEntriesPerPage,
+            'showResultLog' => $this->showResultLog,
+            'showFeVars' => $this->showFeVars,
             'displayActions' => 1,
-            'displayLogFilterHtml' => $this->getDisplayLogFilterHtml($setId),
-            'itemPerPageHtml' => $this->getItemsPerPageDropDownHtml($setId),
-            'showResultLogHtml' => $this->getShowResultLogCheckBoxHtml($setId, $quiPath),
-            'showFeVarsHtml' => $this->getShowFeVarsCheckBoxHtml($setId, $quiPath),
+            'displayLogFilterHtml' => $this->getDisplayLogFilterHtml(),
+            'itemPerPageHtml' => $this->getItemsPerPageDropDownHtml(),
+            'showResultLogHtml' => $this->getShowResultLogCheckBoxHtml(),
+            'showFeVarsHtml' => $this->getShowFeVarsCheckBoxHtml(),
         ]);
     }
 
-    private function getDisplayLogFilterHtml(int $setId): string
+    private function getDisplayLogFilterHtml(): string
     {
         return $this->getLanguageService()->sL(
             'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.display'
         ) . ': ' . BackendUtility::getFuncMenu(
             $this->pageUid,
             'logDisplay',
-            $this->session->get('logDisplay'),
+            $this->logDisplay,
             $this->backendModuleMenu['log_display'],
             'index.php',
-            '&setID=' . $setId . '&itemsPerPage=' . $this->session->get('itemsPerPage')
+            '&setID=' . $this->setId . '&itemsPerPage=' . $this->itemsPerPage
         );
     }
 
-    private function getItemsPerPageDropDownHtml(int $setId): string
+    private function getItemsPerPageDropDownHtml(): string
     {
         return $this->getLanguageService()->sL(
             'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.itemsPerPage'
@@ -228,34 +227,34 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
             BackendUtility::getFuncMenu(
                 $this->pageUid,
                 'itemsPerPage',
-                $this->session->get('itemsPerPage'),
+                $this->itemsPerPage,
                 $this->backendModuleMenu['itemsPerPage'],
                 'index.php',
-                '&setID=' . $setId . '&logDisplay=' . $this->session->get('logDisplay')
+                '&setID=' . $this->setId . '&logDisplay=' . $this->logDisplay
             );
     }
 
-    private function getShowResultLogCheckBoxHtml(int $setId, string $quiPart): string
+    private function getShowResultLogCheckBoxHtml(): string
     {
         return BackendUtility::getFuncCheck(
             $this->pageUid,
             'ShowResultLog',
-            $this->session->get('showResultLog'),
+            $this->showResultLog,
             'index.php',
-            '&setID=' . $setId . $quiPart
+            '&setID=' . $this->setId . $this->quiPath . '&ShowFeVars' . $this->showFeVars
         ) . '&nbsp;' . $this->getLanguageService()->sL(
             'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showresultlog'
         );
     }
 
-    private function getShowFeVarsCheckBoxHtml(int $setId, string $quiPart): string
+    private function getShowFeVarsCheckBoxHtml(): string
     {
         return BackendUtility::getFuncCheck(
             $this->pageUid,
             'ShowFeVars',
-            $this->session->get('showFeLog'),
+            $this->showFeVars,
             'index.php',
-            '&setID=' . $setId . $quiPart
+            '&setID=' . $this->setId . $this->quiPath . '&ShowResultLog' . $this->showResultLog
         ) . '&nbsp;' . $this->getLanguageService()->sL(
             'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showfevars'
         );
