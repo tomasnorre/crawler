@@ -236,6 +236,41 @@ class BackendModuleCest
         $I->dontSeeCheckboxIsChecked('ShowResultLog');
     }
 
+    public function CrawlerLogDropDownAndCheckboxesCombined(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    {
+        $adminStep->loginAsAdmin();
+        $I->openCrawlerBackendModuleCrawlerLog($adminStep, $pageTree);
+
+        # Check individually
+        $this->resetCheckboxes($I);
+        $I->checkOption('ShowResultLog');
+        $I->seeCheckboxIsChecked('ShowResultLog');
+        $I->dontSeeCheckboxIsChecked('ShowFeVars');
+
+        $I->selectOption('itemsPerPage', 'no limit');
+        $I->seeOptionIsSelected('itemsPerPage', 'no limit');
+        $I->selectOption('logDisplay', 'Pending');
+        $I->seeOptionIsSelected('logDisplay', 'Pending');
+        # The checkboxes aren't allowed to change
+        $I->seeCheckboxIsChecked('ShowResultLog');
+        $I->dontSeeCheckboxIsChecked('ShowFeVars');
+
+        # Reversed case, dropdowns are set first, and then checkboxes used.
+        $this->resetCheckboxes($I);
+        $I->selectOption('itemsPerPage', 'no limit');
+        $I->seeOptionIsSelected('itemsPerPage', 'no limit');
+        $I->selectOption('logDisplay', 'Pending');
+        $I->seeOptionIsSelected('logDisplay', 'Pending');
+
+        $I->checkOption('ShowResultLog');
+        $I->seeCheckboxIsChecked('ShowResultLog');
+        $I->dontSeeCheckboxIsChecked('ShowFeVars');
+        $I->checkOption('ShowFeVars');
+        $I->seeCheckboxIsChecked('ShowFeVars');
+        $I->seeOptionIsSelected('logDisplay', 'Pending');
+        $I->seeOptionIsSelected('itemsPerPage', 'no limit');
+    }
+
     public function checkSelections(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();

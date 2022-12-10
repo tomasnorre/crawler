@@ -221,9 +221,11 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
             $this->logDisplay,
             $this->backendModuleMenu['log_display'],
             'index.php',
-            '&setID=' . $this->setId . '&itemsPerPage=' . $this->itemsPerPage
+            $this->getAdditionalQueryParams('logDisplay')
         );
     }
+
+
 
     private function getItemsPerPageDropDownHtml(): string
     {
@@ -236,7 +238,7 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
                 $this->itemsPerPage,
                 $this->backendModuleMenu['itemsPerPage'],
                 'index.php',
-                '&setID=' . $this->setId . '&logDisplay=' . $this->logDisplay
+                $this->getAdditionalQueryParams('itemsPerPage')
             );
     }
 
@@ -247,7 +249,7 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
             'ShowResultLog',
             $this->showResultLog,
             'index.php',
-            '&setID=' . $this->setId . $this->quiPath . '&ShowFeVars=' . $this->showFeVars
+            $this->quiPath . $this->getAdditionalQueryParams('ShowResultLog')
         ) . '&nbsp;' . $this->getLanguageService()->sL(
             'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showresultlog'
         );
@@ -260,7 +262,7 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
             'ShowFeVars',
             $this->showFeVars,
             'index.php',
-            '&setID=' . $this->setId . $this->quiPath . '&ShowResultLog=' . $this->showResultLog
+            $this->quiPath . $this->getAdditionalQueryParams('ShowFeVars')
         ) . '&nbsp;' . $this->getLanguageService()->sL(
             'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showfevars'
         );
@@ -412,5 +414,26 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
         $this->showResultLog = (string)(GeneralUtility::_GP('ShowResultLog') ?? 0);
         $this->showFeVars = (string)(GeneralUtility::_GP('ShowFeVars') ?? 0);
         $this->crawlingDepth = 99;
+    }
+
+    /*
+     * Build query string with affected checkbox/dropdown value removed.
+     */
+    private function getAdditionalQueryParams(string $keyToBeRemoved): string
+    {
+        $queryString = '';
+        $queryParams = [
+            'setID' => $this->setId,
+            'logDisplay' => $this->logDisplay,
+            'itemsPerPage' => $this->itemsPerPage,
+            'ShowFeVars' => $this->showFeVars,
+            'ShowResultLog' => $this->showResultLog,
+        ];
+
+        unset($queryParams[$keyToBeRemoved]);
+        foreach($queryParams as $key => $value) {
+            $queryString .= "&$key=$value";
+        }
+        return $queryString;
     }
 }
