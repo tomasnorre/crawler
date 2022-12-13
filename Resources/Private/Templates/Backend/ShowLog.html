@@ -17,6 +17,7 @@
     <form action="{actionUrl}" method="post" >
     <f:if condition="{displayActions} == 1">
         <f:then>
+            {depthDropDownHtml -> f:format.raw()}
             <br/>
             <br/>
             <table class="crawlerLogActions">

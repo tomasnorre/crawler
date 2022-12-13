@@ -173,6 +173,26 @@ class BackendModuleCest
         $I->waitForText('tx_indexedsearch_reindex',10);
     }
 
+    public function crawlerUlsContinueAndShowLogCheckDepthDropdown(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    {
+        $adminStep->loginAsAdmin();
+        $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
+        $I->selectOption('configurationSelection[]', 'default');
+        $I->selectOption('crawlingDepth', '99');
+        $I->click('Crawl URLs');
+        $I->waitForText('URLs submitted', 15);
+        $I->click('Continue and show Log');
+        $I->waitForText('Crawler log', 15);
+        $I->waitForText('Welcome',10);
+        $I->waitForText('https://crawler-devbox.ddev.site/', 10);
+        $I->waitForText('tx_indexedsearch_reindex',10);
+        $I->selectOption('logDepth', '99');
+        $I->waitForText('Page with Subpages',10);
+        $I->waitForText('https://crawler-devbox.ddev.site/page-with-subpages',10);
+        $I->waitForText('Access Restricted Page',10);
+        $I->waitForText('https://crawler-devbox.ddev.site/access-restricted-page',10);
+    }
+
     public function CrawlerLogDisplayAndItemsPerPageDropdowns(
         BackendModule $I,
         Admin $adminStep,

@@ -23,6 +23,7 @@ use AOE\Crawler\Backend\Helper\ResultHandler;
 use AOE\Crawler\Backend\Helper\UrlBuilder;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Utility\MessageUtility;
 use AOE\Crawler\Value\QueueFilter;
 use AOE\Crawler\Writer\FileWriter\CsvWriter\CsvWriterInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -54,7 +55,7 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
     private string $showResultLog;
     private String $showFeVars;
     private int $showSetId;
-    private int $crawlingDepth;
+    private string $logDepth;
 
     public function __construct(
         private QueueRepository $queueRepository,
@@ -119,8 +120,6 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
 
     private function assignValues(): ModuleTemplate
     {
-
-
         // Look for set ID sent - if it is, we will display contents of that set:
         $this->showSetId = (int) GeneralUtility::_GP('setID');
 
@@ -150,8 +149,8 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
             }
 
             // Get branch beneath:
-            if ($this->crawlingDepth) {
-                $tree->getTree($this->pageUid, $this->crawlingDepth);
+            if ($this->logDepth) {
+                $tree->getTree($this->pageUid, $this->logDepth);
             }
 
             // If Flush button is pressed, flush tables instead of selecting entries:
@@ -208,6 +207,7 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
             'itemPerPageHtml' => $this->getItemsPerPageDropDownHtml(),
             'showResultLogHtml' => $this->getShowResultLogCheckBoxHtml(),
             'showFeVarsHtml' => $this->getShowFeVarsCheckBoxHtml(),
+            'depthDropDownHtml' => $this->getDepthDropDownHtml($this->pageUid, $this->logDepth, $this->backendModuleMenu['depth'])
         ]);
     }
 
@@ -223,6 +223,11 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
             'index.php',
             $this->getAdditionalQueryParams('logDisplay')
         );
+    }
+
+    private function getDepthDropDownHtml(int $id, string $currentValue, array $menuItems): string
+    {
+        return BackendUtility::getFuncMenu($id, 'logDepth', $currentValue, $menuItems);
     }
 
 
@@ -413,7 +418,7 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
         $this->itemsPerPage = (int)(GeneralUtility::_GP('itemsPerPage') ?? 10);
         $this->showResultLog = (string)(GeneralUtility::_GP('ShowResultLog') ?? 0);
         $this->showFeVars = (string)(GeneralUtility::_GP('ShowFeVars') ?? 0);
-        $this->crawlingDepth = 99;
+        $this->logDepth = (string)(GeneralUtility::_GP('logDepth') ?? 0);
     }
 
     /*
@@ -435,5 +440,28 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
             $queryString .= "&$key=$value";
         }
         return $queryString;
+    }
+
+    /**
+     * Outputs the CSV file and sets the correct headers
+     */
+    private function outputCsvFile(): void
+    {
+        if (! count($this->CSVaccu)) {
+            MessageUtility::addWarningMessage(
+                $this->getLanguageService()->sL(
+                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:message.canNotExportEmptyQueueToCsvText'
+                )
+            );
+            return;
+        }
+
+        $csvString = $this->csvWriter->arrayToCsv($this->CSVaccu);
+
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename=CrawlerLog.csv');
+        echo $csvString;
+
+        exit;
     }
 }
