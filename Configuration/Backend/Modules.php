@@ -36,11 +36,6 @@ return [
                 'target' => BackendModuleCrawlerProcessController::class . '::handleRequest',
             ],
         ],
-        'moduleData' => [
-            'function' => 1,
-            'pages' => '0',
-            'depth' => 0,
-        ],
     ],
 
     'web_site_crawler_log' => [
@@ -69,11 +64,6 @@ return [
             '_default' => [
                 'target' => BackendModuleStartCrawlingController::class . '::handleRequest',
             ],
-        ],
-        'moduleData' => [
-            'function' => 1,
-            'pages' => '0',
-            'depth' => 0,
         ],
     ],
     'web_site_crawler_process' => [

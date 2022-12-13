@@ -136,7 +136,7 @@ class BackendModuleCest
      * Ensures that Result logs are writing correctly
      * https://github.com/tomasnorre/crawler/issues/826
      */
-    public function seeCrawlerLogWithOutErrors(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    public function seeCrawlerLogWithoutErrors(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();
         $this->addQueueEntry($I, $adminStep, $pageTree);
@@ -167,7 +167,10 @@ class BackendModuleCest
         $I->click('Crawl URLs');
         $I->waitForText('1 URLs submitted', 15);
         $I->click('Continue and show Log');
-        $I->waitForText('Crawler Log', 15);
+        $I->waitForText('Crawler log', 15);
+        $I->waitForText('Welcome',10);
+        $I->waitForText('https://crawler-devbox.ddev.site/', 10);
+        $I->waitForText('tx_indexedsearch_reindex',10);
     }
 
     public function CrawlerLogDisplayAndItemsPerPageDropdowns(

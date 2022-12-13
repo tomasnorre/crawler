@@ -73,6 +73,9 @@ final class BackendModuleStartCrawlingController extends AbstractBackendModuleCo
 
     private function assignValues(): ModuleTemplate
     {
+        $backendUriBuilder = GeneralUtility::makeInstance(\TYPO3\CMS\Backend\Routing\UriBuilder::class);
+        $logUrl = $backendUriBuilder->buildUriFromRoute('web_site_crawler_log', ['id' => $this->pageUid]);
+
         $crawlingDepth = GeneralUtility::_GP('crawlingDepth') ?? '0';
         $crawlParameter = GeneralUtility::_GP('_crawl');
         $downloadParameter = GeneralUtility::_GP('_download');
@@ -141,6 +144,7 @@ final class BackendModuleStartCrawlingController extends AbstractBackendModuleCo
             'queueRows' => $queueRows,
             'displayActions' => 0,
             'actionUrl' => $this->getActionUrl(),
+            'logUrl' => $logUrl,
         ]);
     }
 
