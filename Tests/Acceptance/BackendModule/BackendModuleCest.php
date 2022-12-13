@@ -173,8 +173,11 @@ class BackendModuleCest
         $I->waitForText('tx_indexedsearch_reindex',10);
     }
 
-    public function crawlerUlsContinueAndShowLogCheckDepthDropdown(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
-    {
+    public function crawlerUlsContinueAndShowLogCheckDepthDropdown(
+        BackendModule $I,
+        Admin $adminStep,
+        PageTree $pageTree
+    ): void {
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
         $I->selectOption('configurationSelection[]', 'default');
@@ -259,8 +262,11 @@ class BackendModuleCest
         $I->dontSeeCheckboxIsChecked('ShowResultLog');
     }
 
-    public function CrawlerLogDropDownAndCheckboxesCombined(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
-    {
+    public function CrawlerLogDropDownAndCheckboxesCombined(
+        BackendModule $I,
+        Admin $adminStep,
+        PageTree $pageTree
+    ): void {
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleCrawlerLog($adminStep, $pageTree);
 

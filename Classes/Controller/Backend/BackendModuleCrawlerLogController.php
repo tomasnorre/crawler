@@ -49,7 +49,6 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
     private array $backendModuleMenu;
     private int $setId;
     private string $quiPath;
-    private string $qid_details;
     private string $logDisplay;
     private int $itemsPerPage;
     private string $showResultLog;
@@ -78,9 +77,7 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
     {
         $this->setPropertiesBasedOnPostVars($request);
         $this->moduleTemplate = $this->setupView($request, $this->pageUid);
-        $this->moduleTemplate = $this->moduleTemplate->makeDocHeaderModuleMenu(
-            ['id' => $this->pageUid]
-        );
+        $this->moduleTemplate = $this->moduleTemplate->makeDocHeaderModuleMenu(['id' => $this->pageUid]);
 
         if (!$this->pageUid) {
             $this->isErrorDetected = true;
@@ -158,7 +155,7 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
                 $doFlush = true;
             } elseif (GeneralUtility::_POST('_flush_all')) {
                 $doFlush = true;
-                $logDisplay = 'all';
+                $this->logDisplay = 'all';
             } else {
                 $doFlush = false;
             }
@@ -207,7 +204,11 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
             'itemPerPageHtml' => $this->getItemsPerPageDropDownHtml(),
             'showResultLogHtml' => $this->getShowResultLogCheckBoxHtml(),
             'showFeVarsHtml' => $this->getShowFeVarsCheckBoxHtml(),
-            'depthDropDownHtml' => $this->getDepthDropDownHtml($this->pageUid, $this->logDepth, $this->backendModuleMenu['depth'])
+            'depthDropDownHtml' => $this->getDepthDropDownHtml(
+                $this->pageUid,
+                $this->logDepth,
+                $this->backendModuleMenu['depth']
+            ),
         ]);
     }
 
@@ -229,8 +230,6 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
     {
         return BackendUtility::getFuncMenu($id, 'logDepth', $currentValue, $menuItems);
     }
-
-
 
     private function getItemsPerPageDropDownHtml(): string
     {
@@ -411,14 +410,14 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
     private function setPropertiesBasedOnPostVars(ServerRequestInterface $request): void
     {
         $this->pageUid = (int) ($request->getQueryParams()['id'] ?? -1);
-        $this->setId = (int)GeneralUtility::_GP('setID');
-        $this->quiPath = GeneralUtility::_GP('qid_details') ? '&qid_details=' . (int)GeneralUtility::_GP('qid_details') : '';
+        $this->setId = (int) GeneralUtility::_GP('setID');
+        $this->quiPath = GeneralUtility::_GP('qid_details') ? '&qid_details=' . (int) GeneralUtility::_GP('qid_details') : '';
         $this->queueId = GeneralUtility::_GP('qid_details');
         $this->logDisplay = GeneralUtility::_GP('logDisplay') ?? 'all';
-        $this->itemsPerPage = (int)(GeneralUtility::_GP('itemsPerPage') ?? 10);
-        $this->showResultLog = (string)(GeneralUtility::_GP('ShowResultLog') ?? 0);
-        $this->showFeVars = (string)(GeneralUtility::_GP('ShowFeVars') ?? 0);
-        $this->logDepth = (string)(GeneralUtility::_GP('logDepth') ?? 0);
+        $this->itemsPerPage = (int) (GeneralUtility::_GP('itemsPerPage') ?? 10);
+        $this->showResultLog = (string) (GeneralUtility::_GP('ShowResultLog') ?? 0);
+        $this->showFeVars = (string) (GeneralUtility::_GP('ShowFeVars') ?? 0);
+        $this->logDepth = (string) (GeneralUtility::_GP('logDepth') ?? 0);
     }
 
     /*
@@ -436,8 +435,8 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
         ];
 
         unset($queryParams[$keyToBeRemoved]);
-        foreach($queryParams as $key => $value) {
-            $queryString .= "&$key=$value";
+        foreach ($queryParams as $key => $value) {
+            $queryString .= "&{$key}={$value}";
         }
         return $queryString;
     }

@@ -83,7 +83,7 @@ final class BackendModuleCrawlerProcessController extends AbstractBackendModuleC
         $maxActiveProcesses = MathUtility::forceIntegerInRange($this->extensionSettings['processLimit'], 1, 99, 1);
 
         return $this->moduleTemplate->assignMultiple([
-            'pageId' => (int) $this->pageUid,
+            'pageId' => $this->pageUid,
             'refreshLink' => $this->getRefreshLink(),
             'addLink' => $this->getAddLink($currentActiveProcesses, $maxActiveProcesses, $isCrawlerEnabled),
             'modeLink' => $this->getModeLink($mode),
