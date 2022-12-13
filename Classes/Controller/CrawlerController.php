@@ -79,9 +79,12 @@ class CrawlerController implements LoggerAwareInterface
      * Todo: Check what this is used for and adjust the type hint or code, as bool doesn't match the current code.
      */
     public bool $MP = false;
+    protected QueueRepository $queueRepository;
+    protected ProcessRepository $processRepository;
     protected ConfigurationRepository $configurationRepository;
     protected QueueExecutor $queueExecutor;
     protected int $maximumUrlsToCompile = 10000;
+    protected IconFactory $iconFactory;
 
     /**
      * @var BackendUserAuthentication|null
@@ -103,12 +106,10 @@ class CrawlerController implements LoggerAwareInterface
      *
      ************************************/
 
-    public function __construct(
-        private QueueRepository $queueRepository,
-        private ProcessRepository $processRepository,
-        private IconFactory $iconFactory
-    ) {
+    public function __construct() {
         $crawlStrategyFactory = GeneralUtility::makeInstance(CrawlStrategyFactory::class);
+        $this->queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
+        $this->processRepository = GeneralUtility::makeInstance(ProcessRepository::class);
         $this->configurationRepository = GeneralUtility::makeInstance(ConfigurationRepository::class);
         $this->pageRepository = GeneralUtility::makeInstance(PageRepository::class);
         $this->eventDispatcher = GeneralUtility::makeInstance(EventDispatcher::class);
@@ -117,6 +118,7 @@ class CrawlerController implements LoggerAwareInterface
             $crawlStrategyFactory,
             $this->eventDispatcher
         );
+        $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
         $this->crawler = GeneralUtility::makeInstance(Crawler::class);
         $this->configurationService = GeneralUtility::makeInstance(ConfigurationService::class);
         $this->urlService = GeneralUtility::makeInstance(UrlService::class);

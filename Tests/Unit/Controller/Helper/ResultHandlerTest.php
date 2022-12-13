@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Unit\Backend\Helper;
+namespace AOE\Crawler\Tests\Unit\Controller\Backend\Helper;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2005-2021 AOE GmbH <dev@aoe.com>
+ * (c) 2021-     Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -19,11 +20,11 @@ namespace AOE\Crawler\Tests\Unit\Backend\Helper;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Backend\Helper\ResultHandler;
+use AOE\Crawler\Controller\Backend\Helper\ResultHandler;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
 /**
- * @covers \AOE\Crawler\Backend\Helper\ResultHandler
+ * @covers \AOE\Crawler\Controller\Backend\Helper\ResultHandler
  * @covers \AOE\Crawler\Converter\JsonCompatibilityConverter::convert
  */
 class ResultHandlerTest extends UnitTestCase

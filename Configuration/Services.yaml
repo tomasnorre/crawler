@@ -38,13 +38,6 @@ services:
         arguments:
             $queryBuilder: '@queryBuilder.tx_crawler_queue'
 
-    AOE\Crawler\Backend\BackendModule:
-        arguments:
-            $processManager: '@AOE\Crawler\Service\ProcessService'
-            $queryBuilder: '@queryBuilder.tx_crawler_queue'
-            $queueRepository: '@AOE\Crawler\Domain\Repository\QueueRepository'
-        public: true
-
     AOE\Crawler\Service\ConfigurationService:
         arguments:
             $urlService: '@AOE\Crawler\Service\UrlService'
