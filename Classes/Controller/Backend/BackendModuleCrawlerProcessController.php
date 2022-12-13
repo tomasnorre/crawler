@@ -19,7 +19,7 @@ namespace AOE\Crawler\Controller\Backend;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Backend\Helper\UrlBuilder;
+use AOE\Crawler\Controller\Backend\Helper\UrlBuilder;
 use AOE\Crawler\Crawler;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
