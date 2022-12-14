@@ -18,10 +18,10 @@ jobs:
         typo3: [ '^11.5' ]
         php: [ '8.0', '8.1' ]
         mysql: ['5.7']
-        include:
-          - typo3: 'dev-main'
-            php: 8.1
-            mysql: 5.7
+        #include:
+          #- typo3: 'dev-main'
+          #  php: 8.1
+          #  mysql: 5.7
           #- typo3: ^12
           #  php: 8.2
           #  mysql: 5.7
@@ -83,7 +83,8 @@ jobs:
           export "UNIT_XML"=.Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml
           composer remove --dev typo3/testing-framework ssch/typo3-rector
           rm -rf composer.lock .Build
-          composer require --dev nimut/typo3-complete:dev-main saschaegerer/phpstan-typo3:"*" nimut/testing-framework:"*"
+          composer require --dev nimut/typo3-complete:dev-main saschaegerer/phpstan-typo3:"*" nimut/testing-framework:"*" typo3/testing-framework:"*"
+          composer require sbuerk/typo3-cmscomposerinstallers-testingframework-bridge
           git checkout composer.json
           ln -nfs .Build/vendor/typo3/cms/typo3 typo3
           .Build/bin/phpunit --whitelist Classes --colors -c $UNIT_XML Tests/Unit

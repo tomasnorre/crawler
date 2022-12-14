@@ -19,6 +19,8 @@ jobs:
         include:
           - typo3: 'dev-main'
             php: '8.1'
+          #- typo3: ^12
+          #  php: '8.2'
     steps:
       - name: Get branch name (merge)
         if: github.event_name != 'pull_request'
