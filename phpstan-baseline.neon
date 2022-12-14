@@ -1,67 +1,9 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Cannot access offset 'alturl' on array\\|bool\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
-			message: "#^Cannot access offset 'procInstructions' on array\\|bool\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Result\\|int\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
-			message: "#^Class cognitive complexity is 72, keep it under 60$#"
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
-			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:drawLog_addRows\\(\\) should return non\\-empty\\-array\\<int, array\\{titleRowSpan\\: int\\<1, max\\>, colSpan\\: int, title\\: string, noEntries\\?\\: string, trClass\\?\\: string, qid\\?\\: array\\{link\\: TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, link\\-text\\: string\\}, refresh\\?\\: array\\{link\\: TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, link\\-text\\: TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon, warning\\: string\\|TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon\\}, columns\\?\\: array\\{url\\: mixed, scheduled\\: string, exec_time\\: string, result_log\\: string, result_status\\: string, feUserGroupList\\: string, procInstructions\\: string, set_id\\: string, \\.\\.\\.\\}\\}\\> but returns non\\-empty\\-array\\<int, array\\{titleRowSpan\\: 1, colSpan\\: 8\\|9\\|11\\|12, title\\: string, noEntries\\: string\\}\\|array\\{titleRowSpan\\: int\\<1, max\\>, colSpan\\: 8\\|9\\|11\\|12, title\\: string, trClass\\: ''\\|'bg\\-danger', qid\\: array\\{link\\: TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, link\\-text\\: string\\}, refresh\\: array\\{link\\: TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, link\\-text\\: TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon, warning\\: ''\\|TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon\\}, columns\\: non\\-empty\\-array\\<'exec_time'\\|'feUserGroupList'\\|'procInstructions'\\|'result_log'\\|'result_status'\\|'scheduled'\\|'set_id'\\|'tsfe_gr_list'\\|'tsfe_id'\\|'url', mixed\\>\\}\\>\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
-			message: "#^Offset 'result_data' does not exist on array\\{parameters\\: array\\|bool\\}\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
-			message: "#^Parameter \\#1 \\$resultData of static method AOE\\\\Crawler\\\\Backend\\\\Helper\\\\ResultHandler\\:\\:getResFeVars\\(\\) expects array, array\\|true given\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
-			message: "#^Unable to resolve the template type T in call to method static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\)$#"
-			count: 1
-			path: Classes/Backend/RequestForm/MultiProcessRequestForm.php
-
-		-
-			message: "#^Call to function is_array\\(\\) with string will always evaluate to false\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/StartRequestForm.php
-
-		-
-			message: "#^Result of \\|\\| is always true\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/StartRequestForm.php
-
-		-
 			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|null given\\.$#"
 			count: 1
 			path: Classes/Command/BuildQueueCommand.php
-
-		-
-			message: """
-				#^Call to deprecated method shortMD5\\(\\) of class TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:
-				since v11, will be removed in v12\\.$#
-			"""
-			count: 1
-			path: Classes/Command/ProcessQueueCommand.php
 
 		-
 			message: "#^Constant AOE\\\\Crawler\\\\Command\\\\ProcessQueueCommand\\:\\:CLI_STATUS_POLLABLE_PROCESSED is unused\\.$#"
@@ -77,14 +19,6 @@ parameters:
 			message: "#^Offset 'name' does not exist on array\\|null\\.$#"
 			count: 1
 			path: Classes/ContextMenu/ItemProvider.php
-
-		-
-			message: """
-				#^Call to deprecated method shortMD5\\(\\) of class TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:
-				since v11, will be removed in v12\\.$#
-			"""
-			count: 1
-			path: Classes/Controller/CrawlerController.php
 
 		-
 			message: "#^Call to function is_string\\(\\) with bool will always evaluate to false\\.$#"
@@ -118,11 +52,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$id of static method TYPO3\\\\CMS\\\\Backend\\\\Utility\\\\BackendUtility\\:\\:getPagesTSconfig\\(\\) expects int, string given\\.$#"
-			count: 1
-			path: Classes/Controller/CrawlerController.php
-
-		-
-			message: "#^Parameter \\#1 \\$input of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:shortMD5\\(\\) expects string, string\\|false given\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -283,11 +212,6 @@ parameters:
 			message: "#^Function getUrlFromPageAndQueryParameters\\(\\) has an unused variable \\$siteLanguage\\.$#"
 			count: 1
 			path: Classes/Service/UrlService.php
-
-		-
-			message: "#^Parameter \\#3 \\$_unused of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\ExtensionManagementUtility\\:\\:insertModuleFunction\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: Classes/Utility/BackendUtility.php
 
 		-
 			message: "#^Parameter \\#1 \\$row of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\CsvUtility\\:\\:csvValues\\(\\) expects array\\<string\\>, array\\<int, int\\|string\\> given\\.$#"
