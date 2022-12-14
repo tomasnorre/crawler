@@ -49,8 +49,8 @@ class ProcessQueueCommandTest extends FunctionalTestCase
         $command = new ProcessQueueCommand(
             new Crawler(),
             $crawlerController,
-            new ProcessRepository(),
-            new QueueRepository()
+            GeneralUtility::makeInstance(ProcessRepository::class),
+            GeneralUtility::makeInstance(QueueRepository::class)
         );
         $this->commandTester = new CommandTester($command);
     }

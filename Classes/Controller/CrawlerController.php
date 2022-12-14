@@ -106,7 +106,8 @@ class CrawlerController implements LoggerAwareInterface
      *
      ************************************/
 
-    public function __construct() {
+    public function __construct()
+    {
         $crawlStrategyFactory = GeneralUtility::makeInstance(CrawlStrategyFactory::class);
         $this->queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
         $this->processRepository = GeneralUtility::makeInstance(ProcessRepository::class);

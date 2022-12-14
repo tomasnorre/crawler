@@ -27,6 +27,9 @@ use AOE\Crawler\Value\QueueFilter;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Information\Typo3Version;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class CrawlerControllerTest
@@ -110,7 +113,20 @@ class CrawlerControllerTest extends FunctionalTestCase
         bool $registerQueueEntriesInternallyOnly,
         bool $expected
     ): void {
-        $mockedQueueRepository = $this->getAccessibleMock(QueueRepository::class, ['getDuplicateQueueItemsIfExists']);
+        $typo3MajorVersion = (new Typo3Version())->getMajorVersion();
+        if ($typo3MajorVersion <= 11) {
+            $mockedQueueRepository = $this->getAccessibleMock(
+                QueueRepository::class,
+                ['getDuplicateQueueItemsIfExists'],
+                [GeneralUtility::makeInstance(ObjectManager::class)]
+            );
+        } else {
+            $mockedQueueRepository = $this->getAccessibleMock(
+                QueueRepository::class,
+                ['getDuplicateQueueItemsIfExists']
+            );
+        }
+
         $mockedQueueRepository->expects($this->any())->method('getDuplicateQueueItemsIfExists')->willReturn(
             $mockedDuplicateRowResult
         );
