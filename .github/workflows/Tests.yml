@@ -83,7 +83,7 @@ jobs:
           export "UNIT_XML"=.Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml
           composer remove --dev typo3/testing-framework ssch/typo3-rector
           rm -rf composer.lock .Build
-          composer require --dev nimut/typo3-complete:dev-master saschaegerer/phpstan-typo3:"*" nimut/testing-framework:"*"
+          composer require --dev nimut/typo3-complete:dev-main saschaegerer/phpstan-typo3:"*" nimut/testing-framework:"*"
           git checkout composer.json
           ln -nfs .Build/vendor/typo3/cms/typo3 typo3
           .Build/bin/phpunit --whitelist Classes --colors -c $UNIT_XML Tests/Unit
