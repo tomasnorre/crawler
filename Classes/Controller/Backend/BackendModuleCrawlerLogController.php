@@ -41,7 +41,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class BackendModuleCrawlerLogController extends AbstractBackendModuleController implements BackendModuleControllerInterface
 {
-    private const BACKEND_MODULE = 'web_site_crawler_log';
+    public const BACKEND_MODULE = 'web_site_crawler_log';
 
     private QueryBuilder $queryBuilder;
     private bool $CSVExport = false;
@@ -55,6 +55,10 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
     private String $showFeVars;
     private int $showSetId;
     private string $logDepth;
+    /**
+     * @var mixed|string|null
+     */
+    private mixed $queueId;
 
     public function __construct(
         private QueueRepository $queueRepository,
@@ -91,6 +95,7 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
 
     public function getQueueEntry(mixed $queueId): array
     {
+        // todo: Move to QueueRepository
         $q_entry = $this->queryBuilder
             ->from(QueueRepository::TABLE_NAME)
             ->select('*')
