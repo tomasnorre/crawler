@@ -49,7 +49,8 @@ final class BackendModuleStartCrawlingController extends AbstractBackendModuleCo
 
     public function __construct(
         private CrawlerController $crawlerController
-    ) {
+    )
+    {
     }
 
     #[Required]
@@ -232,21 +233,21 @@ final class BackendModuleStartCrawlingController extends AbstractBackendModuleCo
         $options = [];
         foreach ($optArray as $key => $val) {
             $selected = (!$multiple && !strcmp($value, (string) $key)) || ($multiple && in_array(
-                $key,
-                (array) $value,
-                true
-            ));
+                        $key,
+                        (array) $value,
+                        true
+                    ));
             $options[] = '
                 <option value="' . $key . '" ' . ($selected ? ' selected="selected"' : '') . '>' . htmlspecialchars(
-                $val,
-                ENT_QUOTES | ENT_HTML5
-            ) . '</option>';
+                    $val,
+                    ENT_QUOTES | ENT_HTML5
+                ) . '</option>';
         }
 
         return '<select class="form-control" name="' . htmlspecialchars(
-            $name . ($multiple ? '[]' : ''),
-            ENT_QUOTES | ENT_HTML5
-        ) . '"' . ($multiple ? ' multiple' : '') . '>' . implode('', $options) . '</select>';
+                $name . ($multiple ? '[]' : ''),
+                ENT_QUOTES | ENT_HTML5
+            ) . '"' . ($multiple ? ' multiple' : '') . '>' . implode('', $options) . '</select>';
     }
 
     private function getScheduledTime(string $time): float|int

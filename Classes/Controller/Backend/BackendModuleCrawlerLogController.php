@@ -39,7 +39,10 @@ use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class BackendModuleCrawlerLogController extends AbstractBackendModuleController implements BackendModuleControllerInterface
+/**
+ * @internal since v12.0.0
+ */
+final class BackendModuleCrawlerLogController extends AbstractBackendModuleController implements BackendModuleControllerInterface
 {
     public const BACKEND_MODULE = 'web_site_crawler_log';
 
@@ -52,7 +55,7 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
     private string $logDisplay;
     private int $itemsPerPage;
     private string $showResultLog;
-    private String $showFeVars;
+    private string $showFeVars;
     private int $showSetId;
     private string $logDepth;
     /**
@@ -61,11 +64,12 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
     private mixed $queueId;
 
     public function __construct(
-        private QueueRepository $queueRepository,
-        private CsvWriterInterface $csvWriter,
+        private QueueRepository            $queueRepository,
+        private CsvWriterInterface         $csvWriter,
         private JsonCompatibilityConverter $jsonCompatibilityConverter,
-        private IconFactory $iconFactory
-    ) {
+        private IconFactory                $iconFactory
+    )
+    {
         $this->backendModuleMenu = $this->getModuleMenu();
     }
 
@@ -93,9 +97,8 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
         return $this->moduleTemplate->renderResponse('Backend/ShowLog');
     }
 
-    public function getQueueEntry(mixed $queueId): array
+    private function getQueueEntry(mixed $queueId): array
     {
-        // todo: Move to QueueRepository
         $q_entry = $this->queryBuilder
             ->from(QueueRepository::TABLE_NAME)
             ->select('*')
@@ -124,6 +127,9 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
     {
         // Look for set ID sent - if it is, we will display contents of that set:
         $this->showSetId = (int) GeneralUtility::_GP('setID');
+        $this->CSVExport = (bool) GeneralUtility::_GP('_csv');
+        $logEntriesPerPage = [];
+
 
         if ($this->queueId) {
             // Get entry record:
@@ -164,6 +170,7 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
             } else {
                 $doFlush = false;
             }
+
             $queueFilter = new QueueFilter($this->logDisplay);
 
             if ($doFlush) {
@@ -172,7 +179,7 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
 
             // Traverse page tree:
             $count = 0;
-            $logEntriesPerPage = [];
+
             foreach ($tree->tree as $data) {
                 $logEntriesOfPage = $this->queueRepository->getQueueEntriesForPageId(
                     (int) $data['row']['uid'],
@@ -220,27 +227,34 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
     private function getDisplayLogFilterHtml(): string
     {
         return $this->getLanguageService()->sL(
-            'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.display'
-        ) . ': ' . BackendUtility::getFuncMenu(
-            $this->pageUid,
-            'logDisplay',
-            $this->logDisplay,
-            $this->backendModuleMenu['log_display'],
-            'index.php',
-            $this->getAdditionalQueryParams('logDisplay')
-        );
+                'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.display'
+            ) . ': ' . BackendUtility::getFuncMenu(
+                $this->pageUid,
+                'logDisplay',
+                $this->logDisplay,
+                $this->backendModuleMenu['log_display'],
+                'index.php',
+                $this->getAdditionalQueryParams('logDisplay')
+            );
     }
 
     private function getDepthDropDownHtml(int $id, string $currentValue, array $menuItems): string
     {
-        return BackendUtility::getFuncMenu($id, 'logDepth', $currentValue, $menuItems);
+        return BackendUtility::getFuncMenu(
+            $id,
+            'logDepth',
+            $currentValue,
+            $menuItems,
+            'index.php',
+            $this->getAdditionalQueryParams('logDepth')
+        );
     }
 
     private function getItemsPerPageDropDownHtml(): string
     {
         return $this->getLanguageService()->sL(
-            'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.itemsPerPage'
-        ) . ': ' .
+                'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.itemsPerPage'
+            ) . ': ' .
             BackendUtility::getFuncMenu(
                 $this->pageUid,
                 'itemsPerPage',
@@ -254,27 +268,27 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
     private function getShowResultLogCheckBoxHtml(): string
     {
         return BackendUtility::getFuncCheck(
-            $this->pageUid,
-            'ShowResultLog',
-            $this->showResultLog,
-            'index.php',
-            $this->quiPath . $this->getAdditionalQueryParams('ShowResultLog')
-        ) . '&nbsp;' . $this->getLanguageService()->sL(
-            'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showresultlog'
-        );
+                $this->pageUid,
+                'ShowResultLog',
+                $this->showResultLog,
+                'index.php',
+                $this->quiPath . $this->getAdditionalQueryParams('ShowResultLog')
+            ) . '&nbsp;' . $this->getLanguageService()->sL(
+                'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showresultlog'
+            );
     }
 
     private function getShowFeVarsCheckBoxHtml(): string
     {
         return BackendUtility::getFuncCheck(
-            $this->pageUid,
-            'ShowFeVars',
-            $this->showFeVars,
-            'index.php',
-            $this->quiPath . $this->getAdditionalQueryParams('ShowFeVars')
-        ) . '&nbsp;' . $this->getLanguageService()->sL(
-            'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showfevars'
-        );
+                $this->pageUid,
+                'ShowFeVars',
+                $this->showFeVars,
+                'index.php',
+                $this->quiPath . $this->getAdditionalQueryParams('ShowFeVars')
+            ) . '&nbsp;' . $this->getLanguageService()->sL(
+                'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showfevars'
+            );
     }
 
     /**
@@ -360,14 +374,14 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
                 $contentArray['trClass'] = $trClass;
                 $contentArray['qid'] = [
                     'link' => UrlBuilder::getBackendModuleUrl([
-                        'qid_details' => $vv['qid'], 'setID' => $setId, ],
+                        'qid_details' => $vv['qid'], 'setID' => $setId,],
                         self::BACKEND_MODULE
                     ),
                     'link-text' => htmlspecialchars((string) $vv['qid'], ENT_QUOTES | ENT_HTML5),
                 ];
                 $contentArray['refresh'] = [
                     'link' => UrlBuilder::getBackendModuleUrl([
-                        'qid_read' => $vv['qid'], 'setID' => $setId, ],
+                        'qid_read' => $vv['qid'], 'setID' => $setId,],
                         self::BACKEND_MODULE
                     ),
                     'link-text' => $refreshIcon,
@@ -437,6 +451,7 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
             'itemsPerPage' => $this->itemsPerPage,
             'ShowFeVars' => $this->showFeVars,
             'ShowResultLog' => $this->showResultLog,
+            'logDepth' => $this->logDepth,
         ];
 
         unset($queryParams[$keyToBeRemoved]);
@@ -451,7 +466,7 @@ class BackendModuleCrawlerLogController extends AbstractBackendModuleController 
      */
     private function outputCsvFile(): void
     {
-        if (! count($this->CSVaccu)) {
+        if (!count($this->CSVaccu)) {
             MessageUtility::addWarningMessage(
                 $this->getLanguageService()->sL(
                     'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:message.canNotExportEmptyQueueToCsvText'
