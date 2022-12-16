@@ -37,21 +37,6 @@ return [
             ],
         ],
     ],
-
-    'web_site_crawler_log' => [
-        'parent' => 'web_site_crawler',
-        'access' => 'user',
-        'path' => '/module/page/crawler/log',
-        'iconIdentifier' => 'crawler-log',
-        'labels' => [
-            'title' => 'Log',
-        ],
-        'routes' => [
-            '_default' => [
-                'target' => BackendModuleCrawlerLogController::class . '::handleRequest',
-            ],
-        ],
-    ],
     'web_site_crawler_start' => [
         'parent' => 'web_site_crawler',
         'access' => 'user',
@@ -77,6 +62,20 @@ return [
         'routes' => [
             '_default' => [
                 'target' => BackendModuleCrawlerProcessController::class . '::handleRequest',
+            ],
+        ],
+    ],
+    'web_site_crawler_log' => [
+        'parent' => 'web_site_crawler',
+        'access' => 'user',
+        'path' => '/module/page/crawler/log',
+        'iconIdentifier' => 'crawler-log',
+        'labels' => [
+            'title' => 'Log',
+        ],
+        'routes' => [
+            '_default' => [
+                'target' => BackendModuleCrawlerLogController::class . '::handleRequest',
             ],
         ],
     ],
