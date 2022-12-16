@@ -23,7 +23,6 @@ use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Service\QueueService;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * @internal since v9.2.5
@@ -55,16 +54,16 @@ class DataHandlerHook
 
     private function getQueueRepository(): QueueRepository
     {
-        return GeneralUtility::makeInstance(ObjectManager::class)->get(QueueRepository::class);
+        return GeneralUtility::makeInstance(QueueRepository::class);
     }
 
     private function getQueueService(): QueueService
     {
-        return GeneralUtility::makeInstance(ObjectManager::class)->get(QueueService::class);
+        return GeneralUtility::makeInstance(QueueService::class);
     }
 
     private function getPageRepository(): PageRepository
     {
-        return GeneralUtility::makeInstance(ObjectManager::class)->get(PageRepository::class);
+        return GeneralUtility::makeInstance(PageRepository::class);
     }
 }
