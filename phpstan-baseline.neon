@@ -1,6 +1,26 @@
 parameters:
 	ignoreErrors:
 		-
+			message: "#^Call to an undefined method Psr\\\\Http\\\\Message\\\\ServerRequestInterface\\:\\:getControllerActionName\\(\\)\\.$#"
+			count: 1
+			path: Classes/Backend/BackendModule.php
+
+		-
+			message: "#^Call to an undefined method TYPO3\\\\CMS\\\\Backend\\\\Routing\\\\UriBuilder\\:\\:reset\\(\\)\\.$#"
+			count: 1
+			path: Classes/Backend/BackendModule.php
+
+		-
+			message: "#^Function setUpDocHeader\\(\\) has an unused variable \\$context\\.$#"
+			count: 1
+			path: Classes/Backend/BackendModule.php
+
+		-
+			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\BackendModule\\:\\:setUpDocHeader\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: Classes/Backend/BackendModule.php
+
+		-
 			message: "#^Cannot access offset 'alturl' on array\\|bool\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
@@ -16,7 +36,12 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Class cognitive complexity is 72, keep it under 60$#"
+			message: "#^Class cognitive complexity is 70, keep it under 60$#"
+			count: 1
+			path: Classes/Backend/RequestForm/LogRequestForm.php
+
+		-
+			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
@@ -36,12 +61,27 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
+			message: "#^Parameter \\#3 \\$currentValue of static method TYPO3\\\\CMS\\\\Backend\\\\Utility\\\\BackendUtility\\:\\:getFuncMenu\\(\\) expects string, int given\\.$#"
+			count: 1
+			path: Classes/Backend/RequestForm/LogRequestForm.php
+
+		-
+			message: "#^Property AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:\\$infoModuleController is never read, only written\\.$#"
+			count: 1
+			path: Classes/Backend/RequestForm/LogRequestForm.php
+
+		-
 			message: "#^Unable to resolve the template type T in call to method static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\)$#"
 			count: 1
 			path: Classes/Backend/RequestForm/MultiProcessRequestForm.php
 
 		-
 			message: "#^Call to function is_array\\(\\) with string will always evaluate to false\\.$#"
+			count: 1
+			path: Classes/Backend/RequestForm/StartRequestForm.php
+
+		-
+			message: "#^Property AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\StartRequestForm\\:\\:\\$infoModuleController is never read, only written\\.$#"
 			count: 1
 			path: Classes/Backend/RequestForm/StartRequestForm.php
 
@@ -54,14 +94,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|null given\\.$#"
 			count: 1
 			path: Classes/Command/BuildQueueCommand.php
-
-		-
-			message: """
-				#^Call to deprecated method shortMD5\\(\\) of class TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:
-				since v11, will be removed in v12\\.$#
-			"""
-			count: 1
-			path: Classes/Command/ProcessQueueCommand.php
 
 		-
 			message: "#^Constant AOE\\\\Crawler\\\\Command\\\\ProcessQueueCommand\\:\\:CLI_STATUS_POLLABLE_PROCESSED is unused\\.$#"
@@ -77,14 +109,6 @@ parameters:
 			message: "#^Offset 'name' does not exist on array\\|null\\.$#"
 			count: 1
 			path: Classes/ContextMenu/ItemProvider.php
-
-		-
-			message: """
-				#^Call to deprecated method shortMD5\\(\\) of class TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:
-				since v11, will be removed in v12\\.$#
-			"""
-			count: 1
-			path: Classes/Controller/CrawlerController.php
 
 		-
 			message: "#^Call to function is_string\\(\\) with bool will always evaluate to false\\.$#"
@@ -122,7 +146,7 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Parameter \\#1 \\$input of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:shortMD5\\(\\) expects string, string\\|false given\\.$#"
+			message: "#^Parameter \\#1 \\$string of function md5 expects string, string\\|false given\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -203,6 +227,25 @@ parameters:
 				             See TYPO3 explained documentation for more information\\.$#
 			"""
 			count: 1
+			path: Classes/Domain/Repository/ConfigurationRepository.php
+
+		-
+			message: "#^Method TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\Repository\\<TYPO3\\\\CMS\\\\Extbase\\\\DomainObject\\\\DomainObjectInterface\\>\\:\\:__construct\\(\\) invoked with 0 parameters, 1 required\\.$#"
+			count: 1
+			path: Classes/Domain/Repository/ConfigurationRepository.php
+
+		-
+			message: """
+				#^Fetching class constant class of deprecated class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
+				since v11, will be removed in v12\\. Use symfony DI and GeneralUtility\\:\\:makeInstance\\(\\) instead\\.
+				             See TYPO3 explained documentation for more information\\.$#
+			"""
+			count: 1
+			path: Classes/Domain/Repository/ProcessRepository.php
+
+		-
+			message: "#^Method TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\Repository\\<TYPO3\\\\CMS\\\\Extbase\\\\DomainObject\\\\DomainObjectInterface\\>\\:\\:__construct\\(\\) invoked with 0 parameters, 1 required\\.$#"
+			count: 1
 			path: Classes/Domain/Repository/ProcessRepository.php
 
 		-
@@ -220,26 +263,14 @@ parameters:
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
+			message: "#^Method TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\Repository\\<TYPO3\\\\CMS\\\\Extbase\\\\DomainObject\\\\DomainObjectInterface\\>\\:\\:__construct\\(\\) invoked with 0 parameters, 1 required\\.$#"
+			count: 1
+			path: Classes/Domain/Repository/QueueRepository.php
+
+		-
 			message: "#^Method AOE\\\\Crawler\\\\Event\\\\ModifySkipPageEvent\\:\\:isSkipped\\(\\) should return string\\|false but returns bool\\|string\\.$#"
 			count: 1
 			path: Classes/Event/ModifySkipPageEvent.php
-
-		-
-			message: """
-				#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
-				since TYPO3 10\\.4, will be removed in version 12\\.0$#
-			"""
-			count: 3
-			path: Classes/Hooks/DataHandlerHook.php
-
-		-
-			message: """
-				#^Fetching class constant class of deprecated class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
-				since v11, will be removed in v12\\. Use symfony DI and GeneralUtility\\:\\:makeInstance\\(\\) instead\\.
-				             See TYPO3 explained documentation for more information\\.$#
-			"""
-			count: 3
-			path: Classes/Hooks/DataHandlerHook.php
 
 		-
 			message: "#^There is no request attribute \"tx_crawler\" configured so we can't figure out the exact type to return when calling Psr\\\\Http\\\\Message\\\\ServerRequestInterface\\:\\:getAttribute$#"
