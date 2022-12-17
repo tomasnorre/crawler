@@ -21,6 +21,7 @@ namespace AOE\Crawler\Tests\Functional;
 
 use TYPO3\CMS\Backend\Routing\Route;
 use TYPO3\CMS\Backend\Routing\Router;
+use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -39,7 +40,7 @@ trait BackendRequestTestTrait
         $request = new ServerRequest('https://example.com/typo3/index.php');
         $request = $request->withQueryParams(['route' => '/web_info']);
         $request = $request->withAttribute('route', $route);
-        $request = $request->withAttribute('applicationType', TYPO3_REQUESTTYPE_BE);
+        $request = $request->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_BE);
         $GLOBALS['TYPO3_REQUEST'] = $request;
     }
 }

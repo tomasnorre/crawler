@@ -22,6 +22,9 @@ namespace AOE\Crawler\Tests\Acceptance\BackendModule;
 
 use AOE\Crawler\Tests\Acceptance\Support\Helper\PageTree;
 use AOE\Crawler\Tests\Acceptance\Support\Step\Acceptance\Admin;
+use Facebook\WebDriver\WebDriver;
+use Facebook\WebDriver\WebDriverExpectedCondition;
+use PHPUnit\Exception;
 use Step\Acceptance\BackendModule;
 
 class BackendModuleCest
@@ -76,10 +79,9 @@ class BackendModuleCest
      */
     public function CrawlerConfigurationWithExcludePageSixPlusThree(
         BackendModule $I,
-        Admin         $adminStep,
-        PageTree      $pageTree
-    ): void
-    {
+        Admin $adminStep,
+        PageTree $pageTree
+    ): void {
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
         $I->selectOption('configurationSelection[]', 'excludepages-6-plus-3');
@@ -90,10 +92,9 @@ class BackendModuleCest
 
     public function EnsureNoUserGroupsAndNoProcInstAreDisplayed(
         BackendModule $I,
-        Admin         $adminStep,
-        PageTree      $pageTree
-    ): void
-    {
+        Admin $adminStep,
+        PageTree $pageTree
+    ): void {
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
         $I->selectOption('configurationSelection[]', 'excludepages-6-plus-3');
@@ -177,10 +178,9 @@ class BackendModuleCest
 
     public function crawlerUrlsContinueAndShowLogCheckDepthDropdown(
         BackendModule $I,
-        Admin         $adminStep,
-        PageTree      $pageTree
-    ): void
-    {
+        Admin $adminStep,
+        PageTree $pageTree
+    ): void {
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
         $I->selectOption('configurationSelection[]', 'default');
@@ -199,34 +199,38 @@ class BackendModuleCest
         $I->waitForText('https://crawler-devbox.ddev.site/access-restricted-page', 10);
     }
 
-    public function flushVisibleEntries(
+    public function flushVisibleEntries(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    {
+        // Will test twice, but done to avoid duplicate code
+        $this->crawlerUrlsContinueAndShowLogCheckDepthDropdown($I, $adminStep, $pageTree);
+        $I->click('Flush entire queue');
+        $I->switchToMainFrame();
+        $I->seeInPopup('Are you sure?');
+        $I->click('OK');
+        $I->switchToContentFrame();
+        $I->wait(3);
+        $I->canSeeNumberOfElements('a.refreshLink', 0);
+        $this->crawlerUrlsContinueAndShowLogCheckDepthDropdown($I, $adminStep, $pageTree);
+        $I->canSeeNumberOfElements('a.refreshLink', 9);
+        $I->selectOption('logDisplay', 'Finished');
+        $I->canSeeNumberOfElements('a.refreshLink', 0);
+        $I->click('Flush visible entries');
+        $I->acceptPopup();
+        $I->wait(3);
+        $I->selectOption('logDisplay', 'All');
+        $I->canSeeNumberOfElements('a.refreshLink', 9);
+        $I->selectOption('logDisplay', 'Pending');
+        $I->click('Flush visible entries');
+        $I->acceptPopup();
+        $I->wait(3);
+        $I->canSeeNumberOfElements('a.refreshLink', 0);
+    }
+
+    public function CrawlerLogDisplayAndItemsPerPageDropdowns(
         BackendModule $I,
         Admin $adminStep,
         PageTree $pageTree
-): void
-{
-    // Will test twice, but done to avoid duplicate code
-    $this->crawlerUrlsContinueAndShowLogCheckDepthDropdown($I, $adminStep, $pageTree);
-    $I->canSeeNumberOfElements('a.refreshLink', 9);
-    $I->selectOption('logDisplay', 'Finished');
-    $I->canSeeNumberOfElements('a.refreshLink', 0);
-    $I->click('Flush visible entries');
-    $I->wait(3);
-    $I->selectOption('logDisplay', 'All');
-    $I->canSeeNumberOfElements('a.refreshLink', 9);
-    $I->selectOption('logDisplay', 'Pending');
-    $I->click('Flush visible entries');
-    $I->wait(3);
-    $I->canSeeNumberOfElements('a.refreshLink', 0);
-}
-
-    public
-    function CrawlerLogDisplayAndItemsPerPageDropdowns(
-        BackendModule $I,
-        Admin         $adminStep,
-        PageTree      $pageTree
-    ): void
-    {
+    ): void {
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleCrawlerLog($adminStep, $pageTree);
         $I->selectOption('moduleMenu', 'Log');
@@ -250,8 +254,7 @@ class BackendModuleCest
         $I->seeOptionIsSelected('logDisplay', 'Pending');
     }
 
-    public
-    function CrawlerLogResultLogAndFEVarsCheckboxes(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    public function CrawlerLogResultLogAndFEVarsCheckboxes(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleCrawlerLog($adminStep, $pageTree);
@@ -289,13 +292,11 @@ class BackendModuleCest
         $I->dontSeeCheckboxIsChecked('ShowResultLog');
     }
 
-    public
-    function CrawlerLogDropDownAndCheckboxesCombined(
+    public function CrawlerLogDropDownAndCheckboxesCombined(
         BackendModule $I,
-        Admin         $adminStep,
-        PageTree      $pageTree
-    ): void
-    {
+        Admin $adminStep,
+        PageTree $pageTree
+    ): void {
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleCrawlerLog($adminStep, $pageTree);
 
@@ -346,8 +347,7 @@ class BackendModuleCest
         $I->seeOptionIsSelected('logDepth', '4 levels');
     }
 
-    public
-    function checkSelections(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    public function checkSelections(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
@@ -375,8 +375,7 @@ class BackendModuleCest
         $I->see('4 AM');
     }
 
-    private
-    function resetCheckboxes(BackendModule $I): void
+    private function resetCheckboxes(BackendModule $I): void
     {
         $I->uncheckOption('ShowResultLog');
         $I->uncheckOption('ShowFeVars');
@@ -385,8 +384,7 @@ class BackendModuleCest
     /**
      * @throws \Exception
      */
-    private
-    function addQueueEntry(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    private function addQueueEntry(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
         $I->selectOption('configurationSelection[]', 'default');
@@ -397,8 +395,7 @@ class BackendModuleCest
     /**
      * @throws \Exception
      */
-    private
-    function addProcess(BackendModule $I): void
+    private function addProcess(BackendModule $I): void
     {
         $I->selectOption('moduleMenu', 'Process');
         $I->waitForText('CLI-Path', 15);

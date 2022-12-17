@@ -65,13 +65,12 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
     private mixed $queueId;
 
     public function __construct(
-        private QueueRepository            $queueRepository,
-        private CsvWriterInterface         $csvWriter,
+        private QueueRepository $queueRepository,
+        private CsvWriterInterface $csvWriter,
         private JsonCompatibilityConverter $jsonCompatibilityConverter,
-        private IconFactory                $iconFactory,
-        private CrawlerController          $crawlerController
-    )
-    {
+        private IconFactory $iconFactory,
+        private CrawlerController $crawlerController
+    ) {
         $this->backendModuleMenu = $this->getModuleMenu();
     }
 
@@ -95,7 +94,6 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
             return $this->moduleTemplate->renderResponse('Backend/ShowLog');
         }
         $this->moduleTemplate = $this->assignValues();
-
         return $this->moduleTemplate->renderResponse('Backend/ShowLog');
     }
 
@@ -232,15 +230,15 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
     private function getDisplayLogFilterHtml(): string
     {
         return $this->getLanguageService()->sL(
-                'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.display'
-            ) . ': ' . BackendUtility::getFuncMenu(
-                $this->pageUid,
-                'logDisplay',
-                $this->logDisplay,
-                $this->backendModuleMenu['log_display'],
-                'index.php',
-                $this->getAdditionalQueryParams('logDisplay')
-            );
+            'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.display'
+        ) . ': ' . BackendUtility::getFuncMenu(
+            $this->pageUid,
+            'logDisplay',
+            $this->logDisplay,
+            $this->backendModuleMenu['log_display'],
+            'index.php',
+            $this->getAdditionalQueryParams('logDisplay')
+        );
     }
 
     private function getDepthDropDownHtml(int $id, string $currentValue, array $menuItems): string
@@ -258,8 +256,8 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
     private function getItemsPerPageDropDownHtml(): string
     {
         return $this->getLanguageService()->sL(
-                'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.itemsPerPage'
-            ) . ': ' .
+            'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.itemsPerPage'
+        ) . ': ' .
             BackendUtility::getFuncMenu(
                 $this->pageUid,
                 'itemsPerPage',
@@ -273,27 +271,27 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
     private function getShowResultLogCheckBoxHtml(): string
     {
         return BackendUtility::getFuncCheck(
-                $this->pageUid,
-                'ShowResultLog',
-                $this->showResultLog,
-                'index.php',
-                $this->quiPath . $this->getAdditionalQueryParams('ShowResultLog')
-            ) . '&nbsp;' . $this->getLanguageService()->sL(
-                'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showresultlog'
-            );
+            $this->pageUid,
+            'ShowResultLog',
+            $this->showResultLog,
+            'index.php',
+            $this->quiPath . $this->getAdditionalQueryParams('ShowResultLog')
+        ) . '&nbsp;' . $this->getLanguageService()->sL(
+            'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showresultlog'
+        );
     }
 
     private function getShowFeVarsCheckBoxHtml(): string
     {
         return BackendUtility::getFuncCheck(
-                $this->pageUid,
-                'ShowFeVars',
-                $this->showFeVars,
-                'index.php',
-                $this->quiPath . $this->getAdditionalQueryParams('ShowFeVars')
-            ) . '&nbsp;' . $this->getLanguageService()->sL(
-                'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showfevars'
-            );
+            $this->pageUid,
+            'ShowFeVars',
+            $this->showFeVars,
+            'index.php',
+            $this->quiPath . $this->getAdditionalQueryParams('ShowFeVars')
+        ) . '&nbsp;' . $this->getLanguageService()->sL(
+            'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showfevars'
+        );
     }
 
     /**
@@ -379,14 +377,14 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
                 $contentArray['trClass'] = $trClass;
                 $contentArray['qid'] = [
                     'link' => UrlBuilder::getBackendModuleUrl([
-                        'qid_details' => $vv['qid'], 'setID' => $setId,],
+                        'qid_details' => $vv['qid'], 'setID' => $setId, ],
                         self::BACKEND_MODULE
                     ),
                     'link-text' => htmlspecialchars((string) $vv['qid'], ENT_QUOTES | ENT_HTML5),
                 ];
                 $contentArray['refresh'] = [
                     'link' => UrlBuilder::getBackendModuleUrl([
-                        'qid_read' => $vv['qid'], 'setID' => $setId,],
+                        'qid_read' => $vv['qid'], 'setID' => $setId, ],
                         self::BACKEND_MODULE
                     ),
                     'link-text' => $refreshIcon,

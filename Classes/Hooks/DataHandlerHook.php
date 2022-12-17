@@ -33,10 +33,8 @@ class DataHandlerHook
     /**
      * @noRector \Rector\DeadCode\Rector\ClassMethod\RemoveUnusedParameterRector
      */
-    public function addFlushedPagesToCrawlerQueue(
-        array $parameters,
-        DataHandler $dataHandler
-    ): void {
+    public function addFlushedPagesToCrawlerQueue(array $parameters, DataHandler $dataHandler): void
+    {
         $pageIdsToBeFlushedFromCache = $parameters['pageIdArray'];
         if (empty($pageIdsToBeFlushedFromCache)) {
             return;
