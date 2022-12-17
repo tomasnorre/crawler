@@ -63,9 +63,7 @@ final class BackendModuleStartCrawlingController extends AbstractBackendModuleCo
         $this->makeCrawlerProcessableChecks($this->extensionSettings);
         $this->pageUid = (int) ($request->getQueryParams()['id'] ?? -1);
         $this->moduleTemplate = $this->setupView($request, $this->pageUid);
-        $this->moduleTemplate->makeDocHeaderModuleMenu(
-            ['id' => $request->getQueryParams()['id'] ?? -1]
-        );
+        $this->moduleTemplate->makeDocHeaderModuleMenu(['id' => $request->getQueryParams()['id'] ?? -1]);
         $this->assignValues();
 
         return $this->moduleTemplate->renderResponse('Backend/ShowCrawlerInformation');

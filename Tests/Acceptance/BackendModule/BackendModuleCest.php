@@ -22,9 +22,6 @@ namespace AOE\Crawler\Tests\Acceptance\BackendModule;
 
 use AOE\Crawler\Tests\Acceptance\Support\Helper\PageTree;
 use AOE\Crawler\Tests\Acceptance\Support\Step\Acceptance\Admin;
-use Facebook\WebDriver\WebDriver;
-use Facebook\WebDriver\WebDriverExpectedCondition;
-use PHPUnit\Exception;
 use Step\Acceptance\BackendModule;
 
 class BackendModuleCest

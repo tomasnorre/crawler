@@ -52,9 +52,6 @@ class BackendModuleStartCrawlingControllerTest extends FunctionalTestCase
         //$serverRequest = new ServerRequest();
         $response = $subject->handleRequest($GLOBALS['TYPO3_REQUEST']);
 
-        self::assertEquals(
-            'test',
-            $response->getBody()
-        );
+        self::assertEquals('test', $response->getBody());
     }
 }
