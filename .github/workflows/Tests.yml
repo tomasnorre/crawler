@@ -18,10 +18,10 @@ jobs:
         typo3: [ '^11.5' ]
         php: [ '8.0', '8.1' ]
         mysql: ['5.7']
-        #include:
-        #  - typo3: ^12
-        #    php: 8.1
-        #    mysql: 5.7
+        include:
+          - typo3: 'dev-main'
+            php: 8.1
+            mysql: 5.7
 
     steps:
       - name: Set up MySQL ${{ matrix.mysql }}
