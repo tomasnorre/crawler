@@ -16,8 +16,8 @@ jobs:
       fail-fast: false
       matrix:
         postgres: [ '9.6', '10', '11', '12', '13' ]
-        typo3: [ '^11.5' ]
-        php: [ '8.0' ]
+        typo3: [ 'dev-main' ]
+        php: [ '8.1' ]
     steps:
       - name: Set up PostgreSQL ${{ matrix.postgres }}
         run: |
@@ -63,8 +63,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [ '8.0' ]
-        typo3: [ '11.5' ]
+        php: [ '8.1' ]
+        typo3: [ 'dev-main' ]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -81,11 +81,6 @@ jobs:
 
       - name: Functional Tests
         run: composer test:functional-sqlite
-#        run: |
-#          export "FUNCTIONAL_XML"=.Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml
-#          .Build/bin/phpunit --whitelist Classes --colors -c $FUNCTIONAL_XML Tests/Functional
-#        env:
-#          typo3DatabaseDriver: pdo_sqlite
 
   MariaDB:
     name: MariaDB
@@ -94,8 +89,8 @@ jobs:
       fail-fast: false
       matrix:
         mariadb: [ '10.2', '10.3', '10.4', '10.5' ]
-        typo3: [ '^11.5' ]
-        php: [ '8.0' ]
+        typo3: [ 'dev-main' ]
+        php: [ '8.1' ]
     steps:
       - name: Set up MariaDB ${{ matrix.mariadb }}
         uses: getong/mariadb-action@v1.1
@@ -135,8 +130,8 @@ jobs:
       fail-fast: false
       matrix:
         mysql: [ '5.6', '5.7', '8.0' ]
-        typo3: [ '^11.5' ]
-        php: [ '8.0' ]
+        typo3: [ 'dev-main' ]
+        php: [ '8.1' ]
     steps:
       - name: Set up MySQL ${{ matrix.mysql }}
         uses: mirromutth/mysql-action@v1.1

@@ -128,7 +128,6 @@ class DataHandlerHookTest extends UnitTestCase
             ],
             $dataHandler
         );
-        self::assertTrue(true);
     }
 
     /**
