@@ -29,7 +29,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 
 /**
- * @covers \AOE\Crawler\Middleware\FrontendUserAuthenticator
+ * @covers FrontendUserAuthenticator
  */
 class FrontendUserAuthenticatorTest extends FunctionalTestCase
 {
@@ -40,7 +40,7 @@ class FrontendUserAuthenticatorTest extends FunctionalTestCase
      */
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    private \AOE\Crawler\Middleware\FrontendUserAuthenticator $subject;
+    private FrontendUserAuthenticator $subject;
 
     protected function setUp(): void
     {
