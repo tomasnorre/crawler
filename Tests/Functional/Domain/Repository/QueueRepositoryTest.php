@@ -21,6 +21,7 @@ namespace AOE\Crawler\Tests\Functional\Domain\Repository;
 
 use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use AOE\Crawler\Value\QueueFilter;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -33,6 +34,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class QueueRepositoryTest extends FunctionalTestCase
 {
+    use BackendRequestTestTrait;
+
     /**
      * @var array
      */
@@ -46,6 +49,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        $this->setupBackendRequest();
 
         $this->importDataSet(__DIR__ . '/../../Fixtures/tx_crawler_queue.xml');
         $this->importDataSet(__DIR__ . '/../../Fixtures/pages.xml');
