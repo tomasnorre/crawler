@@ -20,5 +20,5 @@ return [
     'tx-crawler-icon' => [
         'provider' => SvgIconProvider::class,
         'source' => 'EXT:crawler/Resources/Public/Icons/Extension.svg',
-    ]
+    ],
 ];

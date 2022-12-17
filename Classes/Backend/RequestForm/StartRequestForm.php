@@ -39,11 +39,11 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
     private $incomingConfigurationSelection = [];
 
     public function __construct(
-        private StandaloneView       $view,
+        private StandaloneView $view,
         private InfoModuleController $infoModuleController,
-        array                        $extensionSettings,
-        protected array              $backendModuleMenu,
-        EventDispatcher              $eventDispatcher = null
+        array $extensionSettings,
+        protected array $backendModuleMenu,
+        EventDispatcher $eventDispatcher = null
     ) {
         $this->extensionSettings = $extensionSettings;
         $this->eventDispatcher = $eventDispatcher ?? GeneralUtility::makeInstance(EventDispatcher::class);

@@ -45,11 +45,11 @@ final class MultiProcessRequestForm extends AbstractRequestForm implements Reque
     private Crawler $crawler;
 
     public function __construct(
-        private StandaloneView       $view,
+        private StandaloneView $view,
         private InfoModuleController $infoModuleController,
-        array                        $extensionSettings,
-        protected array              $backendModuleMenu,
-        private ProcessService       $processService
+        array $extensionSettings,
+        protected array $backendModuleMenu,
+        private ProcessService $processService
     ) {
         $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
         $this->extensionSettings = $extensionSettings;

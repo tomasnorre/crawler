@@ -44,7 +44,6 @@ class HookUtility
 
         // Env-dependent
         self::registerBackendHooks();
-
     }
 
     private static function registerBackendHooks(): void

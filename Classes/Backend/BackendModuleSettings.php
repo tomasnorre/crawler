@@ -101,10 +101,4 @@ class BackendModuleSettings implements SingletonInterface
     {
         $this->logFeVars = $logFeVars;
     }
-
-
-
-
-
-
 }

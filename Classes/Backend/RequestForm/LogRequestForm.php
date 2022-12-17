@@ -200,14 +200,8 @@ final class LogRequestForm extends AbstractRequestForm implements RequestFormInt
                 $this->outputCsvFile();
             }
         }
-        $this->view->assign(
-            'showResultLog',
-            $this->backendModuleSettings->isLogResultLog()
-        );
-        $this->view->assign(
-            'showFeVars',
-            $this->backendModuleSettings->isLogFeVars()
-        );
+        $this->view->assign('showResultLog', $this->backendModuleSettings->isLogResultLog());
+        $this->view->assign('showFeVars', $this->backendModuleSettings->isLogFeVars());
         $this->view->assign('displayActions', 1);
         $this->view->assign('displayLogFilterHtml', $this->getDisplayLogFilterHtml($setId));
         $this->view->assign('itemPerPageHtml', $this->getItemsPerPageDropDownHtml());

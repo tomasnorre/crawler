@@ -25,7 +25,6 @@ use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Service\ProcessService;
 use AOE\Crawler\Value\CrawlAction;
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
@@ -41,7 +40,6 @@ use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Info\Controller\InfoModuleController;
-
 
 /**
  * Function for Info module, containing three main actions:
@@ -125,15 +123,15 @@ class BackendModule
         return $response;
     }
 
-    private function setUpDocHeader(
-        ServerRequestInterface $request,
-        ModuleTemplate $view
-    ) {
+    private function setUpDocHeader(ServerRequestInterface $request, ModuleTemplate $view)
+    {
         $menuItems = [
             'flash' => [
                 'controller' => 'Module',
                 'action' => 'flash',
-                'label' => $this->getLanguageService()->sL('LLL:EXT:examples/Resources/Private/Language/Module/locallang.xlf:module.menu.flash'),
+                'label' => $this->getLanguageService()->sL(
+                    'LLL:EXT:examples/Resources/Private/Language/Module/locallang.xlf:module.menu.flash'
+                ),
             ],
             ];
 
@@ -253,7 +251,17 @@ class BackendModule
 
     private function renderForm(CrawlAction $selectedAction): string
     {
-        $requestForm = RequestFormFactory::create($selectedAction, $this->view, $this->pObj, $this->extensionSettings, $this->backendModuleMenu);
-        return $requestForm->render($this->id, (string)$this->backendModuleSettings->getDepth(), $this->backendModuleMenu['depth']);
+        $requestForm = RequestFormFactory::create(
+            $selectedAction,
+            $this->view,
+            $this->pObj,
+            $this->extensionSettings,
+            $this->backendModuleMenu
+        );
+        return $requestForm->render(
+            $this->id,
+            (string) $this->backendModuleSettings->getDepth(),
+            $this->backendModuleMenu['depth']
+        );
     }
 }
