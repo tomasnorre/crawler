@@ -21,6 +21,7 @@ namespace AOE\Crawler\Hooks;
 
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Service\QueueService;
+use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -34,7 +35,7 @@ class DataHandlerHook
      */
     public function addFlushedPagesToCrawlerQueue(
         array $parameters,
-        \TYPO3\CMS\Core\DataHandling\DataHandler $dataHandler
+        DataHandler $dataHandler
     ): void {
         $pageIdsToBeFlushedFromCache = $parameters['pageIdArray'];
         if (empty($pageIdsToBeFlushedFromCache)) {
@@ -52,17 +53,17 @@ class DataHandlerHook
         }
     }
 
-    private function getQueueRepository(): QueueRepository
+    public function getQueueRepository(): QueueRepository
     {
         return GeneralUtility::makeInstance(QueueRepository::class);
     }
 
-    private function getQueueService(): QueueService
+    public function getQueueService(): QueueService
     {
         return GeneralUtility::makeInstance(QueueService::class);
     }
 
-    private function getPageRepository(): PageRepository
+    public function getPageRepository(): PageRepository
     {
         return GeneralUtility::makeInstance(PageRepository::class);
     }

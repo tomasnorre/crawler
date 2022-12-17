@@ -21,6 +21,7 @@ namespace AOE\Crawler\Controller\Backend;
 
 use AOE\Crawler\Controller\Backend\Helper\ResultHandler;
 use AOE\Crawler\Controller\Backend\Helper\UrlBuilder;
+use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Utility\MessageUtility;
@@ -67,7 +68,8 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
         private QueueRepository            $queueRepository,
         private CsvWriterInterface         $csvWriter,
         private JsonCompatibilityConverter $jsonCompatibilityConverter,
-        private IconFactory                $iconFactory
+        private IconFactory                $iconFactory,
+        private CrawlerController          $crawlerController
     )
     {
         $this->backendModuleMenu = $this->getModuleMenu();
@@ -130,6 +132,9 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
         $this->CSVExport = (bool) GeneralUtility::_GP('_csv');
         $logEntriesPerPage = [];
 
+        if (GeneralUtility::_GP('qid_read')) {
+            $this->crawlerController->readUrl((int) GeneralUtility::_GP('qid_read'), true);
+        }
 
         if ($this->queueId) {
             // Get entry record:
