@@ -1,7 +1,7 @@
 {
     "name": "tomasnorre/crawler-devbox",
     "type": "project",
-    "description": "Devbox for Crawler extension for TYPO3v9",
+    "description": "Devbox for TYPO3 Crawler",
     "homepage": "https://github.com/tomasnorre/crawler",
     "support": {
         "issues": "https://github.com/tomasnorre/crawler/issues"
@@ -15,24 +15,30 @@
         }
     ],
     "require": {
-        "typo3/minimal": "^11.5",
-        "typo3/cms-tstemplate": "^11.5",
-        "typo3/cms-info": "^11.5",
-        "typo3/cms-belog": "^11.5",
-        "georgringer/news": "^9.0",
-        "helhum/typo3-console": "*",
-        "tomasnorre/crawler": "dev-main",
+        "typo3/minimal": "^11.5 || 12.2.x-dev || dev-main",
+        "typo3/cms-tstemplate": "^11.5 || 12.2.x-dev || dev-main",
+        "typo3/cms-info": "^11.5 || 12.2.x-dev || dev-main",
+        "typo3/cms-belog": "^11.5 || 12.2.x-dev || dev-main",
+        "georgringer/news": "^9.0 || dev-11-12",
+        "helhum/typo3-console": "dev-v12-compat",
+        "tomasnorre/crawler": "*@dev",
         "tnm/crawler-devbox-sitepackage": "^0.0.2",
-        "typo3/cms-beuser": "^11.5",
-        "typo3/cms-indexed-search": "^11.5",
-        "typo3/cms-felogin": "^11.5"
+        "typo3/cms-beuser": "^11.5 || 12.2.x-dev || dev-main",
+        "typo3/cms-indexed-search": "^11.5 || 12.2.x-dev || dev-main",
+        "typo3/cms-felogin": "^11.5 || 12.2.x-dev || dev-main"
     },
     "repositories": [
         {
             "type": "path",
             "url": "./packages"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/bmack/TYPO3-Console"
         }
     ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "config": {
         "vendor-dir": "vendor",
         "bin-dir": "bin",

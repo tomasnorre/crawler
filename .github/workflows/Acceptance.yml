@@ -16,9 +16,9 @@ jobs:
       matrix:
         typo3: [ ^11.5 ]
         php: [ '8.0', '8.1' ]
-#        include:
-#          - typo3: ^12
-#            php: '8.1'
+        include:
+          - typo3: 'dev-main'
+            php: '8.1'
     steps:
       - name: Get branch name (merge)
         if: github.event_name != 'pull_request'
@@ -32,7 +32,9 @@ jobs:
 
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.0'
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+          coverage: none
 
       - name: Version information
         run: |
@@ -50,12 +52,11 @@ jobs:
           cd .devbox
           sed -i 's/php_version: "8.0"/php_version: "${{ matrix.php }}"/g' .ddev/config.yaml
           sed -i "s|$FROM_PATH|$TO_PATH|g" .ddev/docker-compose.volume.yaml
+          ddev restart
           rm -rf vendor composer.lock
           ddev composer require nimut/typo3-complete=${{ matrix.typo3 }}
-          ddev start
           ddev exec sudo apt remove -y php${{ matrix.php }}-uploadprogress
           ddev exec bin/typo3cms install:fixfolderstructure
-          ddev exec bin/typo3cms install:extensionsetupifpossible
           ddev exec bin/typo3cms database:updateschema
           ddev exec bin/typo3cms cache:flush
           cd .. # Going back to "root" directory
@@ -103,6 +104,7 @@ jobs:
         with:
           php-version: '8.0'
           tools: composer:v2
+          coverage: none
 
       - name: Version information
         run: |

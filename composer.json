@@ -26,11 +26,11 @@
         "psr/http-message": "^1.0",
         "psr/log": "^1.0 || ^2.0 || ^3.0",
         "symfony/console": "^5.0 || ^6.1",
-        "typo3/cms-backend": "*",
-        "typo3/cms-core": "^11.5.6 || ^12.0",
-        "typo3/cms-frontend": "*",
-        "typo3/cms-info": "*",
-        "typo3/cms-seo": "*"
+        "typo3/cms-backend": "^11.5.6 || 12.2.x-dev",
+        "typo3/cms-core": "^11.5.6 || 12.2.x-dev",
+        "typo3/cms-frontend": "^11.5.6 || 12.2.x-dev",
+        "typo3/cms-info": "^11.5.6 || 12.2.x-dev",
+        "typo3/cms-seo": "^11.5.6 || 12.2.x-dev"
     },
     "require-dev": {
         "codeception/codeception": "^5.0",
@@ -50,12 +50,13 @@
         "phpunit/phpunit": "^9.5",
         "roave/security-advisories": "dev-latest",
         "saschaegerer/phpstan-typo3": "^1.8",
+        "sbuerk/typo3-cmscomposerinstallers-testingframework-bridge": "^0.0.1",
         "slam/phpstan-extensions": "^6.0",
         "ssch/typo3-rector": "^1.0",
         "symfony/yaml": "^4.4 || ^5.0 || ^6.1",
         "symplify/easy-coding-standard": "11.1.16",
         "symplify/phpstan-rules": "^11.1",
-        "typo3/testing-framework": "^6.11"
+        "typo3/testing-framework": "7.x-dev"
     },
     "replace": {
         "aoepeople/crawler": "self.version",
@@ -90,7 +91,8 @@
             "infection/extension-installer": true,
             "phpstan/extension-installer": true,
             "typo3/class-alias-loader": true,
-            "typo3/cms-composer-installers": true
+            "typo3/cms-composer-installers": true,
+            "sbuerk/typo3-cmscomposerinstallers-testingframework-bridge": true
         },
         "bin-dir": ".Build/bin",
         "preferred-install": {
