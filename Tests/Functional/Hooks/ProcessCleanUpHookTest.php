@@ -21,8 +21,8 @@ namespace AOE\Crawler\Tests\Functional\Hooks;
 
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
-use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use AOE\Crawler\Hooks\ProcessCleanUpHook;
+use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 

@@ -25,7 +25,6 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Http\Uri;
-use TYPO3\CMS\Core\Information\Typo3Version;
 
 /**
  * @covers \AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategy
