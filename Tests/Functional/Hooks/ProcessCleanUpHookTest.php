@@ -21,6 +21,7 @@ namespace AOE\Crawler\Tests\Functional\Hooks;
 
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use AOE\Crawler\Hooks\ProcessCleanUpHook;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -32,11 +33,11 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class ProcessCleanUpHookTest extends FunctionalTestCase
 {
-    protected \AOE\Crawler\Hooks\ProcessCleanUpHook $subject;
+    use BackendRequestTestTrait;
 
-    protected \AOE\Crawler\Domain\Repository\ProcessRepository $processRepository;
-
-    protected \AOE\Crawler\Domain\Repository\QueueRepository $queueRepository;
+    protected ProcessCleanUpHook $subject;
+    protected ProcessRepository $processRepository;
+    protected QueueRepository $queueRepository;
 
     /**
      * @var array
@@ -46,6 +47,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        $this->setupBackendRequest();
 
         /** @var ProcessCleanUpHook $this->subject */
         $this->subject = GeneralUtility::makeInstance(ProcessCleanUpHook::class);
