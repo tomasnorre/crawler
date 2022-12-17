@@ -126,24 +126,6 @@ parameters:
 			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
 
 		-
-			message: """
-				#^Fetching class constant class of deprecated class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
-				since v11, will be removed in v12\\. Use symfony DI and GeneralUtility\\:\\:makeInstance\\(\\) instead\\.
-				             See TYPO3 explained documentation for more information\\.$#
-			"""
-			count: 1
-			path: Classes/Domain/Repository/ProcessRepository.php
-
-		-
-			message: """
-				#^Fetching class constant class of deprecated class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
-				since v11, will be removed in v12\\. Use symfony DI and GeneralUtility\\:\\:makeInstance\\(\\) instead\\.
-				             See TYPO3 explained documentation for more information\\.$#
-			"""
-			count: 1
-			path: Classes/Domain/Repository/QueueRepository.php
-
-		-
 			message: "#^Function getQueueEntriesForPageId\\(\\) has an unused variable \\$query\\.$#"
 			count: 1
 			path: Classes/Domain/Repository/QueueRepository.php
@@ -152,23 +134,6 @@ parameters:
 			message: "#^Method AOE\\\\Crawler\\\\Event\\\\ModifySkipPageEvent\\:\\:isSkipped\\(\\) should return string\\|false but returns bool\\|string\\.$#"
 			count: 1
 			path: Classes/Event/ModifySkipPageEvent.php
-
-		-
-			message: """
-				#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
-				since TYPO3 10\\.4, will be removed in version 12\\.0$#
-			"""
-			count: 3
-			path: Classes/Hooks/DataHandlerHook.php
-
-		-
-			message: """
-				#^Fetching class constant class of deprecated class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
-				since v11, will be removed in v12\\. Use symfony DI and GeneralUtility\\:\\:makeInstance\\(\\) instead\\.
-				             See TYPO3 explained documentation for more information\\.$#
-			"""
-			count: 3
-			path: Classes/Hooks/DataHandlerHook.php
 
 		-
 			message: "#^There is no request attribute \"tx_crawler\" configured so we can't figure out the exact type to return when calling Psr\\\\Http\\\\Message\\\\ServerRequestInterface\\:\\:getAttribute$#"
