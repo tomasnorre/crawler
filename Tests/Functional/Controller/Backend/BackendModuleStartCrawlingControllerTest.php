@@ -35,6 +35,7 @@ class BackendModuleStartCrawlingControllerTest extends FunctionalTestCase
      */
     public function checkResponseOfHandleRequest(): void
     {
+        $this->markTestSkipped('WIP');
         $this->setupBackendRequest();
         // Set extension settings
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [
