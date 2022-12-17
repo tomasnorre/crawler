@@ -49,6 +49,7 @@ services:
             $processManager: '@AOE\Crawler\Service\ProcessService'
             $queryBuilder: '@queryBuilder.tx_crawler_queue'
             $queueRepository: '@AOE\Crawler\Domain\Repository\QueueRepository'
+            $pObj: 'TYPO3\CMS\Info\Controller\InfoModuleController'
         public: true
 
     AOE\Crawler\Service\ConfigurationService:

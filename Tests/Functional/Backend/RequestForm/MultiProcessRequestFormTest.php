@@ -56,19 +56,7 @@ class MultiProcessRequestFormTest extends FunctionalTestCase
         $this->setupLanguageService();
         $view = $this->setupView();
 
-        $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
-        if ($typo3Version->getMajorVersion() === 10) {
-            $infoModuleController = GeneralUtility::makeInstance(
-                InfoModuleController::class,
-                $this->prophesize(ModuleTemplate::class)->reveal(),
-                $this->prophesize(UriBuilder::class)->reveal(),
-                $this->prophesize(FlashMessageService::class)->reveal(),
-                $this->prophesize(ContainerInterface::class)->reveal()
-            );
-        } else {
-            // version 11+
-            $infoModuleController = $this->createMock(InfoModuleController::class);
-        }
+        $infoModuleController = $this->createMock(InfoModuleController::class);
         $extensionSettings = GeneralUtility::makeInstance(
             ExtensionConfigurationProvider::class
         )->getExtensionConfiguration();
@@ -79,6 +67,7 @@ class MultiProcessRequestFormTest extends FunctionalTestCase
             $view,
             $infoModuleController,
             $extensionSettings,
+            [],
             $processService->reveal()
         );
     }

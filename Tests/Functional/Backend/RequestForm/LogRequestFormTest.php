@@ -28,7 +28,6 @@ use Psr\Container\ContainerInterface;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
-use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
@@ -55,19 +54,8 @@ class LogRequestFormTest extends FunctionalTestCase
         $this->SetupBackendUser();
         $this->setupLanguageService();
         $view = $this->setupView();
-        $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
-        if ($typo3Version->getMajorVersion() === 10) {
-            $infoModuleController = GeneralUtility::makeInstance(
-                InfoModuleController::class,
-                $this->prophesize(ModuleTemplate::class)->reveal(),
-                $this->prophesize(UriBuilder::class)->reveal(),
-                $this->prophesize(FlashMessageService::class)->reveal(),
-                $this->prophesize(ContainerInterface::class)->reveal()
-            );
-        } else {
-            // version 11+
-            $infoModuleController = $this->createMock(InfoModuleController::class);
-        }
+        $infoModuleController = $this->createMock(InfoModuleController::class);
+
         $extensionSettings = GeneralUtility::makeInstance(
             ExtensionConfigurationProvider::class
         )->getExtensionConfiguration();
@@ -75,7 +63,8 @@ class LogRequestFormTest extends FunctionalTestCase
             LogRequestForm::class,
             $view,
             $infoModuleController,
-            $extensionSettings
+            $extensionSettings,
+            []
         );
     }
 
