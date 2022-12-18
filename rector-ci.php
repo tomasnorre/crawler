@@ -28,10 +28,13 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->import(SetList::DEAD_CODE);
     $rectorConfig->import(SetList::PHP_72);
     $rectorConfig->import(SetList::PHP_73);
+    $rectorConfig->import(SetList::PHP_74);
+    $rectorConfig->import(SetList::PHP_80);
     $rectorConfig->import(Typo3SetList::TYPO3_76);
     $rectorConfig->import(Typo3SetList::TYPO3_87);
     $rectorConfig->import(Typo3SetList::TYPO3_95);
     $rectorConfig->import(Typo3SetList::TYPO3_104);
+    $rectorConfig->import(Typo3SetList::TYPO3_11);
 
     $parameters->set(Option::AUTO_IMPORT_NAMES, false);
 

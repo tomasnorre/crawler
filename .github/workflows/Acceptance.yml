@@ -10,17 +10,13 @@ on:
 
 jobs:
   Acceptance:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
-        typo3: [ ^11.5 ]
-        php: [ '8.0', '8.1' ]
-        include:
-          - typo3: '^12.2'
-            php: '8.1'
-          #- typo3: ^12
-          #  php: '8.2'
+        typo3: [ ^12.2 ]
+        php: [ '8.1' ]
+
     steps:
       - name: Get branch name (merge)
         if: github.event_name != 'pull_request'
@@ -52,7 +48,7 @@ jobs:
           export FROM_PATH='../../'
           export TO_PATH=$(echo $GITHUB_WORKSPACE)
           cd .devbox
-          sed -i 's/php_version: "8.0"/php_version: "${{ matrix.php }}"/g' .ddev/config.yaml
+          sed -i 's/php_version: "8.1"/php_version: "${{ matrix.php }}"/g' .ddev/config.yaml
           sed -i "s|$FROM_PATH|$TO_PATH|g" .ddev/docker-compose.volume.yaml
           ddev restart
           rm -rf vendor composer.lock

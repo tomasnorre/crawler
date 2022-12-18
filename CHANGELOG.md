@@ -31,7 +31,9 @@
 * Obsolete columns (first and last time) from Process Overview
 * !!! Remove constructor form RequestFormInterface
 * !!! Support for TYPO3 10
+* !!! Support for TYPO3 11 (Only in main branch, v12.0.0)
 * !!! PHP support for `<8.0`
+* !!! PHP support for `<8.1` (Only in main branch, v12.0.0)
 * Remove CLI_hooks from ProcessQueueCommand
 * !!! ClassAliasMap & LegacyClassesForIde Migrations
 
