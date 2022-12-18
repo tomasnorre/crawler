@@ -32,9 +32,9 @@ jobs:
           php-version: ${{ matrix.php }}
           tools: composer:v2
 
-      - name: Install dependencies with nimut/typo3-complete:${{ matrix.typo3 }}
+      - name: Install dependencies with typo3/cms-core:${{ matrix.typo3 }}
         run: |
-          composer require --dev nimut/typo3-complete:${{ matrix.typo3 }} --no-progress
+          composer require typo3/cms-core:${{ matrix.typo3 }} --no-progress
           git checkout composer.json
           ln -nfs .Build/vendor/typo3/cms/typo3 typo3
 
@@ -75,9 +75,9 @@ jobs:
           php-version: ${{ matrix.php }}
           tools: composer:v2
 
-      - name: Install dependencies with nimut/typo3-complete:${{ matrix.typo3 }}
+      - name: Install dependencies with typo3/cms-core:${{ matrix.typo3 }}
         run: |
-          composer require --dev nimut/typo3-complete:${{ matrix.typo3 }} --no-progress
+          composer require typo3/cms-core:${{ matrix.typo3 }} --no-progress
 
       - name: Functional Tests
         run: composer test:functional-sqlite
@@ -107,9 +107,9 @@ jobs:
           php-version: ${{ matrix.php }}
           tools: composer:v2
 
-      - name: Install dependencies with nimut/typo3-complete:${{ matrix.typo3 }}
+      - name: Install dependencies with typo3/cms-core:${{ matrix.typo3 }}
         run: |
-          composer require --dev nimut/typo3-complete:${{ matrix.typo3 }} --no-progress
+          composer require typo3/cms-core:${{ matrix.typo3 }} --no-progress
           git checkout composer.json
           ln -nfs .Build/vendor/typo3/cms/typo3 typo3
 
@@ -148,9 +148,9 @@ jobs:
           php-version: ${{ matrix.php }}
           tools: composer:v2
 
-      - name: Install dependencies with nimut/typo3-complete:${{ matrix.typo3 }}
+      - name: Install dependencies with typo3/cms-core:${{ matrix.typo3 }}
         run: |
-          composer require --dev nimut/typo3-complete:${{ matrix.typo3 }} --no-progress
+          composer require typo3/cms-core:${{ matrix.typo3 }} --no-progress
           git checkout composer.json
           ln -nfs .Build/vendor/typo3/cms/typo3 typo3
 

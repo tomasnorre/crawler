@@ -56,14 +56,14 @@ jobs:
           sed -i "s|$FROM_PATH|$TO_PATH|g" .ddev/docker-compose.volume.yaml
           ddev restart
           rm -rf vendor composer.lock
-          ddev composer require nimut/typo3-complete=${{ matrix.typo3 }}
+          ddev composer require typo3/cms-core=${{ matrix.typo3 }}
           ddev exec sudo apt remove -y php${{ matrix.php }}-uploadprogress
           ddev exec bin/typo3cms install:fixfolderstructure
           ddev exec bin/typo3cms database:updateschema
           ddev exec bin/typo3cms cache:flush
           cd .. # Going back to "root" directory
           rm -rf .Build composer.lock
-          composer require nimut/typo3-complete=${{ matrix.typo3 }}
+          composer require typo3/cms-core=${{ matrix.typo3 }}
           wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
           chmod +x wait-for-it.sh
           docker ps

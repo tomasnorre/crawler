@@ -19,7 +19,7 @@ jobs:
         php: [ '8.0', '8.1' ]
         mysql: ['5.7']
         include:
-          - typo3: 'dev-main'
+          - typo3: '^12.2'
             php: 8.1
             mysql: 5.7
           #- typo3: 'dev-main'
@@ -50,10 +50,10 @@ jobs:
       - name: Validate composer.json and composer.lock
         run: composer validate
 
-      - name: Install dependencies with nimut/typo3-complete:${{ matrix.typo3 }}
+      - name: Install dependencies with typo3/cms-core:${{ matrix.typo3 }}
         if: matrix.typo3 != 'dev-main'
         run: |
-          composer require --dev nimut/typo3-complete:${{ matrix.typo3 }} --no-progress
+          composer require typo3/cms-core:${{ matrix.typo3 }} --no-progress
           git checkout composer.json
           ln -nfs .Build/vendor/typo3/cms/typo3 typo3
 
@@ -83,8 +83,8 @@ jobs:
           export "UNIT_XML"=.Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml
           composer remove --dev typo3/testing-framework ssch/typo3-rector
           rm -rf composer.lock .Build
-          composer require --dev nimut/typo3-complete:dev-main saschaegerer/phpstan-typo3:"*" nimut/testing-framework:"*" typo3/testing-framework:"*"
-          composer require sbuerk/typo3-cmscomposerinstallers-testingframework-bridge
+          composer require typo3/cms-core:dev-main
+          composer require --dev saschaegerer/phpstan-typo3:"*" nimut/testing-framework:"*" typo3/testing-framework:"*"
           git checkout composer.json
           ln -nfs .Build/vendor/typo3/cms/typo3 typo3
           .Build/bin/phpunit --whitelist Classes --colors -c $UNIT_XML Tests/Unit

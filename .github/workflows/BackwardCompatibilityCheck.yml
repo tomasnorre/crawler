@@ -46,7 +46,7 @@ jobs:
       - name: "Roave Backward Compatibility Check"
         run: |
           # To ensure compability with the roave tool.
-          composer remove --dev nimut/typo3-complete nimut/testing-framework ssch/typo3-rector symplify/easy-coding-standard typo3/testing-framework
+          composer remove --dev nimut/testing-framework ssch/typo3-rector symplify/easy-coding-standard typo3/testing-framework
           rm -rf .Build composer.lock
           composer require --dev roave/backward-compatibility-check:"6.0.x-dev"
           .Build/bin/roave-backward-compatibility-check

@@ -42,7 +42,6 @@
         "infection/infection": "^0.26",
         "nikic/php-parser": "^4.13",
         "nimut/testing-framework": "^6.0 || dev-main",
-        "nimut/typo3-complete": "dev-main",
         "phpspec/prophecy-phpunit": "^2.0",
         "phpstan/extension-installer": "^1.2",
         "phpstan/phpstan": "^1.9",
