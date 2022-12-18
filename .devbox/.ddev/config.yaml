@@ -1,7 +1,7 @@
 name: crawler-devbox
 type: typo3
 docroot: public
-php_version: "8.0"
+php_version: "8.1"
 webserver_type: nginx-fpm
 router_http_port: "80"
 router_https_port: "443"
@@ -19,10 +19,14 @@ hooks:
       scheduler:run' | sudo tee -a /etc/cron.d/typo3
   - exec: sudo chmod 0600 /etc/cron.d/typo3 && sudo service cron start
   - exec: composer install -d /var/www/html
-  #- exec: /var/www/html/bin/typo3cms install:generatepackagestates
   # Import and upgrade Database
   - exec: /var/www/html/build-files/import-if-empty.sh
-  - exec: /var/www/html/bin/typo3cms database:updateschema
+  - exec: /var/www/html/bin/typo3 backend:lock
+  - exec: /var/www/html/bin/typo3 extension:setup
+  - exec: /var/www/html/bin/typo3 cache:flush
+  - exec: /var/www/html/bin/typo3 cache:warmup
+  - exec: /var/www/html/bin/typo3 upgrade:run
+  - exec: /var/www/html/bin/typo3 backend:unlock
 omit_containers: [dba, ddev-ssh-agent]
 webimage_extra_packages: [cron]
 use_dns_when_possible: true
