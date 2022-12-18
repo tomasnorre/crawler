@@ -81,11 +81,9 @@ jobs:
         run: |
           export "FUNCTIONAL_XML"=.Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml
           export "UNIT_XML"=.Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml
-          composer remove --dev typo3/testing-framework ssch/typo3-rector
+          composer remove --dev ssch/typo3-rector
           rm -rf composer.lock .Build
           composer require typo3/cms-core:dev-main
-          composer require --dev saschaegerer/phpstan-typo3:"*" nimut/testing-framework:"*" typo3/testing-framework:"*"
-          git checkout composer.json
           ln -nfs .Build/vendor/typo3/cms/typo3 typo3
           .Build/bin/phpunit --whitelist Classes --colors -c $UNIT_XML Tests/Unit
           .Build/bin/phpunit --whitelist Classes --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
