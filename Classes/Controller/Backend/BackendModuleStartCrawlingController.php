@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Backend\RequestForm;
+namespace AOE\Crawler\Controller\Backend;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2022-     Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -19,17 +19,26 @@ namespace AOE\Crawler\Backend\RequestForm;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Controller\Backend\Helper\UrlBuilder;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Event\InvokeQueueChangeEvent;
 use AOE\Crawler\Utility\MessageUtility;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Symfony\Contracts\Service\Attribute\Required;
+use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
+use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
+use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Fluid\View\StandaloneView;
-use TYPO3\CMS\Info\Controller\InfoModuleController;
 
-final class StartRequestForm extends AbstractRequestForm implements RequestFormInterface
+/**
+ * @internal since v12.0.0
+ */
+final class BackendModuleStartCrawlingController extends AbstractBackendModuleController implements BackendModuleControllerInterface
 {
+    private const BACKEND_MODULE = 'web_site_crawler_start';
     private int $reqMinute = 1000;
     private EventDispatcher $eventDispatcher;
 
@@ -39,58 +48,45 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
     private $incomingConfigurationSelection = [];
 
     public function __construct(
-        private StandaloneView $view,
-        private InfoModuleController $infoModuleController,
-        array $extensionSettings,
-        EventDispatcher $eventDispatcher = null
+        private CrawlerController $crawlerController
     ) {
-        $this->extensionSettings = $extensionSettings;
-        $this->eventDispatcher = $eventDispatcher ?? GeneralUtility::makeInstance(EventDispatcher::class);
     }
 
-    public function render(int $id, string $elementName, array $menuItems): string
+    #[Required]
+    public function setEventDispatcher(): void
     {
-        return $this->showCrawlerInformationAction($id);
+        $this->eventDispatcher = GeneralUtility::makeInstance(EventDispatcher::class);
     }
 
-    /*******************************
-     *
-     * Generate URLs for crawling:
-     *
-     ******************************/
-
-    /**
-     * Show a list of URLs to be crawled for each page
-     */
-    private function showCrawlerInformationAction(int $pageId): string
+    public function handleRequest(ServerRequestInterface $request): ResponseInterface
     {
-        if (empty($pageId)) {
-            $this->isErrorDetected = true;
-            MessageUtility::addErrorMessage(
-                $this->getLanguageService()->sL(
-                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noPageSelected'
-                )
-            );
-            return '';
-        }
+        $this->makeCrawlerProcessableChecks($this->extensionSettings);
+        $this->pageUid = (int) ($request->getQueryParams()['id'] ?? -1);
+        $this->moduleTemplate = $this->setupView($request, $this->pageUid);
+        $this->moduleTemplate->makeDocHeaderModuleMenu(['id' => $request->getQueryParams()['id'] ?? -1]);
+        $this->assignValues();
 
-        $this->view->setTemplate('ShowCrawlerInformation');
+        return $this->moduleTemplate->renderResponse('Backend/ShowCrawlerInformation');
+    }
 
+    private function assignValues(): ModuleTemplate
+    {
+        $backendUriBuilder = GeneralUtility::makeInstance(\TYPO3\CMS\Backend\Routing\UriBuilder::class);
+        $logUrl = $backendUriBuilder->buildUriFromRoute('web_site_crawler_log', ['id' => $this->pageUid]);
+
+        $crawlingDepth = GeneralUtility::_GP('crawlingDepth') ?? '0';
         $crawlParameter = GeneralUtility::_GP('_crawl');
         $downloadParameter = GeneralUtility::_GP('_download');
-
+        $scheduledTime = $this->getScheduledTime((string) GeneralUtility::_GP('tstamp'));
         $submitCrawlUrls = isset($crawlParameter);
         $downloadCrawlUrls = isset($downloadParameter);
-        $this->makeCrawlerProcessableChecks($this->extensionSettings);
-
-        $scheduledTime = $this->getScheduledTime((string) GeneralUtility::_GP('tstamp'));
 
         $this->incomingConfigurationSelection = GeneralUtility::_GP('configurationSelection');
         $this->incomingConfigurationSelection = is_array(
             $this->incomingConfigurationSelection
         ) ? $this->incomingConfigurationSelection : [];
 
-        $this->crawlerController = $this->getCrawlerController();
+        //$this->crawlerController = $this->getCrawlerController();
         $this->crawlerController->setID = GeneralUtility::md5int(microtime());
 
         $queueRows = '';
@@ -113,8 +109,8 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
             }
 
             $queueRows = $this->crawlerController->getPageTreeAndUrls(
-                $pageId,
-                $this->infoModuleController->MOD_SETTINGS['depth'],
+                $this->pageUid,
+                $crawlingDepth,
                 $scheduledTime,
                 $this->reqMinute,
                 $submitCrawlUrls,
@@ -125,18 +121,8 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
             );
         }
 
-        $downloadUrls = $this->crawlerController->downloadUrls;
-
-        $duplicateTrack = $this->crawlerController->duplicateTrack;
-
-        $this->view->assign('noConfigurationSelected', $noConfigurationSelected);
-        $this->view->assign('submitCrawlUrls', $submitCrawlUrls);
-        $this->view->assign('amountOfUrls', count($duplicateTrack));
-        $this->view->assign('selectors', $this->generateConfigurationSelectors($pageId));
-        $this->view->assign('queueRows', $queueRows);
-        $this->view->assign('displayActions', 0);
-
         // Download Urls to crawl:
+        $downloadUrls = $this->crawlerController->downloadUrls;
         if ($downloadCrawlUrls) {
             // Creating output header:
             header('Content-Type: application/octet-stream');
@@ -147,13 +133,23 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
             exit;
         }
 
-        return $this->view->render();
+        return $this->moduleTemplate->assignMultiple([
+            'currentPageId' => $this->pageUid,
+            'noConfigurationSelected' => $noConfigurationSelected,
+            'submitCrawlUrls' => $submitCrawlUrls,
+            'amountOfUrls' => count($this->crawlerController->duplicateTrack ?? []),
+            'selectors' => $this->generateConfigurationSelectors($this->pageUid, $crawlingDepth),
+            'queueRows' => $queueRows,
+            'displayActions' => 0,
+            'actionUrl' => $this->getActionUrl(),
+            'logUrl' => $logUrl,
+        ]);
     }
 
     /**
      * Generates the configuration selectors for compiling URLs:
      */
-    private function generateConfigurationSelectors(int $pageId): array
+    private function generateConfigurationSelectors(int $pageId, string $crawlingDepth): array
     {
         $selectors = [];
         $selectors['depth'] = $this->selectorBox(
@@ -177,15 +173,15 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
                     'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_infi'
                 ),
             ],
-            'SET[depth]',
-            $this->infoModuleController->MOD_SETTINGS['depth'],
+            'crawlingDepth',
+            $crawlingDepth,
             false
         );
 
         // Configurations
-        $availableConfigurations = $this->getCrawlerController()->getConfigurationsForBranch(
+        $availableConfigurations = $this->crawlerController->getConfigurationsForBranch(
             $pageId,
-            (int) $this->infoModuleController->MOD_SETTINGS['depth'] ?: 0
+            (int) $crawlingDepth,
         );
         $selectors['configurations'] = $this->selectorBox(
             empty($availableConfigurations) ? [] : array_combine($availableConfigurations, $availableConfigurations),
@@ -227,13 +223,13 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
      */
     private function selectorBox($optArray, $name, string|array|null $value, bool $multiple): string
     {
-        if (! is_string($value) || ! is_array($value)) {
+        if (!is_string($value) || !is_array($value)) {
             $value = '';
         }
 
         $options = [];
         foreach ($optArray as $key => $val) {
-            $selected = (! $multiple && ! strcmp($value, (string) $key)) || ($multiple && in_array(
+            $selected = (!$multiple && !strcmp($value, (string) $key)) || ($multiple && in_array(
                 $key,
                 (array) $value,
                 true
@@ -251,10 +247,7 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
         ) . '"' . ($multiple ? ' multiple' : '') . '>' . implode('', $options) . '</select>';
     }
 
-    /**
-     * @return int
-     */
-    private function getScheduledTime(string $time)
+    private function getScheduledTime(string $time): float|int
     {
         $scheduledTime = match ($time) {
             'midnight' => mktime(0, 0, 0),
@@ -262,19 +255,18 @@ final class StartRequestForm extends AbstractRequestForm implements RequestFormI
             default => time(),
         };
 
-        if (! $scheduledTime) {
+        if (!$scheduledTime) {
             return time();
         }
 
         return $scheduledTime;
     }
 
-    private function getCrawlerController(): CrawlerController
+    /**
+     * @throws RouteNotFoundException
+     */
+    private function getActionUrl(): Uri
     {
-        if ($this->crawlerController === null) {
-            $this->crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
-        }
-
-        return $this->crawlerController;
+        return GeneralUtility::makeInstance(UrlBuilder::class)->getBackendModuleUrl([], self::BACKEND_MODULE);
     }
 }

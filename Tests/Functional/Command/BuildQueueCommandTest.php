@@ -21,6 +21,8 @@ namespace AOE\Crawler\Tests\Functional\Command;
 
 use AOE\Crawler\Command\BuildQueueCommand;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
+use AOE\Crawler\Tests\Functional\LanguageServiceTestTrait;
 use AOE\Crawler\Tests\Functional\SiteBasedTestTrait;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -29,6 +31,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class BuildQueueCommandTest extends FunctionalTestCase
 {
+    use BackendRequestTestTrait;
+    use LanguageServiceTestTrait;
     use SiteBasedTestTrait;
 
     /**
@@ -46,14 +50,16 @@ class BuildQueueCommandTest extends FunctionalTestCase
      */
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    protected \AOE\Crawler\Domain\Repository\QueueRepository $queueRepository;
+    protected QueueRepository $queueRepository;
 
     protected CommandTester $commandTester;
 
     protected function setUp(): void
     {
         parent::setUp();
+        $this->setupBackendRequest();
         $this->setupBackendUser();
+        $this->setupLanguageService();
 
         $this->importDataSet(__DIR__ . '/../Fixtures/pages.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_configuration.xml');

@@ -38,13 +38,6 @@ services:
         arguments:
             $queryBuilder: '@queryBuilder.tx_crawler_queue'
 
-    AOE\Crawler\Backend\BackendModule:
-        arguments:
-            $processManager: '@AOE\Crawler\Service\ProcessService'
-            $queryBuilder: '@queryBuilder.tx_crawler_queue'
-            $queueRepository: '@AOE\Crawler\Domain\Repository\QueueRepository'
-        public: true
-
     AOE\Crawler\Service\ConfigurationService:
         arguments:
             $urlService: '@AOE\Crawler\Service\UrlService'
@@ -79,3 +72,15 @@ services:
             -   name: 'console.command'
                 command: 'crawler:processQueue'
                 description: 'Trigger the crawler to process the queue entries'
+
+    AOE\Crawler\Controller\BackendModuleController:
+        tags: [ 'backend.controller' ]
+
+    AOE\Crawler\Controller\Backend\BackendModuleCrawlerProcessController:
+        tags: [ 'backend.controller' ]
+
+    AOE\Crawler\Controller\Backend\BackendModuleStartCrawlingController:
+        tags: [ 'backend.controller' ]
+
+    AOE\Crawler\Controller\Backend\BackendModuleCrawlerLogController:
+        tags: [ 'backend.controller' ]

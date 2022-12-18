@@ -42,10 +42,7 @@ class HookUtility
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['refresh_hooks'][] =
             ProcessCleanUpHook::class;
 
-        // Env-dependent
-        if (TYPO3_MODE === 'BE') {
-            self::registerBackendHooks();
-        }
+        self::registerBackendHooks();
     }
 
     private static function registerBackendHooks(): void

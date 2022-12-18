@@ -32,11 +32,11 @@ use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Domain\Model\ProcessCollection;
 use PDO;
+use Symfony\Contracts\Service\Attribute\Required;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
 /**
@@ -49,19 +49,20 @@ class ProcessRepository extends Repository
     protected QueryBuilder $queryBuilder;
     protected array $extensionSettings = [];
 
-    public function __construct()
+    #[Required]
+    public function setExtensionSettings(): void
     {
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-
-        parent::__construct($objectManager);
-
-        $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
-            self::TABLE_NAME
-        );
-
         /** @var ExtensionConfigurationProvider $configurationProvider */
         $configurationProvider = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
         $this->extensionSettings = $configurationProvider->getExtensionConfiguration();
+    }
+
+    #[Required]
+    public function setQueryBuilder(): void
+    {
+        $this->queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
+            self::TABLE_NAME
+        );
     }
 
     /**

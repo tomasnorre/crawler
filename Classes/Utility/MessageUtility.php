@@ -19,9 +19,9 @@ namespace AOE\Crawler\Utility;
  * The TYPO3 project - inspiring people to share!
  */
 
-use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
+use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -34,7 +34,8 @@ class MessageUtility
      */
     public static function addNoticeMessage(string $message): void
     {
-        self::addMessage($message, AbstractMessage::NOTICE);
+
+        self::addMessage($message, ContextualFeedbackSeverity::NOTICE);
     }
 
     /**
@@ -42,7 +43,7 @@ class MessageUtility
      */
     public static function addErrorMessage(string $message): void
     {
-        self::addMessage($message, AbstractMessage::ERROR);
+        self::addMessage($message, ContextualFeedbackSeverity::ERROR);
     }
 
     /**
@@ -50,16 +51,16 @@ class MessageUtility
      */
     public static function addWarningMessage(string $message): void
     {
-        self::addMessage($message, AbstractMessage::WARNING);
+        self::addMessage($message, ContextualFeedbackSeverity::WARNING);
     }
 
     /**
      * This method is used to add a message to the internal queue
      *
      * @param string $message the message itself
-     * @param int $severity message level (0 = success (default), -1 = info, -2 = notice, 1 = warning, 2 = error)
+     * @param ContextualFeedbackSeverity $severity message level (0 = success (default), -1 = info, -2 = notice, 1 = warning, 2 = error)
      */
-    private static function addMessage(string $message, int $severity = AbstractMessage::OK): void
+    private static function addMessage(string $message, ContextualFeedbackSeverity $severity = ContextualFeedbackSeverity::OK): void
     {
         $message = GeneralUtility::makeInstance(FlashMessage::class, $message, '', $severity);
 

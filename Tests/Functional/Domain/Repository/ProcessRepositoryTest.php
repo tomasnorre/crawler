@@ -20,6 +20,7 @@ namespace AOE\Crawler\Tests\Functional\Domain\Repository;
  */
 
 use AOE\Crawler\Domain\Repository\ProcessRepository;
+use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -31,6 +32,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class ProcessRepositoryTest extends FunctionalTestCase
 {
+    use BackendRequestTestTrait;
+
     /**
      * @var array
      */
@@ -44,6 +47,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        $this->setupBackendRequest();
 
         $this->subject = GeneralUtility::makeInstance(ProcessRepository::class);
 
@@ -236,6 +240,6 @@ class ProcessRepositoryTest extends FunctionalTestCase
                     'process_id',
                     $queryBuilder->createNamedParameter($processId, \PDO::PARAM_STR)
                 )
-            )->execute()->fetch(0);
+            )->executeQuery()->fetchAssociative();
     }
 }

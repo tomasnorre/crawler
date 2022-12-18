@@ -20,11 +20,16 @@ namespace AOE\Crawler\Tests\Functional\Controller;
  */
 
 use AOE\Crawler\Controller\CrawlerController;
+use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use AOE\Crawler\Value\QueueFilter;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Information\Typo3Version;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class CrawlerControllerTest
@@ -53,7 +58,16 @@ class CrawlerControllerTest extends FunctionalTestCase
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_process.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/tt_content.xml');
-        $this->subject = $this->getAccessibleMock(CrawlerController::class, ['dummy']);
+
+        $mockedQueueRepository = $this->createMock(QueueRepository::class);
+        $mockedProcessRepository = $this->createMock(ProcessRepository::class);
+        $mockedIconFactory = $this->createMock(IconFactory::class);
+
+        $this->subject = $this->getAccessibleMock(
+            CrawlerController::class,
+            ['dummy'],
+            [$mockedQueueRepository, $mockedProcessRepository, $mockedIconFactory]
+        );
     }
 
     /**
@@ -99,7 +113,20 @@ class CrawlerControllerTest extends FunctionalTestCase
         bool $registerQueueEntriesInternallyOnly,
         bool $expected
     ): void {
-        $mockedQueueRepository = $this->getAccessibleMock(QueueRepository::class, ['getDuplicateQueueItemsIfExists']);
+        $typo3MajorVersion = (new Typo3Version())->getMajorVersion();
+        if ($typo3MajorVersion <= 11) {
+            $mockedQueueRepository = $this->getAccessibleMock(
+                QueueRepository::class,
+                ['getDuplicateQueueItemsIfExists'],
+                [GeneralUtility::makeInstance(ObjectManager::class)]
+            );
+        } else {
+            $mockedQueueRepository = $this->getAccessibleMock(
+                QueueRepository::class,
+                ['getDuplicateQueueItemsIfExists']
+            );
+        }
+
         $mockedQueueRepository->expects($this->any())->method('getDuplicateQueueItemsIfExists')->willReturn(
             $mockedDuplicateRowResult
         );

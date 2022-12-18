@@ -18,7 +18,7 @@
         "chat": "https://typo3.slack.com/archives/C087NGBKM"
     },
     "require": {
-        "php": "^8.0",
+        "php": "~8.0.0 || ~8.1.0",
         "ext-json": "*",
         "ext-pdo": "*",
         "beberlei/assert": "^3.3",
@@ -42,7 +42,6 @@
         "infection/infection": "^0.26",
         "nikic/php-parser": "^4.13",
         "nimut/testing-framework": "^6.0 || dev-main",
-        "nimut/typo3-complete": "^11.5",
         "phpspec/prophecy-phpunit": "^2.0",
         "phpstan/extension-installer": "^1.2",
         "phpstan/phpstan": "^1.9",
@@ -176,6 +175,7 @@
         ],
         "test:acceptance": [
             "[ -e .Build/bin/codecept ] || composer update",
+            ".Build/bin/codecept clean",
             ".Build/bin/codecept run --env=local"
         ],
         "test:all": [

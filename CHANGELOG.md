@@ -3,6 +3,11 @@
 ## Crawler 12.0.0-dev
 
 ### Added
+* AbstractBackendModuleController
+* BackendModuleController
+* BackendModuleCrawlerLogController
+* BackendModuleCrawlerProcessController
+* BackendModuleStartCrawlingController
 
 ### Changed
 * !!! Switch constants in ProcessQueueCommand from public to private
@@ -12,6 +17,8 @@
 * !!! Switch runPollSuccessHooks() in CrawlerInitialization from protected to private
 * !!! Switch isRequestHashMatchingQueueRecord() in FrontendUserAuthenticator from protected to private
 * !!! CrawlerHookInterface doesn't take a CrawlerController as input anymore
+* !!! ResultHandler moved to Controller/Backend/Helper
+* !!! UrlBuilder moved to Controller/Backend/Helper
 
 ### Fixed
 * If indexed_search is installed activate procInstructions for indexed_search
@@ -33,6 +40,14 @@
 * !!! IndexedSearchCrawlerHook
 * !!! CrawlerApi
 * !!! IndexedSearchCrawlerFilesHook
+* !!! BackendModule
+* !!! AbstractRequestForm
+* !!! LogRequestForm
+* !!! RequestFormFactory
+* !!! RequestFormInterface
+* !!! StartRequestForm
+* !!! MultiProcessRequestForm
+* !!! BackendUtility
 
 #### Functions & Properties
 * !!! CrawlerController->modMenu()

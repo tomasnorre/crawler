@@ -58,7 +58,7 @@ class ProcessQueueCommand extends Command
         $this->crawlerController = $crawlerController;
         $this->processRepository = $processRepository;
         $this->queueRepository = $queueRepository;
-        $this->processId = GeneralUtility::shortMD5(microtime() . random_bytes(12));
+        $this->processId = md5(microtime() . random_bytes(12));
     }
 
     /**

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Backend\RequestForm;
+namespace AOE\Crawler\Tests\Functional;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2022-     Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -19,7 +19,14 @@ namespace AOE\Crawler\Backend\RequestForm;
  * The TYPO3 project - inspiring people to share!
  */
 
-interface RequestFormInterface
+use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+trait LanguageServiceTestTrait
 {
-    public function render(int $id, string $elementName, array $menuItems): string;
+    protected function setupLanguageService(): void
+    {
+        $languageFactory = GeneralUtility::makeInstance(LanguageServiceFactory::class);
+        $GLOBALS['LANG'] = $languageFactory->create('en');
+    }
 }
