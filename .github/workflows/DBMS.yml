@@ -130,7 +130,7 @@ jobs:
       fail-fast: false
       matrix:
         mysql: [ '5.6', '5.7', '8.0' ]
-        typo3: [ 'dev-main' ]
+        typo3: [ '^12.2' ]
         php: [ '8.1' ]
     steps:
       - name: Set up MySQL ${{ matrix.mysql }}
