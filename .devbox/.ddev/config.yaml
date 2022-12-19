@@ -25,7 +25,6 @@ hooks:
   - exec: /var/www/html/bin/typo3 extension:setup
   - exec: /var/www/html/bin/typo3 cache:flush
   - exec: /var/www/html/bin/typo3 cache:warmup
-  - exec: /var/www/html/bin/typo3 upgrade:run
   - exec: /var/www/html/bin/typo3 backend:unlock
 omit_containers: [dba, ddev-ssh-agent]
 webimage_extra_packages: [cron]
