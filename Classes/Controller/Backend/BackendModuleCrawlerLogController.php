@@ -101,7 +101,9 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
     {
         $q_entry = $this->queryBuilder
             ->from(QueueRepository::TABLE_NAME)
-            ->select('*')->where($this->queryBuilder->expr()->eq('qid', $this->queryBuilder->createNamedParameter($queueId)))->executeQuery()
+            ->select('*')->where(
+                $this->queryBuilder->expr()->eq('qid', $this->queryBuilder->createNamedParameter($queueId))
+            )->executeQuery()
             ->fetch();
 
         // Explode values
