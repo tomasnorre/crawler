@@ -10,7 +10,6 @@ return [
         'label' => 'name',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
-        'cruser_id' => 'cruser_id',
         'default_sortby' => 'ORDER BY crdate',
         'delete' => 'deleted',
         'enablecolumns' => [
@@ -35,7 +34,8 @@ return [
             'config' => [
                 'type' => 'input',
                 'size' => 30,
-                'eval' => 'required,trim,lower,alphanum_x',
+                'eval' => 'trim,lower,alphanum_x',
+                'required' => true,
             ],
         ],
         'force_ssl' => [

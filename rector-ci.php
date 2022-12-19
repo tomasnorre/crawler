@@ -33,6 +33,7 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->import(Typo3SetList::TYPO3_95);
     $rectorConfig->import(Typo3SetList::TYPO3_104);
     $rectorConfig->import(Typo3SetList::TYPO3_11);
+    $rectorConfig->import(Typo3SetList::TYPO3_12);
 
     $parameters->set(Option::AUTO_IMPORT_NAMES, false);
 
