@@ -26,7 +26,7 @@ use Assert\Assert;
  */
 class QueueFilter implements \Stringable
 {
-    private string $queueFilter;
+    private readonly string $queueFilter;
 
     public function __construct(string $queueFilter = 'all')
     {

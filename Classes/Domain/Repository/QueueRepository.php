@@ -38,7 +38,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
-    public const TABLE_NAME = 'tx_crawler_queue';
+    final public const TABLE_NAME = 'tx_crawler_queue';
 
     protected array $extensionSettings;
 

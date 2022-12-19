@@ -23,8 +23,9 @@ final class ModifySkipPageEvent
 {
     private bool|string $skipped = false;
 
-    public function __construct(private array $pageRow)
-    {
+    public function __construct(
+        private readonly array $pageRow
+    ) {
     }
 
     public function isSkipped(): false|string

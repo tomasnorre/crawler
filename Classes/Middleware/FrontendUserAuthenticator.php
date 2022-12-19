@@ -41,7 +41,7 @@ class FrontendUserAuthenticator implements MiddlewareInterface
     protected Context $context;
 
     public function __construct(
-        private QueryBuilder $queryBuilder,
+        private readonly QueryBuilder $queryBuilder,
         ?Context $context = null
     ) {
         $this->context = $context ?? GeneralUtility::makeInstance(Context::class);

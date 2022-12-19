@@ -145,7 +145,7 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
 
         // Base path must be '/<pathSegements>/':
         if ($frontendBasePath !== '/') {
-            $frontendBasePath = '/' . ltrim($frontendBasePath, '/');
+            $frontendBasePath = '/' . ltrim((string) $frontendBasePath, '/');
             $frontendBasePath = rtrim($frontendBasePath, '/') . '/';
         }
 

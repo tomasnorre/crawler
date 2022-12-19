@@ -24,8 +24,10 @@ final class AfterQueueItemAddedEvent
     /**
      * @param int|string $queueId
      */
-    public function __construct(private $queueId, private array $fieldArray)
-    {
+    public function __construct(
+        private $queueId,
+        private array $fieldArray
+    ) {
     }
 
     public function getQueueId(): int|string

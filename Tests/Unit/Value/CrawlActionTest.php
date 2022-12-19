@@ -27,7 +27,7 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
  */
 class CrawlActionTest extends UnitTestCase
 {
-    public const VALID_VALUE = 'start';
+    final public const VALID_VALUE = 'start';
 
     /**
      * @test

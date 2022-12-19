@@ -48,7 +48,7 @@ final class BackendModuleStartCrawlingController extends AbstractBackendModuleCo
     private $incomingConfigurationSelection = [];
 
     public function __construct(
-        private CrawlerController $crawlerController
+        private readonly CrawlerController $crawlerController
     ) {
     }
 
@@ -236,7 +236,7 @@ final class BackendModuleStartCrawlingController extends AbstractBackendModuleCo
             ));
             $options[] = '
                 <option value="' . $key . '" ' . ($selected ? ' selected="selected"' : '') . '>' . htmlspecialchars(
-                $val,
+                (string) $val,
                 ENT_QUOTES | ENT_HTML5
             ) . '</option>';
         }

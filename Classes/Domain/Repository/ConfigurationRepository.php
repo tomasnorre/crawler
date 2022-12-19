@@ -33,7 +33,7 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
  */
 class ConfigurationRepository extends Repository
 {
-    public const TABLE_NAME = 'tx_crawler_configuration';
+    final public const TABLE_NAME = 'tx_crawler_configuration';
 
     /**
      * Traverses up the rootline of a page and fetches all crawler records.

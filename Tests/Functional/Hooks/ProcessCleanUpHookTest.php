@@ -67,7 +67,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function removeActiveProcessesOlderThanOneHour(): void
+    public function removeActiveProcessesOlderThanOneHour(): never
     {
         $this->markTestSkipped('Please Implement');
     }
@@ -75,7 +75,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function removeActiveOrphanProcesses(): void
+    public function removeActiveOrphanProcesses(): never
     {
         $this->markTestSkipped('Please Implement');
     }
@@ -83,7 +83,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function doProcessStillExists(): void
+    public function doProcessStillExists(): never
     {
         $this->markTestSkipped('Skipped due to differences between windows and *nix');
     }
@@ -91,7 +91,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function killProcess(): void
+    public function killProcess(): never
     {
         $this->markTestSkipped('Skipped due to differences between windows and *nix');
     }
@@ -99,7 +99,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function findDispatcherProcesses(): void
+    public function findDispatcherProcesses(): never
     {
         $this->markTestSkipped('Skipped due to differences between windows and *nix');
     }

@@ -24,7 +24,7 @@ use AOE\Crawler\Domain\Model\Reason;
 final class InvokeQueueChangeEvent
 {
     public function __construct(
-        private Reason $reason
+        private readonly Reason $reason
     ) {
     }
 

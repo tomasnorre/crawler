@@ -44,11 +44,11 @@ final class BackendModuleCrawlerProcessController extends AbstractBackendModuleC
     public const BACKEND_MODULE = 'web_site_crawler_process';
 
     public function __construct(
-        private IconFactory $iconFactory,
-        private ProcessService $processService,
-        private ProcessRepository $processRepository,
-        private QueueRepository $queueRepository,
-        private Crawler $crawler
+        private readonly IconFactory $iconFactory,
+        private readonly ProcessService $processService,
+        private readonly ProcessRepository $processRepository,
+        private readonly QueueRepository $queueRepository,
+        private readonly Crawler $crawler
     ) {
     }
 

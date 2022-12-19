@@ -27,7 +27,7 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
  */
 class QueueFilterTest extends UnitTestCase
 {
-    public const VALID_VALUE = 'finished';
+    final public const VALID_VALUE = 'finished';
 
     /**
      * @test

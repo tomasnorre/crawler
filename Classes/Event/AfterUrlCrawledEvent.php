@@ -21,8 +21,10 @@ namespace AOE\Crawler\Event;
 
 final class AfterUrlCrawledEvent
 {
-    public function __construct(private string $url, private array $result)
-    {
+    public function __construct(
+        private readonly string $url,
+        private readonly array $result
+    ) {
     }
 
     public function getUrl(): string

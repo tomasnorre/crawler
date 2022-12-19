@@ -26,7 +26,7 @@ use Assert\Assert;
  */
 final class CrawlAction implements \Stringable
 {
-    private string $crawlAction;
+    private readonly string $crawlAction;
 
     public function __construct(string $crawlAction)
     {
