@@ -8,6 +8,7 @@
 * BackendModuleCrawlerLogController
 * BackendModuleCrawlerProcessController
 * BackendModuleStartCrawlingController
+* Support for PHP 8.2
 
 ### Changed
 * !!! Switch constants in ProcessQueueCommand from public to private
