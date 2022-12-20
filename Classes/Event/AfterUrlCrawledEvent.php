@@ -19,6 +19,9 @@ namespace AOE\Crawler\Event;
  * The TYPO3 project - inspiring people to share!
  */
 
+/**
+ * @internal since v12.0.0
+ */
 final class AfterUrlCrawledEvent
 {
     public function __construct(

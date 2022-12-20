@@ -20,6 +20,9 @@ namespace AOE\Crawler\Hooks;
  * The TYPO3 project - inspiring people to share!
  */
 
+/**
+ * @internal since v12.0.0
+ */
 interface CrawlerHookInterface
 {
     public function crawler_init(): void;

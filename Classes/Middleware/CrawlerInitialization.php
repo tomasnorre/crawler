@@ -34,6 +34,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * Once done, the queue is fetched, and then the frontend request runs through.
  *
  * Finally, at the very end, if the crawler is still running, output the data and replace the response.
+ *
+ * @internal since v12.0.0
  */
 class CrawlerInitialization implements MiddlewareInterface
 {

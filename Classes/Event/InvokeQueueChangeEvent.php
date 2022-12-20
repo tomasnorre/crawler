@@ -21,6 +21,9 @@ namespace AOE\Crawler\Event;
 
 use AOE\Crawler\Domain\Model\Reason;
 
+/**
+ * @internal since v12.0.0
+ */
 final class InvokeQueueChangeEvent
 {
     public function __construct(

@@ -31,6 +31,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Calls Guzzle / CURL (based on TYPO3 settings) for fetching a URL.
+ * @internal since v12.0.0
  */
 class GuzzleExecutionStrategy implements LoggerAwareInterface, CrawlStrategyInterface
 {
