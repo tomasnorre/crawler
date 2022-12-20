@@ -33,7 +33,7 @@ class BackendModuleStartCrawlingControllerTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function checkResponseOfHandleRequest(): void
+    public function checkResponseOfHandleRequest(): never
     {
         $this->markTestSkipped('WIP');
         $this->setupBackendRequest();

@@ -50,7 +50,7 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
     private QueryBuilder $queryBuilder;
     private bool $CSVExport = false;
     private array $CSVaccu = [];
-    private array $backendModuleMenu;
+    private readonly array $backendModuleMenu;
     private int $setId;
     private string $quiPath;
     private string $logDisplay;
@@ -65,11 +65,11 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
     private mixed $queueId;
 
     public function __construct(
-        private QueueRepository $queueRepository,
-        private CsvWriterInterface $csvWriter,
-        private JsonCompatibilityConverter $jsonCompatibilityConverter,
-        private IconFactory $iconFactory,
-        private CrawlerController $crawlerController
+        private readonly QueueRepository $queueRepository,
+        private readonly CsvWriterInterface $csvWriter,
+        private readonly JsonCompatibilityConverter $jsonCompatibilityConverter,
+        private readonly IconFactory $iconFactory,
+        private readonly CrawlerController $crawlerController
     ) {
         $this->backendModuleMenu = $this->getModuleMenu();
     }
@@ -101,9 +101,9 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
     {
         $q_entry = $this->queryBuilder
             ->from(QueueRepository::TABLE_NAME)
-            ->select('*')
-            ->where($this->queryBuilder->expr()->eq('qid', $this->queryBuilder->createNamedParameter($queueId)))
-            ->execute()
+            ->select('*')->where(
+                $this->queryBuilder->expr()->eq('qid', $this->queryBuilder->createNamedParameter($queueId))
+            )->executeQuery()
             ->fetch();
 
         // Explode values

@@ -34,7 +34,6 @@ class MessageUtility
      */
     public static function addNoticeMessage(string $message): void
     {
-
         self::addMessage($message, ContextualFeedbackSeverity::NOTICE);
     }
 
@@ -60,8 +59,10 @@ class MessageUtility
      * @param string $message the message itself
      * @param ContextualFeedbackSeverity $severity message level (0 = success (default), -1 = info, -2 = notice, 1 = warning, 2 = error)
      */
-    private static function addMessage(string $message, ContextualFeedbackSeverity $severity = ContextualFeedbackSeverity::OK): void
-    {
+    private static function addMessage(
+        string $message,
+        ContextualFeedbackSeverity $severity = ContextualFeedbackSeverity::OK
+    ): void {
         $message = GeneralUtility::makeInstance(FlashMessage::class, $message, '', $severity);
 
         /** @var FlashMessageService $flashMessageService */

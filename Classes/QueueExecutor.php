@@ -40,7 +40,7 @@ class QueueExecutor implements SingletonInterface
 
     public function __construct(
         CrawlStrategyFactory $crawlStrategyFactory,
-        private EventDispatcher $eventDispatcher
+        private readonly EventDispatcher $eventDispatcher
     ) {
         $this->crawlStrategy = $crawlStrategyFactory->create();
     }

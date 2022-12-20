@@ -10,6 +10,7 @@ use Rector\DeadCode\Rector\Property\RemoveSetterOnlyPropertyAndMethodCallRector;
 use Rector\DeadCode\Rector\Property\RemoveUnusedPrivatePropertyRector;
 use Rector\DeadCode\Rector\Stmt\RemoveUnreachableStatementRector;
 use Rector\Php73\Rector\FuncCall\JsonThrowOnErrorRector;
+use Rector\Set\ValueObject\LevelSetList;
 use Rector\Set\ValueObject\SetList;
 use Ssch\TYPO3Rector\Set\Typo3SetList;
 
@@ -26,12 +27,13 @@ return static function (RectorConfig $rectorConfig): void {
     );
 
     $rectorConfig->import(SetList::DEAD_CODE);
-    $rectorConfig->import(SetList::PHP_72);
-    $rectorConfig->import(SetList::PHP_73);
+    $rectorConfig->import(LevelSetList::UP_TO_PHP_81);
     $rectorConfig->import(Typo3SetList::TYPO3_76);
     $rectorConfig->import(Typo3SetList::TYPO3_87);
     $rectorConfig->import(Typo3SetList::TYPO3_95);
     $rectorConfig->import(Typo3SetList::TYPO3_104);
+    $rectorConfig->import(Typo3SetList::TYPO3_11);
+    $rectorConfig->import(Typo3SetList::TYPO3_12);
 
     $parameters->set(Option::AUTO_IMPORT_NAMES, false);
 

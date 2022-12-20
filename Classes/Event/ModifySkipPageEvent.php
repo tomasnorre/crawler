@@ -21,13 +21,11 @@ namespace AOE\Crawler\Event;
 
 final class ModifySkipPageEvent
 {
-    private array $pageRow;
-
     private bool|string $skipped = false;
 
-    public function __construct(array $pageRow)
-    {
-        $this->pageRow = $pageRow;
+    public function __construct(
+        private readonly array $pageRow
+    ) {
     }
 
     public function isSkipped(): false|string

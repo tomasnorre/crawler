@@ -38,7 +38,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
-    public const TABLE_NAME = 'tx_crawler_queue';
+    final public const TABLE_NAME = 'tx_crawler_queue';
 
     protected array $extensionSettings;
 
@@ -456,7 +456,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
         $expressionBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getConnectionForTable(self::TABLE_NAME)
             ->getExpressionBuilder();
-        $query = $expressionBuilder->andX();
+        $query = $expressionBuilder->and();
         // PHPStorm adds the highlight that the $addWhere is immediately overwritten,
         // but the $query = $expressionBuilder->andX() ensures that the $addWhere is written correctly with AND
         // between the statements, it's not a mistake in the code.

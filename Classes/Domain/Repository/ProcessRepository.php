@@ -44,7 +44,7 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
  */
 class ProcessRepository extends Repository
 {
-    public const TABLE_NAME = 'tx_crawler_process';
+    final public const TABLE_NAME = 'tx_crawler_process';
 
     protected QueryBuilder $queryBuilder;
     protected array $extensionSettings = [];

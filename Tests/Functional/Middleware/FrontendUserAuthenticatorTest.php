@@ -52,7 +52,7 @@ class FrontendUserAuthenticatorTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function processQueueEntryNotFound(): void
+    public function processQueueEntryNotFound(): never
     {
         $this->markTestSkipped('WIP');
         $this->setGlobalsSys();
@@ -132,19 +132,19 @@ class FrontendUserAuthenticatorTest extends FunctionalTestCase
         'caching' => [
             'cacheConfigurations' => [
                 'hash' => [
-                    'backend' => 'TYPO3\\CMS\\Core\\Cache\\Backend\\NullBackend',
+                    'backend' => \TYPO3\CMS\Core\Cache\Backend\NullBackend::class,
                 ],
                 'imagesizes' => [
-                    'backend' => 'TYPO3\\CMS\\Core\\Cache\\Backend\\NullBackend',
+                    'backend' => \TYPO3\CMS\Core\Cache\Backend\NullBackend::class,
                 ],
                 'pages' => [
-                    'backend' => 'TYPO3\\CMS\\Core\\Cache\\Backend\\NullBackend',
+                    'backend' => \TYPO3\CMS\Core\Cache\Backend\NullBackend::class,
                 ],
                 'pagesection' => [
-                    'backend' => 'TYPO3\\CMS\\Core\\Cache\\Backend\\NullBackend',
+                    'backend' => \TYPO3\CMS\Core\Cache\Backend\NullBackend::class,
                 ],
                 'rootline' => [
-                    'backend' => 'TYPO3\\CMS\\Core\\Cache\\Backend\\NullBackend',
+                    'backend' => \TYPO3\CMS\Core\Cache\Backend\NullBackend::class,
                 ],
             ],
         ],
@@ -156,14 +156,8 @@ class FrontendUserAuthenticatorTest extends FunctionalTestCase
             'unifiedPageTranslationHandling' => true,
         ],
         'sitename' => 'Crawler Devbox',
-        'systemMaintainers' => [
-            2,
-            5,
-            5,
-            1,
-            1,
-        ],
-        'trustedHostsPattern' => '.*'
+        'systemMaintainers' => [2, 5, 5, 1, 1],
+        'trustedHostsPattern' => '.*',
     ];
     }
 }

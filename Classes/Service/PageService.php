@@ -30,7 +30,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class PageService
 {
-    private EventDispatcher $eventDispatcher;
+    private readonly EventDispatcher $eventDispatcher;
 
     public function __construct(EventDispatcher $eventDispatcher = null)
     {
@@ -84,7 +84,7 @@ class PageService
                 if (is_string($veto)) {
                     return $veto;
                 }
-                return 'Veto from hook "' . htmlspecialchars($key) . '"';
+                return 'Veto from hook "' . htmlspecialchars((string) $key) . '"';
             }
         }
 

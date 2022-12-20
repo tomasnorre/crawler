@@ -86,7 +86,7 @@ abstract class AbstractBackendModuleController
             MessageUtility::addErrorMessage(
                 sprintf($this->getLanguageService()->sL(
                     'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:message.phpBinaryNotFound'
-                ), htmlspecialchars($extensionSettings['phpPath'], ENT_QUOTES | ENT_HTML5))
+                ), htmlspecialchars((string) $extensionSettings['phpPath'], ENT_QUOTES | ENT_HTML5))
             );
         }
     }

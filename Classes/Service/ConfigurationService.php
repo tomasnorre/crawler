@@ -43,11 +43,11 @@ class ConfigurationService
      * @var BackendUserAuthentication|null
      */
     private $backendUser;
-    private array $extensionSettings;
+    private readonly array $extensionSettings;
 
     public function __construct(
-        private UrlService $urlService,
-        private ConfigurationRepository $configurationRepository
+        private readonly UrlService $urlService,
+        private readonly ConfigurationRepository $configurationRepository
     ) {
         $this->extensionSettings = GeneralUtility::makeInstance(
             ExtensionConfigurationProvider::class
@@ -87,7 +87,7 @@ class ConfigurationService
             if (!is_array($values)) {
                 continue;
             }
-            $key = (string) str_replace('.', '', $key);
+            $key = str_replace('.', '', (string) $key);
             // Sub configuration for a single configuration string:
             $subCfg = (array) $crawlerCfg[$key . '.'];
             $subCfg['key'] = $key;
@@ -142,7 +142,7 @@ class ConfigurationService
 
                 // process configuration if it is not page-specific or if the specific page is the current page:
                 // TODO: Check if $pidOnlyList can be kept as Array instead of imploded
-                if (!strcmp($configurationRecord['pidsonly'], '') || GeneralUtility::inList(
+                if (!strcmp((string) $configurationRecord['pidsonly'], '') || GeneralUtility::inList(
                     $pidOnlyList,
                     strval($pageId)
                 )) {
@@ -242,7 +242,7 @@ class ConfigurationService
     {
         // Traverse parameter names:
         foreach ($paramArray as $parameter => $parameterValue) {
-            $parameterValue = trim($parameterValue);
+            $parameterValue = trim((string) $parameterValue);
 
             // If value is encapsulated in square brackets it means there are some ranges of values to find, otherwise the value is literal
             if ($this->isWrappedInSquareBrackets($parameterValue)) {
@@ -414,7 +414,7 @@ class ConfigurationService
     ): array {
         $lookUpPid = isset($subpartParams['_PID']) ? (int) $subpartParams['_PID'] : $pid;
         $recursiveDepth = isset($subpartParams['_RECURSIVE']) ? (int) $subpartParams['_RECURSIVE'] : 0;
-        $pidField = isset($subpartParams['_PIDFIELD']) ? trim($subpartParams['_PIDFIELD']) : 'pid';
+        $pidField = isset($subpartParams['_PIDFIELD']) ? trim((string) $subpartParams['_PIDFIELD']) : 'pid';
         $where = $subpartParams['_WHERE'] ?? '';
         $addTable = $subpartParams['_ADDTABLE'] ?? '';
 

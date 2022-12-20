@@ -77,7 +77,7 @@ class SubProcessExecutionStrategyTest extends UnitTestCase
      * @test
      * @dataProvider buildRequestHandlersDataProvider
      */
-    public function buildRequestHeadersReturnsArray(array $url, string $crawlerId, array $expected): void
+    public function buildRequestHeadersReturnsArray(array $url, string $crawlerId, array $expected): never
     {
         self::markTestSkipped(
             'This is skipped as buildRequestHeaders() is now private, I need to change the test to ensure it is tested as part of the fetchUrlContents()'

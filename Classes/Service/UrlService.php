@@ -65,9 +65,7 @@ class UrlService
                     ->orWhere(
                         $queryBuilder->expr()->eq('uid', $pageId),
                         $queryBuilder->expr()->eq('l10n_parent', $pageId)
-                    )
-                    ->andWhere($queryBuilder->expr()->in('sys_language_uid', $languages))
-                    ->execute();
+                    )->andWhere($queryBuilder->expr()->in('sys_language_uid', $languages))->executeQuery();
                 $rows = $query->fetch();
 
                 if (empty($rows)) {
