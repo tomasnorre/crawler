@@ -37,6 +37,9 @@ use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 
+/**
+ * @internal since v12.0.0
+ */
 class BuildQueueCommand extends Command
 {
     protected function configure(): void

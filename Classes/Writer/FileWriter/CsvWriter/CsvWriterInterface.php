@@ -19,6 +19,9 @@ namespace AOE\Crawler\Writer\FileWriter\CsvWriter;
  * The TYPO3 project - inspiring people to share!
  */
 
+/**
+ * @internal since v12.0.0
+ */
 interface CsvWriterInterface
 {
     public function arrayToCsv(array $records): string;

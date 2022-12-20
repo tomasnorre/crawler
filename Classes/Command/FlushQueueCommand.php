@@ -27,6 +27,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+/**
+ * @internal since v12.0.0
+ */
 class FlushQueueCommand extends Command
 {
     protected function configure(): void
