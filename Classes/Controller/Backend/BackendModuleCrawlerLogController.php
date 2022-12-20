@@ -104,7 +104,7 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
             ->select('*')->where(
                 $this->queryBuilder->expr()->eq('qid', $this->queryBuilder->createNamedParameter($queueId))
             )->executeQuery()
-            ->fetch();
+            ->fetchAssociative();
 
         // Explode values
         $q_entry['parameters'] = $this->jsonCompatibilityConverter->convert($q_entry['parameters']);
@@ -161,7 +161,7 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
 
             // Get branch beneath:
             if ($this->logDepth) {
-                $tree->getTree($this->pageUid, $this->logDepth);
+                $tree->getTree($this->pageUid, (int) $this->logDepth);
             }
 
             // If Flush button is pressed, flush tables instead of selecting entries:

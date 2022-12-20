@@ -133,7 +133,7 @@ class FrontendUserAuthenticator implements MiddlewareInterface
             ->from(QueueRepository::TABLE_NAME)->where(
                 $this->queryBuilder->expr()->eq('qid', $this->queryBuilder->createNamedParameter($queueId))
             )->executeQuery()
-            ->fetch();
+            ->fetchAssociative();
         return is_array($queueRec) ? $queueRec : [];
     }
 }

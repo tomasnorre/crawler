@@ -448,10 +448,10 @@ class ConfigurationService
                 $queryBuilder->andWhere($queryBuilder->expr()->lte($transOrigPointerField, 0));
             }
 
-            $statement = $queryBuilder->execute();
+            $statement = $queryBuilder->executeQuery();
 
             $rows = [];
-            while ($row = $statement->fetch()) {
+            while ($row = $statement->fetchAssociative()) {
                 $rows[$row[$fieldName]] = $row;
             }
 

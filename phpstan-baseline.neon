@@ -12,7 +12,7 @@ parameters:
 
 		-
 			message: "#^Cannot call method error\\(\\) on Psr\\\\Log\\\\LoggerInterface\\|null\\.$#"
-			count: 2
+			count: 1
 			path: Classes/Configuration/ExtensionConfigurationProvider.php
 
 		-
@@ -31,11 +31,6 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Result\\|int\\.$#"
-			count: 1
-			path: Classes/Controller/CrawlerController.php
-
-		-
 			message: "#^Class cognitive complexity is 102, keep it under 60$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
@@ -47,11 +42,6 @@ parameters:
 
 		-
 			message: "#^Method AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:readUrl\\(\\) should return int\\|null but empty return statement found\\.$#"
-			count: 1
-			path: Classes/Controller/CrawlerController.php
-
-		-
-			message: "#^Parameter \\#1 \\$id of static method TYPO3\\\\CMS\\\\Backend\\\\Utility\\\\BackendUtility\\:\\:getPagesTSconfig\\(\\) expects int, string given\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -141,25 +131,7 @@ parameters:
 			path: Classes/Middleware/CrawlerInitialization.php
 
 		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Result\\|int\\.$#"
-			count: 1
-			path: Classes/Middleware/FrontendUserAuthenticator.php
-
-		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Result\\|int\\.$#"
-			count: 1
-			path: Classes/Service/ConfigurationService.php
-
-		-
 			message: "#^Class cognitive complexity is 84, keep it under 60$#"
-			count: 1
-			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: """
-				#^Fetching class constant class of deprecated class TYPO3\\\\CMS\\\\Core\\\\Database\\\\QueryGenerator\\:
-				since v11, will be removed in v12$#
-			"""
 			count: 1
 			path: Classes/Service/ConfigurationService.php
 
@@ -167,11 +139,6 @@ parameters:
 			message: "#^Offset 'usergroup_cached…' does not exist on array\\|null\\.$#"
 			count: 1
 			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Result\\|int\\.$#"
-			count: 1
-			path: Classes/Service/UrlService.php
 
 		-
 			message: "#^Function getUrlFromPageAndQueryParameters\\(\\) has an unused variable \\$siteLanguage\\.$#"

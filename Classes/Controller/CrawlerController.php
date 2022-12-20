@@ -560,7 +560,7 @@ class CrawlerController implements LoggerAwareInterface
                 ->andWhere('exec_time = 0')
                 ->andWhere('process_scheduled > 0');
         }
-        $queueRec = $queryBuilder->execute()->fetch();
+        $queueRec = $queryBuilder->executeQuery()->fetchAssociative();
 
         if (! is_array($queueRec)) {
             return;
