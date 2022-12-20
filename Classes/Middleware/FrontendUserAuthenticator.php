@@ -34,6 +34,8 @@ use TYPO3\CMS\Frontend\Controller\ErrorController;
 
 /**
  * Evaluates HTTP headers and checks if Crawler should register itself.
+ *
+ * @internal since v12.0.0
  */
 class FrontendUserAuthenticator implements MiddlewareInterface
 {

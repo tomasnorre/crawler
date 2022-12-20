@@ -56,6 +56,7 @@ use TYPO3\CMS\Core\Utility\MathUtility;
  * Class CrawlerController
  *
  * @package AOE\Crawler\Controller
+ * @internal since v12.0.0
  */
 class CrawlerController implements LoggerAwareInterface
 {

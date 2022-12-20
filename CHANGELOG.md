@@ -19,6 +19,7 @@
 * !!! CrawlerHookInterface doesn't take a CrawlerController as input anymore
 * !!! ResultHandler moved to Controller/Backend/Helper
 * !!! UrlBuilder moved to Controller/Backend/Helper
+* !!! Mark all classes @internal that are not already marked as internal
 
 ### Fixed
 * If indexed_search is installed activate procInstructions for indexed_search

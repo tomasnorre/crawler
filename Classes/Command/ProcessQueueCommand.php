@@ -31,6 +31,9 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+/**
+ * @internal since v12.0.0
+ */
 class ProcessQueueCommand extends Command
 {
     private const CLI_STATUS_NOTHING_PROCCESSED = 0;

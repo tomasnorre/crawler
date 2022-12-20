@@ -19,6 +19,9 @@ namespace AOE\Crawler\Exception;
  * The TYPO3 project - inspiring people to share!
  */
 
+/**
+ * @internal since v12.0.0
+ */
 class CrawlerObjectException extends \Exception
 {
 }
