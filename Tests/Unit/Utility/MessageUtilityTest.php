@@ -69,13 +69,13 @@ class MessageUtilityTest extends UnitTestCase
         $messageText = 'This is a notice message';
         MessageUtility::addNoticeMessage($messageText);
 
-        $messages = self::getMessages();
+        $messages = $this->getMessages();
 
         self::assertCount(1, $messages);
 
         self::assertEquals($messageText, $messages[0]->getMessage());
 
-        self::assertEquals(ContextualFeedbackSeverity::NOTICE, $messages[0]->getSeverity());
+        self::assertEquals(ContextualFeedbackSeverity::NOTICE->value, $messages[0]->getSeverity()->value);
     }
 
     /**
@@ -86,13 +86,12 @@ class MessageUtilityTest extends UnitTestCase
         $messageText = 'This is a error message';
         MessageUtility::addErrorMessage($messageText);
 
-        $messages = self::getMessages();
+        $messages = $this->getMessages();
 
         self::assertCount(1, $messages);
 
         self::assertEquals($messageText, $messages[0]->getMessage());
-
-        self::assertEquals(ContextualFeedbackSeverity::ERROR, $messages[0]->getSeverity());
+        self::assertEquals(ContextualFeedbackSeverity::ERROR->value, $messages[0]->getSeverity()->value);
     }
 
     /**
@@ -103,12 +102,12 @@ class MessageUtilityTest extends UnitTestCase
         $messageText = 'This is a warning message';
         MessageUtility::addWarningMessage($messageText);
 
-        $messages = self::getMessages();
+        $messages = $this->getMessages();
         self::assertCount(1, $messages);
 
         self::assertEquals($messageText, $messages[0]->getMessage());
 
-        self::assertEquals(ContextualFeedbackSeverity::WARNING, $messages[0]->getSeverity());
+        self::assertEquals(ContextualFeedbackSeverity::WARNING->value, $messages[0]->getSeverity()->value);
     }
 
     /**
