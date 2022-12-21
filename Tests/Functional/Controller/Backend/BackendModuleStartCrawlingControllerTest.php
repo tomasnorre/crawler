@@ -22,21 +22,29 @@ namespace AOE\Crawler\Tests\Functional\Controller\Backend;
 use AOE\Crawler\Controller\Backend\BackendModuleStartCrawlingController;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
+use Prophecy\PhpUnit\ProphecyTrait;
+use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
-use TYPO3\CMS\Core\Http\ServerRequest;
+use TYPO3\CMS\Core\Http\Uri;
+use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 class BackendModuleStartCrawlingControllerTest extends FunctionalTestCase
 {
     use BackendRequestTestTrait;
+    use ProphecyTrait;
+
+    protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+
     /**
      * @test
      */
     public function checkResponseOfHandleRequest(): never
     {
-        $this->markTestSkipped('WIP');
+        //$this->markTestSkipped('WIP');
         $this->setupBackendRequest();
+
         // Set extension settings
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [
             'phpBinary' => 'php',
@@ -47,10 +55,17 @@ class BackendModuleStartCrawlingControllerTest extends FunctionalTestCase
             ->setMethods(['isAdmin', 'getTSConfig', 'getPagePermsClause', 'isInWebMount', 'backendCheckLogin'])
             ->getMock();
 
-        $mockedCrawlerController = $this->createPartialMock(CrawlerController::class, ['dummy']);
-        $subject = GeneralUtility::makeInstance(BackendModuleStartCrawlingController::class, $mockedCrawlerController);
+        $GLOBALS['LANG'] = $this->createMock(LanguageService::class);
 
-        //$serverRequest = new ServerRequest();
+        $mockedCrawlerController = $this->getAccessibleMock(CrawlerController::class, ['dummy']);
+
+        $mockedCrawlerLogUri = new Uri();
+        $mockedCrawlerLogUri->withScheme('https')->withHost('crawler.tld');
+        $mockedBackendUriBuilder = $this->createPartialMock(UriBuilder::class, ['buildUriFromRoute']);
+        $mockedBackendUriBuilder->expects($this->once())->method('buildUriFromRoute')->with('web_site_crawler_log', ['id' => -1])->willReturn($mockedCrawlerLogUri);
+
+        $subject = GeneralUtility::makeInstance(BackendModuleStartCrawlingController::class, $mockedCrawlerController, $mockedBackendUriBuilder);
+
         $response = $subject->handleRequest($GLOBALS['TYPO3_REQUEST']);
 
         self::assertEquals('test', $response->getBody());

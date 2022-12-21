@@ -54,10 +54,6 @@ abstract class AbstractBackendModuleController
     protected function setupView(ServerRequestInterface $request, int $pageUid): ModuleTemplate
     {
         $moduleTemplate = (GeneralUtility::makeInstance(ModuleTemplateFactory::class))->create($request);
-        $moduleTemplate->getView()->setLayoutRootPaths(['EXT:crawler/Resources/Private/Layouts']);
-        $moduleTemplate->getView()->setPartialRootPaths(['EXT:crawler/Resources/Private/Partials']);
-        $moduleTemplate->getView()->setTemplateRootPaths(['EXT:crawler/Resources/Private/Templates/Backend']);
-
         $permissionClause = $this->getBackendUserAuthentication()->getPagePermsClause(Permission::PAGE_SHOW);
         $pageRecord = BackendUtility::readPageAccess($pageUid, $permissionClause);
         if ($pageRecord) {
