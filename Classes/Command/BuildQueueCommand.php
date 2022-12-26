@@ -129,9 +129,9 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
 
         $pageId = MathUtility::forceIntegerInRange((int) $input->getArgument('page'), 0);
         if ($pageId === 0) {
-            $message = "Page ${pageId} is not a valid page, please check you root page id and try again.";
+            $message = "Page {$pageId} is not a valid page, please check you root page id and try again.";
             MessageUtility::addErrorMessage($message);
-            $output->writeln("<info>${message}</info>");
+            $output->writeln("<info>{$message}</info>");
             return Command::FAILURE;
         }
 

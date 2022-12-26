@@ -24,6 +24,7 @@
 
 ### Fixed
 * If indexed_search is installed activate procInstructions for indexed_search
+* Avoid deprecations in PHP 8.2
 
 ### Deprecated
 #### Classes
