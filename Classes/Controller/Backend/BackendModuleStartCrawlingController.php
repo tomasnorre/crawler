@@ -50,7 +50,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
 
     public function __construct(
         private readonly CrawlerController $crawlerController,
-        private readonly UriBuilder $backendUriBuilder
+        private readonly UriBuilder $backendUriBuilder,
     ) {
     }
 
@@ -66,8 +66,8 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
         $this->pageUid = (int) ($request->getQueryParams()['id'] ?? -1);
         $this->moduleTemplate = $this->setupView($request, $this->pageUid);
         $this->moduleTemplate->makeDocHeaderModuleMenu(['id' => $request->getQueryParams()['id'] ?? -1]);
-        $this->assignValues();
 
+        $this->assignValues();
         return $this->moduleTemplate->renderResponse('Backend/ShowCrawlerInformation');
     }
 
