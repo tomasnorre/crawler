@@ -223,6 +223,8 @@ class QueueRepositoryTest extends FunctionalTestCase
         self::assertSame(15, $this->subject->findAll()->count());
         $this->subject->cleanupQueue();
         self::assertSame(8, $this->subject->findAll()->count());
+        // Called again to test the $del === 0 path of the cleanupQueue method.
+        $this->subject->cleanupQueue();
     }
 
     /**
@@ -262,6 +264,9 @@ class QueueRepositoryTest extends FunctionalTestCase
 
         // Check total entries after cleanup
         self::assertSame($expectedRemainingRecords, $this->subject->findAll()->count());
+
+        // Called again to test the $del === 0 path of the cleanUpOldQueueEntries method.
+        $this->subject->cleanUpOldQueueEntries();
     }
 
     /**
