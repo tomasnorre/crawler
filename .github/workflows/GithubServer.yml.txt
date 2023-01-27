@@ -44,7 +44,7 @@ jobs:
         run: cp Build/envs/.env.github .env
 
       - name: Cache dependencies
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         with:
           path: ~/.composer/cache
           key: dependencies-composer-${{ hashFiles('composer.json') }}
