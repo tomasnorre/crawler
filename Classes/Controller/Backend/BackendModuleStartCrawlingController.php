@@ -40,6 +40,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class BackendModuleStartCrawlingController extends AbstractBackendModuleController implements BackendModuleControllerInterface
 {
     private const BACKEND_MODULE = 'web_site_crawler_start';
+    private const LINE_FEED = 10;
+    private const CARRIAGE_RETURN = 13;
     private int $reqMinute = 1000;
     private EventDispatcher $eventDispatcher;
 
@@ -130,7 +132,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
             header('Content-Disposition: attachment; filename=CrawlerUrls.txt');
 
             // Printing the content of the CSV lines:
-            echo implode(chr(13) . chr(10), $downloadUrls);
+            echo implode(chr(self::CARRIAGE_RETURN) . chr(self::LINE_FEED), $downloadUrls);
             exit;
         }
 

@@ -24,12 +24,14 @@ use AOE\Crawler\Controller\Backend\Helper\UrlBuilder;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Service\BackendModuleLogService;
 use AOE\Crawler\Utility\MessageUtility;
 use AOE\Crawler\Value\QueueFilter;
 use AOE\Crawler\Writer\FileWriter\CsvWriter\CsvWriterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Contracts\Service\Attribute\Required;
+use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -69,7 +71,8 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
         private readonly CsvWriterInterface $csvWriter,
         private readonly JsonCompatibilityConverter $jsonCompatibilityConverter,
         private readonly IconFactory $iconFactory,
-        private readonly CrawlerController $crawlerController
+        private readonly CrawlerController $crawlerController,
+        private readonly BackendModuleLogService $backendModuleLogService,
     ) {
         $this->backendModuleMenu = $this->getModuleMenu();
     }
@@ -123,12 +126,16 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
         return [$q_entry, $resStatus];
     }
 
+    /**
+     * @throws RouteNotFoundException
+     */
     private function assignValues(): ModuleTemplate
     {
         // Look for set ID sent - if it is, we will display contents of that set:
         $this->showSetId = (int) GeneralUtility::_GP('setID');
         $this->CSVExport = (bool) GeneralUtility::_GP('_csv');
         $logEntriesPerPage = [];
+        $csvData = [];
 
         if (GeneralUtility::_GP('qid_read')) {
             $this->crawlerController->readUrl((int) GeneralUtility::_GP('qid_read'), true);
@@ -190,9 +197,13 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
                     $queueFilter
                 );
 
-                $logEntriesPerPage[] = $this->drawLog_addRows(
+                list($logEntriesPerPage[], $csvData) = $this->backendModuleLogService->addRows(
                     $logEntriesOfPage,
-                    $data['HTML'] . BackendUtility::getRecordTitle('pages', $data['row'], true)
+                    (int) GeneralUtility::_GP('setID'),
+                    $data['HTML'] . BackendUtility::getRecordTitle('pages', $data['row'], true),
+                    $this->showResultLog,
+                    $this->showFeVars,
+                    $this->CSVExport
                 );
                 if (++$count === 1000) {
                     break;
@@ -203,7 +214,7 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
         }
 
         if ($this->CSVExport) {
-            $this->outputCsvFile();
+            $this->outputCsvFile($csvData);
         }
 
         return $this->moduleTemplate->assignMultiple([
@@ -294,141 +305,6 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
         );
     }
 
-    /**
-     * Create the rows for display of the page tree
-     * For each page a number of rows are shown displaying GET variable configuration
-     *
-     * @param array $logEntriesOfPage Log items of one page
-     * @param string $titleString Title string
-     *
-     * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
-     *
-     * @psalm-return non-empty-list<array{titleRowSpan: positive-int, colSpan: int, title: string, noEntries?: string, trClass?: string, qid?: array{link: \TYPO3\CMS\Core\Http\Uri, link-text: string}, refresh?: array{link: \TYPO3\CMS\Core\Http\Uri, link-text: Icon, warning: Icon|string}, columns?: array{url: mixed|string, scheduled: string, exec_time: string, result_log: string, result_status: string, feUserGroupList: string, procInstructions: string, set_id: string, tsfe_id: string, tsfe_gr_list: string}}>
-     */
-    private function drawLog_addRows(array $logEntriesOfPage, string $titleString): array
-    {
-        $resultArray = [];
-        $contentArray = [];
-
-        $contentArray['titleRowSpan'] = 1;
-        $contentArray['colSpan'] = 9
-            + ($this->showResultLog ? -1 : 0)
-            + ($this->showFeVars ? 3 : 0);
-
-        if (!empty($logEntriesOfPage)) {
-            $setId = (int) GeneralUtility::_GP('setID');
-            $refreshIcon = $this->iconFactory->getIcon('actions-system-refresh', Icon::SIZE_SMALL);
-            // Traverse parameter combinations:
-            $firstIteration = true;
-            foreach ($logEntriesOfPage as $vv) {
-                // Title column:
-                if ($firstIteration) {
-                    $contentArray['titleRowSpan'] = count($logEntriesOfPage);
-                    $contentArray['title'] = $titleString;
-                } else {
-                    $contentArray['title'] = '';
-                    $contentArray['titleRowSpan'] = 1;
-                }
-
-                $firstIteration = false;
-                $execTime = $vv['exec_time'] ? BackendUtility::datetime($vv['exec_time']) : '-';
-
-                // Result:
-                $resLog = ResultHandler::getResultLog($vv);
-
-                $resultData = $vv['result_data'] ? $this->jsonCompatibilityConverter->convert($vv['result_data']) : [];
-                $resStatus = ResultHandler::getResStatus($resultData);
-
-                // Compile row:
-                $parameters = $this->jsonCompatibilityConverter->convert($vv['parameters']);
-
-                // Put data into array:
-                $rowData = [];
-                if ($this->showResultLog) {
-                    $rowData['result_log'] = $resLog;
-                } else {
-                    $rowData['scheduled'] = ($vv['scheduled'] > 0) ? BackendUtility::datetime($vv['scheduled']) : '-';
-                    $rowData['exec_time'] = $execTime;
-                }
-                $rowData['result_status'] = GeneralUtility::fixed_lgd_cs($resStatus, 50);
-                $url = htmlspecialchars((string) ($parameters['url'] ?? $parameters['alturl']), ENT_QUOTES | ENT_HTML5);
-                $rowData['url'] = '<a href="' . $url . '" target="_newWIndow">' . $url . '</a>';
-                $rowData['feUserGroupList'] = $parameters['feUserGroupList'] ?? '';
-                $rowData['procInstructions'] = is_array($parameters['procInstructions']) ? implode(
-                    '; ',
-                    $parameters['procInstructions']
-                ) : '';
-                $rowData['set_id'] = (string) $vv['set_id'];
-
-                if ($this->showFeVars) {
-                    $resFeVars = ResultHandler::getResFeVars($resultData ?: []);
-                    $rowData['tsfe_id'] = $resFeVars['id'] ?? '';
-                    $rowData['tsfe_gr_list'] = $resFeVars['gr_list'] ?? '';
-                }
-
-                $trClass = '';
-                $warningIcon = '';
-                if (str_contains($resStatus, 'Error:')) {
-                    $trClass = 'bg-danger';
-                    $warningIcon = $this->iconFactory->getIcon('actions-ban', Icon::SIZE_SMALL);
-                }
-
-                // Put rows together:
-                $contentArray['trClass'] = $trClass;
-                $contentArray['qid'] = [
-                    'link' => UrlBuilder::getBackendModuleUrl([
-                        'qid_details' => $vv['qid'], 'setID' => $setId, ],
-                        self::BACKEND_MODULE
-                    ),
-                    'link-text' => htmlspecialchars((string) $vv['qid'], ENT_QUOTES | ENT_HTML5),
-                ];
-                $contentArray['refresh'] = [
-                    'link' => UrlBuilder::getBackendModuleUrl([
-                        'qid_read' => $vv['qid'], 'setID' => $setId, ],
-                        self::BACKEND_MODULE
-                    ),
-                    'link-text' => $refreshIcon,
-                    'warning' => $warningIcon,
-                ];
-
-                foreach ($rowData as $fKey => $value) {
-                    if ($fKey === 'url') {
-                        $contentArray['columns'][$fKey] = $value;
-                    } else {
-                        $contentArray['columns'][$fKey] = nl2br(
-                            htmlspecialchars((string) $value, ENT_QUOTES | ENT_HTML5)
-                        );
-                    }
-                }
-
-                $resultArray[] = $contentArray;
-
-                if ($this->CSVExport) {
-                    // Only for CSV (adding qid and scheduled/exec_time if needed):
-                    $csvExport['scheduled'] = BackendUtility::datetime($vv['scheduled']);
-                    $csvExport['exec_time'] = $vv['exec_time'] ? BackendUtility::datetime($vv['exec_time']) : '-';
-                    $csvExport['result_status'] = $contentArray['columns']['result_status'];
-                    $csvExport['url'] = $contentArray['columns']['url'];
-                    $csvExport['feUserGroupList'] = $contentArray['columns']['feUserGroupList'];
-                    $csvExport['procInstructions'] = $contentArray['columns']['procInstructions'];
-                    $csvExport['set_id'] = $contentArray['columns']['set_id'];
-                    $csvExport['result_log'] = str_replace(chr(10), '// ', $resLog);
-                    $csvExport['qid'] = $vv['qid'];
-                    $this->CSVaccu[] = $csvExport;
-                }
-            }
-        } else {
-            $contentArray['title'] = $titleString;
-            $contentArray['noEntries'] = $this->getLanguageService()->sL(
-                'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noentries'
-            );
-
-            $resultArray[] = $contentArray;
-        }
-
-        return $resultArray;
-    }
-
     private function setPropertiesBasedOnPostVars(ServerRequestInterface $request): void
     {
         $this->pageUid = (int) ($request->getQueryParams()['id'] ?? -1);
@@ -467,9 +343,9 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
     /**
      * Outputs the CSV file and sets the correct headers
      */
-    private function outputCsvFile(): void
+    private function outputCsvFile(array $csvData): void
     {
-        if (!count($this->CSVaccu)) {
+        if (!count($csvData)) {
             MessageUtility::addWarningMessage(
                 $this->getLanguageService()->sL(
                     'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:message.canNotExportEmptyQueueToCsvText'
@@ -478,7 +354,7 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
             return;
         }
 
-        $csvString = $this->csvWriter->arrayToCsv($this->CSVaccu);
+        $csvString = $this->csvWriter->arrayToCsv($csvData);
 
         header('Content-Type: application/octet-stream');
         header('Content-Disposition: attachment; filename=CrawlerLog.csv');

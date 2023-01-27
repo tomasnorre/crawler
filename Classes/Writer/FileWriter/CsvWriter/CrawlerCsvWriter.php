@@ -26,6 +26,7 @@ use TYPO3\CMS\Core\Utility\CsvUtility;
  */
 final class CrawlerCsvWriter implements CsvWriterInterface
 {
+    private const LINE_FEED = 10;
     public const CARRIAGE_RETURN = 13;
 
     public function arrayToCsv(array $records): string
@@ -38,7 +39,7 @@ final class CrawlerCsvWriter implements CsvWriterInterface
             $csvLines[] = CsvUtility::csvValues($row);
         }
 
-        return implode(chr(self::CARRIAGE_RETURN) . chr(10), $csvLines);
+        return implode(chr(self::CARRIAGE_RETURN) . chr(self::LINE_FEED), $csvLines);
     }
 
     private function getRowHeaders(array $lines): string
