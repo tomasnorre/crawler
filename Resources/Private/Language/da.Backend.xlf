@@ -4,17 +4,17 @@
     <header/>
     <body>
       <!-- Backend Module Labels -->
-      <trans-unit id="mlang_labels_tabdescr" resname="mlang_labels_tabdescr">
+      <trans-unit id="mlang_labels_tabdescr" resname="mlang_labels_tabdescr" approved="yes">
         <source>Libraries and scripts for crawling the TYPO3 page tree. Used for re-caching, re-indexing, publishing applications etc.</source>
-        <target state="needs-translation">Libraries and scripts for crawling the TYPO3 page tree. Used for re-caching, re-indexing, publishing applications etc.</target>
+        <target state="final">Biblioteker og scripts til at kravle TYPO3 sidetræet. Bruges til re-caching, re-indeksering, udgivelse af applikationer osv.</target>
       </trans-unit>
-      <trans-unit id="mlang_labels_tablabel" resname="mlang_labels_tablabel">
+      <trans-unit id="mlang_labels_tablabel" resname="mlang_labels_tablabel" approved="yes">
         <source>Crawler</source>
-        <target state="needs-translation">Crawler</target>
+        <target state="final">Crawler</target>
       </trans-unit>
-      <trans-unit id="mlang_tabs_tab" resname="mlang_tabs_tab">
+      <trans-unit id="mlang_tabs_tab" resname="mlang_tabs_tab" approved="yes">
         <source>Crawler module</source>
-        <target state="needs-translation">Crawler module</target>
+        <target state="final">Crawler modul</target>
       </trans-unit>
       <!-- Old Backend Module Labels -->
       <trans-unit id="moduleFunction.tx_crawler_modfunc1" resname="moduleFunction.tx_crawler_modfunc1" approved="yes">
