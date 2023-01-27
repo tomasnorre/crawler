@@ -75,7 +75,7 @@ class MessageUtilityTest extends UnitTestCase
 
         self::assertEquals($messageText, $messages[0]->getMessage());
 
-        self::assertEquals(ContextualFeedbackSeverity::NOTICE->value, $messages[0]->getSeverity()->value);
+        self::assertEquals(ContextualFeedbackSeverity::NOTICE->value, $messages[0]->getSeverity()->value->value);
     }
 
     /**
@@ -91,7 +91,7 @@ class MessageUtilityTest extends UnitTestCase
         self::assertCount(1, $messages);
 
         self::assertEquals($messageText, $messages[0]->getMessage());
-        self::assertEquals(ContextualFeedbackSeverity::ERROR->value, $messages[0]->getSeverity()->value);
+        self::assertEquals(ContextualFeedbackSeverity::ERROR->value, $messages[0]->getSeverity()->value->value);
     }
 
     /**
@@ -107,7 +107,7 @@ class MessageUtilityTest extends UnitTestCase
 
         self::assertEquals($messageText, $messages[0]->getMessage());
 
-        self::assertEquals(ContextualFeedbackSeverity::WARNING->value, $messages[0]->getSeverity()->value);
+        self::assertEquals(ContextualFeedbackSeverity::WARNING->value, $messages[0]->getSeverity()->value->value);
     }
 
     /**
