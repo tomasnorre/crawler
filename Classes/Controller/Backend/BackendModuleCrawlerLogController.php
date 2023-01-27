@@ -20,7 +20,6 @@ namespace AOE\Crawler\Controller\Backend;
  */
 
 use AOE\Crawler\Controller\Backend\Helper\ResultHandler;
-use AOE\Crawler\Controller\Backend\Helper\UrlBuilder;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\Domain\Repository\QueueRepository;
@@ -51,7 +50,6 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
 
     private QueryBuilder $queryBuilder;
     private bool $CSVExport = false;
-    private array $CSVaccu = [];
     private readonly array $backendModuleMenu;
     private int $setId;
     private string $quiPath;
@@ -197,7 +195,7 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
                     $queueFilter
                 );
 
-                list($logEntriesPerPage[], $csvData) = $this->backendModuleLogService->addRows(
+                [$logEntriesPerPage[], $csvData] = $this->backendModuleLogService->addRows(
                     $logEntriesOfPage,
                     (int) GeneralUtility::_GP('setID'),
                     $data['HTML'] . BackendUtility::getRecordTitle('pages', $data['row'], true),

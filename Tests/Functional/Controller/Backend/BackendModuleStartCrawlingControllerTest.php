@@ -78,7 +78,6 @@ class BackendModuleStartCrawlingControllerTest extends FunctionalTestCase
          * with the package name, default kicks in (extension default template files -> ext:<ext>/Resources/Private/(Templates/Partials/Layouts)/` ...
          * would bet the missing route/packagename is the missing puzzle piece
          */
-
         $response = $subject->handleRequest($request);
         self::assertEquals('test', $response->getBody());
     }

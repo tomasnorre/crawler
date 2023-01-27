@@ -4,6 +4,21 @@ declare(strict_types=1);
 
 namespace AOE\Crawler\Service;
 
+/*
+ * (c) 2023-     Tomas Norre Mikkelsen <tomasnorre@gmail.com>
+ *
+ * This file is part of the TYPO3 Crawler Extension.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
+
 use AOE\Crawler\Controller\Backend\BackendModuleCrawlerLogController;
 use AOE\Crawler\Controller\Backend\Helper\ResultHandler;
 use AOE\Crawler\Controller\Backend\Helper\UrlBuilder;
@@ -19,22 +34,25 @@ class BackendModuleLogService
     public function __construct(
         private readonly IconFactory $iconFactory,
         private readonly JsonCompatibilityConverter $jsonCompatibilityConverter,
-    )
-    {}
+    ) {
+    }
 
     /**
      * Create the rows for display of the page tree
      * For each page a number of rows are shown displaying GET variable configuration
      *
-     * @param array $logEntriesOfPage Log items of one page
-     * @param string $titleString Title string
-     *
      * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
      *
      * @psalm-return non-empty-list<array{titleRowSpan: positive-int, colSpan: int, title: string, noEntries?: string, trClass?: string, qid?: array{link: \TYPO3\CMS\Core\Http\Uri, link-text: string}, refresh?: array{link: \TYPO3\CMS\Core\Http\Uri, link-text: Icon, warning: Icon|string}, columns?: array{url: mixed|string, scheduled: string, exec_time: string, result_log: string, result_status: string, feUserGroupList: string, procInstructions: string, set_id: string, tsfe_id: string, tsfe_gr_list: string}}>
      */
-    public function addRows(array $logEntriesOfPage, int $setId, string $titleString, string $showResultLog, string $showFeVars, bool $CSVExport): array
-    {
+    public function addRows(
+        array $logEntriesOfPage,
+        int $setId,
+        string $titleString,
+        string $showResultLog,
+        string $showFeVars,
+        bool $CSVExport
+    ): array {
         $resultArray = [];
         $contentArray = [];
         $csvExport = [];
@@ -96,7 +114,7 @@ class BackendModuleLogService
 
                 $trClass = '';
                 $warningIcon = '';
-                if (str_contains($resStatus, 'Error:')) {
+                if (str_contains($resStatus, 'Error')) {
                     $trClass = 'bg-danger';
                     $warningIcon = $this->iconFactory->getIcon('actions-ban', Icon::SIZE_SMALL);
                 }

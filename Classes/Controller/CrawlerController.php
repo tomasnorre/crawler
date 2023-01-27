@@ -122,7 +122,11 @@ class CrawlerController implements LoggerAwareInterface
         );
         $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
         $this->crawler = GeneralUtility::makeInstance(Crawler::class);
-        $this->configurationService = GeneralUtility::makeInstance(ConfigurationService::class, GeneralUtility::makeInstance(UrlService::class), $this->configurationRepository);
+        $this->configurationService = GeneralUtility::makeInstance(
+            ConfigurationService::class,
+            GeneralUtility::makeInstance(UrlService::class),
+            $this->configurationRepository
+        );
         $this->urlService = GeneralUtility::makeInstance(UrlService::class);
 
         /** @var ExtensionConfigurationProvider $configurationProvider */
