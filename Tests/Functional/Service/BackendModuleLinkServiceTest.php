@@ -22,7 +22,6 @@ namespace AOE\Crawler\Tests\Unit\Service;
 use AOE\Crawler\Service\BackendModuleLinkService;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use AOE\Crawler\Tests\Functional\LanguageServiceTestTrait;
-use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
@@ -36,8 +35,8 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 class BackendModuleLinkServiceTest extends FunctionalTestCase
 {
     use BackendRequestTestTrait;
-    use ProphecyTrait;
     use LanguageServiceTestTrait;
+
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
     private BackendModuleLinkService $subject;
     private ModuleTemplate $moduleTemplate;

@@ -23,6 +23,7 @@ use AOE\Crawler\Controller\Backend\Helper\ResultHandler;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Service\BackendModuleHtmlElementService;
 use AOE\Crawler\Service\BackendModuleLogService;
 use AOE\Crawler\Utility\MessageUtility;
 use AOE\Crawler\Value\QueueFilter;
@@ -71,6 +72,7 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
         private readonly IconFactory $iconFactory,
         private readonly CrawlerController $crawlerController,
         private readonly BackendModuleLogService $backendModuleLogService,
+        private readonly BackendModuleHtmlElementService $backendModuleHtmlElementService,
     ) {
         $this->backendModuleMenu = $this->getModuleMenu();
     }
@@ -215,6 +217,15 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
             $this->outputCsvFile($csvData);
         }
 
+        $queryParams = [
+            'setID' => $this->setId,
+            'logDisplay' => $this->logDisplay,
+            'itemsPerPage' => $this->itemsPerPage,
+            'ShowFeVars' => $this->showFeVars,
+            'ShowResultLog' => $this->showResultLog,
+            'logDepth' => $this->logDepth,
+        ];
+
         return $this->moduleTemplate->assignMultiple([
             'actionUrl' => '',
             'queueId' => $this->queueId,
@@ -225,9 +236,21 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
             'showFeVars' => $this->showFeVars,
             'displayActions' => 1,
             'displayLogFilterHtml' => $this->getDisplayLogFilterHtml(),
-            'itemPerPageHtml' => $this->getItemsPerPageDropDownHtml(),
-            'showResultLogHtml' => $this->getShowResultLogCheckBoxHtml(),
-            'showFeVarsHtml' => $this->getShowFeVarsCheckBoxHtml(),
+            'itemPerPageHtml' => $this->backendModuleHtmlElementService->getItemsPerPageDropDownHtml(
+                $this->pageUid,
+                $this->itemsPerPage,
+                $this->backendModuleMenu['itemsPerPage'],
+                $queryParams
+            ),
+            'showResultLogHtml' => $this->backendModuleHtmlElementService->getShowResultLogCheckBoxHtml(
+                $this->pageUid, $this->showResultLog, $this->quiPath, $queryParams
+            ),
+            'showFeVarsHtml' => $this->backendModuleHtmlElementService->getShowFeVarsCheckBoxHtml(
+                $this->pageUid,
+                $this->showFeVars,
+                $this->quiPath,
+                $queryParams
+            ),
             'depthDropDownHtml' => $this->getDepthDropDownHtml(
                 $this->pageUid,
                 $this->logDepth,
@@ -259,47 +282,6 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
             $menuItems,
             'index.php',
             $this->getAdditionalQueryParams('logDepth')
-        );
-    }
-
-    private function getItemsPerPageDropDownHtml(): string
-    {
-        return $this->getLanguageService()->sL(
-            'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.itemsPerPage'
-        ) . ': ' .
-            BackendUtility::getFuncMenu(
-                $this->pageUid,
-                'itemsPerPage',
-                $this->itemsPerPage,
-                $this->backendModuleMenu['itemsPerPage'],
-                'index.php',
-                $this->getAdditionalQueryParams('itemsPerPage')
-            );
-    }
-
-    private function getShowResultLogCheckBoxHtml(): string
-    {
-        return BackendUtility::getFuncCheck(
-            $this->pageUid,
-            'ShowResultLog',
-            $this->showResultLog,
-            'index.php',
-            $this->quiPath . $this->getAdditionalQueryParams('ShowResultLog')
-        ) . '&nbsp;' . $this->getLanguageService()->sL(
-            'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showresultlog'
-        );
-    }
-
-    private function getShowFeVarsCheckBoxHtml(): string
-    {
-        return BackendUtility::getFuncCheck(
-            $this->pageUid,
-            'ShowFeVars',
-            $this->showFeVars,
-            'index.php',
-            $this->quiPath . $this->getAdditionalQueryParams('ShowFeVars')
-        ) . '&nbsp;' . $this->getLanguageService()->sL(
-            'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showfevars'
         );
     }
 
