@@ -219,7 +219,7 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
 
         $queryParams = [
             'setID' => $this->setId,
-            'logDisplay' => $this->logDisplay,
+            'displayLog' => $this->logDisplay,
             'itemsPerPage' => $this->itemsPerPage,
             'ShowFeVars' => $this->showFeVars,
             'ShowResultLog' => $this->showResultLog,
@@ -235,54 +235,38 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
             'showResultLog' => $this->showResultLog,
             'showFeVars' => $this->showFeVars,
             'displayActions' => 1,
-            'displayLogFilterHtml' => $this->getDisplayLogFilterHtml(),
-            'itemPerPageHtml' => $this->backendModuleHtmlElementService->getItemsPerPageDropDownHtml(
+            'displayLogFilterHtml' => $this->backendModuleHtmlElementService->getFormElementSelect(
+                'displayLog',
+                $this->pageUid,
+                $this->logDisplay,
+                $this->backendModuleMenu,
+                $queryParams
+            ),
+            'itemPerPageHtml' => $this->backendModuleHtmlElementService->getFormElementSelect(
+                'itemsPerPage',
                 $this->pageUid,
                 $this->itemsPerPage,
-                $this->backendModuleMenu['itemsPerPage'],
+                $this->backendModuleMenu,
                 $queryParams
             ),
-            'showResultLogHtml' => $this->backendModuleHtmlElementService->getShowResultLogCheckBoxHtml(
-                $this->pageUid, $this->showResultLog, $this->quiPath, $queryParams
+            'showResultLogHtml' => $this->backendModuleHtmlElementService->getFormElementCheckbox(
+                'ShowResultLog', $this->pageUid, $this->showResultLog, $queryParams, $this->quiPath
             ),
-            'showFeVarsHtml' => $this->backendModuleHtmlElementService->getShowFeVarsCheckBoxHtml(
+            'showFeVarsHtml' => $this->backendModuleHtmlElementService->getFormElementCheckbox(
+                'ShowFeVars',
                 $this->pageUid,
                 $this->showFeVars,
-                $this->quiPath,
-                $queryParams
+                $queryParams,
+                $this->quiPath
             ),
-            'depthDropDownHtml' => $this->getDepthDropDownHtml(
+            'depthDropDownHtml' => $this->backendModuleHtmlElementService->getFormElementSelect(
+                'logDepth',
                 $this->pageUid,
                 $this->logDepth,
-                $this->backendModuleMenu['depth']
+                $this->backendModuleMenu,
+                $queryParams
             ),
         ]);
-    }
-
-    private function getDisplayLogFilterHtml(): string
-    {
-        return $this->getLanguageService()->sL(
-            'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.display'
-        ) . ': ' . BackendUtility::getFuncMenu(
-            $this->pageUid,
-            'logDisplay',
-            $this->logDisplay,
-            $this->backendModuleMenu['log_display'],
-            'index.php',
-            $this->getAdditionalQueryParams('logDisplay')
-        );
-    }
-
-    private function getDepthDropDownHtml(int $id, string $currentValue, array $menuItems): string
-    {
-        return BackendUtility::getFuncMenu(
-            $id,
-            'logDepth',
-            $currentValue,
-            $menuItems,
-            'index.php',
-            $this->getAdditionalQueryParams('logDepth')
-        );
     }
 
     private function setPropertiesBasedOnPostVars(ServerRequestInterface $request): void
@@ -291,33 +275,11 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
         $this->setId = (int) GeneralUtility::_GP('setID');
         $this->quiPath = GeneralUtility::_GP('qid_details') ? '&qid_details=' . (int) GeneralUtility::_GP('qid_details') : '';
         $this->queueId = GeneralUtility::_GP('qid_details');
-        $this->logDisplay = GeneralUtility::_GP('logDisplay') ?? 'all';
+        $this->logDisplay = GeneralUtility::_GP('displayLog') ?? 'all';
         $this->itemsPerPage = (int) (GeneralUtility::_GP('itemsPerPage') ?? 10);
         $this->showResultLog = (string) (GeneralUtility::_GP('ShowResultLog') ?? 0);
         $this->showFeVars = (string) (GeneralUtility::_GP('ShowFeVars') ?? 0);
         $this->logDepth = (string) (GeneralUtility::_GP('logDepth') ?? 0);
-    }
-
-    /*
-     * Build query string with affected checkbox/dropdown value removed.
-     */
-    private function getAdditionalQueryParams(string $keyToBeRemoved): string
-    {
-        $queryString = '';
-        $queryParams = [
-            'setID' => $this->setId,
-            'logDisplay' => $this->logDisplay,
-            'itemsPerPage' => $this->itemsPerPage,
-            'ShowFeVars' => $this->showFeVars,
-            'ShowResultLog' => $this->showResultLog,
-            'logDepth' => $this->logDepth,
-        ];
-
-        unset($queryParams[$keyToBeRemoved]);
-        foreach ($queryParams as $key => $value) {
-            $queryString .= "&{$key}={$value}";
-        }
-        return $queryString;
     }
 
     /**

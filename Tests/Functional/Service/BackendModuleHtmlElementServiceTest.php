@@ -20,46 +20,41 @@ namespace AOE\Crawler\Tests\Functional\Service;
  */
 
 use AOE\Crawler\Service\BackendModuleHtmlElementService;
-use AOE\Crawler\Tests\Functional\LanguageServiceTestTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 class BackendModuleHtmlElementServiceTest extends FunctionalTestCase
 {
-    use LanguageServiceTestTrait;
-
-    protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
     private BackendModuleHtmlElementService $subject;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->setupLanguageService();
         $this->subject = GeneralUtility::makeInstance(BackendModuleHtmlElementService::class);
     }
 
     /**
      * @test
      */
-    public function getItemsPerPageDropDownHtmlWithEmptyMenuItemsReturnStringWithLabel(): void
+    public function getFormElementForItemsPerPageWithEmptyMenuItems(): void
     {
-        $html = $this->subject->getItemsPerPageDropDownHtml(1, 10, [], []);
-        self::assertEquals('Items per page: ', $html);
+        $html = $this->subject->getFormElementSelect('itemsPerPage', 1, '10', [], []);
+        self::assertEquals('', $html);
     }
 
     /**
      * @test
      */
-    public function getItemsPerPageDropDownHtmlReturnHtml(): void
+    public function getFormElementForItemsPerPageReturnSelect(): void
     {
-        $html = $this->subject->getItemsPerPageDropDownHtml(
+        $html = $this->subject->getFormElementSelect(
+            'itemsPerPage',
             1,
-            10, // The Selected value
-            $this->getItemsPerPageArray(),
+            '10', // The Selected value
+            $this->getMenuItems(),
             $this->getQueryParameters()
         );
 
-        self::assertStringContainsString('Items per page: ', $html);
         self::assertStringContainsString('select name="itemsPerPage"', $html);
         self::assertStringContainsString('data-menu-identifier="items-per-page"', $html);
         self::assertStringContainsString('value="5"', $html);
@@ -74,12 +69,11 @@ class BackendModuleHtmlElementServiceTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function getShowFeVarsCheckBoxHtmlReturnsHtml(): void
+    public function getFormElementForShowFeVarsReturnsCheckbox(): void
     {
         // without quiPath
-        $html = $this->subject->getShowFeVarsCheckBoxHtml(1, '1', '', $this->getQueryParameters());
+        $html = $this->subject->getFormElementCheckbox('ShowFeVars', 1, '1', $this->getQueryParameters());
 
-        self::assertStringContainsString('Show FE Vars', $html);
         self::assertStringContainsString('<input type="checkbox"', $html);
         self::assertStringContainsString('name="ShowFeVars" value="1"', $html);
         self::assertStringContainsString('data-navigate-value="index.php?id=1&amp;setID=1234', $html);
@@ -88,9 +82,14 @@ class BackendModuleHtmlElementServiceTest extends FunctionalTestCase
         self::assertStringNotContainsString('qid_details', $html);
 
         // with quiPath
-        $html = $this->subject->getShowFeVarsCheckBoxHtml(1, '1', '&qid_details=1', $this->getQueryParameters());
+        $html = $this->subject->getFormElementCheckbox(
+            'ShowFeVars',
+            1,
+            '1',
+            $this->getQueryParameters(),
+            '&qid_details=1',
+        );
 
-        self::assertStringContainsString('Show FE Vars', $html);
         self::assertStringContainsString('<input type="checkbox"', $html);
         self::assertStringContainsString('name="ShowFeVars" value="1"', $html);
         self::assertStringContainsString('data-navigate-value="index.php?id=1&amp;qid_details=1&amp;setID=1234', $html);
@@ -101,12 +100,11 @@ class BackendModuleHtmlElementServiceTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function getShowResultLogCheckBoxHtmlReturnsHtml(): void
+    public function getFormElementForShowResultLogReturnsCheckbox(): void
     {
         // without quiPath
-        $html = $this->subject->getShowResultLogCheckBoxHtml(1, '1', '', $this->getQueryParameters());
+        $html = $this->subject->getFormElementCheckbox('ShowResultLog', 1, '1', $this->getQueryParameters());
 
-        self::assertStringContainsString('Show Result Log', $html);
         self::assertStringContainsString('<input type="checkbox"', $html);
         self::assertStringContainsString('name="ShowResultLog" value="1"', $html);
         self::assertStringContainsString('data-navigate-value="index.php?id=1&amp;setID=1234', $html);
@@ -115,9 +113,14 @@ class BackendModuleHtmlElementServiceTest extends FunctionalTestCase
         self::assertStringNotContainsString('qid_details', $html);
 
         // with quiPath
-        $html = $this->subject->getShowResultLogCheckBoxHtml(1, '1', '&qid_details=1', $this->getQueryParameters());
+        $html = $this->subject->getFormElementCheckbox(
+            'ShowResultLog',
+            1,
+            '1',
+            $this->getQueryParameters(),
+            '&qid_details=1'
+        );
 
-        self::assertStringContainsString('Show Result Log', $html);
         self::assertStringContainsString('<input type="checkbox"', $html);
         self::assertStringContainsString('name="ShowResultLog" value="1"', $html);
         self::assertStringContainsString('data-navigate-value="index.php?id=1&amp;qid_details=1&amp;setID=1234', $html);
@@ -125,7 +128,59 @@ class BackendModuleHtmlElementServiceTest extends FunctionalTestCase
         self::assertStringContainsString('&amp;logDepth=4&amp;ShowResultLog=${value}"', $html);
     }
 
-    private function getItemsPerPageArray(): array
+    /**
+     * @test
+     */
+    public function getFormElementForLogDisplayReturnsSelect(): void
+    {
+        $html = $this->subject->getFormElementSelect(
+            'logDisplay',
+            1,
+            'finished',
+            $this->getMenuItems(),
+            $this->getQueryParameters()
+        );
+
+        self::assertStringContainsString('<select name="logDisplay"', $html);
+        self::assertStringContainsString(
+            'data-navigate-value="index.php?id=1&amp;setID=1234&amp;itemsPerPage=10',
+            $html
+        );
+        self::assertStringContainsString('&amp;ShowFeVars=1&amp;ShowResultLog=1&amp;logDepth=4', $html);
+        self::assertStringContainsString('&amp;logDisplay=${value}"', $html);
+
+        self::assertStringContainsString('<option value="all">', $html);
+        self::assertStringContainsString('<option value="pending">', $html);
+        self::assertStringContainsString('<option value="finished" selected="selected">', $html);
+    }
+
+    /**
+     * @test
+     */
+    public function getFormElementForLogDepthReturnsSelect(): void
+    {
+        $html = $this->subject->getFormElementSelect(
+            'logDepth',
+            1,
+            '2',
+            $this->getMenuItems(),
+            $this->getQueryParameters()
+        );
+
+        self::assertStringContainsString('name="logDepth"', $html);
+        self::assertStringContainsString('data-navigate-value="index.php?id=1&amp;setID=1234&amp;logDisplay=1', $html);
+        self::assertStringContainsString('&amp;itemsPerPage=10&amp;ShowFeVars=1', $html);
+        self::assertStringContainsString('&amp;ShowResultLog=1&amp;logDepth=${value}"', $html);
+
+        self::assertStringContainsString('<option value="0"', $html);
+        self::assertStringContainsString('<option value="1"', $html);
+        self::assertStringContainsString('<option value="2" selected="selected">', $html);
+        self::assertStringContainsString('<option value="3"', $html);
+        self::assertStringContainsString('<option value="4"', $html);
+        self::assertStringContainsString('<option value="99"', $html);
+    }
+
+    private function getMenuItems(): array
     {
         return [
             'itemsPerPage' => [
@@ -133,6 +188,19 @@ class BackendModuleHtmlElementServiceTest extends FunctionalTestCase
                 10 => 'limit to 10',
                 50 => 'limit to 50',
                 0 => 'no limit',
+            ],
+            'logDisplay' => [
+                'all' => 'all',
+                'pending' => 'pending',
+                'finished' => 'finished',
+            ],
+            'logDepth' => [
+                '0' => 'This page',
+                '1' => '1 level',
+                '2' => '2 levels',
+                '3' => '3 levels',
+                '4' => '4 levels',
+                '99' => 'Infinite',
             ],
         ];
     }

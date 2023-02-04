@@ -20,99 +20,41 @@ namespace AOE\Crawler\Service;
  */
 
 use TYPO3\CMS\Backend\Utility\BackendUtility;
-use TYPO3\CMS\Core\Localization\LanguageService;
 
 class BackendModuleHtmlElementService
 {
-    /**
-     * Todo: Mode XLF Labels to Fluid Templates then the methods can be merged into one to some degree.
-     * This should be done when it's added an 100% test coverage, after that i might even be possible to
-     * switch to unit tests as the language service isn't needed anymore in the BackendModuleHtmLElementService
-     */
-    public function getItemsPerPageDropDownHtml(
+    public function getFormElementSelect(
+        string $elementName,
         int $pageUid,
-        int $itemsPerPage,
+        string|int $currentValue,
         array $menuItems,
-        array $queryParameters
-    ): string {
-        return $this->getLanguageService()->sL(
-            'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.itemsPerPage'
-        ) . ': ' .
-            BackendUtility::getFuncMenu(
-                $pageUid,
-                'itemsPerPage',
-                $itemsPerPage,
-                $menuItems['itemsPerPage'],
-                'index.php',
-                $this->getAdditionalQueryParams('itemsPerPage', $queryParameters)
-            );
-    }
-
-    public function getShowFeVarsCheckBoxHtml(
-        int $pageUid,
-        string $showFeVars,
-        string $quiPath,
-        array $queryParameters
-    ): string {
-        return BackendUtility::getFuncCheck(
-            $pageUid,
-            'ShowFeVars',
-            $showFeVars,
-            'index.php',
-            $quiPath . $this->getAdditionalQueryParams('ShowFeVars', $queryParameters)
-        ) . '&nbsp;' . $this->getLanguageService()->sL(
-            'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showfevars'
-        );
-    }
-
-    public function getShowResultLogCheckBoxHtml(
-        int $pageUid,
-        string $showResultLog,
-        string $quiPath,
-        array $queryParameters
-    ): string {
-        return BackendUtility::getFuncCheck(
-            $pageUid,
-            'ShowResultLog',
-            $showResultLog,
-            'index.php',
-            $quiPath . $this->getAdditionalQueryParams('ShowResultLog', $queryParameters)
-        ) . '&nbsp;' . $this->getLanguageService()->sL(
-            'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showresultlog'
-        );
-    }
-
-    public function getDisplayLogFilterHtml(
-        int $pageUid,
-        string $logDisplay,
-        array $menuItems,
-        array $queryParameters
-    ): string {
-        return $this->getLanguageService()->sL(
-            'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.display'
-        ) . ': ' . BackendUtility::getFuncMenu(
-            $pageUid,
-            'logDisplay',
-            $logDisplay,
-            $menuItems['log_display'],
-            'index.php',
-            $this->getAdditionalQueryParams('logDisplay', $queryParameters)
-        );
-    }
-
-    public function getDepthDropDownHtml(
-        int $id,
-        string $currentValue,
-        array $menuItems,
-        array $queryParameters
+        array $queryParameters,
+        string $queryString = ''
     ): string {
         return BackendUtility::getFuncMenu(
-            $id,
-            'logDepth',
+            $pageUid,
+            $elementName,
             $currentValue,
-            $menuItems,
+            $menuItems[$elementName],
             'index.php',
-            $this->getAdditionalQueryParams('logDepth', $queryParameters)
+            $queryString . $this->getAdditionalQueryParams($elementName, $queryParameters)
+        );
+    }
+
+    public function getFormElementCheckbox(
+        string $elementName,
+        int $pageUid,
+        string $currentValue,
+        array $queryParameters,
+        string $queryString = '',
+
+    ) {
+        return BackendUtility::getFuncCheck(
+            $pageUid,
+            $elementName,
+            $currentValue,
+            'index.php',
+            $queryString . $this->getAdditionalQueryParams($elementName, $queryParameters)
         );
     }
 
@@ -127,10 +69,5 @@ class BackendModuleHtmlElementService
             $queryString .= "&{$key}={$value}";
         }
         return $queryString;
-    }
-
-    private function getLanguageService(): LanguageService
-    {
-        return $GLOBALS['LANG'];
     }
 }

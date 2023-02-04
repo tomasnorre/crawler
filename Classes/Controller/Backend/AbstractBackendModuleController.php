@@ -90,7 +90,7 @@ abstract class AbstractBackendModuleController
     protected function getModuleMenu(): array
     {
         return [
-            'depth' => [
+            'logDepth' => [
                 0 => $this->getLanguageService()->sL(
                     'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_0'
                 ),
@@ -124,7 +124,7 @@ abstract class AbstractBackendModuleController
             'log_resultLog' => '',
             'log_feVars' => '',
             'processListMode' => '',
-            'log_display' => [
+            'displayLog' => [
                 'all' => $this->getLanguageService()->sL(
                     'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.all'
                 ),
