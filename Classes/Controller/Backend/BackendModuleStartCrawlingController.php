@@ -148,11 +148,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
             'logUrl' => $logUrl,
         ]);
     }
-
-    /*
-     * TODO: Move HTML Generations to something like BackendModuleHtmlElementService
-     */
-
+    
     /**
      * Generates the configuration selectors for compiling URLs:
      */
