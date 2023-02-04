@@ -84,3 +84,9 @@ services:
 
     AOE\Crawler\Controller\Backend\BackendModuleCrawlerLogController:
         tags: [ 'backend.controller' ]
+
+    AOE\Crawler\Service\BackendModuleLogService:
+        arguments:
+            $iconFactory: '@TYPO3\CMS\Core\Imaging\IconFactory'
+            $jsonCompatibilityConverter: '@AOE\Crawler\Converter\JsonCompatibilityConverter'
+        public: true

@@ -28,6 +28,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Contracts\Service\Attribute\Required;
 use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
+use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Http\Uri;
@@ -36,9 +37,11 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * @internal since v12.0.0
  */
-final class BackendModuleStartCrawlingController extends AbstractBackendModuleController implements BackendModuleControllerInterface
+class BackendModuleStartCrawlingController extends AbstractBackendModuleController implements BackendModuleControllerInterface
 {
     private const BACKEND_MODULE = 'web_site_crawler_start';
+    private const LINE_FEED = 10;
+    private const CARRIAGE_RETURN = 13;
     private int $reqMinute = 1000;
     private EventDispatcher $eventDispatcher;
 
@@ -48,7 +51,8 @@ final class BackendModuleStartCrawlingController extends AbstractBackendModuleCo
     private $incomingConfigurationSelection = [];
 
     public function __construct(
-        private readonly CrawlerController $crawlerController
+        private readonly CrawlerController $crawlerController,
+        private readonly UriBuilder $backendUriBuilder,
     ) {
     }
 
@@ -64,15 +68,14 @@ final class BackendModuleStartCrawlingController extends AbstractBackendModuleCo
         $this->pageUid = (int) ($request->getQueryParams()['id'] ?? -1);
         $this->moduleTemplate = $this->setupView($request, $this->pageUid);
         $this->moduleTemplate->makeDocHeaderModuleMenu(['id' => $request->getQueryParams()['id'] ?? -1]);
-        $this->assignValues();
 
+        $this->assignValues();
         return $this->moduleTemplate->renderResponse('Backend/ShowCrawlerInformation');
     }
 
     private function assignValues(): ModuleTemplate
     {
-        $backendUriBuilder = GeneralUtility::makeInstance(\TYPO3\CMS\Backend\Routing\UriBuilder::class);
-        $logUrl = $backendUriBuilder->buildUriFromRoute('web_site_crawler_log', ['id' => $this->pageUid]);
+        $logUrl = $this->backendUriBuilder->buildUriFromRoute('web_site_crawler_log', ['id' => $this->pageUid]);
 
         $crawlingDepth = GeneralUtility::_GP('crawlingDepth') ?? '0';
         $crawlParameter = GeneralUtility::_GP('_crawl');
@@ -129,7 +132,7 @@ final class BackendModuleStartCrawlingController extends AbstractBackendModuleCo
             header('Content-Disposition: attachment; filename=CrawlerUrls.txt');
 
             // Printing the content of the CSV lines:
-            echo implode(chr(13) . chr(10), $downloadUrls);
+            echo implode(chr(self::CARRIAGE_RETURN) . chr(self::LINE_FEED), $downloadUrls);
             exit;
         }
 
@@ -145,7 +148,7 @@ final class BackendModuleStartCrawlingController extends AbstractBackendModuleCo
             'logUrl' => $logUrl,
         ]);
     }
-
+    
     /**
      * Generates the configuration selectors for compiling URLs:
      */

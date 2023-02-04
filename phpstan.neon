@@ -18,19 +18,18 @@ parameters:
     checkMissingIterableValueType: false
     checkGenericClassInNonGenericObjectType: false
 
+    # composer require tomasvotruba/cognitive-complexity --dev
+    cognitive_complexity:
+        class: 60
+        function: 60
+
+    # composer require tomasvotruba/type-coverage --dev
+    type_coverage:
+        return_type: 81
+        param_type: 79
+        property_type: 79
+
 services:
-    -
-        class: Symplify\PHPStanRules\CognitiveComplexity\Rules\FunctionLikeCognitiveComplexityRule
-        tags: [phpstan.rules.rule]
-        arguments:
-            maxMethodCognitiveComplexity: 60
-
-    -
-        class: Symplify\PHPStanRules\CognitiveComplexity\Rules\ClassLikeCognitiveComplexityRule
-        tags: [phpstan.rules.rule]
-        arguments:
-            maxClassCognitiveComplexity: 60
-
     -
         class: Symplify\PHPStanRules\Rules\ForbiddenFuncCallRule
         tags: [phpstan.rules.rule]
@@ -42,31 +41,3 @@ services:
                 - d
                 - compact
                 - var_dump
-
-    -
-        class: Symplify\PHPStanRules\Rules\Explicit\PropertyTypeDeclarationSeaLevelRule
-        tags: [phpstan.rules.rule]
-        arguments:
-            minimalLevel: 0.89
-
-    -
-        class: Symplify\PHPStanRules\Rules\Explicit\ParamTypeDeclarationSeaLevelRule
-        tags: [phpstan.rules.rule]
-        arguments:
-            minimalLevel: 0.79
-
-    -
-        class: Symplify\PHPStanRules\Rules\Explicit\ReturnTypeDeclarationSeaLevelRule
-        tags: [phpstan.rules.rule]
-        arguments:
-            minimalLevel: 0.79
-
-    -
-        class: Symplify\PHPStanRules\Collector\FunctionLike\ParamTypeSeaLevelCollector
-        tags: [phpstan.collector]
-    -
-        class: Symplify\PHPStanRules\Collector\FunctionLike\ReturnTypeSeaLevelCollector
-        tags: [phpstan.collector]
-    -
-        class: Symplify\PHPStanRules\Collector\ClassLike\PropertyTypeSeaLevelCollector
-        tags: [phpstan.collector]

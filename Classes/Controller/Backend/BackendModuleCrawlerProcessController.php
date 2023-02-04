@@ -19,20 +19,17 @@ namespace AOE\Crawler\Controller\Backend;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Controller\Backend\Helper\UrlBuilder;
 use AOE\Crawler\Crawler;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Exception\ProcessException;
 use AOE\Crawler\Hooks\CrawlerHookInterface;
+use AOE\Crawler\Service\BackendModuleLinkService;
 use AOE\Crawler\Service\ProcessService;
 use AOE\Crawler\Utility\MessageUtility;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\UriInterface;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
-use TYPO3\CMS\Core\Imaging\Icon;
-use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 
@@ -44,10 +41,10 @@ final class BackendModuleCrawlerProcessController extends AbstractBackendModuleC
     public const BACKEND_MODULE = 'web_site_crawler_process';
 
     public function __construct(
-        private readonly IconFactory $iconFactory,
         private readonly ProcessService $processService,
         private readonly ProcessRepository $processRepository,
         private readonly QueueRepository $queueRepository,
+        private readonly BackendModuleLinkService $backendModuleLinkService,
         private readonly Crawler $crawler
     ) {
     }
@@ -84,10 +81,18 @@ final class BackendModuleCrawlerProcessController extends AbstractBackendModuleC
 
         return $this->moduleTemplate->assignMultiple([
             'pageId' => $this->pageUid,
-            'refreshLink' => $this->getRefreshLink(),
-            'addLink' => $this->getAddLink($currentActiveProcesses, $maxActiveProcesses, $isCrawlerEnabled),
-            'modeLink' => $this->getModeLink($mode),
-            'enableDisableToggle' => $this->getEnableDisableLink($isCrawlerEnabled),
+            'refreshLink' => $this->backendModuleLinkService->getRefreshLink($this->moduleTemplate, $this->pageUid),
+            'addLink' => $this->backendModuleLinkService->getAddLink(
+                $this->moduleTemplate,
+                $currentActiveProcesses,
+                $maxActiveProcesses,
+                $isCrawlerEnabled
+            ),
+            'modeLink' => $this->backendModuleLinkService->getModeLink($this->moduleTemplate, $mode),
+            'enableDisableToggle' => $this->backendModuleLinkService->getEnableDisableLink(
+                $this->moduleTemplate,
+                $isCrawlerEnabled
+            ),
             'processCollection' => $allProcesses,
             'cliPath' => $this->processService->getCrawlerCliPath(),
             'isCrawlerEnabled' => $isCrawlerEnabled,
@@ -133,94 +138,6 @@ final class BackendModuleCrawlerProcessController extends AbstractBackendModuleC
     }
 
     /**
-     * Returns a tag for the refresh icon
-     *
-     * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
-     */
-    private function getRefreshLink(): string
-    {
-        return $this->getLinkButton(
-            'actions-refresh',
-            $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.refresh'),
-            UrlBuilder::getBackendModuleUrl(
-                ['SET[\'crawleraction\']' => 'crawleraction', 'id' => $this->pageUid],
-                self::BACKEND_MODULE
-            )
-        );
-    }
-
-    /**
-     * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
-     */
-    private function getAddLink(int $currentActiveProcesses, int $maxActiveProcesses, bool $isCrawlerEnabled): string
-    {
-        if (! $isCrawlerEnabled) {
-            return '';
-        }
-        if ($currentActiveProcesses >= $maxActiveProcesses) {
-            return '';
-        }
-
-        return $this->getLinkButton(
-            'actions-add',
-            $this->getLanguageService()->sL(
-                'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.process.add'
-            ),
-            UrlBuilder::getBackendModuleUrl(['action' => 'addProcess'], self::BACKEND_MODULE)
-        );
-    }
-
-    /**
-     * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
-     */
-    private function getModeLink(string $mode): string
-    {
-        if ($mode === 'detail') {
-            return $this->getLinkButton(
-                'actions-document-view',
-                $this->getLanguageService()->sL(
-                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.show.running'
-                ),
-                UrlBuilder::getBackendModuleUrl(['processListMode' => 'simple'], self::BACKEND_MODULE)
-            );
-        } elseif ($mode === 'simple') {
-            return $this->getLinkButton(
-                'actions-document-view',
-                $this->getLanguageService()->sL(
-                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.show.all'
-                ),
-                UrlBuilder::getBackendModuleUrl(['processListMode' => 'detail'], self::BACKEND_MODULE)
-            );
-        }
-        return '';
-    }
-
-    /**
-     * Returns a link for the panel to enable or disable the crawler
-     *
-     * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
-     */
-    private function getEnableDisableLink(bool $isCrawlerEnabled): string
-    {
-        if ($isCrawlerEnabled) {
-            return $this->getLinkButton(
-                'tx-crawler-stop',
-                $this->getLanguageService()->sL(
-                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.disablecrawling'
-                ),
-                UrlBuilder::getBackendModuleUrl(['action' => 'stopCrawling'], self::BACKEND_MODULE)
-            );
-        }
-        return $this->getLinkButton(
-            'tx-crawler-start',
-            $this->getLanguageService()->sL(
-                'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.enablecrawling'
-            ),
-            UrlBuilder::getBackendModuleUrl(['action' => 'resumeCrawling'], self::BACKEND_MODULE)
-        );
-    }
-
-    /**
      * Activate hooks
      */
     private function runRefreshHooks(): void
@@ -232,15 +149,5 @@ final class BackendModuleCrawlerProcessController extends AbstractBackendModuleC
                 $hookObj->crawler_init();
             }
         }
-    }
-
-    private function getLinkButton(string $iconIdentifier, string $title, UriInterface $href): string
-    {
-        $buttonBar = $this->moduleTemplate->getDocHeaderComponent()->getButtonBar();
-        return (string) $buttonBar->makeLinkButton()
-            ->setHref((string) $href)
-            ->setIcon($this->iconFactory->getIcon($iconIdentifier, Icon::SIZE_SMALL))
-            ->setTitle($title)
-            ->setShowLabelText(true);
     }
 }

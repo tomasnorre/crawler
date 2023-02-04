@@ -22,14 +22,26 @@
             <br/>
             <table class="crawlerLogActions">
                 <tr class="firstRow">
-                    <td>{displayLogFilterHtml -> f:format.raw()}</td>
-                    <td>{itemPerPageHtml -> f:format.raw()}</td>
+                    <td>
+                        <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.display"/>
+                        {displayLogFilterHtml -> f:format.raw()}
+                    </td>
+                    <td>
+                        <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.itemsPerPage"/>
+                        {itemPerPageHtml -> f:format.raw()}
+                    </td>
                 </tr>
                 <tr>
-                    <td colspan="2">{showResultLogHtml -> f:format.raw()}</td>
+                    <td colspan="2">
+                        {showResultLogHtml -> f:format.raw()}&nbsp;
+                        <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showresultlog"/>
+                    </td>
                 </tr>
                 <tr>
-                    <td colspan="2">{showFeVarsHtml -> f:format.raw()}</td>
+                    <td colspan="2">
+                        {showFeVarsHtml -> f:format.raw()}&nbsp;
+                        <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showfevars "/>
+                    </td>
                 </tr>
             </table>
         </f:then>
