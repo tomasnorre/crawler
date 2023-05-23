@@ -24,6 +24,7 @@
 
 ### Fixed
 * If indexed_search is installed activate procInstructions for indexed_search
+* Prevent undefined array key uid and username in FrontendUserAuthentication
 
 ### Deprecated
 #### Classes
