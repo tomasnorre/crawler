@@ -8,13 +8,13 @@
         <source>Libraries and scripts for crawling the TYPO3 page tree. Used for re-caching, re-indexing, publishing applications etc.</source>
         <target state="needs-translation">Libraries and scripts for crawling the TYPO3 page tree. Used for re-caching, re-indexing, publishing applications etc.</target>
       </trans-unit>
-      <trans-unit id="mlang_labels_tablabel" resname="mlang_labels_tablabel">
+      <trans-unit id="mlang_labels_tablabel" resname="mlang_labels_tablabel" approved="yes">
         <source>Crawler</source>
-        <target state="needs-translation">Crawler</target>
+        <target state="final">クローラー</target>
       </trans-unit>
-      <trans-unit id="mlang_tabs_tab" resname="mlang_tabs_tab">
+      <trans-unit id="mlang_tabs_tab" resname="mlang_tabs_tab" approved="yes">
         <source>Crawler module</source>
-        <target state="needs-translation">Crawler module</target>
+        <target state="final">クローラーモジュール</target>
       </trans-unit>
       <!-- Old Backend Module Labels -->
       <trans-unit id="moduleFunction.tx_crawler_modfunc1" resname="moduleFunction.tx_crawler_modfunc1" approved="yes">
@@ -25,9 +25,9 @@
         <source>Crawler Configuration</source>
         <target state="final">クローラーの設定</target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration.name" resname="tx_crawler_configuration.name">
+      <trans-unit id="tx_crawler_configuration.name" resname="tx_crawler_configuration.name" approved="yes">
         <source>Name</source>
-        <target state="needs-translation">Name</target>
+        <target state="final">名前</target>
       </trans-unit>
       <trans-unit id="tx_crawler_configuration.crawling_protocol" resname="tx_crawler_configuration.crawling_protocol">
         <source>Protocol for crawling</source>
@@ -61,13 +61,13 @@
         <source>Processing instruction parameters</source>
         <target state="needs-translation">Processing instruction parameters</target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration.configuration" resname="tx_crawler_configuration.configuration">
+      <trans-unit id="tx_crawler_configuration.configuration" resname="tx_crawler_configuration.configuration" approved="yes">
         <source>Configuration</source>
-        <target state="needs-translation">Configuration</target>
+        <target state="final">構成</target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration.base_url" resname="tx_crawler_configuration.base_url">
+      <trans-unit id="tx_crawler_configuration.base_url" resname="tx_crawler_configuration.base_url" approved="yes">
         <source>Base URL</source>
-        <target state="needs-translation">Base URL</target>
+        <target state="final">ベースURL</target>
       </trans-unit>
       <trans-unit id="tx_crawler_configuration.base_url.description" resname="tx_crawler_configuration.base_url.description">
         <source>Leave empty for fetching the base URL from the Site Configuration.</source>
@@ -117,13 +117,13 @@
         <source>Running the crawler queue process to collect the relevant entries.</source>
         <target state="needs-translation">Running the crawler queue process to collect the relevant entries.</target>
       </trans-unit>
-      <trans-unit id="crawler_im.startPage" resname="crawler_im.startPage">
+      <trans-unit id="crawler_im.startPage" resname="crawler_im.startPage" approved="yes">
         <source>Start page</source>
-        <target state="needs-translation">Start page</target>
+        <target state="final">開始ページ</target>
       </trans-unit>
-      <trans-unit id="crawler_im.depth" resname="crawler_im.depth">
+      <trans-unit id="crawler_im.depth" resname="crawler_im.depth" approved="yes">
         <source>Depth</source>
-        <target state="needs-translation">Depth</target>
+        <target state="final">深さ</target>
       </trans-unit>
       <trans-unit id="crawler_im.invalidStartPage" resname="crawler_im.invalidStartPage">
         <source>Start page must be a positive integer!</source>
@@ -217,9 +217,9 @@
         <source>Remove Orphan processes and processes that are older than one hour</source>
         <target state="needs-translation">Remove Orphan processes and processes that are older than one hour</target>
       </trans-unit>
-      <trans-unit id="contextMenu.label" resname="contextMenu.label">
+      <trans-unit id="contextMenu.label" resname="contextMenu.label" approved="yes">
         <source>Crawl</source>
-        <target state="needs-translation">Crawl</target>
+        <target state="final">クロール</target>
       </trans-unit>
       <!-- For Crawler Priority - Will be remove when support for 9 LTS is dropped -->
       <trans-unit id="pages_crawler.priority_label" resname="pages_crawler.priority_label">
