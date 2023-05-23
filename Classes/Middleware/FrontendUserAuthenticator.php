@@ -127,6 +127,8 @@ class FrontendUserAuthenticator implements MiddlewareInterface
         /** @var FrontendUserAuthentication $frontendUser */
         $frontendUser = $request->getAttribute('frontend.user');
         $frontendUser->user[$frontendUser->usergroup_column] = '0,-2,' . $grList;
+        $frontendUser->user[$frontendUser->userid_column] = 0;
+        $frontendUser->user[$frontendUser->username_column] = '';
         $frontendUser->fetchGroupData($request);
         $frontendUser->user['uid'] = PHP_INT_MAX;
         return $frontendUser;
