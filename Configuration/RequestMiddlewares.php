@@ -14,7 +14,7 @@ return [
         ],
         'aoe/crawler/initialization' => [
             'target' => CrawlerInitialization::class,
-            'before' => ['typo3/cms-core/normalizedParams'],
+            'before' => ['typo3/cms-frontend/prepare-tsfe-rendering'],
         ],
     ],
 ];
