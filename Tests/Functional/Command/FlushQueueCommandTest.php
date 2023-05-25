@@ -71,17 +71,17 @@ class FlushQueueCommandTest extends FunctionalTestCase
     {
         yield 'Flush All' => [
             'mode' => 'all',
-            'expectedOutput' => 'All entries in Crawler queue will be flushed',
+            'expectedOutput' => 'All entries in Crawler queue have been flushed',
             'expectedCount' => 0,
         ];
         yield 'Flush Pending' => [
             'mode' => 'pending',
-            'expectedOutput' => 'All entries in Crawler queue, with status: "pending" will be flushed',
+            'expectedOutput' => 'All entries in Crawler queue with status "pending" have been flushed',
             'expectedCount' => 7,
         ];
         yield 'Flush Finished' => [
             'mode' => 'finished',
-            'expectedOutput' => 'All entries in Crawler queue, with status: "finished" will be flushed',
+            'expectedOutput' => 'All entries in Crawler queue with status "finished" have been flushed',
             'expectedCount' => 8,
         ];
     }
