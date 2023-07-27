@@ -29,21 +29,21 @@
         <source>Name</source>
         <target state="final">名前</target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration.crawling_protocol" resname="tx_crawler_configuration.crawling_protocol">
+      <trans-unit id="tx_crawler_configuration.crawling_protocol" resname="tx_crawler_configuration.crawling_protocol" approved="yes">
         <source>Protocol for crawling</source>
-        <target state="needs-translation">Protocol for crawling</target>
+        <target state="final">クロールのためのプロトコル</target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration.crawling_protocol.http" resname="tx_crawler_configuration.crawling_protocol.http">
+      <trans-unit id="tx_crawler_configuration.crawling_protocol.http" resname="tx_crawler_configuration.crawling_protocol.http" approved="yes">
         <source>Force HTTP for all pages</source>
-        <target state="needs-translation">Force HTTP for all pages</target>
+        <target state="final">すべてのページでHTTPを強制する</target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration.crawling_protocol.page_config" resname="tx_crawler_configuration.crawling_protocol.page_config">
+      <trans-unit id="tx_crawler_configuration.crawling_protocol.page_config" resname="tx_crawler_configuration.crawling_protocol.page_config" approved="yes">
         <source>Keeps page configured protocol</source>
-        <target state="needs-translation">Keeps page configured protocol</target>
+        <target state="final">設定されたプロトコルのページを維持</target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration.crawling_protocol.https" resname="tx_crawler_configuration.crawling_protocol.https">
+      <trans-unit id="tx_crawler_configuration.crawling_protocol.https" resname="tx_crawler_configuration.crawling_protocol.https" approved="yes">
         <source>Force HTTPS for all pages</source>
-        <target state="needs-translation">Force HTTPS for all pages</target>
+        <target state="final">すべてのページでHTTPSを強制する</target>
       </trans-unit>
       <trans-unit id="tx_crawler_configuration.processing_instruction_filter" resname="tx_crawler_configuration.processing_instruction_filter">
         <source>Processing instruction filter</source>
