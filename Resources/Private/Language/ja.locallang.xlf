@@ -3,25 +3,25 @@
   <file source-language="en" datatype="plaintext" original="EXT:crawler/Resources/Private/Language/locallang.xlf" date="2020-04-15T15:00:00Z" product-name="crawler" target-language="ja">
     <header/>
     <body>
-      <trans-unit id="title" resname="title">
+      <trans-unit id="title" resname="title" approved="yes">
         <source>Site Crawler</source>
-        <target state="needs-translation">Site Crawler</target>
+        <target state="final">サイトクローラー</target>
       </trans-unit>
-      <trans-unit id="labels.start" resname="labels.start">
+      <trans-unit id="labels.start" resname="labels.start" approved="yes">
         <source>Start Crawling</source>
-        <target state="needs-translation">Start Crawling</target>
+        <target state="final">クロールを開始</target>
       </trans-unit>
-      <trans-unit id="labels.log" resname="labels.log">
+      <trans-unit id="labels.log" resname="labels.log" approved="yes">
         <source>Crawler log</source>
-        <target state="needs-translation">Crawler log</target>
+        <target state="final">クローラーログ</target>
       </trans-unit>
       <trans-unit id="labels.multiprocess" resname="labels.multiprocess">
         <source>Crawling Processes</source>
         <target state="needs-translation">Crawling Processes</target>
       </trans-unit>
-      <trans-unit id="labels.all" resname="labels.all">
+      <trans-unit id="labels.all" resname="labels.all" approved="yes">
         <source>All</source>
-        <target state="needs-translation">All</target>
+        <target state="final">全て</target>
       </trans-unit>
       <trans-unit id="labels.pending" resname="labels.pending">
         <source>Pending</source>
@@ -215,9 +215,9 @@
         <source>No entries</source>
         <target state="needs-translation">No entries</target>
       </trans-unit>
-      <trans-unit id="labels.immediate" resname="labels.immediate">
+      <trans-unit id="labels.immediate" resname="labels.immediate" approved="yes">
         <source>immediate</source>
-        <target state="needs-translation">immediate</target>
+        <target state="final">即時</target>
       </trans-unit>
       <trans-unit id="labels.generalinformation" resname="labels.generalinformation">
         <source>General Information</source>
