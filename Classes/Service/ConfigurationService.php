@@ -28,7 +28,7 @@ use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
-use TYPO3\CMS\Core\Database\QueryGenerator;
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Type\Bitmask\Permission;
 use TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -360,10 +360,8 @@ class ConfigurationService
     private function getPidArray(int $recursiveDepth, int $lookUpPid): array
     {
         if ($recursiveDepth > 0) {
-            /** @var QueryGenerator $queryGenerator */
-            $queryGenerator = GeneralUtility::makeInstance(QueryGenerator::class);
-            $pidList = $queryGenerator->getTreeList($lookUpPid, $recursiveDepth);
-            $pidArray = GeneralUtility::intExplode(',', $pidList);
+            $pageRepository = GeneralUtility::makeInstance(PageRepository::class);
+            $pidArray = $pageRepository->getPageIdsRecursive([$lookUpPid], $recursiveDepth);
         } else {
             $pidArray = [$lookUpPid];
         }
