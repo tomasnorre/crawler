@@ -23,7 +23,7 @@ use AOE\Crawler\Controller\Backend\Helper\ResultHandler;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\Domain\Repository\QueueRepository;
-use AOE\Crawler\Service\BackendModuleHtmlElementService;
+use AOE\Crawler\Service\BackendModuleScriptUrlService;
 use AOE\Crawler\Service\BackendModuleLogService;
 use AOE\Crawler\Utility\MessageUtility;
 use AOE\Crawler\Value\QueueFilter;
@@ -72,7 +72,7 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
         private readonly IconFactory $iconFactory,
         private readonly CrawlerController $crawlerController,
         private readonly BackendModuleLogService $backendModuleLogService,
-        private readonly BackendModuleHtmlElementService $backendModuleHtmlElementService,
+        private readonly BackendModuleScriptUrlService $backendModuleScriptUrlService,
     ) {
         $this->backendModuleMenu = $this->getModuleMenu();
     }
@@ -238,37 +238,34 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
             'showResultLog' => $this->showResultLog,
             'showFeVars' => $this->showFeVars,
             'displayActions' => 1,
-            'displayLogFilterHtml' => $this->backendModuleHtmlElementService->getFormElementSelect(
-                'displayLog',
-                $this->pageUid,
-                $this->logDisplay,
-                $this->backendModuleMenu,
-                $queryParams
-            ),
-            'itemPerPageHtml' => $this->backendModuleHtmlElementService->getFormElementSelect(
-                'itemsPerPage',
-                $this->pageUid,
-                $this->itemsPerPage,
-                $this->backendModuleMenu,
-                $queryParams
-            ),
-            'showResultLogHtml' => $this->backendModuleHtmlElementService->getFormElementCheckbox(
-                'ShowResultLog', $this->pageUid, $this->showResultLog, $queryParams, $this->quiPath
-            ),
-            'showFeVarsHtml' => $this->backendModuleHtmlElementService->getFormElementCheckbox(
-                'ShowFeVars',
-                $this->pageUid,
-                $this->showFeVars,
-                $queryParams,
-                $this->quiPath
-            ),
-            'depthDropDownHtml' => $this->backendModuleHtmlElementService->getFormElementSelect(
-                'logDepth',
-                $this->pageUid,
-                $this->logDepth,
-                $this->backendModuleMenu,
-                $queryParams
-            ),
+            'displayLogFilterConfig' => [
+                'name' => 'displayLog',
+                'currentValue' => $this->logDisplay,
+                'menuItems' => $this->backendModuleMenu['displayLog'],
+                'scriptUrl' => $this->backendModuleScriptUrlService->buildScriptUrl($request, 'displayLog', $this->pageUid, $queryParams),
+            ],
+            'itemPerPageConfig' => [
+                'name' => 'itemsPerPage',
+                'currentValue' => $this->itemsPerPage,
+                'menuItems' => $this->backendModuleMenu['itemsPerPage'],
+                'scriptUrl' => $this->backendModuleScriptUrlService->buildScriptUrl($request, 'itemsPerPage', $this->pageUid, $queryParams),
+            ],
+            'showResultLogConfig' => [
+                'name' => 'ShowResultLog',
+                'currentValue' => $this->showResultLog,
+                'scriptUrl' => $this->backendModuleScriptUrlService->buildScriptUrl($request, 'ShowResultLog', $this->pageUid, $queryParams, $this->quiPath),
+            ],
+            'showFeVarsConfig' => [
+                'name' => 'ShowFeVars',
+                'currentValue' => $this->showFeVars,
+                'scriptUrl' => $this->backendModuleScriptUrlService->buildScriptUrl($request, 'ShowFeVars', $this->pageUid, $queryParams, $this->quiPath),
+            ],
+            'depthDropDownConfig' => [
+                'name' => 'logDepth',
+                'currentValue' => $this->logDepth,
+                'menuItems' => $this->backendModuleMenu['logDepth'],
+                'scriptUrl' => $this->backendModuleScriptUrlService->buildScriptUrl($request, 'logDepth', $this->pageUid, $queryParams),
+            ],
         ]);
     }
 

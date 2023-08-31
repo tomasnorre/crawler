@@ -17,29 +17,41 @@
     <form action="{actionUrl}" method="post" >
     <f:if condition="{displayActions} == 1">
         <f:then>
-            {depthDropDownHtml -> f:format.raw()}
+            <f:render section="SelectBox" arguments="{config:depthDropDownConfig}" />
             <br/>
             <br/>
             <table class="crawlerLogActions">
                 <tr class="firstRow">
                     <td>
                         <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.display"/>
-                        {displayLogFilterHtml -> f:format.raw()}
+                        <f:render section="SelectBox" arguments="{config:displayLogFilterConfig}" />
                     </td>
                     <td>
                         <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.itemsPerPage"/>
-                        {itemPerPageHtml -> f:format.raw()}
+                        <f:render section="SelectBox" arguments="{config:itemPerPageConfig}" />
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2">
-                        {showResultLogHtml -> f:format.raw()}&nbsp;
+                        <input type="checkbox" class="form-check-input"
+                               name="{showResultLogConfig.name}" value="1"
+                               {f:if(condition:'{showResultLogConfig.currentValue}', then:'checked="checked"')}"
+                        data-global-event="change"
+                        data-action-navigate="$data=~s/$value/"
+                        data-navigate-value="{showResultLogConfig.scriptUrl}"
+                        data-empty-value="0" />&nbsp;
                         <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showresultlog"/>
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2">
-                        {showFeVarsHtml -> f:format.raw()}&nbsp;
+                        <input type="checkbox" class="form-check-input"
+                               name="{showFeVarsConfig.name}" value="1"
+                               {f:if(condition:'{showFeVarsConfig.currentValue}', then:'checked="checked"')}"
+                        data-global-event="change"
+                        data-action-navigate="$data=~s/$value/"
+                        data-navigate-value="{showFeVarsConfig.scriptUrl}"
+                        data-empty-value="0" />&nbsp;
                         <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showfevars "/>
                     </td>
                 </tr>
@@ -187,4 +199,25 @@
     </f:if>
     </form>
 </f:section>
+
+<f:section name="SelectBox">
+    <select name="{config.name}"
+            class="form-select mb-3"
+            data-menu-identifier="{config.name}"
+            data-global-event="change"
+            data-action-navigate="$data=~s/$value/"
+            data-navigate-value="{config.scriptUrl}">
+        <f:for each="{config.menuItems}" key="value" as="label">
+            <f:if condition="{config.currentValue} == {value}">
+                <f:then>
+                    <option value="{value}" selected="selected">{label}</option>
+                </f:then>
+                <f:else>
+                    <option value="{value}">{label}</option>
+                </f:else>
+            </f:if>
+        </f:for>
+    </select>
+</f:section>
+
 
