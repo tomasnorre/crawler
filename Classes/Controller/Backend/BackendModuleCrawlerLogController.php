@@ -132,8 +132,8 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
     private function assignValues(ServerRequestInterface $request): ModuleTemplate
     {
         // Look for set ID sent - if it is, we will display contents of that set:
-        $this->showSetId = (int) ($request->getParsedBody()['setID'] ?? $request->getQueryParams()['setID']);
-        $this->CSVExport = (bool) ($request->getParsedBody()['_csv'] ?? $request->getQueryParams()['_csv']);
+        $this->showSetId = (int) ($request->getParsedBody()['setID'] ?? $request->getQueryParams()['setID'] ?? 0);
+        $this->CSVExport = (bool) ($request->getParsedBody()['_csv'] ?? $request->getQueryParams()['_csv'] ?? false);
         $logEntriesPerPage = [];
         $csvData = [];
 
@@ -173,9 +173,9 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
             }
 
             // If Flush button is pressed, flush tables instead of selecting entries:
-            if ($request->getParsedBody()['_flush']) {
+            if ($request->getParsedBody()['_flush'] ?? false) {
                 $doFlush = true;
-            } elseif ($request->getParsedBody()['_flush_all']) {
+            } elseif ($request->getParsedBody()['_flush_all'] ?? false) {
                 $doFlush = true;
                 $this->logDisplay = 'all';
             } else {
@@ -200,7 +200,7 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
 
                 [$logEntriesPerPage[], $csvData] = $this->backendModuleLogService->addRows(
                     $logEntriesOfPage,
-                    (int) ($request->getParsedBody()['setID'] ?? $request->getQueryParams()['setID']),
+                    (int) ($request->getParsedBody()['setID'] ?? $request->getQueryParams()['setID'] ?? 0),
                     $data['HTML'] . BackendUtility::getRecordTitle('pages', $data['row'], true),
                     $this->showResultLog,
                     $this->showFeVars,
@@ -273,7 +273,7 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
     private function setPropertiesBasedOnPostVars(ServerRequestInterface $request): void
     {
         $this->pageUid = (int) ($request->getQueryParams()['id'] ?? -1);
-        $this->setId = (int) ($request->getParsedBody()['setID'] ?? $request->getQueryParams()['setID']);
+        $this->setId = (int) ($request->getParsedBody()['setID'] ?? $request->getQueryParams()['setID'] ?? 0);
         $quidDetails = $request->getParsedBody()['qid_details'] ?? $request->getQueryParams()['qid_details'] ?? null;
         $this->quiPath = $quidDetails ? '&qid_details=' . (int) $quidDetails : '';
         $this->queueId = $quidDetails ?? null;

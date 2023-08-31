@@ -78,13 +78,13 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
         $logUrl = $this->backendUriBuilder->buildUriFromRoute('web_site_crawler_log', ['id' => $this->pageUid]);
 
         $crawlingDepth = $request->getParsedBody()['crawlingDepth'] ?? $request->getQueryParams()['crawlingDepth'] ?? '0';
-        $crawlParameter = $request->getParsedBody()['_crawl'] ?? $request->getQueryParams()['_crawl'];
-        $downloadParameter = $request->getParsedBody()['_download'] ?? $request->getQueryParams()['_download'];
-        $scheduledTime = $this->getScheduledTime((string) ($request->getParsedBody()['tstamp'] ?? $request->getQueryParams()['tstamp']));
+        $crawlParameter = $request->getParsedBody()['_crawl'] ?? $request->getQueryParams()['_crawl'] ?? null;
+        $downloadParameter = $request->getParsedBody()['_download'] ?? $request->getQueryParams()['_download'] ?? null;
+        $scheduledTime = $this->getScheduledTime((string) ($request->getParsedBody()['tstamp'] ?? $request->getQueryParams()['tstamp'] ?? null));
         $submitCrawlUrls = isset($crawlParameter);
         $downloadCrawlUrls = isset($downloadParameter);
 
-        $this->incomingConfigurationSelection = $request->getParsedBody()['configurationSelection'] ?? $request->getQueryParams()['configurationSelection'];
+        $this->incomingConfigurationSelection = $request->getParsedBody()['configurationSelection'] ?? $request->getQueryParams()['configurationSelection'] ?? null;
         $this->incomingConfigurationSelection = is_array(
             $this->incomingConfigurationSelection
         ) ? $this->incomingConfigurationSelection : [];
@@ -207,7 +207,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
                 ),
             ],
             'tstamp',
-            $request->getParsedBody()['tstamp'],
+            $request->getParsedBody()['tstamp'] ?? null,
             false
         );
 
