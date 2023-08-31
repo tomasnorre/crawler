@@ -18,6 +18,9 @@ return [
         'typeicon_classes' => [
             'default' => 'tx-crawler',
         ],
+        'security' => [
+            'ignorePageTypeRestriction' => true
+        ]
     ],
     'columns' => [
         'hidden' => [
