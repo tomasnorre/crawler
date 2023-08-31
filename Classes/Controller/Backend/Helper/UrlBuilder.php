@@ -37,8 +37,9 @@ class UrlBuilder
      */
     public static function getBackendModuleUrl(array $uriParameters = [], string $module = 'web_site_crawler'): Uri
     {
-        if (GeneralUtility::_GP('id')) {
-            $uriParameters['id'] = GeneralUtility::_GP('id');
+        $id = $GLOBALS['TYPO3_REQUEST']->getParsedBody()['id'] ?? $GLOBALS['TYPO3_REQUEST']->getQueryParams()['id'];
+        if ($id) {
+            $uriParameters['id'] = $id;
         }
         /** @var UriBuilder $uriBuilder */
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
