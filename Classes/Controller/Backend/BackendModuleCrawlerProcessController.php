@@ -54,7 +54,6 @@ final class BackendModuleCrawlerProcessController extends AbstractBackendModuleC
         $this->pageUid = (int) ($request->getQueryParams()['id'] ?? -1);
         $this->moduleTemplate = $this->setupView($request, $this->pageUid);
         $this->moduleTemplate->assign('currentPageId', $this->pageUid);
-        $this->moduleTemplate->setTitle('Crawler', $GLOBALS['LANG']->getLL('module.menu.log'));
         $this->moduleTemplate = $this->moduleTemplate->makeDocHeaderModuleMenu(
             ['id' => $request->getQueryParams()['id'] ?? -1]
         );
