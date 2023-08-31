@@ -37,7 +37,7 @@ class UrlBuilder
      */
     public static function getBackendModuleUrl(array $uriParameters = [], string $module = 'web_site_crawler'): Uri
     {
-        $id = $GLOBALS['TYPO3_REQUEST']->getParsedBody()['id'] ?? $GLOBALS['TYPO3_REQUEST']->getQueryParams()['id'];
+        $id = $GLOBALS['TYPO3_REQUEST']->getParsedBody()['id'] ?? $GLOBALS['TYPO3_REQUEST']->getQueryParams()['id'] ?? null;
         if ($id) {
             $uriParameters['id'] = $id;
         }
