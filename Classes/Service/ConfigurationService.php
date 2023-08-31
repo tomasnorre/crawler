@@ -21,7 +21,7 @@ namespace AOE\Crawler\Service;
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
-use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ArrayParameterType;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Core\Bootstrap;
@@ -433,7 +433,7 @@ class ConfigurationService
                 ->where(
                     $queryBuilder->expr()->in(
                         $pidField,
-                        $queryBuilder->createNamedParameter($pidArray, Connection::PARAM_INT_ARRAY)
+                        $queryBuilder->createNamedParameter($pidArray, ArrayParameterType::INTEGER)
                     ),
                     $where
                 );

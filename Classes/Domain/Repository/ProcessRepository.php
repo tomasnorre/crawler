@@ -31,9 +31,9 @@ namespace AOE\Crawler\Domain\Repository;
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Domain\Model\ProcessCollection;
+use Doctrine\DBAL\ArrayParameterType;
 use PDO;
 use Symfony\Contracts\Service\Attribute\Required;
-use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -253,7 +253,7 @@ class ProcessRepository extends Repository
                 )',
                 $queryBuilder->expr()->in(
                     'process_id',
-                    $queryBuilder->createNamedParameter($processIds, Connection::PARAM_STR_ARRAY)
+                    $queryBuilder->createNamedParameter($processIds, ArrayParameterType::STRING)
                 ),
                 $queryBuilder->expr()->eq('deleted', 0)
             )
