@@ -237,9 +237,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
                 ->where('exec_time != 0 AND exec_time < ' . $purgeDate)->executeStatement();
 
             if ($del === 0) {
-                if ($this->logger !== null) {
-                    $this->logger->info('No records was deleted');
-                }
+                $this->logger?->info('No records was deleted');
             }
         }
     }
@@ -267,9 +265,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ->where($condition)->executeStatement();
 
         if ($del === 0) {
-            if ($this->logger !== null) {
-                $this->logger->info('No records was deleted.');
-            }
+            $this->logger?->info('No records was deleted.');
         }
     }
 
