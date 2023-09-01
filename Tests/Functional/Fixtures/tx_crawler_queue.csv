@@ -1,0 +1,17 @@
+"tx_crawler_queue"
+,"qid","process_id","page_id","process_id_completed","parameters","result_data","exec_time","scheduled","configuration","parameters_hash","configuration_hash","set_id"
+,1001,1001,0,"asdfgh","","",10,0,"FirstConfiguration","","",0
+,1002,1002,1002,"qwerty","","",10,0,"ThirdConfiguration","","",0
+,1003,1003,0,"qwerty","","",20,0,"FirstConfiguration","","",0
+,1004,0,1,"asdfgh","","",0,0,"FirstConfiguration","","",0
+,1005,0,0,"asdfgh","","",10,0,"SecondConfiguration","","",0
+,1006,1006,2,"qwerty","","",0,0,"SecondConfiguration","","7b6919e533f334550b6f19034dfd2f81",123
+,1007,1007,0,"asdfgh","","",12,0,"SecondConfiguration","","",123
+,1008,1007,3,"asdfgh","","",0,0,"ThirdConfiguration","","",456
+,1009,1007,4,"asdfgh","","",0,0,"ThirdConfiguration","","",789
+,1015,0,5,"dvorak","","",0,12,"FirstConfiguration","","",0
+,1016,1016,16,"dvorak","","",10,1245,"ThirdConfiguration","","",0
+,1017,1017,17,"dvorak","","",20,4321,"FirstConfiguration","","",0
+,1018,0,10,"dvorak","","",0,0,"SecondConfiguration","","",0
+,1019,0,10,"dvorak","","",0,12,"SecondConfiguration","NotReallyAHashButWillDoForTesting","",0
+,1020,0,10,"dvorak","","",0,12,"FirstConfiguration","","",0

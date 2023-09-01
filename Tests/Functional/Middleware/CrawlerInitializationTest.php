@@ -20,7 +20,7 @@ namespace AOE\Crawler\Tests\Functional\Middleware;
  */
 
 use AOE\Crawler\Middleware\CrawlerInitialization;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -80,7 +80,7 @@ class CrawlerInitializationTest extends FunctionalTestCase
         self::assertTrue($response->hasHeader('X-T3Crawler-Meta'));
     }
 
-    public function processSetsTSFEApplicationDataDataProvider(): iterable
+    public static function processSetsTSFEApplicationDataDataProvider(): iterable
     {
         yield 'FE Groups set' => [
             'feGroups' => '1,2',

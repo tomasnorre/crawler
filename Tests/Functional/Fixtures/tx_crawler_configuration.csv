@@ -1,0 +1,10 @@
+"tx_crawler_configuration"
+,"uid","pid","deleted","hidden","name","force_ssl","processing_instruction_filter","processing_instruction_parameters_ts","configuration","base_url","pidsonly","begroups","fegroups","exclude"
+,1,0,0,0,"Not hidden or deleted",0,"","","","","","","",0
+,2,0,1,0,"Not hidden or but deleted",0,"","","","","","","",0
+,3,0,0,1,"hidden or but not deleted",0,"","","","","","","",0
+,4,0,1,1,"hidden and deleted",0,"","","","","","","",0
+,5,5,0,0,"Not hidden or deleted - uid 5",1,"","","","","","","",0
+,6,5,0,0,"Not hidden or deleted - uid 6",1,"","","","","","","",0
+,7,5,0,1,"hidden or deleted - uid 7",1,"","","","","","","",0
+,8,1,0,0,"default",0,"","","","https://www.example.com","","","",0

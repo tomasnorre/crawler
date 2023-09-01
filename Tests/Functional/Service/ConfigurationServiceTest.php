@@ -22,7 +22,7 @@ namespace AOE\Crawler\Tests\Functional\Service;
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Service\ConfigurationService;
 use AOE\Crawler\Service\UrlService;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -31,10 +31,7 @@ class ConfigurationServiceTest extends FunctionalTestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var array
-     */
-    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+    protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
     private ConfigurationService $subject;
 
     protected function setUp(): void
@@ -71,8 +68,8 @@ class ConfigurationServiceTest extends FunctionalTestCase
 
         $urlService = GeneralUtility::makeInstance(UrlService::class);
         $configurationRepository = GeneralUtility::makeInstance(ConfigurationRepository::class);
-        $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_configuration.xml');
-        $this->importDataSet(__DIR__ . '/../Fixtures/pages.xml');
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/tx_crawler_configuration.csv');
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/pages.csv');
 
         $configurationService = GeneralUtility::makeInstance(
             ConfigurationService::class,

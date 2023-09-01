@@ -25,18 +25,15 @@ use AOE\Crawler\Crawler;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 class ProcessQueueCommandTest extends FunctionalTestCase
 {
     use BackendRequestTestTrait;
 
-    /**
-     * @var array
-     */
-    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+    protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     protected CommandTester $commandTester;
 
@@ -45,8 +42,8 @@ class ProcessQueueCommandTest extends FunctionalTestCase
         parent::setUp();
         $this->setupBackendRequest();
 
-        $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
-        $this->importDataSet(__DIR__ . '/../Fixtures/pages.xml');
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.csv');
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/pages.csv');
 
         $crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
 
@@ -76,7 +73,7 @@ class ProcessQueueCommandTest extends FunctionalTestCase
         self::assertStringContainsString($expectedOutput, $commandOutput);
     }
 
-    public function processQueueCommandDataProvider(): iterable
+    public static function processQueueCommandDataProvider(): iterable
     {
         yield 'No params' => [
             'parameters' => [],

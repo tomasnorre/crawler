@@ -1,0 +1,3 @@
+"sys_template"
+,"uid","pid","root","config","hidden","deleted"
+,1,1,1,"&lt;INCLUDE_TYPOSCRIPT: source="FILE:EXT:crawler/Tests/Functional/data/typoscript_setup.txt"&gt;",0,0

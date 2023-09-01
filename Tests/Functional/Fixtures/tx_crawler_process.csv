@@ -1,0 +1,8 @@
+"tx_crawler_process"
+,"process_id","ttl","active","deleted","assigned_items_count"
+,1000,10,1,0,1
+,1001,21,1,0,1
+,1002,20,1,0,1
+,1003,20,0,1,0
+,1004,20,0,1,0
+,1005,20,1,1,0

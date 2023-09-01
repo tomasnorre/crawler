@@ -22,15 +22,12 @@ namespace AOE\Crawler\Tests\Functional\Service;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Service\QueueService;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class QueueServiceTest extends FunctionalTestCase
 {
-    /**
-     * @var array
-     */
-    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+    protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     /**
      * @var QueueService
@@ -62,7 +59,7 @@ class QueueServiceTest extends FunctionalTestCase
      */
     public function canNotCreateDuplicateQueueEntriesForTwoPagesInThePast(): void
     {
-        $this->importDataSet(__DIR__ . '/../data/canNotAddDuplicatePagesToQueue.xml');
+        $this->importCSVDataSet(__DIR__ . '/../data/canNotAddDuplicatePagesToQueue.csv');
 
         $this->subject->addPageToQueue(5, 9998);
         $this->subject->addPageToQueue(5, 3422);
@@ -79,7 +76,7 @@ class QueueServiceTest extends FunctionalTestCase
      */
     public function canNotCreateDuplicateForTwoPagesInTheFutureWithTheSameTimestamp(): void
     {
-        $this->importDataSet(__DIR__ . '/../data/canNotAddDuplicatePagesToQueue.xml');
+        $this->importCSVDataSet(__DIR__ . '/../data/canNotAddDuplicatePagesToQueue.csv');
 
         $this->subject->addPageToQueue(5, 100001);
         $this->subject->addPageToQueue(5, 100001);
@@ -96,7 +93,7 @@ class QueueServiceTest extends FunctionalTestCase
      */
     public function canCreateTwoQueueEntriesForDifferentTimestampsInTheFuture(): void
     {
-        $this->importDataSet(__DIR__ . '/../data/canNotAddDuplicatePagesToQueue.xml');
+        $this->importCSVDataSet(__DIR__ . '/../data/canNotAddDuplicatePagesToQueue.csv');
 
         $this->subject->addPageToQueue(5, 100011);
         $this->subject->addPageToQueue(5, 200014);
