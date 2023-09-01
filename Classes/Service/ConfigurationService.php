@@ -29,8 +29,10 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\EventDispatcher\NoopEventDispatcher;
 use TYPO3\CMS\Core\Type\Bitmask\Permission;
-use TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser;
+use TYPO3\CMS\Core\TypoScript\AST\AstBuilder;
+use TYPO3\CMS\Core\TypoScript\TypoScriptStringFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 
@@ -150,13 +152,16 @@ class ConfigurationService
 
                     // don't overwrite previously defined paramSets
                     if (!isset($res[$key])) {
-                        /* @var $TSparserObject TypoScriptParser */
-                        $TSparserObject = GeneralUtility::makeInstance(TypoScriptParser::class);
-                        $TSparserObject->parse($configurationRecord['processing_instruction_parameters_ts']);
+                        /* @var $typoScriptStringFactory TypoScriptStringFactory */
+                        $typoScriptStringFactory = GeneralUtility::makeInstance(TypoScriptStringFactory::class);
+                        $typoScriptTree = $typoScriptStringFactory->parseFromString(
+                            $configurationRecord['processing_instruction_parameters_ts'],
+                            new AstBuilder(new NoopEventDispatcher())
+                        );
 
                         $subCfg = [
                             'procInstrFilter' => $configurationRecord['processing_instruction_filter'],
-                            'procInstrParams.' => $TSparserObject->setup,
+                            'procInstrParams.' => $typoScriptTree->toArray(),
                             'baseUrl' => $configurationRecord['base_url'],
                             'force_ssl' => (int) $configurationRecord['force_ssl'],
                             'userGroups' => $configurationRecord['fegroups'],
