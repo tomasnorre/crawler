@@ -20,7 +20,7 @@ namespace AOE\Crawler\Tests\Unit\Utility;
  */
 
 use AOE\Crawler\Utility\PhpBinaryUtility;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 
 /**
@@ -29,6 +29,8 @@ use TYPO3\CMS\Core\Utility\CommandUtility;
  */
 class PhpBinaryUtilityTest extends UnitTestCase
 {
+    protected bool $resetSingletonInstances = true;
+
     /**
      * @test
      */
@@ -69,7 +71,7 @@ class PhpBinaryUtilityTest extends UnitTestCase
         $this->assertEquals(PhpBinaryUtility::getPhpBinary(), $expected);
     }
 
-    public function getPhpBinaryDataProvider(): iterable
+    public static function getPhpBinaryDataProvider(): iterable
     {
         yield 'php set to standard PHP' => [
             'phpPath' => '',

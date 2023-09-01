@@ -22,7 +22,7 @@ namespace AOE\Crawler\Tests\Unit\Hooks;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Hooks\DataHandlerHook;
 use AOE\Crawler\Service\QueueService;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Cache\CacheManager;
@@ -37,6 +37,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class DataHandlerHookTest extends UnitTestCase
 {
     use ProphecyTrait;
+
+    protected bool $resetSingletonInstances = true;
 
     /**
      * Page with ID 1 is not in queue, should be added

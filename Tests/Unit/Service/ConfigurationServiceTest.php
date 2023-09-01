@@ -22,7 +22,7 @@ namespace AOE\Crawler\Tests\Unit\Service;
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Service\ConfigurationService;
 use AOE\Crawler\Service\UrlService;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -35,6 +35,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class ConfigurationServiceTest extends UnitTestCase
 {
     use ProphecyTrait;
+
+    protected bool $resetSingletonInstances = true;
 
     /**
      * @test
@@ -51,7 +53,7 @@ class ConfigurationServiceTest extends UnitTestCase
         );
     }
 
-    public function removeDisallowedConfigurationsDataProvider(): iterable
+    public static function removeDisallowedConfigurationsDataProvider(): iterable
     {
         yield 'both allowed and configuration is empty' => [
             'allowed' => [],
@@ -107,7 +109,7 @@ class ConfigurationServiceTest extends UnitTestCase
         );
     }
 
-    public function getConfigurationFromPageTSDataProvider(): iterable
+    public static function getConfigurationFromPageTSDataProvider(): iterable
     {
         yield 'Empty Array' => [
             'pageTSConfig' => [],

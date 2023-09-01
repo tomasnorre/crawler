@@ -20,7 +20,7 @@ namespace AOE\Crawler\Tests\Unit\Value;
  */
 
 use AOE\Crawler\Value\QueueRow;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * @covers \AOE\Crawler\Value\QueueRow

@@ -20,7 +20,7 @@ namespace AOE\Crawler\Tests\Unit\Service;
  */
 
 use AOE\Crawler\Service\UserService;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * @covers \AOE\Crawler\Service\UserService
@@ -37,7 +37,7 @@ class UserServiceTest extends UnitTestCase
         self::assertEquals($expected, UserService::hasGroupAccess($groupList, $accessList));
     }
 
-    public function hasGroupAccessDataProvider(): iterable
+    public static function hasGroupAccessDataProvider(): iterable
     {
         yield 'Do not have access' => [
             'groupList' => '1,2,3',

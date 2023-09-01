@@ -23,7 +23,7 @@ use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Exception\ProcessException;
 use AOE\Crawler\Helper\Sleeper\NullSleeper;
 use AOE\Crawler\Service\ProcessService;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Class ProcessServiceTest

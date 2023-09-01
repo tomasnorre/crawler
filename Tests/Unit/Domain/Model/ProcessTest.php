@@ -21,7 +21,7 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
 
 use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Domain\Repository\QueueRepository;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
@@ -35,6 +35,7 @@ class ProcessTest extends UnitTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->subject = $this->createPartialMock(Process::class, []);
         $this->subject->setActive(true);
         $this->subject->setProcessId('1234');
@@ -71,7 +72,7 @@ class ProcessTest extends UnitTestCase
         self::assertSame($systemProcessId, $this->subject->getSystemProcessId());
     }
 
-    public function getStateDataProvider(): iterable
+    public static function getStateDataProvider(): iterable
     {
         yield 'Check that state is running, Active and less than 100%' => [
             'active' => 1,
@@ -138,7 +139,7 @@ class ProcessTest extends UnitTestCase
         self::assertEquals($expectedProgress, $processMock->getProgress());
     }
 
-    public function getProgressReturnsExpectedPercentageDataProvider(): iterable
+    public static function getProgressReturnsExpectedPercentageDataProvider(): iterable
     {
         yield 'CountItemsAssigned is negative number' => [
             'countItemsAssigned' => -2,
@@ -223,7 +224,7 @@ class ProcessTest extends UnitTestCase
         self::assertEquals($expected, $this->subject->getRuntime());
     }
 
-    public function getRuntimeReturnsIntegerDataProvider(): iterable
+    public static function getRuntimeReturnsIntegerDataProvider(): iterable
     {
         yield 'getTimeForFirstItem is bigger than getTimeForLastItem' => [
             'getTimeForFirstItem' => ['exec_time' => 75],

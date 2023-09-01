@@ -21,7 +21,7 @@ namespace AOE\Crawler\Tests\Unit\Service;
 
 use AOE\Crawler\Event\ModifySkipPageEvent;
 use AOE\Crawler\Service\PageService;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -37,8 +37,11 @@ class PageServiceTest extends UnitTestCase
 
     protected \AOE\Crawler\Service\PageService $subject;
 
+    protected bool $resetSingletonInstances = true;
+
     protected function setUp(): void
     {
+        parent::setUp();
         $modifySkipPageEvent = new ModifySkipPageEvent([]);
         $modifySkipPageEvent->setSkipped(false);
 
@@ -71,7 +74,7 @@ class PageServiceTest extends UnitTestCase
         self::assertEquals($expected, $this->subject->checkIfPageShouldBeSkipped($pageRow));
     }
 
-    public function checkIfPageShouldBeSkippedDataProvider(): iterable
+    public static function checkIfPageShouldBeSkippedDataProvider(): iterable
     {
         yield 'Page of doktype 1 - Standard' => [
             'extensionSetting' => [],

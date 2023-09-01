@@ -21,7 +21,7 @@ namespace AOE\Crawler\Tests\Unit\Event;
 
 use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Event\InvokeQueueChangeEvent;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * @covers \AOE\Crawler\Domain\Model\Reason
@@ -33,6 +33,7 @@ class InvokeQueueChangeEventTest extends UnitTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $reason = new Reason();
         $reason->setReason(Reason::REASON_CLI_SUBMIT);
         $reason->setDetailText('More detailed text');

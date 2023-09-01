@@ -20,7 +20,7 @@ namespace AOE\Crawler\Tests\Unit\Writer\FileWriter\CsvWriter;
  */
 
 use AOE\Crawler\Writer\FileWriter\CsvWriter\CrawlerCsvWriter;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**

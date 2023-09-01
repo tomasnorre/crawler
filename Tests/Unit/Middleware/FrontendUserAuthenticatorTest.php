@@ -20,7 +20,7 @@ namespace AOE\Crawler\Tests\Unit\Middleware;
  */
 
 use AOE\Crawler\Middleware\FrontendUserAuthenticator;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -33,12 +33,13 @@ class FrontendUserAuthenticatorTest extends UnitTestCase
 {
     use ProphecyTrait;
 
-    protected \Nimut\TestingFramework\MockObject\AccessibleMockObjectInterface|\PHPUnit\Framework\MockObject\MockObject $subject;
+    protected \TYPO3\TestingFramework\Core\AccessibleObjectInterface|\PHPUnit\Framework\MockObject\MockObject $subject;
 
     protected function setUp(): void
     {
+        parent::setUp();
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'] = md5('this_is_an_insecure_encryption_key');
-        $this->subject = self::getAccessibleMock(FrontendUserAuthenticator::class, ['dummy'], [], '', false);
+        $this->subject = self::getAccessibleMock(FrontendUserAuthenticator::class, null, [], '', false);
     }
 
     /**

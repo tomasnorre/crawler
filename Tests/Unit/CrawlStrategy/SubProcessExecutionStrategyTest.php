@@ -21,7 +21,7 @@ namespace AOE\Crawler\Tests\Unit\CrawlStrategy;
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategy;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 use TYPO3\CMS\Core\Http\Uri;
@@ -33,6 +33,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class SubProcessExecutionStrategyTest extends UnitTestCase
 {
     use ProphecyTrait;
+
+    protected bool $resetSingletonInstances = true;
 
     /**
      * @test
@@ -90,7 +92,7 @@ class SubProcessExecutionStrategyTest extends UnitTestCase
         );
     }
 
-    public function buildRequestHandlersDataProvider(): iterable
+    public static function buildRequestHandlersDataProvider(): iterable
     {
         $path = '/path/to/page';
         $query = 'q=keyword';

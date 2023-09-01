@@ -20,7 +20,7 @@ namespace AOE\Crawler\Tests\Unit\Event;
  */
 
 use AOE\Crawler\Event\AfterQueueItemAddedEvent;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * @covers \AOE\Crawler\Event\AfterQueueItemAddedEvent
@@ -31,6 +31,7 @@ class AfterQueueItemAddedEventTest extends UnitTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $queueId = 'qwerty';
         $fieldArray = ['field' => 'array'];
         $this->subject = new AfterQueueItemAddedEvent($queueId, $fieldArray);
