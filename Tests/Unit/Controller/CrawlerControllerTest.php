@@ -21,9 +21,9 @@ namespace AOE\Crawler\Tests\Unit\Controller;
 
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Service\PageService;
-use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Class CrawlerLibTest

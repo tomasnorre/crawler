@@ -20,8 +20,8 @@ namespace AOE\Crawler\Tests\Unit;
  */
 
 use AOE\Crawler\Crawler;
-use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * @covers \AOE\Crawler\Crawler

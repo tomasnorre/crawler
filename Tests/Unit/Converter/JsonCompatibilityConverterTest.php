@@ -20,8 +20,8 @@ namespace AOE\Crawler\Tests\Unit\Converter;
  */
 
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
-use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * @covers \AOE\Crawler\Converter\JsonCompatibilityConverter

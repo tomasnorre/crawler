@@ -35,8 +35,11 @@ class BackendModuleScriptUrlService
         $mainParams = ['id' => $pageUid];
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
         $route = $request->getAttribute('route');
-        $scriptUrl = (string)$uriBuilder->buildUriFromRoute($route->getOption('_identifier'), $mainParams);
-        $scriptUrl .= $queryString . $this->getAdditionalQueryParams($elementName, $queryParameters) . '&' . $elementName . '=${value}';
+        $scriptUrl = (string) $uriBuilder->buildUriFromRoute($route->getOption('_identifier'), $mainParams);
+        $scriptUrl .= $queryString . $this->getAdditionalQueryParams(
+            $elementName,
+            $queryParameters
+        ) . '&' . $elementName . '=${value}';
 
         return $scriptUrl;
     }

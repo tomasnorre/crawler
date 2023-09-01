@@ -19,8 +19,8 @@ return [
             'default' => 'tx-crawler',
         ],
         'security' => [
-            'ignorePageTypeRestriction' => true
-        ]
+            'ignorePageTypeRestriction' => true,
+        ],
     ],
     'columns' => [
         'hidden' => [

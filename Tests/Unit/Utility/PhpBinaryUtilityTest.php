@@ -20,8 +20,8 @@ namespace AOE\Crawler\Tests\Unit\Utility;
  */
 
 use AOE\Crawler\Utility\PhpBinaryUtility;
-use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use TYPO3\CMS\Core\Utility\CommandUtility;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * @covers \AOE\Crawler\Utility\PhpBinaryUtility

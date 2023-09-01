@@ -21,10 +21,10 @@ namespace AOE\Crawler\Tests\Unit\Service;
 
 use AOE\Crawler\Event\ModifySkipPageEvent;
 use AOE\Crawler\Service\PageService;
-use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * @covers \AOE\Crawler\Configuration\ExtensionConfigurationProvider::getExtensionConfiguration

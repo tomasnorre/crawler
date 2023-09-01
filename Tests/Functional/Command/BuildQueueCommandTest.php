@@ -24,10 +24,10 @@ use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use AOE\Crawler\Tests\Functional\LanguageServiceTestTrait;
 use AOE\Crawler\Tests\Functional\SiteBasedTestTrait;
-use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 class BuildQueueCommandTest extends FunctionalTestCase
 {

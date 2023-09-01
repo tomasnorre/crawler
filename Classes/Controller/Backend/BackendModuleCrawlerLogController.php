@@ -23,8 +23,8 @@ use AOE\Crawler\Controller\Backend\Helper\ResultHandler;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\Domain\Repository\QueueRepository;
-use AOE\Crawler\Service\BackendModuleScriptUrlService;
 use AOE\Crawler\Service\BackendModuleLogService;
+use AOE\Crawler\Service\BackendModuleScriptUrlService;
 use AOE\Crawler\Utility\MessageUtility;
 use AOE\Crawler\Value\QueueFilter;
 use AOE\Crawler\Writer\FileWriter\CsvWriter\CsvWriterInterface;
@@ -242,29 +242,56 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
                 'name' => 'displayLog',
                 'currentValue' => $this->logDisplay,
                 'menuItems' => $this->backendModuleMenu['displayLog'],
-                'scriptUrl' => $this->backendModuleScriptUrlService->buildScriptUrl($request, 'displayLog', $this->pageUid, $queryParams),
+                'scriptUrl' => $this->backendModuleScriptUrlService->buildScriptUrl(
+                    $request,
+                    'displayLog',
+                    $this->pageUid,
+                    $queryParams
+                ),
             ],
             'itemPerPageConfig' => [
                 'name' => 'itemsPerPage',
                 'currentValue' => $this->itemsPerPage,
                 'menuItems' => $this->backendModuleMenu['itemsPerPage'],
-                'scriptUrl' => $this->backendModuleScriptUrlService->buildScriptUrl($request, 'itemsPerPage', $this->pageUid, $queryParams),
+                'scriptUrl' => $this->backendModuleScriptUrlService->buildScriptUrl(
+                    $request,
+                    'itemsPerPage',
+                    $this->pageUid,
+                    $queryParams
+                ),
             ],
             'showResultLogConfig' => [
                 'name' => 'ShowResultLog',
                 'currentValue' => $this->showResultLog,
-                'scriptUrl' => $this->backendModuleScriptUrlService->buildScriptUrl($request, 'ShowResultLog', $this->pageUid, $queryParams, $this->quiPath),
+                'scriptUrl' => $this->backendModuleScriptUrlService->buildScriptUrl(
+                    $request,
+                    'ShowResultLog',
+                    $this->pageUid,
+                    $queryParams,
+                    $this->quiPath
+                ),
             ],
             'showFeVarsConfig' => [
                 'name' => 'ShowFeVars',
                 'currentValue' => $this->showFeVars,
-                'scriptUrl' => $this->backendModuleScriptUrlService->buildScriptUrl($request, 'ShowFeVars', $this->pageUid, $queryParams, $this->quiPath),
+                'scriptUrl' => $this->backendModuleScriptUrlService->buildScriptUrl(
+                    $request,
+                    'ShowFeVars',
+                    $this->pageUid,
+                    $queryParams,
+                    $this->quiPath
+                ),
             ],
             'depthDropDownConfig' => [
                 'name' => 'logDepth',
                 'currentValue' => $this->logDepth,
                 'menuItems' => $this->backendModuleMenu['logDepth'],
-                'scriptUrl' => $this->backendModuleScriptUrlService->buildScriptUrl($request, 'logDepth', $this->pageUid, $queryParams),
+                'scriptUrl' => $this->backendModuleScriptUrlService->buildScriptUrl(
+                    $request,
+                    'logDepth',
+                    $this->pageUid,
+                    $queryParams
+                ),
             ],
         ]);
     }

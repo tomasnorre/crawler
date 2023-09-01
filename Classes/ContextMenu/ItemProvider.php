@@ -78,8 +78,8 @@ class ItemProvider extends AbstractProvider
         return [
             'data-dispatch-action' => 'TYPO3.ModuleMenu.showModule',
             'data-dispatch-args-list' => 'web_site_crawler_start,&' . GeneralUtility::quoteJSvalue(
-                    '&' . implode('&', $additionalParameters)
-                )
+                '&' . implode('&', $additionalParameters)
+            ),
         ];
     }
 }

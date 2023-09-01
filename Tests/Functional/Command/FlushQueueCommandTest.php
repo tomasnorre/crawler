@@ -22,9 +22,9 @@ namespace AOE\Crawler\Tests\Functional\Command;
 use AOE\Crawler\Command\FlushQueueCommand;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
-use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 class FlushQueueCommandTest extends FunctionalTestCase
 {

@@ -20,11 +20,11 @@ namespace AOE\Crawler\Tests\Unit\CrawlStrategy;
  */
 
 use AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategy;
-use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Http\Uri;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * @covers \AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategy

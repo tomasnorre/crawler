@@ -80,7 +80,9 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
         $crawlingDepth = $request->getParsedBody()['crawlingDepth'] ?? $request->getQueryParams()['crawlingDepth'] ?? '0';
         $crawlParameter = $request->getParsedBody()['_crawl'] ?? $request->getQueryParams()['_crawl'] ?? null;
         $downloadParameter = $request->getParsedBody()['_download'] ?? $request->getQueryParams()['_download'] ?? null;
-        $scheduledTime = $this->getScheduledTime((string) ($request->getParsedBody()['tstamp'] ?? $request->getQueryParams()['tstamp'] ?? null));
+        $scheduledTime = $this->getScheduledTime(
+            (string) ($request->getParsedBody()['tstamp'] ?? $request->getQueryParams()['tstamp'] ?? null)
+        );
         $submitCrawlUrls = isset($crawlParameter);
         $downloadCrawlUrls = isset($downloadParameter);
 
@@ -152,8 +154,11 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
     /**
      * Generates the configuration selectors for compiling URLs:
      */
-    private function generateConfigurationSelectors(int $pageId, string $crawlingDepth, ServerRequestInterface $request): array
-    {
+    private function generateConfigurationSelectors(
+        int $pageId,
+        string $crawlingDepth,
+        ServerRequestInterface $request
+    ): array {
         $selectors = [];
         $selectors['depth'] = $this->selectorBox(
             [

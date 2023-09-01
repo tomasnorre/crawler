@@ -20,11 +20,11 @@ namespace AOE\Crawler\Tests\Unit\Middleware;
  */
 
 use AOE\Crawler\Middleware\CrawlerInitialization;
-use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Http\Response;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * @covers \AOE\Crawler\Middleware\CrawlerInitialization
