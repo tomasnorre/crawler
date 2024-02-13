@@ -21,6 +21,73 @@ parameters:
 			path: Classes/ContextMenu/ItemProvider.php
 
 		-
+			message: """
+				#^Call to deprecated method _GP\\(\\) of class TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:
+				since TYPO3 v12\\.3\\. will be removed in TYPO3 v13\\.0\\.$#
+			"""
+			count: 16
+			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
+
+		-
+			message: "#^Cannot access offset 'parameters' on array\\<string, mixed\\>\\|false\\.$#"
+			count: 2
+			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
+
+		-
+			message: """
+				#^Call to deprecated method _GP\\(\\) of class TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:
+				since TYPO3 v12\\.3\\. will be removed in TYPO3 v13\\.0\\.$#
+			"""
+			count: 2
+			path: Classes/Controller/Backend/BackendModuleCrawlerProcessController.php
+
+		-
+			message: "#^Unable to resolve the template type T in call to method static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\)$#"
+			count: 1
+			path: Classes/Controller/Backend/BackendModuleCrawlerProcessController.php
+
+		-
+			message: """
+				#^Call to deprecated method _GP\\(\\) of class TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:
+				since TYPO3 v12\\.3\\. will be removed in TYPO3 v13\\.0\\.$#
+			"""
+			count: 6
+			path: Classes/Controller/Backend/BackendModuleStartCrawlingController.php
+
+		-
+			message: "#^Call to function is_array\\(\\) with string will always evaluate to false\\.$#"
+			count: 1
+			path: Classes/Controller/Backend/BackendModuleStartCrawlingController.php
+
+		-
+			message: "#^Method AOE\\\\Crawler\\\\Controller\\\\Backend\\\\BackendModuleStartCrawlingController\\:\\:getScheduledTime\\(\\) never returns float so it can be removed from the return type\\.$#"
+			count: 1
+			path: Classes/Controller/Backend/BackendModuleStartCrawlingController.php
+
+		-
+			message: "#^Parameter \\#3 \\$scheduledTime of method AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:getPageTreeAndUrls\\(\\) expects int, float\\|int given\\.$#"
+			count: 1
+			path: Classes/Controller/Backend/BackendModuleStartCrawlingController.php
+
+		-
+			message: "#^Result of \\|\\| is always true\\.$#"
+			count: 1
+			path: Classes/Controller/Backend/BackendModuleStartCrawlingController.php
+
+		-
+			message: """
+				#^Call to deprecated method _GP\\(\\) of class TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:
+				since TYPO3 v12\\.3\\. will be removed in TYPO3 v13\\.0\\.$#
+			"""
+			count: 2
+			path: Classes/Controller/Backend/Helper/UrlBuilder.php
+
+		-
+			message: "#^Method AOE\\\\Crawler\\\\Controller\\\\Backend\\\\Helper\\\\UrlBuilder\\:\\:getBackendModuleUrl\\(\\) should return TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri but returns Psr\\\\Http\\\\Message\\\\UriInterface\\.$#"
+			count: 1
+			path: Classes/Controller/Backend/Helper/UrlBuilder.php
+
+		-
 			message: "#^Call to function is_string\\(\\) with bool will always evaluate to false\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
@@ -42,6 +109,16 @@ parameters:
 
 		-
 			message: "#^Method AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:readUrl\\(\\) should return int\\|null but empty return statement found\\.$#"
+			count: 1
+			path: Classes/Controller/CrawlerController.php
+
+		-
+			message: "#^Parameter \\#1 \\$pageUid of static method TYPO3\\\\CMS\\\\Backend\\\\Utility\\\\BackendUtility\\:\\:getPagesTSconfig\\(\\) expects int, string given\\.$#"
+			count: 1
+			path: Classes/Controller/CrawlerController.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function md5 expects string, string\\|false given\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -116,6 +193,38 @@ parameters:
 			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
 
 		-
+			message: """
+				#^Fetching deprecated class constant PARAM_INT_ARRAY of class TYPO3\\\\CMS\\\\Core\\\\Database\\\\Connection\\:
+				Use \\{@see ArrayParameterType\\:\\:INTEGER\\} instead\\.$#
+			"""
+			count: 1
+			path: Classes/Domain/Repository/ConfigurationRepository.php
+
+		-
+			message: """
+				#^Fetching deprecated class constant PARAM_STR_ARRAY of class TYPO3\\\\CMS\\\\Core\\\\Database\\\\Connection\\:
+				Use \\{@see ArrayParameterType\\:\\:STRING\\} instead\\.$#
+			"""
+			count: 1
+			path: Classes/Domain/Repository/ProcessRepository.php
+
+		-
+			message: """
+				#^Call to deprecated method getExpressionBuilder\\(\\) of class TYPO3\\\\CMS\\\\Core\\\\Database\\\\Connection\\:
+				Use \\{@see createExpressionBuilder\\(\\)\\} instead\\.$#
+			"""
+			count: 1
+			path: Classes/Domain/Repository/QueueRepository.php
+
+		-
+			message: """
+				#^Fetching deprecated class constant PARAM_STR_ARRAY of class TYPO3\\\\CMS\\\\Core\\\\Database\\\\Connection\\:
+				Use \\{@see ArrayParameterType\\:\\:STRING\\} instead\\.$#
+			"""
+			count: 1
+			path: Classes/Domain/Repository/QueueRepository.php
+
+		-
 			message: "#^Function getQueueEntriesForPageId\\(\\) has an unused variable \\$query\\.$#"
 			count: 1
 			path: Classes/Domain/Repository/QueueRepository.php
@@ -131,7 +240,84 @@ parameters:
 			path: Classes/Middleware/CrawlerInitialization.php
 
 		-
+			message: """
+				#^Call to deprecated method getFuncCheck\\(\\) of class TYPO3\\\\CMS\\\\Backend\\\\Utility\\\\BackendUtility\\:
+				since TYPO3 v12\\.2\\. will be removed in TYPO3 v13\\.0\\.$#
+			"""
+			count: 1
+			path: Classes/Service/BackendModuleHtmlElementService.php
+
+		-
+			message: """
+				#^Call to deprecated method getFuncMenu\\(\\) of class TYPO3\\\\CMS\\\\Backend\\\\Utility\\\\BackendUtility\\:
+				since TYPO3 v12\\.2\\. will be removed in TYPO3 v13\\.0\\.$#
+			"""
+			count: 1
+			path: Classes/Service/BackendModuleHtmlElementService.php
+
+		-
+			message: "#^Method AOE\\\\Crawler\\\\Service\\\\BackendModuleHtmlElementService\\:\\:getFormElementCheckbox\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: Classes/Service/BackendModuleHtmlElementService.php
+
+		-
+			message: "#^Parameter \\#3 \\$currentValue of static method TYPO3\\\\CMS\\\\Backend\\\\Utility\\\\BackendUtility\\:\\:getFuncMenu\\(\\) expects string, int\\|string given\\.$#"
+			count: 1
+			path: Classes/Service/BackendModuleHtmlElementService.php
+
+		-
+			message: "#^Cannot access offset 'alturl' on array\\|bool\\.$#"
+			count: 1
+			path: Classes/Service/BackendModuleLogService.php
+
+		-
+			message: "#^Cannot access offset 'procInstructions' on array\\|bool\\.$#"
+			count: 1
+			path: Classes/Service/BackendModuleLogService.php
+
+		-
+			message: "#^Class Error should be written with \\:\\:class notation, string found\\.$#"
+			count: 1
+			path: Classes/Service/BackendModuleLogService.php
+
+		-
+			message: "#^Method AOE\\\\Crawler\\\\Service\\\\BackendModuleLogService\\:\\:addRows\\(\\) should return non\\-empty\\-array\\<int, array\\{titleRowSpan\\: int\\<1, max\\>, colSpan\\: int, title\\: string, noEntries\\?\\: string, trClass\\?\\: string, qid\\?\\: array\\{link\\: TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, link\\-text\\: string\\}, refresh\\?\\: array\\{link\\: TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, link\\-text\\: TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon, warning\\: string\\|TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon\\}, columns\\?\\: array\\{url\\: mixed, scheduled\\: string, exec_time\\: string, result_log\\: string, result_status\\: string, feUserGroupList\\: string, procInstructions\\: string, set_id\\: string, \\.\\.\\.\\}\\}\\> but returns array\\{non\\-empty\\-array\\<int\\<0, max\\>, array\\{titleRowSpan\\: 1, colSpan\\: 8\\|9\\|11\\|12, title\\: string, noEntries\\: string\\}\\|array\\{titleRowSpan\\: int\\<1, max\\>, colSpan\\: 8\\|9\\|11\\|12, title\\: string, trClass\\: ''\\|'bg\\-danger', qid\\: array\\{link\\: TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, link\\-text\\: string\\}, refresh\\: array\\{link\\: TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, link\\-text\\: TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon, warning\\: ''\\|TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon\\}, columns\\: non\\-empty\\-array\\<'exec_time'\\|'feUserGroupList'\\|'procInstructions'\\|'result_log'\\|'result_status'\\|'scheduled'\\|'set_id'\\|'tsfe_gr_list'\\|'tsfe_id'\\|'url', mixed\\>\\}\\>, array\\{\\}\\|array\\{scheduled\\: string, exec_time\\: string, result_status\\: mixed, url\\: mixed, feUserGroupList\\: mixed, procInstructions\\: mixed, set_id\\: mixed, result_log\\: string, \\.\\.\\.\\}\\}\\.$#"
+			count: 1
+			path: Classes/Service/BackendModuleLogService.php
+
+		-
+			message: "#^Parameter \\#1 \\$resultData of static method AOE\\\\Crawler\\\\Controller\\\\Backend\\\\Helper\\\\ResultHandler\\:\\:getResFeVars\\(\\) expects array, array\\|true given\\.$#"
+			count: 1
+			path: Classes/Service/BackendModuleLogService.php
+
+		-
+			message: "#^Call to method getTreeList\\(\\) on an unknown class TYPO3\\\\CMS\\\\Core\\\\Database\\\\QueryGenerator\\.$#"
+			count: 1
+			path: Classes/Service/ConfigurationService.php
+
+		-
+			message: "#^Class TYPO3\\\\CMS\\\\Core\\\\Database\\\\QueryGenerator not found\\.$#"
+			count: 1
+			path: Classes/Service/ConfigurationService.php
+
+		-
 			message: "#^Class cognitive complexity is 84, keep it under 60$#"
+			count: 1
+			path: Classes/Service/ConfigurationService.php
+
+		-
+			message: """
+				#^Fetching class constant class of deprecated class TYPO3\\\\CMS\\\\Core\\\\TypoScript\\\\Parser\\\\TypoScriptParser\\:
+				This class should not be used anymore\\. Switch to the new parser construct instead\\.$#
+			"""
+			count: 1
+			path: Classes/Service/ConfigurationService.php
+
+		-
+			message: """
+				#^Fetching deprecated class constant PARAM_INT_ARRAY of class Doctrine\\\\DBAL\\\\Connection\\:
+				Use \\{@see ArrayParameterType\\:\\:INTEGER\\} instead\\.$#
+			"""
 			count: 1
 			path: Classes/Service/ConfigurationService.php
 
@@ -141,7 +327,22 @@ parameters:
 			path: Classes/Service/ConfigurationService.php
 
 		-
+			message: "#^PHPDoc tag @throws with type Doctrine\\\\DBAL\\\\DBALException is not subtype of Throwable$#"
+			count: 2
+			path: Classes/Service/ConfigurationService.php
+
+		-
+			message: "#^PHPDoc tag @var for variable \\$queryGenerator contains unknown class TYPO3\\\\CMS\\\\Core\\\\Database\\\\QueryGenerator\\.$#"
+			count: 1
+			path: Classes/Service/ConfigurationService.php
+
+		-
 			message: "#^Function getUrlFromPageAndQueryParameters\\(\\) has an unused variable \\$siteLanguage\\.$#"
+			count: 1
+			path: Classes/Service/UrlService.php
+
+		-
+			message: "#^PHPDoc tag @throws with type Doctrine\\\\DBAL\\\\DBALException\\|Doctrine\\\\DBAL\\\\Driver\\\\Exception\\|TYPO3\\\\CMS\\\\Core\\\\Exception\\\\SiteNotFoundException\\|TYPO3\\\\CMS\\\\Core\\\\Routing\\\\InvalidRouteArgumentsException is not subtype of Throwable$#"
 			count: 1
 			path: Classes/Service/UrlService.php
 
@@ -149,4 +350,9 @@ parameters:
 			message: "#^Parameter \\#1 \\$row of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\CsvUtility\\:\\:csvValues\\(\\) expects array\\<string\\>, array\\<int, int\\|string\\> given\\.$#"
 			count: 1
 			path: Classes/Writer/FileWriter/CsvWriter/CrawlerCsvWriter.php
+
+		-
+			message: "#^Out of 288 possible return types, only 80 %% actually have it\\. Add more return types to get over 81 %%$#"
+			count: 1
+			path: N/A
 
