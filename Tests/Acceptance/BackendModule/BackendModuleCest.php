@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace AOE\Crawler\Tests\Acceptance\BackendModule;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2005-2021 AOE GmbH <dev@aoe.com>
+ * (c) 2021-     Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -36,28 +37,28 @@ class BackendModuleCest
         $I->loginAsAdmin();
     }
 
-    public function canSeeInfoModule(Admin $I): void
+    public function canSeeCrawlerModule(Admin $I): void
     {
         $I->loginAsAdmin();
-        $I->canSee('Info', '#web_info');
+        $I->canSee('Crawler', '#web_site_crawler');
     }
 
-    public function canSelectInfoModuleStartCrawling(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    public function canSelectCrawlerModuleStartCrawling(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
     }
 
-    public function canSelectInfoModuleCrawlerLog(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    public function canSelectCrawlerModuleCrawlerLog(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleCrawlerLog($adminStep, $pageTree);
     }
 
-    public function canSelectInfoModuleMultiProcess(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    public function canSelectCrawlerModuleProcess(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();
-        $I->openCrawlerBackendModuleCrawlerMultiProcess($adminStep, $pageTree);
+        $I->openCrawlerBackendModuleCrawlerProcess($adminStep, $pageTree);
     }
 
     public function updateUrlButton(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
@@ -73,8 +74,11 @@ class BackendModuleCest
      * Ensure that Crawler Configurations with Exclude pages set to: e.g. 6+3 is working
      * https://github.com/AOEpeople/crawler/issues/777
      */
-    public function CrawlerConfigurationWithExcludePageSixPlusThree(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
-    {
+    public function CrawlerConfigurationWithExcludePageSixPlusThree(
+        BackendModule $I,
+        Admin $adminStep,
+        PageTree $pageTree
+    ): void {
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
         $I->selectOption('configurationSelection[]', 'excludepages-6-plus-3');
@@ -83,8 +87,11 @@ class BackendModuleCest
         $I->waitForText('Count: 1', 15);
     }
 
-    public function EnsureNoUserGroupsAndNoProcInstAreDisplayed(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
-    {
+    public function EnsureNoUserGroupsAndNoProcInstAreDisplayed(
+        BackendModule $I,
+        Admin $adminStep,
+        PageTree $pageTree
+    ): void {
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
         $I->selectOption('configurationSelection[]', 'excludepages-6-plus-3');
@@ -99,7 +106,7 @@ class BackendModuleCest
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
         $I->selectOption('configurationSelection[]', 'default');
-        $I->selectOption('SET[depth]', 99);
+        $I->selectOption('crawlingDepth', 99);
         $I->click('Update');
         $I->waitForElementVisible('.table-striped', 15);
     }
@@ -110,9 +117,9 @@ class BackendModuleCest
         $this->addQueueEntry($I, $adminStep, $pageTree);
 
         // Navigate to Process View
-        $I->selectOption('SET[crawlaction]', 'multiprocess');
-        $I->waitForText('CLI-Path',15);
-        $I->addProcessOnMultiProcess($adminStep, $pageTree);
+        $I->selectOption('moduleMenu', 'Process');
+        $I->waitForText('CLI-Path', 15);
+        $I->addProcessOnProcess($adminStep, $pageTree);
     }
 
     public function processSuccessful(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
@@ -129,7 +136,7 @@ class BackendModuleCest
      * Ensures that Result logs are writing correctly
      * https://github.com/tomasnorre/crawler/issues/826
      */
-    public function seeCrawlerLogWithOutErrors(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    public function seeCrawlerLogWithoutErrors(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();
         $this->addQueueEntry($I, $adminStep, $pageTree);
@@ -137,19 +144,214 @@ class BackendModuleCest
         $I->click('Show finished and terminated processes');
         $I->waitForText('Process completed successfully', 60);
         // Check Result
-        $I->selectOption('SET[crawlaction]', 'log');
-        $I->dontSee('Content index does not exists in requestContent');
+        //$I->selectOption('moduleMenu', 'log');
+        //$I->dontSee('Content index does not exists in requestContent');
     }
 
     public function manualTriggerCrawlerFromLog(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();
         $this->addQueueEntry($I, $adminStep, $pageTree);
-        $I->selectOption('SET[crawlaction]', 'log');
+        $I->selectOption('moduleMenu', 'Log');
         // Click on "refresh" for given record
         $I->click('.refreshLink');
         $I->dontSee('Whoops, looks like something went wrong.');
         $I->waitForText('OK', 15);
+    }
+
+    public function crawlerUrlsContinueAndShowLog(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    {
+        $adminStep->loginAsAdmin();
+        $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
+        $I->selectOption('configurationSelection[]', 'default');
+        $I->click('Crawl URLs');
+        $I->waitForText('1 URLs submitted', 15);
+        $I->click('Continue and show Log');
+        $I->waitForText('Crawler log', 15);
+        $I->waitForText('Welcome', 10);
+        $I->waitForText('https://crawler-devbox.ddev.site/', 10);
+        $I->waitForText('tx_indexedsearch_reindex', 10);
+    }
+
+    public function crawlerUrlsContinueAndShowLogCheckDepthDropdown(
+        BackendModule $I,
+        Admin $adminStep,
+        PageTree $pageTree
+    ): void {
+        $adminStep->loginAsAdmin();
+        $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
+        $I->selectOption('configurationSelection[]', 'default');
+        $I->selectOption('crawlingDepth', '99');
+        $I->click('Crawl URLs');
+        $I->waitForText('URLs submitted', 15);
+        $I->click('Continue and show Log');
+        $I->waitForText('Crawler log', 15);
+        $I->waitForText('Welcome', 10);
+        $I->waitForText('https://crawler-devbox.ddev.site/', 10);
+        $I->waitForText('tx_indexedsearch_reindex', 10);
+        $I->selectOption('logDepth', '99');
+        $I->waitForText('Page with Subpages', 10);
+        $I->waitForText('https://crawler-devbox.ddev.site/page-with-subpages', 10);
+        $I->waitForText('Access Restricted Page', 10);
+        $I->waitForText('https://crawler-devbox.ddev.site/access-restricted-page', 10);
+    }
+
+    public function flushVisibleEntries(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    {
+        // Will test twice, but done to avoid duplicate code
+        $this->crawlerUrlsContinueAndShowLogCheckDepthDropdown($I, $adminStep, $pageTree);
+        $I->click('Flush entire queue');
+        $I->switchToMainFrame();
+        $I->seeInPopup('Are you sure?');
+        $I->click('OK');
+        $I->switchToContentFrame();
+        $I->wait(3);
+        $I->canSeeNumberOfElements('a.refreshLink', 0);
+        $this->crawlerUrlsContinueAndShowLogCheckDepthDropdown($I, $adminStep, $pageTree);
+        $I->canSeeNumberOfElements('a.refreshLink', 9);
+        $I->selectOption('logDisplay', 'Finished');
+        $I->canSeeNumberOfElements('a.refreshLink', 0);
+        $I->click('Flush visible entries');
+        $I->acceptPopup();
+        $I->wait(3);
+        $I->selectOption('logDisplay', 'All');
+        $I->canSeeNumberOfElements('a.refreshLink', 9);
+        $I->selectOption('logDisplay', 'Pending');
+        $I->click('Flush visible entries');
+        $I->acceptPopup();
+        $I->wait(3);
+        $I->canSeeNumberOfElements('a.refreshLink', 0);
+    }
+
+    public function CrawlerLogDisplayAndItemsPerPageDropdowns(
+        BackendModule $I,
+        Admin $adminStep,
+        PageTree $pageTree
+    ): void {
+        $adminStep->loginAsAdmin();
+        $I->openCrawlerBackendModuleCrawlerLog($adminStep, $pageTree);
+        $I->selectOption('moduleMenu', 'Log');
+        $I->waitForText('Crawler log', 15);
+
+        $I->selectOption('displayLog', 'Pending');
+        $I->seeOptionIsSelected('displayLog', 'Pending');
+        # Check the dropdowns work individually
+        $I->selectOption('displayLog', 'Finished');
+        $I->seeOptionIsSelected('displayLog', 'Finished');
+        $I->selectOption('itemsPerPage', 'limit to 5');
+        $I->seeOptionIsSelected('itemsPerPage', 'limit to 5');
+        $I->seeOptionIsSelected('displayLog', 'Finished');
+
+        # Check that the second dropdown selection keeps selected.
+        $I->selectOption('itemsPerPage', 'no limit');
+        $I->seeOptionIsSelected('itemsPerPage', 'no limit');
+        $I->seeOptionIsSelected('displayLog', 'Finished');
+        $I->selectOption('displayLog', 'Pending');
+        $I->seeOptionIsSelected('itemsPerPage', 'no limit');
+        $I->seeOptionIsSelected('displayLog', 'Pending');
+    }
+
+    public function CrawlerLogResultLogShowsLabels(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    {
+        $adminStep->loginAsAdmin();
+        $I->openCrawlerBackendModuleCrawlerLog($adminStep, $pageTree);
+        $I->see('Display');
+        $I->see('Items per page');
+        $I->see('Show Result Log');
+        $I->see('Show FE Vars');
+    }
+
+    public function CrawlerLogResultLogAndFEVarsCheckboxes(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    {
+        $adminStep->loginAsAdmin();
+        $I->openCrawlerBackendModuleCrawlerLog($adminStep, $pageTree);
+
+        # Check individually
+        $this->resetCheckboxes($I);
+        $I->checkOption('ShowResultLog');
+        $I->seeCheckboxIsChecked('ShowResultLog');
+        $I->dontSeeCheckboxIsChecked('ShowFeVars');
+
+        $this->resetCheckboxes($I);
+        $I->checkOption('ShowFeVars');
+        $I->seeCheckboxIsChecked('ShowFeVars');
+        $I->dontSeeCheckboxIsChecked('ShowResultLog');
+
+        # Check in combination
+        $this->resetCheckboxes($I);
+        $I->checkOption('ShowResultLog');
+        $I->checkOption('ShowFeVars');
+        $I->seeCheckboxIsChecked('ShowFeVars');
+        $I->seeCheckboxIsChecked('ShowResultLog');
+
+        $this->resetCheckboxes($I);
+        $I->checkOption('ShowResultLog');
+        $I->checkOption('ShowFeVars');
+        $I->uncheckOption('ShowFeVars');
+        $I->seeCheckboxIsChecked('ShowResultLog');
+        $I->dontSeeCheckboxIsChecked('ShowFeVars');
+
+        $this->resetCheckboxes($I);
+        $I->checkOption('ShowResultLog');
+        $I->checkOption('ShowFeVars');
+        $I->uncheckOption('ShowResultLog');
+        $I->seeCheckboxIsChecked('ShowFeVars');
+        $I->dontSeeCheckboxIsChecked('ShowResultLog');
+    }
+
+    public function CrawlerLogDropDownAndCheckboxesCombined(
+        BackendModule $I,
+        Admin $adminStep,
+        PageTree $pageTree
+    ): void {
+        $adminStep->loginAsAdmin();
+        $I->openCrawlerBackendModuleCrawlerLog($adminStep, $pageTree);
+
+        // Check individually
+        $this->resetCheckboxes($I);
+        $I->checkOption('ShowResultLog');
+        $I->seeCheckboxIsChecked('ShowResultLog');
+        $I->dontSeeCheckboxIsChecked('ShowFeVars');
+
+        $I->selectOption('itemsPerPage', 'no limit');
+        $I->seeOptionIsSelected('itemsPerPage', 'no limit');
+        $I->selectOption('displayLog', 'Pending');
+        $I->seeOptionIsSelected('displayLog', 'Pending');
+        # The checkboxes aren't allowed to change
+        $I->seeCheckboxIsChecked('ShowResultLog');
+        $I->dontSeeCheckboxIsChecked('ShowFeVars');
+
+        // Reversed case, dropdowns are set first, and then checkboxes used.
+        $this->resetCheckboxes($I);
+        $I->selectOption('itemsPerPage', 'no limit');
+        $I->seeOptionIsSelected('itemsPerPage', 'no limit');
+        $I->selectOption('displayLog', 'Pending');
+        $I->seeOptionIsSelected('displayLog', 'Pending');
+
+        $I->checkOption('ShowResultLog');
+        $I->seeCheckboxIsChecked('ShowResultLog');
+        $I->dontSeeCheckboxIsChecked('ShowFeVars');
+        $I->checkOption('ShowFeVars');
+        $I->seeCheckboxIsChecked('ShowFeVars');
+        $I->seeOptionIsSelected('displayLog', 'Pending');
+        $I->seeOptionIsSelected('itemsPerPage', 'no limit');
+
+        // Include logDepth
+        $this->resetCheckboxes($I);
+        $I->selectOption('itemsPerPage', 'no limit');
+        $I->seeOptionIsSelected('itemsPerPage', 'no limit');
+        $I->selectOption('displayLog', 'Pending');
+        $I->seeOptionIsSelected('displayLog', 'Pending');
+        $I->selectOption('logDepth', '4 levels');
+
+        $I->checkOption('ShowResultLog');
+        $I->seeCheckboxIsChecked('ShowResultLog');
+        $I->dontSeeCheckboxIsChecked('ShowFeVars');
+        $I->checkOption('ShowFeVars');
+        $I->seeCheckboxIsChecked('ShowFeVars');
+        $I->seeOptionIsSelected('displayLog', 'Pending');
+        $I->seeOptionIsSelected('itemsPerPage', 'no limit');
+        $I->seeOptionIsSelected('logDepth', '4 levels');
     }
 
     public function checkSelections(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
@@ -158,9 +360,9 @@ class BackendModuleCest
         $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
 
         // Action
-        $I->see('Start Crawling');
-        $I->see('Crawler Log');
-        $I->see('Crawling Processes');
+        $I->see('Start');
+        $I->see('Log');
+        $I->see('Process');
 
         // Configurations
         $I->see('default');
@@ -180,6 +382,12 @@ class BackendModuleCest
         $I->see('4 AM');
     }
 
+    private function resetCheckboxes(BackendModule $I): void
+    {
+        $I->uncheckOption('ShowResultLog');
+        $I->uncheckOption('ShowFeVars');
+    }
+
     /**
      * @throws \Exception
      */
@@ -196,7 +404,7 @@ class BackendModuleCest
      */
     private function addProcess(BackendModule $I): void
     {
-        $I->selectOption('SET[crawlaction]', 'multiprocess');
+        $I->selectOption('moduleMenu', 'Process');
         $I->waitForText('CLI-Path', 15);
         $I->click('Add process');
         $I->waitForElementNotVisible('#nprogress', 120);

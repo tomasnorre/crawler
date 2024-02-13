@@ -12,49 +12,52 @@
     ],
     "homepage": "https://github.com/tomasnorre/crawler",
     "support": {
-        "issues": "https://github.com/tomasnorre/crawler/issues"
+        "docs": "https://docs.typo3.org/p/tomasnorre/crawler/main/en-us/",
+        "issues": "https://github.com/tomasnorre/crawler/issues",
+        "source": "https://github.com/tomasnorre/crawler/",
+        "chat": "https://typo3.slack.com/archives/C087NGBKM"
     },
     "require": {
-        "php": "^7.4 || ^8.0",
+        "php": "~8.1.0 || ~8.2.0",
         "ext-json": "*",
         "ext-pdo": "*",
         "beberlei/assert": "^3.3",
         "guzzlehttp/guzzle": "^6.4.1 || ^7.2",
         "psr/http-message": "^1.0",
-        "psr/log": "^1.0",
-        "symfony/console": "^5.0",
-        "symfony/polyfill-php80": "^1.23",
-        "typo3/cms-backend": "*",
-        "typo3/cms-core": "^10.4.11 || ^11.5",
-        "typo3/cms-frontend": "*",
-        "typo3/cms-info": "*",
-        "typo3/cms-seo": "*"
+        "psr/log": "^1.0 || ^2.0 || ^3.0",
+        "symfony/console": "^5.0 || ^6.1",
+        "typo3/cms-backend": "12.2.x-dev",
+        "typo3/cms-core": "12.2.x-dev",
+        "typo3/cms-frontend": "12.2.x-dev",
+        "typo3/cms-info": "12.2.x-dev",
+        "typo3/cms-seo": "12.2.x-dev"
     },
     "require-dev": {
-        "codeception/codeception": "^4.1",
-        "codeception/module-asserts": "^1.1",
-        "codeception/module-filesystem": "^1.0",
-        "codeception/module-phpbrowser": "^1.0",
-        "codeception/module-webdriver": "^1.0",
+        "codeception/codeception": "^5.0",
+        "codeception/module-asserts": "^3.0",
+        "codeception/module-filesystem": "^3.0",
+        "codeception/module-phpbrowser": "^3.0",
+        "codeception/module-webdriver": "^3.0",
         "cweagans/composer-patches": "^1.7",
         "infection/infection": "^0.26",
         "nikic/php-parser": "^4.13",
         "nimut/testing-framework": "^6.0 || dev-main",
-        "nimut/typo3-complete": "^10.4",
         "phpspec/prophecy-phpunit": "^2.0",
-        "phpstan/extension-installer": "^1.1",
-        "phpstan/phpstan": "0.12.99",
-        "phpstan/phpstan-deprecation-rules": "^0.12.5",
+        "phpstan/extension-installer": "^1.2",
+        "phpstan/phpstan": "^1.9",
+        "phpstan/phpstan-deprecation-rules": "^1.0",
         "phpunit/phpunit": "^9.5",
-        "rector/rector": "0.11.57",
         "roave/security-advisories": "dev-latest",
-        "saschaegerer/phpstan-typo3": "^0.13.3",
-        "slam/phpstan-extensions": "^5.1",
-        "symfony/yaml": "^4.4 || ^5.0",
-        "symplify/easy-coding-standard": "9.4.32",
-        "symplify/phpstan-rules": "9.3.0",
-        "typo3/testing-framework": "^6.11",
-        "vimeo/psalm": "^4.18"
+        "saschaegerer/phpstan-typo3": "^1.8",
+        "sbuerk/typo3-cmscomposerinstallers-testingframework-bridge": "^0.0.1",
+        "slam/phpstan-extensions": "^6.0",
+        "ssch/typo3-rector": "^1.1",
+        "symfony/yaml": "^4.4 || ^5.0 || ^6.1",
+        "symplify/easy-coding-standard": "11.1.16",
+        "symplify/phpstan-rules": "^11.1",
+        "tomasvotruba/cognitive-complexity": "^0.0.5",
+        "tomasvotruba/type-coverage": "^0.0.9",
+        "typo3/testing-framework": "7.x-dev"
     },
     "replace": {
         "aoepeople/crawler": "self.version",
@@ -89,7 +92,8 @@
             "infection/extension-installer": true,
             "phpstan/extension-installer": true,
             "typo3/class-alias-loader": true,
-            "typo3/cms-composer-installers": true
+            "typo3/cms-composer-installers": true,
+            "sbuerk/typo3-cmscomposerinstallers-testingframework-bridge": true
         },
         "bin-dir": ".Build/bin",
         "preferred-install": {
@@ -109,13 +113,7 @@
                 "Reset setDBInit + initCommands for PostgreSQL": "Build/nimut-testing-framework-postgresql.patch"
             }
         },
-        "typo3/class-alias-loader": {
-            "class-alias-maps": [
-                "Migrations/Code/ClassAliasMap.php"
-            ]
-        },
         "typo3/cms": {
-            "cms-package-dir": "{$vendor-dir}/typo3/cms",
             "extension-key": "crawler",
             "web-dir": ".Build/Web"
         }
@@ -161,8 +159,8 @@
             ".Build/bin/phpstan analyse --generate-baseline"
         ],
         "psalm": [
-            "[ -e .Build/bin/psalm ] || composer update",
-            ".Build/bin/psalm"
+            "[ -e tools/psalm ] || phive install",
+            "tools/psalm"
         ],
         "rector": [
             "[ -e .Build/bin/rector ] || composer update",
@@ -179,6 +177,7 @@
         ],
         "test:acceptance": [
             "[ -e .Build/bin/codecept ] || composer update",
+            ".Build/bin/codecept clean",
             ".Build/bin/codecept run --env=local"
         ],
         "test:all": [

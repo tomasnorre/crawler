@@ -73,39 +73,31 @@ class UrlServiceTest extends FunctionalTestCase
      * @test
      * @dataProvider getUrlFromPageAndQueryParametersReturnExpectedUrlDataProvider
      */
-    public function getUrlFromPageAndQueryParametersReturnExpectedUrl($pageId, $queryString, $alternativeBaseUrl, $httpsOrHttp, Uri $expected): void
-    {
-        $actual = $this->subject->getUrlFromPageAndQueryParameters($pageId, $queryString, $alternativeBaseUrl, $httpsOrHttp);
-
-        self::assertEquals(
-            $expected->getHost(),
-            $actual->getHost()
+    public function getUrlFromPageAndQueryParametersReturnExpectedUrl(
+        $pageId,
+        $queryString,
+        $alternativeBaseUrl,
+        $httpsOrHttp,
+        Uri $expected
+    ): void {
+        $actual = $this->subject->getUrlFromPageAndQueryParameters(
+            $pageId,
+            $queryString,
+            $alternativeBaseUrl,
+            $httpsOrHttp
         );
 
-        self::assertEquals(
-            $expected->getScheme(),
-            $actual->getScheme()
-        );
+        self::assertEquals($expected->getHost(), $actual->getHost());
 
-        self::assertEquals(
-            $expected->getPath(),
-            $actual->getPath()
-        );
+        self::assertEquals($expected->getScheme(), $actual->getScheme());
 
-        self::assertEquals(
-            $expected->getPort(),
-            $actual->getPort()
-        );
+        self::assertEquals($expected->getPath(), $actual->getPath());
 
-        self::assertStringContainsString(
-            $expected->getQuery(),
-            $actual->getQuery()
-        );
+        self::assertEquals($expected->getPort(), $actual->getPort());
 
-        self::assertEquals(
-            $expected->getUserInfo(),
-            $actual->getUserInfo()
-        );
+        self::assertStringContainsString($expected->getQuery(), $actual->getQuery());
+
+        self::assertEquals($expected->getUserInfo(), $actual->getUserInfo());
     }
 
     public function getUrlFromPageAndQueryParametersReturnExpectedUrlDataProvider(): iterable

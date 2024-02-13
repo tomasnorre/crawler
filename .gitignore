@@ -26,13 +26,16 @@ infection.log
 /Infection/
 /LOGGER-HTML
 reports/
+tools/
 
 # Devbox
 .devbox/.ddev/config.local.yaml
 .devbox/bin
 .devbox/var
 .devbox/vendor
+.devbox/public/_assets
 .devbox/public/index.php
+.devbox/public/fileadmin/.htaccess
 .devbox/public/fileadmin/_processed_
 .devbox/public/fileadmin/_temp_
 .devbox/public/typo3

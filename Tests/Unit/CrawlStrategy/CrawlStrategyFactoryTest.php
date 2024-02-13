@@ -48,10 +48,7 @@ class CrawlStrategyFactoryTest extends UnitTestCase
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = $configuration;
         $crawlStrategy = GeneralUtility::makeInstance(CrawlStrategyFactory::class)->create();
 
-        self::assertInstanceOf(
-            GuzzleExecutionStrategy::class,
-            $crawlStrategy
-        );
+        self::assertInstanceOf(GuzzleExecutionStrategy::class, $crawlStrategy);
     }
 
     /**
@@ -66,10 +63,7 @@ class CrawlStrategyFactoryTest extends UnitTestCase
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = $configuration;
         $crawlStrategy = GeneralUtility::makeInstance(CrawlStrategyFactory::class)->create();
 
-        self::assertInstanceOf(
-            SubProcessExecutionStrategy::class,
-            $crawlStrategy
-        );
+        self::assertInstanceOf(SubProcessExecutionStrategy::class, $crawlStrategy);
     }
 
     /**
@@ -83,10 +77,7 @@ class CrawlStrategyFactoryTest extends UnitTestCase
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = $configuration;
         $crawlStrategy = GeneralUtility::makeInstance(CrawlStrategyFactory::class)->create();
 
-        self::assertInstanceOf(
-            GuzzleExecutionStrategy::class,
-            $crawlStrategy
-        );
+        self::assertInstanceOf(GuzzleExecutionStrategy::class, $crawlStrategy);
     }
 
     /**
@@ -101,12 +92,12 @@ class CrawlStrategyFactoryTest extends UnitTestCase
 
         $extensionConfigurationProvider = $this->prophesize(ExtensionConfigurationProvider::class);
         $extensionConfigurationProvider->getExtensionConfiguration()->willReturn($configuration);
-        $crawlStrategy = GeneralUtility::makeInstance(CrawlStrategyFactory::class, $extensionConfigurationProvider->reveal())->create();
+        $crawlStrategy = GeneralUtility::makeInstance(
+            CrawlStrategyFactory::class,
+            $extensionConfigurationProvider->reveal()
+        )->create();
 
-        self::assertInstanceOf(
-            SubProcessExecutionStrategy::class,
-            $crawlStrategy
-        );
+        self::assertInstanceOf(SubProcessExecutionStrategy::class, $crawlStrategy);
     }
 
     /**
@@ -121,11 +112,11 @@ class CrawlStrategyFactoryTest extends UnitTestCase
 
         $extensionConfigurationProvider = $this->prophesize(ExtensionConfigurationProvider::class);
         $extensionConfigurationProvider->getExtensionConfiguration()->willReturn($configuration);
-        $crawlStrategy = GeneralUtility::makeInstance(CrawlStrategyFactory::class, $extensionConfigurationProvider->reveal())->create();
+        $crawlStrategy = GeneralUtility::makeInstance(
+            CrawlStrategyFactory::class,
+            $extensionConfigurationProvider->reveal()
+        )->create();
 
-        self::assertInstanceOf(
-            GuzzleExecutionStrategy::class,
-            $crawlStrategy
-        );
+        self::assertInstanceOf(GuzzleExecutionStrategy::class, $crawlStrategy);
     }
 }

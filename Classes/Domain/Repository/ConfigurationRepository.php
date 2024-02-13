@@ -33,7 +33,7 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
  */
 class ConfigurationRepository extends Repository
 {
-    public const TABLE_NAME = 'tx_crawler_configuration';
+    final public const TABLE_NAME = 'tx_crawler_configuration';
 
     /**
      * Traverses up the rootline of a page and fetches all crawler records.
@@ -60,11 +60,14 @@ class ConfigurationRepository extends Repository
             ->select('*')
             ->from(self::TABLE_NAME)
             ->where(
-                $queryBuilder->expr()->in('pid', $queryBuilder->createNamedParameter($pageIdsInRootLine, Connection::PARAM_INT_ARRAY))
+                $queryBuilder->expr()->in(
+                    'pid',
+                    $queryBuilder->createNamedParameter($pageIdsInRootLine, Connection::PARAM_INT_ARRAY)
+                )
             )
             ->orderBy('name')
-            ->execute()
-            ->fetchAll();
+            ->executeQuery()
+            ->fetchAllAssociative();
     }
 
     protected function createQueryBuilder(): QueryBuilder

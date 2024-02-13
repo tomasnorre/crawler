@@ -21,13 +21,14 @@ namespace AOE\Crawler\Event;
 
 use AOE\Crawler\Domain\Model\Reason;
 
+/**
+ * @internal since v12.0.0
+ */
 final class InvokeQueueChangeEvent
 {
-    private Reason $reason;
-
-    public function __construct(Reason $reason)
-    {
-        $this->reason = $reason;
+    public function __construct(
+        private readonly Reason $reason
+    ) {
     }
 
     public function getReasonDetailedText(): string

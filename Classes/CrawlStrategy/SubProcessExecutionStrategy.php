@@ -32,6 +32,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Executes another process via shell_exec() to include cli/bootstrap.php which in turn
  * includes the index.php for frontend.
+ * @internal since v12.0.0
  */
 class SubProcessExecutionStrategy implements LoggerAwareInterface, CrawlStrategyInterface
 {
@@ -65,10 +66,7 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
         }
 
         if (! isset($parsedUrl['scheme']) || ! in_array($parsedUrl['scheme'], ['', 'http', 'https'], true)) {
-            $this->logger->debug(
-                sprintf('Scheme does not match for url "%s"', $url),
-                ['crawlerId' => $crawlerId]
-            );
+            $this->logger->debug(sprintf('Scheme does not match for url "%s"', $url), ['crawlerId' => $crawlerId]);
             return false;
         }
 
@@ -148,7 +146,7 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
 
         // Base path must be '/<pathSegements>/':
         if ($frontendBasePath !== '/') {
-            $frontendBasePath = '/' . ltrim($frontendBasePath, '/');
+            $frontendBasePath = '/' . ltrim((string) $frontendBasePath, '/');
             $frontendBasePath = rtrim($frontendBasePath, '/') . '/';
         }
 

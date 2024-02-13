@@ -67,10 +67,7 @@ class QueueServiceTest extends FunctionalTestCase
         $this->subject->addPageToQueue(5, 9998);
         $this->subject->addPageToQueue(5, 3422);
 
-        self::assertCount(
-            1,
-            $this->queueRepository->getUnprocessedItems()
-        );
+        self::assertCount(1, $this->queueRepository->getUnprocessedItems());
     }
 
     /**
@@ -87,10 +84,7 @@ class QueueServiceTest extends FunctionalTestCase
         $this->subject->addPageToQueue(5, 100001);
         $this->subject->addPageToQueue(5, 100001);
 
-        self::assertCount(
-            1,
-            $this->queueRepository->getUnprocessedItems()
-        );
+        self::assertCount(1, $this->queueRepository->getUnprocessedItems());
     }
 
     /**
@@ -107,10 +101,7 @@ class QueueServiceTest extends FunctionalTestCase
         $this->subject->addPageToQueue(5, 100011);
         $this->subject->addPageToQueue(5, 200014);
 
-        self::assertCount(
-            2,
-            $this->queueRepository->getUnprocessedItems()
-        );
+        self::assertCount(2, $this->queueRepository->getUnprocessedItems());
     }
 
     private function setupExtensionSettings(): void

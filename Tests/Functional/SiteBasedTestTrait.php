@@ -20,6 +20,8 @@ namespace AOE\Crawler\Tests\Functional;
  */
 
 use TYPO3\CMS\Core\Configuration\SiteConfiguration;
+use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Trait used for test classes that want to set up (= write) site configuration files.
@@ -44,8 +46,10 @@ trait SiteBasedTestTrait
             $configuration['errorHandling'] = $errorHandling;
         }
 
+        $eventDispatcher = GeneralUtility::makeInstance(EventDispatcher::class);
         $siteConfiguration = new SiteConfiguration(
-            $this->getInstancePath() . '/typo3conf/sites/'
+            $this->getInstancePath() . '/typo3conf/sites/',
+            $eventDispatcher
         );
 
         try {
@@ -55,13 +59,9 @@ trait SiteBasedTestTrait
         }
     }
 
-    protected function mergeSiteConfiguration(
-        string $identifier,
-        array $overrides
-    ): void {
-        $siteConfiguration = new SiteConfiguration(
-            $this->getInstancePath() . '/typo3conf/sites/'
-        );
+    protected function mergeSiteConfiguration(string $identifier, array $overrides): void
+    {
+        $siteConfiguration = new SiteConfiguration($this->getInstancePath() . '/typo3conf/sites/');
         $configuration = $siteConfiguration->load($identifier);
         $configuration = array_merge($configuration, $overrides);
         try {
@@ -71,20 +71,16 @@ trait SiteBasedTestTrait
         }
     }
 
-    protected function buildSiteConfiguration(
-        int $rootPageId,
-        string $base = ''
-    ): array {
+    protected function buildSiteConfiguration(int $rootPageId, string $base = ''): array
+    {
         return [
             'rootPageId' => $rootPageId,
             'base' => $base,
         ];
     }
 
-    protected function buildDefaultLanguageConfiguration(
-        string $identifier,
-        string $base
-    ): array {
+    protected function buildDefaultLanguageConfiguration(string $identifier, string $base): array
+    {
         $configuration = $this->buildLanguageConfiguration($identifier, $base);
         $configuration['typo3Language'] = 'default';
         $configuration['flag'] = 'global';
@@ -135,10 +131,7 @@ trait SiteBasedTestTrait
     protected function resolveLanguagePreset(string $identifier)
     {
         if (! isset(static::LANGUAGE_PRESETS[$identifier])) {
-            throw new \LogicException(
-                sprintf('Undefined preset identifier "%s"', $identifier),
-                1_533_893_665
-            );
+            throw new \LogicException(sprintf('Undefined preset identifier "%s"', $identifier), 1_533_893_665);
         }
         return static::LANGUAGE_PRESETS[$identifier];
     }

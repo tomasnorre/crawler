@@ -31,9 +31,9 @@ use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
  */
 class Process extends AbstractEntity
 {
-    public const STATE_RUNNING = 'running';
-    public const STATE_CANCELLED = 'cancelled';
-    public const STATE_COMPLETED = 'completed';
+    final public const STATE_RUNNING = 'running';
+    final public const STATE_CANCELLED = 'cancelled';
+    final public const STATE_COMPLETED = 'completed';
 
     protected string $processId = '';
 

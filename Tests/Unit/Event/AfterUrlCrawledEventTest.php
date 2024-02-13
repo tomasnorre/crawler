@@ -39,14 +39,8 @@ class AfterUrlCrawledEventTest extends UnitTestCase
      */
     public function defaultValueTest(): void
     {
-        self::assertEquals(
-            '/contact',
-            $this->subject->getUrl()
-        );
+        self::assertEquals('/contact', $this->subject->getUrl());
 
-        self::assertEquals(
-            [],
-            $this->subject->getResult()
-        );
+        self::assertEquals([], $this->subject->getResult());
     }
 }

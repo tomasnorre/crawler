@@ -34,16 +34,18 @@ use TYPO3\CMS\Frontend\Controller\ErrorController;
 
 /**
  * Evaluates HTTP headers and checks if Crawler should register itself.
+ *
+ * @internal since v12.0.0
  */
 class FrontendUserAuthenticator implements MiddlewareInterface
 {
     protected string $headerName = 'X-T3CRAWLER';
     protected Context $context;
-    private QueryBuilder $queryBuilder;
 
-    public function __construct(QueryBuilder $queryBuilder, ?Context $context = null)
-    {
-        $this->queryBuilder = $queryBuilder;
+    public function __construct(
+        private readonly QueryBuilder $queryBuilder,
+        ?Context $context = null
+    ) {
         $this->context = $context ?? GeneralUtility::makeInstance(Context::class);
     }
 
@@ -53,11 +55,10 @@ class FrontendUserAuthenticator implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-
         /** @var JsonCompatibilityConverter $jsonCompatibilityConverter */
         $jsonCompatibilityConverter = GeneralUtility::makeInstance(JsonCompatibilityConverter::class);
 
-        $crawlerInformation = $request->getHeaderLine($this->headerName) ?? null;
+        $crawlerInformation = $request->getHeaderLine($this->headerName);
         if (empty($crawlerInformation)) {
             return $handler->handle($request);
         }
@@ -69,28 +70,29 @@ class FrontendUserAuthenticator implements MiddlewareInterface
 
         // If a crawler record was found and hash was matching, set it up
         if (! $this->isRequestHashMatchingQueueRecord($queueRec, $hash)) {
-            return GeneralUtility::makeInstance(ErrorController::class)->unavailableAction($request, 'No crawler entry found');
+            return GeneralUtility::makeInstance(ErrorController::class)->unavailableAction(
+                $request,
+                'No crawler entry found'
+            );
         }
 
         $queueParameters = $jsonCompatibilityConverter->convert($queueRec['parameters']);
         $request = $request->withAttribute('tx_crawler', $queueParameters);
 
         // Now ensure to set the proper user groups
-        $grList = $queueParameters['feUserGroupList'] ?? '';
-        if ($grList) {
-            $frontendUser = $this->getFrontendUser($grList, $request);
+        if (is_array($queueParameters)) {
+            $grList = $queueParameters['feUserGroupList'] ?? '';
+            if ($grList) {
+                $frontendUser = $this->getFrontendUser($grList, $request);
 
-            // we have to set the fe user group to the user aspect since indexed_search only reads the user aspect
-            // to get the groups. otherwise groups are ignored during indexing.
-            // we need to add the groups 0, and -2 too, like the getGroupIds getter does.
-            $this->context->setAspect(
-                'frontend.user',
-                GeneralUtility::makeInstance(
-                    UserAspect::class,
-                    $frontendUser,
-                    explode(',', '0,-2,' . $grList)
-                )
-            );
+                // we have to set the fe user group to the user aspect since indexed_search only reads the user aspect
+                // to get the groups. otherwise groups are ignored during indexing.
+                // we need to add the groups 0, and -2 too, like the getGroupIds getter does.
+                $this->context->setAspect(
+                    'frontend.user',
+                    GeneralUtility::makeInstance(UserAspect::class, $frontendUser, explode(',', '0,-2,' . $grList))
+                );
+            }
         }
 
         return $handler->handle($request);
@@ -103,7 +105,12 @@ class FrontendUserAuthenticator implements MiddlewareInterface
 
     private function isRequestHashMatchingQueueRecord(?array $queueRec, string $hash): bool
     {
-        return is_array($queueRec) && hash_equals($hash, md5($queueRec['qid'] . '|' . $queueRec['set_id'] . '|' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']));
+        return is_array($queueRec) && hash_equals(
+            $hash,
+            md5(
+                $queueRec['qid'] . '|' . $queueRec['set_id'] . '|' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']
+            )
+        );
     }
 
     /**
@@ -123,12 +130,10 @@ class FrontendUserAuthenticator implements MiddlewareInterface
     {
         $queueRec = $this->queryBuilder
             ->select('*')
-            ->from(QueueRepository::TABLE_NAME)
-            ->where(
+            ->from(QueueRepository::TABLE_NAME)->where(
                 $this->queryBuilder->expr()->eq('qid', $this->queryBuilder->createNamedParameter($queueId))
-            )
-            ->execute()
-            ->fetch();
+            )->executeQuery()
+            ->fetchAssociative();
         return is_array($queueRec) ? $queueRec : [];
     }
 }

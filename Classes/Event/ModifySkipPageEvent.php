@@ -19,32 +19,24 @@ namespace AOE\Crawler\Event;
  * The TYPO3 project - inspiring people to share!
  */
 
+/**
+ * @internal since v12.0.0
+ */
 final class ModifySkipPageEvent
 {
-    private array $pageRow;
+    private bool|string $skipped = false;
 
-    /**
-     * @var false|string
-     */
-    private $skipped = false;
-
-    public function __construct(array $pageRow)
-    {
-        $this->pageRow = $pageRow;
+    public function __construct(
+        private readonly array $pageRow
+    ) {
     }
 
-    /**
-     * @return false|string
-     */
-    public function isSkipped()
+    public function isSkipped(): false|string
     {
         return $this->skipped;
     }
 
-    /**
-     * @param false|string $skipped
-     */
-    public function setSkipped($skipped): void
+    public function setSkipped(false|string $skipped): void
     {
         $this->skipped = $skipped;
     }

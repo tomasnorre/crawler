@@ -19,6 +19,9 @@ namespace AOE\Crawler\Helper\Sleeper;
  * The TYPO3 project - inspiring people to share!
  */
 
+/**
+ * @internal since v12.0.0
+ */
 interface SleeperInterface
 {
     public function sleep(int $seconds): void;

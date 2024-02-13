@@ -1,122 +1,24 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 1
-			path: Classes/Api/CrawlerApi.php
-
-		-
-			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 1
-			path: Classes/Api/CrawlerApi.php
-
-		-
-			message:
-				"""
-					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
-				"""
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
-			message: "#^Cannot access offset 'alturl' on array\\|bool\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
-			message: "#^Cannot access offset 'feUserGroupList' on array\\|bool\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
-			message: "#^Cannot access offset 'procInstructions' on array\\|bool\\.$#"
-			count: 2
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
-			message: "#^Cannot access offset 'url' on array\\|bool\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
-			message: "#^Class cognitive complexity is 71, keep it under 60$#"
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
-			message: "#^Method AOE\\\\Crawler\\\\Backend\\\\RequestForm\\\\LogRequestForm\\:\\:drawLog_addRows\\(\\) should return array\\<int, array\\('titleRowSpan' \\=\\> int\\<1, max\\>, 'colSpan' \\=\\> int, 'title' \\=\\> string, \\?'noEntries' \\=\\> string, \\?'trClass' \\=\\> string, \\?'qid' \\=\\> array\\('link' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, 'link\\-text' \\=\\> string\\), \\?'refresh' \\=\\> array\\('link' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, 'link\\-text' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon, 'warning' \\=\\> string\\|TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon\\), \\?'columns' \\=\\> array\\('url' \\=\\> mixed, 'scheduled' \\=\\> string, 'exec_time' \\=\\> string, 'result_log' \\=\\> string, 'result_status' \\=\\> string, 'feUserGroupList' \\=\\> string, 'procInstructions' \\=\\> string, 'set_id' \\=\\> string, \\.\\.\\.\\)\\)\\>&nonEmpty but returns array\\<int, array\\('colSpan' \\=\\> 8\\|9\\|11\\|12, 'columns' \\=\\> array\\<literal\\-string&non\\-empty\\-string, mixed\\>&nonEmpty, 'qid' \\=\\> array\\('link' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, 'link\\-text' \\=\\> string\\), 'refresh' \\=\\> array\\('link' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, 'link\\-text' \\=\\> TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon, 'warning' \\=\\> ''\\|TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon\\), 'title' \\=\\> string, 'titleRowSpan' \\=\\> int\\<1, max\\>, 'trClass' \\=\\> ''\\|'bg\\-danger'\\)\\|array\\('titleRowSpan' \\=\\> 1, 'colSpan' \\=\\> 8\\|9\\|11\\|12, 'title' \\=\\> string, 'noEntries' \\=\\> string\\)\\>\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
-			message: "#^Parameter \\#1 \\$resultData of static method AOE\\\\Crawler\\\\Backend\\\\Helper\\\\ResultHandler\\:\\:getResFeVars\\(\\) expects array, array\\|true given\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
-			message: "#^Parameter \\#2 \\$row of method TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\IconFactory\\:\\:getIconForRecord\\(\\) expects array, array\\|false given\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/LogRequestForm.php
-
-		-
-			message: "#^Unable to resolve the template type T in call to method static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\)$#"
-			count: 1
-			path: Classes/Backend/RequestForm/MultiProcessRequestForm.php
-
-		-
-			message: "#^Call to function is_array\\(\\) with string will always evaluate to false\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/StartRequestForm.php
-
-		-
-			message: "#^Cannot call method getConfigurationsForBranch\\(\\) on AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\|null\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/StartRequestForm.php
-
-		-
-			message: "#^Result of \\|\\| is always true\\.$#"
-			count: 1
-			path: Classes/Backend/RequestForm/StartRequestForm.php
-
-		-
 			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|null given\\.$#"
 			count: 1
 			path: Classes/Command/BuildQueueCommand.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:crawler_init\\(\\)\\.$#"
-			count: 1
-			path: Classes/Command/ProcessQueueCommand.php
-
-		-
-			message: "#^Unable to resolve the template type T in call to method static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\)$#"
+			message: "#^Constant AOE\\\\Crawler\\\\Command\\\\ProcessQueueCommand\\:\\:CLI_STATUS_POLLABLE_PROCESSED is unused\\.$#"
 			count: 1
 			path: Classes/Command/ProcessQueueCommand.php
 
 		-
 			message: "#^Cannot call method error\\(\\) on Psr\\\\Log\\\\LoggerInterface\\|null\\.$#"
-			count: 2
+			count: 1
 			path: Classes/Configuration/ExtensionConfigurationProvider.php
 
 		-
-			message: "#^Parameter \\#2 \\$uid of static method TYPO3\\\\CMS\\\\Backend\\\\Utility\\\\BackendUtility\\:\\:getRecordWSOL\\(\\) expects int, string given\\.$#"
+			message: "#^Offset 'name' does not exist on array\\|null\\.$#"
 			count: 1
 			path: Classes/ContextMenu/ItemProvider.php
-
-		-
-			message:
-				"""
-					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
-				"""
-			count: 1
-			path: Classes/Controller/CrawlerController.php
 
 		-
 			message: "#^Call to function is_string\\(\\) with bool will always evaluate to false\\.$#"
@@ -129,12 +31,12 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
+			message: "#^Class cognitive complexity is 102, keep it under 60$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Class cognitive complexity is 102, keep it under 60$#"
+			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -144,17 +46,7 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Parameter \\#1 \\$id of static method TYPO3\\\\CMS\\\\Backend\\\\Utility\\\\BackendUtility\\:\\:getPagesTSconfig\\(\\) expects int, string given\\.$#"
-			count: 1
-			path: Classes/Controller/CrawlerController.php
-
-		-
-			message: "#^Parameter \\#1 \\$input of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:shortMD5\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
-			path: Classes/Controller/CrawlerController.php
-
-		-
-			message: "#^Parameter \\#2 \\$str of function explode expects string, true given\\.$#"
+			message: "#^Parameter \\#2 \\$string of function explode expects string, true given\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -164,17 +56,27 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Call to function is_object\\(\\) with mixed will always evaluate to false\\.$#"
+			message: "#^Property AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:\\$crawler is never read, only written\\.$#"
 			count: 1
-			path: Classes/Converter/JsonCompatibilityConverter.php
+			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\CrawlStrategy\\\\CallbackExecutionStrategy\\:\\:fetchByCallback\\(\\) has no return typehint specified\\.$#"
+			message: "#^Property AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:\\$urlService is never read, only written\\.$#"
+			count: 1
+			path: Classes/Controller/CrawlerController.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:crawler_execute\\(\\)\\.$#"
 			count: 1
 			path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
 
 		-
-			message: "#^Parameter \\#1 \\$className of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\) expects class\\-string\\<mixed\\>, string given\\.$#"
+			message: "#^Method AOE\\\\Crawler\\\\CrawlStrategy\\\\CallbackExecutionStrategy\\:\\:fetchByCallback\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
+
+		-
+			message: "#^Parameter \\#1 \\$className of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\) expects class\\-string\\<object\\>, string given\\.$#"
 			count: 1
 			path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
 
@@ -184,7 +86,12 @@ parameters:
 			path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\CrawlStrategy\\\\CrawlStrategyInterface\\:\\:fetchUrlContents\\(\\) has no return typehint specified\\.$#"
+			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
+			count: 1
+			path: Classes/CrawlStrategy/CrawlStrategyFactory.php
+
+		-
+			message: "#^Method AOE\\\\Crawler\\\\CrawlStrategy\\\\CrawlStrategyInterface\\:\\:fetchUrlContents\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Classes/CrawlStrategy/CrawlStrategyInterface.php
 
@@ -199,117 +106,14 @@ parameters:
 			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
 
 		-
-			message:
-				"""
-					#^Call to deprecated method fetchAll\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchAllNumeric\\(\\), fetchAllAssociative\\(\\) or fetchFirstColumn\\(\\) instead\\.$#
-				"""
+			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
 			count: 1
-			path: Classes/Domain/Repository/ConfigurationRepository.php
+			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
 
 		-
-			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
+			message: "#^Method AOE\\\\Crawler\\\\CrawlStrategy\\\\SubProcessExecutionStrategy\\:\\:executeShellCommand\\(\\) should return string\\|null but returns string\\|false\\|null\\.$#"
 			count: 1
-			path: Classes/Domain/Repository/ConfigurationRepository.php
-
-		-
-			message:
-				"""
-					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
-				"""
-			count: 3
-			path: Classes/Domain/Repository/ProcessRepository.php
-
-		-
-			message:
-				"""
-					#^Call to deprecated method fetchAll\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchAllNumeric\\(\\), fetchAllAssociative\\(\\) or fetchFirstColumn\\(\\) instead\\.$#
-				"""
-			count: 1
-			path: Classes/Domain/Repository/ProcessRepository.php
-
-		-
-			message:
-				"""
-					#^Call to deprecated method fetchColumn\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchOne\\(\\) instead\\.$#
-				"""
-			count: 2
-			path: Classes/Domain/Repository/ProcessRepository.php
-
-		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 3
-			path: Classes/Domain/Repository/ProcessRepository.php
-
-		-
-			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 1
-			path: Classes/Domain/Repository/ProcessRepository.php
-
-		-
-			message: "#^Cannot call method fetchColumn\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 2
-			path: Classes/Domain/Repository/ProcessRepository.php
-
-		-
-			message: "#^Method AOE\\\\Crawler\\\\Domain\\\\Repository\\\\ProcessRepository\\:\\:updateProcessAssignItemsCount\\(\\) has parameter \\$numberOfAffectedRows with no typehint specified\\.$#"
-			count: 1
-			path: Classes/Domain/Repository/ProcessRepository.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$numberOfAffectedRows\\)\\: Unexpected token \"\\$numberOfAffectedRows\", expected type at offset 18$#"
-			count: 1
-			path: Classes/Domain/Repository/ProcessRepository.php
-
-		-
-			message:
-				"""
-					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
-				"""
-			count: 2
-			path: Classes/Domain/Repository/QueueRepository.php
-
-		-
-			message:
-				"""
-					#^Call to deprecated method fetchAll\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchAllNumeric\\(\\), fetchAllAssociative\\(\\) or fetchFirstColumn\\(\\) instead\\.$#
-				"""
-			count: 3
-			path: Classes/Domain/Repository/QueueRepository.php
-
-		-
-			message:
-				"""
-					#^Call to deprecated method fetchColumn\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchOne\\(\\) instead\\.$#
-				"""
-			count: 6
-			path: Classes/Domain/Repository/QueueRepository.php
-
-		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 8
-			path: Classes/Domain/Repository/QueueRepository.php
-
-		-
-			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 4
-			path: Classes/Domain/Repository/QueueRepository.php
-
-		-
-			message: "#^Cannot call method fetchColumn\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 7
-			path: Classes/Domain/Repository/QueueRepository.php
-
-		-
-			message: "#^Cannot call method info\\(\\) on Psr\\\\Log\\\\LoggerInterface\\|null\\.$#"
-			count: 2
-			path: Classes/Domain/Repository/QueueRepository.php
+			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
 
 		-
 			message: "#^Function getQueueEntriesForPageId\\(\\) has an unused variable \\$query\\.$#"
@@ -317,181 +121,14 @@ parameters:
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Domain\\\\Repository\\\\QueueRepository\\:\\:updateProcessIdAndSchedulerForQueueIds\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method AOE\\\\Crawler\\\\Event\\\\ModifySkipPageEvent\\:\\:isSkipped\\(\\) should return string\\|false but returns bool\\|string\\.$#"
 			count: 1
-			path: Classes/Domain/Repository/QueueRepository.php
+			path: Classes/Event/ModifySkipPageEvent.php
 
 		-
-			message: "#^Strict comparison using \\=\\=\\= between Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int and false will always evaluate to false\\.$#"
-			count: 2
-			path: Classes/Domain/Repository/QueueRepository.php
-
-		-
-			message:
-				"""
-					#^Call to deprecated method get\\(\\) of class TYPO3\\\\CMS\\\\Extbase\\\\Object\\\\ObjectManager\\:
-					since TYPO3 10\\.4, will be removed in version 12\\.0$#
-				"""
-			count: 3
-			path: Classes/Hooks/DataHandlerHook.php
-
-		-
-			message: "#^Offset 'extension' does not exist on array\\('dirname' \\=\\> string, 'basename' \\=\\> string, 'filename' \\=\\> string, \\?'extension' \\=\\> string\\)\\.$#"
+			message: "#^There is no request attribute \"tx_crawler\" configured so we can't figure out the exact type to return when calling Psr\\\\Http\\\\Message\\\\ServerRequestInterface\\:\\:getAttribute$#"
 			count: 1
-			path: Classes/Hooks/IndexedSearchCrawlerFilesHook.php
-
-		-
-			message: "#^Access to an undefined property AOE\\\\Crawler\\\\Hooks\\\\IndexedSearchCrawlerHook\\:\\:\\$pObj\\.$#"
-			count: 2
-			path: Classes/Hooks/IndexedSearchCrawlerHook.php
-
-		-
-			message: "#^Argument of an invalid type array\\<string\\>\\|string supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: Classes/Hooks/IndexedSearchCrawlerHook.php
-
-		-
-			message: "#^Call to an undefined method TYPO3\\\\CMS\\\\IndexedSearch\\\\Indexer\\:\\:backend_indexAsTYPO3Page\\(\\)\\.$#"
-			count: 1
-			path: Classes/Hooks/IndexedSearchCrawlerHook.php
-
-		-
-			message: "#^Call to an undefined method TYPO3\\\\CMS\\\\IndexedSearch\\\\Indexer\\:\\:backend_initIndexer\\(\\)\\.$#"
-			count: 3
-			path: Classes/Hooks/IndexedSearchCrawlerHook.php
-
-		-
-			message: "#^Call to an undefined method TYPO3\\\\CMS\\\\IndexedSearch\\\\Indexer\\:\\:backend_setFreeIndexUid\\(\\)\\.$#"
-			count: 3
-			path: Classes/Hooks/IndexedSearchCrawlerHook.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:addQueueEntry_callBack\\(\\)\\.$#"
-			count: 4
-			path: Classes/Hooks/IndexedSearchCrawlerHook.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getUrlsForPageRow\\(\\)\\.$#"
-			count: 1
-			path: Classes/Hooks/IndexedSearchCrawlerHook.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:urlListFromUrlArray\\(\\)\\.$#"
-			count: 1
-			path: Classes/Hooks/IndexedSearchCrawlerHook.php
-
-		-
-			message: "#^Cannot access offset 'host' on array\\(\\?'scheme' \\=\\> string, \\?'host' \\=\\> string, \\?'port' \\=\\> int, \\?'user' \\=\\> string, \\?'pass' \\=\\> string, \\?'path' \\=\\> string, \\?'query' \\=\\> string, \\?'fragment' \\=\\> string\\)\\|false\\.$#"
-			count: 1
-			path: Classes/Hooks/IndexedSearchCrawlerHook.php
-
-		-
-			message: "#^Cannot access offset 'path' on array\\(\\?'scheme' \\=\\> string, \\?'host' \\=\\> string, \\?'port' \\=\\> int, \\?'user' \\=\\> string, \\?'pass' \\=\\> string, \\?'path' \\=\\> string, \\?'query' \\=\\> string, \\?'fragment' \\=\\> string\\)\\|false\\.$#"
-			count: 2
-			path: Classes/Hooks/IndexedSearchCrawlerHook.php
-
-		-
-			message: "#^Cannot access offset 'scheme' on array\\(\\?'scheme' \\=\\> string, \\?'host' \\=\\> string, \\?'port' \\=\\> int, \\?'user' \\=\\> string, \\?'pass' \\=\\> string, \\?'path' \\=\\> string, \\?'query' \\=\\> string, \\?'fragment' \\=\\> string\\)\\|false\\.$#"
-			count: 2
-			path: Classes/Hooks/IndexedSearchCrawlerHook.php
-
-		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 5
-			path: Classes/Hooks/IndexedSearchCrawlerHook.php
-
-		-
-			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 3
-			path: Classes/Hooks/IndexedSearchCrawlerHook.php
-
-		-
-			message: "#^Cannot call method fetchColumn\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 1
-			path: Classes/Hooks/IndexedSearchCrawlerHook.php
-
-		-
-			message: "#^Class cognitive complexity is 109, keep it under 60$#"
-			count: 1
-			path: Classes/Hooks/IndexedSearchCrawlerHook.php
-
-		-
-			message: "#^Constant LF not found\\.$#"
-			count: 1
-			path: Classes/Hooks/IndexedSearchCrawlerHook.php
-
-		-
-			message: "#^Parameter \\#1 \\$id of method AOE\\\\Crawler\\\\Hooks\\\\IndexedSearchCrawlerHook\\:\\:deleteFromIndex\\(\\) expects int, string given\\.$#"
-			count: 2
-			path: Classes/Hooks/IndexedSearchCrawlerHook.php
-
-		-
-			message: "#^Parameter \\#1 \\.\\.\\.\\$expressions of method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\Expression\\\\ExpressionBuilder\\:\\:orX\\(\\) expects string, TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\Expression\\\\CompositeExpression given\\.$#"
-			count: 1
-			path: Classes/Hooks/IndexedSearchCrawlerHook.php
-
-		-
-			message: "#^Parameter \\#2 \\$str of function explode expects string, string\\|null given\\.$#"
-			count: 1
-			path: Classes/Hooks/IndexedSearchCrawlerHook.php
-
-		-
-			message: "#^Parameter \\#3 \\$length of function substr expects int, int\\<0, max\\>\\|false given\\.$#"
-			count: 1
-			path: Classes/Hooks/IndexedSearchCrawlerHook.php
-
-		-
-			message: "#^Unable to resolve the template type T in call to method static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\)$#"
-			count: 2
-			path: Classes/Hooks/IndexedSearchCrawlerHook.php
-
-		-
-			message: "#^Undefined variable\\: \\$message$#"
-			count: 1
-			path: Classes/Hooks/IndexedSearchCrawlerHook.php
-
-		-
-			message: "#^Variable \\$theTitle might not be defined\\.$#"
-			count: 1
-			path: Classes/Hooks/IndexedSearchCrawlerHook.php
-
-		-
-			message:
-				"""
-					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
-				"""
-			count: 1
-			path: Classes/Middleware/FrontendUserAuthenticator.php
-
-		-
-			message: "#^Cannot access offset 'feUserGroupList' on array\\|bool\\.$#"
-			count: 1
-			path: Classes/Middleware/FrontendUserAuthenticator.php
-
-		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 1
-			path: Classes/Middleware/FrontendUserAuthenticator.php
-
-		-
-			message: "#^Method TYPO3\\\\CMS\\\\Frontend\\\\Authentication\\\\FrontendUserAuthentication\\:\\:fetchGroupData\\(\\) invoked with 1 parameter, 0 required\\.$#"
-			count: 1
-			path: Classes/Middleware/FrontendUserAuthenticator.php
-
-		-
-			message:
-				"""
-					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
-				"""
-			count: 1
-			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 1
-			path: Classes/Service/ConfigurationService.php
+			path: Classes/Middleware/CrawlerInitialization.php
 
 		-
 			message: "#^Class cognitive complexity is 84, keep it under 60$#"
@@ -504,53 +141,9 @@ parameters:
 			path: Classes/Service/ConfigurationService.php
 
 		-
-			message: "#^Possibly invalid array key type \\(array\\|string\\)\\.$#"
-			count: 3
-			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: "#^Cannot access property \\$registerQueueEntriesInternallyOnly on AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\|null\\.$#"
-			count: 1
-			path: Classes/Service/QueueService.php
-
-		-
-			message: "#^Cannot call method getUrlsForPageRow\\(\\) on AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\|null\\.$#"
-			count: 1
-			path: Classes/Service/QueueService.php
-
-		-
-			message: "#^Cannot call method urlListFromUrlArray\\(\\) on AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\|null\\.$#"
-			count: 1
-			path: Classes/Service/QueueService.php
-
-		-
-			message:
-				"""
-					#^Call to deprecated method fetch\\(\\) of class Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\:
-					Use fetchNumeric\\(\\), fetchAssociative\\(\\) or fetchOne\\(\\) instead\\.$#
-				"""
-			count: 1
-			path: Classes/Service/UrlService.php
-
-		-
-			message: "#^Cannot call method fetch\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 1
-			path: Classes/Service/UrlService.php
-
-		-
 			message: "#^Function getUrlFromPageAndQueryParameters\\(\\) has an unused variable \\$siteLanguage\\.$#"
 			count: 1
 			path: Classes/Service/UrlService.php
-
-		-
-			message: "#^Parameter \\#1 \\$route of method TYPO3\\\\CMS\\\\Core\\\\Routing\\\\RouterInterface\\:\\:generateUri\\(\\) expects array\\|string, int given\\.$#"
-			count: 1
-			path: Classes/Service/UrlService.php
-
-		-
-			message: "#^Constant TYPO3_MODE not found\\.$#"
-			count: 1
-			path: Classes/Utility/HookUtility.php
 
 		-
 			message: "#^Parameter \\#1 \\$row of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\CsvUtility\\:\\:csvValues\\(\\) expects array\\<string\\>, array\\<int, int\\|string\\> given\\.$#"

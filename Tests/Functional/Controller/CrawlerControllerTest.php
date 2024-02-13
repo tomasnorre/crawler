@@ -20,13 +20,16 @@ namespace AOE\Crawler\Tests\Functional\Controller;
  */
 
 use AOE\Crawler\Controller\CrawlerController;
+use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use AOE\Crawler\Value\QueueFilter;
-use Nimut\TestingFramework\MockObject\AccessibleMockObjectInterface;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
-use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Information\Typo3Version;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class CrawlerControllerTest
@@ -42,10 +45,7 @@ class CrawlerControllerTest extends FunctionalTestCase
      */
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    /**
-     * @var MockObject|AccessibleMockObjectInterface|CrawlerController
-     */
-    protected $subject;
+    protected \Nimut\TestingFramework\MockObject\AccessibleMockObjectInterface|\PHPUnit\Framework\MockObject\MockObject $subject;
 
     protected function setUp(): void
     {
@@ -58,7 +58,16 @@ class CrawlerControllerTest extends FunctionalTestCase
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_process.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/tt_content.xml');
-        $this->subject = $this->getAccessibleMock(CrawlerController::class, ['dummy']);
+
+        $mockedQueueRepository = $this->createMock(QueueRepository::class);
+        $mockedProcessRepository = $this->createMock(ProcessRepository::class);
+        $mockedIconFactory = $this->createMock(IconFactory::class);
+
+        $this->subject = $this->getAccessibleMock(
+            CrawlerController::class,
+            ['dummy'],
+            [$mockedQueueRepository, $mockedProcessRepository, $mockedIconFactory]
+        );
     }
 
     /**
@@ -74,10 +83,7 @@ class CrawlerControllerTest extends FunctionalTestCase
         $configurationsForBranch = $this->subject->getConfigurationsForBranch(5, 99);
 
         self::assertNotEmpty($configurationsForBranch);
-        self::assertCount(
-            4,
-            $configurationsForBranch
-        );
+        self::assertCount(4, $configurationsForBranch);
 
         // sort is done as MySQL and SQLite doesn't sort the same way even though sorting is by "name ASC"
         sort($configurationsForBranch);
@@ -89,20 +95,41 @@ class CrawlerControllerTest extends FunctionalTestCase
         ];
         sort($expected);
 
-        self::assertEquals(
-            $expected,
-            $configurationsForBranch
-        );
+        self::assertEquals($expected, $configurationsForBranch);
     }
 
     /**
      * @test
      * @dataProvider addUrlDataProvider
      */
-    public function addUrl(int $id, string $url, array $subCfg, int $tstamp, string $configurationHash, bool $skipInnerDuplicationCheck, array $mockedDuplicateRowResult, bool $registerQueueEntriesInternallyOnly, bool $expected): void
-    {
-        $mockedQueueRepository = $this->getAccessibleMock(QueueRepository::class, ['getDuplicateQueueItemsIfExists']);
-        $mockedQueueRepository->expects($this->any())->method('getDuplicateQueueItemsIfExists')->willReturn($mockedDuplicateRowResult);
+    public function addUrl(
+        int $id,
+        string $url,
+        array $subCfg,
+        int $tstamp,
+        string $configurationHash,
+        bool $skipInnerDuplicationCheck,
+        array $mockedDuplicateRowResult,
+        bool $registerQueueEntriesInternallyOnly,
+        bool $expected
+    ): void {
+        $typo3MajorVersion = (new Typo3Version())->getMajorVersion();
+        if ($typo3MajorVersion <= 11) {
+            $mockedQueueRepository = $this->getAccessibleMock(
+                QueueRepository::class,
+                ['getDuplicateQueueItemsIfExists'],
+                [GeneralUtility::makeInstance(ObjectManager::class)]
+            );
+        } else {
+            $mockedQueueRepository = $this->getAccessibleMock(
+                QueueRepository::class,
+                ['getDuplicateQueueItemsIfExists']
+            );
+        }
+
+        $mockedQueueRepository->expects($this->any())->method('getDuplicateQueueItemsIfExists')->willReturn(
+            $mockedDuplicateRowResult
+        );
 
         $mockedCrawlerController = $this->getAccessibleMock(CrawlerController::class, ['dummy']);
 
@@ -111,7 +138,14 @@ class CrawlerControllerTest extends FunctionalTestCase
 
         self::assertEquals(
             $expected,
-            $mockedCrawlerController->addUrl($id, $url, $subCfg, $tstamp, $configurationHash, $skipInnerDuplicationCheck)
+            $mockedCrawlerController->addUrl(
+                $id,
+                $url,
+                $subCfg,
+                $tstamp,
+                $configurationHash,
+                $skipInnerDuplicationCheck
+            )
         );
     }
 

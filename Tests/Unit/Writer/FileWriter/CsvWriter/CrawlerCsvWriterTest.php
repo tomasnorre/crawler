@@ -42,6 +42,7 @@ class CrawlerCsvWriterTest extends UnitTestCase
      */
     public function arrayToCsvTest(): void
     {
+        $records = [];
         $records[] = [
             'Page Title' => 'Home',
             'Page Uid' => 1,

@@ -31,6 +31,9 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+/**
+ * @internal since v12.0.0
+ */
 class ProcessQueueCommand extends Command
 {
     private const CLI_STATUS_NOTHING_PROCCESSED = 0;
@@ -58,7 +61,7 @@ class ProcessQueueCommand extends Command
         $this->crawlerController = $crawlerController;
         $this->processRepository = $processRepository;
         $this->queueRepository = $queueRepository;
-        $this->processId = GeneralUtility::shortMD5(microtime() . random_bytes(12));
+        $this->processId = md5(microtime() . random_bytes(12));
     }
 
     /**
@@ -107,8 +110,14 @@ class ProcessQueueCommand extends Command
             $processRepository->markRequestedProcessesAsNotActive([$this->processId]);
             $queueRepository->unsetProcessScheduledAndProcessIdForQueueEntries([$this->processId]);
 
-            $output->writeln('<info>Unprocessed Items remaining:' . count($queueRepository->getUnprocessedItems()) . ' (' . $this->processId . ')</info>');
-            $result |= (count($queueRepository->getUnprocessedItems()) > 0 ? self::CLI_STATUS_REMAIN : self::CLI_STATUS_NOTHING_PROCCESSED);
+            $output->writeln(
+                '<info>Unprocessed Items remaining:' . count(
+                    $queueRepository->getUnprocessedItems()
+                ) . ' (' . $this->processId . ')</info>'
+            );
+            $result |= (count(
+                $queueRepository->getUnprocessedItems()
+            ) > 0 ? self::CLI_STATUS_REMAIN : self::CLI_STATUS_NOTHING_PROCCESSED);
         } else {
             $result |= self::CLI_STATUS_ABORTED;
         }
@@ -161,18 +170,6 @@ class ProcessQueueCommand extends Command
         $result = 0;
         $counter = 0;
 
-        // First, run hooks:
-        foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['cli_hooks'] ?? [] as $objRef) {
-            trigger_error(
-                'This hook (crawler/cli_hooks) is deprecated since 9.1.5 and will be removed when dropping support for TYPO3 9LTS and 10LTS',
-                E_USER_DEPRECATED
-            );
-            $hookObj = GeneralUtility::makeInstance($objRef);
-            if (is_object($hookObj)) {
-                $hookObj->crawler_init($this->crawlerController);
-            }
-        }
-
         // Clean up the queue
         $this->queueRepository->cleanupQueue();
 
@@ -187,7 +184,10 @@ class ProcessQueueCommand extends Command
             }
 
             //save the number of assigned queue entries to determine how many have been processed later
-            $numberOfAffectedRows = $this->queueRepository->updateProcessIdAndSchedulerForQueueIds($quidList, $this->processId);
+            $numberOfAffectedRows = $this->queueRepository->updateProcessIdAndSchedulerForQueueIds(
+                $quidList,
+                $this->processId
+            );
             $this->processRepository->updateProcessAssignItemsCount($numberOfAffectedRows, $this->processId);
 
             if ($numberOfAffectedRows !== count($quidList)) {

@@ -1,17 +1,20 @@
-<f:layout name="BackendModule"/>
-
-<f:section name="Headline">
-    <f:if condition="{noConfigurationSelected}">
-        <f:then>
-            <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noConfigSelected"/>
-        </f:then>
-        <f:else>
-            <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.configuration"/>
-        </f:else>
-    </f:if>
-</f:section>
+<f:layout name="Module" />
 
 <f:section name="Content">
+    <h3>
+        Start Crawling<br /><br />
+        <f:if condition="{noConfigurationSelected}">
+            <f:then>
+                <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noConfigSelected"/>
+            </f:then>
+            <f:else>
+                <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.configuration"/>
+            </f:else>
+        </f:if>
+    </h3>
+
+
+    <form action="{actionUrl}" METHOD="post">
     <input type="hidden" name="id" value="{currentPageId}">
 
     <f:if condition="{submitCrawlUrls}">
@@ -23,9 +26,7 @@
             <br><br>
             <input type="submit" class="btn btn-default" name="_"
                    value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.continue')}">
-            <input type="submit" class="btn btn-primary"
-                   onclick="<f:format.raw>this.form.elements['SET[crawlaction]'].value='log';</f:format.raw>"
-                   value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.continueinlog')}">
+            <a href="{logUrl}" class="btn btn-primary">{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.continueinlog')}</a>
         </f:then>
         <f:else>
             <table class="table">
@@ -57,6 +58,7 @@
                    value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.triggerCrawl')}">
             <input type="submit" class="btn btn-default" name="_download"
                    value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.triggerDownload')}">
+
             <br><br>
             <p>
                 <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.count"/>: {amountOfUrls}<br>
@@ -124,5 +126,6 @@
             </f:if>
         </f:else>
     </f:if>
+    </form>
 </f:section>
 

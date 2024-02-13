@@ -19,27 +19,21 @@ namespace AOE\Crawler\Event;
  * The TYPO3 project - inspiring people to share!
  */
 
+/**
+ * @internal since v12.0.0
+ */
 final class AfterQueueItemAddedEvent
 {
     /**
-     * @var int|string
-     */
-    private $queueId;
-    private array $fieldArray;
-
-    /**
      * @param int|string $queueId
      */
-    public function __construct($queueId, array $fieldArray)
-    {
-        $this->queueId = $queueId;
-        $this->fieldArray = $fieldArray;
+    public function __construct(
+        private $queueId,
+        private array $fieldArray
+    ) {
     }
 
-    /**
-     * @return int|string
-     */
-    public function getQueueId()
+    public function getQueueId(): int|string
     {
         return $this->queueId;
     }

@@ -59,10 +59,9 @@ class ItemProviderTest extends UnitTestCase
      */
     public function canHandleTxCrawlerConfigurationTable(): void
     {
-        $subject = new ItemProvider('tx_crawler_configuration', 'identifier');
-        self::assertTrue(
-            $subject->canHandle()
-        );
+        $subject = new ItemProvider();
+        $subject->setContext('tx_crawler_configuration', 'identifier');
+        self::assertTrue($subject->canHandle());
     }
 
     /**
@@ -70,10 +69,9 @@ class ItemProviderTest extends UnitTestCase
      */
     public function cannotHandleTxCrawlerQueueTable(): void
     {
-        $subject = new ItemProvider('tx_crawler_queue', 'identifier');
-        self::assertFalse(
-            $subject->canHandle()
-        );
+        $subject = new ItemProvider();
+        $subject->setContext('tx_crawler_queue', 'identifier');
+        self::assertFalse($subject->canHandle());
     }
 
     /**
@@ -81,10 +79,8 @@ class ItemProviderTest extends UnitTestCase
      */
     public function getPriorityReturnsExpectedValue(): void
     {
-        $subject = new ItemProvider('tx_crawler_configuration', 'identifier');
-        self::assertEquals(
-            50,
-            $subject->getPriority()
-        );
+        $subject = new ItemProvider();
+        $subject->setContext('tx_crawler_configuration', 'identifier');
+        self::assertEquals(50, $subject->getPriority());
     }
 }

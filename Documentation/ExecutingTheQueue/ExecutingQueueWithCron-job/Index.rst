@@ -26,6 +26,8 @@ as a CGI script as well in /usr/bin/.
 The user "\_cli\_" is created by the framework on demand if it does not exist
 at the first command line call.
 
+Make sure that the user "\_cli\_" has admin-rights.
+
 In the :guilabel:`CLI status` menu of the :guilabel:`Site Crawler` info module
 you can see the status:
 

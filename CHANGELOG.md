@@ -3,6 +3,12 @@
 ## Crawler 12.0.0-dev
 
 ### Added
+* AbstractBackendModuleController
+* BackendModuleController
+* BackendModuleCrawlerLogController
+* BackendModuleCrawlerProcessController
+* BackendModuleStartCrawlingController
+* Support for PHP 8.2
 
 ### Changed
 * !!! Switch constants in ProcessQueueCommand from public to private
@@ -11,8 +17,14 @@
 * !!! Add Type Hints for id parameters on RequestForm Render method
 * !!! Switch runPollSuccessHooks() in CrawlerInitialization from protected to private
 * !!! Switch isRequestHashMatchingQueueRecord() in FrontendUserAuthenticator from protected to private
+* !!! CrawlerHookInterface doesn't take a CrawlerController as input anymore
+* !!! ResultHandler moved to Controller/Backend/Helper
+* !!! UrlBuilder moved to Controller/Backend/Helper
+* !!! Mark all classes @internal that are not already marked as internal
 
 ### Fixed
+* If indexed_search is installed activate procInstructions for indexed_search
+* Prevent undefined array key uid and username in FrontendUserAuthentication
 
 ### Deprecated
 #### Classes
@@ -21,9 +33,26 @@
 ### Removed
 * Obsolete columns (first and last time) from Process Overview
 * !!! Remove constructor form RequestFormInterface
+* !!! Support for TYPO3 10
+* !!! Support for TYPO3 11 (Only in main branch, v12.0.0)
+* !!! PHP support for `<8.0`
+* !!! PHP support for `<8.1` (Only in main branch, v12.0.0)
+* Remove CLI_hooks from ProcessQueueCommand
+* !!! ClassAliasMap & LegacyClassesForIde Migrations
 
 #### Classes
 * !!! AbstractCommandTests
+* !!! IndexedSearchCrawlerHook
+* !!! CrawlerApi
+* !!! IndexedSearchCrawlerFilesHook
+* !!! BackendModule
+* !!! AbstractRequestForm
+* !!! LogRequestForm
+* !!! RequestFormFactory
+* !!! RequestFormInterface
+* !!! StartRequestForm
+* !!! MultiProcessRequestForm
+* !!! BackendUtility
 
 #### Functions & Properties
 * !!! CrawlerController->modMenu()
@@ -36,6 +65,33 @@
 * !!! ProcessQueueCommandTest->queueRepository
 * !!! QueueRepository->isPageInQueueTimed()
 * !!! QueueRepository->getAvailableSets()
+* !!! QueueRepository->countAllUnassignedPendingItems()
+* !!! QueueRepository->countPendingItemsGroupedByConfigurationKey()
+* !!! QueueRepository->getSetIdWithUnprocessedEntries()
+* !!! QueueRepository->getTotalQueueEntriesByConfiguration()
+* !!! QueueRepository->getLastProcessedEntriesTimestamps()
+* !!! QueueRepository->getLastProcessedEntries()
+* !!! QueueRepository->getPerformanceData()
+* !!! QueueRepository->findByQueueId()
+
+## Crawler 11.0.7
+Crawler 11.0.7 was released on November 18th, 2022
+
+### Fixed
+* Ensure that array key is set before used in BuildQueueCommand (PHP 8.1)
+
+## Crawler 11.0.6
+Crawler 11.0.6 was released on November 12th, 2022
+
+### Fixed
+* Zip extension with PHP 7.4 builds instead of PHP 8.1
+
+## Crawler 11.0.5
+Crawler 11.0.5 was released on November 11th, 2022
+
+### Fixed
+* If indexed_search is installed activate procInstructions for indexed_search
+* Ensure undefined indexes is not throwing a warning in PHP 8
 
 ## Crawler 11.0.4
 Crawler 11.0.4 was released on February 11th, 2022

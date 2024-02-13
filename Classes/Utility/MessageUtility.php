@@ -21,6 +21,7 @@ namespace AOE\Crawler\Utility;
 
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
+use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -33,7 +34,7 @@ class MessageUtility
      */
     public static function addNoticeMessage(string $message): void
     {
-        self::addMessage($message, FlashMessage::NOTICE);
+        self::addMessage($message, ContextualFeedbackSeverity::NOTICE);
     }
 
     /**
@@ -41,7 +42,7 @@ class MessageUtility
      */
     public static function addErrorMessage(string $message): void
     {
-        self::addMessage($message, FlashMessage::ERROR);
+        self::addMessage($message, ContextualFeedbackSeverity::ERROR);
     }
 
     /**
@@ -49,23 +50,20 @@ class MessageUtility
      */
     public static function addWarningMessage(string $message): void
     {
-        self::addMessage($message, FlashMessage::WARNING);
+        self::addMessage($message, ContextualFeedbackSeverity::WARNING);
     }
 
     /**
      * This method is used to add a message to the internal queue
      *
      * @param string $message the message itself
-     * @param int $severity message level (0 = success (default), -1 = info, -2 = notice, 1 = warning, 2 = error)
+     * @param ContextualFeedbackSeverity $severity message level (0 = success (default), -1 = info, -2 = notice, 1 = warning, 2 = error)
      */
-    private static function addMessage(string $message, int $severity = FlashMessage::OK): void
-    {
-        $message = GeneralUtility::makeInstance(
-            FlashMessage::class,
-            $message,
-            '',
-            $severity
-        );
+    private static function addMessage(
+        string $message,
+        ContextualFeedbackSeverity $severity = ContextualFeedbackSeverity::OK
+    ): void {
+        $message = GeneralUtility::makeInstance(FlashMessage::class, $message, '', $severity);
 
         /** @var FlashMessageService $flashMessageService */
         $flashMessageService = GeneralUtility::makeInstance(FlashMessageService::class);

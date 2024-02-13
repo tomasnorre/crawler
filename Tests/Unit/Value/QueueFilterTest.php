@@ -27,17 +27,14 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
  */
 class QueueFilterTest extends UnitTestCase
 {
-    public const VALID_VALUE = 'finished';
+    final public const VALID_VALUE = 'finished';
 
     /**
      * @test
      */
     public function defaultValueConstructor(): void
     {
-        self::assertEquals(
-            'all',
-            new QueueFilter()
-        );
+        self::assertEquals('all', new QueueFilter());
     }
 
     /**
@@ -46,10 +43,7 @@ class QueueFilterTest extends UnitTestCase
     public function toStringWithValidValueReturnsOriginalValue(): void
     {
         $queueFilter = new QueueFilter(self::VALID_VALUE);
-        self::assertEquals(
-            self::VALID_VALUE,
-            $queueFilter->__toString()
-        );
+        self::assertEquals(self::VALID_VALUE, $queueFilter->__toString());
     }
 
     /**

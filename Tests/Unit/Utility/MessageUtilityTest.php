@@ -24,6 +24,7 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
+use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -40,7 +41,9 @@ class MessageUtilityTest extends UnitTestCase
 
     protected function setUp(): void
     {
-        $this->flashMessageQueue = GeneralUtility::makeInstance(FlashMessageService::class)->getMessageQueueByIdentifier();
+        $this->flashMessageQueue = GeneralUtility::makeInstance(
+            FlashMessageService::class
+        )->getMessageQueueByIdentifier();
         // Done to have the queue cleared to not stack the messages
         $this->flashMessageQueue->clear();
 
@@ -66,22 +69,13 @@ class MessageUtilityTest extends UnitTestCase
         $messageText = 'This is a notice message';
         MessageUtility::addNoticeMessage($messageText);
 
-        $messages = self::getMessages();
+        $messages = $this->getMessages();
 
-        self::assertCount(
-            1,
-            $messages
-        );
+        self::assertCount(1, $messages);
 
-        self::assertEquals(
-            $messageText,
-            $messages[0]->getMessage()
-        );
+        self::assertEquals($messageText, $messages[0]->getMessage());
 
-        self::assertEquals(
-            FlashMessage::NOTICE,
-            $messages[0]->getSeverity()
-        );
+        self::assertEquals(ContextualFeedbackSeverity::NOTICE->value, $messages[0]->getSeverity()->value);
     }
 
     /**
@@ -92,22 +86,12 @@ class MessageUtilityTest extends UnitTestCase
         $messageText = 'This is a error message';
         MessageUtility::addErrorMessage($messageText);
 
-        $messages = self::getMessages();
+        $messages = $this->getMessages();
 
-        self::assertCount(
-            1,
-            $messages
-        );
+        self::assertCount(1, $messages);
 
-        self::assertEquals(
-            $messageText,
-            $messages[0]->getMessage()
-        );
-
-        self::assertEquals(
-            FlashMessage::ERROR,
-            $messages[0]->getSeverity()
-        );
+        self::assertEquals($messageText, $messages[0]->getMessage());
+        self::assertEquals(ContextualFeedbackSeverity::ERROR->value, $messages[0]->getSeverity()->value);
     }
 
     /**
@@ -118,21 +102,12 @@ class MessageUtilityTest extends UnitTestCase
         $messageText = 'This is a warning message';
         MessageUtility::addWarningMessage($messageText);
 
-        $messages = self::getMessages();
-        self::assertCount(
-            1,
-            $messages
-        );
+        $messages = $this->getMessages();
+        self::assertCount(1, $messages);
 
-        self::assertEquals(
-            $messageText,
-            $messages[0]->getMessage()
-        );
+        self::assertEquals($messageText, $messages[0]->getMessage());
 
-        self::assertEquals(
-            FlashMessage::WARNING,
-            $messages[0]->getSeverity()
-        );
+        self::assertEquals(ContextualFeedbackSeverity::WARNING->value, $messages[0]->getSeverity()->value);
     }
 
     /**

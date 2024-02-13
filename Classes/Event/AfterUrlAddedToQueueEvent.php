@@ -19,15 +19,15 @@ namespace AOE\Crawler\Event;
  * The TYPO3 project - inspiring people to share!
  */
 
+/**
+ * @internal since v12.0.0
+ */
 final class AfterUrlAddedToQueueEvent
 {
-    private string $uid;
-    private array $fieldArray;
-
-    public function __construct(string $uid, array $fieldArray)
-    {
-        $this->uid = $uid;
-        $this->fieldArray = $fieldArray;
+    public function __construct(
+        private readonly string $uid,
+        private readonly array $fieldArray
+    ) {
     }
 
     public function getUid(): string

@@ -39,13 +39,15 @@ class ProcessCollection extends \ArrayObject
 {
     /**
      * Method to retrieve an element from the collection.
-     * @param mixed $index
      * @throws NoIndexFoundException
      */
-    public function offsetGet($index): Process
+    public function offsetGet(mixed $index): Process
     {
         if (! parent::offsetExists($index)) {
-            throw new NoIndexFoundException('Index "' . var_export($index, true) . '" for \AOE\Crawler\Domain\Model\Process are not available', 1_593_714_823);
+            throw new NoIndexFoundException('Index "' . var_export(
+                $index,
+                true
+            ) . '" for \AOE\Crawler\Domain\Model\Process are not available', 1_593_714_823);
         }
         return parent::offsetGet($index);
     }
@@ -53,14 +55,16 @@ class ProcessCollection extends \ArrayObject
     /**
      * Method to add an element to the collection-
      *
-     * @param mixed $index
      * @param Process $subject
      * @throws \InvalidArgumentException
      */
-    public function offsetSet($index, $subject): void
+    public function offsetSet(mixed $index, $subject): void
     {
         if (! $subject instanceof Process) {
-            throw new \InvalidArgumentException('Wrong parameter type given, "\AOE\Crawler\Domain\Model\Process" expected!', 1_593_714_822);
+            throw new \InvalidArgumentException(
+                'Wrong parameter type given, "\AOE\Crawler\Domain\Model\Process" expected!',
+                1_593_714_822
+            );
         }
 
         parent::offsetSet($index, $subject);
@@ -74,7 +78,10 @@ class ProcessCollection extends \ArrayObject
     public function append($subject): void
     {
         if (! $subject instanceof Process) {
-            throw new \InvalidArgumentException('Wrong parameter type given, "\AOE\Crawler\Domain\Model\Process" expected!', 1_593_714_821);
+            throw new \InvalidArgumentException(
+                'Wrong parameter type given, "\AOE\Crawler\Domain\Model\Process" expected!',
+                1_593_714_821
+            );
         }
 
         parent::append($subject);

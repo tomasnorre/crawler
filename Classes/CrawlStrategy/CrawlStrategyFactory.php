@@ -7,13 +7,18 @@ namespace AOE\Crawler\CrawlStrategy;
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+/**
+ * @internal since v12.0.0
+ */
 final class CrawlStrategyFactory
 {
-    private ExtensionConfigurationProvider $configurationProvider;
+    private readonly ExtensionConfigurationProvider $configurationProvider;
 
     public function __construct(?ExtensionConfigurationProvider $configurationProvider = null)
     {
-        $this->configurationProvider = $configurationProvider ?? GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
+        $this->configurationProvider = $configurationProvider ?? GeneralUtility::makeInstance(
+            ExtensionConfigurationProvider::class
+        );
     }
 
     public function create(): CrawlStrategyInterface

@@ -21,12 +21,12 @@ jobs:
           mysql root password: 'root'
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: Set up PHP Version 7.4
+      - name: Set up PHP Version 8.1
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 7.4
+          php-version: 8.1
           tools: composer:v2
 
       - name: Install dependencies
@@ -51,6 +51,6 @@ jobs:
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          composer global require twinh/php-coveralls --no-progress --no-suggest --no-interaction
+          composer global require php-coveralls/php-coveralls --no-progress --no-suggest --no-interaction
           /home/runner/.composer/vendor/bin/php-coveralls -c .coveralls.yml -vvv --json_path=var/log/coveralls-upload.json
         continue-on-error: true

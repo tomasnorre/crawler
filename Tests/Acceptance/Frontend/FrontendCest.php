@@ -26,8 +26,8 @@ class FrontendCest
     public function canSeeHomePage(FrontendUser $I): void
     {
         $I->amOnPage('/');
-        $I->waitForText('Features', 1);
-        $I->waitForText('Customizing', 1);
+        $I->waitForText('Search', 1);
+        $I->waitForText('Login', 1);
     }
 
     public function canSeeNewsPage(FrontendUser $I): void

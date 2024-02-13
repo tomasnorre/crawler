@@ -19,15 +19,15 @@ namespace AOE\Crawler\Event;
  * The TYPO3 project - inspiring people to share!
  */
 
+/**
+ * @internal since v12.0.0
+ */
 final class BeforeQueueItemAddedEvent
 {
-    private int $queueId;
-    private array $queueRecord;
-
-    public function __construct(int $queueId, array $queueRecord)
-    {
-        $this->queueId = $queueId;
-        $this->queueRecord = $queueRecord;
+    public function __construct(
+        private readonly int $queueId,
+        private array $queueRecord
+    ) {
     }
 
     public function getQueueId(): int

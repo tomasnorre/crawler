@@ -19,15 +19,15 @@ namespace AOE\Crawler\Event;
  * The TYPO3 project - inspiring people to share!
  */
 
+/**
+ * @internal since v12.0.0
+ */
 final class AfterUrlCrawledEvent
 {
-    private string $url;
-    private array $result;
-
-    public function __construct(string $url, array $result)
-    {
-        $this->url = $url;
-        $this->result = $result;
+    public function __construct(
+        private readonly string $url,
+        private readonly array $result
+    ) {
     }
 
     public function getUrl(): string

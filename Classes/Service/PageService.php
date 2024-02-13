@@ -30,7 +30,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class PageService
 {
-    private EventDispatcher $eventDispatcher;
+    private readonly EventDispatcher $eventDispatcher;
 
     public function __construct(EventDispatcher $eventDispatcher = null)
     {
@@ -42,9 +42,11 @@ class PageService
      *
      * @return false|string false if the page should be crawled (not excluded), true / skipMessage if it should be skipped
      */
-    public function checkIfPageShouldBeSkipped(array $pageRow)
+    public function checkIfPageShouldBeSkipped(array $pageRow): false|string
     {
-        $extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
+        $extensionSettings = GeneralUtility::makeInstance(
+            ExtensionConfigurationProvider::class
+        )->getExtensionConfiguration();
 
         // if page is hidden
         if (! ($extensionSettings['crawlHiddenPages'] ?? false) && ($pageRow['hidden'] ?? false)) {
@@ -57,7 +59,11 @@ class PageService
 
         foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['excludeDoktype'] ?? [] as $key => $doktypeList) {
             if (GeneralUtility::inList($doktypeList, $pageRow['doktype'])) {
-                return sprintf('Doktype "%d" was excluded by excludeDoktype configuration key "%s"', $pageRow['doktype'], $key);
+                return sprintf(
+                    'Doktype "%d" was excluded by excludeDoktype configuration key "%s"',
+                    $pageRow['doktype'],
+                    $key
+                );
             }
         }
 
@@ -78,7 +84,7 @@ class PageService
                 if (is_string($veto)) {
                     return $veto;
                 }
-                return 'Veto from hook "' . htmlspecialchars($key) . '"';
+                return 'Veto from hook "' . htmlspecialchars((string) $key) . '"';
             }
         }
 

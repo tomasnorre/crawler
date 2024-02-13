@@ -43,10 +43,7 @@ class CrawlerControllerTest extends UnitTestCase
      */
     protected function setUp(): void
     {
-        $this->crawlerController = $this->createPartialMock(
-            CrawlerController::class,
-            []
-        );
+        $this->crawlerController = $this->createPartialMock(CrawlerController::class, []);
         $this->crawlerController->setLogger(new NullLogger());
 
         $configuration = [
@@ -99,10 +96,7 @@ class CrawlerControllerTest extends UnitTestCase
     {
         $skipMessage = '';
         $this->crawlerController->getUrlsForPageRow(['uid' => 'string'], $skipMessage);
-        self::assertEquals(
-            'PageUid "string" was not an integer',
-            $skipMessage
-        );
+        self::assertEquals('PageUid "string" was not an integer', $skipMessage);
     }
 
     /**
@@ -110,20 +104,34 @@ class CrawlerControllerTest extends UnitTestCase
      *
      * @dataProvider getUrlsForPageRowDataProvider
      */
-    public function getUrlsForPageRow(bool $checkIfPageSkipped, array $getUrlsForPages, array $pageRow, string $skipMessage, array $expected): void
-    {
+    public function getUrlsForPageRow(
+        bool $checkIfPageSkipped,
+        array $getUrlsForPages,
+        array $pageRow,
+        string $skipMessage,
+        array $expected
+    ): void {
         $mockedPageService = $this->createPartialMock(PageService::class, ['checkIfPageShouldBeSkipped']);
-        $mockedPageService->expects($this->any())->method('checkIfPageShouldBeSkipped')->will($this->returnValue($checkIfPageSkipped));
+        if ($checkIfPageSkipped) {
+            $mockedPageService->expects($this->any())->method('checkIfPageShouldBeSkipped')->will(
+                $this->returnValue($skipMessage)
+            );
+        } else {
+            $mockedPageService->expects($this->any())->method('checkIfPageShouldBeSkipped')->will(
+                $this->returnValue($checkIfPageSkipped)
+            );
+        }
 
         /** @var MockObject|CrawlerController $crawlerController */
         $crawlerController = $this->createPartialMock(CrawlerController::class, ['getPageService', 'getUrlsForPageId']);
-        $crawlerController->expects($this->any())->method('getPageService')->will($this->returnValue($mockedPageService));
-        $crawlerController->expects($this->any())->method('getUrlsForPageId')->will($this->returnValue($getUrlsForPages));
-
-        self::assertEquals(
-            $expected,
-            $crawlerController->getUrlsForPageRow($pageRow, $skipMessage)
+        $crawlerController->expects($this->any())->method('getPageService')->will(
+            $this->returnValue($mockedPageService)
         );
+        $crawlerController->expects($this->any())->method('getUrlsForPageId')->will(
+            $this->returnValue($getUrlsForPages)
+        );
+
+        self::assertEquals($expected, $crawlerController->getUrlsForPageRow($pageRow, $skipMessage));
     }
 
     /**
@@ -148,10 +156,7 @@ class CrawlerControllerTest extends UnitTestCase
 
         unset($configuration['paramExpanded'], $configuration['URLs']);
         $newCheckSum = md5(serialize($configuration));
-        self::assertEquals(
-            $newCheckSum,
-            $crawlerController->_call('getConfigurationHash', $configuration)
-        );
+        self::assertEquals($newCheckSum, $crawlerController->_call('getConfigurationHash', $configuration));
     }
 
     public function getUrlsForPageRowDataProvider(): iterable
@@ -195,10 +200,7 @@ class CrawlerControllerTest extends UnitTestCase
     {
         $crawlerLib = $this->getAccessibleMock(CrawlerController::class, ['dummy'], [], '', false);
 
-        self::assertEquals(
-            $expected,
-            $crawlerLib->_call('getConfigurationHash', $configuration)
-        );
+        self::assertEquals($expected, $crawlerLib->_call('getConfigurationHash', $configuration));
     }
 
     public function getConfigurationHasReturnsExpectedValueDataProvider(): iterable
@@ -265,24 +267,17 @@ class CrawlerControllerTest extends UnitTestCase
     {
         yield 'Not in list' => [
             'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
-            'incomingProcInstructions' => [
-                'tx_unknown_extension_instruction',
-            ],
+            'incomingProcInstructions' => ['tx_unknown_extension_instruction'],
             'expected' => false,
         ];
         yield 'In list' => [
             'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
-            'incomingProcInstructions' => [
-                'tx_indexedsearch_reindex',
-            ],
+            'incomingProcInstructions' => ['tx_indexedsearch_reindex'],
             'expected' => true,
         ];
         yield 'Twice in list' => [
             'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
-            'incomingProcInstructions' => [
-                'tx_indexedsearch_reindex',
-                'tx_indexedsearch_reindex',
-            ],
+            'incomingProcInstructions' => ['tx_indexedsearch_reindex', 'tx_indexedsearch_reindex'],
             'expected' => true,
         ];
         yield 'Empty incomingProcInstructions' => [
@@ -292,9 +287,7 @@ class CrawlerControllerTest extends UnitTestCase
         ];
         yield 'In list CAPITALIZED' => [
             'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
-            'incomingProcInstructions' => [
-                'TX_INDEXEDSEARCH_REINDES',
-            ],
+            'incomingProcInstructions' => ['TX_INDEXEDSEARCH_REINDES'],
             'expected' => false,
         ];
     }
@@ -312,9 +305,6 @@ class CrawlerControllerTest extends UnitTestCase
         /** @var CrawlerController $crawlerController */
         $crawlerController = $this->getAccessibleMock(CrawlerController::class, ['dummy'], [], '', false);
         $crawlerController->setExtensionSettings($extensionSettings);
-        self::assertEquals(
-            $extensionSettings,
-            $crawlerController->extensionSettings
-        );
+        self::assertEquals($extensionSettings, $crawlerController->extensionSettings);
     }
 }

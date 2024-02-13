@@ -28,7 +28,6 @@ $EM_CONF['typo3_console'] = [
         'conflicts' => [
             'dbal' => '',
         ],
-        'suggests' => [
-        ],
+        'suggests' => [],
     ],
 ];

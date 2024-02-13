@@ -41,8 +41,12 @@ class UrlService
      * @throws \Doctrine\DBAL\DBALException
      * @throws \Doctrine\DBAL\Driver\Exception
      */
-    public function getUrlFromPageAndQueryParameters(int $pageId, string $queryString, ?string $alternativeBaseUrl, int $httpsOrHttp): ?UriInterface
-    {
+    public function getUrlFromPageAndQueryParameters(
+        int $pageId,
+        string $queryString,
+        ?string $alternativeBaseUrl,
+        int $httpsOrHttp
+    ): ?UriInterface {
         $url = new Uri();
         $site = GeneralUtility::makeInstance(SiteMatcher::class)->matchByPageId($pageId);
         if ($site instanceof Site) {
@@ -61,10 +65,8 @@ class UrlService
                     ->orWhere(
                         $queryBuilder->expr()->eq('uid', $pageId),
                         $queryBuilder->expr()->eq('l10n_parent', $pageId)
-                    )
-                    ->andWhere($queryBuilder->expr()->in('sys_language_uid', $languages))
-                    ->execute();
-                $rows = $query->fetch();
+                    )->andWhere($queryBuilder->expr()->in('sys_language_uid', $languages))->executeQuery();
+                $rows = $query->fetchAssociative();
 
                 if (empty($rows)) {
                     return null;
@@ -120,7 +122,9 @@ class UrlService
         foreach ($urls as $url) {
             foreach ($valueSet as $val) {
                 if (count($newUrls) < $maxUrlToCompile) {
-                    $newUrls[] = $url . (strcmp((string) $val, '') ? '&' . rawurlencode($varName) . '=' . rawurlencode((string) $val) : '');
+                    $newUrls[] = $url . (strcmp((string) $val, '') ? '&' . rawurlencode($varName) . '=' . rawurlencode(
+                        (string) $val
+                    ) : '');
                 }
             }
         }
