@@ -29,9 +29,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class ProcessServiceTest extends \TYPO3\TestingFramework\Core\Functional\FunctionalTestCase
 {
-    /**
-     * @var array
-     */
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     protected \AOE\Crawler\Service\ProcessService $subject;

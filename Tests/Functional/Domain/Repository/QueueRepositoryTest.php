@@ -35,9 +35,6 @@ class QueueRepositoryTest extends \TYPO3\TestingFramework\Core\Functional\Functi
 {
     use BackendRequestTestTrait;
 
-    /**
-     * @var array
-     */
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     protected \AOE\Crawler\Domain\Repository\QueueRepository $subject;

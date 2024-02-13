@@ -30,9 +30,6 @@ class ConfigurationServiceTest extends \TYPO3\TestingFramework\Core\Functional\F
 {
     use ProphecyTrait;
 
-    /**
-     * @var array
-     */
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
     private ConfigurationService $subject;
 

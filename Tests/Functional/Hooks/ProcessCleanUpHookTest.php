@@ -38,9 +38,6 @@ class ProcessCleanUpHookTest extends \TYPO3\TestingFramework\Core\Functional\Fun
     protected ProcessRepository $processRepository;
     protected QueueRepository $queueRepository;
 
-    /**
-     * @var array
-     */
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     protected function setUp(): void
@@ -149,12 +146,12 @@ class ProcessCleanUpHookTest extends \TYPO3\TestingFramework\Core\Functional\Fun
         $expectedProcessesToBeRemoved = 1;
 
         $processCountBefore = $this->processRepository->findAll()->count();
-        $queueCountBefore = $this->queueRepository->findByProcessId($existingProcessId)->count();
+        $queueCountBefore = $this->queueRepository->findBy(['processId' => $existingProcessId])->count();
 
         $this->callInaccessibleMethod($this->subject, 'removeProcessFromProcesslist', $existingProcessId);
 
         $processCountAfter = $this->processRepository->findAll()->count();
-        $queueCountAfter = $this->queueRepository->findByProcessId($existingProcessId)->count();
+        $queueCountAfter = $this->queueRepository->findBy(['processId' => $existingProcessId])->count();
 
         self::assertEquals($processCountBefore - $expectedProcessesToBeRemoved, $processCountAfter);
 

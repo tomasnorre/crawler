@@ -35,9 +35,6 @@ class FrontendUserAuthenticatorTest extends \TYPO3\TestingFramework\Core\Functio
 {
     use ProphecyTrait;
 
-    /**
-     * @var array
-     */
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     private FrontendUserAuthenticator $subject;

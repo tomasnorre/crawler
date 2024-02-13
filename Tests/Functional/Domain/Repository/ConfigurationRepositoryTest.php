@@ -26,9 +26,6 @@ class ConfigurationRepositoryTest extends \TYPO3\TestingFramework\Core\Functiona
 {
     private const PAGE_WITHOUT_CONFIGURATIONS = 11;
 
-    /**
-     * @var array
-     */
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     protected \AOE\Crawler\Domain\Repository\ConfigurationRepository $subject;

@@ -44,9 +44,6 @@ class BuildQueueCommandTest extends \TYPO3\TestingFramework\Core\Functional\Func
         'FR-CA' => ['id' => 2, 'title' => 'Franco-Canadian', 'locale' => 'fr_CA.UTF8', 'iso' => 'fr', 'hrefLang' => 'fr-CA', 'direction' => ''],
     ];
 
-    /**
-     * @var array
-     */
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     protected QueueRepository $queueRepository;

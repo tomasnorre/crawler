@@ -29,9 +29,6 @@ class FlushQueueCommandTest extends \TYPO3\TestingFramework\Core\Functional\Func
 {
     use BackendRequestTestTrait;
 
-    /**
-     * @var array
-     */
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     protected \AOE\Crawler\Domain\Repository\QueueRepository $queueRepository;

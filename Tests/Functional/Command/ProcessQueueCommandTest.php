@@ -32,9 +32,6 @@ class ProcessQueueCommandTest extends \TYPO3\TestingFramework\Core\Functional\Fu
 {
     use BackendRequestTestTrait;
 
-    /**
-     * @var array
-     */
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     protected CommandTester $commandTester;
