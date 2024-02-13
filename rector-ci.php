@@ -33,7 +33,7 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->import(Typo3SetList::TYPO3_12);
     $rectorConfig->import(NimutTestingFrameworkSetList::NIMUT_TESTING_FRAMEWORK_TO_TYPO3_TESTING_FRAMEWORK);
 
-    $parameters->set(Option::AUTO_IMPORT_NAMES, true);
+    $parameters->set(Option::AUTO_IMPORT_NAMES, false);
 
     $parameters->set(
         Option::AUTOLOAD_PATHS,
