@@ -1,5 +1,9 @@
 # Changelog TYPO3 Crawler
 
+## Crawler 11.0.8-dev
+### Fixed
+* Fix loading middleware order to make forced indexing work again [@cweiske](https://github.com/cweiske)
+
 ## Crawler 11.0.7
 Crawler 11.0.7 was released on November 18th, 2022
 
