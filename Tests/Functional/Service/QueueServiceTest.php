@@ -22,10 +22,9 @@ namespace AOE\Crawler\Tests\Functional\Service;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Service\QueueService;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class QueueServiceTest extends FunctionalTestCase
+class QueueServiceTest extends \TYPO3\TestingFramework\Core\Functional\FunctionalTestCase
 {
     /**
      * @var array
@@ -41,8 +40,6 @@ class QueueServiceTest extends FunctionalTestCase
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $this->setupExtensionSettings();
 
         $crawlerController = $this->getAccessibleMock(CrawlerController::class, ['getCurrentTime'], [], '');

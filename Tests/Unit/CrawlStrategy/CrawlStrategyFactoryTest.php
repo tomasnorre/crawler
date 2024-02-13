@@ -32,7 +32,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * @covers \AOE\Crawler\Configuration\ExtensionConfigurationProvider
  * @covers \AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategy
  */
-class CrawlStrategyFactoryTest extends UnitTestCase
+class CrawlStrategyFactoryTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     use ProphecyTrait;
 

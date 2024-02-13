@@ -20,21 +20,18 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
  */
 
 use AOE\Crawler\Domain\Model\Reason;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 
 /**
  * @covers \AOE\Crawler\Domain\Model\Reason
  */
-class ReasonTest extends UnitTestCase
+class ReasonTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     protected function setUp(): void
     {
-        parent::setUp();
     }
 
     protected function tearDown(): void
     {
-        parent::tearDown();
     }
 
     /**

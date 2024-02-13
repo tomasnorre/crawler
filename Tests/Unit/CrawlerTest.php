@@ -26,7 +26,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * @covers \AOE\Crawler\Crawler
  */
-class CrawlerTest extends UnitTestCase
+class CrawlerTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     protected \AOE\Crawler\Crawler $crawler;
 

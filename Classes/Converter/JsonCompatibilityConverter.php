@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AOE\Crawler\Converter;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2023-     Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -19,6 +19,8 @@ namespace AOE\Crawler\Converter;
  * The TYPO3 project - inspiring people to share!
  */
 
+use Exception;
+
 /**
  * @internal since v9.2.5
  */
@@ -31,20 +33,26 @@ class JsonCompatibilityConverter
      * in json from now on.
      * @see https://github.com/AOEpeople/crawler/issues/417
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function convert(string $dataString): array|bool
     {
-        $unserialized = unserialize($dataString, ['allowed_classes' => false]);
-        if (is_object($unserialized)) {
-            throw new \Exception('Objects are not allowed: ' . var_export($unserialized, true), 1_593_758_307);
+        try {
+            $deserialized = unserialize($dataString, ['allowed_classes' => false]);
+        } catch (Exception) {
+            return false;
         }
 
-        if (is_array($unserialized)) {
-            return $unserialized;
+
+        if (is_object($deserialized)) {
+            throw new \RuntimeException('Objects are not allowed: ' . var_export($deserialized, true), 1_593_758_307);
         }
 
-        $decoded = json_decode($dataString, true);
+        if (is_array($deserialized)) {
+            return $deserialized;
+        }
+
+        $decoded = json_decode($dataString, true, 512, JSON_THROW_ON_ERROR);
         if (is_array($decoded)) {
             return $decoded;
         }

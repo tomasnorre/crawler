@@ -36,9 +36,6 @@ class DataHandlerHook
     public function addFlushedPagesToCrawlerQueue(array $parameters, DataHandler $dataHandler): void
     {
         $pageIdsToBeFlushedFromCache = $parameters['pageIdArray'];
-        if (empty($pageIdsToBeFlushedFromCache)) {
-            return;
-        }
         foreach ($pageIdsToBeFlushedFromCache as $pageId) {
             $pageId = (int) $pageId;
             if ($pageId < 1 || empty($this->getPageRepository()->getPage($pageId))) {

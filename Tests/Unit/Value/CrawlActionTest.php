@@ -25,7 +25,7 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
 /**
  * @covers \AOE\Crawler\Value\CrawlAction
  */
-class CrawlActionTest extends UnitTestCase
+class CrawlActionTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     final public const VALID_VALUE = 'start';
 

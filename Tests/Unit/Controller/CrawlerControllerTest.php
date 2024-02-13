@@ -21,7 +21,6 @@ namespace AOE\Crawler\Tests\Unit\Controller;
 
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Service\PageService;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 
@@ -31,7 +30,7 @@ use Psr\Log\NullLogger;
  * @package AOE\Crawler\Tests
  * @covers \AOE\Crawler\Controller\CrawlerController
  */
-class CrawlerControllerTest extends UnitTestCase
+class CrawlerControllerTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     /**
      * @var CrawlerController
@@ -139,7 +138,7 @@ class CrawlerControllerTest extends UnitTestCase
      */
     public function getConfigurationHash(): void
     {
-        $crawlerController = $this->getAccessibleMock(CrawlerController::class, ['dummy'], [], '', false);
+        $crawlerController = $this->getAccessibleMock(CrawlerController::class, [], [], '', false);
 
         $configuration = [
             'paramExpanded' => 'extendedParameter',
@@ -148,6 +147,10 @@ class CrawlerControllerTest extends UnitTestCase
         ];
 
         $originalCheckSum = md5(serialize($configuration));
+
+        self::assertNotNull(
+            $crawlerController->_call('getConfigurationHash', $configuration)
+        );
 
         self::assertNotEquals(
             $originalCheckSum,

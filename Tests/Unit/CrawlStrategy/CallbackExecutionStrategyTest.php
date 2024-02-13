@@ -21,10 +21,9 @@ namespace AOE\Crawler\Tests\Unit\CrawlStrategy;
 
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class CallbackExecutionStrategyTest extends UnitTestCase
+class CallbackExecutionStrategyTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     /**
      * @test

@@ -20,10 +20,9 @@ namespace AOE\Crawler\Tests\Functional\Domain\Repository;
  */
 
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class ConfigurationRepositoryTest extends FunctionalTestCase
+class ConfigurationRepositoryTest extends \TYPO3\TestingFramework\Core\Functional\FunctionalTestCase
 {
     private const PAGE_WITHOUT_CONFIGURATIONS = 11;
 
@@ -39,7 +38,6 @@ class ConfigurationRepositoryTest extends FunctionalTestCase
      */
     protected function setUp(): void
     {
-        parent::setUp();
         $this->subject = GeneralUtility::makeInstance(ConfigurationRepository::class);
         $this->importDataSet(__DIR__ . '/../../Fixtures/tx_crawler_configuration.xml');
         $this->importDataSet(__DIR__ . '/../../Fixtures/pages.xml');

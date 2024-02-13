@@ -27,7 +27,7 @@ use TYPO3\CMS\Core\Utility\CommandUtility;
  * @covers \AOE\Crawler\Utility\PhpBinaryUtility
  * @covers \AOE\Crawler\Configuration\ExtensionConfigurationProvider::getExtensionConfiguration
  */
-class PhpBinaryUtilityTest extends UnitTestCase
+class PhpBinaryUtilityTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     /**
      * @test

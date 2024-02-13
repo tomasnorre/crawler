@@ -24,7 +24,6 @@ use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use AOE\Crawler\Value\QueueFilter;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Information\Typo3Version;
@@ -36,7 +35,7 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  *
  * @package AOE\Crawler\Tests\Functional\Controller
  */
-class CrawlerControllerTest extends FunctionalTestCase
+class CrawlerControllerTest extends \TYPO3\TestingFramework\Core\Functional\FunctionalTestCase
 {
     use BackendRequestTestTrait;
 
@@ -45,12 +44,10 @@ class CrawlerControllerTest extends FunctionalTestCase
      */
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    protected \Nimut\TestingFramework\MockObject\AccessibleMockObjectInterface|\PHPUnit\Framework\MockObject\MockObject $subject;
+    protected \TYPO3\TestingFramework\Core\AccessibleObjectInterface|\PHPUnit\Framework\MockObject\MockObject $subject;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $this->setupBackendRequest();
 
         $this->importDataSet(__DIR__ . '/../Fixtures/pages.xml');

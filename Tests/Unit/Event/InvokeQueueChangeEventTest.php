@@ -27,7 +27,7 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
  * @covers \AOE\Crawler\Domain\Model\Reason
  * @covers \AOE\Crawler\Event\InvokeQueueChangeEvent
  */
-class InvokeQueueChangeEventTest extends UnitTestCase
+class InvokeQueueChangeEventTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     private InvokeQueueChangeEvent $subject;
 

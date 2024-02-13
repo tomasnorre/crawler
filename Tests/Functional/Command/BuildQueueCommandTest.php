@@ -24,12 +24,11 @@ use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use AOE\Crawler\Tests\Functional\LanguageServiceTestTrait;
 use AOE\Crawler\Tests\Functional\SiteBasedTestTrait;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class BuildQueueCommandTest extends FunctionalTestCase
+class BuildQueueCommandTest extends \TYPO3\TestingFramework\Core\Functional\FunctionalTestCase
 {
     use BackendRequestTestTrait;
     use LanguageServiceTestTrait;
@@ -56,7 +55,6 @@ class BuildQueueCommandTest extends FunctionalTestCase
 
     protected function setUp(): void
     {
-        parent::setUp();
         $this->setupBackendRequest();
         $this->setupBackendUser();
         $this->setupLanguageService();

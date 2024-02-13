@@ -31,7 +31,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * @covers \AOE\Crawler\Event\ModifySkipPageEvent
  * @covers \AOE\Crawler\Service\PageService
  */
-class PageServiceTest extends UnitTestCase
+class PageServiceTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     use ProphecyTrait;
 

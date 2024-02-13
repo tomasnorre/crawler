@@ -34,7 +34,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * @covers \AOE\Crawler\Hooks\DataHandlerHook
  */
-class DataHandlerHookTest extends UnitTestCase
+class DataHandlerHookTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     use ProphecyTrait;
 

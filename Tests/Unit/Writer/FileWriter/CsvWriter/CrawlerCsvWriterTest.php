@@ -26,14 +26,12 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * @covers \AOE\Crawler\Writer\FileWriter\CsvWriter\CrawlerCsvWriter
  */
-class CrawlerCsvWriterTest extends UnitTestCase
+class CrawlerCsvWriterTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     protected \AOE\Crawler\Writer\FileWriter\CsvWriter\CrawlerCsvWriter $subject;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $this->subject = GeneralUtility::makeInstance(CrawlerCsvWriter::class);
     }
 

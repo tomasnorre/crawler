@@ -20,7 +20,6 @@ namespace AOE\Crawler\Tests\Unit\Middleware;
  */
 
 use AOE\Crawler\Middleware\CrawlerInitialization;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -29,7 +28,7 @@ use TYPO3\CMS\Core\Http\Response;
 /**
  * @covers \AOE\Crawler\Middleware\CrawlerInitialization
  */
-class CrawlerInitializationTest extends UnitTestCase
+class CrawlerInitializationTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     use ProphecyTrait;
 

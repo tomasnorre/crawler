@@ -21,11 +21,10 @@ namespace AOE\Crawler\Tests\Functional\Service;
 
 use AOE\Crawler\Service\UrlService;
 use AOE\Crawler\Tests\Functional\SiteBasedTestTrait;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class UrlServiceTest extends FunctionalTestCase
+class UrlServiceTest extends \TYPO3\TestingFramework\Core\Functional\FunctionalTestCase
 {
     use SiteBasedTestTrait;
 
@@ -51,8 +50,6 @@ class UrlServiceTest extends FunctionalTestCase
      */
     protected function setUp(): void
     {
-        parent::setUp();
-
         $this->subject = GeneralUtility::makeInstance(UrlService::class);
 
         $this->importDataSet(__DIR__ . '/../data/pages.xml');

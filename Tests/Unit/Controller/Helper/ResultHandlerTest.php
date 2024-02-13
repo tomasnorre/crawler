@@ -21,13 +21,12 @@ namespace AOE\Crawler\Tests\Unit\Controller\Backend\Helper;
  */
 
 use AOE\Crawler\Controller\Backend\Helper\ResultHandler;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 
 /**
  * @covers \AOE\Crawler\Controller\Backend\Helper\ResultHandler
  * @covers \AOE\Crawler\Converter\JsonCompatibilityConverter::convert
  */
-class ResultHandlerTest extends UnitTestCase
+class ResultHandlerTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     /**
      * @test

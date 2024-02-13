@@ -12,6 +12,7 @@ use Rector\DeadCode\Rector\Stmt\RemoveUnreachableStatementRector;
 use Rector\Php73\Rector\FuncCall\JsonThrowOnErrorRector;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Set\ValueObject\SetList;
+use Ssch\TYPO3Rector\Set\Extension\NimutTestingFrameworkSetList;
 use Ssch\TYPO3Rector\Set\Typo3SetList;
 
 return static function (RectorConfig $rectorConfig): void {
@@ -28,14 +29,11 @@ return static function (RectorConfig $rectorConfig): void {
 
     $rectorConfig->import(SetList::DEAD_CODE);
     $rectorConfig->import(LevelSetList::UP_TO_PHP_81);
-    $rectorConfig->import(Typo3SetList::TYPO3_76);
-    $rectorConfig->import(Typo3SetList::TYPO3_87);
-    $rectorConfig->import(Typo3SetList::TYPO3_95);
-    $rectorConfig->import(Typo3SetList::TYPO3_104);
     $rectorConfig->import(Typo3SetList::TYPO3_11);
     $rectorConfig->import(Typo3SetList::TYPO3_12);
+    $rectorConfig->import(NimutTestingFrameworkSetList::NIMUT_TESTING_FRAMEWORK_TO_TYPO3_TESTING_FRAMEWORK);
 
-    $parameters->set(Option::AUTO_IMPORT_NAMES, false);
+    $parameters->set(Option::AUTO_IMPORT_NAMES, true);
 
     $parameters->set(
         Option::AUTOLOAD_PATHS,

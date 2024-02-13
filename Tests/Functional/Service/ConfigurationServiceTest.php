@@ -22,12 +22,11 @@ namespace AOE\Crawler\Tests\Functional\Service;
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Service\ConfigurationService;
 use AOE\Crawler\Service\UrlService;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class ConfigurationServiceTest extends FunctionalTestCase
+class ConfigurationServiceTest extends \TYPO3\TestingFramework\Core\Functional\FunctionalTestCase
 {
     use ProphecyTrait;
 
@@ -39,7 +38,6 @@ class ConfigurationServiceTest extends FunctionalTestCase
 
     protected function setUp(): void
     {
-        parent::setUp();
         $this->subject = $this->createPartialMock(ConfigurationService::class, []);
     }
 

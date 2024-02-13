@@ -881,12 +881,12 @@ class CrawlerController implements LoggerAwareInterface
     /**
      * Returns a md5 hash generated from a serialized configuration array.
      *
+     * @param array $configuration
      * @return string
      */
-    protected function getConfigurationHash(array $configuration)
+    protected function getConfigurationHash(array $configuration): string
     {
-        unset($configuration['paramExpanded']);
-        unset($configuration['URLs']);
+        unset($configuration['paramExpanded'], $configuration['URLs']);
         return md5(serialize($configuration));
     }
 

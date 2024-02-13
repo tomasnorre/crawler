@@ -20,7 +20,6 @@ namespace AOE\Crawler\Tests\Functional\Service;
  */
 
 use AOE\Crawler\Service\ProcessService;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -28,7 +27,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  *
  * @package AOE\Crawler\Tests\Unit\Domain\Model
  */
-class ProcessServiceTest extends FunctionalTestCase
+class ProcessServiceTest extends \TYPO3\TestingFramework\Core\Functional\FunctionalTestCase
 {
     /**
      * @var array
@@ -42,8 +41,6 @@ class ProcessServiceTest extends FunctionalTestCase
      */
     protected function setUp(): void
     {
-        parent::setUp();
-
         $this->subject = GeneralUtility::makeInstance(ProcessService::class);
     }
 

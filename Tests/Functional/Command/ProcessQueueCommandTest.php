@@ -25,11 +25,10 @@ use AOE\Crawler\Crawler;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class ProcessQueueCommandTest extends FunctionalTestCase
+class ProcessQueueCommandTest extends \TYPO3\TestingFramework\Core\Functional\FunctionalTestCase
 {
     use BackendRequestTestTrait;
 
@@ -42,7 +41,6 @@ class ProcessQueueCommandTest extends FunctionalTestCase
 
     protected function setUp(): void
     {
-        parent::setUp();
         $this->setupBackendRequest();
 
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');

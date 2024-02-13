@@ -25,7 +25,7 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
 /**
  * @covers \AOE\Crawler\Value\QueueFilter
  */
-class QueueFilterTest extends UnitTestCase
+class QueueFilterTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     final public const VALID_VALUE = 'finished';
 

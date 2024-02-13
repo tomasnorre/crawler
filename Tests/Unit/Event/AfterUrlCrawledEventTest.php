@@ -25,7 +25,7 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
 /**
  * @covers \AOE\Crawler\Event\AfterUrlCrawledEvent
  */
-class AfterUrlCrawledEventTest extends UnitTestCase
+class AfterUrlCrawledEventTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     private AfterUrlCrawledEvent $subject;
 

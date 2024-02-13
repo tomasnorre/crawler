@@ -29,7 +29,7 @@ use TYPO3\CMS\Core\Http\Uri;
 /**
  * @covers \AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategy
  */
-class GuzzleExecutionStrategyTest extends UnitTestCase
+class GuzzleExecutionStrategyTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     use ProphecyTrait;
 

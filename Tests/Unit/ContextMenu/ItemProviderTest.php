@@ -20,7 +20,6 @@ namespace AOE\Crawler\Tests\Unit\ContextMenu;
  */
 
 use AOE\Crawler\ContextMenu\ItemProvider;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Localization\LanguageService;
 
@@ -28,7 +27,7 @@ use TYPO3\CMS\Core\Localization\LanguageService;
  * Class ItemProviderTest
  * @covers \AOE\Crawler\ContextMenu\ItemProvider
  */
-class ItemProviderTest extends UnitTestCase
+class ItemProviderTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     /**
      * @var BackendUserAuthentication|null

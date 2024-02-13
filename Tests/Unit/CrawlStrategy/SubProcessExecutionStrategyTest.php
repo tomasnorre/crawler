@@ -30,7 +30,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * @covers \AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategy
  */
-class SubProcessExecutionStrategyTest extends UnitTestCase
+class SubProcessExecutionStrategyTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     use ProphecyTrait;
 

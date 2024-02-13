@@ -36,7 +36,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * @covers \AOE\Crawler\CrawlStrategy\CrawlStrategyFactory::__construct
  * @covers \AOE\Crawler\CrawlStrategy\CrawlStrategyFactory::create
  */
-class QueueExecutorTest extends UnitTestCase
+class QueueExecutorTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     use ProphecyTrait;
 

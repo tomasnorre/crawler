@@ -26,7 +26,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * @covers \AOE\Crawler\Service\UrlService
  */
-class UrlServiceTest extends UnitTestCase
+class UrlServiceTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
@@ -37,7 +37,6 @@ class UrlServiceTest extends UnitTestCase
      */
     protected function setUp(): void
     {
-        parent::setUp();
         $this->urlService = GeneralUtility::makeInstance(UrlService::class);
     }
 

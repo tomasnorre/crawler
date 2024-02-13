@@ -36,7 +36,7 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
  * @package AOE\Crawler\Tests\Unit\Domain\Model
  * @covers \AOE\Crawler\Domain\Model\Queue
  */
-class QueueTest extends UnitTestCase
+class QueueTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     protected ?\AOE\Crawler\Domain\Model\Queue $subject = null;
 

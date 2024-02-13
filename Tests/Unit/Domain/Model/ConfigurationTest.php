@@ -25,7 +25,7 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
 /**
  * @covers \AOE\Crawler\Domain\Model\Configuration
  */
-class ConfigurationTest extends UnitTestCase
+class ConfigurationTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     protected \AOE\Crawler\Domain\Model\Configuration $subject;
 

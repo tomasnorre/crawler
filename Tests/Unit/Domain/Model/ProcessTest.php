@@ -29,7 +29,7 @@ use PHPUnit\Framework\MockObject\MockObject;
  * @package AOE\Crawler\Tests\Unit\Domain\Model
  * @covers \AOE\Crawler\Domain\Model\Process
  */
-class ProcessTest extends UnitTestCase
+class ProcessTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     protected \AOE\Crawler\Domain\Model\Process $subject;
 

@@ -20,7 +20,6 @@ namespace AOE\Crawler\Tests\Functional\Middleware;
  */
 
 use AOE\Crawler\Middleware\FrontendUserAuthenticator;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -32,7 +31,7 @@ use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 /**
  * @covers FrontendUserAuthenticator
  */
-class FrontendUserAuthenticatorTest extends FunctionalTestCase
+class FrontendUserAuthenticatorTest extends \TYPO3\TestingFramework\Core\Functional\FunctionalTestCase
 {
     use ProphecyTrait;
 
@@ -45,7 +44,6 @@ class FrontendUserAuthenticatorTest extends FunctionalTestCase
 
     protected function setUp(): void
     {
-        parent::setUp();
         $this->subject = GeneralUtility::makeInstance(FrontendUserAuthenticator::class);
     }
 

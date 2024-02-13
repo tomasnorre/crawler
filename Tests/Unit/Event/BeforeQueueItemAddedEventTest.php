@@ -25,7 +25,7 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
 /**
  * @covers \AOE\Crawler\Event\BeforeQueueItemAddedEvent
  */
-class BeforeQueueItemAddedEventTest extends UnitTestCase
+class BeforeQueueItemAddedEventTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     private BeforeQueueItemAddedEvent $subject;
 

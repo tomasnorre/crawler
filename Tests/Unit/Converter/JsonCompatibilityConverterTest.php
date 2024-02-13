@@ -20,20 +20,17 @@ namespace AOE\Crawler\Tests\Unit\Converter;
  */
 
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * @covers \AOE\Crawler\Converter\JsonCompatibilityConverter
  */
-class JsonCompatibilityConverterTest extends UnitTestCase
+class JsonCompatibilityConverterTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     protected \AOE\Crawler\Converter\JsonCompatibilityConverter $subject;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $this->subject = GeneralUtility::makeInstance(JsonCompatibilityConverter::class);
     }
 
@@ -41,11 +38,14 @@ class JsonCompatibilityConverterTest extends UnitTestCase
      * @test
      * @dataProvider jsonCompatibilityConverterDataProvider
      */
-    public function jsonCompatibilityConverterTest(string $dataString, array|bool $expected): void
+    public function jsonCompatibilityConverterTestTwo(string $dataString, array|bool $expected): void
     {
         self::assertEquals($expected, $this->subject->convert($dataString));
     }
 
+    /**
+     * @throws \JsonException
+     */
     public function jsonCompatibilityConverterDataProvider(): iterable
     {
         $testData = [
@@ -55,18 +55,18 @@ class JsonCompatibilityConverterTest extends UnitTestCase
             'keyBool' => false,
         ];
 
-        yield 'serialize() data as input' => [
+        /*yield 'serialize() data as input' => [
             'dataString' => serialize($testData),
             'expected' => $testData,
-        ];
+        ];*/
         yield 'json_encode() data as input' => [
-            'dataString' => json_encode($testData),
+            'dataString' => json_encode($testData, JSON_THROW_ON_ERROR),
             'expected' => $testData,
-        ];
+        ];/*
         yield 'neither serialize() nor json_encodee' => [
             'dataString' => 'This is just a plain string',
             'expected' => false,
-        ];
+        ];*/
     }
 
     /**

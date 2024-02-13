@@ -32,7 +32,7 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
  * @covers \AOE\Crawler\Service\ProcessService
  * @covers \AOE\Crawler\Helper\Sleeper\NullSleeper
  */
-class ProcessServiceTest extends UnitTestCase
+class ProcessServiceTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 

@@ -25,7 +25,7 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
 /**
  * @covers \AOE\Crawler\Event\ModifySkipPageEvent
  */
-class ModifySkipPageEventTest extends UnitTestCase
+class ModifySkipPageEventTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     private ModifySkipPageEvent $subject;
 

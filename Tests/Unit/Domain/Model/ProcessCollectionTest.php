@@ -33,7 +33,7 @@ use PHPUnit\Framework\MockObject\MockObject;
  * @covers \AOE\Crawler\Domain\Model\Process::getProcessId
  * @covers \AOE\Crawler\Domain\Model\Process::setProcessId
  */
-class ProcessCollectionTest extends UnitTestCase
+class ProcessCollectionTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     protected \AOE\Crawler\Domain\Model\ProcessCollection $subject;
 

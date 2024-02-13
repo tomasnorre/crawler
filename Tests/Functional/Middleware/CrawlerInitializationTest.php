@@ -20,7 +20,6 @@ namespace AOE\Crawler\Tests\Functional\Middleware;
  */
 
 use AOE\Crawler\Middleware\CrawlerInitialization;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -31,13 +30,12 @@ use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 /**
  * @covers \AOE\Crawler\Middleware\CrawlerInitialization
  */
-class CrawlerInitializationTest extends FunctionalTestCase
+class CrawlerInitializationTest extends \TYPO3\TestingFramework\Core\Functional\FunctionalTestCase
 {
     use ProphecyTrait;
 
     protected function setUp(): void
     {
-        parent::setUp();
         $this->subject = GeneralUtility::makeInstance(CrawlerInitialization::class);
         $tsfe = $this->prophesize(TypoScriptFrontendController::class);
         $GLOBALS['TSFE'] = $tsfe->reveal();
