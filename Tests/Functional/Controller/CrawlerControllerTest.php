@@ -42,7 +42,7 @@ class CrawlerControllerTest extends \TYPO3\TestingFramework\Core\Functional\Func
     /**
      * @var array
      */
-    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+    protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     protected \TYPO3\TestingFramework\Core\AccessibleObjectInterface|\PHPUnit\Framework\MockObject\MockObject $subject;
 

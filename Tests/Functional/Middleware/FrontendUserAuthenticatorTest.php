@@ -38,7 +38,7 @@ class FrontendUserAuthenticatorTest extends \TYPO3\TestingFramework\Core\Functio
     /**
      * @var array
      */
-    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+    protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     private FrontendUserAuthenticator $subject;
 

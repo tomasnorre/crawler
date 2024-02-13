@@ -47,7 +47,7 @@ class BuildQueueCommandTest extends \TYPO3\TestingFramework\Core\Functional\Func
     /**
      * @var array
      */
-    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+    protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     protected QueueRepository $queueRepository;
 
@@ -152,7 +152,7 @@ class BuildQueueCommandTest extends \TYPO3\TestingFramework\Core\Functional\Func
         ];
     }
 
-    private function setupBackendUser(): void
+    protected function setupBackendUser(int $userUid): BackendUserAuthentication
     {
         $GLOBALS['BE_USER'] = $this->getMockBuilder(BackendUserAuthentication::class)
             ->disableOriginalConstructor()
@@ -160,5 +160,6 @@ class BuildQueueCommandTest extends \TYPO3\TestingFramework\Core\Functional\Func
             ->getMock();
 
         $GLOBALS['BE_USER']->method('isInWebMount')->willReturn(true);
+        return $GLOBALS['BE_USER'];
     }
 }

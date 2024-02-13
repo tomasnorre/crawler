@@ -35,7 +35,7 @@ class ProcessQueueCommandTest extends \TYPO3\TestingFramework\Core\Functional\Fu
     /**
      * @var array
      */
-    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+    protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     protected CommandTester $commandTester;
 

@@ -33,7 +33,7 @@ class ConfigurationServiceTest extends \TYPO3\TestingFramework\Core\Functional\F
     /**
      * @var array
      */
-    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+    protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
     private ConfigurationService $subject;
 
     protected function setUp(): void

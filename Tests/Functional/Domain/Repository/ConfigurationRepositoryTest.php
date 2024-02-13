@@ -29,7 +29,7 @@ class ConfigurationRepositoryTest extends \TYPO3\TestingFramework\Core\Functiona
     /**
      * @var array
      */
-    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+    protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     protected \AOE\Crawler\Domain\Repository\ConfigurationRepository $subject;
 

@@ -29,7 +29,7 @@ class QueueServiceTest extends \TYPO3\TestingFramework\Core\Functional\Functiona
     /**
      * @var array
      */
-    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+    protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     /**
      * @var QueueService
