@@ -172,9 +172,9 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
             }
 
             // If Flush button is pressed, flush tables instead of selecting entries:
-            if (GeneralUtility::_POST('_flush')) {
+            if (GeneralUtility::_GP('_flush')) {
                 $doFlush = true;
-            } elseif (GeneralUtility::_POST('_flush_all')) {
+            } elseif (GeneralUtility::_GP('_flush_all')) {
                 $doFlush = true;
                 $this->logDisplay = 'all';
             } else {

@@ -148,7 +148,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
             'logUrl' => $logUrl,
         ]);
     }
-    
+
     /**
      * Generates the configuration selectors for compiling URLs:
      */
@@ -207,7 +207,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
                 ),
             ],
             'tstamp',
-            GeneralUtility::_POST('tstamp'),
+            GeneralUtility::_GP('tstamp'),
             false
         );
 
