@@ -291,16 +291,6 @@ parameters:
 			path: Classes/Service/BackendModuleLogService.php
 
 		-
-			message: "#^Call to method getTreeList\\(\\) on an unknown class TYPO3\\\\CMS\\\\Core\\\\Database\\\\QueryGenerator\\.$#"
-			count: 1
-			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: "#^Class TYPO3\\\\CMS\\\\Core\\\\Database\\\\QueryGenerator not found\\.$#"
-			count: 1
-			path: Classes/Service/ConfigurationService.php
-
-		-
 			message: "#^Class cognitive complexity is 84, keep it under 60$#"
 			count: 1
 			path: Classes/Service/ConfigurationService.php
@@ -327,16 +317,6 @@ parameters:
 			path: Classes/Service/ConfigurationService.php
 
 		-
-			message: "#^PHPDoc tag @throws with type Doctrine\\\\DBAL\\\\DBALException is not subtype of Throwable$#"
-			count: 2
-			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: "#^PHPDoc tag @var for variable \\$queryGenerator contains unknown class TYPO3\\\\CMS\\\\Core\\\\Database\\\\QueryGenerator\\.$#"
-			count: 1
-			path: Classes/Service/ConfigurationService.php
-
-		-
 			message: "#^Function getUrlFromPageAndQueryParameters\\(\\) has an unused variable \\$siteLanguage\\.$#"
 			count: 1
 			path: Classes/Service/UrlService.php
@@ -352,7 +332,7 @@ parameters:
 			path: Classes/Writer/FileWriter/CsvWriter/CrawlerCsvWriter.php
 
 		-
-			message: "#^Out of 288 possible return types, only 80 %% actually have it\\. Add more return types to get over 81 %%$#"
+			message: "#^Out of 289 possible return types, only 80 %% actually have it\\. Add more return types to get over 81 %%$#"
 			count: 1
 			path: N/A
 

@@ -20,6 +20,7 @@ namespace AOE\Crawler\Service;
  */
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
+use \AOE\Crawler\Database\QueryGenerator;
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use Doctrine\DBAL\Connection;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
@@ -28,7 +29,6 @@ use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
-use TYPO3\CMS\Core\Database\QueryGenerator;
 use TYPO3\CMS\Core\Type\Bitmask\Permission;
 use TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -236,7 +236,7 @@ class ConfigurationService
      *         - "_TABLE:[TCA table name];[_PID:[optional page id, default is current page]];[_ENABLELANG:1]" = Look up of table records from PID, filtering out deleted records. Example "_TABLE:tt_content; _PID:123"
      *        _ENABLELANG:1 picks only original records without their language overlays
      *         - Default: Literal value
-     * @throws \Doctrine\DBAL\DBALException
+     *
      */
     private function expandParameters(array $paramArray, int $pid): array
     {
@@ -404,7 +404,7 @@ class ConfigurationService
     }
 
     /**
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\DBAL\Exception
      */
     private function extractParamsFromCustomTable(
         array $subpartParams,
