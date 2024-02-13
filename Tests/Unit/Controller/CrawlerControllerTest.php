@@ -201,7 +201,7 @@ class CrawlerControllerTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCa
      */
     public function getConfigurationHasReturnsExpectedValue(array $configuration, string $expected): void
     {
-        $crawlerLib = $this->getAccessibleMock(CrawlerController::class, ['dummy'], [], '', false);
+        $crawlerLib = $this->getAccessibleMock(CrawlerController::class, [], [], '', false);
 
         self::assertEquals($expected, $crawlerLib->_call('getConfigurationHash', $configuration));
     }
@@ -306,7 +306,7 @@ class CrawlerControllerTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCa
         ];
 
         /** @var CrawlerController $crawlerController */
-        $crawlerController = $this->getAccessibleMock(CrawlerController::class, ['dummy'], [], '', false);
+        $crawlerController = $this->getAccessibleMock(CrawlerController::class, [], [], '', false);
         $crawlerController->setExtensionSettings($extensionSettings);
         self::assertEquals($extensionSettings, $crawlerController->extensionSettings);
     }

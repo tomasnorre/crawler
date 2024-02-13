@@ -92,7 +92,7 @@ class ProcessCollectionTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCa
     public function appendCrawlerDomainObject(): void
     {
         /** @var MockObject|Process $correctObjectType */
-        $correctObjectType = $this->getAccessibleMock(Process::class, ['dummy'], [], '', false);
+        $correctObjectType = $this->getAccessibleMock(Process::class, [], [], '', false);
         $this->subject->append($correctObjectType);
 
         self::assertEquals($correctObjectType, $this->subject->offsetGet(0));
@@ -115,7 +115,7 @@ class ProcessCollectionTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCa
     public function offsetSetAndGet(): void
     {
         /** @var MockObject|Process $correctObjectType */
-        $correctObjectType = $this->getAccessibleMock(Process::class, ['dummy'], [], '', false);
+        $correctObjectType = $this->getAccessibleMock(Process::class, [], [], '', false);
         $this->subject->offsetSet(100, $correctObjectType);
 
         self::assertEquals($correctObjectType, $this->subject->offsetGet(100));
@@ -131,7 +131,7 @@ class ProcessCollectionTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCa
         self::expectException(NoIndexFoundException::class);
         self::expectExceptionCode(1_593_714_823);
         self::expectExceptionMessageMatches('/^Index.*100.*Process are not available$/');
-        $correctObjectType = $this->getAccessibleMock(Process::class, ['dummy'], [], '', false);
+        $correctObjectType = $this->getAccessibleMock(Process::class, [], [], '', false);
 
         self::assertEquals($correctObjectType, $this->subject->offsetGet(100));
     }

@@ -37,7 +37,7 @@ class CrawlerInitializationTest extends \TYPO3\TestingFramework\Core\Unit\UnitTe
      */
     public function processRequestNotHandled(): void
     {
-        $subject = self::getAccessibleMock(CrawlerInitialization::class, ['dummy'], [], '', false);
+        $subject = self::getAccessibleMock(CrawlerInitialization::class, [], [], '', false);
 
         $request = $this->prophesize(ServerRequestInterface::class);
         $request->getAttribute('tx_crawler')->willReturn(null);
