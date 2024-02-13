@@ -34,6 +34,11 @@ class AfterUrlCrawledEventTest extends \TYPO3\TestingFramework\Core\Unit\UnitTes
         $this->subject = new AfterUrlCrawledEvent('/contact', []);
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     /**
      * @test
      */

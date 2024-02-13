@@ -29,6 +29,11 @@ class QueueFilterTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     final public const VALID_VALUE = 'finished';
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     /**
      * @test
      */

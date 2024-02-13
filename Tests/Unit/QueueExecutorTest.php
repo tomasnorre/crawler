@@ -42,6 +42,11 @@ class QueueExecutorTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 
     protected \AOE\Crawler\QueueExecutor $queueExecutor;
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     /**
      * @var CrawlerController
      */

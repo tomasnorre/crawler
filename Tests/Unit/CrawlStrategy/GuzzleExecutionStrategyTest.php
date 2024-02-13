@@ -51,6 +51,11 @@ class GuzzleExecutionStrategyTest extends \TYPO3\TestingFramework\Core\Unit\Unit
             ->willReturn($response);
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     /**
      * @test
      */

@@ -36,6 +36,11 @@ class AfterUrlAddedToQueueEventTest extends \TYPO3\TestingFramework\Core\Unit\Un
         $this->subject = new AfterUrlAddedToQueueEvent($uid, $fieldArray);
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     /**
      * @test
      */

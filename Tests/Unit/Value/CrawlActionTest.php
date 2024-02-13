@@ -29,6 +29,10 @@ class CrawlActionTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     final public const VALID_VALUE = 'start';
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
     /**
      * @test
      */

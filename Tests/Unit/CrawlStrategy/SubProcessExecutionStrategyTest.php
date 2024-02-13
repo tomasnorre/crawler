@@ -34,6 +34,11 @@ class SubProcessExecutionStrategyTest extends \TYPO3\TestingFramework\Core\Unit\
 {
     use ProphecyTrait;
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     /**
      * @test
      */

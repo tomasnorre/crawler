@@ -36,6 +36,11 @@ class ConfigurationServiceTest extends \TYPO3\TestingFramework\Core\Unit\UnitTes
 {
     use ProphecyTrait;
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     /**
      * @test
      * @dataProvider removeDisallowedConfigurationsDataProvider

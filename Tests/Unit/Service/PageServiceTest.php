@@ -48,6 +48,11 @@ class PageServiceTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         $this->subject = GeneralUtility::makeInstance(PageService::class, $mockedEventDispatcher);
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     /**
      * @test
      *

@@ -34,6 +34,11 @@ class ModifySkipPageEventTest extends \TYPO3\TestingFramework\Core\Unit\UnitTest
         $this->subject = new ModifySkipPageEvent(['dummy' => 'array']);
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     /**
      * @test
      */

@@ -27,6 +27,11 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
  */
 class QueueRowTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     /**
      * @test
      */

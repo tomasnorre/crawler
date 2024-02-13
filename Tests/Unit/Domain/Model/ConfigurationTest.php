@@ -34,6 +34,11 @@ class ConfigurationTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         $this->subject = $this->createPartialMock(Configuration::class, []);
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     /**
      * @test
      */

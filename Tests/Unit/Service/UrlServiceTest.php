@@ -40,6 +40,11 @@ class UrlServiceTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         $this->urlService = GeneralUtility::makeInstance(UrlService::class);
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     /**
      * @test
      *

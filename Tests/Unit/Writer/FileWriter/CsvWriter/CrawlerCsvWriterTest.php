@@ -35,6 +35,11 @@ class CrawlerCsvWriterTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCas
         $this->subject = GeneralUtility::makeInstance(CrawlerCsvWriter::class);
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     /**
      * @test
      */

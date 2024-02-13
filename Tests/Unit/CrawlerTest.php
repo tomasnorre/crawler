@@ -36,6 +36,11 @@ class CrawlerTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         $this->crawler = GeneralUtility::makeInstance(Crawler::class, $filenameWithPath);
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     /**
      * @test
      */

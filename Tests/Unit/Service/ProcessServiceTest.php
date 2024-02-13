@@ -36,6 +36,11 @@ class ProcessServiceTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     /**
      * @test
      */

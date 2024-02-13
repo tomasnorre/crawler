@@ -29,6 +29,11 @@ use TYPO3\CMS\Core\Utility\CommandUtility;
  */
 class PhpBinaryUtilityTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     /**
      * @test
      */

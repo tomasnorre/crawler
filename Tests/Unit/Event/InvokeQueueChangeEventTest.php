@@ -39,6 +39,11 @@ class InvokeQueueChangeEventTest extends \TYPO3\TestingFramework\Core\Unit\UnitT
         $this->subject = new InvokeQueueChangeEvent($reason);
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     /**
      * @test
      */

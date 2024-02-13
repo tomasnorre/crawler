@@ -36,6 +36,11 @@ class AfterQueueItemAddedEventTest extends \TYPO3\TestingFramework\Core\Unit\Uni
         $this->subject = new AfterQueueItemAddedEvent($queueId, $fieldArray);
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     /**
      * @test
      */

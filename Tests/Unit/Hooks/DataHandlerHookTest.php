@@ -38,6 +38,11 @@ class DataHandlerHookTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     use ProphecyTrait;
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     /**
      * Page with ID 1 is not in queue, should be added
      * Page with ID 2 is already in queue. Should NOT be added.

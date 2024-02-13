@@ -40,6 +40,11 @@ class QueueTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     protected ?\AOE\Crawler\Domain\Model\Queue $subject = null;
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     /**
      * @test
      */
