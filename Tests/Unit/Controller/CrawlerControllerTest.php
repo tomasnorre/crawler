@@ -21,16 +21,20 @@ namespace AOE\Crawler\Tests\Unit\Controller;
 
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Service\PageService;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Class CrawlerLibTest
  *
  * @package AOE\Crawler\Tests
  */
-#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Controller\CrawlerController::class)]
-class CrawlerControllerTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
+#[CoversClass(CrawlerController::class)]
+class CrawlerControllerTest extends UnitTestCase
 {
     /**
      * @var CrawlerController
@@ -75,9 +79,9 @@ class CrawlerControllerTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCa
         unset($this->crawlerController);
     }
 
-    
-    #[\PHPUnit\Framework\Attributes\DataProvider('drawURLs_PIfilterDataProvider')]
-    #[\PHPUnit\Framework\Attributes\Test]
+
+    #[DataProvider('drawURLs_PIfilterDataProvider')]
+    #[Test]
     public function drawURLsPIfilter(string $piString, array $incomingProcInstructions, bool $expected): void
     {
         self::assertEquals(
@@ -86,7 +90,7 @@ class CrawlerControllerTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCa
         );
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function getUrlsForPageRowSetsSkipMessageIfUidNotAnInteger(): void
     {
         $skipMessage = '';
@@ -94,9 +98,9 @@ class CrawlerControllerTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCa
         self::assertEquals('PageUid "string" was not an integer', $skipMessage);
     }
 
-    
-    #[\PHPUnit\Framework\Attributes\DataProvider('getUrlsForPageRowDataProvider')]
-    #[\PHPUnit\Framework\Attributes\Test]
+
+    #[DataProvider('getUrlsForPageRowDataProvider')]
+    #[Test]
     public function getUrlsForPageRow(
         bool $checkIfPageSkipped,
         array $getUrlsForPages,
@@ -127,7 +131,7 @@ class CrawlerControllerTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCa
         self::assertEquals($expected, $crawlerController->getUrlsForPageRow($pageRow, $skipMessage));
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function getConfigurationHash(): void
     {
         $crawlerController = $this->getAccessibleMock(CrawlerController::class, [], [], '', false);
@@ -186,9 +190,9 @@ class CrawlerControllerTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCa
         ];
     }
 
-    
-    #[\PHPUnit\Framework\Attributes\DataProvider('getConfigurationHasReturnsExpectedValueDataProvider')]
-    #[\PHPUnit\Framework\Attributes\Test]
+
+    #[DataProvider('getConfigurationHasReturnsExpectedValueDataProvider')]
+    #[Test]
     public function getConfigurationHasReturnsExpectedValue(array $configuration, string $expected): void
     {
         $crawlerLib = $this->getAccessibleMock(CrawlerController::class, [], [], '', false);
@@ -285,7 +289,7 @@ class CrawlerControllerTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCa
         ];
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function setExtensionSettings(): void
     {
         $extensionSettings = [
@@ -294,7 +298,7 @@ class CrawlerControllerTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCa
         ];
 
         /** @var CrawlerController $crawlerController */
-        $crawlerController = $this->getAccessibleMock(CrawlerController::class, [], [], '', false);
+        $crawlerController = $this->createPartialMock(CrawlerController::class, []);
         $crawlerController->setExtensionSettings($extensionSettings);
         self::assertEquals($extensionSettings, $crawlerController->extensionSettings);
     }

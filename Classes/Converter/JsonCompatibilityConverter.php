@@ -40,7 +40,7 @@ class JsonCompatibilityConverter
         try {
             $deserialized = unserialize($dataString, ['allowed_classes' => false]);
         } catch (\Throwable $e) {
-            return false;
+            // Do nothing as we want to continue with json_decode as a test.
         }
 
         if (is_object($deserialized)) {

@@ -30,6 +30,11 @@ use PHPUnit\Framework\Attributes\Test;
 #[CoversClass(JsonCompatibilityConverter::class)]
 class ResultHandlerTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     #[DataProvider('getResStatusDataProvider')]
     #[Test]
     public function getResStatus($requestContent, string $expected): void
@@ -53,14 +58,14 @@ class ResultHandlerTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         ];
         yield 'errorlog is present and not empty (1 Element)' => [
             'requestContent' => ['content' => json_encode([
-                'errorlog' => ['500 Internal Server error'], ],
+                'errorlog' => ['500 Internal Server error'],],
                 JSON_THROW_ON_ERROR
             )],
             'expected' => '500 Internal Server error',
         ];
         yield 'errorlog is present and not empty (2 Element)' => [
             'requestContent' => ['content' => json_encode([
-                'errorlog' => ['500 Internal Server Error', '503 Service Unavailable'], ],
+                'errorlog' => ['500 Internal Server Error', '503 Service Unavailable'],],
                 JSON_THROW_ON_ERROR
             )],
             'expected' => '500 Internal Server Error' . chr(10) . '503 Service Unavailable',
@@ -136,7 +141,7 @@ class ResultHandlerTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         yield 'ResultRow key result_data exits and is not empty, does not contain log' => [
             'resultRow' => [
                 'result_data' => json_encode([
-                    'content' => json_encode(['not-log' => ['ok']], JSON_THROW_ON_ERROR), ],
+                    'content' => json_encode(['not-log' => ['ok']], JSON_THROW_ON_ERROR),],
                     JSON_THROW_ON_ERROR
                 ),
             ],
@@ -145,7 +150,7 @@ class ResultHandlerTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         yield 'ResultRow key result_data exits and is not empty, does contain log (1 element)' => [
             'resultRow' => [
                 'result_data' => json_encode([
-                    'content' => json_encode(['log' => ['ok']], JSON_THROW_ON_ERROR), ],
+                    'content' => json_encode(['log' => ['ok']], JSON_THROW_ON_ERROR),],
                     JSON_THROW_ON_ERROR
                 ),
             ],
@@ -154,7 +159,7 @@ class ResultHandlerTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         yield 'ResultRow key result_data exits and is not empty, does contain log (2 elements)' => [
             'resultRow' => [
                 'result_data' => json_encode([
-                    'content' => json_encode(['log' => ['ok', 'success']], JSON_THROW_ON_ERROR), ],
+                    'content' => json_encode(['log' => ['ok', 'success']], JSON_THROW_ON_ERROR),],
                     JSON_THROW_ON_ERROR
                 ),
             ],

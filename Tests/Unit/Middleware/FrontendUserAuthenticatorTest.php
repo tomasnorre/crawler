@@ -35,7 +35,7 @@ class FrontendUserAuthenticatorTest extends \TYPO3\TestingFramework\Core\Unit\Un
     protected function setUp(): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'] = md5('this_is_an_insecure_encryption_key');
-        $this->subject = self::getAccessibleMock(FrontendUserAuthenticator::class, [], [], '', false);
+        $this->subject = $this->createPartialMock(FrontendUserAuthenticator::class, []);
     }
 
     #[\PHPUnit\Framework\Attributes\Test]

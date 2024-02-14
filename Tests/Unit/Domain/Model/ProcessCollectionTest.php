@@ -23,6 +23,8 @@ use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Domain\Model\ProcessCollection;
 use AOE\Crawler\Exception\NoIndexFoundException;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
@@ -30,35 +32,30 @@ use PHPUnit\Framework\MockObject\MockObject;
  *
  * @package AOE\Crawler\Tests\Unit\Domain\Model
  */
-#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Domain\Model\ProcessCollection::class)]
-#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Domain\Model\Process::class)]
+#[CoversClass(ProcessCollection::class)]
+#[CoversClass(Process::class)]
 class ProcessCollectionTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
-    protected \AOE\Crawler\Domain\Model\ProcessCollection $subject;
+    protected ProcessCollection $subject;
 
     protected function setUp(): void
     {
         $this->subject = new ProcessCollection();
     }
 
-    protected function tearDown(): void
-    {
-        $this->resetSingletonInstances = true;
-    }
-
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function getProcessIdsReturnsArray(): void
     {
         /** @var Process $processOne */
         $processOne = $this->getMockBuilder(Process::class)
-            ->onlyMethods(['dummy'])
+            ->onlyMethods([])
             ->disableOriginalConstructor()
             ->getMock();
         $processOne->setProcessId('11');
 
         /** @var Process $processTwo */
         $processTwo = $this->getMockBuilder(Process::class)
-            ->onlyMethods(['dummy'])
+            ->onlyMethods([])
             ->disableOriginalConstructor()
             ->getMock();
         $processTwo->setProcessId('13');
@@ -72,16 +69,16 @@ class ProcessCollectionTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCa
         self::assertEquals(['11', '13'], $collection->getProcessIds());
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function appendThrowsException(): void
     {
-        self::expectException(\InvalidArgumentException::class);
-        self::expectExceptionCode(1_593_714_821);
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionCode(1_593_714_821);
         $wrongObjectType = new \stdClass();
         $this->subject->append($wrongObjectType);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function appendCrawlerDomainObject(): void
     {
         /** @var MockObject|Process $correctObjectType */
@@ -91,16 +88,16 @@ class ProcessCollectionTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCa
         self::assertEquals($correctObjectType, $this->subject->offsetGet(0));
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function offsetSetThrowsException(): void
     {
-        self::expectException(\InvalidArgumentException::class);
-        self::expectExceptionCode(1_593_714_822);
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionCode(1_593_714_822);
         $wrongObjectType = new \stdClass();
         $this->subject->offsetSet(100, $wrongObjectType);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function offsetSetAndGet(): void
     {
         /** @var MockObject|Process $correctObjectType */
@@ -110,15 +107,13 @@ class ProcessCollectionTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCa
         self::assertEquals($correctObjectType, $this->subject->offsetGet(100));
     }
 
-    /**
-     * @expectedException \Exception
-     */
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function offsetGetThrowsException(): void
     {
-        self::expectException(NoIndexFoundException::class);
-        self::expectExceptionCode(1_593_714_823);
-        self::expectExceptionMessageMatches('/^Index.*100.*Process are not available$/');
+        $this->expectException(\Exception::class);
+        $this->expectException(NoIndexFoundException::class);
+        $this->expectExceptionCode(1_593_714_823);
+        $this->expectExceptionMessageMatches('/^Index.*100.*Process are not available$/');
         $correctObjectType = $this->getAccessibleMock(Process::class, [], [], '', false);
 
         self::assertEquals($correctObjectType, $this->subject->offsetGet(100));
