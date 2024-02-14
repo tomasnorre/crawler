@@ -25,6 +25,7 @@
 ### Fixed
 * If indexed_search is installed activate procInstructions for indexed_search
 * Prevent undefined array key uid and username in FrontendUserAuthentication
+* Fix loading middleware order to make forced indexing work again [@cweiske](https://github.com/cweiske)
 
 ### Deprecated
 #### Classes
