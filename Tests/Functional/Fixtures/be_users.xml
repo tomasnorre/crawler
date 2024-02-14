@@ -6,4 +6,10 @@
 		<username>_cli_crawler</username>
 		<admin>0</admin>
 	</be_users>
+    <be_users>
+        <uid>2</uid>
+        <pid>0</pid>
+        <username>admin</username>
+        <admin>1</admin>
+    </be_users>
 </dataset>

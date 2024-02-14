@@ -54,8 +54,8 @@ class BuildQueueCommandTest extends \TYPO3\TestingFramework\Core\Functional\Func
     {
         parent::setUp();
         $this->setupBackendRequest();
-        $this->setUpBackendUserFromFixture(1);
-        $this->setupBackendUser(1);
+        $this->importDataSet(__DIR__ . '/../Fixtures/be_users.xml');
+        $this->setUpBackendUser(2);
         $this->setupLanguageService();
 
         $this->importDataSet(__DIR__ . '/../Fixtures/pages.xml');

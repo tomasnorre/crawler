@@ -65,7 +65,7 @@ class QueueRepositoryTest extends \TYPO3\TestingFramework\Core\Functional\Functi
         $process = new Process();
         $process->setProcessId($processId);
 
-        $mockedRepository = $this->getAccessibleMock(QueueRepository::class, ['dummy'], [], '', false);
+        $mockedRepository = $this->getAccessibleMock(QueueRepository::class, [], [], '', false);
         $result = $mockedRepository->_call('getFirstOrLastObjectByProcess', $process, $orderBy, $orderDirection);
 
         self::assertEquals($expected, $result);

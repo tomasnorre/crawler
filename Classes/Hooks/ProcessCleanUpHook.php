@@ -116,12 +116,8 @@ class ProcessCleanUpHook implements CrawlerHookInterface
      * Create response array
      * Convert string to array with space character as delimiter,
      * removes all empty records to have a cleaner array
-     *
-     * @param string $string String to create array from
-     *
-     * @return array
      */
-    private function createResponseArray($string)
+    private function createResponseArray(string $string): array
     {
         $responseArray = GeneralUtility::trimExplode(' ', $string, true);
         return array_values($responseArray);
