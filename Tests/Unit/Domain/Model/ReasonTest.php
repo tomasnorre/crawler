@@ -26,6 +26,11 @@ use PHPUnit\Framework\Attributes\Test;
 #[CoversClass(\AOE\Crawler\Domain\Model\Reason::class)]
 class ReasonTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     #[Test]
     public function expectsConstructorToSetPropertiesFromArray(): void
     {

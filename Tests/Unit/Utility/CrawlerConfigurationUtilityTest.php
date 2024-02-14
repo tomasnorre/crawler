@@ -28,6 +28,11 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 #[CoversClass(CrawlerConfigurationUtility::class)]
 class CrawlerConfigurationUtilityTest extends UnitTestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     #[Test]
     public function getConfigurationHash(): void
     {

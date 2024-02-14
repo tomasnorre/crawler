@@ -44,6 +44,11 @@ class ProcessTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         $this->subject->setAssignedItemsCount(20);
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     #[Test]
     public function setAndGetRowDoAsExpected(): void
     {

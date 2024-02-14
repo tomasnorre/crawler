@@ -43,6 +43,11 @@ class ProcessCollectionTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCa
         $this->subject = new ProcessCollection();
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     #[Test]
     public function getProcessIdsReturnsArray(): void
     {

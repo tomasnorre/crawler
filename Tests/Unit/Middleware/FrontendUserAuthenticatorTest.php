@@ -38,6 +38,11 @@ class FrontendUserAuthenticatorTest extends \TYPO3\TestingFramework\Core\Unit\Un
         $this->subject = $this->createPartialMock(FrontendUserAuthenticator::class, []);
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     #[\PHPUnit\Framework\Attributes\Test]
     public function processRequestNotHandled(): void
     {
