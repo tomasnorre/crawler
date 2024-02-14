@@ -39,10 +39,9 @@ class JsonCompatibilityConverter
     {
         try {
             $deserialized = unserialize($dataString, ['allowed_classes' => false]);
-        } catch (Exception) {
+        } catch (\Throwable $e) {
             return false;
         }
-
 
         if (is_object($deserialized)) {
             throw new \RuntimeException('Objects are not allowed: ' . var_export($deserialized, true), 1_593_758_307);
@@ -52,11 +51,17 @@ class JsonCompatibilityConverter
             return $deserialized;
         }
 
-        $decoded = json_decode($dataString, true, 512, JSON_THROW_ON_ERROR);
+        try {
+            $decoded = json_decode($dataString, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+            return false;
+        }
+
         if (is_array($decoded)) {
             return $decoded;
         }
 
         return false;
     }
+
 }

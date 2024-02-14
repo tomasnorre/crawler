@@ -20,21 +20,24 @@ namespace AOE\Crawler\Tests\Unit\Converter;
  */
 
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Converter\JsonCompatibilityConverter::class)]
+#[CoversClass(JsonCompatibilityConverter::class)]
 class JsonCompatibilityConverterTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
-    protected \AOE\Crawler\Converter\JsonCompatibilityConverter $subject;
+    protected JsonCompatibilityConverter $subject;
 
     protected function setUp(): void
     {
         $this->subject = GeneralUtility::makeInstance(JsonCompatibilityConverter::class);
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('jsonCompatibilityConverterDataProvider')]
-    #[\PHPUnit\Framework\Attributes\Test]
-    public function jsonCompatibilityConverterTestTwo(string $dataString, array|bool $expected): void
+    #[DataProvider('jsonCompatibilityConverterDataProvider')]
+    #[Test]
+    public function jsonCompatibilityConverterTest(string $dataString, array|bool $expected): void
     {
         self::assertEquals($expected, $this->subject->convert($dataString));
     }
@@ -51,30 +54,30 @@ class JsonCompatibilityConverterTest extends \TYPO3\TestingFramework\Core\Unit\U
             'keyBool' => false,
         ];
 
-        /*yield 'serialize() data as input' => [
+        yield 'serialize() data as input' => [
             'dataString' => serialize($testData),
             'expected' => $testData,
-        ];*/
+        ];
         yield 'json_encode() data as input' => [
             'dataString' => json_encode($testData, JSON_THROW_ON_ERROR),
             'expected' => $testData,
-        ];/*
+        ];
         yield 'neither serialize() nor json_encodee' => [
             'dataString' => 'This is just a plain string',
             'expected' => false,
-        ];*/
+        ];
     }
 
     /**
      * @throws \Exception
      */
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function jsonCompatibilityConverterTestThrowException(): void
     {
-        self::expectExceptionCode(1_593_758_307);
-        self::expectException(\Throwable::class);
-        self::expectExceptionMessageMatches('#^Objects are not allowed:.*__PHP_Incomplete_Class.*#');
-        self::expectExceptionMessage('This is a test object');
+        $this->expectExceptionCode(1_593_758_307);
+        $this->expectException(\Throwable::class);
+        $this->expectExceptionMessageMatches('#^Objects are not allowed:.*__PHP_Incomplete_Class.*#');
+        $this->expectExceptionMessage('This is a test object');
 
         $object = new \stdClass();
         $object->title = 'Test';
