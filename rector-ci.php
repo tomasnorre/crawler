@@ -52,6 +52,8 @@ return RectorConfig::configure()
     ->withImportNames(false)
     ->withSets([
         SetList::DEAD_CODE,
+        //SetList::CODE_QUALITY,
+        //SetList::CODING_STYLE,
         LevelSetList::UP_TO_PHP_81,
         Typo3SetList::TYPO3_11,
         Typo3SetList::TYPO3_12,
