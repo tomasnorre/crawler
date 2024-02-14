@@ -326,8 +326,3 @@ parameters:
 			count: 1
 			path: Classes/Writer/FileWriter/CsvWriter/CrawlerCsvWriter.php
 
-		-
-			message: "#^Out of 289 possible return types, only 80 %% actually have it\\. Add more return types to get over 81 %%$#"
-			count: 1
-			path: N/A
-

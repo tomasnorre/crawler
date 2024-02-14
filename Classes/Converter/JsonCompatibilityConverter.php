@@ -37,6 +37,7 @@ class JsonCompatibilityConverter
      */
     public function convert(string $dataString): array|bool
     {
+        $deserialized = "";
         try {
             $deserialized = unserialize($dataString, ['allowed_classes' => false]);
         } catch (\Throwable $e) {

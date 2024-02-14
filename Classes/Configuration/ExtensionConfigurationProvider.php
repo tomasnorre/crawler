@@ -39,7 +39,7 @@ class ExtensionConfigurationProvider implements LoggerAwareInterface
     public function getExtensionConfiguration(): array
     {
         try {
-            return GeneralUtility::makeInstance(ExtensionConfiguration::class)?->get('crawler');
+            return GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('crawler');
         } catch (ExtensionConfigurationExtensionNotConfiguredException|ExtensionConfigurationPathDoesNotExistException $e) {
             $this->logger->error($e->getMessage());
         }

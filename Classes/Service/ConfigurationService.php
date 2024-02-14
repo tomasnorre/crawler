@@ -52,7 +52,7 @@ class ConfigurationService
     {
         $this->extensionSettings = GeneralUtility::makeInstance(
             ExtensionConfigurationProvider::class
-        )?->getExtensionConfiguration();
+        )->getExtensionConfiguration();
     }
 
     public static function removeDisallowedConfigurations(array $allowedConfigurations, array $configurations): array
