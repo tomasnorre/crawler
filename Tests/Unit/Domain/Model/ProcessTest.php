@@ -22,16 +22,18 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
 use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Class Process
  * @package AOE\Crawler\Tests\Unit\Domain\Model
  */
-#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Domain\Model\Process::class)]
+#[CoversClass(Process::class)]
 class ProcessTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
-    protected \AOE\Crawler\Domain\Model\Process $subject;
+    protected Process $subject;
 
     protected function setUp(): void
     {
@@ -42,12 +44,7 @@ class ProcessTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         $this->subject->setAssignedItemsCount(20);
     }
 
-    protected function tearDown(): void
-    {
-        $this->resetSingletonInstances = true;
-    }
-
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function setAndGetRowDoAsExpected(): void
     {
         $processId = '4567';
@@ -98,9 +95,9 @@ class ProcessTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         ];
     }
 
-    
+
     #[\PHPUnit\Framework\Attributes\DataProvider('getStateDataProvider')]
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function getStateReturnsExpectedState(int $active, int $processes, string $expectedState): void
     {
         /** @var MockObject|Process $processMock */
@@ -111,9 +108,9 @@ class ProcessTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         self::assertEquals($expectedState, $processMock->getState());
     }
 
-    
+
     #[\PHPUnit\Framework\Attributes\DataProvider('getProgressReturnsExpectedPercentageDataProvider')]
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function getProgressReturnsExpectedPercentage(
         int $countItemsAssigned,
         int $countItemsProcessed,
@@ -196,9 +193,9 @@ class ProcessTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         ];
     }
 
-    
+
     #[\PHPUnit\Framework\Attributes\DataProvider('getRuntimeReturnsIntegerDataProvider')]
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function getRuntimeReturnsInteger(array $getTimeForFirstItem, array $getTimeForLastItem, int $expected): void
     {
         /** @var MockObject|QueueRepository $queueRepositoryMock */

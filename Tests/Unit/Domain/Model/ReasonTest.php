@@ -20,19 +20,13 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
  */
 
 use AOE\Crawler\Domain\Model\Reason;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 
-#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Domain\Model\Reason::class)]
+#[CoversClass(\AOE\Crawler\Domain\Model\Reason::class)]
 class ReasonTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
-    protected function setUp(): void
-    {
-    }
-
-    protected function tearDown(): void
-    {
-    }
-
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function expectsConstructorToSetPropertiesFromArray(): void
     {
         $propertiesArray = [
@@ -43,7 +37,7 @@ class ReasonTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         self::assertSame($propertiesArray, $reason->getRow());
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function settersWillSetValuesAndGettersWillRetrieveTheValues(): void
     {
         $reason = new Reason([]);

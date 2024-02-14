@@ -21,6 +21,7 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
 
 use AOE\Crawler\Domain\Model\Configuration;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 #[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Domain\Model\Configuration::class)]
 class ConfigurationTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
@@ -32,12 +33,7 @@ class ConfigurationTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         $this->subject = $this->createPartialMock(Configuration::class, []);
     }
 
-    protected function tearDown(): void
-    {
-        $this->resetSingletonInstances = true;
-    }
-
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function setterAndGetters(): void
     {
         $name = 'Default Configuration';

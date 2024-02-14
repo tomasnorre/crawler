@@ -22,6 +22,7 @@ namespace AOE\Crawler\Tests\Unit\Controller\Backend\Helper;
 
 use AOE\Crawler\Controller\Backend\Helper\ResultHandler;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
+use JsonException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -30,11 +31,6 @@ use PHPUnit\Framework\Attributes\Test;
 #[CoversClass(JsonCompatibilityConverter::class)]
 class ResultHandlerTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
-    protected function tearDown(): void
-    {
-        $this->resetSingletonInstances = true;
-    }
-
     #[DataProvider('getResStatusDataProvider')]
     #[Test]
     public function getResStatus($requestContent, string $expected): void
@@ -42,6 +38,9 @@ class ResultHandlerTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         self::assertSame($expected, ResultHandler::getResStatus($requestContent));
     }
 
+    /**
+     * @throws JsonException
+     */
     public static function getResStatusDataProvider(): iterable
     {
         yield 'requestContent is empty array' => [
