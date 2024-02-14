@@ -218,7 +218,7 @@
         ],
         "test:unit": [
             "[ -e .Build/bin/phpunit ] || composer update",
-            "TYPO3_PATH_WEB=.Build/Web .Build/bin/phpunit --colors -c .Build/vendor/typo3/testing-framework/Resources/Core/Build/UnitTests-v10.xml Tests/Unit"
+            "TYPO3_PATH_WEB=.Build/Web .Build/bin/phpunit --colors -c Tests/UnitTests.xml"
         ]
     }
 }
