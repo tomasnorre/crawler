@@ -46,12 +46,13 @@ class ConfigurationService
     private readonly array $extensionSettings;
 
     public function __construct(
-        private readonly UrlService $urlService,
+        private readonly UrlService              $urlService,
         private readonly ConfigurationRepository $configurationRepository
-    ) {
+    )
+    {
         $this->extensionSettings = GeneralUtility::makeInstance(
             ExtensionConfigurationProvider::class
-        )->getExtensionConfiguration();
+        )?->getExtensionConfiguration();
     }
 
     public static function removeDisallowedConfigurations(array $allowedConfigurations, array $configurations): array
@@ -70,11 +71,12 @@ class ConfigurationService
     }
 
     public function getConfigurationFromPageTS(
-        array $pageTSConfig,
-        int $pageId,
-        array $res,
+        array  $pageTSConfig,
+        int    $pageId,
+        array  $res,
         string $mountPoint = ''
-    ): array {
+    ): array
+    {
         $defaultCompileUrls = 10_000;
         $maxUrlsToCompile = MathUtility::forceIntegerInRange(
             $this->extensionSettings['maxCompileUrls'] ?? $defaultCompileUrls,
@@ -100,9 +102,9 @@ class ConfigurationService
             // process configuration if it is not page-specific or if the specific page is the current page:
             // TODO: Check if $pidOnlyList can be kept as Array instead of imploded
             if (!strcmp((string) ($subCfg['pidsOnly'] ?? ''), '') || GeneralUtility::inList(
-                $pidOnlyList,
-                strval($pageId)
-            )) {
+                    $pidOnlyList,
+                    (string) $pageId
+                )) {
                 // Explode, process etc.:
                 $res[$key] = [];
                 $res[$key]['subCfg'] = $subCfg;
@@ -135,17 +137,17 @@ class ConfigurationService
         foreach ($crawlerConfigurations as $configurationRecord) {
             // check access to the configuration record
             if (empty($configurationRecord['begroups']) || $this->getBackendUser()->isAdmin() || UserService::hasGroupAccess(
-                $this->getBackendUser()->user['usergroup_cached_list'],
-                $configurationRecord['begroups']
-            )) {
+                    $this->getBackendUser()->user['usergroup_cached_list'],
+                    $configurationRecord['begroups']
+                )) {
                 $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $configurationRecord['pidsonly'], true));
 
                 // process configuration if it is not page-specific or if the specific page is the current page:
                 // TODO: Check if $pidOnlyList can be kept as Array instead of imploded
                 if (!strcmp((string) $configurationRecord['pidsonly'], '') || GeneralUtility::inList(
-                    $pidOnlyList,
-                    strval($pageId)
-                )) {
+                        $pidOnlyList,
+                        strval($pageId)
+                    )) {
                     $key = $configurationRecord['name'];
 
                     // don't overwrite previously defined paramSets
@@ -407,11 +409,12 @@ class ConfigurationService
      * @throws \Doctrine\DBAL\Exception
      */
     private function extractParamsFromCustomTable(
-        array $subpartParams,
-        int $pid,
-        array $paramArray,
+        array      $subpartParams,
+        int        $pid,
+        array      $paramArray,
         int|string $parameter
-    ): array {
+    ): array
+    {
         $lookUpPid = isset($subpartParams['_PID']) ? (int) $subpartParams['_PID'] : $pid;
         $recursiveDepth = isset($subpartParams['_RECURSIVE']) ? (int) $subpartParams['_RECURSIVE'] : 0;
         $pidField = isset($subpartParams['_PIDFIELD']) ? trim((string) $subpartParams['_PIDFIELD']) : 'pid';

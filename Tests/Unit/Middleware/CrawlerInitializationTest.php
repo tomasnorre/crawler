@@ -20,17 +20,21 @@ namespace AOE\Crawler\Tests\Unit\Middleware;
  */
 
 use AOE\Crawler\Middleware\CrawlerInitialization;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use TYPO3\CMS\Backend\Http\RequestHandler;
 use TYPO3\CMS\Core\Http\Response;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Middleware\CrawlerInitialization::class)]
-class CrawlerInitializationTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
+#[CoversClass(CrawlerInitialization::class)]
+class CrawlerInitializationTest extends UnitTestCase
 {
     use ProphecyTrait;
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function processRequestNotHandled(): void
     {
         $subject = $this->getAccessibleMock(CrawlerInitialization::class, [], [], "", false);

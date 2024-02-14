@@ -19,17 +19,21 @@ namespace AOE\Crawler\Tests\Unit\Service;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Service\ConfigurationService;
 use AOE\Crawler\Service\UrlService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Service\ConfigurationService::class)]
-#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Service\UrlService::class)]
-#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Configuration\ExtensionConfigurationProvider::class)]
+#[CoversClass(ConfigurationService::class)]
+#[CoversClass(UrlService::class)]
+#[CoversClass(ExtensionConfigurationProvider::class)]
 class ConfigurationServiceTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     use ProphecyTrait;
@@ -39,8 +43,8 @@ class ConfigurationServiceTest extends \TYPO3\TestingFramework\Core\Unit\UnitTes
         $this->resetSingletonInstances = true;
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('removeDisallowedConfigurationsDataProvider')]
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[DataProvider('removeDisallowedConfigurationsDataProvider')]
+    #[Test]
     public function removeDisallowedConfigurationsReturnsExpectedArray(
         array $allowed,
         array $configuration,
@@ -80,8 +84,8 @@ class ConfigurationServiceTest extends \TYPO3\TestingFramework\Core\Unit\UnitTes
         ];
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('getConfigurationFromPageTSDataProvider')]
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[DataProvider('getConfigurationFromPageTSDataProvider')]
+    #[Test]
     public function getConfigurationFromPageTS(
         array $pageTSConfig,
         int $pageId,
@@ -91,14 +95,16 @@ class ConfigurationServiceTest extends \TYPO3\TestingFramework\Core\Unit\UnitTes
     ): void {
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [];
 
-        $urlService = $this->prophesize(UrlService::class);
-        $urlService->compileUrls(Argument::any(), Argument::any(), Argument::any())->willReturn($compiledUrls);
+        $urlService = $this->getAccessibleMock(UrlService::class);
+        $urlService->method('compileUrls')->willReturn($compiledUrls);
         $configurationRepository = $this->prophesize(ConfigurationRepository::class);
+
         $configurationService = GeneralUtility::makeInstance(
             ConfigurationService::class,
-            $urlService->reveal(),
+            $urlService,
             $configurationRepository->reveal()
         );
+        self::assertNotNull($configurationService->getConfigurationFromPageTS($pageTSConfig, $pageId, [], $mountPoint));
 
         self::assertEquals(
             $expected,

@@ -33,6 +33,7 @@ use AOE\Crawler\QueueExecutor;
 use AOE\Crawler\Service\ConfigurationService;
 use AOE\Crawler\Service\PageService;
 use AOE\Crawler\Service\UrlService;
+use AOE\Crawler\Utility\CrawlerConfigurationUtility;
 use AOE\Crawler\Value\QueueRow;
 use PDO;
 use Psr\Http\Message\UriInterface;
@@ -220,7 +221,7 @@ class CrawlerController implements LoggerAwareInterface
         }
         $urlLog = [];
         $pageId = (int) $pageRow['uid'];
-        $configurationHash = $this->getConfigurationHash($vv);
+        $configurationHash = CrawlerConfigurationUtility::getConfigurationHash($vv);
         $skipInnerCheck = $this->queueRepository->noUnprocessedQueueEntriesForPageWithConfigurationHashExist(
             $pageId,
             $configurationHash
@@ -883,11 +884,16 @@ class CrawlerController implements LoggerAwareInterface
      *
      * @param array $configuration
      * @return string
+     * @deprecated
      */
     protected function getConfigurationHash(array $configuration): string
     {
-        unset($configuration['paramExpanded'], $configuration['URLs']);
-        return md5(serialize($configuration));
+        trigger_error(
+            'The CrawlerController->getConfigurationHash() of the TYPO3 Crawler is deprecated since v12.0.0 and will be removed in v13.0,
+                if needed please use CrawlerConfigurationUtility::getConfigurationHash() instead',
+            E_USER_DEPRECATED
+        );
+        return CrawlerConfigurationUtility::getConfigurationHash($configuration);
     }
 
     protected function getPageService(): PageService
