@@ -57,7 +57,7 @@ class UrlServiceTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         self::assertCount($expectedCount, $this->urlService->compileUrls($paramArray, $urls));
     }
 
-    public function compileUrlsDataProvider(): iterable
+    public static function compileUrlsDataProvider(): iterable
     {
         yield 'Empty Params array' => [
             'paramArray' => [],

@@ -37,7 +37,7 @@ class PhpBinaryUtilityTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCas
     /**
      * @test
      */
-    public function getPhpBinaryThrowExpectionAsExtensionSettingsIsEmpty(): void
+    public function getPhpBinaryThrowExceptionAsExtensionSettingsIsEmpty(): void
     {
         $this->expectExceptionCode(1_587_066_853);
         $this->expectExceptionMessage('ExtensionSettings are empty');
@@ -74,7 +74,7 @@ class PhpBinaryUtilityTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCas
         $this->assertEquals(PhpBinaryUtility::getPhpBinary(), $expected);
     }
 
-    public function getPhpBinaryDataProvider(): iterable
+    public static function getPhpBinaryDataProvider(): iterable
     {
         yield 'php set to standard PHP' => [
             'phpPath' => '',

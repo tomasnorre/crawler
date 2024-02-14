@@ -42,7 +42,7 @@ class UserServiceTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         self::assertEquals($expected, UserService::hasGroupAccess($groupList, $accessList));
     }
 
-    public function hasGroupAccessDataProvider(): iterable
+    public static function hasGroupAccessDataProvider(): iterable
     {
         yield 'Do not have access' => [
             'groupList' => '1,2,3',

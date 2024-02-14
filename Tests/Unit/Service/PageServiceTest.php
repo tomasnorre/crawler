@@ -76,7 +76,7 @@ class PageServiceTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         self::assertEquals($expected, $this->subject->checkIfPageShouldBeSkipped($pageRow));
     }
 
-    public function checkIfPageShouldBeSkippedDataProvider(): iterable
+    public static function checkIfPageShouldBeSkippedDataProvider(): iterable
     {
         yield 'Page of doktype 1 - Standard' => [
             'extensionSetting' => [],
