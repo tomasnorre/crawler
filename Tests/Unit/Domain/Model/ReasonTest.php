@@ -21,9 +21,7 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
 
 use AOE\Crawler\Domain\Model\Reason;
 
-/**
- * @covers \AOE\Crawler\Domain\Model\Reason
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Domain\Model\Reason::class)]
 class ReasonTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     protected function setUp(): void
@@ -34,9 +32,7 @@ class ReasonTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
     {
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function expectsConstructorToSetPropertiesFromArray(): void
     {
         $propertiesArray = [
@@ -47,9 +43,7 @@ class ReasonTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         self::assertSame($propertiesArray, $reason->getRow());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function settersWillSetValuesAndGettersWillRetrieveTheValues(): void
     {
         $reason = new Reason([]);

@@ -22,9 +22,7 @@ namespace AOE\Crawler\Tests\Unit\Event;
 use AOE\Crawler\Event\AfterUrlCrawledEvent;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
-/**
- * @covers \AOE\Crawler\Event\AfterUrlCrawledEvent
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Event\AfterUrlCrawledEvent::class)]
 class AfterUrlCrawledEventTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     private AfterUrlCrawledEvent $subject;
@@ -39,9 +37,7 @@ class AfterUrlCrawledEventTest extends \TYPO3\TestingFramework\Core\Unit\UnitTes
         $this->resetSingletonInstances = true;
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function defaultValueTest(): void
     {
         self::assertEquals('/contact', $this->subject->getUrl());

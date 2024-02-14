@@ -40,9 +40,7 @@ class ConfigurationRepositoryTest extends \TYPO3\TestingFramework\Core\Functiona
         $this->importDataSet(__DIR__ . '/../../Fixtures/pages.xml');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getCrawlerConfigurationRecordsFromRootLineReturnsEmptyArray(): void
     {
         self::assertEmpty(
@@ -50,9 +48,7 @@ class ConfigurationRepositoryTest extends \TYPO3\TestingFramework\Core\Functiona
         );
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getCrawlerConfigurationRecordsFromRootLineReturnsObjects(): void
     {
         $configurations = $this->subject->getCrawlerConfigurationRecordsFromRootLine(5);

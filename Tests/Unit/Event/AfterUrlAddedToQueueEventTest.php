@@ -22,9 +22,7 @@ namespace AOE\Crawler\Tests\Unit\Event;
 use AOE\Crawler\Event\AfterUrlAddedToQueueEvent;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
-/**
- * @covers \AOE\Crawler\Event\AfterUrlAddedToQueueEvent
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Event\AfterUrlAddedToQueueEvent::class)]
 class AfterUrlAddedToQueueEventTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     private AfterUrlAddedToQueueEvent $subject;
@@ -41,9 +39,7 @@ class AfterUrlAddedToQueueEventTest extends \TYPO3\TestingFramework\Core\Unit\Un
         $this->resetSingletonInstances = true;
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function defaultValueTest(): void
     {
         self::assertEquals('qwerty', $this->subject->getUid());

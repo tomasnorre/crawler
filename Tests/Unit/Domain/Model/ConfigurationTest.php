@@ -22,9 +22,7 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
 use AOE\Crawler\Domain\Model\Configuration;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
-/**
- * @covers \AOE\Crawler\Domain\Model\Configuration
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Domain\Model\Configuration::class)]
 class ConfigurationTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     protected \AOE\Crawler\Domain\Model\Configuration $subject;
@@ -39,9 +37,7 @@ class ConfigurationTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         $this->resetSingletonInstances = true;
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function setterAndGetters(): void
     {
         $name = 'Default Configuration';

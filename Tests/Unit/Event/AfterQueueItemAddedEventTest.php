@@ -22,9 +22,7 @@ namespace AOE\Crawler\Tests\Unit\Event;
 use AOE\Crawler\Event\AfterQueueItemAddedEvent;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
-/**
- * @covers \AOE\Crawler\Event\AfterQueueItemAddedEvent
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Event\AfterQueueItemAddedEvent::class)]
 class AfterQueueItemAddedEventTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     private AfterQueueItemAddedEvent $subject;
@@ -41,9 +39,7 @@ class AfterQueueItemAddedEventTest extends \TYPO3\TestingFramework\Core\Unit\Uni
         $this->resetSingletonInstances = true;
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function defaultValuesTest(): void
     {
         self::assertEquals('qwerty', $this->subject->getQueueId());
@@ -51,9 +47,7 @@ class AfterQueueItemAddedEventTest extends \TYPO3\TestingFramework\Core\Unit\Uni
         self::assertEquals(['field' => 'array'], $this->subject->getFieldArray());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function setterTest(): void
     {
         $differentArray = ['different' => 'array'];

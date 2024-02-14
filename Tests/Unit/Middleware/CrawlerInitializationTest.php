@@ -25,16 +25,12 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Http\Response;
 
-/**
- * @covers \AOE\Crawler\Middleware\CrawlerInitialization
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Middleware\CrawlerInitialization::class)]
 class CrawlerInitializationTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function processRequestNotHandled(): void
     {
         $subject = self::getAccessibleMock(CrawlerInitialization::class, [], [], '', false);

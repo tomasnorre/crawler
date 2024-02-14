@@ -37,9 +37,7 @@ class BackendModuleStartCrawlingControllerTest extends FunctionalTestCase
 
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function checkResponseOfHandleRequest(): never
     {
         $this->markTestSkipped('WIP');
@@ -52,7 +50,7 @@ class BackendModuleStartCrawlingControllerTest extends FunctionalTestCase
 
         $GLOBALS['BE_USER'] = $this->getMockBuilder(BackendUserAuthentication::class)
             ->disableOriginalConstructor()
-            ->setMethods(['isAdmin', 'getTSConfig', 'getPagePermsClause', 'isInWebMount', 'backendCheckLogin'])
+            ->onlyMethods(['isAdmin', 'getTSConfig', 'getPagePermsClause', 'isInWebMount', 'backendCheckLogin'])
             ->getMock();
 
         $GLOBALS['LANG'] = $this->createMock(LanguageService::class);

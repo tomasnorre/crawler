@@ -51,9 +51,8 @@ class QueueServiceTest extends \TYPO3\TestingFramework\Core\Functional\Functiona
      * This test is used to check that the api will not create duplicate entries for
      * two pages which should both be crawled in the past, because it is only needed one times.
      * The testcase uses a TSConfig crawler configuration.
-     *
-     * @test
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function canNotCreateDuplicateQueueEntriesForTwoPagesInThePast(): void
     {
         $this->importDataSet(__DIR__ . '/../data/canNotAddDuplicatePagesToQueue.xml');
@@ -68,9 +67,8 @@ class QueueServiceTest extends \TYPO3\TestingFramework\Core\Functional\Functiona
      * This test should check that the api does not create two queue entries for
      * two pages which should be crawled at the same time in the future.
      * The testcase uses a TSConfig crawler configuration.
-     *
-     * @test
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function canNotCreateDuplicateForTwoPagesInTheFutureWithTheSameTimestamp(): void
     {
         $this->importDataSet(__DIR__ . '/../data/canNotAddDuplicatePagesToQueue.xml');
@@ -85,9 +83,8 @@ class QueueServiceTest extends \TYPO3\TestingFramework\Core\Functional\Functiona
      * This test is used to check that the api can be used to schedule one page two times
      * for a different timestamp in the future.
      * The testcase uses a TSConfig crawler configuration.
-     *
-     * @test
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function canCreateTwoQueueEntriesForDifferentTimestampsInTheFuture(): void
     {
         $this->importDataSet(__DIR__ . '/../data/canNotAddDuplicatePagesToQueue.xml');

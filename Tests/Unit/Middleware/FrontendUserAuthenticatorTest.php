@@ -25,9 +25,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Http\Response;
 
-/**
- * @covers \AOE\Crawler\Middleware\FrontendUserAuthenticator
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Middleware\FrontendUserAuthenticator::class)]
 class FrontendUserAuthenticatorTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     use ProphecyTrait;
@@ -40,9 +38,7 @@ class FrontendUserAuthenticatorTest extends \TYPO3\TestingFramework\Core\Unit\Un
         $this->subject = self::getAccessibleMock(FrontendUserAuthenticator::class, [], [], '', false);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function processRequestNotHandled(): void
     {
         $request = $this->prophesize(ServerRequestInterface::class);

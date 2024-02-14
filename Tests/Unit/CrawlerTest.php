@@ -23,9 +23,7 @@ use AOE\Crawler\Crawler;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-/**
- * @covers \AOE\Crawler\Crawler
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Crawler::class)]
 class CrawlerTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     protected \AOE\Crawler\Crawler $crawler;
@@ -41,9 +39,7 @@ class CrawlerTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         $this->resetSingletonInstances = true;
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function setDisabledTest(): void
     {
         // Checking that default the crawler is enabled

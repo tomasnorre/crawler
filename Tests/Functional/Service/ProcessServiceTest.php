@@ -41,9 +41,7 @@ class ProcessServiceTest extends \TYPO3\TestingFramework\Core\Functional\Functio
         $this->subject = GeneralUtility::makeInstance(ProcessService::class);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getCrawlerCliPathReturnsString(): void
     {
         // Check with phpPath set

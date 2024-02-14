@@ -33,18 +33,14 @@ class BackendModuleHtmlElementServiceTest extends FunctionalTestCase
         $this->subject = GeneralUtility::makeInstance(BackendModuleHtmlElementService::class);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getFormElementForItemsPerPageWithEmptyMenuItems(): void
     {
         $html = $this->subject->getFormElementSelect('itemsPerPage', 1, '10', [], []);
         self::assertEquals('', $html);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getFormElementForItemsPerPageReturnSelect(): void
     {
         $html = $this->subject->getFormElementSelect(
@@ -66,9 +62,7 @@ class BackendModuleHtmlElementServiceTest extends FunctionalTestCase
         self::assertStringContainsString('&amp;logDepth=4&amp;itemsPerPage=${value}', $html);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getFormElementForShowFeVarsReturnsCheckbox(): void
     {
         // without quiPath
@@ -97,9 +91,7 @@ class BackendModuleHtmlElementServiceTest extends FunctionalTestCase
         self::assertStringContainsString('&amp;logDepth=4&amp;ShowFeVars=${value}"', $html);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getFormElementForShowResultLogReturnsCheckbox(): void
     {
         // without quiPath
@@ -128,9 +120,7 @@ class BackendModuleHtmlElementServiceTest extends FunctionalTestCase
         self::assertStringContainsString('&amp;logDepth=4&amp;ShowResultLog=${value}"', $html);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getFormElementForLogDisplayReturnsSelect(): void
     {
         $html = $this->subject->getFormElementSelect(
@@ -154,9 +144,7 @@ class BackendModuleHtmlElementServiceTest extends FunctionalTestCase
         self::assertStringContainsString('<option value="finished" selected="selected">', $html);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getFormElementForLogDepthReturnsSelect(): void
     {
         $html = $this->subject->getFormElementSelect(

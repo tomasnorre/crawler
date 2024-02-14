@@ -23,9 +23,7 @@ use AOE\Crawler\Writer\FileWriter\CsvWriter\CrawlerCsvWriter;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-/**
- * @covers \AOE\Crawler\Writer\FileWriter\CsvWriter\CrawlerCsvWriter
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Writer\FileWriter\CsvWriter\CrawlerCsvWriter::class)]
 class CrawlerCsvWriterTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     protected \AOE\Crawler\Writer\FileWriter\CsvWriter\CrawlerCsvWriter $subject;
@@ -40,9 +38,7 @@ class CrawlerCsvWriterTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCas
         $this->resetSingletonInstances = true;
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function arrayToCsvTest(): void
     {
         $records = [];

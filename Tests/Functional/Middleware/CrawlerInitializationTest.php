@@ -27,9 +27,7 @@ use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
-/**
- * @covers \AOE\Crawler\Middleware\CrawlerInitialization
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Middleware\CrawlerInitialization::class)]
 class CrawlerInitializationTest extends \TYPO3\TestingFramework\Core\Functional\FunctionalTestCase
 {
     use ProphecyTrait;
@@ -42,10 +40,8 @@ class CrawlerInitializationTest extends \TYPO3\TestingFramework\Core\Functional\
         $GLOBALS['TSFE']->id = random_int(0,10000);
     }
 
-    /**
-     * @test
-     * @dataProvider processSetsTSFEApplicationDataDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('processSetsTSFEApplicationDataDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function processSetsTSFEApplicationData(string $feGroups, array $expectedGroups): void
     {
         self::assertNull($GLOBALS['TSFE']->applicationData['forceIndexing']);
@@ -78,7 +74,7 @@ class CrawlerInitializationTest extends \TYPO3\TestingFramework\Core\Functional\
         self::assertTrue($response->hasHeader('X-T3Crawler-Meta'));
     }
 
-    public function processSetsTSFEApplicationDataDataProvider(): iterable
+    public static function processSetsTSFEApplicationDataDataProvider(): iterable
     {
         yield 'FE Groups set' => [
             'feGroups' => '1,2',

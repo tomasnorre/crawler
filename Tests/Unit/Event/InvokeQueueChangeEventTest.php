@@ -23,10 +23,8 @@ use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Event\InvokeQueueChangeEvent;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
-/**
- * @covers \AOE\Crawler\Domain\Model\Reason
- * @covers \AOE\Crawler\Event\InvokeQueueChangeEvent
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Domain\Model\Reason::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Event\InvokeQueueChangeEvent::class)]
 class InvokeQueueChangeEventTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     private InvokeQueueChangeEvent $subject;
@@ -44,9 +42,7 @@ class InvokeQueueChangeEventTest extends \TYPO3\TestingFramework\Core\Unit\UnitT
         $this->resetSingletonInstances = true;
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function defaultValueTest(): void
     {
         self::assertEquals(Reason::REASON_CLI_SUBMIT, $this->subject->getReasonText());

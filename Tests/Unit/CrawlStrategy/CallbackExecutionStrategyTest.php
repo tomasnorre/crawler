@@ -23,12 +23,10 @@ use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy::class)]
 class CallbackExecutionStrategyTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
-    /**
-     * @test
-     * @covers \AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function callbackExecutionStrategyTest(): void
     {
         $crawlerController = $this->createPartialMock(CrawlerController::class, []);

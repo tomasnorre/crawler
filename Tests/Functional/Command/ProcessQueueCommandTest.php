@@ -54,10 +54,8 @@ class ProcessQueueCommandTest extends \TYPO3\TestingFramework\Core\Functional\Fu
         $this->commandTester = new CommandTester($command);
     }
 
-    /**
-     * @test
-     * @dataProvider processQueueCommandDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('processQueueCommandDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function processQueueCommandTest(array $parameters, string $expectedOutput): void
     {
         $arguments = [];
@@ -71,7 +69,7 @@ class ProcessQueueCommandTest extends \TYPO3\TestingFramework\Core\Functional\Fu
         self::assertStringContainsString($expectedOutput, $commandOutput);
     }
 
-    public function processQueueCommandDataProvider(): iterable
+    public static function processQueueCommandDataProvider(): iterable
     {
         yield 'No params' => [
             'parameters' => [],

@@ -34,8 +34,8 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
 /**
  * Class QueueTest
  * @package AOE\Crawler\Tests\Unit\Domain\Model
- * @covers \AOE\Crawler\Domain\Model\Queue
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Domain\Model\Queue::class)]
 class QueueTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     protected ?\AOE\Crawler\Domain\Model\Queue $subject = null;
@@ -45,9 +45,7 @@ class QueueTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         $this->resetSingletonInstances = true;
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getterAndSettersTest(): void
     {
         $execTime = 123456;

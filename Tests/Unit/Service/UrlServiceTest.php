@@ -23,9 +23,7 @@ use AOE\Crawler\Service\UrlService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-/**
- * @covers \AOE\Crawler\Service\UrlService
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Service\UrlService::class)]
 class UrlServiceTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
@@ -45,11 +43,9 @@ class UrlServiceTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         $this->resetSingletonInstances = true;
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider compileUrlsDataProvider
-     */
+    
+    #[\PHPUnit\Framework\Attributes\DataProvider('compileUrlsDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function compileUrls(array $paramArray, array $urls, array $expected, int $expectedCount): void
     {
         self::assertEquals($expected, $this->urlService->compileUrls($paramArray, $urls));

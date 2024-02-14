@@ -74,10 +74,8 @@ class BuildQueueCommandTest extends \TYPO3\TestingFramework\Core\Functional\Func
         $this->commandTester = new CommandTester($command);
     }
 
-    /**
-     * @test
-     * @dataProvider buildQueueCommandDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('buildQueueCommandDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function buildQueueCommandTest(array $parameters, string $expectedOutput, int $expectedCount): void
     {
         $arguments = [];
@@ -91,7 +89,7 @@ class BuildQueueCommandTest extends \TYPO3\TestingFramework\Core\Functional\Func
         self::assertEquals($expectedCount, $this->queueRepository->findAll()->count());
     }
 
-    public function buildQueueCommandDataProvider(): iterable
+    public static function buildQueueCommandDataProvider(): iterable
     {
         $crawlerConfiguration = 'default';
 
@@ -153,7 +151,7 @@ class BuildQueueCommandTest extends \TYPO3\TestingFramework\Core\Functional\Func
     {
         $GLOBALS['BE_USER'] = $this->getMockBuilder(BackendUserAuthentication::class)
             ->disableOriginalConstructor()
-            ->setMethods(['isAdmin', 'getTSConfig', 'getPagePermsClause', 'isInWebMount', 'backendCheckLogin'])
+            ->onlyMethods(['isAdmin', 'getTSConfig', 'getPagePermsClause', 'isInWebMount', 'backendCheckLogin'])
             ->getMock();
 
         $GLOBALS['BE_USER']->method('isInWebMount')->willReturn(true);

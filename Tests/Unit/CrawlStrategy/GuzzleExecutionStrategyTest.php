@@ -26,9 +26,7 @@ use Psr\Log\LoggerInterface;
 use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Http\Uri;
 
-/**
- * @covers \AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategy
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategy::class)]
 class GuzzleExecutionStrategyTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     use ProphecyTrait;
@@ -56,9 +54,7 @@ class GuzzleExecutionStrategyTest extends \TYPO3\TestingFramework\Core\Unit\Unit
         $this->resetSingletonInstances = true;
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function fetchUrlContents(): void
     {
         $crawlerId = sha1('this-is-testing');
@@ -70,9 +66,7 @@ class GuzzleExecutionStrategyTest extends \TYPO3\TestingFramework\Core\Unit\Unit
         );
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function fetchUrlContentThrowsException(): void
     {
         $message = 'Error while opening "https://not-important.tld" - 0 cURL error 6: Could not resolve host: not-important.tld (see https://curl.haxx.se/libcurl/c/libcurl-errors.html) for https://not-important.tld';

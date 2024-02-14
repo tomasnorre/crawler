@@ -22,9 +22,7 @@ namespace AOE\Crawler\Tests\Unit\Event;
 use AOE\Crawler\Event\ModifySkipPageEvent;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
-/**
- * @covers \AOE\Crawler\Event\ModifySkipPageEvent
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Event\ModifySkipPageEvent::class)]
 class ModifySkipPageEventTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     private ModifySkipPageEvent $subject;
@@ -39,18 +37,14 @@ class ModifySkipPageEventTest extends \TYPO3\TestingFramework\Core\Unit\UnitTest
         $this->resetSingletonInstances = true;
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function defaultValueTest(): void
     {
         self::assertFalse($this->subject->isSkipped());
         self::assertEquals(['dummy' => 'array'], $this->subject->getPageRow());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function setterTest(): void
     {
         $skippedReason = 'Skipped as in exclude list';

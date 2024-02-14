@@ -63,10 +63,8 @@ class UrlServiceTest extends \TYPO3\TestingFramework\Core\Functional\FunctionalT
         );
     }
 
-    /**
-     * @test
-     * @dataProvider getUrlFromPageAndQueryParametersReturnExpectedUrlDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getUrlFromPageAndQueryParametersReturnExpectedUrlDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getUrlFromPageAndQueryParametersReturnExpectedUrl(
         $pageId,
         $queryString,
@@ -94,7 +92,7 @@ class UrlServiceTest extends \TYPO3\TestingFramework\Core\Functional\FunctionalT
         self::assertEquals($expected->getUserInfo(), $actual->getUserInfo());
     }
 
-    public function getUrlFromPageAndQueryParametersReturnExpectedUrlDataProvider(): iterable
+    public static function getUrlFromPageAndQueryParametersReturnExpectedUrlDataProvider(): iterable
     {
         $uri = new Uri();
 

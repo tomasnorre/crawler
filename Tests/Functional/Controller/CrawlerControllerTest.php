@@ -64,14 +64,12 @@ class CrawlerControllerTest extends \TYPO3\TestingFramework\Core\Functional\Func
         );
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getConfigurationsForBranch(): void
     {
         $GLOBALS['BE_USER'] = $this->getMockBuilder(BackendUserAuthentication::class)
             ->disableOriginalConstructor()
-            ->setMethods(['isAdmin', 'getTSConfig', 'getPagePermsClause', 'isInWebMount', 'backendCheckLogin'])
+            ->onlyMethods(['isAdmin', 'getTSConfig', 'getPagePermsClause', 'isInWebMount', 'backendCheckLogin'])
             ->getMock();
 
         $configurationsForBranch = $this->subject->getConfigurationsForBranch(5, 99);
@@ -92,10 +90,8 @@ class CrawlerControllerTest extends \TYPO3\TestingFramework\Core\Functional\Func
         self::assertEquals($expected, $configurationsForBranch);
     }
 
-    /**
-     * @test
-     * @dataProvider addUrlDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('addUrlDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function addUrl(
         int $id,
         string $url,
@@ -143,7 +139,7 @@ class CrawlerControllerTest extends \TYPO3\TestingFramework\Core\Functional\Func
         );
     }
 
-    public function addUrlDataProvider(): iterable
+    public static function addUrlDataProvider(): iterable
     {
         yield 'Queue entry added' => [
             'id' => 0,

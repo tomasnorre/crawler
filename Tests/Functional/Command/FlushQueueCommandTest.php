@@ -48,10 +48,9 @@ class FlushQueueCommandTest extends \TYPO3\TestingFramework\Core\Functional\Func
 
     /**
      * This will test that the commands and output contains what needed, the cleanup it self isn't tested.
-     *
-     * @test
-     * @dataProvider flushQueueDataProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('flushQueueDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function flushQueueCommandTest(string $mode, string $expectedOutput, int $expectedCount): void
     {
         $arguments = ['mode' => $mode];
@@ -62,7 +61,7 @@ class FlushQueueCommandTest extends \TYPO3\TestingFramework\Core\Functional\Func
         self::assertEquals($expectedCount, $this->queueRepository->findAll()->count());
     }
 
-    public function flushQueueDataProvider(): iterable
+    public static function flushQueueDataProvider(): iterable
     {
         yield 'Flush All' => [
             'mode' => 'all',

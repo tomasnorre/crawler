@@ -22,9 +22,7 @@ namespace AOE\Crawler\Tests\Unit\Service;
 use AOE\Crawler\Service\UserService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
-/**
- * @covers \AOE\Crawler\Service\UserService
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Service\UserService::class)]
 class UserServiceTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     protected function tearDown(): void
@@ -32,11 +30,9 @@ class UserServiceTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         $this->resetSingletonInstances = true;
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider hasGroupAccessDataProvider
-     */
+    
+    #[\PHPUnit\Framework\Attributes\DataProvider('hasGroupAccessDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function hasGroupAccess(string $groupList, string $accessList, bool $expected): void
     {
         self::assertEquals($expected, UserService::hasGroupAccess($groupList, $accessList));

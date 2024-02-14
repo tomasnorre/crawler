@@ -21,23 +21,23 @@ namespace AOE\Crawler\Tests\Unit\Controller\Backend\Helper;
  */
 
 use AOE\Crawler\Controller\Backend\Helper\ResultHandler;
+use AOE\Crawler\Converter\JsonCompatibilityConverter;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 
-/**
- * @covers \AOE\Crawler\Controller\Backend\Helper\ResultHandler
- * @covers \AOE\Crawler\Converter\JsonCompatibilityConverter::convert
- */
+#[CoversClass(ResultHandler::class)]
+#[CoversClass(JsonCompatibilityConverter::class)]
 class ResultHandlerTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
-    /**
-     * @test
-     * @dataProvider getResStatusDataProvider
-     */
+    #[DataProvider('getResStatusDataProvider')]
+    #[Test]
     public function getResStatus($requestContent, string $expected): void
     {
         self::assertSame($expected, ResultHandler::getResStatus($requestContent));
     }
 
-    public function getResStatusDataProvider(): iterable
+    public static function getResStatusDataProvider(): iterable
     {
         yield 'requestContent is empty array' => [
             'requestContent' => [],
@@ -72,16 +72,14 @@ class ResultHandlerTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         // Missing test case for the return 'Error: ' (last return)
     }
 
-    /**
-     * @test
-     * @dataProvider getResFeVarsDataProvider
-     */
+    #[DataProvider('getResFeVarsDataProvider')]
+    #[Test]
     public function getResFeVars(array $resultData, array $expected): void
     {
         self::assertSame($expected, ResultHandler::getResFeVars($resultData));
     }
 
-    public function getResFeVarsDataProvider(): iterable
+    public static function getResFeVarsDataProvider(): iterable
     {
         yield 'ResultData is empty, therefore empty array returned' => [
             'resultData' => [],
@@ -107,16 +105,14 @@ class ResultHandlerTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider getResultLogDataProvider
-     */
+    #[DataProvider('getResultLogDataProvider')]
+    #[Test]
     public function getResultLog(array $resultLog, string $expected): void
     {
         self::assertSame($expected, ResultHandler::getResultLog($resultLog));
     }
 
-    public function getResultLogDataProvider(): iterable
+    public static function getResultLogDataProvider(): iterable
     {
         yield 'ResultRow key result_data does not exist' => [
             'resultRow' => [

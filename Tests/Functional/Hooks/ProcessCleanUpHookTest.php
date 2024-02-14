@@ -58,49 +58,37 @@ class ProcessCleanUpHookTest extends \TYPO3\TestingFramework\Core\Functional\Fun
     {
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function removeActiveProcessesOlderThanOneHour(): never
     {
         $this->markTestSkipped('Please Implement');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function removeActiveOrphanProcesses(): never
     {
         $this->markTestSkipped('Please Implement');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function doProcessStillExists(): never
     {
         $this->markTestSkipped('Skipped due to differences between windows and *nix');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function killProcess(): never
     {
         $this->markTestSkipped('Skipped due to differences between windows and *nix');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function findDispatcherProcesses(): never
     {
         $this->markTestSkipped('Skipped due to differences between windows and *nix');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function removeProcessFromProcesslistCalledWithProcessThatDoesNotExist(): void
     {
         $processCountBefore = $this->processRepository->findAll()->count();
@@ -117,9 +105,7 @@ class ProcessCleanUpHookTest extends \TYPO3\TestingFramework\Core\Functional\Fun
         self::assertEquals($queueCountBefore, $queueCountAfter);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function removeProcessFromProcesslistRemoveOneProcessAndNoQueueRecords(): void
     {
         $expectedProcessesToBeRemoved = 1;
@@ -137,9 +123,7 @@ class ProcessCleanUpHookTest extends \TYPO3\TestingFramework\Core\Functional\Fun
         self::assertEquals($queueCountBefore, $queueCountAfter);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function removeProcessFromProcesslistRemoveOneProcessAndOneQueueRecordIsReset(): void
     {
         $existingProcessId = '1001';
@@ -160,9 +144,7 @@ class ProcessCleanUpHookTest extends \TYPO3\TestingFramework\Core\Functional\Fun
         self::assertEquals(0, $queueCountAfter);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function createResponseArrayReturnsEmptyArray(): void
     {
         $emptyInputString = '';
@@ -173,9 +155,7 @@ class ProcessCleanUpHookTest extends \TYPO3\TestingFramework\Core\Functional\Fun
         );
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function createResponseArrayReturnsArray(): void
     {
         // Input string has multiple spacing to ensure we don't end up with an array with empty values

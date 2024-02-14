@@ -23,10 +23,8 @@ use AOE\Crawler\Utility\PhpBinaryUtility;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 
-/**
- * @covers \AOE\Crawler\Utility\PhpBinaryUtility
- * @covers \AOE\Crawler\Configuration\ExtensionConfigurationProvider::getExtensionConfiguration
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Utility\PhpBinaryUtility::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Configuration\ExtensionConfigurationProvider::class)]
 class PhpBinaryUtilityTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     protected function tearDown(): void
@@ -34,9 +32,7 @@ class PhpBinaryUtilityTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCas
         $this->resetSingletonInstances = true;
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getPhpBinaryThrowExceptionAsExtensionSettingsIsEmpty(): void
     {
         $this->expectExceptionCode(1_587_066_853);
@@ -45,9 +41,7 @@ class PhpBinaryUtilityTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCas
         PhpBinaryUtility::getPhpBinary();
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getPhpBinaryThrowsExceptionAsBinaryDoesNotExist(): void
     {
         $this->expectExceptionCode(1_587_068_215);
@@ -60,10 +54,8 @@ class PhpBinaryUtilityTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCas
         PhpBinaryUtility::getPhpBinary();
     }
 
-    /**
-     * @test
-     * @dataProvider getPhpBinaryDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getPhpBinaryDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getPhpBinary(string $phpPath, string $phpBinary, string $expected): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [

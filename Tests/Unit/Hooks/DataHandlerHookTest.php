@@ -31,9 +31,7 @@ use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-/**
- * @covers \AOE\Crawler\Hooks\DataHandlerHook
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Hooks\DataHandlerHook::class)]
 class DataHandlerHookTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     use ProphecyTrait;
@@ -46,9 +44,8 @@ class DataHandlerHookTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
     /**
      * Page with ID 1 is not in queue, should be added
      * Page with ID 2 is already in queue. Should NOT be added.
-     *
-     * @test
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function itShouldAddPageToQueue(): void
     {
         $mockedDataHandlerHook = $this->createPartialMock(
@@ -91,9 +88,8 @@ class DataHandlerHookTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
      * Page with ID 1 is not in queue, should be added
      * Page with ID 2 is already in queue. Should NOT be added.
      * Page with ID 3 is not in queue, should be added
-     *
-     * @test
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function itShouldAddPageToQueueWithMorePages(): void
     {
         $mockedDataHandlerHook = $this->createPartialMock(
@@ -139,9 +135,8 @@ class DataHandlerHookTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
      * Page with ID 1 is not in queue, should be added
      * Page with ID 2 is already in queue. Should NOT be added.
      * Page with ID 3 is not in queue, should be added
-     *
-     * @test
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function nothingToBeAddedAsPageDoNotExists(): void
     {
         $mockedDataHandlerHook = $this->createPartialMock(
@@ -183,9 +178,8 @@ class DataHandlerHookTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
     /**
      * Page with ID 1 is not in queue, should be added
      * Page with ID 2 is already in queue. Should NOT be added.
-     *
-     * @test
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function ensureThatPageIdArrayIsConvertedToInteger(): void
     {
         $mockedDataHandlerHook = $this->createPartialMock(

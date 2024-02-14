@@ -22,9 +22,7 @@ namespace AOE\Crawler\Tests\Unit\Converter;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-/**
- * @covers \AOE\Crawler\Converter\JsonCompatibilityConverter
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Converter\JsonCompatibilityConverter::class)]
 class JsonCompatibilityConverterTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     protected \AOE\Crawler\Converter\JsonCompatibilityConverter $subject;
@@ -34,10 +32,8 @@ class JsonCompatibilityConverterTest extends \TYPO3\TestingFramework\Core\Unit\U
         $this->subject = GeneralUtility::makeInstance(JsonCompatibilityConverter::class);
     }
 
-    /**
-     * @test
-     * @dataProvider jsonCompatibilityConverterDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('jsonCompatibilityConverterDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function jsonCompatibilityConverterTestTwo(string $dataString, array|bool $expected): void
     {
         self::assertEquals($expected, $this->subject->convert($dataString));
@@ -46,7 +42,7 @@ class JsonCompatibilityConverterTest extends \TYPO3\TestingFramework\Core\Unit\U
     /**
      * @throws \JsonException
      */
-    public function jsonCompatibilityConverterDataProvider(): iterable
+    public static function jsonCompatibilityConverterDataProvider(): iterable
     {
         $testData = [
             'keyString' => 'valueString',
@@ -70,9 +66,9 @@ class JsonCompatibilityConverterTest extends \TYPO3\TestingFramework\Core\Unit\U
     }
 
     /**
-     * @test
      * @throws \Exception
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function jsonCompatibilityConverterTestThrowException(): void
     {
         self::expectExceptionCode(1_593_758_307);

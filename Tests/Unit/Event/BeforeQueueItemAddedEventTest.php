@@ -22,9 +22,7 @@ namespace AOE\Crawler\Tests\Unit\Event;
 use AOE\Crawler\Event\BeforeQueueItemAddedEvent;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
-/**
- * @covers \AOE\Crawler\Event\BeforeQueueItemAddedEvent
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Event\BeforeQueueItemAddedEvent::class)]
 class BeforeQueueItemAddedEventTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     private BeforeQueueItemAddedEvent $subject;
@@ -41,9 +39,7 @@ class BeforeQueueItemAddedEventTest extends \TYPO3\TestingFramework\Core\Unit\Un
         $this->resetSingletonInstances = true;
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function defaultValueTest(): void
     {
         self::assertEquals(1234, $this->subject->getQueueId());
@@ -51,9 +47,7 @@ class BeforeQueueItemAddedEventTest extends \TYPO3\TestingFramework\Core\Unit\Un
         self::assertEquals(['simple' => 'array'], $this->subject->getQueueRecord());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function setterTest(): void
     {
         $differentArray = ['different' => 'array'];

@@ -44,9 +44,7 @@ class FrontendUserAuthenticatorTest extends \TYPO3\TestingFramework\Core\Functio
         $this->subject = GeneralUtility::makeInstance(FrontendUserAuthenticator::class);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function processQueueEntryNotFound(): never
     {
         $this->markTestSkipped('WIP');
@@ -66,10 +64,8 @@ class FrontendUserAuthenticatorTest extends \TYPO3\TestingFramework\Core\Functio
         self::assertStringContainsString('No crawler entry found', $response->getBody()->getContents());
     }
 
-    /**
-     * @test
-     * @dataProvider processSetsExpectedUserGroupsDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('processSetsExpectedUserGroupsDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function processSetsExpectedUserGroups(string $feGroups, string $headerLine): void
     {
         $this->importDataSet(__DIR__ . '/Fixtures/ProcessHandlesFeGroups/tx_crawler_queue.xml');
@@ -108,7 +104,7 @@ class FrontendUserAuthenticatorTest extends \TYPO3\TestingFramework\Core\Functio
         self::assertEquals(200, $response->getStatusCode());
     }
 
-    public function processSetsExpectedUserGroupsDataProvider(): iterable
+    public static function processSetsExpectedUserGroupsDataProvider(): iterable
     {
         yield 'One FE Group' => [
             'feGroups' => '1',

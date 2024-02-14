@@ -27,11 +27,9 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-/**
- * @covers \AOE\Crawler\Service\ConfigurationService
- * @covers \AOE\Crawler\Service\UrlService::compileUrls
- * @covers \AOE\Crawler\Configuration\ExtensionConfigurationProvider::getExtensionConfiguration
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Service\ConfigurationService::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Service\UrlService::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Configuration\ExtensionConfigurationProvider::class)]
 class ConfigurationServiceTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     use ProphecyTrait;
@@ -41,10 +39,8 @@ class ConfigurationServiceTest extends \TYPO3\TestingFramework\Core\Unit\UnitTes
         $this->resetSingletonInstances = true;
     }
 
-    /**
-     * @test
-     * @dataProvider removeDisallowedConfigurationsDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('removeDisallowedConfigurationsDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function removeDisallowedConfigurationsReturnsExpectedArray(
         array $allowed,
         array $configuration,
@@ -56,7 +52,7 @@ class ConfigurationServiceTest extends \TYPO3\TestingFramework\Core\Unit\UnitTes
         );
     }
 
-    public function removeDisallowedConfigurationsDataProvider(): iterable
+    public static function removeDisallowedConfigurationsDataProvider(): iterable
     {
         yield 'both allowed and configuration is empty' => [
             'allowed' => [],
@@ -84,10 +80,8 @@ class ConfigurationServiceTest extends \TYPO3\TestingFramework\Core\Unit\UnitTes
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider getConfigurationFromPageTSDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getConfigurationFromPageTSDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getConfigurationFromPageTS(
         array $pageTSConfig,
         int $pageId,
@@ -112,7 +106,7 @@ class ConfigurationServiceTest extends \TYPO3\TestingFramework\Core\Unit\UnitTes
         );
     }
 
-    public function getConfigurationFromPageTSDataProvider(): iterable
+    public static function getConfigurationFromPageTSDataProvider(): iterable
     {
         yield 'Empty Array' => [
             'pageTSConfig' => [],

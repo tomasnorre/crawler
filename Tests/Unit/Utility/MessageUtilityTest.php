@@ -26,9 +26,7 @@ use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-/**
- * @covers \AOE\Crawler\Utility\MessageUtility
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Utility\MessageUtility::class)]
 class MessageUtilityTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     /**
@@ -60,9 +58,7 @@ class MessageUtilityTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function addNoticeMessage(): void
     {
         $messageText = 'This is a notice message';
@@ -77,9 +73,7 @@ class MessageUtilityTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         self::assertEquals(ContextualFeedbackSeverity::NOTICE->value, $messages[0]->getSeverity()->value);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function addErrorMessage(): void
     {
         $messageText = 'This is a error message';
@@ -93,9 +87,7 @@ class MessageUtilityTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         self::assertEquals(ContextualFeedbackSeverity::ERROR->value, $messages[0]->getSeverity()->value);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function addWarningMessage(): void
     {
         $messageText = 'This is a warning message';

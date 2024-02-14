@@ -9,17 +9,13 @@ use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
-/**
- * @covers \AOE\Crawler\Service\BackendModuleLogService
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Service\BackendModuleLogService::class)]
 class BackendModuleLogServiceTest extends FunctionalTestCase
 {
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    /**
-     * @test
-     * @dataProvider addRowsDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('addRowsDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function addRows(
         string $title,
         int $setId,
@@ -60,10 +56,8 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
         $this->assertEquals($csvDataArray, $CSVData);
     }
 
-    /**
-     * @test
-     * @dataProvider addRowsNoEntriesDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('addRowsNoEntriesDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function addRowsNoEntries(
         string $title,
         int $setId,
@@ -96,7 +90,7 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
         $this->assertEmpty($CSVData);
     }
 
-    public function addRowsNoEntriesDataProvider(): \Iterator
+    public static function addRowsNoEntriesDataProvider(): \Iterator
     {
         $title = 'Testing';
         $setId = 987654;
@@ -117,7 +111,7 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
         ];
     }
 
-    public function addRowsDataProvider(): \Iterator
+    public static function addRowsDataProvider(): \Iterator
     {
         $title = 'Testing';
         $setId = 987654;

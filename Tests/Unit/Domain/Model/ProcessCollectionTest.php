@@ -29,10 +29,9 @@ use PHPUnit\Framework\MockObject\MockObject;
  * Class ProcessCollectionTest
  *
  * @package AOE\Crawler\Tests\Unit\Domain\Model
- * @covers \AOE\Crawler\Domain\Model\ProcessCollection
- * @covers \AOE\Crawler\Domain\Model\Process::getProcessId
- * @covers \AOE\Crawler\Domain\Model\Process::setProcessId
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Domain\Model\ProcessCollection::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Domain\Model\Process::class)]
 class ProcessCollectionTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     protected \AOE\Crawler\Domain\Model\ProcessCollection $subject;
@@ -47,21 +46,19 @@ class ProcessCollectionTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCa
         $this->resetSingletonInstances = true;
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getProcessIdsReturnsArray(): void
     {
         /** @var Process $processOne */
         $processOne = $this->getMockBuilder(Process::class)
-            ->setMethods(['dummy'])
+            ->onlyMethods(['dummy'])
             ->disableOriginalConstructor()
             ->getMock();
         $processOne->setProcessId('11');
 
         /** @var Process $processTwo */
         $processTwo = $this->getMockBuilder(Process::class)
-            ->setMethods(['dummy'])
+            ->onlyMethods(['dummy'])
             ->disableOriginalConstructor()
             ->getMock();
         $processTwo->setProcessId('13');
@@ -75,9 +72,7 @@ class ProcessCollectionTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCa
         self::assertEquals(['11', '13'], $collection->getProcessIds());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function appendThrowsException(): void
     {
         self::expectException(\InvalidArgumentException::class);
@@ -86,9 +81,7 @@ class ProcessCollectionTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCa
         $this->subject->append($wrongObjectType);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function appendCrawlerDomainObject(): void
     {
         /** @var MockObject|Process $correctObjectType */
@@ -98,9 +91,7 @@ class ProcessCollectionTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCa
         self::assertEquals($correctObjectType, $this->subject->offsetGet(0));
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function offsetSetThrowsException(): void
     {
         self::expectException(\InvalidArgumentException::class);
@@ -109,9 +100,7 @@ class ProcessCollectionTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCa
         $this->subject->offsetSet(100, $wrongObjectType);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function offsetSetAndGet(): void
     {
         /** @var MockObject|Process $correctObjectType */
@@ -122,10 +111,9 @@ class ProcessCollectionTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCa
     }
 
     /**
-     * @test
-     *
      * @expectedException \Exception
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function offsetGetThrowsException(): void
     {
         self::expectException(NoIndexFoundException::class);

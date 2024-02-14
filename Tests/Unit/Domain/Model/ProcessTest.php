@@ -27,8 +27,8 @@ use PHPUnit\Framework\MockObject\MockObject;
 /**
  * Class Process
  * @package AOE\Crawler\Tests\Unit\Domain\Model
- * @covers \AOE\Crawler\Domain\Model\Process
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Domain\Model\Process::class)]
 class ProcessTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     protected \AOE\Crawler\Domain\Model\Process $subject;
@@ -47,9 +47,7 @@ class ProcessTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         $this->resetSingletonInstances = true;
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function setAndGetRowDoAsExpected(): void
     {
         $processId = '4567';
@@ -76,7 +74,7 @@ class ProcessTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         self::assertSame($systemProcessId, $this->subject->getSystemProcessId());
     }
 
-    public function getStateDataProvider(): iterable
+    public static function getStateDataProvider(): iterable
     {
         yield 'Check that state is running, Active and less than 100%' => [
             'active' => 1,
@@ -100,11 +98,9 @@ class ProcessTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider getStateDataProvider
-     */
+    
+    #[\PHPUnit\Framework\Attributes\DataProvider('getStateDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getStateReturnsExpectedState(int $active, int $processes, string $expectedState): void
     {
         /** @var MockObject|Process $processMock */
@@ -115,11 +111,9 @@ class ProcessTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         self::assertEquals($expectedState, $processMock->getState());
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider getProgressReturnsExpectedPercentageDataProvider
-     */
+    
+    #[\PHPUnit\Framework\Attributes\DataProvider('getProgressReturnsExpectedPercentageDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getProgressReturnsExpectedPercentage(
         int $countItemsAssigned,
         int $countItemsProcessed,
@@ -143,7 +137,7 @@ class ProcessTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         self::assertEquals($expectedProgress, $processMock->getProgress());
     }
 
-    public function getProgressReturnsExpectedPercentageDataProvider(): iterable
+    public static function getProgressReturnsExpectedPercentageDataProvider(): iterable
     {
         yield 'CountItemsAssigned is negative number' => [
             'countItemsAssigned' => -2,
@@ -202,11 +196,9 @@ class ProcessTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider getRuntimeReturnsIntegerDataProvider
-     */
+    
+    #[\PHPUnit\Framework\Attributes\DataProvider('getRuntimeReturnsIntegerDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getRuntimeReturnsInteger(array $getTimeForFirstItem, array $getTimeForLastItem, int $expected): void
     {
         /** @var MockObject|QueueRepository $queueRepositoryMock */
@@ -228,7 +220,7 @@ class ProcessTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
         self::assertEquals($expected, $this->subject->getRuntime());
     }
 
-    public function getRuntimeReturnsIntegerDataProvider(): iterable
+    public static function getRuntimeReturnsIntegerDataProvider(): iterable
     {
         yield 'getTimeForFirstItem is bigger than getTimeForLastItem' => [
             'getTimeForFirstItem' => ['exec_time' => 75],
