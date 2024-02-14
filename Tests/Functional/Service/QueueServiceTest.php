@@ -37,6 +37,7 @@ class QueueServiceTest extends \TYPO3\TestingFramework\Core\Functional\Functiona
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->setupExtensionSettings();
 
         $crawlerController = $this->getAccessibleMock(CrawlerController::class, ['getCurrentTime'], [], '');

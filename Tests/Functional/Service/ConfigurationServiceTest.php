@@ -35,6 +35,7 @@ class ConfigurationServiceTest extends \TYPO3\TestingFramework\Core\Functional\F
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->subject = $this->createPartialMock(ConfigurationService::class, []);
     }
 

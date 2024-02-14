@@ -42,6 +42,7 @@ class ProcessCleanUpHookTest extends \TYPO3\TestingFramework\Core\Functional\Fun
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->setupBackendRequest();
 
         /** @var ProcessCleanUpHook $this->subject */

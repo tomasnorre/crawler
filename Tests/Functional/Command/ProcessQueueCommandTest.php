@@ -38,6 +38,7 @@ class ProcessQueueCommandTest extends \TYPO3\TestingFramework\Core\Functional\Fu
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->setupBackendRequest();
 
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');

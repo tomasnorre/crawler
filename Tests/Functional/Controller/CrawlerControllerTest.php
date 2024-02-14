@@ -45,6 +45,7 @@ class CrawlerControllerTest extends \TYPO3\TestingFramework\Core\Functional\Func
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->setupBackendRequest();
 
         $this->importDataSet(__DIR__ . '/../Fixtures/pages.xml');

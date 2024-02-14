@@ -190,20 +190,23 @@
         "test:functional": [
             "@test:reset-vars",
             "@extension-create-libs",
+            "@test-set-vars",
             "[ -e .Build/bin/phpunit ] || composer update",
-            "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseName=crawler typo3DatabaseHost=127.0.0.1 typo3DatabaseUsername=root typo3DatabasePassword=root .Build/bin/phpunit -c .Build/vendor/typo3/testing-framework/Resources/Core/Build/FunctionalTests-v10.xml Tests/Functional"
+            "TYPO3_PATH_WEB=$PWD/.Build/Web .Build/bin/phpunit -c Tests/FunctionalTests.xml"
         ],
         "test:functional-postgre": [
             "@test:reset-vars",
             "@extension-create-libs",
+            "@test-set-vars",
             "[ -e .Build/bin/phpunit ] || composer update",
-            "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseDriver=pdo_pgsql typo3DatabaseName=crawler typo3DatabaseHost=127.0.0.1 typo3DatabaseUsername=root typo3DatabasePassword=root .Build/bin/phpunit -c .Build/vendor/typo3/testing-framework/Resources/Core/Build/FunctionalTests-v10.xml Tests/Functional"
+            "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseDriver=pdo_pgsql .Build/bin/phpunit -c Tests/FunctionalTests.xml"
         ],
         "test:functional-sqlite": [
             "@test:reset-vars",
             "@extension-create-libs",
+            "@test-set-vars",
             "[ -e .Build/bin/phpunit ] || composer update",
-            "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseDriver=pdo_sqlite typo3DatabaseName=test .Build/bin/phpunit -c .Build/vendor/typo3/testing-framework/Resources/Core/Build/FunctionalTests-v10.xml Tests/Functional"
+            "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseDriver=pdo_sqlite .Build/bin/phpunit -c Tests/FunctionalTests.xml"
         ],
         "test:mutation": [
             "[ -e .Build/bin/infection ] || composer update",
@@ -215,6 +218,12 @@
             "export typo3DatabaseUsername=''",
             "export typo3DatabasePassword=''",
             "export typo3DatabaseDriver=''"
+        ],
+        "test:set-vars": [
+            "export typo3DatabaseName='crawler'",
+            "export typo3DatabaseHost='127.0.0.1'",
+            "export typo3DatabaseUsername='root'",
+            "typo3DatabasePassword='root'"
         ],
         "test:unit": [
             "[ -e .Build/bin/phpunit ] || composer update",

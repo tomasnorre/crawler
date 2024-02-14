@@ -41,6 +41,7 @@ class FrontendUserAuthenticatorTest extends \TYPO3\TestingFramework\Core\Functio
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->subject = GeneralUtility::makeInstance(FrontendUserAuthenticator::class);
     }
 

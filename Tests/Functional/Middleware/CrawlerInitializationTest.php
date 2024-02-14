@@ -34,6 +34,7 @@ class CrawlerInitializationTest extends \TYPO3\TestingFramework\Core\Functional\
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->subject = GeneralUtility::makeInstance(CrawlerInitialization::class);
         $tsfe = $this->prophesize(TypoScriptFrontendController::class);
         $GLOBALS['TSFE'] = $tsfe->reveal();

@@ -38,6 +38,7 @@ class ProcessServiceTest extends \TYPO3\TestingFramework\Core\Functional\Functio
      */
     protected function setUp(): void
     {
+        parent::setUp();
         $this->subject = GeneralUtility::makeInstance(ProcessService::class);
     }
 

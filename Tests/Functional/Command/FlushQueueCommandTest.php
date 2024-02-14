@@ -37,6 +37,7 @@ class FlushQueueCommandTest extends \TYPO3\TestingFramework\Core\Functional\Func
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->setupBackendRequest();
 
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');

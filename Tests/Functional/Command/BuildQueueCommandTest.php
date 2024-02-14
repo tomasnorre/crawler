@@ -52,8 +52,10 @@ class BuildQueueCommandTest extends \TYPO3\TestingFramework\Core\Functional\Func
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->setupBackendRequest();
-        $this->setupBackendUser();
+        $this->setUpBackendUserFromFixture(1);
+        $this->setupBackendUser(1);
         $this->setupLanguageService();
 
         $this->importDataSet(__DIR__ . '/../Fixtures/pages.xml');
@@ -147,7 +149,7 @@ class BuildQueueCommandTest extends \TYPO3\TestingFramework\Core\Functional\Func
         ];
     }
 
-    protected function setupBackendUser(int $userUid): BackendUserAuthentication
+    /*protected function setupBackendUser(): BackendUserAuthentication
     {
         $GLOBALS['BE_USER'] = $this->getMockBuilder(BackendUserAuthentication::class)
             ->disableOriginalConstructor()
@@ -156,5 +158,5 @@ class BuildQueueCommandTest extends \TYPO3\TestingFramework\Core\Functional\Func
 
         $GLOBALS['BE_USER']->method('isInWebMount')->willReturn(true);
         return $GLOBALS['BE_USER'];
-    }
+    }*/
 }

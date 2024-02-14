@@ -5,17 +5,25 @@ declare(strict_types=1);
 namespace AOE\Crawler\Tests\Unit\Service;
 
 use AOE\Crawler\Service\BackendModuleLogService;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
-#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Service\BackendModuleLogService::class)]
+#[CoversClass(BackendModuleLogService::class)]
 class BackendModuleLogServiceTest extends FunctionalTestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+    }
+
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('addRowsDataProvider')]
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[DataProvider('addRowsDataProvider')]
+    #[Test]
     public function addRows(
         string $title,
         int $setId,
@@ -56,8 +64,8 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
         $this->assertEquals($csvDataArray, $CSVData);
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('addRowsNoEntriesDataProvider')]
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[DataProvider('addRowsNoEntriesDataProvider')]
+    #[Test]
     public function addRowsNoEntries(
         string $title,
         int $setId,

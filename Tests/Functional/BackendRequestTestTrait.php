@@ -23,6 +23,8 @@ use TYPO3\CMS\Backend\Routing\Route;
 use TYPO3\CMS\Backend\Routing\Router;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Http\ServerRequest;
+use TYPO3\CMS\Core\Routing\BackendEntryPointResolver;
+use TYPO3\CMS\Core\Routing\RequestContextFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 trait BackendRequestTestTrait
@@ -34,8 +36,11 @@ trait BackendRequestTestTrait
      */
     protected function setupBackendRequest(): void
     {
+        //$backendEntryPointResolver = new BackendEntryPointResolver();
+        //$requestContextFactory = new RequestContextFactory($backendEntryPointResolver);
         $route = new Route('/web_info', []);
         $router = GeneralUtility::makeInstance(Router::class);
+        //$router = GeneralUtility::makeInstance(Router::class, $requestContextFactory);
         $router->addRoute('module_web_info', $route);
         $request = new ServerRequest('https://example.com/typo3/index.php');
         $request = $request->withQueryParams(['route' => '/web_info']);

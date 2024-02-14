@@ -47,6 +47,7 @@ class UrlServiceTest extends \TYPO3\TestingFramework\Core\Functional\FunctionalT
      */
     protected function setUp(): void
     {
+        parent::setUp();
         $this->subject = GeneralUtility::makeInstance(UrlService::class);
 
         $this->importDataSet(__DIR__ . '/../data/pages.xml');

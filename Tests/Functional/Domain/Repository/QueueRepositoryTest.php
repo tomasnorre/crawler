@@ -44,6 +44,7 @@ class QueueRepositoryTest extends \TYPO3\TestingFramework\Core\Functional\Functi
      */
     protected function setUp(): void
     {
+        parent::setUp();
         $this->setupBackendRequest();
 
         $this->importDataSet(__DIR__ . '/../../Fixtures/tx_crawler_queue.xml');
@@ -52,7 +53,7 @@ class QueueRepositoryTest extends \TYPO3\TestingFramework\Core\Functional\Functi
         $this->subject = GeneralUtility::makeInstance(QueueRepository::class);
     }
 
-    
+
     #[\PHPUnit\Framework\Attributes\DataProvider('getFirstOrLastObjectByProcessDataProvider')]
     #[\PHPUnit\Framework\Attributes\Test]
     public function getFirstOrLastObjectByProcess(
@@ -172,7 +173,7 @@ class QueueRepositoryTest extends \TYPO3\TestingFramework\Core\Functional\Functi
         self::assertSame(15, $this->subject->countAll());
     }
 
-    
+
     #[\PHPUnit\Framework\Attributes\DataProvider('isPageInQueueDataProvider')]
     #[\PHPUnit\Framework\Attributes\Test]
     public function isPageInQueue(
@@ -294,7 +295,7 @@ class QueueRepositoryTest extends \TYPO3\TestingFramework\Core\Functional\Functi
         );
     }
 
-    
+
     #[\PHPUnit\Framework\Attributes\DataProvider('getQueueEntriesForPageIdDataProvider')]
     #[\PHPUnit\Framework\Attributes\Test]
     public function getQueueEntriesForPageId(
@@ -306,7 +307,7 @@ class QueueRepositoryTest extends \TYPO3\TestingFramework\Core\Functional\Functi
         self::assertEquals($expected, $this->subject->getQueueEntriesForPageId($id, $itemsPerPage, $queueFilter));
     }
 
-    
+
     #[\PHPUnit\Framework\Attributes\DataProvider('flushQueueDataProvider')]
     #[\PHPUnit\Framework\Attributes\Test]
     public function flushQueue(QueueFilter $queueFilter, int $expected): void

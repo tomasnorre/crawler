@@ -35,6 +35,7 @@ class ConfigurationRepositoryTest extends \TYPO3\TestingFramework\Core\Functiona
      */
     protected function setUp(): void
     {
+        parent::setUp();
         $this->subject = GeneralUtility::makeInstance(ConfigurationRepository::class);
         $this->importDataSet(__DIR__ . '/../../Fixtures/tx_crawler_configuration.xml');
         $this->importDataSet(__DIR__ . '/../../Fixtures/pages.xml');
