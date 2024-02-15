@@ -22,7 +22,7 @@ hooks:
   # Import and upgrade Database
   - exec: /var/www/html/build-files/import-if-empty.sh
   - exec: /var/www/html/bin/typo3cms database:updateschema
-omit_containers: [dba, ddev-ssh-agent]
+omit_containers: [ddev-ssh-agent]
 webimage_extra_packages: [cron]
 use_dns_when_possible: true
 timezone: Europe/Copenhagen
