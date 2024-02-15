@@ -76,13 +76,13 @@ It will remove queue entries and perform a cleanup.' . chr(10) . chr(10) .
         switch ($queueFilter) {
             case 'all':
                 $queueRepository->flushQueue($queueFilter);
-                $output->writeln('<info>All entries in Crawler queue will be flushed</info>');
+                $output->writeln('<info>All entries in Crawler queue have been flushed</info>');
                 break;
             case 'finished':
             case 'pending':
                 $queueRepository->flushQueue($queueFilter);
                 $output->writeln(
-                    '<info>All entries in Crawler queue, with status: "' . $queueFilter . '" will be flushed</info>'
+                    '<info>All entries in Crawler queue with status "' . $queueFilter . '" have been flushed</info>'
                 );
                 break;
             default:
