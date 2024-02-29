@@ -2,7 +2,7 @@
 # Table structure for table 'tx_crawler_queue'
 #
 CREATE TABLE tx_crawler_queue (
-  qid int(11) DEFAULT '0' NOT NULL auto_increment,
+  qid int(11) NOT NULL auto_increment,
   page_id int(11) DEFAULT '0' NOT NULL,
   parameters text NOT NULL,
   parameters_hash varchar(50) DEFAULT '' NOT NULL,
