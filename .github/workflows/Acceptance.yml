@@ -14,8 +14,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        typo3: [ ^12.2 ]
-        php: [ '8.1', '8.2' ]
+        typo3:
+          - ^12.2
+        php:
+          - '8.1'
+          - '8.2'
 
     steps:
       - name: Get branch name (merge)
@@ -98,7 +101,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        typo3: [ 'v11', 'v11p80' ]
+        typo3:
+          - 'v11'
+          - 'v11p80'
 
     steps:
       - uses: shivammathur/setup-php@v2

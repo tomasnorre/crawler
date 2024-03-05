@@ -233,22 +233,32 @@ class BackendModuleCest
         $I->selectOption('moduleMenu', 'Log');
         $I->waitForText('Crawler log', 15);
 
-        $I->selectOption('logDisplay', 'Pending');
-        $I->seeOptionIsSelected('logDisplay', 'Pending');
+        $I->selectOption('displayLog', 'Pending');
+        $I->seeOptionIsSelected('displayLog', 'Pending');
         # Check the dropdowns work individually
-        $I->selectOption('logDisplay', 'Finished');
-        $I->seeOptionIsSelected('logDisplay', 'Finished');
+        $I->selectOption('displayLog', 'Finished');
+        $I->seeOptionIsSelected('displayLog', 'Finished');
         $I->selectOption('itemsPerPage', 'limit to 5');
         $I->seeOptionIsSelected('itemsPerPage', 'limit to 5');
-        $I->seeOptionIsSelected('logDisplay', 'Finished');
+        $I->seeOptionIsSelected('displayLog', 'Finished');
 
         # Check that the second dropdown selection keeps selected.
         $I->selectOption('itemsPerPage', 'no limit');
         $I->seeOptionIsSelected('itemsPerPage', 'no limit');
-        $I->seeOptionIsSelected('logDisplay', 'Finished');
-        $I->selectOption('logDisplay', 'Pending');
+        $I->seeOptionIsSelected('displayLog', 'Finished');
+        $I->selectOption('displayLog', 'Pending');
         $I->seeOptionIsSelected('itemsPerPage', 'no limit');
-        $I->seeOptionIsSelected('logDisplay', 'Pending');
+        $I->seeOptionIsSelected('displayLog', 'Pending');
+    }
+
+    public function CrawlerLogResultLogShowsLabels(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    {
+        $adminStep->loginAsAdmin();
+        $I->openCrawlerBackendModuleCrawlerLog($adminStep, $pageTree);
+        $I->see('Display');
+        $I->see('Items per page');
+        $I->see('Show Result Log');
+        $I->see('Show FE Vars');
     }
 
     public function CrawlerLogResultLogAndFEVarsCheckboxes(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
@@ -305,8 +315,8 @@ class BackendModuleCest
 
         $I->selectOption('itemsPerPage', 'no limit');
         $I->seeOptionIsSelected('itemsPerPage', 'no limit');
-        $I->selectOption('logDisplay', 'Pending');
-        $I->seeOptionIsSelected('logDisplay', 'Pending');
+        $I->selectOption('displayLog', 'Pending');
+        $I->seeOptionIsSelected('displayLog', 'Pending');
         # The checkboxes aren't allowed to change
         $I->seeCheckboxIsChecked('ShowResultLog');
         $I->dontSeeCheckboxIsChecked('ShowFeVars');
@@ -315,23 +325,23 @@ class BackendModuleCest
         $this->resetCheckboxes($I);
         $I->selectOption('itemsPerPage', 'no limit');
         $I->seeOptionIsSelected('itemsPerPage', 'no limit');
-        $I->selectOption('logDisplay', 'Pending');
-        $I->seeOptionIsSelected('logDisplay', 'Pending');
+        $I->selectOption('displayLog', 'Pending');
+        $I->seeOptionIsSelected('displayLog', 'Pending');
 
         $I->checkOption('ShowResultLog');
         $I->seeCheckboxIsChecked('ShowResultLog');
         $I->dontSeeCheckboxIsChecked('ShowFeVars');
         $I->checkOption('ShowFeVars');
         $I->seeCheckboxIsChecked('ShowFeVars');
-        $I->seeOptionIsSelected('logDisplay', 'Pending');
+        $I->seeOptionIsSelected('displayLog', 'Pending');
         $I->seeOptionIsSelected('itemsPerPage', 'no limit');
 
         // Include logDepth
         $this->resetCheckboxes($I);
         $I->selectOption('itemsPerPage', 'no limit');
         $I->seeOptionIsSelected('itemsPerPage', 'no limit');
-        $I->selectOption('logDisplay', 'Pending');
-        $I->seeOptionIsSelected('logDisplay', 'Pending');
+        $I->selectOption('displayLog', 'Pending');
+        $I->seeOptionIsSelected('displayLog', 'Pending');
         $I->selectOption('logDepth', '4 levels');
 
         $I->checkOption('ShowResultLog');
@@ -339,7 +349,7 @@ class BackendModuleCest
         $I->dontSeeCheckboxIsChecked('ShowFeVars');
         $I->checkOption('ShowFeVars');
         $I->seeCheckboxIsChecked('ShowFeVars');
-        $I->seeOptionIsSelected('logDisplay', 'Pending');
+        $I->seeOptionIsSelected('displayLog', 'Pending');
         $I->seeOptionIsSelected('itemsPerPage', 'no limit');
         $I->seeOptionIsSelected('logDepth', '4 levels');
     }
