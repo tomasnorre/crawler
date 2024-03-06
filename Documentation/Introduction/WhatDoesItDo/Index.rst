@@ -1,15 +1,19 @@
-﻿.. include:: /Includes.txt
+﻿.. include:: /Includes.rst.txt
 
 ================
 What does it do?
 ================
 
-Uses a command line cron-script to traverse a queue of actions
-(alternative option: executing all immediately), eg. requesting a URL
-but could also be calling of a function. The name "crawler" refers to
-this action: That a URL in the queue is requested.
+The TYPO3 Crawler is an extension which provides possibilities, from both
+the TYPO3 backend and from CLIm that helps you with you cache and e.g.
+search index.
 
-Features an API that other extensions can plug into. Example of this
+The Crawler implements several PSR-14 events, that you can use to "hook" into
+if you have certain requirements for your site at the given time.
+
+See more :ref:`psr14-modify-skip-page-event`.
+
+It features an API that other extensions can plug into. Example of this
 is "indexed\_search" which uses crawler to index content defined by
 its Indexing Configurations. Other extensions supporting it are
 "staticpub" (publishing to static pages) or "cachemgm" (allows

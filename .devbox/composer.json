@@ -1,12 +1,8 @@
 {
     "name": "tomasnorre/crawler-devbox",
-    "type": "project",
-    "description": "Devbox for Crawler extension for TYPO3v9",
-    "homepage": "https://github.com/tomasnorre/crawler",
-    "support": {
-        "issues": "https://github.com/tomasnorre/crawler/issues"
-    },
+    "description": "Devbox for TYPO3 Crawler",
     "license": "GPL-3.0",
+    "type": "project",
     "authors": [
         {
             "name": "Tomas Norre Mikkelsen",
@@ -14,31 +10,43 @@
             "role": "Developer"
         }
     ],
+    "homepage": "https://github.com/tomasnorre/crawler",
+    "support": {
+        "issues": "https://github.com/tomasnorre/crawler/issues"
+    },
     "require": {
-        "typo3/minimal": "^10.4",
-        "typo3/cms-introduction": "~4.0",
-        "typo3/cms-tstemplate": "^10.4",
-        "typo3/cms-info": "^10.4",
-        "typo3/cms-belog": "^10.4",
-        "bk2k/bootstrap-package": "^10.0 || ^11.0",
-        "helhum/typo3-console": "*",
+        "georgringer/news": "^9.0 || dev-11-12",
+        "tnm/crawler-devbox-sitepackage": "^0.0.2",
         "tomasnorre/crawler": "*@dev",
-        "typo3/cms-beuser": "^10.4",
-        "georgringer/news": "*"
+        "typo3/cms-belog": "12.2.x-dev || dev-main" ,
+        "typo3/cms-beuser": "12.2.x-dev || dev-main",
+        "typo3/cms-felogin": "12.2.x-dev || dev-main",
+        "typo3/cms-indexed-search": "12.2.x-dev || dev-main",
+        "typo3/cms-info": "12.2.x-dev || dev-main",
+        "typo3/cms-tstemplate": "12.2.x-dev || dev-main",
+        "typo3/minimal": "12.2.x-dev || dev-main"
+    },
+    "require-dev": {
+        "roave/security-advisories": "dev-latest"
+    },
+    "conflict": {
+        "tomasnorre/crawler": "<12.0.0"
     },
     "repositories": [
         {
             "type": "path",
-            "url": "../"
-        },
-        {
-            "type": "git",
-            "url": "https://github.com/tomasnorre/bootstrap_package.git"
+            "url": "./packages"
         }
     ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "config": {
-        "vendor-dir": "vendor",
-        "bin-dir": "bin"
+        "allow-plugins": {
+            "typo3/cms-composer-installers": true,
+            "typo3/class-alias-loader": true
+        },
+        "bin-dir": "bin",
+        "vendor-dir": "vendor"
     },
     "extra": {
         "typo3/cms": {

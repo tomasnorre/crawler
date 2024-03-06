@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AOE\Crawler\Middleware;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2022 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -34,13 +34,12 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * Once done, the queue is fetched, and then the frontend request runs through.
  *
  * Finally, at the very end, if the crawler is still running, output the data and replace the response.
+ *
+ * @internal since v12.0.0
  */
 class CrawlerInitialization implements MiddlewareInterface
 {
-    /**
-     * @var Context
-     */
-    protected $context;
+    protected Context $context;
 
     public function __construct(?Context $context = null)
     {
@@ -62,11 +61,11 @@ class CrawlerInitialization implements MiddlewareInterface
         $GLOBALS['TSFE']->applicationData['tx_crawler']['running'] = true;
         $GLOBALS['TSFE']->applicationData['tx_crawler']['parameters'] = $queueParameters;
         $GLOBALS['TSFE']->applicationData['tx_crawler']['log'] = [
-            'User Groups: ' . $queueParameters['feUserGroupList'],
+            'User Groups: ' . ($queueParameters['feUserGroupList'] ?? ''),
         ];
 
         // Execute the frontend request as is
-        $handler->handle($request);
+        $response = $handler->handle($request);
 
         $GLOBALS['TSFE']->applicationData['tx_crawler']['vars'] = [
             'id' => $GLOBALS['TSFE']->id,
@@ -76,25 +75,27 @@ class CrawlerInitialization implements MiddlewareInterface
 
         $this->runPollSuccessHooks();
 
-        // Output log data for crawler (serialized content):
-        $content = serialize($GLOBALS['TSFE']->applicationData['tx_crawler']);
-        $response = new Response();
-        $response->getBody()->write($content);
-
-        return $response;
+        // Send log data for crawler (serialized content)
+        return $response->withHeader('X-T3Crawler-Meta', serialize($GLOBALS['TSFE']->applicationData['tx_crawler']));
     }
 
     /**
      * Required because some extensions (staticpub) might never be requested to run due to some Core side effects
      * and since this is considered as error the crawler should handle it properly
      */
-    protected function runPollSuccessHooks(): void
+    private function runPollSuccessHooks(): void
     {
-        if (! is_array($GLOBALS['TSFE']->applicationData['tx_crawler']['content']['parameters']['procInstructions'])) {
+        if (! is_array(
+            $GLOBALS['TSFE']->applicationData['tx_crawler']['content']['parameters']['procInstructions'] ?? false
+        )) {
             return;
         }
         foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'] ?? [] as $pollable) {
-            if (in_array($pollable, $GLOBALS['TSFE']->applicationData['tx_crawler']['content']['parameters']['procInstructions'], true)) {
+            if (in_array(
+                $pollable,
+                $GLOBALS['TSFE']->applicationData['tx_crawler']['content']['parameters']['procInstructions'],
+                true
+            )) {
                 if (empty($GLOBALS['TSFE']->applicationData['tx_crawler']['success'][$pollable])) {
                     $GLOBALS['TSFE']->applicationData['tx_crawler']['errorlog'][] = 'Error: Pollable extension (' . $pollable . ') did not complete successfully.';
                 }

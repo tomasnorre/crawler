@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AOE\Crawler\Command;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -24,18 +24,22 @@ use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Event\InvokeQueueChangeEvent;
 use AOE\Crawler\Utility\MessageUtility;
-use AOE\Crawler\Utility\SignalSlotUtility;
+use AOE\Crawler\Value\QueueRow;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
+/**
+ * @internal since v12.0.0
+ */
 class BuildQueueCommand extends Command
 {
     protected function configure(): void
@@ -58,17 +62,9 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             '
         );
 
-        $this->addArgument(
-            'page',
-            InputArgument::REQUIRED,
-            'The page from where the queue building should start'
-        );
+        $this->addArgument('page', InputArgument::REQUIRED, 'The page from where the queue building should start');
 
-        $this->addArgument(
-            'conf',
-            InputArgument::REQUIRED,
-            'A comma separated list of crawler configurations'
-        );
+        $this->addArgument('conf', InputArgument::REQUIRED, 'A comma separated list of crawler configurations');
 
         $this->addOption(
             'depth',
@@ -117,14 +113,15 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
         $jsonCompatibilityConverter = GeneralUtility::makeInstance(JsonCompatibilityConverter::class);
         $mode = $input->getOption('mode') ?? 'queue';
 
-        $extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
-
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $extensionSettings = GeneralUtility::makeInstance(
+            ExtensionConfigurationProvider::class
+        )->getExtensionConfiguration();
+        $eventDispatcher = GeneralUtility::makeInstance(EventDispatcher::class);
 
         /** @var CrawlerController $crawlerController */
-        $crawlerController = $objectManager->get(CrawlerController::class);
+        $crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
         /** @var QueueRepository $queueRepository */
-        $queueRepository = $objectManager->get(QueueRepository::class);
+        $queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
 
         if ($mode === 'exec') {
             $crawlerController->registerQueueEntriesInternallyOnly = true;
@@ -132,10 +129,10 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
 
         $pageId = MathUtility::forceIntegerInRange((int) $input->getArgument('page'), 0);
         if ($pageId === 0) {
-            $message = "Page ${pageId} is not a valid page, please check you root page id and try again.";
+            $message = "Page {$pageId} is not a valid page, please check you root page id and try again.";
             MessageUtility::addErrorMessage($message);
-            $output->writeln("<info>${message}</info>");
-            return 1;
+            $output->writeln("<info>{$message}</info>");
+            return Command::FAILURE;
         }
 
         $configurationKeys = $this->getConfigurationKeys((string) $input->getArgument('conf'));
@@ -144,13 +141,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             $reason = new Reason();
             $reason->setReason(Reason::REASON_CLI_SUBMIT);
             $reason->setDetailText('The cli script of the crawler added to the queue');
-
-            $signalPayload = ['reason' => $reason];
-            SignalSlotUtility::emitSignal(
-                self::class,
-                SignalSlotUtility::SIGNAL_INVOKE_QUEUE_CHANGE,
-                $signalPayload
-            );
+            $eventDispatcher->dispatch(new InvokeQueueChangeEvent($reason));
         }
 
         if ($extensionSettings['cleanUpOldQueueEntries']) {
@@ -158,7 +149,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
         }
 
         $crawlerController->setID = GeneralUtility::md5int(microtime());
-        $crawlerController->getPageTreeAndUrls(
+        $queueRows = $crawlerController->getPageTreeAndUrls(
             $pageId,
             MathUtility::forceIntegerInRange((int) $input->getOption('depth'), 0, 99),
             $crawlerController->getCurrentTime(),
@@ -174,14 +165,19 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
         } elseif ($mode === 'exec') {
             $progressBar = new ProgressBar($output);
             $output->writeln('<info>Executing ' . count($crawlerController->urlList) . ' requests right away:</info>');
-            $output->writeln('<info>' . implode(PHP_EOL, $crawlerController->urlList) . '</info>' . PHP_EOL);
+            $this->outputUrls($queueRows, $output);
             $output->writeln('<info>Processing</info>' . PHP_EOL);
 
             foreach ($progressBar->iterate($crawlerController->queueEntries) as $queueRec) {
                 $p = $jsonCompatibilityConverter->convert($queueRec['parameters']);
+                if (is_bool($p)) {
+                    continue;
+                }
 
                 $progressBar->clear();
-                $output->writeln('<info>' . $p['url'] . ' (' . implode(',', $p['procInstructions']) . ') => ' . '</info>' . PHP_EOL);
+                $output->writeln(
+                    '<info>' . $p['url'] . ' (' . implode(',', $p['procInstructions']) . ') => ' . '</info>' . PHP_EOL
+                );
                 $progressBar->display();
 
                 $result = $crawlerController->readUrlFromArray($queueRec);
@@ -191,23 +187,37 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
 
                 $progressBar->clear();
                 if (is_array($requestResult)) {
-                    $resLog = is_array($requestResult['log']) ? PHP_EOL . chr(9) . chr(9) . implode(PHP_EOL . chr(9) . chr(9), $requestResult['log']) : '';
+                    $resLog = array_key_exists('log', $requestResult)
+                    && is_array($requestResult['log']) ? PHP_EOL . chr(9) . chr(9) .
+                        implode(PHP_EOL . chr(9) . chr(9), $requestResult['log']) : '';
                     $output->writeln('<info>OK: ' . $resLog . '</info>' . PHP_EOL);
                 } else {
-                    $output->writeln('<error>Error checking Crawler Result:  ' . substr(preg_replace('/\s+/', ' ', strip_tags($resultContent)), 0, 30000) . '...' . PHP_EOL . '</error>' . PHP_EOL);
+                    $output->writeln(
+                        '<error>Error checking Crawler Result:  ' . substr(
+                            preg_replace('/\s+/', ' ', strip_tags((string) $resultContent)),
+                            0,
+                            30000
+                        ) . '...' . PHP_EOL . '</error>' . PHP_EOL
+                    );
                 }
                 $progressBar->display();
             }
             $output->writeln('');
         } elseif ($mode === 'queue') {
-            $output->writeln('<info>Putting ' . count($crawlerController->urlList) . ' entries in queue:</info>' . PHP_EOL);
-            $output->writeln('<info>' . implode(PHP_EOL, $crawlerController->urlList) . '</info>' . PHP_EOL);
+            $output->writeln(
+                '<info>Putting ' . count($crawlerController->urlList) . ' entries in queue:</info>' . PHP_EOL
+            );
+            $this->outputUrls($queueRows, $output);
         } else {
-            $output->writeln('<info>' . count($crawlerController->urlList) . ' entries found for processing. (Use "mode" to decide action):</info>' . PHP_EOL);
-            $output->writeln('<info>' . implode(PHP_EOL, $crawlerController->urlList) . '</info>' . PHP_EOL);
+            $output->writeln(
+                '<info>' . count(
+                    $crawlerController->urlList
+                ) . ' entries found for processing. (Use "mode" to decide action):</info>' . PHP_EOL
+            );
+            $this->outputUrls($queueRows, $output);
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     /**
@@ -217,5 +227,17 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
     {
         $parameter = trim($conf);
         return ($parameter !== '' ? GeneralUtility::trimExplode(',', $parameter) : []);
+    }
+
+    private function outputUrls(array $queueRows, OutputInterface $output): void
+    {
+        /** @var QueueRow $row */
+        foreach ($queueRows as $row) {
+            if (empty($row->message)) {
+                $output->writeln('<info>' . $row->urls . '</info>');
+            } else {
+                $output->writeln('<warning>' . $row->pageTitle . ': ' . $row->message . '</warning>');
+            }
+        }
     }
 }

@@ -24,12 +24,9 @@ use Assert\Assert;
 /**
  * @internal since v9.2.5
  */
-final class CrawlAction
+final class CrawlAction implements \Stringable
 {
-    /**
-     * @var string
-     */
-    private $crawlAction;
+    private readonly string $crawlAction;
 
     public function __construct(string $crawlAction)
     {

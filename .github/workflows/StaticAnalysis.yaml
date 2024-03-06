@@ -13,10 +13,10 @@ jobs:
         name: PHPstan
         runs-on: ubuntu-latest
         steps:
-            -   uses: actions/checkout@v2
+            -   uses: actions/checkout@v3
             -   id: composer-cache
                 run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-            -   uses: actions/cache@v1
+            -   uses: actions/cache@v3
                 with:
                     path: ${{ steps.composer-cache.outputs.dir }}
                     key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -24,7 +24,7 @@ jobs:
                         ${{ runner.os }}-composer-
             -   uses: shivammathur/setup-php@v2
                 with:
-                    php-version: 7.4
+                    php-version: 8.1
                     coverage: none
             -   run: composer install --no-progress
             -   run: composer analyse
@@ -33,10 +33,10 @@ jobs:
         name: Rector
         runs-on: ubuntu-latest
         steps:
-            -   uses: actions/checkout@v2
+            -   uses: actions/checkout@v3
             -   id: composer-cache
                 run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-            -   uses: actions/cache@v1
+            -   uses: actions/cache@v3
                 with:
                     path: ${{ steps.composer-cache.outputs.dir }}
                     key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -44,7 +44,7 @@ jobs:
                         ${{ runner.os }}-composer-
             -   uses: shivammathur/setup-php@v2
                 with:
-                    php-version: 7.4
+                    php-version: 8.1
                     coverage: none
             -   run: composer install --no-progress
             -   run: composer rector
@@ -53,10 +53,10 @@ jobs:
         name: Code Style
         runs-on: ubuntu-latest
         steps:
-            -   uses: actions/checkout@v2
+            -   uses: actions/checkout@v3
             -   id: composer-cache
                 run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-            -   uses: actions/cache@v1
+            -   uses: actions/cache@v3
                 with:
                     path: ${{ steps.composer-cache.outputs.dir }}
                     key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -64,7 +64,7 @@ jobs:
                         ${{ runner.os }}-composer-
             -   uses: shivammathur/setup-php@v2
                 with:
-                    php-version: 7.4
+                    php-version: 8.1
                     coverage: none
             -   run: composer install --no-progress
             -   run: composer cs-fix
@@ -73,10 +73,10 @@ jobs:
         name: Psalm
         runs-on: ubuntu-latest
         steps:
-            -   uses: actions/checkout@v2
+            -   uses: actions/checkout@v3
             -   id: composer-cache
                 run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-            -   uses: actions/cache@v1
+            -   uses: actions/cache@v3
                 with:
                     path: ${{ steps.composer-cache.outputs.dir }}
                     key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -84,9 +84,13 @@ jobs:
                         ${{ runner.os }}-composer-
             -   uses: shivammathur/setup-php@v2
                 with:
-                    php-version: 7.4
+                    php-version: 8.1
                     coverage: none
+                    tools: phive
 
-            -   run: composer install --no-scripts --no-progress
-            -   run: .Build/bin/psalm --shepherd
+            -   name: "Install tools (Phive)"
+                run: "phive install --trust-gpg-keys 12CE0F1D262429A5"
+
+            -   run: composer require --dev typo3/cms-core:^12.2 --no-progress
+            -   run: tools/psalm --shepherd
 

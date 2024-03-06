@@ -24,7 +24,6 @@ use AOE\Crawler\Tests\Functional\SiteBasedTestTrait;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 class UrlServiceTest extends FunctionalTestCase
 {
@@ -45,10 +44,7 @@ class UrlServiceTest extends FunctionalTestCase
      */
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    /**
-     * @var UrlService
-     */
-    protected $subject;
+    protected \AOE\Crawler\Service\UrlService $subject;
 
     /**
      * Creates the test environment.
@@ -57,7 +53,7 @@ class UrlServiceTest extends FunctionalTestCase
     {
         parent::setUp();
 
-        $this->subject = GeneralUtility::makeInstance(ObjectManager::class)->get(UrlService::class);
+        $this->subject = GeneralUtility::makeInstance(UrlService::class);
 
         $this->importDataSet(__DIR__ . '/../data/pages.xml');
         $this->importDataSet(__DIR__ . '/../data/sys_template.xml');
@@ -77,135 +73,122 @@ class UrlServiceTest extends FunctionalTestCase
      * @test
      * @dataProvider getUrlFromPageAndQueryParametersReturnExpectedUrlDataProvider
      */
-    public function getUrlFromPageAndQueryParametersReturnExpectedUrl($pageId, $queryString, $alternativeBaseUrl, $httpsOrHttp, Uri $expected): void
-    {
-        $actual = $this->subject->getUrlFromPageAndQueryParameters($pageId, $queryString, $alternativeBaseUrl, $httpsOrHttp);
-
-        self::assertEquals(
-            $expected->getHost(),
-            $actual->getHost()
+    public function getUrlFromPageAndQueryParametersReturnExpectedUrl(
+        $pageId,
+        $queryString,
+        $alternativeBaseUrl,
+        $httpsOrHttp,
+        Uri $expected
+    ): void {
+        $actual = $this->subject->getUrlFromPageAndQueryParameters(
+            $pageId,
+            $queryString,
+            $alternativeBaseUrl,
+            $httpsOrHttp
         );
 
-        self::assertEquals(
-            $expected->getScheme(),
-            $actual->getScheme()
-        );
+        self::assertEquals($expected->getHost(), $actual->getHost());
 
-        self::assertEquals(
-            $expected->getPath(),
-            $actual->getPath()
-        );
+        self::assertEquals($expected->getScheme(), $actual->getScheme());
 
-        self::assertEquals(
-            $expected->getPort(),
-            $actual->getPort()
-        );
+        self::assertEquals($expected->getPath(), $actual->getPath());
 
-        self::assertStringContainsString(
-            $expected->getQuery(),
-            $actual->getQuery()
-        );
+        self::assertEquals($expected->getPort(), $actual->getPort());
 
-        self::assertEquals(
-            $expected->getUserInfo(),
-            $actual->getUserInfo()
-        );
+        self::assertStringContainsString($expected->getQuery(), $actual->getQuery());
+
+        self::assertEquals($expected->getUserInfo(), $actual->getUserInfo());
     }
 
-    /**
-     * @return array[]
-     */
-    public function getUrlFromPageAndQueryParametersReturnExpectedUrlDataProvider(): array
+    public function getUrlFromPageAndQueryParametersReturnExpectedUrlDataProvider(): iterable
     {
         $uri = new Uri();
 
-        return [
-            'Site is not instance of Site::class + http' => [
-                'pageId' => 0,
-                'queryString' => '?id=1234&param=foo',
-                'alternativeBaseUrl' => 'http://www.example.com',
-                'httpsOrHttp' => -1,
-                'expected' =>
-                    $uri->withScheme('http')
-                        ->withHost('www.example.com')
-                        ->withPath('/index.php')
-                        ->withQuery('id=1234&param=foo'),
-            ],
-            'Site is not instance of Site::class + https' => [
-                'pageId' => 0,
-                'queryString' => '?id=1234&param=foo',
-                'alternativeBaseUrl' => 'https://www.example.com',
-                'httpsOrHttp' => 1,
-                'expected' =>
-                    $uri->withScheme('https')
-                        ->withHost('www.example.com')
-                        ->withPath('/index.php')
-                        ->withQuery('?id=1234&param=foo'),
-            ],
-            'Site is not instance of Site::class + https + userinfo' => [
-                'pageId' => 0,
-                'queryString' => '?id=1234&param=foo',
-                'alternativeBaseUrl' => 'https://username:password@www.example.com',
-                'httpsOrHttp' => 1,
-                'expected' =>
-                    $uri->withScheme('https')
-                        ->withHost('www.example.com')
-                        ->withPath('/index.php')
-                        ->withQuery('?id=1234&param=foo')
-                        ->withUserInfo('username', 'password'),
-            ],
-            'Only with pageId' => [
-                'pageId' => 1,
-                'queryString' => '',
-                'alternativeBaseUrl' => '',
-                'httpsOrHttp' => 1,
-                'expected' =>
-                    $uri->withScheme('https')
-                        ->withHost('acme.us')
-                        ->withPath('/'),
-            ],
-            'With PageId and QueryString' => [
-                'pageId' => 1,
-                'queryString' => 'id=21&q=crawler',
-                'alternativeBaseUrl' => '',
-                'httpsOrHttp' => 1,
-                'expected' => $uri->withScheme('https')
+        yield 'Site is not instance of Site::class + http' => [
+            'pageId' => 1234,
+            'queryString' => '?id=1234&param=foo',
+            'alternativeBaseUrl' => 'http://www.example.com',
+            'httpsOrHttp' => -1,
+            'expected' =>
+                $uri->withScheme('http')
+                    ->withHost('www.example.com')
+                    ->withPath('/pageuid-1234')
+                    ->withQuery('param=foo'),
+        ];
+        yield 'Site is not instance of Site::class + https' => [
+            'pageId' => 1234,
+            'queryString' => '?id=1234&param=foo',
+            'alternativeBaseUrl' => 'https://www.example.com',
+            'httpsOrHttp' => 1,
+            'expected' =>
+                $uri->withScheme('https')
+                    ->withHost('www.example.com')
+                    ->withPath('/pageuid-1234')
+                    ->withQuery('param=foo'),
+        ];
+        yield 'Site is not instance of Site::class + https + userinfo' => [
+            'pageId' => 1234,
+            'queryString' => '?id=1234&param=foo',
+            'alternativeBaseUrl' => 'https://username:password@www.example.com',
+            'httpsOrHttp' => 1,
+            'expected' =>
+                $uri->withScheme('https')
+                    ->withHost('www.example.com')
+                    ->withPath('/pageuid-1234')
+                    ->withQuery('param=foo')
+                    ->withUserInfo('username', 'password'),
+        ];
+        yield 'Only with pageId' => [
+            'pageId' => 1,
+            'queryString' => '',
+            'alternativeBaseUrl' => '',
+            'httpsOrHttp' => 1,
+            'expected' =>
+                $uri->withScheme('https')
                     ->withHost('acme.us')
+                    ->withPath('/'),
+        ];
+        yield 'With PageId and QueryString' => [
+            'pageId' => 1,
+            'queryString' => 'id=21&q=crawler',
+            'alternativeBaseUrl' => '',
+            'httpsOrHttp' => 1,
+            'expected' => $uri->withScheme('https')
+                ->withHost('acme.us')
+                ->withPath('/')
+                ->withQuery('q=crawler'),
+        ];
+        yield 'With PageId and QueryString (including Language (FR))' => [
+            'pageId' => 1,
+            'queryString' => 'id=21&L=1&q=crawler',
+            'alternativeBaseUrl' => '',
+            'httpsOrHttp' => 1,
+            'expected' =>
+                $uri->withScheme('https')
+                    ->withHost('acme.fr')
                     ->withPath('/')
                     ->withQuery('q=crawler'),
-            ],
-            'With PageId and QueryString (including Language (FR))' => [
-                'pageId' => 1,
-                'queryString' => 'id=21&L=1&q=crawler',
-                'alternativeBaseUrl' => '',
-                'httpsOrHttp' => 1,
-                'expected' =>
-                    $uri->withScheme('https')
-                        ->withHost('acme.fr')
-                        ->withPath('/')
-                        ->withQuery('q=crawler'),
-            ],
-            'With alternative BaseUrl' => [
-                'pageId' => 1,
-                'queryString' => '',
-                'alternativeBaseUrl' => 'https://www.acme.co.uk',
-                'httpsOrHttp' => 1,
-                'expected' =>
-                    $uri->withScheme('https')
-                        ->withHost('www.acme.co.uk')
-                        ->withPath('/'),
-            ],
-            'With alternative BaseUrl and port' => [
-                'pageId' => 1,
-                'queryString' => '',
-                'alternativeBaseUrl' => 'https://www.acme.co.uk:443',
-                'httpsOrHttp' => 1,
-                'expected' =>
-                    $uri->withScheme('https')
-                        ->withHost('www.acme.co.uk')
-                        ->withPath('/')
-                        ->withPort(443),
-            ],
+        ];
+        yield 'With alternative BaseUrl' => [
+            'pageId' => 1,
+            'queryString' => '',
+            'alternativeBaseUrl' => 'https://www.acme.co.uk',
+            'httpsOrHttp' => 1,
+            'expected' =>
+                $uri->withScheme('https')
+                    ->withHost('www.acme.co.uk')
+                    ->withPath('/'),
+        ];
+        yield 'With alternative BaseUrl and port' => [
+            'pageId' => 1,
+            'queryString' => '',
+            'alternativeBaseUrl' => 'https://www.acme.co.uk:443',
+            'httpsOrHttp' => 1,
+            'expected' =>
+                $uri->withScheme('https')
+                    ->withHost('www.acme.co.uk')
+                    ->withPath('/')
+                    ->withPort(443),
         ];
     }
 }

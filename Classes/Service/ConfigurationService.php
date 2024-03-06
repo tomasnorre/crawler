@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AOE\Crawler\Service;
 
 /*
- * (c) 2021 AOE GmbH <dev@aoe.com>
+ * (c) 2022 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -33,7 +33,6 @@ use TYPO3\CMS\Core\Type\Bitmask\Permission;
 use TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * @internal since v9.2.5
@@ -44,52 +43,51 @@ class ConfigurationService
      * @var BackendUserAuthentication|null
      */
     private $backendUser;
+    private readonly array $extensionSettings;
 
-    /**
-     * @var UrlService
-     */
-    private $urlService;
-
-    /**
-     * @var ConfigurationRepository
-     */
-    private $configurationRepository;
-
-    /**
-     * @var array
-     */
-    private $extensionSettings;
-
-    public function __construct()
-    {
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->urlService = GeneralUtility::makeInstance(UrlService::class);
-        $this->configurationRepository = $objectManager->get(ConfigurationRepository::class);
-        $this->extensionSettings = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class)->getExtensionConfiguration();
+    public function __construct(
+        private readonly UrlService $urlService,
+        private readonly ConfigurationRepository $configurationRepository
+    ) {
+        $this->extensionSettings = GeneralUtility::makeInstance(
+            ExtensionConfigurationProvider::class
+        )->getExtensionConfiguration();
     }
 
     public static function removeDisallowedConfigurations(array $allowedConfigurations, array $configurations): array
     {
-        if (! empty($allowedConfigurations)) {
-            // 	remove configuration that does not match the current selection
-            foreach ($configurations as $confKey => $confArray) {
-                if (! in_array($confKey, $allowedConfigurations, true)) {
-                    unset($configurations[$confKey]);
-                }
+        if (empty($allowedConfigurations)) {
+            return $configurations;
+        }
+        // 	remove configuration that does not match the current selection
+        foreach ($configurations as $confKey => $confArray) {
+            if (!in_array($confKey, $allowedConfigurations, true)) {
+                unset($configurations[$confKey]);
             }
         }
+
         return $configurations;
     }
 
-    public function getConfigurationFromPageTS(array $pageTSConfig, int $pageId, array $res, string $mountPoint = ''): array
-    {
-        $maxUrlsToCompile = MathUtility::forceIntegerInRange($this->extensionSettings['maxCompileUrls'], 1, 1000000000, 10000);
+    public function getConfigurationFromPageTS(
+        array $pageTSConfig,
+        int $pageId,
+        array $res,
+        string $mountPoint = ''
+    ): array {
+        $defaultCompileUrls = 10_000;
+        $maxUrlsToCompile = MathUtility::forceIntegerInRange(
+            $this->extensionSettings['maxCompileUrls'] ?? $defaultCompileUrls,
+            1,
+            1_000_000_000,
+            $defaultCompileUrls
+        );
         $crawlerCfg = $pageTSConfig['tx_crawler.']['crawlerCfg.']['paramSets.'] ?? [];
         foreach ($crawlerCfg as $key => $values) {
-            if (! is_array($values)) {
+            if (!is_array($values)) {
                 continue;
             }
-            $key = str_replace('.', '', $key);
+            $key = str_replace('.', '', (string) $key);
             // Sub configuration for a single configuration string:
             $subCfg = (array) $crawlerCfg[$key . '.'];
             $subCfg['key'] = $key;
@@ -97,12 +95,14 @@ class ConfigurationService
             if (strcmp($subCfg['procInstrFilter'] ?? '', '')) {
                 $subCfg['procInstrFilter'] = implode(',', GeneralUtility::trimExplode(',', $subCfg['procInstrFilter']));
             }
-            $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $subCfg['pidsOnly'], true));
+            $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $subCfg['pidsOnly'] ?? '', true));
 
             // process configuration if it is not page-specific or if the specific page is the current page:
             // TODO: Check if $pidOnlyList can be kept as Array instead of imploded
-            if (! strcmp((string) $subCfg['pidsOnly'], '') || GeneralUtility::inList($pidOnlyList, strval($pageId))) {
-
+            if (!strcmp((string) ($subCfg['pidsOnly'] ?? ''), '') || GeneralUtility::inList(
+                $pidOnlyList,
+                strval($pageId)
+            )) {
                 // Explode, process etc.:
                 $res[$key] = [];
                 $res[$key]['subCfg'] = $subCfg;
@@ -112,7 +112,11 @@ class ConfigurationService
 
                 $url = '?id=' . $pageId;
                 $url .= $mountPoint !== '' ? '&MP=' . $mountPoint : '';
-                $res[$key]['URLs'] = $this->getUrlService()->compileUrls($res[$key]['paramExpanded'], [$url], $maxUrlsToCompile);
+                $res[$key]['URLs'] = $this->urlService->compileUrls(
+                    $res[$key]['paramExpanded'],
+                    [$url],
+                    $maxUrlsToCompile
+                );
             }
         }
         return $res;
@@ -120,23 +124,32 @@ class ConfigurationService
 
     public function getConfigurationFromDatabase(int $pageId, array $res): array
     {
-        $maxUrlsToCompile = MathUtility::forceIntegerInRange($this->extensionSettings['maxCompileUrls'], 1, 1000000000, 10000);
+        $maxUrlsToCompile = MathUtility::forceIntegerInRange(
+            $this->extensionSettings['maxCompileUrls'],
+            1,
+            1_000_000_000,
+            10000
+        );
 
         $crawlerConfigurations = $this->configurationRepository->getCrawlerConfigurationRecordsFromRootLine($pageId);
         foreach ($crawlerConfigurations as $configurationRecord) {
-
             // check access to the configuration record
-            if (empty($configurationRecord['begroups']) || $this->getBackendUser()->isAdmin() || UserService::hasGroupAccess($this->getBackendUser()->user['usergroup_cached_list'], $configurationRecord['begroups'])) {
+            if (empty($configurationRecord['begroups']) || $this->getBackendUser()->isAdmin() || UserService::hasGroupAccess(
+                $this->getBackendUser()->user['usergroup_cached_list'],
+                $configurationRecord['begroups']
+            )) {
                 $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $configurationRecord['pidsonly'], true));
 
                 // process configuration if it is not page-specific or if the specific page is the current page:
                 // TODO: Check if $pidOnlyList can be kept as Array instead of imploded
-                if (! strcmp($configurationRecord['pidsonly'], '') || GeneralUtility::inList($pidOnlyList, strval($pageId))) {
+                if (!strcmp((string) $configurationRecord['pidsonly'], '') || GeneralUtility::inList(
+                    $pidOnlyList,
+                    strval($pageId)
+                )) {
                     $key = $configurationRecord['name'];
 
                     // don't overwrite previously defined paramSets
-                    if (! isset($res[$key])) {
-
+                    if (!isset($res[$key])) {
                         /* @var $TSparserObject TypoScriptParser */
                         $TSparserObject = GeneralUtility::makeInstance(TypoScriptParser::class);
                         $TSparserObject->parse($configurationRecord['processing_instruction_parameters_ts']);
@@ -151,12 +164,18 @@ class ConfigurationService
                             'key' => $key,
                         ];
 
-                        if (! in_array($pageId, $this->expandExcludeString($subCfg['exclude']), true)) {
+                        if (!in_array($pageId, $this->expandExcludeString($subCfg['exclude']), true)) {
                             $res[$key] = [];
                             $res[$key]['subCfg'] = $subCfg;
-                            $res[$key]['paramParsed'] = GeneralUtility::explodeUrl2Array($configurationRecord['configuration']);
+                            $res[$key]['paramParsed'] = GeneralUtility::explodeUrl2Array(
+                                $configurationRecord['configuration']
+                            );
                             $res[$key]['paramExpanded'] = $this->expandParameters($res[$key]['paramParsed'], $pageId);
-                            $res[$key]['URLs'] = $this->getUrlService()->compileUrls($res[$key]['paramExpanded'], ['?id=' . $pageId], $maxUrlsToCompile);
+                            $res[$key]['URLs'] = $this->urlService->compileUrls(
+                                $res[$key]['paramExpanded'],
+                                ['?id=' . $pageId],
+                                $maxUrlsToCompile
+                            );
                             $res[$key]['origin'] = 'tx_crawler_configuration_' . $configurationRecord['uid'];
                         }
                     }
@@ -172,41 +191,39 @@ class ConfigurationService
         static $expandedExcludeStringCache;
         static $treeCache = [];
 
-        if (empty($expandedExcludeStringCache[$excludeString])) {
-            $pidList = [];
-
-            if (! empty($excludeString)) {
-                /** @var PageTreeView $tree */
-                $tree = GeneralUtility::makeInstance(PageTreeView::class);
-                $tree->init('AND ' . $this->getBackendUser()->getPagePermsClause(Permission::PAGE_SHOW));
-
-                $excludeParts = GeneralUtility::trimExplode(',', $excludeString);
-
-                foreach ($excludeParts as $excludePart) {
-                    [$pid, $depth] = GeneralUtility::trimExplode('+', $excludePart);
-
-                    // default is "page only" = "depth=0"
-                    if (empty($depth)) {
-                        $depth = (strpos($excludePart, '+') !== false) ? 99 : 0;
-                    }
-
-                    $pidList[] = (int) $pid;
-                    if ($depth > 0) {
-                        $pidList = $this->expandPidList($treeCache, $pid, $depth, $tree, $pidList);
-                    }
-                }
-            }
-
-            $expandedExcludeStringCache[$excludeString] = array_unique($pidList);
+        if (!empty($expandedExcludeStringCache[$excludeString])) {
+            return $expandedExcludeStringCache[$excludeString];
         }
 
-        return $expandedExcludeStringCache[$excludeString];
-    }
+        $pidList = [];
 
-    protected function getUrlService(): UrlService
-    {
-        $this->urlService = $this->urlService ?? GeneralUtility::makeInstance(UrlService::class);
-        return $this->urlService;
+        if (!empty($excludeString)) {
+            /** @var PageTreeView $tree */
+            $tree = GeneralUtility::makeInstance(PageTreeView::class);
+            $tree->init('AND ' . $this->getBackendUser()->getPagePermsClause(Permission::PAGE_SHOW));
+
+            $excludeParts = GeneralUtility::trimExplode(',', $excludeString);
+
+            foreach ($excludeParts as $excludePart) {
+                $explodedExcludePart = GeneralUtility::trimExplode('+', $excludePart);
+                $pid = isset($explodedExcludePart[0]) ? (int) $explodedExcludePart[0] : 0;
+                $depth = isset($explodedExcludePart[1]) ? (int) $explodedExcludePart[1] : null;
+
+                // default is "page only" = "depth=0"
+                if (empty($depth)) {
+                    $depth = (str_contains($excludePart, '+')) ? 99 : 0;
+                }
+
+                $pidList[] = $pid;
+                if ($depth > 0) {
+                    $pidList = $this->expandPidList($treeCache, $pid, $depth, $tree, $pidList);
+                }
+            }
+        }
+
+        $expandedExcludeStringCache[$excludeString] = array_unique($pidList);
+
+        return $expandedExcludeStringCache[$excludeString];
     }
 
     /**
@@ -219,12 +236,13 @@ class ConfigurationService
      *         - "_TABLE:[TCA table name];[_PID:[optional page id, default is current page]];[_ENABLELANG:1]" = Look up of table records from PID, filtering out deleted records. Example "_TABLE:tt_content; _PID:123"
      *        _ENABLELANG:1 picks only original records without their language overlays
      *         - Default: Literal value
+     * @throws \Doctrine\DBAL\DBALException
      */
     private function expandParameters(array $paramArray, int $pid): array
     {
         // Traverse parameter names:
         foreach ($paramArray as $parameter => $parameterValue) {
-            $parameterValue = trim($parameterValue);
+            $parameterValue = trim((string) $parameterValue);
 
             // If value is encapsulated in square brackets it means there are some ranges of values to find, otherwise the value is literal
             if ($this->isWrappedInSquareBrackets($parameterValue)) {
@@ -235,13 +253,11 @@ class ConfigurationService
                 // Explode parts and traverse them:
                 $parts = explode('|', $parameterValue);
                 foreach ($parts as $part) {
-
                     // Look for integer range: (fx. 1-34 or -40--30 // reads minus 40 to minus 30)
                     if (preg_match('/^(-?[0-9]+)\s*-\s*(-?[0-9]+)$/', trim($part), $reg)) {
                         $reg = $this->swapIfFirstIsLargerThanSecond($reg);
                         $paramArray = $this->addValuesInRange($reg, $paramArray, $parameter);
-                    } elseif (strpos(trim($part), '_TABLE:') === 0) {
-
+                    } elseif (str_starts_with(trim($part), '_TABLE:')) {
                         // Parse parameters:
                         $subparts = GeneralUtility::trimExplode(';', $part);
                         $subpartParams = [];
@@ -252,55 +268,12 @@ class ConfigurationService
 
                         // Table exists:
                         if (isset($GLOBALS['TCA'][$subpartParams['_TABLE']])) {
-                            $lookUpPid = isset($subpartParams['_PID']) ? intval($subpartParams['_PID']) : $pid;
-                            $recursiveDepth = isset($subpartParams['_RECURSIVE']) ? intval($subpartParams['_RECURSIVE']) : 0;
-                            $pidField = isset($subpartParams['_PIDFIELD']) ? trim($subpartParams['_PIDFIELD']) : 'pid';
-                            $where = $subpartParams['_WHERE'] ?? '';
-                            $addTable = $subpartParams['_ADDTABLE'] ?? '';
-
-                            $fieldName = $subpartParams['_FIELD'] ?: 'uid';
-                            if ($fieldName === 'uid' || $GLOBALS['TCA'][$subpartParams['_TABLE']]['columns'][$fieldName]) {
-                                $queryBuilder = $this->getQueryBuilder($subpartParams['_TABLE']);
-                                $pidArray = $this->getPidArray($recursiveDepth, $lookUpPid);
-
-                                $queryBuilder->getRestrictions()
-                                    ->removeAll()
-                                    ->add(GeneralUtility::makeInstance(DeletedRestriction::class));
-
-                                $queryBuilder
-                                    ->select($fieldName)
-                                    ->from($subpartParams['_TABLE'])
-                                    ->where(
-                                        $queryBuilder->expr()->in($pidField, $queryBuilder->createNamedParameter($pidArray, Connection::PARAM_INT_ARRAY)),
-                                        $where
-                                    );
-
-                                if (! empty($addTable)) {
-                                    // TODO: Check if this works as intended!
-                                    $queryBuilder->add('from', $addTable);
-                                }
-                                $transOrigPointerField = $GLOBALS['TCA'][$subpartParams['_TABLE']]['ctrl']['transOrigPointerField'];
-
-                                if ($subpartParams['_ENABLELANG'] && $transOrigPointerField) {
-                                    $queryBuilder->andWhere(
-                                        $queryBuilder->expr()->lte(
-                                            $transOrigPointerField,
-                                            0
-                                        )
-                                    );
-                                }
-
-                                $statement = $queryBuilder->execute();
-
-                                $rows = [];
-                                while ($row = $statement->fetch()) {
-                                    $rows[$row[$fieldName]] = $row;
-                                }
-
-                                if (is_array($rows)) {
-                                    $paramArray[$parameter] = array_merge($paramArray[$parameter], array_keys($rows));
-                                }
-                            }
+                            $paramArray = $this->extractParamsFromCustomTable(
+                                $subpartParams,
+                                $pid,
+                                $paramArray,
+                                $parameter
+                            );
                         }
                     } else {
                         // Just add value:
@@ -324,7 +297,7 @@ class ConfigurationService
 
     private function isWrappedInSquareBrackets(string $string): bool
     {
-        return (strpos($string, '[') === 0 && substr($string, -1) === ']');
+        return (str_starts_with($string, '[') && str_ends_with($string, ']'));
     }
 
     private function swapIfFirstIsLargerThanSecond(array $reg): array
@@ -363,12 +336,13 @@ class ConfigurationService
     }
 
     /**
-     * @param $parameter
-     * @param $path
+     * @psalm-param array-key $parameter
      */
-    private function runExpandParametersHook(array $paramArray, $parameter, $path, int $pid): array
+    private function runExpandParametersHook(array $paramArray, int|string $parameter, string $path, int $pid): array
     {
-        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/class.tx_crawler_lib.php']['expandParameters'])) {
+        if (is_array(
+            $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/class.tx_crawler_lib.php']['expandParameters'] ?? null
+        )) {
             $_params = [
                 'pObj' => &$this,
                 'paramArray' => &$paramArray,
@@ -388,7 +362,7 @@ class ConfigurationService
         if ($recursiveDepth > 0) {
             /** @var QueryGenerator $queryGenerator */
             $queryGenerator = GeneralUtility::makeInstance(QueryGenerator::class);
-            $pidList = $queryGenerator->getTreeList($lookUpPid, $recursiveDepth, 0, 1);
+            $pidList = $queryGenerator->getTreeList($lookUpPid, $recursiveDepth);
             $pidArray = GeneralUtility::intExplode(',', $pidList);
         } else {
             $pidArray = [$lookUpPid];
@@ -397,12 +371,12 @@ class ConfigurationService
     }
 
     /**
-     * @param $parameter
-     *
      * Traverse range, add values:
      * Limit to size of range!
+     *
+     * @psalm-param array-key $parameter
      */
-    private function addValuesInRange(array $reg, array $paramArray, $parameter): array
+    private function addValuesInRange(array $reg, array $paramArray, int|string $parameter): array
     {
         $runAwayBrake = 1000;
         for ($a = $reg[1]; $a <= $reg[2]; $a++) {
@@ -415,10 +389,7 @@ class ConfigurationService
         return $paramArray;
     }
 
-    /**
-     * @param $depth
-     */
-    private function expandPidList(array $treeCache, string $pid, $depth, PageTreeView $tree, array $pidList): array
+    private function expandPidList(array $treeCache, int $pid, int $depth, PageTreeView $tree, array $pidList): array
     {
         if (empty($treeCache[$pid][$depth])) {
             $tree->reset();
@@ -430,5 +401,64 @@ class ConfigurationService
             $pidList[] = (int) $data['row']['uid'];
         }
         return $pidList;
+    }
+
+    /**
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    private function extractParamsFromCustomTable(
+        array $subpartParams,
+        int $pid,
+        array $paramArray,
+        int|string $parameter
+    ): array {
+        $lookUpPid = isset($subpartParams['_PID']) ? (int) $subpartParams['_PID'] : $pid;
+        $recursiveDepth = isset($subpartParams['_RECURSIVE']) ? (int) $subpartParams['_RECURSIVE'] : 0;
+        $pidField = isset($subpartParams['_PIDFIELD']) ? trim((string) $subpartParams['_PIDFIELD']) : 'pid';
+        $where = $subpartParams['_WHERE'] ?? '';
+        $addTable = $subpartParams['_ADDTABLE'] ?? '';
+
+        $fieldName = ($subpartParams['_FIELD'] ?? '') ?: 'uid';
+        if ($fieldName === 'uid' || $GLOBALS['TCA'][$subpartParams['_TABLE']]['columns'][$fieldName]) {
+            $queryBuilder = $this->getQueryBuilder($subpartParams['_TABLE']);
+            $pidArray = $this->getPidArray($recursiveDepth, $lookUpPid);
+
+            $queryBuilder->getRestrictions()
+                ->removeAll()
+                ->add(GeneralUtility::makeInstance(DeletedRestriction::class));
+
+            $queryBuilder
+                ->select($fieldName)
+                ->from($subpartParams['_TABLE'])
+                ->where(
+                    $queryBuilder->expr()->in(
+                        $pidField,
+                        $queryBuilder->createNamedParameter($pidArray, Connection::PARAM_INT_ARRAY)
+                    ),
+                    $where
+                );
+
+            if (!empty($addTable)) {
+                // TODO: Check if this works as intended!
+                $queryBuilder->add('from', $addTable);
+            }
+            $transOrigPointerField = $GLOBALS['TCA'][$subpartParams['_TABLE']]['ctrl']['transOrigPointerField'] ?? false;
+
+            if (($subpartParams['_ENABLELANG'] ?? false) && $transOrigPointerField) {
+                $queryBuilder->andWhere($queryBuilder->expr()->lte($transOrigPointerField, 0));
+            }
+
+            $statement = $queryBuilder->executeQuery();
+
+            $rows = [];
+            while ($row = $statement->fetchAssociative()) {
+                $rows[$row[$fieldName]] = $row;
+            }
+
+            if (is_array($rows)) {
+                $paramArray[$parameter] = array_merge($paramArray[$parameter], array_keys($rows));
+            }
+        }
+        return $paramArray;
     }
 }

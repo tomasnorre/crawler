@@ -8,14 +8,18 @@ on:
     branches:
       - "main"
 
-
 jobs:
   Acceptance:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
-        typo3: [ ^10.4 ]
+        typo3:
+          - ^12.2
+        php:
+          - '8.1'
+          - '8.2'
+
     steps:
       - name: Get branch name (merge)
         if: github.event_name != 'pull_request'
@@ -29,29 +33,39 @@ jobs:
 
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: 7.4
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+          coverage: none
 
       - name: Version information
         run: |
           php -v
           composer --version
 
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - uses: jonaseberle/github-action-setup-ddev@v1
         with:
           ddevDir: ".devbox"
-      - run: |
+      - name: CodeCeption
+        run: |
+          export FROM_PATH='../../'
+          export TO_PATH=$(echo $GITHUB_WORKSPACE)
           cd .devbox
+          sed -i 's/php_version: "8.1"/php_version: "${{ matrix.php }}"/g' .ddev/config.yaml
+          sed -i "s|$FROM_PATH|$TO_PATH|g" .ddev/docker-compose.volume.yaml
+          ddev restart
           rm -rf vendor composer.lock
-          ddev composer require nimut/typo3-complete=${{ matrix.typo3 }} tomasnorre/crawler="dev-${{ env.BRANCH_NAME }}"
-          ddev start
-          ddev exec bin/typo3cms install:fixfolderstructure
-          ddev exec bin/typo3cms install:extensionsetupifpossible
-          ddev exec bin/typo3cms database:updateschema
-          ddev exec bin/typo3cms cache:flush
+          ddev composer require typo3/cms-core=${{ matrix.typo3 }}
+          ddev exec sudo apt remove -y php${{ matrix.php }}-uploadprogress
+          ddev exec bin/typo3 backend:lock
+          ddev exec bin/typo3 extension:setup
+          ddev exec bin/typo3 cache:flush
+          ddev exec bin/typo3 cache:warmup
+          ddev exec bin/typo3 upgrade:run
+          ddev exec bin/typo3 backend:unlock
           cd .. # Going back to "root" directory
           rm -rf .Build composer.lock
-          composer require nimut/typo3-complete=${{ matrix.typo3 }}
+          composer require typo3/cms-core=${{ matrix.typo3 }}
           wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
           chmod +x wait-for-it.sh
           docker ps
@@ -80,4 +94,54 @@ jobs:
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
           aws_bucket: ${{ secrets.AWS_BUCKET }}
           source_dir: 'Tests/Acceptance/_output/'
-          destination_dir: '${{ matrix.typo3 }}'
+          destination_dir: '${{ matrix.typo3 }}-${{ matrix.php }}'
+
+  NonComposer:
+    runs-on: self-hosted
+    strategy:
+      fail-fast: false
+      matrix:
+        typo3:
+          - 'v11'
+          - 'v11p80'
+
+    steps:
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          tools: composer:v2
+          coverage: none
+
+      - name: Version information
+        run: |
+          php -v
+          composer --version
+
+      - uses: actions/checkout@v3
+      - run: |
+          cd .devbox/.ddev
+          docker-compose -f docker-compose.selenium.yaml up -d
+          cd ../.. # Going back to "root" directory
+          rm -rf .Build composer.lock
+          composer require nimut/typo3-complete:^11.5
+          wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
+          chmod +x wait-for-it.sh
+          docker ps
+          ./wait-for-it.sh -t 60 localhost:4444
+          php .Build/bin/codecept run --env=${{ matrix.typo3 }}-non-composer
+
+      - name: Upload Codeception output
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: codeception-results
+          path: Tests/Acceptance/_output/
+
+      - uses: shallwefootball/s3-upload-action@master
+        if: ${{ failure() }}
+        with:
+          aws_key_id: ${{ secrets.AWS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+          aws_bucket: ${{ secrets.AWS_BUCKET }}
+          source_dir: 'Tests/Acceptance/_output/'
+          destination_dir: '${{ matrix.typo3 }}-non-composer'

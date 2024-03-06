@@ -22,7 +22,6 @@ namespace AOE\Crawler\Domain\Model;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class Process
@@ -32,179 +31,112 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  */
 class Process extends AbstractEntity
 {
-    public const STATE_RUNNING = 'running';
+    final public const STATE_RUNNING = 'running';
+    final public const STATE_CANCELLED = 'cancelled';
+    final public const STATE_COMPLETED = 'completed';
 
-    public const STATE_CANCELLED = 'cancelled';
+    protected string $processId = '';
 
-    public const STATE_COMPLETED = 'completed';
+    protected bool $active = false;
+    protected int $ttl = 0;
+    protected int $assignedItemsCount = 0;
 
-    /**
-     * @var string
-     */
-    protected $processId = '';
+    protected bool $deleted = false;
 
-    /**
-     * @var bool
-     */
-    protected $active = false;
-
-    /**
-     * @var int
-     */
-    protected $ttl = 0;
-
-    /**
-     * @var int
-     */
-    protected $assignedItemsCount = 0;
-
-    /**
-     * @var bool
-     */
-    protected $deleted = false;
-
-    /**
-     * @var string
-     */
-    protected $systemProcessId = '';
-
-    /**
-     * @var QueueRepository
-     */
-    protected $queueRepository;
+    protected string $systemProcessId = '';
+    protected QueueRepository$queueRepository;
 
     public function __construct()
     {
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->queueRepository = $objectManager->get(QueueRepository::class);
+        $this->queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
     }
 
-    /**
-     * @return string
-     */
-    public function getProcessId()
+    public function getProcessId(): string
     {
         return $this->processId;
     }
 
-    /**
-     * @param string $processId
-     */
-    public function setProcessId($processId): void
+    public function setProcessId(string $processId): void
     {
         $this->processId = $processId;
     }
 
-    /**
-     * @return bool
-     */
-    public function isActive()
+    public function isActive(): bool
     {
         return $this->active;
     }
 
-    /**
-     * @param bool $active
-     */
-    public function setActive($active): void
+    public function setActive(bool $active): void
     {
         $this->active = $active;
     }
 
-    /**
-     * @return int
-     */
-    public function getTtl()
+    public function getTtl(): int
     {
         return $this->ttl;
     }
 
-    /**
-     * @param int $ttl
-     */
-    public function setTtl($ttl): void
+    public function setTtl(int $ttl): void
     {
         $this->ttl = $ttl;
     }
 
-    /**
-     * @return int
-     */
-    public function getAssignedItemsCount()
+    public function getAssignedItemsCount(): int
     {
         return $this->assignedItemsCount;
     }
 
-    /**
-     * @param int $assignedItemsCount
-     */
-    public function setAssignedItemsCount($assignedItemsCount): void
+    public function setAssignedItemsCount(int $assignedItemsCount): void
     {
         $this->assignedItemsCount = $assignedItemsCount;
     }
 
-    /**
-     * @return bool
-     */
-    public function isDeleted()
+    public function isDeleted(): bool
     {
         return $this->deleted;
     }
 
-    /**
-     * @param bool $deleted
-     */
-    public function setDeleted($deleted): void
+    public function setDeleted(bool $deleted): void
     {
         $this->deleted = $deleted;
     }
 
-    /**
-     * @return string
-     */
-    public function getSystemProcessId()
+    public function getSystemProcessId(): string
     {
         return $this->systemProcessId;
     }
 
-    /**
-     * @param string $systemProcessId
-     */
-    public function setSystemProcessId($systemProcessId): void
+    public function setSystemProcessId(string $systemProcessId): void
     {
         $this->systemProcessId = $systemProcessId;
     }
 
     /**
      * Returns the difference between first and last processed item
-     *
-     * @return int
      */
-    public function getRuntime()
+    public function getRuntime(): int
     {
         $lastItem = $this->getQueueRepository()->findOldestEntryForProcess($this);
         $firstItem = $this->getQueueRepository()->findYoungestEntryForProcess($this);
-        return $lastItem['exec_time'] - $firstItem['exec_time'];
+        $startTime = $firstItem['exec_time'] ?? 0;
+        $endTime = $lastItem['exec_time'] ?? 0;
+        return $endTime - $startTime;
     }
 
     /**
      * Counts the number of items which need to be processed
-     *
-     * @return int
      * @codeCoverageIgnore
      */
-    public function getAmountOfItemsProcessed()
+    public function getAmountOfItemsProcessed(): int
     {
         return $this->getQueueRepository()->countExecutedItemsByProcess($this);
     }
 
     /**
      * Counts the number of items which still need to be processed
-     *
-     * @return int
      * @codeCoverageIgnore
      */
-    public function getItemsToProcess()
+    public function getItemsToProcess(): int
     {
         return $this->getQueueRepository()->countNonExecutedItemsByProcess($this);
     }
@@ -237,10 +169,8 @@ class Process extends AbstractEntity
 
     /**
      * Return the processes current state
-     *
-     * @return string
      */
-    public function getState()
+    public function getState(): string
     {
         if ($this->isActive() && $this->getProgress() < 100) {
             $stage = self::STATE_RUNNING;
@@ -254,7 +184,7 @@ class Process extends AbstractEntity
 
     private function getQueueRepository(): QueueRepository
     {
-        $this->queueRepository = $this->queueRepository ?? GeneralUtility::makeInstance(QueueRepository::class);
+        $this->queueRepository ??= GeneralUtility::makeInstance(QueueRepository::class);
         return $this->queueRepository;
     }
 }

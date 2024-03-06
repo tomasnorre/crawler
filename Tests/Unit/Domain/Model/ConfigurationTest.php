@@ -27,10 +27,7 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
  */
 class ConfigurationTest extends UnitTestCase
 {
-    /**
-     * @var Configuration
-     */
-    protected $subject;
+    protected \AOE\Crawler\Domain\Model\Configuration $subject;
 
     protected function setUp(): void
     {
@@ -64,55 +61,25 @@ class ConfigurationTest extends UnitTestCase
         $this->subject->setFeGroups($feGroups);
         $this->subject->setExclude($excludes);
 
-        self::assertEquals(
-            $name,
-            $this->subject->getName()
-        );
+        self::assertEquals($name, $this->subject->getName());
 
-        self::assertEquals(
-            $forceSsl,
-            $this->subject->isForceSsl()
-        );
+        self::assertEquals($forceSsl, $this->subject->isForceSsl());
 
-        self::assertEquals(
-            $processInstructionFilter,
-            $this->subject->getProcessingInstructionFilter()
-        );
+        self::assertEquals($processInstructionFilter, $this->subject->getProcessingInstructionFilter());
 
-        self::assertEquals(
-            $processInstructionParameters,
-            $this->subject->getProcessingInstructionParameters()
-        );
+        self::assertEquals($processInstructionParameters, $this->subject->getProcessingInstructionParameters());
 
-        self::assertEquals(
-            $configuration,
-            $this->subject->getConfiguration()
-        );
+        self::assertEquals($configuration, $this->subject->getConfiguration());
 
-        self::assertEquals(
-            $baseUrl,
-            $this->subject->getBaseUrl()
-        );
+        self::assertEquals($baseUrl, $this->subject->getBaseUrl());
 
-        self::assertEquals(
-            $pidOnly,
-            $this->subject->getPidsOnly()
-        );
+        self::assertEquals($pidOnly, $this->subject->getPidsOnly());
 
-        self::assertEquals(
-            $beGroups,
-            $this->subject->getBeGroups()
-        );
+        self::assertEquals($beGroups, $this->subject->getBeGroups());
 
-        self::assertEquals(
-            $feGroups,
-            $this->subject->getFeGroups()
-        );
+        self::assertEquals($feGroups, $this->subject->getFeGroups());
 
-        self::assertEquals(
-            $excludes,
-            $this->subject->getExclude()
-        );
+        self::assertEquals($excludes, $this->subject->getExclude());
     }
 
     public function injectSubject(Configuration $subject): void

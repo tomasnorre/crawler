@@ -34,30 +34,25 @@ class UserServiceTest extends UnitTestCase
      */
     public function hasGroupAccess(string $groupList, string $accessList, bool $expected): void
     {
-        self::assertEquals(
-            $expected,
-            UserService::hasGroupAccess($groupList, $accessList)
-        );
+        self::assertEquals($expected, UserService::hasGroupAccess($groupList, $accessList));
     }
 
-    public function hasGroupAccessDataProvider(): array
+    public function hasGroupAccessDataProvider(): iterable
     {
-        return [
-            'Do not have access' => [
-                'groupList' => '1,2,3',
-                'accessList' => '4,5,6',
-                'expected' => false,
-            ],
-            'Do have access' => [
-                'groupList' => '1,2,3,4',
-                'accessList' => '4,5,6',
-                'expected' => true,
-            ],
-            'Access List empty' => [
-                'groupList' => '1,2,3',
-                'accessList' => '',
-                'expected' => true,
-            ],
+        yield 'Do not have access' => [
+            'groupList' => '1,2,3',
+            'accessList' => '4,5,6',
+            'expected' => false,
+        ];
+        yield 'Do have access' => [
+            'groupList' => '1,2,3,4',
+            'accessList' => '4,5,6',
+            'expected' => true,
+        ];
+        yield 'Access List empty' => [
+            'groupList' => '1,2,3',
+            'accessList' => '',
+            'expected' => true,
         ];
     }
 }

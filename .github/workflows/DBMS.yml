@@ -1,0 +1,185 @@
+name: DBMS Compat Checks
+
+on:
+  pull_request:
+    branches:
+      - "**"
+  push:
+    branches:
+      - "main"
+
+jobs:
+  PostgreSQL:
+    name: PostgreSQL
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        postgres:
+          - '9.6'
+          - '10'
+          - '11'
+          - '12'
+          - '13'
+        typo3:
+          - 'dev-main'
+        php:
+          - '8.1'
+    steps:
+      - name: Set up PostgreSQL ${{ matrix.postgres }}
+        run: |
+          docker run -e POSTGRES_DB=typo3 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=root -d -p 5432:5432 postgres:${{ matrix.postgres }}
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up PHP Version ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+
+      - name: Install dependencies with typo3/cms-core:${{ matrix.typo3 }}
+        run: |
+          composer require typo3/cms-core:${{ matrix.typo3 }} --no-progress
+          git checkout composer.json
+          ln -nfs .Build/vendor/typo3/cms/typo3 typo3
+
+      - name: Wait for PostgreSQL
+        run: |
+          while ! nc -z localhost 5432; do
+            sleep 1;
+          done;
+          echo Database is up;
+
+      - name: Functional Tests
+        run: |
+          export "FUNCTIONAL_XML"=.Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml
+          rm -rf .Build/Web/typo3temp/
+          .Build/bin/phpunit --whitelist Classes --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
+        env:
+          typo3DatabaseDriver: pdo_pgsql
+          typo3DatabaseHost: 127.0.0.1
+          typo3DatabaseName: typo3
+          typo3DatabasePassword: root
+          typo3DatabaseUsername: root
+
+  SQLite:
+    name: SQLite
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        php:
+          - '8.1'
+        typo3:
+          - 'dev-main'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up PHP Version ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+
+      - name: Install dependencies with typo3/cms-core:${{ matrix.typo3 }}
+        run: |
+          composer require typo3/cms-core:${{ matrix.typo3 }} --no-progress
+
+      - name: Functional Tests
+        run: composer test:functional-sqlite
+
+  MariaDB:
+    name: MariaDB
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        mariadb:
+          - '10.2'
+          - '10.3'
+          - '10.4'
+          - '10.5'
+        typo3:
+          - 'dev-main'
+        php:
+          - '8.1'
+    steps:
+      - name: Set up MariaDB ${{ matrix.mariadb }}
+        uses: getong/mariadb-action@v1.1
+        with:
+          mariadb version: ${{ matrix.mariadb }}
+          mysql root password: 'root'
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up PHP Version ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+
+      - name: Install dependencies with typo3/cms-core:${{ matrix.typo3 }}
+        run: |
+          composer require typo3/cms-core:${{ matrix.typo3 }} --no-progress
+          git checkout composer.json
+          ln -nfs .Build/vendor/typo3/cms/typo3 typo3
+
+      - name: Functional Tests
+        run: |
+          export "FUNCTIONAL_XML"=.Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml
+          .Build/bin/phpunit --whitelist Classes --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
+        env:
+          typo3DatabaseHost: 127.0.0.1
+          typo3DatabaseName: typo3
+          typo3DatabasePassword: root
+          typo3DatabaseUsername: root
+
+  MySQL:
+    name: MySQL
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        mysql:
+          - '5.6'
+          - '5.7'
+          - '8.0'
+        typo3:
+          - '^12.2'
+        php:
+          - '8.1'
+    steps:
+      - name: Set up MySQL ${{ matrix.mysql }}
+        uses: mirromutth/mysql-action@v1.1
+        with:
+          mysql version: ${{ matrix.mysql }}
+          mysql root password: 'root'
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up PHP Version ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+
+      - name: Install dependencies with typo3/cms-core:${{ matrix.typo3 }}
+        run: |
+          composer require typo3/cms-core:${{ matrix.typo3 }} --no-progress
+          git checkout composer.json
+          ln -nfs .Build/vendor/typo3/cms/typo3 typo3
+
+      - name: Functional Tests
+        run: |
+          export "FUNCTIONAL_XML"=.Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml
+          .Build/bin/phpunit --whitelist Classes --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
+        env:
+          typo3DatabaseHost: 127.0.0.1
+          typo3DatabaseName: typo3
+          typo3DatabasePassword: root
+          typo3DatabaseUsername: root

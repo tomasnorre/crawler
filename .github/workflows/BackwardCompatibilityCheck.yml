@@ -1,0 +1,52 @@
+name: "Backwards Compatibility Check"
+
+on:
+  pull_request:
+    branches:
+      - "**"
+  push:
+    branches:
+      - "main"
+
+jobs:
+  BC-Breaks:
+    name: "Check Backwards Compatibility"
+    runs-on: "ubuntu-latest"
+
+    strategy:
+      matrix:
+        php-version:
+          - '8.1'
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v3"
+        with:
+          fetch-depth: 0
+
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          coverage: "pcov"
+          php-version: ${{ matrix.php-version }}
+          ini-values: memory_limit=-1
+          tools: composer:v2, cs2pr
+          extensions: curl
+
+
+      - name: "Cache dependencies"
+        uses: "actions/cache@v3"
+        with:
+          path: |
+            ~/.composer/cache
+            vendor
+          key: "php-${{ matrix.php-version }}"
+          restore-keys: "php-${{ matrix.php-version }}"
+
+      - name: "Roave Backward Compatibility Check"
+        run: |
+          # To ensure compability with the roave tool.
+          composer remove --dev nimut/testing-framework ssch/typo3-rector symplify/easy-coding-standard typo3/testing-framework
+          rm -rf .Build composer.lock
+          composer require --dev roave/backward-compatibility-check:"6.0.x-dev"
+          .Build/bin/roave-backward-compatibility-check

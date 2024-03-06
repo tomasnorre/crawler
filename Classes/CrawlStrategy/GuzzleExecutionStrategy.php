@@ -19,18 +19,21 @@ namespace AOE\Crawler\CrawlStrategy;
  * The TYPO3 project - inspiring people to share!
  */
 
+use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
+use TYPO3\CMS\Core\Http\Client\GuzzleClientFactory;
 use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Calls Guzzle / CURL (based on TYPO3 settings) for fetching a URL.
+ * @internal since v12.0.0
  */
-class GuzzleExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
+class GuzzleExecutionStrategy implements LoggerAwareInterface, CrawlStrategyInterface
 {
     use LoggerAwareTrait;
 
@@ -50,8 +53,7 @@ class GuzzleExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
         try {
             $url = (string) $url;
             $response = $this->getResponse($url, $options);
-            $contents = $response->getBody()->getContents();
-            return unserialize($contents);
+            return unserialize($response->getHeaderLine('X-T3Crawler-Meta'));
         } catch (RequestException $e) {
             $response = $e->getResponse();
             $message = ($response ? $response->getStatusCode() : 0)
@@ -63,17 +65,22 @@ class GuzzleExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
                 ['crawlerId' => $crawlerId]
             );
             return $message;
+        } catch (ConnectException $e) {
+            $message = $e->getCode() . chr(32) . $e->getMessage();
+
+            $this->logger->debug(
+                sprintf('Error while opening "%s" - ' . $message, $url),
+                ['crawlerId' => $crawlerId]
+            );
+            return $message;
         }
     }
 
     protected function getResponse(string $url, array $options): ResponseInterface
     {
-        return GeneralUtility::makeInstance(RequestFactory::class)
-            ->request(
-                $url,
-                'GET',
-                $options
-            );
+        $guzzleClientFactory = GeneralUtility::makeInstance(GuzzleClientFactory::class);
+        return GeneralUtility::makeInstance(RequestFactory::class, $guzzleClientFactory)
+            ->request($url, 'GET', $options);
     }
 
     /**

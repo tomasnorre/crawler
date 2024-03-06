@@ -69,14 +69,16 @@ class ItemProvider extends AbstractProvider
 
     protected function getAdditionalAttributes(string $itemName): array
     {
-        $crawlerConfiguration = BackendUtility::getRecordWSOL($this->table, $this->identifier);
+        $crawlerConfiguration = BackendUtility::getRecordWSOL($this->table, (int) $this->identifier);
 
         $additionalParameters = [];
         $additionalParameters[] = 'SET[function]=AOE\Crawler\Backend\BackendModule';
         $additionalParameters[] = 'SET[crawlaction]=start';
         $additionalParameters[] = 'configurationSelection[]=' . $crawlerConfiguration['name'];
         return [
-            'onclick' => 'top.goToModule(\'web_info\', 1, ' . GeneralUtility::quoteJSvalue('&' . implode('&', $additionalParameters)) . ');',
+            'onclick' => 'top.goToModule(\'web_info\', 1, ' . GeneralUtility::quoteJSvalue(
+                '&' . implode('&', $additionalParameters)
+            ) . ');',
         ];
     }
 }

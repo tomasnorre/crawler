@@ -26,8 +26,10 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
+/**
+ * @internal since v12.0.0
+ */
 class FlushQueueCommand extends Command
 {
     protected function configure(): void
@@ -47,11 +49,7 @@ It will remove queue entries and perform a cleanup.' . chr(10) . chr(10) .
               $ typo3 crawler:flushQueue pending
             '
         );
-        $this->addArgument(
-            'mode',
-            InputArgument::REQUIRED,
-            'What to clear: all, finished, pending'
-        );
+        $this->addArgument('mode', InputArgument::REQUIRED, 'What to clear: all, finished, pending');
     }
 
     /**
@@ -70,28 +68,30 @@ It will remove queue entries and perform a cleanup.' . chr(10) . chr(10) .
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-
         $queueFilter = new QueueFilter($input->getArgument('mode'));
 
         /** @var QueueRepository $queueRepository */
-        $queueRepository = $objectManager->get(QueueRepository::class);
+        $queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
 
         switch ($queueFilter) {
             case 'all':
                 $queueRepository->flushQueue($queueFilter);
-                $output->writeln('<info>All entries in Crawler queue will be flushed</info>');
+                $output->writeln('<info>All entries in Crawler queue have been flushed</info>');
                 break;
             case 'finished':
             case 'pending':
                 $queueRepository->flushQueue($queueFilter);
-                $output->writeln('<info>All entries in Crawler queue, with status: "' . $queueFilter . '" will be flushed</info>');
+                $output->writeln(
+                    '<info>All entries in Crawler queue with status "' . $queueFilter . '" have been flushed</info>'
+                );
                 break;
             default:
-                $output->writeln('<info>No matching parameters found.' . PHP_EOL . 'Try "typo3 help crawler:flushQueue" to see your options</info>');
+                $output->writeln(
+                    '<info>No matching parameters found.' . PHP_EOL . 'Try "typo3 help crawler:flushQueue" to see your options</info>'
+                );
                 break;
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

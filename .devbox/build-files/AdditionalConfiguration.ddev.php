@@ -19,4 +19,4 @@ $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['user'] = 'db';
 $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['password'] = 'db';
 $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['host'] = 'db';
 $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['port'] = '3306';
-$GLOBALS['TYPO3_CONF_VARS']['BE']['installToolPassword'] = '$P$CZqeoYBTHC0kXKny4tpTvBSzzV5wVY0'; /* joh316 */
+$GLOBALS['TYPO3_CONF_VARS']['BE']['installToolPassword'] = '$argon2i$v=19$m=65536,t=16,p=1$aVdpSkRCR1NVOE9abTFHaQ$Hy/cm62jADhVJXRqKE8Hd5Hbk8e22fb01Kkk/zzjT3I'; /* joh316 */

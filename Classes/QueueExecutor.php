@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AOE\Crawler;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2022 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -22,9 +22,10 @@ namespace AOE\Crawler;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy;
-use AOE\Crawler\CrawlStrategy\CrawlStrategy;
 use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
-use AOE\Crawler\Utility\SignalSlotUtility;
+use AOE\Crawler\CrawlStrategy\CrawlStrategyInterface;
+use AOE\Crawler\Event\AfterUrlCrawledEvent;
+use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -35,13 +36,12 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class QueueExecutor implements SingletonInterface
 {
-    /**
-     * @var CrawlStrategy
-     */
-    protected $crawlStrategy;
+    protected CrawlStrategyInterface $crawlStrategy;
 
-    public function __construct(CrawlStrategyFactory $crawlStrategyFactory)
-    {
+    public function __construct(
+        CrawlStrategyFactory $crawlStrategyFactory,
+        private readonly EventDispatcher $eventDispatcher
+    ) {
         $this->crawlStrategy = $crawlStrategyFactory->create();
     }
 
@@ -64,7 +64,7 @@ class QueueExecutor implements SingletonInterface
         if (! is_array($parameters) || empty($parameters)) {
             return 'ERROR';
         }
-        if ($parameters['_CALLBACKOBJ']) {
+        if (isset($parameters['_CALLBACKOBJ'])) {
             $className = $parameters['_CALLBACKOBJ'];
             unset($parameters['_CALLBACKOBJ']);
             $result = GeneralUtility::makeInstance(CallbackExecutionStrategy::class)
@@ -78,20 +78,16 @@ class QueueExecutor implements SingletonInterface
             $result = $this->crawlStrategy->fetchUrlContents($url, $crawlerId);
             if ($result !== false) {
                 $result = ['content' => json_encode($result)];
+                $this->eventDispatcher->dispatch(new AfterUrlCrawledEvent($parameters['url'], $result));
             }
-
-            $signalPayload = ['url' => $parameters['url'], 'result' => $result];
-            SignalSlotUtility::emitSignal(
-                self::class,
-                SignalSlotUtility::SIGNAL_URL_CRAWLED,
-                $signalPayload
-            );
         }
         return $result;
     }
 
     protected function generateCrawlerIdFromQueueItem(array $queueItem): string
     {
-        return $queueItem['qid'] . ':' . md5($queueItem['qid'] . '|' . $queueItem['set_id'] . '|' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']);
+        return $queueItem['qid'] . ':' . md5(
+            $queueItem['qid'] . '|' . $queueItem['set_id'] . '|' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']
+        );
     }
 }

@@ -1,0 +1,28 @@
+name: Auto Comment
+on:
+  - issues
+  - pull_request
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: wow-actions/auto-comment@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.CRAWLER_GITHUB_TOKEN }}
+          issuesOpened: |
+            👋 @{{ author }}
+            Thank you for raising an issue.
+
+            I'm out till end of September '22, so the response time will be longer than normal.
+            If you are looking for help, you can try to reach out to other users on the TYPO3 Slack in the #ext-crawler channel.
+
+            https://typo3.org/community/meet/how-to-use-slack-in-the-typo3-community
+
+            Please make sure you have given us as much context as possible.
+
+          pullRequestOpened: |
+            👋 @{{ author }}
+            Thank you for raising your pull request.
+            Please make sure you have followed our contributing guidelines. We will review it as soon as possible
+
+            I'm out till end of September '22, so the response time will be longer than normal.

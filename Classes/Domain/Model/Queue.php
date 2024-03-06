@@ -35,70 +35,19 @@ use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
  */
 class Queue extends AbstractEntity
 {
-    /**
-     * @var int
-     */
-    protected $qid = 0;
-
-    /**
-     * @var int
-     */
-    protected $pageId = 0;
-
-    /**
-     * @var string
-     */
-    protected $parameters = '';
-
-    /**
-     * @var string
-     */
-    protected $parametersHash = '';
-
-    /**
-     * @var string
-     */
-    protected $configurationHash = '';
-
-    /**
-     * @var bool
-     */
-    protected $scheduled = false;
-
-    /**
-     * @var int
-     */
-    protected $execTime = 0;
-
-    /**
-     * @var int
-     */
-    protected $setId = 0;
-
-    /**
-     * @var string
-     */
-    protected $resultData = '';
-
-    /**
-     * @var bool
-     */
-    protected $processScheduled = false;
-
-    /**
-     * @var string
-     */
-    protected $processId = '';
-
-    /**
-     * @var string
-     */
-    protected $processIdCompleted = '';
-
-    /**
-     * @var string
-     */
-    protected $configuration = '';
+    protected int $qid = 0;
+    protected int $pageId = 0;
+    protected string $parameters = '';
+    protected string $parametersHash = '';
+    protected string $configurationHash = '';
+    protected bool $scheduled = false;
+    protected int $execTime = 0;
+    protected int $setId = 0;
+    protected string $resultData = '';
+    protected bool $processScheduled = false;
+    protected string $processId = '';
+    protected string $processIdCompleted = '';
+    protected string $configuration = '';
 
     /**
      * @return int

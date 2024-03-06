@@ -1,27 +1,52 @@
-<f:layout name="BackendModule"/>
+<f:layout name="Module" />
 
-<f:section name="Headline">
-    <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.log"/>
-</f:section>
-
-<f:section name="DisplayActions">
-    <br/>
-    <br/>
-    <table class="crawlerLogActions">
-        <tr class="firstRow">
-            <td>{displayLogFilterHtml -> f:format.raw()}</td>
-            <td>{itemPerPageHtml -> f:format.raw()}</td>
-        </tr>
-        <tr>
-            <td colspan="2">{showResultLogHtml -> f:format.raw()}</td>
-        </tr>
-        <tr>
-            <td colspan="2">{showFeVarsHtml -> f:format.raw()}</td>
-        </tr>
-    </table>
-</f:section>
+<link rel="stylesheet" href="{f:uri.resource(path:'EXT:crawler/Resources/Public/Css/backend_crawler.css')}">
 
 <f:section name="Content">
+    <h3>
+    <f:if condition="{noPageSelected}">
+        <f:then>
+            <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noPageSelected" />
+        </f:then>
+        <f:else>
+            <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.log"/>
+        </f:else>
+    </f:if>
+    </h3>
+
+    <form action="{actionUrl}" method="post" >
+    <f:if condition="{displayActions} == 1">
+        <f:then>
+            {depthDropDownHtml -> f:format.raw()}
+            <br/>
+            <br/>
+            <table class="crawlerLogActions">
+                <tr class="firstRow">
+                    <td>
+                        <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.display"/>
+                        {displayLogFilterHtml -> f:format.raw()}
+                    </td>
+                    <td>
+                        <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.itemsPerPage"/>
+                        {itemPerPageHtml -> f:format.raw()}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        {showResultLogHtml -> f:format.raw()}&nbsp;
+                        <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showresultlog"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        {showFeVarsHtml -> f:format.raw()}&nbsp;
+                        <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.showfevars "/>
+                    </td>
+                </tr>
+            </table>
+        </f:then>
+    </f:if>
+
     <input type="hidden" name="id" value="{currentPageId}">
     <input type="hidden" value="{setId}" name="setID"/>
     <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.curtime"/>
@@ -53,11 +78,11 @@
             <input type="submit" class="btn btn-default"
                    value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.flushvisiblequeue')}"
                    name="_flush"
-                   onclick="return confirm('{f:translate(key: 'crawler/Resources/Private/Language/locallang.xlf:labels.confirmyouresure')}')"/>
+                   onclick="return confirm('{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.confirmyouresure')}')"/>
             <input type="submit" class="btn btn-default"
                    value="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.flushfullqueue')}"
                    name="_flush_all"
-                   onclick="return confirm('{f:translate(key: 'crawler/Resources/Private/Language/locallang.xlf:labels.confirmyouresure')}')"/>
+                   onclick="return confirm('{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.confirmyouresure')}')"/>
             <br>
             <br>
             <table class="table table-hover">
@@ -122,7 +147,7 @@
                             </f:then>
                             <f:else>
                                 <td><a href="{logEntry.qid.link}">{logEntry.qid.link-text}</a></td>
-                                <td><a href="{logEntry.refresh.link}">{logEntry.refresh.link-text -> f:format.raw()}</a> {logEntry.refresh.warning -> f:format.raw()}</td>
+                                <td><a href="{logEntry.refresh.link}" class="refreshLink">{logEntry.refresh.link-text -> f:format.raw()}</a> {logEntry.refresh.warning -> f:format.raw()}</td>
                                 <f:if condition="{showResultLog}">
                                     <f:then>
                                         <td>{logEntry.columns.result_log}</td>
@@ -136,17 +161,10 @@
                                                 </td>
                                             </f:then>
                                             <f:else>
-                                                <td>{logEntry.columns.scheduled -> f:format.date(format: 'd.m.Y H:i')}</td>
+                                                <td>{logEntry.columns.scheduled}</td>
                                             </f:else>
                                         </f:if>
-                                        <f:if condition="{logEntry.columns.exec_time} = '-'">
-                                            <f:then>
-                                                <td>{logEntry.columns.exec_time}</td>
-                                            </f:then>
-                                            <f:else>
-                                                <td>{logEntry.columns.exec_time -> f:format.date(format: 'd.m.Y H:i')}</td>
-                                            </f:else>
-                                        </f:if>
+                                        <td>{logEntry.columns.exec_time}</td>
                                     </f:else>
                                 </f:if>
                                 <td>{logEntry.columns.result_status}</td>
@@ -167,5 +185,6 @@
             </table>
         </f:else>
     </f:if>
+    </form>
 </f:section>
 

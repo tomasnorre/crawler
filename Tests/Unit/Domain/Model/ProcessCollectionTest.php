@@ -35,10 +35,7 @@ use PHPUnit\Framework\MockObject\MockObject;
  */
 class ProcessCollectionTest extends UnitTestCase
 {
-    /**
-     * @var ProcessCollection
-     */
-    protected $subject;
+    protected \AOE\Crawler\Domain\Model\ProcessCollection $subject;
 
     protected function setUp(): void
     {
@@ -70,10 +67,7 @@ class ProcessCollectionTest extends UnitTestCase
 
         $collection = new ProcessCollection($processes);
 
-        self::assertEquals(
-            ['11', '13'],
-            $collection->getProcessIds()
-        );
+        self::assertEquals(['11', '13'], $collection->getProcessIds());
     }
 
     /**
@@ -82,7 +76,7 @@ class ProcessCollectionTest extends UnitTestCase
     public function appendThrowsException(): void
     {
         self::expectException(\InvalidArgumentException::class);
-        self::expectExceptionCode(1593714821);
+        self::expectExceptionCode(1_593_714_821);
         $wrongObjectType = new \stdClass();
         $this->subject->append($wrongObjectType);
     }
@@ -96,10 +90,7 @@ class ProcessCollectionTest extends UnitTestCase
         $correctObjectType = $this->getAccessibleMock(Process::class, ['dummy'], [], '', false);
         $this->subject->append($correctObjectType);
 
-        self::assertEquals(
-            $correctObjectType,
-            $this->subject->offsetGet(0)
-        );
+        self::assertEquals($correctObjectType, $this->subject->offsetGet(0));
     }
 
     /**
@@ -108,7 +99,7 @@ class ProcessCollectionTest extends UnitTestCase
     public function offsetSetThrowsException(): void
     {
         self::expectException(\InvalidArgumentException::class);
-        self::expectExceptionCode(1593714822);
+        self::expectExceptionCode(1_593_714_822);
         $wrongObjectType = new \stdClass();
         $this->subject->offsetSet(100, $wrongObjectType);
     }
@@ -122,10 +113,7 @@ class ProcessCollectionTest extends UnitTestCase
         $correctObjectType = $this->getAccessibleMock(Process::class, ['dummy'], [], '', false);
         $this->subject->offsetSet(100, $correctObjectType);
 
-        self::assertEquals(
-            $correctObjectType,
-            $this->subject->offsetGet(100)
-        );
+        self::assertEquals($correctObjectType, $this->subject->offsetGet(100));
     }
 
     /**
@@ -136,12 +124,10 @@ class ProcessCollectionTest extends UnitTestCase
     public function offsetGetThrowsException(): void
     {
         self::expectException(NoIndexFoundException::class);
-        self::expectExceptionCode(1593714823);
+        self::expectExceptionCode(1_593_714_823);
+        self::expectExceptionMessageMatches('/^Index.*100.*Process are not available$/');
         $correctObjectType = $this->getAccessibleMock(Process::class, ['dummy'], [], '', false);
 
-        self::assertEquals(
-            $correctObjectType,
-            $this->subject->offsetGet(100)
-        );
+        self::assertEquals($correctObjectType, $this->subject->offsetGet(100));
     }
 }

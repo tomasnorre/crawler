@@ -43,10 +43,7 @@ class CrawlerControllerTest extends UnitTestCase
      */
     protected function setUp(): void
     {
-        $this->crawlerController = $this->createPartialMock(
-            CrawlerController::class,
-            []
-        );
+        $this->crawlerController = $this->createPartialMock(CrawlerController::class, []);
         $this->crawlerController->setLogger(new NullLogger());
 
         $configuration = [
@@ -94,23 +91,47 @@ class CrawlerControllerTest extends UnitTestCase
 
     /**
      * @test
+     */
+    public function getUrlsForPageRowSetsSkipMessageIfUidNotAnInteger(): void
+    {
+        $skipMessage = '';
+        $this->crawlerController->getUrlsForPageRow(['uid' => 'string'], $skipMessage);
+        self::assertEquals('PageUid "string" was not an integer', $skipMessage);
+    }
+
+    /**
+     * @test
      *
      * @dataProvider getUrlsForPageRowDataProvider
      */
-    public function getUrlsForPageRow(bool $checkIfPageSkipped, array $getUrlsForPages, array $pageRow, string $skipMessage, array $expected): void
-    {
+    public function getUrlsForPageRow(
+        bool $checkIfPageSkipped,
+        array $getUrlsForPages,
+        array $pageRow,
+        string $skipMessage,
+        array $expected
+    ): void {
         $mockedPageService = $this->createPartialMock(PageService::class, ['checkIfPageShouldBeSkipped']);
-        $mockedPageService->expects($this->any())->method('checkIfPageShouldBeSkipped')->will($this->returnValue($checkIfPageSkipped));
+        if ($checkIfPageSkipped) {
+            $mockedPageService->expects($this->any())->method('checkIfPageShouldBeSkipped')->will(
+                $this->returnValue($skipMessage)
+            );
+        } else {
+            $mockedPageService->expects($this->any())->method('checkIfPageShouldBeSkipped')->will(
+                $this->returnValue($checkIfPageSkipped)
+            );
+        }
 
         /** @var MockObject|CrawlerController $crawlerController */
         $crawlerController = $this->createPartialMock(CrawlerController::class, ['getPageService', 'getUrlsForPageId']);
-        $crawlerController->expects($this->any())->method('getPageService')->will($this->returnValue($mockedPageService));
-        $crawlerController->expects($this->any())->method('getUrlsForPageId')->will($this->returnValue($getUrlsForPages));
-
-        self::assertEquals(
-            $expected,
-            $crawlerController->getUrlsForPageRow($pageRow, $skipMessage)
+        $crawlerController->expects($this->any())->method('getPageService')->will(
+            $this->returnValue($mockedPageService)
         );
+        $crawlerController->expects($this->any())->method('getUrlsForPageId')->will(
+            $this->returnValue($getUrlsForPages)
+        );
+
+        self::assertEquals($expected, $crawlerController->getUrlsForPageRow($pageRow, $skipMessage));
     }
 
     /**
@@ -135,32 +156,38 @@ class CrawlerControllerTest extends UnitTestCase
 
         unset($configuration['paramExpanded'], $configuration['URLs']);
         $newCheckSum = md5(serialize($configuration));
-        self::assertEquals(
-            $newCheckSum,
-            $crawlerController->_call('getConfigurationHash', $configuration)
-        );
+        self::assertEquals($newCheckSum, $crawlerController->_call('getConfigurationHash', $configuration));
     }
 
-    /**
-     * @return array
-     */
-    public function getUrlsForPageRowDataProvider()
+    public function getUrlsForPageRowDataProvider(): iterable
     {
-        return [
-            'Message equals false, returns Urls from getUrlsForPages()' => [
-                'checkIfPageSkipped' => false,
-                'getUrlsForPages' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
-                'pageRow' => ['uid' => 2001],
-                '$skipMessage' => 'Just variable placeholder, not used in tests as parsed as reference',
-                'expected' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
-            ],
-            'Message string not empty, returns empty array' => [
-                'checkIfPageSkipped' => true,
-                'getUrlsForPages' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
-                'pageRow' => ['uid' => 2001],
-                '$skipMessage' => 'Just variable placeholder, not used in tests as parsed as reference',
-                'expected' => [],
-            ],
+        yield 'Message equals false, returns Urls from getUrlsForPages()' => [
+            'checkIfPageSkipped' => false,
+            'getUrlsForPages' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
+            'pageRow' => ['uid' => 2001],
+            '$skipMessage' => 'Just variable placeholder, not used in tests as parsed as reference',
+            'expected' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
+        ];
+        yield 'Message string not empty, returns empty array' => [
+            'checkIfPageSkipped' => true,
+            'getUrlsForPages' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
+            'pageRow' => ['uid' => 2001],
+            '$skipMessage' => 'Just variable placeholder, not used in tests as parsed as reference',
+            'expected' => [],
+        ];
+        yield 'PageRow Uid is string with int value' => [
+            'checkIfPageSkipped' => false,
+            'getUrlsForPages' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
+            'pageRow' => ['uid' => '2001'],
+            '$skipMessage' => 'Just variable placeholder, not used in tests as parsed as reference',
+            'expected' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
+        ];
+        yield 'PageRow Uid is string with string value' => [
+            'checkIfPageSkipped' => true,
+            'getUrlsForPages' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
+            'pageRow' => ['uid' => 'string'],
+            '$skipMessage' => 'PageUid "string" was not an integer',
+            'expected' => [],
         ];
     }
 
@@ -173,122 +200,111 @@ class CrawlerControllerTest extends UnitTestCase
     {
         $crawlerLib = $this->getAccessibleMock(CrawlerController::class, ['dummy'], [], '', false);
 
-        self::assertEquals(
-            $expected,
-            $crawlerLib->_call('getConfigurationHash', $configuration)
-        );
+        self::assertEquals($expected, $crawlerLib->_call('getConfigurationHash', $configuration));
     }
 
-    /**
-     * @return array
-     */
-    public function getConfigurationHasReturnsExpectedValueDataProvider()
+    public function getConfigurationHasReturnsExpectedValueDataProvider(): iterable
     {
-        return [
-            'Configuration with either paramExpanded nor URLs set' => [
-                'configuration' => [
-                    'testKey' => 'testValue',
-                    'paramExpanded' => '',
-                    'URLs' => '',
-                ],
-                'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22',
+        yield 'Configuration with either paramExpanded nor URLs set' => [
+            'configuration' => [
+                'testKey' => 'testValue',
+                'paramExpanded' => '',
+                'URLs' => '',
             ],
-            'Configuration with only paramExpanded set' => [
-                'configuration' => [
-                    'testKey' => 'testValue',
-                    'paramExpanded' => 'Value not important',
-                    'URLs' => '',
-                ],
-                'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22',
+            'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22',
+        ];
+        yield 'Configuration with only paramExpanded set' => [
+            'configuration' => [
+                'testKey' => 'testValue',
+                'paramExpanded' => 'Value not important',
+                'URLs' => '',
             ],
-            'Configuration with only URLS set' => [
-                'configuration' => [
-                    'testKey' => 'testValue',
-                    'paramExpanded' => '',
-                    'URLs' => 'Value not important',
-                ],
-                'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22',
+            'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22',
+        ];
+        yield 'Configuration with only URLS set' => [
+            'configuration' => [
+                'testKey' => 'testValue',
+                'paramExpanded' => '',
+                'URLs' => 'Value not important',
             ],
-            'Configuration with both paramExpanded and URLS set' => [
-                'configuration' => [
-                    'testKey' => 'testValue',
-                    'paramExpanded' => 'Value not important',
-                    'URLs' => 'Value not important',
-                ],
-                'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22',
+            'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22',
+        ];
+        yield 'Configuration with both paramExpanded and URLS set' => [
+            'configuration' => [
+                'testKey' => 'testValue',
+                'paramExpanded' => 'Value not important',
+                'URLs' => 'Value not important',
             ],
-            'Configuration with both paramExpanded and URLS set, will return same hash' => [
-                'configuration' => [
-                    'testKey' => 'testValue',
-                    'paramExpanded' => 'Value not important, but different than test case before',
-                    'URLs' => 'Value not important, but different than test case before',
-                ],
-                'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22',
+            'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22',
+        ];
+        yield 'Configuration with both paramExpanded and URLS set, will return same hash' => [
+            'configuration' => [
+                'testKey' => 'testValue',
+                'paramExpanded' => 'Value not important, but different than test case before',
+                'URLs' => 'Value not important, but different than test case before',
             ],
+            'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22',
+        ];
+    }
+
+    public function getConfigurationKeysDataProvider(): iterable
+    {
+        yield 'cliObject with no -conf' => [
+            'config' => ['-d' => 4, '-o' => 'url'],
+            'expected' => [],
+        ];
+        yield 'cliObject with one -conf' => [
+            'config' => ['-d' => 4, '-o' => 'url', '-conf' => 'default'],
+            'expected' => ['default'],
+        ];
+        yield 'cliObject with two -conf' => [
+            'config' => ['-d' => 4, '-o' => 'url', '-conf' => 'default,news'],
+            'expected' => ['default', 'news'],
+        ];
+    }
+
+    public function drawURLs_PIfilterDataProvider(): iterable
+    {
+        yield 'Not in list' => [
+            'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
+            'incomingProcInstructions' => ['tx_unknown_extension_instruction'],
+            'expected' => false,
+        ];
+        yield 'In list' => [
+            'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
+            'incomingProcInstructions' => ['tx_indexedsearch_reindex'],
+            'expected' => true,
+        ];
+        yield 'Twice in list' => [
+            'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
+            'incomingProcInstructions' => ['tx_indexedsearch_reindex', 'tx_indexedsearch_reindex'],
+            'expected' => true,
+        ];
+        yield 'Empty incomingProcInstructions' => [
+            'piString' => '',
+            'incomingProcInstructions' => [],
+            'expected' => true,
+        ];
+        yield 'In list CAPITALIZED' => [
+            'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
+            'incomingProcInstructions' => ['TX_INDEXEDSEARCH_REINDES'],
+            'expected' => false,
         ];
     }
 
     /**
-     * @return array
+     * @test
      */
-    public function getConfigurationKeysDataProvider()
+    public function setExtensionSettings(): void
     {
-        return [
-            'cliObject with no -conf' => [
-                'config' => ['-d' => 4, '-o' => 'url'],
-                'expected' => [],
-            ],
-            'cliObject with one -conf' => [
-                'config' => ['-d' => 4, '-o' => 'url', '-conf' => 'default'],
-                'expected' => ['default'],
-            ],
-            'cliObject with two -conf' => [
-                'config' => ['-d' => 4, '-o' => 'url', '-conf' => 'default,news'],
-                'expected' => ['default', 'news'],
-            ],
+        $extensionSettings = [
+            'makeDirectRequests' => 0,
+            'frontendBasePath' => '/',
         ];
-    }
 
-    /**
-     * @return array
-     */
-    public function drawURLs_PIfilterDataProvider()
-    {
-        return [
-            'Not in list' => [
-                'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
-                'incomingProcInstructions' => [
-                    'tx_unknown_extension_instruction',
-                ],
-                'expected' => false,
-            ],
-            'In list' => [
-                'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
-                'incomingProcInstructions' => [
-                    'tx_indexedsearch_reindex',
-                ],
-                'expected' => true,
-            ],
-            'Twice in list' => [
-                'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
-                'incomingProcInstructions' => [
-                    'tx_indexedsearch_reindex',
-                    'tx_indexedsearch_reindex',
-                ],
-                'expected' => true,
-            ],
-            'Empty incomingProcInstructions' => [
-                'piString' => '',
-                'incomingProcInstructions' => [],
-                'expected' => true,
-            ],
-            'In list CAPITALIZED' => [
-                'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
-                'incomingProcInstructions' => [
-                    'TX_INDEXEDSEARCH_REINDES',
-                ],
-                'expected' => false,
-            ],
-        ];
+        /** @var CrawlerController $crawlerController */
+        $crawlerController = $this->getAccessibleMock(CrawlerController::class, ['dummy'], [], '', false);
+        $crawlerController->setExtensionSettings($extensionSettings);
+        self::assertEquals($extensionSettings, $crawlerController->extensionSettings);
     }
 }

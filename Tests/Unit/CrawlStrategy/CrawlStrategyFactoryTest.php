@@ -19,10 +19,12 @@ namespace AOE\Crawler\Tests\Unit\CrawlStrategy;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
 use AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategy;
 use AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategy;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -32,6 +34,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class CrawlStrategyFactoryTest extends UnitTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      */
@@ -44,10 +48,7 @@ class CrawlStrategyFactoryTest extends UnitTestCase
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = $configuration;
         $crawlStrategy = GeneralUtility::makeInstance(CrawlStrategyFactory::class)->create();
 
-        self::assertInstanceOf(
-            GuzzleExecutionStrategy::class,
-            $crawlStrategy
-        );
+        self::assertInstanceOf(GuzzleExecutionStrategy::class, $crawlStrategy);
     }
 
     /**
@@ -62,9 +63,60 @@ class CrawlStrategyFactoryTest extends UnitTestCase
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = $configuration;
         $crawlStrategy = GeneralUtility::makeInstance(CrawlStrategyFactory::class)->create();
 
-        self::assertInstanceOf(
-            SubProcessExecutionStrategy::class,
-            $crawlStrategy
-        );
+        self::assertInstanceOf(SubProcessExecutionStrategy::class, $crawlStrategy);
+    }
+
+    /**
+     * @test
+     */
+    public function crawlerStrategyFactoryReturnsGuzzleExecutionStrategyAsItIsDefault(): void
+    {
+        $configuration = [
+            'frontendBasePath' => '/',
+        ];
+        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = $configuration;
+        $crawlStrategy = GeneralUtility::makeInstance(CrawlStrategyFactory::class)->create();
+
+        self::assertInstanceOf(GuzzleExecutionStrategy::class, $crawlStrategy);
+    }
+
+    /**
+     * @test
+     */
+    public function crawlerStrategyFactoryConstructedWithConfigurationProviderReturnsSubProcess(): void
+    {
+        $configuration = [
+            'makeDirectRequests' => 1,
+            'frontendBasePath' => '/',
+        ];
+
+        $extensionConfigurationProvider = $this->prophesize(ExtensionConfigurationProvider::class);
+        $extensionConfigurationProvider->getExtensionConfiguration()->willReturn($configuration);
+        $crawlStrategy = GeneralUtility::makeInstance(
+            CrawlStrategyFactory::class,
+            $extensionConfigurationProvider->reveal()
+        )->create();
+
+        self::assertInstanceOf(SubProcessExecutionStrategy::class, $crawlStrategy);
+    }
+
+    /**
+     * @test
+     */
+    public function crawlerStrategyFactoryConstructedWithConfigurationProviderReturnsGuzzle(): void
+    {
+        $configuration = [
+            'makeDirectRequests' => 0,
+            'frontendBasePath' => '/',
+        ];
+
+        $extensionConfigurationProvider = $this->prophesize(ExtensionConfigurationProvider::class);
+        $extensionConfigurationProvider->getExtensionConfiguration()->willReturn($configuration);
+        $crawlStrategy = GeneralUtility::makeInstance(
+            CrawlStrategyFactory::class,
+            $extensionConfigurationProvider->reveal()
+        )->create();
+
+        self::assertInstanceOf(GuzzleExecutionStrategy::class, $crawlStrategy);
     }
 }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AOE\Crawler\Middleware;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -27,35 +27,26 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\UserAspect;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\VersionNumberUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 use TYPO3\CMS\Frontend\Controller\ErrorController;
 
 /**
  * Evaluates HTTP headers and checks if Crawler should register itself.
+ *
+ * @internal since v12.0.0
  */
 class FrontendUserAuthenticator implements MiddlewareInterface
 {
-    /**
-     * @var string
-     */
-    protected $headerName = 'X-T3CRAWLER';
+    protected string $headerName = 'X-T3CRAWLER';
+    protected Context $context;
 
-    /**
-     * @var Context
-     */
-    protected $context;
-
-    /**
-     * @var QueueRepository
-     */
-    protected $queueRepository;
-
-    public function __construct(?Context $context = null)
-    {
+    public function __construct(
+        private readonly QueryBuilder $queryBuilder,
+        ?Context $context = null
+    ) {
         $this->context = $context ?? GeneralUtility::makeInstance(Context::class);
-        $this->queueRepository = GeneralUtility::makeInstance(ObjectManager::class)->get(QueueRepository::class);
     }
 
     /**
@@ -64,11 +55,10 @@ class FrontendUserAuthenticator implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-
         /** @var JsonCompatibilityConverter $jsonCompatibilityConverter */
         $jsonCompatibilityConverter = GeneralUtility::makeInstance(JsonCompatibilityConverter::class);
 
-        $crawlerInformation = $request->getHeaderLine($this->headerName) ?? null;
+        $crawlerInformation = $request->getHeaderLine($this->headerName);
         if (empty($crawlerInformation)) {
             return $handler->handle($request);
         }
@@ -76,40 +66,51 @@ class FrontendUserAuthenticator implements MiddlewareInterface
         // Authenticate crawler request:
         //@todo: ask service to exclude current call for special reasons: for example no relevance because the language version is not affected
         [$queueId, $hash] = explode(':', $crawlerInformation);
-        $queueRec = $this->queueRepository->findByQueueId($queueId);
+        $queueRec = $this->findByQueueId($queueId);
 
         // If a crawler record was found and hash was matching, set it up
         if (! $this->isRequestHashMatchingQueueRecord($queueRec, $hash)) {
-            return GeneralUtility::makeInstance(ErrorController::class)->unavailableAction($request, 'No crawler entry found');
+            return GeneralUtility::makeInstance(ErrorController::class)->unavailableAction(
+                $request,
+                'No crawler entry found'
+            );
         }
 
         $queueParameters = $jsonCompatibilityConverter->convert($queueRec['parameters']);
         $request = $request->withAttribute('tx_crawler', $queueParameters);
 
         // Now ensure to set the proper user groups
-        $grList = $queueParameters['feUserGroupList'];
-        if ($grList) {
-            $frontendUser = $this->getFrontendUser($grList, $request);
+        if (is_array($queueParameters)) {
+            $grList = $queueParameters['feUserGroupList'] ?? '';
+            if ($grList) {
+                $frontendUser = $this->getFrontendUser($grList, $request);
 
-            // we have to set the fe user group to the user aspect since indexed_search only reads the user aspect
-            // to get the groups. otherwise groups are ignored during indexing.
-            // we need to add the groups 0, and -2 too, like the getGroupIds getter does.
-            $this->context->setAspect(
-                'frontend.user',
-                GeneralUtility::makeInstance(
-                    UserAspect::class,
-                    $frontendUser,
-                    explode(',', '0,-2,' . $grList)
-                )
-            );
+                // we have to set the fe user group to the user aspect since indexed_search only reads the user aspect
+                // to get the groups. otherwise groups are ignored during indexing.
+                // we need to add the groups 0, and -2 too, like the getGroupIds getter does.
+                $this->context->setAspect(
+                    'frontend.user',
+                    GeneralUtility::makeInstance(UserAspect::class, $frontendUser, explode(',', '0,-2,' . $grList))
+                );
+            }
         }
 
         return $handler->handle($request);
     }
 
-    protected function isRequestHashMatchingQueueRecord(?array $queueRec, string $hash): bool
+    public function getContext(): Context
     {
-        return is_array($queueRec) && hash_equals($hash, md5($queueRec['qid'] . '|' . $queueRec['set_id'] . '|' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']));
+        return $this->context;
+    }
+
+    private function isRequestHashMatchingQueueRecord(?array $queueRec, string $hash): bool
+    {
+        return is_array($queueRec) && hash_equals(
+            $hash,
+            md5(
+                $queueRec['qid'] . '|' . $queueRec['set_id'] . '|' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']
+            )
+        );
     }
 
     /**
@@ -117,15 +118,22 @@ class FrontendUserAuthenticator implements MiddlewareInterface
      */
     private function getFrontendUser(string $grList, ServerRequestInterface $request)
     {
-        $currentTYPO3VersionAsInteger = VersionNumberUtility::convertVersionNumberToInteger(VersionNumberUtility::getNumericTypo3Version());
-        if ($currentTYPO3VersionAsInteger < 10000000) {
-            $frontendUser = $GLOBALS['TSFE']->fe_user;
-            $frontendUser->user[$frontendUser->usergroup_column] = $grList;
-        } else {
-            $frontendUser = $request->getAttribute('frontend.user');
-            $frontendUser->user[$frontendUser->usergroup_column] = '0,-2,' . $grList;
-            $frontendUser->user['uid'] = PHP_INT_MAX;
-        }
+        /** @var FrontendUserAuthentication $frontendUser */
+        $frontendUser = $request->getAttribute('frontend.user');
+        $frontendUser->user[$frontendUser->usergroup_column] = '0,-2,' . $grList;
+        $frontendUser->fetchGroupData($request);
+        $frontendUser->user['uid'] = PHP_INT_MAX;
         return $frontendUser;
+    }
+
+    private function findByQueueId(string $queueId): array
+    {
+        $queueRec = $this->queryBuilder
+            ->select('*')
+            ->from(QueueRepository::TABLE_NAME)->where(
+                $this->queryBuilder->expr()->eq('qid', $this->queryBuilder->createNamedParameter($queueId))
+            )->executeQuery()
+            ->fetchAssociative();
+        return is_array($queueRec) ? $queueRec : [];
     }
 }

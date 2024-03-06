@@ -19,36 +19,70 @@ namespace AOE\Crawler\Tests\Functional\Service;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Service\ConfigurationService;
+use AOE\Crawler\Service\UrlService;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class ConfigurationServiceTest extends FunctionalTestCase
 {
+    use ProphecyTrait;
+
     /**
-     * @var ConfigurationService
+     * @var array
      */
-    private $subject;
+    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+    private ConfigurationService $subject;
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->subject = $this->createPartialMock(ConfigurationService::class, []);
     }
 
     /**
      * @test
+     * @runInSeparateProcess
      */
     public function expandExcludeStringReturnsArraysOfIntegers(): void
     {
         $GLOBALS['BE_USER'] = $this->getMockBuilder(BackendUserAuthentication::class)
             ->disableOriginalConstructor()
-            ->setMethods(['isAdmin', 'getTSConfig', 'getPagePermsClause', 'isInWebMount', 'backendCheckLogin'])
+            ->onlyMethods(['isAdmin', 'getTSConfig', 'getPagePermsClause', 'isInWebMount', 'backendCheckLogin'])
             ->getMock();
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename'] = 'foo';
 
         $excludeStringArray = $this->subject->expandExcludeString('1,2,4,6,8');
 
         foreach ($excludeStringArray as $excluded) {
             self::assertIsInt($excluded);
         }
+    }
+
+    /**
+     * @test
+     */
+    public function getConfigurationFromDatabaseReturnsArray(): void
+    {
+        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [];
+
+        $urlService = GeneralUtility::makeInstance(UrlService::class);
+        $configurationRepository = GeneralUtility::makeInstance(ConfigurationRepository::class);
+        $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_configuration.xml');
+        $this->importDataSet(__DIR__ . '/../Fixtures/pages.xml');
+
+        $configurationService = GeneralUtility::makeInstance(
+            ConfigurationService::class,
+            $urlService,
+            $configurationRepository
+        );
+
+        $configurations = $configurationService->getConfigurationFromDatabase(1, []);
+
+        self::assertArrayHasKey('default', $configurations);
+        self::assertArrayHasKey('Not hidden or deleted', $configurations);
     }
 }

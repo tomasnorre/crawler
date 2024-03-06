@@ -21,38 +21,31 @@ namespace AOE\Crawler\Tests\Functional\Command;
 
 use AOE\Crawler\Command\FlushQueueCommand;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
+use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
-class FlushQueueCommandTest extends AbstractCommandTests
+class FlushQueueCommandTest extends FunctionalTestCase
 {
+    use BackendRequestTestTrait;
+
     /**
      * @var array
      */
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    /**
-     * @var array
-     */
-    protected $coreExtensionsToLoad = ['cms', 'version', 'lang'];
+    protected \AOE\Crawler\Domain\Repository\QueueRepository $queueRepository;
 
-    /**
-     * @var QueueRepository
-     */
-    protected $queueRepository;
-
-    /**
-     * @var CommandTester
-     */
-    protected $commandTester;
+    protected \Symfony\Component\Console\Tester\CommandTester $commandTester;
 
     protected function setUp(): void
     {
         parent::setUp();
+        $this->setupBackendRequest();
 
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
-        $this->queueRepository = GeneralUtility::makeInstance(ObjectManager::class)->get(QueueRepository::class);
+        $this->queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
 
         $command = new FlushQueueCommand();
         $this->commandTester = new CommandTester($command);
@@ -71,30 +64,25 @@ class FlushQueueCommandTest extends AbstractCommandTests
         $commandOutput = $this->commandTester->getDisplay();
 
         self::assertStringContainsString($expectedOutput, $commandOutput);
-        self::assertEquals(
-            $expectedCount,
-            $this->queueRepository->findAll()->count()
-        );
+        self::assertEquals($expectedCount, $this->queueRepository->findAll()->count());
     }
 
-    public function flushQueueDataProvider(): array
+    public function flushQueueDataProvider(): iterable
     {
-        return [
-            'Flush All' => [
-                'mode' => 'all',
-                'expectedOutput' => 'All entries in Crawler queue will be flushed',
-                'expectedCount' => 0,
-            ],
-            'Flush Pending' => [
-                'mode' => 'pending',
-                'expectedOutput' => 'All entries in Crawler queue, with status: "pending" will be flushed',
-                'expectedCount' => 7,
-            ],
-            'Flush Finished' => [
-                'mode' => 'finished',
-                'expectedOutput' => 'All entries in Crawler queue, with status: "finished" will be flushed',
-                'expectedCount' => 8,
-            ],
+        yield 'Flush All' => [
+            'mode' => 'all',
+            'expectedOutput' => 'All entries in Crawler queue have been flushed',
+            'expectedCount' => 0,
+        ];
+        yield 'Flush Pending' => [
+            'mode' => 'pending',
+            'expectedOutput' => 'All entries in Crawler queue with status "pending" have been flushed',
+            'expectedCount' => 7,
+        ];
+        yield 'Flush Finished' => [
+            'mode' => 'finished',
+            'expectedOutput' => 'All entries in Crawler queue with status "finished" have been flushed',
+            'expectedCount' => 8,
         ];
     }
 }

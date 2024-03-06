@@ -2,8 +2,8 @@
 <dataset>
     <pages uid="7">
         <uid>7</uid>
-        <pid>0</pid>
-        <slug>/</slug>
+        <pid>1</pid>
+        <slug>/pageuid-seven</slug>
         <TSconfig></TSconfig>
         <sys_language_uid>0</sys_language_uid>
         <l10n_parent>0</l10n_parent>

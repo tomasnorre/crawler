@@ -95,8 +95,7 @@ abstract class AbstractPageTree
         $I->see($nodeText, self::$treeItemSelector);
 
         /** @var RemoteWebElement $context */
-        $context = $I->executeInSelenium(function () use ($nodeText, $context
-        ) {
+        $context = $I->executeInSelenium(function () use ($nodeText, $context) {
             return $context->findElement(WebDriverBy::xpath('//*[text()=\'' . $nodeText . '\']/..'));
         });
 

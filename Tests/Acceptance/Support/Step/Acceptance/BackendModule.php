@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Step\Acceptance;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2021-     Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -26,43 +26,48 @@ class BackendModule extends \AcceptanceTester
 {
     public function openCrawlerBackendModule(Admin $I, PageTree $pageTree): void
     {
-        $I->click('#web_info');
+        $I->click('#web_site_crawler');
         // Due to slow response time.
-        $I->wait(0.5);
-        $pageTree->openPath(['[1] Congratulations']);
+        $I->waitForElementNotVisible('#nprogress', 120);
+        $I->waitForElement('#typo3-pagetree-treeContainer', 120);
+        $pageTree->openPath(['Welcome']);
         // Due to slow response time.
-        $I->wait(0.5);
+        $I->waitForElementNotVisible('#nprogress', 120);
         $I->switchToContentFrame();
-        $I->waitForText('Page information', 10);
+        $I->waitForText('Crawl', 10);
     }
 
     public function openCrawlerBackendModuleStartCrawling(Admin $I, PageTree $pageTree): void
     {
         $this->openCrawlerBackendModule($I, $pageTree);
-        $I->selectOption('SET[crawlaction]', 'start');
+        $I->selectOption('moduleMenu', 'Start');
+        $I->waitForElementNotVisible('#nprogress', 120);
         $I->waitForText('Please select at least one configuration');
     }
 
     public function openCrawlerBackendModuleCrawlerLog(Admin $I, PageTree $pageTree): void
     {
         $this->openCrawlerBackendModule($I, $pageTree);
-        $I->selectOption('SET[crawlaction]', 'log');
+        $I->selectOption('moduleMenu', 'Log');
+        $I->waitForElementNotVisible('#nprogress', 120);
         $I->waitForText('Crawler log');
     }
 
-    public function openCrawlerBackendModuleCrawlerMultiProcess(Admin $I, PageTree $pageTree): void
+    public function openCrawlerBackendModuleCrawlerProcess(Admin $I, PageTree $pageTree): void
     {
         $this->openCrawlerBackendModule($I, $pageTree);
-        $I->selectOption('SET[crawlaction]', 'multiprocess');
+        $I->selectOption('moduleMenu', 'Process');
+        $I->waitForElementNotVisible('#nprogress', 120);
         $I->waitForText('CLI-Path');
     }
 
     /**
      * @noRector \Rector\DeadCode\Rector\ClassMethod\RemoveUnusedParameterRector
      */
-    public function addProcessOnMultiProcess(Admin $I, PageTree $pageTree): void
+    public function addProcessOnProcess(Admin $I, PageTree $pageTree): void
     {
         $I->click('Add process');
+        $I->waitForElementNotVisible('#nprogress', 120);
         $I->waitForText('New process has been started');
     }
 }

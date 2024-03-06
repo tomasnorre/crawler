@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace AOE\Crawler\Tests\Unit;
 
 /*
+ * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
+ *
  * This file is part of the TYPO3 Crawler Extension.
  *
  * It is free software; you can redistribute it and/or modify it under
@@ -22,6 +24,8 @@ use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
 use AOE\Crawler\QueueExecutor;
 use AOE\Crawler\Tests\Unit\CrawlStrategy\CallbackObjectForTesting;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -34,10 +38,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class QueueExecutorTest extends UnitTestCase
 {
-    /**
-     * @var QueueExecutor
-     */
-    protected $queueExecutor;
+    use ProphecyTrait;
+
+    protected \AOE\Crawler\QueueExecutor $queueExecutor;
 
     /**
      * @var CrawlerController
@@ -49,7 +52,11 @@ class QueueExecutorTest extends UnitTestCase
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [];
         $this->mockedCrawlerController = $this->createMock(CrawlerController::class);
         $crawlStrategyFactory = GeneralUtility::makeInstance(CrawlStrategyFactory::class);
-        $this->queueExecutor = new QueueExecutor($crawlStrategyFactory);
+
+        $this->queueExecutor = new QueueExecutor(
+            $crawlStrategyFactory,
+            $this->prophesize(EventDispatcher::class)->reveal()
+        );
     }
 
     /**
@@ -77,26 +84,25 @@ class QueueExecutorTest extends UnitTestCase
         self::assertStringContainsString('Hi, it works!', $result['content']);
     }
 
-    public function invalidArgumentsReturnErrorInExecuteQueueItemDataProvider(): array
+    public function invalidArgumentsReturnErrorInExecuteQueueItemDataProvider(): iterable
     {
-        return [
-            'No parameters set' => [
-                'queueItem' => [],
+        yield 'No parameters set' => [
+            'queueItem' => [],
+        ];
+
+        yield 'Parameters set, but empty' => [
+            'queueItem' => [
+                'parameters' => '',
             ],
-            'Parameters set, but empty' => [
-                'queueItem' => [
-                    'parameters' => '',
-                ],
+        ];
+        yield 'Parameters set, can be converted' => [
+            'queueItem' => [
+                'parameters' => serialize('Simple string'),
             ],
-            'Parameters set, can be converted' => [
-                'queueItem' => [
-                    'parameters' => serialize('Simple string'),
-                ],
-            ],
-            'Parameters set, cannot be converted' => [
-                'queueItem' => [
-                    'parameters' => 'A simple string not encoded',
-                ],
+        ];
+        yield 'Parameters set, cannot be converted' => [
+            'queueItem' => [
+                'parameters' => 'A simple string not encoded',
             ],
         ];
     }

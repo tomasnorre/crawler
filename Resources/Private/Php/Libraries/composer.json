@@ -1,8 +1,5 @@
 {
     "config": {
-        "platform": {
-            "php": "7.2.5"
-        },
         "classmap-authoritative": true,
         "prepend-autoloader": false
     },
@@ -10,8 +7,7 @@
         "beberlei/assert": "^3.3",
         "guzzlehttp/guzzle": "^6.4.1 || ^7.2",
         "psr/http-message": "^1.0",
-        "psr/log": "^1.0",
-        "symfony/console": "^5.0",
-        "symfony/polyfill-php80": "^1.23"
+        "psr/log": "^1.0 || ^2.0 || ^3.0",
+        "symfony/console": "^5.0 || ^6.1"
     }
 }

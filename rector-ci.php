@@ -2,15 +2,20 @@
 
 declare(strict_types=1);
 
+use Rector\Config\RectorConfig;
 use Rector\Core\Configuration\Option;
+use Rector\DeadCode\Rector\Cast\RecastingRemovalRector;
+use Rector\DeadCode\Rector\If_\RemoveAlwaysTrueIfConditionRector;
 use Rector\DeadCode\Rector\Property\RemoveSetterOnlyPropertyAndMethodCallRector;
 use Rector\DeadCode\Rector\Property\RemoveUnusedPrivatePropertyRector;
+use Rector\DeadCode\Rector\Stmt\RemoveUnreachableStatementRector;
+use Rector\Php73\Rector\FuncCall\JsonThrowOnErrorRector;
+use Rector\Set\ValueObject\LevelSetList;
 use Rector\Set\ValueObject\SetList;
 use Ssch\TYPO3Rector\Set\Typo3SetList;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
-return static function (ContainerConfigurator $containerConfigurator): void {
-    $parameters = $containerConfigurator->parameters();
+return static function (RectorConfig $rectorConfig): void {
+    $parameters = $rectorConfig->parameters();
 
     $parameters->set(
         Option::PATHS,
@@ -21,12 +26,14 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ]
     );
 
-    $containerConfigurator->import(SetList::DEAD_CODE);
-    $containerConfigurator->import(SetList::PHP_72);
-    $containerConfigurator->import(SetList::PHP_73);
-    $containerConfigurator->import(Typo3SetList::TYPO3_76);
-    $containerConfigurator->import(Typo3SetList::TYPO3_87);
-    $containerConfigurator->import(Typo3SetList::TYPO3_95);
+    $rectorConfig->import(SetList::DEAD_CODE);
+    $rectorConfig->import(LevelSetList::UP_TO_PHP_81);
+    $rectorConfig->import(Typo3SetList::TYPO3_76);
+    $rectorConfig->import(Typo3SetList::TYPO3_87);
+    $rectorConfig->import(Typo3SetList::TYPO3_95);
+    $rectorConfig->import(Typo3SetList::TYPO3_104);
+    $rectorConfig->import(Typo3SetList::TYPO3_11);
+    $rectorConfig->import(Typo3SetList::TYPO3_12);
 
     $parameters->set(Option::AUTO_IMPORT_NAMES, false);
 
@@ -45,24 +52,27 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             __DIR__ . '/Classes/Command/ProcessQueueCommand.php',
             __DIR__ . '/Classes/Controller/CrawlerController.php',
             __DIR__ . '/Classes/Domain/Model/Reason.php',
-            __DIR__ . '/Classes/Utility/SignalSlotUtility.php',
             __DIR__ . '/Tests/Functional/Api/CrawlerApiTest.php',
             __DIR__ . '/Tests/Acceptance',
             Rector\DeadCode\Rector\If_\RemoveDeadInstanceOfRector::class => null,
             Rector\DeadCode\Rector\Assign\RemoveUnusedVariableAssignRector::class => [
                 __DIR__ . '/Classes/Domain/Repository/QueueRepository.php'
             ],
-            \Rector\Php73\Rector\FuncCall\JsonThrowOnErrorRector::class,
-            \Rector\DeadCode\Rector\Stmt\RemoveUnreachableStatementRector::class => [
+            JsonThrowOnErrorRector::class,
+            RemoveAlwaysTrueIfConditionRector::class => null,
+            RemoveUnreachableStatementRector::class => [
                 __DIR__ . '/Tests/Unit/CrawlStrategy/SubProcessExecutionStrategyTest.php'
             ],
             RemoveUnusedPrivatePropertyRector::class => [
                 __DIR__ . '/Classes/Hooks/ProcessCleanUpHook.php'
             ],
+            RecastingRemovalRector::class => [
+                __DIR__ . '/Classes/Backend/RequestForm/LogRequestForm.php'
+            ]
         ]
     );
 
-    $services = $containerConfigurator->services();
+    $services = $rectorConfig->services();
 
     $services->set(RemoveUnusedPrivatePropertyRector::class);
 

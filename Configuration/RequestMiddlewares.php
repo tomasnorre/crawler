@@ -9,18 +9,12 @@ return [
     'frontend' => [
         'aoe/crawler/authentication' => [
             'target' => FrontendUserAuthenticator::class,
-            'after' => [
-                'typo3/cms-frontend/authentication',
-            ],
-            'before' => [
-                'typo3/cms-frontend/page-resolver',
-            ],
+            'after' => ['typo3/cms-frontend/authentication'],
+            'before' => ['typo3/cms-frontend/page-resolver'],
         ],
         'aoe/crawler/initialization' => [
             'target' => CrawlerInitialization::class,
-            'before' => [
-                'typo3/cms-core/normalizedParams',
-            ],
+            'before' => ['typo3/cms-frontend/prepare-tsfe-rendering'],
         ],
     ],
 ];

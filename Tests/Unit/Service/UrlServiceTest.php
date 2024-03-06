@@ -28,15 +28,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class UrlServiceTest extends UnitTestCase
 {
-    /**
-     * @var array
-     */
-    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+    protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    /**
-     * @var UrlService
-     */
-    protected $urlService;
+    protected \AOE\Crawler\Service\UrlService $urlService;
 
     /**
      * Creates the test environment.
@@ -54,67 +48,58 @@ class UrlServiceTest extends UnitTestCase
      */
     public function compileUrls(array $paramArray, array $urls, array $expected, int $expectedCount): void
     {
-        $maxUrlsToCompile = 8;
+        self::assertEquals($expected, $this->urlService->compileUrls($paramArray, $urls));
 
-        self::assertEquals(
-            $expected,
-            $this->urlService->compileUrls($paramArray, $urls, $maxUrlsToCompile)
-        );
-
-        self::assertCount(
-            $expectedCount,
-            $this->urlService->compileUrls($paramArray, $urls, $maxUrlsToCompile)
-        );
+        self::assertCount($expectedCount, $this->urlService->compileUrls($paramArray, $urls));
     }
 
-    /**
-     * @return array
-     */
-    public function compileUrlsDataProvider()
+    public function compileUrlsDataProvider(): iterable
     {
-        return [
-            'Empty Params array' => [
-                'paramArray' => [],
-                'urls' => ['/home', '/search', '/about'],
-                'expected' => ['/home', '/search', '/about'],
-                'expectedCount' => 3,
+        yield 'Empty Params array' => [
+            'paramArray' => [],
+            'urls' => ['/home', '/search', '/about'],
+            'expected' => ['/home', '/search', '/about'],
+            'expectedCount' => 3,
+        ];
+        yield 'Empty Urls array' => [
+            'paramArray' => ['pagination' => [1, 2, 3, 4]],
+            'urls' => [],
+            'expected' => [],
+            'expectedCount' => 0,
+        ];
+        yield 'Exactly number of URLs matches maximumUrlsToCompile' => [
+            'paramArray' => ['pagination' => [1, 2, 3, 4, 5]],
+            'urls' => ['index.php?id=10', 'index.php?id=11'],
+            'expected' => [
+                'index.php?id=10&pagination=1',
+                'index.php?id=10&pagination=2',
+                'index.php?id=10&pagination=3',
+                'index.php?id=10&pagination=4',
+                'index.php?id=10&pagination=5',
+                'index.php?id=11&pagination=1',
+                'index.php?id=11&pagination=2',
+                'index.php?id=11&pagination=3',
+                'index.php?id=11&pagination=4',
+                'index.php?id=11&pagination=5',
             ],
-            'Empty Urls array' => [
-                'paramArray' => ['pagination' => [1, 2, 3, 4]],
-                'urls' => [],
-                'expected' => [],
-                'expectedCount' => 0,
+            'expectedCount' => 10,
+        ];
+        yield 'More urls than maximumUrlsToCompile' => [
+            'paramArray' => ['pagination' => [1, 2, 3, 4, 5]],
+            'urls' => ['index.php?id=10', 'index.php?id=11', 'index.php?id=12'],
+            'expected' => [
+                'index.php?id=10&pagination=1',
+                'index.php?id=10&pagination=2',
+                'index.php?id=10&pagination=3',
+                'index.php?id=10&pagination=4',
+                'index.php?id=10&pagination=5',
+                'index.php?id=11&pagination=1',
+                'index.php?id=11&pagination=2',
+                'index.php?id=11&pagination=3',
+                'index.php?id=11&pagination=4',
+                'index.php?id=11&pagination=5',
             ],
-            'case' => [
-                'paramArray' => ['pagination' => [1, 2, 3, 4]],
-                'urls' => ['index.php?id=10', 'index.php?id=11'],
-                'expected' => [
-                    'index.php?id=10&pagination=1',
-                    'index.php?id=10&pagination=2',
-                    'index.php?id=10&pagination=3',
-                    'index.php?id=10&pagination=4',
-                    'index.php?id=11&pagination=1',
-                    'index.php?id=11&pagination=2',
-                    'index.php?id=11&pagination=3',
-                    'index.php?id=11&pagination=4',
-                ],
-                'expectedCount' => 8,
-            ],
-            'More urls than maximumUrlsToCompile' => [
-                'paramArray' => ['pagination' => [1, 2, 3, 4]],
-                'urls' => ['index.php?id=10', 'index.php?id=11', 'index.php?id=12'],
-                'expected' => [
-                    'index.php?id=10&pagination=1',
-                    'index.php?id=10&pagination=2',
-                    'index.php?id=10&pagination=3',
-                    'index.php?id=10&pagination=4',
-                    'index.php?id=11&pagination=1',
-                    'index.php?id=11&pagination=2',
-                    'index.php?id=11&pagination=3',
-                    'index.php?id=11&pagination=4',
-                ],
-                'expectedCount' => 8,
-            ],
+            'expectedCount' => 10,
         ];
     }
 }

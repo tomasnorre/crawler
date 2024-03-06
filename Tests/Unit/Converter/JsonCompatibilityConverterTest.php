@@ -28,10 +28,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class JsonCompatibilityConverterTest extends UnitTestCase
 {
-    /**
-     * @var JsonCompatibilityConverter
-     */
-    protected $subject;
+    protected \AOE\Crawler\Converter\JsonCompatibilityConverter $subject;
 
     protected function setUp(): void
     {
@@ -43,17 +40,13 @@ class JsonCompatibilityConverterTest extends UnitTestCase
     /**
      * @test
      * @dataProvider jsonCompatibilityConverterDataProvider
-     * @param array|bool $expected
      */
-    public function jsonCompatibilityConverterTest(string $dataString, $expected): void
+    public function jsonCompatibilityConverterTest(string $dataString, array|bool $expected): void
     {
-        self::assertEquals(
-            $expected,
-            $this->subject->convert($dataString)
-        );
+        self::assertEquals($expected, $this->subject->convert($dataString));
     }
 
-    public function jsonCompatibilityConverterDataProvider(): array
+    public function jsonCompatibilityConverterDataProvider(): iterable
     {
         $testData = [
             'keyString' => 'valueString',
@@ -62,19 +55,17 @@ class JsonCompatibilityConverterTest extends UnitTestCase
             'keyBool' => false,
         ];
 
-        return [
-            'serialize() data as input' => [
-                'dataString' => serialize($testData),
-                'expected' => $testData,
-            ],
-            'json_encode() data as input' => [
-                'dataString' => json_encode($testData),
-                'expected' => $testData,
-            ],
-            'neither serialize() nor json_encodee' => [
-                'dataString' => 'This is just a plain string',
-                'expected' => false,
-            ],
+        yield 'serialize() data as input' => [
+            'dataString' => serialize($testData),
+            'expected' => $testData,
+        ];
+        yield 'json_encode() data as input' => [
+            'dataString' => json_encode($testData),
+            'expected' => $testData,
+        ];
+        yield 'neither serialize() nor json_encodee' => [
+            'dataString' => 'This is just a plain string',
+            'expected' => false,
         ];
     }
 
@@ -84,9 +75,10 @@ class JsonCompatibilityConverterTest extends UnitTestCase
      */
     public function jsonCompatibilityConverterTestThrowException(): void
     {
-        self::expectExceptionCode(1593758307);
+        self::expectExceptionCode(1_593_758_307);
         self::expectException(\Throwable::class);
-        self::expectExceptionMessageMatches('#.*__PHP_Incomplete_Class.*#');
+        self::expectExceptionMessageMatches('#^Objects are not allowed:.*__PHP_Incomplete_Class.*#');
+        self::expectExceptionMessage('This is a test object');
 
         $object = new \stdClass();
         $object->title = 'Test';

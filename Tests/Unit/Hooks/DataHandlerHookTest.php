@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AOE\Crawler\Tests\Unit\Hooks;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -24,18 +24,20 @@ use AOE\Crawler\Hooks\DataHandlerHook;
 use AOE\Crawler\Service\QueueService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * @covers \AOE\Crawler\Hooks\DataHandlerHook
  */
 class DataHandlerHookTest extends UnitTestCase
 {
+    use ProphecyTrait;
+
     /**
      * Page with ID 1 is not in queue, should be added
      * Page with ID 2 is already in queue. Should NOT be added.
@@ -44,10 +46,10 @@ class DataHandlerHookTest extends UnitTestCase
      */
     public function itShouldAddPageToQueue(): void
     {
-        if ($this->isTYPO3v9()) {
-            self::markTestSkipped('Test is not working anymore in TYPO3 9LTS as we have a class_alias for the PageRepository');
-        }
-        $dataHandlerHook = new DataHandlerHook();
+        $mockedDataHandlerHook = $this->createPartialMock(
+            DataHandlerHook::class,
+            ['getQueueRepository', 'getQueueService', 'getPageRepository']
+        );
 
         $queueService = $this->prophesize(QueueService::class);
         $queueService->addPageToQueue(1)->shouldBeCalled();
@@ -60,20 +62,18 @@ class DataHandlerHookTest extends UnitTestCase
         $pageRepository->getPage(1)->willReturn(['Faking that page exists as not empty array']);
         $pageRepository->getPage(2)->willReturn(['Faking that page exists as not empty array']);
 
-        $objectManager = $this->prophesize(ObjectManager::class);
-        $objectManager->get(QueueRepository::class)->willReturn($queueRepository->reveal());
-        $objectManager->get(QueueService::class)->willReturn($queueService->reveal());
-        $objectManager->get(PageRepository::class)->willReturn($pageRepository->reveal());
+        $mockedDataHandlerHook->method('getQueueRepository')->willReturn($queueRepository->reveal());
+        $mockedDataHandlerHook->method('getQueueService')->willReturn($queueService->reveal());
+        $mockedDataHandlerHook->method('getPageRepository')->willReturn($pageRepository->reveal());
 
         $cacheManager = $this->prophesize(CacheManager::class);
         $cacheManager->getCache(Argument::any())->willReturn($this->prophesize(FrontendInterface::class)->reveal());
 
         GeneralUtility::setSingletonInstance(CacheManager::class, $cacheManager->reveal());
-        GeneralUtility::setSingletonInstance(ObjectManager::class, $objectManager->reveal());
 
         $dataHandler = new DataHandler();
 
-        $dataHandlerHook->addFlushedPagesToCrawlerQueue(
+        $mockedDataHandlerHook->addFlushedPagesToCrawlerQueue(
             [
                 'table' => 'pages',
                 'pageIdArray' => [0, 1, 2],
@@ -91,10 +91,11 @@ class DataHandlerHookTest extends UnitTestCase
      */
     public function itShouldAddPageToQueueWithMorePages(): void
     {
-        if ($this->isTYPO3v9()) {
-            self::markTestSkipped('Test is not working anymore in TYPO3 9LTS as we have a class_alias for the PageRepository');
-        }
-        $dataHandlerHook = new DataHandlerHook();
+        $mockedDataHandlerHook = $this->createPartialMock(
+            DataHandlerHook::class,
+            ['getQueueRepository', 'getQueueService', 'getPageRepository']
+        );
+
         $queueService = $this->prophesize(QueueService::class);
         $queueService->addPageToQueue(1)->shouldBeCalled();
         $queueService->addPageToQueue(3)->shouldBeCalled();
@@ -109,20 +110,18 @@ class DataHandlerHookTest extends UnitTestCase
         $pageRepository->getPage(2)->willReturn(['Faking that page exists as not empty array']);
         $pageRepository->getPage(3)->willReturn(['Faking that page exists as not empty array']);
 
-        $objectManager = $this->prophesize(ObjectManager::class);
-        $objectManager->get(QueueRepository::class)->willReturn($queueRepository->reveal());
-        $objectManager->get(QueueService::class)->willReturn($queueService->reveal());
-        $objectManager->get(PageRepository::class)->willReturn($pageRepository->reveal());
+        $mockedDataHandlerHook->method('getQueueRepository')->willReturn($queueRepository->reveal());
+        $mockedDataHandlerHook->method('getQueueService')->willReturn($queueService->reveal());
+        $mockedDataHandlerHook->method('getPageRepository')->willReturn($pageRepository->reveal());
 
         $cacheManager = $this->prophesize(CacheManager::class);
         $cacheManager->getCache(Argument::any())->willReturn($this->prophesize(FrontendInterface::class)->reveal());
 
         GeneralUtility::setSingletonInstance(CacheManager::class, $cacheManager->reveal());
-        GeneralUtility::setSingletonInstance(ObjectManager::class, $objectManager->reveal());
 
         $dataHandler = new DataHandler();
 
-        $dataHandlerHook->addFlushedPagesToCrawlerQueue(
+        $mockedDataHandlerHook->addFlushedPagesToCrawlerQueue(
             [
                 'table' => 'tt_content',
                 'pageIdArray' => [0, 1, 2, 3],
@@ -140,10 +139,11 @@ class DataHandlerHookTest extends UnitTestCase
      */
     public function nothingToBeAddedAsPageDoNotExists(): void
     {
-        if ($this->isTYPO3v9()) {
-            self::markTestSkipped('Test is not working anymore in TYPO3 9LTS as we have a class_alias for the PageRepository');
-        }
-        $dataHandlerHook = new DataHandlerHook();
+        $mockedDataHandlerHook = $this->createPartialMock(
+            DataHandlerHook::class,
+            ['getQueueRepository', 'getQueueService', 'getPageRepository']
+        );
+
         $queueService = $this->prophesize(QueueService::class);
         $queueService->addPageToQueue(1)->shouldBeCalled();
 
@@ -155,20 +155,18 @@ class DataHandlerHookTest extends UnitTestCase
         // Empty array to act like pages doesn't exist
         $pageRepository->getPage(3000)->willReturn([]);
 
-        $objectManager = $this->prophesize(ObjectManager::class);
-        $objectManager->get(QueueRepository::class)->willReturn($queueRepository->reveal());
-        $objectManager->get(QueueService::class)->willReturn($queueService->reveal());
-        $objectManager->get(PageRepository::class)->willReturn($pageRepository->reveal());
+        $mockedDataHandlerHook->method('getQueueRepository')->willReturn($queueRepository->reveal());
+        $mockedDataHandlerHook->method('getQueueService')->willReturn($queueService->reveal());
+        $mockedDataHandlerHook->method('getPageRepository')->willReturn($pageRepository->reveal());
 
         $cacheManager = $this->prophesize(CacheManager::class);
         $cacheManager->getCache(Argument::any())->willReturn($this->prophesize(FrontendInterface::class)->reveal());
 
         GeneralUtility::setSingletonInstance(CacheManager::class, $cacheManager->reveal());
-        GeneralUtility::setSingletonInstance(ObjectManager::class, $objectManager->reveal());
 
         $dataHandler = new DataHandler();
 
-        $dataHandlerHook->addFlushedPagesToCrawlerQueue(
+        $mockedDataHandlerHook->addFlushedPagesToCrawlerQueue(
             [
                 'table' => 'tt_content',
                 'pageIdArray' => [0, 1, 3000],
@@ -177,8 +175,47 @@ class DataHandlerHookTest extends UnitTestCase
         );
     }
 
-    private function isTYPO3v9(): bool
+    /**
+     * Page with ID 1 is not in queue, should be added
+     * Page with ID 2 is already in queue. Should NOT be added.
+     *
+     * @test
+     */
+    public function ensureThatPageIdArrayIsConvertedToInteger(): void
     {
-        return class_exists(\TYPO3\CMS\Frontend\Page\PageRepository::class);
+        $mockedDataHandlerHook = $this->createPartialMock(
+            DataHandlerHook::class,
+            ['getQueueRepository', 'getQueueService', 'getPageRepository']
+        );
+
+        $queueService = $this->prophesize(QueueService::class);
+        $queueService->addPageToQueue(1)->shouldBeCalled();
+
+        $queueRepository = $this->prophesize(QueueRepository::class);
+        $queueRepository->isPageInQueue(1)->willReturn(false);
+        $queueRepository->isPageInQueue(2)->willReturn(true);
+
+        $pageRepository = $this->prophesize(PageRepository::class);
+        $pageRepository->getPage(1)->willReturn(['Faking that page exists as not empty array']);
+        $pageRepository->getPage(2)->willReturn(['Faking that page exists as not empty array']);
+
+        $mockedDataHandlerHook->method('getQueueRepository')->willReturn($queueRepository->reveal());
+        $mockedDataHandlerHook->method('getQueueService')->willReturn($queueService->reveal());
+        $mockedDataHandlerHook->method('getPageRepository')->willReturn($pageRepository->reveal());
+
+        $cacheManager = $this->prophesize(CacheManager::class);
+        $cacheManager->getCache(Argument::any())->willReturn($this->prophesize(FrontendInterface::class)->reveal());
+
+        GeneralUtility::setSingletonInstance(CacheManager::class, $cacheManager->reveal());
+
+        $dataHandler = new DataHandler();
+
+        $mockedDataHandlerHook->addFlushedPagesToCrawlerQueue(
+            [
+                'table' => 'pages',
+                'pageIdArray' => ['0', '1', '2'],
+            ],
+            $dataHandler
+        );
     }
 }

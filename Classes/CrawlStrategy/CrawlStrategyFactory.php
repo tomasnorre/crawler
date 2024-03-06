@@ -7,28 +7,30 @@ namespace AOE\Crawler\CrawlStrategy;
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+/**
+ * @internal since v12.0.0
+ */
 final class CrawlStrategyFactory
 {
-    /**
-     * @var ExtensionConfigurationProvider
-     */
-    private $configurationProvider;
+    private readonly ExtensionConfigurationProvider $configurationProvider;
 
     public function __construct(?ExtensionConfigurationProvider $configurationProvider = null)
     {
-        $this->configurationProvider = $configurationProvider ?? GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
+        $this->configurationProvider = $configurationProvider ?? GeneralUtility::makeInstance(
+            ExtensionConfigurationProvider::class
+        );
     }
 
-    public function create(): CrawlStrategy
+    public function create(): CrawlStrategyInterface
     {
         $settings = $this->configurationProvider->getExtensionConfiguration();
         $extensionSettings = is_array($settings) ? $settings : [];
 
-        if ($extensionSettings['makeDirectRequests']) {
-            /** @var CrawlStrategy $instance */
-            $instance = GeneralUtility::makeInstance(SubProcessExecutionStrategy::class);
+        if ($extensionSettings['makeDirectRequests'] ?? false) {
+            /** @var CrawlStrategyInterface $instance */
+            $instance = GeneralUtility::makeInstance(SubProcessExecutionStrategy::class, $this->configurationProvider);
         } else {
-            $instance = GeneralUtility::makeInstance(GuzzleExecutionStrategy::class);
+            $instance = GeneralUtility::makeInstance(GuzzleExecutionStrategy::class, $this->configurationProvider);
         }
 
         return $instance;

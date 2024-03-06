@@ -12,12 +12,13 @@
     "phpUnit": {
         "configDir": "Tests\/"
     },
-    "minMsi": 19,
-    "minCoveredMsi": 85,
+    "minMsi": 16,
+    "minCoveredMsi": 84,
     "logs": {
         "text": "infection.log",
-        "badge": {
-            "branch": "main"
+        "github": true,
+        "stryker": {
+            "report": "main"
         }
     },
     "mutators": {

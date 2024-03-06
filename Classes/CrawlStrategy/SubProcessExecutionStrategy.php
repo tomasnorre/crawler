@@ -32,19 +32,17 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Executes another process via shell_exec() to include cli/bootstrap.php which in turn
  * includes the index.php for frontend.
+ * @internal since v12.0.0
  */
-class SubProcessExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
+class SubProcessExecutionStrategy implements LoggerAwareInterface, CrawlStrategyInterface
 {
     use LoggerAwareTrait;
 
-    /**
-     * @var array
-     */
-    protected $extensionSettings;
+    protected array $extensionSettings;
 
     public function __construct(?ExtensionConfigurationProvider $configurationProvider = null)
     {
-        $configurationProvider = $configurationProvider ?? GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
+        $configurationProvider ??= GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
         $settings = $configurationProvider->getExtensionConfiguration();
         $this->extensionSettings = is_array($settings) ? $settings : [];
     }
@@ -67,11 +65,8 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
             return false;
         }
 
-        if (! in_array($parsedUrl['scheme'], ['', 'http', 'https'], true)) {
-            $this->logger->debug(
-                sprintf('Scheme does not match for url "%s"', $url),
-                ['crawlerId' => $crawlerId]
-            );
+        if (! isset($parsedUrl['scheme']) || ! in_array($parsedUrl['scheme'], ['', 'http', 'https'], true)) {
+            $this->logger->debug(sprintf('Scheme does not match for url "%s"', $url), ['crawlerId' => $crawlerId]);
             return false;
         }
 
@@ -98,13 +93,14 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
         if ($content === null) {
             return false;
         }
-        return unserialize($content);
+
+        return ['content' => $content];
     }
 
     private function buildRequestHeaders(array $url, string $crawlerId): array
     {
         $reqHeaders = [];
-        $reqHeaders[] = 'GET ' . $url['path'] . ($url['query'] ? '?' . $url['query'] : '') . ' HTTP/1.0';
+        $reqHeaders[] = 'GET ' . $url['path'] . (isset($url['query']) ? '?' . $url['query'] : '') . ' HTTP/1.0';
         $reqHeaders[] = 'Host: ' . $url['host'];
         $reqHeaders[] = 'Connection: close';
         if (isset($url['user'], $url['pass']) && $url['user'] !== '' && $url['pass'] !== '') {
@@ -150,7 +146,7 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
 
         // Base path must be '/<pathSegements>/':
         if ($frontendBasePath !== '/') {
-            $frontendBasePath = '/' . ltrim($frontendBasePath, '/');
+            $frontendBasePath = '/' . ltrim((string) $frontendBasePath, '/');
             $frontendBasePath = rtrim($frontendBasePath, '/') . '/';
         }
 

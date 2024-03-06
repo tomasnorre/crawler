@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AOE\Crawler\Tests\Functional\Command;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2022 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -20,42 +20,42 @@ namespace AOE\Crawler\Tests\Functional\Command;
  */
 
 use AOE\Crawler\Command\ProcessQueueCommand;
+use AOE\Crawler\Controller\CrawlerController;
+use AOE\Crawler\Crawler;
+use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
+use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
-class ProcessQueueCommandTest extends AbstractCommandTests
+class ProcessQueueCommandTest extends FunctionalTestCase
 {
+    use BackendRequestTestTrait;
+
     /**
      * @var array
      */
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    /**
-     * @var array
-     */
-    protected $coreExtensionsToLoad = ['cms', 'version', 'lang'];
-
-    /**
-     * @var QueueRepository
-     */
-    protected $queueRepository;
-
-    /**
-     * @var CommandTester
-     */
-    protected $commandTester;
+    protected CommandTester $commandTester;
 
     protected function setUp(): void
     {
         parent::setUp();
+        $this->setupBackendRequest();
 
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/pages.xml');
-        $this->queueRepository = GeneralUtility::makeInstance(ObjectManager::class)->get(QueueRepository::class);
 
-        $command = new ProcessQueueCommand();
+        $crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
+
+        $command = new ProcessQueueCommand(
+            new Crawler(),
+            $crawlerController,
+            GeneralUtility::makeInstance(ProcessRepository::class),
+            GeneralUtility::makeInstance(QueueRepository::class)
+        );
         $this->commandTester = new CommandTester($command);
     }
 
@@ -66,7 +66,7 @@ class ProcessQueueCommandTest extends AbstractCommandTests
     public function processQueueCommandTest(array $parameters, string $expectedOutput): void
     {
         $arguments = [];
-        if (! empty($parameters)) {
+        if (!empty($parameters)) {
             $arguments = $parameters;
         }
 
@@ -76,19 +76,17 @@ class ProcessQueueCommandTest extends AbstractCommandTests
         self::assertStringContainsString($expectedOutput, $commandOutput);
     }
 
-    public function processQueueCommandDataProvider(): array
+    public function processQueueCommandDataProvider(): iterable
     {
-        return [
-            'No params' => [
-                'parameters' => [],
-                'expectedOutput' => 'Unprocessed Items remaining:0',
+        yield 'No params' => [
+            'parameters' => [],
+            'expectedOutput' => 'Unprocessed Items remaining:0',
+        ];
+        yield '--amount 5' => [
+            'parameters' => [
+                '--amount' => 5,
             ],
-            '--amount 5' => [
-                'parameters' => [
-                    '--amount' => 5,
-                ],
-                'expectedOutput' => 'Unprocessed Items remaining:3',
-            ],
+            'expectedOutput' => 'Unprocessed Items remaining:3',
         ];
     }
 }

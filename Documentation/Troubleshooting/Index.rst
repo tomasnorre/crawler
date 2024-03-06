@@ -1,4 +1,4 @@
-﻿.. include:: /Includes.txt
+﻿.. include:: /Includes.rst.txt
 
 ===============
 Troubleshooting
@@ -61,7 +61,7 @@ Please check the :guilabel:`Upgrade Wizard`, and check if the
 :guilabel:`Introduce URL parts ("slugs") to all existing pages` is marked as
 done, if not you should perform this step.
 
-See related issue: `[BUG] Crawling Depth not respected #464 <https://github.com/AOEpeople/crawler/issues/464>`_
+See related issue: `[BUG] Crawling Depth not respected #464 <https://github.com/tomasnorre/crawler/issues/464>`_
 
 
 Update from older versions
@@ -77,7 +77,7 @@ Make sure to delete all unnecessary fields from database tables. You can do
 this in the backend via :guilabel:`Analyze Database Structure` tool or if you
 have `TYPO3 Console <https://extensions.typo3.org/extension/typo3_console/>`_
 installed via command line command
-:shell:`vendor/bin/typo3cms database:updateschema`.
+:bash:`vendor/bin/typo3cms database:updateschema`.
 
 
 TYPO3 shows error if the PHP path is not correct
@@ -116,8 +116,8 @@ Workaround
 
 This workaround is for these two bugs:
 
-https://github.com/AOEpeople/crawler/issues/576 and
-https://github.com/AOEpeople/crawler/issues/739
+https://github.com/tomasnorre/crawler/issues/576 and
+https://github.com/tomasnorre/crawler/issues/739
 
 If you would like to know more about what's going it, you can look at the core:
 
@@ -125,3 +125,46 @@ https://github.com/TYPO3/TYPO3.CMS/blob/10.4/typo3/sysext/indexed_search/Classes
 
 Here a int value is submitted instead of a String. This is a change that goes more than 8 years back.
 So surprised that it never was a problem before.
+
+Crawler Log shows "-" as result
+===============================
+
+In Crawler v11.0.0 after introducing PHP 8.0 compatibility. We are influenced by a bug in the PHP itself
+https://bugs.php.net/bug.php?id=81320, this bugs make the Crawler status an invalid JSON and can therefore
+not render the correct result. It will display the result in the Crawler Log as `-`.
+
+Even though the page is correct crawler, the status is incorrect, which is of course not desired.
+
+Workaround
+----------
+
+On solution can be to remove the `php8.0-uploadprogress` package from your server. If this version is below
+1.1.4, this will trigger the problem. Removing the package can of course be a problem if you are depending on it.
+
+If possible, better update it to 1.1.4 or higher, then the problem should be solved as well.
+
+Site config baseVariants not used
+=================================
+
+An issue was reported for the Crawler, that the Site Config baseVariants was not respected by the Crawler.
+https://github.com/tomasnorre/crawler/issues/851, it turned out that crawler had problems with `ApplicationContexts`
+set in `.htaccess` like in example.
+
+.. code-block:: text
+
+    <IfModule mod_rewrite.c>
+       # Rules to set ApplicationContext based on hostname
+       RewriteCond %{HTTP_HOST} ^(.*)\.my\-site\.localhost$
+       RewriteRule .? - [E=TYPO3_CONTEXT:Development]
+       RewriteCond %{HTTP_HOST} ^(.*)\.mysite\.info$
+       RewriteRule .? - [E=TYPO3_CONTEXT:Production/Staging]
+       RewriteCond %{HTTP_HOST} ^(.*)\.my\-site\.info$
+       RewriteRule .? - [E=TYPO3_CONTEXT:Production]
+    </IfModule>
+
+Workaround
+----------
+
+this problem isn't solved, but it can be bypassed by using the `helhum/dotenv-connector`
+https://github.com/helhum/dotenv-connector
+

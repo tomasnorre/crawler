@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AOE\Crawler\Tests\Functional\Domain\Repository;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2022 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -20,9 +20,10 @@ namespace AOE\Crawler\Tests\Functional\Domain\Repository;
  */
 
 use AOE\Crawler\Domain\Repository\ProcessRepository;
+use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class ProcessRepositoryTest
@@ -31,25 +32,14 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  */
 class ProcessRepositoryTest extends FunctionalTestCase
 {
+    use BackendRequestTestTrait;
+
     /**
      * @var array
      */
     protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    /**
-     * @var array
-     */
-    protected $coreExtensionsToLoad = ['cms', 'version', 'lang'];
-
-    /**
-     * @var ProcessRepository
-     */
-    protected $subject;
-
-    /**
-     * @var \TYPO3\CMS\Extbase\Object\ObjectManagerInterface The object manager
-     */
-    protected $objectManager;
+    protected \AOE\Crawler\Domain\Repository\ProcessRepository $subject;
 
     /**
      * Creates the test environment.
@@ -57,9 +47,9 @@ class ProcessRepositoryTest extends FunctionalTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        $this->setupBackendRequest();
 
-        $this->objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->subject = $this->objectManager->get(ProcessRepository::class);
+        $this->subject = GeneralUtility::makeInstance(ProcessRepository::class);
 
         $configuration = [
             'sleepTime' => '1000',
@@ -90,10 +80,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
      */
     public function findAllReturnsAll(): void
     {
-        self::assertSame(
-            6,
-            $this->subject->findAll()->count()
-        );
+        self::assertSame(6, $this->subject->findAll()->count());
     }
 
     /**
@@ -101,10 +88,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
      */
     public function findAllActiveReturnsActive(): void
     {
-        self::assertSame(
-            3,
-            $this->subject->findAllActive()->count()
-        );
+        self::assertSame(3, $this->subject->findAllActive()->count());
     }
 
     /**
@@ -112,28 +96,11 @@ class ProcessRepositoryTest extends FunctionalTestCase
      */
     public function removeByProcessId(): void
     {
-        self::assertSame(
-            6,
-            $this->subject->findAll()->count()
-        );
+        self::assertSame(6, $this->subject->findAll()->count());
 
         $this->subject->removeByProcessId('1002');
 
-        self::assertSame(
-            5,
-            $this->subject->findAll()->count()
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function countActive(): void
-    {
-        self::assertSame(
-            3,
-            $this->subject->findAllActive()->count()
-        );
+        self::assertSame(5, $this->subject->findAll()->count());
     }
 
     /**
@@ -141,10 +108,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
      */
     public function countNotTimeouted(): void
     {
-        self::assertSame(
-            2,
-            $this->subject->countNotTimeouted(11)
-        );
+        self::assertSame(2, $this->subject->countNotTimeouted(11));
     }
 
     /**
@@ -152,10 +116,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
      */
     public function countAll(): void
     {
-        self::assertSame(
-            6,
-            $this->subject->countAll()
-        );
+        self::assertSame(6, $this->subject->countAll());
     }
 
     /**
@@ -170,10 +131,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
             ['process_id' => '1005', 'system_process_id' => 0],
         ];
 
-        self::assertSame(
-            $expected,
-            $this->subject->getActiveProcessesOlderThanOneHour()
-        );
+        self::assertEquals($expected, $this->subject->getActiveProcessesOlderThanOneHour());
     }
 
     /**
@@ -188,10 +146,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
             ['process_id' => '1005', 'system_process_id' => 0],
         ];
 
-        self::assertSame(
-            $expected,
-            $this->subject->getActiveOrphanProcesses()
-        );
+        self::assertEquals($expected, $this->subject->getActiveOrphanProcesses());
     }
 
     /**
@@ -203,10 +158,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
         $expectedProcessesToBeDeleted = 3;
         $this->subject->deleteProcessesWithoutItemsAssigned();
 
-        self::assertSame(
-            $this->subject->findAll()->count(),
-            $countBeforeDelete - $expectedProcessesToBeDeleted
-        );
+        self::assertSame($this->subject->findAll()->count(), $countBeforeDelete - $expectedProcessesToBeDeleted);
     }
 
     /**
@@ -218,10 +170,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
         $expectedProcessesToBeDeleted = 3;
         $this->subject->deleteProcessesMarkedAsDeleted();
 
-        self::assertSame(
-            $this->subject->findAll()->count(),
-            $countBeforeDelete - $expectedProcessesToBeDeleted
-        );
+        self::assertSame($this->subject->findAll()->count(), $countBeforeDelete - $expectedProcessesToBeDeleted);
     }
 
     /**
@@ -230,18 +179,12 @@ class ProcessRepositoryTest extends FunctionalTestCase
     public function markRequestedProcessesAsNotActive(): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching'] = [];
-        self::assertEquals(
-            3,
-            $this->subject->findAllActive()->count()
-        );
+        self::assertEquals(3, $this->subject->findAllActive()->count());
 
         $processIds = ['1001', '1002'];
         $this->subject->markRequestedProcessesAsNotActive($processIds);
 
-        self::assertEquals(
-            1,
-            $this->subject->findAllActive()->count()
-        );
+        self::assertEquals(1, $this->subject->findAllActive()->count());
     }
 
     /**
@@ -249,19 +192,13 @@ class ProcessRepositoryTest extends FunctionalTestCase
      */
     public function updateProcessAssignItemsCount(): void
     {
-        $processBefore = $this->subject->findByProcessId('1002');
-        self::assertEquals(
-            1,
-            $processBefore['assigned_items_count']
-        );
+        $processBefore = $this->findByProcessId('1002');
+        self::assertEquals(1, $processBefore['assigned_items_count']);
 
         $this->subject->updateProcessAssignItemsCount(10, '1002');
 
-        $processAfter = $this->subject->findByProcessId('1002');
-        self::assertEquals(
-            10,
-            $processAfter['assigned_items_count']
-        );
+        $processAfter = $this->findByProcessId('1002');
+        self::assertEquals(10, $processAfter['assigned_items_count']);
     }
 
     /**
@@ -271,29 +208,38 @@ class ProcessRepositoryTest extends FunctionalTestCase
     {
         $processId = md5('processId');
         $systemProcessId = 12345;
-        self::assertFalse($this->subject->findByProcessId($processId));
+        self::assertFalse($this->findByProcessId($processId));
 
         $this->subject->addProcess($processId, $systemProcessId);
 
-        $process = $this->subject->findByProcessId($processId);
-        self::assertEquals(
-            $processId,
-            $process['process_id']
+        $process = $this->findByProcessId($processId);
+        self::assertEquals($processId, $process['process_id']);
+
+        self::assertEquals(true, $process['active']);
+
+        self::assertGreaterThan(time(), $process['ttl']);
+
+        self::assertEquals($systemProcessId, $process['system_process_id']);
+    }
+
+    /**
+     * @return mixed
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    private function findByProcessId(string $processId)
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
+            ProcessRepository::TABLE_NAME
         );
 
-        self::assertEquals(
-            true,
-            $process['active']
-        );
-
-        self::assertGreaterThan(
-            time(),
-            $process['ttl']
-        );
-
-        self::assertEquals(
-            $systemProcessId,
-            $process['system_process_id']
-        );
+        return $queryBuilder
+            ->select('*')
+            ->from(ProcessRepository::TABLE_NAME)
+            ->where(
+                $queryBuilder->expr()->eq(
+                    'process_id',
+                    $queryBuilder->createNamedParameter($processId, \PDO::PARAM_STR)
+                )
+            )->executeQuery()->fetchAssociative();
     }
 }

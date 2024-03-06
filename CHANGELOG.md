@@ -1,22 +1,205 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 11.0.0-dev
+## Crawler 12.0.0-dev
 
 ### Added
+* AbstractBackendModuleController
+* BackendModuleController
+* BackendModuleCrawlerLogController
+* BackendModuleCrawlerProcessController
+* BackendModuleStartCrawlingController
+* Support for PHP 8.2
 
 ### Changed
+* !!! Switch constants in ProcessQueueCommand from public to private
+* !!! Add interface to CrawlStrategy filename
+* !!! Switch getExtensionIcon() in TcaUtility from protected to private
+* !!! Add Type Hints for id parameters on RequestForm Render method
+* !!! Switch runPollSuccessHooks() in CrawlerInitialization from protected to private
+* !!! Switch isRequestHashMatchingQueueRecord() in FrontendUserAuthenticator from protected to private
+* !!! CrawlerHookInterface doesn't take a CrawlerController as input anymore
+* !!! ResultHandler moved to Controller/Backend/Helper
+* !!! UrlBuilder moved to Controller/Backend/Helper
+* !!! Mark all classes @internal that are not already marked as internal
 
 ### Fixed
+* If indexed_search is installed activate procInstructions for indexed_search
+* Avoid deprecations in PHP 8.2
+* Prevent undefined array key uid and username in FrontendUserAuthentication
+* Fix loading middleware order to make forced indexing work again [@cweiske](https://github.com/cweiske)
+* Change tense in flush command message [@cweiske](https://github.com/cweiske)
 
 ### Deprecated
 #### Classes
 #### Functions & Properties
 
 ### Removed
-* Support for TYPO3 9
-* PHP support for `<7.4`
+* Obsolete columns (first and last time) from Process Overview
+* !!! Remove constructor form RequestFormInterface
+* !!! Support for TYPO3 10
+* !!! Support for TYPO3 11 (Only in main branch, v12.0.0)
+* !!! PHP support for `<8.0`
+* !!! PHP support for `<8.1` (Only in main branch, v12.0.0)
+* Remove CLI_hooks from ProcessQueueCommand
+* !!! ClassAliasMap & LegacyClassesForIde Migrations
 
 #### Classes
+* !!! AbstractCommandTests
+* !!! IndexedSearchCrawlerHook
+* !!! CrawlerApi
+* !!! IndexedSearchCrawlerFilesHook
+* !!! BackendModule
+* !!! AbstractRequestForm
+* !!! LogRequestForm
+* !!! RequestFormFactory
+* !!! RequestFormInterface
+* !!! StartRequestForm
+* !!! MultiProcessRequestForm
+* !!! BackendUtility
+
+#### Functions & Properties
+* !!! CrawlerController->modMenu()
+* !!! ConfigurationRepository->getCrawlerConfigurationRecords()
+* !!! ConfigurationService->getUrlService()
+* !!! FrontendUserAuthenticator->queueRepository
+* !!! ProcessRepository->countActive()
+* !!! ProcessRepository->findByProcessId()
+* !!! ProcessRepository->getLimitFromItemCountAndOffset()
+* !!! ProcessQueueCommandTest->queueRepository
+* !!! QueueRepository->isPageInQueueTimed()
+* !!! QueueRepository->getAvailableSets()
+* !!! QueueRepository->countAllUnassignedPendingItems()
+* !!! QueueRepository->countPendingItemsGroupedByConfigurationKey()
+* !!! QueueRepository->getSetIdWithUnprocessedEntries()
+* !!! QueueRepository->getTotalQueueEntriesByConfiguration()
+* !!! QueueRepository->getLastProcessedEntriesTimestamps()
+* !!! QueueRepository->getLastProcessedEntries()
+* !!! QueueRepository->getPerformanceData()
+* !!! QueueRepository->findByQueueId()
+
+## Crawler 11.0.7
+Crawler 11.0.7 was released on November 18th, 2022
+
+### Fixed
+* Ensure that array key is set before used in BuildQueueCommand (PHP 8.1)
+
+## Crawler 11.0.6
+Crawler 11.0.6 was released on November 12th, 2022
+
+### Fixed
+* Zip extension with PHP 7.4 builds instead of PHP 8.1
+
+## Crawler 11.0.5
+Crawler 11.0.5 was released on November 11th, 2022
+
+### Fixed
+* If indexed_search is installed activate procInstructions for indexed_search
+* Ensure undefined indexes is not throwing a warning in PHP 8
+
+## Crawler 11.0.4
+Crawler 11.0.4 was released on February 11th, 2022
+
+### Fixed
+* Crawler could not index frontend because of trustedHostPattern mismatch
+* Fatal PHP error is thrown in the backend crawler log
+* Prevent buildQueue from creating entries for non-localized pages
+* CrawlerController checking if URL is correct ObjectType fixed
+
+### Deprecated
+#### Functions & Properties
+* ConfigurationRepository->getCrawlerConfigurationRecords()
+* ProcessRepository->findByProcessId()
+* QueueRepository->countAllUnassignedPendingItems()
+* QueueRepository->countPendingItemsGroupedByConfigurationKey()
+* QueueRepository->getSetIdWithUnprocessedEntries()
+* QueueRepository->getTotalQueueEntriesByConfiguration()
+* QueueRepository->getLastProcessedEntriesTimestamps()
+* QueueRepository->getLastProcessedEntries()
+* QueueRepository->getPerformanceData()
+* QueueRepository->isPageInQueueTimed()
+* QueueRepository->getAvailableSets()
+* QueueRepository->findByQueueId()
+
+## Crawler 11.0.3
+Crawler 11.0.3 was released on January 28th, 2022
+
+### Added
+* PHP 8.1 compatibility
+
+### Fixed
+* PHP8 undefined array key when creating/updating/saving configuration record
+* RestrictedPages is getting crawled when Crawler Configuration contains the belonging UserGroup
+
+## Crawler 11.0.2
+Crawler 11.0.2 was released on January 11th, 2022
+
+### Added
+* Docs: Troubleshooting - Site based baseVariants not used
+* Docs: Example on how to exclude pages recursively from being crawled
+* Docs: Respecting Categories in News to prevent double indexing
+* Docs: Set correct main branch name
+
+### Fixed
+* DateTime parse error in backend module when displaying log
+* PHP8 undefined array keys in CrawlerController, ConfigurationService and middlewares
+* Text not displayed in confirm dialog in backend module
+
+## Crawler 11.0.1
+Crawler 11.0.1 was released on November 1st, 2021
+
+### Changed
+* Use more expressive message for excluded doktypes when building queue
+
+### Fixed
+* Set `result_data` back to `json_encode($result)` to ensure correct result handling in backend
+* Removes QueueRepository from FrontendUserAuthenticator Middleware, to ensure FE plugins can be rendered
+* PHP 8.0 compatibility problems. Undefined indexes resolved
+* Change requests to write to Header to ensure StaticFileCache is working
+* Switched back to fetch() instead of fetchAssociative() to keep support for legacy TYPO3 installations
+* Crawler Status on direct requests showing correct statuses again
+
+## Crawler 11.0.0
+Crawler 11.0.0 was released on October 22nd, 2021
+
+### Added
+* Support for TYPO3 11 LTS
+* PHP 8.0 Support
+* Display error messages in buildQueue command in CLI
+* PSR-14 ModifySkipPageEvent
+* PSR-14 AfterUrlCrawledEvent
+* PSR-14 InvokeQueueChangeEvent
+* PSR-14 AfterUrlCrawledEvent
+* PSR-14 BeforeQueueItemAddedEvent
+* PSR-14 AfterQueueItemAddedEvent
+
+### Changed
+* !!! CrawlerController->drawURLs_addRowsForPage() is now returning an array instead of HTML-string
+* !!! CrawlerController->getPageTreeAndUrls() is now returning an array instead of HTML-string
+
+### Fixed
+* Add Process button isn't shown when no entries in queue
+* Calculating the typo3 cli path based on composer is active
+
+### Deprecated
+* pageVeto-hook is marked as deprecated, will be removed in 13.0
+
+#### Classes
+#### Functions & Properties
+
+### Removed
+* Support for TYPO3 9
+* PHP support for `<7.4`
+* SignalSlotUtility::SIGNAL_URL_CRAWLED
+* SignalSlotUtility::SIGNAL_INVOKE_QUEUE_CHANGE
+* SignalSlotUtility::SIGNAL_URL_ADDED_TO_QUEUE
+* SignalSlotUtility::SIGNAL_DUPLICATE_URL_IN_QUEUE
+* SignalSlotUtility::SIGNAL_QUEUEITEM_PREPROCESS
+* SignalSlotUtility::SIGNAL_QUEUEITEM_POSTPROCESS
+* SignalSlotUtility::SIGNAL_QUEUE_ENTRY_FLUSH
+
+#### Classes
+* SignalSlotUtility
+
 #### Functions & Properties
 * CrawlerController->accessMode
 * CrawlerController->processFilename
@@ -54,7 +237,6 @@
 * ProcessService->multiProcess()
 * ProcessService->reportItemStatus()
 * ProcessService->startRequiredProcesses()
-
 * QueueRepository->countUnprocessedItems()
 * QueueRepository->countAllByProcessId()
 

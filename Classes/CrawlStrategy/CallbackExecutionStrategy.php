@@ -24,6 +24,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Used for hooks (e.g. crawling external files)
+ * @internal since v12.0.0
  */
 class CallbackExecutionStrategy
 {

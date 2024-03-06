@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AOE\Crawler\Service;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -20,6 +20,7 @@ namespace AOE\Crawler\Service;
  */
 
 use Psr\Http\Message\UriInterface;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Routing\SiteMatcher;
 use TYPO3\CMS\Core\Site\Entity\Site;
@@ -37,15 +38,41 @@ class UrlService
      * @param int $httpsOrHttp see tx_crawler_configuration.force_ssl
      * @throws \TYPO3\CMS\Core\Exception\SiteNotFoundException
      * @throws \TYPO3\CMS\Core\Routing\InvalidRouteArgumentsException
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\DBAL\Driver\Exception
      */
-    public function getUrlFromPageAndQueryParameters(int $pageId, string $queryString, ?string $alternativeBaseUrl, int $httpsOrHttp): UriInterface
-    {
+    public function getUrlFromPageAndQueryParameters(
+        int $pageId,
+        string $queryString,
+        ?string $alternativeBaseUrl,
+        int $httpsOrHttp
+    ): ?UriInterface {
+        $url = new Uri();
         $site = GeneralUtility::makeInstance(SiteMatcher::class)->matchByPageId($pageId);
         if ($site instanceof Site) {
             $queryString = ltrim($queryString, '?&');
             $queryParts = [];
             parse_str($queryString, $queryParts);
             unset($queryParts['id']);
+
+            if (isset($queryParts['L']) && !empty($queryParts['L'])) {
+                $requestedLanguage = $site->getLanguageById((int) $queryParts['L']);
+                $languages = array_merge([(int) $queryParts['L']], $requestedLanguage->getFallbackLanguageIds());
+
+                $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('pages');
+                $query = $queryBuilder->select('*')
+                    ->from('pages')
+                    ->orWhere(
+                        $queryBuilder->expr()->eq('uid', $pageId),
+                        $queryBuilder->expr()->eq('l10n_parent', $pageId)
+                    )->andWhere($queryBuilder->expr()->in('sys_language_uid', $languages))->executeQuery();
+                $rows = $query->fetchAssociative();
+
+                if (empty($rows)) {
+                    return null;
+                }
+            }
+
             // workaround as long as we don't have native language support in crawler configurations
             if (isset($queryParts['L'])) {
                 $queryParts['_language'] = $queryParts['L'];
@@ -55,7 +82,7 @@ class UrlService
                 $siteLanguage = $site->getDefaultLanguage();
             }
             $url = $site->getRouter()->generateUri($pageId, $queryParts);
-            if (! empty($alternativeBaseUrl)) {
+            if (!empty($alternativeBaseUrl)) {
                 $alternativeBaseUrl = new Uri($alternativeBaseUrl);
                 $url = $url->withHost($alternativeBaseUrl->getHost());
                 $url = $url->withScheme($alternativeBaseUrl->getScheme());
@@ -64,12 +91,6 @@ class UrlService
                     $url = $url->withUserInfo($userInfo);
                 }
             }
-        } else {
-            // Technically this is not possible with site handling, but kept for backwards-compatibility reasons
-            // Once EXT:crawler is v10-only compatible, this should be removed completely
-            $baseUrl = ($alternativeBaseUrl ?: GeneralUtility::getIndpEnv('TYPO3_SITE_URL'));
-            $url = rtrim($baseUrl, '/') . '/index.php' . $queryString;
-            $url = new Uri($url);
         }
 
         if ($httpsOrHttp === -1) {
@@ -101,7 +122,9 @@ class UrlService
         foreach ($urls as $url) {
             foreach ($valueSet as $val) {
                 if (count($newUrls) < $maxUrlToCompile) {
-                    $newUrls[] = $url . (strcmp((string) $val, '') ? '&' . rawurlencode($varName) . '=' . rawurlencode((string) $val) : '');
+                    $newUrls[] = $url . (strcmp((string) $val, '') ? '&' . rawurlencode($varName) . '=' . rawurlencode(
+                        (string) $val
+                    ) : '');
                 }
             }
         }

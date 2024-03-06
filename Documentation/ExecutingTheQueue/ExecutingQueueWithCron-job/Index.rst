@@ -1,4 +1,4 @@
-﻿.. include:: /Includes.txt
+﻿.. include:: /Includes.rst.txt
 
 =============================
 Executing queue with cron-job
@@ -9,7 +9,7 @@ intervals.
 
 For this to become reality you must ideally have a cron-job set up.
 This assumes you are running on Unix architecture of some sort. The
-crontab is often edited by :shell:`crontab -e` and you should insert a line
+crontab is often edited by :bash:`crontab -e` and you should insert a line
 like this:
 
 ::
@@ -25,6 +25,8 @@ as a CGI script as well in /usr/bin/.
 
 The user "\_cli\_" is created by the framework on demand if it does not exist
 at the first command line call.
+
+Make sure that the user "\_cli\_" has admin-rights.
 
 In the :guilabel:`CLI status` menu of the :guilabel:`Site Crawler` info module
 you can see the status:

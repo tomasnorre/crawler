@@ -1,10 +1,10 @@
-.. include:: /Includes.txt
+.. include:: /Includes.rst.txt
 
 ============================
 Automatic add pages to Queue
 ============================
 
-Since 9.1.0
+.. versionadded:: 9.1.0
 
 Edit Pages
 ----------

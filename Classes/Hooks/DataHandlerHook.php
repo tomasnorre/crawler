@@ -21,9 +21,9 @@ namespace AOE\Crawler\Hooks;
 
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Service\QueueService;
+use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * @internal since v9.2.5
@@ -33,7 +33,7 @@ class DataHandlerHook
     /**
      * @noRector \Rector\DeadCode\Rector\ClassMethod\RemoveUnusedParameterRector
      */
-    public function addFlushedPagesToCrawlerQueue(array $parameters, \TYPO3\CMS\Core\DataHandling\DataHandler $dataHandler): void
+    public function addFlushedPagesToCrawlerQueue(array $parameters, DataHandler $dataHandler): void
     {
         $pageIdsToBeFlushedFromCache = $parameters['pageIdArray'];
         if (empty($pageIdsToBeFlushedFromCache)) {
@@ -51,18 +51,18 @@ class DataHandlerHook
         }
     }
 
-    private function getQueueRepository(): QueueRepository
+    public function getQueueRepository(): QueueRepository
     {
-        return GeneralUtility::makeInstance(ObjectManager::class)->get(QueueRepository::class);
+        return GeneralUtility::makeInstance(QueueRepository::class);
     }
 
-    private function getQueueService(): QueueService
+    public function getQueueService(): QueueService
     {
-        return GeneralUtility::makeInstance(ObjectManager::class)->get(QueueService::class);
+        return GeneralUtility::makeInstance(QueueService::class);
     }
 
-    private function getPageRepository(): PageRepository
+    public function getPageRepository(): PageRepository
     {
-        return GeneralUtility::makeInstance(ObjectManager::class)->get(PageRepository::class);
+        return GeneralUtility::makeInstance(PageRepository::class);
     }
 }

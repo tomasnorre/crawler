@@ -28,10 +28,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class CrawlerCsvWriterTest extends UnitTestCase
 {
-    /**
-     * @var CrawlerCsvWriter
-     */
-    protected $subject;
+    protected \AOE\Crawler\Writer\FileWriter\CsvWriter\CrawlerCsvWriter $subject;
 
     protected function setUp(): void
     {
@@ -45,6 +42,7 @@ class CrawlerCsvWriterTest extends UnitTestCase
      */
     public function arrayToCsvTest(): void
     {
+        $records = [];
         $records[] = [
             'Page Title' => 'Home',
             'Page Uid' => 1,

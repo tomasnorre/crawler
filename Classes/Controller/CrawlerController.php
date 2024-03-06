@@ -26,12 +26,16 @@ use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Event\AfterQueueItemAddedEvent;
+use AOE\Crawler\Event\AfterUrlAddedToQueueEvent;
+use AOE\Crawler\Event\BeforeQueueItemAddedEvent;
 use AOE\Crawler\QueueExecutor;
 use AOE\Crawler\Service\ConfigurationService;
 use AOE\Crawler\Service\PageService;
 use AOE\Crawler\Service\UrlService;
-use AOE\Crawler\Utility\SignalSlotUtility;
+use AOE\Crawler\Value\QueueRow;
 use PDO;
+use Psr\Http\Message\UriInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
@@ -39,20 +43,20 @@ use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Type\Bitmask\Permission;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class CrawlerController
  *
  * @package AOE\Crawler\Controller
+ * @internal since v12.0.0
  */
 class CrawlerController implements LoggerAwareInterface
 {
@@ -60,138 +64,42 @@ class CrawlerController implements LoggerAwareInterface
 
     public const CLI_STATUS_POLLABLE_PROCESSED = 8;
 
-    /**
-     * @var integer
-     */
-    public $setID = 0;
-
-    /**
-     * @var string
-     */
-    public $processID = '';
-
-    /**
-     * @var array
-     */
-    public $duplicateTrack = [];
-
-    /**
-     * @var array
-     */
-    public $downloadUrls = [];
-
-    /**
-     * @var array
-     */
-    public $incomingProcInstructions = [];
-
-    /**
-     * @var array
-     */
-    public $incomingConfigurationSelection = [];
-
-    /**
-     * @var bool
-     */
-    public $registerQueueEntriesInternallyOnly = false;
-
-    /**
-     * @var array
-     */
-    public $queueEntries = [];
-
-    /**
-     * @var array
-     */
-    public $urlList = [];
-
-    /**
-     * @var array
-     */
-    public $extensionSettings = [];
+    public int $setID = 0;
+    public string $processID = '';
+    public array $duplicateTrack = [];
+    public array $downloadUrls = [];
+    public array $incomingProcInstructions = [];
+    public array $incomingConfigurationSelection = [];
+    public bool $registerQueueEntriesInternallyOnly = false;
+    public array $queueEntries = [];
+    public array $urlList = [];
+    public array $extensionSettings = [];
 
     /**
      * Mount Point
-     *
-     * @var bool
      * Todo: Check what this is used for and adjust the type hint or code, as bool doesn't match the current code.
      */
-    public $MP = false;
-
-    /**
-     * @var QueueRepository
-     */
-    protected $queueRepository;
-
-    /**
-     * @var ProcessRepository
-     */
-    protected $processRepository;
-
-    /**
-     * @var ConfigurationRepository
-     */
-    protected $configurationRepository;
-
-    /**
-     * @var QueueExecutor
-     */
-    protected $queueExecutor;
-
-    /**
-     * @var int
-     */
-    protected $maximumUrlsToCompile = 10000;
-
-    /**
-     * @var IconFactory
-     */
-    protected $iconFactory;
+    public bool $MP = false;
+    protected QueueRepository $queueRepository;
+    protected ProcessRepository $processRepository;
+    protected ConfigurationRepository $configurationRepository;
+    protected QueueExecutor $queueExecutor;
+    protected int $maximumUrlsToCompile = 10000;
+    protected IconFactory $iconFactory;
 
     /**
      * @var BackendUserAuthentication|null
      */
     private $backendUser;
-
-    /**
-     * @var integer
-     */
-    private $scheduledTime = 0;
-
-    /**
-     * @var integer
-     */
-    private $reqMinute = 0;
-
-    /**
-     * @var bool
-     */
-    private $submitCrawlUrls = false;
-
-    /**
-     * @var bool
-     */
-    private $downloadCrawlUrls = false;
-
-    /**
-     * @var PageRepository
-     */
-    private $pageRepository;
-
-    /**
-     * @var Crawler
-     */
-    private $crawler;
-
-    /**
-     * @var ConfigurationService
-     */
-    private $configurationService;
-
-    /**
-     * @var UrlService
-     */
-    private $urlService;
+    private int $scheduledTime = 0;
+    private int $reqMinute = 0;
+    private bool $submitCrawlUrls = false;
+    private bool $downloadCrawlUrls = false;
+    private PageRepository $pageRepository;
+    private Crawler $crawler;
+    private ConfigurationService $configurationService;
+    private UrlService $urlService;
+    private EventDispatcher $eventDispatcher;
 
     /************************************
      *
@@ -201,16 +109,24 @@ class CrawlerController implements LoggerAwareInterface
 
     public function __construct()
     {
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $crawlStrategyFactory = GeneralUtility::makeInstance(CrawlStrategyFactory::class);
-        $this->queueRepository = $objectManager->get(QueueRepository::class);
-        $this->processRepository = $objectManager->get(ProcessRepository::class);
-        $this->configurationRepository = $objectManager->get(ConfigurationRepository::class);
+        $this->queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
+        $this->processRepository = GeneralUtility::makeInstance(ProcessRepository::class);
+        $this->configurationRepository = GeneralUtility::makeInstance(ConfigurationRepository::class);
         $this->pageRepository = GeneralUtility::makeInstance(PageRepository::class);
-        $this->queueExecutor = GeneralUtility::makeInstance(QueueExecutor::class, $crawlStrategyFactory);
+        $this->eventDispatcher = GeneralUtility::makeInstance(EventDispatcher::class);
+        $this->queueExecutor = GeneralUtility::makeInstance(
+            QueueExecutor::class,
+            $crawlStrategyFactory,
+            $this->eventDispatcher
+        );
         $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
         $this->crawler = GeneralUtility::makeInstance(Crawler::class);
-        $this->configurationService = GeneralUtility::makeInstance(ConfigurationService::class);
+        $this->configurationService = GeneralUtility::makeInstance(
+            ConfigurationService::class,
+            GeneralUtility::makeInstance(UrlService::class),
+            $this->configurationRepository
+        );
         $this->urlService = GeneralUtility::makeInstance(UrlService::class);
 
         /** @var ExtensionConfigurationProvider $configurationProvider */
@@ -222,8 +138,15 @@ class CrawlerController implements LoggerAwareInterface
             $this->extensionSettings['countInARun'] = 100;
         }
 
-        $this->extensionSettings['processLimit'] = MathUtility::forceIntegerInRange($this->extensionSettings['processLimit'], 1, 99, 1);
-        $this->setMaximumUrlsToCompile(MathUtility::forceIntegerInRange($this->extensionSettings['maxCompileUrls'], 1, 1000000000, 10000));
+        $this->extensionSettings['processLimit'] = MathUtility::forceIntegerInRange(
+            $this->extensionSettings['processLimit'],
+            1,
+            99,
+            1
+        );
+        $this->setMaximumUrlsToCompile(
+            MathUtility::forceIntegerInRange($this->extensionSettings['maxCompileUrls'], 1, 1000000000, 10000)
+        );
     }
 
     public function setMaximumUrlsToCompile(int $maximumUrlsToCompile): void
@@ -244,20 +167,19 @@ class CrawlerController implements LoggerAwareInterface
      * It returns an array of configurations and no urls!
      *
      * @param array $pageRow Page record with at least dok-type and uid columns.
-     * @param string $skipMessage
-     * @return array
      * @see getUrlsForPageId()
      */
-    public function getUrlsForPageRow(array $pageRow, &$skipMessage = '')
+    public function getUrlsForPageRow(array $pageRow, string &$skipMessage = ''): array
     {
-        if (! is_int($pageRow['uid'])) {
-            $skipMessage = 'PageUid ' . $pageRow['uid'] . ' was not an integer';
+        $pageRowUid = intval($pageRow['uid']);
+        if (!$pageRowUid) {
+            $skipMessage = 'PageUid "' . $pageRow['uid'] . '" was not an integer';
             return [];
         }
 
         $message = $this->getPageService()->checkIfPageShouldBeSkipped($pageRow);
         if ($message === false) {
-            $res = $this->getUrlsForPageId($pageRow['uid']);
+            $res = $this->getUrlsForPageId($pageRowUid);
             $skipMessage = '';
         } else {
             $skipMessage = $message;
@@ -285,37 +207,46 @@ class CrawlerController implements LoggerAwareInterface
     public function urlListFromUrlArray(
         array $vv,
         array $pageRow,
-        $scheduledTime,
-        $reqMinute,
-        $submitCrawlUrls,
-        $downloadCrawlUrls,
+        int $scheduledTime,
+        int $reqMinute,
+        bool $submitCrawlUrls,
+        bool $downloadCrawlUrls,
         array &$duplicateTrack,
         array &$downloadUrls,
         array $incomingProcInstructions
-    ) {
+    ): string {
         if (! is_array($vv['URLs'])) {
             return 'ERROR - no URL generated';
         }
         $urlLog = [];
         $pageId = (int) $pageRow['uid'];
         $configurationHash = $this->getConfigurationHash($vv);
-        $skipInnerCheck = $this->queueRepository->noUnprocessedQueueEntriesForPageWithConfigurationHashExist($pageId, $configurationHash);
+        $skipInnerCheck = $this->queueRepository->noUnprocessedQueueEntriesForPageWithConfigurationHashExist(
+            $pageId,
+            $configurationHash
+        );
 
         $urlService = new UrlService();
 
         foreach ($vv['URLs'] as $urlQuery) {
-            if (! $this->drawURLs_PIfilter($vv['subCfg']['procInstrFilter'], $incomingProcInstructions)) {
+            if (! $this->drawURLs_PIfilter($vv['subCfg']['procInstrFilter'] ?? '', $incomingProcInstructions)) {
                 continue;
             }
-            $url = (string) $urlService->getUrlFromPageAndQueryParameters(
+            $url = $urlService->getUrlFromPageAndQueryParameters(
                 $pageId,
                 $urlQuery,
                 $vv['subCfg']['baseUrl'] ?? null,
                 $vv['subCfg']['force_ssl'] ?? 0
             );
 
+            if (! $url instanceof UriInterface) {
+                continue;
+            }
+
+            $url = (string) $url;
+
             // Create key by which to determine unique-ness:
-            $uKey = $url . '|' . $vv['subCfg']['userGroups'] . '|' . $vv['subCfg']['procInstrFilter'];
+            $uKey = $url . '|' . ($vv['subCfg']['userGroups'] ?? '') . '|' . ($vv['subCfg']['procInstrFilter'] ?? '');
 
             if (isset($duplicateTrack[$uKey])) {
                 //if the url key is registered just display it and do not resubmit is
@@ -349,6 +280,7 @@ class CrawlerController implements LoggerAwareInterface
             $duplicateTrack[$uKey] = true;
         }
 
+        // Todo: Find a better option to have this correct in both backend (<br>) and cli (<new line>)
         return implode('<br>', $urlLog);
     }
 
@@ -359,7 +291,7 @@ class CrawlerController implements LoggerAwareInterface
      * @param array $incomingProcInstructions Processing instructions
      * @return boolean
      */
-    public function drawURLs_PIfilter($piString, array $incomingProcInstructions)
+    public function drawURLs_PIfilter(string $piString, array $incomingProcInstructions)
     {
         if (empty($incomingProcInstructions)) {
             return true;
@@ -384,7 +316,10 @@ class CrawlerController implements LoggerAwareInterface
         }
 
         // Call a hook to alter configuration
-        if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['getPageTSconfigForId'])) {
+        if (
+            isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['getPageTSconfigForId'])
+            && is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['getPageTSconfigForId'])
+        ) {
             $params = [
                 'pageId' => $id,
                 'pageTSConfig' => &$pageTSconfig,
@@ -397,7 +332,7 @@ class CrawlerController implements LoggerAwareInterface
     }
 
     /**
-     * This methods returns an array of configurations.
+     * This method returns an array of configurations.
      * Adds no urls!
      */
     public function getUrlsForPageId(int $pageId): array
@@ -531,14 +466,14 @@ class CrawlerController implements LoggerAwareInterface
         ];
 
         // fe user group simulation:
-        $uGs = implode(',', array_unique(GeneralUtility::intExplode(',', $subCfg['userGroups'], true)));
+        $uGs = implode(',', array_unique(GeneralUtility::intExplode(',', $subCfg['userGroups'] ?? '', true)));
         if ($uGs) {
             $parameters['feUserGroupList'] = $uGs;
         }
 
         // Setting processing instructions
-        $parameters['procInstructions'] = GeneralUtility::trimExplode(',', $subCfg['procInstrFilter']);
-        if (is_array($subCfg['procInstrParams.'])) {
+        $parameters['procInstructions'] = GeneralUtility::trimExplode(',', $subCfg['procInstrFilter'] ?? '');
+        if (is_array($subCfg['procInstrParams.'] ?? false)) {
             $parameters['procInstrParams'] = $subCfg['procInstrParams.'];
         }
 
@@ -547,7 +482,7 @@ class CrawlerController implements LoggerAwareInterface
         $fieldArray = [
             'page_id' => (int) $id,
             'parameters' => $parameters_serialized,
-            'parameters_hash' => GeneralUtility::shortMD5($parameters_serialized),
+            'parameters_hash' => md5($parameters_serialized),
             'configuration_hash' => $configurationHash,
             'scheduled' => $tstamp,
             'exec_time' => 0,
@@ -570,30 +505,16 @@ class CrawlerController implements LoggerAwareInterface
                     $fieldArray['parameters_hash']
                 );
             }
-
-            if (empty($rows)) {
-                $connectionForCrawlerQueue = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(QueueRepository::TABLE_NAME);
-                $connectionForCrawlerQueue->insert(
-                    QueueRepository::TABLE_NAME,
-                    $fieldArray
+            if ($rows === []) {
+                $connectionForCrawlerQueue = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(
+                    QueueRepository::TABLE_NAME
                 );
+                $connectionForCrawlerQueue->insert(QueueRepository::TABLE_NAME, $fieldArray);
                 $uid = $connectionForCrawlerQueue->lastInsertId(QueueRepository::TABLE_NAME, 'qid');
                 $rows[] = $uid;
                 $urlAdded = true;
 
-                $signalPayload = ['uid' => $uid, 'fieldArray' => $fieldArray];
-                SignalSlotUtility::emitSignal(
-                    self::class,
-                    SignalSlotUtility::SIGNAL_URL_ADDED_TO_QUEUE,
-                    $signalPayload
-                );
-            } else {
-                $signalPayload = ['rows' => $rows, 'fieldArray' => $fieldArray];
-                SignalSlotUtility::emitSignal(
-                    self::class,
-                    SignalSlotUtility::SIGNAL_DUPLICATE_URL_IN_QUEUE,
-                    $signalPayload
-                );
+                $this->eventDispatcher->dispatch(new AfterUrlAddedToQueueEvent($uid, $fieldArray));
             }
         }
 
@@ -626,7 +547,9 @@ class CrawlerController implements LoggerAwareInterface
      */
     public function readUrl($queueId, $force = false, string $processId = '')
     {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(QueueRepository::TABLE_NAME);
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
+            QueueRepository::TABLE_NAME
+        );
         $ret = 0;
         $this->logger->debug('crawler-readurl start ' . microtime(true));
 
@@ -641,17 +564,15 @@ class CrawlerController implements LoggerAwareInterface
                 ->andWhere('exec_time = 0')
                 ->andWhere('process_scheduled > 0');
         }
-        $queueRec = $queryBuilder->execute()->fetch();
+        $queueRec = $queryBuilder->executeQuery()->fetchAssociative();
 
         if (! is_array($queueRec)) {
             return;
         }
 
-        SignalSlotUtility::emitSignal(
-            self::class,
-            SignalSlotUtility::SIGNAL_QUEUEITEM_PREPROCESS,
-            [$queueId, &$queueRec]
-        );
+        /** @var BeforeQueueItemAddedEvent $event */
+        $event = $this->eventDispatcher->dispatch(new BeforeQueueItemAddedEvent((int) $queueId, $queueRec));
+        $queueRec = $event->getQueueRecord();
 
         // Set exec_time to lock record:
         $field_array = ['exec_time' => $this->getCurrentTime()];
@@ -662,14 +583,10 @@ class CrawlerController implements LoggerAwareInterface
         }
 
         GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(QueueRepository::TABLE_NAME)
-            ->update(
-                QueueRepository::TABLE_NAME,
-                $field_array,
-                ['qid' => (int) $queueId]
-            );
+            ->update(QueueRepository::TABLE_NAME, $field_array, ['qid' => (int) $queueId]);
 
         $result = $this->queueExecutor->executeQueueItem($queueRec, $this);
-        if ($result['content'] === null) {
+        if ($result === 'ERROR' || ($result['content'] ?? null) === null) {
             $resultData = 'An errors happened';
         } else {
             /** @var JsonCompatibilityConverter $jsonCompatibilityConverter */
@@ -677,15 +594,16 @@ class CrawlerController implements LoggerAwareInterface
             $resultData = $jsonCompatibilityConverter->convert($result['content']);
 
             //atm there's no need to point to specific pollable extensions
-            if (is_array($resultData) && is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'])) {
+            if (
+                is_array($resultData)
+                && isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'])
+                && is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'])
+            ) {
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'] as $pollable) {
                     // only check the success value if the instruction is runnig
                     // it is important to name the pollSuccess key same as the procInstructions key
                     if (is_array($resultData['parameters']['procInstructions'])
-                        && in_array(
-                            $pollable,
-                            $resultData['parameters']['procInstructions'], true
-                        )
+                        && in_array($pollable, $resultData['parameters']['procInstructions'], true)
                     ) {
                         if (! empty($resultData['success'][$pollable])) {
                             $ret |= self::CLI_STATUS_POLLABLE_PROCESSED;
@@ -697,18 +615,12 @@ class CrawlerController implements LoggerAwareInterface
         // Set result in log which also denotes the end of the processing of this entry.
         $field_array = ['result_data' => json_encode($result)];
 
-        SignalSlotUtility::emitSignal(
-            self::class,
-            SignalSlotUtility::SIGNAL_QUEUEITEM_POSTPROCESS,
-            [$queueId, &$field_array]
-        );
+        /** @var AfterQueueItemAddedEvent $event */
+        $event = $this->eventDispatcher->dispatch(new AfterQueueItemAddedEvent($queueId, $field_array));
+        $field_array = $event->getFieldArray();
 
         GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(QueueRepository::TABLE_NAME)
-            ->update(
-                QueueRepository::TABLE_NAME,
-                $field_array,
-                ['qid' => (int) $queueId]
-            );
+            ->update(QueueRepository::TABLE_NAME, $field_array, ['qid' => (int) $queueId]);
 
         $this->logger->debug('crawler-readurl stop ' . microtime(true));
         return $ret;
@@ -725,28 +637,21 @@ class CrawlerController implements LoggerAwareInterface
     {
         // Set exec_time to lock record:
         $field_array['exec_time'] = $this->getCurrentTime();
-        $connectionForCrawlerQueue = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(QueueRepository::TABLE_NAME);
-        $connectionForCrawlerQueue->insert(
-            QueueRepository::TABLE_NAME,
-            $field_array
+        $connectionForCrawlerQueue = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(
+            QueueRepository::TABLE_NAME
         );
+        $connectionForCrawlerQueue->insert(QueueRepository::TABLE_NAME, $field_array);
         $queueId = $field_array['qid'] = $connectionForCrawlerQueue->lastInsertId(QueueRepository::TABLE_NAME, 'qid');
         $result = $this->queueExecutor->executeQueueItem($field_array, $this);
 
         // Set result in log which also denotes the end of the processing of this entry.
         $field_array = ['result_data' => json_encode($result)];
 
-        SignalSlotUtility::emitSignal(
-            self::class,
-            SignalSlotUtility::SIGNAL_QUEUEITEM_POSTPROCESS,
-            [$queueId, &$field_array]
-        );
+        /** @var AfterQueueItemAddedEvent $event */
+        $event = $this->eventDispatcher->dispatch(new AfterQueueItemAddedEvent($queueId, $field_array));
+        $field_array = $event->getFieldArray();
 
-        $connectionForCrawlerQueue->update(
-            QueueRepository::TABLE_NAME,
-            $field_array,
-            ['qid' => $queueId]
-        );
+        $connectionForCrawlerQueue->update(QueueRepository::TABLE_NAME, $field_array, ['qid' => $queueId]);
 
         return $result;
     }
@@ -758,6 +663,8 @@ class CrawlerController implements LoggerAwareInterface
      *****************************/
 
     /**
+     * This draws the pageTree with URLs for e.g the Backend Log Module
+     *
      * @param integer $id Root page id to start from.
      * @param integer $depth Depth of tree, 0=only id-page, 1= on sublevel, 99 = infinite
      * @param integer $scheduledTime Unix Time when the URL is timed to be visited when put in queue
@@ -766,7 +673,7 @@ class CrawlerController implements LoggerAwareInterface
      * @param boolean $downloadCrawlUrls If set (and submitcrawlUrls is false) will fill $downloadUrls with entries)
      * @param array $incomingProcInstructions Array of processing instructions
      * @param array $configurationSelection Array of configuration keys
-     * @return string
+     * @return array
      */
     public function getPageTreeAndUrls(
         $id,
@@ -792,7 +699,7 @@ class CrawlerController implements LoggerAwareInterface
         /* @var PageTreeView $tree */
         $tree = GeneralUtility::makeInstance(PageTreeView::class);
         $perms_clause = $this->getBackendUser()->getPagePermsClause(Permission::PAGE_SHOW);
-        $tree->init('AND ' . $perms_clause);
+        $tree->init(empty($perms_clause) ? '' : ('AND ' . $perms_clause));
 
         $pageInfo = BackendUtility::readPageAccess($id, $perms_clause);
         if (is_array($pageInfo)) {
@@ -808,9 +715,9 @@ class CrawlerController implements LoggerAwareInterface
             $tree->getTree($id, $depth, '');
         }
 
-        // Traverse page tree:
-        $code = '';
+        $queueRows = [];
 
+        // Traverse page tree:
         foreach ($tree->tree as $data) {
             $this->MP = false;
 
@@ -822,14 +729,15 @@ class CrawlerController implements LoggerAwareInterface
                 $this->MP = $mountpage[0]['mount_pid'] . '-' . $data['row']['uid'];
 
                 $mountTree = GeneralUtility::makeInstance(PageTreeView::class);
-                $mountTree->init('AND ' . $perms_clause);
+                $mountTree->init(empty($perms_clause) ? '' : ('AND ' . $perms_clause));
                 $mountTree->getTree($mountpage[0]['mount_pid'], $depth);
 
                 foreach ($mountTree->tree as $mountData) {
-                    $code .= $this->drawURLs_addRowsForPage(
+                    $queueRows = array_merge($queueRows, $this->drawURLs_addRowsForPage(
                         $mountData['row'],
-                        $mountData['HTML'] . BackendUtility::getRecordTitle('pages', $mountData['row'], true)
-                    );
+                        BackendUtility::getRecordTitle('pages', $mountData['row'], true),
+                        (string) $data['HTML']
+                    ));
                 }
 
                 // replace page when mount_pid_ol is enabled
@@ -841,42 +749,52 @@ class CrawlerController implements LoggerAwareInterface
                 }
             }
 
-            $code .= $this->drawURLs_addRowsForPage(
+            $queueRows = array_merge($queueRows, $this->drawURLs_addRowsForPage(
                 $data['row'],
-                $data['HTML'] . BackendUtility::getRecordTitle('pages', $data['row'], true)
-            );
+                BackendUtility::getRecordTitle('pages', $data['row'], true),
+                (string) $data['HTML']
+            ));
         }
 
-        return $code;
+        return $queueRows;
     }
 
     /**
      * Create the rows for display of the page tree
      * For each page a number of rows are shown displaying GET variable configuration
      */
-    public function drawURLs_addRowsForPage(array $pageRow, string $pageTitle): string
+    public function drawURLs_addRowsForPage(array $pageRow, string $pageTitle, string $pageTitleHTML = ''): array
     {
         $skipMessage = '';
 
         // Get list of configurations
         $configurations = $this->getUrlsForPageRow($pageRow, $skipMessage);
-        $configurations = ConfigurationService::removeDisallowedConfigurations($this->incomingConfigurationSelection, $configurations);
+        $configurations = ConfigurationService::removeDisallowedConfigurations(
+            $this->incomingConfigurationSelection,
+            $configurations
+        );
 
         // Traverse parameter combinations:
         $c = 0;
-        $content = '';
+
+        $queueRowCollection = [];
+
         if (! empty($configurations)) {
             foreach ($configurations as $confKey => $confArray) {
-
                 // Title column:
                 if (! $c) {
-                    $titleClm = '<td rowspan="' . count($configurations) . '">' . $pageTitle . '</td>';
+                    $queueRow = new QueueRow($pageTitle);
+                    $queueRow->setPageTitleHTML($pageTitleHTML);
                 } else {
-                    $titleClm = '';
+                    $queueRow = new QueueRow();
+                    $queueRow->setPageTitleHTML($pageTitleHTML);
                 }
 
-                if (! in_array($pageRow['uid'], $this->configurationService->expandExcludeString($confArray['subCfg']['exclude'] ?? ''), true)) {
-
+                if (! in_array(
+                    $pageRow['uid'],
+                    $this->configurationService->expandExcludeString($confArray['subCfg']['exclude'] ?? ''),
+                    true
+                )) {
                     // URL list:
                     $urlList = $this->urlListFromUrlArray(
                         $confArray,
@@ -901,7 +819,9 @@ class CrawlerController implements LoggerAwareInterface
                                 <td>' . htmlspecialchars('&' . $gVar . '=') . '<br/>' .
                             '(' . count($gVal) . ')' .
                             '</td>
-                                <td nowrap="nowrap">' . nl2br(htmlspecialchars(implode(chr(10), $gVal))) . '</td>
+                                <td nowrap="nowrap">' . nl2br(
+                                htmlspecialchars(implode(chr(10), $gVal))
+                            ) . '</td>
                             </tr>
                         ';
                         $calcRes *= count($gVal);
@@ -911,47 +831,51 @@ class CrawlerController implements LoggerAwareInterface
                     $paramExpanded .= 'Comb: ' . implode('*', $calcAccu) . '=' . $calcRes;
 
                     // Options
-                    $optionValues = '';
-                    if ($confArray['subCfg']['userGroups']) {
-                        $optionValues .= 'User Groups: ' . $confArray['subCfg']['userGroups'] . '<br/>';
+                    $queueRowOptionCollection = [];
+                    if ($confArray['subCfg']['userGroups'] ?? false) {
+                        $queueRowOptionCollection[] = 'User Groups: ' . $confArray['subCfg']['userGroups'];
                     }
-                    if ($confArray['subCfg']['procInstrFilter']) {
-                        $optionValues .= 'ProcInstr: ' . $confArray['subCfg']['procInstrFilter'] . '<br/>';
+                    if ($confArray['subCfg']['procInstrFilter'] ?? false) {
+                        $queueRowOptionCollection[] = 'ProcInstr: ' . $confArray['subCfg']['procInstrFilter'];
                     }
 
-                    // Compile row:
-                    $content .= '
-                        <tr>
-                            ' . $titleClm . '
-                            <td>' . htmlspecialchars($confKey) . '</td>
-                            <td>' . nl2br(htmlspecialchars(rawurldecode(trim(str_replace('&', chr(10) . '&', GeneralUtility::implodeArrayForUrl('', $confArray['paramParsed'])))))) . '</td>
-                            <td>' . $paramExpanded . '</td>
-                            <td nowrap="nowrap">' . $urlList . '</td>
-                            <td nowrap="nowrap">' . $optionValues . '</td>
-                            <td nowrap="nowrap">' . DebugUtility::viewArray($confArray['subCfg']['procInstrParams.']) . '</td>
-                        </tr>';
+                    // Remove empty array entries;
+                    $queueRowOptionCollection = array_filter($queueRowOptionCollection);
+
+                    $parameterConfig = nl2br(
+                        htmlspecialchars(rawurldecode(
+                            trim(str_replace(
+                                '&',
+                                chr(10) . '&',
+                                GeneralUtility::implodeArrayForUrl('', $confArray['paramParsed'] ?? [])
+                            ))
+                        ))
+                    );
+                    $queueRow->setValuesExpanded($paramExpanded);
+                    $queueRow->setConfigurationKey($confKey);
+                    $queueRow->setUrls($urlList);
+                    $queueRow->setOptions($queueRowOptionCollection);
+                    $queueRow->setParameters(DebugUtility::viewArray($confArray['subCfg']['procInstrParams.'] ?? []));
+                    $queueRow->setParameterConfig($parameterConfig);
+
+                    $queueRowCollection[] = $queueRow;
                 } else {
-                    $content .= '<tr>
-                            ' . $titleClm . '
-                            <td>' . htmlspecialchars($confKey) . '</td>
-                            <td colspan="5"><em>No entries</em> (Page is excluded in this configuration)</td>
-                        </tr>';
+                    $queueRow->setConfigurationKey($confKey);
+                    $queueRow->setMessage('(Page is excluded in this configuration)');
+                    $queueRowCollection[] = $queueRow;
                 }
 
                 $c++;
             }
         } else {
             $message = ! empty($skipMessage) ? ' (' . $skipMessage . ')' : '';
-
-            // Compile row:
-            $content .= '
-                <tr>
-                    <td>' . $pageTitle . '</td>
-                    <td colspan="6"><em>No entries</em>' . $message . '</td>
-                </tr>';
+            $queueRow = new QueueRow($pageTitle);
+            $queueRow->setPageTitleHTML($pageTitleHTML);
+            $queueRow->setMessage($message);
+            $queueRowCollection[] = $queueRow;
         }
 
-        return $content;
+        return $queueRowCollection;
     }
 
     /**
@@ -971,11 +895,6 @@ class CrawlerController implements LoggerAwareInterface
         return new PageService();
     }
 
-    private function getMaximumUrlsToCompile(): int
-    {
-        return $this->maximumUrlsToCompile;
-    }
-
     /**
      * @return BackendUserAuthentication
      */
@@ -987,15 +906,5 @@ class CrawlerController implements LoggerAwareInterface
             $this->backendUser = $GLOBALS['BE_USER'];
         }
         return $this->backendUser;
-    }
-
-    /**
-     * Get querybuilder for given table
-     *
-     * @return QueryBuilder
-     */
-    private function getQueryBuilder(string $table)
-    {
-        return GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($table);
     }
 }

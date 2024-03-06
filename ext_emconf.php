@@ -7,13 +7,14 @@ $EM_CONF[$_EXTKEY] = [
     'uploadfolder' => 0,
     'createDirs' => '',
     'clearCacheOnLoad' => 0,
-    'author' => 'Kasper Skaarhoj, Daniel Poetzinger, Fabrizio Branca, Tolleiv Nietsch, Timo Schmidt, Michael Klapper, Stefan Rotsch, Tomas Norre Mikkelsen, Tizian Schmidlin',
+    'author' => 'Tomas Norre Mikkelsen',
     'author_email' => 'tomasnorre@gmail.com',
     'author_company' => '',
-    'version' => '10.0.3',
+    'version' => '12.0.0-dev',
     'constraints' => [
         'depends' => [
-            'typo3' => '10.4.0-11.0.99',
+            'php' => '8.1.0-8.99.99',
+            'typo3' => '12.2.0-12.9.99',
         ],
         'conflicts' => [],
         'suggests' => [],

@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace AOE\Crawler\Hooks;
 
 /*
- * (c) 2020 AOE GmbH <dev@aoe.com>
+ * (c) 2005-2021 AOE GmbH <dev@aoe.com>
+ * (c) 2021-     Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * This file is part of the TYPO3 Crawler Extension.
  *
@@ -19,55 +20,27 @@ namespace AOE\Crawler\Hooks;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * @internal since v9.2.5
  */
 class ProcessCleanUpHook implements CrawlerHookInterface
 {
-    /**
-     * @var ProcessRepository
-     */
-    protected $processRepository;
-
-    /**
-     * @var QueueRepository
-     */
-    protected $queueRepository;
-
-    /**
-     * @var CrawlerController
-     */
-    private $crawlerController;
-
-    /**
-     * @var array
-     */
-    private $extensionSettings;
+    protected ProcessRepository $processRepository;
+    protected QueueRepository $queueRepository;
 
     public function __construct()
     {
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->processRepository = $objectManager->get(ProcessRepository::class);
-        $this->queueRepository = $objectManager->get(QueueRepository::class);
+        $this->processRepository = GeneralUtility::makeInstance(ProcessRepository::class);
+        $this->queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
     }
 
-    /**
-     * Main function of process CleanUp Hook.
-     *
-     * @param CrawlerController $crawlerController Crawler Lib class
-     */
-    public function crawler_init(CrawlerController $crawlerController): void
+    public function crawler_init(): void
     {
-        $this->crawlerController = $crawlerController;
-        $this->extensionSettings = $this->crawlerController->extensionSettings;
-
         // Clean Up
         $this->removeActiveOrphanProcesses();
         $this->removeActiveProcessesOlderThanOneHour();
@@ -119,7 +92,7 @@ class ProcessCleanUpHook implements CrawlerHookInterface
                     $responseArray = $this->createResponseArray($process);
                     if ($systemProcessId === (int) $responseArray[1]) {
                         $processExists = true;
-                    };
+                    }
                 }
                 if (! $processExists) {
                     $this->removeProcessFromProcesslist($processId);
@@ -209,7 +182,15 @@ class ProcessCleanUpHook implements CrawlerHookInterface
         $returnArray = [];
         if (! Environment::isWindows()) {
             // Not windows
-            exec('ps aux | grep \'typo3 crawler:processQueue\'', $returnArray, $returnValue);
+            if (exec('which ps')) {
+                // ps command is defined
+                exec('ps aux | grep \'typo3 crawler:processQueue\'', $returnArray, $returnValue);
+            } else {
+                trigger_error(
+                    'Crawler is unable to locate the ps command to clean up orphaned crawler processes.',
+                    E_USER_WARNING
+                );
+            }
         } else {
             // Windows
             exec('tasklist | find \'typo3 crawler:processQueue\'', $returnArray, $returnValue);

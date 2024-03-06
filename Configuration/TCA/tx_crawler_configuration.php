@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-defined('TYPO3_MODE') or die();
+defined('TYPO3') or die();
 
 return [
     'ctrl' => [
@@ -10,7 +10,6 @@ return [
         'label' => 'name',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
-        'cruser_id' => 'cruser_id',
         'default_sortby' => 'ORDER BY crdate',
         'delete' => 'deleted',
         'enablecolumns' => [
@@ -35,7 +34,8 @@ return [
             'config' => [
                 'type' => 'input',
                 'size' => 30,
-                'eval' => 'required,trim,lower,alphanum_x',
+                'eval' => 'trim,lower,alphanum_x',
+                'required' => true,
             ],
         ],
         'force_ssl' => [
@@ -105,7 +105,6 @@ return [
             'description' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:tx_crawler_configuration.pidsonly.description',
             'config' => [
                 'type' => 'group',
-                'internal_type' => 'db',
                 'allowed' => 'pages',
                 'size' => 5,
                 'minitems' => 0,

@@ -1,15 +1,16 @@
-<f:layout name="BackendModule" />
-
-<f:section name="Headline">
-	<f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.log" />
-</f:section>
+<f:layout name="Module" />
 
 <f:section name="Content">
+    <h3>
+        <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.multiprocess" />
+    </h3>
 	<br />
 	<div>
 		{refreshLink -> f:format.raw()}
 		{enableDisableToggle -> f:format.raw()}
-		{addLink -> f:format.raw()}
+        <f:if condition="{totalUnprocessedItemCount} > 0">
+            {addLink -> f:format.raw()}
+        </f:if>
 		{modeLink -> f:format.raw()}
 	</div>
 	<h3>
@@ -41,8 +42,6 @@
 			<tr>
 				<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.state" /></th>
 				<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.processid" /></th>
-				<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.time.first" /></th>
-				<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.time.last" /></th>
 				<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.time.duration" /></th>
 				<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.ttl" /></th>
 				<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.status.current" /></th>
@@ -68,8 +67,6 @@
 					</f:switch>
 				</td>
 				<td>{process.processId}</td>
-				<td><f:format.date format="d.m.Y - H:i:s">{process.timeForFirstItem}</f:format.date></td>
-				<td><f:format.date format="d.m.Y - H:i:s">{process.timeForLastItem}</f:format.date></td>
 				<td>{process.runTime}</td>
 				<td><f:format.date format="d.m.Y - H:i:s">{process.ttl}</f:format.date></td>
 				<td>{process.amountOfItemsProcessed}</td>
