@@ -38,7 +38,6 @@ class UrlService
      * @param int $httpsOrHttp see tx_crawler_configuration.force_ssl
      * @throws \TYPO3\CMS\Core\Exception\SiteNotFoundException
      * @throws \TYPO3\CMS\Core\Routing\InvalidRouteArgumentsException
-     * @throws \Doctrine\DBAL\DBALException
      * @throws \Doctrine\DBAL\Driver\Exception
      */
     public function getUrlFromPageAndQueryParameters(
