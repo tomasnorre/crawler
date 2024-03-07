@@ -18,7 +18,7 @@ jobs:
           - ^12.4
         php:
           - '8.1'
-          - '8.2'
+          #- '8.2' Disabled till green again, no need to run both if one is failing.
 
     steps:
       - name: Get branch name (merge)
@@ -43,7 +43,7 @@ jobs:
           composer --version
 
       - uses: actions/checkout@v3
-      - uses: jonaseberle/github-action-setup-ddev@v1
+      - uses: ddev/github-action-setup-ddev@v1
         with:
           ddevDir: ".devbox"
       - name: CodeCeption

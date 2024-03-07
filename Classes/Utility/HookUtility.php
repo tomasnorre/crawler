@@ -20,6 +20,8 @@ namespace AOE\Crawler\Utility;
  */
 
 use AOE\Crawler\Hooks\ProcessCleanUpHook;
+use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Core\Http\ApplicationType;
 
 /**
  * @codeCoverageIgnore
@@ -42,7 +44,12 @@ class HookUtility
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['refresh_hooks'][] =
             ProcessCleanUpHook::class;
 
-        self::registerBackendHooks();
+        // Env-dependent
+        if (($GLOBALS['TYPO3_REQUEST'] ?? null) instanceof ServerRequestInterface
+            && ApplicationType::fromRequest($GLOBALS['TYPO3_REQUEST'])->isBackend()
+        ) {
+            self::registerBackendHooks();
+        }
     }
 
     private static function registerBackendHooks(): void

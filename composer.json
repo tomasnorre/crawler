@@ -37,7 +37,7 @@
         "codeception/module-asserts": "^3.0",
         "codeception/module-filesystem": "^3.0",
         "codeception/module-phpbrowser": "^3.0",
-        "codeception/module-webdriver": "^3.0",
+        "codeception/module-webdriver": "^4.0",
         "infection/infection": "^0.26",
         "nikic/php-parser": "^4.13",
         "phpspec/prophecy-phpunit": "^2.0",
