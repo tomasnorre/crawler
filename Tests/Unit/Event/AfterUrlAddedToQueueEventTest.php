@@ -20,7 +20,7 @@ namespace AOE\Crawler\Tests\Unit\Event;
  */
 
 use AOE\Crawler\Event\AfterUrlAddedToQueueEvent;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * @covers \AOE\Crawler\Event\AfterUrlAddedToQueueEvent
@@ -31,6 +31,7 @@ class AfterUrlAddedToQueueEventTest extends UnitTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $uid = 'qwerty';
         $fieldArray = ['field' => 'array'];
         $this->subject = new AfterUrlAddedToQueueEvent($uid, $fieldArray);

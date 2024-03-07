@@ -52,7 +52,6 @@ class BackendModuleStartCrawlingControllerTest extends FunctionalTestCase
 
         $GLOBALS['BE_USER'] = $this->getMockBuilder(BackendUserAuthentication::class)
             ->disableOriginalConstructor()
-            ->setMethods(['isAdmin', 'getTSConfig', 'getPagePermsClause', 'isInWebMount', 'backendCheckLogin'])
             ->getMock();
 
         $GLOBALS['LANG'] = $this->createMock(LanguageService::class);

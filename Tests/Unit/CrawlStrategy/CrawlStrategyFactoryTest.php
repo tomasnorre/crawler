@@ -23,9 +23,9 @@ use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
 use AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategy;
 use AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategy;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * @covers \AOE\Crawler\CrawlStrategy\CrawlStrategyFactory
@@ -35,6 +35,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class CrawlStrategyFactoryTest extends UnitTestCase
 {
     use ProphecyTrait;
+
+    protected bool $resetSingletonInstances = true;
 
     /**
      * @test

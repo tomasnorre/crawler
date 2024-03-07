@@ -69,22 +69,24 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
         $this->moduleTemplate = $this->setupView($request, $this->pageUid);
         $this->moduleTemplate->makeDocHeaderModuleMenu(['id' => $request->getQueryParams()['id'] ?? -1]);
 
-        $this->assignValues();
+        $this->assignValues($request);
         return $this->moduleTemplate->renderResponse('Backend/ShowCrawlerInformation');
     }
 
-    private function assignValues(): ModuleTemplate
+    private function assignValues(ServerRequestInterface $request): ModuleTemplate
     {
         $logUrl = $this->backendUriBuilder->buildUriFromRoute('web_site_crawler_log', ['id' => $this->pageUid]);
 
-        $crawlingDepth = GeneralUtility::_GP('crawlingDepth') ?? '0';
-        $crawlParameter = GeneralUtility::_GP('_crawl');
-        $downloadParameter = GeneralUtility::_GP('_download');
-        $scheduledTime = $this->getScheduledTime((string) GeneralUtility::_GP('tstamp'));
+        $crawlingDepth = $request->getParsedBody()['crawlingDepth'] ?? $request->getQueryParams()['crawlingDepth'] ?? '0';
+        $crawlParameter = $request->getParsedBody()['_crawl'] ?? $request->getQueryParams()['_crawl'] ?? null;
+        $downloadParameter = $request->getParsedBody()['_download'] ?? $request->getQueryParams()['_download'] ?? null;
+        $scheduledTime = $this->getScheduledTime(
+            (string) ($request->getParsedBody()['tstamp'] ?? $request->getQueryParams()['tstamp'] ?? null)
+        );
         $submitCrawlUrls = isset($crawlParameter);
         $downloadCrawlUrls = isset($downloadParameter);
 
-        $this->incomingConfigurationSelection = GeneralUtility::_GP('configurationSelection');
+        $this->incomingConfigurationSelection = $request->getParsedBody()['configurationSelection'] ?? $request->getQueryParams()['configurationSelection'] ?? null;
         $this->incomingConfigurationSelection = is_array(
             $this->incomingConfigurationSelection
         ) ? $this->incomingConfigurationSelection : [];
@@ -141,19 +143,22 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
             'noConfigurationSelected' => $noConfigurationSelected,
             'submitCrawlUrls' => $submitCrawlUrls,
             'amountOfUrls' => count($this->crawlerController->duplicateTrack ?? []),
-            'selectors' => $this->generateConfigurationSelectors($this->pageUid, $crawlingDepth),
+            'selectors' => $this->generateConfigurationSelectors($this->pageUid, $crawlingDepth, $request),
             'queueRows' => $queueRows,
             'displayActions' => 0,
             'actionUrl' => $this->getActionUrl(),
             'logUrl' => $logUrl,
         ]);
     }
-    
+
     /**
      * Generates the configuration selectors for compiling URLs:
      */
-    private function generateConfigurationSelectors(int $pageId, string $crawlingDepth): array
-    {
+    private function generateConfigurationSelectors(
+        int $pageId,
+        string $crawlingDepth,
+        ServerRequestInterface $request
+    ): array {
         $selectors = [];
         $selectors['depth'] = $this->selectorBox(
             [
@@ -207,7 +212,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
                 ),
             ],
             'tstamp',
-            GeneralUtility::_POST('tstamp'),
+            $request->getParsedBody()['tstamp'] ?? null,
             false
         );
 

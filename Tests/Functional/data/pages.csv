@@ -1,0 +1,5 @@
+"pages"
+,"uid","pid","title","deleted","is_siteroot","slug","sys_language_uid","l10n_parent"
+,1,0,"Root",0,1,"/",0,0
+,2,1,"Archived",0,0,"/archived",0,0
+,1234,0,"Page UID 1234",0,0,"/pageuid-1234",0,0

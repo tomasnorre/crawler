@@ -1,0 +1,4 @@
+"tx_crawler_queue"
+,"qid","page_id","process_id","process_id_completed","parameters","result_data","exec_time","scheduled","set_id","configuration","configuration_hash"
+,1006,2,1006,"qwerty","{'url':'https://crawler-devbox.ddev.site','feUserGroupList':'1','procInstructions':[''],'procInstrParams':[]}","",0,0,123,"SecondConfiguration","28f6fd71036abbe3452a0bf9ca10ee38"
+,1007,2,1006,"qwerty","{'url':'https://crawler-devbox.ddev.site','feUserGroupList':'1,2','procInstructions':[''],'procInstrParams':[]}","",0,0,123,"SecondConfiguration","8e6edae3da393a9412898ef59e6cf925"

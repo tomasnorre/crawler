@@ -20,8 +20,8 @@ namespace AOE\Crawler\Tests\Unit\Converter;
  */
 
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * @covers \AOE\Crawler\Converter\JsonCompatibilityConverter
@@ -46,7 +46,7 @@ class JsonCompatibilityConverterTest extends UnitTestCase
         self::assertEquals($expected, $this->subject->convert($dataString));
     }
 
-    public function jsonCompatibilityConverterDataProvider(): iterable
+    public static function jsonCompatibilityConverterDataProvider(): iterable
     {
         $testData = [
             'keyString' => 'valueString',

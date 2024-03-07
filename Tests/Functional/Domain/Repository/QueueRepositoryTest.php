@@ -23,9 +23,9 @@ use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use AOE\Crawler\Value\QueueFilter;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
  * Class QueryRepositoryTest
@@ -36,10 +36,7 @@ class QueueRepositoryTest extends FunctionalTestCase
 {
     use BackendRequestTestTrait;
 
-    /**
-     * @var array
-     */
-    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+    protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     protected \AOE\Crawler\Domain\Repository\QueueRepository $subject;
 
@@ -51,8 +48,8 @@ class QueueRepositoryTest extends FunctionalTestCase
         parent::setUp();
         $this->setupBackendRequest();
 
-        $this->importDataSet(__DIR__ . '/../../Fixtures/tx_crawler_queue.xml');
-        $this->importDataSet(__DIR__ . '/../../Fixtures/pages.xml');
+        $this->importCSVDataSet(__DIR__ . '/../../Fixtures/tx_crawler_queue.csv');
+        $this->importCSVDataSet(__DIR__ . '/../../Fixtures/pages.csv');
 
         $this->subject = GeneralUtility::makeInstance(QueueRepository::class);
     }
@@ -71,7 +68,7 @@ class QueueRepositoryTest extends FunctionalTestCase
         $process = new Process();
         $process->setProcessId($processId);
 
-        $mockedRepository = $this->getAccessibleMock(QueueRepository::class, ['dummy'], [], '', false);
+        $mockedRepository = $this->getAccessibleMock(QueueRepository::class, null, [], '', false);
         $result = $mockedRepository->_call('getFirstOrLastObjectByProcess', $process, $orderBy, $orderDirection);
 
         self::assertEquals($expected, $result);
@@ -362,7 +359,7 @@ class QueueRepositoryTest extends FunctionalTestCase
         self::assertSame($expected, $queryRepository->findAll()->count());
     }
 
-    public function flushQueueDataProvider(): iterable
+    public static function flushQueueDataProvider(): iterable
     {
         yield 'Flush Entire Queue' => [
             'filter' => new QueueFilter('all'),
@@ -403,7 +400,7 @@ class QueueRepositoryTest extends FunctionalTestCase
         }
     }
 
-    public function getDuplicateQueueItemsIfExistsDataProvider(): iterable
+    public static function getDuplicateQueueItemsIfExistsDataProvider(): iterable
     {
         yield 'EnableTimeslot is true and timestamp is <= current' => [
             'timeslotActive' => true,
@@ -447,7 +444,7 @@ class QueueRepositoryTest extends FunctionalTestCase
         ];
     }
 
-    public function isPageInQueueDataProvider(): iterable
+    public static function isPageInQueueDataProvider(): iterable
     {
         yield 'Unprocessed Only' => [
             'uid' => 10,
@@ -479,7 +476,7 @@ class QueueRepositoryTest extends FunctionalTestCase
         ];
     }
 
-    public function getFirstOrLastObjectByProcessDataProvider(): iterable
+    public static function getFirstOrLastObjectByProcessDataProvider(): iterable
     {
         yield 'Known process_id, get first' => [
             'processId' => 'qwerty',
@@ -529,7 +526,7 @@ class QueueRepositoryTest extends FunctionalTestCase
         ];
     }
 
-    public function noUnprocessedQueueEntriesForPageWithConfigurationHashExistDataProvider(): iterable
+    public static function noUnprocessedQueueEntriesForPageWithConfigurationHashExistDataProvider(): iterable
     {
         yield 'No record found, uid not present' => [
             'uid' => 3000,
@@ -548,7 +545,7 @@ class QueueRepositoryTest extends FunctionalTestCase
         ];
     }
 
-    public function getQueueEntriesForPageIdDataProvider(): iterable
+    public static function getQueueEntriesForPageIdDataProvider(): iterable
     {
         yield 'Do Flush' => [
             'id' => 1002,

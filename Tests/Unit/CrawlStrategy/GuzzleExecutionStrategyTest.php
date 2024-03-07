@@ -20,11 +20,11 @@ namespace AOE\Crawler\Tests\Unit\CrawlStrategy;
  */
 
 use AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategy;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Http\Uri;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * @covers \AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategy
@@ -40,6 +40,7 @@ class GuzzleExecutionStrategyTest extends UnitTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->guzzleExecutionStrategy = $this->createPartialMock(GuzzleExecutionStrategy::class, ['getResponse']);
 
         $response = $this->createPartialMock(Response::class, ['getHeaderLine']);

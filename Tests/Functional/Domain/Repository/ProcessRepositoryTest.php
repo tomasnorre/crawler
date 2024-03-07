@@ -21,9 +21,9 @@ namespace AOE\Crawler\Tests\Functional\Domain\Repository;
 
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
  * Class ProcessRepositoryTest
@@ -34,10 +34,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
 {
     use BackendRequestTestTrait;
 
-    /**
-     * @var array
-     */
-    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+    protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     protected \AOE\Crawler\Domain\Repository\ProcessRepository $subject;
 
@@ -72,7 +69,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
         ];
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = $configuration;
 
-        $this->importDataSet(__DIR__ . '/../../Fixtures/tx_crawler_process.xml');
+        $this->importCSVDataSet(__DIR__ . '/../../Fixtures/tx_crawler_process.csv');
     }
 
     /**

@@ -1,0 +1,6 @@
+"pages"
+,"uid","pid","slug","TSconfig","sys_language_uid","l10n_parent"
+,7,1,"/pageuid-seven","",0,0
+"tx_crawler_configuration"
+,"uid","pid","tstamp","crdate","cruser_id","deleted","hidden","name","processing_instruction_filter","processing_instruction_parameters_ts","configuration","base_url","pidsonly","exclude"
+,7,7,1245224687,1245224687,831,0,0,"staticpub","tx_staticpub_publish","tx_staticpub_publish.includeResources=relPath","&amp;S=CRAWL&amp;L=[0]","http://www.testcase.de/","",""

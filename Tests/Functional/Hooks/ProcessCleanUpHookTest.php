@@ -23,8 +23,8 @@ use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Hooks\ProcessCleanUpHook;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
  * Class ProcessCleanUpHookTest
@@ -39,10 +39,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
     protected ProcessRepository $processRepository;
     protected QueueRepository $queueRepository;
 
-    /**
-     * @var array
-     */
-    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+    protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     protected function setUp(): void
     {
@@ -55,8 +52,8 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         $this->queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
 
         // Include Fixtures
-        $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_process.xml');
-        $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/tx_crawler_process.csv');
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.csv');
     }
 
     protected function tearDown(): void

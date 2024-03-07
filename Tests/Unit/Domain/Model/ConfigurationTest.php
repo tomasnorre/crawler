@@ -20,7 +20,7 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
  */
 
 use AOE\Crawler\Domain\Model\Configuration;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * @covers \AOE\Crawler\Domain\Model\Configuration
@@ -31,6 +31,7 @@ class ConfigurationTest extends UnitTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->subject = $this->createPartialMock(Configuration::class, []);
     }
 

@@ -24,10 +24,10 @@ use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use AOE\Crawler\Tests\Functional\LanguageServiceTestTrait;
 use AOE\Crawler\Tests\Functional\SiteBasedTestTrait;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 class BuildQueueCommandTest extends FunctionalTestCase
 {
@@ -45,10 +45,7 @@ class BuildQueueCommandTest extends FunctionalTestCase
         'FR-CA' => ['id' => 2, 'title' => 'Franco-Canadian', 'locale' => 'fr_CA.UTF8', 'iso' => 'fr', 'hrefLang' => 'fr-CA', 'direction' => ''],
     ];
 
-    /**
-     * @var array
-     */
-    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+    protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     protected QueueRepository $queueRepository;
 
@@ -58,11 +55,11 @@ class BuildQueueCommandTest extends FunctionalTestCase
     {
         parent::setUp();
         $this->setupBackendRequest();
-        $this->setupBackendUser();
+        $this->setupBackendUser(0);
         $this->setupLanguageService();
 
-        $this->importDataSet(__DIR__ . '/../Fixtures/pages.xml');
-        $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_configuration.xml');
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/pages.csv');
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/tx_crawler_configuration.csv');
         $this->queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
 
         $this->writeSiteConfiguration(
@@ -96,7 +93,7 @@ class BuildQueueCommandTest extends FunctionalTestCase
         self::assertEquals($expectedCount, $this->queueRepository->findAll()->count());
     }
 
-    public function buildQueueCommandDataProvider(): iterable
+    public static function buildQueueCommandDataProvider(): iterable
     {
         $crawlerConfiguration = 'default';
 
@@ -154,13 +151,14 @@ class BuildQueueCommandTest extends FunctionalTestCase
         ];
     }
 
-    private function setupBackendUser(): void
+    protected function setupBackendUser(int $userUid): BackendUserAuthentication
     {
         $GLOBALS['BE_USER'] = $this->getMockBuilder(BackendUserAuthentication::class)
             ->disableOriginalConstructor()
-            ->setMethods(['isAdmin', 'getTSConfig', 'getPagePermsClause', 'isInWebMount', 'backendCheckLogin'])
             ->getMock();
 
         $GLOBALS['BE_USER']->method('isInWebMount')->willReturn(true);
+
+        return $GLOBALS['BE_USER'];
     }
 }

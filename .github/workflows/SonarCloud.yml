@@ -31,8 +31,8 @@ jobs:
             if [ -n "${{ secrets.SONAR_TOKEN }}" ]; then
                 composer require --dev nimut/typo3-complete:^11.4 nimut/phpunit-merger:^1.1 --no-progress
                 export "TYPO3_PATH_WEB"=$PWD/.Build/Web;
-                export "UNIT_XML"='.Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml'
-                export "FUNCTIONAL_XML"='.Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml'
+                export "UNIT_XML"='.Build/vendor/typo3/testing-framework/Resources/Core/Build/UnitTests.xml'
+                export "FUNCTIONAL_XML"='.Build/vendor/typo3/testing-framework/Resources/Core/Build/FunctionalTests.xml'
                 mkdir -p .Logs/coverage .Logs/junit
                 .Build/bin/phpunit --whitelist Classes --coverage-php .Logs/coverage/unit_clover.cov --log-junit .Logs/junit/unit_junit.xml -c $UNIT_XML Tests/Unit
                 .Build/bin/phpunit --whitelist Classes --coverage-php .Logs/coverage/functional-coverage.cov --log-junit .Logs/junit/functional-junit.xml -c $FUNCTIONAL_XML Tests/Functional

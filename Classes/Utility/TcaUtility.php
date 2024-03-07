@@ -37,9 +37,9 @@ class TcaUtility
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'] ?? null)) {
             foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'] as $extensionKey => $extensionConfiguration) {
                 $configuration['items'][] = [
-                    $extensionConfiguration['value'] . ' [' . $extensionConfiguration['key'] . ']',
-                    $extensionConfiguration['key'],
-                    $this->getExtensionIcon($extensionKey),
+                    'label' => $extensionConfiguration['value'] . ' [' . $extensionConfiguration['key'] . ']',
+                    'value' => $extensionConfiguration['key'],
+                    'icon' => $this->getExtensionIcon($extensionKey),
                 ];
             }
         }

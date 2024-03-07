@@ -20,8 +20,8 @@ namespace AOE\Crawler\Tests\Functional\Service;
  */
 
 use AOE\Crawler\Service\ProcessService;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
  * Class ProcessServiceTest
@@ -30,10 +30,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class ProcessServiceTest extends FunctionalTestCase
 {
-    /**
-     * @var array
-     */
-    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+    protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     protected \AOE\Crawler\Service\ProcessService $subject;
 

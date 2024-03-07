@@ -76,9 +76,10 @@ class ItemProvider extends AbstractProvider
         $additionalParameters[] = 'SET[crawlaction]=start';
         $additionalParameters[] = 'configurationSelection[]=' . $crawlerConfiguration['name'];
         return [
-            'onclick' => 'top.goToModule(\'web_info\', 1, ' . GeneralUtility::quoteJSvalue(
+            'data-dispatch-action' => 'TYPO3.ModuleMenu.showModule',
+            'data-dispatch-args-list' => 'web_site_crawler_start,&' . GeneralUtility::quoteJSvalue(
                 '&' . implode('&', $additionalParameters)
-            ) . ');',
+            ),
         ];
     }
 }

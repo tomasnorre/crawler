@@ -56,7 +56,7 @@ class TcaUtilityTest extends FunctionalTestCase
         self::assertEquals($expected, $actual);
     }
 
-    public function getProcessingInstructionsDataProvider(): \Iterator
+    public static function getProcessingInstructionsDataProvider(): \Iterator
     {
         yield 'All Empty' => [
             'procInstructions' => [],

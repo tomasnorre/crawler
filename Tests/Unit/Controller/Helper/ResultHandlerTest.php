@@ -21,7 +21,7 @@ namespace AOE\Crawler\Tests\Unit\Controller\Backend\Helper;
  */
 
 use AOE\Crawler\Controller\Backend\Helper\ResultHandler;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * @covers \AOE\Crawler\Controller\Backend\Helper\ResultHandler
@@ -38,7 +38,7 @@ class ResultHandlerTest extends UnitTestCase
         self::assertSame($expected, ResultHandler::getResStatus($requestContent));
     }
 
-    public function getResStatusDataProvider(): iterable
+    public static function getResStatusDataProvider(): iterable
     {
         yield 'requestContent is empty array' => [
             'requestContent' => [],
@@ -82,7 +82,7 @@ class ResultHandlerTest extends UnitTestCase
         self::assertSame($expected, ResultHandler::getResFeVars($resultData));
     }
 
-    public function getResFeVarsDataProvider(): iterable
+    public static function getResFeVarsDataProvider(): iterable
     {
         yield 'ResultData is empty, therefore empty array returned' => [
             'resultData' => [],
@@ -117,7 +117,7 @@ class ResultHandlerTest extends UnitTestCase
         self::assertSame($expected, ResultHandler::getResultLog($resultLog));
     }
 
-    public function getResultLogDataProvider(): iterable
+    public static function getResultLogDataProvider(): iterable
     {
         yield 'ResultRow key result_data does not exist' => [
             'resultRow' => [

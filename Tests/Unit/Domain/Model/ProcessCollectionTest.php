@@ -22,8 +22,8 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
 use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Domain\Model\ProcessCollection;
 use AOE\Crawler\Exception\NoIndexFoundException;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Class ProcessCollectionTest
@@ -39,6 +39,7 @@ class ProcessCollectionTest extends UnitTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->subject = new ProcessCollection();
     }
 
@@ -49,17 +50,15 @@ class ProcessCollectionTest extends UnitTestCase
     {
         /** @var Process $processOne */
         $processOne = $this->getMockBuilder(Process::class)
-            ->setMethods(['dummy'])
             ->disableOriginalConstructor()
             ->getMock();
-        $processOne->setProcessId('11');
+        $processOne->expects(self::any())->method('getProcessId')->withAnyParameters()->willReturn('11');
 
         /** @var Process $processTwo */
         $processTwo = $this->getMockBuilder(Process::class)
-            ->setMethods(['dummy'])
             ->disableOriginalConstructor()
             ->getMock();
-        $processTwo->setProcessId('13');
+        $processTwo->expects(self::any())->method('getProcessId')->withAnyParameters()->willReturn('13');
 
         $processes = [];
         $processes[] = $processOne;
@@ -87,7 +86,7 @@ class ProcessCollectionTest extends UnitTestCase
     public function appendCrawlerDomainObject(): void
     {
         /** @var MockObject|Process $correctObjectType */
-        $correctObjectType = $this->getAccessibleMock(Process::class, ['dummy'], [], '', false);
+        $correctObjectType = $this->getAccessibleMock(Process::class, null, [], '', false);
         $this->subject->append($correctObjectType);
 
         self::assertEquals($correctObjectType, $this->subject->offsetGet(0));
@@ -110,7 +109,7 @@ class ProcessCollectionTest extends UnitTestCase
     public function offsetSetAndGet(): void
     {
         /** @var MockObject|Process $correctObjectType */
-        $correctObjectType = $this->getAccessibleMock(Process::class, ['dummy'], [], '', false);
+        $correctObjectType = $this->getAccessibleMock(Process::class, null, [], '', false);
         $this->subject->offsetSet(100, $correctObjectType);
 
         self::assertEquals($correctObjectType, $this->subject->offsetGet(100));
@@ -126,7 +125,7 @@ class ProcessCollectionTest extends UnitTestCase
         self::expectException(NoIndexFoundException::class);
         self::expectExceptionCode(1_593_714_823);
         self::expectExceptionMessageMatches('/^Index.*100.*Process are not available$/');
-        $correctObjectType = $this->getAccessibleMock(Process::class, ['dummy'], [], '', false);
+        $correctObjectType = $this->getAccessibleMock(Process::class, null, [], '', false);
 
         self::assertEquals($correctObjectType, $this->subject->offsetGet(100));
     }

@@ -20,7 +20,6 @@ namespace AOE\Crawler\Tests\Functional\Middleware;
  */
 
 use AOE\Crawler\Middleware\FrontendUserAuthenticator;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -28,6 +27,7 @@ use TYPO3\CMS\Core\Http\NormalizedParams;
 use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
  * @covers FrontendUserAuthenticator
@@ -36,10 +36,7 @@ class FrontendUserAuthenticatorTest extends FunctionalTestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var array
-     */
-    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+    protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     private FrontendUserAuthenticator $subject;
 
@@ -77,7 +74,7 @@ class FrontendUserAuthenticatorTest extends FunctionalTestCase
      */
     public function processSetsExpectedUserGroups(string $feGroups, string $headerLine): void
     {
-        $this->importDataSet(__DIR__ . '/Fixtures/ProcessHandlesFeGroups/tx_crawler_queue.xml');
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/ProcessHandlesFeGroups/tx_crawler_queue.csv');
 
         $queueParametersArray = [
             'url' => 'https://crawler-devbox.ddev.site',
@@ -113,7 +110,7 @@ class FrontendUserAuthenticatorTest extends FunctionalTestCase
         self::assertEquals(200, $response->getStatusCode());
     }
 
-    public function processSetsExpectedUserGroupsDataProvider(): iterable
+    public static function processSetsExpectedUserGroupsDataProvider(): iterable
     {
         yield 'One FE Group' => [
             'feGroups' => '1',

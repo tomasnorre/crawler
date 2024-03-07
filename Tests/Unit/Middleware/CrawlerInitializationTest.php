@@ -20,11 +20,11 @@ namespace AOE\Crawler\Tests\Unit\Middleware;
  */
 
 use AOE\Crawler\Middleware\CrawlerInitialization;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Http\Response;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * @covers \AOE\Crawler\Middleware\CrawlerInitialization
@@ -38,7 +38,7 @@ class CrawlerInitializationTest extends UnitTestCase
      */
     public function processRequestNotHandled(): void
     {
-        $subject = self::getAccessibleMock(CrawlerInitialization::class, ['dummy'], [], '', false);
+        $subject = self::getAccessibleMock(CrawlerInitialization::class, null, [], '', false);
 
         $request = $this->prophesize(ServerRequestInterface::class);
         $request->getAttribute('tx_crawler')->willReturn(null);

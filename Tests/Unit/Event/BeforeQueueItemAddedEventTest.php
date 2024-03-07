@@ -20,7 +20,7 @@ namespace AOE\Crawler\Tests\Unit\Event;
  */
 
 use AOE\Crawler\Event\BeforeQueueItemAddedEvent;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * @covers \AOE\Crawler\Event\BeforeQueueItemAddedEvent
@@ -31,6 +31,7 @@ class BeforeQueueItemAddedEventTest extends UnitTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $queueId = 1234;
         $queueRecord = ['simple' => 'array'];
         $this->subject = new BeforeQueueItemAddedEvent($queueId, $queueRecord);

@@ -20,7 +20,7 @@ namespace AOE\Crawler\Tests\Unit\Event;
  */
 
 use AOE\Crawler\Event\ModifySkipPageEvent;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * @covers \AOE\Crawler\Event\ModifySkipPageEvent
@@ -31,6 +31,7 @@ class ModifySkipPageEventTest extends UnitTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->subject = new ModifySkipPageEvent(['dummy' => 'array']);
     }
 

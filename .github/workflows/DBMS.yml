@@ -54,7 +54,7 @@ jobs:
 
       - name: Functional Tests
         run: |
-          export "FUNCTIONAL_XML"=.Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml
+          export "FUNCTIONAL_XML"=.Build/vendor/typo3/testing-framework/Resources/Core/Build/FunctionalTests.xml
           rm -rf .Build/Web/typo3temp/
           .Build/bin/phpunit --whitelist Classes --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
         env:
@@ -130,7 +130,7 @@ jobs:
 
       - name: Functional Tests
         run: |
-          export "FUNCTIONAL_XML"=.Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml
+          export "FUNCTIONAL_XML"=.Build/vendor/typo3/testing-framework/Resources/Core/Build/FunctionalTests.xml
           .Build/bin/phpunit --whitelist Classes --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
         env:
           typo3DatabaseHost: 127.0.0.1
@@ -176,7 +176,7 @@ jobs:
 
       - name: Functional Tests
         run: |
-          export "FUNCTIONAL_XML"=.Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml
+          export "FUNCTIONAL_XML"=.Build/vendor/typo3/testing-framework/Resources/Core/Build/FunctionalTests.xml
           .Build/bin/phpunit --whitelist Classes --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
         env:
           typo3DatabaseHost: 127.0.0.1

@@ -96,7 +96,7 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
         $this->assertEmpty($CSVData);
     }
 
-    public function addRowsNoEntriesDataProvider(): \Iterator
+    public static function addRowsNoEntriesDataProvider(): \Iterator
     {
         $title = 'Testing';
         $setId = 987654;
@@ -117,7 +117,7 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
         ];
     }
 
-    public function addRowsDataProvider(): \Iterator
+    public static function addRowsDataProvider(): \Iterator
     {
         $title = 'Testing';
         $setId = 987654;

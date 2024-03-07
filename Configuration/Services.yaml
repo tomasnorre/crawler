@@ -90,3 +90,7 @@ services:
             $iconFactory: '@TYPO3\CMS\Core\Imaging\IconFactory'
             $jsonCompatibilityConverter: '@AOE\Crawler\Converter\JsonCompatibilityConverter'
         public: true
+
+    AOE\Crawler\ContextMenu\ItemProvider:
+        tags:
+            - name: backend.contextmenu.itemprovider

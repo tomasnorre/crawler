@@ -20,8 +20,8 @@ namespace AOE\Crawler\Tests\Unit\Service;
  */
 
 use AOE\Crawler\Service\UrlService;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * @covers \AOE\Crawler\Service\UrlService
@@ -53,7 +53,7 @@ class UrlServiceTest extends UnitTestCase
         self::assertCount($expectedCount, $this->urlService->compileUrls($paramArray, $urls));
     }
 
-    public function compileUrlsDataProvider(): iterable
+    public static function compileUrlsDataProvider(): iterable
     {
         yield 'Empty Params array' => [
             'paramArray' => [],

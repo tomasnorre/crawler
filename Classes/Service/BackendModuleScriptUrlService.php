@@ -19,43 +19,29 @@ namespace AOE\Crawler\Service;
  * The TYPO3 project - inspiring people to share!
  */
 
-use TYPO3\CMS\Backend\Utility\BackendUtility;
+use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Backend\Routing\UriBuilder;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class BackendModuleHtmlElementService
+class BackendModuleScriptUrlService
 {
-    public function getFormElementSelect(
+    public function buildScriptUrl(
+        ServerRequestInterface $request,
         string $elementName,
         int $pageUid,
-        string|int $currentValue,
-        array $menuItems,
         array $queryParameters,
         string $queryString = ''
     ): string {
-        return BackendUtility::getFuncMenu(
-            $pageUid,
+        $mainParams = ['id' => $pageUid];
+        $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
+        $route = $request->getAttribute('route');
+        $scriptUrl = (string) $uriBuilder->buildUriFromRoute($route->getOption('_identifier'), $mainParams);
+        $scriptUrl .= $queryString . $this->getAdditionalQueryParams(
             $elementName,
-            $currentValue,
-            $menuItems[$elementName],
-            'index.php',
-            $queryString . $this->getAdditionalQueryParams($elementName, $queryParameters)
-        );
-    }
+            $queryParameters
+        ) . '&' . $elementName . '=${value}';
 
-    public function getFormElementCheckbox(
-        string $elementName,
-        int $pageUid,
-        string $currentValue,
-        array $queryParameters,
-        string $queryString = '',
-
-    ) {
-        return BackendUtility::getFuncCheck(
-            $pageUid,
-            $elementName,
-            $currentValue,
-            'index.php',
-            $queryString . $this->getAdditionalQueryParams($elementName, $queryParameters)
-        );
+        return $scriptUrl;
     }
 
     /*
