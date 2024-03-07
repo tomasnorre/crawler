@@ -241,7 +241,6 @@ class ConfigurationService
      *         - "_TABLE:[TCA table name];[_PID:[optional page id, default is current page]];[_ENABLELANG:1]" = Look up of table records from PID, filtering out deleted records. Example "_TABLE:tt_content; _PID:123"
      *        _ENABLELANG:1 picks only original records without their language overlays
      *         - Default: Literal value
-     * @throws \Doctrine\DBAL\DBALException
      */
     private function expandParameters(array $paramArray, int $pid): array
     {
@@ -406,9 +405,6 @@ class ConfigurationService
         return $pidList;
     }
 
-    /**
-     * @throws \Doctrine\DBAL\DBALException
-     */
     private function extractParamsFromCustomTable(
         array $subpartParams,
         int $pid,
