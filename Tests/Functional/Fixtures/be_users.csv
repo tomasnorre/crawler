@@ -1,3 +1,4 @@
 "be_users"
 ,"uid","pid","username","admin"
 ,1,0,"_cli_crawler",0
+,2,0,"admin",1

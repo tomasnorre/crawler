@@ -110,7 +110,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         $queueCountBefore = $this->queueRepository->findAll()->count();
 
         $notExistingProcessId = '23456';
-        $this->callInaccessibleMethod($this->subject, 'removeProcessFromProcesslist', $notExistingProcessId);
+        $this->subject->removeProcessFromProcesslist($notExistingProcessId);
 
         $processCountAfter = $this->processRepository->findAll()->count();
         $queueCountAfter = $this->queueRepository->findAll()->count();
@@ -131,7 +131,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         $queueCountBefore = $this->queueRepository->findAll()->count();
 
         $existingProcessId = '1000';
-        $this->callInaccessibleMethod($this->subject, 'removeProcessFromProcesslist', $existingProcessId);
+        $this->subject->removeProcessFromProcesslist($existingProcessId);
 
         $processCountAfter = $this->processRepository->findAll()->count();
         $queueCountAfter = $this->queueRepository->findAll()->count();
@@ -151,7 +151,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         $processCountBefore = $this->processRepository->findAll()->count();
         $queueCountBefore = $this->queueRepository->findByProcessId($existingProcessId)->count();
 
-        $this->callInaccessibleMethod($this->subject, 'removeProcessFromProcesslist', $existingProcessId);
+        $this->subject->removeProcessFromProcesslist($existingProcessId);
 
         $processCountAfter = $this->processRepository->findAll()->count();
         $queueCountAfter = $this->queueRepository->findByProcessId($existingProcessId)->count();
@@ -170,10 +170,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
     {
         $emptyInputString = '';
 
-        self::assertEquals(
-            [],
-            $this->callInaccessibleMethod($this->subject, 'createResponseArray', $emptyInputString)
-        );
+        self::assertEquals([], $this->subject->createResponseArray($emptyInputString));
     }
 
     /**
@@ -185,9 +182,6 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         $inputString = '1   2 2 4 5 6 ';
         $expectedOutputArray = ['1', '2', '2', '4', '5', '6'];
 
-        self::assertEquals(
-            $expectedOutputArray,
-            $this->callInaccessibleMethod($this->subject, 'createResponseArray', $inputString)
-        );
+        self::assertEquals($expectedOutputArray, $this->subject->createResponseArray($inputString));
     }
 }

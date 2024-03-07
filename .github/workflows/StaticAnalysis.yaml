@@ -91,6 +91,6 @@ jobs:
             -   name: "Install tools (Phive)"
                 run: "phive install --trust-gpg-keys 12CE0F1D262429A5"
 
-            -   run: composer require --dev typo3/cms-core:^12.2 --no-progress
+            -   run: composer require --dev typo3/cms-core:^12.4 --no-progress
             -   run: tools/psalm --shepherd
 
