@@ -25,7 +25,6 @@ use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use AOE\Crawler\Tests\Functional\LanguageServiceTestTrait;
 use AOE\Crawler\Tests\Functional\SiteBasedTestTrait;
 use Symfony\Component\Console\Tester\CommandTester;
-use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
@@ -54,8 +53,9 @@ class BuildQueueCommandTest extends FunctionalTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/be_users.csv');
         $this->setupBackendRequest();
-        $this->setupBackendUser(0);
+        $this->setupBackendUser(2);
         $this->setupLanguageService();
 
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/pages.csv');
@@ -128,7 +128,7 @@ class BuildQueueCommandTest extends FunctionalTestCase
                 'conf' => $crawlerConfiguration,
                 '--mode' => 'url',
             ],
-            'expectedOutput' => 'https://www.example.com/',
+            'expectedOutput' => 'https://acme.com/',
             'expectedCount' => 0,
         ];
         yield 'Start page 1,  --mode exec' => [
@@ -149,16 +149,5 @@ class BuildQueueCommandTest extends FunctionalTestCase
             'expectedOutput' => 'Page 0 is not a valid page, please check you root page id and try again.',
             'expectedCount' => 0,
         ];
-    }
-
-    protected function setupBackendUser(int $userUid): BackendUserAuthentication
-    {
-        $GLOBALS['BE_USER'] = $this->getMockBuilder(BackendUserAuthentication::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $GLOBALS['BE_USER']->method('isInWebMount')->willReturn(true);
-
-        return $GLOBALS['BE_USER'];
     }
 }

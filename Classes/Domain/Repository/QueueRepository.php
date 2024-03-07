@@ -156,7 +156,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
 
     /**
      * This method can be used to count all queue entries which are
-     * scheduled for now or a earlier date and are assigned to a process.
+     * scheduled for now or an earlier date and are assigned to a process.
      */
     public function countAllAssignedPendingItems(): int
     {
@@ -166,7 +166,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ->count('*')
             ->from(self::TABLE_NAME)
             ->where(
-                $queryBuilder->expr()->neq('process_id', "''"),
+                $queryBuilder->expr()->neq('process_id', 0),
                 $queryBuilder->expr()->eq('exec_time', 0),
                 $queryBuilder->expr()->lte('scheduled', time())
             )

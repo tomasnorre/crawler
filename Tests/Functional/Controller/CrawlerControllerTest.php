@@ -24,9 +24,11 @@ use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use AOE\Crawler\Value\QueueFilter;
+use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Information\Typo3Version;
+use TYPO3\TestingFramework\Core\AccessibleObjectInterface;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
@@ -40,7 +42,7 @@ class CrawlerControllerTest extends FunctionalTestCase
 
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    protected \TYPO3\TestingFramework\Core\AccessibleObjectInterface|\PHPUnit\Framework\MockObject\MockObject $subject;
+    protected AccessibleObjectInterface|MockObject $subject;
 
     protected function setUp(): void
     {
@@ -60,7 +62,7 @@ class CrawlerControllerTest extends FunctionalTestCase
 
         $this->subject = $this->getAccessibleMock(
             CrawlerController::class,
-            ['dummy'],
+            null,
             [$mockedQueueRepository, $mockedProcessRepository, $mockedIconFactory]
         );
     }
@@ -73,7 +75,7 @@ class CrawlerControllerTest extends FunctionalTestCase
         $GLOBALS['BE_USER'] = $this->getMockBuilder(BackendUserAuthentication::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $GLOBALS['BE_USER']->expects(self::any())->method('isAdmin')->willReturn(true);
+        $GLOBALS['BE_USER']->method('isAdmin')->willReturn(true);
 
         $configurationsForBranch = $this->subject->getConfigurationsForBranch(5, 99);
 

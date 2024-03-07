@@ -106,7 +106,7 @@ class ProcessCleanUpHook implements CrawlerHookInterface
      *
      * @param string $processId Unique process Id.
      */
-    private function removeProcessFromProcesslist($processId): void
+    public function removeProcessFromProcesslist($processId): void
     {
         $this->processRepository->removeByProcessId($processId);
         $this->queueRepository->unsetQueueProcessId($processId);
@@ -121,7 +121,7 @@ class ProcessCleanUpHook implements CrawlerHookInterface
      *
      * @return array
      */
-    private function createResponseArray($string)
+    public function createResponseArray($string)
     {
         $responseArray = GeneralUtility::trimExplode(' ', $string, true);
         return array_values($responseArray);

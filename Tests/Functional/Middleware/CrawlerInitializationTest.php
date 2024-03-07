@@ -35,6 +35,8 @@ class CrawlerInitializationTest extends FunctionalTestCase
 {
     use ProphecyTrait;
 
+    private CrawlerInitialization $subject;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -50,7 +52,7 @@ class CrawlerInitializationTest extends FunctionalTestCase
      */
     public function processSetsTSFEApplicationData(string $feGroups, array $expectedGroups): void
     {
-        self::assertNull($GLOBALS['TSFE']->applicationData['forceIndexing']);
+        self::assertEmpty($GLOBALS['TSFE']->applicationData);
 
         $queueParameters = [
             'url' => 'https://crawler-devbox.ddev.site',

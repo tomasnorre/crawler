@@ -39,18 +39,18 @@ class TcaUtilityTest extends FunctionalTestCase
 
         $subject = new TcaUtility();
 
-        if (!empty($expected['items'][0][2])) {
+        if (!empty($expected['items'][0]['icon'])) {
             self::assertStringContainsString(
                 'ext/crawler/Resources/Public/Icons/Extension.svg',
-                $expected['items'][0][2]
+                $expected['items'][0]['icon']
             );
-            unset($expected['items'][0][2]);
+            unset($expected['items'][0]['icon']);
         }
 
         $actual = $subject->getProcessingInstructions($configuration);
         // Remove the Extension Icon if present, as already tested
-        if (!empty($actual['items'][0][2])) {
-            unset($actual['items'][0][2]);
+        if (!empty($actual['items'][0]['icon'])) {
+            unset($actual['items'][0]['icon']);
         }
 
         self::assertEquals($expected, $actual);
@@ -74,7 +74,11 @@ class TcaUtilityTest extends FunctionalTestCase
             'configuration' => [],
             'expected' => [
                 'items' => [
-                    ['Fake Value [crawler]', 'crawler', 'ext/crawler/Resources/Public/Icons/Extension.svg'],
+                    [
+                        'label' => 'Fake Value [crawler]',
+                        'value' => 'crawler',
+                        'icon' => 'ext/crawler/Resources/Public/Icons/Extension.svg',
+                    ]
                 ],
             ],
         ];
@@ -90,7 +94,11 @@ class TcaUtilityTest extends FunctionalTestCase
             'expected' => [
                 'default',
                 'items' => [
-                    ['Fake Value [crawler]', 'crawler', 'ext/crawler/Resources/Public/Icons/Extension.svg'],
+                    [
+                        'label' => 'Fake Value [crawler]',
+                        'value' => 'crawler',
+                        'icon' => 'ext/crawler/Resources/Public/Icons/Extension.svg'
+                    ],
                 ],
             ],
         ];

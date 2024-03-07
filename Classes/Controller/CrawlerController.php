@@ -370,7 +370,7 @@ class CrawlerController implements LoggerAwareInterface
             if (! is_array($value)) {
                 continue;
             }
-            $configurationsForBranch[] = substr($key, -1) === '.' ? substr($key, 0, -1) : $key;
+            $configurationsForBranch[] = str_ends_with($key, '.') ? substr($key, 0, -1) : $key;
         }
         $pids = [];
         $rootLine = BackendUtility::BEgetRootLine($rootid);
@@ -782,11 +782,10 @@ class CrawlerController implements LoggerAwareInterface
                 // Title column:
                 if (! $c) {
                     $queueRow = new QueueRow($pageTitle);
-                    $queueRow->setPageTitleHTML($pageTitleHTML);
                 } else {
                     $queueRow = new QueueRow();
-                    $queueRow->setPageTitleHTML($pageTitleHTML);
                 }
+                $queueRow->setPageTitleHTML($pageTitleHTML);
 
                 if (! in_array(
                     $pageRow['uid'],
@@ -855,13 +854,11 @@ class CrawlerController implements LoggerAwareInterface
                     $queueRow->setOptions($queueRowOptionCollection);
                     $queueRow->setParameters(DebugUtility::viewArray($confArray['subCfg']['procInstrParams.'] ?? []));
                     $queueRow->setParameterConfig($parameterConfig);
-
-                    $queueRowCollection[] = $queueRow;
                 } else {
                     $queueRow->setConfigurationKey($confKey);
                     $queueRow->setMessage('(Page is excluded in this configuration)');
-                    $queueRowCollection[] = $queueRow;
                 }
+                $queueRowCollection[] = $queueRow;
 
                 $c++;
             }

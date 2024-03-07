@@ -69,9 +69,9 @@ class BackendModuleLinkServiceTest extends FunctionalTestCase
 
         self::assertIsString($link);
         self::assertStringContainsString('Refresh', $link);
-        self::assertStringContainsString('<a  href="/typo3/module/page/crawler/process', $link);
+        self::assertStringContainsString('<a href="/typo3/module/page/crawler/process', $link);
         self::assertStringContainsString('SET%5B%27crawleraction%27%5D=crawleraction&amp;id=1', $link);
-        self::assertStringContainsString('class="btn btn-default btn-sm "', $link);
+        self::assertStringContainsString('class="btn btn-sm btn-default "', $link);
     }
 
     /**
@@ -93,9 +93,9 @@ class BackendModuleLinkServiceTest extends FunctionalTestCase
 
         self::assertIsString($link);
         self::assertStringContainsString('Add process', $link);
-        self::assertStringContainsString('<a  href="/typo3/module/page/crawler/process', $link);
+        self::assertStringContainsString('<a href="/typo3/module/page/crawler/process', $link);
         self::assertStringContainsString('action=addProcess', $link);
-        self::assertStringContainsString('class="btn btn-default btn-sm "', $link);
+        self::assertStringContainsString('class="btn btn-sm btn-default "', $link);
     }
 
     /**
@@ -115,9 +115,9 @@ class BackendModuleLinkServiceTest extends FunctionalTestCase
 
         self::assertIsString($link);
         self::assertStringContainsString('Show only running processes', $link);
-        self::assertStringContainsString('<a  href="/typo3/module/page/crawler/process', $link);
+        self::assertStringContainsString('<a href="/typo3/module/page/crawler/process', $link);
         self::assertStringContainsString('processListMode=simple', $link);
-        self::assertStringContainsString('class="btn btn-default btn-sm "', $link);
+        self::assertStringContainsString('class="btn btn-sm btn-default "', $link);
     }
 
     /**
@@ -129,9 +129,9 @@ class BackendModuleLinkServiceTest extends FunctionalTestCase
 
         self::assertIsString($link);
         self::assertStringContainsString('Show finished and terminated processes', $link);
-        self::assertStringContainsString('<a  href="/typo3/module/page/crawler/process', $link);
+        self::assertStringContainsString('<a href="/typo3/module/page/crawler/process', $link);
         self::assertStringContainsString('processListMode=detail', $link);
-        self::assertStringContainsString('class="btn btn-default btn-sm "', $link);
+        self::assertStringContainsString('class="btn btn-sm btn-default "', $link);
     }
 
     /**
@@ -143,9 +143,9 @@ class BackendModuleLinkServiceTest extends FunctionalTestCase
 
         self::assertIsString($link);
         self::assertStringContainsString('Stop all processes and disable crawling', $link);
-        self::assertStringContainsString('<a  href="/typo3/module/page/crawler/process', $link);
+        self::assertStringContainsString('<a href="/typo3/module/page/crawler/process', $link);
         self::assertStringContainsString('action=stopCrawling', $link);
-        self::assertStringContainsString('class="btn btn-default btn-sm "', $link);
+        self::assertStringContainsString('class="btn btn-sm btn-default "', $link);
     }
 
     /**
@@ -157,8 +157,8 @@ class BackendModuleLinkServiceTest extends FunctionalTestCase
 
         self::assertIsString($link);
         self::assertStringContainsString('Enable crawling', $link);
-        self::assertStringContainsString('<a  href="/typo3/module/page/crawler/process', $link);
+        self::assertStringContainsString('<a href="/typo3/module/page/crawler/process', $link);
         self::assertStringContainsString('action=resumeCrawling', $link);
-        self::assertStringContainsString('class="btn btn-default btn-sm "', $link);
+        self::assertStringContainsString('class="btn btn-sm btn-default "', $link);
     }
 }

@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace AOE\Crawler\Tests\Unit\Service;
 
 use AOE\Crawler\Service\BackendModuleLogService;
+use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
+use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Localization\LanguageService;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
@@ -14,7 +15,20 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
  */
 class BackendModuleLogServiceTest extends FunctionalTestCase
 {
+    use BackendRequestTestTrait;
+    use ProphecyTrait;
+
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+    private BackendModuleLogService $subject;
+
+    protected function setUp(): void
+    {
+        $this->setupBackendRequest();
+        $this->subject = $this->getMockBuilder(BackendModuleLogService::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $GLOBALS['LANG'] = $this->createMock(LanguageService::class);
+    }
 
     /**
      * @test
@@ -29,10 +43,7 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
         array $logEntries,
         array $expected
     ): void {
-        $GLOBALS['LANG'] = $this->createMock(LanguageService::class);
-        $subject = GeneralUtility::makeInstance(BackendModuleLogService::class);
-
-        [$result, $CSVData] = $subject->addRows(
+        [$result, $CSVData] = $this->subject->addRows(
             $logEntries,
             $setId,
             $title,
@@ -73,10 +84,7 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
         array $logEntries,
         array $expected
     ): void {
-        $GLOBALS['LANG'] = $this->createMock(LanguageService::class);
-        $subject = GeneralUtility::makeInstance(BackendModuleLogService::class);
-
-        [$result, $CSVData] = $subject->addRows(
+        [$result, $CSVData] = $this->subject->addRows(
             $logEntries,
             $setId,
             $title,
@@ -85,11 +93,11 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
             $CSVExport
         );
 
-        // To easy the work with the result data, as i multidimensional array.
+        // To ease the work with the result data, as i multidimensional array.
         $resultArray = $result[0];
         $expectedArray = $expected[0][0];
 
-        $propertiesToCheck = ['title', 'colSpan', 'titleRowSpan', 'trClass'];
+        $propertiesToCheck = ['title', 'colSpan', 'titleRowSpan'];
         foreach ($propertiesToCheck as $property) {
             $this->assertEquals($resultArray[$property], $expectedArray[$property]);
         }
