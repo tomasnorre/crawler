@@ -27,18 +27,14 @@ use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-/**
- * @covers \AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategy
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategy::class)]
 class SubProcessExecutionStrategyTest extends UnitTestCase
 {
     use ProphecyTrait;
 
     protected bool $resetSingletonInstances = true;
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function constructorTest(): void
     {
         $configuration = [
@@ -56,9 +52,7 @@ class SubProcessExecutionStrategyTest extends UnitTestCase
         self::assertInstanceOf(SubProcessExecutionStrategy::class, $crawlStrategy);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function fetchUrlContentsInvalidSchema(): void
     {
         $logger = $this->prophesize(LoggerInterface::class);
@@ -75,10 +69,8 @@ class SubProcessExecutionStrategyTest extends UnitTestCase
         self::assertFalse($subProcessExecutionStrategy->fetchUrlContents($url, $crawlerId));
     }
 
-    /**
-     * @test
-     * @dataProvider buildRequestHandlersDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('buildRequestHandlersDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function buildRequestHeadersReturnsArray(array $url, string $crawlerId, array $expected): never
     {
         self::markTestSkipped(

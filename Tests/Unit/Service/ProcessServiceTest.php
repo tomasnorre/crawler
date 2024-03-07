@@ -29,16 +29,14 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
  * Class ProcessServiceTest
  *
  * @package AOE\Crawler\Tests\Unit\Domain\Model
- * @covers \AOE\Crawler\Service\ProcessService
- * @covers \AOE\Crawler\Helper\Sleeper\NullSleeper
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Service\ProcessService::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Helper\Sleeper\NullSleeper::class)]
 class ProcessServiceTest extends UnitTestCase
 {
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function startProcess(): void
     {
         $mockedProcessRepository = $this->createPartialMock(ProcessRepository::class, ['countNotTimeouted']);
@@ -60,9 +58,7 @@ class ProcessServiceTest extends UnitTestCase
         self::assertTrue($processService->startProcess());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function startProcessThrowsProcessException(): void
     {
         $this->expectException(ProcessException::class);

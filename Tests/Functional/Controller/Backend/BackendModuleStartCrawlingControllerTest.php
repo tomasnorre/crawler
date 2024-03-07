@@ -37,9 +37,7 @@ class BackendModuleStartCrawlingControllerTest extends FunctionalTestCase
 
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function checkResponseOfHandleRequest(): never
     {
         $this->markTestSkipped('WIP');

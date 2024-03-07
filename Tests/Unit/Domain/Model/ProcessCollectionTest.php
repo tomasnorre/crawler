@@ -29,10 +29,10 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
  * Class ProcessCollectionTest
  *
  * @package AOE\Crawler\Tests\Unit\Domain\Model
- * @covers \AOE\Crawler\Domain\Model\ProcessCollection
- * @covers \AOE\Crawler\Domain\Model\Process::getProcessId
- * @covers \AOE\Crawler\Domain\Model\Process::setProcessId
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Domain\Model\ProcessCollection::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Domain\Model\Process::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Domain\Model\Process::class)]
 class ProcessCollectionTest extends UnitTestCase
 {
     protected \AOE\Crawler\Domain\Model\ProcessCollection $subject;
@@ -43,9 +43,7 @@ class ProcessCollectionTest extends UnitTestCase
         $this->subject = new ProcessCollection();
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getProcessIdsReturnsArray(): void
     {
         /** @var Process $processOne */
@@ -69,9 +67,7 @@ class ProcessCollectionTest extends UnitTestCase
         self::assertEquals(['11', '13'], $collection->getProcessIds());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function appendThrowsException(): void
     {
         self::expectException(\InvalidArgumentException::class);
@@ -80,9 +76,7 @@ class ProcessCollectionTest extends UnitTestCase
         $this->subject->append($wrongObjectType);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function appendCrawlerDomainObject(): void
     {
         /** @var MockObject|Process $correctObjectType */
@@ -92,9 +86,7 @@ class ProcessCollectionTest extends UnitTestCase
         self::assertEquals($correctObjectType, $this->subject->offsetGet(0));
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function offsetSetThrowsException(): void
     {
         self::expectException(\InvalidArgumentException::class);
@@ -103,9 +95,7 @@ class ProcessCollectionTest extends UnitTestCase
         $this->subject->offsetSet(100, $wrongObjectType);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function offsetSetAndGet(): void
     {
         /** @var MockObject|Process $correctObjectType */
@@ -116,10 +106,9 @@ class ProcessCollectionTest extends UnitTestCase
     }
 
     /**
-     * @test
-     *
      * @expectedException \Exception
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function offsetGetThrowsException(): void
     {
         self::expectException(NoIndexFoundException::class);

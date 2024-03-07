@@ -67,9 +67,7 @@ class CrawlerControllerTest extends FunctionalTestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getConfigurationsForBranch(): void
     {
         $GLOBALS['BE_USER'] = $this->getMockBuilder(BackendUserAuthentication::class)
@@ -95,10 +93,8 @@ class CrawlerControllerTest extends FunctionalTestCase
         self::assertEquals($expected, $configurationsForBranch);
     }
 
-    /**
-     * @test
-     * @dataProvider addUrlDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('addUrlDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function addUrl(
         int $id,
         string $url,
@@ -110,18 +106,11 @@ class CrawlerControllerTest extends FunctionalTestCase
         bool $registerQueueEntriesInternallyOnly,
         bool $expected
     ): void {
-        $typo3MajorVersion = (new Typo3Version())->getMajorVersion();
-        if ($typo3MajorVersion <= 11) {
-            $mockedQueueRepository = $this->getAccessibleMock(
-                QueueRepository::class,
-                ['getDuplicateQueueItemsIfExists']
-            );
-        } else {
-            $mockedQueueRepository = $this->getAccessibleMock(
-                QueueRepository::class,
-                ['getDuplicateQueueItemsIfExists']
-            );
-        }
+        (new Typo3Version())->getMajorVersion();
+        $mockedQueueRepository = $this->getAccessibleMock(
+            QueueRepository::class,
+            ['getDuplicateQueueItemsIfExists']
+        );
 
         $mockedQueueRepository->expects($this->any())->method('getDuplicateQueueItemsIfExists')->willReturn(
             $mockedDuplicateRowResult

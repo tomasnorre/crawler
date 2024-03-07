@@ -194,7 +194,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
                 } else {
                     $output->writeln(
                         '<error>Error checking Crawler Result:  ' . substr(
-                            preg_replace('/\s+/', ' ', strip_tags((string) $resultContent)),
+                            (string) preg_replace('/\s+/', ' ', strip_tags((string) $resultContent)),
                             0,
                             30000
                         ) . '...' . PHP_EOL . '</error>' . PHP_EOL

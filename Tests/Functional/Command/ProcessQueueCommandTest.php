@@ -56,10 +56,8 @@ class ProcessQueueCommandTest extends FunctionalTestCase
         $this->commandTester = new CommandTester($command);
     }
 
-    /**
-     * @test
-     * @dataProvider processQueueCommandDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('processQueueCommandDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function processQueueCommandTest(array $parameters, string $expectedOutput): void
     {
         $arguments = [];

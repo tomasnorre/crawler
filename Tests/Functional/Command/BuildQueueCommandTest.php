@@ -76,10 +76,8 @@ class BuildQueueCommandTest extends FunctionalTestCase
         $this->commandTester = new CommandTester($command);
     }
 
-    /**
-     * @test
-     * @dataProvider buildQueueCommandDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('buildQueueCommandDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function buildQueueCommandTest(array $parameters, string $expectedOutput, int $expectedCount): void
     {
         $arguments = [];

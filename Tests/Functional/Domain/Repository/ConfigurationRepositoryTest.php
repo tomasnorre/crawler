@@ -42,9 +42,7 @@ class ConfigurationRepositoryTest extends FunctionalTestCase
         $this->importCSVDataSet(__DIR__ . '/../../Fixtures/pages.csv');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getCrawlerConfigurationRecordsFromRootLineReturnsEmptyArray(): void
     {
         self::assertEmpty(
@@ -52,9 +50,7 @@ class ConfigurationRepositoryTest extends FunctionalTestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getCrawlerConfigurationRecordsFromRootLineReturnsObjects(): void
     {
         $configurations = $this->subject->getCrawlerConfigurationRecordsFromRootLine(5);

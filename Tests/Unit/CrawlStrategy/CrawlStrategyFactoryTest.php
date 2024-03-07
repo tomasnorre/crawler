@@ -27,20 +27,16 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-/**
- * @covers \AOE\Crawler\CrawlStrategy\CrawlStrategyFactory
- * @covers \AOE\Crawler\Configuration\ExtensionConfigurationProvider
- * @covers \AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategy
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\CrawlStrategy\CrawlStrategyFactory::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Configuration\ExtensionConfigurationProvider::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategy::class)]
 class CrawlStrategyFactoryTest extends UnitTestCase
 {
     use ProphecyTrait;
 
     protected bool $resetSingletonInstances = true;
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function crawlerStrategyFactoryReturnsGuzzleExecutionStrategy(): void
     {
         $configuration = [
@@ -53,9 +49,7 @@ class CrawlStrategyFactoryTest extends UnitTestCase
         self::assertInstanceOf(GuzzleExecutionStrategy::class, $crawlStrategy);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function crawlerStrategyFactoryReturnsSubProcessExecutionStrategy(): void
     {
         $configuration = [
@@ -68,9 +62,7 @@ class CrawlStrategyFactoryTest extends UnitTestCase
         self::assertInstanceOf(SubProcessExecutionStrategy::class, $crawlStrategy);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function crawlerStrategyFactoryReturnsGuzzleExecutionStrategyAsItIsDefault(): void
     {
         $configuration = [
@@ -82,9 +74,7 @@ class CrawlStrategyFactoryTest extends UnitTestCase
         self::assertInstanceOf(GuzzleExecutionStrategy::class, $crawlStrategy);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function crawlerStrategyFactoryConstructedWithConfigurationProviderReturnsSubProcess(): void
     {
         $configuration = [
@@ -102,9 +92,7 @@ class CrawlStrategyFactoryTest extends UnitTestCase
         self::assertInstanceOf(SubProcessExecutionStrategy::class, $crawlStrategy);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function crawlerStrategyFactoryConstructedWithConfigurationProviderReturnsGuzzle(): void
     {
         $configuration = [

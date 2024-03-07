@@ -22,17 +22,13 @@ namespace AOE\Crawler\Tests\Functional\Utility;
 use AOE\Crawler\Utility\TcaUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
-/**
- * @covers \AOE\Crawler\Utility\TcaUtility
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Utility\TcaUtility::class)]
 class TcaUtilityTest extends FunctionalTestCase
 {
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    /**
-     * @test
-     * @dataProvider getProcessingInstructionsDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getProcessingInstructionsDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getProcessingInstructions($procInstructions, array $configuration, $expected): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'] = $procInstructions;

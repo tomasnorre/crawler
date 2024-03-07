@@ -23,9 +23,7 @@ use AOE\Crawler\Crawler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-/**
- * @covers \AOE\Crawler\Crawler
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Crawler::class)]
 class CrawlerTest extends UnitTestCase
 {
     protected \AOE\Crawler\Crawler $crawler;
@@ -38,9 +36,7 @@ class CrawlerTest extends UnitTestCase
         $this->crawler = GeneralUtility::makeInstance(Crawler::class, $filenameWithPath);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function setDisabledTest(): void
     {
         // Checking that default the crawler is enabled

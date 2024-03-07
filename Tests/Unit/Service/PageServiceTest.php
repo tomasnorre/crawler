@@ -26,11 +26,9 @@ use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-/**
- * @covers \AOE\Crawler\Configuration\ExtensionConfigurationProvider::getExtensionConfiguration
- * @covers \AOE\Crawler\Event\ModifySkipPageEvent
- * @covers \AOE\Crawler\Service\PageService
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Configuration\ExtensionConfigurationProvider::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Event\ModifySkipPageEvent::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Service\PageService::class)]
 class PageServiceTest extends UnitTestCase
 {
     use ProphecyTrait;
@@ -51,11 +49,8 @@ class PageServiceTest extends UnitTestCase
         $this->subject = GeneralUtility::makeInstance(PageService::class, $mockedEventDispatcher);
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider checkIfPageShouldBeSkippedDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('checkIfPageShouldBeSkippedDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function checkIfPageShouldBeSkipped(
         array $extensionSetting,
         array $pageRow,

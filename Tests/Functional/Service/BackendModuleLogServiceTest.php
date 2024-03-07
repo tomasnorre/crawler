@@ -10,9 +10,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
-/**
- * @covers \AOE\Crawler\Service\BackendModuleLogService
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Service\BackendModuleLogService::class)]
 class BackendModuleLogServiceTest extends FunctionalTestCase
 {
     use BackendRequestTestTrait;
@@ -30,10 +28,8 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
         $GLOBALS['LANG'] = $this->createMock(LanguageService::class);
     }
 
-    /**
-     * @test
-     * @dataProvider addRowsDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('addRowsDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function addRows(
         string $title,
         int $setId,
@@ -71,10 +67,8 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
         $this->assertEquals($csvDataArray, $CSVData);
     }
 
-    /**
-     * @test
-     * @dataProvider addRowsNoEntriesDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('addRowsNoEntriesDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function addRowsNoEntries(
         string $title,
         int $setId,
