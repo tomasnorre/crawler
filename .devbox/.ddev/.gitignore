@@ -28,7 +28,10 @@
 /mutagen/.start-synced
 /nginx_full/nginx-site.conf
 /postgres/postgresql.conf
+/providers/acquia.yaml
+/providers/lagoon.yaml
 /providers/platform.yaml
+/providers/upsun.yaml
 /sequelpro.spf
 /settings/settings.ddev.py
 /traefik/config/crawler-devbox.yaml
