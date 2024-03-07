@@ -48,7 +48,7 @@ class HookUtility
         if (($GLOBALS['TYPO3_REQUEST'] ?? null) instanceof ServerRequestInterface
             && ApplicationType::fromRequest($GLOBALS['TYPO3_REQUEST'])->isBackend()
         ) {
-            self::registerBackendHooks($extKey);
+            self::registerBackendHooks();
         }
     }
 
