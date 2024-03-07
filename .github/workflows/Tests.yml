@@ -60,13 +60,13 @@ jobs:
       - name: Unit Tests
         if: matrix.typo3 != 'dev-main'
         run: |
-          export "UNIT_XML"=.Build/vendor/typo3/testing-framework/Resources/Core/Build/UnitTests.xml
-          .Build/bin/phpunit --whitelist Classes --coverage-clover=unittest-coverage.clover --colors -c $UNIT_XML Tests/Unit
+          export "UNIT_XML"=Tests/UnitTests.xml
+          .Build/bin/phpunit --coverage-clover=unittest-coverage.clover --colors -c $UNIT_XML Tests/Unit
 
       - name: Functional Tests
         run: |
-          export "FUNCTIONAL_XML"=.Build/vendor/typo3/testing-framework/Resources/Core/Build/FunctionalTests.xml
-          .Build/bin/phpunit --whitelist Classes --coverage-clover=functional-coverage.clover --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
+          export "FUNCTIONAL_XML"=Tests/FunctionalTests.xml
+          .Build/bin/phpunit --coverage-clover=functional-coverage.clover --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
         if: matrix.typo3 != 'dev-main'
         env:
           typo3DatabaseHost: 127.0.0.1
@@ -76,14 +76,14 @@ jobs:
 
       - name: Tests for dev-main
         run: |
-          export "FUNCTIONAL_XML"=.Build/vendor/typo3/testing-framework/Resources/Core/Build/FunctionalTests.xml
-          export "UNIT_XML"=.Build/vendor/typo3/testing-framework/Resources/Core/Build/UnitTests.xml
+          export "FUNCTIONAL_XML"=Tests/FunctionalTests.xml
+          export "UNIT_XML"=Tests/UnitTests.xml
           composer remove --dev ssch/typo3-rector
           rm -rf composer.lock .Build
           composer require typo3/cms-core:dev-main
           ln -nfs .Build/vendor/typo3/cms/typo3 typo3
-          .Build/bin/phpunit --whitelist Classes --colors -c $UNIT_XML Tests/Unit
-          .Build/bin/phpunit --whitelist Classes --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
+          .Build/bin/phpunit --colors -c $UNIT_XML Tests/Unit
+          .Build/bin/phpunit --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
         if: matrix.typo3 == 'dev-main' && matrix.php == '8.1'
         env:
           typo3DatabaseHost: 127.0.0.1
