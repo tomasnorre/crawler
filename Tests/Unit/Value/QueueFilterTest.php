@@ -22,33 +22,25 @@ namespace AOE\Crawler\Tests\Unit\Value;
 use AOE\Crawler\Value\QueueFilter;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-/**
- * @covers \AOE\Crawler\Value\QueueFilter
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Value\QueueFilter::class)]
 class QueueFilterTest extends UnitTestCase
 {
     final public const VALID_VALUE = 'finished';
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function defaultValueConstructor(): void
     {
         self::assertEquals('all', new QueueFilter());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function toStringWithValidValueReturnsOriginalValue(): void
     {
         $queueFilter = new QueueFilter(self::VALID_VALUE);
         self::assertEquals(self::VALID_VALUE, $queueFilter->__toString());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function constructorThrowsException(): void
     {
         self::expectException(\InvalidArgumentException::class);

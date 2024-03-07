@@ -27,21 +27,17 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-/**
- * @covers \AOE\Crawler\Service\ConfigurationService
- * @covers \AOE\Crawler\Service\UrlService::compileUrls
- * @covers \AOE\Crawler\Configuration\ExtensionConfigurationProvider::getExtensionConfiguration
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Service\ConfigurationService::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Service\UrlService::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Configuration\ExtensionConfigurationProvider::class)]
 class ConfigurationServiceTest extends UnitTestCase
 {
     use ProphecyTrait;
 
     protected bool $resetSingletonInstances = true;
 
-    /**
-     * @test
-     * @dataProvider removeDisallowedConfigurationsDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('removeDisallowedConfigurationsDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function removeDisallowedConfigurationsReturnsExpectedArray(
         array $allowed,
         array $configuration,
@@ -81,10 +77,8 @@ class ConfigurationServiceTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider getConfigurationFromPageTSDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getConfigurationFromPageTSDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getConfigurationFromPageTS(
         array $pageTSConfig,
         int $pageId,

@@ -44,12 +44,14 @@
         "phpstan/extension-installer": "^1.2",
         "phpstan/phpstan": "^1.9",
         "phpstan/phpstan-deprecation-rules": "^1.0",
-        "phpunit/phpunit": "^10.0",
+        "phpunit/phpunit": "^10.5",
+        "rector/rector": "^1.0",
         "roave/security-advisories": "dev-latest",
         "saschaegerer/phpstan-typo3": "^1.8",
         "sbuerk/typo3-cmscomposerinstallers-testingframework-bridge": "^0.1",
         "slam/phpstan-extensions": "^6.0",
-        "ssch/typo3-rector": "^1.1",
+        "ssch/typo3-rector": "^2.0",
+        "ssch/typo3-rector-testing-framework": "*",
         "symfony/yaml": "^4.4 || ^5.0 || ^6.1",
         "symplify/easy-coding-standard": "11.1.16",
         "symplify/phpstan-rules": "^11.1",
@@ -90,8 +92,7 @@
             "phpstan/extension-installer": true,
             "typo3/class-alias-loader": true,
             "typo3/cms-composer-installers": true,
-            "sbuerk/typo3-cmscomposerinstallers-testingframework-bridge": true,
-            "cweagans/composer-patches": false
+            "sbuerk/typo3-cmscomposerinstallers-testingframework-bridge": true
         },
         "bin-dir": ".Build/bin",
         "preferred-install": {
@@ -182,35 +183,44 @@
         "test:functional": [
             "@test:reset-vars",
             "@extension-create-libs",
+            "@test-set-vars",
             "[ -e .Build/bin/phpunit ] || composer update",
-            "TYPO3_PATH_WEB=$PWD/.Build/Web .Build/bin/phpunit -c Tests/FunctionalTests.xml Tests/Functional"
+            "TYPO3_PATH_WEB=$PWD/.Build/Web .Build/bin/phpunit -c Tests/FunctionalTests.xml"
         ],
         "test:functional-postgre": [
             "@test:reset-vars",
             "@extension-create-libs",
+            "@test-set-vars",
             "[ -e .Build/bin/phpunit ] || composer update",
-            "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseDriver=pdo_pgsql .Build/bin/phpunit -c Tests/FunctionalTests.xml Tests/Functional"
+            "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseDriver=pdo_pgsql .Build/bin/phpunit -c Tests/FunctionalTests.xml"
         ],
         "test:functional-sqlite": [
             "@test:reset-vars",
             "@extension-create-libs",
+            "@test-set-vars",
             "[ -e .Build/bin/phpunit ] || composer update",
-            "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseDriver=pdo_sqlite .Build/bin/phpunit -c Tests/FunctionalTests.xml Tests/Functional"
+            "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseDriver=pdo_sqlite .Build/bin/phpunit -c Tests/FunctionalTests.xml"
         ],
         "test:mutation": [
             "[ -e .Build/bin/infection ] || composer update",
             "XDEBUG_MODE=coverage .Build/bin/infection --threads=8"
         ],
         "test:reset-vars": [
+            "export typo3DatabaseName=''",
+            "export typo3DatabaseHost=''",
+            "export typo3DatabaseUsername=''",
+            "export typo3DatabasePassword=''",
+            "export typo3DatabaseDriver=''"
+        ],
+        "test:set-vars": [
             "export typo3DatabaseName='crawler'",
             "export typo3DatabaseHost='127.0.0.1'",
             "export typo3DatabaseUsername='root'",
-            "export typo3DatabasePassword='root'",
-            "export typo3DatabaseDriver=''"
+            "typo3DatabasePassword='root'"
         ],
         "test:unit": [
             "[ -e .Build/bin/phpunit ] || composer update",
-            "TYPO3_PATH_WEB=.Build/Web .Build/bin/phpunit --colors -c .Build/vendor/typo3/testing-framework/Resources/Core/Build/UnitTests.xml Tests/Unit"
+            "TYPO3_PATH_WEB=.Build/Web .Build/bin/phpunit --colors -c Tests/UnitTests.xml"
         ]
     }
 }

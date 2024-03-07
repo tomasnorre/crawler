@@ -66,10 +66,8 @@ class UrlServiceTest extends FunctionalTestCase
         );
     }
 
-    /**
-     * @test
-     * @dataProvider getUrlFromPageAndQueryParametersReturnExpectedUrlDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getUrlFromPageAndQueryParametersReturnExpectedUrlDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getUrlFromPageAndQueryParametersReturnExpectedUrl(
         $pageId,
         $queryString,

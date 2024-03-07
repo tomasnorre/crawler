@@ -50,10 +50,9 @@ class FlushQueueCommandTest extends FunctionalTestCase
 
     /**
      * This will test that the commands and output contains what needed, the cleanup it self isn't tested.
-     *
-     * @test
-     * @dataProvider flushQueueDataProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('flushQueueDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function flushQueueCommandTest(string $mode, string $expectedOutput, int $expectedCount): void
     {
         $arguments = ['mode' => $mode];

@@ -22,9 +22,7 @@ namespace AOE\Crawler\Tests\Unit\Event;
 use AOE\Crawler\Event\AfterQueueItemAddedEvent;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-/**
- * @covers \AOE\Crawler\Event\AfterQueueItemAddedEvent
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Event\AfterQueueItemAddedEvent::class)]
 class AfterQueueItemAddedEventTest extends UnitTestCase
 {
     private AfterQueueItemAddedEvent $subject;
@@ -37,9 +35,7 @@ class AfterQueueItemAddedEventTest extends UnitTestCase
         $this->subject = new AfterQueueItemAddedEvent($queueId, $fieldArray);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function defaultValuesTest(): void
     {
         self::assertEquals('qwerty', $this->subject->getQueueId());
@@ -47,9 +43,7 @@ class AfterQueueItemAddedEventTest extends UnitTestCase
         self::assertEquals(['field' => 'array'], $this->subject->getFieldArray());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function setterTest(): void
     {
         $differentArray = ['different' => 'array'];

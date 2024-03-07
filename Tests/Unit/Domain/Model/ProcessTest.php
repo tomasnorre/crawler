@@ -27,8 +27,8 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 /**
  * Class Process
  * @package AOE\Crawler\Tests\Unit\Domain\Model
- * @covers \AOE\Crawler\Domain\Model\Process
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Domain\Model\Process::class)]
 class ProcessTest extends UnitTestCase
 {
     protected \AOE\Crawler\Domain\Model\Process $subject;
@@ -43,9 +43,7 @@ class ProcessTest extends UnitTestCase
         $this->subject->setAssignedItemsCount(20);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function setAndGetRowDoAsExpected(): void
     {
         $processId = '4567';
@@ -96,11 +94,9 @@ class ProcessTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider getStateDataProvider
-     */
+    
+    #[\PHPUnit\Framework\Attributes\DataProvider('getStateDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getStateReturnsExpectedState(int $active, int $processes, string $expectedState): void
     {
         /** @var MockObject|Process $processMock */
@@ -111,11 +107,9 @@ class ProcessTest extends UnitTestCase
         self::assertEquals($expectedState, $processMock->getState());
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider getProgressReturnsExpectedPercentageDataProvider
-     */
+    
+    #[\PHPUnit\Framework\Attributes\DataProvider('getProgressReturnsExpectedPercentageDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getProgressReturnsExpectedPercentage(
         int $countItemsAssigned,
         int $countItemsProcessed,
@@ -198,11 +192,9 @@ class ProcessTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider getRuntimeReturnsIntegerDataProvider
-     */
+    
+    #[\PHPUnit\Framework\Attributes\DataProvider('getRuntimeReturnsIntegerDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getRuntimeReturnsInteger(array $getTimeForFirstItem, array $getTimeForLastItem, int $expected): void
     {
         /** @var MockObject|QueueRepository $queueRepositoryMock */

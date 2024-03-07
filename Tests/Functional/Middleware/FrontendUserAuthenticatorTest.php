@@ -46,9 +46,7 @@ class FrontendUserAuthenticatorTest extends FunctionalTestCase
         $this->subject = GeneralUtility::makeInstance(FrontendUserAuthenticator::class);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function processQueueEntryNotFound(): never
     {
         $this->markTestSkipped('WIP');
@@ -68,10 +66,8 @@ class FrontendUserAuthenticatorTest extends FunctionalTestCase
         self::assertStringContainsString('No crawler entry found', $response->getBody()->getContents());
     }
 
-    /**
-     * @test
-     * @dataProvider processSetsExpectedUserGroupsDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('processSetsExpectedUserGroupsDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function processSetsExpectedUserGroups(string $feGroups, string $headerLine): void
     {
         $this->importCSVDataSet(__DIR__ . '/Fixtures/ProcessHandlesFeGroups/tx_crawler_queue.csv');

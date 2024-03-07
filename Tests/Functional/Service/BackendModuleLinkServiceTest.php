@@ -60,9 +60,7 @@ class BackendModuleLinkServiceTest extends FunctionalTestCase
         $this->moduleTemplate = (GeneralUtility::makeInstance(ModuleTemplateFactory::class))->create($request);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getRefreshLinkReturnLink(): void
     {
         $link = $this->subject->getRefreshLink($this->moduleTemplate, 1);
@@ -74,9 +72,7 @@ class BackendModuleLinkServiceTest extends FunctionalTestCase
         self::assertStringContainsString('class="btn btn-sm btn-default "', $link);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getAddLinkReturnsEmptyString(): void
     {
         self::assertEmpty($this->subject->getAddLink($this->moduleTemplate, 10, 20, false));
@@ -84,9 +80,7 @@ class BackendModuleLinkServiceTest extends FunctionalTestCase
         self::assertEmpty($this->subject->getAddLink($this->moduleTemplate, 20, 10, true));
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getAddLinkReturnLink(): void
     {
         $link = $this->subject->getAddLink($this->moduleTemplate, 1, 10, true);
@@ -98,17 +92,13 @@ class BackendModuleLinkServiceTest extends FunctionalTestCase
         self::assertStringContainsString('class="btn btn-sm btn-default "', $link);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getModeLinkReturnEmptyString(): void
     {
         self::assertEmpty($this->subject->getModeLink($this->moduleTemplate, 'not-exting-mode'));
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getModeLinkReturnsDatailLink(): void
     {
         $link = $this->subject->getModeLink($this->moduleTemplate, 'detail');
@@ -120,9 +110,7 @@ class BackendModuleLinkServiceTest extends FunctionalTestCase
         self::assertStringContainsString('class="btn btn-sm btn-default "', $link);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getModeLinkReturnsSimpleLink(): void
     {
         $link = $this->subject->getModeLink($this->moduleTemplate, 'simple');
@@ -134,9 +122,7 @@ class BackendModuleLinkServiceTest extends FunctionalTestCase
         self::assertStringContainsString('class="btn btn-sm btn-default "', $link);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getEnableDisableLinkReturnsEnableLink(): void
     {
         $link = $this->subject->getEnableDisableLink($this->moduleTemplate, true);
@@ -148,9 +134,7 @@ class BackendModuleLinkServiceTest extends FunctionalTestCase
         self::assertStringContainsString('class="btn btn-sm btn-default "', $link);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getEnableDisableLinkReturnsDisableLink(): void
     {
         $link = $this->subject->getEnableDisableLink($this->moduleTemplate, false);

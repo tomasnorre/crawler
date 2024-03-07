@@ -23,10 +23,8 @@ use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Event\InvokeQueueChangeEvent;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-/**
- * @covers \AOE\Crawler\Domain\Model\Reason
- * @covers \AOE\Crawler\Event\InvokeQueueChangeEvent
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Domain\Model\Reason::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Event\InvokeQueueChangeEvent::class)]
 class InvokeQueueChangeEventTest extends UnitTestCase
 {
     private InvokeQueueChangeEvent $subject;
@@ -40,9 +38,7 @@ class InvokeQueueChangeEventTest extends UnitTestCase
         $this->subject = new InvokeQueueChangeEvent($reason);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function defaultValueTest(): void
     {
         self::assertEquals(Reason::REASON_CLI_SUBMIT, $this->subject->getReasonText());

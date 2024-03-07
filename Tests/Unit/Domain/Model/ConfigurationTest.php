@@ -22,9 +22,7 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
 use AOE\Crawler\Domain\Model\Configuration;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-/**
- * @covers \AOE\Crawler\Domain\Model\Configuration
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Domain\Model\Configuration::class)]
 class ConfigurationTest extends UnitTestCase
 {
     protected \AOE\Crawler\Domain\Model\Configuration $subject;
@@ -35,9 +33,7 @@ class ConfigurationTest extends UnitTestCase
         $this->subject = $this->createPartialMock(Configuration::class, []);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function setterAndGetters(): void
     {
         $name = 'Default Configuration';

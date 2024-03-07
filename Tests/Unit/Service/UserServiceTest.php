@@ -22,16 +22,12 @@ namespace AOE\Crawler\Tests\Unit\Service;
 use AOE\Crawler\Service\UserService;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-/**
- * @covers \AOE\Crawler\Service\UserService
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Service\UserService::class)]
 class UserServiceTest extends UnitTestCase
 {
-    /**
-     * @test
-     *
-     * @dataProvider hasGroupAccessDataProvider
-     */
+    
+    #[\PHPUnit\Framework\Attributes\DataProvider('hasGroupAccessDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function hasGroupAccess(string $groupList, string $accessList, bool $expected): void
     {
         self::assertEquals($expected, UserService::hasGroupAccess($groupList, $accessList));

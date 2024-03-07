@@ -22,9 +22,7 @@ namespace AOE\Crawler\Tests\Unit\Event;
 use AOE\Crawler\Event\AfterUrlCrawledEvent;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-/**
- * @covers \AOE\Crawler\Event\AfterUrlCrawledEvent
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Event\AfterUrlCrawledEvent::class)]
 class AfterUrlCrawledEventTest extends UnitTestCase
 {
     private AfterUrlCrawledEvent $subject;
@@ -35,9 +33,7 @@ class AfterUrlCrawledEventTest extends UnitTestCase
         $this->subject = new AfterUrlCrawledEvent('/contact', []);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function defaultValueTest(): void
     {
         self::assertEquals('/contact', $this->subject->getUrl());

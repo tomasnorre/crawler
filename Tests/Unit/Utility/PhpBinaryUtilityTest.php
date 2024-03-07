@@ -23,17 +23,13 @@ use AOE\Crawler\Utility\PhpBinaryUtility;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-/**
- * @covers \AOE\Crawler\Utility\PhpBinaryUtility
- * @covers \AOE\Crawler\Configuration\ExtensionConfigurationProvider::getExtensionConfiguration
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Utility\PhpBinaryUtility::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Configuration\ExtensionConfigurationProvider::class)]
 class PhpBinaryUtilityTest extends UnitTestCase
 {
     protected bool $resetSingletonInstances = true;
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getPhpBinaryThrowExpectionAsExtensionSettingsIsEmpty(): void
     {
         $this->expectExceptionCode(1_587_066_853);
@@ -42,9 +38,7 @@ class PhpBinaryUtilityTest extends UnitTestCase
         PhpBinaryUtility::getPhpBinary();
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getPhpBinaryThrowsExceptionAsBinaryDoesNotExist(): void
     {
         $this->expectExceptionCode(1_587_068_215);
@@ -57,10 +51,8 @@ class PhpBinaryUtilityTest extends UnitTestCase
         PhpBinaryUtility::getPhpBinary();
     }
 
-    /**
-     * @test
-     * @dataProvider getPhpBinaryDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getPhpBinaryDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getPhpBinary(string $phpPath, string $phpBinary, string $expected): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [

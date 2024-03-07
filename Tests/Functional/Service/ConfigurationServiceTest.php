@@ -40,10 +40,8 @@ class ConfigurationServiceTest extends FunctionalTestCase
         $this->subject = $this->createPartialMock(ConfigurationService::class, []);
     }
 
-    /**
-     * @test
-     * @runInSeparateProcess
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
     public function expandExcludeStringReturnsArraysOfIntegers(): void
     {
         $GLOBALS['BE_USER'] = $this->getMockBuilder(BackendUserAuthentication::class)
@@ -59,9 +57,7 @@ class ConfigurationServiceTest extends FunctionalTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getConfigurationFromDatabaseReturnsArray(): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [
