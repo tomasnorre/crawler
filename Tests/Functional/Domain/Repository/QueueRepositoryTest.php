@@ -54,7 +54,6 @@ class QueueRepositoryTest extends FunctionalTestCase
         $this->subject = GeneralUtility::makeInstance(QueueRepository::class);
     }
 
-    
     #[\PHPUnit\Framework\Attributes\DataProvider('getFirstOrLastObjectByProcessDataProvider')]
     #[\PHPUnit\Framework\Attributes\Test]
     public function getFirstOrLastObjectByProcess(
@@ -174,7 +173,6 @@ class QueueRepositoryTest extends FunctionalTestCase
         self::assertSame(15, $this->subject->countAll());
     }
 
-    
     #[\PHPUnit\Framework\Attributes\DataProvider('isPageInQueueDataProvider')]
     #[\PHPUnit\Framework\Attributes\Test]
     public function isPageInQueue(
@@ -284,7 +282,9 @@ class QueueRepositoryTest extends FunctionalTestCase
         self::assertSame(7, $unprocessedEntriesAfter);
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('noUnprocessedQueueEntriesForPageWithConfigurationHashExistDataProvider')]
+    #[\PHPUnit\Framework\Attributes\DataProvider(
+        'noUnprocessedQueueEntriesForPageWithConfigurationHashExistDataProvider'
+    )]
     public function noUnprocessedQueueEntriesForPageWithConfigurationHashExist(
         int $uid,
         string $configurationHash,
@@ -296,7 +296,6 @@ class QueueRepositoryTest extends FunctionalTestCase
         );
     }
 
-    
     #[\PHPUnit\Framework\Attributes\DataProvider('getQueueEntriesForPageIdDataProvider')]
     #[\PHPUnit\Framework\Attributes\Test]
     public function getQueueEntriesForPageId(
@@ -308,7 +307,6 @@ class QueueRepositoryTest extends FunctionalTestCase
         self::assertEquals($expected, $this->subject->getQueueEntriesForPageId($id, $itemsPerPage, $queueFilter));
     }
 
-    
     #[\PHPUnit\Framework\Attributes\DataProvider('flushQueueDataProvider')]
     #[\PHPUnit\Framework\Attributes\Test]
     public function flushQueue(QueueFilter $queueFilter, int $expected): void

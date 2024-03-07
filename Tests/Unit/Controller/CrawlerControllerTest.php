@@ -76,7 +76,6 @@ class CrawlerControllerTest extends UnitTestCase
         unset($this->crawlerController);
     }
 
-    
     #[\PHPUnit\Framework\Attributes\DataProvider('drawURLs_PIfilterDataProvider')]
     #[\PHPUnit\Framework\Attributes\Test]
     public function drawURLsPIfilter(string $piString, array $incomingProcInstructions, bool $expected): void
@@ -95,7 +94,6 @@ class CrawlerControllerTest extends UnitTestCase
         self::assertEquals('PageUid "string" was not an integer', $skipMessage);
     }
 
-    
     #[\PHPUnit\Framework\Attributes\DataProvider('getUrlsForPageRowDataProvider')]
     #[\PHPUnit\Framework\Attributes\Test]
     public function getUrlsForPageRow(
@@ -183,7 +181,6 @@ class CrawlerControllerTest extends UnitTestCase
         ];
     }
 
-    
     #[\PHPUnit\Framework\Attributes\DataProvider('getConfigurationHasReturnsExpectedValueDataProvider')]
     #[\PHPUnit\Framework\Attributes\Test]
     public function getConfigurationHasReturnsExpectedValue(array $configuration, string $expected): void

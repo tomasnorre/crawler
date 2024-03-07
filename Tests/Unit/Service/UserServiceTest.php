@@ -25,7 +25,6 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 #[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Service\UserService::class)]
 class UserServiceTest extends UnitTestCase
 {
-    
     #[\PHPUnit\Framework\Attributes\DataProvider('hasGroupAccessDataProvider')]
     #[\PHPUnit\Framework\Attributes\Test]
     public function hasGroupAccess(string $groupList, string $accessList, bool $expected): void

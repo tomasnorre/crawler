@@ -24,9 +24,6 @@ use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-/**
- * Class ItemProviderTest
- */
 #[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\ContextMenu\ItemProvider::class)]
 class ItemProviderTest extends UnitTestCase
 {

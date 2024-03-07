@@ -39,7 +39,6 @@ class UrlServiceTest extends UnitTestCase
         $this->urlService = GeneralUtility::makeInstance(UrlService::class);
     }
 
-    
     #[\PHPUnit\Framework\Attributes\DataProvider('compileUrlsDataProvider')]
     #[\PHPUnit\Framework\Attributes\Test]
     public function compileUrls(array $paramArray, array $urls, array $expected, int $expectedCount): void

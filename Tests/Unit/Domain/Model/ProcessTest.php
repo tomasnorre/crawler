@@ -94,7 +94,6 @@ class ProcessTest extends UnitTestCase
         ];
     }
 
-    
     #[\PHPUnit\Framework\Attributes\DataProvider('getStateDataProvider')]
     #[\PHPUnit\Framework\Attributes\Test]
     public function getStateReturnsExpectedState(int $active, int $processes, string $expectedState): void
@@ -107,7 +106,6 @@ class ProcessTest extends UnitTestCase
         self::assertEquals($expectedState, $processMock->getState());
     }
 
-    
     #[\PHPUnit\Framework\Attributes\DataProvider('getProgressReturnsExpectedPercentageDataProvider')]
     #[\PHPUnit\Framework\Attributes\Test]
     public function getProgressReturnsExpectedPercentage(
@@ -192,7 +190,6 @@ class ProcessTest extends UnitTestCase
         ];
     }
 
-    
     #[\PHPUnit\Framework\Attributes\DataProvider('getRuntimeReturnsIntegerDataProvider')]
     #[\PHPUnit\Framework\Attributes\Test]
     public function getRuntimeReturnsInteger(array $getTimeForFirstItem, array $getTimeForLastItem, int $expected): void

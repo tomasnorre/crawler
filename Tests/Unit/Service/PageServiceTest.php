@@ -49,7 +49,6 @@ class PageServiceTest extends UnitTestCase
         $this->subject = GeneralUtility::makeInstance(PageService::class, $mockedEventDispatcher);
     }
 
-
     #[\PHPUnit\Framework\Attributes\DataProvider('checkIfPageShouldBeSkippedDataProvider')]
     #[\PHPUnit\Framework\Attributes\Test]
     public function checkIfPageShouldBeSkipped(

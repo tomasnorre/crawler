@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * This file is part of the TYPO3 CMS project.
  *
@@ -71,14 +73,23 @@
 
     // Set all packages to active
     if (interface_exists(\TYPO3\CMS\Core\Package\Cache\PackageCacheInterface::class)) {
-        $packageManager = \TYPO3\CMS\Core\Core\Bootstrap::createPackageManager(\TYPO3\CMS\Core\Package\UnitTestPackageManager::class, \TYPO3\CMS\Core\Core\Bootstrap::createPackageCache($cache));
+        $packageManager = \TYPO3\CMS\Core\Core\Bootstrap::createPackageManager(
+            \TYPO3\CMS\Core\Package\UnitTestPackageManager::class,
+            \TYPO3\CMS\Core\Core\Bootstrap::createPackageCache($cache)
+        );
     } else {
         // v10 compatibility layer
         // @deprecated Will be removed when v10 compat is dropped from testing-framework
-        $packageManager = \TYPO3\CMS\Core\Core\Bootstrap::createPackageManager(\TYPO3\CMS\Core\Package\UnitTestPackageManager::class, $cache);
+        $packageManager = \TYPO3\CMS\Core\Core\Bootstrap::createPackageManager(
+            \TYPO3\CMS\Core\Package\UnitTestPackageManager::class,
+            $cache
+        );
     }
 
-    \TYPO3\CMS\Core\Utility\GeneralUtility::setSingletonInstance(\TYPO3\CMS\Core\Package\PackageManager::class, $packageManager);
+    \TYPO3\CMS\Core\Utility\GeneralUtility::setSingletonInstance(
+        \TYPO3\CMS\Core\Package\PackageManager::class,
+        $packageManager
+    );
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::setPackageManager($packageManager);
 
     $testbase->dumpClassLoadingInformation();
