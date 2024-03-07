@@ -21,15 +21,13 @@ namespace AOE\Crawler\Tests\Unit\CrawlStrategy;
 
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy::class)]
 class CallbackExecutionStrategyTest extends UnitTestCase
 {
-    /**
-     * @test
-     * @covers \AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function callbackExecutionStrategyTest(): void
     {
         $crawlerController = $this->createPartialMock(CrawlerController::class, []);

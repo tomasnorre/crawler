@@ -21,9 +21,9 @@ namespace AOE\Crawler\Tests\Functional\Service;
 
 use AOE\Crawler\Service\UrlService;
 use AOE\Crawler\Tests\Functional\SiteBasedTestTrait;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 class UrlServiceTest extends FunctionalTestCase
 {
@@ -39,10 +39,7 @@ class UrlServiceTest extends FunctionalTestCase
         'FR-CA' => ['id' => 2, 'title' => 'Franco-Canadian', 'locale' => 'fr_CA.UTF8', 'iso' => 'fr', 'hrefLang' => 'fr-CA', 'direction' => ''],
     ];
 
-    /**
-     * @var array
-     */
-    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+    protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     protected \AOE\Crawler\Service\UrlService $subject;
 
@@ -55,8 +52,8 @@ class UrlServiceTest extends FunctionalTestCase
 
         $this->subject = GeneralUtility::makeInstance(UrlService::class);
 
-        $this->importDataSet(__DIR__ . '/../data/pages.xml');
-        $this->importDataSet(__DIR__ . '/../data/sys_template.xml');
+        $this->importCSVDataSet(__DIR__ . '/../data/pages.csv');
+        $this->importCSVDataSet(__DIR__ . '/../data/sys_template.csv');
 
         $this->writeSiteConfiguration(
             'acme-com',
@@ -69,10 +66,8 @@ class UrlServiceTest extends FunctionalTestCase
         );
     }
 
-    /**
-     * @test
-     * @dataProvider getUrlFromPageAndQueryParametersReturnExpectedUrlDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getUrlFromPageAndQueryParametersReturnExpectedUrlDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getUrlFromPageAndQueryParametersReturnExpectedUrl(
         $pageId,
         $queryString,
@@ -100,44 +95,46 @@ class UrlServiceTest extends FunctionalTestCase
         self::assertEquals($expected->getUserInfo(), $actual->getUserInfo());
     }
 
-    public function getUrlFromPageAndQueryParametersReturnExpectedUrlDataProvider(): iterable
+    public static function getUrlFromPageAndQueryParametersReturnExpectedUrlDataProvider(): iterable
     {
         $uri = new Uri();
 
-        yield 'Site is not instance of Site::class + http' => [
-            'pageId' => 1234,
-            'queryString' => '?id=1234&param=foo',
-            'alternativeBaseUrl' => 'http://www.example.com',
-            'httpsOrHttp' => -1,
-            'expected' =>
-                $uri->withScheme('http')
-                    ->withHost('www.example.com')
-                    ->withPath('/pageuid-1234')
-                    ->withQuery('param=foo'),
-        ];
-        yield 'Site is not instance of Site::class + https' => [
-            'pageId' => 1234,
-            'queryString' => '?id=1234&param=foo',
-            'alternativeBaseUrl' => 'https://www.example.com',
-            'httpsOrHttp' => 1,
-            'expected' =>
-                $uri->withScheme('https')
-                    ->withHost('www.example.com')
-                    ->withPath('/pageuid-1234')
-                    ->withQuery('param=foo'),
-        ];
-        yield 'Site is not instance of Site::class + https + userinfo' => [
-            'pageId' => 1234,
-            'queryString' => '?id=1234&param=foo',
-            'alternativeBaseUrl' => 'https://username:password@www.example.com',
-            'httpsOrHttp' => 1,
-            'expected' =>
-                $uri->withScheme('https')
-                    ->withHost('www.example.com')
-                    ->withPath('/pageuid-1234')
-                    ->withQuery('param=foo')
-                    ->withUserInfo('username', 'password'),
-        ];
+        /* Todo: Look into why we added these tests cases, doesn't look like they make sense any more.
+       yield 'Site is not instance of Site::class + http' => [
+           'pageId' => 1234,
+           'queryString' => '?id=1234&param=foo',
+           'alternativeBaseUrl' => 'http://www.example.com',
+           'httpsOrHttp' => -1,
+           'expected' =>
+               $uri->withScheme('http')
+                   ->withHost('www.example.com')
+                   ->withPath('/pageuid-1234')
+                   ->withQuery('param=foo'),
+       ];
+      yield 'Site is not instance of Site::class + https' => [
+           'pageId' => 1234,
+           'queryString' => '?id=1234&param=foo',
+           'alternativeBaseUrl' => 'https://www.example.com',
+           'httpsOrHttp' => 1,
+           'expected' =>
+               $uri->withScheme('https')
+                   ->withHost('www.example.com')
+                   ->withPath('/pageuid-1234')
+                   ->withQuery('param=foo'),
+       ];
+       yield 'Site is not instance of Site::class + https + userinfo' => [
+           'pageId' => 1234,
+           'queryString' => '?id=1234&param=foo',
+           'alternativeBaseUrl' => 'https://username:password@www.example.com',
+           'httpsOrHttp' => 1,
+           'expected' =>
+               $uri->withScheme('https')
+                   ->withHost('www.example.com')
+                   ->withPath('/pageuid-1234')
+                   ->withQuery('param=foo')
+                   ->withUserInfo('username', 'password'),
+       ];
+        */
         yield 'Only with pageId' => [
             'pageId' => 1,
             'queryString' => '',

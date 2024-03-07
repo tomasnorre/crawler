@@ -54,26 +54,25 @@ final class BackendModuleCrawlerProcessController extends AbstractBackendModuleC
         $this->pageUid = (int) ($request->getQueryParams()['id'] ?? -1);
         $this->moduleTemplate = $this->setupView($request, $this->pageUid);
         $this->moduleTemplate->assign('currentPageId', $this->pageUid);
-        $this->moduleTemplate->setTitle('Crawler', $GLOBALS['LANG']->getLL('module.menu.log'));
         $this->moduleTemplate = $this->moduleTemplate->makeDocHeaderModuleMenu(
             ['id' => $request->getQueryParams()['id'] ?? -1]
         );
-        $this->moduleTemplate = $this->assignValues();
+        $this->moduleTemplate = $this->assignValues($request);
         $this->runRefreshHooks();
 
         return $this->moduleTemplate->renderResponse('Backend/ProcessOverview');
     }
 
-    private function assignValues(): ModuleTemplate
+    private function assignValues(ServerRequestInterface $request): ModuleTemplate
     {
         try {
-            $this->handleProcessOverviewActions();
+            $this->handleProcessOverviewActions($request);
         } catch (\Throwable $e) {
             $this->isErrorDetected = true;
             MessageUtility::addErrorMessage($e->getMessage());
         }
 
-        $mode = GeneralUtility::_GP('processListMode') ?? 'simple';
+        $mode = $request->getParsedBody()['processListMode'] ?? $request->getQueryParams()['processListMode'] ?? 'simple';
         $allProcesses = $mode === 'simple' ? $this->processRepository->findAllActive() : $this->processRepository->findAll();
         $isCrawlerEnabled = ! $this->crawler->isDisabled() && ! $this->isErrorDetected;
         $currentActiveProcesses = $this->processRepository->findAllActive()->count();
@@ -110,9 +109,11 @@ final class BackendModuleCrawlerProcessController extends AbstractBackendModuleC
      *
      * @throws ProcessException
      */
-    private function handleProcessOverviewActions(): void
+    private function handleProcessOverviewActions(ServerRequestInterface $request): void
     {
-        switch (GeneralUtility::_GP('action')) {
+        $action = $request->getParsedBody()['action'] ?? $request->getQueryParams()['action'] ?? null;
+
+        switch ($action) {
             case 'stopCrawling':
                 //set the cli status to disable (all processes will be terminated)
                 $this->crawler->setDisabled(true);

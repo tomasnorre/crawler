@@ -24,9 +24,7 @@ use AOE\Crawler\Exception\ProcessException;
 use AOE\Crawler\Helper\Sleeper\SleeperInterface;
 use AOE\Crawler\Utility\PhpBinaryUtility;
 use TYPO3\CMS\Core\Core\Environment;
-use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\CommandUtility;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 /**
  * @package AOE\Crawler\Service
@@ -78,14 +76,8 @@ class ProcessService
      */
     public function getCrawlerCliPath(): string
     {
-        $typo3MajorVersion = (new Typo3Version())->getMajorVersion();
         $phpPath = PhpBinaryUtility::getPhpBinary();
-
-        if ($typo3MajorVersion === 10 || !Environment::isComposerMode()) {
-            $typo3BinaryPath = ExtensionManagementUtility::extPath('core') . 'bin/';
-        } else {
-            $typo3BinaryPath = $this->getComposerBinPath();
-        }
+        $typo3BinaryPath = $this->getComposerBinPath();
 
         $cliPart = 'typo3 crawler:processQueue';
         // Don't like the spacing, but don't have an better idea for now

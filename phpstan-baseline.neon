@@ -1,11 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|null given\\.$#"
-			count: 1
-			path: Classes/Command/BuildQueueCommand.php
-
-		-
 			message: "#^Constant AOE\\\\Crawler\\\\Command\\\\ProcessQueueCommand\\:\\:CLI_STATUS_POLLABLE_PROCESSED is unused\\.$#"
 			count: 1
 			path: Classes/Command/ProcessQueueCommand.php
@@ -21,9 +16,39 @@ parameters:
 			path: Classes/ContextMenu/ItemProvider.php
 
 		-
-			message: "#^Call to function is_string\\(\\) with bool will always evaluate to false\\.$#"
+			message: "#^Cannot access offset 'parameters' on array\\<string, mixed\\>\\|false\\.$#"
+			count: 2
+			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
+
+		-
+			message: "#^Unable to resolve the template type T in call to method static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\)$#"
 			count: 1
-			path: Classes/Controller/CrawlerController.php
+			path: Classes/Controller/Backend/BackendModuleCrawlerProcessController.php
+
+		-
+			message: "#^Call to function is_array\\(\\) with string will always evaluate to false\\.$#"
+			count: 1
+			path: Classes/Controller/Backend/BackendModuleStartCrawlingController.php
+
+		-
+			message: "#^Method AOE\\\\Crawler\\\\Controller\\\\Backend\\\\BackendModuleStartCrawlingController\\:\\:getScheduledTime\\(\\) never returns float so it can be removed from the return type\\.$#"
+			count: 1
+			path: Classes/Controller/Backend/BackendModuleStartCrawlingController.php
+
+		-
+			message: "#^Parameter \\#3 \\$scheduledTime of method AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:getPageTreeAndUrls\\(\\) expects int, float\\|int given\\.$#"
+			count: 1
+			path: Classes/Controller/Backend/BackendModuleStartCrawlingController.php
+
+		-
+			message: "#^Result of \\|\\| is always true\\.$#"
+			count: 1
+			path: Classes/Controller/Backend/BackendModuleStartCrawlingController.php
+
+		-
+			message: "#^Method AOE\\\\Crawler\\\\Controller\\\\Backend\\\\Helper\\\\UrlBuilder\\:\\:getBackendModuleUrl\\(\\) should return TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri but returns Psr\\\\Http\\\\Message\\\\UriInterface\\.$#"
+			count: 1
+			path: Classes/Controller/Backend/Helper/UrlBuilder.php
 
 		-
 			message: "#^Cannot call method debug\\(\\) on Psr\\\\Log\\\\LoggerInterface\\|null\\.$#"
@@ -31,7 +56,7 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Class cognitive complexity is 102, keep it under 60$#"
+			message: "#^Class cognitive complexity is 101, keep it under 60$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -46,12 +71,12 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Parameter \\#2 \\$string of function explode expects string, true given\\.$#"
+			message: "#^Parameter \\#1 \\$pageUid of static method TYPO3\\\\CMS\\\\Backend\\\\Utility\\\\BackendUtility\\:\\:getPagesTSconfig\\(\\) expects int, string given\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Property AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:\\$MP \\(bool\\) does not accept string\\.$#"
+			message: "#^Parameter \\#1 \\$string of function md5 expects string, string\\|false given\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -116,6 +141,14 @@ parameters:
 			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
 
 		-
+			message: """
+				#^Call to deprecated method getExpressionBuilder\\(\\) of class TYPO3\\\\CMS\\\\Core\\\\Database\\\\Connection\\:
+				Use \\{@see createExpressionBuilder\\(\\)\\} instead\\.$#
+			"""
+			count: 1
+			path: Classes/Domain/Repository/QueueRepository.php
+
+		-
 			message: "#^Function getQueueEntriesForPageId\\(\\) has an unused variable \\$query\\.$#"
 			count: 1
 			path: Classes/Domain/Repository/QueueRepository.php
@@ -129,6 +162,36 @@ parameters:
 			message: "#^There is no request attribute \"tx_crawler\" configured so we can't figure out the exact type to return when calling Psr\\\\Http\\\\Message\\\\ServerRequestInterface\\:\\:getAttribute$#"
 			count: 1
 			path: Classes/Middleware/CrawlerInitialization.php
+
+		-
+			message: "#^Cannot access offset 'alturl' on array\\|bool\\.$#"
+			count: 1
+			path: Classes/Service/BackendModuleLogService.php
+
+		-
+			message: "#^Cannot access offset 'procInstructions' on array\\|bool\\.$#"
+			count: 1
+			path: Classes/Service/BackendModuleLogService.php
+
+		-
+			message: "#^Class Error should be written with \\:\\:class notation, string found\\.$#"
+			count: 1
+			path: Classes/Service/BackendModuleLogService.php
+
+		-
+			message: "#^Method AOE\\\\Crawler\\\\Service\\\\BackendModuleLogService\\:\\:addRows\\(\\) should return non\\-empty\\-array\\<int, array\\{titleRowSpan\\: int\\<1, max\\>, colSpan\\: int, title\\: string, noEntries\\?\\: string, trClass\\?\\: string, qid\\?\\: array\\{link\\: TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, link\\-text\\: string\\}, refresh\\?\\: array\\{link\\: TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, link\\-text\\: TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon, warning\\: string\\|TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon\\}, columns\\?\\: array\\{url\\: mixed, scheduled\\: string, exec_time\\: string, result_log\\: string, result_status\\: string, feUserGroupList\\: string, procInstructions\\: string, set_id\\: string, \\.\\.\\.\\}\\}\\> but returns array\\{non\\-empty\\-array\\<int\\<0, max\\>, array\\{titleRowSpan\\: 1, colSpan\\: 8\\|9\\|11\\|12, title\\: string, noEntries\\: string\\}\\|array\\{titleRowSpan\\: int\\<1, max\\>, colSpan\\: 8\\|9\\|11\\|12, title\\: string, trClass\\: ''\\|'bg\\-danger', qid\\: array\\{link\\: TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, link\\-text\\: string\\}, refresh\\: array\\{link\\: TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, link\\-text\\: TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon, warning\\: ''\\|TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon\\}, columns\\: non\\-empty\\-array\\<'exec_time'\\|'feUserGroupList'\\|'procInstructions'\\|'result_log'\\|'result_status'\\|'scheduled'\\|'set_id'\\|'tsfe_gr_list'\\|'tsfe_id'\\|'url', mixed\\>\\}\\>, array\\{\\}\\|array\\{scheduled\\: string, exec_time\\: string, result_status\\: mixed, url\\: mixed, feUserGroupList\\: mixed, procInstructions\\: mixed, set_id\\: mixed, result_log\\: string, \\.\\.\\.\\}\\}\\.$#"
+			count: 1
+			path: Classes/Service/BackendModuleLogService.php
+
+		-
+			message: "#^Parameter \\#1 \\$resultData of static method AOE\\\\Crawler\\\\Controller\\\\Backend\\\\Helper\\\\ResultHandler\\:\\:getResFeVars\\(\\) expects array, array\\|true given\\.$#"
+			count: 1
+			path: Classes/Service/BackendModuleLogService.php
+
+		-
+			message: "#^There is no request attribute \"route\" configured so we can't figure out the exact type to return when calling Psr\\\\Http\\\\Message\\\\ServerRequestInterface\\:\\:getAttribute$#"
+			count: 1
+			path: Classes/Service/BackendModuleScriptUrlService.php
 
 		-
 			message: "#^Class cognitive complexity is 84, keep it under 60$#"

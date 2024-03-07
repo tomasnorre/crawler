@@ -21,16 +21,18 @@ namespace AOE\Crawler\Service;
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
-use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ArrayParameterType;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
-use TYPO3\CMS\Core\Database\QueryGenerator;
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\EventDispatcher\NoopEventDispatcher;
 use TYPO3\CMS\Core\Type\Bitmask\Permission;
-use TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser;
+use TYPO3\CMS\Core\TypoScript\AST\AstBuilder;
+use TYPO3\CMS\Core\TypoScript\TypoScriptStringFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 
@@ -150,13 +152,16 @@ class ConfigurationService
 
                     // don't overwrite previously defined paramSets
                     if (!isset($res[$key])) {
-                        /* @var $TSparserObject TypoScriptParser */
-                        $TSparserObject = GeneralUtility::makeInstance(TypoScriptParser::class);
-                        $TSparserObject->parse($configurationRecord['processing_instruction_parameters_ts']);
+                        /* @var $typoScriptStringFactory TypoScriptStringFactory */
+                        $typoScriptStringFactory = GeneralUtility::makeInstance(TypoScriptStringFactory::class);
+                        $typoScriptTree = $typoScriptStringFactory->parseFromString(
+                            $configurationRecord['processing_instruction_parameters_ts'],
+                            new AstBuilder(new NoopEventDispatcher())
+                        );
 
                         $subCfg = [
                             'procInstrFilter' => $configurationRecord['processing_instruction_filter'],
-                            'procInstrParams.' => $TSparserObject->setup,
+                            'procInstrParams.' => $typoScriptTree->toArray(),
                             'baseUrl' => $configurationRecord['base_url'],
                             'force_ssl' => (int) $configurationRecord['force_ssl'],
                             'userGroups' => $configurationRecord['fegroups'],
@@ -236,7 +241,6 @@ class ConfigurationService
      *         - "_TABLE:[TCA table name];[_PID:[optional page id, default is current page]];[_ENABLELANG:1]" = Look up of table records from PID, filtering out deleted records. Example "_TABLE:tt_content; _PID:123"
      *        _ENABLELANG:1 picks only original records without their language overlays
      *         - Default: Literal value
-     * @throws \Doctrine\DBAL\DBALException
      */
     private function expandParameters(array $paramArray, int $pid): array
     {
@@ -325,12 +329,7 @@ class ConfigurationService
         return $this->backendUser;
     }
 
-    /**
-     * Get querybuilder for given table
-     *
-     * @return QueryBuilder
-     */
-    private function getQueryBuilder(string $table)
+    private function getQueryBuilder(string $table): QueryBuilder
     {
         return GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($table);
     }
@@ -360,10 +359,8 @@ class ConfigurationService
     private function getPidArray(int $recursiveDepth, int $lookUpPid): array
     {
         if ($recursiveDepth > 0) {
-            /** @var QueryGenerator $queryGenerator */
-            $queryGenerator = GeneralUtility::makeInstance(QueryGenerator::class);
-            $pidList = $queryGenerator->getTreeList($lookUpPid, $recursiveDepth);
-            $pidArray = GeneralUtility::intExplode(',', $pidList);
+            $pageRepository = GeneralUtility::makeInstance(PageRepository::class);
+            $pidArray = $pageRepository->getPageIdsRecursive([$lookUpPid], $recursiveDepth);
         } else {
             $pidArray = [$lookUpPid];
         }
@@ -403,9 +400,6 @@ class ConfigurationService
         return $pidList;
     }
 
-    /**
-     * @throws \Doctrine\DBAL\DBALException
-     */
     private function extractParamsFromCustomTable(
         array $subpartParams,
         int $pid,
@@ -433,7 +427,7 @@ class ConfigurationService
                 ->where(
                     $queryBuilder->expr()->in(
                         $pidField,
-                        $queryBuilder->createNamedParameter($pidArray, Connection::PARAM_INT_ARRAY)
+                        $queryBuilder->createNamedParameter($pidArray, ArrayParameterType::INTEGER)
                     ),
                     $where
                 );

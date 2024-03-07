@@ -22,15 +22,12 @@ namespace AOE\Crawler\Tests\Functional\Service;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Service\QueueService;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 class QueueServiceTest extends FunctionalTestCase
 {
-    /**
-     * @var array
-     */
-    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+    protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     /**
      * @var QueueService
@@ -57,12 +54,11 @@ class QueueServiceTest extends FunctionalTestCase
      * This test is used to check that the api will not create duplicate entries for
      * two pages which should both be crawled in the past, because it is only needed one times.
      * The testcase uses a TSConfig crawler configuration.
-     *
-     * @test
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function canNotCreateDuplicateQueueEntriesForTwoPagesInThePast(): void
     {
-        $this->importDataSet(__DIR__ . '/../data/canNotAddDuplicatePagesToQueue.xml');
+        $this->importCSVDataSet(__DIR__ . '/../data/canNotAddDuplicatePagesToQueue.csv');
 
         $this->subject->addPageToQueue(5, 9998);
         $this->subject->addPageToQueue(5, 3422);
@@ -74,12 +70,11 @@ class QueueServiceTest extends FunctionalTestCase
      * This test should check that the api does not create two queue entries for
      * two pages which should be crawled at the same time in the future.
      * The testcase uses a TSConfig crawler configuration.
-     *
-     * @test
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function canNotCreateDuplicateForTwoPagesInTheFutureWithTheSameTimestamp(): void
     {
-        $this->importDataSet(__DIR__ . '/../data/canNotAddDuplicatePagesToQueue.xml');
+        $this->importCSVDataSet(__DIR__ . '/../data/canNotAddDuplicatePagesToQueue.csv');
 
         $this->subject->addPageToQueue(5, 100001);
         $this->subject->addPageToQueue(5, 100001);
@@ -91,12 +86,11 @@ class QueueServiceTest extends FunctionalTestCase
      * This test is used to check that the api can be used to schedule one page two times
      * for a different timestamp in the future.
      * The testcase uses a TSConfig crawler configuration.
-     *
-     * @test
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function canCreateTwoQueueEntriesForDifferentTimestampsInTheFuture(): void
     {
-        $this->importDataSet(__DIR__ . '/../data/canNotAddDuplicatePagesToQueue.xml');
+        $this->importCSVDataSet(__DIR__ . '/../data/canNotAddDuplicatePagesToQueue.csv');
 
         $this->subject->addPageToQueue(5, 100011);
         $this->subject->addPageToQueue(5, 200014);

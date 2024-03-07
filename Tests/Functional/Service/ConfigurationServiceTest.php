@@ -22,19 +22,16 @@ namespace AOE\Crawler\Tests\Functional\Service;
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Service\ConfigurationService;
 use AOE\Crawler\Service\UrlService;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 class ConfigurationServiceTest extends FunctionalTestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var array
-     */
-    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+    protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
     private ConfigurationService $subject;
 
     protected function setUp(): void
@@ -43,10 +40,8 @@ class ConfigurationServiceTest extends FunctionalTestCase
         $this->subject = $this->createPartialMock(ConfigurationService::class, []);
     }
 
-    /**
-     * @test
-     * @runInSeparateProcess
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
     public function expandExcludeStringReturnsArraysOfIntegers(): void
     {
         $GLOBALS['BE_USER'] = $this->getMockBuilder(BackendUserAuthentication::class)
@@ -62,17 +57,17 @@ class ConfigurationServiceTest extends FunctionalTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getConfigurationFromDatabaseReturnsArray(): void
     {
-        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [];
+        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [
+            'maxCompileUrls' => 100,
+        ];
 
         $urlService = GeneralUtility::makeInstance(UrlService::class);
         $configurationRepository = GeneralUtility::makeInstance(ConfigurationRepository::class);
-        $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_configuration.xml');
-        $this->importDataSet(__DIR__ . '/../Fixtures/pages.xml');
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/tx_crawler_configuration.csv');
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/pages.csv');
 
         $configurationService = GeneralUtility::makeInstance(
             ConfigurationService::class,

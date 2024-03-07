@@ -23,19 +23,16 @@ use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
 use AOE\Crawler\QueueExecutor;
 use AOE\Crawler\Tests\Unit\CrawlStrategy\CallbackObjectForTesting;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-/**
- * @covers \AOE\Crawler\QueueExecutor
- * @covers \AOE\Crawler\Configuration\ExtensionConfigurationProvider::getExtensionConfiguration
- * @covers \AOE\Crawler\Converter\JsonCompatibilityConverter::convert
- * @covers \AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy::fetchByCallback
- * @covers \AOE\Crawler\CrawlStrategy\CrawlStrategyFactory::__construct
- * @covers \AOE\Crawler\CrawlStrategy\CrawlStrategyFactory::create
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\QueueExecutor::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Configuration\ExtensionConfigurationProvider::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Converter\JsonCompatibilityConverter::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\CrawlStrategy\CrawlStrategyFactory::class)]
 class QueueExecutorTest extends UnitTestCase
 {
     use ProphecyTrait;
@@ -47,8 +44,11 @@ class QueueExecutorTest extends UnitTestCase
      */
     protected $mockedCrawlerController;
 
+    protected bool $resetSingletonInstances = true;
+
     protected function setUp(): void
     {
+        parent::setUp();
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [];
         $this->mockedCrawlerController = $this->createMock(CrawlerController::class);
         $crawlStrategyFactory = GeneralUtility::makeInstance(CrawlStrategyFactory::class);
@@ -59,19 +59,15 @@ class QueueExecutorTest extends UnitTestCase
         );
     }
 
-    /**
-     * @test
-     * @dataProvider invalidArgumentsReturnErrorInExecuteQueueItemDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalidArgumentsReturnErrorInExecuteQueueItemDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function invalidArgumentsReturnErrorInExecuteQueueItem(array $queueItem): void
     {
         $result = $this->queueExecutor->executeQueueItem($queueItem, $this->mockedCrawlerController);
         self::assertEquals('ERROR', $result);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function executeQueueItemCallback(): void
     {
         $queueItem = [
@@ -84,7 +80,7 @@ class QueueExecutorTest extends UnitTestCase
         self::assertStringContainsString('Hi, it works!', $result['content']);
     }
 
-    public function invalidArgumentsReturnErrorInExecuteQueueItemDataProvider(): iterable
+    public static function invalidArgumentsReturnErrorInExecuteQueueItemDataProvider(): iterable
     {
         yield 'No parameters set' => [
             'queueItem' => [],

@@ -23,8 +23,8 @@ use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Hooks\ProcessCleanUpHook;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
  * Class ProcessCleanUpHookTest
@@ -39,10 +39,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
     protected ProcessRepository $processRepository;
     protected QueueRepository $queueRepository;
 
-    /**
-     * @var array
-     */
-    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+    protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     protected function setUp(): void
     {
@@ -55,8 +52,8 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         $this->queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
 
         // Include Fixtures
-        $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_process.xml');
-        $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/tx_crawler_process.csv');
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.csv');
     }
 
     protected function tearDown(): void
@@ -64,56 +61,44 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         parent::tearDown();
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function removeActiveProcessesOlderThanOneHour(): never
     {
         $this->markTestSkipped('Please Implement');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function removeActiveOrphanProcesses(): never
     {
         $this->markTestSkipped('Please Implement');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function doProcessStillExists(): never
     {
         $this->markTestSkipped('Skipped due to differences between windows and *nix');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function killProcess(): never
     {
         $this->markTestSkipped('Skipped due to differences between windows and *nix');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function findDispatcherProcesses(): never
     {
         $this->markTestSkipped('Skipped due to differences between windows and *nix');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function removeProcessFromProcesslistCalledWithProcessThatDoesNotExist(): void
     {
         $processCountBefore = $this->processRepository->findAll()->count();
         $queueCountBefore = $this->queueRepository->findAll()->count();
 
         $notExistingProcessId = '23456';
-        $this->callInaccessibleMethod($this->subject, 'removeProcessFromProcesslist', $notExistingProcessId);
+        $this->subject->removeProcessFromProcesslist($notExistingProcessId);
 
         $processCountAfter = $this->processRepository->findAll()->count();
         $queueCountAfter = $this->queueRepository->findAll()->count();
@@ -123,9 +108,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         self::assertEquals($queueCountBefore, $queueCountAfter);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function removeProcessFromProcesslistRemoveOneProcessAndNoQueueRecords(): void
     {
         $expectedProcessesToBeRemoved = 1;
@@ -134,7 +117,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         $queueCountBefore = $this->queueRepository->findAll()->count();
 
         $existingProcessId = '1000';
-        $this->callInaccessibleMethod($this->subject, 'removeProcessFromProcesslist', $existingProcessId);
+        $this->subject->removeProcessFromProcesslist($existingProcessId);
 
         $processCountAfter = $this->processRepository->findAll()->count();
         $queueCountAfter = $this->queueRepository->findAll()->count();
@@ -143,21 +126,19 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         self::assertEquals($queueCountBefore, $queueCountAfter);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function removeProcessFromProcesslistRemoveOneProcessAndOneQueueRecordIsReset(): void
     {
         $existingProcessId = '1001';
         $expectedProcessesToBeRemoved = 1;
 
         $processCountBefore = $this->processRepository->findAll()->count();
-        $queueCountBefore = $this->queueRepository->findByProcessId($existingProcessId)->count();
+        $queueCountBefore = $this->queueRepository->findBy(['processId' => $existingProcessId])->count();
 
-        $this->callInaccessibleMethod($this->subject, 'removeProcessFromProcesslist', $existingProcessId);
+        $this->subject->removeProcessFromProcesslist($existingProcessId);
 
         $processCountAfter = $this->processRepository->findAll()->count();
-        $queueCountAfter = $this->queueRepository->findByProcessId($existingProcessId)->count();
+        $queueCountAfter = $this->queueRepository->findBy(['processId' => $existingProcessId])->count();
 
         self::assertEquals($processCountBefore - $expectedProcessesToBeRemoved, $processCountAfter);
 
@@ -166,31 +147,21 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         self::assertEquals(0, $queueCountAfter);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function createResponseArrayReturnsEmptyArray(): void
     {
         $emptyInputString = '';
 
-        self::assertEquals(
-            [],
-            $this->callInaccessibleMethod($this->subject, 'createResponseArray', $emptyInputString)
-        );
+        self::assertEquals([], $this->subject->createResponseArray($emptyInputString));
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function createResponseArrayReturnsArray(): void
     {
         // Input string has multiple spacing to ensure we don't end up with an array with empty values
         $inputString = '1   2 2 4 5 6 ';
         $expectedOutputArray = ['1', '2', '2', '4', '5', '6'];
 
-        self::assertEquals(
-            $expectedOutputArray,
-            $this->callInaccessibleMethod($this->subject, 'createResponseArray', $inputString)
-        );
+        self::assertEquals($expectedOutputArray, $this->subject->createResponseArray($inputString));
     }
 }

@@ -21,24 +21,20 @@ namespace AOE\Crawler\Tests\Unit\Controller\Backend\Helper;
  */
 
 use AOE\Crawler\Controller\Backend\Helper\ResultHandler;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-/**
- * @covers \AOE\Crawler\Controller\Backend\Helper\ResultHandler
- * @covers \AOE\Crawler\Converter\JsonCompatibilityConverter::convert
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Controller\Backend\Helper\ResultHandler::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Converter\JsonCompatibilityConverter::class)]
 class ResultHandlerTest extends UnitTestCase
 {
-    /**
-     * @test
-     * @dataProvider getResStatusDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getResStatusDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getResStatus($requestContent, string $expected): void
     {
         self::assertSame($expected, ResultHandler::getResStatus($requestContent));
     }
 
-    public function getResStatusDataProvider(): iterable
+    public static function getResStatusDataProvider(): iterable
     {
         yield 'requestContent is empty array' => [
             'requestContent' => [],
@@ -73,16 +69,14 @@ class ResultHandlerTest extends UnitTestCase
         // Missing test case for the return 'Error: ' (last return)
     }
 
-    /**
-     * @test
-     * @dataProvider getResFeVarsDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getResFeVarsDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getResFeVars(array $resultData, array $expected): void
     {
         self::assertSame($expected, ResultHandler::getResFeVars($resultData));
     }
 
-    public function getResFeVarsDataProvider(): iterable
+    public static function getResFeVarsDataProvider(): iterable
     {
         yield 'ResultData is empty, therefore empty array returned' => [
             'resultData' => [],
@@ -108,16 +102,14 @@ class ResultHandlerTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider getResultLogDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getResultLogDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getResultLog(array $resultLog, string $expected): void
     {
         self::assertSame($expected, ResultHandler::getResultLog($resultLog));
     }
 
-    public function getResultLogDataProvider(): iterable
+    public static function getResultLogDataProvider(): iterable
     {
         yield 'ResultRow key result_data does not exist' => [
             'resultRow' => [

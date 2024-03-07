@@ -20,11 +20,9 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
  */
 
 use AOE\Crawler\Domain\Model\Reason;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-/**
- * @covers \AOE\Crawler\Domain\Model\Reason
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Domain\Model\Reason::class)]
 class ReasonTest extends UnitTestCase
 {
     protected function setUp(): void
@@ -37,9 +35,7 @@ class ReasonTest extends UnitTestCase
         parent::tearDown();
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function expectsConstructorToSetPropertiesFromArray(): void
     {
         $propertiesArray = [
@@ -50,9 +46,7 @@ class ReasonTest extends UnitTestCase
         self::assertSame($propertiesArray, $reason->getRow());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function settersWillSetValuesAndGettersWillRetrieveTheValues(): void
     {
         $reason = new Reason([]);

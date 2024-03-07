@@ -26,38 +26,38 @@
         "psr/http-message": "^1.0",
         "psr/log": "^1.0 || ^2.0 || ^3.0",
         "symfony/console": "^5.0 || ^6.1",
-        "typo3/cms-backend": "12.2.x-dev",
-        "typo3/cms-core": "12.2.x-dev",
-        "typo3/cms-frontend": "12.2.x-dev",
-        "typo3/cms-info": "12.2.x-dev",
-        "typo3/cms-seo": "12.2.x-dev"
+        "typo3/cms-backend": "^12.4",
+        "typo3/cms-core": "^12.4",
+        "typo3/cms-frontend": "^12.4",
+        "typo3/cms-info": "^12.4",
+        "typo3/cms-seo": "^12.4"
     },
     "require-dev": {
         "codeception/codeception": "^5.0",
         "codeception/module-asserts": "^3.0",
         "codeception/module-filesystem": "^3.0",
         "codeception/module-phpbrowser": "^3.0",
-        "codeception/module-webdriver": "^3.0",
-        "cweagans/composer-patches": "^1.7",
+        "codeception/module-webdriver": "^4.0",
         "infection/infection": "^0.26",
         "nikic/php-parser": "^4.13",
-        "nimut/testing-framework": "^6.0 || dev-main",
         "phpspec/prophecy-phpunit": "^2.0",
         "phpstan/extension-installer": "^1.2",
         "phpstan/phpstan": "^1.9",
         "phpstan/phpstan-deprecation-rules": "^1.0",
-        "phpunit/phpunit": "^9.5",
+        "phpunit/phpunit": "^10.5",
+        "rector/rector": "^1.0",
         "roave/security-advisories": "dev-latest",
         "saschaegerer/phpstan-typo3": "^1.8",
-        "sbuerk/typo3-cmscomposerinstallers-testingframework-bridge": "^0.0.1",
+        "sbuerk/typo3-cmscomposerinstallers-testingframework-bridge": "^0.1",
         "slam/phpstan-extensions": "^6.0",
-        "ssch/typo3-rector": "^1.1",
+        "ssch/typo3-rector": "^2.0",
+        "ssch/typo3-rector-testing-framework": "*",
         "symfony/yaml": "^4.4 || ^5.0 || ^6.1",
         "symplify/easy-coding-standard": "11.1.16",
         "symplify/phpstan-rules": "^11.1",
         "tomasvotruba/cognitive-complexity": "^0.0.5",
         "tomasvotruba/type-coverage": "^0.0.9",
-        "typo3/testing-framework": "7.x-dev"
+        "typo3/testing-framework": "^8.0"
     },
     "replace": {
         "aoepeople/crawler": "self.version",
@@ -88,7 +88,6 @@
     "config": {
         "allow-plugins": {
             "composer/package-versions-deprecated": true,
-            "cweagans/composer-patches": true,
             "infection/extension-installer": true,
             "phpstan/extension-installer": true,
             "typo3/class-alias-loader": true,
@@ -107,11 +106,6 @@
     "extra": {
         "branch-alias": {
             "dev-main": "12.0.x-dev"
-        },
-        "patches": {
-            "nimut/testing-framework": {
-                "Reset setDBInit + initCommands for PostgreSQL": "Build/nimut-testing-framework-postgresql.patch"
-            }
         },
         "typo3/cms": {
             "extension-key": "crawler",
@@ -189,20 +183,23 @@
         "test:functional": [
             "@test:reset-vars",
             "@extension-create-libs",
+            "@test-set-vars",
             "[ -e .Build/bin/phpunit ] || composer update",
-            "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseName=crawler typo3DatabaseHost=127.0.0.1 typo3DatabaseUsername=root typo3DatabasePassword=root .Build/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml Tests/Functional"
+            "TYPO3_PATH_WEB=$PWD/.Build/Web .Build/bin/phpunit -c Tests/FunctionalTests.xml"
         ],
         "test:functional-postgre": [
             "@test:reset-vars",
             "@extension-create-libs",
+            "@test-set-vars",
             "[ -e .Build/bin/phpunit ] || composer update",
-            "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseDriver=pdo_pgsql typo3DatabaseName=crawler typo3DatabaseHost=127.0.0.1 typo3DatabaseUsername=root typo3DatabasePassword=root .Build/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml Tests/Functional"
+            "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseDriver=pdo_pgsql .Build/bin/phpunit -c Tests/FunctionalTests.xml"
         ],
         "test:functional-sqlite": [
             "@test:reset-vars",
             "@extension-create-libs",
+            "@test-set-vars",
             "[ -e .Build/bin/phpunit ] || composer update",
-            "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseDriver=pdo_sqlite typo3DatabaseName=test .Build/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml Tests/Functional"
+            "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseDriver=pdo_sqlite .Build/bin/phpunit -c Tests/FunctionalTests.xml"
         ],
         "test:mutation": [
             "[ -e .Build/bin/infection ] || composer update",
@@ -215,9 +212,15 @@
             "export typo3DatabasePassword=''",
             "export typo3DatabaseDriver=''"
         ],
+        "test:set-vars": [
+            "export typo3DatabaseName='crawler'",
+            "export typo3DatabaseHost='127.0.0.1'",
+            "export typo3DatabaseUsername='root'",
+            "typo3DatabasePassword='root'"
+        ],
         "test:unit": [
             "[ -e .Build/bin/phpunit ] || composer update",
-            "TYPO3_PATH_WEB=.Build/Web .Build/bin/phpunit --colors -c .Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/Unit"
+            "TYPO3_PATH_WEB=.Build/Web .Build/bin/phpunit --colors -c Tests/UnitTests.xml"
         ]
     }
 }

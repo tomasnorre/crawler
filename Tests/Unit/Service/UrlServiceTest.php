@@ -20,12 +20,10 @@ namespace AOE\Crawler\Tests\Unit\Service;
  */
 
 use AOE\Crawler\Service\UrlService;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-/**
- * @covers \AOE\Crawler\Service\UrlService
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Service\UrlService::class)]
 class UrlServiceTest extends UnitTestCase
 {
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
@@ -41,11 +39,8 @@ class UrlServiceTest extends UnitTestCase
         $this->urlService = GeneralUtility::makeInstance(UrlService::class);
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider compileUrlsDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('compileUrlsDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function compileUrls(array $paramArray, array $urls, array $expected, int $expectedCount): void
     {
         self::assertEquals($expected, $this->urlService->compileUrls($paramArray, $urls));
@@ -53,7 +48,7 @@ class UrlServiceTest extends UnitTestCase
         self::assertCount($expectedCount, $this->urlService->compileUrls($paramArray, $urls));
     }
 
-    public function compileUrlsDataProvider(): iterable
+    public static function compileUrlsDataProvider(): iterable
     {
         yield 'Empty Params array' => [
             'paramArray' => [],

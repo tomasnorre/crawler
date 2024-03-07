@@ -22,11 +22,11 @@ namespace AOE\Crawler\Domain\Repository;
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Value\QueueFilter;
+use Doctrine\DBAL\ArrayParameterType;
 use PDO;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Contracts\Service\Attribute\Required;
-use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Repository;
@@ -156,7 +156,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
 
     /**
      * This method can be used to count all queue entries which are
-     * scheduled for now or a earlier date and are assigned to a process.
+     * scheduled for now or an earlier date and are assigned to a process.
      */
     public function countAllAssignedPendingItems(): int
     {
@@ -166,7 +166,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ->count('*')
             ->from(self::TABLE_NAME)
             ->where(
-                $queryBuilder->expr()->neq('process_id', "''"),
+                $queryBuilder->expr()->neq('process_id', 0),
                 $queryBuilder->expr()->eq('exec_time', 0),
                 $queryBuilder->expr()->lte('scheduled', time())
             )
@@ -237,9 +237,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
                 ->where('exec_time != 0 AND exec_time < ' . $purgeDate)->executeStatement();
 
             if ($del === 0) {
-                if ($this->logger !== null) {
-                    $this->logger->info('No records was deleted');
-                }
+                $this->logger?->info('No records was deleted');
             }
         }
     }
@@ -267,9 +265,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ->where($condition)->executeStatement();
 
         if ($del === 0) {
-            if ($this->logger !== null) {
-                $this->logger->info('No records was deleted.');
-            }
+            $this->logger?->info('No records was deleted.');
         }
     }
 
@@ -325,7 +321,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
                 $queryBuilder->expr()->eq('exec_time', 0),
                 $queryBuilder->expr()->in(
                     'process_id',
-                    $queryBuilder->createNamedParameter($processIds, Connection::PARAM_STR_ARRAY)
+                    $queryBuilder->createNamedParameter($processIds, ArrayParameterType::STRING)
                 )
             )
             ->set('process_scheduled', '0')

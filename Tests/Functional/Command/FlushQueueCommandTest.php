@@ -22,18 +22,15 @@ namespace AOE\Crawler\Tests\Functional\Command;
 use AOE\Crawler\Command\FlushQueueCommand;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 class FlushQueueCommandTest extends FunctionalTestCase
 {
     use BackendRequestTestTrait;
 
-    /**
-     * @var array
-     */
-    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+    protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     protected \AOE\Crawler\Domain\Repository\QueueRepository $queueRepository;
 
@@ -44,7 +41,7 @@ class FlushQueueCommandTest extends FunctionalTestCase
         parent::setUp();
         $this->setupBackendRequest();
 
-        $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.csv');
         $this->queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
 
         $command = new FlushQueueCommand();
@@ -53,10 +50,9 @@ class FlushQueueCommandTest extends FunctionalTestCase
 
     /**
      * This will test that the commands and output contains what needed, the cleanup it self isn't tested.
-     *
-     * @test
-     * @dataProvider flushQueueDataProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('flushQueueDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function flushQueueCommandTest(string $mode, string $expectedOutput, int $expectedCount): void
     {
         $arguments = ['mode' => $mode];
@@ -67,21 +63,21 @@ class FlushQueueCommandTest extends FunctionalTestCase
         self::assertEquals($expectedCount, $this->queueRepository->findAll()->count());
     }
 
-    public function flushQueueDataProvider(): iterable
+    public static function flushQueueDataProvider(): iterable
     {
         yield 'Flush All' => [
             'mode' => 'all',
-            'expectedOutput' => 'All entries in Crawler queue will be flushed',
+            'expectedOutput' => 'All entries in Crawler queue have been flushed',
             'expectedCount' => 0,
         ];
         yield 'Flush Pending' => [
             'mode' => 'pending',
-            'expectedOutput' => 'All entries in Crawler queue, with status: "pending" will be flushed',
+            'expectedOutput' => 'All entries in Crawler queue with status "pending" have been flushed',
             'expectedCount' => 7,
         ];
         yield 'Flush Finished' => [
             'mode' => 'finished',
-            'expectedOutput' => 'All entries in Crawler queue, with status: "finished" will be flushed',
+            'expectedOutput' => 'All entries in Crawler queue with status "finished" have been flushed',
             'expectedCount' => 8,
         ];
     }

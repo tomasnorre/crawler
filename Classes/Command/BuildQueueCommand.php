@@ -129,9 +129,9 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
 
         $pageId = MathUtility::forceIntegerInRange((int) $input->getArgument('page'), 0);
         if ($pageId === 0) {
-            $message = "Page ${pageId} is not a valid page, please check you root page id and try again.";
+            $message = "Page {$pageId} is not a valid page, please check you root page id and try again.";
             MessageUtility::addErrorMessage($message);
-            $output->writeln("<info>${message}</info>");
+            $output->writeln("<info>{$message}</info>");
             return Command::FAILURE;
         }
 
@@ -194,7 +194,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
                 } else {
                     $output->writeln(
                         '<error>Error checking Crawler Result:  ' . substr(
-                            preg_replace('/\s+/', ' ', strip_tags((string) $resultContent)),
+                            (string) preg_replace('/\s+/', ' ', strip_tags((string) $resultContent)),
                             0,
                             30000
                         ) . '...' . PHP_EOL . '</error>' . PHP_EOL

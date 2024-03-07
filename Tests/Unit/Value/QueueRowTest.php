@@ -20,25 +20,19 @@ namespace AOE\Crawler\Tests\Unit\Value;
  */
 
 use AOE\Crawler\Value\QueueRow;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-/**
- * @covers \AOE\Crawler\Value\QueueRow
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Value\QueueRow::class)]
 class QueueRowTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function constructionDefaultValues(): void
     {
         $queueRow = new QueueRow();
         self::assertEmpty($queueRow->pageTitle);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function gettersAndSetters(): void
     {
         $pageTitle = 'Page Title';

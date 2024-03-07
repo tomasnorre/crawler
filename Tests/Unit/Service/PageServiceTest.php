@@ -21,24 +21,25 @@ namespace AOE\Crawler\Tests\Unit\Service;
 
 use AOE\Crawler\Event\ModifySkipPageEvent;
 use AOE\Crawler\Service\PageService;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-/**
- * @covers \AOE\Crawler\Configuration\ExtensionConfigurationProvider::getExtensionConfiguration
- * @covers \AOE\Crawler\Event\ModifySkipPageEvent
- * @covers \AOE\Crawler\Service\PageService
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Configuration\ExtensionConfigurationProvider::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Event\ModifySkipPageEvent::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Service\PageService::class)]
 class PageServiceTest extends UnitTestCase
 {
     use ProphecyTrait;
 
     protected \AOE\Crawler\Service\PageService $subject;
 
+    protected bool $resetSingletonInstances = true;
+
     protected function setUp(): void
     {
+        parent::setUp();
         $modifySkipPageEvent = new ModifySkipPageEvent([]);
         $modifySkipPageEvent->setSkipped(false);
 
@@ -48,11 +49,8 @@ class PageServiceTest extends UnitTestCase
         $this->subject = GeneralUtility::makeInstance(PageService::class, $mockedEventDispatcher);
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider checkIfPageShouldBeSkippedDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('checkIfPageShouldBeSkippedDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function checkIfPageShouldBeSkipped(
         array $extensionSetting,
         array $pageRow,
@@ -71,7 +69,7 @@ class PageServiceTest extends UnitTestCase
         self::assertEquals($expected, $this->subject->checkIfPageShouldBeSkipped($pageRow));
     }
 
-    public function checkIfPageShouldBeSkippedDataProvider(): iterable
+    public static function checkIfPageShouldBeSkippedDataProvider(): iterable
     {
         yield 'Page of doktype 1 - Standard' => [
             'extensionSetting' => [],

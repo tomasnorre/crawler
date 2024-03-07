@@ -19,14 +19,18 @@ namespace AOE\Crawler\Tests\Functional;
  * The TYPO3 project - inspiring people to share!
  */
 
+use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Backend\Routing\Route;
 use TYPO3\CMS\Backend\Routing\Router;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Http\ServerRequest;
+use TYPO3\CMS\Core\Routing\RequestContextFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 trait BackendRequestTestTrait
 {
+    use ProphecyTrait;
+
     /**
      * This is needed as long as TYPO3 Backend does not bootstrap a request object which can be handed into modules,
      * and the Functional Test Suite cannot boot up a Backend with all the middlewares in place (thus, loading
@@ -34,8 +38,10 @@ trait BackendRequestTestTrait
      */
     protected function setupBackendRequest(): void
     {
-        $route = new Route('/web_info', []);
-        $router = GeneralUtility::makeInstance(Router::class);
+        $requestContextFactory = $this->prophesize(RequestContextFactory::class);
+
+        $route = new Route('/module/web/list', []);
+        $router = GeneralUtility::makeInstance(Router::class, $requestContextFactory->reveal());
         $router->addRoute('module_web_info', $route);
         $request = new ServerRequest('https://example.com/typo3/index.php');
         $request = $request->withQueryParams(['route' => '/web_info']);

@@ -21,27 +21,24 @@ namespace AOE\Crawler\Tests\Unit\Event;
 
 use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Event\InvokeQueueChangeEvent;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-/**
- * @covers \AOE\Crawler\Domain\Model\Reason
- * @covers \AOE\Crawler\Event\InvokeQueueChangeEvent
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Domain\Model\Reason::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Event\InvokeQueueChangeEvent::class)]
 class InvokeQueueChangeEventTest extends UnitTestCase
 {
     private InvokeQueueChangeEvent $subject;
 
     protected function setUp(): void
     {
+        parent::setUp();
         $reason = new Reason();
         $reason->setReason(Reason::REASON_CLI_SUBMIT);
         $reason->setDetailText('More detailed text');
         $this->subject = new InvokeQueueChangeEvent($reason);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function defaultValueTest(): void
     {
         self::assertEquals(Reason::REASON_CLI_SUBMIT, $this->subject->getReasonText());

@@ -20,27 +20,21 @@ namespace AOE\Crawler\Tests\Unit\Value;
  */
 
 use AOE\Crawler\Value\CrawlAction;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-/**
- * @covers \AOE\Crawler\Value\CrawlAction
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Value\CrawlAction::class)]
 class CrawlActionTest extends UnitTestCase
 {
     final public const VALID_VALUE = 'start';
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function toStringWithValidValueReturnsOriginalValue(): void
     {
         $crawlAction = new CrawlAction(self::VALID_VALUE);
         self::assertEquals(self::VALID_VALUE, $crawlAction->__toString());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function constructorThrowsException(): void
     {
         self::expectException(\InvalidArgumentException::class);

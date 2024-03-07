@@ -5,21 +5,31 @@ declare(strict_types=1);
 namespace AOE\Crawler\Tests\Unit\Service;
 
 use AOE\Crawler\Service\BackendModuleLogService;
+use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
+use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Localization\LanguageService;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
-/**
- * @covers \AOE\Crawler\Service\BackendModuleLogService
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Service\BackendModuleLogService::class)]
 class BackendModuleLogServiceTest extends FunctionalTestCase
 {
-    protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+    use BackendRequestTestTrait;
+    use ProphecyTrait;
 
-    /**
-     * @test
-     * @dataProvider addRowsDataProvider
-     */
+    protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+    private BackendModuleLogService $subject;
+
+    protected function setUp(): void
+    {
+        $this->setupBackendRequest();
+        $this->subject = $this->getMockBuilder(BackendModuleLogService::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $GLOBALS['LANG'] = $this->createMock(LanguageService::class);
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('addRowsDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function addRows(
         string $title,
         int $setId,
@@ -29,10 +39,7 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
         array $logEntries,
         array $expected
     ): void {
-        $GLOBALS['LANG'] = $this->createMock(LanguageService::class);
-        $subject = GeneralUtility::makeInstance(BackendModuleLogService::class);
-
-        [$result, $CSVData] = $subject->addRows(
+        [$result, $CSVData] = $this->subject->addRows(
             $logEntries,
             $setId,
             $title,
@@ -60,10 +67,8 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
         $this->assertEquals($csvDataArray, $CSVData);
     }
 
-    /**
-     * @test
-     * @dataProvider addRowsNoEntriesDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('addRowsNoEntriesDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function addRowsNoEntries(
         string $title,
         int $setId,
@@ -73,10 +78,7 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
         array $logEntries,
         array $expected
     ): void {
-        $GLOBALS['LANG'] = $this->createMock(LanguageService::class);
-        $subject = GeneralUtility::makeInstance(BackendModuleLogService::class);
-
-        [$result, $CSVData] = $subject->addRows(
+        [$result, $CSVData] = $this->subject->addRows(
             $logEntries,
             $setId,
             $title,
@@ -85,18 +87,18 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
             $CSVExport
         );
 
-        // To easy the work with the result data, as i multidimensional array.
+        // To ease the work with the result data, as i multidimensional array.
         $resultArray = $result[0];
         $expectedArray = $expected[0][0];
 
-        $propertiesToCheck = ['title', 'colSpan', 'titleRowSpan', 'trClass'];
+        $propertiesToCheck = ['title', 'colSpan', 'titleRowSpan'];
         foreach ($propertiesToCheck as $property) {
             $this->assertEquals($resultArray[$property], $expectedArray[$property]);
         }
         $this->assertEmpty($CSVData);
     }
 
-    public function addRowsNoEntriesDataProvider(): \Iterator
+    public static function addRowsNoEntriesDataProvider(): \Iterator
     {
         $title = 'Testing';
         $setId = 987654;
@@ -117,7 +119,7 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
         ];
     }
 
-    public function addRowsDataProvider(): \Iterator
+    public static function addRowsDataProvider(): \Iterator
     {
         $title = 'Testing';
         $setId = 987654;

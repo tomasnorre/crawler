@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+     backupGlobals="true"
+     beStrictAboutTestsThatDoNotTestAnything="false"
+     bootstrap="UnitTestsBootstrap.php"
+     cacheDirectory=".phpunit.cache"
+     cacheResult="false"
+     colors="true"
+     displayDetailsOnTestsThatTriggerDeprecations="true"
+     displayDetailsOnTestsThatTriggerErrors="true"
+     displayDetailsOnTestsThatTriggerNotices="false"
+     displayDetailsOnTestsThatTriggerWarnings="true"
+     failOnDeprecation="true"
+     failOnNotice="false"
+     failOnRisky="true"
+     failOnWarning="true"
+     requireCoverageMetadata="true"
+>
+    <testsuites>
+        <testsuite name="Unit tests">
+            <directory>Unit/</directory>
+        </testsuite>
+    </testsuites>
+    <php>
+        <!-- @deprecated: will be removed with next major version, constant TYPO3_MODE is deprecated -->
+        <const name="TYPO3_MODE" value="BE"/>
+        <ini name="display_errors" value="1"/>
+        <env name="TYPO3_CONTEXT" value="Testing"/>
+    </php>
+</phpunit>

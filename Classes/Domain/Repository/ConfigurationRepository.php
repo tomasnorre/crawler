@@ -19,8 +19,8 @@ namespace AOE\Crawler\Domain\Repository;
  * The TYPO3 project - inspiring people to share!
  */
 
+use Doctrine\DBAL\ArrayParameterType;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
-use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
@@ -62,7 +62,7 @@ class ConfigurationRepository extends Repository
             ->where(
                 $queryBuilder->expr()->in(
                     'pid',
-                    $queryBuilder->createNamedParameter($pageIdsInRootLine, Connection::PARAM_INT_ARRAY)
+                    $queryBuilder->createNamedParameter($pageIdsInRootLine, ArrayParameterType::INTEGER)
                 )
             )
             ->orderBy('name')

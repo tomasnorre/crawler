@@ -22,44 +22,41 @@ namespace AOE\Crawler\Tests\Unit\Domain\Model;
 use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Domain\Model\ProcessCollection;
 use AOE\Crawler\Exception\NoIndexFoundException;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Class ProcessCollectionTest
  *
  * @package AOE\Crawler\Tests\Unit\Domain\Model
- * @covers \AOE\Crawler\Domain\Model\ProcessCollection
- * @covers \AOE\Crawler\Domain\Model\Process::getProcessId
- * @covers \AOE\Crawler\Domain\Model\Process::setProcessId
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Domain\Model\ProcessCollection::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Domain\Model\Process::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Domain\Model\Process::class)]
 class ProcessCollectionTest extends UnitTestCase
 {
     protected \AOE\Crawler\Domain\Model\ProcessCollection $subject;
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->subject = new ProcessCollection();
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getProcessIdsReturnsArray(): void
     {
         /** @var Process $processOne */
         $processOne = $this->getMockBuilder(Process::class)
-            ->setMethods(['dummy'])
             ->disableOriginalConstructor()
             ->getMock();
-        $processOne->setProcessId('11');
+        $processOne->expects(self::any())->method('getProcessId')->withAnyParameters()->willReturn('11');
 
         /** @var Process $processTwo */
         $processTwo = $this->getMockBuilder(Process::class)
-            ->setMethods(['dummy'])
             ->disableOriginalConstructor()
             ->getMock();
-        $processTwo->setProcessId('13');
+        $processTwo->expects(self::any())->method('getProcessId')->withAnyParameters()->willReturn('13');
 
         $processes = [];
         $processes[] = $processOne;
@@ -70,9 +67,7 @@ class ProcessCollectionTest extends UnitTestCase
         self::assertEquals(['11', '13'], $collection->getProcessIds());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function appendThrowsException(): void
     {
         self::expectException(\InvalidArgumentException::class);
@@ -81,21 +76,17 @@ class ProcessCollectionTest extends UnitTestCase
         $this->subject->append($wrongObjectType);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function appendCrawlerDomainObject(): void
     {
         /** @var MockObject|Process $correctObjectType */
-        $correctObjectType = $this->getAccessibleMock(Process::class, ['dummy'], [], '', false);
+        $correctObjectType = $this->getAccessibleMock(Process::class, null, [], '', false);
         $this->subject->append($correctObjectType);
 
         self::assertEquals($correctObjectType, $this->subject->offsetGet(0));
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function offsetSetThrowsException(): void
     {
         self::expectException(\InvalidArgumentException::class);
@@ -104,29 +95,26 @@ class ProcessCollectionTest extends UnitTestCase
         $this->subject->offsetSet(100, $wrongObjectType);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function offsetSetAndGet(): void
     {
         /** @var MockObject|Process $correctObjectType */
-        $correctObjectType = $this->getAccessibleMock(Process::class, ['dummy'], [], '', false);
+        $correctObjectType = $this->getAccessibleMock(Process::class, null, [], '', false);
         $this->subject->offsetSet(100, $correctObjectType);
 
         self::assertEquals($correctObjectType, $this->subject->offsetGet(100));
     }
 
     /**
-     * @test
-     *
      * @expectedException \Exception
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function offsetGetThrowsException(): void
     {
         self::expectException(NoIndexFoundException::class);
         self::expectExceptionCode(1_593_714_823);
         self::expectExceptionMessageMatches('/^Index.*100.*Process are not available$/');
-        $correctObjectType = $this->getAccessibleMock(Process::class, ['dummy'], [], '', false);
+        $correctObjectType = $this->getAccessibleMock(Process::class, null, [], '', false);
 
         self::assertEquals($correctObjectType, $this->subject->offsetGet(100));
     }

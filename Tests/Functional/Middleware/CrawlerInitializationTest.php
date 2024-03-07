@@ -20,20 +20,20 @@ namespace AOE\Crawler\Tests\Functional\Middleware;
  */
 
 use AOE\Crawler\Middleware\CrawlerInitialization;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
-/**
- * @covers \AOE\Crawler\Middleware\CrawlerInitialization
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Middleware\CrawlerInitialization::class)]
 class CrawlerInitializationTest extends FunctionalTestCase
 {
     use ProphecyTrait;
+
+    private CrawlerInitialization $subject;
 
     protected function setUp(): void
     {
@@ -44,13 +44,11 @@ class CrawlerInitializationTest extends FunctionalTestCase
         $GLOBALS['TSFE']->id = random_int(0,10000);
     }
 
-    /**
-     * @test
-     * @dataProvider processSetsTSFEApplicationDataDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('processSetsTSFEApplicationDataDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function processSetsTSFEApplicationData(string $feGroups, array $expectedGroups): void
     {
-        self::assertNull($GLOBALS['TSFE']->applicationData['forceIndexing']);
+        self::assertEmpty($GLOBALS['TSFE']->applicationData);
 
         $queueParameters = [
             'url' => 'https://crawler-devbox.ddev.site',
@@ -80,7 +78,7 @@ class CrawlerInitializationTest extends FunctionalTestCase
         self::assertTrue($response->hasHeader('X-T3Crawler-Meta'));
     }
 
-    public function processSetsTSFEApplicationDataDataProvider(): iterable
+    public static function processSetsTSFEApplicationDataDataProvider(): iterable
     {
         yield 'FE Groups set' => [
             'feGroups' => '1,2',

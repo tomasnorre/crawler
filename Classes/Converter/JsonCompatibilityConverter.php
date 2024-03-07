@@ -35,7 +35,7 @@ class JsonCompatibilityConverter
      */
     public function convert(string $dataString): array|bool
     {
-        $unserialized = unserialize($dataString, ['allowed_classes' => false]);
+        $unserialized = @unserialize($dataString, ['allowed_classes' => false]);
         if (is_object($unserialized)) {
             throw new \Exception('Objects are not allowed: ' . var_export($unserialized, true), 1_593_758_307);
         }

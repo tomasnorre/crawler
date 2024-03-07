@@ -22,7 +22,6 @@ namespace AOE\Crawler\Tests\Unit\Hooks;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Hooks\DataHandlerHook;
 use AOE\Crawler\Service\QueueService;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Cache\CacheManager;
@@ -30,20 +29,20 @@ use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-/**
- * @covers \AOE\Crawler\Hooks\DataHandlerHook
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Hooks\DataHandlerHook::class)]
 class DataHandlerHookTest extends UnitTestCase
 {
     use ProphecyTrait;
 
+    protected bool $resetSingletonInstances = true;
+
     /**
      * Page with ID 1 is not in queue, should be added
      * Page with ID 2 is already in queue. Should NOT be added.
-     *
-     * @test
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function itShouldAddPageToQueue(): void
     {
         $mockedDataHandlerHook = $this->createPartialMock(
@@ -86,9 +85,8 @@ class DataHandlerHookTest extends UnitTestCase
      * Page with ID 1 is not in queue, should be added
      * Page with ID 2 is already in queue. Should NOT be added.
      * Page with ID 3 is not in queue, should be added
-     *
-     * @test
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function itShouldAddPageToQueueWithMorePages(): void
     {
         $mockedDataHandlerHook = $this->createPartialMock(
@@ -134,9 +132,8 @@ class DataHandlerHookTest extends UnitTestCase
      * Page with ID 1 is not in queue, should be added
      * Page with ID 2 is already in queue. Should NOT be added.
      * Page with ID 3 is not in queue, should be added
-     *
-     * @test
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function nothingToBeAddedAsPageDoNotExists(): void
     {
         $mockedDataHandlerHook = $this->createPartialMock(
@@ -178,9 +175,8 @@ class DataHandlerHookTest extends UnitTestCase
     /**
      * Page with ID 1 is not in queue, should be added
      * Page with ID 2 is already in queue. Should NOT be added.
-     *
-     * @test
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function ensureThatPageIdArrayIsConvertedToInteger(): void
     {
         $mockedDataHandlerHook = $this->createPartialMock(

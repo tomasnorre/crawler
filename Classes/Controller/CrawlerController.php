@@ -77,9 +77,8 @@ class CrawlerController implements LoggerAwareInterface
 
     /**
      * Mount Point
-     * Todo: Check what this is used for and adjust the type hint or code, as bool doesn't match the current code.
      */
-    public bool $MP = false;
+    public ?string $MP = null;
     protected QueueRepository $queueRepository;
     protected ProcessRepository $processRepository;
     protected ConfigurationRepository $configurationRepository;
@@ -307,10 +306,9 @@ class CrawlerController implements LoggerAwareInterface
 
     public function getPageTSconfigForId(int $id): array
     {
-        if (! $this->MP) {
+        if (!$this->MP) {
             $pageTSconfig = BackendUtility::getPagesTSconfig($id);
         } else {
-            // TODO: Please check, this makes no sense to split a boolean value.
             [, $mountPointId] = explode('-', $this->MP);
             $pageTSconfig = BackendUtility::getPagesTSconfig($mountPointId);
         }
@@ -340,7 +338,7 @@ class CrawlerController implements LoggerAwareInterface
         // Get page TSconfig for page ID
         $pageTSconfig = $this->getPageTSconfigForId($pageId);
 
-        $mountPoint = is_string($this->MP) ? $this->MP : '';
+        $mountPoint = $this->MP ?? '';
 
         $res = [];
 
@@ -372,7 +370,7 @@ class CrawlerController implements LoggerAwareInterface
             if (! is_array($value)) {
                 continue;
             }
-            $configurationsForBranch[] = substr($key, -1) === '.' ? substr($key, 0, -1) : $key;
+            $configurationsForBranch[] = str_ends_with($key, '.') ? substr($key, 0, -1) : $key;
         }
         $pids = [];
         $rootLine = BackendUtility::BEgetRootLine($rootid);
@@ -719,7 +717,7 @@ class CrawlerController implements LoggerAwareInterface
 
         // Traverse page tree:
         foreach ($tree->tree as $data) {
-            $this->MP = false;
+            $this->MP = null;
 
             // recognize mount points
             if ($data['row']['doktype'] === PageRepository::DOKTYPE_MOUNTPOINT) {
@@ -745,7 +743,7 @@ class CrawlerController implements LoggerAwareInterface
                     $data['row']['uid'] = $mountpage[0]['mount_pid'];
                 } else {
                     // if the mount_pid_ol is not set the MP must not be used for the mountpoint page
-                    $this->MP = false;
+                    $this->MP = null;
                 }
             }
 
@@ -784,11 +782,10 @@ class CrawlerController implements LoggerAwareInterface
                 // Title column:
                 if (! $c) {
                     $queueRow = new QueueRow($pageTitle);
-                    $queueRow->setPageTitleHTML($pageTitleHTML);
                 } else {
                     $queueRow = new QueueRow();
-                    $queueRow->setPageTitleHTML($pageTitleHTML);
                 }
+                $queueRow->setPageTitleHTML($pageTitleHTML);
 
                 if (! in_array(
                     $pageRow['uid'],
@@ -857,13 +854,11 @@ class CrawlerController implements LoggerAwareInterface
                     $queueRow->setOptions($queueRowOptionCollection);
                     $queueRow->setParameters(DebugUtility::viewArray($confArray['subCfg']['procInstrParams.'] ?? []));
                     $queueRow->setParameterConfig($parameterConfig);
-
-                    $queueRowCollection[] = $queueRow;
                 } else {
                     $queueRow->setConfigurationKey($confKey);
                     $queueRow->setMessage('(Page is excluded in this configuration)');
-                    $queueRowCollection[] = $queueRow;
                 }
+                $queueRowCollection[] = $queueRow;
 
                 $c++;
             }

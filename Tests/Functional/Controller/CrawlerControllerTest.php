@@ -24,12 +24,12 @@ use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use AOE\Crawler\Value\QueueFilter;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Information\Typo3Version;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\TestingFramework\Core\AccessibleObjectInterface;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
  * Class CrawlerControllerTest
@@ -40,12 +40,9 @@ class CrawlerControllerTest extends FunctionalTestCase
 {
     use BackendRequestTestTrait;
 
-    /**
-     * @var array
-     */
-    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+    protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    protected \Nimut\TestingFramework\MockObject\AccessibleMockObjectInterface|\PHPUnit\Framework\MockObject\MockObject $subject;
+    protected AccessibleObjectInterface|MockObject $subject;
 
     protected function setUp(): void
     {
@@ -53,11 +50,11 @@ class CrawlerControllerTest extends FunctionalTestCase
 
         $this->setupBackendRequest();
 
-        $this->importDataSet(__DIR__ . '/../Fixtures/pages.xml');
-        $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_configuration.xml');
-        $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.xml');
-        $this->importDataSet(__DIR__ . '/../Fixtures/tx_crawler_process.xml');
-        $this->importDataSet(__DIR__ . '/../Fixtures/tt_content.xml');
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/pages.csv');
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/tx_crawler_configuration.csv');
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.csv');
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/tx_crawler_process.csv');
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/tt_content.csv');
 
         $mockedQueueRepository = $this->createMock(QueueRepository::class);
         $mockedProcessRepository = $this->createMock(ProcessRepository::class);
@@ -65,20 +62,18 @@ class CrawlerControllerTest extends FunctionalTestCase
 
         $this->subject = $this->getAccessibleMock(
             CrawlerController::class,
-            ['dummy'],
+            null,
             [$mockedQueueRepository, $mockedProcessRepository, $mockedIconFactory]
         );
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getConfigurationsForBranch(): void
     {
         $GLOBALS['BE_USER'] = $this->getMockBuilder(BackendUserAuthentication::class)
             ->disableOriginalConstructor()
-            ->setMethods(['isAdmin', 'getTSConfig', 'getPagePermsClause', 'isInWebMount', 'backendCheckLogin'])
             ->getMock();
+        $GLOBALS['BE_USER']->method('isAdmin')->willReturn(true);
 
         $configurationsForBranch = $this->subject->getConfigurationsForBranch(5, 99);
 
@@ -98,10 +93,8 @@ class CrawlerControllerTest extends FunctionalTestCase
         self::assertEquals($expected, $configurationsForBranch);
     }
 
-    /**
-     * @test
-     * @dataProvider addUrlDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('addUrlDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function addUrl(
         int $id,
         string $url,
@@ -113,25 +106,17 @@ class CrawlerControllerTest extends FunctionalTestCase
         bool $registerQueueEntriesInternallyOnly,
         bool $expected
     ): void {
-        $typo3MajorVersion = (new Typo3Version())->getMajorVersion();
-        if ($typo3MajorVersion <= 11) {
-            $mockedQueueRepository = $this->getAccessibleMock(
-                QueueRepository::class,
-                ['getDuplicateQueueItemsIfExists'],
-                [GeneralUtility::makeInstance(ObjectManager::class)]
-            );
-        } else {
-            $mockedQueueRepository = $this->getAccessibleMock(
-                QueueRepository::class,
-                ['getDuplicateQueueItemsIfExists']
-            );
-        }
+        (new Typo3Version())->getMajorVersion();
+        $mockedQueueRepository = $this->getAccessibleMock(
+            QueueRepository::class,
+            ['getDuplicateQueueItemsIfExists']
+        );
 
         $mockedQueueRepository->expects($this->any())->method('getDuplicateQueueItemsIfExists')->willReturn(
             $mockedDuplicateRowResult
         );
 
-        $mockedCrawlerController = $this->getAccessibleMock(CrawlerController::class, ['dummy']);
+        $mockedCrawlerController = $this->getAccessibleMock(CrawlerController::class, null);
 
         $mockedCrawlerController->_set('registerQueueEntriesInternallyOnly', $registerQueueEntriesInternallyOnly);
         $mockedCrawlerController->_set('queueRepository', $mockedQueueRepository);
@@ -149,7 +134,7 @@ class CrawlerControllerTest extends FunctionalTestCase
         );
     }
 
-    public function addUrlDataProvider(): iterable
+    public static function addUrlDataProvider(): iterable
     {
         yield 'Queue entry added' => [
             'id' => 0,

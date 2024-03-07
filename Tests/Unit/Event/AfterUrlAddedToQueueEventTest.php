@@ -20,25 +20,22 @@ namespace AOE\Crawler\Tests\Unit\Event;
  */
 
 use AOE\Crawler\Event\AfterUrlAddedToQueueEvent;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-/**
- * @covers \AOE\Crawler\Event\AfterUrlAddedToQueueEvent
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Event\AfterUrlAddedToQueueEvent::class)]
 class AfterUrlAddedToQueueEventTest extends UnitTestCase
 {
     private AfterUrlAddedToQueueEvent $subject;
 
     protected function setUp(): void
     {
+        parent::setUp();
         $uid = 'qwerty';
         $fieldArray = ['field' => 'array'];
         $this->subject = new AfterUrlAddedToQueueEvent($uid, $fieldArray);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function defaultValueTest(): void
     {
         self::assertEquals('qwerty', $this->subject->getUid());

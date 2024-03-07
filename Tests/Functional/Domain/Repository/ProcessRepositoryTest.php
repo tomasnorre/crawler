@@ -21,9 +21,9 @@ namespace AOE\Crawler\Tests\Functional\Domain\Repository;
 
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
  * Class ProcessRepositoryTest
@@ -34,10 +34,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
 {
     use BackendRequestTestTrait;
 
-    /**
-     * @var array
-     */
-    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+    protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     protected \AOE\Crawler\Domain\Repository\ProcessRepository $subject;
 
@@ -72,28 +69,22 @@ class ProcessRepositoryTest extends FunctionalTestCase
         ];
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = $configuration;
 
-        $this->importDataSet(__DIR__ . '/../../Fixtures/tx_crawler_process.xml');
+        $this->importCSVDataSet(__DIR__ . '/../../Fixtures/tx_crawler_process.csv');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function findAllReturnsAll(): void
     {
         self::assertSame(6, $this->subject->findAll()->count());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function findAllActiveReturnsActive(): void
     {
         self::assertSame(3, $this->subject->findAllActive()->count());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function removeByProcessId(): void
     {
         self::assertSame(6, $this->subject->findAll()->count());
@@ -103,25 +94,19 @@ class ProcessRepositoryTest extends FunctionalTestCase
         self::assertSame(5, $this->subject->findAll()->count());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function countNotTimeouted(): void
     {
         self::assertSame(2, $this->subject->countNotTimeouted(11));
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function countAll(): void
     {
         self::assertSame(6, $this->subject->countAll());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getActiveProcessesOlderThanOneOHour(): void
     {
         $expected = [
@@ -134,9 +119,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
         self::assertEquals($expected, $this->subject->getActiveProcessesOlderThanOneHour());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getActiveOrphanProcesses(): void
     {
         $expected = [
@@ -149,9 +132,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
         self::assertEquals($expected, $this->subject->getActiveOrphanProcesses());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function deleteProcessesWithoutItemsAssigned(): void
     {
         $countBeforeDelete = $this->subject->findAll()->count();
@@ -161,9 +142,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
         self::assertSame($this->subject->findAll()->count(), $countBeforeDelete - $expectedProcessesToBeDeleted);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function deleteProcessesMarkedAsDeleted(): void
     {
         $countBeforeDelete = $this->subject->findAll()->count();
@@ -173,9 +152,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
         self::assertSame($this->subject->findAll()->count(), $countBeforeDelete - $expectedProcessesToBeDeleted);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function markRequestedProcessesAsNotActive(): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching'] = [];
@@ -187,9 +164,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
         self::assertEquals(1, $this->subject->findAllActive()->count());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function updateProcessAssignItemsCount(): void
     {
         $processBefore = $this->findByProcessId('1002');
@@ -201,9 +176,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
         self::assertEquals(10, $processAfter['assigned_items_count']);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function addProcessAddProcess(): void
     {
         $processId = md5('processId');

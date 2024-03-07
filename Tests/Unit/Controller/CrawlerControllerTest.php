@@ -21,16 +21,16 @@ namespace AOE\Crawler\Tests\Unit\Controller;
 
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Service\PageService;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Class CrawlerLibTest
  *
  * @package AOE\Crawler\Tests
- * @covers \AOE\Crawler\Controller\CrawlerController
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Controller\CrawlerController::class)]
 class CrawlerControllerTest extends UnitTestCase
 {
     /**
@@ -76,11 +76,8 @@ class CrawlerControllerTest extends UnitTestCase
         unset($this->crawlerController);
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider drawURLs_PIfilterDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('drawURLs_PIfilterDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function drawURLsPIfilter(string $piString, array $incomingProcInstructions, bool $expected): void
     {
         self::assertEquals(
@@ -89,9 +86,7 @@ class CrawlerControllerTest extends UnitTestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getUrlsForPageRowSetsSkipMessageIfUidNotAnInteger(): void
     {
         $skipMessage = '';
@@ -99,11 +94,8 @@ class CrawlerControllerTest extends UnitTestCase
         self::assertEquals('PageUid "string" was not an integer', $skipMessage);
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider getUrlsForPageRowDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getUrlsForPageRowDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getUrlsForPageRow(
         bool $checkIfPageSkipped,
         array $getUrlsForPages,
@@ -134,12 +126,10 @@ class CrawlerControllerTest extends UnitTestCase
         self::assertEquals($expected, $crawlerController->getUrlsForPageRow($pageRow, $skipMessage));
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getConfigurationHash(): void
     {
-        $crawlerController = $this->getAccessibleMock(CrawlerController::class, ['dummy'], [], '', false);
+        $crawlerController = $this->getAccessibleMock(CrawlerController::class, null, [], '', false);
 
         $configuration = [
             'paramExpanded' => 'extendedParameter',
@@ -159,7 +149,7 @@ class CrawlerControllerTest extends UnitTestCase
         self::assertEquals($newCheckSum, $crawlerController->_call('getConfigurationHash', $configuration));
     }
 
-    public function getUrlsForPageRowDataProvider(): iterable
+    public static function getUrlsForPageRowDataProvider(): iterable
     {
         yield 'Message equals false, returns Urls from getUrlsForPages()' => [
             'checkIfPageSkipped' => false,
@@ -191,19 +181,16 @@ class CrawlerControllerTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider getConfigurationHasReturnsExpectedValueDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getConfigurationHasReturnsExpectedValueDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getConfigurationHasReturnsExpectedValue(array $configuration, string $expected): void
     {
-        $crawlerLib = $this->getAccessibleMock(CrawlerController::class, ['dummy'], [], '', false);
+        $crawlerLib = $this->getAccessibleMock(CrawlerController::class, null, [], '', false);
 
         self::assertEquals($expected, $crawlerLib->_call('getConfigurationHash', $configuration));
     }
 
-    public function getConfigurationHasReturnsExpectedValueDataProvider(): iterable
+    public static function getConfigurationHasReturnsExpectedValueDataProvider(): iterable
     {
         yield 'Configuration with either paramExpanded nor URLs set' => [
             'configuration' => [
@@ -263,7 +250,7 @@ class CrawlerControllerTest extends UnitTestCase
         ];
     }
 
-    public function drawURLs_PIfilterDataProvider(): iterable
+    public static function drawURLs_PIfilterDataProvider(): iterable
     {
         yield 'Not in list' => [
             'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
@@ -292,9 +279,7 @@ class CrawlerControllerTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function setExtensionSettings(): void
     {
         $extensionSettings = [
@@ -303,7 +288,7 @@ class CrawlerControllerTest extends UnitTestCase
         ];
 
         /** @var CrawlerController $crawlerController */
-        $crawlerController = $this->getAccessibleMock(CrawlerController::class, ['dummy'], [], '', false);
+        $crawlerController = $this->getAccessibleMock(CrawlerController::class, null, [], '', false);
         $crawlerController->setExtensionSettings($extensionSettings);
         self::assertEquals($extensionSettings, $crawlerController->extensionSettings);
     }

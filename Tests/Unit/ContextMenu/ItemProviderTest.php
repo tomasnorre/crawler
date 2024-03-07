@@ -20,14 +20,11 @@ namespace AOE\Crawler\Tests\Unit\ContextMenu;
  */
 
 use AOE\Crawler\ContextMenu\ItemProvider;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Localization\LanguageService;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-/**
- * Class ItemProviderTest
- * @covers \AOE\Crawler\ContextMenu\ItemProvider
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\ContextMenu\ItemProvider::class)]
 class ItemProviderTest extends UnitTestCase
 {
     /**
@@ -54,9 +51,7 @@ class ItemProviderTest extends UnitTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function canHandleTxCrawlerConfigurationTable(): void
     {
         $subject = new ItemProvider();
@@ -64,9 +59,7 @@ class ItemProviderTest extends UnitTestCase
         self::assertTrue($subject->canHandle());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function cannotHandleTxCrawlerQueueTable(): void
     {
         $subject = new ItemProvider();
@@ -74,9 +67,7 @@ class ItemProviderTest extends UnitTestCase
         self::assertFalse($subject->canHandle());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getPriorityReturnsExpectedValue(): void
     {
         $subject = new ItemProvider();

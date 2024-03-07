@@ -60,23 +60,19 @@ class BackendModuleLinkServiceTest extends FunctionalTestCase
         $this->moduleTemplate = (GeneralUtility::makeInstance(ModuleTemplateFactory::class))->create($request);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getRefreshLinkReturnLink(): void
     {
         $link = $this->subject->getRefreshLink($this->moduleTemplate, 1);
 
         self::assertIsString($link);
         self::assertStringContainsString('Refresh', $link);
-        self::assertStringContainsString('<a  href="/typo3/module/page/crawler/process', $link);
+        self::assertStringContainsString('<a href="/typo3/module/page/crawler/process', $link);
         self::assertStringContainsString('SET%5B%27crawleraction%27%5D=crawleraction&amp;id=1', $link);
-        self::assertStringContainsString('class="btn btn-default btn-sm "', $link);
+        self::assertStringContainsString('class="btn btn-sm btn-default "', $link);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getAddLinkReturnsEmptyString(): void
     {
         self::assertEmpty($this->subject->getAddLink($this->moduleTemplate, 10, 20, false));
@@ -84,81 +80,69 @@ class BackendModuleLinkServiceTest extends FunctionalTestCase
         self::assertEmpty($this->subject->getAddLink($this->moduleTemplate, 20, 10, true));
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getAddLinkReturnLink(): void
     {
         $link = $this->subject->getAddLink($this->moduleTemplate, 1, 10, true);
 
         self::assertIsString($link);
         self::assertStringContainsString('Add process', $link);
-        self::assertStringContainsString('<a  href="/typo3/module/page/crawler/process', $link);
+        self::assertStringContainsString('<a href="/typo3/module/page/crawler/process', $link);
         self::assertStringContainsString('action=addProcess', $link);
-        self::assertStringContainsString('class="btn btn-default btn-sm "', $link);
+        self::assertStringContainsString('class="btn btn-sm btn-default "', $link);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getModeLinkReturnEmptyString(): void
     {
         self::assertEmpty($this->subject->getModeLink($this->moduleTemplate, 'not-exting-mode'));
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getModeLinkReturnsDatailLink(): void
     {
         $link = $this->subject->getModeLink($this->moduleTemplate, 'detail');
 
         self::assertIsString($link);
         self::assertStringContainsString('Show only running processes', $link);
-        self::assertStringContainsString('<a  href="/typo3/module/page/crawler/process', $link);
+        self::assertStringContainsString('<a href="/typo3/module/page/crawler/process', $link);
         self::assertStringContainsString('processListMode=simple', $link);
-        self::assertStringContainsString('class="btn btn-default btn-sm "', $link);
+        self::assertStringContainsString('class="btn btn-sm btn-default "', $link);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getModeLinkReturnsSimpleLink(): void
     {
         $link = $this->subject->getModeLink($this->moduleTemplate, 'simple');
 
         self::assertIsString($link);
         self::assertStringContainsString('Show finished and terminated processes', $link);
-        self::assertStringContainsString('<a  href="/typo3/module/page/crawler/process', $link);
+        self::assertStringContainsString('<a href="/typo3/module/page/crawler/process', $link);
         self::assertStringContainsString('processListMode=detail', $link);
-        self::assertStringContainsString('class="btn btn-default btn-sm "', $link);
+        self::assertStringContainsString('class="btn btn-sm btn-default "', $link);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getEnableDisableLinkReturnsEnableLink(): void
     {
         $link = $this->subject->getEnableDisableLink($this->moduleTemplate, true);
 
         self::assertIsString($link);
         self::assertStringContainsString('Stop all processes and disable crawling', $link);
-        self::assertStringContainsString('<a  href="/typo3/module/page/crawler/process', $link);
+        self::assertStringContainsString('<a href="/typo3/module/page/crawler/process', $link);
         self::assertStringContainsString('action=stopCrawling', $link);
-        self::assertStringContainsString('class="btn btn-default btn-sm "', $link);
+        self::assertStringContainsString('class="btn btn-sm btn-default "', $link);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getEnableDisableLinkReturnsDisableLink(): void
     {
         $link = $this->subject->getEnableDisableLink($this->moduleTemplate, false);
 
         self::assertIsString($link);
         self::assertStringContainsString('Enable crawling', $link);
-        self::assertStringContainsString('<a  href="/typo3/module/page/crawler/process', $link);
+        self::assertStringContainsString('<a href="/typo3/module/page/crawler/process', $link);
         self::assertStringContainsString('action=resumeCrawling', $link);
-        self::assertStringContainsString('class="btn btn-default btn-sm "', $link);
+        self::assertStringContainsString('class="btn btn-sm btn-default "', $link);
     }
 }

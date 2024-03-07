@@ -20,17 +20,14 @@ namespace AOE\Crawler\Tests\Functional\Domain\Repository;
  */
 
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 class ConfigurationRepositoryTest extends FunctionalTestCase
 {
     private const PAGE_WITHOUT_CONFIGURATIONS = 11;
 
-    /**
-     * @var array
-     */
-    protected $testExtensionsToLoad = ['typo3conf/ext/crawler'];
+    protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     protected \AOE\Crawler\Domain\Repository\ConfigurationRepository $subject;
 
@@ -41,13 +38,11 @@ class ConfigurationRepositoryTest extends FunctionalTestCase
     {
         parent::setUp();
         $this->subject = GeneralUtility::makeInstance(ConfigurationRepository::class);
-        $this->importDataSet(__DIR__ . '/../../Fixtures/tx_crawler_configuration.xml');
-        $this->importDataSet(__DIR__ . '/../../Fixtures/pages.xml');
+        $this->importCSVDataSet(__DIR__ . '/../../Fixtures/tx_crawler_configuration.csv');
+        $this->importCSVDataSet(__DIR__ . '/../../Fixtures/pages.csv');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getCrawlerConfigurationRecordsFromRootLineReturnsEmptyArray(): void
     {
         self::assertEmpty(
@@ -55,9 +50,7 @@ class ConfigurationRepositoryTest extends FunctionalTestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getCrawlerConfigurationRecordsFromRootLineReturnsObjects(): void
     {
         $configurations = $this->subject->getCrawlerConfigurationRecordsFromRootLine(5);

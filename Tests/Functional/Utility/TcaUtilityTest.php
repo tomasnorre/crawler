@@ -22,41 +22,37 @@ namespace AOE\Crawler\Tests\Functional\Utility;
 use AOE\Crawler\Utility\TcaUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
-/**
- * @covers \AOE\Crawler\Utility\TcaUtility
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Utility\TcaUtility::class)]
 class TcaUtilityTest extends FunctionalTestCase
 {
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    /**
-     * @test
-     * @dataProvider getProcessingInstructionsDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getProcessingInstructionsDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getProcessingInstructions($procInstructions, array $configuration, $expected): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'] = $procInstructions;
 
         $subject = new TcaUtility();
 
-        if (!empty($expected['items'][0][2])) {
+        if (!empty($expected['items'][0]['icon'])) {
             self::assertStringContainsString(
                 'ext/crawler/Resources/Public/Icons/Extension.svg',
-                $expected['items'][0][2]
+                $expected['items'][0]['icon']
             );
-            unset($expected['items'][0][2]);
+            unset($expected['items'][0]['icon']);
         }
 
         $actual = $subject->getProcessingInstructions($configuration);
         // Remove the Extension Icon if present, as already tested
-        if (!empty($actual['items'][0][2])) {
-            unset($actual['items'][0][2]);
+        if (!empty($actual['items'][0]['icon'])) {
+            unset($actual['items'][0]['icon']);
         }
 
         self::assertEquals($expected, $actual);
     }
 
-    public function getProcessingInstructionsDataProvider(): \Iterator
+    public static function getProcessingInstructionsDataProvider(): \Iterator
     {
         yield 'All Empty' => [
             'procInstructions' => [],
@@ -74,7 +70,11 @@ class TcaUtilityTest extends FunctionalTestCase
             'configuration' => [],
             'expected' => [
                 'items' => [
-                    ['Fake Value [crawler]', 'crawler', 'ext/crawler/Resources/Public/Icons/Extension.svg'],
+                    [
+                        'label' => 'Fake Value [crawler]',
+                        'value' => 'crawler',
+                        'icon' => 'ext/crawler/Resources/Public/Icons/Extension.svg',
+                    ],
                 ],
             ],
         ];
@@ -90,7 +90,11 @@ class TcaUtilityTest extends FunctionalTestCase
             'expected' => [
                 'default',
                 'items' => [
-                    ['Fake Value [crawler]', 'crawler', 'ext/crawler/Resources/Public/Icons/Extension.svg'],
+                    [
+                        'label' => 'Fake Value [crawler]',
+                        'value' => 'crawler',
+                        'icon' => 'ext/crawler/Resources/Public/Icons/Extension.svg',
+                    ],
                 ],
             ],
         ];

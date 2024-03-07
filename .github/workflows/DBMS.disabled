@@ -22,7 +22,7 @@ jobs:
           - '12'
           - '13'
         typo3:
-          - 'dev-main'
+          - '^12.4'
         php:
           - '8.1'
     steps:
@@ -54,9 +54,9 @@ jobs:
 
       - name: Functional Tests
         run: |
-          export "FUNCTIONAL_XML"=.Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml
+          export "FUNCTIONAL_XML"=Tests/FunctionalTests.xml
           rm -rf .Build/Web/typo3temp/
-          .Build/bin/phpunit --whitelist Classes --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
+          .Build/bin/phpunit --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
         env:
           typo3DatabaseDriver: pdo_pgsql
           typo3DatabaseHost: 127.0.0.1
@@ -73,7 +73,7 @@ jobs:
         php:
           - '8.1'
         typo3:
-          - 'dev-main'
+          - '^12.4'
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -103,7 +103,7 @@ jobs:
           - '10.4'
           - '10.5'
         typo3:
-          - 'dev-main'
+          - '^12.4'
         php:
           - '8.1'
     steps:
@@ -130,8 +130,8 @@ jobs:
 
       - name: Functional Tests
         run: |
-          export "FUNCTIONAL_XML"=.Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml
-          .Build/bin/phpunit --whitelist Classes --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
+          export "FUNCTIONAL_XML"=Tests/FunctionalTests.xml
+          .Build/bin/phpunit --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
         env:
           typo3DatabaseHost: 127.0.0.1
           typo3DatabaseName: typo3
@@ -149,7 +149,7 @@ jobs:
           - '5.7'
           - '8.0'
         typo3:
-          - '^12.2'
+          - '^12.4'
         php:
           - '8.1'
     steps:
@@ -176,8 +176,8 @@ jobs:
 
       - name: Functional Tests
         run: |
-          export "FUNCTIONAL_XML"=.Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml
-          .Build/bin/phpunit --whitelist Classes --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
+          export "FUNCTIONAL_XML"=Tests/FunctionalTests.xml
+          .Build/bin/phpunit --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
         env:
           typo3DatabaseHost: 127.0.0.1
           typo3DatabaseName: typo3
