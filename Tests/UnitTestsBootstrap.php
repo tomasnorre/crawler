@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * This file is part of the TYPO3 CMS project.
  *
@@ -52,7 +54,11 @@
     // @todo: Remove else branch when dropping support for v12
     $hasConsolidatedHttpEntryPoint = class_exists(CoreHttpApplication::class);
     if ($hasConsolidatedHttpEntryPoint) {
-        \TYPO3\TestingFramework\Core\SystemEnvironmentBuilder::run(0, \TYPO3\CMS\Core\Core\SystemEnvironmentBuilder::REQUESTTYPE_CLI, $composerMode);
+        \TYPO3\TestingFramework\Core\SystemEnvironmentBuilder::run(
+            0,
+            \TYPO3\CMS\Core\Core\SystemEnvironmentBuilder::REQUESTTYPE_CLI,
+            $composerMode
+        );
     } else {
         $requestType = \TYPO3\CMS\Core\Core\SystemEnvironmentBuilder::REQUESTTYPE_BE | \TYPO3\CMS\Core\Core\SystemEnvironmentBuilder::REQUESTTYPE_CLI;
         \TYPO3\TestingFramework\Core\SystemEnvironmentBuilder::run(0, $requestType, $composerMode);
@@ -80,7 +86,10 @@
         \TYPO3\CMS\Core\Core\Bootstrap::createPackageCache($cache)
     );
 
-    \TYPO3\CMS\Core\Utility\GeneralUtility::setSingletonInstance(\TYPO3\CMS\Core\Package\PackageManager::class, $packageManager);
+    \TYPO3\CMS\Core\Utility\GeneralUtility::setSingletonInstance(
+        \TYPO3\CMS\Core\Package\PackageManager::class,
+        $packageManager
+    );
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::setPackageManager($packageManager);
 
     $testbase->dumpClassLoadingInformation();

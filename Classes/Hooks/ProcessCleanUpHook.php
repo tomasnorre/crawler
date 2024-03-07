@@ -47,6 +47,32 @@ class ProcessCleanUpHook implements CrawlerHookInterface
     }
 
     /**
+     * Remove a process from processlist
+     *
+     * @param string $processId Unique process Id.
+     */
+    public function removeProcessFromProcesslist($processId): void
+    {
+        $this->processRepository->removeByProcessId($processId);
+        $this->queueRepository->unsetQueueProcessId($processId);
+    }
+
+    /**
+     * Create response array
+     * Convert string to array with space character as delimiter,
+     * removes all empty records to have a cleaner array
+     *
+     * @param string $string String to create array from
+     *
+     * @return array
+     */
+    public function createResponseArray($string)
+    {
+        $responseArray = GeneralUtility::trimExplode(' ', $string, true);
+        return array_values($responseArray);
+    }
+
+    /**
      * Remove active processes older than one hour
      */
     private function removeActiveProcessesOlderThanOneHour(): void
@@ -99,32 +125,6 @@ class ProcessCleanUpHook implements CrawlerHookInterface
                 }
             }
         }
-    }
-
-    /**
-     * Remove a process from processlist
-     *
-     * @param string $processId Unique process Id.
-     */
-    public function removeProcessFromProcesslist($processId): void
-    {
-        $this->processRepository->removeByProcessId($processId);
-        $this->queueRepository->unsetQueueProcessId($processId);
-    }
-
-    /**
-     * Create response array
-     * Convert string to array with space character as delimiter,
-     * removes all empty records to have a cleaner array
-     *
-     * @param string $string String to create array from
-     *
-     * @return array
-     */
-    public function createResponseArray($string)
-    {
-        $responseArray = GeneralUtility::trimExplode(' ', $string, true);
-        return array_values($responseArray);
     }
 
     /**

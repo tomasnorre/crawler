@@ -78,7 +78,7 @@ class TcaUtilityTest extends FunctionalTestCase
                         'label' => 'Fake Value [crawler]',
                         'value' => 'crawler',
                         'icon' => 'ext/crawler/Resources/Public/Icons/Extension.svg',
-                    ]
+                    ],
                 ],
             ],
         ];
@@ -97,7 +97,7 @@ class TcaUtilityTest extends FunctionalTestCase
                     [
                         'label' => 'Fake Value [crawler]',
                         'value' => 'crawler',
-                        'icon' => 'ext/crawler/Resources/Public/Icons/Extension.svg'
+                        'icon' => 'ext/crawler/Resources/Public/Icons/Extension.svg',
                     ],
                 ],
             ],

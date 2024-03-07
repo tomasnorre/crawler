@@ -170,10 +170,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
     {
         $emptyInputString = '';
 
-        self::assertEquals(
-            [],
-            $this->subject->createResponseArray($emptyInputString)
-        );
+        self::assertEquals([], $this->subject->createResponseArray($emptyInputString));
     }
 
     /**
@@ -185,9 +182,6 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         $inputString = '1   2 2 4 5 6 ';
         $expectedOutputArray = ['1', '2', '2', '4', '5', '6'];
 
-        self::assertEquals(
-            $expectedOutputArray,
-            $this->subject->createResponseArray($inputString)
-        );
+        self::assertEquals($expectedOutputArray, $this->subject->createResponseArray($inputString));
     }
 }

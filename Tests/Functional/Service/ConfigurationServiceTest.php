@@ -65,7 +65,7 @@ class ConfigurationServiceTest extends FunctionalTestCase
     public function getConfigurationFromDatabaseReturnsArray(): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [
-            'maxCompileUrls' => 100
+            'maxCompileUrls' => 100,
         ];
 
         $urlService = GeneralUtility::makeInstance(UrlService::class);
