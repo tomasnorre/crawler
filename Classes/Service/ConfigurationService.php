@@ -328,7 +328,7 @@ class ConfigurationService
         }
         return $this->backendUser;
     }
-    
+
     private function getQueryBuilder(string $table): QueryBuilder
     {
         return GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($table);
