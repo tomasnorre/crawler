@@ -43,7 +43,7 @@ jobs:
           composer --version
 
       - uses: actions/checkout@v3
-      - uses: jonaseberle/github-action-setup-ddev@v1
+      - uses: ddev/github-action-setup-ddev@v1
         with:
           ddevDir: ".devbox"
       - name: CodeCeption
