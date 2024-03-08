@@ -22,10 +22,8 @@ namespace AOE\Crawler\Tests\Unit\Service;
 use AOE\Crawler\Service\ProcessInstructionService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
-/**
- * @covers \AOE\Crawler\Service\ProcessInstructionService
- */
-class ProcessInstructionServiceTest extends UnitTestCase
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Service\ProcessInstructionService::class)]
+class ProcessInstructionServiceTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
     private ProcessInstructionService $processInstructionService;
 
@@ -34,40 +32,34 @@ class ProcessInstructionServiceTest extends UnitTestCase
         $this->processInstructionService = new ProcessInstructionService();
     }
 
-    /**
-     * @test
-     * @dataProvider isAllowedDataProvider
-     */
-    public function isAllowReturnsExpectedBoolValue(string $piString, array $incomingProcInstructions, bool $expected): void
-    {
+    #[\PHPUnit\Framework\Attributes\Test]
+    #[\PHPUnit\Framework\Attributes\DataProvider('isAllowedDataProvider')]
+    public function isAllowReturnsExpectedBoolValue(
+        string $piString,
+        array $incomingProcInstructions,
+        bool $expected
+    ): void {
         self::assertEquals(
             $expected,
             $this->processInstructionService->isAllowed($piString, $incomingProcInstructions)
         );
     }
 
-    public function isAllowedDataProvider(): iterable
+    public static function isAllowedDataProvider(): iterable
     {
         yield 'Not in list' => [
             'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
-            'incomingProcInstructions' => [
-                'tx_unknown_extension_instruction',
-            ],
+            'incomingProcInstructions' => ['tx_unknown_extension_instruction'],
             'expected' => false,
         ];
         yield 'In list' => [
             'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
-            'incomingProcInstructions' => [
-                'tx_indexedsearch_reindex',
-            ],
+            'incomingProcInstructions' => ['tx_indexedsearch_reindex'],
             'expected' => true,
         ];
         yield 'Twice in list' => [
             'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
-            'incomingProcInstructions' => [
-                'tx_indexedsearch_reindex',
-                'tx_indexedsearch_reindex',
-            ],
+            'incomingProcInstructions' => ['tx_indexedsearch_reindex', 'tx_indexedsearch_reindex'],
             'expected' => true,
         ];
         yield 'Empty incomingProcInstructions' => [
@@ -77,9 +69,7 @@ class ProcessInstructionServiceTest extends UnitTestCase
         ];
         yield 'In list CAPITALIZED' => [
             'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
-            'incomingProcInstructions' => [
-                'TX_INDEXEDSEARCH_REINDES',
-            ],
+            'incomingProcInstructions' => ['TX_INDEXEDSEARCH_REINDES'],
             'expected' => false,
         ];
     }

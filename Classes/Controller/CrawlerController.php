@@ -230,7 +230,10 @@ class CrawlerController implements LoggerAwareInterface
         $processInstructionService = new ProcessInstructionService();
 
         foreach ($vv['URLs'] as $urlQuery) {
-            if (! $processInstructionService->isAllowed($vv['subCfg']['procInstrFilter'] ?? '', $incomingProcInstructions)) {
+            if (! $processInstructionService->isAllowed(
+                $vv['subCfg']['procInstrFilter'] ?? '',
+                $incomingProcInstructions
+            )) {
                 continue;
             }
             $url = $urlService->getUrlFromPageAndQueryParameters(
