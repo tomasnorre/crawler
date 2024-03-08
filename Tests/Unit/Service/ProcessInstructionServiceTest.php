@@ -28,6 +28,7 @@ class ProcessInstructionServiceTest extends \TYPO3\TestingFramework\Core\Unit\Un
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->processInstructionService = new ProcessInstructionService();
     }
 
