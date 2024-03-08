@@ -194,7 +194,7 @@ parameters:
 			path: Classes/Service/BackendModuleScriptUrlService.php
 
 		-
-			message: "#^Class cognitive complexity is 84, keep it under 60$#"
+			message: "#^Class cognitive complexity is 87, keep it under 60$#"
 			count: 1
 			path: Classes/Service/ConfigurationService.php
 

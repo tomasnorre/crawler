@@ -126,7 +126,7 @@ class BuildQueueCommandTest extends FunctionalTestCase
                 'conf' => $crawlerConfiguration,
                 '--mode' => 'url',
             ],
-            'expectedOutput' => 'https://acme.com/',
+            'expectedOutput' => 'https://www.example.com/',
             'expectedCount' => 0,
         ];
         yield 'Start page 1,  --mode exec' => [

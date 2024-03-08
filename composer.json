@@ -81,8 +81,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "AOE\\Crawler\\Tests\\": "Tests",
-            "TYPO3\\CMS\\Core\\Tests\\": ".Build/Web/typo3/sysext/core/Tests"
+            "AOE\\Crawler\\Tests\\": "Tests"
         }
     },
     "config": {
