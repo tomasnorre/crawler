@@ -20,7 +20,6 @@ namespace AOE\Crawler\Tests\Unit\Service;
  */
 
 use AOE\Crawler\Service\ProcessInstructionService;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 
 #[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Service\ProcessInstructionService::class)]
 class ProcessInstructionServiceTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
