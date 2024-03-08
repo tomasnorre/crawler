@@ -77,10 +77,8 @@ trait SiteBasedTestTrait
         }
     }
 
-    protected function mergeSiteConfiguration(
-        string $identifier,
-        array $overrides
-    ): void {
+    protected function mergeSiteConfiguration(string $identifier, array $overrides): void
+    {
         $siteConfiguration = new SiteConfiguration(
             $this->instancePath . '/typo3conf/sites/',
             $this->get(EventDispatcherInterface::class),
@@ -95,20 +93,16 @@ trait SiteBasedTestTrait
         }
     }
 
-    protected function buildSiteConfiguration(
-        int $rootPageId,
-        string $base = ''
-    ): array {
+    protected function buildSiteConfiguration(int $rootPageId, string $base = ''): array
+    {
         return [
             'rootPageId' => $rootPageId,
             'base' => $base,
         ];
     }
 
-    protected function buildDefaultLanguageConfiguration(
-        string $identifier,
-        string $base
-    ): array {
+    protected function buildDefaultLanguageConfiguration(string $identifier, string $base): array
+    {
         $configuration = $this->buildLanguageConfiguration($identifier, $base);
         $configuration['flag'] = 'global';
         unset($configuration['fallbackType'], $configuration['fallbacks']);
@@ -148,10 +142,8 @@ trait SiteBasedTestTrait
         return $configuration;
     }
 
-    protected function buildErrorHandlingConfiguration(
-        string $handler,
-        array $codes
-    ): array {
+    protected function buildErrorHandlingConfiguration(string $handler, array $codes): array
+    {
         if ($handler === 'Page') {
             // This implies you cannot test both 404 and 403 in the same test.
             // Fixing that requires much deeper changes to the testing harness,
@@ -177,10 +169,7 @@ trait SiteBasedTestTrait
                 'errorPhpClassFQCN' => PhpError::class,
             ];
         } else {
-            throw new \LogicException(
-                sprintf('Invalid handler "%s"', $handler),
-                1533894782
-            );
+            throw new \LogicException(sprintf('Invalid handler "%s"', $handler), 1533894782);
         }
 
         $baseConfiguration['errorHandler'] = $handler;
@@ -200,10 +189,7 @@ trait SiteBasedTestTrait
     protected function resolveLanguagePreset(string $identifier)
     {
         if (!isset(static::LANGUAGE_PRESETS[$identifier])) {
-            throw new \LogicException(
-                sprintf('Undefined preset identifier "%s"', $identifier),
-                1533893665
-            );
+            throw new \LogicException(sprintf('Undefined preset identifier "%s"', $identifier), 1533893665);
         }
         return static::LANGUAGE_PRESETS[$identifier];
     }
@@ -211,8 +197,10 @@ trait SiteBasedTestTrait
     /**
      * @todo Instruction handling should be part of Testing Framework (multiple instructions per identifier, merge in interface)
      */
-    protected function applyInstructions(InternalRequest $request, AbstractInstruction ...$instructions): InternalRequest
-    {
+    protected function applyInstructions(
+        InternalRequest $request,
+        AbstractInstruction ...$instructions
+    ): InternalRequest {
         $modifiedInstructions = [];
 
         foreach ($instructions as $instruction) {
@@ -232,20 +220,14 @@ trait SiteBasedTestTrait
 
     protected function mergeInstruction(AbstractInstruction $current, AbstractInstruction $other): AbstractInstruction
     {
-        if (get_class($current) !== get_class($other)) {
+        if ($current::class !== $other::class) {
             throw new \LogicException('Cannot merge different instruction types', 1565863174);
         }
 
         if ($current instanceof TypoScriptInstruction) {
             /** @var TypoScriptInstruction $other */
-            $typoScript = array_replace_recursive(
-                $current->getTypoScript() ?? [],
-                $other->getTypoScript() ?? []
-            );
-            $constants = array_replace_recursive(
-                $current->getConstants() ?? [],
-                $other->getConstants() ?? []
-            );
+            $typoScript = array_replace_recursive($current->getTypoScript() ?? [], $other->getTypoScript() ?? []);
+            $constants = array_replace_recursive($current->getConstants() ?? [], $other->getConstants() ?? []);
             if ($typoScript !== []) {
                 $current = $current->withTypoScript($typoScript);
             }
