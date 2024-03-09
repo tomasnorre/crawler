@@ -25,7 +25,7 @@ class Admin extends \AcceptanceTester
     public function loginAsAdmin(): void
     {
         $I = $this;
-        if ($I->tryToSeeCookie('be_typo_user'))  {
+        if ($I->tryToSeeCookie('be_typo_user')) {
             return;
         }
 
