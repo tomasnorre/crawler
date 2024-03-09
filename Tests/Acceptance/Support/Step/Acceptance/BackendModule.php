@@ -24,19 +24,6 @@ use AOE\Crawler\Tests\Acceptance\Support\Step\Acceptance\Admin;
 
 class BackendModule extends \AcceptanceTester
 {
-    public function openCrawlerBackendModule(Admin $I, PageTree $pageTree): void
-    {
-        $I->click('#web_site_crawler');
-        // Due to slow response time.
-        $I->waitForElementNotVisible('#nprogress', 120);
-        $I->waitForElement('#typo3-pagetree-treeContainer', 120);
-        $pageTree->openPath(['Welcome']);
-        // Due to slow response time.
-        $I->waitForElementNotVisible('#nprogress', 120);
-        $I->switchToContentFrame();
-        $I->waitForText('Crawl', 10);
-    }
-
     public function openCrawlerBackendModuleStartCrawling(Admin $I, PageTree $pageTree): void
     {
         $this->openCrawlerBackendModule($I, $pageTree);
@@ -69,5 +56,17 @@ class BackendModule extends \AcceptanceTester
         $I->click('Add process');
         $I->waitForElementNotVisible('#nprogress', 120);
         $I->waitForText('New process has been started');
+    }
+    private function openCrawlerBackendModule(Admin $I, PageTree $pageTree): void
+    {
+        $I->click('[data-moduleroute-identifier="web_site_crawler"]');
+        // Due to slow response time.
+        $I->waitForElementNotVisible('#nprogress', 120);
+        $I->waitForElement('#typo3-pagetree-treeContainer', 120);
+        $pageTree->openPath(['Welcome']);
+        // Due to slow response time.
+        $I->waitForElementNotVisible('#nprogress', 120);
+        $I->switchToContentFrame();
+        $I->waitForText('Crawl', 10);
     }
 }

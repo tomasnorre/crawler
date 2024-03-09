@@ -40,7 +40,7 @@ class BackendModuleCest
     public function canSeeCrawlerModule(Admin $I): void
     {
         $I->loginAsAdmin();
-        $I->canSee('Crawler', '#web_site_crawler');
+        $I->canSee('Crawler', '[data-modulemenu-identifier="web_site_crawler"]');
     }
 
     public function canSelectCrawlerModuleStartCrawling(BackendModule $I, Admin $adminStep, PageTree $pageTree): void

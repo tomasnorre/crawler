@@ -25,10 +25,10 @@ use Step\Acceptance\BackendModule;
 
 class CrawlerConfigurationCest
 {
-    public function canCreateCrawlerConfigration(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    public function canCreateCrawlerConfiguration(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();
-        $I->click('#web_list');
+        $I->click('[data-moduleroute-identifier="web_list"]');
         // Due to slow response time.
         $I->waitForElementNotVisible('#nprogress', 120);
         $I->waitForElement('#typo3-pagetree-treeContainer', 120);
