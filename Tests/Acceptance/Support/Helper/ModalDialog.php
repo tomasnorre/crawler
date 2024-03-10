@@ -81,6 +81,6 @@ final class ModalDialog extends AbstractModalDialog
         $I->switchToIFrame();
         $I->waitForElement(self::$openedModalSelector);
         // I will wait two seconds to prevent failing tests
-        $I->wait(2);
+        $I->wait(5);
     }
 }
