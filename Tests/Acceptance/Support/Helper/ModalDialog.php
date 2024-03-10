@@ -3,7 +3,9 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the TYPO3 CMS project.
+ * (c) 2024-     Tomas Norre Mikkelsen <tomasnorre@gmail.com>
+ *
+ * This file is part of the TYPO3 Crawler Extension.
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -15,9 +17,15 @@ declare(strict_types=1);
  * The TYPO3 project - inspiring people to share!
  */
 
+/**
+ * This is copied from
+ * https://github.com/TYPO3/typo3/blob/main/typo3/sysext/core/Tests/Acceptance/Support/Helper/ModalDialog.php
+ */
+
 namespace AOE\Crawler\Tests\Acceptance\Support\Helper;
 
 use AcceptanceTester;
+use TYPO3\TestingFramework\Core\Acceptance\Helper\AbstractModalDialog;
 
 final class ModalDialog extends AbstractModalDialog
 {
