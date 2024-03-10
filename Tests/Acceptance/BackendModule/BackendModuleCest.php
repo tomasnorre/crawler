@@ -20,6 +20,7 @@ namespace AOE\Crawler\Tests\Acceptance\BackendModule;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Tests\Acceptance\Support\Helper\ModalDialog;
 use AOE\Crawler\Tests\Acceptance\Support\Helper\PageTree;
 use AOE\Crawler\Tests\Acceptance\Support\Step\Acceptance\Admin;
 use Step\Acceptance\BackendModule;
@@ -196,30 +197,35 @@ class BackendModuleCest
         $I->waitForText('https://crawler-devbox.ddev.site/access-restricted-page', 10);
     }
 
-    public function flushVisibleEntries(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
-    {
+    public function flushVisibleEntries(
+        BackendModule $I,
+        Admin $adminStep,
+        PageTree $pageTree,
+        ModalDialog $modalDialog
+    ): void {
         // Will test twice, but done to avoid duplicate code
         $this->crawlerUrlsContinueAndShowLogCheckDepthDropdown($I, $adminStep, $pageTree);
         $I->click('Flush entire queue');
-        $I->switchToMainFrame();
-        $I->seeInPopup('Are you sure?');
-        $I->click('OK');
-        $I->switchToContentFrame();
-        $I->wait(3);
+        $modalDialog->canSeeDialog();
+        $modalDialog->clickButtonInDialog('OK');
+        $I->wait(1);
         $I->canSeeNumberOfElements('a.refreshLink', 0);
         $this->crawlerUrlsContinueAndShowLogCheckDepthDropdown($I, $adminStep, $pageTree);
         $I->canSeeNumberOfElements('a.refreshLink', 9);
-        $I->selectOption('logDisplay', 'Finished');
+        $I->selectOption('displayLog', 'Finished');
         $I->canSeeNumberOfElements('a.refreshLink', 0);
         $I->click('Flush visible entries');
-        $I->acceptPopup();
-        $I->wait(3);
-        $I->selectOption('logDisplay', 'All');
+        $modalDialog->canSeeDialog();
+        $modalDialog->clickButtonInDialog('OK');
+        $I->wait(1);
+        $I->switchToContentFrame();
+        $I->selectOption('displayLog', 'All');
         $I->canSeeNumberOfElements('a.refreshLink', 9);
-        $I->selectOption('logDisplay', 'Pending');
+        $I->selectOption('displayLog', 'Pending');
         $I->click('Flush visible entries');
-        $I->acceptPopup();
-        $I->wait(3);
+        $modalDialog->canSeeDialog();
+        $modalDialog->clickButtonInDialog('OK');
+        $I->wait(1);
         $I->canSeeNumberOfElements('a.refreshLink', 0);
     }
 
