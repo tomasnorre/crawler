@@ -63,7 +63,7 @@
         </f:if>
 
         <input type="hidden" name="id" value="{currentPageId}">
-        <input type="hidden" name="setID" value="{setId}" />
+        <input type="hidden" name="setID" value="{setId}"/>
         <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.curtime"/>
         :
         <f:format.date format="H:i:s">now</f:format.date>
@@ -99,7 +99,8 @@
                    data-button-close-text="{f:translate(key: 'LLL:EXT:core/Resources/Private/Language/locallang_common.xlf:cancel')}"
                    data-bs-content="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.confirmyouresure')}"
                 >
-                    <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.flushvisiblequeue" />
+                    <f:translate
+                        key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.flushvisiblequeue"/>
                 </a>
                 <a class="btn btn-default t3js-modal-trigger"
                    type="submit"
@@ -109,7 +110,7 @@
                    data-button-close-text="{f:translate(key: 'LLL:EXT:core/Resources/Private/Language/locallang_common.xlf:cancel')}"
                    data-bs-content="{f:translate(key: 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.confirmyouresure')}"
                 >
-                    <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.flushfullqueue" />
+                    <f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.flushfullqueue"/>
                 </a>
 
 
@@ -222,14 +223,14 @@
     </form>
     <!-- Forms for Buttons with Modals, to make a proper submit -->
     <form action="" method="post" id="crawler_log_flush_visible">
-        <input type="hidden" name="{depthDropDownConfig.name}" value="{depthDropDownConfig.currentValue}" >
-        <input type="hidden" name="{itemPerPageConfig.name}" value="{itemPerPageConfig.currentValue}" >
-        <input type="hidden" name="{displayLogFilterConfig.name}" value="{displayLogFilterConfig.currentValue}" >
+        <input type="hidden" name="{depthDropDownConfig.name}" value="{depthDropDownConfig.currentValue}">
+        <input type="hidden" name="{itemPerPageConfig.name}" value="{itemPerPageConfig.currentValue}">
+        <input type="hidden" name="{displayLogFilterConfig.name}" value="{displayLogFilterConfig.currentValue}">
         <input type="hidden" name="id" value="{currentPageId}">
-        <input type="hidden" name="setID" value="{setId}" />
+        <input type="hidden" name="setID" value="{setId}"/>
         <input type="hidden" name="_flush" value="_flush">
     </form>
-    <form action="" method="post" id="crawler_log_flush_all" >
+    <form action="" method="post" id="crawler_log_flush_all">
         <input type="hidden" name="_flush_all" value="_flush_all">
     </form>
 

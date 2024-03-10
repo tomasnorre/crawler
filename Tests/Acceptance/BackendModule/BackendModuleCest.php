@@ -206,6 +206,7 @@ class BackendModuleCest
         // Will test twice, but done to avoid duplicate code
         $this->crawlerUrlsContinueAndShowLogCheckDepthDropdown($I, $adminStep, $pageTree);
         $I->click('Flush entire queue');
+        $I->wait(3);
         $modalDialog->canSeeDialog();
         $modalDialog->clickButtonInDialog('OK');
         $I->wait(1);
@@ -215,6 +216,7 @@ class BackendModuleCest
         $I->selectOption('displayLog', 'Finished');
         $I->canSeeNumberOfElements('a.refreshLink', 0);
         $I->click('Flush visible entries');
+        $I->wait(3);
         $modalDialog->canSeeDialog();
         $modalDialog->clickButtonInDialog('OK');
         $I->wait(1);
@@ -223,6 +225,7 @@ class BackendModuleCest
         $I->canSeeNumberOfElements('a.refreshLink', 9);
         $I->selectOption('displayLog', 'Pending');
         $I->click('Flush visible entries');
+        $I->wait(3);
         $modalDialog->canSeeDialog();
         $modalDialog->clickButtonInDialog('OK');
         $I->wait(1);
