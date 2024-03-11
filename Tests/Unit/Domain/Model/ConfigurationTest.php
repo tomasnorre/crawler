@@ -33,6 +33,11 @@ class ConfigurationTest extends UnitTestCase
         $this->subject = $this->createPartialMock(Configuration::class, []);
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     #[\PHPUnit\Framework\Attributes\Test]
     public function setterAndGetters(): void
     {

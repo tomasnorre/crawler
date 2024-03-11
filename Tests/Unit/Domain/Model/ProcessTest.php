@@ -43,6 +43,11 @@ class ProcessTest extends UnitTestCase
         $this->subject->setAssignedItemsCount(20);
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     #[\PHPUnit\Framework\Attributes\Test]
     public function setAndGetRowDoAsExpected(): void
     {

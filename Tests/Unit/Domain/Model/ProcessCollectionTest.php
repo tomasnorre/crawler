@@ -43,6 +43,11 @@ class ProcessCollectionTest extends UnitTestCase
         $this->subject = new ProcessCollection();
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     #[\PHPUnit\Framework\Attributes\Test]
     public function getProcessIdsReturnsArray(): void
     {
