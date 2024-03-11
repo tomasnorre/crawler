@@ -4,6 +4,7 @@
 ### Fixed
 * Fix loading middleware order to make forced indexing work again [@cweiske](https://github.com/cweiske)
 * Avoid deprecations in PHP 8.2
+* Ensure that directory for lock file for enabling/disabling crawler exits
 
 ## Crawler 11.0.7
 Crawler 11.0.7 was released on November 18th, 2022
@@ -226,38 +227,38 @@ Crawler 9.2.5 was released on May 28th, 2021
 * Switch to Constants for Repository TableNames
 * Use ConfigurationRepository function instead of queries in CrawlerController
 * Following classes are marked as internal
-  * Backend/BackendModule.php
-  * Backend/Helper/ResultHandler.php
-  * Backend/Helper/UrlBuilder.php
-  * Configuration/ExtensionConfigurationProvider.php
-  * ContextMenu/ItemProvider.php
-  * Converter/JsonCompatibilityConverter.php
-  * Crawler.php
-  * Domain/Model/Configuration.php
-  * Domain/Model/Process.php
-  * Domain/Model/ProcessCollection.php
-  * Domain/Model/Queue.php
-  * Domain/Model/Reason.php
-  * Domain/Repository/ConfigurationRepository.php
-  * Domain/Repository/ProcessRepository.php
-  * Domain/Repository/QueueRepository.php
-  * Hooks/DataHandlerHook.php
-  * Hooks/ProcessCleanUpHook.php
-  * QueueExecutor.php
-  * Service/ConfigurationService.php
-  * Service/ProcessService.php
-  * Service/QueueService.php
-  * Service/UrlService.php
-  * Service/UserService.php
-  * Service/ProcessService.php
-  * Utility/BackendUtility.php
-  * Utility/HookUtility.php
-  * Utility/MessageUtility.php
-  * Utility/PhpBinaryUtility.php
-  * Utility/TcaUtility.php
-  * Value/CrawlAction.php
-  * Value/QueueFilter.php
-  * Writer/FileWriter/CsvWriter/CrawlerCsvWriter.php
+    * Backend/BackendModule.php
+    * Backend/Helper/ResultHandler.php
+    * Backend/Helper/UrlBuilder.php
+    * Configuration/ExtensionConfigurationProvider.php
+    * ContextMenu/ItemProvider.php
+    * Converter/JsonCompatibilityConverter.php
+    * Crawler.php
+    * Domain/Model/Configuration.php
+    * Domain/Model/Process.php
+    * Domain/Model/ProcessCollection.php
+    * Domain/Model/Queue.php
+    * Domain/Model/Reason.php
+    * Domain/Repository/ConfigurationRepository.php
+    * Domain/Repository/ProcessRepository.php
+    * Domain/Repository/QueueRepository.php
+    * Hooks/DataHandlerHook.php
+    * Hooks/ProcessCleanUpHook.php
+    * QueueExecutor.php
+    * Service/ConfigurationService.php
+    * Service/ProcessService.php
+    * Service/QueueService.php
+    * Service/UrlService.php
+    * Service/UserService.php
+    * Service/ProcessService.php
+    * Utility/BackendUtility.php
+    * Utility/HookUtility.php
+    * Utility/MessageUtility.php
+    * Utility/PhpBinaryUtility.php
+    * Utility/TcaUtility.php
+    * Value/CrawlAction.php
+    * Value/QueueFilter.php
+    * Writer/FileWriter/CsvWriter/CrawlerCsvWriter.php
 
 ### Fixed
 * Date parsing for immediate queue entries

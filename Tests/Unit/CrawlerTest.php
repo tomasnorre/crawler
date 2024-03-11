@@ -33,10 +33,21 @@ class CrawlerTest extends UnitTestCase
      */
     protected $crawler;
 
+    /**
+     * @var string
+     */
+    private $filenameWithPath;
+
     protected function setUp(): void
     {
-        $filenameWithPath = tempnam('/tmp', 'test_foo') ?: 'FileNameIsForceIfTempNamReturnedFalse.txt';
-        $this->crawler = GeneralUtility::makeInstance(Crawler::class, $filenameWithPath);
+        $this->filenameWithPath = tempnam('/tmp', 'test_foo') ?: 'FileNameIsForceIfTempNamReturnedFalse.txt';
+        $this->crawler = GeneralUtility::makeInstance(Crawler::class, $this->filenameWithPath);
+    }
+
+    public function checkDirectoryIsCreated(): void
+    {
+        $pathInfo = pathinfo($this->filenameWithPath);
+        $this->assertTrue(is_dir($pathInfo['dirname']));
     }
 
     /**
