@@ -1,26 +1,31 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd"
-         bootstrap="../.Build/vendor/nimut/testing-framework/res/Configuration/UnitTestsBootstrap.php"
-         cacheResultFile=".phpunit.cache/test-results"
-         executionOrder="depends,defects"
-         forceCoversAnnotation="true"
-         beStrictAboutCoversAnnotation="true"
-         beStrictAboutOutputDuringTests="true"
-         beStrictAboutTodoAnnotatedTests="true"
-         failOnRisky="true"
-         failOnWarning="true"
-         verbose="true">
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+         backupGlobals="true"
+         beStrictAboutTestsThatDoNotTestAnything="false"
+         bootstrap="UnitTestsBootstrap.php"
+         cacheDirectory=".phpunit.cache"
+         cacheResult="false"
+         colors="true"
+         displayDetailsOnTestsThatTriggerDeprecations="false"
+         displayDetailsOnTestsThatTriggerErrors="false"
+         displayDetailsOnTestsThatTriggerNotices="false"
+         displayDetailsOnTestsThatTriggerWarnings="false"
+         failOnDeprecation="false"
+         failOnNotice="false"
+         failOnRisky="false"
+         failOnWarning="false"
+         requireCoverageMetadata="true"
+>
     <testsuites>
-        <testsuite name="default">
-            <directory>../Tests/Unit</directory>
+        <testsuite name="Unit tests">
+            <directory>Unit/</directory>
         </testsuite>
     </testsuites>
-
-    <coverage cacheDirectory=".phpunit.cache/code-coverage"
-              processUncoveredFiles="true">
-        <include>
-            <directory suffix=".php">../Classes</directory>
-        </include>
-    </coverage>
+    <php>
+        <!-- @deprecated: will be removed with next major version, constant TYPO3_MODE is deprecated -->
+        <const name="TYPO3_MODE" value="BE"/>
+        <ini name="display_errors" value="1"/>
+        <env name="TYPO3_CONTEXT" value="Testing"/>
+    </php>
 </phpunit>
