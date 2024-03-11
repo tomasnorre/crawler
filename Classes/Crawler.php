@@ -34,6 +34,8 @@ final class Crawler implements SingletonInterface
     {
         $this->processFilename = $processFilename ?: Environment::getVarPath() . '/lock/tx_crawler.proc';
         $this->setDisabled(false);
+        $pathInfo = pathinfo($this->processFilename);
+        GeneralUtility::mkdir_deep($pathInfo['dirname']);
     }
 
     public function setDisabled(bool $disabled = true): void

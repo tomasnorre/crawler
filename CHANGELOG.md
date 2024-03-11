@@ -29,6 +29,7 @@
 * Prevent undefined array key uid and username in FrontendUserAuthentication
 * Fix loading middleware order to make forced indexing work again [@cweiske](https://github.com/cweiske)
 * Change tense in flush command message [@cweiske](https://github.com/cweiske)
+* Ensure that directory for lock file for enabling/disabling crawler exits
 
 ### Deprecated
 #### Classes
