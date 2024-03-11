@@ -29,7 +29,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 final class Crawler implements SingletonInterface
 {
     private readonly string $processFilename;
-    private readonly string $filePath;
 
     public function __construct(?string $processFilename = null)
     {
