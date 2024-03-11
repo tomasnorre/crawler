@@ -20,23 +20,33 @@ namespace AOE\Crawler\Tests\Unit;
  */
 
 use AOE\Crawler\Crawler;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Crawler::class)]
+#[CoversClass(Crawler::class)]
 class CrawlerTest extends UnitTestCase
 {
-    protected \AOE\Crawler\Crawler $crawler;
+    protected Crawler $crawler;
     protected bool $resetSingletonInstances = true;
+    private string $filenameWithPath;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $filenameWithPath = tempnam('/tmp', 'test_foo') ?: 'FileNameIsForceIfTempNamReturnedFalse.txt';
-        $this->crawler = GeneralUtility::makeInstance(Crawler::class, $filenameWithPath);
+        $this->filenameWithPath = tempnam('/tmp', 'test_foo') ?: 'FileNameIsForceIfTempNamReturnedFalse.txt';
+        $this->crawler = GeneralUtility::makeInstance(Crawler::class, $this->filenameWithPath);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
+    public function checkDirectoryIsCreated(): void
+    {
+        $pathInfo = pathinfo($this->filenameWithPath);
+        $this->assertDirectoryExists($pathInfo['dirname']);
+    }
+
+    #[Test]
     public function setDisabledTest(): void
     {
         // Checking that default the crawler is enabled
