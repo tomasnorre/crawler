@@ -13,10 +13,10 @@ jobs:
         name: PHPstan
         runs-on: ubuntu-latest
         steps:
-            -   uses: actions/checkout@v3
+            -   uses: actions/checkout@v4
             -   id: composer-cache
                 run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-            -   uses: actions/cache@v3
+            -   uses: actions/cache@v4
                 with:
                     path: ${{ steps.composer-cache.outputs.dir }}
                     key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -33,10 +33,10 @@ jobs:
         name: Rector
         runs-on: ubuntu-latest
         steps:
-            -   uses: actions/checkout@v3
+            -   uses: actions/checkout@v4
             -   id: composer-cache
                 run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-            -   uses: actions/cache@v3
+            -   uses: actions/cache@v4
                 with:
                     path: ${{ steps.composer-cache.outputs.dir }}
                     key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -53,10 +53,10 @@ jobs:
         name: Code Style
         runs-on: ubuntu-latest
         steps:
-            -   uses: actions/checkout@v3
+            -   uses: actions/checkout@v4
             -   id: composer-cache
                 run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-            -   uses: actions/cache@v3
+            -   uses: actions/cache@v4
                 with:
                     path: ${{ steps.composer-cache.outputs.dir }}
                     key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -73,10 +73,10 @@ jobs:
         name: Psalm
         runs-on: ubuntu-latest
         steps:
-            -   uses: actions/checkout@v3
+            -   uses: actions/checkout@v4
             -   id: composer-cache
                 run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-            -   uses: actions/cache@v3
+            -   uses: actions/cache@v4
                 with:
                     path: ${{ steps.composer-cache.outputs.dir }}
                     key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}

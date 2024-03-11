@@ -21,7 +21,7 @@ jobs:
           mysql root password: 'root'
 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up PHP Version 8.1
         uses: shivammathur/setup-php@v2

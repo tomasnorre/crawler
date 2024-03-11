@@ -31,7 +31,7 @@ jobs:
           docker run -e POSTGRES_DB=typo3 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=root -d -p 5432:5432 postgres:${{ matrix.postgres }}
 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up PHP Version ${{ matrix.php }}
         uses: shivammathur/setup-php@v2
@@ -76,7 +76,7 @@ jobs:
           - '^12.4'
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up PHP Version ${{ matrix.php }}
         uses: shivammathur/setup-php@v2
@@ -114,7 +114,7 @@ jobs:
           mysql root password: 'root'
 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up PHP Version ${{ matrix.php }}
         uses: shivammathur/setup-php@v2
@@ -160,7 +160,7 @@ jobs:
           mysql root password: 'root'
 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up PHP Version ${{ matrix.php }}
         uses: shivammathur/setup-php@v2
