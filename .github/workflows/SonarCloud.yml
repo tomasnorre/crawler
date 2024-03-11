@@ -15,10 +15,10 @@ jobs:
       -   name: Start database server
           run: sudo /etc/init.d/mysql start
 
-      -   uses: actions/checkout@v3
+      -   uses: actions/checkout@v4
       -   id: composer-cache
           run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-      -   uses: actions/cache@v3
+      -   uses: actions/cache@v4
           with:
             path: ${{ steps.composer-cache.outputs.dir }}
             key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
