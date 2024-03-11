@@ -32,6 +32,11 @@ class ProcessInstructionServiceTest extends \TYPO3\TestingFramework\Core\Unit\Un
         $this->processInstructionService = new ProcessInstructionService();
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     #[\PHPUnit\Framework\Attributes\Test]
     #[\PHPUnit\Framework\Attributes\DataProvider('isAllowedDataProvider')]
     public function isAllowReturnsExpectedBoolValue(

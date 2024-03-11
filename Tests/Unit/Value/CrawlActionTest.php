@@ -27,6 +27,11 @@ class CrawlActionTest extends UnitTestCase
 {
     final public const VALID_VALUE = 'start';
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     #[\PHPUnit\Framework\Attributes\Test]
     public function toStringWithValidValueReturnsOriginalValue(): void
     {

@@ -38,6 +38,11 @@ class InvokeQueueChangeEventTest extends UnitTestCase
         $this->subject = new InvokeQueueChangeEvent($reason);
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     #[\PHPUnit\Framework\Attributes\Test]
     public function defaultValueTest(): void
     {

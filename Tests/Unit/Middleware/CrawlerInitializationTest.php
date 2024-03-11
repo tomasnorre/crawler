@@ -31,6 +31,11 @@ class CrawlerInitializationTest extends UnitTestCase
 {
     use ProphecyTrait;
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     #[\PHPUnit\Framework\Attributes\Test]
     public function processRequestNotHandled(): void
     {

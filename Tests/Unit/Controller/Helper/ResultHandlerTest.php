@@ -27,6 +27,11 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 #[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Converter\JsonCompatibilityConverter::class)]
 class ResultHandlerTest extends UnitTestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     #[\PHPUnit\Framework\Attributes\DataProvider('getResStatusDataProvider')]
     #[\PHPUnit\Framework\Attributes\Test]
     public function getResStatus($requestContent, string $expected): void

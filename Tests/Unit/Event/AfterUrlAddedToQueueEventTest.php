@@ -35,6 +35,11 @@ class AfterUrlAddedToQueueEventTest extends UnitTestCase
         $this->subject = new AfterUrlAddedToQueueEvent($uid, $fieldArray);
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     #[\PHPUnit\Framework\Attributes\Test]
     public function defaultValueTest(): void
     {

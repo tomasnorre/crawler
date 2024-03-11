@@ -35,6 +35,11 @@ class CrawlerCsvWriterTest extends UnitTestCase
         $this->subject = GeneralUtility::makeInstance(CrawlerCsvWriter::class);
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     #[\PHPUnit\Framework\Attributes\Test]
     public function arrayToCsvTest(): void
     {
