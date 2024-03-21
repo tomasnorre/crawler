@@ -60,7 +60,6 @@ class BuildQueueCommandTest extends FunctionalTestCase
 
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/pages.csv');
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/tx_crawler_configuration.csv');
-        $this->queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
 
         $this->writeSiteConfiguration(
             'acme-com',
@@ -72,6 +71,7 @@ class BuildQueueCommandTest extends FunctionalTestCase
             ]
         );
 
+        $this->queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
         $command = new BuildQueueCommand();
         $this->commandTester = new CommandTester($command);
     }
