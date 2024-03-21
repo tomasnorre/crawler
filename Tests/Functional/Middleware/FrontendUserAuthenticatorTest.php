@@ -20,18 +20,20 @@ namespace AOE\Crawler\Tests\Functional\Middleware;
  */
 
 use AOE\Crawler\Middleware\FrontendUserAuthenticator;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use TYPO3\CMS\Core\Cache\Backend\NullBackend;
 use TYPO3\CMS\Core\Http\NormalizedParams;
 use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
-/**
- * @covers FrontendUserAuthenticator
- */
+#[CoversClass(FrontendUserAuthenticator::class)]
 class FrontendUserAuthenticatorTest extends FunctionalTestCase
 {
     use ProphecyTrait;
@@ -46,7 +48,7 @@ class FrontendUserAuthenticatorTest extends FunctionalTestCase
         $this->subject = GeneralUtility::makeInstance(FrontendUserAuthenticator::class);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function processQueueEntryNotFound(): never
     {
         $this->markTestSkipped('WIP');
@@ -66,8 +68,8 @@ class FrontendUserAuthenticatorTest extends FunctionalTestCase
         self::assertStringContainsString('No crawler entry found', $response->getBody()->getContents());
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('processSetsExpectedUserGroupsDataProvider')]
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[DataProvider('processSetsExpectedUserGroupsDataProvider')]
+    #[Test]
     public function processSetsExpectedUserGroups(string $feGroups, string $headerLine): void
     {
         $this->importCSVDataSet(__DIR__ . '/Fixtures/ProcessHandlesFeGroups/tx_crawler_queue.csv');
@@ -122,35 +124,35 @@ class FrontendUserAuthenticatorTest extends FunctionalTestCase
     private function setGlobalsSys(): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['SYS'] = [
-        'caching' => [
-            'cacheConfigurations' => [
-                'hash' => [
-                    'backend' => \TYPO3\CMS\Core\Cache\Backend\NullBackend::class,
-                ],
-                'imagesizes' => [
-                    'backend' => \TYPO3\CMS\Core\Cache\Backend\NullBackend::class,
-                ],
-                'pages' => [
-                    'backend' => \TYPO3\CMS\Core\Cache\Backend\NullBackend::class,
-                ],
-                'pagesection' => [
-                    'backend' => \TYPO3\CMS\Core\Cache\Backend\NullBackend::class,
-                ],
-                'rootline' => [
-                    'backend' => \TYPO3\CMS\Core\Cache\Backend\NullBackend::class,
+            'caching' => [
+                'cacheConfigurations' => [
+                    'hash' => [
+                        'backend' => NullBackend::class,
+                    ],
+                    'imagesizes' => [
+                        'backend' => NullBackend::class,
+                    ],
+                    'pages' => [
+                        'backend' => NullBackend::class,
+                    ],
+                    'pagesection' => [
+                        'backend' => NullBackend::class,
+                    ],
+                    'rootline' => [
+                        'backend' => NullBackend::class,
+                    ],
                 ],
             ],
-        ],
-        'devIPmask' => '',
-        'displayErrors' => 0,
-        'encryptionKey' => '3a5826140e97e15e5f2f6de051e7e0f903958cb8d9a9caadaf6b237be88f53bde31462ef070939161e30e8ac101e2f3f',
-        'exceptionalErrors' => 4096,
-        'features' => [
-            'unifiedPageTranslationHandling' => true,
-        ],
-        'sitename' => 'Crawler Devbox',
-        'systemMaintainers' => [2, 5, 5, 1, 1],
-        'trustedHostsPattern' => '.*',
-    ];
+            'devIPmask' => '',
+            'displayErrors' => 0,
+            'encryptionKey' => '3a5826140e97e15e5f2f6de051e7e0f903958cb8d9a9caadaf6b237be88f53bde31462ef070939161e30e8ac101e2f3f',
+            'exceptionalErrors' => 4096,
+            'features' => [
+                'unifiedPageTranslationHandling' => true,
+            ],
+            'sitename' => 'Crawler Devbox',
+            'systemMaintainers' => [2, 5, 5, 1, 1],
+            'trustedHostsPattern' => '.*',
+        ];
     }
 }
