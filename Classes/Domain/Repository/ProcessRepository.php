@@ -32,7 +32,6 @@ use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Domain\Model\ProcessCollection;
 use Doctrine\DBAL\ArrayParameterType;
-use PDO;
 use Symfony\Contracts\Service\Attribute\Required;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
@@ -131,7 +130,7 @@ class ProcessRepository extends Repository
         $queryBuilder
             ->delete(self::TABLE_NAME)
             ->where(
-                $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId, PDO::PARAM_STR))
+                $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId))
             )->executeStatement();
     }
 

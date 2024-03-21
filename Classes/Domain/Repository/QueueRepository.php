@@ -23,10 +23,10 @@ use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Value\QueueFilter;
 use Doctrine\DBAL\ArrayParameterType;
-use PDO;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Contracts\Service\Attribute\Required;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Repository;
@@ -190,7 +190,10 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ->from(self::TABLE_NAME)
             ->count('*')
             ->where(
-                $queryBuilder->expr()->eq('page_id', $queryBuilder->createNamedParameter($uid, \PDO::PARAM_INT))
+                $queryBuilder->expr()->eq(
+                    'page_id',
+                    $queryBuilder->createNamedParameter($uid, Connection::PARAM_INT)
+                )
             );
 
         if ($unprocessed_only !== false) {
@@ -203,7 +206,10 @@ class QueueRepository extends Repository implements LoggerAwareInterface
 
         if ($timestamp) {
             $statement->andWhere(
-                $queryBuilder->expr()->eq('scheduled', $queryBuilder->createNamedParameter($timestamp, \PDO::PARAM_INT))
+                $queryBuilder->expr()->eq(
+                    'scheduled',
+                    $queryBuilder->createNamedParameter($timestamp, Connection::PARAM_INT)
+                )
             );
         }
 
@@ -422,12 +428,15 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ->andWhere($queryBuilder->expr()->eq('exec_time', 0))
             ->andWhere($queryBuilder->expr()->eq('process_id', "''"))
             ->andWhere(
-                $queryBuilder->expr()->eq('page_id', $queryBuilder->createNamedParameter($pageId, \PDO::PARAM_INT))
+                $queryBuilder->expr()->eq(
+                    'page_id',
+                    $queryBuilder->createNamedParameter($pageId, Connection::PARAM_INT)
+                )
             )
             ->andWhere(
                 $queryBuilder->expr()->eq('parameters_hash', $queryBuilder->createNamedParameter(
                     $parametersHash,
-                    \PDO::PARAM_STR
+                    Connection::PARAM_STR
                 ))
             );
 
@@ -446,7 +455,12 @@ class QueueRepository extends Repository implements LoggerAwareInterface
         $queryBuilder
             ->select('*')
             ->from(self::TABLE_NAME)
-            ->where($queryBuilder->expr()->eq('page_id', $queryBuilder->createNamedParameter($id, PDO::PARAM_INT)))
+            ->where(
+                $queryBuilder->expr()->eq('page_id', $queryBuilder->createNamedParameter(
+                    $id,
+                    Connection::PARAM_INT
+                ))
+            )
             ->orderBy('scheduled', 'DESC');
 
         $expressionBuilder = GeneralUtility::makeInstance(ConnectionPool::class)

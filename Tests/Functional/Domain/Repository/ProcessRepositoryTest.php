@@ -209,10 +209,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
             ->select('*')
             ->from(ProcessRepository::TABLE_NAME)
             ->where(
-                $queryBuilder->expr()->eq(
-                    'process_id',
-                    $queryBuilder->createNamedParameter($processId, \PDO::PARAM_STR)
-                )
+                $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId))
             )->executeQuery()->fetchAssociative();
     }
 }
