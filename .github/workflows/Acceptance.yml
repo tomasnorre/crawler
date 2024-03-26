@@ -58,6 +58,7 @@ jobs:
           sed -i 's/php_version: "8.1"/php_version: "${{ matrix.php }}"/g' .ddev/config.yaml
           sed -i "s|$FROM_PATH|$TO_PATH|g" .ddev/docker-compose.volume.yaml
           ddev restart
+          ddev composer remove georgringer/news
           rm -rf vendor composer.lock
           ddev composer require typo3/cms-core=${{ matrix.typo3 }} tomasnorre/crawler=dev-$BRANCH_NAME
           ddev exec sudo apt remove -y php${{ matrix.php }}-uploadprogress
