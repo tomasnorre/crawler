@@ -178,12 +178,11 @@ class QueueRepository extends Repository implements LoggerAwareInterface
      * Determines if a page is queued
      */
     public function isPageInQueue(
-        int  $uid,
+        int $uid,
         bool $unprocessed_only = true,
         bool $timed_only = false,
-        int  $timestamp = 0
-    ): bool
-    {
+        int $timestamp = 0
+    ): bool {
         $isPageInQueue = false;
 
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
@@ -332,7 +331,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
                 )
             )
             ->set('process_scheduled', '0')
-            ->set('process_id', '')
+            ->set('process_id', '0')
             ->executeStatement();
     }
 
@@ -342,10 +341,9 @@ class QueueRepository extends Repository implements LoggerAwareInterface
      * If there is none, we can skip an inner detail check
      */
     public function noUnprocessedQueueEntriesForPageWithConfigurationHashExist(
-        int    $uid,
+        int $uid,
         string $configurationHash
-    ): bool
-    {
+    ): bool {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
         $noUnprocessedQueueEntriesFound = true;
 
@@ -396,13 +394,12 @@ class QueueRepository extends Repository implements LoggerAwareInterface
     }
 
     public function getDuplicateQueueItemsIfExists(
-        bool   $enableTimeslot,
-        int    $timestamp,
-        int    $currentTime,
-        int    $pageId,
+        bool $enableTimeslot,
+        int $timestamp,
+        int $currentTime,
+        int $pageId,
         string $parametersHash
-    ): array
-    {
+    ): array {
         $rows = [];
 
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
