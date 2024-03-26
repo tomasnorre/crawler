@@ -166,7 +166,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ->count('*')
             ->from(self::TABLE_NAME)
             ->where(
-                $queryBuilder->expr()->neq('process_id', 0),
+                $queryBuilder->expr()->neq('process_id', $queryBuilder->createNamedParameter(0, Connection::PARAM_INT)),
                 $queryBuilder->expr()->eq('exec_time', 0),
                 $queryBuilder->expr()->lte('scheduled', time())
             )
@@ -324,21 +324,21 @@ class QueueRepository extends Repository implements LoggerAwareInterface
         $queryBuilder
             ->update(self::TABLE_NAME)
             ->where(
-                $queryBuilder->expr()->eq('exec_time', 0),
+                $queryBuilder->expr()->eq('exec_time', $queryBuilder->createNamedParameter(0, Connection::PARAM_INT)),
                 $queryBuilder->expr()->in(
                     'process_id',
-                    $queryBuilder->createNamedParameter($processIds, ArrayParameterType::STRING)
+                    $queryBuilder->createNamedParameter($processIds, ArrayParameterType::INTEGER)
                 )
             )
             ->set('process_scheduled', '0')
-            ->set('process_id', '')
+            ->set('process_id', '0')
             ->executeStatement();
     }
 
     /**
      * This method is used to count if there are ANY unprocessed queue entries
      * of a given page_id and the configuration which matches a given hash.
-     * If there if none, we can skip an inner detail check
+     * If there is none, we can skip an inner detail check
      */
     public function noUnprocessedQueueEntriesForPageWithConfigurationHashExist(
         int $uid,
