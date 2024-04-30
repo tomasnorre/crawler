@@ -26,7 +26,7 @@ hooks:
     - exec: /var/www/html/bin/typo3 cache:flush
     - exec: /var/www/html/bin/typo3 cache:warmup
     - exec: /var/www/html/bin/typo3 backend:unlock
-omit_containers: [ dba, ddev-ssh-agent ]
+omit_containers: [ db, ddev-ssh-agent ]
 webimage_extra_packages: [ cron ]
 use_dns_when_possible: true
 timezone: Europe/Copenhagen
