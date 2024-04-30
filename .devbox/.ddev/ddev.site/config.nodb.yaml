@@ -1,1 +1,1 @@
-omit_containers: [ db, ddev-ssh-agent ]
+omit_containers: [ ddev-ssh-agent ]
