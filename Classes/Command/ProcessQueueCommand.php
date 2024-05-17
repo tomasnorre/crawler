@@ -71,7 +71,6 @@ class ProcessQueueCommand extends Command
      *
      * --- Will trigger the crawler which starts to process the queue entries
      * $ typo3 crawler:crawlQueue
-     *
      */
     public function execute(InputInterface $input, OutputInterface $output): int
     {
