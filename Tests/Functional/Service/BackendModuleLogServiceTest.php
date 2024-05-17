@@ -230,7 +230,7 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
                     'feUserGroupList' => '',
                     'procInstructions' => '',
                     'set_id' => '987654',
-                    'scheduled' => date('d-m-y H:i', $scheduled),
+                    'scheduled' => date('Y-m-d H:i', $scheduled),
                     'exec_time' => '-',
                 ],
             ]], []],
@@ -337,7 +337,7 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
                     ],
                 ],
                 [
-                    'scheduled' => '01-01-70 00:00',
+                    'scheduled' => '1970-01-01 00:00',
                     'exec_time' => '-',
                     'result_status' => '-',
                     'url' => '<a href="/" target="_newWIndow">/</a>',
