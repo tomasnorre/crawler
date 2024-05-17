@@ -45,6 +45,7 @@
 * !!! PHP support for `<8.1` (Only in main branch, v12.0.0)
 * Remove CLI_hooks from ProcessQueueCommand
 * !!! ClassAliasMap & LegacyClassesForIde Migrations
+* !!! Remove Symfony Components `<6.4` from composer.json
 
 #### Classes
 * !!! AbstractCommandTests
