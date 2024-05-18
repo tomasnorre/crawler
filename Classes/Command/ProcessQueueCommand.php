@@ -71,10 +71,8 @@ class ProcessQueueCommand extends Command
      *
      * --- Will trigger the crawler which starts to process the queue entries
      * $ typo3 crawler:crawlQueue
-     *
-     * @return int
      */
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $amount = $input->getOption('amount');
         $sleeptime = $input->getOption('sleeptime');
