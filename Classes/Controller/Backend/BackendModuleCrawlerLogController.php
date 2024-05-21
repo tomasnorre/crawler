@@ -66,15 +66,14 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
     private mixed $queueId;
 
     public function __construct(
-        private readonly QueueRepository               $queueRepository,
-        private readonly CsvWriterInterface            $csvWriter,
-        private readonly JsonCompatibilityConverter    $jsonCompatibilityConverter,
-        private readonly IconFactory                   $iconFactory,
-        private readonly CrawlerController             $crawlerController,
-        private readonly BackendModuleLogService       $backendModuleLogService,
+        private readonly QueueRepository $queueRepository,
+        private readonly CsvWriterInterface $csvWriter,
+        private readonly JsonCompatibilityConverter $jsonCompatibilityConverter,
+        private readonly IconFactory $iconFactory,
+        private readonly CrawlerController $crawlerController,
+        private readonly BackendModuleLogService $backendModuleLogService,
         private readonly BackendModuleScriptUrlService $backendModuleScriptUrlService,
-    )
-    {
+    ) {
         $this->backendModuleMenu = $this->getModuleMenu();
     }
 
