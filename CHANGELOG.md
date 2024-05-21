@@ -1,6 +1,7 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 12.0.0-dev
+## Crawler 12.0.0
+Crawler 12.0.0 was release on April 21st, 2024
 
 ### Added
 * AbstractBackendModuleController
