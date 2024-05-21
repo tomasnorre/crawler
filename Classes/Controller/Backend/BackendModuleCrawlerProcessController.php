@@ -72,9 +72,11 @@ final class BackendModuleCrawlerProcessController extends AbstractBackendModuleC
             MessageUtility::addErrorMessage($e->getMessage());
         }
 
-        $mode = $request->getParsedBody()['processListMode'] ?? $request->getQueryParams()['processListMode'] ?? 'simple';
+        $mode = $this->getParsedBody(
+            $request
+        )['processListMode'] ?? $request->getQueryParams()['processListMode'] ?? 'simple';
         $allProcesses = $mode === 'simple' ? $this->processRepository->findAllActive() : $this->processRepository->findAll();
-        $isCrawlerEnabled = ! $this->crawler->isDisabled() && ! $this->isErrorDetected;
+        $isCrawlerEnabled = !$this->crawler->isDisabled() && !$this->isErrorDetected;
         $currentActiveProcesses = $this->processRepository->findAllActive()->count();
         $maxActiveProcesses = MathUtility::forceIntegerInRange($this->extensionSettings['processLimit'], 1, 99, 1);
 
@@ -111,7 +113,7 @@ final class BackendModuleCrawlerProcessController extends AbstractBackendModuleC
      */
     private function handleProcessOverviewActions(ServerRequestInterface $request): void
     {
-        $action = $request->getParsedBody()['action'] ?? $request->getQueryParams()['action'] ?? null;
+        $action = $this->getParsedBody($request)['action'] ?? $request->getQueryParams()['action'] ?? null;
 
         switch ($action) {
             case 'stopCrawling':

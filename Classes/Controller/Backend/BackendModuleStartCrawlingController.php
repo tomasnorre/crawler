@@ -77,16 +77,22 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
     {
         $logUrl = $this->backendUriBuilder->buildUriFromRoute('web_site_crawler_log', ['id' => $this->pageUid]);
 
-        $crawlingDepth = $request->getParsedBody()['crawlingDepth'] ?? $request->getQueryParams()['crawlingDepth'] ?? '0';
-        $crawlParameter = $request->getParsedBody()['_crawl'] ?? $request->getQueryParams()['_crawl'] ?? null;
-        $downloadParameter = $request->getParsedBody()['_download'] ?? $request->getQueryParams()['_download'] ?? null;
+        $crawlingDepth = $this->getParsedBody(
+            $request
+        )['crawlingDepth'] ?? $request->getQueryParams()['crawlingDepth'] ?? '0';
+        $crawlParameter = $this->getParsedBody($request)['_crawl'] ?? $request->getQueryParams()['_crawl'] ?? null;
+        $downloadParameter = $this->getParsedBody(
+            $request
+        )['_download'] ?? $request->getQueryParams()['_download'] ?? null;
         $scheduledTime = $this->getScheduledTime(
-            (string) ($request->getParsedBody()['tstamp'] ?? $request->getQueryParams()['tstamp'] ?? null)
+            (string) ($this->getParsedBody($request)['tstamp'] ?? $request->getQueryParams()['tstamp'] ?? null)
         );
         $submitCrawlUrls = isset($crawlParameter);
         $downloadCrawlUrls = isset($downloadParameter);
 
-        $this->incomingConfigurationSelection = $request->getParsedBody()['configurationSelection'] ?? $request->getQueryParams()['configurationSelection'] ?? null;
+        $this->incomingConfigurationSelection = $this->getParsedBody(
+            $request
+        )['configurationSelection'] ?? $request->getQueryParams()['configurationSelection'] ?? null;
         $this->incomingConfigurationSelection = is_array(
             $this->incomingConfigurationSelection
         ) ? $this->incomingConfigurationSelection : [];
@@ -212,7 +218,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
                 ),
             ],
             'tstamp',
-            $request->getParsedBody()['tstamp'] ?? null,
+            $this->getParsedBody($request)['tstamp'] ?? null,
             false
         );
 

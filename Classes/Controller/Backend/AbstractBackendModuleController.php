@@ -65,7 +65,7 @@ abstract class AbstractBackendModuleController
 
     protected function makeCrawlerProcessableChecks(array $extensionSettings): void
     {
-        if (! $this->isPhpForkAvailable()) {
+        if (!$this->isPhpForkAvailable()) {
             $this->isErrorDetected = true;
             MessageUtility::addErrorMessage(
                 $this->getLanguageService()->sL(
@@ -160,6 +160,15 @@ abstract class AbstractBackendModuleController
     protected function getBackendUserAuthentication(): BackendUserAuthentication
     {
         return $GLOBALS['BE_USER'];
+    }
+
+    protected function getParsedBody(ServerRequestInterface $request): array
+    {
+        if (is_array($request->getParsedBody())) {
+            return $request->getParsedBody();
+        }
+
+        return [];
     }
 
     /**

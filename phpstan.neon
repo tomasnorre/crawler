@@ -15,8 +15,12 @@ parameters:
         - Classes/CrawlStrategy/GuzzleExecutionStrategy.php
 
     inferPrivatePropertyTypeFromConstructor: true
-    checkMissingIterableValueType: false
-    checkGenericClassInNonGenericObjectType: false
+
+    ignoreErrors:
+        -
+            identifier: missingType.iterableValue
+        -
+            identifier: missingType.generics
 
     # composer require tomasvotruba/cognitive-complexity --dev
     cognitive_complexity:
