@@ -36,6 +36,11 @@ class ProcessServiceTest extends UnitTestCase
 {
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     #[\PHPUnit\Framework\Attributes\Test]
     public function startProcess(): void
     {
@@ -70,7 +75,7 @@ class ProcessServiceTest extends UnitTestCase
         $mockedProcessRepository
             ->expects($this->exactly(11))
             ->method('countNotTimeouted')
-            ->will($this->onConsecutiveCalls(1, 1,1,1,1,1,1,1,1,1,1,1));
+            ->will($this->onConsecutiveCalls(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1));
 
         $processService = $this->getAccessibleMock(
             ProcessService::class,

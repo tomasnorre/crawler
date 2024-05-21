@@ -33,6 +33,11 @@ class ModifySkipPageEventTest extends UnitTestCase
         $this->subject = new ModifySkipPageEvent(['dummy' => 'array']);
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     #[\PHPUnit\Framework\Attributes\Test]
     public function defaultValueTest(): void
     {

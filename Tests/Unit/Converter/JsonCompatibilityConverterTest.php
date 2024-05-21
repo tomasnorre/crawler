@@ -35,6 +35,11 @@ class JsonCompatibilityConverterTest extends UnitTestCase
         $this->subject = GeneralUtility::makeInstance(JsonCompatibilityConverter::class);
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     #[\PHPUnit\Framework\Attributes\DataProvider('jsonCompatibilityConverterDataProvider')]
     #[\PHPUnit\Framework\Attributes\Test]
     public function jsonCompatibilityConverterTest(string $dataString, array|bool $expected): void
