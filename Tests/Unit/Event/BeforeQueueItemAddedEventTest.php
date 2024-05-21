@@ -35,6 +35,11 @@ class BeforeQueueItemAddedEventTest extends UnitTestCase
         $this->subject = new BeforeQueueItemAddedEvent($queueId, $queueRecord);
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     #[\PHPUnit\Framework\Attributes\Test]
     public function defaultValueTest(): void
     {

@@ -50,6 +50,11 @@ class GuzzleExecutionStrategyTest extends UnitTestCase
             ->willReturn($response);
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
+    }
+
     #[\PHPUnit\Framework\Attributes\Test]
     public function fetchUrlContents(): void
     {

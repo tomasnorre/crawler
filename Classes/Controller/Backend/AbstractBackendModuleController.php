@@ -65,7 +65,7 @@ abstract class AbstractBackendModuleController
 
     protected function makeCrawlerProcessableChecks(array $extensionSettings): void
     {
-        if (! $this->isPhpForkAvailable()) {
+        if (!$this->isPhpForkAvailable()) {
             $this->isErrorDetected = true;
             MessageUtility::addErrorMessage(
                 $this->getLanguageService()->sL(

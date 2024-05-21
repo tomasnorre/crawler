@@ -25,6 +25,8 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 #[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Domain\Model\Reason::class)]
 class ReasonTest extends UnitTestCase
 {
+    protected bool $resetSingletonInstances = true;
+
     protected function setUp(): void
     {
         parent::setUp();

@@ -25,12 +25,18 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 #[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Event\ModifySkipPageEvent::class)]
 class ModifySkipPageEventTest extends UnitTestCase
 {
+    protected bool $resetSingletonInstances = true;
     private ModifySkipPageEvent $subject;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->subject = new ModifySkipPageEvent(['dummy' => 'array']);
+    }
+
+    protected function tearDown(): void
+    {
+        $this->resetSingletonInstances = true;
     }
 
     #[\PHPUnit\Framework\Attributes\Test]

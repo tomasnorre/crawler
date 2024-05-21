@@ -74,6 +74,7 @@ class CrawlerControllerTest extends UnitTestCase
     protected function tearDown(): void
     {
         unset($this->crawlerController);
+        $this->resetSingletonInstances = true;
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('drawURLs_PIfilterDataProvider')]

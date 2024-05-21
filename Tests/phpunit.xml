@@ -16,7 +16,7 @@
          failOnRisky="false"
          failOnWarning="false"
          requireCoverageMetadata="true"
-         executionOrder="default"
+         executionOrder="random"
 >
     <testsuites>
         <testsuite name="Unit tests">

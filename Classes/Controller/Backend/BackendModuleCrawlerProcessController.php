@@ -74,7 +74,7 @@ final class BackendModuleCrawlerProcessController extends AbstractBackendModuleC
 
         $mode = $request->getParsedBody()['processListMode'] ?? $request->getQueryParams()['processListMode'] ?? 'simple';
         $allProcesses = $mode === 'simple' ? $this->processRepository->findAllActive() : $this->processRepository->findAll();
-        $isCrawlerEnabled = ! $this->crawler->isDisabled() && ! $this->isErrorDetected;
+        $isCrawlerEnabled = !$this->crawler->isDisabled() && !$this->isErrorDetected;
         $currentActiveProcesses = $this->processRepository->findAllActive()->count();
         $maxActiveProcesses = MathUtility::forceIntegerInRange($this->extensionSettings['processLimit'], 1, 99, 1);
 

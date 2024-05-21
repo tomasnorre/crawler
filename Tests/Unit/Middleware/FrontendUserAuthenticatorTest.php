@@ -32,6 +32,7 @@ class FrontendUserAuthenticatorTest extends UnitTestCase
     use ProphecyTrait;
 
     protected \TYPO3\TestingFramework\Core\AccessibleObjectInterface|\PHPUnit\Framework\MockObject\MockObject $subject;
+    protected bool $resetSingletonInstances = true;
 
     protected function setUp(): void
     {

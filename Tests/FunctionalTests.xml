@@ -16,6 +16,7 @@
      failOnRisky="false"
      failOnWarning="false"
      requireCoverageMetadata="false"
+     executionOrder="random"
 >
     <testsuites>
         <testsuite name="Functional tests">
