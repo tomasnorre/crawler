@@ -25,6 +25,7 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 #[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Event\AfterUrlCrawledEvent::class)]
 class AfterUrlCrawledEventTest extends UnitTestCase
 {
+    protected bool $resetSingletonInstances = true;
     private AfterUrlCrawledEvent $subject;
 
     protected function setUp(): void

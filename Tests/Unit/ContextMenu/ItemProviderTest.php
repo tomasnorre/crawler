@@ -27,6 +27,7 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 #[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\ContextMenu\ItemProvider::class)]
 class ItemProviderTest extends UnitTestCase
 {
+    protected bool $resetSingletonInstances = true;
     /**
      * @var BackendUserAuthentication|null
      */
