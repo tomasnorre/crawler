@@ -46,11 +46,6 @@ parameters:
 			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
 
 		-
-			message: "#^Cannot access offset 'id' on array\\|object\\.$#"
-			count: 1
-			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
-
-		-
 			message: "#^Cannot access offset 'itemsPerPage' on array\\|object\\.$#"
 			count: 1
 			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
