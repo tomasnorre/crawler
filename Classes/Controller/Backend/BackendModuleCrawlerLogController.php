@@ -66,14 +66,15 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
     private mixed $queueId;
 
     public function __construct(
-        private readonly QueueRepository $queueRepository,
-        private readonly CsvWriterInterface $csvWriter,
-        private readonly JsonCompatibilityConverter $jsonCompatibilityConverter,
-        private readonly IconFactory $iconFactory,
-        private readonly CrawlerController $crawlerController,
-        private readonly BackendModuleLogService $backendModuleLogService,
+        private readonly QueueRepository               $queueRepository,
+        private readonly CsvWriterInterface            $csvWriter,
+        private readonly JsonCompatibilityConverter    $jsonCompatibilityConverter,
+        private readonly IconFactory                   $iconFactory,
+        private readonly CrawlerController             $crawlerController,
+        private readonly BackendModuleLogService       $backendModuleLogService,
         private readonly BackendModuleScriptUrlService $backendModuleScriptUrlService,
-    ) {
+    )
+    {
         $this->backendModuleMenu = $this->getModuleMenu();
     }
 
@@ -298,7 +299,7 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
 
     private function setPropertiesBasedOnPostVars(ServerRequestInterface $request): void
     {
-        $this->pageUid = (int) ($request->getParsedBody()['id'] ?? -1);
+        $this->pageUid = (int) ($request->getQueryParams()['id'] ?? -1);
         $this->setId = (int) ($request->getParsedBody()['setID'] ?? $request->getQueryParams()['setID'] ?? 0);
         $quidDetails = $request->getParsedBody()['qid_details'] ?? $request->getQueryParams()['qid_details'] ?? null;
         $this->quiPath = $quidDetails ? '&qid_details=' . (int) $quidDetails : '';

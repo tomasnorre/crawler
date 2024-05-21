@@ -162,15 +162,6 @@ abstract class AbstractBackendModuleController
         return $GLOBALS['BE_USER'];
     }
 
-    protected function getParsedBody(ServerRequestInterface $request): array
-    {
-        if (is_array($request->getParsedBody())) {
-            return $request->getParsedBody();
-        }
-
-        return [];
-    }
-
     /**
      * Indicate that the required PHP method "popen" is
      * available in the system.
