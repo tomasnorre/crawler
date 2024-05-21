@@ -132,14 +132,12 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
     private function assignValues(ServerRequestInterface $request): ModuleTemplate
     {
         // Look for set ID sent - if it is, we will display contents of that set:
-        $this->showSetId = (int) ($this->getParsedBody($request)['setID'] ?? $request->getQueryParams()['setID'] ?? 0);
-        $this->CSVExport = (bool) ($this->getParsedBody(
-            $request
-        )['_csv'] ?? $request->getQueryParams()['_csv'] ?? false);
+        $this->showSetId = (int) ($request->getParsedBody()['setID'] ?? $request->getQueryParams()['setID'] ?? 0);
+        $this->CSVExport = (bool) ($request->getParsedBody()['_csv'] ?? $request->getQueryParams()['_csv'] ?? false);
         $logEntriesPerPage = [];
         $csvData = [];
 
-        $quidRead = (int) ($this->getParsedBody($request)['qid_read'] ?? $request->getQueryParams()['qid_read'] ?? 0);
+        $quidRead = (int) ($request->getParsedBody()['qid_read'] ?? $request->getQueryParams()['qid_read'] ?? 0);
         if ($quidRead) {
             $this->crawlerController->readUrl($quidRead, true);
         }
@@ -175,9 +173,9 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
             }
 
             // If Flush button is pressed, flush tables instead of selecting entries:
-            if ($this->getParsedBody($request)['_flush'] ?? false) {
+            if ($request->getParsedBody()['_flush'] ?? false) {
                 $doFlush = true;
-            } elseif ($this->getParsedBody($request)['_flush_all'] ?? false) {
+            } elseif ($request->getParsedBody()['_flush_all'] ?? false) {
                 $doFlush = true;
                 $this->logDisplay = 'all';
             } else {
@@ -202,7 +200,7 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
 
                 [$logEntriesPerPage[], $row] = $this->backendModuleLogService->addRows(
                     $logEntriesOfPage,
-                    (int) ($this->getParsedBody($request)['setID'] ?? $request->getQueryParams()['setID'] ?? 0),
+                    (int) ($request->getParsedBody()['setID'] ?? $request->getQueryParams()['setID'] ?? 0),
                     $data['HTML'] . BackendUtility::getRecordTitle('pages', $data['row'], true),
                     $this->showResultLog,
                     $this->showFeVars,
@@ -300,28 +298,16 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
 
     private function setPropertiesBasedOnPostVars(ServerRequestInterface $request): void
     {
-        $this->pageUid = (int) ($this->getParsedBody($request)['id'] ?? -1);
-        $this->setId = (int) ($this->getParsedBody($request)['setID'] ?? $request->getQueryParams()['setID'] ?? 0);
-        $quidDetails = $this->getParsedBody(
-            $request
-        )['qid_details'] ?? $request->getQueryParams()['qid_details'] ?? null;
+        $this->pageUid = (int) ($request->getParsedBody()['id'] ?? -1);
+        $this->setId = (int) ($request->getParsedBody()['setID'] ?? $request->getQueryParams()['setID'] ?? 0);
+        $quidDetails = $request->getParsedBody()['qid_details'] ?? $request->getQueryParams()['qid_details'] ?? null;
         $this->quiPath = $quidDetails ? '&qid_details=' . (int) $quidDetails : '';
         $this->queueId = $quidDetails ?? null;
-        $this->logDisplay = $this->getParsedBody(
-            $request
-        )['displayLog'] ?? $request->getQueryParams()['displayLog'] ?? 'all';
-        $this->itemsPerPage = (int) ($this->getParsedBody(
-            $request
-        )['itemsPerPage'] ?? $request->getQueryParams()['itemsPerPage'] ?? 10);
-        $this->showResultLog = (string) ($this->getParsedBody(
-            $request
-        )['ShowResultLog'] ?? $request->getQueryParams()['ShowResultLog'] ?? 0);
-        $this->showFeVars = (string) ($this->getParsedBody(
-            $request
-        )['ShowFeVars'] ?? $request->getQueryParams()['ShowFeVars'] ?? 0);
-        $this->logDepth = (string) ($this->getParsedBody(
-            $request
-        )['logDepth'] ?? $request->getQueryParams()['logDepth'] ?? 0);
+        $this->logDisplay = $request->getParsedBody()['displayLog'] ?? $request->getQueryParams()['displayLog'] ?? 'all';
+        $this->itemsPerPage = (int) ($request->getParsedBody()['itemsPerPage'] ?? $request->getQueryParams()['itemsPerPage'] ?? 10);
+        $this->showResultLog = (string) ($request->getParsedBody()['ShowResultLog'] ?? $request->getQueryParams()['ShowResultLog'] ?? 0);
+        $this->showFeVars = (string) ($request->getParsedBody()['ShowFeVars'] ?? $request->getQueryParams()['ShowFeVars'] ?? 0);
+        $this->logDepth = (string) ($request->getParsedBody()['logDepth'] ?? $request->getQueryParams()['logDepth'] ?? 0);
     }
 
     /**

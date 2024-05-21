@@ -16,9 +16,79 @@ parameters:
 			path: Classes/ContextMenu/ItemProvider.php
 
 		-
+			message: "#^Cannot access offset 'ShowFeVars' on array\\|object\\.$#"
+			count: 1
+			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
+
+		-
+			message: "#^Cannot access offset 'ShowResultLog' on array\\|object\\.$#"
+			count: 1
+			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
+
+		-
+			message: "#^Cannot access offset '_csv' on array\\|object\\.$#"
+			count: 1
+			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
+
+		-
+			message: "#^Cannot access offset '_flush' on array\\|object\\.$#"
+			count: 1
+			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
+
+		-
+			message: "#^Cannot access offset '_flush_all' on array\\|object\\.$#"
+			count: 1
+			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
+
+		-
+			message: "#^Cannot access offset 'displayLog' on array\\|object\\.$#"
+			count: 1
+			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
+
+		-
+			message: "#^Cannot access offset 'id' on array\\|object\\.$#"
+			count: 1
+			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
+
+		-
+			message: "#^Cannot access offset 'itemsPerPage' on array\\|object\\.$#"
+			count: 1
+			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
+
+		-
+			message: "#^Cannot access offset 'logDepth' on array\\|object\\.$#"
+			count: 1
+			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
+
+		-
 			message: "#^Cannot access offset 'parameters' on array\\<string, mixed\\>\\|false\\.$#"
 			count: 2
 			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
+
+		-
+			message: "#^Cannot access offset 'qid_details' on array\\|object\\.$#"
+			count: 1
+			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
+
+		-
+			message: "#^Cannot access offset 'qid_read' on array\\|object\\.$#"
+			count: 1
+			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
+
+		-
+			message: "#^Cannot access offset 'setID' on array\\|object\\.$#"
+			count: 3
+			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
+
+		-
+			message: "#^Cannot access offset 'action' on array\\|object\\.$#"
+			count: 1
+			path: Classes/Controller/Backend/BackendModuleCrawlerProcessController.php
+
+		-
+			message: "#^Cannot access offset 'processListMode' on array\\|object\\.$#"
+			count: 1
+			path: Classes/Controller/Backend/BackendModuleCrawlerProcessController.php
 
 		-
 			message: "#^Unable to resolve the template type T in call to method static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\)$#"
@@ -28,6 +98,31 @@ parameters:
 		-
 			message: "#^Call to function is_array\\(\\) with string will always evaluate to false\\.$#"
 			count: 1
+			path: Classes/Controller/Backend/BackendModuleStartCrawlingController.php
+
+		-
+			message: "#^Cannot access offset '_crawl' on array\\|object\\.$#"
+			count: 1
+			path: Classes/Controller/Backend/BackendModuleStartCrawlingController.php
+
+		-
+			message: "#^Cannot access offset '_download' on array\\|object\\.$#"
+			count: 1
+			path: Classes/Controller/Backend/BackendModuleStartCrawlingController.php
+
+		-
+			message: "#^Cannot access offset 'configurationSelect…' on array\\|object\\.$#"
+			count: 1
+			path: Classes/Controller/Backend/BackendModuleStartCrawlingController.php
+
+		-
+			message: "#^Cannot access offset 'crawlingDepth' on array\\|object\\.$#"
+			count: 1
+			path: Classes/Controller/Backend/BackendModuleStartCrawlingController.php
+
+		-
+			message: "#^Cannot access offset 'tstamp' on array\\|object\\.$#"
+			count: 2
 			path: Classes/Controller/Backend/BackendModuleStartCrawlingController.php
 
 		-
