@@ -25,6 +25,7 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 #[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Event\AfterQueueItemAddedEvent::class)]
 class AfterQueueItemAddedEventTest extends UnitTestCase
 {
+    protected bool $resetSingletonInstances = true;
     private AfterQueueItemAddedEvent $subject;
 
     protected function setUp(): void
@@ -33,11 +34,6 @@ class AfterQueueItemAddedEventTest extends UnitTestCase
         $queueId = 'qwerty';
         $fieldArray = ['field' => 'array'];
         $this->subject = new AfterQueueItemAddedEvent($queueId, $fieldArray);
-    }
-
-    protected function tearDown(): void
-    {
-        $this->resetSingletonInstances = true;
     }
 
     #[\PHPUnit\Framework\Attributes\Test]

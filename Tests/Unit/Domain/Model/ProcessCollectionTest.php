@@ -36,16 +36,12 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 class ProcessCollectionTest extends UnitTestCase
 {
     protected \AOE\Crawler\Domain\Model\ProcessCollection $subject;
+    protected bool $resetSingletonInstances = true;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->subject = new ProcessCollection();
-    }
-
-    protected function tearDown(): void
-    {
-        $this->resetSingletonInstances = true;
     }
 
     #[\PHPUnit\Framework\Attributes\Test]

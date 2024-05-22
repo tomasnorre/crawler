@@ -26,11 +26,7 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 class QueueFilterTest extends UnitTestCase
 {
     final public const VALID_VALUE = 'finished';
-
-    protected function tearDown(): void
-    {
-        $this->resetSingletonInstances = true;
-    }
+    protected bool $resetSingletonInstances = true;
 
     #[\PHPUnit\Framework\Attributes\Test]
     public function defaultValueConstructor(): void

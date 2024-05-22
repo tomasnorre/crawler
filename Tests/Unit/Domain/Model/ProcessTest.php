@@ -32,6 +32,7 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 class ProcessTest extends UnitTestCase
 {
     protected \AOE\Crawler\Domain\Model\Process $subject;
+    protected bool $resetSingletonInstances = true;
 
     protected function setUp(): void
     {
@@ -41,11 +42,6 @@ class ProcessTest extends UnitTestCase
         $this->subject->setProcessId('1234');
         $this->subject->setTtl(300);
         $this->subject->setAssignedItemsCount(20);
-    }
-
-    protected function tearDown(): void
-    {
-        $this->resetSingletonInstances = true;
     }
 
     #[\PHPUnit\Framework\Attributes\Test]

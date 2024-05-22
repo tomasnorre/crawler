@@ -38,6 +38,8 @@ class CrawlerControllerTest extends UnitTestCase
      */
     protected $crawlerController;
 
+    protected bool $resetSingletonInstances = true;
+
     /**
      * Creates the test environment.
      */
@@ -74,7 +76,6 @@ class CrawlerControllerTest extends UnitTestCase
     protected function tearDown(): void
     {
         unset($this->crawlerController);
-        $this->resetSingletonInstances = true;
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('drawURLs_PIfilterDataProvider')]

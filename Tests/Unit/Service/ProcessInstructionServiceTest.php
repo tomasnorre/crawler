@@ -24,17 +24,13 @@ use AOE\Crawler\Service\ProcessInstructionService;
 #[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Service\ProcessInstructionService::class)]
 class ProcessInstructionServiceTest extends \TYPO3\TestingFramework\Core\Unit\UnitTestCase
 {
+    protected bool $resetSingletonInstances = true;
     private ProcessInstructionService $processInstructionService;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->processInstructionService = new ProcessInstructionService();
-    }
-
-    protected function tearDown(): void
-    {
-        $this->resetSingletonInstances = true;
     }
 
     #[\PHPUnit\Framework\Attributes\Test]

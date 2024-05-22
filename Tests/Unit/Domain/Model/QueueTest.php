@@ -39,11 +39,7 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 class QueueTest extends UnitTestCase
 {
     protected ?\AOE\Crawler\Domain\Model\Queue $subject = null;
-
-    protected function tearDown(): void
-    {
-        $this->resetSingletonInstances = true;
-    }
+    protected bool $resetSingletonInstances = true;
 
     #[\PHPUnit\Framework\Attributes\Test]
     public function getterAndSettersTest(): void

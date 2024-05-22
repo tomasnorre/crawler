@@ -35,11 +35,7 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 class ProcessServiceTest extends UnitTestCase
 {
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
-
-    protected function tearDown(): void
-    {
-        $this->resetSingletonInstances = true;
-    }
+    protected bool $resetSingletonInstances = true;
 
     #[\PHPUnit\Framework\Attributes\Test]
     public function startProcess(): void

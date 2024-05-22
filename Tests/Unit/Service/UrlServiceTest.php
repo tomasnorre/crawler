@@ -29,6 +29,7 @@ class UrlServiceTest extends UnitTestCase
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     protected \AOE\Crawler\Service\UrlService $urlService;
+    protected bool $resetSingletonInstances = true;
 
     /**
      * Creates the test environment.
@@ -37,11 +38,6 @@ class UrlServiceTest extends UnitTestCase
     {
         parent::setUp();
         $this->urlService = GeneralUtility::makeInstance(UrlService::class);
-    }
-
-    protected function tearDown(): void
-    {
-        $this->resetSingletonInstances = true;
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('compileUrlsDataProvider')]

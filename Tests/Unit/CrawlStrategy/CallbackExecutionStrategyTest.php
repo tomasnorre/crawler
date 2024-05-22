@@ -27,10 +27,7 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 #[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy::class)]
 class CallbackExecutionStrategyTest extends UnitTestCase
 {
-    protected function tearDown(): void
-    {
-        $this->resetSingletonInstances = true;
-    }
+    protected bool $resetSingletonInstances = true;
 
     #[\PHPUnit\Framework\Attributes\Test]
     public function callbackExecutionStrategyTest(): void
