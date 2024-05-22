@@ -7,7 +7,6 @@
 /.dbimageExtra
 /.ddev-docker-*.yaml
 /.*downloads
-/.global_commands
 /.homeadditions
 /.importdb*
 /.sshimageBuild
