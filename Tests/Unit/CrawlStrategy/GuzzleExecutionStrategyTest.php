@@ -31,6 +31,8 @@ class GuzzleExecutionStrategyTest extends UnitTestCase
 {
     use ProphecyTrait;
 
+    protected bool $resetSingletonInstances = true;
+
     /**
      * @var GuzzleExecutionStrategy
      */
@@ -48,11 +50,6 @@ class GuzzleExecutionStrategyTest extends UnitTestCase
         $this->guzzleExecutionStrategy
             ->method('getResponse')
             ->willReturn($response);
-    }
-
-    protected function tearDown(): void
-    {
-        $this->resetSingletonInstances = true;
     }
 
     #[\PHPUnit\Framework\Attributes\Test]

@@ -27,17 +27,13 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 class JsonCompatibilityConverterTest extends UnitTestCase
 {
     protected \AOE\Crawler\Converter\JsonCompatibilityConverter $subject;
+    protected bool $resetSingletonInstances = true;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->subject = GeneralUtility::makeInstance(JsonCompatibilityConverter::class);
-    }
-
-    protected function tearDown(): void
-    {
-        $this->resetSingletonInstances = true;
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('jsonCompatibilityConverterDataProvider')]

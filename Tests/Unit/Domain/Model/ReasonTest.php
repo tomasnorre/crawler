@@ -35,7 +35,6 @@ class ReasonTest extends UnitTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
-        $this->resetSingletonInstances = true;
     }
 
     #[\PHPUnit\Framework\Attributes\Test]

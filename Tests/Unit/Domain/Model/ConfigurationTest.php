@@ -26,16 +26,12 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 class ConfigurationTest extends UnitTestCase
 {
     protected \AOE\Crawler\Domain\Model\Configuration $subject;
+    protected bool $resetSingletonInstances = true;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->subject = $this->createPartialMock(Configuration::class, []);
-    }
-
-    protected function tearDown(): void
-    {
-        $this->resetSingletonInstances = true;
     }
 
     #[\PHPUnit\Framework\Attributes\Test]

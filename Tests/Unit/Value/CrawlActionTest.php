@@ -26,11 +26,7 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 class CrawlActionTest extends UnitTestCase
 {
     final public const VALID_VALUE = 'start';
-
-    protected function tearDown(): void
-    {
-        $this->resetSingletonInstances = true;
-    }
+    protected bool $resetSingletonInstances = true;
 
     #[\PHPUnit\Framework\Attributes\Test]
     public function toStringWithValidValueReturnsOriginalValue(): void

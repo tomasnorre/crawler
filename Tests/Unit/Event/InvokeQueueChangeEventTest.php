@@ -27,6 +27,7 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 #[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Event\InvokeQueueChangeEvent::class)]
 class InvokeQueueChangeEventTest extends UnitTestCase
 {
+    protected bool $resetSingletonInstances = true;
     private InvokeQueueChangeEvent $subject;
 
     protected function setUp(): void
@@ -36,11 +37,6 @@ class InvokeQueueChangeEventTest extends UnitTestCase
         $reason->setReason(Reason::REASON_CLI_SUBMIT);
         $reason->setDetailText('More detailed text');
         $this->subject = new InvokeQueueChangeEvent($reason);
-    }
-
-    protected function tearDown(): void
-    {
-        $this->resetSingletonInstances = true;
     }
 
     #[\PHPUnit\Framework\Attributes\Test]

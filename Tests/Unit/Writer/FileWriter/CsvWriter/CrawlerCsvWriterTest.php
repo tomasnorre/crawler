@@ -27,17 +27,13 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 class CrawlerCsvWriterTest extends UnitTestCase
 {
     protected \AOE\Crawler\Writer\FileWriter\CsvWriter\CrawlerCsvWriter $subject;
+    protected bool $resetSingletonInstances = true;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->subject = GeneralUtility::makeInstance(CrawlerCsvWriter::class);
-    }
-
-    protected function tearDown(): void
-    {
-        $this->resetSingletonInstances = true;
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
