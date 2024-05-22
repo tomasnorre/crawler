@@ -1,6 +1,8 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 11.0.8-dev
+## Crawler 11.0.8
+Crawler 11.0.8 was released on May 22nd, 2024
+
 ### Fixed
 * Fix loading middleware order to make forced indexing work again [@cweiske](https://github.com/cweiske)
 * Avoid deprecations in PHP 8.2
