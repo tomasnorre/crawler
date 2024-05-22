@@ -95,6 +95,14 @@ Crawler 12.0.0 was release on April 21st, 2024
 * !!! QueueRepository->getPerformanceData()
 * !!! QueueRepository->findByQueueId()
 
+## Crawler 11.0.8
+Crawler 11.0.8 was released on May 22nd, 2024
+
+### Fixed
+* Fix loading middleware order to make forced indexing work again [@cweiske](https://github.com/cweiske)
+* Avoid deprecations in PHP 8.2
+* Ensure that directory for lock file for enabling/disabling crawler exits
+
 ## Crawler 11.0.7
 Crawler 11.0.7 was released on November 18th, 2022
 
