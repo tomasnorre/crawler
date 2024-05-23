@@ -48,5 +48,5 @@ jobs:
           # To ensure compability with the roave tool.
           composer remove --dev typo3/testing-framework ssch/typo3-rector symplify/easy-coding-standard typo3/testing-framework
           rm -rf .Build composer.lock
-          composer require --dev roave/backward-compatibility-check:"6.0.x-dev"
+          composer require --dev roave/backward-compatibility-check:"^8.6"
           .Build/bin/roave-backward-compatibility-check
