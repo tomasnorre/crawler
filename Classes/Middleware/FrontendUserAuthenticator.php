@@ -44,9 +44,8 @@ class FrontendUserAuthenticator implements MiddlewareInterface
 
     public function __construct(
         private readonly QueryBuilder $queryBuilder,
-        ?Context                      $context = null
-    )
-    {
+        ?Context $context = null
+    ) {
         $this->context = $context ?? GeneralUtility::makeInstance(Context::class);
     }
 
@@ -107,11 +106,11 @@ class FrontendUserAuthenticator implements MiddlewareInterface
     private function isRequestHashMatchingQueueRecord(?array $queueRec, string $hash): bool
     {
         return is_array($queueRec) && hash_equals(
-                $hash,
-                md5(
-                    $queueRec['qid'] . '|' . $queueRec['set_id'] . '|' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']
-                )
-            );
+            $hash,
+            md5(
+                $queueRec['qid'] . '|' . $queueRec['set_id'] . '|' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']
+            )
+        );
     }
 
     /**
