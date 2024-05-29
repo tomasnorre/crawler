@@ -1,5 +1,13 @@
 # Changelog TYPO3 Crawler
 
+## Crawler 12.0.2
+
+Crawler 12.0.2 was released on May 29th, 2024
+
+### Fixed
+
+* Updated composer.json to have `prepare-release` to enable installations on non-composer projects
+
 ## Crawler 12.0.1
 
 Crawler 12.0.1 was released on May 29th, 2024

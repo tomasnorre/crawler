@@ -130,7 +130,7 @@
         "extension-create-libs": [
             "@composer install -d Resources/Private/Php/Libraries"
         ],
-        "extension-release": [
+        "prepare-release": [
             "@extension-create-libs",
             "rm -rf .devbox",
             "rm -rf Build",
