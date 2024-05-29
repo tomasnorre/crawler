@@ -44,8 +44,9 @@ class FrontendUserAuthenticator implements MiddlewareInterface
 
     public function __construct(
         private readonly QueryBuilder $queryBuilder,
-        ?Context $context = null
-    ) {
+        ?Context                      $context = null
+    )
+    {
         $this->context = $context ?? GeneralUtility::makeInstance(Context::class);
     }
 
@@ -69,7 +70,7 @@ class FrontendUserAuthenticator implements MiddlewareInterface
         $queueRec = $this->findByQueueId($queueId);
 
         // If a crawler record was found and hash was matching, set it up
-        if (! $this->isRequestHashMatchingQueueRecord($queueRec, $hash)) {
+        if (!$this->isRequestHashMatchingQueueRecord($queueRec, $hash)) {
             return GeneralUtility::makeInstance(ErrorController::class)->unavailableAction(
                 $request,
                 'No crawler entry found'
@@ -106,11 +107,11 @@ class FrontendUserAuthenticator implements MiddlewareInterface
     private function isRequestHashMatchingQueueRecord(?array $queueRec, string $hash): bool
     {
         return is_array($queueRec) && hash_equals(
-            $hash,
-            md5(
-                $queueRec['qid'] . '|' . $queueRec['set_id'] . '|' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']
-            )
-        );
+                $hash,
+                md5(
+                    $queueRec['qid'] . '|' . $queueRec['set_id'] . '|' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']
+                )
+            );
     }
 
     /**
@@ -121,6 +122,8 @@ class FrontendUserAuthenticator implements MiddlewareInterface
         /** @var FrontendUserAuthentication $frontendUser */
         $frontendUser = $request->getAttribute('frontend.user');
         $frontendUser->user[$frontendUser->usergroup_column] = '0,-2,' . $grList;
+        $frontendUser->user[$frontendUser->userid_column] = 0;
+        $frontendUser->user[$frontendUser->username_column] = '';
         $frontendUser->fetchGroupData($request);
         $frontendUser->user['uid'] = PHP_INT_MAX;
         return $frontendUser;
