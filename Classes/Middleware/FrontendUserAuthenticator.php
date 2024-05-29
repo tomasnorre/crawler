@@ -69,7 +69,7 @@ class FrontendUserAuthenticator implements MiddlewareInterface
         $queueRec = $this->findByQueueId($queueId);
 
         // If a crawler record was found and hash was matching, set it up
-        if (! $this->isRequestHashMatchingQueueRecord($queueRec, $hash)) {
+        if (!$this->isRequestHashMatchingQueueRecord($queueRec, $hash)) {
             return GeneralUtility::makeInstance(ErrorController::class)->unavailableAction(
                 $request,
                 'No crawler entry found'
@@ -121,6 +121,8 @@ class FrontendUserAuthenticator implements MiddlewareInterface
         /** @var FrontendUserAuthentication $frontendUser */
         $frontendUser = $request->getAttribute('frontend.user');
         $frontendUser->user[$frontendUser->usergroup_column] = '0,-2,' . $grList;
+        $frontendUser->user[$frontendUser->userid_column] = 0;
+        $frontendUser->user[$frontendUser->username_column] = '';
         $frontendUser->fetchGroupData($request);
         $frontendUser->user['uid'] = PHP_INT_MAX;
         return $frontendUser;
