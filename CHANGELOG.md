@@ -108,6 +108,14 @@ Crawler 12.0.0 was released on April 21st, 2024
 * !!! QueueRepository->getPerformanceData()
 * !!! QueueRepository->findByQueueId()
 
+## Crawler 11.0.9
+
+Crawler 11.0.9 was released on May 30th, 2024
+
+### Fixed
+
+* Updated composer.json to have prepare-release to enable installations on non-composer projects
+
 ## Crawler 11.0.8
 
 Crawler 11.0.8 was released on May 22nd, 2024
