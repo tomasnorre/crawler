@@ -8,6 +8,8 @@
 
 ### Fixed
 
+* Check queueRec before usages to avoid php-errors
+
 ### Deprecated
 
 #### Classes
