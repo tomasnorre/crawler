@@ -1,5 +1,13 @@
 # Changelog TYPO3 Crawler
 
+## Crawler 12.0.3
+
+Crawler 12.0.3 was released on May 30th, 2024
+
+### Fixed
+
+* CI is fixed for automated TER uploaded
+
 ## Crawler 12.0.2
 
 Crawler 12.0.2 was released on May 29th, 2024
