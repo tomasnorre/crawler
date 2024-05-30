@@ -45,7 +45,7 @@ class FrontendUserAuthenticatorTest extends UnitTestCase
     public function processRequestNotHandled(): void
     {
         $request = $this->prophesize(ServerRequestInterface::class);
-        $request->getHeaderLine('X-T3CRAWLER')->willReturn(null);
+        $request->getHeaderLine('X-T3CRAWLER')->willReturn('');
 
         $handlerResponse = new Response();
         $handler = $this->prophesize(RequestHandlerInterface::class);
