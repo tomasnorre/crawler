@@ -6,7 +6,7 @@
     "require": {
         "beberlei/assert": "^3.3",
         "guzzlehttp/guzzle": "^6.4.1 || ^7.2",
-        "psr/http-message": "^1.0",
+        "psr/http-message": "^2.0",
         "psr/log": "^1.0 || ^2.0 || ^3.0",
         "symfony/console": "^6.4 || ^7.0"
     }
