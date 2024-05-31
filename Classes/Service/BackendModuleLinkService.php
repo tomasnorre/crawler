@@ -46,7 +46,10 @@ class BackendModuleLinkService
             'actions-refresh',
             $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.refresh'),
             UrlBuilder::getBackendModuleUrl(
-                ['SET[\'crawleraction\']' => 'crawleraction', 'id' => $pageUid],
+                [
+                    'SET[\'crawleraction\']' => 'crawleraction',
+                    'id' => $pageUid,
+                ],
                 BackendModuleCrawlerProcessController::BACKEND_MODULE
             )
         );
@@ -72,7 +75,9 @@ class BackendModuleLinkService
                 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.process.add'
             ),
             UrlBuilder::getBackendModuleUrl(
-                ['action' => 'addProcess'],
+                [
+                    'action' => 'addProcess',
+                ],
                 BackendModuleCrawlerProcessController::BACKEND_MODULE
             )
         );
@@ -104,7 +109,9 @@ class BackendModuleLinkService
             'actions-document-view',
             $label,
             UrlBuilder::getBackendModuleUrl(
-                ['processListMode' => $linkMode],
+                [
+                    'processListMode' => $linkMode,
+                ],
                 BackendModuleCrawlerProcessController::BACKEND_MODULE
             )
         );
@@ -136,7 +143,9 @@ class BackendModuleLinkService
             $iconIdentifier,
             $label,
             UrlBuilder::getBackendModuleUrl(
-                ['action' => $action],
+                [
+                    'action' => $action,
+                ],
                 BackendModuleCrawlerProcessController::BACKEND_MODULE
             )
         );

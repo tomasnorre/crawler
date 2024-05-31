@@ -46,7 +46,9 @@ class GuzzleExecutionStrategy implements LoggerAwareInterface, CrawlStrategyInte
     {
         $reqHeaders = $this->buildRequestHeaders($crawlerId);
 
-        $options = ['headers' => $reqHeaders];
+        $options = [
+            'headers' => $reqHeaders,
+        ];
         if ($url->getUserInfo()) {
             $options['auth'] = explode(':', $url->getUserInfo());
         }
@@ -62,7 +64,9 @@ class GuzzleExecutionStrategy implements LoggerAwareInterface, CrawlStrategyInte
 
             $this->logger->debug(
                 sprintf('Error while opening "%s" - ' . $message, $url),
-                ['crawlerId' => $crawlerId]
+                [
+                    'crawlerId' => $crawlerId,
+                ]
             );
             return $message;
         } catch (ConnectException $e) {
@@ -70,7 +74,9 @@ class GuzzleExecutionStrategy implements LoggerAwareInterface, CrawlStrategyInte
 
             $this->logger->debug(
                 sprintf('Error while opening "%s" - ' . $message, $url),
-                ['crawlerId' => $crawlerId]
+                [
+                    'crawlerId' => $crawlerId,
+                ]
             );
             return $message;
         }

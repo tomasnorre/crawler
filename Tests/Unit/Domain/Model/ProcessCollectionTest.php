@@ -26,8 +26,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
- * Class ProcessCollectionTest
- *
  * @package AOE\Crawler\Tests\Unit\Domain\Model
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Domain\Model\ProcessCollection::class)]

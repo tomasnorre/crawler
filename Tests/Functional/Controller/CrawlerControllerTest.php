@@ -32,8 +32,6 @@ use TYPO3\TestingFramework\Core\AccessibleObjectInterface;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
- * Class CrawlerControllerTest
- *
  * @package AOE\Crawler\Tests\Functional\Controller
  */
 class CrawlerControllerTest extends FunctionalTestCase
@@ -157,33 +155,45 @@ class CrawlerControllerTest extends FunctionalTestCase
         yield 'Queue entry is NOT added, due to duplication check return not empty array (mocked)' => [
             'id' => 0,
             'url' => '',
-            'subCfg' => ['key' => 'some-key'],
+            'subCfg' => [
+                'key' => 'some-key',
+            ],
             'tstamp' => 1_563_287_062,
             'configurationHash' => '',
             'skipInnerDuplicationCheck' => false,
-            'mockedDuplicateRowResult' => ['duplicate-exists' => true],
+            'mockedDuplicateRowResult' => [
+                'duplicate-exists' => true,
+            ],
             'registerQueueEntriesInternallyOnly' => false,
             'expected' => false,
         ];
         yield 'Queue entry is added, due to duplication is ignored' => [
             'id' => 0,
             'url' => '',
-            'subCfg' => ['key' => 'some-key'],
+            'subCfg' => [
+                'key' => 'some-key',
+            ],
             'tstamp' => 1_563_287_062,
             'configurationHash' => '',
             'skipInnerDuplicationCheck' => true,
-            'mockedDuplicateRowResult' => ['duplicate-exists' => true],
+            'mockedDuplicateRowResult' => [
+                'duplicate-exists' => true,
+            ],
             'registerQueueEntriesInternallyOnly' => false,
             'expected' => true,
         ];
         yield 'Queue entry is NOT added, due to registerQueueEntriesInternalOnly' => [
             'id' => 0,
             'url' => '',
-            'subCfg' => ['key' => 'some-key'],
+            'subCfg' => [
+                'key' => 'some-key',
+            ],
             'tstamp' => 1_563_287_062,
             'configurationHash' => '',
             'skipInnerDuplicationCheck' => true,
-            'mockedDuplicateRowResult' => ['duplicate-exists' => true],
+            'mockedDuplicateRowResult' => [
+                'duplicate-exists' => true,
+            ],
             'registerQueueEntriesInternallyOnly' => true,
             'expected' => false,
         ];

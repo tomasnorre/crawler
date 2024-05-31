@@ -55,7 +55,9 @@ class FlushQueueCommandTest extends FunctionalTestCase
     #[\PHPUnit\Framework\Attributes\Test]
     public function flushQueueCommandTest(string $mode, string $expectedOutput, int $expectedCount): void
     {
-        $arguments = ['mode' => $mode];
+        $arguments = [
+            'mode' => $mode,
+        ];
         $this->commandTester->execute($arguments);
         $commandOutput = $this->commandTester->getDisplay();
 

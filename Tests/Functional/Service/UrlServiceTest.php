@@ -34,9 +34,30 @@ class UrlServiceTest extends FunctionalTestCase
      * @noRector \Rector\DeadCode\Rector\ClassConst\RemoveUnusedClassConstantRector
      */
     protected const LANGUAGE_PRESETS = [
-        'EN' => ['id' => 0, 'title' => 'English', 'locale' => 'en_US.UTF8', 'iso' => 'en', 'hrefLang' => 'en-US', 'direction' => ''],
-        'FR' => ['id' => 1, 'title' => 'French', 'locale' => 'fr_FR.UTF8', 'iso' => 'fr', 'hrefLang' => 'fr-FR', 'direction' => ''],
-        'FR-CA' => ['id' => 2, 'title' => 'Franco-Canadian', 'locale' => 'fr_CA.UTF8', 'iso' => 'fr', 'hrefLang' => 'fr-CA', 'direction' => ''],
+        'EN' => [
+            'id' => 0,
+            'title' => 'English',
+            'locale' => 'en_US.UTF8',
+            'iso' => 'en',
+            'hrefLang' => 'en-US',
+            'direction' => '',
+        ],
+        'FR' => [
+            'id' => 1,
+            'title' => 'French',
+            'locale' => 'fr_FR.UTF8',
+            'iso' => 'fr',
+            'hrefLang' => 'fr-FR',
+            'direction' => '',
+        ],
+        'FR-CA' => [
+            'id' => 2,
+            'title' => 'Franco-Canadian',
+            'locale' => 'fr_CA.UTF8',
+            'iso' => 'fr',
+            'hrefLang' => 'fr-CA',
+            'direction' => '',
+        ],
     ];
 
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];

@@ -27,8 +27,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
- * Class ProcessCleanUpHookTest
- *
  * @package AOE\Crawler\Tests\Functional\Hooks
  */
 class ProcessCleanUpHookTest extends FunctionalTestCase
@@ -133,12 +131,16 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         $expectedProcessesToBeRemoved = 1;
 
         $processCountBefore = $this->processRepository->findAll()->count();
-        $queueCountBefore = $this->queueRepository->findBy(['processId' => $existingProcessId])->count();
+        $queueCountBefore = $this->queueRepository->findBy([
+            'processId' => $existingProcessId,
+        ])->count();
 
         $this->subject->removeProcessFromProcesslist($existingProcessId);
 
         $processCountAfter = $this->processRepository->findAll()->count();
-        $queueCountAfter = $this->queueRepository->findBy(['processId' => $existingProcessId])->count();
+        $queueCountAfter = $this->queueRepository->findBy([
+            'processId' => $existingProcessId,
+        ])->count();
 
         self::assertEquals($processCountBefore - $expectedProcessesToBeRemoved, $processCountAfter);
 

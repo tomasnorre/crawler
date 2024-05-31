@@ -67,7 +67,9 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
         $this->makeCrawlerProcessableChecks($this->extensionSettings);
         $this->pageUid = (int) ($request->getQueryParams()['id'] ?? -1);
         $this->moduleTemplate = $this->setupView($request, $this->pageUid);
-        $this->moduleTemplate->makeDocHeaderModuleMenu(['id' => $request->getQueryParams()['id'] ?? -1]);
+        $this->moduleTemplate->makeDocHeaderModuleMenu([
+            'id' => $request->getQueryParams()['id'] ?? -1,
+        ]);
 
         $this->assignValues($request);
         return $this->moduleTemplate->renderResponse('Backend/ShowCrawlerInformation');
@@ -75,7 +77,9 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
 
     private function assignValues(ServerRequestInterface $request): ModuleTemplate
     {
-        $logUrl = $this->backendUriBuilder->buildUriFromRoute('web_site_crawler_log', ['id' => $this->pageUid]);
+        $logUrl = $this->backendUriBuilder->buildUriFromRoute('web_site_crawler_log', [
+            'id' => $this->pageUid,
+        ]);
 
         $crawlingDepth = $request->getParsedBody()['crawlingDepth'] ?? $request->getQueryParams()['crawlingDepth'] ?? '0';
         $crawlParameter = $request->getParsedBody()['_crawl'] ?? $request->getQueryParams()['_crawl'] ?? null;

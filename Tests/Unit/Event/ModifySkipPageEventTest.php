@@ -31,14 +31,18 @@ class ModifySkipPageEventTest extends UnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->subject = new ModifySkipPageEvent(['dummy' => 'array']);
+        $this->subject = new ModifySkipPageEvent([
+            'dummy' => 'array',
+        ]);
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
     public function defaultValueTest(): void
     {
         self::assertFalse($this->subject->isSkipped());
-        self::assertEquals(['dummy' => 'array'], $this->subject->getPageRow());
+        self::assertEquals([
+            'dummy' => 'array',
+        ], $this->subject->getPageRow());
     }
 
     #[\PHPUnit\Framework\Attributes\Test]

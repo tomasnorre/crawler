@@ -71,7 +71,9 @@ class QueueExecutorTest extends UnitTestCase
     public function executeQueueItemCallback(): void
     {
         $queueItem = [
-            'parameters' => serialize(['_CALLBACKOBJ' => CallbackObjectForTesting::class]),
+            'parameters' => serialize([
+                '_CALLBACKOBJ' => CallbackObjectForTesting::class,
+            ]),
         ];
         $result = $this->queueExecutor->executeQueueItem($queueItem, $this->mockedCrawlerController);
 

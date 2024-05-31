@@ -189,7 +189,7 @@ class ProcessQueueCommand extends Command
             $this->processRepository->updateProcessAssignItemsCount($numberOfAffectedRows, $this->processId);
 
             if ($numberOfAffectedRows !== count($quidList)) {
-                return ($result | self::CLI_STATUS_ABORTED);
+                return $result | self::CLI_STATUS_ABORTED;
             }
 
             foreach ($records as $record) {
@@ -202,7 +202,7 @@ class ProcessQueueCommand extends Command
                 // if during the start and the current read url the cli has been disable we need to return from the function
                 // mark the process NOT as ended.
                 if ($this->crawler->isDisabled()) {
-                    return ($result | self::CLI_STATUS_ABORTED);
+                    return $result | self::CLI_STATUS_ABORTED;
                 }
 
                 if (!$this->processRepository->isProcessActive($this->processId)) {

@@ -41,7 +41,7 @@ class CrawlerInitializationTest extends FunctionalTestCase
         $this->subject = GeneralUtility::makeInstance(CrawlerInitialization::class);
         $tsfe = $this->prophesize(TypoScriptFrontendController::class);
         $GLOBALS['TSFE'] = $tsfe->reveal();
-        $GLOBALS['TSFE']->id = random_int(0,10000);
+        $GLOBALS['TSFE']->id = random_int(0, 10000);
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('processSetsTSFEApplicationDataDataProvider')]

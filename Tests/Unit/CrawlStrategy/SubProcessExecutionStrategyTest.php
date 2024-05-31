@@ -58,7 +58,9 @@ class SubProcessExecutionStrategyTest extends UnitTestCase
         $logger = $this->prophesize(LoggerInterface::class);
         $logger->debug(
             'Scheme does not match for url "/not-an-url"',
-            ['crawlerId' => '2981d019ade833a37995c1b569ef87b6b5af7287']
+            [
+                'crawlerId' => '2981d019ade833a37995c1b569ef87b6b5af7287',
+            ]
         )->shouldBeCalledOnce();
 
         $crawlerId = sha1('this-is-testing');

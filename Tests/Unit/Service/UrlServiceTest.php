@@ -58,13 +58,17 @@ class UrlServiceTest extends UnitTestCase
             'expectedCount' => 3,
         ];
         yield 'Empty Urls array' => [
-            'paramArray' => ['pagination' => [1, 2, 3, 4]],
+            'paramArray' => [
+                'pagination' => [1, 2, 3, 4],
+            ],
             'urls' => [],
             'expected' => [],
             'expectedCount' => 0,
         ];
         yield 'Exactly number of URLs matches maximumUrlsToCompile' => [
-            'paramArray' => ['pagination' => [1, 2, 3, 4, 5]],
+            'paramArray' => [
+                'pagination' => [1, 2, 3, 4, 5],
+            ],
             'urls' => ['index.php?id=10', 'index.php?id=11'],
             'expected' => [
                 'index.php?id=10&pagination=1',
@@ -81,7 +85,9 @@ class UrlServiceTest extends UnitTestCase
             'expectedCount' => 10,
         ];
         yield 'More urls than maximumUrlsToCompile' => [
-            'paramArray' => ['pagination' => [1, 2, 3, 4, 5]],
+            'paramArray' => [
+                'pagination' => [1, 2, 3, 4, 5],
+            ],
             'urls' => ['index.php?id=10', 'index.php?id=11', 'index.php?id=12'],
             'expected' => [
                 'index.php?id=10&pagination=1',

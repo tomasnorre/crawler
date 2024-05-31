@@ -32,7 +32,9 @@ class BackendModuleScriptUrlService
         array $queryParameters,
         string $queryString = ''
     ): string {
-        $mainParams = ['id' => $pageUid];
+        $mainParams = [
+            'id' => $pageUid,
+        ];
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
         $route = $request->getAttribute('route');
         $scriptUrl = (string) $uriBuilder->buildUriFromRoute($route->getOption('_identifier'), $mainParams);

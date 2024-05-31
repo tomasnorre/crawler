@@ -226,7 +226,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
     private function getConfigurationKeys(string $conf): array
     {
         $parameter = trim($conf);
-        return ($parameter !== '' ? GeneralUtility::trimExplode(',', $parameter) : []);
+        return $parameter !== '' ? GeneralUtility::trimExplode(',', $parameter) : [];
     }
 
     private function outputUrls(array $queueRows, OutputInterface $output): void

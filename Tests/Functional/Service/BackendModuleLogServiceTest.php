@@ -281,7 +281,9 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
                     'parameters' => '{"url":"\/","procInstructions":[""],"procInstrParams":[]}',
                     'scheduled' => 0,
                     'set_id' => $setId,
-                    'result_data' => json_encode(['content' => 'sdafds']),
+                    'result_data' => json_encode([
+                        'content' => 'sdafds',
+                    ]),
                     'exec_time' => 0,
                 ],
             ],

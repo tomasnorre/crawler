@@ -26,8 +26,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
- * Class ProcessRepositoryTest
- *
  * @package AOE\Crawler\Tests\Functional\Domain\Repository
  */
 class ProcessRepositoryTest extends FunctionalTestCase
@@ -110,10 +108,22 @@ class ProcessRepositoryTest extends FunctionalTestCase
     public function getActiveProcessesOlderThanOneOHour(): void
     {
         $expected = [
-            ['process_id' => '1000', 'system_process_id' => 0],
-            ['process_id' => '1001', 'system_process_id' => 0],
-            ['process_id' => '1002', 'system_process_id' => 0],
-            ['process_id' => '1005', 'system_process_id' => 0],
+            [
+                'process_id' => '1000',
+                'system_process_id' => 0,
+            ],
+            [
+                'process_id' => '1001',
+                'system_process_id' => 0,
+            ],
+            [
+                'process_id' => '1002',
+                'system_process_id' => 0,
+            ],
+            [
+                'process_id' => '1005',
+                'system_process_id' => 0,
+            ],
         ];
 
         self::assertEquals($expected, $this->subject->getActiveProcessesOlderThanOneHour());
@@ -123,10 +133,22 @@ class ProcessRepositoryTest extends FunctionalTestCase
     public function getActiveOrphanProcesses(): void
     {
         $expected = [
-            ['process_id' => '1000', 'system_process_id' => 0],
-            ['process_id' => '1001', 'system_process_id' => 0],
-            ['process_id' => '1002', 'system_process_id' => 0],
-            ['process_id' => '1005', 'system_process_id' => 0],
+            [
+                'process_id' => '1000',
+                'system_process_id' => 0,
+            ],
+            [
+                'process_id' => '1001',
+                'system_process_id' => 0,
+            ],
+            [
+                'process_id' => '1002',
+                'system_process_id' => 0,
+            ],
+            [
+                'process_id' => '1005',
+                'system_process_id' => 0,
+            ],
         ];
 
         self::assertEquals($expected, $this->subject->getActiveOrphanProcesses());

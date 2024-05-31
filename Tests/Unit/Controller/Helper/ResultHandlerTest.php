@@ -43,29 +43,42 @@ class ResultHandlerTest extends UnitTestCase
             'expected' => '-',
         ];
         yield 'requestContent["content"] index does not exist' => [
-            'requestContent' => ['not-content' => 'value'],
+            'requestContent' => [
+                'not-content' => 'value',
+            ],
             'expected' => 'Content index does not exists in requestContent array',
         ];
         yield 'errorlog is present but empty' => [
-            'requestContent' => ['content' => json_encode(['errorlog' => []], JSON_THROW_ON_ERROR)],
+            'requestContent' => [
+                'content' => json_encode([
+                    'errorlog' => [],
+                ], JSON_THROW_ON_ERROR),
+            ],
             'expected' => 'OK',
         ];
         yield 'errorlog is present and not empty (1 Element)' => [
-            'requestContent' => ['content' => json_encode([
-                'errorlog' => ['500 Internal Server error'], ],
-                JSON_THROW_ON_ERROR
-            )],
+            'requestContent' => [
+                'content' => json_encode([
+                    'errorlog' => ['500 Internal Server error'],
+                ], JSON_THROW_ON_ERROR),
+            ],
             'expected' => '500 Internal Server error',
         ];
         yield 'errorlog is present and not empty (2 Element)' => [
-            'requestContent' => ['content' => json_encode([
-                'errorlog' => ['500 Internal Server Error', '503 Service Unavailable'], ],
-                JSON_THROW_ON_ERROR
-            )],
+            'requestContent' => [
+                'content' => json_encode(
+                    [
+                        'errorlog' => ['500 Internal Server Error', '503 Service Unavailable'],
+                    ],
+                    JSON_THROW_ON_ERROR
+                ),
+            ],
             'expected' => '500 Internal Server Error' . chr(10) . '503 Service Unavailable',
         ];
         yield 'requestResult is boolean' => [
-            'requestContent' => ['content' => 'This string is neither json or serialized, therefor convert returns false'],
+            'requestContent' => [
+                'content' => 'This string is neither json or serialized, therefor convert returns false',
+            ],
             'expected' => 'Error - no info, sorry!',
         ];
         // Missing test case for the return 'Error: ' (last return)
@@ -86,19 +99,25 @@ class ResultHandlerTest extends UnitTestCase
         ];
         yield 'result data does not contain vars' => [
             'resultData' => [
-                'content' => json_encode(['not-vars' => 'some value'], JSON_THROW_ON_ERROR),
+                'content' => json_encode([
+                    'not-vars' => 'some value',
+                ], JSON_THROW_ON_ERROR),
             ],
             'expected' => [],
         ];
         yield 'Result data vars is present by empty, therefore empty array is returned' => [
             'resultData' => [
-                'content' => json_encode(['vars' => []], JSON_THROW_ON_ERROR),
+                'content' => json_encode([
+                    'vars' => [],
+                ], JSON_THROW_ON_ERROR),
             ],
             'expected' => [],
         ];
         yield 'Result data vars is present and not empty' => [
             'resultData' => [
-                'content' => json_encode(['vars' => ['fe-one', 'fe-two']], JSON_THROW_ON_ERROR),
+                'content' => json_encode([
+                    'vars' => ['fe-one', 'fe-two'],
+                ], JSON_THROW_ON_ERROR),
             ],
             'expected' => ['fe-one', 'fe-two'],
         ];
@@ -128,14 +147,20 @@ class ResultHandlerTest extends UnitTestCase
         /* Bug We don't handle when result row doesn't contain content key */
         yield 'ResultRow key result_data exits, is not empty, but does not contain content key' => [
             'resultRow' => [
-                'result_data' => json_encode(['not-content' => 'value'], JSON_THROW_ON_ERROR),
+                'result_data' => json_encode([
+                    'not-content' => 'value',
+                ], JSON_THROW_ON_ERROR),
             ],
             'expected' => '',
         ];
         yield 'ResultRow key result_data exits and is not empty, does not contain log' => [
             'resultRow' => [
-                'result_data' => json_encode([
-                    'content' => json_encode(['not-log' => ['ok']], JSON_THROW_ON_ERROR), ],
+                'result_data' => json_encode(
+                    [
+                        'content' => json_encode([
+                            'not-log' => ['ok'],
+                        ], JSON_THROW_ON_ERROR),
+                    ],
                     JSON_THROW_ON_ERROR
                 ),
             ],
@@ -143,8 +168,12 @@ class ResultHandlerTest extends UnitTestCase
         ];
         yield 'ResultRow key result_data exits and is not empty, does contain log (1 element)' => [
             'resultRow' => [
-                'result_data' => json_encode([
-                    'content' => json_encode(['log' => ['ok']], JSON_THROW_ON_ERROR), ],
+                'result_data' => json_encode(
+                    [
+                        'content' => json_encode([
+                            'log' => ['ok'],
+                        ], JSON_THROW_ON_ERROR),
+                    ],
                     JSON_THROW_ON_ERROR
                 ),
             ],
@@ -152,8 +181,12 @@ class ResultHandlerTest extends UnitTestCase
         ];
         yield 'ResultRow key result_data exits and is not empty, does contain log (2 elements)' => [
             'resultRow' => [
-                'result_data' => json_encode([
-                    'content' => json_encode(['log' => ['ok', 'success']], JSON_THROW_ON_ERROR), ],
+                'result_data' => json_encode(
+                    [
+                        'content' => json_encode([
+                            'log' => ['ok', 'success'],
+                        ], JSON_THROW_ON_ERROR),
+                    ],
                     JSON_THROW_ON_ERROR
                 ),
             ],

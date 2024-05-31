@@ -35,7 +35,7 @@ class ResultHandler
         $content = '';
         if (is_array($resultRow) && array_key_exists('result_data', $resultRow)) {
             $requestContent = self::getJsonCompatibilityConverter()->convert($resultRow['result_data']) ?: [];
-            if (is_bool($requestContent) || ! array_key_exists('content', $requestContent)) {
+            if (is_bool($requestContent) || !array_key_exists('content', $requestContent)) {
                 return $content;
             }
             $requestResult = self::getJsonCompatibilityConverter()->convert($requestContent['content']);
@@ -52,7 +52,7 @@ class ResultHandler
         if (empty($requestContent)) {
             return '-';
         }
-        if (is_bool($requestContent) || ! array_key_exists('content', $requestContent)) {
+        if (is_bool($requestContent) || !array_key_exists('content', $requestContent)) {
             return 'Content index does not exists in requestContent array';
         }
 

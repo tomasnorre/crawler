@@ -26,8 +26,6 @@ use Psr\Log\NullLogger;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
- * Class CrawlerLibTest
- *
  * @package AOE\Crawler\Tests
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Controller\CrawlerController::class)]
@@ -92,7 +90,9 @@ class CrawlerControllerTest extends UnitTestCase
     public function getUrlsForPageRowSetsSkipMessageIfUidNotAnInteger(): void
     {
         $skipMessage = '';
-        $this->crawlerController->getUrlsForPageRow(['uid' => 'string'], $skipMessage);
+        $this->crawlerController->getUrlsForPageRow([
+            'uid' => 'string',
+        ], $skipMessage);
         self::assertEquals('PageUid "string" was not an integer', $skipMessage);
     }
 
@@ -156,28 +156,36 @@ class CrawlerControllerTest extends UnitTestCase
         yield 'Message equals false, returns Urls from getUrlsForPages()' => [
             'checkIfPageSkipped' => false,
             'getUrlsForPages' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
-            'pageRow' => ['uid' => 2001],
+            'pageRow' => [
+                'uid' => 2001,
+            ],
             '$skipMessage' => 'Just variable placeholder, not used in tests as parsed as reference',
             'expected' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
         ];
         yield 'Message string not empty, returns empty array' => [
             'checkIfPageSkipped' => true,
             'getUrlsForPages' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
-            'pageRow' => ['uid' => 2001],
+            'pageRow' => [
+                'uid' => 2001,
+            ],
             '$skipMessage' => 'Just variable placeholder, not used in tests as parsed as reference',
             'expected' => [],
         ];
         yield 'PageRow Uid is string with int value' => [
             'checkIfPageSkipped' => false,
             'getUrlsForPages' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
-            'pageRow' => ['uid' => '2001'],
+            'pageRow' => [
+                'uid' => '2001',
+            ],
             '$skipMessage' => 'Just variable placeholder, not used in tests as parsed as reference',
             'expected' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
         ];
         yield 'PageRow Uid is string with string value' => [
             'checkIfPageSkipped' => true,
             'getUrlsForPages' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
-            'pageRow' => ['uid' => 'string'],
+            'pageRow' => [
+                'uid' => 'string',
+            ],
             '$skipMessage' => 'PageUid "string" was not an integer',
             'expected' => [],
         ];
@@ -239,15 +247,26 @@ class CrawlerControllerTest extends UnitTestCase
     public function getConfigurationKeysDataProvider(): iterable
     {
         yield 'cliObject with no -conf' => [
-            'config' => ['-d' => 4, '-o' => 'url'],
+            'config' => [
+                '-d' => 4,
+                '-o' => 'url',
+            ],
             'expected' => [],
         ];
         yield 'cliObject with one -conf' => [
-            'config' => ['-d' => 4, '-o' => 'url', '-conf' => 'default'],
+            'config' => [
+                '-d' => 4,
+                '-o' => 'url',
+                '-conf' => 'default',
+            ],
             'expected' => ['default'],
         ];
         yield 'cliObject with two -conf' => [
-            'config' => ['-d' => 4, '-o' => 'url', '-conf' => 'default,news'],
+            'config' => [
+                '-d' => 4,
+                '-o' => 'url',
+                '-conf' => 'default,news',
+            ],
             'expected' => ['default', 'news'],
         ];
     }

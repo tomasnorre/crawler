@@ -73,7 +73,9 @@ class ConfigurationServiceTest extends UnitTestCase
                 'default' => 'configuration-text',
                 'news' => 'configuration-text',
             ],
-            'expected' => ['default' => 'configuration-text'],
+            'expected' => [
+                'default' => 'configuration-text',
+            ],
         ];
     }
 

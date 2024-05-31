@@ -32,7 +32,9 @@ class AfterQueueItemAddedEventTest extends UnitTestCase
     {
         parent::setUp();
         $queueId = 'qwerty';
-        $fieldArray = ['field' => 'array'];
+        $fieldArray = [
+            'field' => 'array',
+        ];
         $this->subject = new AfterQueueItemAddedEvent($queueId, $fieldArray);
     }
 
@@ -41,13 +43,17 @@ class AfterQueueItemAddedEventTest extends UnitTestCase
     {
         self::assertEquals('qwerty', $this->subject->getQueueId());
 
-        self::assertEquals(['field' => 'array'], $this->subject->getFieldArray());
+        self::assertEquals([
+            'field' => 'array',
+        ], $this->subject->getFieldArray());
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
     public function setterTest(): void
     {
-        $differentArray = ['different' => 'array'];
+        $differentArray = [
+            'different' => 'array',
+        ];
         $this->subject->setFieldArray($differentArray);
         self::assertEquals($differentArray, $this->subject->getFieldArray());
     }

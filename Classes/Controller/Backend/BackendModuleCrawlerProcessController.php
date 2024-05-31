@@ -55,7 +55,9 @@ final class BackendModuleCrawlerProcessController extends AbstractBackendModuleC
         $this->moduleTemplate = $this->setupView($request, $this->pageUid);
         $this->moduleTemplate->assign('currentPageId', $this->pageUid);
         $this->moduleTemplate = $this->moduleTemplate->makeDocHeaderModuleMenu(
-            ['id' => $request->getQueryParams()['id'] ?? -1]
+            [
+                'id' => $request->getQueryParams()['id'] ?? -1,
+            ]
         );
         $this->moduleTemplate = $this->assignValues($request);
         $this->runRefreshHooks();
