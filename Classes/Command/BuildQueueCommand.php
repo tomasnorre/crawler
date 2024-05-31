@@ -25,6 +25,7 @@ use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\InvokeQueueChangeEvent;
+use AOE\Crawler\Queue\Message\CrawlerMessage;
 use AOE\Crawler\Utility\MessageUtility;
 use AOE\Crawler\Value\QueueRow;
 use Symfony\Component\Console\Command\Command;
@@ -33,6 +34,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
@@ -42,6 +44,13 @@ use TYPO3\CMS\Core\Utility\MathUtility;
  */
 class BuildQueueCommand extends Command
 {
+    public function __construct(
+        private readonly MessageBusInterface $messageBus,
+        ?string                              $name = null)
+    {
+        parent::__construct($name);
+    }
+
     protected function configure(): void
     {
         $this->setDescription('Create entries in the queue that can be processed at once');
@@ -109,6 +118,8 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $this->messageBus->dispatch(new CrawlerMessage('from build queue command!!'));
+
         /** @var JsonCompatibilityConverter $jsonCompatibilityConverter */
         $jsonCompatibilityConverter = GeneralUtility::makeInstance(JsonCompatibilityConverter::class);
         $mode = $input->getOption('mode') ?? 'queue';

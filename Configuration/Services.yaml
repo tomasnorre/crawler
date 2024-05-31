@@ -1,96 +1,103 @@
 services:
-    _defaults:
-        autowire: true
-        autoconfigure: true
-        public: false
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
 
-    AOE\Crawler\:
-        resource: '../Classes/*'
+  AOE\Crawler\:
+    resource: '../Classes/*'
 
-    AOE\Crawler\Command\BuildQueueCommand:
-        tags:
-            - name: 'console.command'
-              command: 'crawler:buildQueue'
-              description: 'Create entries in the queue that can be processed at once'
+  AOE\Crawler\Queue\Handler\CrawlerHandler:
+    tags:
+      - name: 'messenger.message_handler'
 
-    AOE\Crawler\Command\FlushQueueCommand:
-        tags:
-            - name: 'console.command'
-              command: 'crawler:flushQueue'
-              description: 'Remove queue entries and perform a cleanup'
+  AOE\Crawler\Command\BuildQueueCommand:
+    arguments:
+      $messageBus: '@Symfony\Component\Messenger\MessageBusInterface'
+    public: true
+    tags:
+      - name: 'console.command'
+        command: 'crawler:buildQueue'
+        description: 'Create entries in the queue that can be processed at once'
 
-    queryBuilder.tx_crawler_configuration:
-        class: 'TYPO3\CMS\Core\Database\Query\QueryBuilder'
-        factory: [ '@TYPO3\CMS\Core\Database\ConnectionPool', 'getQueryBuilderForTable' ]
-        arguments: [ 'tx_crawler_configuration' ]
+  AOE\Crawler\Command\FlushQueueCommand:
+    tags:
+      - name: 'console.command'
+        command: 'crawler:flushQueue'
+        description: 'Remove queue entries and perform a cleanup'
 
-    queryBuilder.tx_crawler_process:
-        class: 'TYPO3\CMS\Core\Database\Query\QueryBuilder'
-        factory: [ '@TYPO3\CMS\Core\Database\ConnectionPool', 'getQueryBuilderForTable' ]
-        arguments: [ 'tx_crawler_process' ]
+  queryBuilder.tx_crawler_configuration:
+    class: 'TYPO3\CMS\Core\Database\Query\QueryBuilder'
+    factory: [ '@TYPO3\CMS\Core\Database\ConnectionPool', 'getQueryBuilderForTable' ]
+    arguments: [ 'tx_crawler_configuration' ]
 
-    queryBuilder.tx_crawler_queue:
-        class: 'TYPO3\CMS\Core\Database\Query\QueryBuilder'
-        factory: [ '@TYPO3\CMS\Core\Database\ConnectionPool', 'getQueryBuilderForTable' ]
-        arguments: [ 'tx_crawler_queue' ]
+  queryBuilder.tx_crawler_process:
+    class: 'TYPO3\CMS\Core\Database\Query\QueryBuilder'
+    factory: [ '@TYPO3\CMS\Core\Database\ConnectionPool', 'getQueryBuilderForTable' ]
+    arguments: [ 'tx_crawler_process' ]
 
-    AOE\Crawler\Middleware\FrontendUserAuthenticator:
-        arguments:
-            $queryBuilder: '@queryBuilder.tx_crawler_queue'
+  queryBuilder.tx_crawler_queue:
+    class: 'TYPO3\CMS\Core\Database\Query\QueryBuilder'
+    factory: [ '@TYPO3\CMS\Core\Database\ConnectionPool', 'getQueryBuilderForTable' ]
+    arguments: [ 'tx_crawler_queue' ]
 
-    AOE\Crawler\Service\ConfigurationService:
-        arguments:
-            $urlService: '@AOE\Crawler\Service\UrlService'
-            $configurationRepository: '@AOE\Crawler\Domain\Repository\ConfigurationRepository'
-        public: true
+  AOE\Crawler\Middleware\FrontendUserAuthenticator:
+    arguments:
+      $queryBuilder: '@queryBuilder.tx_crawler_queue'
 
-    AOE\Crawler\Service\PageService:
-        arguments:
-            $eventDispatcher: '@TYPO3\CMS\Core\EventDispatcher\EventDispatcher'
-        public: true
+  AOE\Crawler\Service\ConfigurationService:
+    arguments:
+      $urlService: '@AOE\Crawler\Service\UrlService'
+      $configurationRepository: '@AOE\Crawler\Domain\Repository\ConfigurationRepository'
+    public: true
 
-    AOE\Crawler\Service\ProcessService:
-        arguments:
-            $processRepository: '@AOE\Crawler\Domain\Repository\ProcessRepository'
-            $sleeper: '@AOE\Crawler\Helper\Sleeper\SystemSleeper'
-        public: true
+  AOE\Crawler\Service\PageService:
+    arguments:
+      $eventDispatcher: '@TYPO3\CMS\Core\EventDispatcher\EventDispatcher'
+    public: true
 
-    AOE\Crawler\QueueExecutor:
-        arguments:
-            $crawlStrategyFactory: '@AOE\Crawler\CrawlStrategy\CrawlStrategyFactory'
-            $eventDispatcher: '@TYPO3\CMS\Core\EventDispatcher\EventDispatcher'
-        public: true
+  AOE\Crawler\Service\ProcessService:
+    arguments:
+      $processRepository: '@AOE\Crawler\Domain\Repository\ProcessRepository'
+      $sleeper: '@AOE\Crawler\Helper\Sleeper\SystemSleeper'
+    public: true
 
-    AOE\Crawler\Command\ProcessQueueCommand:
-        arguments:
-            $crawler: '@AOE\Crawler\Crawler'
-            $crawlerController: '@AOE\Crawler\Controller\CrawlerController'
-            $processRepository: '@AOE\Crawler\Domain\Repository\ProcessRepository'
-            $queueRepository: '@AOE\Crawler\Domain\Repository\QueueRepository'
-        public: true
-        tags:
-            -   name: 'console.command'
-                command: 'crawler:processQueue'
-                description: 'Trigger the crawler to process the queue entries'
+  AOE\Crawler\QueueExecutor:
+    arguments:
+      $crawlStrategyFactory: '@AOE\Crawler\CrawlStrategy\CrawlStrategyFactory'
+      $eventDispatcher: '@TYPO3\CMS\Core\EventDispatcher\EventDispatcher'
+    public: true
 
-    AOE\Crawler\Controller\BackendModuleController:
-        tags: [ 'backend.controller' ]
+  AOE\Crawler\Command\ProcessQueueCommand:
+    arguments:
+      $crawler: '@AOE\Crawler\Crawler'
+      $crawlerController: '@AOE\Crawler\Controller\CrawlerController'
+      $processRepository: '@AOE\Crawler\Domain\Repository\ProcessRepository'
+      $queueRepository: '@AOE\Crawler\Domain\Repository\QueueRepository'
+    public: true
+    tags:
+      - name: 'console.command'
+        command: 'crawler:processQueue'
+        description: 'Trigger the crawler to process the queue entries'
 
-    AOE\Crawler\Controller\Backend\BackendModuleCrawlerProcessController:
-        tags: [ 'backend.controller' ]
+  AOE\Crawler\Controller\BackendModuleController:
+    tags: [ 'backend.controller' ]
 
-    AOE\Crawler\Controller\Backend\BackendModuleStartCrawlingController:
-        tags: [ 'backend.controller' ]
+  AOE\Crawler\Controller\Backend\BackendModuleCrawlerProcessController:
+    tags: [ 'backend.controller' ]
 
-    AOE\Crawler\Controller\Backend\BackendModuleCrawlerLogController:
-        tags: [ 'backend.controller' ]
+  AOE\Crawler\Controller\Backend\BackendModuleStartCrawlingController:
+    tags: [ 'backend.controller' ]
 
-    AOE\Crawler\Service\BackendModuleLogService:
-        arguments:
-            $iconFactory: '@TYPO3\CMS\Core\Imaging\IconFactory'
-            $jsonCompatibilityConverter: '@AOE\Crawler\Converter\JsonCompatibilityConverter'
-        public: true
+  AOE\Crawler\Controller\Backend\BackendModuleCrawlerLogController:
+    tags: [ 'backend.controller' ]
 
-    AOE\Crawler\ContextMenu\ItemProvider:
-        tags:
-            - name: backend.contextmenu.itemprovider
+  AOE\Crawler\Service\BackendModuleLogService:
+    arguments:
+      $iconFactory: '@TYPO3\CMS\Core\Imaging\IconFactory'
+      $jsonCompatibilityConverter: '@AOE\Crawler\Converter\JsonCompatibilityConverter'
+    public: true
+
+  AOE\Crawler\ContextMenu\ItemProvider:
+    tags:
+      - name: backend.contextmenu.itemprovider
