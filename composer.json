@@ -53,7 +53,7 @@
         "ssch/typo3-rector": "^2.0",
         "ssch/typo3-rector-testing-framework": "*",
         "symfony/yaml": "^6.4 || ^7.0",
-        "symplify/easy-coding-standard": "11.1.16",
+        "symplify/easy-coding-standard": "^12.2",
         "symplify/phpstan-rules": "^12.7",
         "tomasvotruba/cognitive-complexity": "^0.2",
         "tomasvotruba/type-coverage": "^0.3",

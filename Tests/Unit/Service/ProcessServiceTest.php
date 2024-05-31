@@ -26,8 +26,6 @@ use AOE\Crawler\Service\ProcessService;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
- * Class ProcessServiceTest
- *
  * @package AOE\Crawler\Tests\Unit\Domain\Model
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Service\ProcessService::class)]

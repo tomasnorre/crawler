@@ -27,8 +27,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
- * Class ProcessCleanUpHookTest
- *
  * @package AOE\Crawler\Tests\Functional\Hooks
  */
 class ProcessCleanUpHookTest extends FunctionalTestCase

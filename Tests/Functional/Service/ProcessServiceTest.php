@@ -24,8 +24,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
- * Class ProcessServiceTest
- *
  * @package AOE\Crawler\Tests\Unit\Domain\Model
  */
 class ProcessServiceTest extends FunctionalTestCase

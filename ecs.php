@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use PHP_CodeSniffer\Standards\Generic\Sniffs\Metrics\CyclomaticComplexitySniff;
 use PhpCsFixer\Fixer\ArrayNotation\ArraySyntaxFixer;
 use PhpCsFixer\Fixer\Import\NoLeadingImportSlashFixer;
 use PhpCsFixer\Fixer\Import\NoUnusedImportsFixer;
@@ -14,79 +13,39 @@ use PhpCsFixer\Fixer\Phpdoc\AlignMultilineCommentFixer;
 use PhpCsFixer\Fixer\Phpdoc\GeneralPhpdocAnnotationRemoveFixer;
 use PhpCsFixer\Fixer\Phpdoc\NoBlankLinesAfterPhpdocFixer;
 use PhpCsFixer\Fixer\Whitespace\NoExtraBlankLinesFixer;
+use Symplify\CodingStandard\Fixer\LineLength\LineLengthFixer;
 use Symplify\EasyCodingStandard\Config\ECSConfig;
-use Symplify\EasyCodingStandard\ValueObject\Option;
-use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
 
-return static function (ECSConfig $ecsConfig): void {
-    $parameters = $ecsConfig->parameters();
-
-    $ecsConfig->import(SetList::PSR_12);
-    $ecsConfig->import(SetList::COMMON);
-
-    $parameters->set(
-        Option::PATHS,
+return ECSConfig::configure()
+    ->withPaths(
         [
             __DIR__ . '/Classes',
             __DIR__ . '/Configuration',
             __DIR__ . '/Tests',
         ]
-    );
-
-    $parameters->set(Option::SKIP,
-        [
-            __DIR__ . '/Tests/Acceptance/Support/_generated',
-            'PhpCsFixer\Fixer\ClassNotation\ClassAttributesSeparationFixer' => null,
-            #'PhpCsFixer\Fixer\Whitespace\ArrayIndentationFixer' => null,
-            #'PhpCsFixer\Fixer\FunctionNotation\MethodArgumentSpaceFixer' => null,
-            'PhpCsFixer\Fixer\Strict\StrictParamFixer' => null,
-            #'PHP_CodeSniffer\Standards\Generic\Sniffs\CodeAnalysis\AssignmentInConditionSniff.FoundInWhileCondition' => null,
-            #PhpUnitStrictFixer::class => null,
-            #PhpUnitTestAnnotationFixer::class => null,
-            #'SlevomatCodingStandard\Sniffs\Classes\TraitUseSpacingSniff.IncorrectLinesCountAfterLastUse' => null,
-            #'Symplify\CodingStandard\Fixer\ArrayNotation\ArrayOpenerAndCloserNewlineFixer' => null,
-            #'Symplify\CodingStandard\Fixer\ArrayNotation\ArrayListItemNewlineFixer' => null,
-            #UnaryOperatorSpacesFixer::class => null,
-            #StandaloneLineInMultilineArrayFixer::class => null,
-            PhpCsFixer\Fixer\Operator\NotOperatorWithSuccessorSpaceFixer::class => null,
-            'PHP_CodeSniffer\Standards\Generic\Sniffs\CodeAnalysis\AssignmentInConditionSniff.Found' => null,
-        ]
-    );
-
-
-    $services = $ecsConfig->services();
-
-    $services->set(ArraySyntaxFixer::class)
-        ->call('configure', [['syntax' => 'short']]);
-
-    $services->set(ConcatSpaceFixer::class)
-        ->call('configure', [['spacing' => 'one']]);
-
-    $services->set(BinaryOperatorSpacesFixer::class)
-        ->call('configure', [['default' => 'single_space']]);
-
-    $services->set(NoExtraBlankLinesFixer::class);
-
-    $services->set(TernaryOperatorSpacesFixer::class);
-
-    $services->set(NoBlankLinesAfterPhpdocFixer::class);
-
-    $services->set(AlignMultilineCommentFixer::class)
-        ->call('configure', [['comment_type' => 'phpdocs_only']]);
-
-    $services->set(GeneralPhpdocAnnotationRemoveFixer::class)
-        ->call('configure', [['annotations' => ['author', 'since']]]);
-
-    $services->set(NoLeadingImportSlashFixer::class);
-
-    $services->set(NoUnusedImportsFixer::class);
-
-    $services->set(OrderedImportsFixer::class)
-        ->call('configure', [['imports_order' => ['class', 'const', 'function']]]);
-
-    $services->set(CyclomaticComplexitySniff::class)
-        ->property('complexity', 22)
-        ->property('absoluteComplexity', 22);
-
-    $services->set(\Symplify\CodingStandard\Fixer\LineLength\LineLengthFixer::class);
-};
+    )
+    ->withPreparedSets(
+        psr12: true,
+        common: true
+    )
+    ->withRules([
+        LineLengthFixer::class,
+        NoBlankLinesAfterPhpdocFixer::class,
+        NoExtraBlankLinesFixer::class,
+        NoLeadingImportSlashFixer::class,
+        NoUnusedImportsFixer::class,
+        TernaryOperatorSpacesFixer::class,
+    ])
+    ->withConfiguredRule(ArraySyntaxFixer::class, ['syntax' => 'short'])
+    ->withConfiguredRule(ConcatSpaceFixer::class, ['spacing' => 'one'])
+    ->withConfiguredRule(BinaryOperatorSpacesFixer::class, ['default' => 'single_space'])
+    ->withConfiguredRule(AlignMultilineCommentFixer::class, ['comment_type' => 'phpdocs_only'])
+    ->withConfiguredRule(GeneralPhpdocAnnotationRemoveFixer::class, ['annotations' => ['author', 'since']])
+    ->withConfiguredRule(OrderedImportsFixer::class, ['imports_order' => ['class', 'const', 'function']])
+    ->withSkip([
+        __DIR__ . '/Tests/Acceptance/Support/_generated',
+        'PhpCsFixer\Fixer\ClassNotation\ClassAttributesSeparationFixer' => null,
+        'PhpCsFixer\Fixer\Strict\StrictParamFixer' => null,
+        PhpCsFixer\Fixer\Operator\NotOperatorWithSuccessorSpaceFixer::class => null,
+        'PHP_CodeSniffer\Standards\Generic\Sniffs\CodeAnalysis\AssignmentInConditionSniff.Found' => null,
+    ]);

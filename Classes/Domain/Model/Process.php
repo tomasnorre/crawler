@@ -24,8 +24,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
 /**
- * Class Process
- *
  * @ignoreAnnotation("noRector")
  * @internal since v9.2.5
  */
@@ -44,7 +42,7 @@ class Process extends AbstractEntity
     protected bool $deleted = false;
 
     protected string $systemProcessId = '';
-    protected QueueRepository$queueRepository;
+    protected QueueRepository $queueRepository;
 
     public function __construct()
     {

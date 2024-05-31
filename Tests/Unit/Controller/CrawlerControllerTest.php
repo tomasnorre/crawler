@@ -26,8 +26,6 @@ use Psr\Log\NullLogger;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
- * Class CrawlerLibTest
- *
  * @package AOE\Crawler\Tests
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Controller\CrawlerController::class)]

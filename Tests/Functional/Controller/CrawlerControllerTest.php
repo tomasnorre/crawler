@@ -32,8 +32,6 @@ use TYPO3\TestingFramework\Core\AccessibleObjectInterface;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
- * Class CrawlerControllerTest
- *
  * @package AOE\Crawler\Tests\Functional\Controller
  */
 class CrawlerControllerTest extends FunctionalTestCase

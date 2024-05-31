@@ -26,8 +26,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
- * Class ProcessRepositoryTest
- *
  * @package AOE\Crawler\Tests\Functional\Domain\Repository
  */
 class ProcessRepositoryTest extends FunctionalTestCase

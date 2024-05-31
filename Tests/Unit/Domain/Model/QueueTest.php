@@ -32,7 +32,6 @@ use AOE\Crawler\Domain\Model\Queue;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
- * Class QueueTest
  * @package AOE\Crawler\Tests\Unit\Domain\Model
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Domain\Model\Queue::class)]

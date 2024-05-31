@@ -31,8 +31,6 @@ use AOE\Crawler\Exception\NoIndexFoundException;
  ***************************************************************/
 
 /**
- * Class ProcessCollection
- *
  * @internal since v9.2.5
  */
 class ProcessCollection extends \ArrayObject

@@ -142,10 +142,10 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
         // Get the path from the extension settings:
         if (isset($this->extensionSettings['frontendBasePath']) && $this->extensionSettings['frontendBasePath']) {
             $frontendBasePath = $this->extensionSettings['frontendBasePath'];
-        // If empty, try to use config.absRefPrefix:
+            // If empty, try to use config.absRefPrefix:
         } elseif (isset($GLOBALS['TSFE']->absRefPrefix) && !empty($GLOBALS['TSFE']->absRefPrefix)) {
             $frontendBasePath = $GLOBALS['TSFE']->absRefPrefix;
-        // If not in CLI mode the base path can be determined from $_SERVER environment:
+            // If not in CLI mode the base path can be determined from $_SERVER environment:
         } elseif (!Environment::isCli()) {
             $frontendBasePath = GeneralUtility::getIndpEnv('TYPO3_SITE_PATH');
         }

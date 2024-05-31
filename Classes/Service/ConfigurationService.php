@@ -152,7 +152,7 @@ class ConfigurationService
 
                     // don't overwrite previously defined paramSets
                     if (!isset($res[$key])) {
-                        /* @var $typoScriptStringFactory TypoScriptStringFactory */
+                        /** @var TypoScriptStringFactory $typoScriptStringFactory */
                         $typoScriptStringFactory = GeneralUtility::makeInstance(TypoScriptStringFactory::class);
                         $typoScriptTree = $typoScriptStringFactory->parseFromString(
                             $configurationRecord['processing_instruction_parameters_ts'],
@@ -301,7 +301,7 @@ class ConfigurationService
 
     private function isWrappedInSquareBrackets(string $string): bool
     {
-        return (str_starts_with($string, '[') && str_ends_with($string, ']'));
+        return str_starts_with($string, '[') && str_ends_with($string, ']');
     }
 
     private function swapIfFirstIsLargerThanSecond(array $reg): array

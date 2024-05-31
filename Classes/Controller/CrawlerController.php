@@ -54,8 +54,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 
 /**
- * Class CrawlerController
- *
  * @package AOE\Crawler\Controller
  * @internal since v12.0.0
  */
@@ -375,7 +373,7 @@ class CrawlerController implements LoggerAwareInterface
         foreach ($rootLine as $node) {
             $pids[] = $node['uid'];
         }
-        /* @var PageTreeView $tree */
+        /** @var PageTreeView $tree */
         $tree = GeneralUtility::makeInstance(PageTreeView::class);
         $perms_clause = $this->getBackendUser()->getPagePermsClause(Permission::PAGE_SHOW);
         $tree->init(empty($perms_clause) ? '' : ('AND ' . $perms_clause));
@@ -704,7 +702,7 @@ class CrawlerController implements LoggerAwareInterface
         $this->downloadUrls = [];
 
         // Drawing tree:
-        /* @var PageTreeView $tree */
+        /** @var PageTreeView $tree */
         $tree = GeneralUtility::makeInstance(PageTreeView::class);
         $perms_clause = $this->getBackendUser()->getPagePermsClause(Permission::PAGE_SHOW);
         $tree->init(empty($perms_clause) ? '' : ('AND ' . $perms_clause));
