@@ -10,14 +10,10 @@ use PhpCsFixer\Fixer\Import\OrderedImportsFixer;
 use PhpCsFixer\Fixer\Operator\BinaryOperatorSpacesFixer;
 use PhpCsFixer\Fixer\Operator\ConcatSpaceFixer;
 use PhpCsFixer\Fixer\Operator\TernaryOperatorSpacesFixer;
-use PhpCsFixer\Fixer\Operator\UnaryOperatorSpacesFixer;
-use PhpCsFixer\Fixer\PhpUnit\PhpUnitStrictFixer;
-use PhpCsFixer\Fixer\PhpUnit\PhpUnitTestAnnotationFixer;
 use PhpCsFixer\Fixer\Phpdoc\AlignMultilineCommentFixer;
 use PhpCsFixer\Fixer\Phpdoc\GeneralPhpdocAnnotationRemoveFixer;
 use PhpCsFixer\Fixer\Phpdoc\NoBlankLinesAfterPhpdocFixer;
 use PhpCsFixer\Fixer\Whitespace\NoExtraBlankLinesFixer;
-use Symplify\CodingStandard\Fixer\ArrayNotation\StandaloneLineInMultilineArrayFixer;
 use Symplify\EasyCodingStandard\Config\ECSConfig;
 use Symplify\EasyCodingStandard\ValueObject\Option;
 use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
@@ -28,26 +24,6 @@ return static function (ECSConfig $ecsConfig): void {
     $ecsConfig->import(SetList::PSR_12);
     $ecsConfig->import(SetList::COMMON);
 
-    $parameters->set(Option::SKIP,
-        [
-            __DIR__ . '/Tests/Acceptance/Support/_generated',
-            'PhpCsFixer\Fixer\ClassNotation\ClassAttributesSeparationFixer' => null,
-            'PhpCsFixer\Fixer\Whitespace\ArrayIndentationFixer' => null,
-            'PhpCsFixer\Fixer\FunctionNotation\MethodArgumentSpaceFixer' => null,
-            'PhpCsFixer\Fixer\Strict\StrictParamFixer' => null,
-            'PHP_CodeSniffer\Standards\Generic\Sniffs\CodeAnalysis\AssignmentInConditionSniff.FoundInWhileCondition' => null,
-            PhpUnitStrictFixer::class => null,
-            PhpUnitTestAnnotationFixer::class => null,
-            'SlevomatCodingStandard\Sniffs\Classes\TraitUseSpacingSniff.IncorrectLinesCountAfterLastUse' => null,
-            'Symplify\CodingStandard\Fixer\ArrayNotation\ArrayOpenerAndCloserNewlineFixer' => null,
-            'Symplify\CodingStandard\Fixer\ArrayNotation\ArrayListItemNewlineFixer' => null,
-            UnaryOperatorSpacesFixer::class => null,
-            StandaloneLineInMultilineArrayFixer::class => null,
-            PhpCsFixer\Fixer\Operator\NotOperatorWithSuccessorSpaceFixer::class => null,
-            'PHP_CodeSniffer\Standards\Generic\Sniffs\CodeAnalysis\AssignmentInConditionSniff.Found' => null,
-        ]
-    );
-
     $parameters->set(
         Option::PATHS,
         [
@@ -56,6 +32,27 @@ return static function (ECSConfig $ecsConfig): void {
             __DIR__ . '/Tests',
         ]
     );
+
+    $parameters->set(Option::SKIP,
+        [
+            __DIR__ . '/Tests/Acceptance/Support/_generated',
+            'PhpCsFixer\Fixer\ClassNotation\ClassAttributesSeparationFixer' => null,
+            #'PhpCsFixer\Fixer\Whitespace\ArrayIndentationFixer' => null,
+            #'PhpCsFixer\Fixer\FunctionNotation\MethodArgumentSpaceFixer' => null,
+            'PhpCsFixer\Fixer\Strict\StrictParamFixer' => null,
+            #'PHP_CodeSniffer\Standards\Generic\Sniffs\CodeAnalysis\AssignmentInConditionSniff.FoundInWhileCondition' => null,
+            #PhpUnitStrictFixer::class => null,
+            #PhpUnitTestAnnotationFixer::class => null,
+            #'SlevomatCodingStandard\Sniffs\Classes\TraitUseSpacingSniff.IncorrectLinesCountAfterLastUse' => null,
+            #'Symplify\CodingStandard\Fixer\ArrayNotation\ArrayOpenerAndCloserNewlineFixer' => null,
+            #'Symplify\CodingStandard\Fixer\ArrayNotation\ArrayListItemNewlineFixer' => null,
+            #UnaryOperatorSpacesFixer::class => null,
+            #StandaloneLineInMultilineArrayFixer::class => null,
+            PhpCsFixer\Fixer\Operator\NotOperatorWithSuccessorSpaceFixer::class => null,
+            'PHP_CodeSniffer\Standards\Generic\Sniffs\CodeAnalysis\AssignmentInConditionSniff.Found' => null,
+        ]
+    );
+
 
     $services = $ecsConfig->services();
 

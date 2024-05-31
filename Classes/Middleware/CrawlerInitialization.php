@@ -84,7 +84,7 @@ class CrawlerInitialization implements MiddlewareInterface
      */
     private function runPollSuccessHooks(): void
     {
-        if (! is_array(
+        if (!is_array(
             $GLOBALS['TSFE']->applicationData['tx_crawler']['content']['parameters']['procInstructions'] ?? false
         )) {
             return;

@@ -32,7 +32,9 @@ class AfterUrlAddedToQueueEventTest extends UnitTestCase
     {
         parent::setUp();
         $uid = 'qwerty';
-        $fieldArray = ['field' => 'array'];
+        $fieldArray = [
+            'field' => 'array',
+        ];
         $this->subject = new AfterUrlAddedToQueueEvent($uid, $fieldArray);
     }
 
@@ -41,6 +43,8 @@ class AfterUrlAddedToQueueEventTest extends UnitTestCase
     {
         self::assertEquals('qwerty', $this->subject->getUid());
 
-        self::assertEquals(['field' => 'array'], $this->subject->getFieldArray());
+        self::assertEquals([
+            'field' => 'array',
+        ], $this->subject->getFieldArray());
     }
 }

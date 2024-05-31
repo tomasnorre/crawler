@@ -44,7 +44,9 @@ class QueueRowTest extends UnitTestCase
         $parameterConfig = 'string';
         $valueExpanded = 'string';
         $urls = 'https://www.example.com';
-        $options = ['option' => 'value'];
+        $options = [
+            'option' => 'value',
+        ];
         $parameters = 'parameters';
 
         $queueRow = new QueueRow($pageTitle);

@@ -174,7 +174,7 @@ class Process extends AbstractEntity
     {
         if ($this->isActive() && $this->getProgress() < 100) {
             $stage = self::STATE_RUNNING;
-        } elseif (! $this->isActive() && $this->getProgress() < 100) {
+        } elseif (!$this->isActive() && $this->getProgress() < 100) {
             $stage = self::STATE_CANCELLED;
         } else {
             $stage = self::STATE_COMPLETED;

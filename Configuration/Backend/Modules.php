@@ -24,7 +24,9 @@ use AOE\Crawler\Controller\Backend\BackendModuleStartCrawlingController;
 return [
     'web_site_crawler' => [
         'parent' => 'web',
-        'position' => ['after' => 'web_info'],
+        'position' => [
+            'after' => 'web_info',
+        ],
         'access' => 'user',
         'workspaces' => 'live',
         'path' => '/module/page/crawler',

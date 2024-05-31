@@ -49,7 +49,7 @@ class PageService
         )->getExtensionConfiguration();
 
         // if page is hidden
-        if (! ($extensionSettings['crawlHiddenPages'] ?? false) && ($pageRow['hidden'] ?? false)) {
+        if (!($extensionSettings['crawlHiddenPages'] ?? false) && ($pageRow['hidden'] ?? false)) {
             return 'Because page is hidden';
         }
 

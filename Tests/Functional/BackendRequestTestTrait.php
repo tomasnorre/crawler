@@ -44,7 +44,9 @@ trait BackendRequestTestTrait
         $router = GeneralUtility::makeInstance(Router::class, $requestContextFactory->reveal());
         $router->addRoute('module_web_info', $route);
         $request = new ServerRequest('https://example.com/typo3/index.php');
-        $request = $request->withQueryParams(['route' => '/web_info']);
+        $request = $request->withQueryParams([
+            'route' => '/web_info',
+        ]);
         $request = $request->withAttribute('route', $route);
         $request = $request->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_BE);
         $GLOBALS['TYPO3_REQUEST'] = $request;

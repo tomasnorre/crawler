@@ -215,7 +215,7 @@ class CrawlerController implements LoggerAwareInterface
         array &$downloadUrls,
         array $incomingProcInstructions
     ): string {
-        if (! is_array($vv['URLs'])) {
+        if (!is_array($vv['URLs'])) {
             return 'ERROR - no URL generated';
         }
         $urlLog = [];
@@ -230,7 +230,7 @@ class CrawlerController implements LoggerAwareInterface
         $processInstructionService = new ProcessInstructionService();
 
         foreach ($vv['URLs'] as $urlQuery) {
-            if (! $processInstructionService->isAllowed(
+            if (!$processInstructionService->isAllowed(
                 $vv['subCfg']['procInstrFilter'] ?? '',
                 $incomingProcInstructions
             )) {
@@ -243,7 +243,7 @@ class CrawlerController implements LoggerAwareInterface
                 $vv['subCfg']['force_ssl'] ?? 0
             );
 
-            if (! $url instanceof UriInterface) {
+            if (!$url instanceof UriInterface) {
                 continue;
             }
 
@@ -365,7 +365,7 @@ class CrawlerController implements LoggerAwareInterface
         $pageTSconfig = $this->getPageTSconfigForId($rootid);
         $sets = $pageTSconfig['tx_crawler.']['crawlerCfg.']['paramSets.'] ?? [];
         foreach ($sets as $key => $value) {
-            if (! is_array($value)) {
+            if (!is_array($value)) {
                 continue;
             }
             $configurationsForBranch[] = str_ends_with($key, '.') ? substr($key, 0, -1) : $key;
@@ -409,7 +409,7 @@ class CrawlerController implements LoggerAwareInterface
      */
     public function addQueueEntry_callBack($setId, $params, $callBack, $page_id = 0, $schedule = 0): void
     {
-        if (! is_array($params)) {
+        if (!is_array($params)) {
             $params = [];
         }
         $params['_CALLBACKOBJ'] = $callBack;
@@ -491,7 +491,7 @@ class CrawlerController implements LoggerAwareInterface
             //the entries will only be registered and not stored to the database
             $this->queueEntries[] = $fieldArray;
         } else {
-            if (! $skipInnerDuplicationCheck) {
+            if (!$skipInnerDuplicationCheck) {
                 // check if there is already an equal entry
                 $rows = $this->queueRepository->getDuplicateQueueItemsIfExists(
                     (bool) $this->extensionSettings['enableTimeslot'],
@@ -555,14 +555,14 @@ class CrawlerController implements LoggerAwareInterface
             ->where(
                 $queryBuilder->expr()->eq('qid', $queryBuilder->createNamedParameter($queueId, PDO::PARAM_INT))
             );
-        if (! $force) {
+        if (!$force) {
             $queryBuilder
                 ->andWhere('exec_time = 0')
                 ->andWhere('process_scheduled > 0');
         }
         $queueRec = $queryBuilder->executeQuery()->fetchAssociative();
 
-        if (! is_array($queueRec)) {
+        if (!is_array($queueRec)) {
             return;
         }
 
@@ -571,15 +571,19 @@ class CrawlerController implements LoggerAwareInterface
         $queueRec = $event->getQueueRecord();
 
         // Set exec_time to lock record:
-        $field_array = ['exec_time' => $this->getCurrentTime()];
+        $field_array = [
+            'exec_time' => $this->getCurrentTime(),
+        ];
 
-        if (! empty($processId)) {
+        if (!empty($processId)) {
             //if mulitprocessing is used we need to store the id of the process which has handled this entry
             $field_array['process_id_completed'] = $processId;
         }
 
         GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(QueueRepository::TABLE_NAME)
-            ->update(QueueRepository::TABLE_NAME, $field_array, ['qid' => (int) $queueId]);
+            ->update(QueueRepository::TABLE_NAME, $field_array, [
+                'qid' => (int) $queueId,
+            ]);
 
         $result = $this->queueExecutor->executeQueueItem($queueRec, $this);
         if ($result === 'ERROR' || ($result['content'] ?? null) === null) {
@@ -601,7 +605,7 @@ class CrawlerController implements LoggerAwareInterface
                     if (is_array($resultData['parameters']['procInstructions'])
                         && in_array($pollable, $resultData['parameters']['procInstructions'], true)
                     ) {
-                        if (! empty($resultData['success'][$pollable])) {
+                        if (!empty($resultData['success'][$pollable])) {
                             $ret |= self::CLI_STATUS_POLLABLE_PROCESSED;
                         }
                     }
@@ -609,14 +613,18 @@ class CrawlerController implements LoggerAwareInterface
             }
         }
         // Set result in log which also denotes the end of the processing of this entry.
-        $field_array = ['result_data' => json_encode($result)];
+        $field_array = [
+            'result_data' => json_encode($result),
+        ];
 
         /** @var AfterQueueItemAddedEvent $event */
         $event = $this->eventDispatcher->dispatch(new AfterQueueItemAddedEvent($queueId, $field_array));
         $field_array = $event->getFieldArray();
 
         GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(QueueRepository::TABLE_NAME)
-            ->update(QueueRepository::TABLE_NAME, $field_array, ['qid' => (int) $queueId]);
+            ->update(QueueRepository::TABLE_NAME, $field_array, [
+                'qid' => (int) $queueId,
+            ]);
 
         $this->logger->debug('crawler-readurl stop ' . microtime(true));
         return $ret;
@@ -641,13 +649,17 @@ class CrawlerController implements LoggerAwareInterface
         $result = $this->queueExecutor->executeQueueItem($field_array, $this);
 
         // Set result in log which also denotes the end of the processing of this entry.
-        $field_array = ['result_data' => json_encode($result)];
+        $field_array = [
+            'result_data' => json_encode($result),
+        ];
 
         /** @var AfterQueueItemAddedEvent $event */
         $event = $this->eventDispatcher->dispatch(new AfterQueueItemAddedEvent($queueId, $field_array));
         $field_array = $event->getFieldArray();
 
-        $connectionForCrawlerQueue->update(QueueRepository::TABLE_NAME, $field_array, ['qid' => $queueId]);
+        $connectionForCrawlerQueue->update(QueueRepository::TABLE_NAME, $field_array, [
+            'qid' => $queueId,
+        ]);
 
         return $result;
     }
@@ -775,17 +787,17 @@ class CrawlerController implements LoggerAwareInterface
 
         $queueRowCollection = [];
 
-        if (! empty($configurations)) {
+        if (!empty($configurations)) {
             foreach ($configurations as $confKey => $confArray) {
                 // Title column:
-                if (! $c) {
+                if (!$c) {
                     $queueRow = new QueueRow($pageTitle);
                 } else {
                     $queueRow = new QueueRow();
                 }
                 $queueRow->setPageTitleHTML($pageTitleHTML);
 
-                if (! in_array(
+                if (!in_array(
                     $pageRow['uid'],
                     $this->configurationService->expandExcludeString($confArray['subCfg']['exclude'] ?? ''),
                     true
@@ -861,7 +873,7 @@ class CrawlerController implements LoggerAwareInterface
                 $c++;
             }
         } else {
-            $message = ! empty($skipMessage) ? ' (' . $skipMessage . ')' : '';
+            $message = !empty($skipMessage) ? ' (' . $skipMessage . ')' : '';
             $queueRow = new QueueRow($pageTitle);
             $queueRow->setPageTitleHTML($pageTitleHTML);
             $queueRow->setMessage($message);

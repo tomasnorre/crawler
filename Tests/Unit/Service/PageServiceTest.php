@@ -83,7 +83,9 @@ class PageServiceTest extends UnitTestCase
         ];
 
         yield 'Extension Setting do not crawl hidden pages and page is hidden' => [
-            'extensionSetting' => ['crawlHiddenPages' => false],
+            'extensionSetting' => [
+                'crawlHiddenPages' => false,
+            ],
             'pageRow' => [
                 'doktype' => 1,
                 'hidden' => 1,
@@ -131,7 +133,9 @@ class PageServiceTest extends UnitTestCase
                 'doktype' => 155,
                 'hidden' => 0,
             ],
-            'excludeDoktype' => ['custom' => 155],
+            'excludeDoktype' => [
+                'custom' => 155,
+            ],
             'pageVeto' => [],
             'expected' => 'Doktype "155" was excluded by excludeDoktype configuration key "custom"',
         ];

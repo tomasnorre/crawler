@@ -61,7 +61,7 @@ class QueueExecutor implements SingletonInterface
             $parameters = $jsonCompatibleConverter->convert($queueItem['parameters']);
         }
 
-        if (! is_array($parameters) || empty($parameters)) {
+        if (!is_array($parameters) || empty($parameters)) {
             return 'ERROR';
         }
         if (isset($parameters['_CALLBACKOBJ'])) {
@@ -69,7 +69,9 @@ class QueueExecutor implements SingletonInterface
             unset($parameters['_CALLBACKOBJ']);
             $result = GeneralUtility::makeInstance(CallbackExecutionStrategy::class)
                 ->fetchByCallback($className, $parameters, $crawlerController);
-            $result = ['content' => json_encode($result)];
+            $result = [
+                'content' => json_encode($result),
+            ];
         } else {
             // Regular FE request
             $crawlerId = $this->generateCrawlerIdFromQueueItem($queueItem);
@@ -77,7 +79,9 @@ class QueueExecutor implements SingletonInterface
             $url = new Uri($parameters['url']);
             $result = $this->crawlStrategy->fetchUrlContents($url, $crawlerId);
             if ($result !== false) {
-                $result = ['content' => json_encode($result)];
+                $result = [
+                    'content' => json_encode($result),
+                ];
                 $this->eventDispatcher->dispatch(new AfterUrlCrawledEvent($parameters['url'], $result));
             }
         }

@@ -56,7 +56,9 @@ class BackendModuleLinkServiceTest extends FunctionalTestCase
 
         $request = (new ServerRequest('https://example.com/typo3/'))
             ->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_BE)
-            ->withAttribute('route', new Route('path', ['packageName' => 'tomasnorre/crawler']));
+            ->withAttribute('route', new Route('path', [
+                'packageName' => 'tomasnorre/crawler',
+            ]));
 
         $this->moduleTemplate = (GeneralUtility::makeInstance(ModuleTemplateFactory::class))->create($request);
     }

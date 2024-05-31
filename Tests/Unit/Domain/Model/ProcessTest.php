@@ -217,33 +217,57 @@ class ProcessTest extends UnitTestCase
     public static function getRuntimeReturnsIntegerDataProvider(): iterable
     {
         yield 'getTimeForFirstItem is bigger than getTimeForLastItem' => [
-            'getTimeForFirstItem' => ['exec_time' => 75],
-            'getTimeForLastItem' => ['exec_time' => 50],
+            'getTimeForFirstItem' => [
+                'exec_time' => 75,
+            ],
+            'getTimeForLastItem' => [
+                'exec_time' => 50,
+            ],
             'expected' => -25,
         ];
         yield 'getTimeForFirstItem is smaller than getTimeForLastItem' => [
-            'getTimeForFirstItem' => ['exec_time' => 55],
-            'getTimeForLastItem' => ['exec_time' => 85],
+            'getTimeForFirstItem' => [
+                'exec_time' => 55,
+            ],
+            'getTimeForLastItem' => [
+                'exec_time' => 85,
+            ],
             'expected' => 30,
         ];
         yield 'getTimeForFirstItem is equal to getTimeForLastItem' => [
-            'getTimeForFirstItem' => ['exec_time' => 45],
-            'getTimeForLastItem' => ['exec_time' => 45],
+            'getTimeForFirstItem' => [
+                'exec_time' => 45,
+            ],
+            'getTimeForLastItem' => [
+                'exec_time' => 45,
+            ],
             'expected' => 0,
         ];
         yield 'getTimeForFirstItem is negative number and getTimeForLastItem is positive' => [
-            'getTimeForFirstItem' => ['exec_time' => -25],
-            'getTimeForLastItem' => ['exec_time' => 50],
+            'getTimeForFirstItem' => [
+                'exec_time' => -25,
+            ],
+            'getTimeForLastItem' => [
+                'exec_time' => 50,
+            ],
             'expected' => 75,
         ];
         yield 'getTimeForFirstItem is positive number and getTimeForLastItem is negative' => [
-            'getTimeForFirstItem' => ['exec_time' => 25],
-            'getTimeForLastItem' => ['exec_time' => -50],
+            'getTimeForFirstItem' => [
+                'exec_time' => 25,
+            ],
+            'getTimeForLastItem' => [
+                'exec_time' => -50,
+            ],
             'expected' => -75,
         ];
         yield 'getTimeForFirstItem and getTimeForLastItem are both invalid arrays' => [
-            'getTimeForFirstItem' => ['invalid_exec_time' => 0],
-            'getTimeForLastItem' => ['invalid_exec_time' => 0],
+            'getTimeForFirstItem' => [
+                'invalid_exec_time' => 0,
+            ],
+            'getTimeForLastItem' => [
+                'invalid_exec_time' => 0,
+            ],
             'expected' => 0,
         ];
     }

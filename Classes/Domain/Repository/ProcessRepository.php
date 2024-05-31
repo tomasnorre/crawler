@@ -235,8 +235,12 @@ class ProcessRepository extends Repository
         GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(self::TABLE_NAME)
             ->update(
                 self::TABLE_NAME,
-                ['assigned_items_count' => $numberOfAffectedRows],
-                ['process_id' => $processId]
+                [
+                    'assigned_items_count' => $numberOfAffectedRows,
+                ],
+                [
+                    'process_id' => $processId,
+                ]
             );
     }
 

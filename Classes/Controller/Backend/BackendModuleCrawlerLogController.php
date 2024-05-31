@@ -89,7 +89,9 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
     {
         $this->setPropertiesBasedOnPostVars($request);
         $this->moduleTemplate = $this->setupView($request, $this->pageUid);
-        $this->moduleTemplate = $this->moduleTemplate->makeDocHeaderModuleMenu(['id' => $this->pageUid]);
+        $this->moduleTemplate = $this->moduleTemplate->makeDocHeaderModuleMenu([
+            'id' => $this->pageUid,
+        ]);
 
         if (!$this->pageUid) {
             $this->isErrorDetected = true;

@@ -122,15 +122,21 @@ class BackendModuleLogService
                 // Put rows together:
                 $contentArray['trClass'] = $trClass;
                 $contentArray['qid'] = [
-                    'link' => UrlBuilder::getBackendModuleUrl([
-                        'qid_details' => $vv['qid'], 'setID' => $setId, ],
+                    'link' => UrlBuilder::getBackendModuleUrl(
+                        [
+                            'qid_details' => $vv['qid'],
+                            'setID' => $setId,
+                        ],
                         BackendModuleCrawlerLogController::BACKEND_MODULE
                     ),
                     'link-text' => htmlspecialchars((string) $vv['qid'], ENT_QUOTES | ENT_HTML5),
                 ];
                 $contentArray['refresh'] = [
-                    'link' => UrlBuilder::getBackendModuleUrl([
-                        'qid_read' => $vv['qid'], 'setID' => $setId, ],
+                    'link' => UrlBuilder::getBackendModuleUrl(
+                        [
+                            'qid_read' => $vv['qid'],
+                            'setID' => $setId,
+                        ],
                         BackendModuleCrawlerLogController::BACKEND_MODULE
                     ),
                     'link-text' => $refreshIcon,

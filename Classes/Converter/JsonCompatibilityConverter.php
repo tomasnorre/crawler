@@ -50,7 +50,9 @@ class JsonCompatibilityConverter
         }
 
         try {
-            $deserialized = unserialize($dataString, ['allowed_classes' => false]);
+            $deserialized = unserialize($dataString, [
+                'allowed_classes' => false,
+            ]);
         } catch (\Throwable) {
             return false;
         }
