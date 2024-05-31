@@ -70,6 +70,13 @@ class ItemProvider extends AbstractProvider
     protected function getAdditionalAttributes(string $itemName): array
     {
         $crawlerConfiguration = BackendUtility::getRecordWSOL($this->table, (int) $this->identifier);
+        if ($crawlerConfiguration === null) {
+            return [];
+        }
+
+        if (!array_key_exists('name', $crawlerConfiguration)) {
+            $crawlerConfiguration['name'] = 'No Name found in configuration';
+        }
 
         $additionalParameters = [];
         $additionalParameters[] = 'SET[function]=AOE\Crawler\Backend\BackendModule';

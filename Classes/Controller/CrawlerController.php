@@ -224,7 +224,6 @@ class CrawlerController implements LoggerAwareInterface
             $configurationHash
         );
 
-        $urlService = new UrlService();
         $processInstructionService = new ProcessInstructionService();
 
         foreach ($vv['URLs'] as $urlQuery) {
@@ -234,7 +233,7 @@ class CrawlerController implements LoggerAwareInterface
             )) {
                 continue;
             }
-            $url = $urlService->getUrlFromPageAndQueryParameters(
+            $url = $this->urlService->getUrlFromPageAndQueryParameters(
                 $pageId,
                 $urlQuery,
                 $vv['subCfg']['baseUrl'] ?? null,
@@ -472,7 +471,7 @@ class CrawlerController implements LoggerAwareInterface
         }
 
         // Compile value array:
-        $parameters_serialized = json_encode($parameters);
+        $parameters_serialized = json_encode($parameters) ?: '';
         $fieldArray = [
             'page_id' => (int) $id,
             'parameters' => $parameters_serialized,
@@ -545,7 +544,7 @@ class CrawlerController implements LoggerAwareInterface
             QueueRepository::TABLE_NAME
         );
         $ret = 0;
-        $this->logger->debug('crawler-readurl start ' . microtime(true));
+        $this->logger?->debug('crawler-readurl start ' . microtime(true));
 
         $queryBuilder
             ->select('*')
@@ -561,7 +560,7 @@ class CrawlerController implements LoggerAwareInterface
         $queueRec = $queryBuilder->executeQuery()->fetchAssociative();
 
         if (!is_array($queueRec)) {
-            return;
+            return null;
         }
 
         /** @var BeforeQueueItemAddedEvent $event */
@@ -624,7 +623,7 @@ class CrawlerController implements LoggerAwareInterface
                 'qid' => (int) $queueId,
             ]);
 
-        $this->logger->debug('crawler-readurl stop ' . microtime(true));
+        $this->logger?->debug('crawler-readurl stop ' . microtime(true));
         return $ret;
     }
 
