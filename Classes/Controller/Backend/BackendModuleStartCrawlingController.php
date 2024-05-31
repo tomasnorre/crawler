@@ -259,7 +259,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
         ) . '"' . ($multiple ? ' multiple' : '') . '>' . implode('', $options) . '</select>';
     }
 
-    private function getScheduledTime(string $time): float|int
+    private function getScheduledTime(string $time): int
     {
         $scheduledTime = match ($time) {
             'midnight' => mktime(0, 0, 0),

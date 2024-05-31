@@ -6,16 +6,6 @@ parameters:
 			path: Classes/Command/ProcessQueueCommand.php
 
 		-
-			message: "#^Cannot call method error\\(\\) on Psr\\\\Log\\\\LoggerInterface\\|null\\.$#"
-			count: 1
-			path: Classes/Configuration/ExtensionConfigurationProvider.php
-
-		-
-			message: "#^Offset 'name' does not exist on array\\|null\\.$#"
-			count: 1
-			path: Classes/ContextMenu/ItemProvider.php
-
-		-
 			message: "#^Cannot access offset 'ShowFeVars' on array\\|object\\.$#"
 			count: 1
 			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
@@ -121,16 +111,6 @@ parameters:
 			path: Classes/Controller/Backend/BackendModuleStartCrawlingController.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Controller\\\\Backend\\\\BackendModuleStartCrawlingController\\:\\:getScheduledTime\\(\\) never returns float so it can be removed from the return type\\.$#"
-			count: 1
-			path: Classes/Controller/Backend/BackendModuleStartCrawlingController.php
-
-		-
-			message: "#^Parameter \\#3 \\$scheduledTime of method AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:getPageTreeAndUrls\\(\\) expects int, float\\|int given\\.$#"
-			count: 1
-			path: Classes/Controller/Backend/BackendModuleStartCrawlingController.php
-
-		-
 			message: "#^Result of \\|\\| is always true\\.$#"
 			count: 1
 			path: Classes/Controller/Backend/BackendModuleStartCrawlingController.php
@@ -141,12 +121,7 @@ parameters:
 			path: Classes/Controller/Backend/Helper/UrlBuilder.php
 
 		-
-			message: "#^Cannot call method debug\\(\\) on Psr\\\\Log\\\\LoggerInterface\\|null\\.$#"
-			count: 2
-			path: Classes/Controller/CrawlerController.php
-
-		-
-			message: "#^Class cognitive complexity is 97, keep it under 60$#"
+			message: "#^Class cognitive complexity is 98, keep it under 60$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -156,27 +131,12 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:readUrl\\(\\) should return int\\|null but empty return statement found\\.$#"
-			count: 1
-			path: Classes/Controller/CrawlerController.php
-
-		-
 			message: "#^Parameter \\#1 \\$pageUid of static method TYPO3\\\\CMS\\\\Backend\\\\Utility\\\\BackendUtility\\:\\:getPagesTSconfig\\(\\) expects int, string given\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Parameter \\#1 \\$string of function md5 expects string, string\\|false given\\.$#"
-			count: 1
-			path: Classes/Controller/CrawlerController.php
-
-		-
 			message: "#^Property AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:\\$crawler is never read, only written\\.$#"
-			count: 1
-			path: Classes/Controller/CrawlerController.php
-
-		-
-			message: "#^Property AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:\\$urlService is never read, only written\\.$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -209,16 +169,6 @@ parameters:
 			message: "#^Method AOE\\\\Crawler\\\\CrawlStrategy\\\\CrawlStrategyInterface\\:\\:fetchUrlContents\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Classes/CrawlStrategy/CrawlStrategyInterface.php
-
-		-
-			message: "#^Cannot call method debug\\(\\) on Psr\\\\Log\\\\LoggerInterface\\|null\\.$#"
-			count: 2
-			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
-
-		-
-			message: "#^Cannot call method info\\(\\) on Psr\\\\Log\\\\LoggerInterface\\|null\\.$#"
-			count: 1
-			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
 
 		-
 			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
