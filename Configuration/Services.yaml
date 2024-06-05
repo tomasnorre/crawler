@@ -8,6 +8,11 @@ services:
     resource: '../Classes/*'
 
   AOE\Crawler\Queue\Handler\CrawlerHandler:
+    arguments:
+      $eventDispatcher: '@TYPO3\CMS\Core\EventDispatcher\EventDispatcher'
+      $jsonCompatibilityConverter: '@AOE\Crawler\Converter\JsonCompatibilityConverter'
+      $queueExecutor: '@AOE\Crawler\QueueExecutor'
+    public: true
     tags:
       - name: 'messenger.message_handler'
 

@@ -118,8 +118,6 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->messageBus->dispatch(new CrawlerMessage('from build queue command!!'));
-
         /** @var JsonCompatibilityConverter $jsonCompatibilityConverter */
         $jsonCompatibilityConverter = GeneralUtility::makeInstance(JsonCompatibilityConverter::class);
         $mode = $input->getOption('mode') ?? 'queue';
@@ -145,6 +143,8 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             $output->writeln("<info>{$message}</info>");
             return Command::FAILURE;
         }
+
+        $this->messageBus->dispatch(new CrawlerMessage('from build queue command!! id: ' . $pageId, $pageId));
 
         $configurationKeys = $this->getConfigurationKeys((string) $input->getArgument('conf'));
 
