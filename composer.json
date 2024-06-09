@@ -183,21 +183,21 @@
         "test:functional": [
             "@test:reset-vars",
             "@extension-create-libs",
-            "@test-set-vars",
+            "@test:set-vars",
             "[ -e .Build/bin/phpunit ] || composer update",
             "TYPO3_PATH_WEB=$PWD/.Build/Web .Build/bin/phpunit -c Tests/FunctionalTests.xml"
         ],
         "test:functional-postgre": [
             "@test:reset-vars",
             "@extension-create-libs",
-            "@test-set-vars",
+            "@test:set-vars",
             "[ -e .Build/bin/phpunit ] || composer update",
             "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseDriver=pdo_pgsql .Build/bin/phpunit -c Tests/FunctionalTests.xml"
         ],
         "test:functional-sqlite": [
             "@test:reset-vars",
             "@extension-create-libs",
-            "@test-set-vars",
+            "@test:set-vars",
             "[ -e .Build/bin/phpunit ] || composer update",
             "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseDriver=pdo_sqlite .Build/bin/phpunit -c Tests/FunctionalTests.xml"
         ],
