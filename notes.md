@@ -5,6 +5,11 @@
 Create two asynchronous queues, normal and priority, so that pages that are more urgent get higher priority.
 Perhaps the SEO settings, need to be remove again? Or used to determine if it's should go to normal or priority queues.
 
+### Messages
+
+* CrawlerAddPageQueue
+* CrawlerProcessPage
+
 ## Backend Modules
 
 ### Crawler Log
