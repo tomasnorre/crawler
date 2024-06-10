@@ -1,5 +1,11 @@
 # Changelog TYPO3 Crawler
 
+## Crawler 11.0.10-dev
+
+### Fixed
+
+* Check queueRec before usages to avoid php-errors
+
 ## Crawler 11.0.9
 
 Crawler 11.0.9 was released on May 30th, 2024

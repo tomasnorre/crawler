@@ -81,7 +81,7 @@ class FrontendUserAuthenticator implements MiddlewareInterface
         $queueRec = $this->findByQueueId($queueId);
 
         // If a crawler record was found and hash was matching, set it up
-        if (! $this->isRequestHashMatchingQueueRecord($queueRec, $hash)) {
+        if (!$this->isRequestHashMatchingQueueRecord($queueRec, $hash)) {
             return GeneralUtility::makeInstance(ErrorController::class)->unavailableAction($request, 'No crawler entry found');
         }
 
@@ -116,6 +116,10 @@ class FrontendUserAuthenticator implements MiddlewareInterface
 
     protected function isRequestHashMatchingQueueRecord(?array $queueRec, string $hash): bool
     {
+        if ($queueRec === null || !array_key_exists('qid', $queueRec) || !array_key_exists('set_id', $queueRec)) {
+            return false;
+        }
+
         return is_array($queueRec) && hash_equals($hash, md5($queueRec['qid'] . '|' . $queueRec['set_id'] . '|' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']));
     }
 
