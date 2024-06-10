@@ -105,6 +105,10 @@ class FrontendUserAuthenticator implements MiddlewareInterface
 
     private function isRequestHashMatchingQueueRecord(?array $queueRec, string $hash): bool
     {
+        if ($queueRec === null || !array_key_exists('qid', $queueRec) || !array_key_exists('set_id', $queueRec)) {
+            return false;
+        }
+
         return is_array($queueRec) && hash_equals(
             $hash,
             md5(
