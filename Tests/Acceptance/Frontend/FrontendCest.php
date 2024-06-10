@@ -35,4 +35,13 @@ class FrontendCest
         $I->amOnPage('/news');
         $I->waitForText('No news available.');
     }
+
+    public function canSeeSearchPageAndSearchForTomasnorre(FrontendUser $I): void
+    {
+        $I->amOnPage('/search');
+        $I->waitForText('Search', 1);
+        $I->fillField('#tx-indexedsearch-searchbox-sword', 'tomasnorre');
+        $I->click('#tx-indexedsearch-searchbox-button-submit');
+        $I->waitForText('Displaying results 1 to 1');
+    }
 }
