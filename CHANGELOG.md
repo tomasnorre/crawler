@@ -1,26 +1,15 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 12.0.4-dev
-
-### Added
+## Crawler 12.0.4
+Crawler 12.0.4 was released on June 13th, 2024
 
 ### Changed
+
+* Update composer dependencies
 
 ### Fixed
 
 * Check queueRec before usages to avoid php-errors
-
-### Deprecated
-
-#### Classes
-
-#### Functions & Properties
-
-### Removed
-
-#### Classes
-
-#### Functions & Properties
 
 ## Crawler 12.0.3
 
