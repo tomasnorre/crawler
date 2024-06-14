@@ -73,7 +73,7 @@ class BackendModuleCest
 
     /**
      * Ensure that Crawler Configurations with Exclude pages set to: e.g. 6+3 is working
-     * https://github.com/AOEpeople/crawler/issues/777
+     * https://github.com/tomasnorre/crawler/issues/777
      */
     public function CrawlerConfigurationWithExcludePageSixPlusThree(
         BackendModule $I,

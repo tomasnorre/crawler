@@ -32,7 +32,7 @@ class JsonCompatibilityConverter
      * in the database. To ensure that older crawler entries, which have already been stored as serialized data
      * still works, we have added this converter that can be used for the reading part. The writing part will be done
      * in json from now on.
-     * @see https://github.com/AOEpeople/crawler/issues/417
+     * @see https://github.com/tomasnorre/crawler/issues/417
      *
      * @throws Exception
      */
