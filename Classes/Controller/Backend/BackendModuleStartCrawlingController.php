@@ -253,7 +253,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
             ) . '</option>';
         }
 
-        return '<select class="form-control" name="' . htmlspecialchars(
+        return '<select class="form-select" name="' . htmlspecialchars(
             $name . ($multiple ? '[]' : ''),
             ENT_QUOTES | ENT_HTML5
         ) . '"' . ($multiple ? ' multiple' : '') . '>' . implode('', $options) . '</select>';
