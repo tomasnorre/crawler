@@ -9,7 +9,6 @@ use Rector\DeadCode\Rector\If_\RemoveAlwaysTrueIfConditionRector;
 use Rector\DeadCode\Rector\Property\RemoveSetterOnlyPropertyAndMethodCallRector;
 use Rector\DeadCode\Rector\Property\RemoveUnusedPrivatePropertyRector;
 use Rector\DeadCode\Rector\Stmt\RemoveUnreachableStatementRector;
-use Rector\Php73\Rector\FuncCall\JsonThrowOnErrorRector;
 use Rector\PHPUnit\Set\PHPUnitSetList;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Set\ValueObject\SetList;
@@ -34,7 +33,6 @@ return RectorConfig::configure()
         Rector\DeadCode\Rector\Assign\RemoveUnusedVariableAssignRector::class => [
             __DIR__ . '/Classes/Domain/Repository/QueueRepository.php'
         ],
-        JsonThrowOnErrorRector::class,
         RemoveAlwaysTrueIfConditionRector::class => null,
         RemoveUnreachableStatementRector::class => [
             __DIR__ . '/Tests/Unit/CrawlStrategy/SubProcessExecutionStrategyTest.php'
@@ -55,12 +53,14 @@ return RectorConfig::configure()
         //SetList::CODE_QUALITY,
         //SetList::CODING_STYLE,
         LevelSetList::UP_TO_PHP_81,
-        Typo3SetList::TYPO3_11,
-        Typo3SetList::TYPO3_12,
         PHPUnitSetList::PHPUNIT_90,
         PHPUnitSetList::PHPUNIT_100,
         NimutTestingFrameworkSetList::class::NIMUT_TESTING_FRAMEWORK_TO_TYPO3_TESTING_FRAMEWORK,
-    ]);
+    ])
+    ->registerService(
+        Typo3SetList::TYPO3_11,
+        Typo3SetList::TYPO3_12,
+    );
 
 
 /**return static function (RectorConfig $rectorConfig): void {

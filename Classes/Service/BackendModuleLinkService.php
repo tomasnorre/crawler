@@ -18,7 +18,7 @@ namespace AOE\Crawler\Service;
  *
  * The TYPO3 project - inspiring people to share!
  */
-
+use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use AOE\Crawler\Controller\Backend\BackendModuleCrawlerProcessController;
 use AOE\Crawler\Controller\Backend\Helper\UrlBuilder;
 use Psr\Http\Message\UriInterface;
@@ -37,7 +37,7 @@ class BackendModuleLinkService
     /**
      * Returns a tag for the refresh icon
      *
-     * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
+     * @throws RouteNotFoundException
      */
     public function getRefreshLink(ModuleTemplate $moduleTemplate, int $pageUid): string
     {
@@ -56,7 +56,7 @@ class BackendModuleLinkService
     }
 
     /**
-     * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
+     * @throws RouteNotFoundException
      */
     public function getAddLink(
         ModuleTemplate $moduleTemplate,
@@ -84,7 +84,7 @@ class BackendModuleLinkService
     }
 
     /**
-     * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
+     * @throws RouteNotFoundException
      */
     public function getModeLink(ModuleTemplate $moduleTemplate, string $mode): string
     {
@@ -120,7 +120,7 @@ class BackendModuleLinkService
     /**
      * Returns a link for the panel to enable or disable the crawler
      *
-     * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
+     * @throws RouteNotFoundException
      */
     public function getEnableDisableLink(ModuleTemplate $moduleTemplate, bool $isCrawlerEnabled): string
     {

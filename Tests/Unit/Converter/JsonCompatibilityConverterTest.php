@@ -18,7 +18,7 @@ namespace AOE\Crawler\Tests\Unit\Converter;
  *
  * The TYPO3 project - inspiring people to share!
  */
-
+use Exception;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
@@ -67,7 +67,7 @@ class JsonCompatibilityConverterTest extends UnitTestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     #[\PHPUnit\Framework\Attributes\Test]
     public function jsonCompatibilityConverterTestThrowException(): void
