@@ -55,12 +55,10 @@ return RectorConfig::configure()
         LevelSetList::UP_TO_PHP_81,
         PHPUnitSetList::PHPUNIT_90,
         PHPUnitSetList::PHPUNIT_100,
-        NimutTestingFrameworkSetList::class::NIMUT_TESTING_FRAMEWORK_TO_TYPO3_TESTING_FRAMEWORK,
     ])
-    ->registerService(
-        Typo3SetList::TYPO3_11,
-        Typo3SetList::TYPO3_12,
-    );
+    ->registerService(Typo3SetList::TYPO3_11)
+    ->registerService(Typo3SetList::TYPO3_12)
+    ->registerService(NimutTestingFrameworkSetList::class::NIMUT_TESTING_FRAMEWORK_TO_TYPO3_TESTING_FRAMEWORK);
 
 
 /**return static function (RectorConfig $rectorConfig): void {
