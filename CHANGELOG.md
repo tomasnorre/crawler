@@ -1,6 +1,8 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 11.0.10-dev
+## Crawler 11.0.10
+
+Crawler 11.0.10 was released on July 4th, 2024
 
 ### Fixed
 
