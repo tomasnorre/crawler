@@ -18,7 +18,8 @@ namespace AOE\Crawler\Service;
  *
  * The TYPO3 project - inspiring people to share!
  */
-
+use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
+use TYPO3\CMS\Core\Http\Uri;
 use AOE\Crawler\Controller\Backend\BackendModuleCrawlerLogController;
 use AOE\Crawler\Controller\Backend\Helper\ResultHandler;
 use AOE\Crawler\Controller\Backend\Helper\UrlBuilder;
@@ -41,9 +42,9 @@ class BackendModuleLogService
      * Create the rows for display of the page tree
      * For each page a number of rows are shown displaying GET variable configuration
      *
-     * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
+     * @throws RouteNotFoundException
      *
-     * @psalm-return non-empty-list<array{titleRowSpan: positive-int, colSpan: int, title: string, noEntries?: string, trClass?: string, qid?: array{link: \TYPO3\CMS\Core\Http\Uri, link-text: string}, refresh?: array{link: \TYPO3\CMS\Core\Http\Uri, link-text: Icon, warning: Icon|string}, columns?: array{url: mixed|string, scheduled: string, exec_time: string, result_log: string, result_status: string, feUserGroupList: string, procInstructions: string, set_id: string, tsfe_id: string, tsfe_gr_list: string}}>
+     * @psalm-return non-empty-list<array{titleRowSpan: positive-int, colSpan: int, title: string, noEntries?: string, trClass?: string, qid?: array{link: Uri, link-text: string}, refresh?: array{link: Uri, link-text: Icon, warning: (Icon | string)}, columns?: array{url: (mixed | string), scheduled: string, exec_time: string, result_log: string, result_status: string, feUserGroupList: string, procInstructions: string, set_id: string, tsfe_id: string, tsfe_gr_list: string}}>
      */
     public function addRows(
         array $logEntriesOfPage,

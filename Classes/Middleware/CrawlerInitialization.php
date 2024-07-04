@@ -18,7 +18,8 @@ namespace AOE\Crawler\Middleware;
  *
  * The TYPO3 project - inspiring people to share!
  */
-
+use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
+use TYPO3\CMS\Core\Error\Http\ServiceUnavailableException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -46,8 +47,8 @@ class CrawlerInitialization implements MiddlewareInterface
     }
 
     /**
-     * @throws \TYPO3\CMS\Core\Context\Exception\AspectNotFoundException
-     * @throws \TYPO3\CMS\Core\Error\Http\ServiceUnavailableException
+     * @throws AspectNotFoundException
+     * @throws ServiceUnavailableException
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

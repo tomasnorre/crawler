@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AOE\Crawler\Domain\Model;
 
+use InvalidArgumentException;
 use AOE\Crawler\Exception\NoIndexFoundException;
 
 /***************************************************************
@@ -54,7 +55,7 @@ class ProcessCollection extends \ArrayObject
      * Method to add an element to the collection-
      *
      * @param Process $subject
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function offsetSet(mixed $index, $subject): void
     {
@@ -71,7 +72,7 @@ class ProcessCollection extends \ArrayObject
     /**
      * Method to append an element to the collection
      * @param Process $subject
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function append($subject): void
     {

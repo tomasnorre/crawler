@@ -18,7 +18,8 @@ namespace AOE\Crawler\Middleware;
  *
  * The TYPO3 project - inspiring people to share!
  */
-
+use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
+use TYPO3\CMS\Core\Error\Http\ServiceUnavailableException;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use Psr\Http\Message\ResponseInterface;
@@ -50,8 +51,8 @@ class FrontendUserAuthenticator implements MiddlewareInterface
     }
 
     /**
-     * @throws \TYPO3\CMS\Core\Context\Exception\AspectNotFoundException
-     * @throws \TYPO3\CMS\Core\Error\Http\ServiceUnavailableException
+     * @throws AspectNotFoundException
+     * @throws ServiceUnavailableException
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -118,7 +119,7 @@ class FrontendUserAuthenticator implements MiddlewareInterface
     }
 
     /**
-     * @return mixed|string|\TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication
+     * @return mixed|string|FrontendUserAuthentication
      */
     private function getFrontendUser(string $grList, ServerRequestInterface $request)
     {

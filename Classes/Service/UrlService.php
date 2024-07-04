@@ -18,7 +18,9 @@ namespace AOE\Crawler\Service;
  *
  * The TYPO3 project - inspiring people to share!
  */
-
+use TYPO3\CMS\Core\Exception\SiteNotFoundException;
+use TYPO3\CMS\Core\Routing\InvalidRouteArgumentsException;
+use Doctrine\DBAL\Driver\Exception;
 use Psr\Http\Message\UriInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Http\Uri;
@@ -36,9 +38,9 @@ class UrlService
      * the Site instance.
      *
      * @param int $httpsOrHttp see tx_crawler_configuration.force_ssl
-     * @throws \TYPO3\CMS\Core\Exception\SiteNotFoundException
-     * @throws \TYPO3\CMS\Core\Routing\InvalidRouteArgumentsException
-     * @throws \Doctrine\DBAL\Driver\Exception
+     * @throws SiteNotFoundException
+     * @throws InvalidRouteArgumentsException
+     * @throws Exception
      */
     public function getUrlFromPageAndQueryParameters(
         int $pageId,
