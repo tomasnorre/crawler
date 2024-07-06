@@ -147,6 +147,14 @@ Crawler 12.0.0 was released on April 21st, 2024
 * !!! QueueRepository->getPerformanceData()
 * !!! QueueRepository->findByQueueId()
 
+## Crawler 11.0.10
+
+Crawler 11.0.10 was released on July 4th, 2024
+
+### Fixed
+
+* Check queueRec before usages to avoid php-errors
+
 ## Crawler 11.0.9
 
 Crawler 11.0.9 was released on May 30th, 2024
