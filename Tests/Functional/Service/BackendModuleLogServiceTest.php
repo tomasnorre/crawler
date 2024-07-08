@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Unit\Service;
+namespace AOE\Crawler\Tests\Functional\Service;
 
 use AOE\Crawler\Service\BackendModuleLogService;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
@@ -110,7 +110,7 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
             'setId' => $setId,
             'showResultLog' => '1',
             'showFeVars' => '1',
-            'CVSExport' => false,
+            'CSVExport' => false,
             'logEntries' => [],
             'expected' => [[[
                 'titleRowSpan' => 1,
@@ -132,7 +132,7 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
             'setId' => $setId,
             'showResultLog' => '1',
             'showFeVars' => '1',
-            'CVSExport' => false,
+            'CSVExport' => false,
             'logEntries' => [
                 [
                     'qid' => 20,
@@ -166,7 +166,7 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
             'setId' => $setId,
             'showResultLog' => '1',
             'showFeVars' => '1',
-            'CVSExport' => false,
+            'CSVExport' => false,
             'logEntries' => [
                 [
                     'qid' => 20,
@@ -208,7 +208,7 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
             'setId' => $setId,
             'showResultLog' => '0',
             'showFeVars' => '0',
-            'CVSExport' => false,
+            'CSVExport' => false,
             'logEntries' => [
                 [
                     'qid' => 20,
@@ -241,7 +241,7 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
             'setId' => $setId,
             'showResultLog' => '0',
             'showFeVars' => '0',
-            'CVSExport' => false,
+            'CSVExport' => false,
             'logEntries' => [
                 [
                     'qid' => 20,
@@ -274,7 +274,7 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
             'setId' => $setId,
             'showResultLog' => '0',
             'showFeVars' => '0',
-            'CVSExport' => false,
+            'CSVExport' => false,
             'logEntries' => [
                 [
                     'qid' => 20,
@@ -304,12 +304,12 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
             ]], []],
         ];
 
-        yield 'One log entry, CVSExport is true' => [
+        yield 'One log entry, CSVExport is true' => [
             'title' => $title,
             'setId' => $setId,
             'showResultLog' => '0',
             'showFeVars' => '0',
-            'CVSExport' => true,
+            'CSVExport' => true,
             'logEntries' => [
                 [
                     'qid' => 20,
