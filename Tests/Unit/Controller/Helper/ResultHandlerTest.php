@@ -132,29 +132,29 @@ class ResultHandlerTest extends UnitTestCase
 
     public static function getResultLogDataProvider(): iterable
     {
-        yield 'ResultRow key result_data does not exist' => [
-            'resultRow' => [
+        yield 'resultLog key result_data does not exist' => [
+            'resultLog' => [
                 'other-key' => 'value',
             ],
             'expected' => '',
         ];
-        yield 'ResultRow key result_data does exist, but empty' => [
-            'resultRow' => [
+        yield 'resultLog key result_data does exist, but empty' => [
+            'resultLog' => [
                 'result_data' => '',
             ],
             'expected' => '',
         ];
         /* Bug We don't handle when result row doesn't contain content key */
-        yield 'ResultRow key result_data exits, is not empty, but does not contain content key' => [
-            'resultRow' => [
+        yield 'resultLog key result_data exits, is not empty, but does not contain content key' => [
+            'resultLog' => [
                 'result_data' => json_encode([
                     'not-content' => 'value',
                 ], JSON_THROW_ON_ERROR),
             ],
             'expected' => '',
         ];
-        yield 'ResultRow key result_data exits and is not empty, does not contain log' => [
-            'resultRow' => [
+        yield 'resultLog key result_data exits and is not empty, does not contain log' => [
+            'resultLog' => [
                 'result_data' => json_encode(
                     [
                         'content' => json_encode([
@@ -166,8 +166,8 @@ class ResultHandlerTest extends UnitTestCase
             ],
             'expected' => '',
         ];
-        yield 'ResultRow key result_data exits and is not empty, does contain log (1 element)' => [
-            'resultRow' => [
+        yield 'resultLog key result_data exits and is not empty, does contain log (1 element)' => [
+            'resultLog' => [
                 'result_data' => json_encode(
                     [
                         'content' => json_encode([
@@ -179,8 +179,8 @@ class ResultHandlerTest extends UnitTestCase
             ],
             'expected' => 'ok',
         ];
-        yield 'ResultRow key result_data exits and is not empty, does contain log (2 elements)' => [
-            'resultRow' => [
+        yield 'resultLog key result_data exits and is not empty, does contain log (2 elements)' => [
+            'resultLog' => [
                 'result_data' => json_encode(
                     [
                         'content' => json_encode([
