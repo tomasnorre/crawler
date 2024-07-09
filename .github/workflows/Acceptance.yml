@@ -56,7 +56,7 @@ jobs:
           sed -i "s|$FROM_PATH|$TO_PATH|g" .ddev/docker-compose.volume.yaml
           ddev restart
           rm -rf vendor composer.lock
-          ddev composer require typo3/cms-core=${{ matrix.typo3 }} tomasnorre/crawler=dev-$BRANCH_NAME
+          ddev composer require typo3/minimal=${{ matrix.typo3 }} tomasnorre/crawler=dev-$BRANCH_NAME
           ddev exec bin/typo3 backend:lock
           ddev exec bin/typo3 extension:setup
           ddev exec bin/typo3 cache:flush
@@ -65,7 +65,7 @@ jobs:
           ddev exec bin/typo3 backend:unlock
           cd .. # Going back to "root" directory
           rm -rf .Build composer.lock
-          composer require typo3/cms-core=${{ matrix.typo3 }}
+          composer require typo3/minimal=${{ matrix.typo3 }}
           wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
           chmod +x wait-for-it.sh
           docker ps
