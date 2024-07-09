@@ -18,12 +18,12 @@ namespace AOE\Crawler\Service;
  *
  * The TYPO3 project - inspiring people to share!
  */
-use TYPO3\CMS\Core\Exception\SiteNotFoundException;
-use TYPO3\CMS\Core\Routing\InvalidRouteArgumentsException;
 use Doctrine\DBAL\Driver\Exception;
 use Psr\Http\Message\UriInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\Http\Uri;
+use TYPO3\CMS\Core\Routing\InvalidRouteArgumentsException;
 use TYPO3\CMS\Core\Routing\SiteMatcher;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
