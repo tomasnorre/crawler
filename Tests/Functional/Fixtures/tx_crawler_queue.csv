@@ -6,9 +6,9 @@
 ,1004,0,1,"asdfgh","","",0,0,"FirstConfiguration","","",0
 ,1005,0,0,"asdfgh","","",10,0,"SecondConfiguration","","",0
 ,1006,1006,2,"qwerty","","",0,0,"SecondConfiguration","","7b6919e533f334550b6f19034dfd2f81",123
-,1007,1007,0,"asdfgh","","",12,0,"SecondConfiguration","","",123
-,1008,1007,3,"asdfgh","","",0,0,"ThirdConfiguration","","",456
-,1009,1007,4,"asdfgh","","",0,0,"ThirdConfiguration","","",789
+,1007,"4b802fa4bd183156c47836ba9c79643b",0,"asdfgh","","",12,0,"SecondConfiguration","","",123
+,1008,"4b802fa4bd183156c47836ba9c79643b",3,"asdfgh","","",0,0,"ThirdConfiguration","","",456
+,1009,"4b802fa4bd183156c47836ba9c79643b",4,"asdfgh","","",0,0,"ThirdConfiguration","","",789
 ,1015,0,5,"dvorak","","",0,12,"FirstConfiguration","","",0
 ,1016,1016,16,"dvorak","","",10,1245,"ThirdConfiguration","","",0
 ,1017,1017,17,"dvorak","","",20,4321,"FirstConfiguration","","",0

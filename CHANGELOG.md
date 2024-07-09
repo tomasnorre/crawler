@@ -7,6 +7,7 @@
 ### Changed
 
 ### Fixed
+* Prevent exception `Truncated incorrect DECIMAL value` in `crawler:processQueue` [@xyng](https://github.com/xyng)
 
 ### Deprecated
 

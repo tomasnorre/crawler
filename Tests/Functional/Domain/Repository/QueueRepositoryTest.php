@@ -134,7 +134,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     public function countNonExecutedItemsByProcessReturnsInteger(): void
     {
         $process = new Process();
-        $process->setProcessId('1007');
+        $process->setProcessId('4b802fa4bd183156c47836ba9c79643b');
 
         self::assertSame(2, $this->subject->countNonExecutedItemsByProcess($process));
     }
@@ -273,7 +273,7 @@ class QueueRepositoryTest extends FunctionalTestCase
     {
         $unprocessedEntriesBefore = $this->subject->countAllPendingItems() - $this->subject->countAllAssignedPendingItems();
         self::assertSame(5, $unprocessedEntriesBefore);
-        $processIds = ['1007'];
+        $processIds = ['4b802fa4bd183156c47836ba9c79643b'];
         $this->subject->unsetProcessScheduledAndProcessIdForQueueEntries($processIds);
 
         $unprocessedEntriesAfter = $this->subject->countAllPendingItems() - $this->subject->countAllAssignedPendingItems();

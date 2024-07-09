@@ -327,7 +327,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
                 $queryBuilder->expr()->eq('exec_time', $queryBuilder->createNamedParameter(0, Connection::PARAM_INT)),
                 $queryBuilder->expr()->in(
                     'process_id',
-                    $queryBuilder->createNamedParameter($processIds, ArrayParameterType::INTEGER)
+                    $queryBuilder->createNamedParameter($processIds, ArrayParameterType::STRING)
                 )
             )
             ->set('process_scheduled', '0')
