@@ -159,7 +159,7 @@ class CrawlerControllerTest extends UnitTestCase
             'pageRow' => [
                 'uid' => 2001,
             ],
-            '$skipMessage' => 'Just variable placeholder, not used in tests as parsed as reference',
+            'skipMessage' => 'Just variable placeholder, not used in tests as parsed as reference',
             'expected' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
         ];
         yield 'Message string not empty, returns empty array' => [
@@ -168,7 +168,7 @@ class CrawlerControllerTest extends UnitTestCase
             'pageRow' => [
                 'uid' => 2001,
             ],
-            '$skipMessage' => 'Just variable placeholder, not used in tests as parsed as reference',
+            'skipMessage' => 'Just variable placeholder, not used in tests as parsed as reference',
             'expected' => [],
         ];
         yield 'PageRow Uid is string with int value' => [
@@ -177,7 +177,7 @@ class CrawlerControllerTest extends UnitTestCase
             'pageRow' => [
                 'uid' => '2001',
             ],
-            '$skipMessage' => 'Just variable placeholder, not used in tests as parsed as reference',
+            'skipMessage' => 'Just variable placeholder, not used in tests as parsed as reference',
             'expected' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
         ];
         yield 'PageRow Uid is string with string value' => [
@@ -186,7 +186,7 @@ class CrawlerControllerTest extends UnitTestCase
             'pageRow' => [
                 'uid' => 'string',
             ],
-            '$skipMessage' => 'PageUid "string" was not an integer',
+            'skipMessage' => 'PageUid "string" was not an integer',
             'expected' => [],
         ];
     }

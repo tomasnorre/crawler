@@ -53,12 +53,12 @@ class ConfigurationServiceTest extends UnitTestCase
     {
         yield 'both allowed and configuration is empty' => [
             'allowed' => [],
-            'configurations' => [],
+            'configuration' => [],
             'expected' => [],
         ];
         yield 'allowed is empty' => [
             'allowed' => [],
-            'configurations' => [
+            'configuration' => [
                 'default' => 'configuration-text',
                 'news' => 'configuration-text',
             ],
@@ -69,7 +69,7 @@ class ConfigurationServiceTest extends UnitTestCase
         ];
         yield 'news is not allowed' => [
             'allowed' => ['default'],
-            'configurations' => [
+            'configuration' => [
                 'default' => 'configuration-text',
                 'news' => 'configuration-text',
             ],
