@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace AOE\Crawler\Domain\Model;
 
-use InvalidArgumentException;
 use AOE\Crawler\Exception\NoIndexFoundException;
+use InvalidArgumentException;
 
 /***************************************************************
  *  Copyright notice

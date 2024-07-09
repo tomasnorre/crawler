@@ -318,15 +318,15 @@ class QueueRepositoryTest extends FunctionalTestCase
     public static function flushQueueDataProvider(): iterable
     {
         yield 'Flush Entire Queue' => [
-            'filter' => new QueueFilter('all'),
+            'queueFilter' => new QueueFilter('all'),
             'expected' => 0,
         ];
         yield 'Flush Pending entries' => [
-            'filter' => new QueueFilter('pending'),
+            'queueFilter' => new QueueFilter('pending'),
             'expected' => 7,
         ];
         yield 'Flush Finished entries' => [
-            'filter' => new QueueFilter('finished'),
+            'queueFilter' => new QueueFilter('finished'),
             'expected' => 8,
         ];
     }
@@ -357,43 +357,43 @@ class QueueRepositoryTest extends FunctionalTestCase
     public static function getDuplicateQueueItemsIfExistsDataProvider(): iterable
     {
         yield 'EnableTimeslot is true and timestamp is <= current' => [
-            'timeslotActive' => true,
-            'tstamp' => 10,
-            'current' => 12,
-            'page_id' => 10,
-            'parameters_hash' => '',
+            'enableTimeslot' => true,
+            'timestamp' => 10,
+            'currentTime' => 12,
+            'pageId' => 10,
+            'parametersHash' => '',
             'expected' => [1018, 1020],
         ];
         yield 'EnableTimeslot is false and timestamp is <= current' => [
-            'timeslotActive' => false,
-            'tstamp' => 11,
-            'current' => 11,
-            'page_id' => 10,
-            'parameters_hash' => '',
+            'enableTimeslot' => false,
+            'timestamp' => 11,
+            'currentTime' => 11,
+            'pageId' => 10,
+            'parametersHash' => '',
             'expected' => [1018],
         ];
         yield 'EnableTimeslot is true and timestamp is > current' => [
-            'timeslotActive' => true,
-            'tstamp' => 12,
-            'current' => 10,
-            'page_id' => 10,
-            'parameters_hash' => '',
+            'enableTimeslot' => true,
+            'timestamp' => 12,
+            'currentTime' => 10,
+            'pageId' => 10,
+            'parametersHash' => '',
             'expected' => [1020],
         ];
         yield 'EnableTimeslot is false and timestamp is > current' => [
-            'timeslotActive' => false,
-            'tstamp' => 12,
-            'current' => 10,
-            'page_id' => 10,
-            'parameters_hash' => '',
+            'enableTimeslot' => false,
+            'timestamp' => 12,
+            'currentTime' => 10,
+            'pageId' => 10,
+            'parametersHash' => '',
             'expected' => [1020],
         ];
         yield 'EnableTimeslot is false and timestamp is > current and parameters_hash is set' => [
-            'timeslotActive' => false,
-            'tstamp' => 12,
-            'current' => 10,
-            'page_id' => 10,
-            'parameters_hash' => 'NotReallyAHashButWillDoForTesting',
+            'enableTimeslot' => false,
+            'timestamp' => 12,
+            'currentTime' => 10,
+            'pageId' => 10,
+            'parametersHash' => 'NotReallyAHashButWillDoForTesting',
             'expected' => [1019],
         ];
     }
