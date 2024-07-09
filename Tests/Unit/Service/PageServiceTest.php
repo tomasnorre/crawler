@@ -106,7 +106,7 @@ class PageServiceTest extends UnitTestCase
         ];
 
         yield 'Page of doktype 3 - External Url' => [
-            'extensionSettings' => [],
+            'extensionSetting' => [],
             'pageRow' => [
                 'doktype' => 3,
                 'hidden' => 0,
@@ -117,7 +117,7 @@ class PageServiceTest extends UnitTestCase
         ];
 
         yield 'Page of doktype 4 - Shortcut' => [
-            'extensionSettings' => [],
+            'extensionSetting' => [],
             'pageRow' => [
                 'doktype' => 4,
                 'hidden' => 0,
@@ -128,7 +128,7 @@ class PageServiceTest extends UnitTestCase
         ];
 
         yield 'Page of doktype 155 - Custom' => [
-            'extensionSettings' => [],
+            'extensionSetting' => [],
             'pageRow' => [
                 'doktype' => 155,
                 'hidden' => 0,
@@ -141,7 +141,7 @@ class PageServiceTest extends UnitTestCase
         ];
 
         yield 'Page of doktype 199 - Spacer' => [
-            'extensionSettings' => [],
+            'extensionSetting' => [],
             'pageRow' => [
                 'doktype' => 199,
                 'hidden' => 0,
@@ -152,7 +152,7 @@ class PageServiceTest extends UnitTestCase
         ];
 
         yield 'Page of doktype 254 - Folder' => [
-            'extensionSettings' => [],
+            'extensionSetting' => [],
             'pageRow' => [
                 'doktype' => 254,
                 'hidden' => 0,
@@ -163,7 +163,7 @@ class PageServiceTest extends UnitTestCase
         ];
 
         yield 'Page of doktype 255 - Recycler' => [
-            'extensionSettings' => [],
+            'extensionSetting' => [],
             'pageRow' => [
                 'doktype' => 255,
                 'hidden' => 0,
@@ -177,7 +177,7 @@ class PageServiceTest extends UnitTestCase
          * Left out as we want people to use the PSR-14 ModifySkipPageEvent instead,
          * kept for easy testing if needed.
         yield 'Page veto exists' => [
-            'extensionSettings' => [],
+            'extensionSetting' => [],
             'pageRow' => [
                 'doktype' => 1,
                 'hidden' => 0,
@@ -188,7 +188,7 @@ class PageServiceTest extends UnitTestCase
         ];
 
         yield 'Page veto exists - string' => [
-            'extensionSettings' => [],
+            'extensionSetting' => [],
             'pageRow' => [
                 'doktype' => 1,
                 'hidden' => 0,
