@@ -27,8 +27,7 @@ hooks:
     - exec: /var/www/html/bin/typo3 cache:warmup
     - exec: /var/www/html/bin/typo3 backend:unlock
 omit_containers: [ ddev-ssh-agent ]
-webimage_extra_packages: [ cron ]
-#webimage_extra_packages: [ cron, poppler-utils ]
+webimage_extra_packages: [ cron, poppler-utils ]
 use_dns_when_possible: true
 timezone: Europe/Copenhagen
 composer_version: "2"
