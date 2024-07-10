@@ -47,6 +47,7 @@ jobs:
       - uses: ddev/github-action-setup-ddev@v1
         with:
           ddevDir: ".devbox"
+          version: 1.22.4
       - name: CodeCeption
         run: |
           export FROM_PATH='../../'
