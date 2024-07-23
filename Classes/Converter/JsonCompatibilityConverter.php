@@ -36,6 +36,11 @@ class JsonCompatibilityConverter
      */
     public function convert(string $dataString)
     {
+        $decoded = json_decode($dataString, true);
+        if ($decoded) {
+            return $decoded;
+        }
+
         $unserialized = unserialize($dataString, ['allowed_classes' => false]);
         if (is_object($unserialized)) {
             throw new \Exception('Objects are not allowed: ' . var_export($unserialized, true), 1593758307);
@@ -43,11 +48,6 @@ class JsonCompatibilityConverter
 
         if ($unserialized && ! is_object($unserialized)) {
             return $unserialized;
-        }
-
-        $decoded = json_decode($dataString, true);
-        if ($decoded) {
-            return $decoded;
         }
 
         return false;
