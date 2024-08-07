@@ -8,6 +8,7 @@
 
 ### Fixed
 * Prevent exception `Truncated incorrect DECIMAL value` in `crawler:processQueue` [@xyng](https://github.com/xyng)
+* Prevent and suppress E_WARNING in JsonCompatibilityConverter [@ulrichmathes](https://github.com/ulrichmathes)
 
 ### Deprecated
 
