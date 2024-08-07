@@ -53,13 +53,9 @@ class JsonCompatibilityConverter
             return $decoded;
         }
 
-        try {
-            $deserialized = unserialize($dataString, [
-                'allowed_classes' => false,
-            ]);
-        } catch (\Throwable) {
-            return false;
-        }
+        $deserialized = @unserialize($dataString, [
+            'allowed_classes' => false,
+        ]);
 
         if (is_object($deserialized)) {
             throw new \RuntimeException('Objects are not allowed: ' . var_export($deserialized, true), 1_593_758_307);
