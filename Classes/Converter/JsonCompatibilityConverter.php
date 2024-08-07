@@ -38,6 +38,10 @@ class JsonCompatibilityConverter
      */
     public function convert(string $dataString): array|bool
     {
+        if (empty($dataString)) {
+            return false;
+        }
+
         $decoded = '';
         try {
             $decoded = json_decode($dataString, true, 512, JSON_THROW_ON_ERROR);
