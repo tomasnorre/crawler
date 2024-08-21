@@ -1,5 +1,26 @@
 # Changelog TYPO3 Crawler
 
+## Crawler 11.0.11-dev
+
+### Added
+
+### Changed
+
+### Fixed
+* Fixed query building when using _ADDTABLE parameter [@hawkeye1909](https://github.com/hawkeye1909)
+
+### Deprecated
+
+#### Classes
+
+#### Functions & Properties
+
+### Removed
+
+#### Classes
+
+#### Functions & Properties
+
 ## Crawler 11.0.10
 
 Crawler 11.0.10 was released on July 4th, 2024

@@ -280,7 +280,10 @@ class ConfigurationService
 
                                 if (! empty($addTable)) {
                                     // TODO: Check if this works as intended!
-                                    $queryBuilder->add('from', $addTable);
+                                    $addTables = GeneralUtility::trimExplode(',', $addTable, true);
+                                    foreach ($addTables as $table) {
+                                        $queryBuilder->from($table);
+                                    }
                                 }
                                 $transOrigPointerField = $GLOBALS['TCA'][$subpartParams['_TABLE']]['ctrl']['transOrigPointerField'];
 
