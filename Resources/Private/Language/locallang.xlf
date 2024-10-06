@@ -238,6 +238,9 @@
 			<trans-unit id="labels.process.add" resname="labels.process.add">
 				<source>Add process</source>
 			</trans-unit>
+	        <trans-unit id="labels.process.flush" resname="labels.process.flush">
+				<source>Flush all processes</source>
+			</trans-unit>
 			<trans-unit id="time.detailed" resname="time.detailed">
 				<source>d-m-y H:i:s</source>
 			</trans-unit>

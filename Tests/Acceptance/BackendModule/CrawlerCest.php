@@ -35,4 +35,17 @@ class CrawlerCest
         $I->click('Enable crawling');
         $I->canSee('Stop all processes and disable crawling');
     }
+
+    public function canSeeFlushAllProcesses(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
+    {
+        $adminStep->loginAsAdmin();
+        $I->openCrawlerBackendModuleCrawlerProcess($adminStep, $pageTree);
+        $I->canSee('Flush all Processes');
+        $I->click('Show finished and terminated processes');
+        $I->canSeeNumberOfElements('#processes tbody tr', 3);
+        $I->click('Flush all Processes');
+        $I->click('Show finished and terminated processes');
+        $I->canSeeNumberOfElements('#processes tbody tr', 0);
+    }
+
 }
