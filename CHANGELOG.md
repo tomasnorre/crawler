@@ -7,6 +7,7 @@
 * Information when page does not exists when crawler:buildQueue command is called from cli
 
 ### Changed
+* Disallow DOKTYPE_BE_USER_SECTION to be crawled
 
 ### Fixed
 * Prevent exception `Truncated incorrect DECIMAL value` in `crawler:processQueue` [@xyng](https://github.com/xyng)

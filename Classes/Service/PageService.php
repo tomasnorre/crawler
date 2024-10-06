@@ -101,6 +101,7 @@ class PageService
             PageRepository::DOKTYPE_SPACER,
             PageRepository::DOKTYPE_SYSFOLDER,
             PageRepository::DOKTYPE_RECYCLER,
+            PageRepository::DOKTYPE_BE_USER_SECTION,
         ];
     }
 }
