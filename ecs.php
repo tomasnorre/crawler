@@ -48,4 +48,6 @@ return ECSConfig::configure()
         'PhpCsFixer\Fixer\Strict\StrictParamFixer' => null,
         PhpCsFixer\Fixer\Operator\NotOperatorWithSuccessorSpaceFixer::class => null,
         'PHP_CodeSniffer\Standards\Generic\Sniffs\CodeAnalysis\AssignmentInConditionSniff.Found' => null,
+        PhpCsFixer\Fixer\Phpdoc\AlignMultilineCommentFixer::class => null,
+        Symplify\CodingStandard\Fixer\Commenting\RemoveUselessDefaultCommentFixer::class => null
     ]);

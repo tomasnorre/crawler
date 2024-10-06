@@ -55,6 +55,23 @@ class BackendModuleLinkService
         );
     }
 
+    public function getFlushLink(ModuleTemplate $moduleTemplate): string
+    {
+        return $this->getLinkButton(
+            $moduleTemplate,
+            'actions-bolt',
+            $this->getLanguageService()->sL(
+                'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.process.flush'
+            ),
+            UrlBuilder::getBackendModuleUrl(
+                [
+                    'action' => 'flushProcess',
+                ],
+                BackendModuleCrawlerProcessController::BACKEND_MODULE
+            )
+        );
+    }
+
     /**
      * @throws RouteNotFoundException
      */

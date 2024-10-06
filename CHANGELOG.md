@@ -3,6 +3,7 @@
 ## Crawler 12.0.5-dev
 
 ### Added
+* Possibility to flush all processes from the backend module in process view
 
 ### Changed
 

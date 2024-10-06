@@ -12,11 +12,12 @@
             {addLink -> f:format.raw()}
         </f:if>
 		{modeLink -> f:format.raw()}
+		{flushLink -> f:format.raw()}
 	</div>
 	<h3>
 		<f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.generalinformation" />
 	</h3>
-	<table class="table table-striped table-bordered">
+	<table id="proces_overview"  class="table table-striped table-bordered">
 		<tr>
 			<td><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.pendingoverview" /></td>
 			<td>{assignedUnprocessedItemCount} / {totalUnprocessedItemCount}</td>
@@ -37,7 +38,7 @@
 	<h3>
 		<f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.processstates" />
 	</h3>
-	<table class="table table-striped table-bordered">
+	<table id="processes" class="table table-striped table-bordered">
 		<thead>
 			<tr>
 				<th><f:translate key="LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.state" /></th>
