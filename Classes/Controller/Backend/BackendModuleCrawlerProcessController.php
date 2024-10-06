@@ -90,6 +90,7 @@ final class BackendModuleCrawlerProcessController extends AbstractBackendModuleC
                 $isCrawlerEnabled
             ),
             'modeLink' => $this->backendModuleLinkService->getModeLink($this->moduleTemplate, $mode),
+            'flushLink' => $this->backendModuleLinkService->getFlushLink($this->moduleTemplate),
             'enableDisableToggle' => $this->backendModuleLinkService->getEnableDisableLink(
                 $this->moduleTemplate,
                 $isCrawlerEnabled
@@ -131,6 +132,12 @@ final class BackendModuleCrawlerProcessController extends AbstractBackendModuleC
                         'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.newprocess'
                     )
                 );
+                break;
+            case 'flushProcess':
+                $processes = $this->processRepository->findAll();
+                foreach ($processes as $process) {
+                    $this->processRepository->removeByProcessId($process->getProcessId());
+                }
                 break;
             case 'resumeCrawling':
             default:
