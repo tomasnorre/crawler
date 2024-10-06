@@ -4,6 +4,7 @@
 
 ### Added
 * Possibility to flush all processes from the backend module in process view
+* Information when page does not exists when crawler:buildQueue command is called from cli
 
 ### Changed
 
