@@ -40,10 +40,10 @@ class CrawlerCest
     {
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleCrawlerProcess($adminStep, $pageTree);
-        $I->canSee('Flush all Processes');
+        $I->canSee('Flush all processes');
         $I->click('Show finished and terminated processes');
         $I->canSeeNumberOfElements('#processes tbody tr', 3);
-        $I->click('Flush all Processes');
+        $I->click('Flush all processes');
         $I->click('Show finished and terminated processes');
         $I->canSeeNumberOfElements('#processes tbody tr', 0);
     }
