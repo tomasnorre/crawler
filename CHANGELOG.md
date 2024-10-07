@@ -15,6 +15,8 @@
 ### Deprecated
 
 #### Classes
+* CrawlerObjectException
+* TimeStampException
 
 #### Functions & Properties
 
