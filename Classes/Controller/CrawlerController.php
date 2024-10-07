@@ -237,7 +237,7 @@ class CrawlerController implements LoggerAwareInterface
                 $pageId,
                 $urlQuery,
                 $vv['subCfg']['baseUrl'] ?? null,
-                (int) $vv['subCfg']['force_ssl'] ?? 0
+                (int) ($vv['subCfg']['force_ssl'] ?? 0)
             );
 
             if (!$url instanceof UriInterface) {
