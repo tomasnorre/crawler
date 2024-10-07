@@ -195,9 +195,7 @@ class BackendModuleLogService
             if ($fKey === 'url') {
                 $contentArray['columns'][$fKey] = $value;
             } else {
-                $contentArray['columns'][$fKey] = nl2br(
-                    htmlspecialchars((string)$value, ENT_QUOTES | ENT_HTML5)
-                );
+                $contentArray['columns'][$fKey] = nl2br(htmlspecialchars((string) $value, ENT_QUOTES | ENT_HTML5));
             }
         }
         return $contentArray;
