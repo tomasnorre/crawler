@@ -21,6 +21,7 @@ namespace AOE\Crawler\Exception;
 
 /**
  * @internal since v12.0.0
+ * @deprecated since 12.0.5 will be removed in v14.x
  */
 class TimeStampException extends \Exception
 {
