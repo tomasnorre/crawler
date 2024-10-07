@@ -56,7 +56,6 @@ class BackendModuleLogService
     ): array {
         $resultArray = [];
         $contentArray = [];
-        $csvExport = [];
 
         $contentArray['titleRowSpan'] = 1;
         $contentArray['colSpan'] = 9
@@ -107,11 +106,7 @@ class BackendModuleLogService
                 ) : '';
                 $rowData['set_id'] = (string) $vv['set_id'];
 
-                if ($showFeVars) {
-                    $resFeVars = ResultHandler::getResFeVars($resultData ?: []);
-                    $rowData['tsfe_id'] = $resFeVars['id'] ?? '';
-                    $rowData['tsfe_gr_list'] = $resFeVars['gr_list'] ?? '';
-                }
+                $rowData = $this->populateFeVars($showFeVars, $resultData, $rowData);
 
                 $trClass = '';
                 $warningIcon = '';
@@ -144,32 +139,12 @@ class BackendModuleLogService
                     'warning' => $warningIcon,
                 ];
 
-                foreach ($rowData as $fKey => $value) {
-                    if ($fKey === 'url') {
-                        $contentArray['columns'][$fKey] = $value;
-                    } else {
-                        $contentArray['columns'][$fKey] = nl2br(
-                            htmlspecialchars((string) $value, ENT_QUOTES | ENT_HTML5)
-                        );
-                    }
-                }
-
+                $contentArray = $this->buildColumnsInContentArray($rowData, $contentArray);
                 $resultArray[] = $contentArray;
-
-                if ($CSVExport) {
-                    // Only for CSV (adding qid and scheduled/exec_time if needed):
-                    $csvExport['scheduled'] = BackendUtility::datetime($vv['scheduled']);
-                    $csvExport['exec_time'] = $vv['exec_time'] ? BackendUtility::datetime($vv['exec_time']) : '-';
-                    $csvExport['result_status'] = $contentArray['columns']['result_status'];
-                    $csvExport['url'] = $contentArray['columns']['url'];
-                    $csvExport['feUserGroupList'] = $contentArray['columns']['feUserGroupList'];
-                    $csvExport['procInstructions'] = $contentArray['columns']['procInstructions'];
-                    $csvExport['set_id'] = $contentArray['columns']['set_id'];
-                    $csvExport['result_log'] = str_replace(chr(10), '// ', $resLog);
-                    $csvExport['qid'] = $vv['qid'];
-                }
+                $csvExport = $this->extractCsvExport($CSVExport, $vv, $contentArray['columns'], $resLog);
             }
         } else {
+            $csvExport = [];
             $contentArray['title'] = $titleString;
             $contentArray['noEntries'] = $this->getLanguageService()->sL(
                 'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noentries'
@@ -184,5 +159,47 @@ class BackendModuleLogService
     private function getLanguageService(): LanguageService
     {
         return $GLOBALS['LANG'];
+    }
+
+    private function extractCsvExport(bool $CSVExport, mixed $vv, array $columns, string $resLog): array
+    {
+        $csvExport = [];
+        if ($CSVExport) {
+            // Only for CSV (adding qid and scheduled/exec_time if needed):
+            $csvExport['scheduled'] = BackendUtility::datetime($vv['scheduled']);
+            $csvExport['exec_time'] = $vv['exec_time'] ? BackendUtility::datetime($vv['exec_time']) : '-';
+            $csvExport['result_status'] = $columns['result_status'];
+            $csvExport['url'] = $columns['url'];
+            $csvExport['feUserGroupList'] = $columns['feUserGroupList'];
+            $csvExport['procInstructions'] = $columns['procInstructions'];
+            $csvExport['set_id'] = $columns['set_id'];
+            $csvExport['result_log'] = str_replace(chr(10), '// ', $resLog);
+            $csvExport['qid'] = $vv['qid'];
+        }
+        return $csvExport;
+    }
+
+    private function populateFeVars(string $showFeVars, bool|array $resultData, array $rowData): array
+    {
+        if ($showFeVars) {
+            $resFeVars = ResultHandler::getResFeVars($resultData ?: []);
+            $rowData['tsfe_id'] = $resFeVars['id'] ?? '';
+            $rowData['tsfe_gr_list'] = $resFeVars['gr_list'] ?? '';
+        }
+        return $rowData;
+    }
+
+    private function buildColumnsInContentArray(array $rowData, array $contentArray): array
+    {
+        foreach ($rowData as $fKey => $value) {
+            if ($fKey === 'url') {
+                $contentArray['columns'][$fKey] = $value;
+            } else {
+                $contentArray['columns'][$fKey] = nl2br(
+                    htmlspecialchars((string)$value, ENT_QUOTES | ENT_HTML5)
+                );
+            }
+        }
+        return $contentArray;
     }
 }

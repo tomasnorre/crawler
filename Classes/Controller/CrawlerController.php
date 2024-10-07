@@ -205,19 +205,20 @@ class CrawlerController implements LoggerAwareInterface
     public function urlListFromUrlArray(
         array $vv,
         array $pageRow,
-        int $scheduledTime,
-        int $reqMinute,
-        bool $submitCrawlUrls,
-        bool $downloadCrawlUrls,
+        int   $scheduledTime,
+        int   $reqMinute,
+        bool  $submitCrawlUrls,
+        bool  $downloadCrawlUrls,
         array &$duplicateTrack,
         array &$downloadUrls,
         array $incomingProcInstructions
-    ): string {
+    ): string
+    {
         if (!is_array($vv['URLs'])) {
             return 'ERROR - no URL generated';
         }
         $urlLog = [];
-        $pageId = (int) $pageRow['uid'];
+        $pageId = (int)$pageRow['uid'];
         $configurationHash = $this->getConfigurationHash($vv);
         $skipInnerCheck = $this->queueRepository->noUnprocessedQueueEntriesForPageWithConfigurationHashExist(
             $pageId,
@@ -244,7 +245,7 @@ class CrawlerController implements LoggerAwareInterface
                 continue;
             }
 
-            $url = (string) $url;
+            $url = (string)$url;
 
             // Create key by which to determine unique-ness:
             $uKey = $url . '|' . ($vv['subCfg']['userGroups'] ?? '') . '|' . ($vv['subCfg']['procInstrFilter'] ?? '');
@@ -415,11 +416,11 @@ class CrawlerController implements LoggerAwareInterface
             ->insert(
                 QueueRepository::TABLE_NAME,
                 [
-                    'page_id' => (int) $page_id,
+                    'page_id' => (int)$page_id,
                     'parameters' => json_encode($params),
-                    'scheduled' => (int) $schedule ?: $this->getCurrentTime(),
+                    'scheduled' => (int)$schedule ?: $this->getCurrentTime(),
                     'exec_time' => 0,
-                    'set_id' => (int) $setId,
+                    'set_id' => (int)$setId,
                     'result_data' => '',
                 ]
             );
@@ -449,7 +450,8 @@ class CrawlerController implements LoggerAwareInterface
         $tstamp,
         $configurationHash = '',
         $skipInnerDuplicationCheck = false
-    ) {
+    )
+    {
         $urlAdded = false;
         $rows = [];
 
@@ -473,13 +475,13 @@ class CrawlerController implements LoggerAwareInterface
         // Compile value array:
         $parameters_serialized = json_encode($parameters) ?: '';
         $fieldArray = [
-            'page_id' => (int) $id,
+            'page_id' => (int)$id,
             'parameters' => $parameters_serialized,
             'parameters_hash' => md5($parameters_serialized),
             'configuration_hash' => $configurationHash,
             'scheduled' => $tstamp,
             'exec_time' => 0,
-            'set_id' => (int) $this->setID,
+            'set_id' => (int)$this->setID,
             'result_data' => '',
             'configuration' => $subCfg['key'],
         ];
@@ -491,7 +493,7 @@ class CrawlerController implements LoggerAwareInterface
             if (!$skipInnerDuplicationCheck) {
                 // check if there is already an equal entry
                 $rows = $this->queueRepository->getDuplicateQueueItemsIfExists(
-                    (bool) $this->extensionSettings['enableTimeslot'],
+                    (bool)$this->extensionSettings['enableTimeslot'],
                     $tstamp,
                     $this->getCurrentTime(),
                     $fieldArray['page_id'],
@@ -540,31 +542,17 @@ class CrawlerController implements LoggerAwareInterface
      */
     public function readUrl($queueId, $force = false, string $processId = '')
     {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
-            QueueRepository::TABLE_NAME
-        );
         $ret = 0;
         $this->logger?->debug('crawler-readurl start ' . microtime(true));
 
-        $queryBuilder
-            ->select('*')
-            ->from(QueueRepository::TABLE_NAME)
-            ->where(
-                $queryBuilder->expr()->eq('qid', $queryBuilder->createNamedParameter($queueId, PDO::PARAM_INT))
-            );
-        if (!$force) {
-            $queryBuilder
-                ->andWhere('exec_time = 0')
-                ->andWhere('process_scheduled > 0');
-        }
-        $queueRec = $queryBuilder->executeQuery()->fetchAssociative();
+        $queueRec = $this->queueRepository->getQueueEntriesByQid($queueId, $force);
 
         if (!is_array($queueRec)) {
             return null;
         }
 
         /** @var BeforeQueueItemAddedEvent $event */
-        $event = $this->eventDispatcher->dispatch(new BeforeQueueItemAddedEvent((int) $queueId, $queueRec));
+        $event = $this->eventDispatcher->dispatch(new BeforeQueueItemAddedEvent((int)$queueId, $queueRec));
         $queueRec = $event->getQueueRecord();
 
         // Set exec_time to lock record:
@@ -579,7 +567,7 @@ class CrawlerController implements LoggerAwareInterface
 
         GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(QueueRepository::TABLE_NAME)
             ->update(QueueRepository::TABLE_NAME, $field_array, [
-                'qid' => (int) $queueId,
+                'qid' => (int)$queueId,
             ]);
 
         $result = $this->queueExecutor->executeQueueItem($queueRec, $this);
@@ -618,9 +606,11 @@ class CrawlerController implements LoggerAwareInterface
         $event = $this->eventDispatcher->dispatch(new AfterQueueItemAddedEvent($queueId, $field_array));
         $field_array = $event->getFieldArray();
 
+        //This should be extracted, we should listen to the event ourself,
+        // and move the code block here to an appropiate place. /Tomas 2024-10-07
         GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(QueueRepository::TABLE_NAME)
             ->update(QueueRepository::TABLE_NAME, $field_array, [
-                'qid' => (int) $queueId,
+                'qid' => (int)$queueId,
             ]);
 
         $this->logger?->debug('crawler-readurl stop ' . microtime(true));
@@ -689,7 +679,8 @@ class CrawlerController implements LoggerAwareInterface
         $downloadCrawlUrls,
         array $incomingProcInstructions,
         array $configurationSelection
-    ) {
+    )
+    {
         $this->scheduledTime = $scheduledTime;
         $this->reqMinute = $reqMinute;
         $this->submitCrawlUrls = $submitCrawlUrls;
@@ -741,7 +732,7 @@ class CrawlerController implements LoggerAwareInterface
                     $queueRows = array_merge($queueRows, $this->drawURLs_addRowsForPage(
                         $mountData['row'],
                         BackendUtility::getRecordTitle('pages', $mountData['row'], true),
-                        (string) $data['HTML']
+                        (string)$data['HTML']
                     ));
                 }
 
@@ -757,7 +748,7 @@ class CrawlerController implements LoggerAwareInterface
             $queueRows = array_merge($queueRows, $this->drawURLs_addRowsForPage(
                 $data['row'],
                 BackendUtility::getRecordTitle('pages', $data['row'], true),
-                (string) $data['HTML']
+                (string)$data['HTML']
             ));
         }
 
