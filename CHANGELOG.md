@@ -8,6 +8,7 @@
 
 ### Changed
 * Disallow DOKTYPE_BE_USER_SECTION to be crawled
+* CrawlerCsvWriter::CARRIAGE_RETURN constant is now private
 
 ### Fixed
 * Prevent exception `Truncated incorrect DECIMAL value` in `crawler:processQueue` [@xyng](https://github.com/xyng)
