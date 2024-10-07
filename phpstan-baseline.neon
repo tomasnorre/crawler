@@ -126,7 +126,7 @@ parameters:
 			path: Classes/Controller/Backend/Helper/UrlBuilder.php
 
 		-
-			message: "#^Class cognitive complexity is 97, keep it under 60$#"
+			message: "#^Class cognitive complexity is 97, keep it under 35$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -239,7 +239,7 @@ parameters:
 			path: Classes/Service/BackendModuleScriptUrlService.php
 
 		-
-			message: "#^Class cognitive complexity is 87, keep it under 60$#"
+			message: "#^Class cognitive complexity is 87, keep it under 35$#"
 			count: 1
 			path: Classes/Service/ConfigurationService.php
 
