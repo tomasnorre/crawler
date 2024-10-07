@@ -177,9 +177,12 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
                 }
 
                 $progressBar->clear();
-                $output->writeln(
-                    '<info>' . $p['url'] . ' (' . implode(',', $p['procInstructions']) . ') => ' . '</info>' . PHP_EOL
-                );
+                if (empty($p['procInstructions'][0])) {
+                    $procInstructionsString = '';
+                } else {
+                    $procInstructionsString = ' (' . implode(',', $p['procInstructions']) . ')';
+                }
+                $output->writeln('<info>' . $p['url'] . $procInstructionsString . ' => ' . '</info>');
                 $progressBar->display();
 
                 $result = $crawlerController->readUrlFromArray($queueRec);
@@ -192,7 +195,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
                     $resLog = array_key_exists('log', $requestResult)
                     && is_array($requestResult['log']) ? chr(9) . chr(9) .
                         implode(PHP_EOL . chr(9) . chr(9), $requestResult['log']) : '';
-                    $output->writeln('<info>OK: ' . $resLog . '</info>');
+                    $output->writeln('<info>OK: ' . $resLog . '</info>' . PHP_EOL);
                 } else {
                     $output->writeln(
                         '<error>Error checking Crawler Result:  ' . substr(
@@ -238,7 +241,9 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             if (empty($row->message)) {
                 $output->writeln('<info>' . $row->urls . '</info>');
             } else {
-                $output->writeln('<comment>' . $row->pageTitle . ': ' . $row->message . '</comment>');
+                $output->writeln(
+                    '<comment>Page "' . $row->pageTitle . '" is not added to queue' . $row->message . '</comment>'
+                );
             }
         }
     }
