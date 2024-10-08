@@ -94,3 +94,8 @@ services:
     AOE\Crawler\ContextMenu\ItemProvider:
         tags:
             - name: backend.contextmenu.itemprovider
+
+    AOE\Crawler\EventListener\AfterQueueItemAddedEventListener:
+      tags:
+        - name: event.listener
+          identifier: 'tx-crawler-after-queue-item-added'
