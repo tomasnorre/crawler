@@ -20,6 +20,7 @@
 * TimeStampException
 
 #### Functions & Properties
+* CrawlerController->addQueueEntry_callBack()
 
 ### Removed
 

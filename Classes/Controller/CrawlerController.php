@@ -402,6 +402,8 @@ class CrawlerController implements LoggerAwareInterface
      * @param string $callBack Call back object reference, eg. 'EXT:indexed_search/class.crawler.php:&tx_indexedsearch_crawler'
      * @param integer $page_id Page ID to attach it to
      * @param integer $schedule Time at which to activate
+     *
+     * @deprecated since 12.0.5 will be removed in 14.x
      */
     public function addQueueEntry_callBack($setId, $params, $callBack, $page_id = 0, $schedule = 0): void
     {
