@@ -52,5 +52,5 @@ jobs:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
         run: |
           composer global require php-coveralls/php-coveralls --no-progress --no-suggest --no-interaction
-          /home/runner/.composer/vendor/bin/php-coveralls -c .coveralls.yml -vvv --json_path=var/log/coveralls-upload.json
-        continue-on-error: true
+          /home/runner/.composer/vendor/bin/php-coveralls -c .coveralls.yml -vvv --json_path=Tests/coveralls-upload.json
+        #continue-on-error: true
