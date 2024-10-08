@@ -40,6 +40,7 @@
         "codeception/module-webdriver": "^4.0",
         "infection/infection": "^0.26",
         "nikic/php-parser": "^4.13",
+        "nimut/phpunit-merger": "^2.0",
         "phpspec/prophecy-phpunit": "^2.0",
         "phpstan/extension-installer": "^1.2",
         "phpstan/phpstan": "^1.9",
@@ -179,6 +180,12 @@
             "@test:functional",
             "@test:functional-sqlite",
             "@test:acceptance"
+        ],
+        "test:coverage": [
+            "mkdir -p .Logs/coverage",
+            "XDEBUG_MODE=coverage .Build/bin/phpunit --coverage-filter Classes --coverage-php .Logs/coverage/unit_clover.cov -c Tests/UnitTests.xml Tests/Unit ",
+            "XDEBUG_MODE=coverage .Build/bin/phpunit --coverage-filter Classes --coverage-php .Logs/coverage/functional_clover.cov -c Tests/FunctionalTests.xml Tests/Functional ",
+            "XDEBUG_MODE=coverage .Build/bin/phpunit-merger coverage .Logs/coverage/ --html=report .Logs/coverage.xml;"
         ],
         "test:functional": [
             "@test:reset-vars",
