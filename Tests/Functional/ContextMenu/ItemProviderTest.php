@@ -20,11 +20,10 @@ declare(strict_types=1);
 namespace AOE\Crawler\Tests\Functional\ContextMenu;
 
 use AOE\Crawler\ContextMenu\ItemProvider;
-use AOE\Crawler\Tests\Functional\LanguageServiceTestTrait;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
-use PHPUnit\Framework\Attributes\Test;
 
 class ItemProviderTest extends FunctionalTestCase
 {
@@ -69,7 +68,7 @@ class ItemProviderTest extends FunctionalTestCase
                 'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:contextMenu.label',
                 'iconIdentifier' => 'tx-other-ext',
                 'callbackAction' => 'other-ext-callback',
-            ]
+            ],
         ];
 
         $subject = new ItemProvider();

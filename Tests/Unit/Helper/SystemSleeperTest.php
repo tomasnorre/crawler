@@ -32,6 +32,6 @@ class SystemSleeperTest extends UnitTestCase
         $subject = new SystemSleeper();
         $subject->sleep(1);
         $endTime = date('s');
-        self::assertEquals(1, $endTime-$startTime);
+        self::assertEquals(1, $endTime - $startTime);
     }
 }

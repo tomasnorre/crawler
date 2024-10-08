@@ -25,7 +25,6 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 class ExtensionConfigurationProviderTest extends FunctionalTestCase
 {
-
     public function testExceptionIsThrownAndCatchedIfExtensionNotLoaded(): void
     {
         $subject = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
