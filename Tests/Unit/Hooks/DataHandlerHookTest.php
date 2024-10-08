@@ -214,4 +214,40 @@ class DataHandlerHookTest extends UnitTestCase
             $dataHandler
         );
     }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function ensureEarlyReturnIfPageIdsToBeFlushedFromCacheEmpty(): void
+    {
+        $mockedDataHandlerHook = $this->createPartialMock(
+            DataHandlerHook::class,
+            ['getQueueRepository', 'getQueueService', 'getPageRepository']
+        );
+
+        $queueService = $this->prophesize(QueueService::class);
+        $queueService->addPageToQueue()->shouldNotBeCalled();
+
+        $queueRepository = $this->prophesize(QueueRepository::class);
+        $queueRepository->isPageInQueue()->shouldNotBeCalled();
+
+        $pageRepository = $this->prophesize(PageRepository::class);
+        $pageRepository->getPage()->shouldNotBeCalled();
+
+        $mockedDataHandlerHook->method('getQueueRepository')->willReturn($queueRepository->reveal());
+        $mockedDataHandlerHook->method('getQueueService')->willReturn($queueService->reveal());
+        $mockedDataHandlerHook->method('getPageRepository')->willReturn($pageRepository->reveal());
+
+        $cacheManager = $this->prophesize(CacheManager::class);
+        $cacheManager->getCache(Argument::any())->willReturn($this->prophesize(FrontendInterface::class)->reveal());
+        GeneralUtility::setSingletonInstance(CacheManager::class, $cacheManager->reveal());
+
+        $dataHandler = new DataHandler();
+
+        self::assertNull($mockedDataHandlerHook->addFlushedPagesToCrawlerQueue(
+            [
+                'table' => 'pages',
+                'pageIdArray' => [],
+            ],
+            $dataHandler
+        ));
+    }
 }
