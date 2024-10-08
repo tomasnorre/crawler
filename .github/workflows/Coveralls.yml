@@ -14,10 +14,10 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - name: Set up MySQL 5.7
+      - name: Set up MySQL 8.0
         uses: mirromutth/mysql-action@v1.1
         with:
-          mysql version: 5.7
+          mysql version: 8.0
           mysql root password: 'root'
 
       - name: Checkout
@@ -35,12 +35,12 @@ jobs:
       - name: Unit Tests
         run: |
           export "UNIT_XML"=Tests/UnitTests.xml
-          .Build/bin/phpunit --coverage-filter Classes --coverage-clover=unittest-coverage.clover --colors -c $UNIT_XML Tests/Unit
+          XDEBUG_MODE=coverage .Build/bin/phpunit --coverage-filter Classes --coverage-clover=unittest-coverage.clover --colors -c $UNIT_XML Tests/Unit
 
       - name: Functional Tests
         run: |
           export "FUNCTIONAL_XML"=Tests/FunctionalTests.xml
-          .Build/bin/phpunit --coverage-filter Classes --coverage-clover=functional-coverage.clover --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
+          XDEBUG_MODE=coverage .Build/bin/phpunit --coverage-filter Classes --coverage-clover=functional-coverage.clover --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
         env:
           typo3DatabaseHost: 127.0.0.1
           typo3DatabaseName: typo3
@@ -49,8 +49,8 @@ jobs:
 
       - name: Upload coverage results to Coveralls
         env:
-          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
         run: |
           composer global require php-coveralls/php-coveralls --no-progress --no-suggest --no-interaction
-          /home/runner/.composer/vendor/bin/php-coveralls -c .coveralls.yml -vvv --json_path=var/log/coveralls-upload.json
-        continue-on-error: true
+          /home/runner/.composer/vendor/bin/php-coveralls -c .coveralls.yml -vvv --json_path=Tests/coveralls-upload.json
+        #continue-on-error: true
