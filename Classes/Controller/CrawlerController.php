@@ -35,7 +35,6 @@ use AOE\Crawler\Service\PageService;
 use AOE\Crawler\Service\ProcessInstructionService;
 use AOE\Crawler\Service\UrlService;
 use AOE\Crawler\Value\QueueRow;
-use PDO;
 use Psr\Http\Message\UriInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
@@ -540,24 +539,10 @@ class CrawlerController implements LoggerAwareInterface
      */
     public function readUrl($queueId, $force = false, string $processId = '')
     {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
-            QueueRepository::TABLE_NAME
-        );
         $ret = 0;
         $this->logger?->debug('crawler-readurl start ' . microtime(true));
 
-        $queryBuilder
-            ->select('*')
-            ->from(QueueRepository::TABLE_NAME)
-            ->where(
-                $queryBuilder->expr()->eq('qid', $queryBuilder->createNamedParameter($queueId, PDO::PARAM_INT))
-            );
-        if (!$force) {
-            $queryBuilder
-                ->andWhere('exec_time = 0')
-                ->andWhere('process_scheduled > 0');
-        }
-        $queueRec = $queryBuilder->executeQuery()->fetchAssociative();
+        $queueRec = $this->queueRepository->getQueueEntriesByQid($queueId, $force);
 
         if (!is_array($queueRec)) {
             return null;
@@ -618,6 +603,8 @@ class CrawlerController implements LoggerAwareInterface
         $event = $this->eventDispatcher->dispatch(new AfterQueueItemAddedEvent($queueId, $field_array));
         $field_array = $event->getFieldArray();
 
+        //This should be extracted, we should listen to the event ourself,
+        // and move the code block here to an appropiate place. /Tomas 2024-10-07
         GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(QueueRepository::TABLE_NAME)
             ->update(QueueRepository::TABLE_NAME, $field_array, [
                 'qid' => (int) $queueId,

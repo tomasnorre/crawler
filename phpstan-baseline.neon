@@ -1,6 +1,11 @@
 parameters:
 	ignoreErrors:
 		-
+			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Command\\\\BuildQueueCommand\\:\\:execute\\(\\)\" is 23, keep it under 21$#"
+			count: 1
+			path: Classes/Command/BuildQueueCommand.php
+
+		-
 			message: "#^Constant AOE\\\\Crawler\\\\Command\\\\ProcessQueueCommand\\:\\:CLI_STATUS_POLLABLE_PROCESSED is unused\\.$#"
 			count: 1
 			path: Classes/Command/ProcessQueueCommand.php
@@ -121,7 +126,7 @@ parameters:
 			path: Classes/Controller/Backend/Helper/UrlBuilder.php
 
 		-
-			message: "#^Class cognitive complexity is 98, keep it under 60$#"
+			message: "#^Class cognitive complexity is 97, keep it under 35$#"
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -219,7 +224,7 @@ parameters:
 			path: Classes/Service/BackendModuleLogService.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Service\\\\BackendModuleLogService\\:\\:addRows\\(\\) should return non\\-empty\\-array\\<int, array\\{titleRowSpan\\: int\\<1, max\\>, colSpan\\: int, title\\: string, noEntries\\?\\: string, trClass\\?\\: string, qid\\?\\: array\\{link\\: TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, link\\-text\\: string\\}, refresh\\?\\: array\\{link\\: TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, link\\-text\\: TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon, warning\\: string\\|TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon\\}, columns\\?\\: array\\{url\\: mixed, scheduled\\: string, exec_time\\: string, result_log\\: string, result_status\\: string, feUserGroupList\\: string, procInstructions\\: string, set_id\\: string, \\.\\.\\.\\}\\}\\> but returns array\\{non\\-empty\\-array\\<int\\<0, max\\>, array\\{titleRowSpan\\: 1, colSpan\\: 8\\|9\\|11\\|12, title\\: string, noEntries\\: string\\}\\|array\\{titleRowSpan\\: int\\<1, max\\>, colSpan\\: 8\\|9\\|11\\|12, title\\: string, trClass\\: ''\\|'bg\\-danger', qid\\: array\\{link\\: TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, link\\-text\\: string\\}, refresh\\: array\\{link\\: TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, link\\-text\\: TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon, warning\\: ''\\|TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon\\}, columns\\: non\\-empty\\-array\\<'exec_time'\\|'feUserGroupList'\\|'procInstructions'\\|'result_log'\\|'result_status'\\|'scheduled'\\|'set_id'\\|'tsfe_gr_list'\\|'tsfe_id'\\|'url', mixed\\>\\}\\>, array\\{\\}\\|array\\{scheduled\\: string, exec_time\\: string, result_status\\: mixed, url\\: mixed, feUserGroupList\\: mixed, procInstructions\\: mixed, set_id\\: mixed, result_log\\: string, \\.\\.\\.\\}\\}\\.$#"
+			message: "#^Method AOE\\\\Crawler\\\\Service\\\\BackendModuleLogService\\:\\:addRows\\(\\) should return non\\-empty\\-array\\<int, array\\{titleRowSpan\\: int\\<1, max\\>, colSpan\\: int, title\\: string, noEntries\\?\\: string, trClass\\?\\: string, qid\\?\\: array\\{link\\: TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, link\\-text\\: string\\}, refresh\\?\\: array\\{link\\: TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, link\\-text\\: TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon, warning\\: string\\|TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon\\}, columns\\?\\: array\\{url\\: mixed, scheduled\\: string, exec_time\\: string, result_log\\: string, result_status\\: string, feUserGroupList\\: string, procInstructions\\: string, set_id\\: string, \\.\\.\\.\\}\\}\\> but returns array\\{non\\-empty\\-array\\<int\\<0, max\\>, array\\>, array\\}\\.$#"
 			count: 1
 			path: Classes/Service/BackendModuleLogService.php
 
@@ -234,7 +239,7 @@ parameters:
 			path: Classes/Service/BackendModuleScriptUrlService.php
 
 		-
-			message: "#^Class cognitive complexity is 87, keep it under 60$#"
+			message: "#^Class cognitive complexity is 87, keep it under 35$#"
 			count: 1
 			path: Classes/Service/ConfigurationService.php
 

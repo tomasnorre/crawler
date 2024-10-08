@@ -23,6 +23,7 @@ use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Value\QueueFilter;
 use Doctrine\DBAL\ArrayParameterType;
+use PDO;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Contracts\Service\Attribute\Required;
@@ -118,6 +119,24 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             )
             ->executeQuery()
             ->fetchOne();
+    }
+
+    public function getQueueEntriesByQid(int $queueId, bool $force): array|false
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
+
+        $queryBuilder
+            ->select('*')
+            ->from(self::TABLE_NAME)
+            ->where(
+                $queryBuilder->expr()->eq('qid', $queryBuilder->createNamedParameter($queueId, PDO::PARAM_INT))
+            );
+        if (!$force) {
+            $queryBuilder
+                ->andWhere('exec_time = 0')
+                ->andWhere('process_scheduled > 0');
+        }
+        return $queryBuilder->executeQuery()->fetchAssociative();
     }
 
     /**
