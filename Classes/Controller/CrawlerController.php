@@ -35,7 +35,6 @@ use AOE\Crawler\Service\PageService;
 use AOE\Crawler\Service\ProcessInstructionService;
 use AOE\Crawler\Service\UrlService;
 use AOE\Crawler\Value\QueueRow;
-use PDO;
 use Psr\Http\Message\UriInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
@@ -403,6 +402,8 @@ class CrawlerController implements LoggerAwareInterface
      * @param string $callBack Call back object reference, eg. 'EXT:indexed_search/class.crawler.php:&tx_indexedsearch_crawler'
      * @param integer $page_id Page ID to attach it to
      * @param integer $schedule Time at which to activate
+     *
+     * @deprecated since 12.0.5 will be removed in 14.x
      */
     public function addQueueEntry_callBack($setId, $params, $callBack, $page_id = 0, $schedule = 0): void
     {
@@ -540,24 +541,10 @@ class CrawlerController implements LoggerAwareInterface
      */
     public function readUrl($queueId, $force = false, string $processId = '')
     {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
-            QueueRepository::TABLE_NAME
-        );
         $ret = 0;
         $this->logger?->debug('crawler-readurl start ' . microtime(true));
 
-        $queryBuilder
-            ->select('*')
-            ->from(QueueRepository::TABLE_NAME)
-            ->where(
-                $queryBuilder->expr()->eq('qid', $queryBuilder->createNamedParameter($queueId, PDO::PARAM_INT))
-            );
-        if (!$force) {
-            $queryBuilder
-                ->andWhere('exec_time = 0')
-                ->andWhere('process_scheduled > 0');
-        }
-        $queueRec = $queryBuilder->executeQuery()->fetchAssociative();
+        $queueRec = $this->queueRepository->getQueueEntriesByQid($queueId, $force);
 
         if (!is_array($queueRec)) {
             return null;
@@ -614,16 +601,9 @@ class CrawlerController implements LoggerAwareInterface
             'result_data' => json_encode($result),
         ];
 
-        /** @var AfterQueueItemAddedEvent $event */
-        $event = $this->eventDispatcher->dispatch(new AfterQueueItemAddedEvent($queueId, $field_array));
-        $field_array = $event->getFieldArray();
-
-        GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(QueueRepository::TABLE_NAME)
-            ->update(QueueRepository::TABLE_NAME, $field_array, [
-                'qid' => (int) $queueId,
-            ]);
-
+        $this->eventDispatcher->dispatch(new AfterQueueItemAddedEvent($queueId, $field_array));
         $this->logger?->debug('crawler-readurl stop ' . microtime(true));
+
         return $ret;
     }
 
@@ -650,13 +630,7 @@ class CrawlerController implements LoggerAwareInterface
             'result_data' => json_encode($result),
         ];
 
-        /** @var AfterQueueItemAddedEvent $event */
-        $event = $this->eventDispatcher->dispatch(new AfterQueueItemAddedEvent($queueId, $field_array));
-        $field_array = $event->getFieldArray();
-
-        $connectionForCrawlerQueue->update(QueueRepository::TABLE_NAME, $field_array, [
-            'qid' => $queueId,
-        ]);
+        $this->eventDispatcher->dispatch(new AfterQueueItemAddedEvent($queueId, $field_array));
 
         return $result;
     }

@@ -57,16 +57,6 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
         $url = (string) $url;
         $parsedUrl = parse_url($url);
 
-        if ($parsedUrl === false) {
-            $this->logger?->debug(
-                sprintf('Could not parse_url() for string "%s"', $url),
-                [
-                    'crawlerId' => $crawlerId,
-                ]
-            );
-            return false;
-        }
-
         if (!isset($parsedUrl['scheme']) || !in_array($parsedUrl['scheme'], ['', 'http', 'https'], true)) {
             $this->logger?->debug(sprintf('Scheme does not match for url "%s"', $url), [
                 'crawlerId' => $crawlerId,

@@ -4,8 +4,11 @@
 
 ### Added
 * Possibility to flush all processes from the backend module in process view
+* Information when page does not exists when crawler:buildQueue command is called from cli
 
 ### Changed
+* Disallow DOKTYPE_BE_USER_SECTION to be crawled
+* CrawlerCsvWriter::CARRIAGE_RETURN constant is now private
 
 ### Fixed
 * Prevent exception `Truncated incorrect DECIMAL value` in `crawler:processQueue` [@xyng](https://github.com/xyng)
@@ -14,8 +17,11 @@
 ### Deprecated
 
 #### Classes
+* CrawlerObjectException
+* TimeStampException
 
 #### Functions & Properties
+* CrawlerController->addQueueEntry_callBack()
 
 ### Removed
 

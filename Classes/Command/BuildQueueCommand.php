@@ -33,6 +33,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
@@ -122,13 +123,14 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
         $crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
         /** @var QueueRepository $queueRepository */
         $queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
+        $pageRepository = GeneralUtility::makeInstance(PageRepository::class);
 
         if ($mode === 'exec') {
             $crawlerController->registerQueueEntriesInternallyOnly = true;
         }
 
         $pageId = MathUtility::forceIntegerInRange((int) $input->getArgument('page'), 0);
-        if ($pageId === 0) {
+        if ($pageId === 0 || empty($pageRepository->getPage($pageId))) {
             $message = "Page {$pageId} is not a valid page, please check you root page id and try again.";
             MessageUtility::addErrorMessage($message);
             $output->writeln("<info>{$message}</info>");
@@ -175,9 +177,12 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
                 }
 
                 $progressBar->clear();
-                $output->writeln(
-                    '<info>' . $p['url'] . ' (' . implode(',', $p['procInstructions']) . ') => ' . '</info>' . PHP_EOL
-                );
+                if (empty($p['procInstructions'][0])) {
+                    $procInstructionsString = '';
+                } else {
+                    $procInstructionsString = ' (' . implode(',', $p['procInstructions']) . ')';
+                }
+                $output->writeln('<info>' . $p['url'] . $procInstructionsString . ' => ' . '</info>');
                 $progressBar->display();
 
                 $result = $crawlerController->readUrlFromArray($queueRec);
@@ -188,7 +193,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
                 $progressBar->clear();
                 if (is_array($requestResult)) {
                     $resLog = array_key_exists('log', $requestResult)
-                    && is_array($requestResult['log']) ? PHP_EOL . chr(9) . chr(9) .
+                    && is_array($requestResult['log']) ? chr(9) . chr(9) .
                         implode(PHP_EOL . chr(9) . chr(9), $requestResult['log']) : '';
                     $output->writeln('<info>OK: ' . $resLog . '</info>' . PHP_EOL);
                 } else {
@@ -236,7 +241,9 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             if (empty($row->message)) {
                 $output->writeln('<info>' . $row->urls . '</info>');
             } else {
-                $output->writeln('<warning>' . $row->pageTitle . ': ' . $row->message . '</warning>');
+                $output->writeln(
+                    '<comment>Page "' . $row->pageTitle . '" is not added to queue' . $row->message . '</comment>'
+                );
             }
         }
     }
