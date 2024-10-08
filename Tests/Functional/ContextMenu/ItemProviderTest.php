@@ -53,15 +53,6 @@ class ItemProviderTest extends FunctionalTestCase
     #[Test]
     public function addItemsContactsItems(): void
     {
-        $defaultItemsConfiguration = [
-            'crawler' => [
-                'type' => 'item',
-                'label' => 'LLL:EXT:crawler/Resources/Private/Language/Backend.xlf:contextMenu.label',
-                'iconIdentifier' => 'tx-crawler',
-                'callbackAction' => 'crawler',
-            ],
-        ];
-
         $newItems = [
             'other-ext' => [
                 'type' => 'item',
