@@ -599,18 +599,9 @@ class CrawlerController implements LoggerAwareInterface
             'result_data' => json_encode($result),
         ];
 
-        /** @var AfterQueueItemAddedEvent $event */
-        $event = $this->eventDispatcher->dispatch(new AfterQueueItemAddedEvent($queueId, $field_array));
-        $field_array = $event->getFieldArray();
-
-        //This should be extracted, we should listen to the event ourself,
-        // and move the code block here to an appropiate place. /Tomas 2024-10-07
-        GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(QueueRepository::TABLE_NAME)
-            ->update(QueueRepository::TABLE_NAME, $field_array, [
-                'qid' => (int) $queueId,
-            ]);
-
+        $this->eventDispatcher->dispatch(new AfterQueueItemAddedEvent($queueId, $field_array));
         $this->logger?->debug('crawler-readurl stop ' . microtime(true));
+
         return $ret;
     }
 
@@ -637,13 +628,7 @@ class CrawlerController implements LoggerAwareInterface
             'result_data' => json_encode($result),
         ];
 
-        /** @var AfterQueueItemAddedEvent $event */
-        $event = $this->eventDispatcher->dispatch(new AfterQueueItemAddedEvent($queueId, $field_array));
-        $field_array = $event->getFieldArray();
-
-        $connectionForCrawlerQueue->update(QueueRepository::TABLE_NAME, $field_array, [
-            'qid' => $queueId,
-        ]);
+        $this->eventDispatcher->dispatch(new AfterQueueItemAddedEvent($queueId, $field_array));
 
         return $result;
     }
