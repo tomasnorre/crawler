@@ -8,6 +8,7 @@
 
 ### Fixed
 * Fixed query building when using _ADDTABLE parameter [@hawkeye1909](https://github.com/hawkeye1909)
+* Typecast PageTS Crawler Configuration `force_ssl` to `int`
 
 ### Deprecated
 
