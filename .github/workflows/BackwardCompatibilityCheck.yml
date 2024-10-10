@@ -48,5 +48,5 @@ jobs:
           # To ensure compability with the roave tool.
           composer remove --dev nimut/typo3-complete nimut/testing-framework rector/rector symplify/easy-coding-standard typo3/testing-framework
           rm -rf .Build composer.lock
-          composer require --dev roave/backward-compatibility-check:"6.0.x-dev"
-          .Build/bin/roave-backward-compatibility-check --to=v11.x
+          composer require --dev roave/backward-compatibility-check:"^6.4"
+          .Build/bin/roave-backward-compatibility-check --from=11.0.0
