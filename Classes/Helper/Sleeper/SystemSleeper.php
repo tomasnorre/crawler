@@ -21,7 +21,6 @@ namespace AOE\Crawler\Helper\Sleeper;
 
 /*
  * @internal
- * @codeCoverageIgnore
  */
 final class SystemSleeper implements SleeperInterface
 {
