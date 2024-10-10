@@ -135,6 +135,19 @@ Page TSconfig Reference (tx\_crawler.crawlerCfg)
    Description
          List of Page Ids to limit this configuration to
 
+.. container:: table-row
+
+   Property
+         .. _crawler-tsconfig-paramSets-key-force_ssl:
+
+         paramSets.[key].force_ssl
+
+   Data type
+         integer
+
+   Description
+         Whether https should be inforced or not. 0 = false (default), 1 = true.
+
 
 .. container:: table-row
 
@@ -183,5 +196,6 @@ Example
       procInstrFilter = tx_indexedsearch_reindex
       pidsOnly = 1,5,13,55
       userGroups = 1
+      force_ssl = 1
    }
 
