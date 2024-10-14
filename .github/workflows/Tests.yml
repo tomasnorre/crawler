@@ -82,7 +82,7 @@ jobs:
           export "UNIT_XML"=Tests/UnitTests.xml
           composer remove --dev ssch/typo3-rector infection/infection roave/security-advisories
           rm -rf composer.lock .Build
-          composer require typo3/cms-core:^13.1
+          composer require typo3/cms-backend:^13.1 typo3/cms-core:^13.1 typo3/cms-frontend:^13.1 typo3/cms-info:^13.1 typo3/cms-seo:^13.1
           ln -nfs .Build/vendor/typo3/cms/typo3 typo3
           .Build/bin/phpunit --colors -c $UNIT_XML Tests/Unit
           .Build/bin/phpunit --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
