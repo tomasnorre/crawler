@@ -17,6 +17,7 @@ jobs:
       matrix:
         typo3:
           - '^12.4'
+          - '^13.1'
         php:
           - '8.1'
           - '8.2'
@@ -75,17 +76,17 @@ jobs:
           typo3DatabasePassword: root
           typo3DatabaseUsername: root
 
-      - name: Tests for dev-main
+      - name: Tests for ^13.1
         run: |
           export "FUNCTIONAL_XML"=Tests/FunctionalTests.xml
           export "UNIT_XML"=Tests/UnitTests.xml
-          composer remove --dev ssch/typo3-rector
+          composer remove --dev ssch/typo3-rector infection/infection roave/security-advisories
           rm -rf composer.lock .Build
-          composer require typo3/cms-core:dev-main
+          composer require typo3/cms-core:^13.1
           ln -nfs .Build/vendor/typo3/cms/typo3 typo3
           .Build/bin/phpunit --colors -c $UNIT_XML Tests/Unit
           .Build/bin/phpunit --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
-        if: matrix.typo3 == 'dev-main' && matrix.php == '8.1'
+        if: matrix.typo3 == '^13.1' && matrix.php == '8.3'
         env:
           typo3DatabaseHost: 127.0.0.1
           typo3DatabaseName: typo3
