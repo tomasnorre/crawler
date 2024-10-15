@@ -26,8 +26,12 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 #[CoversClass(SystemSleeper::class)]
 class SystemSleeperTest extends UnitTestCase
 {
+
+
     public function testSystemSleeper(): void
     {
+        $this->resetSingletonInstances = true;
+
         $startTime = date('s');
         $subject = new SystemSleeper();
         $subject->sleep(1);
