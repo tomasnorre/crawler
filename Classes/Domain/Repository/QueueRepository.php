@@ -23,7 +23,6 @@ use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Value\QueueFilter;
 use Doctrine\DBAL\ArrayParameterType;
-use PDO;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Contracts\Service\Attribute\Required;
@@ -129,7 +128,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ->select('*')
             ->from(self::TABLE_NAME)
             ->where(
-                $queryBuilder->expr()->eq('qid', $queryBuilder->createNamedParameter($queueId, PDO::PARAM_INT))
+                $queryBuilder->expr()->eq('qid', $queryBuilder->createNamedParameter($queueId, Connection::PARAM_INT))
             );
         if (!$force) {
             $queryBuilder
@@ -431,7 +430,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
                 $timeBegin = $currentTime - 100;
                 $timeEnd = $currentTime + 100;
                 $queryBuilder
-                    ->where('scheduled BETWEEN ' . $timeBegin . ' AND ' . $timeEnd . '')
+                    ->where('scheduled BETWEEN ' . $timeBegin . ' AND ' . $timeEnd . ' ')
                     ->orWhere($queryBuilder->expr()->lte('scheduled', $currentTime));
             } else {
                 $queryBuilder
