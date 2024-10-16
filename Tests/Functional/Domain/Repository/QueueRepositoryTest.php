@@ -93,7 +93,7 @@ class QueueRepositoryTest extends FunctionalTestCase
                 'process_id_completed' => 'qwerty',
                 'configuration' => 'ThirdConfiguration',
                 'uid' => 2,
-                'pid'  => 0,
+                'pid' => 0,
             ],
             $this->subject->findYoungestEntryForProcess($process)
         );
@@ -121,7 +121,7 @@ class QueueRepositoryTest extends FunctionalTestCase
                 'process_id_completed' => 'qwerty',
                 'configuration' => 'FirstConfiguration',
                 'uid' => 3,
-                'pid'  => 0,
+                'pid' => 0,
             ],
             $this->subject->findOldestEntryForProcess($process)
         );
@@ -286,9 +286,7 @@ class QueueRepositoryTest extends FunctionalTestCase
         self::assertSame(7, $unprocessedEntriesAfter);
     }
 
-    #[DataProvider(
-        'noUnprocessedQueueEntriesForPageWithConfigurationHashExistDataProvider'
-    )]
+    #[DataProvider('noUnprocessedQueueEntriesForPageWithConfigurationHashExistDataProvider')]
     public function noUnprocessedQueueEntriesForPageWithConfigurationHashExist(
         int $uid,
         string $configurationHash,
@@ -457,7 +455,7 @@ class QueueRepositoryTest extends FunctionalTestCase
                 'process_id_completed' => 'qwerty',
                 'configuration' => 'ThirdConfiguration',
                 'uid' => 2,
-                'pid'  => 0,
+                'pid' => 0,
             ],
         ];
         yield 'Known process_id, get last' => [
@@ -479,7 +477,7 @@ class QueueRepositoryTest extends FunctionalTestCase
                 'process_id_completed' => 'qwerty',
                 'configuration' => 'FirstConfiguration',
                 'uid' => 3,
-                'pid'  => 0,
+                'pid' => 0,
             ],
         ];
         yield 'Unknown process_id' => [
@@ -536,7 +534,7 @@ class QueueRepositoryTest extends FunctionalTestCase
                 'configuration' => 'ThirdConfiguration',
                 'set_id' => 0,
                 'uid' => 2,
-                'pid'  => 0,
+                'pid' => 0,
             ]],
         ];
         yield 'Check that doFullFlush do not flush if doFlush is not true' => [
@@ -558,7 +556,7 @@ class QueueRepositoryTest extends FunctionalTestCase
                 'process_id_completed' => 'qwerty',
                 'configuration' => 'SecondConfiguration',
                 'uid' => 6,
-                'pid'  => 0,
+                'pid' => 0,
             ]],
         ];
         yield 'Get entries for page_id 2001' => [
@@ -580,7 +578,7 @@ class QueueRepositoryTest extends FunctionalTestCase
                 'process_id_completed' => 'qwerty',
                 'configuration' => 'SecondConfiguration',
                 'uid' => 6,
-                'pid'  => 0,
+                'pid' => 0,
             ]],
         ];
     }
