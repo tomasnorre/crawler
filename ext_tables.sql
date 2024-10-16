@@ -1,22 +1,9 @@
-CREATE TABLE tx_crawler_queue
-(
-    KEY qid (qid),
-    KEY page_id (page_id),
-    KEY set_id (set_id),
-    KEY exec_time (exec_time),
-    KEY scheduled (scheduled),
-    KEY process_id (process_id),
-    KEY parameters_hash (parameters_hash),
-    KEY configuration_hash (configuration_hash),
-    KEY cleanup (exec_time,scheduled)
-) ENGINE=InnoDB;
-
 #
 # Table structure for table 'tx_crawler_queue'
 #
-CREATE TABLE tx_crawler_queue2
+CREATE TABLE tx_crawler_queue
 (
-    qid                  int(11) DEFAULT '0' NOT NULL auto_increment,
+    qid                  int(11) DEFAULT '0' NOT NULL,
     page_id              int(11) DEFAULT '0' NOT NULL,
     parameters           text                    NOT NULL,
     parameters_hash      varchar(50)  DEFAULT '' NOT NULL,

@@ -32,9 +32,13 @@ use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Domain\Model\ProcessCollection;
 use Doctrine\DBAL\ArrayParameterType;
+use Doctrine\DBAL\Exception;
 use Symfony\Contracts\Service\Attribute\Required;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
+use TYPO3\CMS\Core\Database\Query\Restriction\HiddenRestriction;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
@@ -66,12 +70,16 @@ class ProcessRepository extends Repository
 
     /**
      * This method is used to find all cli processes within a limit.
+     * @throws Exception
      */
     public function findAll(): ProcessCollection
     {
         /** @var ProcessCollection $collection */
         $collection = GeneralUtility::makeInstance(ProcessCollection::class);
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
+        $queryBuilder->getRestrictions()
+            ->removeByType(HiddenRestriction::class)
+            ->removeByType(DeletedRestriction::class);
 
         $statement = $queryBuilder
             ->select('*')
@@ -143,6 +151,10 @@ class ProcessRepository extends Repository
     public function getActiveProcessesOlderThanOneHour()
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
+        $queryBuilder->getRestrictions()
+            ->removeByType(HiddenRestriction::class)
+            ->removeByType(DeletedRestriction::class);
+
         $activeProcesses = [];
         $statement = $queryBuilder
             ->select('process_id', 'system_process_id')
@@ -172,6 +184,9 @@ class ProcessRepository extends Repository
     public function getActiveOrphanProcesses()
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
+        $queryBuilder->getRestrictions()
+            ->removeByType(HiddenRestriction::class)
+            ->removeByType(DeletedRestriction::class);
 
         return $queryBuilder
             ->select('process_id', 'system_process_id')
@@ -212,7 +227,7 @@ class ProcessRepository extends Repository
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
         $queryBuilder
             ->delete(self::TABLE_NAME)
-            ->where($queryBuilder->expr()->eq('deleted', 1))
+            ->where($queryBuilder->expr()->eq('deleted', $queryBuilder->createNamedParameter(1)))
             ->executeStatement();
     }
 
