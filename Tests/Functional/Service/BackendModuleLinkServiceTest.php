@@ -48,11 +48,7 @@ class BackendModuleLinkServiceTest extends FunctionalTestCase
         $this->setupBackendRequest();
         $this->setupLanguageService();
 
-        $mockedIcon = $this->createMock(Icon::class);
-        $mockedIconFactory = $this->createMock(IconFactory::class);
-        $mockedIconFactory->method('getIcon')->willReturn($mockedIcon);
-
-        $this->subject = GeneralUtility::makeInstance(BackendModuleLinkService::class, $mockedIconFactory);
+        $this->subject = GeneralUtility::makeInstance(BackendModuleLinkService::class);
 
         $request = (new ServerRequest('https://example.com/typo3/'))
             ->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_BE)
