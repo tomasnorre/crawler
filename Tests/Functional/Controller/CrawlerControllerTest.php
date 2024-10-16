@@ -56,12 +56,11 @@ class CrawlerControllerTest extends FunctionalTestCase
 
         $mockedQueueRepository = $this->createMock(QueueRepository::class);
         $mockedProcessRepository = $this->createMock(ProcessRepository::class);
-        $mockedIconFactory = $this->createMock(IconFactory::class);
 
         $this->subject = $this->getAccessibleMock(
             CrawlerController::class,
             null,
-            [$mockedQueueRepository, $mockedProcessRepository, $mockedIconFactory]
+            [$mockedQueueRepository, $mockedProcessRepository]
         );
     }
 
