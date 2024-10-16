@@ -23,6 +23,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use TYPO3\CMS\Core\Cache\Frontend\NullFrontend;
 use TYPO3\CMS\Core\Configuration\Loader\YamlFileLoader;
 use TYPO3\CMS\Core\Configuration\SiteConfiguration;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Site\Set\SetRegistry;
 use TYPO3\CMS\Core\Site\SiteSettingsFactory;
 use TYPO3\CMS\Core\Tests\Functional\Fixtures\Frontend\PhpError;
@@ -67,26 +68,33 @@ trait SiteBasedTestTrait
             $configuration['errorHandling'] = $errorHandling;
         }
 
-        $frontendCache = GeneralUtility::makeInstance(NullFrontend::class, 'test_identifier');
+        $typo3Version = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(Typo3Version::class);
+        if ($typo3Version->getMajorVersion() >= 13) {
+            $frontendCache = GeneralUtility::makeInstance(NullFrontend::class, 'test_identifier');
 
-        $siteConfiguration = new SiteConfiguration(
-            $this->instancePath . '/typo3conf/sites/',
-            $this->get(SiteSettingsFactory::class),
-            $this->get(SetRegistry::class),
-            $this->get(EventDispatcherInterface::class),
-            $this->get('cache.core'),
-            $this->get(YamlFileLoader::class),
-            $frontendCache
-        );
-
-        /*
-        try {
-            // ensure no previous site configuration influences the test
-            GeneralUtility::rmdir($this->instancePath . '/typo3conf/sites/' . $identifier, true);
-            $siteConfiguration->write($identifier, $configuration);
-        } catch (\Exception $exception) {
-            $this->markTestSkipped($exception->getMessage());
-        }*/
+            $siteConfiguration = new SiteConfiguration(
+                $this->instancePath . '/typo3conf/sites/',
+                $this->get(SiteSettingsFactory::class),
+                $this->get(SetRegistry::class),
+                $this->get(EventDispatcherInterface::class),
+                $this->get('cache.core'),
+                $this->get(YamlFileLoader::class),
+                $frontendCache
+            );
+        } else {
+            $siteConfiguration = new SiteConfiguration(
+                $this->instancePath . '/typo3conf/sites/',
+                $this->get(EventDispatcherInterface::class),
+                $this->get('cache.core'),
+            );
+            try {
+                // ensure no previous site configuration influences the test
+                GeneralUtility::rmdir($this->instancePath . '/typo3conf/sites/' . $identifier, true);
+                $siteConfiguration->write($identifier, $configuration);
+            } catch (\Exception $exception) {
+                $this->markTestSkipped($exception->getMessage());
+            }
+        }
     }
 
     protected function mergeSiteConfiguration(string $identifier, array $overrides): void
