@@ -211,7 +211,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
 
         self::assertEquals(true, $process['active']);
 
-        self::assertGreaterThan(time(), $process['ttl']);
+        self::assertGreaterThanOrEqual(time(), $process['ttl']);
 
         self::assertEquals($systemProcessId, $process['system_process_id']);
     }

@@ -34,7 +34,7 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
 /**
  * @internal since v9.2.5
  */
-class QueueRepository extends Repository implements LoggerAwareInterface
+class QueueRepository implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
