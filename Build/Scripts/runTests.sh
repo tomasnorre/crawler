@@ -49,10 +49,7 @@ cleanRenderedDocumentationFiles() {
     echo "done"
 }
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 170e632 (add runTest.sh)
 handleDbmsOptions() {
     # -a, -d, -i depend on each other. Validate input combinations and set defaults.
     case ${DBMS} in
