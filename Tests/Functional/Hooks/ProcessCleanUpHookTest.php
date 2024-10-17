@@ -93,14 +93,14 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
     #[Test]
     public function removeProcessFromProcesslistCalledWithProcessThatDoesNotExist(): void
     {
-        $processCountBefore = $this->processRepository->findAll()->count();
-        $queueCountBefore = $this->queueRepository->findAll()->count();
+        $processCountBefore = count($this->processRepository->findAll());
+        $queueCountBefore = count($this->queueRepository->findAll());
 
         $notExistingProcessId = '23456';
         $this->subject->removeProcessFromProcesslist($notExistingProcessId);
 
-        $processCountAfter = $this->processRepository->findAll()->count();
-        $queueCountAfter = $this->queueRepository->findAll()->count();
+        $processCountAfter = count($this->processRepository->findAll());
+        $queueCountAfter = count($this->queueRepository->findAll());
 
         self::assertEquals($processCountBefore, $processCountAfter);
 
@@ -112,14 +112,14 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
     {
         $expectedProcessesToBeRemoved = 1;
 
-        $processCountBefore = $this->processRepository->findAll()->count();
-        $queueCountBefore = $this->queueRepository->findAll()->count();
+        $processCountBefore = count($this->processRepository->findAll());
+        $queueCountBefore = count($this->queueRepository->findAll());
 
         $existingProcessId = '1000';
         $this->subject->removeProcessFromProcesslist($existingProcessId);
 
-        $processCountAfter = $this->processRepository->findAll()->count();
-        $queueCountAfter = $this->queueRepository->findAll()->count();
+        $processCountAfter = count($this->processRepository->findAll());
+        $queueCountAfter = count($this->queueRepository->findAll());
 
         self::assertEquals($processCountBefore - $expectedProcessesToBeRemoved, $processCountAfter);
         self::assertEquals($queueCountBefore, $queueCountAfter);
@@ -131,17 +131,13 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         $existingProcessId = '1001';
         $expectedProcessesToBeRemoved = 1;
 
-        $processCountBefore = $this->processRepository->findAll()->count();
-        $queueCountBefore = $this->queueRepository->findBy([
-            'processId' => $existingProcessId,
-        ])->count();
+        $processCountBefore = count($this->processRepository->findAll());
+        $queueCountBefore = count($this->queueRepository->findByProcessId($existingProcessId));
 
         $this->subject->removeProcessFromProcesslist($existingProcessId);
 
-        $processCountAfter = $this->processRepository->findAll()->count();
-        $queueCountAfter = $this->queueRepository->findBy([
-            'processId' => $existingProcessId,
-        ])->count();
+        $processCountAfter = count($this->processRepository->findAll());
+        $queueCountAfter = count($this->queueRepository->findByProcessId($existingProcessId));
 
         self::assertEquals($processCountBefore - $expectedProcessesToBeRemoved, $processCountAfter);
 

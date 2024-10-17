@@ -23,13 +23,13 @@ use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Value\QueueFilter;
 use Doctrine\DBAL\ArrayParameterType;
+use Doctrine\DBAL\Exception;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Contracts\Service\Attribute\Required;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Persistence\Repository;
 
 /**
  * @internal since v9.2.5
@@ -503,6 +503,33 @@ class QueueRepository implements LoggerAwareInterface
         }
 
         return $queryBuilder->executeQuery()->fetchAllAssociative();
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function findAll(): array
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
+        $queryBuilder
+            ->select('*')
+            ->from(self::TABLE_NAME);
+        return $queryBuilder->executeQuery()->fetchAllAssociative();
+    }
+
+    public function findByProcessId(string $processId): array
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
+        return $queryBuilder
+            ->select('*')
+            ->from(self::TABLE_NAME)
+            ->where(
+                $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter(
+                    $processId,
+                    Connection::PARAM_INT
+                ))
+            )
+            ->executeQuery()->fetchAllAssociative();
     }
 
     /**

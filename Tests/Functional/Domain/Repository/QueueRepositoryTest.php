@@ -171,12 +171,6 @@ class QueueRepositoryTest extends FunctionalTestCase
         self::assertSame(3, $this->subject->countAllAssignedPendingItems());
     }
 
-    #[Test]
-    public function countAll(): void
-    {
-        self::assertSame(15, $this->subject->countAll());
-    }
-
     #[DataProvider('isPageInQueueDataProvider')]
     #[Test]
     public function isPageInQueue(
@@ -195,9 +189,9 @@ class QueueRepositoryTest extends FunctionalTestCase
     #[Test]
     public function cleanupQueue(): void
     {
-        self::assertSame(15, $this->subject->findAll()->count());
+        self::assertCount(15, $this->subject->findAll());
         $this->subject->cleanupQueue();
-        self::assertSame(8, $this->subject->findAll()->count());
+        self::assertCount(8, $this->subject->findAll());
         // Called again to test the $del === 0 path of the cleanupQueue method.
         $this->subject->cleanupQueue();
     }
@@ -231,12 +225,12 @@ class QueueRepositoryTest extends FunctionalTestCase
         }
 
         // Check total entries before cleanup
-        self::assertSame($recordsFromFixture + $expectedRemainingRecords, $this->subject->findAll()->count());
+        self::assertCount($recordsFromFixture + $expectedRemainingRecords, $this->subject->findAll());
 
         $this->subject->cleanUpOldQueueEntries();
 
         // Check total entries after cleanup
-        self::assertSame($expectedRemainingRecords, $this->subject->findAll()->count());
+        self::assertCount($expectedRemainingRecords, $this->subject->findAll());
 
         // Called again to test the $del === 0 path of the cleanUpOldQueueEntries method.
         $this->subject->cleanUpOldQueueEntries();
@@ -316,7 +310,7 @@ class QueueRepositoryTest extends FunctionalTestCase
         $queryRepository = GeneralUtility::makeInstance(QueueRepository::class);
         $this->subject->flushQueue($queueFilter);
 
-        self::assertSame($expected, $queryRepository->findAll()->count());
+        self::assertCount($expected, $queryRepository->findAll());
     }
 
     public static function flushQueueDataProvider(): iterable
