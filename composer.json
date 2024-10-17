@@ -94,8 +94,9 @@
         },
         "bin-dir": ".Build/bin",
         "preferred-install": {
-            "*": "dist",
-            "typo3/cms-core": "source"
+            "typo3/cms-core": "source",
+            "typo3/cms-frontend": "source",
+            "*": "dist"
         },
         "process-timeout": 0,
         "sort-packages": true,

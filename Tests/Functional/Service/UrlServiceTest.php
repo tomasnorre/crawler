@@ -20,10 +20,10 @@ namespace AOE\Crawler\Tests\Functional\Service;
  */
 
 use AOE\Crawler\Service\UrlService;
-use AOE\Crawler\Tests\Functional\SiteBasedTestTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Http\Uri;
+use TYPO3\CMS\Core\Tests\Functional\SiteHandling\SiteBasedTestTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
@@ -64,7 +64,7 @@ class UrlServiceTest extends FunctionalTestCase
 
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    protected \AOE\Crawler\Service\UrlService $subject;
+    protected UrlService $subject;
 
     /**
      * Creates the test environment.

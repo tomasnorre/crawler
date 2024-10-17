@@ -23,10 +23,10 @@ use AOE\Crawler\Command\BuildQueueCommand;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use AOE\Crawler\Tests\Functional\LanguageServiceTestTrait;
-use AOE\Crawler\Tests\Functional\SiteBasedTestTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Console\Tester\CommandTester;
+use TYPO3\CMS\Core\Tests\Functional\SiteHandling\SiteBasedTestTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
