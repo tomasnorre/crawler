@@ -15,16 +15,16 @@
         "issues": "https://github.com/tomasnorre/crawler/issues"
     },
     "require": {
-        "georgringer/news": "^11.4",
-        "tnm/crawler-devbox-sitepackage": "^0.0.2",
+        "tnm/crawler-devbox-sitepackage": "^0.0.3",
         "tomasnorre/crawler": "*@dev",
-        "typo3/cms-belog": "^12.4 || dev-main" ,
-        "typo3/cms-beuser": "^12.4 || dev-main",
-        "typo3/cms-felogin": "^12.4 || dev-main",
-        "typo3/cms-indexed-search": "^12.4 || dev-main",
-        "typo3/cms-info": "^12.4 || dev-main",
-        "typo3/cms-tstemplate": "^12.4 || dev-main",
-        "typo3/minimal": "^12.4 || dev-main"
+        "typo3/cms-belog": "^12.4 || ^13.4" ,
+        "typo3/cms-beuser": "^12.4 || ^13.4",
+        "typo3/cms-felogin": "^12.4 || ^13.4",
+        "typo3/cms-indexed-search": "^12.4 || ^13.4",
+        "typo3/cms-info": "^12.4 || ^13.4",
+        "typo3/cms-tstemplate": "^12.4 || ^13.4",
+        "typo3/minimal": "^12.4 || ^13.4",
+        "typo3/cms-install": "^12.4 || ^13.4"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest"

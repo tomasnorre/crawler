@@ -25,6 +25,8 @@ use AOE\Crawler\Crawler;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Console\Tester\CommandTester;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
@@ -56,8 +58,8 @@ class ProcessQueueCommandTest extends FunctionalTestCase
         $this->commandTester = new CommandTester($command);
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('processQueueCommandDataProvider')]
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[DataProvider('processQueueCommandDataProvider')]
+    #[Test]
     public function processQueueCommandTest(array $parameters, string $expectedOutput): void
     {
         $arguments = [];

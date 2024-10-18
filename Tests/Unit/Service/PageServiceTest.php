@@ -23,6 +23,7 @@ use AOE\Crawler\Event\ModifySkipPageEvent;
 use AOE\Crawler\Service\PageService;
 use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
@@ -162,16 +163,19 @@ class PageServiceTest extends UnitTestCase
             'expected' => 'Because doktype "254" is not allowed',
         ];
 
-        yield 'Page of doktype 255 - Recycler' => [
-            'extensionSetting' => [],
-            'pageRow' => [
-                'doktype' => 255,
-                'hidden' => 0,
-            ],
-            'excludeDoktype' => [],
-            'pageVeto' => [],
-            'expected' => 'Because doktype "255" is not allowed',
-        ];
+        $typo3Version = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(Typo3Version::class);
+        if ($typo3Version->getMajorVersion() === 12) {
+            yield 'Page of doktype 255 - Recycler' => [
+                'extensionSetting' => [],
+                'pageRow' => [
+                    'doktype' => 255,
+                    'hidden' => 0,
+                ],
+                'excludeDoktype' => [],
+                'pageVeto' => [],
+                'expected' => 'Because doktype "255" is not allowed',
+            ];
+        }
 
         /*
          * Left out as we want people to use the PSR-14 ModifySkipPageEvent instead,

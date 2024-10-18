@@ -27,41 +27,48 @@ use Step\Acceptance\BackendModule;
 
 class BackendModuleCest
 {
+    // Implemented in Playwright for TYPO3 V13
     public function canSeeLoginMask(Admin $I): void
     {
         $I->amOnPage('/typo3');
         $I->waitForText('Login', 5);
     }
 
+    // Implemented in Playwright for TYPO3 V13
     public function signInSuccessfully(Admin $I): void
     {
         $I->loginAsAdmin();
     }
 
+    // Implemented in Playwright for TYPO3 V13
     public function canSeeCrawlerModule(Admin $I): void
     {
         $I->loginAsAdmin();
         $I->canSee('Crawler', '[data-modulemenu-identifier="web_site_crawler"]');
     }
 
+    // Implemented in Playwright for TYPO3 V13
     public function canSelectCrawlerModuleStartCrawling(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
     }
 
+    // Implemented in Playwright for TYPO3 V13
     public function canSelectCrawlerModuleCrawlerLog(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleCrawlerLog($adminStep, $pageTree);
     }
 
+    // Implemented in Playwright for TYPO3 V13
     public function canSelectCrawlerModuleProcess(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleCrawlerProcess($adminStep, $pageTree);
     }
 
+    // Implemented in Playwright for TYPO3 V13
     public function updateUrlButton(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();
@@ -75,11 +82,13 @@ class BackendModuleCest
      * Ensure that Crawler Configurations with Exclude pages set to: e.g. 6+3 is working
      * https://github.com/tomasnorre/crawler/issues/777
      */
+    // Implemented in Playwright for TYPO3 V13
     public function CrawlerConfigurationWithExcludePageSixPlusThree(
         BackendModule $I,
-        Admin $adminStep,
-        PageTree $pageTree
-    ): void {
+        Admin         $adminStep,
+        PageTree      $pageTree
+    ): void
+    {
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
         $I->selectOption('configurationSelection[]', 'excludepages-6-plus-3');
@@ -90,9 +99,10 @@ class BackendModuleCest
 
     public function EnsureNoUserGroupsAndNoProcInstAreDisplayed(
         BackendModule $I,
-        Admin $adminStep,
-        PageTree $pageTree
-    ): void {
+        Admin         $adminStep,
+        PageTree      $pageTree
+    ): void
+    {
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
         $I->selectOption('configurationSelection[]', 'excludepages-6-plus-3');
@@ -102,6 +112,7 @@ class BackendModuleCest
         $I->waitForText('Count: 1', 15);
     }
 
+    // Implemented in Playwright for TYPO3 V13
     public function updateUrlButtonSetDepth(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();
@@ -176,9 +187,10 @@ class BackendModuleCest
 
     public function crawlerUrlsContinueAndShowLogCheckDepthDropdown(
         BackendModule $I,
-        Admin $adminStep,
-        PageTree $pageTree
-    ): void {
+        Admin         $adminStep,
+        PageTree      $pageTree
+    ): void
+    {
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
         $I->selectOption('configurationSelection[]', 'default');
@@ -199,10 +211,11 @@ class BackendModuleCest
 
     public function flushVisibleEntries(
         BackendModule $I,
-        Admin $adminStep,
-        PageTree $pageTree,
-        ModalDialog $modalDialog
-    ): void {
+        Admin         $adminStep,
+        PageTree      $pageTree,
+        ModalDialog   $modalDialog
+    ): void
+    {
         // Will test twice, but done to avoid duplicate code
         $this->crawlerUrlsContinueAndShowLogCheckDepthDropdown($I, $adminStep, $pageTree);
         $I->click('Flush entire queue');
@@ -234,9 +247,10 @@ class BackendModuleCest
 
     public function CrawlerLogDisplayAndItemsPerPageDropdowns(
         BackendModule $I,
-        Admin $adminStep,
-        PageTree $pageTree
-    ): void {
+        Admin         $adminStep,
+        PageTree      $pageTree
+    ): void
+    {
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleCrawlerLog($adminStep, $pageTree);
         $I->selectOption('moduleMenu', 'Log');
@@ -310,9 +324,10 @@ class BackendModuleCest
 
     public function CrawlerLogDropDownAndCheckboxesCombined(
         BackendModule $I,
-        Admin $adminStep,
-        PageTree $pageTree
-    ): void {
+        Admin         $adminStep,
+        PageTree      $pageTree
+    ): void
+    {
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleCrawlerLog($adminStep, $pageTree);
 

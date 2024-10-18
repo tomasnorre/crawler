@@ -22,6 +22,8 @@ namespace AOE\Crawler\Tests\Functional\Command;
 use AOE\Crawler\Command\FlushQueueCommand;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Console\Tester\CommandTester;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
@@ -49,10 +51,10 @@ class FlushQueueCommandTest extends FunctionalTestCase
     }
 
     /**
-     * This will test that the commands and output contains what needed, the cleanup it self isn't tested.
+     * This will test that the commands and output contains what needed, the cleanup itself isn't tested.
      */
-    #[\PHPUnit\Framework\Attributes\DataProvider('flushQueueDataProvider')]
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[DataProvider('flushQueueDataProvider')]
+    #[Test]
     public function flushQueueCommandTest(string $mode, string $expectedOutput, int $expectedCount): void
     {
         $arguments = [
@@ -62,7 +64,7 @@ class FlushQueueCommandTest extends FunctionalTestCase
         $commandOutput = $this->commandTester->getDisplay();
 
         self::assertStringContainsString($expectedOutput, $commandOutput);
-        self::assertEquals($expectedCount, $this->queueRepository->findAll()->count());
+        self::assertCount($expectedCount, $this->queueRepository->findAll());
     }
 
     public static function flushQueueDataProvider(): iterable
