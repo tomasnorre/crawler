@@ -9,7 +9,7 @@ on:
       - "main"
 
 jobs:
-  Acceptance:
+  Acceptance-CodeCeption:
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
@@ -98,3 +98,67 @@ jobs:
           aws_bucket: ${{ secrets.AWS_BUCKET }}
           source_dir: 'Tests/Acceptance/_output/'
           destination_dir: '${{ matrix.typo3 }}-${{ matrix.php }}'
+
+  Acceptance-Playwright:
+    strategy:
+      fail-fast: false
+      matrix:
+        typo3:
+          - ^13.4
+        php:
+          - '8.2'
+          - '8.3'
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get branch name (merge)
+        if: github.event_name != 'pull_request'
+        shell: bash
+        run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/} | tr / -)" >> $GITHUB_ENV
+
+      - name: Get branch name (pull request)
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: echo "BRANCH_NAME=$(echo ${GITHUB_HEAD_REF})" >> $GITHUB_ENV
+
+      - uses: actions/checkout@v4
+      - uses: ddev/github-action-setup-ddev@v1
+        with:
+          ddevDir: ".devbox"
+      - name: CodeCeption
+        run: |
+          export FROM_PATH='../../'
+          export TO_PATH=$(echo $GITHUB_WORKSPACE)
+          cd .devbox
+          sed -i 's/php_version: "8.1"/php_version: "${{ matrix.php }}"/g' .ddev/config.yaml
+          sed -i "s|$FROM_PATH|$TO_PATH|g" .ddev/docker-compose.volume.yaml
+          ddev restart
+          rm -rf vendor composer.lock
+          ddev composer require typo3/cms-core=${{ matrix.typo3 }} tomasnorre/crawler=dev-$BRANCH_NAME
+          ddev exec bin/typo3 backend:lock
+          ddev exec bin/typo3 extension:setup
+          ddev exec bin/typo3 cache:flush
+          ddev exec bin/typo3 cache:warmup
+          ddev exec bin/typo3 upgrade:run
+          ddev exec bin/typo3 backend:unlock
+          cd .. # Going back to "root" directory
+          wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
+          chmod +x wait-for-it.sh
+          docker ps
+          ./wait-for-it.sh -t 60 127.0.0.1:80
+          ./wait-for-it.sh -t 60 127.0.0.1:443
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Install dependencies
+        run: cd Tests/Acceptance-Playwright && npm ci
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+      - name: Run Playwright tests
+        run: npx playwright test
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30

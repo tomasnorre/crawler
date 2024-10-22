@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import * as helpers from './helpers';
 
 test('Update URL button', async ({ page }) => {
+    await helpers.loginBackend(page)
     await helpers.openCrawlerModuleStartCrawling(page)
     await page.getByRole('treeitem', { name: 'Welcome' }).locator('div').nth(2).click();
     await expect(page.locator('#nprogress')).toHaveCount(0);
@@ -12,6 +13,7 @@ test('Update URL button', async ({ page }) => {
 });
 
 test('CrawlerConfigurationWithExcludePageSixPlusThree', async ({ page }) => {
+    await helpers.loginBackend(page)
     await helpers.openCrawlerModuleStartCrawling(page)
     await page.getByRole('treeitem', { name: 'Welcome' }).locator('div').nth(2).click();
     await expect(page.locator('#nprogress')).toHaveCount(0);
@@ -23,6 +25,7 @@ test('CrawlerConfigurationWithExcludePageSixPlusThree', async ({ page }) => {
 });
 
 test('UpdateUrlButtonSetDepth', async ({ page }) => {
+    await helpers.loginBackend(page)
     await helpers.openCrawlerModuleStartCrawling(page)
     await page.getByRole('treeitem', { name: 'Welcome' }).locator('div').nth(2).click();
     await expect(page.locator('#nprogress')).toHaveCount(0);
