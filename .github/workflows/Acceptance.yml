@@ -20,9 +20,6 @@ jobs:
           - '8.1'
           - '8.2'
           - '8.3'
-        include:
-          - typo3: '^13.4'
-            php: '8.3'
 
     steps:
       - name: Get branch name (merge)
@@ -153,9 +150,9 @@ jobs:
       - name: Install dependencies
         run: cd Tests/Acceptance-Playwright && npm ci
       - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+        run: cd Tests/Acceptance-Playwright && npx playwright install --with-deps
       - name: Run Playwright tests
-        run: npx playwright test
+        run: cd Tests/Acceptance-Playwright && npx playwright test
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
