@@ -26,7 +26,7 @@ use Step\Acceptance\BackendModule;
 class CrawlerCest
 {
     // Implemented in Playwright for TYPO3 V13
-    public function canDisableAndEnableCrawler(BackendModule $I, Admin $adminStep, PageTreettomasnore $pageTree): void
+    public function canDisableAndEnableCrawler(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleCrawlerProcess($adminStep, $pageTree);
