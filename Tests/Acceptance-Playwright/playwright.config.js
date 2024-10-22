@@ -29,8 +29,10 @@ module.exports = defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
-  },
 
+    /* Whether to ignore HTTPS errors when sending network requests. See https://playwright.dev/docs/api/class-testoptions#test-options-ignore-https-errors*/
+    ignoreHTTPSErrors: true,
+  },
   /* Configure projects for major browsers */
   projects: [
     {
