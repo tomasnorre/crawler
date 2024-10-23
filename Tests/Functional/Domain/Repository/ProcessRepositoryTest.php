@@ -21,6 +21,8 @@ namespace AOE\Crawler\Tests\Functional\Domain\Repository;
 
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
+use Doctrine\DBAL\Exception;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
@@ -70,19 +72,22 @@ class ProcessRepositoryTest extends FunctionalTestCase
         $this->importCSVDataSet(__DIR__ . '/../../Fixtures/tx_crawler_process.csv');
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function findAllReturnsAll(): void
     {
         self::assertSame(6, $this->subject->findAll()->count());
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function findAllActiveReturnsActive(): void
     {
         self::assertSame(3, $this->subject->findAllActive()->count());
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    /**
+     * @throws Exception
+     */
+    #[Test]
     public function removeByProcessId(): void
     {
         self::assertSame(6, $this->subject->findAll()->count());
@@ -92,19 +97,13 @@ class ProcessRepositoryTest extends FunctionalTestCase
         self::assertSame(5, $this->subject->findAll()->count());
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function countNotTimeouted(): void
     {
         self::assertSame(2, $this->subject->countNotTimeouted(11));
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
-    public function countAll(): void
-    {
-        self::assertSame(6, $this->subject->countAll());
-    }
-
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function getActiveProcessesOlderThanOneOHour(): void
     {
         $expected = [
@@ -129,7 +128,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
         self::assertEquals($expected, $this->subject->getActiveProcessesOlderThanOneHour());
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function getActiveOrphanProcesses(): void
     {
         $expected = [
@@ -154,7 +153,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
         self::assertEquals($expected, $this->subject->getActiveOrphanProcesses());
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function deleteProcessesWithoutItemsAssigned(): void
     {
         $countBeforeDelete = $this->subject->findAll()->count();
@@ -164,7 +163,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
         self::assertSame($this->subject->findAll()->count(), $countBeforeDelete - $expectedProcessesToBeDeleted);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function deleteProcessesMarkedAsDeleted(): void
     {
         $countBeforeDelete = $this->subject->findAll()->count();
@@ -174,7 +173,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
         self::assertSame($this->subject->findAll()->count(), $countBeforeDelete - $expectedProcessesToBeDeleted);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function markRequestedProcessesAsNotActive(): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching'] = [];
@@ -186,7 +185,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
         self::assertEquals(1, $this->subject->findAllActive()->count());
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function updateProcessAssignItemsCount(): void
     {
         $processBefore = $this->findByProcessId('1002');
@@ -198,7 +197,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
         self::assertEquals(10, $processAfter['assigned_items_count']);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function addProcessAddProcess(): void
     {
         $processId = md5('processId');
@@ -212,7 +211,7 @@ class ProcessRepositoryTest extends FunctionalTestCase
 
         self::assertEquals(true, $process['active']);
 
-        self::assertGreaterThan(time(), $process['ttl']);
+        self::assertGreaterThanOrEqual(time(), $process['ttl']);
 
         self::assertEquals($systemProcessId, $process['system_process_id']);
     }

@@ -25,6 +25,7 @@ use Step\Acceptance\BackendModule;
 
 class CrawlerConfigurationCest
 {
+    // Implemented in Playwright for TYPO3 V13
     public function canCreateCrawlerConfiguration(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();
