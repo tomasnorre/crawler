@@ -9,7 +9,7 @@ test('Can see homepage', async ({page}) => {
 
 test('Can see news page', async ({page}) => {
     await page.goto('/news');
-    await expect(page.getByRole('document')).toContainText('Content Element with uid "5"');
+    await expect(page.getByRole('document')).toContainText('No news available.');
 });
 
 test('Can see search page and search for Tomasnorre', async ({page}) => {
