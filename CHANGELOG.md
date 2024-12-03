@@ -13,6 +13,7 @@
 ### Fixed
 * Prevent exception `Truncated incorrect DECIMAL value` in `crawler:processQueue` [@xyng](https://github.com/xyng)
 * Typecast PageTS Crawler Configuration `force_ssl` to `int`
+* Use proper pid's in EXT:news docs code example
 
 ### Deprecated
 
