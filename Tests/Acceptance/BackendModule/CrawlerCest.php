@@ -25,6 +25,7 @@ use Step\Acceptance\BackendModule;
 
 class CrawlerCest
 {
+    // Implemented in Playwright for TYPO3 V13
     public function canDisableAndEnableCrawler(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();
@@ -36,6 +37,7 @@ class CrawlerCest
         $I->canSee('Stop all processes and disable crawling');
     }
 
+    // Implemented in Playwright for TYPO3 V13
     public function canSeeFlushAllProcesses(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();

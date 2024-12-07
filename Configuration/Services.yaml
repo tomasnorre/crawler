@@ -38,6 +38,11 @@ services:
         arguments:
             $queryBuilder: '@queryBuilder.tx_crawler_queue'
 
+    AOE\Crawler\Service\BackendModuleLinkService:
+        arguments:
+            $iconFactory: '@TYPO3\CMS\Core\Imaging\IconFactory'
+        public: true
+
     AOE\Crawler\Service\ConfigurationService:
         arguments:
             $urlService: '@AOE\Crawler\Service\UrlService'

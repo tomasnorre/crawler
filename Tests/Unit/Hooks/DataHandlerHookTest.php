@@ -70,7 +70,7 @@ class DataHandlerHookTest extends UnitTestCase
 
         GeneralUtility::setSingletonInstance(CacheManager::class, $cacheManager->reveal());
 
-        $dataHandler = new DataHandler();
+        $dataHandler = $this->prophesize(DataHandler::class)->reveal();
 
         $mockedDataHandlerHook->addFlushedPagesToCrawlerQueue(
             [
@@ -117,7 +117,7 @@ class DataHandlerHookTest extends UnitTestCase
 
         GeneralUtility::setSingletonInstance(CacheManager::class, $cacheManager->reveal());
 
-        $dataHandler = new DataHandler();
+        $dataHandler = $this->prophesize(DataHandler::class)->reveal();
 
         $mockedDataHandlerHook->addFlushedPagesToCrawlerQueue(
             [
@@ -161,7 +161,7 @@ class DataHandlerHookTest extends UnitTestCase
 
         GeneralUtility::setSingletonInstance(CacheManager::class, $cacheManager->reveal());
 
-        $dataHandler = new DataHandler();
+        $dataHandler = $this->prophesize(DataHandler::class)->reveal();
 
         $mockedDataHandlerHook->addFlushedPagesToCrawlerQueue(
             [
@@ -204,7 +204,7 @@ class DataHandlerHookTest extends UnitTestCase
 
         GeneralUtility::setSingletonInstance(CacheManager::class, $cacheManager->reveal());
 
-        $dataHandler = new DataHandler();
+        $dataHandler = $this->prophesize(DataHandler::class)->reveal();
 
         $mockedDataHandlerHook->addFlushedPagesToCrawlerQueue(
             [
@@ -240,7 +240,7 @@ class DataHandlerHookTest extends UnitTestCase
         $cacheManager->getCache(Argument::any())->willReturn($this->prophesize(FrontendInterface::class)->reveal());
         GeneralUtility::setSingletonInstance(CacheManager::class, $cacheManager->reveal());
 
-        $dataHandler = new DataHandler();
+        $dataHandler = $this->prophesize(DataHandler::class)->reveal();
 
         self::assertNull($mockedDataHandlerHook->addFlushedPagesToCrawlerQueue(
             [
