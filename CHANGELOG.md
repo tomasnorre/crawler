@@ -157,6 +157,15 @@ Crawler 12.0.0 was released on April 21st, 2024
 * !!! QueueRepository->getPerformanceData()
 * !!! QueueRepository->findByQueueId()
 
+## Crawler 11.0.11
+
+Crawler 11.0.11 was released on January 20th, 2025
+
+### Fixed
+* Fixed query building when using _ADDTABLE parameter [@hawkeye1909](https://github.com/hawkeye1909)
+* Typecast PageTS Crawler Configuration `force_ssl` to `int`
+* Catch E_WARNING when unserialize() fails [cweiske](https://github.com/cweiske)
+
 ## Crawler 11.0.10
 
 Crawler 11.0.10 was released on July 4th, 2024
