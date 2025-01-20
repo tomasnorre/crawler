@@ -1,6 +1,7 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 12.0.5-dev
+## Crawler 12.0.5
+Crawler 12.0.5 was released on January 20th, 2025
 
 ### Added
 * Possibility to flush all processes from the backend module in process view
@@ -23,12 +24,6 @@
 
 #### Functions & Properties
 * CrawlerController->addQueueEntry_callBack()
-
-### Removed
-
-#### Classes
-
-#### Functions & Properties
 
 ## Crawler 12.0.4
 Crawler 12.0.4 was released on June 13th, 2024
