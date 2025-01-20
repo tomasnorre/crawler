@@ -1,27 +1,13 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 11.0.11-dev
+## Crawler 11.0.11
 
-### Added
-
-### Changed
+Crawler 11.0.11 was released on January 20th, 2025
 
 ### Fixed
 * Fixed query building when using _ADDTABLE parameter [@hawkeye1909](https://github.com/hawkeye1909)
 * Typecast PageTS Crawler Configuration `force_ssl` to `int`
 * Catch E_WARNING when unserialize() fails [cweiske](https://github.com/cweiske)
-
-### Deprecated
-
-#### Classes
-
-#### Functions & Properties
-
-### Removed
-
-#### Classes
-
-#### Functions & Properties
 
 ## Crawler 11.0.10
 
