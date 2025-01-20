@@ -1,6 +1,23 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 12.0.5-dev
+## Crawler 12.0.6-dev
+
+### Added
+
+### Changed
+
+### Fixed
+
+### Deprecated
+#### Classes
+#### Functions & Properties
+
+### Removed
+#### Classes
+#### Functions & Properties
+
+## Crawler 12.0.5
+Crawler 12.0.5 was released on January 20th, 2025
 
 ### Added
 * Possibility to flush all processes from the backend module in process view
@@ -13,6 +30,7 @@
 ### Fixed
 * Prevent exception `Truncated incorrect DECIMAL value` in `crawler:processQueue` [@xyng](https://github.com/xyng)
 * Typecast PageTS Crawler Configuration `force_ssl` to `int`
+* Use proper pid's in EXT:news docs code example
 
 ### Deprecated
 
@@ -22,12 +40,6 @@
 
 #### Functions & Properties
 * CrawlerController->addQueueEntry_callBack()
-
-### Removed
-
-#### Classes
-
-#### Functions & Properties
 
 ## Crawler 12.0.4
 Crawler 12.0.4 was released on June 13th, 2024
@@ -155,6 +167,15 @@ Crawler 12.0.0 was released on April 21st, 2024
 * !!! QueueRepository->getLastProcessedEntries()
 * !!! QueueRepository->getPerformanceData()
 * !!! QueueRepository->findByQueueId()
+
+## Crawler 11.0.11
+
+Crawler 11.0.11 was released on January 20th, 2025
+
+### Fixed
+* Fixed query building when using _ADDTABLE parameter [@hawkeye1909](https://github.com/hawkeye1909)
+* Typecast PageTS Crawler Configuration `force_ssl` to `int`
+* Catch E_WARNING when unserialize() fails [cweiske](https://github.com/cweiske)
 
 ## Crawler 11.0.10
 

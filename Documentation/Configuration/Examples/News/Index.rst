@@ -21,14 +21,14 @@ Example
 ::
 
    tx_crawler.crawlerCfg.paramSets {
-      tx_news = &tx_news_pi1[controller]=News&tx_news_pi1[action]=detail&tx_news_pi1[news]=[_TABLE:tx_news_domain_model_news; _PID:57; _WHERE: hidden = 0]
+      tx_news = &tx_news_pi1[controller]=News&tx_news_pi1[action]=detail&tx_news_pi1[news]=[_TABLE:tx_news_domain_model_news; _PID:58; _WHERE: hidden = 0]
       tx_news {
-        pidsOnly = 58
+        pidsOnly = 57
       }
    }
 
-   # _PID:57 is the Folder where news records are stored.
-   # pidSOnly = 58 is the detail-view PageId.
+   # _PID:58 is the Folder where news records are stored.
+   # pidSOnly = 57 is the detail-view PageId.
 
 Now you can add the News detail-view pages to the crawler queue and have them in
 the cache and the `indexed_search` index if you are using that.
