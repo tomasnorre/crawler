@@ -1,5 +1,21 @@
 # Changelog TYPO3 Crawler
 
+## Crawler 12.0.6-dev
+
+### Added
+
+### Changed
+
+### Fixed
+
+### Deprecated
+#### Classes
+#### Functions & Properties
+
+### Removed
+#### Classes
+#### Functions & Properties
+
 ## Crawler 12.0.5
 Crawler 12.0.5 was released on January 20th, 2025
 
