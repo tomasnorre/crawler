@@ -49,6 +49,7 @@
         "saschaegerer/phpstan-typo3": "^1.8",
         "sbuerk/typo3-cmscomposerinstallers-testingframework-bridge": "^0.1",
         "slam/phpstan-extensions": "^6.0",
+        "ssch/typo3-rector": "^2.12",
         "ssch/typo3-rector-testing-framework": "*",
         "symfony/yaml": "^6.4 || ^7.0",
         "symplify/easy-coding-standard": "^12.2",
