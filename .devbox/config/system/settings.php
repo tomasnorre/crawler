@@ -2,6 +2,7 @@
 return [
     'BE' => [
         'debug' => false,
+        'explicitADmode' => 'explicitAllow',
         'installToolPassword' => ' $argon2i$v=19$m=65536,t=16,p=1$aVdpSkRCR1NVOE9abTFHaQ$Hy/cm62jADhVJXRqKE8Hd5Hbk8e22fb01Kkk/zzjT3I',
         'passwordHashing' => [
             'className' => 'TYPO3\\CMS\\Core\\Crypto\\PasswordHashing\\Argon2iPasswordHash',
@@ -41,6 +42,17 @@ return [
             'loginLogo' => '',
             'loginLogoAlt' => '',
         ],
+        'bootstrap_package' => [
+            'disableCssProcessing' => '0',
+            'disableFontLoader' => '0',
+            'disableGoogleFontCaching' => '0',
+            'disablePageTsBackendLayouts' => '0',
+            'disablePageTsContentElements' => '0',
+            'disablePageTsRTE' => '0',
+            'disablePageTsTCADefaults' => '0',
+            'disablePageTsTCEFORM' => '0',
+            'disablePageTsTCEMAIN' => '0',
+        ],
         'crawler' => [
             'cleanUpOldQueueEntries' => '1',
             'cleanUpProcessedAge' => '2',
@@ -61,8 +73,13 @@ return [
             'sleepAfterFinish' => '10',
             'sleepTime' => '1000',
         ],
+        'extensionmanager' => [
+            'automaticInstallation' => '1',
+            'offlineMode' => '1',
+        ],
         'indexed_search' => [
             'catdoc' => '/usr/bin/',
+            'debugMode' => '0',
             'deleteFromIndexAfterEditing' => '1',
             'disableFrontendIndexing' => '0',
             'enableMetaphoneSearch' => '1',
@@ -94,7 +111,6 @@ return [
             'hidePageTreeForAdministrationModule' => '0',
             'manualSorting' => '0',
             'mediaPreview' => 'false',
-            'pageTreePluginPreview' => '1',
             'prependAtCopy' => '1',
             'resourceFolderImporter' => '/news_import',
             'rteForTeaser' => '0',
@@ -103,6 +119,10 @@ return [
             'slugBehaviour' => 'unique',
             'storageUidImporter' => '1',
             'tagPid' => '1',
+        ],
+        'scheduler' => [
+            'maxLifetime' => '1440',
+            'showSampleTasks' => '1',
         ],
     ],
     'FE' => [
@@ -114,9 +134,12 @@ return [
     ],
     'GFX' => [
         'processor' => 'ImageMagick',
+        'processor_allowTemporaryMasksAsPng' => false,
+        'processor_colorspace' => 'sRGB',
         'processor_effects' => true,
         'processor_enabled' => true,
         'processor_path' => '/usr/bin/',
+        'processor_path_lzw' => '/usr/bin/',
     ],
     'LOG' => [
         'TYPO3' => [
@@ -151,6 +174,9 @@ return [
                     'backend' => 'TYPO3\\CMS\\Core\\Cache\\Backend\\Typo3DatabaseBackend',
                 ],
                 'pages' => [
+                    'backend' => 'TYPO3\\CMS\\Core\\Cache\\Backend\\Typo3DatabaseBackend',
+                ],
+                'pagesection' => [
                     'backend' => 'TYPO3\\CMS\\Core\\Cache\\Backend\\Typo3DatabaseBackend',
                 ],
                 'rootline' => [
