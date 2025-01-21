@@ -70,6 +70,5 @@ CREATE TABLE tx_crawler_configuration
 #
 CREATE TABLE pages
 (
-    sitemap_priority decimal(2, 1) DEFAULT '
-0.5' NOT NULL
+    sitemap_priority decimal(2, 1) DEFAULT '0.5' NOT NULL
 );
