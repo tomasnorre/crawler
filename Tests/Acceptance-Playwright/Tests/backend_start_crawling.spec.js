@@ -4,7 +4,7 @@ import * as helpers from './helpers';
 test('Update URL button', async ({ page }) => {
     await helpers.loginBackend(page)
     await helpers.openCrawlerModuleStartCrawling(page)
-    await page.getByRole('treeitem', { name: 'Welcome' }).locator('div').nth(2).click();
+    await page.locator('div.node:nth-child(2)').click();
     await expect(page.locator('#nprogress')).toHaveCount(0);
     await page.locator('iframe[name="list_frame"]').contentFrame().locator('select[name="configurationSelection[]"]').selectOption('default');
     await page.locator('iframe[name="list_frame"]').contentFrame().getByRole('button', { name: 'Update' }).click();
@@ -15,7 +15,7 @@ test('Update URL button', async ({ page }) => {
 test('CrawlerConfigurationWithExcludePageSixPlusThree', async ({ page }) => {
     await helpers.loginBackend(page)
     await helpers.openCrawlerModuleStartCrawling(page)
-    await page.getByRole('treeitem', { name: 'Welcome' }).locator('div').nth(2).click();
+    await page.locator('div.node:nth-child(2)').click();
     await expect(page.locator('#nprogress')).toHaveCount(0);
     await page.locator('iframe[name="list_frame"]').contentFrame().locator('select[name="configurationSelection[]"]').selectOption('excludepages-6-plus-3');
     await page.locator('iframe[name="list_frame"]').contentFrame().getByRole('button', { name: 'Update' }).click();
@@ -27,7 +27,7 @@ test('CrawlerConfigurationWithExcludePageSixPlusThree', async ({ page }) => {
 test('UpdateUrlButtonSetDepth', async ({ page }) => {
     await helpers.loginBackend(page)
     await helpers.openCrawlerModuleStartCrawling(page)
-    await page.getByRole('treeitem', { name: 'Welcome' }).locator('div').nth(2).click();
+    await page.locator('div.node:nth-child(2)').click();
     await expect(page.locator('#nprogress')).toHaveCount(0);
     await page.locator('iframe[name="list_frame"]').contentFrame().locator('select[name="configurationSelection[]"]').selectOption('default');
     await page.locator('iframe[name="list_frame"]').contentFrame().locator('select[name="crawlingDepth"]').selectOption('99');

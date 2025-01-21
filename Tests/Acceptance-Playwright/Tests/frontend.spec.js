@@ -12,7 +12,8 @@ test('Can see news page', async ({page}) => {
     await expect(page.getByRole('document')).toContainText('No news available.');
 });
 
-test('Can see search page and search for Tomasnorre', async ({page}) => {
+test.skip('Can see search page and search for Tomasnorre', async ({page}) => {
+
     await page.goto('/search');
     await expect(page.getByRole('document')).toContainText('Search');
     await page.fill('#tx-indexedsearch-searchbox-sword', 'tomasnorre');

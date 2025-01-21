@@ -3,7 +3,7 @@ import * as helpers from './helpers';
 
 async function addQueueEntries(page, config, depth = '0') {
     await helpers.openCrawlerModuleStartCrawling(page)
-    await page.getByRole('treeitem', {name: 'Welcome'}).locator('div').nth(2).click();
+    await page.locator('div.node:nth-child(2)').click();
     await expect(page.locator('#nprogress')).toHaveCount(0);
     await page.locator('iframe[name="list_frame"]').contentFrame().locator('select[name="configurationSelection[]"]').selectOption(config);
     await page.locator('iframe[name="list_frame"]').contentFrame().locator('select[name="crawlingDepth"]').selectOption(depth);
