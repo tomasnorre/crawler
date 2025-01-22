@@ -160,10 +160,7 @@ class ProcessRepository
             ->select('process_id', 'system_process_id')
             ->from(self::TABLE_NAME)
             ->where(
-                $queryBuilder->expr()->lte(
-                    'ttl',
-                    intval(time() - $processMaxRunTime - 3600)
-                ),
+                $queryBuilder->expr()->lte('ttl', intval(time() - $processMaxRunTime - 3600)),
                 $queryBuilder->expr()->eq('active', 1)
             )
             ->executeQuery();
