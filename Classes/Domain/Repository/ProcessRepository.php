@@ -148,6 +148,8 @@ class ProcessRepository
      */
     public function getActiveProcessesOlderThanOneHour()
     {
+        $processMaxRunTime = $this->extensionSettings['processMaxRunTime'] ?? 360;
+
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
         $queryBuilder->getRestrictions()
             ->removeByType(HiddenRestriction::class)
@@ -160,7 +162,7 @@ class ProcessRepository
             ->where(
                 $queryBuilder->expr()->lte(
                     'ttl',
-                    intval(time() - $this->extensionSettings['processMaxRunTime'] - 3600)
+                    intval(time() - $processMaxRunTime - 3600)
                 ),
                 $queryBuilder->expr()->eq('active', 1)
             )
@@ -186,11 +188,13 @@ class ProcessRepository
             ->removeByType(HiddenRestriction::class)
             ->removeByType(DeletedRestriction::class);
 
+        $processMaxRunTime = $this->extensionSettings['processMaxRunTime'] ?? 360;
+
         return $queryBuilder
             ->select('process_id', 'system_process_id')
             ->from(self::TABLE_NAME)
             ->where(
-                $queryBuilder->expr()->lte('ttl', intval(time() - $this->extensionSettings['processMaxRunTime'])),
+                $queryBuilder->expr()->lte('ttl', intval(time() - $processMaxRunTime)),
                 $queryBuilder->expr()->eq('active', 1)
             )
             ->executeQuery()->fetchAllAssociative();
