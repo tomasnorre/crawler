@@ -315,6 +315,10 @@
         <source>Add process</source>
         <target state="final">Prozess hinzufügen</target>
       </trans-unit>
+      <trans-unit id="labels.process.flush" resname="labels.process.flush">
+        <source>Flush all processes</source>
+        <target state="needs-translation">Flush all processes</target>
+      </trans-unit>
       <trans-unit id="time.detailed" resname="time.detailed" approved="yes">
         <source>d-m-y H:i:s</source>
         <target state="final">d.m.y H:i:s</target>
