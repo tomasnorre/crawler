@@ -57,8 +57,7 @@ return RectorConfig::configure()
         PHPUnitSetList::PHPUNIT_100,
     ])
     ->registerService(Typo3SetList::TYPO3_11)
-    ->registerService(Typo3SetList::TYPO3_12)
-    ->registerService(NimutTestingFrameworkSetList::class::NIMUT_TESTING_FRAMEWORK_TO_TYPO3_TESTING_FRAMEWORK);
+    ->registerService(Typo3SetList::TYPO3_12);
 
 
 /**return static function (RectorConfig $rectorConfig): void {

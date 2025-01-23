@@ -11,7 +11,6 @@ parameters:
         - "Configuration/"
     excludePaths:
         - Tests/Acceptance
-        - Classes/Worker/CrawlerWorker.php
         - Classes/CrawlStrategy/GuzzleExecutionStrategy.php
 
     inferPrivatePropertyTypeFromConstructor: true

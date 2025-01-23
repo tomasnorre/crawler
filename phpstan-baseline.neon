@@ -1,259 +1,340 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Cognitive complexity for \"AOE\\\\Crawler\\\\Command\\\\BuildQueueCommand\\:\\:execute\\(\\)\" is 23, keep it under 21$#"
+			message: '#^Cognitive complexity for "AOE\\Crawler\\Command\\BuildQueueCommand\:\:execute\(\)" is 23, keep it under 21$#'
+			identifier: complexity.functionLike
 			count: 1
 			path: Classes/Command/BuildQueueCommand.php
 
 		-
-			message: "#^Constant AOE\\\\Crawler\\\\Command\\\\ProcessQueueCommand\\:\\:CLI_STATUS_POLLABLE_PROCESSED is unused\\.$#"
+			message: '#^Constant AOE\\Crawler\\Command\\ProcessQueueCommand\:\:CLI_STATUS_POLLABLE_PROCESSED is unused\.$#'
+			identifier: classConstant.unused
 			count: 1
 			path: Classes/Command/ProcessQueueCommand.php
 
 		-
-			message: "#^Cannot access offset 'ShowFeVars' on array\\|object\\.$#"
+			message: '#^Cannot access offset ''ShowFeVars'' on array\|object\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
 
 		-
-			message: "#^Cannot access offset 'ShowResultLog' on array\\|object\\.$#"
+			message: '#^Cannot access offset ''ShowResultLog'' on array\|object\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
 
 		-
-			message: "#^Cannot access offset '_csv' on array\\|object\\.$#"
+			message: '#^Cannot access offset ''_csv'' on array\|object\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
 
 		-
-			message: "#^Cannot access offset '_flush' on array\\|object\\.$#"
+			message: '#^Cannot access offset ''_flush'' on array\|object\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
 
 		-
-			message: "#^Cannot access offset '_flush_all' on array\\|object\\.$#"
+			message: '#^Cannot access offset ''_flush_all'' on array\|object\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
 
 		-
-			message: "#^Cannot access offset 'displayLog' on array\\|object\\.$#"
+			message: '#^Cannot access offset ''displayLog'' on array\|object\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
 
 		-
-			message: "#^Cannot access offset 'itemsPerPage' on array\\|object\\.$#"
+			message: '#^Cannot access offset ''itemsPerPage'' on array\|object\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
 
 		-
-			message: "#^Cannot access offset 'logDepth' on array\\|object\\.$#"
+			message: '#^Cannot access offset ''logDepth'' on array\|object\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
 
 		-
-			message: "#^Cannot access offset 'parameters' on array\\<string, mixed\\>\\|false\\.$#"
+			message: '#^Cannot access offset ''parameters'' on array\<string, mixed\>\|false\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
 			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
 
 		-
-			message: "#^Cannot access offset 'qid_details' on array\\|object\\.$#"
+			message: '#^Cannot access offset ''qid_details'' on array\|object\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
 
 		-
-			message: "#^Cannot access offset 'qid_read' on array\\|object\\.$#"
+			message: '#^Cannot access offset ''qid_read'' on array\|object\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
 
 		-
-			message: "#^Cannot access offset 'setID' on array\\|object\\.$#"
+			message: '#^Cannot access offset ''setID'' on array\|object\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 3
 			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
 
 		-
-			message: "#^Cannot access offset 'action' on array\\|object\\.$#"
+			message: '#^Call to function is_object\(\) with AOE\\Crawler\\Hooks\\CrawlerHookInterface will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
 			count: 1
 			path: Classes/Controller/Backend/BackendModuleCrawlerProcessController.php
 
 		-
-			message: "#^Cannot access offset 'processListMode' on array\\|object\\.$#"
+			message: '#^Cannot access offset ''action'' on array\|object\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: Classes/Controller/Backend/BackendModuleCrawlerProcessController.php
 
 		-
-			message: "#^Unable to resolve the template type T in call to method static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\)$#"
+			message: '#^Cannot access offset ''processListMode'' on array\|object\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: Classes/Controller/Backend/BackendModuleCrawlerProcessController.php
 
 		-
-			message: "#^Call to function is_array\\(\\) with string will always evaluate to false\\.$#"
+			message: '#^Unable to resolve the template type T in call to method static method TYPO3\\CMS\\Core\\Utility\\GeneralUtility\:\:makeInstance\(\)$#'
+			identifier: argument.templateType
+			count: 1
+			path: Classes/Controller/Backend/BackendModuleCrawlerProcessController.php
+
+		-
+			message: '#^Call to function is_array\(\) with string will always evaluate to false\.$#'
+			identifier: function.impossibleType
 			count: 1
 			path: Classes/Controller/Backend/BackendModuleStartCrawlingController.php
 
 		-
-			message: "#^Cannot access offset '_crawl' on array\\|object\\.$#"
+			message: '#^Cannot access offset ''_crawl'' on array\|object\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: Classes/Controller/Backend/BackendModuleStartCrawlingController.php
 
 		-
-			message: "#^Cannot access offset '_download' on array\\|object\\.$#"
+			message: '#^Cannot access offset ''_download'' on array\|object\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: Classes/Controller/Backend/BackendModuleStartCrawlingController.php
 
 		-
-			message: "#^Cannot access offset 'configurationSelect…' on array\\|object\\.$#"
+			message: '#^Cannot access offset ''configurationSelection'' on array\|object\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: Classes/Controller/Backend/BackendModuleStartCrawlingController.php
 
 		-
-			message: "#^Cannot access offset 'crawlingDepth' on array\\|object\\.$#"
+			message: '#^Cannot access offset ''crawlingDepth'' on array\|object\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: Classes/Controller/Backend/BackendModuleStartCrawlingController.php
 
 		-
-			message: "#^Cannot access offset 'tstamp' on array\\|object\\.$#"
+			message: '#^Cannot access offset ''tstamp'' on array\|object\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
 			path: Classes/Controller/Backend/BackendModuleStartCrawlingController.php
 
 		-
-			message: "#^Result of \\|\\| is always true\\.$#"
+			message: '#^Result of \|\| is always true\.$#'
+			identifier: booleanOr.alwaysTrue
 			count: 1
 			path: Classes/Controller/Backend/BackendModuleStartCrawlingController.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\Controller\\\\Backend\\\\Helper\\\\UrlBuilder\\:\\:getBackendModuleUrl\\(\\) should return TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri but returns Psr\\\\Http\\\\Message\\\\UriInterface\\.$#"
+			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: Classes/Controller/Backend/Helper/ResultHandler.php
+
+		-
+			message: '#^Method AOE\\Crawler\\Controller\\Backend\\Helper\\UrlBuilder\:\:getBackendModuleUrl\(\) should return TYPO3\\CMS\\Core\\Http\\Uri but returns Psr\\Http\\Message\\UriInterface\.$#'
+			identifier: return.type
 			count: 1
 			path: Classes/Controller/Backend/Helper/UrlBuilder.php
 
 		-
-			message: "#^Class cognitive complexity is 97, keep it under 35$#"
+			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 2
+			path: Classes/Controller/CrawlerController.php
+
+		-
+			message: '#^Class cognitive complexity is 97, keep it under 35$#'
+			identifier: complexity.classLike
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
+			message: '#^Parameter \#1 \$array \(array\{\}\|array\{0\: non\-falsy\-string, 1\?\: non\-falsy\-string\}\) to function array_filter does not contain falsy values, the array will always stay the same\.$#'
+			identifier: arrayFilter.same
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Parameter \\#1 \\$pageUid of static method TYPO3\\\\CMS\\\\Backend\\\\Utility\\\\BackendUtility\\:\\:getPagesTSconfig\\(\\) expects int, string given\\.$#"
+			message: '#^Parameter \#1 \$pageUid of static method TYPO3\\CMS\\Backend\\Utility\\BackendUtility\:\:getPagesTSconfig\(\) expects int, string given\.$#'
+			identifier: argument.type
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Property AOE\\\\Crawler\\\\Controller\\\\CrawlerController\\:\\:\\$crawler is never read, only written\\.$#"
+			message: '#^Property AOE\\Crawler\\Controller\\CrawlerController\:\:\$crawler is never read, only written\.$#'
+			identifier: property.onlyWritten
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:crawler_execute\\(\\)\\.$#"
+			message: '#^Call to an undefined method object\:\:crawler_execute\(\)\.$#'
+			identifier: method.notFound
 			count: 1
 			path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\CrawlStrategy\\\\CallbackExecutionStrategy\\:\\:fetchByCallback\\(\\) has no return type specified\\.$#"
+			message: '#^Method AOE\\Crawler\\CrawlStrategy\\CallbackExecutionStrategy\:\:fetchByCallback\(\) has no return type specified\.$#'
+			identifier: missingType.return
 			count: 1
 			path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
 
 		-
-			message: "#^Parameter \\#1 \\$className of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\) expects class\\-string\\<object\\>, string given\\.$#"
+			message: '#^Parameter \#1 \$className of static method TYPO3\\CMS\\Core\\Utility\\GeneralUtility\:\:makeInstance\(\) expects class\-string\<object\>, string given\.$#'
+			identifier: argument.type
 			count: 1
 			path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
 
 		-
-			message: "#^Unable to resolve the template type T in call to method static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\GeneralUtility\\:\\:makeInstance\\(\\)$#"
+			message: '#^Unable to resolve the template type T in call to method static method TYPO3\\CMS\\Core\\Utility\\GeneralUtility\:\:makeInstance\(\)$#'
+			identifier: argument.templateType
 			count: 1
 			path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
 
 		-
-			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
+			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
 			count: 1
 			path: Classes/CrawlStrategy/CrawlStrategyFactory.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\CrawlStrategy\\\\CrawlStrategyInterface\\:\\:fetchUrlContents\\(\\) has no return type specified\\.$#"
+			message: '#^Method AOE\\Crawler\\CrawlStrategy\\CrawlStrategyInterface\:\:fetchUrlContents\(\) has no return type specified\.$#'
+			identifier: missingType.return
 			count: 1
 			path: Classes/CrawlStrategy/CrawlStrategyInterface.php
 
 		-
-			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
+			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
 			count: 1
 			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
 
 		-
-			message: "#^Method AOE\\\\Crawler\\\\CrawlStrategy\\\\SubProcessExecutionStrategy\\:\\:executeShellCommand\\(\\) should return string\\|null but returns string\\|false\\|null\\.$#"
+			message: '#^Call to function is_array\(\) with array\{scheme\: ''''\|''http''\|''https'', host\?\: string, port\?\: int\<0, 65535\>, user\?\: string, pass\?\: string, path\?\: string, query\?\: string, fragment\?\: string\} will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
 			count: 1
 			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
 
 		-
-			message: """
-				#^Call to deprecated method getExpressionBuilder\\(\\) of class TYPO3\\\\CMS\\\\Core\\\\Database\\\\Connection\\:
-				Use \\{@see createExpressionBuilder\\(\\)\\} instead\\.$#
-			"""
+			message: '#^Method AOE\\Crawler\\CrawlStrategy\\SubProcessExecutionStrategy\:\:executeShellCommand\(\) should return string\|null but returns string\|false\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
+
+		-
+			message: '#^Instanceof between AOE\\Crawler\\Domain\\Model\\Process and AOE\\Crawler\\Domain\\Model\\Process will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 2
+			path: Classes/Domain/Model/ProcessCollection.php
+
+		-
+			message: '''
+				#^Call to deprecated method getExpressionBuilder\(\) of class TYPO3\\CMS\\Core\\Database\\Connection\:
+				Use \{@see createExpressionBuilder\(\)\} instead\.$#
+			'''
+			identifier: method.deprecated
 			count: 1
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
-			message: "#^Function getQueueEntriesForPageId\\(\\) has an unused variable \\$query\\.$#"
-			count: 1
-			path: Classes/Domain/Repository/QueueRepository.php
-
-		-
-			message: "#^Method AOE\\\\Crawler\\\\Event\\\\ModifySkipPageEvent\\:\\:isSkipped\\(\\) should return string\\|false but returns bool\\|string\\.$#"
+			message: '#^Method AOE\\Crawler\\Event\\ModifySkipPageEvent\:\:isSkipped\(\) should return string\|false but returns bool\|string\.$#'
+			identifier: return.type
 			count: 1
 			path: Classes/Event/ModifySkipPageEvent.php
 
 		-
-			message: "#^There is no request attribute \"tx_crawler\" configured so we can't figure out the exact type to return when calling Psr\\\\Http\\\\Message\\\\ServerRequestInterface\\:\\:getAttribute$#"
-			count: 1
-			path: Classes/Middleware/CrawlerInitialization.php
+			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 2
+			path: Classes/Hooks/ProcessCleanUpHook.php
 
 		-
-			message: "#^Cannot access offset 'alturl' on array\\|bool\\.$#"
+			message: '#^Parameter \#1 \$array \(list\<non\-empty\-string\>\) of array_values is already a list, call has no effect\.$#'
+			identifier: arrayValues.list
 			count: 1
-			path: Classes/Service/BackendModuleLogService.php
+			path: Classes/Hooks/ProcessCleanUpHook.php
 
 		-
-			message: "#^Cannot access offset 'procInstructions' on array\\|bool\\.$#"
+			message: '#^Call to function is_array\(\) with non\-empty\-array will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
 			count: 1
-			path: Classes/Service/BackendModuleLogService.php
+			path: Classes/Middleware/FrontendUserAuthenticator.php
 
 		-
-			message: "#^Class Error should be written with \\:\\:class notation, string found\\.$#"
-			count: 1
-			path: Classes/Service/BackendModuleLogService.php
-
-		-
-			message: "#^Method AOE\\\\Crawler\\\\Service\\\\BackendModuleLogService\\:\\:addRows\\(\\) should return non\\-empty\\-array\\<int, array\\{titleRowSpan\\: int\\<1, max\\>, colSpan\\: int, title\\: string, noEntries\\?\\: string, trClass\\?\\: string, qid\\?\\: array\\{link\\: TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, link\\-text\\: string\\}, refresh\\?\\: array\\{link\\: TYPO3\\\\CMS\\\\Core\\\\Http\\\\Uri, link\\-text\\: TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon, warning\\: string\\|TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\Icon\\}, columns\\?\\: array\\{url\\: mixed, scheduled\\: string, exec_time\\: string, result_log\\: string, result_status\\: string, feUserGroupList\\: string, procInstructions\\: string, set_id\\: string, \\.\\.\\.\\}\\}\\> but returns array\\{non\\-empty\\-array\\<int\\<0, max\\>, array\\>, array\\}\\.$#"
-			count: 1
-			path: Classes/Service/BackendModuleLogService.php
-
-		-
-			message: "#^Parameter \\#1 \\$resultData of static method AOE\\\\Crawler\\\\Controller\\\\Backend\\\\Helper\\\\ResultHandler\\:\\:getResFeVars\\(\\) expects array, array\\|true given\\.$#"
+			message: '#^Cannot access offset ''alturl'' on array\|bool\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: Classes/Service/BackendModuleLogService.php
 
 		-
-			message: "#^There is no request attribute \"route\" configured so we can't figure out the exact type to return when calling Psr\\\\Http\\\\Message\\\\ServerRequestInterface\\:\\:getAttribute$#"
+			message: '#^Cannot access offset ''procInstructions'' on array\|bool\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: Classes/Service/BackendModuleScriptUrlService.php
+			path: Classes/Service/BackendModuleLogService.php
 
 		-
-			message: "#^Class cognitive complexity is 87, keep it under 35$#"
+			message: '#^Method AOE\\Crawler\\Service\\BackendModuleLogService\:\:addRows\(\) should return non\-empty\-list\<array\{titleRowSpan\: int\<1, max\>, colSpan\: int, title\: string, noEntries\?\: string, trClass\?\: string, qid\?\: array\{link\: TYPO3\\CMS\\Core\\Http\\Uri, link\-text\: string\}, refresh\?\: array\{link\: TYPO3\\CMS\\Core\\Http\\Uri, link\-text\: TYPO3\\CMS\\Core\\Imaging\\Icon, warning\: string\|TYPO3\\CMS\\Core\\Imaging\\Icon\}, columns\?\: array\{url\: mixed, scheduled\: string, exec_time\: string, result_log\: string, result_status\: string, feUserGroupList\: string, procInstructions\: string, set_id\: string, \.\.\.\}\}\> but returns array\{non\-empty\-list\<array\>, array\}\.$#'
+			identifier: return.type
+			count: 1
+			path: Classes/Service/BackendModuleLogService.php
+
+		-
+			message: '#^Parameter \#1 \$resultData of static method AOE\\Crawler\\Controller\\Backend\\Helper\\ResultHandler\:\:getResFeVars\(\) expects array, array\|true given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Classes/Service/BackendModuleLogService.php
+
+		-
+			message: '#^Call to function is_array\(\) with array\<non\-empty\-array\<string, mixed\>\> will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
 			count: 1
 			path: Classes/Service/ConfigurationService.php
 
 		-
-			message: "#^Offset 'usergroup_cached…' does not exist on array\\|null\\.$#"
+			message: '#^Class cognitive complexity is 87, keep it under 35$#'
+			identifier: complexity.classLike
 			count: 1
 			path: Classes/Service/ConfigurationService.php
 
 		-
-			message: "#^Function getUrlFromPageAndQueryParameters\\(\\) has an unused variable \\$siteLanguage\\.$#"
+			message: '#^Offset ''usergroup_cached_list'' might not exist on array\|null\.$#'
+			identifier: offsetAccess.notFound
 			count: 1
-			path: Classes/Service/UrlService.php
+			path: Classes/Service/ConfigurationService.php
 
 		-
-			message: "#^Parameter \\#1 \\$row of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\CsvUtility\\:\\:csvValues\\(\\) expects array\\<string\\>, array\\<int, int\\|string\\> given\\.$#"
+			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: Classes/Service/QueueService.php
+
+		-
+			message: '#^Parameter \#1 \$row of static method TYPO3\\CMS\\Core\\Utility\\CsvUtility\:\:csvValues\(\) expects array\<string\>, list\<int\|string\> given\.$#'
+			identifier: argument.type
 			count: 1
 			path: Classes/Writer/FileWriter/CsvWriter/CrawlerCsvWriter.php
