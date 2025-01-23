@@ -62,12 +62,6 @@
     "suggest": {
         "typo3/cms-seo": "Enables the posibility to priorities your Crawler Queue + You have seo features in the CMS it self."
     },
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/symplify/phpstan-rules"
-        }
-    ],
     "minimum-stability": "dev",
     "prefer-stable": true,
     "autoload": {
