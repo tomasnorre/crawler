@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns:t3="http://typo3.org/schemas/xliff" version="1.0">
-  <file t3:id="1509961542" source-language="en" datatype="plaintext" original="EXT:crawler/Resources/Private/Language/locallang_csh_tx_crawler_configuration.xlf" date="2017-11-06T10:46:00Z" product-name="crawler" target-language="it">
+  <file t3:id="1509961542" source-language="en" datatype="plaintext" original="EXT:crawler/Resources/Private/Language/locallang_csh_tx_crawler_configuration.xlf" date="2017-11-06T10:46:00Z" product-name="crawler" target-language="es-ES">
     <header/>
     <body>
       <trans-unit id="root_template_pid.description" resname="root_template_pid.description">
