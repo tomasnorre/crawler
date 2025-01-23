@@ -23,8 +23,10 @@ use AOE\Crawler\Command\BuildQueueCommand;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use AOE\Crawler\Tests\Functional\LanguageServiceTestTrait;
-use AOE\Crawler\Tests\Functional\SiteBasedTestTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Console\Tester\CommandTester;
+use TYPO3\CMS\Core\Tests\Functional\SiteHandling\SiteBasedTestTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
@@ -97,8 +99,8 @@ class BuildQueueCommandTest extends FunctionalTestCase
         $this->commandTester = new CommandTester($command);
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('buildQueueCommandDataProvider')]
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[DataProvider('buildQueueCommandDataProvider')]
+    #[Test]
     public function buildQueueCommandTest(array $parameters, string $expectedOutput, int $expectedCount): void
     {
         $arguments = [];
@@ -109,7 +111,7 @@ class BuildQueueCommandTest extends FunctionalTestCase
         $this->commandTester->execute($arguments);
 
         self::assertStringContainsString($expectedOutput, $this->commandTester->getDisplay());
-        self::assertEquals($expectedCount, $this->queueRepository->findAll()->count());
+        self::assertCount($expectedCount, $this->queueRepository->findAll());
     }
 
     public static function buildQueueCommandDataProvider(): iterable

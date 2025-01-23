@@ -23,6 +23,7 @@ use AOE\Crawler\Tests\Acceptance\Support\Step\Acceptance\FrontendUser;
 
 class FrontendCest
 {
+    // Implemented in Playwright for TYPO3 V13
     public function canSeeHomePage(FrontendUser $I): void
     {
         $I->amOnPage('/');
@@ -30,12 +31,14 @@ class FrontendCest
         $I->waitForText('Login', 1);
     }
 
+    // Implemented in Playwright for TYPO3 V13
     public function canSeeNewsPage(FrontendUser $I): void
     {
         $I->amOnPage('/news');
         $I->waitForText('No news available.');
     }
 
+    // Implemented in Playwright for TYPO3 V13
     public function canSeeSearchPageAndSearchForTomasnorre(FrontendUser $I): void
     {
         $I->amOnPage('/search');

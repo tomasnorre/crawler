@@ -3,8 +3,12 @@
 ## Crawler 12.0.6-dev
 
 ### Added
+* Support for TYPO3 13 LTS
 
 ### Changed
+* ProcessRepository doesn't extend from TYPO3\CMS\Extbase\Persistence\Repository anymore
+* QueueRepository doesn't extend from TYPO3\CMS\Extbase\Persistence\Repository anymore
+* PageRepository::DOKTYPE_RECYCLER is removed from disallowedDoctypes in PageService for TYPO3 13 LTS
 
 ### Fixed
 

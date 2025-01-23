@@ -23,6 +23,7 @@ hooks:
     - exec: /var/www/html/build-files/import-if-empty.sh
     - exec: /var/www/html/bin/typo3 backend:lock
     - exec: /var/www/html/bin/typo3 extension:setup
+    - exec: /var/www/html/build-files/typo3-uprade-wizard.sh
     - exec: /var/www/html/bin/typo3 cache:flush
     - exec: /var/www/html/bin/typo3 cache:warmup
     - exec: /var/www/html/bin/typo3 backend:unlock

@@ -23,19 +23,18 @@ use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Value\QueueFilter;
 use Doctrine\DBAL\ArrayParameterType;
-use PDO;
+use Doctrine\DBAL\Exception;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Contracts\Service\Attribute\Required;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Persistence\Repository;
 
 /**
  * @internal since v9.2.5
  */
-class QueueRepository extends Repository implements LoggerAwareInterface
+class QueueRepository implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
@@ -129,7 +128,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
             ->select('*')
             ->from(self::TABLE_NAME)
             ->where(
-                $queryBuilder->expr()->eq('qid', $queryBuilder->createNamedParameter($queueId, PDO::PARAM_INT))
+                $queryBuilder->expr()->eq('qid', $queryBuilder->createNamedParameter($queueId, Connection::PARAM_INT))
             );
         if (!$force) {
             $queryBuilder
@@ -431,7 +430,7 @@ class QueueRepository extends Repository implements LoggerAwareInterface
                 $timeBegin = $currentTime - 100;
                 $timeEnd = $currentTime + 100;
                 $queryBuilder
-                    ->where('scheduled BETWEEN ' . $timeBegin . ' AND ' . $timeEnd . '')
+                    ->where('scheduled BETWEEN ' . $timeBegin . ' AND ' . $timeEnd . ' ')
                     ->orWhere($queryBuilder->expr()->lte('scheduled', $currentTime));
             } else {
                 $queryBuilder
@@ -504,6 +503,33 @@ class QueueRepository extends Repository implements LoggerAwareInterface
         }
 
         return $queryBuilder->executeQuery()->fetchAllAssociative();
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function findAll(): array
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
+        $queryBuilder
+            ->select('*')
+            ->from(self::TABLE_NAME);
+        return $queryBuilder->executeQuery()->fetchAllAssociative();
+    }
+
+    public function findByProcessId(string $processId): array
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
+        return $queryBuilder
+            ->select('*')
+            ->from(self::TABLE_NAME)
+            ->where(
+                $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter(
+                    $processId,
+                    Connection::PARAM_INT
+                ))
+            )
+            ->executeQuery()->fetchAllAssociative();
     }
 
     /**

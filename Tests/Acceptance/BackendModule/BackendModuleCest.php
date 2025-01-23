@@ -27,41 +27,48 @@ use Step\Acceptance\BackendModule;
 
 class BackendModuleCest
 {
+    // Implemented in Playwright for TYPO3 V13
     public function canSeeLoginMask(Admin $I): void
     {
         $I->amOnPage('/typo3');
         $I->waitForText('Login', 5);
     }
 
+    // Implemented in Playwright for TYPO3 V13
     public function signInSuccessfully(Admin $I): void
     {
         $I->loginAsAdmin();
     }
 
+    // Implemented in Playwright for TYPO3 V13
     public function canSeeCrawlerModule(Admin $I): void
     {
         $I->loginAsAdmin();
         $I->canSee('Crawler', '[data-modulemenu-identifier="web_site_crawler"]');
     }
 
+    // Implemented in Playwright for TYPO3 V13
     public function canSelectCrawlerModuleStartCrawling(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleStartCrawling($adminStep, $pageTree);
     }
 
+    // Implemented in Playwright for TYPO3 V13
     public function canSelectCrawlerModuleCrawlerLog(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleCrawlerLog($adminStep, $pageTree);
     }
 
+    // Implemented in Playwright for TYPO3 V13
     public function canSelectCrawlerModuleProcess(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();
         $I->openCrawlerBackendModuleCrawlerProcess($adminStep, $pageTree);
     }
 
+    // Implemented in Playwright for TYPO3 V13
     public function updateUrlButton(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();
@@ -75,6 +82,7 @@ class BackendModuleCest
      * Ensure that Crawler Configurations with Exclude pages set to: e.g. 6+3 is working
      * https://github.com/tomasnorre/crawler/issues/777
      */
+    // Implemented in Playwright for TYPO3 V13
     public function CrawlerConfigurationWithExcludePageSixPlusThree(
         BackendModule $I,
         Admin $adminStep,
@@ -102,6 +110,7 @@ class BackendModuleCest
         $I->waitForText('Count: 1', 15);
     }
 
+    // Implemented in Playwright for TYPO3 V13
     public function updateUrlButtonSetDepth(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();
@@ -112,6 +121,7 @@ class BackendModuleCest
         $I->waitForElementVisible('.table-striped', 15);
     }
 
+    // Implemented in Playwright for TYPO3 V13
     public function crawlerAddProcess(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();
@@ -123,6 +133,7 @@ class BackendModuleCest
         $I->addProcessOnProcess($adminStep, $pageTree);
     }
 
+    // Implemented in Playwright for TYPO3 V13
     public function processSuccessful(BackendModule $I, Admin $adminStep, PageTree $pageTree): void
     {
         $adminStep->loginAsAdmin();

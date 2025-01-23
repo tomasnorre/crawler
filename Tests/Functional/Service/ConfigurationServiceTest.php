@@ -22,6 +22,7 @@ namespace AOE\Crawler\Tests\Functional\Service;
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Service\ConfigurationService;
 use AOE\Crawler\Service\UrlService;
+use PHPUnit\Framework\Attributes\Test;
 use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -40,8 +41,7 @@ class ConfigurationServiceTest extends FunctionalTestCase
         $this->subject = $this->createPartialMock(ConfigurationService::class, []);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
-    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
+    #[Test]
     public function expandExcludeStringReturnsArraysOfIntegers(): void
     {
         $GLOBALS['BE_USER'] = $this->getMockBuilder(BackendUserAuthentication::class)
@@ -57,7 +57,7 @@ class ConfigurationServiceTest extends FunctionalTestCase
         }
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function getConfigurationFromDatabaseReturnsArray(): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [
