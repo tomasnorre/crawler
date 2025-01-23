@@ -1,6 +1,7 @@
 # Changelog TYPO3 Crawler
 
 ## Crawler 12.0.6-dev
+Crawler 12.0.6 was released on January 23rd, 2025
 
 ### Added
 * Support for TYPO3 13 LTS
@@ -9,16 +10,6 @@
 * ProcessRepository doesn't extend from TYPO3\CMS\Extbase\Persistence\Repository anymore
 * QueueRepository doesn't extend from TYPO3\CMS\Extbase\Persistence\Repository anymore
 * PageRepository::DOKTYPE_RECYCLER is removed from disallowedDoctypes in PageService for TYPO3 13 LTS
-
-### Fixed
-
-### Deprecated
-#### Classes
-#### Functions & Properties
-
-### Removed
-#### Classes
-#### Functions & Properties
 
 ## Crawler 12.0.5
 Crawler 12.0.5 was released on January 20th, 2025
