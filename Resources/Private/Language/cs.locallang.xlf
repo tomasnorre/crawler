@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff version="1.0">
+  <file source-language="en" datatype="plaintext" original="EXT:crawler/Resources/Private/Language/locallang.xlf" date="2020-04-15T15:00:00Z" product-name="crawler" target-language="cs">
+    <header/>
+    <body>
+      <trans-unit id="title" resname="title">
+        <source>Site Crawler</source>
+        <target state="needs-translation">Site Crawler</target>
+      </trans-unit>
+      <trans-unit id="labels.start" resname="labels.start">
+        <source>Start Crawling</source>
+        <target state="needs-translation">Start Crawling</target>
+      </trans-unit>
+      <trans-unit id="labels.log" resname="labels.log">
+        <source>Crawler log</source>
+        <target state="needs-translation">Crawler log</target>
+      </trans-unit>
+      <trans-unit id="labels.multiprocess" resname="labels.multiprocess">
+        <source>Crawling Processes</source>
+        <target state="needs-translation">Crawling Processes</target>
+      </trans-unit>
+      <trans-unit id="labels.all" resname="labels.all">
+        <source>All</source>
+        <target state="needs-translation">All</target>
+      </trans-unit>
+      <trans-unit id="labels.pending" resname="labels.pending">
+        <source>Pending</source>
+        <target state="needs-translation">Pending</target>
+      </trans-unit>
+      <trans-unit id="labels.finished" resname="labels.finished">
+        <source>Finished</source>
+        <target state="needs-translation">Finished</target>
+      </trans-unit>
+      <trans-unit id="labels.noPageSelected" resname="labels.noPageSelected">
+        <source>Please select a page in the pagetree</source>
+        <target state="needs-translation">Please select a page in the pagetree</target>
+      </trans-unit>
+      <trans-unit id="labels.noConfigSelected" resname="labels.noConfigSelected">
+        <source>Please select at least one configuration</source>
+        <target state="needs-translation">Please select at least one configuration</target>
+      </trans-unit>
+      <trans-unit id="labels.configuration" resname="labels.configuration">
+        <source>Crawl configuration</source>
+        <target state="needs-translation">Crawl configuration</target>
+      </trans-unit>
+      <trans-unit id="labels.triggerUpdate" resname="labels.triggerUpdate">
+        <source>Update</source>
+        <target state="needs-translation">Update</target>
+      </trans-unit>
+      <trans-unit id="labels.triggerCrawl" resname="labels.triggerCrawl">
+        <source>Crawl URLs</source>
+        <target state="needs-translation">Crawl URLs</target>
+      </trans-unit>
+      <trans-unit id="labels.triggerDownload" resname="labels.triggerDownload">
+        <source>Download URLs</source>
+        <target state="needs-translation">Download URLs</target>
+      </trans-unit>
+      <trans-unit id="labels.continue" resname="labels.continue">
+        <source>Continue</source>
+        <target state="needs-translation">Continue</target>
+      </trans-unit>
+      <trans-unit id="labels.continueinlog" resname="labels.continueinlog">
+        <source>Continue and show Log</source>
+        <target state="needs-translation">Continue and show Log</target>
+      </trans-unit>
+      <trans-unit id="labels.count" resname="labels.count">
+        <source>Count</source>
+        <target state="needs-translation">Count</target>
+      </trans-unit>
+      <trans-unit id="labels.time" resname="labels.time">
+        <source>Time</source>
+        <target state="needs-translation">Time</target>
+      </trans-unit>
+      <trans-unit id="labels.curtime" resname="labels.curtime">
+        <source>Current server time</source>
+        <target state="needs-translation">Current server time</target>
+      </trans-unit>
+      <trans-unit id="labels.submitted" resname="labels.submitted">
+        <source>URLs submitted</source>
+        <target state="needs-translation">URLs submitted</target>
+      </trans-unit>
+      <trans-unit id="labels.depth" resname="labels.depth">
+        <source>Depth</source>
+        <target state="needs-translation">Depth</target>
+      </trans-unit>
+      <trans-unit id="labels.configurations" resname="labels.configurations">
+        <source>Configurations</source>
+        <target state="needs-translation">Configurations</target>
+      </trans-unit>
+      <trans-unit id="labels.scheduled" resname="labels.scheduled">
+        <source>Scheduled</source>
+        <target state="needs-translation">Scheduled</target>
+      </trans-unit>
+      <trans-unit id="labels.pagetitle" resname="labels.pagetitle">
+        <source>Page title</source>
+        <target state="needs-translation">Page title</target>
+      </trans-unit>
+      <trans-unit id="labels.key" resname="labels.key">
+        <source>Key</source>
+        <target state="needs-translation">Key</target>
+      </trans-unit>
+      <trans-unit id="labels.parametercfg" resname="labels.parametercfg">
+        <source>Parameter Cfg</source>
+        <target state="needs-translation">Parameter Cfg</target>
+      </trans-unit>
+      <trans-unit id="labels.values" resname="labels.values">
+        <source>Values Expanded</source>
+        <target state="needs-translation">Values Expanded</target>
+      </trans-unit>
+      <trans-unit id="labels.url" resname="labels.url">
+        <source>URL</source>
+        <target state="needs-translation">URL</target>
+      </trans-unit>
+      <trans-unit id="labels.urls" resname="labels.urls">
+        <source>URLs</source>
+        <target state="needs-translation">URLs</target>
+      </trans-unit>
+      <trans-unit id="labels.options" resname="labels.options">
+        <source>Options</source>
+        <target state="needs-translation">Options</target>
+      </trans-unit>
+      <trans-unit id="labels.parameters" resname="labels.parameters">
+        <source>Parameters</source>
+        <target state="needs-translation">Parameters</target>
+      </trans-unit>
+      <trans-unit id="labels.back" resname="labels.back">
+        <source>Back</source>
+        <target state="needs-translation">Back</target>
+      </trans-unit>
+      <trans-unit id="labels.reloadlist" resname="labels.reloadlist">
+        <source>Reload list</source>
+        <target state="needs-translation">Reload list</target>
+      </trans-unit>
+      <trans-unit id="labels.downloadcsv" resname="labels.downloadcsv">
+        <source>Download entries as CSV</source>
+        <target state="needs-translation">Download entries as CSV</target>
+      </trans-unit>
+      <trans-unit id="labels.flushvisiblequeue" resname="labels.flushvisiblequeue">
+        <source>Flush visible entries</source>
+        <target state="needs-translation">Flush visible entries</target>
+      </trans-unit>
+      <trans-unit id="labels.flushfullqueue" resname="labels.flushfullqueue">
+        <source>Flush entire queue</source>
+        <target state="needs-translation">Flush entire queue</target>
+      </trans-unit>
+      <trans-unit id="labels.confirmyouresure" resname="labels.confirmyouresure">
+        <source>Are you sure?</source>
+        <target state="needs-translation">Are you sure?</target>
+      </trans-unit>
+      <trans-unit id="labels.setid" resname="labels.setid">
+        <source>Set ID</source>
+        <target state="needs-translation">Set ID</target>
+      </trans-unit>
+      <trans-unit id="labels.qid" resname="labels.qid">
+        <source>Queue id</source>
+        <target state="needs-translation">Queue id</target>
+      </trans-unit>
+      <trans-unit id="labels.resultlog" resname="labels.resultlog">
+        <source>Result Log</source>
+        <target state="needs-translation">Result Log</target>
+      </trans-unit>
+      <trans-unit id="labels.scheduledtime" resname="labels.scheduledtime">
+        <source>Scheduled</source>
+        <target state="needs-translation">Scheduled</target>
+      </trans-unit>
+      <trans-unit id="labels.runtime" resname="labels.runtime">
+        <source>Run-time</source>
+        <target state="needs-translation">Run-time</target>
+      </trans-unit>
+      <trans-unit id="labels.status" resname="labels.status">
+        <source>Status</source>
+        <target state="needs-translation">Status</target>
+      </trans-unit>
+      <trans-unit id="labels.groups" resname="labels.groups">
+        <source>Groups</source>
+        <target state="needs-translation">Groups</target>
+      </trans-unit>
+      <trans-unit id="labels.procinstr" resname="labels.procinstr">
+        <source>Proc. Instr.</source>
+        <target state="needs-translation">Proc. Instr.</target>
+      </trans-unit>
+      <trans-unit id="labels.newprocess" resname="labels.newprocess">
+        <source>New process has been started, refresh to monitor the state</source>
+        <target state="needs-translation">New process has been started, refresh to monitor the state</target>
+      </trans-unit>
+      <trans-unit id="labels.newprocesserror" resname="labels.newprocesserror">
+        <source>Error while starting process</source>
+        <target state="needs-translation">Error while starting process</target>
+      </trans-unit>
+      <trans-unit id="labels.time.now" resname="labels.time.now">
+        <source>Now</source>
+        <target state="needs-translation">Now</target>
+      </trans-unit>
+      <trans-unit id="labels.time.midnight" resname="labels.time.midnight">
+        <source>Midnight</source>
+        <target state="needs-translation">Midnight</target>
+      </trans-unit>
+      <trans-unit id="labels.time.4am" resname="labels.time.4am">
+        <source>4 AM</source>
+        <target state="needs-translation">4 AM</target>
+      </trans-unit>
+      <trans-unit id="labels.display" resname="labels.display">
+        <source>Display</source>
+        <target state="needs-translation">Display</target>
+      </trans-unit>
+      <trans-unit id="labels.showresultlog" resname="labels.showresultlog">
+        <source>Show Result Log</source>
+        <target state="needs-translation">Show Result Log</target>
+      </trans-unit>
+      <trans-unit id="labels.showfevars" resname="labels.showfevars">
+        <source>Show FE Vars</source>
+        <target state="needs-translation">Show FE Vars</target>
+      </trans-unit>
+      <trans-unit id="labels.noentries" resname="labels.noentries">
+        <source>No entries</source>
+        <target state="needs-translation">No entries</target>
+      </trans-unit>
+      <trans-unit id="labels.immediate" resname="labels.immediate">
+        <source>immediate</source>
+        <target state="needs-translation">immediate</target>
+      </trans-unit>
+      <trans-unit id="labels.generalinformation" resname="labels.generalinformation">
+        <source>General Information</source>
+        <target state="needs-translation">General Information</target>
+      </trans-unit>
+      <trans-unit id="labels.pendingoverview" resname="labels.pendingoverview">
+        <source>Pending Entries (assigned / overall)</source>
+        <target state="needs-translation">Pending Entries (assigned / overall)</target>
+      </trans-unit>
+      <trans-unit id="labels.processcount" resname="labels.processcount">
+        <source>Processes count (running / max)</source>
+        <target state="needs-translation">Processes count (running / max)</target>
+      </trans-unit>
+      <trans-unit id="labels.clipath" resname="labels.clipath">
+        <source>CLI-Path</source>
+        <target state="needs-translation">CLI-Path</target>
+      </trans-unit>
+      <trans-unit id="labels.processstates" resname="labels.processstates">
+        <source>Process States</source>
+        <target state="needs-translation">Process States</target>
+      </trans-unit>
+      <trans-unit id="labels.state" resname="labels.state">
+        <source>State</source>
+        <target state="needs-translation">State</target>
+      </trans-unit>
+      <trans-unit id="labels.processid" resname="labels.processid">
+        <source>Id</source>
+        <target state="needs-translation">Id</target>
+      </trans-unit>
+      <trans-unit id="labels.time.first" resname="labels.time.first">
+        <source>Time first item</source>
+        <target state="needs-translation">Time first item</target>
+      </trans-unit>
+      <trans-unit id="labels.time.last" resname="labels.time.last">
+        <source>Time last item</source>
+        <target state="needs-translation">Time last item</target>
+      </trans-unit>
+      <trans-unit id="labels.time.duration" resname="labels.time.duration">
+        <source>Runtime</source>
+        <target state="needs-translation">Runtime</target>
+      </trans-unit>
+      <trans-unit id="labels.ttl" resname="labels.ttl">
+        <source>TTL</source>
+        <target state="needs-translation">TTL</target>
+      </trans-unit>
+      <trans-unit id="labels.status.current" resname="labels.status.current">
+        <source>Processed</source>
+        <target state="needs-translation">Processed</target>
+      </trans-unit>
+      <trans-unit id="labels.status.initial" resname="labels.status.initial">
+        <source>Initially assigned</source>
+        <target state="needs-translation">Initially assigned</target>
+      </trans-unit>
+      <trans-unit id="labels.status.finally" resname="labels.status.finally">
+        <source>Finally assigned</source>
+        <target state="needs-translation">Finally assigned</target>
+      </trans-unit>
+      <trans-unit id="labels.status.progress" resname="labels.status.progress">
+        <source>Progress</source>
+        <target state="needs-translation">Progress</target>
+      </trans-unit>
+      <trans-unit id="labels.process.running" resname="labels.process.running">
+        <source>Process running</source>
+        <target state="needs-translation">Process running</target>
+      </trans-unit>
+      <trans-unit id="labels.process.success" resname="labels.process.success">
+        <source>Process completed successfully</source>
+        <target state="needs-translation">Process completed successfully</target>
+      </trans-unit>
+      <trans-unit id="labels.process.cancelled" resname="labels.process.cancelled">
+        <source>Process was cancelled</source>
+        <target state="needs-translation">Process was cancelled</target>
+      </trans-unit>
+      <trans-unit id="labels.refresh" resname="labels.refresh">
+        <source>Refresh</source>
+        <target state="needs-translation">Refresh</target>
+      </trans-unit>
+      <trans-unit id="labels.disablecrawling" resname="labels.disablecrawling">
+        <source>Stop all processes and disable crawling</source>
+        <target state="needs-translation">Stop all processes and disable crawling</target>
+      </trans-unit>
+      <trans-unit id="labels.enablecrawling" resname="labels.enablecrawling">
+        <source>Enable crawling</source>
+        <target state="needs-translation">Enable crawling</target>
+      </trans-unit>
+      <trans-unit id="labels.show.running" resname="labels.show.running">
+        <source>Show only running processes</source>
+        <target state="needs-translation">Show only running processes</target>
+      </trans-unit>
+      <trans-unit id="labels.show.all" resname="labels.show.all">
+        <source>Show finished and terminated processes</source>
+        <target state="needs-translation">Show finished and terminated processes</target>
+      </trans-unit>
+      <trans-unit id="labels.process.add" resname="labels.process.add">
+        <source>Add process</source>
+        <target state="needs-translation">Add process</target>
+      </trans-unit>
+      <trans-unit id="labels.process.flush" resname="labels.process.flush">
+        <source>Flush all processes</source>
+        <target state="needs-translation">Flush all processes</target>
+      </trans-unit>
+      <trans-unit id="time.detailed" resname="time.detailed">
+        <source>d-m-y H:i:s</source>
+        <target state="needs-translation">d-m-y H:i:s</target>
+      </trans-unit>
+      <trans-unit id="labels.itemsPerPage.5" resname="labels.itemsPerPage.5">
+        <source>limit to 5</source>
+        <target state="needs-translation">limit to 5</target>
+      </trans-unit>
+      <trans-unit id="labels.itemsPerPage.10" resname="labels.itemsPerPage.10">
+        <source>limit to 10</source>
+        <target state="needs-translation">limit to 10</target>
+      </trans-unit>
+      <trans-unit id="labels.itemsPerPage.50" resname="labels.itemsPerPage.50">
+        <source>limit to 50</source>
+        <target state="needs-translation">limit to 50</target>
+      </trans-unit>
+      <trans-unit id="labels.itemsPerPage.0" resname="labels.itemsPerPage.0">
+        <source>no limit</source>
+        <target state="needs-translation">no limit</target>
+      </trans-unit>
+      <trans-unit id="labels.itemsPerPage" resname="labels.itemsPerPage">
+        <source>Items per page</source>
+        <target state="needs-translation">Items per page</target>
+      </trans-unit>
+      <trans-unit id="message.noBeUserAvailable" resname="message.noBeUserAvailable">
+        <source>There is no be_user "_cli_crawler" available!</source>
+        <target state="needs-translation">There is no be_user "_cli_crawler" available!</target>
+      </trans-unit>
+      <trans-unit id="message.noPhpForkAvailable" resname="message.noPhpForkAvailable">
+        <source>There is no PHP method "popen" available!</source>
+        <target state="needs-translation">There is no PHP method "popen" available!</target>
+      </trans-unit>
+      <trans-unit id="message.beUserIsAdmin" resname="message.beUserIsAdmin">
+        <source>The be_user "_cli_crawler" is not allowed to have admin rights!</source>
+        <target state="needs-translation">The be_user "_cli_crawler" is not allowed to have admin rights!</target>
+      </trans-unit>
+      <trans-unit id="message.canNotExportEmptyQueueToCsvText" resname="message.canNotExportEmptyQueueToCsvText">
+        <source>An empty queue can not be exported to CSV.</source>
+        <target state="needs-translation">An empty queue can not be exported to CSV.</target>
+      </trans-unit>
+      <trans-unit id="message.phpBinaryNotFound" resname="message.phpBinaryNotFound">
+        <source>No php binary found in '%s'. Please update value for 'phpPath' in crawler extension setup.
+				</source>
+        <target state="needs-translation">No php binary found in '%s'. Please update value for 'phpPath' in crawler extension setup.
+				</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
