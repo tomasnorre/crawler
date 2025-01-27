@@ -1,23 +1,12 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 12.0.7-dev
+## Crawler 12.0.7
+Crawler 12.0.7 was released on January 27th, 2025
 
 ### Added
 * Support for PHP 8.4
 
-### Changed
-
-### Fixed
-
-### Deprecated
-#### Classes
-#### Functions & Properties
-
-### Removed
-#### Classes
-#### Functions & Properties
-
-## Crawler 12.0.6-dev
+## Crawler 12.0.6
 Crawler 12.0.6 was released on January 23rd, 2025
 
 ### Added
