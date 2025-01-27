@@ -3,6 +3,7 @@
 ## Crawler 12.0.7-dev
 
 ### Added
+* Support for PHP 8.4
 
 ### Changed
 

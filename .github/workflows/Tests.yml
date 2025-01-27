@@ -56,7 +56,6 @@ jobs:
         run: composer validate
 
       - name: Install dependencies with typo3/cms-core:${{ matrix.typo3 }}
-        if: matrix.typo3 != '^13.4'
         run: |
           composer require typo3/cms-core:${{ matrix.typo3 }} --no-progress
           git checkout composer.json
@@ -66,7 +65,6 @@ jobs:
         run: find . -name \*.php ! -path "./.Build/*" ! -path "./scripts/*" ! -path "./typo3_src/*" ! -path "./Resources/*" | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \;
 
       - name: Unit Tests
-        if: matrix.typo3 != '^13.4'
         run: |
           export "UNIT_XML"=Tests/UnitTests.xml
           .Build/bin/phpunit --coverage-filter Classes --coverage-clover=unittest-coverage.clover --colors -c $UNIT_XML Tests/Unit
@@ -75,24 +73,6 @@ jobs:
         run: |
           export "FUNCTIONAL_XML"=Tests/FunctionalTests.xml
           .Build/bin/phpunit --coverage-filter Classes --coverage-clover=functional-coverage.clover --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
-        if: matrix.typo3 != '^13.4'
-        env:
-          typo3DatabaseHost: 127.0.0.1
-          typo3DatabaseName: typo3
-          typo3DatabasePassword: root
-          typo3DatabaseUsername: root
-
-      - name: Tests for ^13.4
-        run: |
-          export "FUNCTIONAL_XML"=Tests/FunctionalTests.xml
-          export "UNIT_XML"=Tests/UnitTests.xml
-          composer remove --dev ssch/typo3-rector infection/infection
-          rm -rf composer.lock .Build
-          composer require typo3/cms-backend:^13.4 typo3/cms-core:^13.4 typo3/cms-frontend:^13.4 typo3/cms-info:^13.4 typo3/cms-seo:^13.4
-          ln -nfs .Build/vendor/typo3/cms/typo3 typo3
-          .Build/bin/phpunit --colors -c $UNIT_XML Tests/Unit
-          .Build/bin/phpunit --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
-        if: matrix.typo3 == '^13.4' && matrix.php == '8.3'
         env:
           typo3DatabaseHost: 127.0.0.1
           typo3DatabaseName: typo3
