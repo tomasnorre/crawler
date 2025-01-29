@@ -1,5 +1,10 @@
 # Changelog TYPO3 Crawler
 
+## Crawler 11.0.12-dev
+
+### Fixed
+* "Scheduled" and "Run-time" column values in backend log [cweiske](https://github.com/cweiske)
+
 ## Crawler 11.0.11
 
 Crawler 11.0.11 was released on January 20th, 2025
