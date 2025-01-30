@@ -63,7 +63,7 @@ parameters:
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
 		-
-			message: "#^Class cognitive complexity is 72, keep it under 60$#"
+			message: "#^Class cognitive complexity is 73, keep it under 60$#"
 			count: 1
 			path: Classes/Backend/RequestForm/LogRequestForm.php
 
@@ -762,4 +762,3 @@ parameters:
 			message: "#^Parameter \\#1 \\$row of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\CsvUtility\\:\\:csvValues\\(\\) expects array\\<string\\>, array\\<int, int\\|string\\> given\\.$#"
 			count: 1
 			path: Classes/Writer/FileWriter/CsvWriter/CrawlerCsvWriter.php
-
