@@ -78,16 +78,3 @@ jobs:
           typo3DatabaseName: typo3
           typo3DatabasePassword: root
           typo3DatabaseUsername: root
-
-      - name: Set up PHP Version 7.4 for Scrutinizer Upload
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 7.4
-          tools: composer:v2
-
-      - name: Upload coverage results to Scrutinizer
-        if: matrix.typo3 == '^12.4' && matrix.php == '8.1'
-        run: |
-          wget https://scrutinizer-ci.com/ocular.phar
-          php ocular.phar code-coverage:upload --format=php-clover unittest-coverage.clover
-          php ocular.phar code-coverage:upload --format=php-clover functional-coverage.clover
