@@ -133,7 +133,6 @@
             "rm -f phpstan-baseline.neon",
             "rm -f ecs.php",
             "rm -f rector-ci.php",
-            "rm -f sonar-project.properties",
             "rm -f psalm.xml",
             "rm -f psalm-baseline.xml",
             "rm -f codeception.yml",
