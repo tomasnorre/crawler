@@ -41,6 +41,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           tools: composer:v2
+          coverage: none
 
       - name: Install dependencies with typo3/cms-core:${{ matrix.typo3 }}
         run: |
@@ -86,6 +87,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           tools: composer:v2
+          coverage: none
 
       - name: Install dependencies with typo3/cms-core:${{ matrix.typo3 }}
         run: |
@@ -135,6 +137,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           tools: composer:v2
+          coverage: none
 
       - name: Install dependencies with typo3/cms-core:${{ matrix.typo3 }}
         run: |
@@ -179,6 +182,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           tools: composer:v2
+          coverage: none
 
       - name: Install dependencies with typo3/cms-core:${{ matrix.typo3 }}
         run: |
