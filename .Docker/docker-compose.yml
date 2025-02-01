@@ -1,9 +1,7 @@
-version: '3.1'
-
 services:
   db:
     image: mariadb:10.3
-    restart: never
+    restart: no
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: crawler
@@ -14,7 +12,7 @@ services:
 
   db_postgres:
     image: postgres:13.5-alpine3.15
-    restart: never
+    restart: no
     environment:
       POSTGRES_DB: crawler
       POSTGRES_USER: root
