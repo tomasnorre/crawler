@@ -37,10 +37,16 @@ class JsonCompatibilityConverter
     public function convert(string $dataString)
     {
         try {
+            set_error_handler(function ($severity, $message, $file, $line) {
+                throw new \ErrorException($message, 0, $severity, $file, $line);
+            });
             $unserialized = unserialize($dataString, ['allowed_classes' => false]);
         } catch (\Throwable $e) {
             $unserialized = false;
+        } finally {
+            restore_error_handler();
         }
+
         if (is_object($unserialized)) {
             throw new \Exception('Objects are not allowed: ' . var_export($unserialized, true), 1593758307);
         }
