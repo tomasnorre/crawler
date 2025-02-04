@@ -7,6 +7,7 @@
 ### Changed
 
 ### Fixed
+* Ensure that correct typo3 binary is returned in non-composer installations
 
 ### Deprecated
 #### Classes
