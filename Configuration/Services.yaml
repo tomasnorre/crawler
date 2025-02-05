@@ -12,6 +12,26 @@ services:
             - name: 'console.command'
               command: 'crawler:buildQueue'
               description: 'Create entries in the queue that can be processed at once'
+        arguments:
+            $jsonCompatibilityConverter: '@AOE\Crawler\Converter\JsonCompatibilityConverter'
+            $eventDispatcher: '@TYPO3\CMS\Core\EventDispatcher\EventDispatcher'
+            $queueRepository: '@AOE\Crawler\Domain\Repository\QueueRepository'
+            $pageRepository: '@TYPO3\CMS\Core\Domain\Repository\PageRepository'
+            $crawlerController: '@AOE\Crawler\Controller\CrawlerController'
+        public: true
+
+    AOE\Crawler\Command\ProcessQueueCommand:
+      arguments:
+        $crawler: '@AOE\Crawler\Crawler'
+        $crawlerController: '@AOE\Crawler\Controller\CrawlerController'
+        $processRepository: '@AOE\Crawler\Domain\Repository\ProcessRepository'
+        $queueRepository: '@AOE\Crawler\Domain\Repository\QueueRepository'
+      public: true
+      tags:
+        -   name: 'console.command'
+            command: 'crawler:processQueue'
+            description: 'Trigger the crawler to process the queue entries'
+
 
     AOE\Crawler\Command\FlushQueueCommand:
         tags:
@@ -65,18 +85,6 @@ services:
             $crawlStrategyFactory: '@AOE\Crawler\CrawlStrategy\CrawlStrategyFactory'
             $eventDispatcher: '@TYPO3\CMS\Core\EventDispatcher\EventDispatcher'
         public: true
-
-    AOE\Crawler\Command\ProcessQueueCommand:
-        arguments:
-            $crawler: '@AOE\Crawler\Crawler'
-            $crawlerController: '@AOE\Crawler\Controller\CrawlerController'
-            $processRepository: '@AOE\Crawler\Domain\Repository\ProcessRepository'
-            $queueRepository: '@AOE\Crawler\Domain\Repository\QueueRepository'
-        public: true
-        tags:
-            -   name: 'console.command'
-                command: 'crawler:processQueue'
-                description: 'Trigger the crawler to process the queue entries'
 
     AOE\Crawler\Controller\BackendModuleController:
         tags: [ 'backend.controller' ]
