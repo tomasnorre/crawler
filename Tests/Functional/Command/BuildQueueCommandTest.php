@@ -95,7 +95,7 @@ class BuildQueueCommandTest extends FunctionalTestCase
         );
 
         $this->queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
-        $command = new BuildQueueCommand();
+        $command = GeneralUtility::makeInstance(BuildQueueCommand::class);
         $this->commandTester = new CommandTester($command);
     }
 

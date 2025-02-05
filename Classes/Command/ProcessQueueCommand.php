@@ -41,27 +41,17 @@ class ProcessQueueCommand extends Command
     private const CLI_STATUS_PROCESSED = 2;
     private const CLI_STATUS_ABORTED = 4;
     private const CLI_STATUS_POLLABLE_PROCESSED = 8;
-
-    private Crawler $crawler;
-    private CrawlerController $crawlerController;
-    private ProcessRepository $processRepository;
-    private QueueRepository $queueRepository;
     private string $processId;
     private array $extensionSettings;
 
     public function __construct(
-        Crawler $crawler,
-        CrawlerController $crawlerController,
-        ProcessRepository $processRepository,
-        QueueRepository $queueRepository,
-        string $name = null
+        private readonly Crawler $crawler,
+        private readonly CrawlerController $crawlerController,
+        private readonly ProcessRepository $processRepository,
+        private readonly QueueRepository $queueRepository,
     ) {
-        parent::__construct($name);
-        $this->crawler = $crawler;
-        $this->crawlerController = $crawlerController;
-        $this->processRepository = $processRepository;
-        $this->queueRepository = $queueRepository;
         $this->processId = md5(microtime() . random_bytes(12));
+        parent::__construct();
     }
 
     /**
@@ -82,15 +72,7 @@ class ProcessQueueCommand extends Command
 
         $result = self::CLI_STATUS_NOTHING_PROCCESSED;
 
-        /** @var QueueRepository $queueRepository */
-        $queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
-        /** @var ProcessRepository $processRepository */
-        $processRepository = GeneralUtility::makeInstance(ProcessRepository::class);
-
-        /** @var Crawler $crawler */
-        $crawler = GeneralUtility::makeInstance(Crawler::class);
-
-        if (!$crawler->isDisabled() && $this->checkAndAcquireNewProcess($this->processId)) {
+        if (!$this->crawler->isDisabled() && $this->checkAndAcquireNewProcess($this->processId)) {
             $countInARun = $amount ? (int) $amount : (int) $this->extensionSettings['countInARun'];
             $sleepAfterFinish = $sleepafter ? (int) $sleepafter : (int) $this->extensionSettings['sleepAfterFinish'];
             $sleepTime = $sleeptime ? (int) $sleeptime : (int) $this->extensionSettings['sleepTime'];
@@ -104,17 +86,17 @@ class ProcessQueueCommand extends Command
             }
 
             // Cleanup
-            $processRepository->deleteProcessesWithoutItemsAssigned();
-            $processRepository->markRequestedProcessesAsNotActive([$this->processId]);
-            $queueRepository->unsetProcessScheduledAndProcessIdForQueueEntries([$this->processId]);
+            $this->processRepository->deleteProcessesWithoutItemsAssigned();
+            $this->processRepository->markRequestedProcessesAsNotActive([$this->processId]);
+            $this->queueRepository->unsetProcessScheduledAndProcessIdForQueueEntries([$this->processId]);
 
             $output->writeln(
                 '<info>Unprocessed Items remaining:' . count(
-                    $queueRepository->getUnprocessedItems()
+                    $this->queueRepository->getUnprocessedItems()
                 ) . ' (' . $this->processId . ')</info>'
             );
             $result |= (count(
-                $queueRepository->getUnprocessedItems()
+                $this->queueRepository->getUnprocessedItems()
             ) > 0 ? self::CLI_STATUS_REMAIN : self::CLI_STATUS_NOTHING_PROCCESSED);
         } else {
             $result |= self::CLI_STATUS_ABORTED;

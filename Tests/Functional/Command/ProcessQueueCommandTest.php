@@ -20,10 +20,6 @@ namespace AOE\Crawler\Tests\Functional\Command;
  */
 
 use AOE\Crawler\Command\ProcessQueueCommand;
-use AOE\Crawler\Controller\CrawlerController;
-use AOE\Crawler\Crawler;
-use AOE\Crawler\Domain\Repository\ProcessRepository;
-use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -47,14 +43,7 @@ class ProcessQueueCommandTest extends FunctionalTestCase
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.csv');
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/pages.csv');
 
-        $crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
-
-        $command = new ProcessQueueCommand(
-            new Crawler(),
-            $crawlerController,
-            GeneralUtility::makeInstance(ProcessRepository::class),
-            GeneralUtility::makeInstance(QueueRepository::class)
-        );
+        $command = GeneralUtility::makeInstance(ProcessQueueCommand::class);
         $this->commandTester = new CommandTester($command);
     }
 
