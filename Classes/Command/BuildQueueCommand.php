@@ -162,7 +162,6 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             $configurationKeys
         );
 
-
         // Consider a swith/match statement here, and extract the code in between.
         if ($mode === 'url') {
             $output->writeln('<info>' . implode(PHP_EOL, $crawlerController->downloadUrls) . PHP_EOL . '</info>');

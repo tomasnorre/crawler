@@ -92,6 +92,10 @@ class ProcessService
 
     private function getComposerBinPath(): ?string
     {
+        if (!getenv('TYPO3_PATH_COMPOSER_ROOT')) {
+            return sprintf('%s/%s/', getenv('TYPO3_PATH_APP'), 'vendor/typo3/cms-cli');
+        }
+
         // copied and modified from @see
         // https://github.com/TYPO3/typo3/blob/8a9c80b9d85ef986f5f369f1744fc26a6b607dda/typo3/sysext/scheduler/Classes/Controller/SchedulerModuleController.php#L402
         $composerJsonFile = getenv('TYPO3_PATH_COMPOSER_ROOT') . '/composer.json';

@@ -20,12 +20,10 @@ namespace AOE\Crawler\Tests\Functional\Service;
  */
 
 use AOE\Crawler\Service\ProcessService;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
-/**
- * @package AOE\Crawler\Tests\Unit\Domain\Model
- */
 class ProcessServiceTest extends FunctionalTestCase
 {
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
@@ -42,7 +40,7 @@ class ProcessServiceTest extends FunctionalTestCase
         $this->subject = GeneralUtility::makeInstance(ProcessService::class);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function getCrawlerCliPathReturnsString(): void
     {
         // Check with phpPath set
@@ -61,5 +59,18 @@ class ProcessServiceTest extends FunctionalTestCase
 
         ];
         self::assertStringContainsString('php', $this->subject->getCrawlerCliPath());
+    }
+
+    #[Test]
+    public function getCrawlerCliPathContainsTYPO3BinaryRespectivelyWithOutComposer(): void
+    {
+        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [
+            'phpBinary' => 'php',
+
+        ];
+
+        // Unassign TYPO3_PATH_COMPOSER_ROOT
+        putenv('TYPO3_PATH_COMPOSER_ROOT');
+        self::assertStringContainsString('vendor/typo3/cms-cli/typo3', $this->subject->getCrawlerCliPath());
     }
 }
