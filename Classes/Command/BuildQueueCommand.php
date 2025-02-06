@@ -126,11 +126,8 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             ExtensionConfigurationProvider::class
         )->getExtensionConfiguration();
 
-        /** @var CrawlerController $crawlerController */
-        $crawlerController = GeneralUtility::makeInstance(CrawlerController::class);
-
         if ($mode === 'exec') {
-            $crawlerController->registerQueueEntriesInternallyOnly = true;
+            $this->crawlerController->registerQueueEntriesInternallyOnly = true;
         }
 
         $pageId = MathUtility::forceIntegerInRange((int) $input->getArgument('page'), 0);
