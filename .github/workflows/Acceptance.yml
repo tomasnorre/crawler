@@ -49,11 +49,9 @@ jobs:
           ddevDir: ".devbox"
       - name: CodeCeption
         run: |
-          export FROM_PATH='../../'
-          export TO_PATH=$(echo $GITHUB_WORKSPACE)
           cd .devbox
           sed -i 's/php_version: "8.1"/php_version: "${{ matrix.php }}"/g' .ddev/config.yaml
-          sed -i "s|$FROM_PATH|$TO_PATH|g" .ddev/docker-compose.volume.yaml
+          rm .ddev/docker-compose.volume.yaml
           ddev restart
           rm -rf vendor composer.lock
           ddev composer require typo3/cms-core=${{ matrix.typo3 }} tomasnorre/crawler=dev-$BRANCH_NAME
@@ -125,11 +123,9 @@ jobs:
           ddevDir: ".devbox"
       - name: CodeCeption
         run: |
-          export FROM_PATH='../../'
-          export TO_PATH=$(echo $GITHUB_WORKSPACE)
           cd .devbox
           sed -i 's/php_version: "8.1"/php_version: "${{ matrix.php }}"/g' .ddev/config.yaml
-          sed -i "s|$FROM_PATH|$TO_PATH|g" .ddev/docker-compose.volume.yaml
+          rm .ddev/docker-compose.volume.yaml
           ddev restart
           rm -rf vendor composer.lock
           ddev composer require typo3/cms-core=${{ matrix.typo3 }} tomasnorre/crawler=dev-$BRANCH_NAME
