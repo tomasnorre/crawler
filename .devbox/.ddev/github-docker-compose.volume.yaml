@@ -1,0 +1,4 @@
+services:
+  web:
+    volumes:
+      - "../../:/var/www/html/packages/crawler"

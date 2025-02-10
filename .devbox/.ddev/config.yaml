@@ -15,15 +15,15 @@ nfs_mount_enabled: false
 mutagen_enabled: false
 hooks:
   post-start:
+    - exec: composer install -d /var/www/html
     - exec: echo '*/1 * * * * root TYPO3_CONTEXT=Development /usr/bin/php /var/www/html/bin/typo3
         scheduler:run' | sudo tee -a /etc/cron.d/typo3
     - exec: sudo chmod 0600 /etc/cron.d/typo3 && sudo service cron start
-    - exec: composer install -d /var/www/html
     # Import and upgrade Database
     - exec: /var/www/html/build-files/import-if-empty.sh
     - exec: /var/www/html/bin/typo3 backend:lock
     - exec: /var/www/html/bin/typo3 extension:setup
-    - exec: /var/www/html/build-files/typo3-uprade-wizard.sh
+    - exec: /var/www/html/build-files/typo3-upgrade-wizard.sh
     - exec: /var/www/html/bin/typo3 cache:flush
     - exec: /var/www/html/bin/typo3 cache:warmup
     - exec: /var/www/html/bin/typo3 backend:unlock

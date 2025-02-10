@@ -23,8 +23,8 @@
         "typo3/cms-indexed-search": "^12.4 || ^13.4",
         "typo3/cms-info": "^12.4 || ^13.4",
         "typo3/cms-tstemplate": "^12.4 || ^13.4",
-        "typo3/minimal": "^12.4 || ^13.4",
         "typo3/cms-install": "^12.4 || ^13.4",
+        "typo3/cms-filelist": "^12.4 || ^13.4",
         "georgringer/news": "^12"
     },
     "require-dev": {
