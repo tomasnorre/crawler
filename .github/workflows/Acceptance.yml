@@ -52,7 +52,6 @@ jobs:
           export FROM_PATH='../../'
           export TO_PATH=$(echo $GITHUB_WORKSPACE)
           cd .devbox
-          cp .ddev/github-docker-compose.volume.yaml .ddev/docker-compose.volume.yaml
           sed -i 's/php_version: "8.1"/php_version: "${{ matrix.php }}"/g' .ddev/config.yaml
           sed -i "s|$FROM_PATH|$TO_PATH|g" .ddev/docker-compose.volume.yaml
           ddev restart
@@ -129,7 +128,6 @@ jobs:
           export FROM_PATH='../../'
           export TO_PATH=$(echo $GITHUB_WORKSPACE)
           cd .devbox
-          cp .ddev/github-docker-compose.volume.yaml .ddev/docker-compose.volume.yaml
           sed -i 's/php_version: "8.1"/php_version: "${{ matrix.php }}"/g' .ddev/config.yaml
           sed -i "s|$FROM_PATH|$TO_PATH|g" .ddev/docker-compose.volume.yaml
           ddev restart
