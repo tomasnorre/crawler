@@ -16,6 +16,8 @@
 ### Removed
 #### Classes
 #### Functions & Properties
+#### Files
+* The cli/conf.php is removed, as not used anymore
 
 ## Crawler 12.0.7
 Crawler 12.0.7 was released on January 27th, 2025
