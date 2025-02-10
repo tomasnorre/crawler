@@ -1,4 +1,4 @@
 services:
   web:
     volumes:
-      - "../../:/var/www/html/vendor/tomasnorre/crawler"
+      - "../../:/var/www/html/packages/crawler"
