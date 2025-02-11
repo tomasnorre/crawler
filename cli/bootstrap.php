@@ -21,8 +21,7 @@ if (!isAbsPath($tempPathThisScript)) {
     }
 }
 
-$typo3Root = preg_replace('#typo3conf/ext/crawler/cli/bootstrap.php$#', '', $tempPathThisScript);
-
+$typo3Root = preg_replace('#vendor/tomasnorre/crawler/cli/bootstrap.php$#', 'public/', $tempPathThisScript);
 /**
  * Second parameter is a base64 encoded serialized array of header data
  */
