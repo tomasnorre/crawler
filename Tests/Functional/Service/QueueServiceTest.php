@@ -22,6 +22,7 @@ namespace AOE\Crawler\Tests\Functional\Service;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Service\QueueService;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
@@ -55,7 +56,7 @@ class QueueServiceTest extends FunctionalTestCase
      * two pages which should both be crawled in the past, because it is only needed one times.
      * The testcase uses a TSConfig crawler configuration.
      */
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function canNotCreateDuplicateQueueEntriesForTwoPagesInThePast(): void
     {
         $this->importCSVDataSet(__DIR__ . '/../data/canNotAddDuplicatePagesToQueue.csv');
@@ -71,7 +72,7 @@ class QueueServiceTest extends FunctionalTestCase
      * two pages which should be crawled at the same time in the future.
      * The testcase uses a TSConfig crawler configuration.
      */
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function canNotCreateDuplicateForTwoPagesInTheFutureWithTheSameTimestamp(): void
     {
         $this->importCSVDataSet(__DIR__ . '/../data/canNotAddDuplicatePagesToQueue.csv');
@@ -87,7 +88,7 @@ class QueueServiceTest extends FunctionalTestCase
      * for a different timestamp in the future.
      * The testcase uses a TSConfig crawler configuration.
      */
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function canCreateTwoQueueEntriesForDifferentTimestampsInTheFuture(): void
     {
         $this->importCSVDataSet(__DIR__ . '/../data/canNotAddDuplicatePagesToQueue.csv');

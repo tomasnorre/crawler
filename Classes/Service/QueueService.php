@@ -20,6 +20,8 @@ namespace AOE\Crawler\Service;
  */
 
 use AOE\Crawler\Controller\CrawlerController;
+use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Value\QueueRow;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -28,7 +30,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class QueueService
 {
-    private ?\AOE\Crawler\Controller\CrawlerController $crawlerController = null;
+    private ?CrawlerController $crawlerController = null;
 
     public function injectCrawlerController(CrawlerController $crawlerController): void
     {
@@ -53,26 +55,41 @@ class QueueService
         $downloadUrls = [];
         $duplicateTrack = [];
 
-        if (is_array($configurations)) {
-            foreach ($configurations as $configuration) {
-                //enable inserting of entries
-                $this->crawlerController->registerQueueEntriesInternallyOnly = false;
-                $this->crawlerController->urlListFromUrlArray(
-                    $configuration,
-                    $pageData,
-                    $time,
-                    300,
-                    true,
-                    false,
-                    $duplicateTrack,
-                    $downloadUrls,
-                    array_keys($this->getCrawlerProcInstructions())
-                );
+        foreach ($configurations as $configuration) {
+            //enable inserting of entries
+            $this->crawlerController->registerQueueEntriesInternallyOnly = false;
+            $this->crawlerController->urlListFromUrlArray(
+                $configuration,
+                $pageData,
+                $time,
+                300,
+                true,
+                false,
+                $duplicateTrack,
+                $downloadUrls,
+                array_keys($this->getCrawlerProcInstructions())
+            );
 
-                //reset the queue because the entries have been written to the db
-                unset($this->crawlerController->queueEntries);
-            }
+            //reset the queue because the entries have been written to the db
+            unset($this->crawlerController->queueEntries);
         }
+    }
+
+    /**
+     * @return array<int, QueueRow>
+     */
+    public function getPageFromQueue(QueueRepository $queueRepository): array
+    {
+        $queueRows = [];
+
+        foreach ($queueRepository->getUnprocessedItems() as $item) {
+            $queueRow = new QueueRow();
+            $queueRow->setConfigurationKey($item['configuration']);
+            $queueRow->setParameters($item['parameters']);
+            $queueRows[] = $queueRow;
+        }
+
+        return $queueRows;
     }
 
     /**
