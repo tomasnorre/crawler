@@ -805,7 +805,9 @@ class CrawlerController implements LoggerAwareInterface
                         $calcRes *= count($gVal);
                         $calcAccu[] = count($gVal);
                     }
-                    $paramExpanded = '<table>' . $paramExpanded . '</table>';
+                    if (!empty($paramExpanded)) {
+                        $paramExpanded = "<table>{$paramExpanded}</table>";
+                    }
                     $paramExpanded .= 'Comb: ' . implode('*', $calcAccu) . '=' . $calcRes;
 
                     // Options
