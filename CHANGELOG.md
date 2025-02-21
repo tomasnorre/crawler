@@ -9,6 +9,7 @@
 ### Fixed
 * Ensure that correct typo3 binary is returned in non-composer installations
 * Adjust path in cli/bootstrap.php to match new folder structure of where extensions are installed
+* Fix crawling of mount pages
 
 ### Deprecated
 #### Classes

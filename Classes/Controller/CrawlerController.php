@@ -705,11 +705,11 @@ class CrawlerController implements LoggerAwareInterface
                 $mountpage = $this->pageRepository->getPage($data['row']['uid']);
 
                 // fetch mounted pages
-                $this->MP = $mountpage[0]['mount_pid'] . '-' . $data['row']['uid'];
+                $this->MP = $mountpage['mount_pid'] . '-' . $data['row']['uid'];
 
                 $mountTree = GeneralUtility::makeInstance(PageTreeView::class);
                 $mountTree->init(empty($perms_clause) ? '' : ('AND ' . $perms_clause));
-                $mountTree->getTree($mountpage[0]['mount_pid'], $depth);
+                $mountTree->getTree($mountpage['mount_pid'], $depth);
 
                 foreach ($mountTree->tree as $mountData) {
                     $queueRows = array_merge($queueRows, $this->drawURLs_addRowsForPage(
@@ -720,8 +720,8 @@ class CrawlerController implements LoggerAwareInterface
                 }
 
                 // replace page when mount_pid_ol is enabled
-                if ($mountpage[0]['mount_pid_ol']) {
-                    $data['row']['uid'] = $mountpage[0]['mount_pid'];
+                if ($mountpage['mount_pid_ol']) {
+                    $data['row']['uid'] = $mountpage['mount_pid'];
                 } else {
                     // if the mount_pid_ol is not set the MP must not be used for the mountpoint page
                     $this->MP = null;
