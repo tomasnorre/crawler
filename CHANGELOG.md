@@ -10,6 +10,7 @@
 * Ensure that correct typo3 binary is returned in non-composer installations
 * Adjust path in cli/bootstrap.php to match new folder structure of where extensions are installed
 * Don't wrap empty HTML in table-tag to ensure valid HTML
+* Fix crawling of mount pages
 
 ### Deprecated
 #### Classes
