@@ -1,6 +1,6 @@
-﻿.. include:: /Includes.rst.txt
+﻿..  include:: /Includes.rst.txt
 
-.. _executing-the-queue-cli-label:
+..  _executing-the-queue-cli-label:
 
 ==================================================
 Building and Executing queue right away (from cli)
@@ -16,35 +16,35 @@ The script to use is this:
 
 ::
 
-   vendor/bin/typo3 crawler:buildQueue <startPageUid> <configurationKeys>
+    vendor/bin/typo3 crawler:buildQueue <startPageUid> <configurationKeys>
 
 If you run it you will see a list of options which explains usage.
 
-.. ### BEGIN~OF~TABLE ###
+..  ##.  BEGIN~OF~TABLE ###
 
-.. container:: table-row
+..  container:: table-row
 
-   Property
+    Property
          <startPageUid>
 
-   Data type
+    Data type
          integer
 
-   Description
+    Description
          Page Id of the page to use as starting point for crawling.
 
-   Default
+    Default
          n/a
 
-.. container:: table-row
+..  container:: table-row
 
-   Property
+    Property
          <configurationKeys>
 
-   Data type
+    Data type
          string
 
-   Description
+    Description
          Configurationkey:
 
          Comma separated list of your crawler configurations. If you use the
@@ -58,35 +58,35 @@ If you run it you will see a list of options which explains usage.
 
             re-crawl-pages,re-crawl-news
 
-   Default
+    Default
          n/a
 
 
-.. container:: table-row
+..  container:: table-row
 
-   Property
+    Property
          --number <number>
 
-   Data type
+    Data type
          integer
 
-   Description
+    Description
          Specifies how many items are put in the queue per minute. Only valid
          for output mode "queue".
 
-   Default
+    Default
          n/a
 
 
-.. container:: table-row
+..  container:: table-row
 
-   Property
+    Property
          --mode <mode>
 
-   Data type
+    Data type
          string
 
-   Description
+    Description
          Output mode: "url", "exec", "queue"
 
          - url : Will list URLs which wget could use as input.
@@ -95,28 +95,28 @@ If you run it you will see a list of options which explains usage.
 
          - exec: Will execute all entries right away!
 
-   Default
+    Default
          queue
 
 
-.. container:: table-row
+..  container:: table-row
 
-   Property
+    Property
          --depth <depth>
 
-   Data type
+    Data type
          integer
 
-   Description
+    Description
          Tree depth, 0-99.
 
          How many levels under the 'page\_id' to include. By default, no additional levels are included.
 
-   Default
+    Default
          0
 
 
-.. ###### END~OF~TABLE ######
+..  #####.  END~OF~TABLE ######
 
 Example
 -------
@@ -125,17 +125,17 @@ We want to crawl pages under the page "Content Examples" (uid=6) and 2 levels do
 
 This is done like this in the backend.
 
-.. image:: /Images/backend_startcrawling.png
+..  image:: /Images/backend_startcrawling.png
 
 To do the same with the CLI script you run this:
 
 ::
 
-   vendor/bin/typo3 crawler:buildQueue 6 default --depth 2
+    vendor/bin/typo3 crawler:buildQueue 6 default --depth 2
 
 And this is the output:
 
-.. code-block:: text
+..  code-block:: text
 
     38 entries found for processing. (Use "mode" to decide action):
 

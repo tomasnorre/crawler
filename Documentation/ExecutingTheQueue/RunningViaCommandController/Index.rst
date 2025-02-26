@@ -1,6 +1,6 @@
-.. include:: /Includes.rst.txt
+..  include:: /Includes.rst.txt
 
-.. _command-controller:
+..  _command-controller:
 
 ==========================
 Run via command controller

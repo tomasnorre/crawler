@@ -1,10 +1,10 @@
-.. include:: /Includes.rst.txt
+..  include:: /Includes.rst.txt
 
 =================
 Priority Crawling
 =================
 
-.. versionadded:: 9.1.0
+..  versionadded:: 9.1.0
 
 Some website has a quite large number of pages. Some pages are logically more
 important than others e.g. the start-, support-, product-, you name it-pages.
@@ -40,10 +40,10 @@ TYPO3 9 LTS
 In TYPO3 9 LTS, the will be a new tab :guilabel:`Crawler` when editing pages, here you
 can set the priority.
 
-.. figure:: /Images/backend_crawler_priority_v9.png
-   :alt: A Crawler tab will be visible in TYPO3 9 LTS
+..  figure:: /Images/backend_crawler_priority_v9.png
+    :alt: A Crawler tab will be visible in TYPO3 9 LTS
 
-   A Crawler tab will be visible in TYPO3 9 LTS
+    A Crawler tab will be visible in TYPO3 9 LTS
 
 TYPO3 10 LTS
 ------------
@@ -51,12 +51,12 @@ TYPO3 10 LTS
 In TYPO3 10 LTS or higher, the existing :guilabel:`SEO` tab will be used to set priorities when editing
 pages.
 
-.. image:: /Images/backend_crawler_seo_v10.png
+..  image:: /Images/backend_crawler_seo_v10.png
 
-.. figure:: /Images/backend_crawler_seo_priority_v10.png
-   :alt: The SEO tab will contain the sitemap_priority field
+..  figure:: /Images/backend_crawler_seo_priority_v10.png
+    :alt: The SEO tab will contain the sitemap_priority field
 
-   The SEO tab will contain the sitemap_priority field
+    The SEO tab will contain the sitemap_priority field
 
 Disclaimer
 ----------

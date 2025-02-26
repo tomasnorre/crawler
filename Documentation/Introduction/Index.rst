@@ -1,14 +1,14 @@
-﻿.. include:: /Includes.rst.txt
+﻿..  include:: /Includes.rst.txt
 
 ============
 Introduction
 ============
 
-.. toctree::
-   :maxdepth: 5
-   :titlesonly:
-   :glob:
+..  toctree::
+    :maxdepth: 5
+    :titlesonly:
+    :glob:
 
-   WhatDoesItDo/Index
-   Screenshots/Index
+    WhatDoesItDo/Index
+    Screenshots/Index
 

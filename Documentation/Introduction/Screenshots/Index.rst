@@ -1,4 +1,4 @@
-﻿.. include:: /Includes.rst.txt
+﻿..  include:: /Includes.rst.txt
 
 ===========
 Screenshots
@@ -14,13 +14,13 @@ CLI status display
 
 CLI = Command Line Interface = shell script = cron script
 
-.. image:: /Images/backend_processlist.png
+..  image:: /Images/backend_processlist.png
 
 
 Crawler queue (before processing) / log (after processing)
 ==========================================================
 
-.. image:: /Images/backend_crawlerlog.png
+..  image:: /Images/backend_crawlerlog.png
 
 
 Interface for submitting a batch of URLs to be crawled
@@ -29,5 +29,5 @@ Interface for submitting a batch of URLs to be crawled
 The parameter combinations are programmeble through Page TSconfig or
 configuration records.
 
-.. image:: /Images/backend_pendingurls.png
+..  image:: /Images/backend_pendingurls.png
 

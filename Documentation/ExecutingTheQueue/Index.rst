@@ -1,6 +1,6 @@
-﻿.. include:: /Includes.rst.txt
+﻿..  include:: /Includes.rst.txt
 
-.. _executing-the-queue-label:
+..  _executing-the-queue-label:
 
 ===================
 Executing the queue
@@ -18,12 +18,12 @@ for several reasons;
   to 30 seconds!
 
 
-.. toctree::
-   :maxdepth: 5
-   :titlesonly:
-   :glob:
+..  toctree::
+    :maxdepth: 5
+    :titlesonly:
+    :glob:
 
-   RunningViaCommandController/Index
-   ExecutingQueueWithCron-job/Index
-   RunViaBackend/Index
-   BuildingAndExecutingQueueRightAway(fromCli)/Index
+    RunningViaCommandController/Index
+    ExecutingQueueWithCron-job/Index
+    RunViaBackend/Index
+    BuildingAndExecutingQueueRightAway(fromCli)/Index

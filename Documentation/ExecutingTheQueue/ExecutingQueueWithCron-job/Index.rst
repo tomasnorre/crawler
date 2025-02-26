@@ -1,4 +1,4 @@
-﻿.. include:: /Includes.rst.txt
+﻿..  include:: /Includes.rst.txt
 
 =============================
 Executing queue with cron-job
@@ -31,10 +31,10 @@ Make sure that the user "\_cli\_" has admin-rights.
 In the :guilabel:`CLI status` menu of the :guilabel:`Site Crawler` info module
 you can see the status:
 
-.. figure:: /Images/backend_processlist.png
-   :alt: Status page in the backend
+..  figure:: /Images/backend_processlist.png
+    :alt: Status page in the backend
 
-   Status page in the backend
+    Status page in the backend
 
 This is how it looks just after you ran the script. (You can also see
 the full path to the script in the bottom - this is the path to the

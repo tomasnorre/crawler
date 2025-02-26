@@ -1,5 +1,5 @@
-﻿.. include:: /Includes.rst.txt
-.. highlight:: php
+﻿..  include:: /Includes.rst.txt
+..  highlight:: php
 
 =====
 Hooks
@@ -21,8 +21,8 @@ being crawled:
 pageVeto Hook
 =============
 
-.. deprecated:: 11.0.0
-   Will be removed in 13.0, please migrate to the PSR-14 Event :ref:`psr14-modify-skip-page-event`!
+..  deprecated:: 11.0.0
+    Will be removed in 13.0, please migrate to the PSR-14 Event :ref:`psr14-modify-skip-page-event`!
 
 You can also decide whether a page should not be crawled in an
 individual userfunction. Register your function here:
@@ -34,13 +34,13 @@ individual userfunction. Register your function here:
 Example::
 
    <?php
-   declare(strict_types=1);
+    declare(strict_types=1);
 
-   namespace Vendor\YourExt\Hooks\Crawler;
+    namespace Vendor\YourExt\Hooks\Crawler;
 
-   use AOE\Crawler\Controller\CrawlerController;
+    use AOE\Crawler\Controller\CrawlerController;
 
-   class PageVeto
+    class PageVeto
    {
       public function excludePage(array &$params, CrawlerController $controller)
       {

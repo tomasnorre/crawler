@@ -1,5 +1,5 @@
-﻿.. include:: /Includes.rst.txt
-.. highlight:: php
+﻿..  include:: /Includes.rst.txt
+..  highlight:: php
 
 ================================
 Pollable processing instructions

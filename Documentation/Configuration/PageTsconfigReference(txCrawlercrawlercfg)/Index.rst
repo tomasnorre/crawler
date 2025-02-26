@@ -1,23 +1,23 @@
-﻿.. include:: /Includes.rst.txt
-.. highlight:: typoscript
+﻿..  include:: /Includes.rst.txt
+..  highlight:: typoscript
 
 ================================================
 Page TSconfig Reference (tx\_crawler.crawlerCfg)
 ================================================
 
-.. ### BEGIN~OF~TABLE ###
+..  ##.  BEGIN~OF~TABLE ###
 
-.. container:: table-row
+..  container:: table-row
 
-   Property
-         .. _crawler-tsconfig-paramSets-key:
+    Property
+         ..  _crawler-tsconfig-paramSets-key:
 
          paramSets.[key]
 
-   Data type
+    Data type
          string
 
-   Description
+    Description
          Get Parameter configuration. The values of GET variables are according
          to a special syntax. From the code documentation
          (class.tx\_crawler\_lib.php):
@@ -86,34 +86,34 @@ Page TSconfig Reference (tx\_crawler.crawlerCfg)
 
 
 
-.. container:: table-row
+..  container:: table-row
 
-   Property
-         .. _crawler-tsconfig-paramSets-key-procInstrFilter:
+    Property
+         ..  _crawler-tsconfig-paramSets-key-procInstrFilter:
 
          paramSets.[key].procInstrFilter
 
-   Data type
+    Data type
          string
 
-   Description
+    Description
          List of processing instructions, eg. "tx\_indexedsearch\_reindex" from
          indexed\_search to send for the request. Processing instructions are
          necessary for the request to perform any meaningful action, since they
          activate third party activity.
 
 
-.. container:: table-row
+..  container:: table-row
 
-   Property
-         .. _crawler-tsconfig-paramSets-key-procInstrParams:
+    Property
+         ..  _crawler-tsconfig-paramSets-key-procInstrParams:
 
          paramSets.[key].procInstrParams.[procIn.key].[...]
 
-   Data type
+    Data type
          strings
 
-   Description
+    Description
          Options for processing instructions. Will be defined in the respective
          third party modules.
 
@@ -122,58 +122,58 @@ Page TSconfig Reference (tx\_crawler.crawlerCfg)
          .....procInstrParams.tx\_staticpub\_publish.includeResources=1
 
 
-.. container:: table-row
+..  container:: table-row
 
-   Property
-         .. _crawler-tsconfig-paramSets-key-pidsOnly:
+    Property
+         ..  _crawler-tsconfig-paramSets-key-pidsOnly:
 
          paramSets.[key].pidsOnly
 
-   Data type
+    Data type
          list of integers (pages uid)
 
-   Description
+    Description
          List of Page Ids to limit this configuration to
 
-.. container:: table-row
+..  container:: table-row
 
-   Property
-         .. _crawler-tsconfig-paramSets-key-force_ssl:
+    Property
+         ..  _crawler-tsconfig-paramSets-key-force_ssl:
 
          paramSets.[key].force_ssl
 
-   Data type
+    Data type
          integer
 
-   Description
+    Description
          Whether https should be inforced or not. 0 = false (default), 1 = true.
 
 
-.. container:: table-row
+..  container:: table-row
 
-   Property
-         .. _crawler-tsconfig-paramSets-key-userGroups:
+    Property
+         ..  _crawler-tsconfig-paramSets-key-userGroups:
 
          paramSets.[key].userGroups
 
-   Data type
+    Data type
          list of integers (fe\_groups uid)
 
-   Description
+    Description
          User groups to set for the request.
 
 
-.. container:: table-row
+..  container:: table-row
 
-   Property
-         .. _crawler-tsconfig-paramSets-key-baseUrl:
+    Property
+         ..  _crawler-tsconfig-paramSets-key-baseUrl:
 
          paramSets.[key].baseUrl
 
-   Data type
+    Data type
          string
 
-   Description
+    Description
          If not set, t3lib\_div::getIndpEnv('TYPO3\_SITE\_URL') is used to
          request the page.
 
@@ -181,7 +181,7 @@ Page TSconfig Reference (tx\_crawler.crawlerCfg)
          that context!)
 
 
-.. ###### END~OF~TABLE ######
+..  #####.  END~OF~TABLE ######
 
 [Page TSconfig: tx\_crawler.crawlerCfg]
 
@@ -191,8 +191,8 @@ Example
 
 ::
 
-   tx_crawler.crawlerCfg.paramSets.test = &L=[0-3]
-   tx_crawler.crawlerCfg.paramSets.test {
+    tx_crawler.crawlerCfg.paramSets.test = &L=[0-3]
+    tx_crawler.crawlerCfg.paramSets.test {
       procInstrFilter = tx_indexedsearch_reindex
       pidsOnly = 1,5,13,55
       userGroups = 1

@@ -1,12 +1,12 @@
-﻿.. include:: /Includes.rst.txt
+﻿..  include:: /Includes.rst.txt
 
 ===============
 Troubleshooting
 ===============
 
-.. contents:: Table of Contents
-   :depth: 1
-   :local:
+..  contents:: Table of Contents
+    :depth: 1
+    :local:
 
 Problem reading data in Crawler Queue
 =====================================
@@ -33,7 +33,7 @@ and it doesn't give you any result, or that the scheduler tasks stalls.
 It can be because of a faulty configured `TrustedHostPattern`, this can be
 changed in the :file:`LocalConfiguration.php`.
 
-.. code-block:: php
+..  code-block:: php
 
     $GLOBALS['TYPO3_CONF_VARS']['SYS']['trustedHostsPattern'] = '<your-pattern>';
 
@@ -47,7 +47,7 @@ call the crawler like:
 
 ::
 
-   php -d max_execution_time=512 vendor/bin/typo3 crawler:buildQueue
+    php -d max_execution_time=512 vendor/bin/typo3 crawler:buildQueue
 
 
 Crawler Count is 0 (zero)
@@ -69,7 +69,7 @@ Update from older versions
 
 If you update the extension from older versions you can run into following error:
 
-.. code-block:: text
+..  code-block:: text
 
     SQL error: 'Field 'sys_domain_base_url' doesn't have a default value'
 
@@ -86,17 +86,17 @@ TYPO3 shows error if the PHP path is not correct
 In some cases you get an error, if the PHP path is not set correctly. It occures
 if you select the Site Crawler in Info-module.
 
-.. figure:: /Images/backend_info_php_error.png
-   :alt: Error message in Info-module
+..  figure:: /Images/backend_info_php_error.png
+    :alt: Error message in Info-module
 
-   Error message in Info-module
+    Error message in Info-module
 
 In this case you have to set the path to your PHP in the Extension configuration.
 
-.. figure:: /Images/backend_php_path_configuration.png
-   :alt: Correct PHP path settings
+..  figure:: /Images/backend_php_path_configuration.png
+    :alt: Correct PHP path settings
 
-   Correct PHP path settings in Extension configuration
+    Correct PHP path settings in Extension configuration
 
 Please be sure to add the correct path to your PHP. The path in this screenshot
 might be different to your PHP path.
@@ -112,7 +112,8 @@ I will not try to provide a fix for this, but only a workaround.
 
 Workaround
 ----------
-   The problem appears when the Crawler Configuration and the Indexed_Search Configuration are stored on the same page. The workaround is then to move the Indexed_Search Configuration to a different page. I have not experience any side-effects on this change, but if you do so, please report them to me.
+
+The problem appears when the Crawler Configuration and the Indexed_Search Configuration are stored on the same page. The workaround is then to move the Indexed_Search Configuration to a different page. I have not experience any side-effects on this change, but if you do so, please report them to me.
 
 This workaround is for these two bugs:
 
@@ -150,7 +151,7 @@ An issue was reported for the Crawler, that the Site Config baseVariants was not
 https://github.com/tomasnorre/crawler/issues/851, it turned out that crawler had problems with `ApplicationContexts`
 set in `.htaccess` like in example.
 
-.. code-block:: text
+..  code-block:: text
 
     <IfModule mod_rewrite.c>
        # Rules to set ApplicationContext based on hostname

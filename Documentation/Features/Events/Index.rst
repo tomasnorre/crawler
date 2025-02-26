@@ -1,22 +1,22 @@
-﻿.. include:: /Includes.rst.txt
-.. highlight:: php
+﻿..  include:: /Includes.rst.txt
+..  highlight:: php
 
 =============
 PSR-14 Events
 =============
 
-.. versionadded:: 11.0.0
+..  versionadded:: 11.0.0
 
 You can register your own PSR-14 Event Listener and extend the functionality of the
 TYPO3 Crawler. In this section you will see which events that you can listen too.
 
 **Events within the Crawler**
 
-.. contents::
-   :depth: 1
-   :local:
+..  contents::
+    :depth: 1
+    :local:
 
-.. _psr14-modify-skip-page-event:
+..  _psr14-modify-skip-page-event:
 
 ModifySkipPageEvent
 ===================
@@ -29,11 +29,11 @@ Let's say you don't want to crawl pages with SEO priority 0.2 or lower.
 This would then be the place to add your own listener to Modify the Skip Page logic
 already implemented.
 
-.. rst-class:: bignums-xxl
+..  rst-class:: bignums-xxl
 
-#. Create the event listener
+#.  Create the event listener
 
-   ::
+    ::
 
       <?php
       declare(strict_types=1);
@@ -49,19 +49,19 @@ already implemented.
           }
       }
 
-#. Register your event listener in :file:`Configuration/Services.yaml`
+#.  Register your event listener in :file:`Configuration/Services.yaml`
 
-   .. code-block:: yaml
+    ..  code-block:: yaml
 
-      services:
-         AOE\Crawler\EventListener\ModifySkipPageEventListener:
-            tags:
-               -   name: event.listener
-                   identifier: 'ext-extension-key/ModifySkipPageEventListener'
-                   event: AOE\Crawler\Event\ModifySkipPageEvent
+        services:
+           AOE\Crawler\EventListener\ModifySkipPageEventListener:
+              tags:
+                 -   name: event.listener
+                     identifier: 'ext-extension-key/ModifySkipPageEventListener'
+                     event: AOE\Crawler\Event\ModifySkipPageEvent
 
 
-.. _psr14-after-url-crawled-event:
+..  _psr14-after-url-crawled-event:
 
 AfterUrlCrawledEvent
 ====================
@@ -69,11 +69,11 @@ AfterUrlCrawledEvent
 This events enables you to trigger, e.g a Vanish Ban for a specific URL after it's freshly
 crawled. This ensures that your varnish cache will be up to date as well.
 
-.. rst-class:: bignums-xxl
+..  rst-class:: bignums-xxl
 
-#. Create the event listener
+#.  Create the event listener
 
-   ::
+    ::
 
       <?php
       declare(strict_types=1);
@@ -87,18 +87,18 @@ crawled. This ensures that your varnish cache will be up to date as well.
           }
       }
 
-#. Register your event listener in :file:`Configuration/Services.yaml`
+#.  Register your event listener in :file:`Configuration/Services.yaml`
 
-   .. code-block:: yaml
+    ..  code-block:: yaml
 
-      services:
-         AOE\Crawler\EventListener\AfterUrlCrawledEventListener:
-            tags:
-               -   name: event.listener
-                   identifier: 'ext-extension-key/AfterUrlCrawledEventListener'
-                   event: AOE\Crawler\Event\AfterUrlCrawledEvent
+        services:
+           AOE\Crawler\EventListener\AfterUrlCrawledEventListener:
+              tags:
+                 -   name: event.listener
+                     identifier: 'ext-extension-key/AfterUrlCrawledEventListener'
+                     event: AOE\Crawler\Event\AfterUrlCrawledEvent
 
-.. _psr14-invoke-queue-change-event:
+..  _psr14-invoke-queue-change-event:
 
 InvokeQueueChangeEvent
 ======================
@@ -108,11 +108,11 @@ e.g. automatically adding new processes. The event takes a `Reason` as arguments
 which gives you more information about what has happened and for GUI also by
 whom.
 
-.. rst-class:: bignums-xxl
+..  rst-class:: bignums-xxl
 
-#. Create the event listener
+#.  Create the event listener
 
-   ::
+    ::
 
       <?php
       declare(strict_types=1);
@@ -127,18 +127,18 @@ whom.
           }
       }
 
-#. Register your event listener in :file:`Configuration/Services.yaml`
+#.  Register your event listener in :file:`Configuration/Services.yaml`
 
-   .. code-block:: yaml
+    ..  code-block:: yaml
 
-      services:
-         AOE\Crawler\EventListener\InvokeQueueChangeEvent:
-            tags:
-               -   name: event.listener
-                   identifier: 'ext-extension-key/InvokeQueueChangeEventListener'
-                   event: AOE\Crawler\Event\InvokeQueueChangeEvent
+        services:
+           AOE\Crawler\EventListener\InvokeQueueChangeEvent:
+              tags:
+                 -   name: event.listener
+                     identifier: 'ext-extension-key/InvokeQueueChangeEventListener'
+                     event: AOE\Crawler\Event\InvokeQueueChangeEvent
 
-.. _psr14-after-url-added-to-queue-event:
+..  _psr14-after-url-added-to-queue-event:
 
 AfterUrlAddedToQueueEvent
 =========================
@@ -146,11 +146,11 @@ AfterUrlAddedToQueueEvent
 AfterUrlAddedToQueueEvent gives you the opportunity to trigger desired actions based on
 e.g. which fields are changed. You have `uid` and `fieldArray` present for evaluation.
 
-.. rst-class:: bignums-xxl
+..  rst-class:: bignums-xxl
 
-#. Create the event listener
+#.  Create the event listener
 
-   ::
+    ::
 
       <?php
       declare(strict_types=1);
@@ -164,18 +164,18 @@ e.g. which fields are changed. You have `uid` and `fieldArray` present for evalu
           }
       }
 
-#. Register your event listener in :file:`Configuration/Services.yaml`
+#.  Register your event listener in :file:`Configuration/Services.yaml`
 
-   .. code-block:: yaml
+    ..  code-block:: yaml
 
-      services:
-         AOE\Crawler\EventListener\AfterUrlAddedToQueueEventListener:
-            tags:
-               -   name: event.listener
-                   identifier: 'ext-extension-key/AfterUrlAddedToQueueEventListener'
-                   event: AOE\Crawler\Event\AfterUrlAddedToQueueEvent
+        services:
+           AOE\Crawler\EventListener\AfterUrlAddedToQueueEventListener:
+              tags:
+                 -   name: event.listener
+                     identifier: 'ext-extension-key/AfterUrlAddedToQueueEventListener'
+                     event: AOE\Crawler\Event\AfterUrlAddedToQueueEvent
 
-.. _psr14-before-queue-items-added-event:
+..  _psr14-before-queue-items-added-event:
 
 BeforeQueueItemAddedEvent
 =========================
@@ -184,11 +184,11 @@ This event can be used to check or modify a queue record before adding it to
 the queue. This can be useful if you want certain actions in place based on, let's
 say `Doktype` or SEO Priority.
 
-.. rst-class:: bignums-xxl
+..  rst-class:: bignums-xxl
 
-#. Create the event listener
+#.  Create the event listener
 
-   ::
+    ::
 
       <?php
       declare(strict_types=1);
@@ -202,18 +202,18 @@ say `Doktype` or SEO Priority.
           }
       }
 
-#. Register your event listener in :file:`Configuration/Services.yaml`
+#.  Register your event listener in :file:`Configuration/Services.yaml`
 
-   .. code-block:: yaml
+    ..  code-block:: yaml
 
-      services:
-         AOE\Crawler\EventListener\BeforeQueueItemAddedEventListener:
-            tags:
-               -   name: event.listener
-                   identifier: 'ext-extension-key/BeforeQueueItemAddedEventListener'
-                   event: AOE\Crawler\Event\BeforeQueueItemAddedEvent
+        services:
+           AOE\Crawler\EventListener\BeforeQueueItemAddedEventListener:
+              tags:
+                 -   name: event.listener
+                     identifier: 'ext-extension-key/BeforeQueueItemAddedEventListener'
+                     event: AOE\Crawler\Event\BeforeQueueItemAddedEvent
 
-.. _psr14-after-queue-items-added-event:
+..  _psr14-after-queue-items-added-event:
 
 AfterQueueItemAddedEvent
 ========================
@@ -222,11 +222,11 @@ The AfterQueueItemAddedEvent can be helpful if you want a given action after
 the item is added. Here you have the `queueId` and `fieldArray` information for you
 usages and checks.
 
-.. rst-class:: bignums-xxl
+..  rst-class:: bignums-xxl
 
-#. Create the event listener
+#.  Create the event listener
 
-   ::
+    ::
 
       <?php
       declare(strict_types=1);
@@ -240,13 +240,13 @@ usages and checks.
           }
       }
 
-#. Register your event listener in :file:`Configuration/Services.yaml`
+#.  Register your event listener in :file:`Configuration/Services.yaml`
 
-   .. code-block:: yaml
+    ..  code-block:: yaml
 
-      services:
-         AOE\Crawler\EventListener\AfterQueueItemAddedEventListener:
-            tags:
-               -   name: event.listener
-                   identifier: 'ext-extension-key/AfterQueueItemAddedEventListener'
-                   event: AOE\Crawler\Event\AfterQueueItemAddedEvent
+        services:
+           AOE\Crawler\EventListener\AfterQueueItemAddedEventListener:
+              tags:
+                 -   name: event.listener
+                     identifier: 'ext-extension-key/AfterQueueItemAddedEventListener'
+                     event: AOE\Crawler\Event\AfterQueueItemAddedEvent

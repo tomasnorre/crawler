@@ -1,10 +1,10 @@
-.. include:: /Includes.rst.txt
+..  include:: /Includes.rst.txt
 
 ============================
 Automatic add pages to Queue
 ============================
 
-.. versionadded:: 9.1.0
+..  versionadded:: 9.1.0
 
 Edit Pages
 ----------
@@ -27,12 +27,12 @@ we have an additional feature for free. When you clear the page cache for a spec
 page then it will also be added automatically to the crawler queue. Again this will
 be processed during the next crawler process.
 
-.. figure:: /Images/backend_clear_cache.png
-   :alt: Clearing the page cache
+..  figure:: /Images/backend_clear_cache.png
+    :alt: Clearing the page cache
 
-   Clearing the page cache
+    Clearing the page cache
 
-.. figure:: /Images/backend_clear_cache_queue.png
-   :alt: Page is added to the crawler queue
+..  figure:: /Images/backend_clear_cache_queue.png
+    :alt: Page is added to the crawler queue
 
-   Page is added to the crawler queue
+    Page is added to the crawler queue

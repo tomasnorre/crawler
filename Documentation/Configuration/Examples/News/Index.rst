@@ -1,4 +1,4 @@
-.. include:: /Includes.rst.txt
+..  include:: /Includes.rst.txt
 
 ========
 EXT:news
@@ -7,10 +7,10 @@ EXT:news
 The news extensions is one of the most used extensions in the TYPO3 CMS. This
 configuration is made under the assumption with a page tree looking similar to this:
 
-.. figure:: /Images/ext_news_pagetree.png
-   :alt: Example Pagetree of EXT:news setup
+..  figure:: /Images/ext_news_pagetree.png
+    :alt: Example Pagetree of EXT:news setup
 
-   Example Pagetree of EXT:news setup
+    Example Pagetree of EXT:news setup
 
 If you want to have a Crawler Configuration that matches this, you can add
 following to the :guilabel:`PageTS` for PageId `56`.
@@ -20,7 +20,7 @@ Example
 
 ::
 
-   tx_crawler.crawlerCfg.paramSets {
+    tx_crawler.crawlerCfg.paramSets {
       tx_news = &tx_news_pi1[controller]=News&tx_news_pi1[action]=detail&tx_news_pi1[news]=[_TABLE:tx_news_domain_model_news; _PID:58; _WHERE: hidden = 0]
       tx_news {
         pidsOnly = 57
@@ -60,9 +60,9 @@ and register an event listener in your site package.
 
 :file:`ext/Configuration/Services.yaml`
 
-.. code-block:: yaml
+..  code-block:: yaml
 
-   services:
+    services:
      Vendor\Ext\EventListeners\NewsDetailEventListener:
        tags:
          - name: event.listener
@@ -72,7 +72,7 @@ and register an event listener in your site package.
 
 :file:`ext/Classes/EventListeners/NewsDetailEventListener.php`
 
-.. code-block:: php
+..  code-block:: php
 
     <?php
 
@@ -125,8 +125,8 @@ and register an event listener in your site package.
        }
     }
 
-.. warning::
+..  warning::
 
-   Note that this does more than just prevent articles from being indexed twice. It
-   actually prevents articles from being displayed on a page that is supposed to show
-   only articles of a certain category!
+    Note that this does more than just prevent articles from being indexed twice. It
+    actually prevents articles from being displayed on a page that is supposed to show
+    only articles of a certain category!

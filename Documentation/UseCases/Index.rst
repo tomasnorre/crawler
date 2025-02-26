@@ -1,4 +1,4 @@
-.. include:: /Includes.rst.txt
+..  include:: /Includes.rst.txt
 
 =========
 Use cases
@@ -10,11 +10,11 @@ have multiple use cases. If you have some that is not listed here, feel free
 to make a PR or issue on `https://github.com/tomasnorre/crawler
 <https://github.com/tomasnorre/crawler/>`_.
 
-.. toctree::
-   :maxdepth: 5
-   :titlesonly:
-   :glob:
+..  toctree::
+    :maxdepth: 5
+    :titlesonly:
+    :glob:
 
-   CacheWarmup/Index
-   IndexedSearch/Index
+    CacheWarmup/Index
+    IndexedSearch/Index
 
