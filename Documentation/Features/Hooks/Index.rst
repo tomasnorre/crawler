@@ -13,9 +13,10 @@ excludeDoktype Hook
 By adding doktype ids to following array you can exclude them from
 being crawled:
 
-::
+..  code-block:: php
+    :caption: packages/my_extension/ext_localconf.php
 
-   $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['excludeDoktype'][] = <dokTypeId>
+    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['excludeDoktype'][] = <dokTypeId>
 
 
 pageVeto Hook
@@ -27,28 +28,10 @@ pageVeto Hook
 You can also decide whether a page should not be crawled in an
 individual userfunction. Register your function here:
 
-::
+..  code-block:: php
+    :caption: packages/my_extension/ext_localconf.php
 
-   $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pageVeto'][] = Vendor\YourExt\Hooks\Crawler\PageVeto::class . '->excludePage';
+    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pageVeto'][] = MyVendor\MyExtension\Hooks\Crawler\PageVeto::class . '->excludePage';
 
-Example::
-
-   <?php
-    declare(strict_types=1);
-
-    namespace Vendor\YourExt\Hooks\Crawler;
-
-    use AOE\Crawler\Controller\CrawlerController;
-
-    class PageVeto
-   {
-      public function excludePage(array &$params, CrawlerController $controller)
-      {
-         if ($params['pageRow']['uid'] === 42) {
-            return 'Page with uid "42" is excluded by page veto hook');
-         }
-
-         return false;
-      }
-   }
-
+..  literalinclude:: _PageVeto.php
+    :caption: packages/my_extension/Classes/Hooks/Crawler/PageVeto.php

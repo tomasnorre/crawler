@@ -151,17 +151,7 @@ An issue was reported for the Crawler, that the Site Config baseVariants was not
 https://github.com/tomasnorre/crawler/issues/851, it turned out that crawler had problems with `ApplicationContexts`
 set in `.htaccess` like in example.
 
-..  code-block:: text
-
-    <IfModule mod_rewrite.c>
-       # Rules to set ApplicationContext based on hostname
-       RewriteCond %{HTTP_HOST} ^(.*)\.my\-site\.localhost$
-       RewriteRule .? - [E=TYPO3_CONTEXT:Development]
-       RewriteCond %{HTTP_HOST} ^(.*)\.mysite\.info$
-       RewriteRule .? - [E=TYPO3_CONTEXT:Production/Staging]
-       RewriteCond %{HTTP_HOST} ^(.*)\.my\-site\.info$
-       RewriteRule .? - [E=TYPO3_CONTEXT:Production]
-    </IfModule>
+..  literalinclude:: _htaccess.txt
 
 Workaround
 ----------

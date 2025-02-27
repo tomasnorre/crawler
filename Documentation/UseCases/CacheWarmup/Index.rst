@@ -38,9 +38,17 @@ adjust with additional parameters if you like.
 
         Crawler configuration record
 
-
     ..  hint::
-        Let's say your website has frontend users with one or multiple Usergroups. In this case you need to create multiple crawler configurations: For every possible combination of Usergroups that a user can have you need to create a individual crawler configuration. All those crawler configurations need to be added to the `crawler:processQueue` command to be considered. If you miss this some user get a warmed up cache but those with a combination of Usergroups which was not taken into account in a crawler configuration will get an uncached page.
+        Let's say your website has frontend users with one or multiple user
+        groups. In this case you need to create multiple crawler
+        configurations: For every possible combination of User groups that a
+        user can have you need to create a individual crawler configuration.
+
+        All those crawler configurations need to be added to the
+        `crawler:processQueue` command to be considered. If you miss this
+        some user get a warmed up cache but those with a combination of
+        user groups which was not taken into account in a crawler configuration
+        will get an uncached page.
 
 #.  Build the queue
 
@@ -49,20 +57,8 @@ adjust with additional parameters if you like.
     deployment tool you use, but it's not important as long as you can execute
     shell commands. What would you need to execute?
 
-    ::
-
-      # Done to make sure the crawler queue is empty, so that we will only crawl important pages.
-      $ vendor/bin/typo3 crawler:flushQueue all
-
-      # Now we want to fill the crawler queue,
-      # This will start on page uid 1 with the deployment configuration and depth 99,
-      # --mode exec crawles the pages instantly so we don't need a secondary process for that.
-      $ vendor/bin/typo3 crawler:buildQueue 1 deployment --depth 99 --mode exec
-
-      # Add the rest of the pages to crawler queue and have the processed with the scheduler
-      # --mode queue is default, but it is  added for visibility,
-      # we assume that you have a crawler configuration called default
-      $ vendor/bin/typo3 crawler:buildQueue 1 default --depth 99 --mode queue
+    ..  literalinclude:: _commands.bash
+        :language: bash
 
 #.  Process the queue
 

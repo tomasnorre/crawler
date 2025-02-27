@@ -33,32 +33,13 @@ already implemented.
 
 #.  Create the event listener
 
-    ::
-
-      <?php
-      declare(strict_types=1);
-      namespace AOE\Crawler\EventListener;
-
-      final class ModifySkipPageEventListener
-      {
-          public function __invoke(ModifySkipPageEvent $modifySkipPageEvent)
-          {
-              if($modifySkipPageEvent->getPageRow()['uid'] === 42) {
-                  $modifySkipPageEvent->setSkipped('Page with uid "42" is excluded by ModifySkipPageEvent');
-              }
-          }
-      }
+    ..  literalinclude:: _ModifySkipPageEventListener.php
+        :caption: packages/my_extension/Classes/EventListener/ModifySkipPageEventListener.php
 
 #.  Register your event listener in :file:`Configuration/Services.yaml`
 
-    ..  code-block:: yaml
-
-        services:
-           AOE\Crawler\EventListener\ModifySkipPageEventListener:
-              tags:
-                 -   name: event.listener
-                     identifier: 'ext-extension-key/ModifySkipPageEventListener'
-                     event: AOE\Crawler\Event\ModifySkipPageEvent
+    ..  literalinclude:: _ModifySkipPageEventListener_services.yaml
+        :caption: packages/my_extension/Configuration/services.yaml
 
 
 ..  _psr14-after-url-crawled-event:
@@ -66,37 +47,20 @@ already implemented.
 AfterUrlCrawledEvent
 ====================
 
-This events enables you to trigger, e.g a Vanish Ban for a specific URL after it's freshly
+This event enables you to trigger, e.g a Vanish Ban for a specific URL after it's freshly
 crawled. This ensures that your varnish cache will be up to date as well.
 
 ..  rst-class:: bignums-xxl
 
 #.  Create the event listener
 
-    ::
-
-      <?php
-      declare(strict_types=1);
-      namespace AOE\Crawler\EventListener;
-
-      final class AfterUrlCrawledEventListener
-      {
-          public function __invoke(AfterUrlCrawledEvent $afterUrlCrawledEvent)
-          {
-               // VarnishBanUrl($afterUrlCrawledEvent->$afterUrl());
-          }
-      }
+    ..  literalinclude:: _AfterUrlCrawledEventListener.php
+        :caption: packages/my_extension/Classes/EventListener/AfterUrlCrawledEventListener.php
 
 #.  Register your event listener in :file:`Configuration/Services.yaml`
 
-    ..  code-block:: yaml
-
-        services:
-           AOE\Crawler\EventListener\AfterUrlCrawledEventListener:
-              tags:
-                 -   name: event.listener
-                     identifier: 'ext-extension-key/AfterUrlCrawledEventListener'
-                     event: AOE\Crawler\Event\AfterUrlCrawledEvent
+    ..  literalinclude:: _AfterUrlCrawledEventListener_services.yaml
+        :caption: packages/my_extension/Configuration/services.yaml
 
 ..  _psr14-invoke-queue-change-event:
 
@@ -112,31 +76,13 @@ whom.
 
 #.  Create the event listener
 
-    ::
-
-      <?php
-      declare(strict_types=1);
-      namespace AOE\Crawler\EventListener;
-
-      final class InvokeQueueChangeEventListener
-      {
-          public function __invoke(InvokeQueueChangeEvent $invokeQueueChangeEvent)
-          {
-               $reason = $invokeQueueChangeEvent->getReason()
-               // You can implement different logic based on reason, GUI or CLI
-          }
-      }
+    ..  literalinclude:: _InvokeQueueChangeEventListener.php
+        :caption: packages/my_extension/Classes/EventListener/AfterUrlCrawledEventListener.php
 
 #.  Register your event listener in :file:`Configuration/Services.yaml`
 
-    ..  code-block:: yaml
-
-        services:
-           AOE\Crawler\EventListener\InvokeQueueChangeEvent:
-              tags:
-                 -   name: event.listener
-                     identifier: 'ext-extension-key/InvokeQueueChangeEventListener'
-                     event: AOE\Crawler\Event\InvokeQueueChangeEvent
+    ..  literalinclude:: _InvokeQueueChangeEvent_services.yaml
+        :caption: packages/my_extension/Configuration/services.yaml
 
 ..  _psr14-after-url-added-to-queue-event:
 

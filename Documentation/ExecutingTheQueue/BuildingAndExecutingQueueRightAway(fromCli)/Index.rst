@@ -135,98 +135,34 @@ To do the same with the CLI script you run this:
 
 And this is the output:
 
-..  code-block:: text
-
-    38 entries found for processing. (Use "mode" to decide action):
-
-    [10-04-20 10:35] https://crawler-devbox.ddev.site/content-examples/overview
-    [10-04-20 10:35] https://crawler-devbox.ddev.site/content-examples/text/rich-text
-    [10-04-20 10:35] https://crawler-devbox.ddev.site/content-examples/text/headers
-    [10-04-20 10:35] https://crawler-devbox.ddev.site/content-examples/text/bullet-list
-    [10-04-20 10:35] https://crawler-devbox.ddev.site/content-examples/text/text-with-teaser
-    [10-04-20 10:35] https://crawler-devbox.ddev.site/content-examples/text/text-and-icon
-    [10-04-20 10:35] https://crawler-devbox.ddev.site/content-examples/text/text-in-columns
-    [10-04-20 10:35] https://crawler-devbox.ddev.site/content-examples/text/list-group
-    [10-04-20 10:35] https://crawler-devbox.ddev.site/content-examples/text/panel
-    [10-04-20 10:35] https://crawler-devbox.ddev.site/content-examples/text/table
-    [10-04-20 10:35] https://crawler-devbox.ddev.site/content-examples/text/quote
-    [10-04-20 10:35] https://crawler-devbox.ddev.site/content-examples/media/audio
-    [10-04-20 10:35] https://crawler-devbox.ddev.site/content-examples/media/text-and-images
-    ...
-    [10-04-20 10:36] https://crawler-devbox.ddev.site/content-examples/and-more/frames
+..  literalinclude:: _output_buildQueue_6_default.txt
 
 
 At this point you have three options for "action":
 
-- Commit the URLs to the queue and let the cron script take care of it
-  over time. In this case there is an option for setting the amount of
-  tasks per minute if you wish to change it from the default 30. This is
-  useful if you would like to submit a job to the cron script based
-  crawler everyday.
+-   Commit the URLs to the queue and let the cron script take care of it
+    over time. In this case there is an option for setting the amount of
+    tasks per minute if you wish to change it from the default 30. This is
+    useful if you would like to submit a job to the cron script based
+    crawler everyday.
 
-  - Add "--mode queue"
-  - This is also the **default** setting, so unless you want it to be explicit visible, you don't need to add it.
+    - Add "--mode queue"
+    - This is also the **default** setting, so unless you want it to be explicit visible, you don't need to add it.
 
-- List full URLs for use with wget or similar. Corresponds to pressing
-  the "Download URLs" button in the backend module.
+-   List full URLs for use with wget or similar. Corresponds to pressing
+    the "Download URLs" button in the backend module.
 
-  - Add "--mode url"
+    - Add "--mode url"
 
-::
+    ..  literalinclude:: _output_buildQueue_6_default_mode_url.txt
 
-    $ bin/typo3 crawler:buildQueue 6 default --depth 2 --mode url
-    https://crawler-devbox.ddev.site/content-examples/overview
-    https://crawler-devbox.ddev.site/content-examples/text/rich-text
-    https://crawler-devbox.ddev.site/content-examples/text/headers
-    https://crawler-devbox.ddev.site/content-examples/text/bullet-list
-    https://crawler-devbox.ddev.site/content-examples/text/text-with-teaser
-    https://crawler-devbox.ddev.site/content-examples/text/text-and-icon
-    https://crawler-devbox.ddev.site/content-examples/text/text-in-columns
-    https://crawler-devbox.ddev.site/content-examples/text/list-group
-    https://crawler-devbox.ddev.site/content-examples/text/panel
-    ...
+-   Commit and execute the queue right away. This will still put the jobs
+    into the queue but execute them immediately. If server load is no
+    issue to you and if you are in a hurry this is the way to go! It also
+    feels much more like the "command-line-way" of things. And the status
+    output is more immediate than in the queue.
 
-- Commit and execute the queue right away. This will still put the jobs
-  into the queue but execute them immediately. If server load is no
-  issue to you and if you are in a hurry this is the way to go! It also
-  feels much more like the "command-line-way" of things. And the status
-  output is more immediate than in the queue.
+    - Add "--mode exec"
 
-  - Add "--mode exec"
-
-::
-
-    $ bin/typo3 crawler:buildQueue 6 default --depth 2 --mode exec
-    https://crawler-devbox.ddev.site/content-examples/overview
-    https://crawler-devbox.ddev.site/content-examples/text/rich-text
-    https://crawler-devbox.ddev.site/content-examples/text/headers
-    https://crawler-devbox.ddev.site/content-examples/text/bullet-list
-    https://crawler-devbox.ddev.site/content-examples/text/text-with-teaser
-    https://crawler-devbox.ddev.site/content-examples/text/text-and-icon
-    https://crawler-devbox.ddev.site/content-examples/text/text-in-columns
-    https://crawler-devbox.ddev.site/content-examples/text/list-group
-    https://crawler-devbox.ddev.site/content-examples/text/panel
-    ...
-    Processing
-
-    https://crawler-devbox.ddev.site/content-examples/overview () =>
-
-    OK:
-            User Groups:
-
-    https://crawler-devbox.ddev.site/content-examples/text/rich-text () =>
-
-    OK:
-            User Groups:
-
-    https://crawler-devbox.ddev.site/content-examples/text/headers () =>
-
-    OK:
-            User Groups:
-
-    https://crawler-devbox.ddev.site/content-examples/text/bullet-list () =>
-
-    OK:
-            User Groups:
-    ...
+    ..  literalinclude:: _output_buildQueue_6_default_mode_exec.txt
 

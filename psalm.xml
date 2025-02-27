@@ -11,6 +11,7 @@
         <directory name="Classes" />
         <ignoreFiles>
             <directory name=".Build/vendor" />
+            <directory name="Documentation" />
         </ignoreFiles>
     </projectFiles>
 </psalm>
