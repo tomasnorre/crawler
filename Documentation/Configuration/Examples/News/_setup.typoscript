@@ -1,0 +1,8 @@
+plugin.tx_news.settings {
+    # categories and categoryconjunction are not considered in detail view, so they must be overridden
+    overrideFlexformSettingsIfEmpty = cropMaxCharacters,dateField,timeRestriction,archiveRestriction,orderBy,orderDirection,backPid,listPid,startingpoint,recursive,list.paginate.itemsPerPage,list.paginate.templatePath,categories,categoryConjunction
+    # see the news extension for possible values of categoryConjunction
+    categoryConjunction = AND
+    categories = <ID of respective category>
+    detail.errorHandling = pageNotFoundHandler
+}

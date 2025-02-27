@@ -1,0 +1,7 @@
+tx_crawler.crawlerCfg.paramSets.test = &L=[0-3]
+tx_crawler.crawlerCfg.paramSets.test {
+    procInstrFilter = tx_indexedsearch_reindex
+    pidsOnly = 1,5,13,55
+    userGroups = 1
+    force_ssl = 1
+}
