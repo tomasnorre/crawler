@@ -1,5 +1,7 @@
 ..  include:: /Includes.rst.txt
 
+..  _use-case-cache-warm-up:
+
 =============
 Cache warm up
 =============

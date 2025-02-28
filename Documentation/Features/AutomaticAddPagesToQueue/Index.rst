@@ -1,10 +1,14 @@
 ..  include:: /Includes.rst.txt
 
+..  _add-to-queue:
+
 ============================
 Automatic add pages to Queue
 ============================
 
 ..  versionadded:: 9.1.0
+
+..  _add-to-queue-edit:
 
 Edit Pages
 ----------
@@ -18,6 +22,8 @@ of which pages you have edited, it will automatically be handle on next crawler
 process task, see :ref:`executing-the-queue-label`. This ensure that
 your cache or e.g. Search Index is always up to date and the end-users will see
 the most current content as soon as possible.
+
+..  _add-to-queue-cache:
 
 Clear Page Single Cache
 -----------------------

@@ -14,7 +14,7 @@ executed right away.
 
 The script to use is this:
 
-::
+..  code-block:: bash
 
     vendor/bin/typo3 crawler:buildQueue <startPageUid> <configurationKeys>
 
@@ -54,7 +54,7 @@ If you run it you will see a list of options which explains usage.
 
          **Examples:**
 
-         ::
+         ..  code-block:: plaintext
 
             re-crawl-pages,re-crawl-news
 

@@ -1,9 +1,10 @@
 ﻿..  include:: /Includes.rst.txt
 
+..  _features:
+
 ========
 Features
 ========
-
 
 ..  toctree::
     :maxdepth: 5
@@ -16,4 +17,3 @@ Features
     Hooks/Index
     Events/Index
     PriorityCrawling/Index
-

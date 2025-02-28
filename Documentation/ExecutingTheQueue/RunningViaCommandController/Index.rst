@@ -6,6 +6,8 @@
 Run via command controller
 ==========================
 
+..  _command-controller-buildqueue:
+
 Create queue
 ------------
 
@@ -14,6 +16,8 @@ Create queue
 
     $ vendor/bin/typo3 crawler:buildQueue <page-id> <configurationKey1,configurationKey2,...> [--depth <depth>] [--number <number>] [--mode <exec|queue|url>]
 
+..  _command-controller-processqueue:
+
 Run queue
 ---------
 
@@ -21,6 +25,8 @@ Run queue
     :caption: replace vendor/bin/typo3 with your own cli runner
 
    $ vendor/bin/typo3 crawler:processQueue [--amount <pages to crawl>] [--sleeptime <milliseconds>] [--sleepafter <seconds>]
+
+..  _command-controller-flushqueue:
 
 Flush queue
 -----------

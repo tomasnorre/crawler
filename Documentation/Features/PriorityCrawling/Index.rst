@@ -1,5 +1,7 @@
 ..  include:: /Includes.rst.txt
 
+..  _priority-crawling:
+
 =================
 Priority Crawling
 =================
@@ -34,21 +36,7 @@ options that the `sysext/seo` gives you and all pages will by default get a prio
 0.5, and therefore do not influence the processing order as everyone will have the
 same priority.
 
-TYPO3 9 LTS
------------
-
-In TYPO3 9 LTS, the will be a new tab :guilabel:`Crawler` when editing pages, here you
-can set the priority.
-
-..  figure:: /Images/backend_crawler_priority_v9.png
-    :alt: A Crawler tab will be visible in TYPO3 9 LTS
-
-    A Crawler tab will be visible in TYPO3 9 LTS
-
-TYPO3 10 LTS
-------------
-
-In TYPO3 10 LTS or higher, the existing :guilabel:`SEO` tab will be used to set priorities when editing
+The existing :guilabel:`SEO` tab will be used to set priorities when editing
 pages.
 
 ..  image:: /Images/backend_crawler_seo_v10.png
@@ -57,17 +45,3 @@ pages.
     :alt: The SEO tab will contain the sitemap_priority field
 
     The SEO tab will contain the sitemap_priority field
-
-Disclaimer
-----------
-This `sitemap_priority` is not added to `typo3/cms-seo` before TYPO3 10LTS, so
-it has been added to the :file:`EXT:crawler/ext_tables.sql`
-to have it present already in TYPO3 9 LTS. The TCA for this field will only be
-included from the crawler in TYPO3 9 LTS, otherwise defaulting to setup from
-TYPO3 10 LTS or higher.
-
-This field has thus the naming, no influence what so ever on the SEO optimization
-of the website in TYPO3 9 LTS.
-
-The decision to reuse the field was done to lower the migration effort when going
-from TYPO3 9 LTS to 10 LTS or higher, as the field will need no migration at all.

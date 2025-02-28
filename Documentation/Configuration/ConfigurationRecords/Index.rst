@@ -15,8 +15,12 @@ pagetree you want to affect with this configuration.
 The fields in these records are related to the pageTS keys described
 below.
 
+..  _backend-configuration-record-fields:
+
 Fields and their pageTS equivalents
 ===================================
+
+..  _backend-configuration-record-general:
 
 General
 -------
@@ -64,6 +68,8 @@ Processing instruction parameters
 Crawl with FE user groups
     User groups to set for the request. See also:
     :ref:`paramSets.[key].userGroups <crawler-tsconfig-paramSets-key-userGroups>` and the hint in :ref:`create-crawler-configuration`
+
+..  _backend-configuration-record-access:
 
 Access
 ------

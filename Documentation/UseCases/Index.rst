@@ -1,5 +1,7 @@
 ..  include:: /Includes.rst.txt
 
+..  _use-cases:
+
 =========
 Use cases
 =========

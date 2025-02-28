@@ -1,11 +1,14 @@
 ﻿..  include:: /Includes.rst.txt
-..  highlight:: php
+
+..  _hooks:
 
 =====
 Hooks
 =====
 
 Register the following hooks in :file:`ext_localconf.php` of your extension.
+
+..  _hooks-excludeDoktype:
 
 excludeDoktype Hook
 ===================
@@ -18,6 +21,7 @@ being crawled:
 
     $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['excludeDoktype'][] = <dokTypeId>
 
+..  _hooks-pageVeto:
 
 pageVeto Hook
 =============

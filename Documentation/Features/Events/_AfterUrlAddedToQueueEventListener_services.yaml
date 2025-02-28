@@ -1,0 +1,6 @@
+services:
+  MyVendor\MyExtension\EventListener\AfterUrlAddedToQueueEventListener:
+    tags:
+      -   name: event.listener
+          identifier: 'ext-extension-key/AfterUrlAddedToQueueEventListener'
+          event: AOE\Crawler\Event\AfterUrlAddedToQueueEvent

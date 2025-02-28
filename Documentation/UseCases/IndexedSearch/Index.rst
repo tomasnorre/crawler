@@ -1,5 +1,7 @@
 ..  include:: /Includes.rst.txt
 
+..  _use-case-indexed-search:
+
 ==============
 Indexed Search
 ==============
@@ -15,6 +17,8 @@ You can see the issue here: https://github.com/tomasnorre/crawler/issues/558
 or tip in the money pool here: https://www.paypal.com/paypalme/tomasnorre/10
 
 `#HappyCrawling`
+
+..  _use-case-indexed-search-setup:
 
 Setup Index Search
 ==================

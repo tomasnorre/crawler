@@ -1,5 +1,7 @@
 ..  include:: /Includes.rst.txt
 
+..  _example-configuration-news:
+
 ========
 EXT:news
 ========
@@ -15,14 +17,13 @@ configuration is made under the assumption with a page tree looking similar to t
 If you want to have a Crawler Configuration that matches this, you can add
 following to the :guilabel:`PageTS` for PageId `56`.
 
-Example
-=======
-
 ..  literalinclude:: _page.tsconfig
     :caption: packages/my_extension/Configuration/Sets/MySet/page.tsconfig
 
 Now you can add the News detail-view pages to the crawler queue and have them in
 the cache and the `indexed_search` index if you are using that.
+
+..  _example-configuration-news-category:
 
 Respecting Categories in News
 =============================

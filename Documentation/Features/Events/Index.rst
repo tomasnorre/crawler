@@ -1,5 +1,5 @@
 ﻿..  include:: /Includes.rst.txt
-..  highlight:: php
+..  _psr14-events:
 
 =============
 PSR-14 Events
@@ -10,9 +10,8 @@ PSR-14 Events
 You can register your own PSR-14 Event Listener and extend the functionality of the
 TYPO3 Crawler. In this section you will see which events that you can listen too.
 
-**Events within the Crawler**
-
 ..  contents::
+    :caption: Events within the Crawler
     :depth: 1
     :local:
 
@@ -96,30 +95,14 @@ e.g. which fields are changed. You have `uid` and `fieldArray` present for evalu
 
 #.  Create the event listener
 
-    ::
+    ..  literalinclude:: _AfterUrlAddedToQueueEventListener.php
+        :caption: packages/my_extension/Classes/EventListener/AfterUrlAddedToQueueEventListener.php
 
-      <?php
-      declare(strict_types=1);
-      namespace AOE\Crawler\EventListener;
-
-      final class AfterUrlAddedToQueueEventListener
-      {
-          public function __invoke(AfterUrlAddedToQueueEvent $afterUrlAddedToQueueEvent)
-          {
-               // Implement your wanted logic, you have the `$uid` and `$fieldArray` information
-          }
-      }
 
 #.  Register your event listener in :file:`Configuration/Services.yaml`
 
-    ..  code-block:: yaml
-
-        services:
-           AOE\Crawler\EventListener\AfterUrlAddedToQueueEventListener:
-              tags:
-                 -   name: event.listener
-                     identifier: 'ext-extension-key/AfterUrlAddedToQueueEventListener'
-                     event: AOE\Crawler\Event\AfterUrlAddedToQueueEvent
+    ..  literalinclude:: _AfterUrlAddedToQueueEventListener_services.yaml
+        :caption: packages/my_extension/Configuration/services.yaml
 
 ..  _psr14-before-queue-items-added-event:
 
@@ -134,30 +117,14 @@ say `Doktype` or SEO Priority.
 
 #.  Create the event listener
 
-    ::
+    ..  literalinclude:: _BeforeQueueItemAddedEventListener.php
+        :caption: packages/my_extension/Classes/EventListener/BeforeQueueItemAddedEventListener.php
 
-      <?php
-      declare(strict_types=1);
-      namespace AOE\Crawler\EventListener;
-
-      final class BeforeQueueItemAddedEventListener
-      {
-          public function __invoke(BeforeQueueItemAddedEvent $beforeQueueItemAddedEvent)
-          {
-               // Implement your wanted logic, you have the `$queueId` and `$queueRecord` information
-          }
-      }
 
 #.  Register your event listener in :file:`Configuration/Services.yaml`
 
-    ..  code-block:: yaml
-
-        services:
-           AOE\Crawler\EventListener\BeforeQueueItemAddedEventListener:
-              tags:
-                 -   name: event.listener
-                     identifier: 'ext-extension-key/BeforeQueueItemAddedEventListener'
-                     event: AOE\Crawler\Event\BeforeQueueItemAddedEvent
+    ..  literalinclude:: _BeforeQueueItemAddedEventListener_services.yaml
+        :caption: packages/my_extension/Configuration/services.yaml
 
 ..  _psr14-after-queue-items-added-event:
 
@@ -172,27 +139,10 @@ usages and checks.
 
 #.  Create the event listener
 
-    ::
-
-      <?php
-      declare(strict_types=1);
-      namespace AOE\Crawler\EventListener;
-
-      final class AfterQueueItemAddedEventListener
-      {
-          public function __invoke(AfterQueueItemAddedEvent $afterQueueItemAddedEvent)
-          {
-               // Implement your wanted logic, you have the `$queueId` and `$fieldArray` information
-          }
-      }
+    ..  literalinclude:: _AfterQueueItemAddedEventListener.php
+        :caption: packages/my_extension/Classes/EventListener/AfterQueueItemAddedEventListener.php
 
 #.  Register your event listener in :file:`Configuration/Services.yaml`
 
-    ..  code-block:: yaml
-
-        services:
-           AOE\Crawler\EventListener\AfterQueueItemAddedEventListener:
-              tags:
-                 -   name: event.listener
-                     identifier: 'ext-extension-key/AfterQueueItemAddedEventListener'
-                     event: AOE\Crawler\Event\AfterQueueItemAddedEvent
+    ..  literalinclude:: _AfterQueueItemAddedEventListener_services.yaml
+        :caption: packages/my_extension/Configuration/services.yaml

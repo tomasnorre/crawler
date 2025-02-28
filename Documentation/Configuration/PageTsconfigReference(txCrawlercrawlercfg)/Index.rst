@@ -1,6 +1,8 @@
 ﻿..  include:: /Includes.rst.txt
 ..  highlight:: typoscript
 
+..  _page-tsconfig:
+
 ================================================
 Page TSconfig Reference (tx\_crawler.crawlerCfg)
 ================================================
@@ -132,6 +134,8 @@ Page TSconfig Reference (tx\_crawler.crawlerCfg)
 
 [Page TSconfig: tx\_crawler.crawlerCfg]
 
+
+..  _page-tsconfig-example:
 
 Example
 =======

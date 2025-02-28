@@ -2,9 +2,9 @@
 
 ..  _start:
 
-=======
-Crawler
-=======
+======================
+Site Crawler Extension
+======================
 
 :Extension key:
     crawler
