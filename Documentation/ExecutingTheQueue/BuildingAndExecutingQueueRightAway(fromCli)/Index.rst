@@ -20,103 +20,59 @@ The script to use is this:
 
 If you run it you will see a list of options which explains usage.
 
-..  ##.  BEGIN~OF~TABLE ###
 
-..  container:: table-row
+..  confval:: <startPageUid>
+    :type: integer
 
-    Property
-         <startPageUid>
+    Page Id of the page to use as starting point for crawling.
 
-    Data type
-         integer
+..  confval:: <configurationKeys>
+    :type: string
 
-    Description
-         Page Id of the page to use as starting point for crawling.
+    Configurationkey:
 
-    Default
-         n/a
+    Comma separated list of your crawler configurations. If you use the
+    crawler configuration records you have to use the "name" if you're
+    still using the old TypoScript based configuration you have to use the
+    configuration key which is also a string.
 
-..  container:: table-row
+    **Examples:**
 
-    Property
-         <configurationKeys>
+    ..  code-block:: plaintext
 
-    Data type
-         string
-
-    Description
-         Configurationkey:
-
-         Comma separated list of your crawler configurations. If you use the
-         crawler configuration records you have to use the "name" if you're
-         still using the old TypoScript based configuration you have to use the
-         configuration key which is also a string.
-
-         **Examples:**
-
-         ..  code-block:: plaintext
-
-            re-crawl-pages,re-crawl-news
-
-    Default
-         n/a
+       re-crawl-pages,re-crawl-news
 
 
-..  container:: table-row
+..  confval:: --number <number>
+    :type: integer
 
-    Property
-         --number <number>
-
-    Data type
-         integer
-
-    Description
-         Specifies how many items are put in the queue per minute. Only valid
-         for output mode "queue".
-
-    Default
-         n/a
+    Specifies how many items are put in the queue per minute. Only valid
+    for output mode "queue".
 
 
-..  container:: table-row
+..  confval:: --mode <mode>
+    :type: string
+    :default: queue
 
-    Property
-         --mode <mode>
+    Output mode: "url", "exec", "queue"
 
-    Data type
-         string
+    - url : Will list URLs which wget could use as input.
 
-    Description
-         Output mode: "url", "exec", "queue"
+    - queue: Will put entries in queue table.
 
-         - url : Will list URLs which wget could use as input.
-
-         - queue: Will put entries in queue table.
-
-         - exec: Will execute all entries right away!
-
-    Default
-         queue
+    - exec: Will execute all entries right away!
 
 
-..  container:: table-row
+..  confval:: --depth <depth>
+    :type: integer
+    :default: 0
 
-    Property
-         --depth <depth>
+     Tree depth, 0-99.
 
-    Data type
-         integer
-
-    Description
-         Tree depth, 0-99.
-
-         How many levels under the 'page\_id' to include. By default, no additional levels are included.
-
-    Default
-         0
+     How many levels under the 'page\_id' to include. By default, no additional levels are included.
 
 
-..  #####.  END~OF~TABLE ######
+..  _executing-the-queue-cli-label-example:
 
 Example
 -------
@@ -129,7 +85,7 @@ This is done like this in the backend.
 
 To do the same with the CLI script you run this:
 
-::
+..  code-block:: bash
 
     vendor/bin/typo3 crawler:buildQueue 6 default --depth 2
 
