@@ -51,7 +51,6 @@ Libraries and scripts for crawling the TYPO3 page tree. Used for re-caching, re-
     Features/Index
     Troubleshooting/Index
     Links/Links
-    Aoe/Aoe
 
 ..  toctree::
     :hidden:
