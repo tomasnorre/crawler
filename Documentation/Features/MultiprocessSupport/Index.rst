@@ -1,4 +1,6 @@
-﻿.. include:: /Includes.rst.txt
+﻿..  include:: /Includes.rst.txt
+
+..  _multi-process:
 
 =====================
 Multi process support
@@ -15,7 +17,7 @@ crawling processes per minute. You'll be able to speed up the crawler quite a lo
 
 But choose your settings carefully as it puts loads on the server.
 
-.. figure:: /Images/crawler_settings_processLimit.png
-   :alt: Backend configuration: Processing
+..  figure:: /Images/crawler_settings_processLimit.png
+    :alt: Backend configuration: Processing
 
-   Backend configuration: Processing
+    Backend configuration: Processing

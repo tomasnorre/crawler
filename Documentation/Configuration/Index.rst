@@ -1,16 +1,18 @@
-﻿.. include:: /Includes.rst.txt
+﻿..  include:: /Includes.rst.txt
+
+..  _configuration:
 
 =============
 Configuration
 =============
 
-.. toctree::
-   :maxdepth: 5
-   :titlesonly:
-   :glob:
+..  toctree::
+    :maxdepth: 5
+    :titlesonly:
+    :glob:
 
-   ExtensionManagerConfiguration/Index
-   ConfigurationRecords/Index
-   PageTsconfigReference(txCrawlercrawlercfg)/Index
-   HttpAuthentication/Index
-   Examples/Index
+    ExtensionManagerConfiguration/Index
+    ConfigurationRecords/Index
+    PageTsconfigReference(txCrawlercrawlercfg)/Index
+    HttpAuthentication/Index
+    Examples/Index

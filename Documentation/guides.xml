@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<guides xmlns="https://www.phpdoc.org/guides" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://www.phpdoc.org/guides ../vendor/phpdocumentor/guides-cli/resources/schema/guides.xsd" links-are-relative="true">
+  <extension class="\T3Docs\Typo3DocsTheme\DependencyInjection\Typo3DocsThemeExtension"
+             project-repository="https://github.com/tomasnorre/crawler"
+             project-issues="https://github.com/tomasnorre/crawler/issues"
+             edit-on-github-branch="main"
+             edit-on-github="tomasnorre/crawler"
+             typo3-core-preferred="stable"
+             interlink-shortcode="tomasnorre/crawler"
+  />
+  <project
+      title="Crawler"
+      release="dev"
+      version="dev"
+      copyright="2002-2021 AOE GmbH, since 2021 Tomas Norre Mikkelsen"
+  />
+</guides>

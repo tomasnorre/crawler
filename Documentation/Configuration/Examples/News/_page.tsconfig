@@ -1,0 +1,9 @@
+tx_crawler.crawlerCfg.paramSets {
+    tx_news = &tx_news_pi1[controller]=News&tx_news_pi1[action]=detail&tx_news_pi1[news]=[_TABLE:tx_news_domain_model_news; _PID:58; _WHERE: hidden = 0]
+    tx_news {
+        pidsOnly = 57
+    }
+}
+
+# _PID:58 is the Folder where news records are stored.
+# pidSOnly = 57 is the detail-view PageId.

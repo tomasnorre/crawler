@@ -1,0 +1,6 @@
+services:
+  AOE\Crawler\EventListener\AfterUrlCrawledEventListener:
+    tags:
+      -   name: event.listener
+          identifier: 'ext-extension-key/AfterUrlCrawledEventListener'
+          event: AOE\Crawler\Event\AfterUrlCrawledEvent

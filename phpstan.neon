@@ -12,6 +12,7 @@ parameters:
     excludePaths:
         - Tests/Acceptance
         - Classes/CrawlStrategy/GuzzleExecutionStrategy.php
+        - Documentation
 
     inferPrivatePropertyTypeFromConstructor: true
 

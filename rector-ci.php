@@ -29,6 +29,7 @@ return RectorConfig::configure()
         __DIR__ . '/Classes/Domain/Model/Reason.php',
         __DIR__ . '/Tests/Functional/Api/CrawlerApiTest.php',
         __DIR__ . '/Tests/Acceptance',
+        __DIR__ . '/Documentation',
         Rector\DeadCode\Rector\If_\RemoveDeadInstanceOfRector::class => null,
         Rector\DeadCode\Rector\Assign\RemoveUnusedVariableAssignRector::class => [
             __DIR__ . '/Classes/Domain/Repository/QueueRepository.php'

@@ -1,0 +1,6 @@
+services:
+  AOE\Crawler\EventListener\InvokeQueueChangeEvent:
+    tags:
+      - name: event.listener
+        identifier: 'ext-extension-key/InvokeQueueChangeEventListener'
+        event: AOE\Crawler\Event\InvokeQueueChangeEvent

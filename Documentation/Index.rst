@@ -1,31 +1,31 @@
-﻿.. include:: /Includes.rst.txt
+﻿..  include:: /Includes.rst.txt
 
-.. _start:
+..  _start:
 
-=======
-Crawler
-=======
+======================
+Site Crawler Extension
+======================
 
 :Extension key:
-   crawler
+    crawler
 
 :Package name:
-   tomasnorre/crawler
+    tomasnorre/crawler
 
 :Version:
    |release|
 
 :Language:
-   en
+    en
 
 :Author:
-   Tomas Norre Mikkelsen
+    Tomas Norre Mikkelsen
 
 :Copyright:
-   2005-2021 AOE GmbH, since 2021 Tomas Norre Mikkelsen
+    2005-2021 AOE GmbH, since 2021 Tomas Norre Mikkelsen
 
 :License:
-   This document is published under the `Open Content License
+    This document is published under the `Open Content License
    <https://www.opencontent.org/openpub/>`_.
 
 :Rendered:
@@ -39,21 +39,20 @@ Libraries and scripts for crawling the TYPO3 page tree. Used for re-caching, re-
 
 **Table of Contents:**
 
-.. toctree::
-   :maxdepth: 2
-   :titlesonly:
+..  toctree::
+    :maxdepth: 2
+    :titlesonly:
 
-   Introduction/Index
-   Configuration/Index
-   ExecutingTheQueue/Index
-   Scheduler/Index
-   UseCases/Index
-   Features/Index
-   Troubleshooting/Index
-   Links/Links
-   Aoe/Aoe
+    Introduction/Index
+    Configuration/Index
+    ExecutingTheQueue/Index
+    Scheduler/Index
+    UseCases/Index
+    Features/Index
+    Troubleshooting/Index
+    Links/Links
 
-.. toctree::
-   :hidden:
+..  toctree::
+    :hidden:
 
-   Sitemap
+    Sitemap

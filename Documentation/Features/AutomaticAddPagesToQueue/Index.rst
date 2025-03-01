@@ -1,10 +1,14 @@
-.. include:: /Includes.rst.txt
+..  include:: /Includes.rst.txt
+
+..  _add-to-queue:
 
 ============================
 Automatic add pages to Queue
 ============================
 
-.. versionadded:: 9.1.0
+..  versionadded:: 9.1.0
+
+..  _add-to-queue-edit:
 
 Edit Pages
 ----------
@@ -19,6 +23,8 @@ process task, see :ref:`executing-the-queue-label`. This ensure that
 your cache or e.g. Search Index is always up to date and the end-users will see
 the most current content as soon as possible.
 
+..  _add-to-queue-cache:
+
 Clear Page Single Cache
 -----------------------
 
@@ -27,12 +33,12 @@ we have an additional feature for free. When you clear the page cache for a spec
 page then it will also be added automatically to the crawler queue. Again this will
 be processed during the next crawler process.
 
-.. figure:: /Images/backend_clear_cache.png
-   :alt: Clearing the page cache
+..  figure:: /Images/backend_clear_cache.png
+    :alt: Clearing the page cache
 
-   Clearing the page cache
+    Clearing the page cache
 
-.. figure:: /Images/backend_clear_cache_queue.png
-   :alt: Page is added to the crawler queue
+..  figure:: /Images/backend_clear_cache_queue.png
+    :alt: Page is added to the crawler queue
 
-   Page is added to the crawler queue
+    Page is added to the crawler queue

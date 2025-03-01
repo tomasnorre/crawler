@@ -1,0 +1,6 @@
+services:
+  MyVendor\MyExtension\BeforeQueueItemAddedEventListener:
+    tags:
+      -   name: event.listener
+          identifier: 'ext-extension-key/BeforeQueueItemAddedEventListener'
+          event: AOE\Crawler\Event\BeforeQueueItemAddedEvent

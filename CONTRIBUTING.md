@@ -9,6 +9,14 @@ When you have a PR, please run the following checks first.
 * `composer analyse`
     * Will run PHPStan and do a static code analysis, this is not adjust completely in build yet, but please try to avoid adding new violations. ;)
 
+### Writing documentation
+
+You can render the documentation in this extension with the command
+
+```
+make docs
+```
+
 #### Devbox
 
 If you don't have a setup already, where you can do development, bugfixing etc. for the crawler, don't worry.
