@@ -1,12 +1,15 @@
-﻿.. include:: /Includes.rst.txt
+﻿..  include:: /Includes.rst.txt
+..  _troubleshooting:
 
 ===============
 Troubleshooting
 ===============
 
-.. contents:: Table of Contents
-   :depth: 1
-   :local:
+..  contents:: Table of Contents
+    :depth: 1
+    :local:
+
+..  _troubleshooting-reading-data:
 
 Problem reading data in Crawler Queue
 =====================================
@@ -24,6 +27,8 @@ happen, but in case of it run:
     $ vendor/bin/typo3 crawler:flushQueue all
 
 
+..  _troubleshooting-direct-request:
+
 Make Direct Request doesn't work
 ================================
 
@@ -33,10 +38,11 @@ and it doesn't give you any result, or that the scheduler tasks stalls.
 It can be because of a faulty configured `TrustedHostPattern`, this can be
 changed in the :file:`LocalConfiguration.php`.
 
-.. code-block:: php
+..  code-block:: php
 
     $GLOBALS['TYPO3_CONF_VARS']['SYS']['trustedHostsPattern'] = '<your-pattern>';
 
+..  _troubleshooting-cli-all:
 
 Crawler want process all entries from command line
 ==================================================
@@ -47,8 +53,9 @@ call the crawler like:
 
 ::
 
-   php -d max_execution_time=512 vendor/bin/typo3 crawler:buildQueue
+    php -d max_execution_time=512 vendor/bin/typo3 crawler:buildQueue
 
+..  _troubleshooting-count-zero:
 
 Crawler Count is 0 (zero)
 =========================
@@ -63,13 +70,14 @@ done, if not you should perform this step.
 
 See related issue: `[BUG] Crawling Depth not respected #464 <https://github.com/tomasnorre/crawler/issues/464>`_
 
+..  _troubleshooting-update:
 
 Update from older versions
 ==========================
 
 If you update the extension from older versions you can run into following error:
 
-.. code-block:: text
+..  code-block:: text
 
     SQL error: 'Field 'sys_domain_base_url' doesn't have a default value'
 
@@ -79,6 +87,7 @@ have `TYPO3 Console <https://extensions.typo3.org/extension/typo3_console/>`_
 installed via command line command
 :bash:`vendor/bin/typo3cms database:updateschema`.
 
+..  _troubleshooting-php-path-not-correct:
 
 TYPO3 shows error if the PHP path is not correct
 ================================================
@@ -86,20 +95,22 @@ TYPO3 shows error if the PHP path is not correct
 In some cases you get an error, if the PHP path is not set correctly. It occures
 if you select the Site Crawler in Info-module.
 
-.. figure:: /Images/backend_info_php_error.png
-   :alt: Error message in Info-module
+..  figure:: /Images/backend_info_php_error.png
+    :alt: Error message in Info-module
 
-   Error message in Info-module
+    Error message in Info-module
 
 In this case you have to set the path to your PHP in the Extension configuration.
 
-.. figure:: /Images/backend_php_path_configuration.png
-   :alt: Correct PHP path settings
+..  figure:: /Images/backend_php_path_configuration.png
+    :alt: Correct PHP path settings
 
-   Correct PHP path settings in Extension configuration
+    Correct PHP path settings in Extension configuration
 
 Please be sure to add the correct path to your PHP. The path in this screenshot
 might be different to your PHP path.
+
+..  _troubleshooting-htmlspecialchars:
 
 Info Module throws htmlspecialchars() expects parameter 1 to be string
 ======================================================================
@@ -110,9 +121,12 @@ TYPO3 Core, as this is remove in TYPO3 11.
 
 I will not try to provide a fix for this, but only a workaround.
 
+..  _troubleshooting-htmlspecialchars-workaround:
+
 Workaround
 ----------
-   The problem appears when the Crawler Configuration and the Indexed_Search Configuration are stored on the same page. The workaround is then to move the Indexed_Search Configuration to a different page. I have not experience any side-effects on this change, but if you do so, please report them to me.
+
+The problem appears when the Crawler Configuration and the Indexed_Search Configuration are stored on the same page. The workaround is then to move the Indexed_Search Configuration to a different page. I have not experience any side-effects on this change, but if you do so, please report them to me.
 
 This workaround is for these two bugs:
 
@@ -126,6 +140,8 @@ https://github.com/TYPO3/TYPO3.CMS/blob/10.4/typo3/sysext/indexed_search/Classes
 Here a int value is submitted instead of a String. This is a change that goes more than 8 years back.
 So surprised that it never was a problem before.
 
+..  _troubleshooting-log-empty:
+
 Crawler Log shows "-" as result
 ===============================
 
@@ -135,6 +151,8 @@ not render the correct result. It will display the result in the Crawler Log as 
 
 Even though the page is correct crawler, the status is incorrect, which is of course not desired.
 
+..  _troubleshooting-log-empty-workaround:
+
 Workaround
 ----------
 
@@ -143,6 +161,8 @@ On solution can be to remove the `php8.0-uploadprogress` package from your serve
 
 If possible, better update it to 1.1.4 or higher, then the problem should be solved as well.
 
+..  _troubleshooting-baseVariants:
+
 Site config baseVariants not used
 =================================
 
@@ -150,17 +170,9 @@ An issue was reported for the Crawler, that the Site Config baseVariants was not
 https://github.com/tomasnorre/crawler/issues/851, it turned out that crawler had problems with `ApplicationContexts`
 set in `.htaccess` like in example.
 
-.. code-block:: text
+..  literalinclude:: _htaccess.txt
 
-    <IfModule mod_rewrite.c>
-       # Rules to set ApplicationContext based on hostname
-       RewriteCond %{HTTP_HOST} ^(.*)\.my\-site\.localhost$
-       RewriteRule .? - [E=TYPO3_CONTEXT:Development]
-       RewriteCond %{HTTP_HOST} ^(.*)\.mysite\.info$
-       RewriteRule .? - [E=TYPO3_CONTEXT:Production/Staging]
-       RewriteCond %{HTTP_HOST} ^(.*)\.my\-site\.info$
-       RewriteRule .? - [E=TYPO3_CONTEXT:Production]
-    </IfModule>
+..  _troubleshooting-baseVariants-workaround:
 
 Workaround
 ----------

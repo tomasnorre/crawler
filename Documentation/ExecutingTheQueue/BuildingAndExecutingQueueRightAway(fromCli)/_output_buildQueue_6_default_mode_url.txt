@@ -1,0 +1,10 @@
+$ bin/typo3 crawler:buildQueue 6 default --depth 2 --mode url
+https://crawler-devbox.ddev.site/content-examples/overview
+https://crawler-devbox.ddev.site/content-examples/text/rich-text
+https://crawler-devbox.ddev.site/content-examples/text/headers
+https://crawler-devbox.ddev.site/content-examples/text/bullet-list
+https://crawler-devbox.ddev.site/content-examples/text/text-with-teaser
+https://crawler-devbox.ddev.site/content-examples/text/text-and-icon
+https://crawler-devbox.ddev.site/content-examples/text/text-in-columns
+https://crawler-devbox.ddev.site/content-examples/text/list-group
+https://crawler-devbox.ddev.site/content-examples/text/panel

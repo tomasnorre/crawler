@@ -1,0 +1,6 @@
+services:
+  MyVendor\MyExtension\EventListener\AfterQueueItemAddedEventListener:
+    tags:
+      -   name: event.listener
+          identifier: 'ext-extension-key/AfterQueueItemAddedEventListener'
+          event: AOE\Crawler\Event\AfterQueueItemAddedEvent

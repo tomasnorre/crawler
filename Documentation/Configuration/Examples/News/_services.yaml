@@ -1,0 +1,6 @@
+services:
+  MyVendor\MyExtension\EventListeners\NewsDetailEventListener:
+    tags:
+      - name: event.listener
+        identifier: 'myNewsDetailListener'
+        event: GeorgRinger\News\Event\NewsDetailActionEvent

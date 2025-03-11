@@ -1,0 +1,9 @@
+<IfModule mod_rewrite.c>
+   # Rules to set ApplicationContext based on hostname
+   RewriteCond %{HTTP_HOST} ^(.*)\.my\-site\.localhost$
+   RewriteRule .? - [E=TYPO3_CONTEXT:Development]
+   RewriteCond %{HTTP_HOST} ^(.*)\.mysite\.info$
+   RewriteRule .? - [E=TYPO3_CONTEXT:Production/Staging]
+   RewriteCond %{HTTP_HOST} ^(.*)\.my\-site\.info$
+   RewriteRule .? - [E=TYPO3_CONTEXT:Production]
+</IfModule>

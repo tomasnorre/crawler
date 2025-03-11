@@ -1,16 +1,16 @@
-.. include:: /Includes.rst.txt
+..  include:: /Includes.rst.txt
 
-.. _links:
+..  _links:
 
 =====
 Links
 =====
 
 :TER:
-    	https://extensions.typo3.org/extension/crawler/
+    https://extensions.typo3.org/extension/crawler/
 
 :Bug Tracker:
-    	https://github.com/tomasnorre/crawler/issues
+    https://github.com/tomasnorre/crawler/issues
 
 :Git Repository:
-    	https://github.com/tomasnorre/crawler.git
+    https://github.com/tomasnorre/crawler.git

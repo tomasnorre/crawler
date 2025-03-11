@@ -1,0 +1,6 @@
+services:
+  AOE\Crawler\EventListener\ModifySkipPageEventListener:
+    tags:
+      -   name: event.listener
+          identifier: 'ext-extension-key/ModifySkipPageEventListener'
+          event: AOE\Crawler\Event\ModifySkipPageEvent

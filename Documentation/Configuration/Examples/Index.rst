@@ -1,12 +1,14 @@
-.. include:: /Includes.rst.txt
+..  include:: /Includes.rst.txt
+
+..  _examples:
 
 ========
 Examples
 ========
 
-.. toctree::
-   :maxdepth: 5
-   :titlesonly:
-   :glob:
+..  toctree::
+    :maxdepth: 5
+    :titlesonly:
+    :glob:
 
-   News/Index
+    News/Index

@@ -1,4 +1,6 @@
-﻿.. include:: /Includes.rst.txt
+﻿..  include:: /Includes.rst.txt
+
+..  _with-crown:
 
 =============================
 Executing queue with cron-job
@@ -12,7 +14,7 @@ This assumes you are running on Unix architecture of some sort. The
 crontab is often edited by :bash:`crontab -e` and you should insert a line
 like this:
 
-::
+..  code-block:: plaintext
 
    * * * * * vendor/bin/typo3 crawler:buildQueue <startpage> <configurationKeys> > /dev/null
 
@@ -20,21 +22,21 @@ This will run the script every minute. You should try to run the
 script on the command line first to make sure it runs without any
 errors. If it doesn't output anything it was successful.
 
-You will need to have a user called "\_cli\_" and you must have PHP installed
-as a CGI script as well in /usr/bin/.
+You will need to have a user called `_cli_` and you must have PHP installed
+as a CGI script as well in :path:`/usr/bin/`.
 
-The user "\_cli\_" is created by the framework on demand if it does not exist
+The user `_cli_` is created by the framework on demand if it does not exist
 at the first command line call.
 
-Make sure that the user "\_cli\_" has admin-rights.
+Make sure that the user `_cli_` has admin-rights.
 
 In the :guilabel:`CLI status` menu of the :guilabel:`Site Crawler` info module
 you can see the status:
 
-.. figure:: /Images/backend_processlist.png
-   :alt: Status page in the backend
+..  figure:: /Images/backend_processlist.png
+    :alt: Status page in the backend
 
-   Status page in the backend
+    Status page in the backend
 
 This is how it looks just after you ran the script. (You can also see
 the full path to the script in the bottom - this is the path to the
