@@ -124,7 +124,7 @@ jobs:
           - '8.1'
     steps:
       - name: Set up MariaDB ${{ matrix.mariadb }}
-        uses: getong/mariadb-action@v1.1
+        uses: getong/mariadb-action@v1.11
         with:
           mariadb version: ${{ matrix.mariadb }}
           mysql root password: 'root'
