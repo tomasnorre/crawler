@@ -112,3 +112,8 @@ services:
       tags:
         - name: event.listener
           identifier: 'tx-crawler-after-queue-item-added'
+
+    AOE\Crawler\EventListener\ShouldUseCachedPageDataIfAvailableEventListener:
+      tags:
+        - name: event.listener
+          identifier: 'tx-crawler-should-use-cached-page-data-if-available'
