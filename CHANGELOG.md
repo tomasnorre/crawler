@@ -1,10 +1,7 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 12.0.8-dev
-
-### Added
-
-### Changed
+## Crawler 12.0.8
+Crawler 12.0.8 was released on May 23rd, 2025
 
 ### Fixed
 * Ensure that correct typo3 binary is returned in non-composer installations
@@ -12,14 +9,6 @@
 * Don't wrap empty HTML in table-tag to ensure valid HTML
 * Fix crawling of mount pages
 * Fix indexing of cached pages when "disableFrontendIndexing" is active [@cweiske](https://github.com/cweiske)
-
-### Deprecated
-#### Classes
-#### Functions & Properties
-
-### Removed
-#### Classes
-#### Functions & Properties
 
 ## Crawler 12.0.7
 Crawler 12.0.7 was released on January 27th, 2025
