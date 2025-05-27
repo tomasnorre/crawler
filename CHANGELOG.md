@@ -7,6 +7,7 @@
 ### Changed
 
 ### Fixed
+* Fix usage of no_cache in CrawlerInitialization [@luisbecker-gh](https://github.com/luisbecker-gh)
 
 ### Deprecated
 #### Classes
