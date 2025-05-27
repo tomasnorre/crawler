@@ -25,6 +25,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\Cache\CacheInstruction;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
@@ -59,6 +60,7 @@ class CrawlerInitializationTest extends FunctionalTestCase
 
         $request = $this->prophesize(ServerRequestInterface::class);
         $request->getAttribute('tx_crawler')->willReturn($queueParameters);
+        $request->getAttribute('frontend.cache.instruction')->willReturn(new CacheInstruction());
 
         $handlerResponse = new Response();
         $handler = $this->prophesize(RequestHandlerInterface::class);
