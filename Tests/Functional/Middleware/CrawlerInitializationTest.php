@@ -24,6 +24,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Http\Response;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
@@ -59,6 +60,12 @@ class CrawlerInitializationTest extends FunctionalTestCase
 
         $request = $this->prophesize(ServerRequestInterface::class);
         $request->getAttribute('tx_crawler')->willReturn($queueParameters);
+        $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
+        if ($typo3Version->getMajorVersion() >= 13) {
+            $request->getAttribute('frontend.cache.instruction')->willReturn(
+                new \TYPO3\CMS\Frontend\Cache\CacheInstruction()
+            );
+        }
 
         $handlerResponse = new Response();
         $handler = $this->prophesize(RequestHandlerInterface::class);
