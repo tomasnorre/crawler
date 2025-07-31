@@ -8,6 +8,7 @@
 
 ### Fixed
 * Fix usage of no_cache in CrawlerInitialization [@luisbecker-gh](https://github.com/luisbecker-gh)
+* Ensure that pageRow['uid'] is set or return with skipMessage [@tomasnorer-gh](https://github.com/tomasnorre)
 
 ### Deprecated
 #### Classes
