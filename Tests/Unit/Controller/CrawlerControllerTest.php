@@ -107,23 +107,19 @@ class CrawlerControllerTest extends UnitTestCase
     ): void {
         $mockedPageService = $this->createPartialMock(PageService::class, ['checkIfPageShouldBeSkipped']);
         if ($checkIfPageSkipped) {
-            $mockedPageService->expects($this->any())->method('checkIfPageShouldBeSkipped')->will(
-                $this->returnValue($skipMessage)
+            $mockedPageService->expects($this->any())->method('checkIfPageShouldBeSkipped')->willReturn(
+                $skipMessage
             );
         } else {
-            $mockedPageService->expects($this->any())->method('checkIfPageShouldBeSkipped')->will(
-                $this->returnValue($checkIfPageSkipped)
+            $mockedPageService->expects($this->any())->method('checkIfPageShouldBeSkipped')->willReturn(
+                $checkIfPageSkipped
             );
         }
 
         /** @var MockObject|CrawlerController $crawlerController */
         $crawlerController = $this->createPartialMock(CrawlerController::class, ['getPageService', 'getUrlsForPageId']);
-        $crawlerController->expects($this->any())->method('getPageService')->will(
-            $this->returnValue($mockedPageService)
-        );
-        $crawlerController->expects($this->any())->method('getUrlsForPageId')->will(
-            $this->returnValue($getUrlsForPages)
-        );
+        $crawlerController->expects($this->any())->method('getPageService')->willReturn($mockedPageService);
+        $crawlerController->expects($this->any())->method('getUrlsForPageId')->willReturn($getUrlsForPages);
 
         self::assertEquals($expected, $crawlerController->getUrlsForPageRow($pageRow, $skipMessage));
     }
@@ -187,6 +183,13 @@ class CrawlerControllerTest extends UnitTestCase
                 'uid' => 'string',
             ],
             'skipMessage' => 'PageUid "string" was not an integer',
+            'expected' => [],
+        ];
+        yield 'PageRow-array does not contain uid' => [
+            'checkIfPageSkipped' => true,
+            'getUrlsForPages' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
+            'pageRow' => [],
+            'skipMessage' => 'pagRow[\'uid\'] is missing',
             'expected' => [],
         ];
     }
