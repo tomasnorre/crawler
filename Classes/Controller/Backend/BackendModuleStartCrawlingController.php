@@ -235,7 +235,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
      */
     private function selectorBox($optArray, $name, string|array|null $value, bool $multiple): string
     {
-        if (!is_string($value) || !is_array($value)) {
+        if (!is_string($value) && !is_array($value)) {
             $value = '';
         }
 
