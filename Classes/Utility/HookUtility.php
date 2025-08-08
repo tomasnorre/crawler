@@ -20,8 +20,6 @@ namespace AOE\Crawler\Utility;
  */
 
 use AOE\Crawler\Hooks\ProcessCleanUpHook;
-use Psr\Http\Message\ServerRequestInterface;
-use TYPO3\CMS\Core\Http\ApplicationType;
 
 /**
  * @codeCoverageIgnore
@@ -44,17 +42,6 @@ class HookUtility
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['refresh_hooks'][] =
             ProcessCleanUpHook::class;
 
-        // Env-dependent
-        if (($GLOBALS['TYPO3_REQUEST'] ?? null) instanceof ServerRequestInterface
-            && ApplicationType::fromRequest($GLOBALS['TYPO3_REQUEST'])->isBackend()
-        ) {
-            self::registerBackendHooks();
-        }
-    }
-
-    private static function registerBackendHooks(): void
-    {
-        // DataHandler clear page cache pre-processing
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['clearPageCacheEval'][] =
             "AOE\Crawler\Hooks\DataHandlerHook->addFlushedPagesToCrawlerQueue";
     }
