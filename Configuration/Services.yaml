@@ -80,6 +80,11 @@ services:
             $sleeper: '@AOE\Crawler\Helper\Sleeper\SystemSleeper'
         public: true
 
+    AOE\Crawler\Service\QueueService:
+        arguments:
+            $crawlerController: '@AOE\Crawler\Controller\CrawlerController'
+        public: true
+
     AOE\Crawler\QueueExecutor:
         arguments:
             $crawlStrategyFactory: '@AOE\Crawler\CrawlStrategy\CrawlStrategyFactory'
