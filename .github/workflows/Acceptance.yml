@@ -43,7 +43,7 @@ jobs:
           php -v
           composer --version
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: ddev/github-action-setup-ddev@v1
         with:
           ddevDir: ".devbox"
@@ -119,7 +119,7 @@ jobs:
         shell: bash
         run: echo "BRANCH_NAME=$(echo ${GITHUB_HEAD_REF})" >> $GITHUB_ENV
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: ddev/github-action-setup-ddev@v1
         with:
           ddevDir: ".devbox"
