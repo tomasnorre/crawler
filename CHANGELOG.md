@@ -8,6 +8,7 @@
 
 ### Fixed
 * Fix usage of no_cache in CrawlerInitialization [@luisbecker-gh](https://github.com/luisbecker-gh)
+* Ensure that pages are added to queue on clear page cache [@tomasnorre](https://github.com/tomasnorre)
 
 ### Deprecated
 #### Classes

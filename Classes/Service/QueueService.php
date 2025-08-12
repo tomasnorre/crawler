@@ -28,20 +28,16 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class QueueService
 {
-    private ?\AOE\Crawler\Controller\CrawlerController $crawlerController = null;
-
-    public function injectCrawlerController(CrawlerController $crawlerController): void
-    {
-        $this->crawlerController = $crawlerController;
-        $this->crawlerController->setID = GeneralUtility::md5int(microtime());
+    public function __construct(
+        private readonly CrawlerController $crawlerController
+    ) {
+        if ($this->crawlerController->setID <= 0) {
+            $this->crawlerController->setID = GeneralUtility::md5int(microtime());
+        }
     }
 
     public function addPageToQueue(int $pageUid, int $time = 0): void
     {
-        if ($this->crawlerController === null) {
-            return;
-        }
-
         $pageData = GeneralUtility::makeInstance(PageRepository::class)->getPage($pageUid, true);
         $configurations = $this->crawlerController->getUrlsForPageRow($pageData);
         // Currently this is only used from the DataHandlerHook, and we don't know of any allowed/disallowed configurations,
