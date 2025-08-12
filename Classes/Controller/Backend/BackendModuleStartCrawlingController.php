@@ -242,14 +242,10 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
         $options = [];
         foreach ($optArray as $key => $val) {
             $selected = (
-                    !$multiple && is_string($value) && !strcmp($value, (string) $key)
-                ) || (
-                    $multiple && in_array(
-                        $key,
-                        (array) $value,
-                        true
-                    )
-                );
+                !$multiple && is_string($value) && !strcmp($value, (string) $key)
+            ) || (
+                $multiple && in_array($key, (array) $value, true)
+            );
             $options[] = '
                 <option value="' . $key . '" ' . ($selected ? ' selected="selected"' : '') . '>' . htmlspecialchars(
                 (string) $val,
