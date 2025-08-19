@@ -168,6 +168,11 @@ class CrawlerController implements LoggerAwareInterface
      */
     public function getUrlsForPageRow(array $pageRow, string &$skipMessage = ''): array
     {
+        if (!isset($pageRow['uid'])) {
+            $skipMessage = "pageRow['uid'] is missing";
+            return [];
+        }
+
         $pageRowUid = intval($pageRow['uid']);
         if (!$pageRowUid) {
             $skipMessage = 'PageUid "' . $pageRow['uid'] . '" was not an integer';
