@@ -10,7 +10,7 @@ on:
 
 jobs:
   Acceptance-CodeCeption:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
@@ -107,7 +107,7 @@ jobs:
           - '8.3'
           - '8.4'
     timeout-minutes: 60
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Get branch name (merge)
         if: github.event_name != 'pull_request'
