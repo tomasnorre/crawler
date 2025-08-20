@@ -4,6 +4,8 @@
 
 ### Added
 
+* Document setup for indexed_search + crawler [@cweiske](https://github.com/cweiske)
+
 ### Changed
 
 ### Fixed
