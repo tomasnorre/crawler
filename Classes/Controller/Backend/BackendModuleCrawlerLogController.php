@@ -20,6 +20,7 @@ namespace AOE\Crawler\Controller\Backend;
  */
 
 use AOE\Crawler\Controller\Backend\Helper\ResultHandler;
+use AOE\Crawler\Controller\Backend\Helper\UrlBuilder;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\Domain\Repository\QueueRepository;
@@ -37,6 +38,7 @@ use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\DebugUtility;
@@ -232,6 +234,7 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
         ];
 
         return $this->moduleTemplate->assignMultiple([
+            'backendModuleUrl' => $this->getBackendModuleUrl(),
             'actionUrl' => '',
             'queueId' => $this->queueId,
             'setId' => $this->showSetId,
@@ -333,5 +336,10 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
         echo $csvString;
 
         exit;
+    }
+
+    private function getBackendModuleUrl(): Uri
+    {
+        return GeneralUtility::makeInstance(UrlBuilder::class)->getBackendModuleUrl([], self::BACKEND_MODULE);
     }
 }
