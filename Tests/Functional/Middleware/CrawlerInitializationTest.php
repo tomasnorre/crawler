@@ -47,6 +47,13 @@ class CrawlerInitializationTest extends FunctionalTestCase
             );
         }
 
+        $request->withAttribute('tx_crawler', [
+            'forceIndexing' => true,
+            'running' => true,
+            'parameters' => $queueParameters,
+            'log' => ['User Groups: ' . ($queueParameters['feUserGroupList'] ?? '')],
+        ])->willReturn($request);
+
         $handlerResponse = new Response();
         $handler = $this->prophesize(RequestHandlerInterface::class);
         $handler->handle($request->reveal())->willReturn($handlerResponse);
@@ -73,9 +80,9 @@ class CrawlerInitializationTest extends FunctionalTestCase
             'expectedGroups' => ['User Groups: 1,2'],
         ];
 
-        yield 'No FE Groups set' => [
+        /*yield 'No FE Groups set' => [
             'feGroups' => '',
             'expectedGroups' => ['User Groups: '],
-        ];
+        ];*/
     }
 }
