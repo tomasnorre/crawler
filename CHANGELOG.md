@@ -1,12 +1,10 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 12.0.9-dev
+## Crawler 12.0.9
+Crawler 12.0.9 was released on August 21st, 2025
 
 ### Added
-
 * Document setup for indexed_search + crawler [@cweiske](https://github.com/cweiske)
-
-### Changed
 
 ### Fixed
 * Fix usage of no_cache in CrawlerInitialization [@luisbecker-gh](https://github.com/luisbecker-gh)
@@ -14,14 +12,6 @@
 * Ensure that selections are kept in Crawler Start module, when Updating URLs [@tomasnorre](https://github.com/tomasnorre)
 * Ensure that pageRow['uid'] is set or return with skipMessage [@tomasnorre](https://github.com/tomasnorre)
 * Back link in Crawler Log after visiting details about Queue Item [@tomasnorre](https://github.com/tomasnorre)
-
-### Deprecated
-#### Classes
-#### Functions & Properties
-
-### Removed
-#### Classes
-#### Functions & Properties
 
 ## Crawler 12.0.8
 Crawler 12.0.8 was released on May 23rd, 2025
