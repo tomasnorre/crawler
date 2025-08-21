@@ -48,6 +48,7 @@ class GuzzleExecutionStrategy implements LoggerAwareInterface, CrawlStrategyInte
 
         $options = [
             'headers' => $reqHeaders,
+            'connect_timeout' => 5.0,
         ];
         if ($url->getUserInfo()) {
             $options['auth'] = explode(':', $url->getUserInfo());

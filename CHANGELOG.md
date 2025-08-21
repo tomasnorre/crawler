@@ -7,6 +7,7 @@
 ### Changed
 
 ### Fixed
+* Set guzzle connect timeout to 5 seconds [@cweiske](https://github.com/cweiske)
 
 ### Deprecated
 #### Classes
