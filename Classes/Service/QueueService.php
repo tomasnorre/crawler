@@ -49,27 +49,26 @@ class QueueService
         $downloadUrls = [];
         $duplicateTrack = [];
 
-        if (is_array($configurations)) {
-            foreach ($configurations as $configuration) {
-                //enable inserting of entries
-                $this->crawlerController->registerQueueEntriesInternallyOnly = false;
-                $this->crawlerController->urlListFromUrlArray(
-                    $configuration,
-                    $pageData,
-                    $time,
-                    300,
-                    true,
-                    false,
-                    $duplicateTrack,
-                    $downloadUrls,
-                    array_keys($this->getCrawlerProcInstructions())
-                );
+        foreach ($configurations as $configuration) {
+            //enable inserting of entries
+            $this->crawlerController->registerQueueEntriesInternallyOnly = false;
+            $this->crawlerController->urlListFromUrlArray(
+                $configuration,
+                $pageData,
+                $time,
+                300,
+                true,
+                false,
+                $duplicateTrack,
+                $downloadUrls,
+                array_keys($this->getCrawlerProcInstructions())
+            );
 
-                //reset the queue because the entries have been written to the db
-                unset($this->crawlerController->queueEntries);
-            }
+            //reset the queue because the entries have been written to the db
+            unset($this->crawlerController->queueEntries);
         }
     }
+
 
     /**
      * Reads the registered processingInstructions of the crawler

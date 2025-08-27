@@ -310,12 +310,6 @@ parameters:
 			path: Classes/Service/ConfigurationService.php
 
 		-
-			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: Classes/Service/QueueService.php
-
-		-
 			message: '#^Parameter \#1 \$row of static method TYPO3\\CMS\\Core\\Utility\\CsvUtility\:\:csvValues\(\) expects array\<string\>, list\<int\|string\> given\.$#'
 			identifier: argument.type
 			count: 1
