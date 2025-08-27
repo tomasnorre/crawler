@@ -2,6 +2,11 @@
 
 ## Crawler 11.0.12-dev
 
+### Added
+* Extract error information in SubProcess crawl strategy [@cweiske](https://github.com/cweiske)
+
+### Changed
+
 ### Fixed
 * "Scheduled" and "Run-time" column values in backend log [cweiske](https://github.com/cweiske)
 

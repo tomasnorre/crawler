@@ -98,6 +98,24 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
         if ($content === null) {
             return false;
         }
+        if (str_contains($content, 'typo3-error-page')) {
+            preg_match('#class="typo3-error-page-statuscode">(.+?)</#s', $content, $matchStatus);
+            preg_match('#class="typo3-error-page-title">(.+?)</#s', $content, $matchTitle);
+            preg_match('#class="typo3-error-page-message">(.+?)</#s', $content, $matchMessage);
+            $message = trim($matchStatus[1] ?? '')
+                . ' ' . trim($matchTitle[1] ?? '')
+                . ' - ' . trim($matchMessage[1] ?? '');
+            $this->logger->debug(
+                sprintf('Error while opening "%s" - %s', $url, $message),
+                [
+                    'crawlerId' => $crawlerId,
+                ]
+            );
+            return [
+                'errorlog' => [$message],
+                'content' => $content,
+            ];
+        }
 
         return ['content' => $content];
     }
