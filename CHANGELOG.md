@@ -3,6 +3,7 @@
 ## Crawler 12.0.10-dev
 
 ### Added
+* Extract error information in SubProcess crawl strategy [@cweiske](https://github.com/cweiske)
 
 ### Changed
 
