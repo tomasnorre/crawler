@@ -69,7 +69,6 @@ class QueueService
         }
     }
 
-
     /**
      * Reads the registered processingInstructions of the crawler
      */
