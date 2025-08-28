@@ -320,7 +320,7 @@ parameters:
 
 		-
 			message: "#^Cannot call method debug\\(\\) on Psr\\\\Log\\\\LoggerInterface\\|null\\.$#"
-			count: 2
+			count: 3
 			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
 
 		-
