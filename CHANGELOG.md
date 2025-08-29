@@ -9,6 +9,7 @@
 
 ### Fixed
 * "Scheduled" and "Run-time" column values in backend log [cweiske](https://github.com/cweiske)
+* Clear page cache before crawling [cweiske](https://github.com/cweiske)
 
 ## Crawler 11.0.11
 
