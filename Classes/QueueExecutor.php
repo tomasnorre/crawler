@@ -25,6 +25,7 @@ use AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy;
 use AOE\Crawler\CrawlStrategy\CrawlStrategy;
 use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
 use AOE\Crawler\Event\AfterUrlCrawledEvent;
+use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\SingletonInterface;
@@ -77,6 +78,11 @@ class QueueExecutor implements SingletonInterface
         } else {
             // Regular FE request
             $crawlerId = $this->generateCrawlerIdFromQueueItem($queueItem);
+
+            if (in_array('tx_indexedsearch_reindex', $parameters['procInstructions'])) {
+                GeneralUtility::makeInstance(CacheManager::class)
+                    ->flushCachesInGroupByTags('pages', ['pageId_' . $queueItem['page_id']]);
+            }
 
             $url = new Uri($parameters['url']);
             $result = $this->crawlStrategy->fetchUrlContents($url, $crawlerId);
