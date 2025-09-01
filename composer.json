@@ -142,7 +142,6 @@
             "rm -rf Build",
             "rm -rf Tests/",
             "rm -f .gitignore",
-            "rm -f .scrutinizer.yml",
             "rm -f infection.json.dist",
             "rm -f phpstan.neon",
             "rm -f phpstan-baseline.neon",
