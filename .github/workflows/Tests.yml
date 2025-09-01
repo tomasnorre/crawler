@@ -10,7 +10,7 @@ on:
 
 jobs:
   Unit:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
 
     strategy:
       fail-fast: false
@@ -97,10 +97,3 @@ jobs:
           typo3DatabaseName: typo3
           typo3DatabasePassword: root
           typo3DatabaseUsername: root
-
-      - name: Upload coverage results to Scrutinizer
-        if: matrix.typo3 == '^10.4' && matrix.php == '7.4'
-        run: |
-          wget https://scrutinizer-ci.com/ocular.phar
-          php ocular.phar code-coverage:upload --format=php-clover unittest-coverage.clover
-          php ocular.phar code-coverage:upload --format=php-clover functional-coverage.clover

@@ -3,7 +3,6 @@
 [![Total Downloads](https://poser.pugx.org/tomasnorre/crawler/downloads)](https://packagist.org/packages/tomasnorre/crawler)
 [![License](https://poser.pugx.org/tomasnorre/crawler/license)](https://packagist.org/packages/tomasnorre/crawler)
 ![Tests](https://github.com/tomasnorre/crawler/workflows/Tests/badge.svg)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/tomasnorre/crawler/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/tomasnorre/crawler/?branch=main)
 [![Code Coverage](https://scrutinizer-ci.com/g/tomasnorre/crawler/badges/coverage.png?b=main)](https://scrutinizer-ci.com/g/tomasnorre/crawler/?branch=main)
 [![Coverage Status](https://coveralls.io/repos/github/tomasnorre/crawler/badge.svg)](https://coveralls.io/github/tomasnorre/crawler)
 [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Ftomasnorre%2Fcrawler%2Fmain)](https://dashboard.stryker-mutator.io/reports/github.com/tomasnorre/crawler/main)
