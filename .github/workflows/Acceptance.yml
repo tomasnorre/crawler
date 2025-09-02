@@ -51,6 +51,7 @@ jobs:
       - name: Patch composer.json for forked PR
         if: github.event.pull_request.head.repo.full_name != github.repository
         run: |
+          cd .devbox
           composer config repositories.crawler-pr '{"type": "vcs", "url": "https://github.com/${{ github.event.pull_request.head.repo.full_name }}.git"}'
 
       - name: CodeCeption
@@ -132,6 +133,7 @@ jobs:
       - name: Patch composer.json for forked PR
         if: github.event.pull_request.head.repo.full_name != github.repository
         run: |
+          cd .devbox
           composer config repositories.crawler-pr '{"type": "vcs", "url": "https://github.com/${{ github.event.pull_request.head.repo.full_name }}.git"}'
 
       - name: CodeCeption
