@@ -40,7 +40,7 @@ class GuzzleExecutionStrategy implements LoggerAwareInterface, CrawlStrategyInte
     /**
      * Sets up a CURL / Guzzle Request for fetching the request.
      *
-     * @return array|bool|mixed
+     * @return array|false See CrawlStrategyInterface::fetchUrlContents()
      */
     public function fetchUrlContents(UriInterface $url, string $crawlerId)
     {
