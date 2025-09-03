@@ -49,7 +49,9 @@ jobs:
         with:
           ddevDir: ".devbox"
       - name: Patch composer.json for forked PR
-        if: github.event.pull_request.head.repo.full_name != github.repository
+        if: >
+          github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.full_name != github.repository
         run: |
           cd .devbox
           composer config repositories.crawler-pr '{"type": "vcs", "url": "https://github.com/${{ github.event.pull_request.head.repo.full_name }}.git"}'
@@ -131,7 +133,9 @@ jobs:
         with:
           ddevDir: ".devbox"
       - name: Patch composer.json for forked PR
-        if: github.event.pull_request.head.repo.full_name != github.repository
+        if: >
+          github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.full_name != github.repository
         run: |
           cd .devbox
           composer config repositories.crawler-pr '{"type": "vcs", "url": "https://github.com/${{ github.event.pull_request.head.repo.full_name }}.git"}'
