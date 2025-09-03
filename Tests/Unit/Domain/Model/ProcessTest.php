@@ -100,8 +100,8 @@ class ProcessTest extends UnitTestCase
     {
         /** @var MockObject|Process $processMock */
         $processMock = self::getAccessibleMock(Process::class, ['isActive', 'getProgress'], [], '', false);
-        $processMock->expects($this->any())->method('isActive')->will($this->returnValue((bool) $active));
-        $processMock->expects($this->any())->method('getProgress')->will($this->returnValue($processes));
+        $processMock->expects($this->any())->method('isActive')->willReturn((bool) $active);
+        $processMock->expects($this->any())->method('getProgress')->willReturn((float) $processes);
 
         self::assertEquals($expectedState, $processMock->getState());
     }
@@ -121,12 +121,8 @@ class ProcessTest extends UnitTestCase
             '',
             false
         );
-        $processMock->expects($this->any())->method('getAssignedItemsCount')->will(
-            $this->returnValue($countItemsAssigned)
-        );
-        $processMock->expects($this->any())->method('getAmountOfItemsProcessed')->will(
-            $this->returnValue($countItemsProcessed)
-        );
+        $processMock->expects($this->any())->method('getAssignedItemsCount')->willReturn($countItemsAssigned);
+        $processMock->expects($this->any())->method('getAmountOfItemsProcessed')->willReturn($countItemsProcessed);
 
         self::assertEquals($expectedProgress, $processMock->getProgress());
     }
@@ -202,11 +198,11 @@ class ProcessTest extends UnitTestCase
             '',
             false
         );
-        $queueRepositoryMock->expects($this->any())->method('findOldestEntryForProcess')->will(
-            $this->returnValue($getTimeForLastItem)
+        $queueRepositoryMock->expects($this->any())->method('findOldestEntryForProcess')->willReturn(
+            $getTimeForLastItem
         );
-        $queueRepositoryMock->expects($this->any())->method('findYoungestEntryForProcess')->will(
-            $this->returnValue($getTimeForFirstItem)
+        $queueRepositoryMock->expects($this->any())->method('findYoungestEntryForProcess')->willReturn(
+            $getTimeForFirstItem
         );
 
         $this->subject->_setProperty('queueRepository', $queueRepositoryMock);
