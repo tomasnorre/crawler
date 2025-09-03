@@ -26,17 +26,5 @@ use Psr\Http\Message\UriInterface;
  */
 interface CrawlStrategyInterface
 {
-    /**
-     * Fetch the given URL and return its textual response
-     *
-     * @return array|false "false" on errors without explanation.
-     *                     Array may contain the following optional keys:
-     *                     - errorlog: array of string error messages
-     *                     - content: HTML content (string)
-     *                     - running: bool
-     *                     - parameters: array
-     *                     - log: array of strings
-     *                     - vars: array
-     */
     public function fetchUrlContents(UriInterface $url, string $crawlerId);
 }

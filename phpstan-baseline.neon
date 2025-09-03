@@ -205,6 +205,12 @@ parameters:
 			path: Classes/CrawlStrategy/CrawlStrategyFactory.php
 
 		-
+			message: '#^Method AOE\\Crawler\\CrawlStrategy\\CrawlStrategyInterface\:\:fetchUrlContents\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: Classes/CrawlStrategy/CrawlStrategyInterface.php
+
+		-
 			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1

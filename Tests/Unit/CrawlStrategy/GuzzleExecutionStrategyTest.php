@@ -81,7 +81,7 @@ class GuzzleExecutionStrategyTest extends UnitTestCase
 
         self::assertStringContainsString(
             'cURL error 6: Could not resolve host: not-important.tld (see https://curl.haxx.se/libcurl/c/libcurl-errors.html)',
-            $guzzleExecutionStrategy->fetchUrlContents($url, $crawlerId)['errorlog'][0]
+            $guzzleExecutionStrategy->fetchUrlContents($url, $crawlerId)
         );
     }
 }

@@ -40,7 +40,7 @@ class GuzzleExecutionStrategy implements LoggerAwareInterface, CrawlStrategyInte
     /**
      * Sets up a CURL / Guzzle Request for fetching the request.
      *
-     * @return array|false See CrawlStrategyInterface::fetchUrlContents()
+     * @return bool|mixed
      */
     public function fetchUrlContents(UriInterface $url, string $crawlerId)
     {
@@ -69,9 +69,7 @@ class GuzzleExecutionStrategy implements LoggerAwareInterface, CrawlStrategyInte
                     'crawlerId' => $crawlerId,
                 ]
             );
-            return [
-                'errorlog' => [$message],
-            ];
+            return $message;
         } catch (ConnectException $e) {
             $message = $e->getCode() . chr(32) . $e->getMessage();
 
@@ -81,9 +79,7 @@ class GuzzleExecutionStrategy implements LoggerAwareInterface, CrawlStrategyInte
                     'crawlerId' => $crawlerId,
                 ]
             );
-            return [
-                'errorlog' => [$message],
-            ];
+            return $message;
         }
     }
 

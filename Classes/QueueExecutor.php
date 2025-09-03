@@ -49,11 +49,7 @@ class QueueExecutor implements SingletonInterface
      * Takes a queue record and fetches the contents of the URL.
      * In the future, updating the queue item & additional signal/slot/events should also happen in here.
      *
-     * @return array|false|string Possible return values:
-     *         - "false" for unexplained errors
-     *         - string "ERROR" when queueItem parameters could not be parsed
-     *         - array with single key 'content' that contains the json_encoded crawl results.
-     *           See CrawlStrategyInterface::fetchUrlContents() for its structure.
+     * @return array|bool|mixed|string
      */
     public function executeQueueItem(array $queueItem, CrawlerController $crawlerController)
     {

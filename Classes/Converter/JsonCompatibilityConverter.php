@@ -42,22 +42,27 @@ class JsonCompatibilityConverter
         try {
             $decoded = json_decode($dataString, true, 512, JSON_THROW_ON_ERROR);
         } catch (\JsonException) {
-            //no json, fallback to unserialize()
-            try {
-                $decoded = unserialize($dataString, [
-                    'allowed_classes' => false,
-                ]);
-            } catch (\Throwable) {
-                return false;
-            }
+            // Do nothing as we want to continue with unserialize as a test.
         }
 
         if (is_array($decoded)) {
             return $decoded;
         }
 
-        if (is_object($decoded)) {
-            throw new \RuntimeException('Objects are not allowed: ' . var_export($decoded, true), 1_593_758_307);
+        try {
+            $deserialized = unserialize($dataString, [
+                'allowed_classes' => false,
+            ]);
+        } catch (\Throwable) {
+            return false;
+        }
+
+        if (is_object($deserialized)) {
+            throw new \RuntimeException('Objects are not allowed: ' . var_export($deserialized, true), 1_593_758_307);
+        }
+
+        if (is_array($deserialized)) {
+            return $deserialized;
         }
 
         return false;

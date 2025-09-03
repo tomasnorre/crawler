@@ -44,7 +44,7 @@ class ProcessServiceTest extends UnitTestCase
         $mockedProcessRepository
             ->expects($this->exactly(2))
             ->method('countNotTimeouted')
-            ->willReturn(1, 2);
+            ->will($this->onConsecutiveCalls(1, 2));
 
         $processService = $this->getAccessibleMock(
             ProcessService::class,
@@ -69,7 +69,7 @@ class ProcessServiceTest extends UnitTestCase
         $mockedProcessRepository
             ->expects($this->exactly(11))
             ->method('countNotTimeouted')
-            ->willReturn(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+            ->will($this->onConsecutiveCalls(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1));
 
         $processService = $this->getAccessibleMock(
             ProcessService::class,

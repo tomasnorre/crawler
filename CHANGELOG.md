@@ -9,7 +9,6 @@
 
 ### Fixed
 * Set guzzle connect timeout to 5 seconds [@cweiske](https://github.com/cweiske)
-* Prevent warning when guzzle crawl requests return errors [@cweiske](https://github.com/cweiske)
 
 ### Deprecated
 #### Classes
