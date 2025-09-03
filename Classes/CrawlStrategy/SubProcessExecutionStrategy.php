@@ -50,7 +50,7 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
     /**
      * Fetches a URL by calling a shell script.
      *
-     * @return array|bool|mixed
+     * @return array|false See CrawlStrategyInterface::fetchUrlContents()
      */
     public function fetchUrlContents(UriInterface $url, string $crawlerId)
     {
