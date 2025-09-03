@@ -180,3 +180,13 @@ Workaround
 this problem isn't solved, but it can be bypassed by using the `helhum/dotenv-connector`
 https://github.com/helhum/dotenv-connector
 
+
+.. _troubleshooting-header
+
+X-T3Crawler-Meta header missing
+===============================
+When the crawler log reports "Response has no X-T3Crawler-Meta header",
+then a firewall probably filters incoming or outgoing HTTP headers.
+
+Crawler sends a `X-T3Crawler` header to TYPO3 and expects a `X-T3Crawler-Meta`
+in the response. If those are removed in transit, crawler will not work.

@@ -43,9 +43,13 @@ class GuzzleExecutionStrategyTest extends UnitTestCase
         parent::setUp();
         $this->guzzleExecutionStrategy = $this->createPartialMock(GuzzleExecutionStrategy::class, ['getResponse']);
 
-        $response = $this->createPartialMock(Response::class, ['getHeaderLine']);
+        $response = $this->createPartialMock(Response::class, ['getHeaderLine', 'getStatusCode', 'hasHeader']);
+        $response->method('getStatusCode')
+            ->willReturn(200);
         $response->method('getHeaderLine')
             ->willReturn(serialize('Crawler extension for TYPO3'));
+        $response->method('hasHeader')
+            ->willReturn(true);
 
         $this->guzzleExecutionStrategy
             ->method('getResponse')
@@ -61,6 +65,36 @@ class GuzzleExecutionStrategyTest extends UnitTestCase
         self::assertStringContainsString(
             'Crawler extension for TYPO3',
             $this->guzzleExecutionStrategy->fetchUrlContents($url, $crawlerId)
+        );
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function fetchUrlContentsNoHeader(): void
+    {
+        $this->guzzleExecutionStrategy = $this->createPartialMock(GuzzleExecutionStrategy::class, ['getResponse']);
+
+        $response = $this->createPartialMock(Response::class, ['getHeaderLine', 'getStatusCode', 'hasHeader']);
+        $response->method('getStatusCode')
+            ->willReturn(200);
+        $response->method('hasHeader')
+            ->willReturn(false);
+
+        $this->guzzleExecutionStrategy
+            ->method('getResponse')
+            ->willReturn($response);
+
+        $crawlerId = sha1('this-is-testing');
+        $url = new Uri('https://not-important.tld');
+
+        $response = $this->guzzleExecutionStrategy->fetchUrlContents($url, $crawlerId);
+        $this->assertEquals(
+            [
+                'errorlog' => ['Response has no X-T3Crawler-Meta header'],
+                'vars' => [
+                    'status' => '200 ',
+                ],
+            ],
+            $response
         );
     }
 

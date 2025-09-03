@@ -4,6 +4,7 @@
 
 ### Added
 * Extract error information in SubProcess crawl strategy [@cweiske](https://github.com/cweiske)
+* Expose error when crawl response has not X-T3Crawler-Meta header [@cweiske](https://github.com/cweiske)
 
 ### Changed
 
