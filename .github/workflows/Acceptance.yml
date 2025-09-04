@@ -162,7 +162,7 @@ jobs:
           docker ps
           ./wait-for-it.sh -t 60 127.0.0.1:80
           ./wait-for-it.sh -t 60 127.0.0.1:443
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: lts/*
       - name: Install dependencies
