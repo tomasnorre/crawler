@@ -123,9 +123,9 @@ class UrlService
         foreach ($urls as $url) {
             foreach ($valueSet as $val) {
                 if (count($newUrls) < $maxUrlToCompile) {
-                    $newUrls[] = $url . (strcmp((string) $val, '') ? '&' . rawurlencode($varName) . '=' . rawurlencode(
-                        (string) $val
-                    ) : '');
+                    $newUrls[] = $url . (strcmp((string) $val, '') ? '&' . rawurlencode(
+                        (string) $varName
+                    ) . '=' . rawurlencode((string) $val) : '');
                 }
             }
         }
