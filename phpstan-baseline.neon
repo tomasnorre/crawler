@@ -244,24 +244,6 @@ parameters:
 			path: Classes/Event/ModifySkipPageEvent.php
 
 		-
-			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 2
-			path: Classes/Hooks/ProcessCleanUpHook.php
-
-		-
-			message: '#^Parameter \#1 \$array \(list\<non\-empty\-string\>\) of array_values is already a list, call has no effect\.$#'
-			identifier: arrayValues.list
-			count: 1
-			path: Classes/Hooks/ProcessCleanUpHook.php
-
-		-
-			message: '#^Call to function is_array\(\) with non\-empty\-array will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: Classes/Middleware/FrontendUserAuthenticator.php
-
-		-
 			message: '#^Cannot access offset ''alturl'' on array\|bool\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
