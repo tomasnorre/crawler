@@ -232,88 +232,127 @@ class ConfigurationService
     }
 
     /**
-     * Will expand the parameters configuration to individual values. This follows a certain syntax of the value of each parameter.
+     * Expands the parameters configuration into individual values.
+     *
      * Syntax of values:
-     * - Basically: If the value is wrapped in [...] it will be expanded according to the following syntax, otherwise the value is taken literally
-     * - Configuration is splitted by "|" and the parts are processed individually and finally added together
-     * - For each configuration part:
-     *         - "[int]-[int]" = Integer range, will be expanded to all values in between, values included, starting from low to high (max. 1000). Example "1-34" or "-40--30"
-     *         - "_TABLE:[TCA table name];[_PID:[optional page id, default is current page]];[_ENABLELANG:1]" = Look up of table records from PID, filtering out deleted records. Example "_TABLE:tt_content; _PID:123"
-     *        _ENABLELANG:1 picks only original records without their language overlays
-     *         - Default: Literal value
+     * - Literal values are taken as-is unless wrapped in [ ].
+     * - If wrapped in [ ]:
+     *   - Parts are separated by "|" and expanded individually.
+     *   - Supported parts:
+     *       - "x-y"       → Integer range (inclusive, max 1000 values)
+     *       - "_TABLE:..." → Lookup values from a TCA table
+     *       - Otherwise   → Literal value
      */
     private function expandParameters(array $paramArray, int $pid): array
     {
-        // Traverse parameter names:
-        foreach ($paramArray as $parameter => $parameterValue) {
-            $parameterValue = trim((string) $parameterValue);
+        /** @var array<string, string|int|float|null> $paramArray */
+        foreach ($paramArray as $parameter => $rawValue) {
+            $value = trim((string) $rawValue);
 
-            // If value is encapsulated in square brackets it means there are some ranges of values to find, otherwise the value is literal
-            if ($this->isWrappedInSquareBrackets($parameterValue)) {
-                // So, find the value inside brackets and reset the paramArray value as an array.
-                $parameterValue = substr($parameterValue, 1, -1);
-                $paramArray[$parameter] = [];
-
-                // Explode parts and traverse them:
-                $parts = explode('|', $parameterValue);
-                foreach ($parts as $part) {
-                    // Look for integer range: (fx. 1-34 or -40--30 // reads minus 40 to minus 30)
-                    if (preg_match('/^(-?[0-9]+)\s*-\s*(-?[0-9]+)$/', trim($part), $reg)) {
-                        $reg = $this->swapIfFirstIsLargerThanSecond($reg);
-                        $paramArray = $this->addValuesInRange($reg, $paramArray, $parameter);
-                    } elseif (str_starts_with(trim($part), '_TABLE:')) {
-                        // Parse parameters:
-                        $subparts = GeneralUtility::trimExplode(';', $part);
-                        $subpartParams = [];
-                        foreach ($subparts as $spV) {
-                            [$pKey, $pVal] = GeneralUtility::trimExplode(':', $spV);
-                            $subpartParams[$pKey] = $pVal;
-                        }
-
-                        // Table exists:
-                        if (isset($GLOBALS['TCA'][$subpartParams['_TABLE']])) {
-                            $paramArray = $this->extractParamsFromCustomTable(
-                                $subpartParams,
-                                $pid,
-                                $paramArray,
-                                $parameter
-                            );
-                        }
-                    } else {
-                        // Just add value:
-                        $paramArray[$parameter][] = $part;
-                    }
-                    // Hook for processing own expandParameters place holder
-                    $paramArray = $this->runExpandParametersHook($paramArray, $parameter, $part, $pid);
-                }
-
-                // Make unique set of values and sort array by key:
-                $paramArray[$parameter] = array_unique($paramArray[$parameter]);
-                ksort($paramArray);
+            if ($this->isWrappedInSquareBrackets($value)) {
+                /** @var array<int, string|int> $expanded */
+                $expanded = $this->expandBracketedValue($value, $pid, $parameter, $paramArray);
+                $paramArray[$parameter] = $expanded;
             } else {
-                // Set the literal value as only value in array:
-                $paramArray[$parameter] = [$parameterValue];
+                /** @var array<int, string> $paramArray */
+                $paramArray[$parameter] = [$value];
             }
         }
 
+        /** @var array<string, array<int, string|int>> $paramArray */
         return $paramArray;
+    }
+
+    /**
+     * Expands a value wrapped in [ ] into an array of individual values.
+     *
+     * @param array<string, mixed>             $paramArray
+     * @return array<int, string|int>
+     */
+    private function expandBracketedValue(string $value, int $pid, string $parameter, array $paramArray): array
+    {
+        $expandedValues = [];
+        $innerValue = substr($value, 1, -1);
+        $parts = explode('|', $innerValue);
+
+        foreach ($parts as $part) {
+            $part = trim($part);
+
+            if ($this->isIntegerRange($part)) {
+                $expandedValues = array_merge($expandedValues, $this->expandIntegerRange($part));
+            } elseif (str_starts_with($part, '_TABLE:')) {
+                $expandedValues = array_merge(
+                    $expandedValues,
+                    $this->expandTableLookup($part, $pid, $parameter, $paramArray)
+                );
+            } else {
+                $expandedValues[] = $part;
+            }
+
+            // Allow custom hooks to modify the expanded values
+            $paramArray = $this->runExpandParametersHook($paramArray, $parameter, $part, $pid);
+        }
+
+        return array_values(array_unique($expandedValues));
+    }
+
+    /**
+     * Checks whether a part is an integer range like "1-34" or "-40--30".
+     */
+    private function isIntegerRange(string $part): bool
+    {
+        return (bool) preg_match('/^(-?\d+)\s*-\s*(-?\d+)$/', $part);
+    }
+
+    /**
+     * Expands an integer range string into an array of integers.
+     *
+     * @return array<int, int>
+     */
+    private function expandIntegerRange(string $part): array
+    {
+        preg_match('/^(-?\d+)\s*-\s*(-?\d+)$/', $part, $matches);
+
+        [, $start, $end] = $matches;
+        $start = (int) $start;
+        $end = (int) $end;
+
+        if ($start > $end) {
+            [$start, $end] = [$end, $start];
+        }
+
+        $range = range($start, $end);
+
+        // Safety limit to prevent runaway ranges
+        return count($range) > 1000 ? array_slice($range, 0, 1000) : $range;
+    }
+
+    /**
+     * Expands a _TABLE lookup definition into values from the TCA table.
+     *
+     * @param array<string, mixed>             $paramArray
+     * @return array<int, string|int>
+     */
+    private function expandTableLookup(string $definition, int $pid, string $parameter, array $paramArray): array
+    {
+        $subparts = GeneralUtility::trimExplode(';', $definition);
+        $options = [];
+
+        foreach ($subparts as $subpart) {
+            [$key, $value] = GeneralUtility::trimExplode(':', $subpart);
+            $options[$key] = $value;
+        }
+
+        if (!isset($GLOBALS['TCA'][$options['_TABLE']])) {
+            return []; // invalid table
+        }
+
+        return $this->extractParamsFromCustomTable($options, $pid, $paramArray, $parameter);
     }
 
     private function isWrappedInSquareBrackets(string $string): bool
     {
         return str_starts_with($string, '[') && str_ends_with($string, ']');
-    }
-
-    private function swapIfFirstIsLargerThanSecond(array $reg): array
-    {
-        // Swap if first is larger than last:
-        if ($reg[1] > $reg[2]) {
-            $temp = $reg[2];
-            $reg[2] = $reg[1];
-            $reg[1] = $temp;
-        }
-
-        return $reg;
     }
 
     /**
@@ -365,25 +404,6 @@ class ConfigurationService
             $pidArray = [$lookUpPid];
         }
         return $pidArray;
-    }
-
-    /**
-     * Traverse range, add values:
-     * Limit to size of range!
-     *
-     * @psalm-param array-key $parameter
-     */
-    private function addValuesInRange(array $reg, array $paramArray, int|string $parameter): array
-    {
-        $runAwayBrake = 1000;
-        for ($a = $reg[1]; $a <= $reg[2]; $a++) {
-            $paramArray[$parameter][] = $a;
-            $runAwayBrake--;
-            if ($runAwayBrake <= 0) {
-                break;
-            }
-        }
-        return $paramArray;
     }
 
     private function expandPidList(array $treeCache, int $pid, int $depth, PageTreeView $tree, array $pidList): array

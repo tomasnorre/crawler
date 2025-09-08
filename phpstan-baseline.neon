@@ -292,7 +292,7 @@ parameters:
 			path: Classes/Service/ConfigurationService.php
 
 		-
-			message: '#^Class cognitive complexity is 87, keep it under 35$#'
+			message: '#^Class cognitive complexity is 77, keep it under 35$#'
 			identifier: complexity.classLike
 			count: 1
 			path: Classes/Service/ConfigurationService.php
