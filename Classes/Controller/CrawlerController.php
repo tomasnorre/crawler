@@ -584,7 +584,7 @@ class CrawlerController implements LoggerAwareInterface
 
             //atm there's no need to point to specific pollable extensions
             if (
-                is_array($resultData)
+                !empty($resultData)
                 && isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'])
                 && is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'])
             ) {

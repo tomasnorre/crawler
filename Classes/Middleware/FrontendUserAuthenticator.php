@@ -81,19 +81,17 @@ class FrontendUserAuthenticator implements MiddlewareInterface
         $request = $request->withAttribute('tx_crawler', $queueParameters);
 
         // Now ensure to set the proper user groups
-        if (is_array($queueParameters)) {
-            $grList = $queueParameters['feUserGroupList'] ?? '';
-            if ($grList) {
-                $frontendUser = $this->getFrontendUser($grList, $request);
+        $grList = $queueParameters['feUserGroupList'] ?? '';
+        if ($grList) {
+            $frontendUser = $this->getFrontendUser($grList, $request);
 
-                // we have to set the fe user group to the user aspect since indexed_search only reads the user aspect
-                // to get the groups. otherwise groups are ignored during indexing.
-                // we need to add the groups 0, and -2 too, like the getGroupIds getter does.
-                $this->context->setAspect(
-                    'frontend.user',
-                    GeneralUtility::makeInstance(UserAspect::class, $frontendUser, explode(',', '0,-2,' . $grList))
-                );
-            }
+            // we have to set the fe user group to the user aspect since indexed_search only reads the user aspect
+            // to get the groups. otherwise groups are ignored during indexing.
+            // we need to add the groups 0, and -2 too, like the getGroupIds getter does.
+            $this->context->setAspect(
+                'frontend.user',
+                GeneralUtility::makeInstance(UserAspect::class, $frontendUser, explode(',', '0,-2,' . $grList))
+            );
         }
 
         return $handler->handle($request);

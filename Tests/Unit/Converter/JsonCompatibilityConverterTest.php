@@ -62,11 +62,11 @@ class JsonCompatibilityConverterTest extends UnitTestCase
         ];
         yield 'neither serialize() nor json_encode' => [
             'dataString' => 'This is just a plain string',
-            'expected' => false,
+            'expected' => [],
         ];
         yield 'json false does not trigger unserialize' => [
             'dataString' => json_encode(false),
-            'expected' => false,
+            'expected' => [],
         ];
     }
 

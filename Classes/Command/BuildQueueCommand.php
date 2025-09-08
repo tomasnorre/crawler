@@ -218,7 +218,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
 
         foreach ($progressBar->iterate($this->crawlerController->queueEntries) as $queueRec) {
             $p = $this->jsonCompatibilityConverter->convert($queueRec['parameters']);
-            if (is_bool($p)) {
+            if (empty($p)) {
                 continue;
             }
 
@@ -237,7 +237,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             $requestResult = $this->jsonCompatibilityConverter->convert($resultContent);
 
             $progressBar->clear();
-            if (is_array($requestResult)) {
+            if (!empty($requestResult)) {
                 $resLog = array_key_exists('log', $requestResult)
                 && is_array($requestResult['log']) ? chr(9) . chr(9) .
                     implode(PHP_EOL . chr(9) . chr(9), $requestResult['log']) : '';

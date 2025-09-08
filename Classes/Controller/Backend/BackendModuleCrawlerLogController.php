@@ -117,14 +117,12 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
         $q_entry['parameters'] = $this->jsonCompatibilityConverter->convert($q_entry['parameters']);
         $q_entry['result_data'] = $this->jsonCompatibilityConverter->convert($q_entry['result_data']);
         $resStatus = ResultHandler::getResStatus($q_entry['result_data']);
-        if (is_array($q_entry['result_data'])) {
+        if (!empty($q_entry['result_data'])) {
             $q_entry['result_data']['content'] = $this->jsonCompatibilityConverter->convert(
                 $q_entry['result_data']['content']
             );
             if (!$this->showResultLog) {
-                if (is_array($q_entry['result_data']['content'])) {
-                    unset($q_entry['result_data']['content']['log']);
-                }
+                unset($q_entry['result_data']['content']['log']);
             }
         }
         return [$q_entry, $resStatus];

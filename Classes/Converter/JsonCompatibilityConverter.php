@@ -36,7 +36,7 @@ class JsonCompatibilityConverter
      *
      * @throws Exception
      */
-    public function convert(string $dataString): array|bool
+    public function convert(string $dataString): array
     {
         $decoded = '';
         try {
@@ -48,7 +48,7 @@ class JsonCompatibilityConverter
                     'allowed_classes' => false,
                 ]);
             } catch (\Throwable) {
-                return false;
+                return [];
             }
         }
 
@@ -60,6 +60,6 @@ class JsonCompatibilityConverter
             throw new \RuntimeException('Objects are not allowed: ' . var_export($decoded, true), 1_593_758_307);
         }
 
-        return false;
+        return [];
     }
 }
