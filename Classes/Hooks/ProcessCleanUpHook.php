@@ -61,15 +61,10 @@ class ProcessCleanUpHook implements CrawlerHookInterface
      * Create response array
      * Convert string to array with space character as delimiter,
      * removes all empty records to have a cleaner array
-     *
-     * @param string $string String to create array from
-     *
-     * @return array
      */
-    public function createResponseArray($string)
+    public function createResponseArray(string $string): array
     {
-        $responseArray = GeneralUtility::trimExplode(' ', $string, true);
-        return array_values($responseArray);
+        return GeneralUtility::trimExplode(' ', $string, true);
     }
 
     /**
@@ -101,16 +96,13 @@ class ProcessCleanUpHook implements CrawlerHookInterface
     {
         $results = $this->processRepository->getActiveOrphanProcesses();
 
-        if (!is_array($results)) {
-            return;
-        }
         foreach ($results as $result) {
             $processExists = false;
             $systemProcessId = (int) $result['system_process_id'];
             $processId = $result['process_id'];
             if ($systemProcessId > 1) {
                 $dispatcherProcesses = $this->findDispatcherProcesses();
-                if (!is_array($dispatcherProcesses) || empty($dispatcherProcesses)) {
+                if (empty($dispatcherProcesses)) {
                     $this->removeProcessFromProcesslist($processId);
                     return;
                 }

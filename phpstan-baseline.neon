@@ -243,25 +243,8 @@ parameters:
 			count: 1
 			path: Classes/Event/ModifySkipPageEvent.php
 
-		-
-			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 2
-			path: Classes/Hooks/ProcessCleanUpHook.php
-
-		-
-			message: '#^Parameter \#1 \$array \(list\<non\-empty\-string\>\) of array_values is already a list, call has no effect\.$#'
-			identifier: arrayValues.list
-			count: 1
-			path: Classes/Hooks/ProcessCleanUpHook.php
-
-		-
-			message: '#^Call to function is_array\(\) with non\-empty\-array will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: Classes/Middleware/FrontendUserAuthenticator.php
-
-		-
+		
+    -
 			message: '#^Method AOE\\Crawler\\Service\\BackendModuleLogService\:\:addRows\(\) should return non\-empty\-list\<array\{titleRowSpan\: int\<1, max\>, colSpan\: int, title\: string, noEntries\?\: string, trClass\?\: string, qid\?\: array\{link\: TYPO3\\CMS\\Core\\Http\\Uri, link\-text\: string\}, refresh\?\: array\{link\: TYPO3\\CMS\\Core\\Http\\Uri, link\-text\: TYPO3\\CMS\\Core\\Imaging\\Icon, warning\: string\|TYPO3\\CMS\\Core\\Imaging\\Icon\}, columns\?\: array\{url\: mixed, scheduled\: string, exec_time\: string, result_log\: string, result_status\: string, feUserGroupList\: string, procInstructions\: string, set_id\: string, \.\.\.\}\}\> but returns array\{non\-empty\-list\<array\>, array\}\.$#'
 			identifier: return.type
 			count: 1
