@@ -248,9 +248,3 @@ parameters:
 			identifier: offsetAccess.notFound
 			count: 1
 			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: '#^Parameter \#1 \$row of static method TYPO3\\CMS\\Core\\Utility\\CsvUtility\:\:csvValues\(\) expects array\<string\>, list\<int\|string\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Classes/Writer/FileWriter/CsvWriter/CrawlerCsvWriter.php

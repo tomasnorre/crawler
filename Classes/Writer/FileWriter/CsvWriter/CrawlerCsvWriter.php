@@ -44,7 +44,7 @@ final class CrawlerCsvWriter implements CsvWriterInterface
 
     private function getRowHeaders(array $lines): string
     {
-        $fieldNames = array_keys(current($lines));
+        $fieldNames = array_map('strval', array_keys(current($lines)));
         return CsvUtility::csvValues($fieldNames);
     }
 }
