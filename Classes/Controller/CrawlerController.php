@@ -93,7 +93,6 @@ class CrawlerController implements LoggerAwareInterface
     private bool $submitCrawlUrls = false;
     private bool $downloadCrawlUrls = false;
     private PageRepository $pageRepository;
-    private Crawler $crawler;
     private ConfigurationService $configurationService;
     private UrlService $urlService;
     private EventDispatcher $eventDispatcher;
@@ -118,7 +117,7 @@ class CrawlerController implements LoggerAwareInterface
             $this->eventDispatcher
         );
         $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
-        $this->crawler = GeneralUtility::makeInstance(Crawler::class);
+        GeneralUtility::makeInstance(Crawler::class);
         $this->configurationService = GeneralUtility::makeInstance(
             ConfigurationService::class,
             GeneralUtility::makeInstance(UrlService::class),
@@ -128,8 +127,7 @@ class CrawlerController implements LoggerAwareInterface
 
         /** @var ExtensionConfigurationProvider $configurationProvider */
         $configurationProvider = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
-        $settings = $configurationProvider->getExtensionConfiguration();
-        $this->extensionSettings = is_array($settings) ? $settings : [];
+        $this->extensionSettings = $configurationProvider->getExtensionConfiguration();
 
         if (MathUtility::convertToPositiveInteger($this->extensionSettings['countInARun']) === 0) {
             $this->extensionSettings['countInARun'] = 100;
@@ -309,7 +307,7 @@ class CrawlerController implements LoggerAwareInterface
             $pageTSconfig = BackendUtility::getPagesTSconfig($id);
         } else {
             [, $mountPointId] = explode('-', $this->MP);
-            $pageTSconfig = BackendUtility::getPagesTSconfig($mountPointId);
+            $pageTSconfig = BackendUtility::getPagesTSconfig((int) $mountPointId);
         }
 
         // Call a hook to alter configuration
@@ -410,11 +408,13 @@ class CrawlerController implements LoggerAwareInterface
      *
      * @deprecated since 12.0.5 will be removed in 14.x
      */
-    public function addQueueEntry_callBack($setId, $params, $callBack, $page_id = 0, $schedule = 0): void
-    {
-        if (!is_array($params)) {
-            $params = [];
-        }
+    public function addQueueEntry_callBack(
+        int $setId,
+        array $params,
+        string $callBack,
+        int $page_id = 0,
+        int $schedule = 0
+    ): void {
         $params['_CALLBACKOBJ'] = $callBack;
 
         GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(QueueRepository::TABLE_NAME)
@@ -823,9 +823,6 @@ class CrawlerController implements LoggerAwareInterface
                     if ($confArray['subCfg']['procInstrFilter'] ?? false) {
                         $queueRowOptionCollection[] = 'ProcInstr: ' . $confArray['subCfg']['procInstrFilter'];
                     }
-
-                    // Remove empty array entries;
-                    $queueRowOptionCollection = array_filter($queueRowOptionCollection);
 
                     $parameterConfig = nl2br(
                         htmlspecialchars(rawurldecode(

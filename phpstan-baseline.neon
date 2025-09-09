@@ -145,32 +145,8 @@ parameters:
 			path: Classes/Controller/Backend/Helper/UrlBuilder.php
 
 		-
-			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 2
-			path: Classes/Controller/CrawlerController.php
-
-		-
-			message: '#^Class cognitive complexity is 99, keep it under 35$#'
+			message: '#^Class cognitive complexity is 97, keep it under 35$#'
 			identifier: complexity.classLike
-			count: 1
-			path: Classes/Controller/CrawlerController.php
-
-		-
-			message: '#^Parameter \#1 \$array \(array\{\}\|array\{0\: non\-falsy\-string, 1\?\: non\-falsy\-string\}\) to function array_filter does not contain falsy values, the array will always stay the same\.$#'
-			identifier: arrayFilter.same
-			count: 1
-			path: Classes/Controller/CrawlerController.php
-
-		-
-			message: '#^Parameter \#1 \$pageUid of static method TYPO3\\CMS\\Backend\\Utility\\BackendUtility\:\:getPagesTSconfig\(\) expects int, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Classes/Controller/CrawlerController.php
-
-		-
-			message: '#^Property AOE\\Crawler\\Controller\\CrawlerController\:\:\$crawler is never read, only written\.$#'
-			identifier: property.onlyWritten
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
