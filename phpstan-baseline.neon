@@ -133,12 +133,6 @@ parameters:
 			path: Classes/Controller/Backend/BackendModuleStartCrawlingController.php
 
 		-
-			message: '#^Method AOE\\Crawler\\Controller\\Backend\\Helper\\UrlBuilder\:\:getBackendModuleUrl\(\) should return TYPO3\\CMS\\Core\\Http\\Uri but returns Psr\\Http\\Message\\UriInterface\.$#'
-			identifier: return.type
-			count: 1
-			path: Classes/Controller/Backend/Helper/UrlBuilder.php
-
-		-
 			message: '#^Class cognitive complexity is 97, keep it under 35$#'
 			identifier: complexity.classLike
 			count: 1

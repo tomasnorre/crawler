@@ -18,9 +18,10 @@ namespace AOE\Crawler\Controller\Backend\Helper;
  *
  * The TYPO3 project - inspiring people to share!
  */
+
+use Psr\Http\Message\UriInterface;
 use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
-use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -35,8 +36,10 @@ class UrlBuilder
      *
      * @throws RouteNotFoundException
      */
-    public static function getBackendModuleUrl(array $uriParameters = [], string $module = 'web_site_crawler'): Uri
-    {
+    public static function getBackendModuleUrl(
+        array $uriParameters = [],
+        string $module = 'web_site_crawler'
+    ): UriInterface {
         $id = $GLOBALS['TYPO3_REQUEST']->getParsedBody()['id'] ?? $GLOBALS['TYPO3_REQUEST']->getQueryParams()['id'] ?? null;
         if ($id) {
             $uriParameters['id'] = $id;
