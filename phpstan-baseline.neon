@@ -133,12 +133,6 @@ parameters:
 			path: Classes/Controller/Backend/BackendModuleStartCrawlingController.php
 
 		-
-			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: Classes/Controller/Backend/Helper/ResultHandler.php
-
-		-
 			message: '#^Method AOE\\Crawler\\Controller\\Backend\\Helper\\UrlBuilder\:\:getBackendModuleUrl\(\) should return TYPO3\\CMS\\Core\\Http\\Uri but returns Psr\\Http\\Message\\UriInterface\.$#'
 			identifier: return.type
 			count: 1

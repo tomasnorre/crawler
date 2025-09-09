@@ -33,7 +33,7 @@ class ResultHandler
     public static function getResultLog(array $resultRow): string
     {
         $content = '';
-        if (is_array($resultRow) && array_key_exists('result_data', $resultRow)) {
+        if (array_key_exists('result_data', $resultRow)) {
             $requestContent = self::getJsonCompatibilityConverter()->convert($resultRow['result_data']) ?: [];
             if (is_bool($requestContent) || !array_key_exists('content', $requestContent)) {
                 return $content;
