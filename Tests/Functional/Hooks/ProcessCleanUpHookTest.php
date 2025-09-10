@@ -22,6 +22,9 @@ namespace AOE\Crawler\Tests\Functional\Hooks;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Hooks\ProcessCleanUpHook;
+use AOE\Crawler\Process\Cleaner\OldProcessCleaner;
+use AOE\Crawler\Process\Cleaner\OrphanProcessCleaner;
+use AOE\Crawler\Process\ProcessManagerFactory;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -46,9 +49,13 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         $this->setupBackendRequest();
 
         /** @var ProcessCleanUpHook $this->subject */
-        $this->subject = GeneralUtility::makeInstance(ProcessCleanUpHook::class);
         $this->processRepository = GeneralUtility::makeInstance(ProcessRepository::class);
         $this->queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
+
+        $ophanProcessCleaner = GeneralUtility::makeInstance(OrphanProcessCleaner::class, $this->processRepository, $this->queueRepository, (new ProcessManagerFactory())->create());
+        $oldProcessCleaner = GeneralUtility::makeInstance(OldProcessCleaner::class, $this->processRepository, $this->queueRepository, (new ProcessManagerFactory())->create());
+
+        $this->subject = GeneralUtility::makeInstance(ProcessCleanUpHook::class, $ophanProcessCleaner, $oldProcessCleaner);
 
         // Include Fixtures
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/tx_crawler_process.csv');
@@ -60,35 +67,6 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         parent::tearDown();
     }
 
-    #[Test]
-    public function removeActiveProcessesOlderThanOneHour(): never
-    {
-        $this->markTestSkipped('Please Implement');
-    }
-
-    #[Test]
-    public function removeActiveOrphanProcesses(): never
-    {
-        $this->markTestSkipped('Please Implement');
-    }
-
-    #[Test]
-    public function doProcessStillExists(): never
-    {
-        $this->markTestSkipped('Skipped due to differences between windows and *nix');
-    }
-
-    #[Test]
-    public function killProcess(): never
-    {
-        $this->markTestSkipped('Skipped due to differences between windows and *nix');
-    }
-
-    #[Test]
-    public function findDispatcherProcesses(): never
-    {
-        $this->markTestSkipped('Skipped due to differences between windows and *nix');
-    }
 
     #[Test]
     public function removeProcessFromProcesslistCalledWithProcessThatDoesNotExist(): void
@@ -96,8 +74,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         $processCountBefore = count($this->processRepository->findAll());
         $queueCountBefore = count($this->queueRepository->findAll());
 
-        $notExistingProcessId = '23456';
-        $this->subject->removeProcessFromProcesslist($notExistingProcessId);
+        $this->subject->crawler_init();
 
         $processCountAfter = count($this->processRepository->findAll());
         $queueCountAfter = count($this->queueRepository->findAll());
@@ -115,8 +92,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         $processCountBefore = count($this->processRepository->findAll());
         $queueCountBefore = count($this->queueRepository->findAll());
 
-        $existingProcessId = '1000';
-        $this->subject->removeProcessFromProcesslist($existingProcessId);
+        $this->subject->crawler_init($existingProcessId);
 
         $processCountAfter = count($this->processRepository->findAll());
         $queueCountAfter = count($this->queueRepository->findAll());
@@ -134,7 +110,7 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         $processCountBefore = count($this->processRepository->findAll());
         $queueCountBefore = count($this->queueRepository->findByProcessId($existingProcessId));
 
-        $this->subject->removeProcessFromProcesslist($existingProcessId);
+        $this->subject->crawler_init();
 
         $processCountAfter = count($this->processRepository->findAll());
         $queueCountAfter = count($this->queueRepository->findByProcessId($existingProcessId));
@@ -144,23 +120,5 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         self::assertEquals(1, $queueCountBefore);
 
         self::assertEquals(0, $queueCountAfter);
-    }
-
-    #[Test]
-    public function createResponseArrayReturnsEmptyArray(): void
-    {
-        $emptyInputString = '';
-
-        self::assertEquals([], $this->subject->createResponseArray($emptyInputString));
-    }
-
-    #[Test]
-    public function createResponseArrayReturnsArray(): void
-    {
-        // Input string has multiple spacing to ensure we don't end up with an array with empty values
-        $inputString = '1   2 2 4 5 6 ';
-        $expectedOutputArray = ['1', '2', '2', '4', '5', '6'];
-
-        self::assertEquals($expectedOutputArray, $this->subject->createResponseArray($inputString));
     }
 }
