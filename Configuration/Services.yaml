@@ -58,6 +58,9 @@ services:
         arguments:
             $queryBuilder: '@queryBuilder.tx_crawler_queue'
 
+    AOE\Crawler\Process\ProcessManagerInterface:
+      factory: [ 'AOE\Crawler\Process\ProcessManagerFactory', 'create' ]
+
     AOE\Crawler\Service\BackendModuleLinkService:
         arguments:
             $iconFactory: '@TYPO3\CMS\Core\Imaging\IconFactory'
