@@ -30,6 +30,8 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 #[CoversClass(ProcessManagerFactory::class)]
 class ProcessManagerFactoryTest extends UnitTestCase
 {
+    protected bool $resetSingletonInstances = true;
+
     #[Test]
     public function factoryReturnsCorrectManagerOnUnix(): void
     {
