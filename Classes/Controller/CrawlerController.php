@@ -544,7 +544,7 @@ class CrawlerController implements LoggerAwareInterface
      *
      * @return int|null
      */
-    public function readUrl($queueId, $force = false, string $processId = '')
+    public function readUrl(int $queueId, bool $force = false, string $processId = '')
     {
         $ret = 0;
         $this->logger?->debug('crawler-readurl start ' . microtime(true));
@@ -564,10 +564,7 @@ class CrawlerController implements LoggerAwareInterface
             'exec_time' => $this->getCurrentTime(),
         ];
 
-        if (!empty($processId)) {
-            //if mulitprocessing is used we need to store the id of the process which has handled this entry
-            $field_array['process_id_completed'] = $processId;
-        }
+        $field_array['process_id_completed'] = $processId;
 
         GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(QueueRepository::TABLE_NAME)
             ->update(QueueRepository::TABLE_NAME, $field_array, [
