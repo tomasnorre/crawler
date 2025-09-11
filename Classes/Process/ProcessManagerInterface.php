@@ -19,6 +19,9 @@ namespace AOE\Crawler\Process;
  * The TYPO3 project - inspiring people to share!
  */
 
+/**
+ * @codeCoverageIgnore
+ */
 interface ProcessManagerInterface
 {
     public function processExists(int $pid): bool;
