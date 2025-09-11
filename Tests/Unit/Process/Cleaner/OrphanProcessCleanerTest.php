@@ -30,6 +30,7 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 #[CoversClass(OrphanProcessCleaner::class)]
 class OrphanProcessCleanerTest extends UnitTestCase
 {
+    protected bool $resetSingletonInstances = true;
     private ProcessRepository $processRepository;
     private QueueRepository $queueRepository;
     private ProcessManagerInterface $processManager;
