@@ -151,7 +151,7 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
                 'columns' => [
                     'result_log' => '',
                     'result_status' => '-',
-                    'url' => '<a href="/" target="_newWIndow">/</a>',
+                    'url' => '/',
                     'feUserGroupList' => '',
                     'procInstructions' => '',
                     'set_id' => '987654',
@@ -193,7 +193,7 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
                 'columns' => [
                     'result_log' => '',
                     'result_status' => '-',
-                    'url' => '<a href="/" target="_newWIndow">/</a>',
+                    'url' => '/',
                     'feUserGroupList' => '',
                     'procInstructions' => '',
                     'set_id' => '987654',
@@ -226,7 +226,7 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
                 'trClass' => '',
                 'columns' => [
                     'result_status' => '-',
-                    'url' => '<a href="/" target="_newWIndow">/</a>',
+                    'url' => '/',
                     'feUserGroupList' => '',
                     'procInstructions' => '',
                     'set_id' => '987654',
@@ -259,7 +259,7 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
                 'trClass' => '',
                 'columns' => [
                     'result_status' => '-',
-                    'url' => '<a href="/" target="_newWIndow">/</a>',
+                    'url' => '/',
                     'feUserGroupList' => '',
                     'procInstructions' => '',
                     'set_id' => '987654',
@@ -294,7 +294,7 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
                 'trClass' => 'bg-danger',
                 'columns' => [
                     'result_status' => 'Error - no info, sorry!',
-                    'url' => '<a href="/" target="_newWIndow">/</a>',
+                    'url' => '/',
                     'feUserGroupList' => '',
                     'procInstructions' => '',
                     'set_id' => '987654',
@@ -329,7 +329,7 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
                         'trClass' => '',
                         'columns' => [
                             'result_status' => '-',
-                            'url' => '<a href="/" target="_newWIndow">/</a>',
+                            'url' => '/',
                             'feUserGroupList' => '',
                             'procInstructions' => '',
                             'set_id' => '987654',
@@ -342,7 +342,7 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
                     'scheduled' => '1970-01-01 00:00',
                     'exec_time' => '-',
                     'result_status' => '-',
-                    'url' => '<a href="/" target="_newWIndow">/</a>',
+                    'url' => '/',
                     'feUserGroupList' => '',
                     'procInstructions' => '',
                     'set_id' => '987654',
