@@ -24,6 +24,9 @@ use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Process\ProcessManagerInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+/**
+ * @internal since v12.0.10
+ */
 class OrphanProcessCleaner
 {
     public function __construct(

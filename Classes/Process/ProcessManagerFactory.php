@@ -19,6 +19,9 @@ namespace AOE\Crawler\Process;
 
 use TYPO3\CMS\Core\Core\Environment;
 
+/**
+ * @internal since v12.0.10
+ */
 class ProcessManagerFactory
 {
     public static function create(): ProcessManagerInterface

@@ -21,6 +21,7 @@ namespace AOE\Crawler\Process;
 
 /**
  * @codeCoverageIgnore
+ * @internal since v12.0.10
  */
 interface ProcessManagerInterface
 {

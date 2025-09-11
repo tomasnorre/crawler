@@ -23,6 +23,9 @@ use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Process\ProcessManagerInterface;
 
+/**
+ * @internal since v12.0.10
+ */
 class OldProcessCleaner
 {
     public function __construct(
