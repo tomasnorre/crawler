@@ -58,6 +58,9 @@ services:
         arguments:
             $queryBuilder: '@queryBuilder.tx_crawler_queue'
 
+    AOE\Crawler\Process\ProcessManagerInterface:
+      factory: [ 'AOE\Crawler\Process\ProcessManagerFactory', 'create' ]
+
     AOE\Crawler\Service\BackendModuleLinkService:
         arguments:
             $iconFactory: '@TYPO3\CMS\Core\Imaging\IconFactory'
@@ -107,6 +110,26 @@ services:
         arguments:
             $iconFactory: '@TYPO3\CMS\Core\Imaging\IconFactory'
             $jsonCompatibilityConverter: '@AOE\Crawler\Converter\JsonCompatibilityConverter'
+        public: true
+
+    AOE\Crawler\Process\Cleaner\OldProcessCleaner:
+        arguments:
+            $processRepository: '@AOE\Crawler\Domain\Repository\ProcessRepository'
+            $queueRepository: '@AOE\Crawler\Domain\Repository\QueueRepository'
+            $processManager: '@AOE\Crawler\Process\ProcessManagerInterface'
+        public: true
+
+    AOE\Crawler\Process\Cleaner\OrphanProcessCleaner:
+        arguments:
+            $processRepository: '@AOE\Crawler\Domain\Repository\ProcessRepository'
+            $queueRepository: '@AOE\Crawler\Domain\Repository\QueueRepository'
+            $processManager: '@AOE\Crawler\Process\ProcessManagerInterface'
+        public: true
+
+    AOE\Crawler\Hooks\ProcessCleanUpHook:
+        arguments:
+            $orphanCleaner: '@AOE\Crawler\Process\Cleaner\OrphanProcessCleaner'
+            $oldCleaner: '@AOE\Crawler\Process\Cleaner\OldProcessCleaner'
         public: true
 
     AOE\Crawler\ContextMenu\ItemProvider:
