@@ -72,8 +72,14 @@ class OldProcessCleanerTest extends UnitTestCase
             ->expects(self::once())
             ->method('getActiveProcessesOlderThanOneHour')
             ->willReturn([
-                ['system_process_id' => 0, 'process_id' => 'skip-me'],
-                ['system_process_id' => 1, 'process_id' => 'skip-me-too'],
+                [
+                    'system_process_id' => 0,
+                    'process_id' => 'skip-me',
+                ],
+                [
+                    'system_process_id' => 1,
+                    'process_id' => 'skip-me-too',
+                ],
             ]);
 
         $this->processManager->expects(self::never())->method('processExists');
@@ -92,7 +98,10 @@ class OldProcessCleanerTest extends UnitTestCase
         $this->processRepository
             ->expects(self::once())
             ->method('getActiveProcessesOlderThanOneHour')
-            ->willReturn([['system_process_id' => $systemProcessId, 'process_id' => $processId]]);
+            ->willReturn([[
+                'system_process_id' => $systemProcessId,
+                'process_id' => $processId,
+            ]]);
 
         $this->processManager
             ->expects(self::once())
@@ -127,7 +136,10 @@ class OldProcessCleanerTest extends UnitTestCase
         $this->processRepository
             ->expects(self::once())
             ->method('getActiveProcessesOlderThanOneHour')
-            ->willReturn([['system_process_id' => $systemProcessId, 'process_id' => $processId]]);
+            ->willReturn([[
+                'system_process_id' => $systemProcessId,
+                'process_id' => $processId,
+            ]]);
 
         $this->processManager
             ->expects(self::once())

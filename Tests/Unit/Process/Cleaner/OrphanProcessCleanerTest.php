@@ -57,8 +57,14 @@ class OrphanProcessCleanerTest extends UnitTestCase
             ->expects(self::once())
             ->method('getActiveOrphanProcesses')
             ->willReturn([
-                ['system_process_id' => 0, 'process_id' => 'p-0'],
-                ['system_process_id' => 1, 'process_id' => 'p-1'],
+                [
+                    'system_process_id' => 0,
+                    'process_id' => 'p-0',
+                ],
+                [
+                    'system_process_id' => 1,
+                    'process_id' => 'p-1',
+                ],
             ]);
 
         $this->processManager->expects(self::never())->method('findDispatcherProcesses');
@@ -76,7 +82,10 @@ class OrphanProcessCleanerTest extends UnitTestCase
         $this->processRepository
             ->expects(self::once())
             ->method('getActiveOrphanProcesses')
-            ->willReturn([['system_process_id' => 200, 'process_id' => $processId]]);
+            ->willReturn([[
+                'system_process_id' => 200,
+                'process_id' => $processId,
+            ]]);
 
         $this->processManager
             ->expects(self::once())
@@ -105,7 +114,10 @@ class OrphanProcessCleanerTest extends UnitTestCase
         $this->processRepository
             ->expects(self::once())
             ->method('getActiveOrphanProcesses')
-            ->willReturn([['system_process_id' => $systemProcessId, 'process_id' => $processId]]);
+            ->willReturn([[
+                'system_process_id' => $systemProcessId,
+                'process_id' => $processId,
+            ]]);
 
         // Dispatcher returns a string like "typo3 300 ..." -> parsed into [ 'typo3', '300', ... ]
         $this->processManager
@@ -128,7 +140,10 @@ class OrphanProcessCleanerTest extends UnitTestCase
         $this->processRepository
             ->expects(self::once())
             ->method('getActiveOrphanProcesses')
-            ->willReturn([['system_process_id' => $systemProcessId, 'process_id' => $processId]]);
+            ->willReturn([[
+                'system_process_id' => $systemProcessId,
+                'process_id' => $processId,
+            ]]);
 
         // Dispatcher returns process with a different PID -> should trigger removal
         $this->processManager
