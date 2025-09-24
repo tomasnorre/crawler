@@ -11,5 +11,5 @@ test('Can crawl manually in log module, and keep selected log depth', async ({pa
     await expect(page.locator('iframe[name="list_frame"]').contentFrame().locator('select[name="logDepth"]')).toHaveValue('3');
     await page.locator('iframe[name="list_frame"]').contentFrame().locator('.refreshLink').first().click();
     await page.locator('iframe[name="list_frame"]').contentFrame().locator('select[name="logDepth"]').isVisible();
-    await expect(page.locator('iframe[name="list_frame"]').contentFrame().locator('select[name="logDepth"]')).toHaveValue('3');
+    await expect(page.locator('iframe[name="list_frame"]').contentFrame().locator('select[name="logDepth"]')).valueOf('3');
 });
