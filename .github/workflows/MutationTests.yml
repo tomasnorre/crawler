@@ -35,17 +35,8 @@ jobs:
           ini-values: memory_limit=-1
           tools: composer:v2, cs2pr
 
-      - name: "Cache dependencies"
-        uses: "actions/cache@v4"
-        with:
-          path: |
-            ~/.composer/cache
-            .Build
-          key: "php-${{ matrix.php-version }}-${{ matrix.dependencies }}"
-          restore-keys: "php-${{ matrix.php-version }}-${{ matrix.dependencies }}"
-
       - name: "Install dependencies"
-        run: "composer install"
+        uses: ramsey/composer-install@v3
 
       - name: "Infection"
         run: "composer test:mutation"
