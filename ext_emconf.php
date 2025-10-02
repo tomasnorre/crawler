@@ -1,7 +1,7 @@
 <?php
 $EM_CONF[$_EXTKEY] = [
     'title' => 'Site Crawler',
-    'description' => 'Libraries and scripts for crawling the TYPO3 page tree.',
+    'description' => 'TYPO3 Crawler crawls the TYPO3 page tree. Used for cache warmup, indexing, publishing applications etc.',
     'category' => 'module',
     'state' => 'stable',
     'uploadfolder' => 0,
