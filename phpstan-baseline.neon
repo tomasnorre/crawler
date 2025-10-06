@@ -97,7 +97,7 @@ parameters:
 			path: Classes/Controller/Backend/BackendModuleCrawlerProcessController.php
 
 		-
-			message: '#^Unable to resolve the template type T in call to method static method TYPO3\\CMS\\Core\\Utility\\GeneralUtility\:\:makeInstance\(\)$#'
+			message: '#^Unable to resolve the template type T in call to static method TYPO3\\CMS\\Core\\Utility\\GeneralUtility\:\:makeInstance\(\)$#'
 			identifier: argument.templateType
 			count: 1
 			path: Classes/Controller/Backend/BackendModuleCrawlerProcessController.php
@@ -157,7 +157,7 @@ parameters:
 			path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
 
 		-
-			message: '#^Unable to resolve the template type T in call to method static method TYPO3\\CMS\\Core\\Utility\\GeneralUtility\:\:makeInstance\(\)$#'
+			message: '#^Unable to resolve the template type T in call to static method TYPO3\\CMS\\Core\\Utility\\GeneralUtility\:\:makeInstance\(\)$#'
 			identifier: argument.templateType
 			count: 1
 			path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
