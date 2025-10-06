@@ -33,7 +33,7 @@ class PageService
 {
     private readonly EventDispatcher $eventDispatcher;
 
-    public function __construct(EventDispatcher $eventDispatcher = null)
+    public function __construct(?EventDispatcher $eventDispatcher = null)
     {
         $this->eventDispatcher = $eventDispatcher ?? GeneralUtility::makeInstance(EventDispatcher::class);
     }
