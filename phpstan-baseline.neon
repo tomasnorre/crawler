@@ -166,12 +166,6 @@ parameters:
 			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
-			path: Classes/CrawlStrategy/CrawlStrategyFactory.php
-
-		-
-			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
 			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
 
 		-
