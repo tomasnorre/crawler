@@ -43,8 +43,7 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
     public function __construct(?ExtensionConfigurationProvider $configurationProvider = null)
     {
         $configurationProvider ??= GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
-        $settings = $configurationProvider->getExtensionConfiguration();
-        $this->extensionSettings = is_array($settings) ? $settings : [];
+        $this->extensionSettings = $configurationProvider->getExtensionConfiguration();
     }
 
     /**
@@ -84,7 +83,7 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
         $content = $this->executeShellCommand($cmd);
         $this->logger?->info($url . ' ' . (microtime(true) - $startTime));
 
-        if ($content === null) {
+        if ($content === null || $content === false) {
             return false;
         }
         if (str_contains($content, 'typo3-error-page')) {
@@ -129,7 +128,7 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
      * Executes a shell command and returns the outputted result.
      *
      * @param string $command Shell command to be executed
-     * @return string|null Outputted result of the command execution
+     * @return string|false|null Outputted result of the command execution
      */
     private function executeShellCommand($command)
     {
