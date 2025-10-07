@@ -40,7 +40,6 @@ class ProcessQueueCommand extends Command
     private const CLI_STATUS_REMAIN = 1;
     private const CLI_STATUS_PROCESSED = 2;
     private const CLI_STATUS_ABORTED = 4;
-    private const CLI_STATUS_POLLABLE_PROCESSED = 8;
     private string $processId;
     private array $extensionSettings;
 
