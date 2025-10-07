@@ -30,6 +30,8 @@ class CallbackExecutionStrategy
 {
     /**
      * In the future, the callback should implement an interface.
+     * @template T of object
+     * @param class-string<T> $callbackClassName
      */
     public function fetchByCallback(string $callbackClassName, array $parameters, CrawlerController $crawlerController)
     {

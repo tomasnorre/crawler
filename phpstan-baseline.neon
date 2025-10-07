@@ -139,7 +139,7 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: '#^Call to an undefined method object\:\:crawler_execute\(\)\.$#'
+			message: '#^Call to an undefined method T of object\:\:crawler_execute\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
@@ -147,18 +147,6 @@ parameters:
 		-
 			message: '#^Method AOE\\Crawler\\CrawlStrategy\\CallbackExecutionStrategy\:\:fetchByCallback\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
-
-		-
-			message: '#^Parameter \#1 \$className of static method TYPO3\\CMS\\Core\\Utility\\GeneralUtility\:\:makeInstance\(\) expects class\-string\<object\>, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
-
-		-
-			message: '#^Unable to resolve the template type T in call to static method TYPO3\\CMS\\Core\\Utility\\GeneralUtility\:\:makeInstance\(\)$#'
-			identifier: argument.templateType
 			count: 1
 			path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
 
