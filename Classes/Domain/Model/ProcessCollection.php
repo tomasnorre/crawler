@@ -40,57 +40,56 @@ class ProcessCollection extends \ArrayObject
      * Method to retrieve an element from the collection.
      * @throws NoIndexFoundException
      */
-    public function offsetGet(mixed $index): Process
+    public function offsetGet(mixed $key): Process
     {
-        if (!parent::offsetExists($index)) {
+        if (!parent::offsetExists($key)) {
             throw new NoIndexFoundException('Index "' . var_export(
-                $index,
+                $key,
                 true
             ) . '" for \AOE\Crawler\Domain\Model\Process are not available', 1_593_714_823);
         }
-        return parent::offsetGet($index);
+        return parent::offsetGet($key);
     }
 
     /**
      * Method to add an element to the collection-
      *
-     * @param Process $subject
+     * @param Process $value
      * @throws InvalidArgumentException
      */
-    public function offsetSet(mixed $index, $subject): void
+    public function offsetSet(mixed $key, $value): void
     {
-        if (!$subject instanceof Process) {
+        if (!$value instanceof Process) {
             throw new \InvalidArgumentException(
                 'Wrong parameter type given, "\AOE\Crawler\Domain\Model\Process" expected!',
                 1_593_714_822
             );
         }
 
-        parent::offsetSet($index, $subject);
+        parent::offsetSet($key, $value);
     }
 
     /**
      * Method to append an element to the collection
-     * @param Process $subject
+     * @param Process $value
      * @throws InvalidArgumentException
      */
-    public function append($subject): void
+    public function append($value): void
     {
-        if (!$subject instanceof Process) {
+        if (!$value instanceof Process) {
             throw new \InvalidArgumentException(
                 'Wrong parameter type given, "\AOE\Crawler\Domain\Model\Process" expected!',
                 1_593_714_821
             );
         }
 
-        parent::append($subject);
+        parent::append($value);
     }
 
     /**
      * returns array of process ids of the current collection
-     * @return array
      */
-    public function getProcessIds()
+    public function getProcessIds(): array
     {
         $result = [];
         foreach ($this->getIterator() as $value) {
