@@ -1,12 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Constant AOE\\Crawler\\Command\\ProcessQueueCommand\:\:CLI_STATUS_POLLABLE_PROCESSED is unused\.$#'
-			identifier: classConstant.unused
-			count: 1
-			path: Classes/Command/ProcessQueueCommand.php
-
-		-
 			message: '#^Cannot access offset ''ShowFeVars'' on array\|object\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
