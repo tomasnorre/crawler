@@ -451,10 +451,7 @@ class ConfigurationService
             while ($row = $statement->fetchAssociative()) {
                 $rows[$row[$fieldName]] = $row;
             }
-
-            if (is_array($rows)) {
-                $paramArray[$parameter] = array_merge($paramArray[$parameter], array_keys($rows));
-            }
+            $paramArray[$parameter] = array_merge($paramArray[$parameter], array_keys($rows));
         }
         return $paramArray;
     }
