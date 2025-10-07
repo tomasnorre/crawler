@@ -202,12 +202,6 @@ parameters:
 			path: Classes/Domain/Repository/QueueRepository.php
 
 		-
-			message: '#^Method AOE\\Crawler\\Event\\ModifySkipPageEvent\:\:isSkipped\(\) should return string\|false but returns bool\|string\.$#'
-			identifier: return.type
-			count: 1
-			path: Classes/Event/ModifySkipPageEvent.php
-
-		-
 			message: '#^Cannot access offset ''alturl'' on array\|bool\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
