@@ -214,13 +214,7 @@ parameters:
 			path: Classes/Service/BackendModuleLogService.php
 
 		-
-			message: '#^Call to function is_array\(\) with array\<non\-empty\-array\<string, mixed\>\> will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: '#^Class cognitive complexity is 87, keep it under 28$#'
+			message: '#^Class cognitive complexity is 86, keep it under 28$#'
 			identifier: complexity.classLike
 			count: 1
 			path: Classes/Service/ConfigurationService.php
