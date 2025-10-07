@@ -145,20 +145,8 @@ parameters:
 			path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
 
 		-
-			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
-
-		-
 			message: '#^Call to function is_array\(\) with array\{scheme\: ''''\|''http''\|''https'', host\?\: string, port\?\: int\<0, 65535\>, user\?\: string, pass\?\: string, path\?\: string, query\?\: string, fragment\?\: string\} will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 1
-			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
-
-		-
-			message: '#^Method AOE\\Crawler\\CrawlStrategy\\SubProcessExecutionStrategy\:\:executeShellCommand\(\) should return string\|null but returns string\|false\|null\.$#'
-			identifier: return.type
 			count: 1
 			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
 
