@@ -5,6 +5,8 @@
 ### Added
 * Extract error information in SubProcess crawl strategy [@cweiske](https://github.com/cweiske)
 * Expose error when crawl response has not X-T3Crawler-Meta header [@cweiske](https://github.com/cweiske)
+* RequestHelper to more some of the logic for fetching value from request [@tomasnorre](https://github.com/tomasnorre)
+
 
 ### Changed
 * ProcessCleanUpHook is splitted into more classes to strive for seperations of concerns [@tomasnorre](https://github.com/tomasnorre)
