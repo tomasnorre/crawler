@@ -28,6 +28,8 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 #[CoversClass(RequestHelper::class)]
 class RequestHelperTest extends UnitTestCase
 {
+    protected bool $resetSingletonInstances = true;
+
     #[Test]
     public function getIntFromRequestFromParsedBody()
     {
@@ -51,6 +53,30 @@ class RequestHelperTest extends UnitTestCase
     }
 
     #[Test]
+    public function getIntFromRequestFromQueryParamsIntAsStringValue()
+    {
+        $value = '1000';
+        $serverRequest = new ServerRequest();
+        $serverRequest = $serverRequest->withQueryParams([
+            'value' => $value,
+        ]);
+        $this->assertSame(1000, RequestHelper::getIntFromRequest($serverRequest, 'value'));
+    }
+
+    #[Test]
+    public function getIntFromRequestFromWithBothParsedBodyAndQueryParams()
+    {
+        $serverRequest = new ServerRequest();
+        $serverRequest = $serverRequest->withParsedBody([
+            'value' => 2000,
+        ]);
+        $serverRequest = $serverRequest->withQueryParams([
+            'value' => 1000,
+        ]);
+        $this->assertSame(2000, RequestHelper::getIntFromRequest($serverRequest, 'value'));
+    }
+
+    #[Test]
     public function getIntFromRequestReturnDefault()
     {
         $serverRequest = new ServerRequest();
@@ -65,7 +91,7 @@ class RequestHelperTest extends UnitTestCase
         $serverRequest = $serverRequest->withParsedBody([
             'value' => $value,
         ]);
-        $this->assertSame($value, RequestHelper::getBoolFromRequest($serverRequest, 'value'));
+        $this->assertTrue(RequestHelper::getBoolFromRequest($serverRequest, 'value'));
     }
 
     #[Test]
@@ -76,14 +102,38 @@ class RequestHelperTest extends UnitTestCase
         $serverRequest = $serverRequest->withQueryParams([
             'value' => $value,
         ]);
-        $this->assertSame($value, RequestHelper::getBoolFromRequest($serverRequest, 'value'));
+        $this->assertTrue(RequestHelper::getBoolFromRequest($serverRequest, 'value'));
+    }
+
+    #[Test]
+    public function getBoolFromRequestFromWithBothParsedBodyAndQueryParams()
+    {
+        $serverRequest = new ServerRequest();
+        $serverRequest = $serverRequest->withParsedBody([
+            'value' => true,
+        ]);
+        $serverRequest = $serverRequest->withQueryParams([
+            'value' => false,
+        ]);
+        $this->assertTrue(RequestHelper::getBoolFromRequest($serverRequest, 'value'));
+    }
+
+    #[Test]
+    public function getBoolFromRequestFromQueryParamsExpectFalse()
+    {
+        $value = false;
+        $serverRequest = new ServerRequest();
+        $serverRequest = $serverRequest->withQueryParams([
+            'value' => $value,
+        ]);
+        $this->assertFalse(RequestHelper::getBoolFromRequest($serverRequest, 'value'));
     }
 
     #[Test]
     public function getBoolFromRequestReturnDefault()
     {
         $serverRequest = new ServerRequest();
-        $this->assertSame(false, RequestHelper::getBoolFromRequest($serverRequest, 'value'));
+        $this->assertFalse(RequestHelper::getBoolFromRequest($serverRequest, 'value'));
     }
 
     #[Test]
@@ -130,6 +180,29 @@ class RequestHelperTest extends UnitTestCase
     }
 
     #[Test]
+    public function getStringFromRequestFromWithBothParsedBodyAndQueryParams()
+    {
+        $serverRequest = new ServerRequest();
+        $serverRequest = $serverRequest->withParsedBody([
+            'value' => 'parsedBody',
+        ]);
+        $serverRequest = $serverRequest->withQueryParams([
+            'value' => 'queryParams',
+        ]);
+        $this->assertSame('parsedBody', RequestHelper::getStringFromRequest($serverRequest, 'value'));
+    }
+
+    #[Test]
+    public function getStringFromRequestWithIntValue()
+    {
+        $serverRequest = new ServerRequest();
+        $serverRequest = $serverRequest->withQueryParams([
+            'value' => 1001,
+        ]);
+        $this->assertSame('1001', RequestHelper::getStringFromRequest($serverRequest, 'value'));
+    }
+
+    #[Test]
     public function getStringFromRequestReturnDefault()
     {
         $serverRequest = new ServerRequest();
@@ -164,6 +237,29 @@ class RequestHelperTest extends UnitTestCase
             'value' => $value,
         ]);
         $this->assertSame($value, RequestHelper::getArrayFromRequest($serverRequest, 'value'));
+    }
+
+    #[Test]
+    public function getArrayFromRequestFromWithBothParsedBodyAndQueryParams()
+    {
+        $parsedBody = [
+            'int' => 123,
+            'bool' => true,
+            'string' => 'parsedBody',
+        ];
+        $queryParams = [
+            'int' => 321,
+            'bool' => false,
+            'string' => 'queryParams',
+        ];
+        $serverRequest = new ServerRequest();
+        $serverRequest = $serverRequest->withParsedBody([
+            'value' => $parsedBody,
+        ]);
+        $serverRequest = $serverRequest->withQueryParams([
+            'value' => $queryParams,
+        ]);
+        $this->assertSame($parsedBody, RequestHelper::getArrayFromRequest($serverRequest, 'value'));
     }
 
     #[Test]

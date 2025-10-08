@@ -61,7 +61,7 @@ final class RequestHelper
             ?? ($query[$key] ?? null)
             ?? $default;
 
-        return is_scalar($value) ? trim((string) $value) : $default;
+        return is_scalar($value) ? (string) $value : $default;
     }
 
     public static function getArrayFromRequest(ServerRequestInterface $request, string $key): array
