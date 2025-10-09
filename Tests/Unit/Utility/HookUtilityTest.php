@@ -28,6 +28,8 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 #[CoversClass(HookUtility::class)]
 class HookUtilityTest extends UnitTestCase
 {
+    protected bool $resetSingletonInstances = true;
+
     #[Test]
     public function testRegisterHooksRegistersExpectedHooks(): void
     {

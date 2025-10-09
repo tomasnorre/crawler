@@ -52,16 +52,42 @@ class OldProcessCleanerTest extends UnitTestCase
     }
 
     #[Test]
-    public function cleanDoesNothingWhenRepositoryReturnsNonArray(): void
+    public function cleanDoesNothingWhenRepositoryReturnsEmpty(): void
     {
+        $this->processRepository
+            ->expects(self::once())
+            ->method('getActiveProcessesOlderThanOneHour')
+            ->willReturn([]);
+
+        $this->processManager->expects(self::never())->method('processExists');
+        $this->processRepository->expects(self::never())->method('removeByProcessId');
+        $this->queueRepository->expects(self::never())->method('unsetQueueProcessId');
+
+        $this->subject->clean();
+    }
+
+    #[Test]
+    public function cleanDoesNothingWhenRepositoryReturnsNull(): void
+    {
+        $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('Expected array, got NULL');
         $this->processRepository
             ->expects(self::once())
             ->method('getActiveProcessesOlderThanOneHour')
             ->willReturn(null);
 
-        $this->processManager->expects(self::never())->method('processExists');
-        $this->processRepository->expects(self::never())->method('removeByProcessId');
-        $this->queueRepository->expects(self::never())->method('unsetQueueProcessId');
+        $this->subject->clean();
+    }
+
+    #[Test]
+    public function ensureEarlyReturnIfResultIsNotAnArray(): void
+    {
+        $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('Expected array, got string');
+        $this->processRepository
+            ->expects(self::once())
+            ->method('getActiveProcessesOlderThanOneHour')
+            ->willReturn('string-instead-of-array');
 
         $this->subject->clean();
     }
@@ -146,21 +172,6 @@ class OldProcessCleanerTest extends UnitTestCase
                     'process_id' => 'skip-as-i-cannot-convert-string-to-int',
                 ],
             ]);
-
-        $this->processManager->expects(self::never())->method('processExists');
-        $this->processRepository->expects(self::never())->method('removeByProcessId');
-        $this->queueRepository->expects(self::never())->method('unsetQueueProcessId');
-
-        $this->subject->clean();
-    }
-
-    #[Test]
-    public function ensureEarlyReturnIfResultIsNotAnArray(): void
-    {
-        $this->processRepository
-            ->expects(self::once())
-            ->method('getActiveProcessesOlderThanOneHour')
-            ->willReturn('string-instead-of-array');
 
         $this->processManager->expects(self::never())->method('processExists');
         $this->processRepository->expects(self::never())->method('removeByProcessId');
