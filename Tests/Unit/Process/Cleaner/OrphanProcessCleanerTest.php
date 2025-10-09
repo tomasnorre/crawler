@@ -51,6 +51,21 @@ class OrphanProcessCleanerTest extends UnitTestCase
         );
     }
 
+    public function cleanDoesNothingWhenRepositoryReturnsEmpty(): void
+    {
+        $this->processRepository
+            ->expects(self::once())
+            ->method('getActiveOrphanProcesses')
+            ->willReturn([]);
+
+        $this->processManager->expects(self::never())->method('findDispatcherProcesses');
+        $this->processRepository->expects(self::never())->method('removeByProcessId');
+        $this->queueRepository->expects(self::never())->method('unsetQueueProcessId');
+
+        $this->subject->clean();
+
+    }
+
     #[Test]
     public function cleanSkipsProcessesWithSystemIdLessOrEqualOne(): void
     {
@@ -64,6 +79,70 @@ class OrphanProcessCleanerTest extends UnitTestCase
                 ],
                 [
                     'system_process_id' => 1,
+                    'process_id' => 'p-1',
+                ],
+            ]);
+
+        $this->processManager->expects(self::never())->method('findDispatcherProcesses');
+        $this->processRepository->expects(self::never())->method('removeByProcessId');
+        $this->queueRepository->expects(self::never())->method('unsetQueueProcessId');
+
+        $this->subject->clean();
+    }
+
+    #[Test]
+    public function cleanSkipsProcessesWithSystemIdEqualOneAndTwo(): void
+    {
+        $this->processRepository
+            ->expects(self::once())
+            ->method('getActiveOrphanProcesses')
+            ->willReturn([
+                [
+                    'system_process_id' => 1,
+                    'process_id' => 'p-0',
+                ],
+                [
+                    'system_process_id' => 2,
+                    'process_id' => 'p-1',
+                ],
+            ]);
+
+        $this->processManager->expects(self::once())->method('findDispatcherProcesses');
+        $this->processRepository->expects(self::once())->method('removeByProcessId');
+        $this->queueRepository->expects(self::once())->method('unsetQueueProcessId');
+
+        $this->subject->clean();
+    }
+
+    #[Test]
+    public function cleanSkipsProcessesWithSystemIdIntvalAsString(): void
+    {
+        $this->processRepository
+            ->expects(self::once())
+            ->method('getActiveOrphanProcesses')
+            ->willReturn([
+                [
+                    'system_process_id' => '2',
+                    'process_id' => 'p-1',
+                ],
+            ]);
+
+        $this->processManager->expects(self::once())->method('findDispatcherProcesses');
+        $this->processRepository->expects(self::once())->method('removeByProcessId');
+        $this->queueRepository->expects(self::once())->method('unsetQueueProcessId');
+
+        $this->subject->clean();
+    }
+
+    #[Test]
+    public function cleanSkipsProcessesWithSystemIdAsString(): void
+    {
+        $this->processRepository
+            ->expects(self::once())
+            ->method('getActiveOrphanProcesses')
+            ->willReturn([
+                [
+                    'system_process_id' => 'not-convertable-id',
                     'process_id' => 'p-1',
                 ],
             ]);
@@ -124,7 +203,7 @@ class OrphanProcessCleanerTest extends UnitTestCase
         $this->processManager
             ->expects(self::once())
             ->method('findDispatcherProcesses')
-            ->willReturn(['typo3 300 something']);
+            ->willReturn(['typo3 300 something', 'typo3 88 something else']);
 
         $this->processRepository->expects(self::never())->method('removeByProcessId');
         $this->queueRepository->expects(self::never())->method('unsetQueueProcessId');
@@ -141,10 +220,12 @@ class OrphanProcessCleanerTest extends UnitTestCase
         $this->processRepository
             ->expects(self::once())
             ->method('getActiveOrphanProcesses')
-            ->willReturn([[
-                'system_process_id' => $systemProcessId,
-                'process_id' => $processId,
-            ]]);
+            ->willReturn([
+                [
+                    'system_process_id' => $systemProcessId,
+                    'process_id' => $processId,
+                ],
+            ]);
 
         // Dispatcher returns process with a different PID -> should trigger removal
         $this->processManager
