@@ -19,6 +19,7 @@ namespace AOE\Crawler\Controller\Backend;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Controller\Backend\Helper\RequestHelper;
 use AOE\Crawler\Crawler;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
@@ -74,7 +75,7 @@ final class BackendModuleCrawlerProcessController extends AbstractBackendModuleC
             MessageUtility::addErrorMessage($e->getMessage());
         }
 
-        $mode = $request->getParsedBody()['processListMode'] ?? $request->getQueryParams()['processListMode'] ?? 'simple';
+        $mode = RequestHelper::getStringFromRequest($request, 'processListMode', 'simple');
         $allProcesses = $mode === 'simple' ? $this->processRepository->findAllActive() : $this->processRepository->findAll();
         $isCrawlerEnabled = !$this->crawler->isDisabled() && !$this->isErrorDetected;
         $currentActiveProcesses = $this->processRepository->findAllActive()->count();
@@ -114,7 +115,7 @@ final class BackendModuleCrawlerProcessController extends AbstractBackendModuleC
      */
     private function handleProcessOverviewActions(ServerRequestInterface $request): void
     {
-        $action = $request->getParsedBody()['action'] ?? $request->getQueryParams()['action'] ?? null;
+        $action = RequestHelper::getStringFromRequest($request, 'action');
 
         switch ($action) {
             case 'stopCrawling':

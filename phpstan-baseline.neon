@@ -1,24 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Cannot access offset ''ShowFeVars'' on array\|object\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
-
-		-
-			message: '#^Cannot access offset ''ShowResultLog'' on array\|object\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
-
-		-
-			message: '#^Cannot access offset ''_csv'' on array\|object\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
-
-		-
 			message: '#^Cannot access offset ''_flush'' on array\|object\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -26,24 +8,6 @@ parameters:
 
 		-
 			message: '#^Cannot access offset ''_flush_all'' on array\|object\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
-
-		-
-			message: '#^Cannot access offset ''displayLog'' on array\|object\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
-
-		-
-			message: '#^Cannot access offset ''itemsPerPage'' on array\|object\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
-
-		-
-			message: '#^Cannot access offset ''logDepth'' on array\|object\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
@@ -61,32 +25,8 @@ parameters:
 			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
 
 		-
-			message: '#^Cannot access offset ''qid_read'' on array\|object\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
-
-		-
-			message: '#^Cannot access offset ''setID'' on array\|object\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
-			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
-
-		-
 			message: '#^Call to function is_object\(\) with AOE\\Crawler\\Hooks\\CrawlerHookInterface will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 1
-			path: Classes/Controller/Backend/BackendModuleCrawlerProcessController.php
-
-		-
-			message: '#^Cannot access offset ''action'' on array\|object\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Classes/Controller/Backend/BackendModuleCrawlerProcessController.php
-
-		-
-			message: '#^Cannot access offset ''processListMode'' on array\|object\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: Classes/Controller/Backend/BackendModuleCrawlerProcessController.php
 
@@ -95,36 +35,6 @@ parameters:
 			identifier: argument.templateType
 			count: 1
 			path: Classes/Controller/Backend/BackendModuleCrawlerProcessController.php
-
-		-
-			message: '#^Cannot access offset ''_crawl'' on array\|object\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Classes/Controller/Backend/BackendModuleStartCrawlingController.php
-
-		-
-			message: '#^Cannot access offset ''_download'' on array\|object\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Classes/Controller/Backend/BackendModuleStartCrawlingController.php
-
-		-
-			message: '#^Cannot access offset ''configurationSelection'' on array\|object\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Classes/Controller/Backend/BackendModuleStartCrawlingController.php
-
-		-
-			message: '#^Cannot access offset ''crawlingDepth'' on array\|object\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Classes/Controller/Backend/BackendModuleStartCrawlingController.php
-
-		-
-			message: '#^Cannot access offset ''tstamp'' on array\|object\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: Classes/Controller/Backend/BackendModuleStartCrawlingController.php
 
 		-
 			message: '#^Class cognitive complexity is 96, keep it under 28$#'
