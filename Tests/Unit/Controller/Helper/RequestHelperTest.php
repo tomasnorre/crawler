@@ -64,7 +64,7 @@ class RequestHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function getIntFromRequestFromWithBothParsedBodyAndQueryParams()
+    public function getIntFromRequestWithBothParsedBodyAndQueryParams()
     {
         $serverRequest = new ServerRequest();
         $serverRequest = $serverRequest->withParsedBody([
@@ -106,7 +106,7 @@ class RequestHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function getBoolFromRequestFromWithBothParsedBodyAndQueryParams()
+    public function getBoolFromRequestWithBothParsedBodyAndQueryParams()
     {
         $serverRequest = new ServerRequest();
         $serverRequest = $serverRequest->withParsedBody([
@@ -180,7 +180,7 @@ class RequestHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function getStringFromRequestFromWithBothParsedBodyAndQueryParams()
+    public function getStringFromRequestWithBothParsedBodyAndQueryParams()
     {
         $serverRequest = new ServerRequest();
         $serverRequest = $serverRequest->withParsedBody([
@@ -193,7 +193,7 @@ class RequestHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function getStringFromRequestWithIntValue()
+    public function getStringFromRequestStringAsIntValue()
     {
         $serverRequest = new ServerRequest();
         $serverRequest = $serverRequest->withQueryParams([
@@ -240,7 +240,7 @@ class RequestHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function getArrayFromRequestFromWithBothParsedBodyAndQueryParams()
+    public function getArrayFromRequestWithBothParsedBodyAndQueryParams()
     {
         $parsedBody = [
             'int' => 123,
