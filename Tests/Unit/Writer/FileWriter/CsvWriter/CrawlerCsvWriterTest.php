@@ -20,13 +20,15 @@ namespace AOE\Crawler\Tests\Unit\Writer\FileWriter\CsvWriter;
  */
 
 use AOE\Crawler\Writer\FileWriter\CsvWriter\CrawlerCsvWriter;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Writer\FileWriter\CsvWriter\CrawlerCsvWriter::class)]
+#[CoversClass(CrawlerCsvWriter::class)]
 class CrawlerCsvWriterTest extends UnitTestCase
 {
-    protected \AOE\Crawler\Writer\FileWriter\CsvWriter\CrawlerCsvWriter $subject;
+    protected CrawlerCsvWriter $subject;
     protected bool $resetSingletonInstances = true;
 
     protected function setUp(): void
@@ -36,7 +38,7 @@ class CrawlerCsvWriterTest extends UnitTestCase
         $this->subject = GeneralUtility::makeInstance(CrawlerCsvWriter::class);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function arrayToCsvTest(): void
     {
         $records = [];
@@ -46,12 +48,28 @@ class CrawlerCsvWriterTest extends UnitTestCase
         ];
 
         // Done to make sure that the reset() in the function is used, to reset the array
-        // to it's start pointer again.
+        // to its start pointer again.
         next($records);
 
         self::assertEquals(
             '"Page Title","Page Uid"' . chr(13) . chr(10) . '"Home",1',
             $this->subject->arrayToCsv($records)
         );
+    }
+
+    #[Test]
+    public function arrayToCsvEnsureIntKeysAreConvertedToStrings(): void
+    {
+        $records = [];
+        $records[] = [
+            100 => 'Home',
+            200 => 1,
+        ];
+
+        // Done to make sure that the reset() in the function is used, to reset the array
+        // to its start pointer again.
+        next($records);
+
+        self::assertEquals('100,200' . chr(13) . chr(10) . '"Home",1', $this->subject->arrayToCsv($records));
     }
 }
