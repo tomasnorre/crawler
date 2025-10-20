@@ -19,19 +19,16 @@ declare(strict_types=1);
 
 namespace AOE\Crawler\Controller\Ajax;
 
-use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Http\Response;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class ProcessStatusController
 {
     public function __construct(
         private readonly ProcessRepository $processRepository,
-    )
-    {
+    ) {
     }
 
     public function getProcessStatus(ServerRequestInterface $request): ResponseInterface
