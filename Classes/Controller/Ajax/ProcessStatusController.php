@@ -53,7 +53,7 @@ class ProcessStatusController
                 'status' => $process->getProgress(),
                 'processedItems' => $process->getAmountOfItemsProcessed(),
                 'runtime' => $process->getRuntime(),
-                'processId' => $id,
+                'processId' => $process->getProcessId(),
             ]
         );
         if ($content === false) {

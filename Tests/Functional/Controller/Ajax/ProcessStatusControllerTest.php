@@ -20,6 +20,7 @@ namespace AOE\Crawler\Tests\Functional\Controller\Ajax;
  */
 
 use AOE\Crawler\Controller\Ajax\ProcessStatusController;
+use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -53,7 +54,7 @@ class ProcessStatusControllerTest extends FunctionalTestCase
         $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getBody')
             ->willReturn($stream);
-        $response = $this->subject->getProcessStatus( $request);
+        $response = $this->subject->getProcessStatus($request);
 
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertEquals('No process ID provided', $response->getReasonPhrase());
@@ -65,7 +66,9 @@ class ProcessStatusControllerTest extends FunctionalTestCase
         $processId = 'abcdef';
         $stream = $this->createMock(StreamInterface::class);
         $stream->method('getContents')
-            ->willReturn(json_encode(['id' => $processId]));
+            ->willReturn(json_encode([
+                'id' => $processId,
+            ]));
 
         $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getBody')
@@ -74,12 +77,49 @@ class ProcessStatusControllerTest extends FunctionalTestCase
         $response = $this->subject->getProcessStatus($request);
 
         $this->assertEquals(404, $response->getStatusCode());
-        $this->assertEquals('Process with ID: ' . $processId .' not found', $response->getReasonPhrase());
+        $this->assertEquals('Process with ID: ' . $processId . ' not found', $response->getReasonPhrase());
     }
 
     #[Test]
     public function getProcessStatusReturnJson()
     {
-        $this->markTestSkipped('Please implement');
+        $status = 42.0;
+        $processedItems = 3;
+        $runtime = 35;
+        $processId = 'abcdef';
+
+        $jsonResponse = json_encode([
+            'status' => $status,
+            'processedItems' => $processedItems,
+            'runtime' => $runtime,
+            'processId' => $processId,
+        ]);
+
+        $mockedProcess = $this->createMock(Process::class);
+        $mockedProcess->expects($this->once())->method('getProgress')->willReturn($status);
+        $mockedProcess->expects($this->once())->method('getAmountOfItemsProcessed')->willReturn($processedItems);
+        $mockedProcess->expects($this->once())->method('getRuntime')->willReturn($runtime);
+        $mockedProcess->expects($this->once())->method('getProcessId')->willReturn($processId);
+
+        $mockedProcessRepository = $this->createMock(ProcessRepository::class);
+        $mockedProcessRepository->expects($this->once())->method('findByProcessId')->willReturn($mockedProcess);
+
+        $processId = 'abcdef';
+        $stream = $this->createMock(StreamInterface::class);
+        $stream->method('getContents')
+            ->willReturn(json_encode([
+                'id' => $processId,
+            ]));
+
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->method('getBody')
+            ->willReturn($stream);
+
+        $subject = new ProcessStatusController($mockedProcessRepository);
+
+        $response = $subject->getProcessStatus($request);
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals($jsonResponse, $response->getBody());
+
     }
 }
