@@ -22,7 +22,7 @@
         let status = `${data.status}%`;
         bar.style.width = status;
         bar.innerHTML = status;
-        updateTableCellByClass(id, 'processedItems', `${data.procesedItems}`);
+        updateTableCellByClass(id, 'processedItems', `${data.processedItems}`);
         updateTableCellByClass(id, 'runtime', `${data.runtime}`);
 
         if(`${data.status}` >= 100) {

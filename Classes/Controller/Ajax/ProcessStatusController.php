@@ -51,7 +51,7 @@ class ProcessStatusController
         $content = json_encode(
             [
                 'status' => $process->getProgress(),
-                'procesedItems' => $process->getAmountOfItemsProcessed(),
+                'processedItems' => $process->getAmountOfItemsProcessed(),
                 'runtime' => $process->getRuntime(),
                 'processId' => $id,
             ]
