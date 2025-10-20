@@ -37,22 +37,25 @@ class ProcessStatusController
         $response = new Response();
 
         if ($id === null) {
-            $response->getBody()->write(json_encode([
-                'status' => 'error',
-                'message' => 'No process ID provided',
-            ]));
-            return $response;
+            return $response->withStatus(400, 'No process ID provided');
         }
 
         $process = $this->getProcess($id);
+        if ($process === null) {
+            return $response->withStatus(404, 'Process with ID ' . $id . ' not found');
+        }
 
-        $response->getBody()->write(json_encode(
+        $content = json_encode(
             [
                 'status' => $process->getProgress(),
                 'procesedItems' => $process->getAmountOfItemsProcessed(),
                 'processId' => $id,
             ]
-        ));
+        );
+        if ($content === false) {
+            throw new \RuntimeException('Failed to encode JSON response', 1760971184);
+        }
+        $response->getBody()->write($content);
         return $response;
     }
 
