@@ -77,7 +77,7 @@
 					<f:switch expression="{process.state}">
 						<f:case value="running">
 							<div class="crawlerprocessprogress progress" style="width: 200px; margin-bottom: 0px !important;">
-								<div class="progress-bar crawlerprocessprogress-bar" role="progressbar" style="width: {process.progress}%" aria-valuenow="{process.progress}" aria-valuemin="0" aria-valuemax="100">{process.progress} %</div>
+								<div id="{process.processId}" class="progress-bar crawlerprocessprogress-bar" role="progressbar" style="width: {process.progress}%" aria-valuenow="{process.progress}" aria-valuemin="0" aria-valuemax="100">{process.progress} %</div>
 							</div>
 						</f:case>
 						<f:case value="cancelled">
@@ -93,8 +93,8 @@
 		</tbody>
 	</table>
     <f:be.pageRenderer
-        includeJavaScriptModules="{
-         0: '@tomasnorre/crawler/ProcessStatus.js'
+        includeJsFiles="{
+         0: 'EXT:crawler/Resources/Public/JavaScript/ProcessStatus.js'
       }"
     />
 </f:section>

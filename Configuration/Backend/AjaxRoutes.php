@@ -7,5 +7,5 @@ return [
         'path' => '/crawler/process/status',
         'target' => ProcessStatusController::class . '::getProcessStatus',
         'inheritAccessFromModule' => 'web_site_crawler_process',
-    ]
+    ],
 ];

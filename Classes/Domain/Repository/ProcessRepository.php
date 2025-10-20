@@ -126,6 +126,32 @@ class ProcessRepository
         return $collection;
     }
 
+    public function findByProcessId(string $processId): ?Process
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
+
+        $row = $queryBuilder
+            ->select('*')
+            ->from(self::TABLE_NAME)
+            ->where($queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId)))
+            ->executeQuery()
+            ->fetchAssociative();
+
+        if ($row === false) {
+            return null;
+        }
+
+        $process = new Process();
+        $process->setProcessId((string) $row['process_id']);
+        $process->setActive((bool) $row['active']);
+        $process->setTtl((int) $row['ttl']);
+        $process->setAssignedItemsCount((int) $row['assigned_items_count']);
+        $process->setDeleted((bool) $row['deleted']);
+        $process->setSystemProcessId((string) $row['system_process_id']);
+
+        return $process;
+    }
+
     /**
      * @param string $processId
      */

@@ -19,21 +19,46 @@ declare(strict_types=1);
 
 namespace AOE\Crawler\Controller\Ajax;
 
-use Psr\Http\Message\ResponseFactoryInterface;
+use AOE\Crawler\Domain\Model\Process;
+use AOE\Crawler\Domain\Repository\ProcessRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Core\Http\Response;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class ProcessStatusController
 {
-    public function __construct(
-        private readonly ResponseFactoryInterface $responseFactory,
-    )
-    {}
-
     public function getProcessStatus(ServerRequestInterface $request): ResponseInterface
     {
-        $response = $this->responseFactory->createResponse();
-        $response->getBody()->write(json_encode(['status' => 'ok']));
+        $body = $request->getBody()->getContents();
+        $data = json_decode($body, true);
+        $id = $data['id'] ?? null;
+
+        $response = new Response();
+
+        if ($id === null) {
+            $response->getBody()->write(json_encode([
+                'status' => 'error',
+                'message' => 'No process ID provided',
+            ]));
+            return $response;
+        }
+
+        $process = $this->getProcess($id);
+
+        $response->getBody()->write(json_encode(
+            [
+                'status' => $process->getProgress(),
+                'procesedItems' => $process->getAmountOfItemsProcessed(),
+                'processId' => $id,
+            ]
+        ));
         return $response;
+    }
+
+    private function getProcess(string $id): ?Process
+    {
+        $processRepository = GeneralUtility::makeInstance(ProcessRepository::class);
+        return $processRepository->findByProcessId($id);
     }
 }

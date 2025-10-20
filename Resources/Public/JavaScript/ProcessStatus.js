@@ -1,8 +1,54 @@
-import AjaxRequest from "@typo3/core/ajax/ajax-request.js";
+(function () {
+    const ajaxKey = 'crawler_process_status';
+    const ajaxUrl = TYPO3.settings?.ajaxUrls?.[ajaxKey];
 
-new AjaxRequest(TYPO3.settings.ajaxUrls.crawler_process_status)
-    .get()
-    .then(async function (response) {
-        const resolved = await response.resolve();
-        console.log(resolved.result);
-    });
+    async function fetchStatus(id) {
+        try {
+            const resp = await fetch(ajaxUrl, {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({id})
+            });
+            const data = await resp.json();
+            updateProgress(id, data);
+        } catch (err) {
+            console.error('Error fetching status', err);
+        }
+    }
+
+    function updateProgress(id, data) {
+        const bar = document.getElementById(id);
+        let status = `${data.status}%`;
+        bar.style.width = status;
+        bar.innerHTML = status;
+        updateProcessedIetemsCell(id, `${data.procesedItems}`);
+
+        if(`${data.status}` >= 100) {
+            bar.classList.remove('crawlerprocessprogress-bar');
+            // Trigger a refresh of the page to show updated status
+            document.querySelector('a[title="Refresh"]').click();
+        }
+    }
+
+    function updateProcessedIetemsCell(elementId, newValue) {
+        const el = document.getElementById(elementId);
+        if (!el) return;
+
+        const row = el.closest('tr'); // climbs up the DOM tree until it finds a <tr>
+        if (!row) return;
+
+        const cells = row.getElementsByTagName('td');
+        if (cells.length >= 5) {
+            cells[4].textContent = newValue; // set new text
+        }
+    }
+
+    async function getElementsToUpdate() {
+        let progressBars = document.getElementsByClassName('crawlerprocessprogress-bar');
+        for (let i = 0; i < progressBars.length; i++) {
+            await fetchStatus(progressBars[i].id);
+        }
+    }
+    setInterval(getElementsToUpdate, 3000);
+})();
