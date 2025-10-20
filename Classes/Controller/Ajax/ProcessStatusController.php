@@ -33,9 +33,12 @@ class ProcessStatusController
 
     public function getProcessStatus(ServerRequestInterface $request): ResponseInterface
     {
-        $body = $request->getBody()->getContents();
-        $data = json_decode($body, true);
-        $id = $data['id'] ?? null;
+        $response = new Response();
+        $body = $request->getParsedBody();
+        if(!is_array($body)) {
+            return $response->withStatus(400, 'Bad Request');
+        }
+        $id = $body['id'] ?? null;
 
         $response = new Response();
 
