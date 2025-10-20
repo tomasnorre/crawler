@@ -28,6 +28,12 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class ProcessStatusController
 {
+    public function __construct(
+        private readonly ProcessRepository $processRepository,
+    )
+    {
+    }
+
     public function getProcessStatus(ServerRequestInterface $request): ResponseInterface
     {
         $body = $request->getBody()->getContents();
@@ -40,7 +46,7 @@ class ProcessStatusController
             return $response->withStatus(400, 'No process ID provided');
         }
 
-        $process = $this->getProcess($id);
+        $process = $this->processRepository->findByProcessId($id);
         if ($process === null) {
             return $response->withStatus(404, 'Process with ID ' . $id . ' not found');
         }
@@ -49,6 +55,7 @@ class ProcessStatusController
             [
                 'status' => $process->getProgress(),
                 'procesedItems' => $process->getAmountOfItemsProcessed(),
+                'runtime' => $process->getRuntime(),
                 'processId' => $id,
             ]
         );
@@ -57,11 +64,5 @@ class ProcessStatusController
         }
         $response->getBody()->write($content);
         return $response;
-    }
-
-    private function getProcess(string $id): ?Process
-    {
-        $processRepository = GeneralUtility::makeInstance(ProcessRepository::class);
-        return $processRepository->findByProcessId($id);
     }
 }

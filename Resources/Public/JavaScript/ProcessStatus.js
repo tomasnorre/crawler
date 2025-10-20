@@ -22,7 +22,8 @@
         let status = `${data.status}%`;
         bar.style.width = status;
         bar.innerHTML = status;
-        updateProcessedIetemsCell(id, `${data.procesedItems}`);
+        updateTableCellByClass(id, 'processedItems', `${data.procesedItems}`);
+        updateTableCellByClass(id, 'runtime', `${data.runtime}`);
 
         if(`${data.status}` >= 100) {
             bar.classList.remove('crawlerprocessprogress-bar');
@@ -31,16 +32,16 @@
         }
     }
 
-    function updateProcessedIetemsCell(elementId, newValue) {
+    function updateTableCellByClass(elementId, cellClass, newValue) {
         const el = document.getElementById(elementId);
         if (!el) return;
 
-        const row = el.closest('tr'); // climbs up the DOM tree until it finds a <tr>
+        const row = el.closest('tr');
         if (!row) return;
 
-        const cells = row.getElementsByTagName('td');
-        if (cells.length >= 5) {
-            cells[4].textContent = newValue; // set new text
+        const cell = row.querySelector(`td.${cellClass}`);
+        if (cell) {
+            cell.textContent = newValue;
         }
     }
 
