@@ -45,7 +45,7 @@ class ProcessStatusController
 
         $process = $this->processRepository->findByProcessId($id);
         if ($process === null) {
-            return $response->withStatus(404, 'Process with ID ' . $id . ' not found');
+            return $response->withStatus(404, 'Process with ID: ' . $id . ' not found');
         }
 
         $content = json_encode(
