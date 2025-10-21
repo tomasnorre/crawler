@@ -3,6 +3,10 @@
     const ajaxUrl = TYPO3.settings?.ajaxUrls?.[ajaxKey];
 
     async function fetchStatus(id) {
+        if (!ajaxUrl) {
+            console.error('Missing TYPO3 AJAX URL for crawler_process_status');
+            return;
+        }
         try {
             const resp = await fetch(ajaxUrl, {
                 method: 'POST',
@@ -10,6 +14,9 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({id})
             });
+            if (!resp.ok) {
+                throw new Error(`HTTP error ${resp.status}`);
+            }
             const data = await resp.json();
             updateProgress(id, data);
         } catch (err) {
@@ -25,7 +32,7 @@
         updateTableCellByClass(id, 'processedItems', `${data.processedItems}`);
         updateTableCellByClass(id, 'runtime', `${data.runtime}`);
 
-        if(`${data.status}` >= 100) {
+        if (Number(data.status) >= 100) {
             bar.classList.remove('crawlerprocessprogress-bar');
             // Trigger a refresh of the page to show updated status
             document.querySelector('a[title="Refresh"]').click();
@@ -46,10 +53,9 @@
     }
 
     async function getElementsToUpdate() {
-        let progressBars = document.getElementsByClassName('crawlerprocessprogress-bar');
-        for (let i = 0; i < progressBars.length; i++) {
-            await fetchStatus(progressBars[i].id);
-        }
+        const progressBars = document.getElementsByClassName('crawlerprocessprogress-bar');
+        const promises = Array.from(progressBars).map(bar => fetchStatus(bar.id));
+        await Promise.all(promises);
     }
     setInterval(getElementsToUpdate, 3000);
 })();
