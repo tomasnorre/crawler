@@ -25,7 +25,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Http\Response;
 
 /**
- * @internal since 12.0.10
+ * @internal since v12.0.10
  */
 class ProcessStatusController
 {
