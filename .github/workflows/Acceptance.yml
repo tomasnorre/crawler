@@ -129,9 +129,6 @@ jobs:
         run: echo "BRANCH_NAME=$(echo ${GITHUB_HEAD_REF})" >> $GITHUB_ENV
 
       - uses: actions/checkout@v5
-      - uses: ddev/github-action-setup-ddev@v1
-        with:
-          ddevDir: ".devbox"
       - name: Patch composer.json for forked PR
         if: >
           github.event_name == 'pull_request' &&
@@ -140,14 +137,21 @@ jobs:
           cd .devbox
           composer config repositories.crawler-pr '{"type": "vcs", "url": "https://github.com/${{ github.event.pull_request.head.repo.full_name }}.git"}'
 
-      - name: Playwright
+      - name: Prepare devbox before start
         run: |
           export FROM_PATH='../../'
           export TO_PATH=$(echo $GITHUB_WORKSPACE)
           cd .devbox
           sed -i 's/php_version: "8.1"/php_version: "${{ matrix.php }}"/g' .ddev/config.yaml
           sed -i "s|$FROM_PATH|$TO_PATH|g" .ddev/docker-compose.volume.yaml
-          ddev restart
+
+      - uses: ddev/github-action-setup-ddev@v1
+        with:
+          ddevDir: ".devbox"
+
+      - name: Playwright
+        run: |
+          cd .devbox
           rm -rf vendor composer.lock
           ddev composer require typo3/cms-core=${{ matrix.typo3 }} tomasnorre/crawler=dev-$BRANCH_NAME
           cd .. # Going back to "root" directory
