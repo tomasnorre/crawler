@@ -140,7 +140,7 @@ jobs:
           cd .devbox
           composer config repositories.crawler-pr '{"type": "vcs", "url": "https://github.com/${{ github.event.pull_request.head.repo.full_name }}.git"}'
 
-      - name: Playwright
+      - name: Tests
         run: |
           export FROM_PATH='../../'
           export TO_PATH=$(echo $GITHUB_WORKSPACE)
