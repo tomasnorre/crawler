@@ -25,7 +25,8 @@
         "typo3/cms-tstemplate": "^12.4 || ^13.4",
         "typo3/minimal": "^12.4 || ^13.4",
         "typo3/cms-install": "^12.4 || ^13.4",
-        "georgringer/news": "^12"
+        "georgringer/news": "^12",
+        "helhum/typo3-console": "^8.2"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest"
