@@ -140,7 +140,7 @@ jobs:
           cd .devbox
           composer config repositories.crawler-pr '{"type": "vcs", "url": "https://github.com/${{ github.event.pull_request.head.repo.full_name }}.git"}'
 
-      - name: CodeCeption
+      - name: Playwright
         run: |
           export FROM_PATH='../../'
           export TO_PATH=$(echo $GITHUB_WORKSPACE)
@@ -150,12 +150,12 @@ jobs:
           ddev restart
           rm -rf vendor composer.lock
           ddev composer require typo3/cms-core=${{ matrix.typo3 }} tomasnorre/crawler=dev-$BRANCH_NAME
-          ddev exec bin/typo3 backend:lock
-          ddev exec bin/typo3 extension:setup
-          ddev exec bin/typo3 cache:flush
-          ddev exec bin/typo3 cache:warmup
-          ddev exec bin/typo3 upgrade:run
-          ddev exec bin/typo3 backend:unlock
+#          ddev exec bin/typo3 backend:lock
+#          ddev exec bin/typo3 extension:setup
+#          ddev exec bin/typo3 cache:flush
+#          ddev exec bin/typo3 cache:warmup
+#          ddev exec bin/typo3 upgrade:run
+#          ddev exec bin/typo3 backend:unlock
           cd .. # Going back to "root" directory
           wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
           chmod +x wait-for-it.sh
