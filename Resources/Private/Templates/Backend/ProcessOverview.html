@@ -68,16 +68,16 @@
 					</f:switch>
 				</td>
 				<td>{process.processId}</td>
-				<td>{process.runTime}</td>
+				<td class="runtime">{process.runTime}</td>
 				<td><f:format.date format="d.m.Y - H:i:s">{process.ttl}</f:format.date></td>
-				<td>{process.amountOfItemsProcessed}</td>
+				<td class="processedItems">{process.amountOfItemsProcessed}</td>
 				<td>{process.assignedItemsCount}</td>
 				<td>{process.finallyAssigned}</td>
 				<td>
 					<f:switch expression="{process.state}">
 						<f:case value="running">
 							<div class="crawlerprocessprogress progress" style="width: 200px; margin-bottom: 0px !important;">
-								<div class="progress-bar crawlerprocessprogress-bar" role="progressbar" style="width: {process.progress}%" aria-valuenow="{process.progress}" aria-valuemin="0" aria-valuemax="100">{process.progress} %</div>
+								<div id="{process.processId}" class="progress-bar crawlerprocessprogress-bar" role="progressbar" style="width: {process.progress}%" aria-valuenow="{process.progress}" aria-valuemin="0" aria-valuemax="100">{process.progress} %</div>
 							</div>
 						</f:case>
 						<f:case value="cancelled">
@@ -92,4 +92,9 @@
 		</f:for>
 		</tbody>
 	</table>
+    <f:be.pageRenderer
+        includeJsFiles="{
+         0: 'EXT:crawler/Resources/Public/JavaScript/ProcessStatus.js'
+      }"
+    />
 </f:section>
