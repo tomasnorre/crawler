@@ -85,7 +85,7 @@ CREATE TABLE tx_crawler_configuration
 
 The `tx_crawler_configuration` might exists in some form or the other. The is a suggestion to let the TYPO3 Crawler simple run over the `sitemap.xml` file, which will remove the real need of a configuration. I still think some kind of configuration is needed to have some possibility to exclude some pages in crawler, when e.g. the TYPO3 Crawler is used as a Cache warmup.
 
-#### Classes
+### Classes
 
 There is quite a number of classes that will be trimmed down and even obsolete after doing this change. So I'll only outline the new Classes that I would expect to be present after the refactor.
 
