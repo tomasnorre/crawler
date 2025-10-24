@@ -34,12 +34,6 @@
     "conflict": {
         "tomasnorre/crawler": "<12.0.0"
     },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "./packages"
-        }
-    ],
     "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
