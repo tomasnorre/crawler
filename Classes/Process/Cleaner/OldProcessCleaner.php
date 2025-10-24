@@ -40,7 +40,7 @@ class OldProcessCleaner
         $results = $this->processRepository->getActiveProcessesOlderThanOneHour();
 
         if (!is_array($results)) {
-            return;
+            throw new \UnexpectedValueException('Expected array, got ' . gettype($results));
         }
 
         foreach ($results as $result) {

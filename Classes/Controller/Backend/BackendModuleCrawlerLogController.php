@@ -19,6 +19,7 @@ namespace AOE\Crawler\Controller\Backend;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Controller\Backend\Helper\RequestHelper;
 use AOE\Crawler\Controller\Backend\Helper\ResultHandler;
 use AOE\Crawler\Controller\Backend\Helper\UrlBuilder;
 use AOE\Crawler\Controller\CrawlerController;
@@ -136,12 +137,12 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
     private function assignValues(ServerRequestInterface $request): ModuleTemplate
     {
         // Look for set ID sent - if it is, we will display contents of that set:
-        $this->showSetId = (int) ($request->getParsedBody()['setID'] ?? $request->getQueryParams()['setID'] ?? 0);
-        $this->CSVExport = (bool) ($request->getParsedBody()['_csv'] ?? $request->getQueryParams()['_csv'] ?? false);
+        $this->showSetId = RequestHelper::getIntFromRequest($request, 'setID');
+        $this->CSVExport = RequestHelper::getBoolFromRequest($request, '_csv');
         $logEntriesPerPage = [];
         $csvData = [];
 
-        $quidRead = (int) ($request->getParsedBody()['qid_read'] ?? $request->getQueryParams()['qid_read'] ?? 0);
+        $quidRead = RequestHelper::getIntFromRequest($request, 'qid_read');
         if ($quidRead) {
             $this->crawlerController->readUrl($quidRead, true);
         }
@@ -204,7 +205,7 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
 
                 [$logEntriesPerPage[], $row] = $this->backendModuleLogService->addRows(
                     $logEntriesOfPage,
-                    (int) ($request->getParsedBody()['setID'] ?? $request->getQueryParams()['setID'] ?? 0),
+                    RequestHelper::getIntFromRequest($request, 'setID'),
                     $data['HTML'] . BackendUtility::getRecordTitle('pages', $data['row'], true),
                     $this->showResultLog,
                     $this->showFeVars,
@@ -304,15 +305,15 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
     private function setPropertiesBasedOnPostVars(ServerRequestInterface $request): void
     {
         $this->pageUid = (int) ($request->getQueryParams()['id'] ?? -1);
-        $this->setId = (int) ($request->getParsedBody()['setID'] ?? $request->getQueryParams()['setID'] ?? 0);
+        $this->setId = RequestHelper::getIntFromRequest($request, 'setID̈́');
         $quidDetails = $request->getParsedBody()['qid_details'] ?? $request->getQueryParams()['qid_details'] ?? null;
         $this->quiPath = $quidDetails ? '&qid_details=' . (int) $quidDetails : '';
         $this->queueId = $quidDetails ?? null;
-        $this->logDisplay = $request->getParsedBody()['displayLog'] ?? $request->getQueryParams()['displayLog'] ?? 'all';
-        $this->itemsPerPage = (int) ($request->getParsedBody()['itemsPerPage'] ?? $request->getQueryParams()['itemsPerPage'] ?? 10);
-        $this->showResultLog = (string) ($request->getParsedBody()['ShowResultLog'] ?? $request->getQueryParams()['ShowResultLog'] ?? 0);
-        $this->showFeVars = (string) ($request->getParsedBody()['ShowFeVars'] ?? $request->getQueryParams()['ShowFeVars'] ?? 0);
-        $this->logDepth = (string) ($request->getParsedBody()['logDepth'] ?? $request->getQueryParams()['logDepth'] ?? 0);
+        $this->logDisplay = RequestHelper::getStringFromRequest($request, 'displayLog', 'all');
+        $this->itemsPerPage = RequestHelper::getIntFromRequest($request, 'itemsPerPage', 10);
+        $this->showResultLog = RequestHelper::getStringFromRequest($request, 'ShowResultLog', '0');
+        $this->showFeVars = RequestHelper::getStringFromRequest($request, 'ShowFeVars', '0');
+        $this->logDepth = RequestHelper::getStringFromRequest($request, 'logDepth', '0');
     }
 
     /**

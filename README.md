@@ -6,10 +6,8 @@
 [![Coverage Status](https://coveralls.io/repos/github/tomasnorre/crawler/badge.svg)](https://coveralls.io/github/tomasnorre/crawler)
 [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Ftomasnorre%2Fcrawler%2Fmain)](https://dashboard.stryker-mutator.io/reports/github.com/tomasnorre/crawler/main)
 ![Psalm coverage](https://shepherd.dev/github/tomasnorre/crawler/coverage.svg)
-[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/tomasnorre/crawler.svg)](http://isitmaintained.com/project/tomasnorre/crawler "Average time to resolve an issue")
-[![Percentage of issues still open](http://isitmaintained.com/badge/open/tomasnorre/crawler.svg)](http://isitmaintained.com/project/tomasnorre/crawler "Percentage of issues still open")
 
-Libraries and scripts for crawling the TYPO3 page tree. Used for re-caching, re-indexing, publishing applications etc.
+TYPO3 Crawler crawls the TYPO3 page tree. Used for cache warmup, indexing, publishing applications etc.
 
 
 You can include the crawler in your TYPO3 project with composer or from the [TYPO3 Extension Repository](https://extensions.typo3.org/extension/crawler)

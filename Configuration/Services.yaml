@@ -94,6 +94,11 @@ services:
             $eventDispatcher: '@TYPO3\CMS\Core\EventDispatcher\EventDispatcher'
         public: true
 
+    AOE\Crawler\Controller\Ajax\ProcessStatusController:
+        arguments:
+            $processRepository: '@AOE\Crawler\Domain\Repository\ProcessRepository'
+        public: true
+
     AOE\Crawler\Controller\BackendModuleController:
         tags: [ 'backend.controller' ]
 
