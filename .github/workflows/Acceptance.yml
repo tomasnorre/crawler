@@ -60,6 +60,7 @@ jobs:
           cd .devbox
           sed -i 's/php_version: "8.1"/php_version: "${{ matrix.php }}"/g' .ddev/config.yaml
           sed -i "s|$FROM_PATH|$TO_PATH|g" .ddev/docker-compose.volume.yaml
+          composer require --no-install typo3/cms-core=${{ matrix.typo3 }} tomasnorre/crawler=dev-$BRANCH_NAME
 
       - uses: ddev/github-action-setup-ddev@v1
         with:
@@ -67,16 +68,6 @@ jobs:
 
       - name: CodeCeption
         run: |
-          cd .devbox
-          rm -rf vendor composer.lock
-          ddev composer require typo3/cms-core=${{ matrix.typo3 }} tomasnorre/crawler=dev-$BRANCH_NAME
-          ddev exec bin/typo3 backend:lock
-          ddev exec bin/typo3 extension:setup
-          ddev exec bin/typo3 cache:flush
-          ddev exec bin/typo3 cache:warmup
-          ddev exec bin/typo3 upgrade:run
-          ddev exec bin/typo3 backend:unlock
-          cd .. # Going back to "root" directory
           rm -rf .Build composer.lock
           composer require typo3/cms-core=${{ matrix.typo3 }}
           wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
