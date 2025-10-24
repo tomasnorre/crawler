@@ -2,7 +2,7 @@
 
 I've been working regularly to improve the TYPO3 Crawler since I started contributing more than 10 years ago.
 
-After the Message Queue [1][2] system was introduced to TYPO3 I think it's time to rethink the TYPO3 Crawler a little. There is to much logic in the crawler that could be replaced with core functionality. Which is the aim for this feature.
+After the Message Queue system was introduced to TYPO3 I think it's time to rethink the TYPO3 Crawler a little. There is to much logic in the crawler that could be replaced with core functionality. Which is the aim for this feature.
 
 ## Disclaimer
 
@@ -133,5 +133,6 @@ Whit these changes most of the `Domain/Model` and `Domain/Repository` present to
 
 ## Links
 
-1. https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/ApiOverview/MessageBus/Index.html
-2. https://usetypo3.com/messages-in-typo3/
+-   https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/ApiOverview/MessageBus/Index.html
+-   https://usetypo3.com/messages-in-typo3/
+-   https://docs.typo3.org/c/typo3/cms-core/main/en-us/Changelog/12.2/Feature-97700-AdoptSymfonyMessengerAsAMessageBusAndQueue.html
