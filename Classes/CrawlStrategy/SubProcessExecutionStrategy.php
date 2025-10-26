@@ -43,14 +43,13 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
     public function __construct(?ExtensionConfigurationProvider $configurationProvider = null)
     {
         $configurationProvider ??= GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
-        $settings = $configurationProvider->getExtensionConfiguration();
-        $this->extensionSettings = is_array($settings) ? $settings : [];
+        $this->extensionSettings = $configurationProvider->getExtensionConfiguration();
     }
 
     /**
      * Fetches a URL by calling a shell script.
      *
-     * @return array|bool|mixed
+     * @return array|false See CrawlStrategyInterface::fetchUrlContents()
      */
     public function fetchUrlContents(UriInterface $url, string $crawlerId)
     {
@@ -84,8 +83,26 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
         $content = $this->executeShellCommand($cmd);
         $this->logger?->info($url . ' ' . (microtime(true) - $startTime));
 
-        if ($content === null) {
+        if ($content === null || $content === false) {
             return false;
+        }
+        if (str_contains($content, 'typo3-error-page')) {
+            preg_match('#class="typo3-error-page-statuscode">(.+?)</#s', $content, $matchStatus);
+            preg_match('#class="typo3-error-page-title">(.+?)</#s', $content, $matchTitle);
+            preg_match('#class="typo3-error-page-message">(.+?)</#s', $content, $matchMessage);
+            $message = trim($matchStatus[1] ?? '')
+                . ' ' . trim($matchTitle[1] ?? '')
+                . ' - ' . trim($matchMessage[1] ?? '');
+            $this->logger?->debug(
+                sprintf('Error while opening "%s" - %s', $url, $message),
+                [
+                    'crawlerId' => $crawlerId,
+                ]
+            );
+            return [
+                'errorlog' => [$message],
+                'content' => $content,
+            ];
         }
 
         return [
@@ -111,7 +128,7 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
      * Executes a shell command and returns the outputted result.
      *
      * @param string $command Shell command to be executed
-     * @return string|null Outputted result of the command execution
+     * @return string|false|null Outputted result of the command execution
      */
     private function executeShellCommand($command)
     {

@@ -7,8 +7,8 @@ jobs:
   greeting:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/first-interaction@v3
+      - uses: actions/first-interaction@v3.1.0
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          issue-message: 'Hi there, thank you for taking your time to create your first issue. Please give us a bit of time to review it.'
-          pr-message: 'Super! Thank you for taking the time to create your first pull request. Please give us a bit of time to review it.'
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          issue_message: 'Hi there, thank you for taking your time to create your first issue. Please give us a bit of time to review it.'
+          pr_message: 'Super! Thank you for taking the time to create your first pull request. Please give us a bit of time to review it.'

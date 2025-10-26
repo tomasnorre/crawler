@@ -52,15 +52,11 @@ class BackendModuleLogService
         string $titleString,
         string $showResultLog,
         string $showFeVars,
-        bool $CSVExport
+        bool $CSVExport = false,
     ): array {
         $resultArray = [];
-        $contentArray = [];
-
-        $contentArray['titleRowSpan'] = 1;
-        $contentArray['colSpan'] = 9
-            + ($showResultLog ? -1 : 0)
-            + ($showFeVars ? 3 : 0);
+        $contentArray = $this->configureContentArray($showResultLog, $showFeVars);
+        $csvExport = [];
 
         if (!empty($logEntriesOfPage)) {
             $refreshIcon = $this->iconFactory->getIcon('actions-system-refresh', Icon::SIZE_SMALL);
@@ -97,8 +93,10 @@ class BackendModuleLogService
                     $rowData['exec_time'] = $execTime;
                 }
                 $rowData['result_status'] = GeneralUtility::fixed_lgd_cs($resStatus, 50);
-                $url = htmlspecialchars((string) ($parameters['url'] ?? $parameters['alturl']), ENT_QUOTES | ENT_HTML5);
-                $rowData['url'] = '<a href="' . $url . '" target="_newWIndow">' . $url . '</a>';
+                $rowData['url'] = htmlspecialchars(
+                    (string) ($parameters['url'] ?? $parameters['alturl']),
+                    ENT_QUOTES | ENT_HTML5
+                );
                 $rowData['feUserGroupList'] = $parameters['feUserGroupList'] ?? '';
                 $rowData['procInstructions'] = is_array($parameters['procInstructions']) ? implode(
                     '; ',
@@ -141,7 +139,9 @@ class BackendModuleLogService
 
                 $contentArray = $this->buildColumnsInContentArray($rowData, $contentArray);
                 $resultArray[] = $contentArray;
-                $csvExport = $this->extractCsvExport($CSVExport, $vv, $contentArray['columns'], $resLog);
+                if ($CSVExport) {
+                    $csvExport = $this->extractCsvExport($vv, $contentArray['columns'], $resLog);
+                }
             }
         } else {
             $csvExport = [];
@@ -156,26 +156,35 @@ class BackendModuleLogService
         return [$resultArray, $csvExport];
     }
 
+    public function configureContentArray(string $showResultLog, string $showFeVars): array
+    {
+        $contentArray = [];
+
+        $contentArray['titleRowSpan'] = 1;
+        $contentArray['colSpan'] = 9
+            + ($showResultLog ? -1 : 0)
+            + ($showFeVars ? 3 : 0);
+        return $contentArray;
+    }
+
     private function getLanguageService(): LanguageService
     {
         return $GLOBALS['LANG'];
     }
 
-    private function extractCsvExport(bool $CSVExport, mixed $vv, array $columns, string $resLog): array
+    private function extractCsvExport(mixed $vv, array $columns, string $resLog): array
     {
         $csvExport = [];
-        if ($CSVExport) {
-            // Only for CSV (adding qid and scheduled/exec_time if needed):
-            $csvExport['scheduled'] = BackendUtility::datetime($vv['scheduled']);
-            $csvExport['exec_time'] = $vv['exec_time'] ? BackendUtility::datetime($vv['exec_time']) : '-';
-            $csvExport['result_status'] = $columns['result_status'];
-            $csvExport['url'] = $columns['url'];
-            $csvExport['feUserGroupList'] = $columns['feUserGroupList'];
-            $csvExport['procInstructions'] = $columns['procInstructions'];
-            $csvExport['set_id'] = $columns['set_id'];
-            $csvExport['result_log'] = str_replace(chr(10), '// ', $resLog);
-            $csvExport['qid'] = $vv['qid'];
-        }
+        // Only for CSV (adding qid and scheduled/exec_time if needed):
+        $csvExport['scheduled'] = BackendUtility::datetime($vv['scheduled']);
+        $csvExport['exec_time'] = $vv['exec_time'] ? BackendUtility::datetime($vv['exec_time']) : '-';
+        $csvExport['result_status'] = $columns['result_status'];
+        $csvExport['url'] = $columns['url'];
+        $csvExport['feUserGroupList'] = $columns['feUserGroupList'];
+        $csvExport['procInstructions'] = $columns['procInstructions'];
+        $csvExport['set_id'] = $columns['set_id'];
+        $csvExport['result_log'] = str_replace(chr(10), '// ', $resLog);
+        $csvExport['qid'] = $vv['qid'];
         return $csvExport;
     }
 
@@ -191,13 +200,17 @@ class BackendModuleLogService
 
     private function buildColumnsInContentArray(array $rowData, array $contentArray): array
     {
-        foreach ($rowData as $fKey => $value) {
-            if ($fKey === 'url') {
-                $contentArray['columns'][$fKey] = $value;
-            } else {
-                $contentArray['columns'][$fKey] = nl2br(htmlspecialchars((string) $value, ENT_QUOTES | ENT_HTML5));
-            }
+        foreach ($rowData as $field => $value) {
+            $contentArray['columns'][$field] = $field === 'url'
+                ? $value
+                : $this->escapeValue($value);
         }
+
         return $contentArray;
+    }
+
+    private function escapeValue(mixed $value): string
+    {
+        return nl2br(htmlspecialchars((string) $value, ENT_QUOTES | ENT_HTML5));
     }
 }

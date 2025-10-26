@@ -1,19 +1,20 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 12.0.9-dev
+## Crawler 12.0.10-dev
 
 ### Added
+* Extract error information in SubProcess crawl strategy [@cweiske](https://github.com/cweiske)
+* Expose error when crawl response has not X-T3Crawler-Meta header [@cweiske](https://github.com/cweiske)
+* RequestHelper to more some of the logic for fetching value from request [@tomasnorre](https://github.com/tomasnorre)
+* Automatic reload process status without page reload [@tomasnorre](https://github.com/tomasnorre)
 
-* Document setup for indexed_search + crawler [@cweiske](https://github.com/cweiske)
 
 ### Changed
+* ProcessCleanUpHook is splitted into more classes to strive for seperations of concerns [@tomasnorre](https://github.com/tomasnorre)
 
 ### Fixed
-* Fix usage of no_cache in CrawlerInitialization [@luisbecker-gh](https://github.com/luisbecker-gh)
-* Ensure that pages are added to queue on clear page cache [@tomasnorre](https://github.com/tomasnorre)
-* Ensure that selections are kept in Crawler Start module, when Updating URLs [@tomasnorre](https://github.com/tomasnorre)
-* Ensure that pageRow['uid'] is set or return with skipMessage [@tomasnorre](https://github.com/tomasnorre)
-* Back link in Crawler Log after visiting details about Queue Item [@tomasnorre](https://github.com/tomasnorre)
+* Set guzzle connect timeout to 5 seconds [@cweiske](https://github.com/cweiske)
+* Prevent warning when guzzle crawl requests return errors [@cweiske](https://github.com/cweiske)
 
 ### Deprecated
 #### Classes
@@ -22,6 +23,19 @@
 ### Removed
 #### Classes
 #### Functions & Properties
+
+## Crawler 12.0.9
+Crawler 12.0.9 was released on August 21st, 2025
+
+### Added
+* Document setup for indexed_search + crawler [@cweiske](https://github.com/cweiske)
+
+### Fixed
+* Fix usage of no_cache in CrawlerInitialization [@luisbecker-gh](https://github.com/luisbecker-gh)
+* Ensure that pages are added to queue on clear page cache [@tomasnorre](https://github.com/tomasnorre)
+* Ensure that selections are kept in Crawler Start module, when Updating URLs [@tomasnorre](https://github.com/tomasnorre)
+* Ensure that pageRow['uid'] is set or return with skipMessage [@tomasnorre](https://github.com/tomasnorre)
+* Back link in Crawler Log after visiting details about Queue Item [@tomasnorre](https://github.com/tomasnorre)
 
 ## Crawler 12.0.8
 Crawler 12.0.8 was released on May 23rd, 2025

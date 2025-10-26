@@ -30,7 +30,7 @@ jobs:
           tools: composer:v2
 
       - name: Install dependencies
-        run: composer install --no-progress
+        uses: ramsey/composer-install@v3
 
       - name: Unit Tests
         run: |

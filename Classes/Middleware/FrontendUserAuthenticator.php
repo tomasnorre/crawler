@@ -110,7 +110,7 @@ class FrontendUserAuthenticator implements MiddlewareInterface
             return false;
         }
 
-        return is_array($queueRec) && hash_equals(
+        return hash_equals(
             $hash,
             md5(
                 $queueRec['qid'] . '|' . $queueRec['set_id'] . '|' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']

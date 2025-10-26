@@ -24,8 +24,8 @@ parameters:
 
     # composer require tomasvotruba/cognitive-complexity --dev
     cognitive_complexity:
-        class: 35
-        function: 21
+        class: 28
+        function: 20
 
     # composer require tomasvotruba/type-coverage --dev
     type_coverage:

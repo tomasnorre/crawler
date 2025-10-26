@@ -19,6 +19,7 @@ namespace AOE\Crawler\Controller\Backend;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Controller\Backend\Helper\RequestHelper;
 use AOE\Crawler\Controller\Backend\Helper\UrlBuilder;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Model\Reason;
@@ -26,12 +27,12 @@ use AOE\Crawler\Event\InvokeQueueChangeEvent;
 use AOE\Crawler\Utility\MessageUtility;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UriInterface;
 use Symfony\Contracts\Service\Attribute\Required;
 use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
-use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -81,26 +82,18 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
             'id' => $this->pageUid,
         ]);
 
-        $crawlingDepth = $request->getParsedBody()['crawlingDepth'] ?? $request->getQueryParams()['crawlingDepth'] ?? '0';
-        $crawlParameter = $request->getParsedBody()['_crawl'] ?? $request->getQueryParams()['_crawl'] ?? null;
-        $downloadParameter = $request->getParsedBody()['_download'] ?? $request->getQueryParams()['_download'] ?? null;
-        $scheduledTime = $this->getScheduledTime(
-            (string) ($request->getParsedBody()['tstamp'] ?? $request->getQueryParams()['tstamp'] ?? null)
-        );
-        $submitCrawlUrls = isset($crawlParameter);
-        $downloadCrawlUrls = isset($downloadParameter);
+        $crawlingDepth = RequestHelper::getIntFromRequest($request, 'crawlingDepth');
+        $submitCrawlUrls = RequestHelper::getBoolFromRequest($request, '_crawl');
+        $downloadCrawlUrls = RequestHelper::getBoolFromRequest($request, '_download');
+        $scheduledTime = $this->getScheduledTime(RequestHelper::getStringFromRequest($request, 'tstamp', 'now'));
 
-        $this->incomingConfigurationSelection = $request->getParsedBody()['configurationSelection'] ?? $request->getQueryParams()['configurationSelection'] ?? null;
-        $this->incomingConfigurationSelection = is_array(
-            $this->incomingConfigurationSelection
-        ) ? $this->incomingConfigurationSelection : [];
+        $this->incomingConfigurationSelection = RequestHelper::getArrayFromRequest($request, 'configurationSelection');
 
         //$this->crawlerController = $this->getCrawlerController();
         $this->crawlerController->setID = GeneralUtility::md5int(microtime());
 
         $queueRows = '';
-        $noConfigurationSelected = empty($this->incomingConfigurationSelection)
-            || (count($this->incomingConfigurationSelection) === 1 && empty($this->incomingConfigurationSelection[0]));
+        $noConfigurationSelected = $this->isNoConfigurationSelected();
         if ($noConfigurationSelected) {
             MessageUtility::addWarningMessage(
                 $this->getLanguageService()->sL(
@@ -147,7 +140,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
             'noConfigurationSelected' => $noConfigurationSelected,
             'submitCrawlUrls' => $submitCrawlUrls,
             'amountOfUrls' => count($this->crawlerController->duplicateTrack ?? []),
-            'selectors' => $this->generateConfigurationSelectors($this->pageUid, $crawlingDepth, $request),
+            'selectors' => $this->generateConfigurationSelectors($this->pageUid, (string) $crawlingDepth, $request),
             'queueRows' => $queueRows,
             'displayActions' => 0,
             'actionUrl' => $this->getActionUrl(),
@@ -216,7 +209,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
                 ),
             ],
             'tstamp',
-            $request->getParsedBody()['tstamp'] ?? null,
+            RequestHelper::getStringFromRequest($request, 'tstamp', 'now'),
             false
         );
 
@@ -277,8 +270,14 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
     /**
      * @throws RouteNotFoundException
      */
-    private function getActionUrl(): Uri
+    private function getActionUrl(): UriInterface
     {
         return GeneralUtility::makeInstance(UrlBuilder::class)->getBackendModuleUrl([], self::BACKEND_MODULE);
+    }
+
+    private function isNoConfigurationSelected(): bool
+    {
+        return empty($this->incomingConfigurationSelection)
+            || (count($this->incomingConfigurationSelection) === 1 && empty($this->incomingConfigurationSelection[0]));
     }
 }

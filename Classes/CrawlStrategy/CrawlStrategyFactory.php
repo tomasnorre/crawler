@@ -23,9 +23,7 @@ final class CrawlStrategyFactory
 
     public function create(): CrawlStrategyInterface
     {
-        $settings = $this->configurationProvider->getExtensionConfiguration();
-        $extensionSettings = is_array($settings) ? $settings : [];
-
+        $extensionSettings = $this->configurationProvider->getExtensionConfiguration();
         if ($extensionSettings['makeDirectRequests'] ?? false) {
             /** @var CrawlStrategyInterface $instance */
             $instance = GeneralUtility::makeInstance(SubProcessExecutionStrategy::class, $this->configurationProvider);

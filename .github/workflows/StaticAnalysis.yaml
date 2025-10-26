@@ -15,7 +15,7 @@ jobs:
         steps:
             -   uses: actions/checkout@v5
             -   id: composer-cache
-                run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+                run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
             -   uses: actions/cache@v4
                 with:
                     path: ${{ steps.composer-cache.outputs.dir }}
@@ -26,7 +26,8 @@ jobs:
                 with:
                     php-version: 8.1
                     coverage: none
-            -   run: composer install --no-progress
+            -   name: "Install dependencies"
+                uses: ramsey/composer-install@v3
             -   run: composer analyse
 
     rector:
@@ -35,7 +36,7 @@ jobs:
         steps:
             -   uses: actions/checkout@v5
             -   id: composer-cache
-                run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+                run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
             -   uses: actions/cache@v4
                 with:
                     path: ${{ steps.composer-cache.outputs.dir }}
@@ -46,7 +47,8 @@ jobs:
                 with:
                     php-version: 8.1
                     coverage: none
-            -   run: composer install --no-progress
+            -   name: "Install dependencies"
+                uses: ramsey/composer-install@v3
             -   run: composer rector
 
     code-style:
@@ -55,7 +57,7 @@ jobs:
         steps:
             -   uses: actions/checkout@v5
             -   id: composer-cache
-                run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+                run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
             -   uses: actions/cache@v4
                 with:
                     path: ${{ steps.composer-cache.outputs.dir }}
@@ -66,7 +68,8 @@ jobs:
                 with:
                     php-version: 8.1
                     coverage: none
-            -   run: composer install --no-progress
+            -   name: "Install dependencies"
+                uses: ramsey/composer-install@v3
             -   run: composer cs-fix
 
     Psalm:
@@ -75,7 +78,7 @@ jobs:
         steps:
             -   uses: actions/checkout@v5
             -   id: composer-cache
-                run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+                run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
             -   uses: actions/cache@v4
                 with:
                     path: ${{ steps.composer-cache.outputs.dir }}

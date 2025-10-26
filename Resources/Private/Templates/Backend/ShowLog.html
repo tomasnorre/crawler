@@ -203,7 +203,7 @@
                                             </f:else>
                                         </f:if>
                                         <td>{logEntry.columns.result_status}</td>
-                                        <td>{logEntry.columns.url -> f:format.raw()}</td>
+                                        <td><a href="{logEntry.columns.url}" target="_newWIndow">{logEntry.columns.url}</a></td>
                                         <td>{logEntry.columns.feUserGroupList}</td>
                                         <td>{logEntry.columns.procInstructions}</td>
                                         <td>{logEntry.columns.set_id}</td>
