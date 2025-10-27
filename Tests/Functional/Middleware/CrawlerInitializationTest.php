@@ -30,7 +30,6 @@ use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Cache\CacheInstruction;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 #[CoversClass(CrawlerInitialization::class)]
@@ -50,7 +49,9 @@ class CrawlerInitializationTest extends FunctionalTestCase
     #[Test]
     public function processSetsCrawlerData(string $feGroups, array $expectedGroups): void
     {
-        $GLOBALS['TSFE'] = (Object)['id' => 1234];
+        $GLOBALS['TSFE'] = (object) [
+            'id' => 1234,
+        ];
 
         $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
         if ($typo3Version->getMajorVersion() < 13) {
@@ -67,9 +68,7 @@ class CrawlerInitializationTest extends FunctionalTestCase
         $request = $this->prophesize(ServerRequestInterface::class);
         $request->getAttribute('tx_crawler')->willReturn($queueParameters);
 
-        $request->getAttribute('frontend.cache.instruction')->willReturn(
-            new CacheInstruction()
-        );
+        $request->getAttribute('frontend.cache.instruction')->willReturn(new CacheInstruction());
 
         $request->withAttribute('tx_crawler', [
             'forceIndexing' => true,
@@ -82,7 +81,7 @@ class CrawlerInitializationTest extends FunctionalTestCase
             'forceIndexing' => true,
             'running' => true,
             'parameters' => $queueParameters,
-            'log' => ['User Groups: ' . $queueParameters['feUserGroupList']]
+            'log' => ['User Groups: ' . $queueParameters['feUserGroupList']],
         ];
         $request->getAttribute('tx_crawler', [])->willReturn($attributes);
 
