@@ -10,7 +10,8 @@
 
 
 ### Changed
-* ProcessCleanUpHook is splitted into more classes to strive for seperations of concerns [@tomasnorre](https://github.com/tomasnorre)
+* ProcessCleanUpHook is split into more classes to strive for seperations of concerns [@tomasnorre](https://github.com/tomasnorre)
+* Replace deprecated applicationData with request attributes [@tomasnorre](https://github.com/tomasnorre)
 
 ### Fixed
 * Set guzzle connect timeout to 5 seconds [@cweiske](https://github.com/cweiske)
