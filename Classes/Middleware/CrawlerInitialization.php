@@ -83,8 +83,6 @@ class CrawlerInitialization implements MiddlewareInterface
             'no_cache' => $noCache,
         ];
 
-        $request->withAttribute('tx_crawler', $crawlerData);
-
         $this->runPollSuccessHooks($crawlerData);
 
         // Send log data for crawler (serialized content)
