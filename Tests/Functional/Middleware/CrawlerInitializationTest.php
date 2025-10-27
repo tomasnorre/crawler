@@ -30,6 +30,7 @@ use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Cache\CacheInstruction;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 #[CoversClass(CrawlerInitialization::class)]
@@ -49,6 +50,8 @@ class CrawlerInitializationTest extends FunctionalTestCase
     #[Test]
     public function processSetsCrawlerData(string $feGroups, array $expectedGroups): void
     {
+        $GLOBALS['TSFE'] = (Object)['id' => 1234];
+
         $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
         if ($typo3Version->getMajorVersion() < 13) {
             $this->markTestSkipped('Only tested with TYPO3 13+');
@@ -73,7 +76,15 @@ class CrawlerInitializationTest extends FunctionalTestCase
             'running' => true,
             'parameters' => $queueParameters,
             'log' => ['User Groups: ' . ($queueParameters['feUserGroupList'] ?? '')],
-        ])->willReturn();
+        ])->willReturn($request);
+
+        $attributes = [
+            'forceIndexing' => true,
+            'running' => true,
+            'parameters' => $queueParameters,
+            'log' => ['User Groups: ' . $queueParameters['feUserGroupList']]
+        ];
+        $request->getAttribute('tx_crawler', [])->willReturn($attributes);
 
         $handlerResponse = new Response();
         $handler = $this->prophesize(RequestHandlerInterface::class);
@@ -101,9 +112,9 @@ class CrawlerInitializationTest extends FunctionalTestCase
             'expectedGroups' => ['User Groups: 1,2'],
         ];
 
-        /*yield 'No FE Groups set' => [
+        yield 'No FE Groups set' => [
             'feGroups' => '',
             'expectedGroups' => ['User Groups: '],
-        ];*/
+        ];
     }
 }
