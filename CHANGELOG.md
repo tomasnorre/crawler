@@ -1,6 +1,7 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 12.0.10-dev
+## Crawler 12.0.10
+Crawler 12.0.10 was released on October 28th, 2025
 
 ### Added
 * Extract error information in SubProcess crawl strategy [@cweiske](https://github.com/cweiske)
@@ -8,21 +9,12 @@
 * RequestHelper to more some of the logic for fetching value from request [@tomasnorre](https://github.com/tomasnorre)
 * Automatic reload process status without page reload [@tomasnorre](https://github.com/tomasnorre)
 
-
 ### Changed
 * ProcessCleanUpHook is splitted into more classes to strive for seperations of concerns [@tomasnorre](https://github.com/tomasnorre)
 
 ### Fixed
 * Set guzzle connect timeout to 5 seconds [@cweiske](https://github.com/cweiske)
 * Prevent warning when guzzle crawl requests return errors [@cweiske](https://github.com/cweiske)
-
-### Deprecated
-#### Classes
-#### Functions & Properties
-
-### Removed
-#### Classes
-#### Functions & Properties
 
 ## Crawler 12.0.9
 Crawler 12.0.9 was released on August 21st, 2025
