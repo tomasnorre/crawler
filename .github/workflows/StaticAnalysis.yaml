@@ -13,7 +13,7 @@ jobs:
         name: PHPstan
         runs-on: ubuntu-latest
         steps:
-            -   uses: actions/checkout@v5
+            -   uses: actions/checkout@v6
             -   id: composer-cache
                 run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
             -   uses: actions/cache@v4
@@ -34,7 +34,7 @@ jobs:
         name: Rector
         runs-on: ubuntu-latest
         steps:
-            -   uses: actions/checkout@v5
+            -   uses: actions/checkout@v6
             -   id: composer-cache
                 run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
             -   uses: actions/cache@v4
@@ -55,7 +55,7 @@ jobs:
         name: Code Style
         runs-on: ubuntu-latest
         steps:
-            -   uses: actions/checkout@v5
+            -   uses: actions/checkout@v6
             -   id: composer-cache
                 run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
             -   uses: actions/cache@v4
@@ -76,7 +76,7 @@ jobs:
         name: Psalm
         runs-on: ubuntu-latest
         steps:
-            -   uses: actions/checkout@v5
+            -   uses: actions/checkout@v6
             -   id: composer-cache
                 run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
             -   uses: actions/cache@v4
