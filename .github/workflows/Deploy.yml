@@ -20,7 +20,7 @@ jobs:
             ${{ runner.os }}-composer-
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.1
+          php-version: 8.2
           coverage: none
 
       - name: "Determine tag"
@@ -30,4 +30,4 @@ jobs:
       - uses: tomasnorre/typo3-upload-ter@v2.2.4
         with:
           api-token: ${{ secrets.TYPO3_API_TOKEN }}
-          php-version: '8.1'
+          php-version: '8.2'

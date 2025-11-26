@@ -17,7 +17,6 @@ jobs:
         typo3:
           - ^12.4
         php:
-          - '8.1'
           - '8.2'
           - '8.3'
           - '8.4'
@@ -58,7 +57,7 @@ jobs:
           export FROM_PATH='../../'
           export TO_PATH=$(echo $GITHUB_WORKSPACE)
           cd .devbox
-          sed -i 's/php_version: "8.1"/php_version: "${{ matrix.php }}"/g' .ddev/config.yaml
+          sed -i 's/php_version: "8.2"/php_version: "${{ matrix.php }}"/g' .ddev/config.yaml
           sed -i "s|$FROM_PATH|$TO_PATH|g" .ddev/docker-compose.volume.yaml
           composer require --no-install typo3/cms-core=${{ matrix.typo3 }} tomasnorre/crawler=dev-$BRANCH_NAME
           composer config repositories.local path "./packages"
@@ -138,7 +137,7 @@ jobs:
           export FROM_PATH='../../'
           export TO_PATH=$(echo $GITHUB_WORKSPACE)
           cd .devbox
-          sed -i 's/php_version: "8.1"/php_version: "${{ matrix.php }}"/g' .ddev/config.yaml
+          sed -i 's/php_version: "8.2"/php_version: "${{ matrix.php }}"/g' .ddev/config.yaml
           sed -i "s|$FROM_PATH|$TO_PATH|g" .ddev/docker-compose.volume.yaml
 
       - uses: ddev/github-action-setup-ddev@v1

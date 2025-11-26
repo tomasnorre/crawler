@@ -24,10 +24,6 @@ jobs:
           - '8.4'
         mysql:
           - '8.0'
-        include:
-          - typo3: '^12.4'
-            php: '8.1'
-            mysql: '8.0'
 
     steps:
       - name: Set up MySQL ${{ matrix.mysql }}
