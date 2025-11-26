@@ -129,7 +129,7 @@ class CrawlerController implements LoggerAwareInterface
         $configurationProvider = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
         $this->extensionSettings = $configurationProvider->getExtensionConfiguration();
 
-        if (abs((int) $this->extensionSettings['countInARun']) === 0) {
+        if (MathUtility::convertToPositiveInteger($this->extensionSettings['countInARun']) === 0) {
             $this->extensionSettings['countInARun'] = 100;
         }
 
