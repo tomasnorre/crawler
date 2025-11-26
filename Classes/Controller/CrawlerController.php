@@ -509,7 +509,7 @@ class CrawlerController implements LoggerAwareInterface
                     QueueRepository::TABLE_NAME
                 );
                 $connectionForCrawlerQueue->insert(QueueRepository::TABLE_NAME, $fieldArray);
-                $uid = $connectionForCrawlerQueue->lastInsertId();
+                $uid = $connectionForCrawlerQueue->lastInsertId(QueueRepository::TABLE_NAME, 'qid');
                 $rows[] = $uid;
                 $urlAdded = true;
 
@@ -624,7 +624,7 @@ class CrawlerController implements LoggerAwareInterface
             QueueRepository::TABLE_NAME
         );
         $connectionForCrawlerQueue->insert(QueueRepository::TABLE_NAME, $field_array);
-        $queueId = $field_array['qid'] = $connectionForCrawlerQueue->lastInsertId();
+        $queueId = $field_array['qid'] = $connectionForCrawlerQueue->lastInsertId(QueueRepository::TABLE_NAME, 'qid');
         $result = $this->queueExecutor->executeQueueItem($field_array, $this);
 
         // Set result in log which also denotes the end of the processing of this entry.
