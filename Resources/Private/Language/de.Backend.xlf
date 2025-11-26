@@ -4,17 +4,17 @@
     <header/>
     <body>
       <!-- Backend Module Labels -->
-      <trans-unit id="mlang_labels_tabdescr" resname="mlang_labels_tabdescr">
+      <trans-unit id="mlang_labels_tabdescr" resname="mlang_labels_tabdescr" approved="yes">
         <source>Libraries and scripts for crawling the TYPO3 page tree. Used for re-caching, re-indexing, publishing applications etc.</source>
-        <target state="needs-translation">Libraries and scripts for crawling the TYPO3 page tree. Used for re-caching, re-indexing, publishing applications etc.</target>
+        <target state="final">Bibliotheken und Skripte zum Crawlen der TYPO3-Seitenstruktur. Wird für das erneute Caching, die erneute Indizierung, die Veröffentlichung von Anwendungen usw. verwendet.</target>
       </trans-unit>
-      <trans-unit id="mlang_labels_tablabel" resname="mlang_labels_tablabel">
+      <trans-unit id="mlang_labels_tablabel" resname="mlang_labels_tablabel" approved="yes">
         <source>Crawler</source>
-        <target state="needs-translation">Crawler</target>
+        <target state="final">Crawler</target>
       </trans-unit>
-      <trans-unit id="mlang_tabs_tab" resname="mlang_tabs_tab">
+      <trans-unit id="mlang_tabs_tab" resname="mlang_tabs_tab" approved="yes">
         <source>Crawler module</source>
-        <target state="needs-translation">Crawler module</target>
+        <target state="final">Crawler Module</target>
       </trans-unit>
       <!-- Old Backend Module Labels -->
       <trans-unit id="moduleFunction.tx_crawler_modfunc1" resname="moduleFunction.tx_crawler_modfunc1" approved="yes">
@@ -45,21 +45,19 @@
         <source>Force HTTPS for all pages</source>
         <target state="final">HTTPS für alle Seiten erzwingen</target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration.processing_instruction_filter" resname="tx_crawler_configuration.processing_instruction_filter">
+      <trans-unit id="tx_crawler_configuration.processing_instruction_filter" resname="tx_crawler_configuration.processing_instruction_filter" approved="yes">
         <source>Processing instruction filter</source>
-        <target state="needs-translation">Processing instruction filter</target>
+        <target state="final">Verarbeitungsanweisungsfilter</target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration.processing_instruction_filter.description" resname="tx_crawler_configuration.processing_instruction_filter.description">
+      <trans-unit id="tx_crawler_configuration.processing_instruction_filter.description" resname="tx_crawler_configuration.processing_instruction_filter.description" approved="yes">
         <source>List of processing instructions to send for the request. Processing instructions are necessary
                     for the request to perform any meaningful action, since they activate third party activity.
                 </source>
-        <target state="needs-translation">List of processing instructions to send for the request. Processing instructions are necessary
-                    for the request to perform any meaningful action, since they activate third party activity.
-                </target>
+        <target state="final">Liste der für die Anfrage zu sendenden Verarbeitungsanweisungen. Diese Verarbeitungsanweisungen sind erforderlich, damit die Anfrage eine sinnvolle Aktion ausführen kann, da sie Aktivitäten von Dritten aktivieren.</target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration.processing_instruction_parameters_ts" resname="tx_crawler_configuration.processing_instruction_parameters_ts">
+      <trans-unit id="tx_crawler_configuration.processing_instruction_parameters_ts" resname="tx_crawler_configuration.processing_instruction_parameters_ts" approved="yes">
         <source>Processing instruction parameters</source>
-        <target state="needs-translation">Processing instruction parameters</target>
+        <target state="final">Verarbeitung von Anweisungsparametern</target>
       </trans-unit>
       <trans-unit id="tx_crawler_configuration.configuration" resname="tx_crawler_configuration.configuration" approved="yes">
         <source>Configuration</source>
@@ -85,13 +83,11 @@
         <source>Restrict access to</source>
         <target state="final">Zugang einschränken auf</target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration.begroups.description" resname="tx_crawler_configuration.begroups.description">
+      <trans-unit id="tx_crawler_configuration.begroups.description" resname="tx_crawler_configuration.begroups.description" approved="yes">
         <source>Restrict access to this configuration record to selected backend user groups. Empty means no
                     restriction is set.
                 </source>
-        <target state="needs-translation">Restrict access to this configuration record to selected backend user groups. Empty means no
-                    restriction is set.
-                </target>
+        <target state="final">Beschränke den Zugriff auf diesen Konfigurationsdatensatz auf die ausgewählte Backend-Benutzergruppen. Leer bedeutet, dass keine Einschränkung festgelegt ist.</target>
       </trans-unit>
       <trans-unit id="tx_crawler_configuration.fegroups" resname="tx_crawler_configuration.fegroups" approved="yes">
         <source>Crawl with FE user groups</source>
@@ -105,9 +101,9 @@
         <source>Exclude pages</source>
         <target state="final">Ausgeschlossene Seiten</target>
       </trans-unit>
-      <trans-unit id="tx_crawler_configuration.exclude.description" resname="tx_crawler_configuration.exclude.description">
+      <trans-unit id="tx_crawler_configuration.exclude.description" resname="tx_crawler_configuration.exclude.description" approved="yes">
         <source>Comma separated list of page IDs which should not be crawled. You can do recursive exclusion by adding uid+depth e.g. 6+3</source>
-        <target state="needs-translation">Comma separated list of page IDs which should not be crawled. You can do recursive exclusion by adding uid+depth e.g. 6+3</target>
+        <target state="final">Durch Kommas getrennte Liste von Seiten-IDs, die nicht gecrawlt werden sollen. Du kannst rekursive Ausschlüsse vornehmen, indem du uid+depth hinzufügst, z. B. 6+3.</target>
       </trans-unit>
       <trans-unit id="crawler_im.name" resname="crawler_im.name" approved="yes">
         <source>Crawler queue</source>
@@ -173,17 +169,17 @@
         <source>The count in a run must be a positive integer!</source>
         <target state="final">Die Anzahl in einem Durchlauf muss eine positive Ganzzahl sein!</target>
       </trans-unit>
-      <trans-unit id="crawler_crawlMultiProcess.name" resname="crawler_crawlMultiProcess.name">
+      <trans-unit id="crawler_crawlMultiProcess.name" resname="crawler_crawlMultiProcess.name" approved="yes">
         <source>Crawler Run Multi Process</source>
-        <target state="needs-translation">Crawler Run Multi Process</target>
+        <target state="final">Crawler Run Multi Process</target>
       </trans-unit>
       <trans-unit id="crawler_crawl.name" resname="crawler_crawl.name" approved="yes">
         <source>Crawler Run</source>
         <target state="final">Crawler-Durchlauf</target>
       </trans-unit>
-      <trans-unit id="crawler_crawl.description" resname="crawler_crawl.description">
+      <trans-unit id="crawler_crawl.description" resname="crawler_crawl.description" approved="yes">
         <source>Running the crawler to extension to process it's queue-entries.</source>
-        <target state="needs-translation">Running the crawler to extension to process it's queue-entries.</target>
+        <target state="final">Ausführen des Crawlers zur Erweiterung, um dessen Warteschlangeneinträge zu verarbeiten.</target>
       </trans-unit>
       <trans-unit id="crawler_flush.name" resname="crawler_flush.name" approved="yes">
         <source>Crawler Queue Flush</source>
@@ -222,21 +218,19 @@
         <target state="final">Crawl</target>
       </trans-unit>
       <!-- For Crawler Priority - Will be remove when support for 9 LTS is dropped -->
-      <trans-unit id="pages_crawler.priority_label" resname="pages_crawler.priority_label">
+      <trans-unit id="pages_crawler.priority_label" resname="pages_crawler.priority_label" approved="yes">
         <source>Page priority</source>
-        <target state="needs-translation">Page priority</target>
+        <target state="final">Seitenpriorität</target>
       </trans-unit>
-      <trans-unit id="pages_crawler.priority" resname="pages_crawler.priority">
+      <trans-unit id="pages_crawler.priority" resname="pages_crawler.priority" approved="yes">
         <source>Priority</source>
-        <target state="needs-translation">Priority</target>
+        <target state="final">Priorität</target>
       </trans-unit>
-      <trans-unit id="pages_crawler.priority.description" resname="pages_crawler.priority.description">
+      <trans-unit id="pages_crawler.priority.description" resname="pages_crawler.priority.description" approved="yes">
         <source>The higher the number, the earlier will it be crawled. This is a reuse of the sitemap_priority
                     field introduced in 10LTS, to ensure compatibility after upgrade, we reuse the field.
                 </source>
-        <target state="needs-translation">The higher the number, the earlier will it be crawled. This is a reuse of the sitemap_priority
-                    field introduced in 10LTS, to ensure compatibility after upgrade, we reuse the field.
-                </target>
+        <target state="final">Je höher die Zahl, desto früher wird die Seite gecrawlt. Dies ist eine Wiederverwendung des in 10LTS eingeführten Feldes sitemap_priority. Um die Kompatibilität nach dem Upgrade zu gewährleisten, verwenden wir dieses Feld erneut.</target>
       </trans-unit>
     </body>
   </file>
