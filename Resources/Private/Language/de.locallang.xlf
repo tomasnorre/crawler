@@ -99,13 +99,13 @@
         <source>Key</source>
         <target state="final">Schlüssel</target>
       </trans-unit>
-      <trans-unit id="labels.parametercfg" resname="labels.parametercfg">
+      <trans-unit id="labels.parametercfg" resname="labels.parametercfg" approved="yes">
         <source>Parameter Cfg</source>
-        <target state="needs-translation">Parameter Cfg</target>
+        <target state="final">Parameter Konfiguration</target>
       </trans-unit>
-      <trans-unit id="labels.values" resname="labels.values">
+      <trans-unit id="labels.values" resname="labels.values" approved="yes">
         <source>Values Expanded</source>
-        <target state="needs-translation">Values Expanded</target>
+        <target state="final">Werte erweitert</target>
       </trans-unit>
       <trans-unit id="labels.url" resname="labels.url" approved="yes">
         <source>URL</source>
@@ -147,9 +147,9 @@
         <source>Are you sure?</source>
         <target state="final">Sind Sie sicher?</target>
       </trans-unit>
-      <trans-unit id="labels.setid" resname="labels.setid">
+      <trans-unit id="labels.setid" resname="labels.setid" approved="yes">
         <source>Set ID</source>
-        <target state="needs-translation">Set ID</target>
+        <target state="final">Set ID</target>
       </trans-unit>
       <trans-unit id="labels.qid" resname="labels.qid" approved="yes">
         <source>Queue id</source>
@@ -175,9 +175,9 @@
         <source>Groups</source>
         <target state="final">Gruppen</target>
       </trans-unit>
-      <trans-unit id="labels.procinstr" resname="labels.procinstr">
+      <trans-unit id="labels.procinstr" resname="labels.procinstr" approved="yes">
         <source>Proc. Instr.</source>
-        <target state="needs-translation">Proc. Instr.</target>
+        <target state="final">Proc. Instr.</target>
       </trans-unit>
       <trans-unit id="labels.newprocess" resname="labels.newprocess" approved="yes">
         <source>New process has been started, refresh to monitor the state</source>
@@ -207,9 +207,9 @@
         <source>Show Result Log</source>
         <target state="final">Ergebnisse anzeigen</target>
       </trans-unit>
-      <trans-unit id="labels.showfevars" resname="labels.showfevars">
+      <trans-unit id="labels.showfevars" resname="labels.showfevars" approved="yes">
         <source>Show FE Vars</source>
-        <target state="needs-translation">Show FE Vars</target>
+        <target state="final">zeige FE Variablen</target>
       </trans-unit>
       <trans-unit id="labels.noentries" resname="labels.noentries" approved="yes">
         <source>No entries</source>
@@ -315,9 +315,9 @@
         <source>Add process</source>
         <target state="final">Prozess hinzufügen</target>
       </trans-unit>
-      <trans-unit id="labels.process.flush" resname="labels.process.flush">
+      <trans-unit id="labels.process.flush" resname="labels.process.flush" approved="yes">
         <source>Flush all processes</source>
-        <target state="needs-translation">Flush all processes</target>
+        <target state="final">alle Prozesse beenden</target>
       </trans-unit>
       <trans-unit id="time.detailed" resname="time.detailed" approved="yes">
         <source>d-m-y H:i:s</source>
