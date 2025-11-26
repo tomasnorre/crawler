@@ -67,15 +67,6 @@ parameters:
 			path: Classes/Domain/Model/ProcessCollection.php
 
 		-
-			message: '''
-				#^Call to deprecated method getExpressionBuilder\(\) of class TYPO3\\CMS\\Core\\Database\\Connection\:
-				Use \{@see createExpressionBuilder\(\)\} instead\.$#
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: Classes/Domain/Repository/QueueRepository.php
-
-		-
 			message: '#^Cannot access offset ''alturl'' on array\|bool\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1

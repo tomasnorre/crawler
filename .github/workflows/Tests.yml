@@ -16,7 +16,6 @@ jobs:
       fail-fast: false
       matrix:
         typo3:
-          - '^12.4'
           - '^13.4'
         php:
           - '8.2'

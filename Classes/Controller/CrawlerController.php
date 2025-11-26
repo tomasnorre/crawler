@@ -45,8 +45,8 @@ use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
-use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Imaging\IconSize;
 use TYPO3\CMS\Core\Type\Bitmask\Permission;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -129,7 +129,7 @@ class CrawlerController implements LoggerAwareInterface
         $configurationProvider = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
         $this->extensionSettings = $configurationProvider->getExtensionConfiguration();
 
-        if (MathUtility::convertToPositiveInteger($this->extensionSettings['countInARun']) === 0) {
+        if (abs((int) $this->extensionSettings['countInARun']) === 0) {
             $this->extensionSettings['countInARun'] = 100;
         }
 
@@ -509,7 +509,7 @@ class CrawlerController implements LoggerAwareInterface
                     QueueRepository::TABLE_NAME
                 );
                 $connectionForCrawlerQueue->insert(QueueRepository::TABLE_NAME, $fieldArray);
-                $uid = $connectionForCrawlerQueue->lastInsertId(QueueRepository::TABLE_NAME, 'qid');
+                $uid = $connectionForCrawlerQueue->lastInsertId();
                 $rows[] = $uid;
                 $urlAdded = true;
 
@@ -624,7 +624,7 @@ class CrawlerController implements LoggerAwareInterface
             QueueRepository::TABLE_NAME
         );
         $connectionForCrawlerQueue->insert(QueueRepository::TABLE_NAME, $field_array);
-        $queueId = $field_array['qid'] = $connectionForCrawlerQueue->lastInsertId(QueueRepository::TABLE_NAME, 'qid');
+        $queueId = $field_array['qid'] = $connectionForCrawlerQueue->lastInsertId();
         $result = $this->queueExecutor->executeQueueItem($field_array, $this);
 
         // Set result in log which also denotes the end of the processing of this entry.
@@ -687,7 +687,7 @@ class CrawlerController implements LoggerAwareInterface
             // Set root row:
             $tree->tree[] = [
                 'row' => $pageInfo,
-                'HTML' => $this->iconFactory->getIconForRecord('pages', $pageInfo, Icon::SIZE_SMALL),
+                'HTML' => $this->iconFactory->getIconForRecord('pages', $pageInfo, IconSize::SMALL),
             ];
         }
 

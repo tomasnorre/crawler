@@ -13,7 +13,8 @@
 #### Functions & Properties
 
 ### Removed
-* PHP 8.1 Support
+* PHP 8.1 Support [@tomasnorre](https://github.com/tomasnorre)
+* TYPO3 12 LTS Support [@tomasnorre](https://github.com/tomasnorre)
 
 #### Classes
 #### Functions & Properties

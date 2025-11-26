@@ -27,6 +27,7 @@ use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Imaging\IconSize;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -59,7 +60,7 @@ class BackendModuleLogService
         $csvExport = [];
 
         if (!empty($logEntriesOfPage)) {
-            $refreshIcon = $this->iconFactory->getIcon('actions-system-refresh', Icon::SIZE_SMALL);
+            $refreshIcon = $this->iconFactory->getIcon('actions-system-refresh', IconSize::SMALL);
             // Traverse parameter combinations:
             $firstIteration = true;
             foreach ($logEntriesOfPage as $vv) {
@@ -110,7 +111,7 @@ class BackendModuleLogService
                 $warningIcon = '';
                 if (str_contains($resStatus, 'Error')) {
                     $trClass = 'bg-danger';
-                    $warningIcon = $this->iconFactory->getIcon('actions-ban', Icon::SIZE_SMALL);
+                    $warningIcon = $this->iconFactory->getIcon('actions-ban', IconSize::SMALL);
                 }
 
                 // Put rows together:

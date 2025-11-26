@@ -14,7 +14,7 @@ services:
     image: postgres:13.5-alpine3.15
     restart: no
     environment:
-      POSTGRES_DB: crawler
+      POSTGRES_DB: root
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
       PGDATA: "/data/postgres"
