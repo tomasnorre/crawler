@@ -9,6 +9,7 @@ use Rector\DeadCode\Rector\If_\RemoveAlwaysTrueIfConditionRector;
 use Rector\DeadCode\Rector\Property\RemoveSetterOnlyPropertyAndMethodCallRector;
 use Rector\DeadCode\Rector\Property\RemoveUnusedPrivatePropertyRector;
 use Rector\DeadCode\Rector\Stmt\RemoveUnreachableStatementRector;
+use Rector\Php82\Rector\Class_\ReadOnlyClassRector;
 use Rector\PHPUnit\Set\PHPUnitSetList;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Set\ValueObject\SetList;
@@ -43,7 +44,8 @@ return RectorConfig::configure()
         ],
         RecastingRemovalRector::class => [
             __DIR__ . '/Classes/Backend/RequestForm/LogRequestForm.php'
-        ]
+        ],
+        ReadOnlyClassRector::class => null,
     ])
     ->withAutoloadPaths([
         __DIR__ . '/Classes'
@@ -53,7 +55,7 @@ return RectorConfig::configure()
         SetList::DEAD_CODE,
         //SetList::CODE_QUALITY,
         //SetList::CODING_STYLE,
-        LevelSetList::UP_TO_PHP_81,
+        LevelSetList::UP_TO_PHP_82,
         PHPUnitSetList::PHPUNIT_90,
         PHPUnitSetList::PHPUNIT_100,
     ])

@@ -24,7 +24,7 @@ jobs:
                         ${{ runner.os }}-composer-
             -   uses: shivammathur/setup-php@v2
                 with:
-                    php-version: 8.1
+                    php-version: 8.2
                     coverage: none
             -   name: "Install dependencies"
                 uses: ramsey/composer-install@v3
@@ -45,7 +45,7 @@ jobs:
                         ${{ runner.os }}-composer-
             -   uses: shivammathur/setup-php@v2
                 with:
-                    php-version: 8.1
+                    php-version: 8.2
                     coverage: none
             -   name: "Install dependencies"
                 uses: ramsey/composer-install@v3
@@ -66,7 +66,7 @@ jobs:
                         ${{ runner.os }}-composer-
             -   uses: shivammathur/setup-php@v2
                 with:
-                    php-version: 8.1
+                    php-version: 8.2
                     coverage: none
             -   name: "Install dependencies"
                 uses: ramsey/composer-install@v3
@@ -87,7 +87,7 @@ jobs:
                         ${{ runner.os }}-composer-
             -   uses: shivammathur/setup-php@v2
                 with:
-                    php-version: 8.1
+                    php-version: 8.2
                     coverage: none
                     tools: phive
 

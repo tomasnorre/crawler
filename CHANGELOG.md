@@ -13,6 +13,8 @@
 #### Functions & Properties
 
 ### Removed
+* PHP 8.1 Support
+
 #### Classes
 #### Functions & Properties
 

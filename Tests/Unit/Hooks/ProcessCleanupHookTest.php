@@ -29,6 +29,8 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 #[CoversClass(ProcessCleanUpHook::class)]
 class ProcessCleanupHookTest extends UnitTestCase
 {
+    protected bool $resetSingletonInstances = true;
+
     #[Test]
     public function testCrawlerInitCallsCleanersOnce(): void
     {
