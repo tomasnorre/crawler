@@ -23,6 +23,7 @@ use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Event\ModifySkipPageEvent;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -95,12 +96,22 @@ class PageService
 
     private function getDisallowedDokTypes(): array
     {
-        return [
+        return array_merge([
             PageRepository::DOKTYPE_LINK,
             PageRepository::DOKTYPE_SHORTCUT,
             PageRepository::DOKTYPE_SPACER,
             PageRepository::DOKTYPE_SYSFOLDER,
             PageRepository::DOKTYPE_BE_USER_SECTION,
-        ];
+        ], $this->getDisallowedDokTypeTYPO3v12());
+    }
+
+    private function getDisallowedDokTypeTYPO3v12(): array
+    {
+        $disallowed_v12 = [];
+        $typo3Version = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(Typo3Version::class);
+        if ($typo3Version->getMajorVersion() === 12) {
+            $disallowed_v12[] = PageRepository::DOKTYPE_RECYCLER;
+        }
+        return $disallowed_v12;
     }
 }

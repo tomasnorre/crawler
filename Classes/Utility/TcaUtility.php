@@ -19,8 +19,7 @@ namespace AOE\Crawler\Utility;
  * The TYPO3 project - inspiring people to share!
  */
 
-use TYPO3\CMS\Core\Package\PackageManager;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 /**
  * @internal since v9.2.5
@@ -50,12 +49,6 @@ class TcaUtility
 
     private function getExtensionIcon(string $extensionKey): string
     {
-        $packageManager = GeneralUtility::makeInstance(PackageManager::class);
-        $package = $packageManager->getPackage($extensionKey);
-        if ($package->getPackageIcon()) {
-            return $fullIconPath = $package->getPackagePath() . $package->getPackageIcon();
-        }
-
-        return '';
+        return ExtensionManagementUtility::getExtensionIcon(ExtensionManagementUtility::extPath($extensionKey), true);
     }
 }

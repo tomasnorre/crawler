@@ -40,8 +40,8 @@ use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
-use TYPO3\CMS\Core\Imaging\IconSize;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -165,7 +165,7 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
             $pageinfo = BackendUtility::readPageAccess($this->pageUid, $perms_clause);
 
             if (is_array($pageinfo)) {
-                $HTML = $this->iconFactory->getIconForRecord('pages', $pageinfo, IconSize::SMALL)->render();
+                $HTML = $this->iconFactory->getIconForRecord('pages', $pageinfo, Icon::SIZE_SMALL)->render();
                 $tree->tree[] = [
                     'row' => $pageinfo,
                     'HTML' => $HTML,
