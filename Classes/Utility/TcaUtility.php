@@ -19,7 +19,8 @@ namespace AOE\Crawler\Utility;
  * The TYPO3 project - inspiring people to share!
  */
 
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Package\PackageManager;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * @internal since v9.2.5
@@ -47,14 +48,13 @@ class TcaUtility
         return $configuration;
     }
 
-    /**
-     * Get path to ext_icon.gif from processing instruction key
-     *
-     * @param string $extensionKey Like staticfilecache or indexed_search
-     * @return string
-     */
-    private function getExtensionIcon($extensionKey)
+    private function getExtensionIcon(string $extensionKey): string
     {
-        return ExtensionManagementUtility::getExtensionIcon(ExtensionManagementUtility::extPath($extensionKey), true);
+        $packageManager = GeneralUtility::makeInstance(PackageManager::class);
+        $package = $packageManager->getPackage($extensionKey);
+        if ($package->getPackageIcon()) {
+            return $fullIconPath = $package->getPackagePath() . $package->getPackageIcon();
+        }
+        return '';
     }
 }

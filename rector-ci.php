@@ -13,7 +13,9 @@ use Rector\Php82\Rector\Class_\ReadOnlyClassRector;
 use Rector\PHPUnit\Set\PHPUnitSetList;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Set\ValueObject\SetList;
+use Ssch\TYPO3Rector\Set\Typo3LevelSetList;
 use Ssch\TYPO3Rector\Set\Typo3SetList;
+use Ssch\TYPO3Rector\TYPO313\v0\MigrateTypoScriptFrontendControllerReadOnlyPropertiesRector;
 use Ssch\Typo3RectorTestingFramework\Set\NimutTestingFrameworkSetList;
 
 return RectorConfig::configure()
@@ -46,6 +48,7 @@ return RectorConfig::configure()
             __DIR__ . '/Classes/Backend/RequestForm/LogRequestForm.php'
         ],
         ReadOnlyClassRector::class => null,
+        MigrateTypoScriptFrontendControllerReadOnlyPropertiesRector::class => null,
     ])
     ->withAutoloadPaths([
         __DIR__ . '/Classes'
@@ -58,10 +61,8 @@ return RectorConfig::configure()
         LevelSetList::UP_TO_PHP_82,
         PHPUnitSetList::PHPUNIT_90,
         PHPUnitSetList::PHPUNIT_100,
-    ])
-    ->registerService(Typo3SetList::TYPO3_11)
-    ->registerService(Typo3SetList::TYPO3_12);
-
+        Typo3LevelSetList::UP_TO_TYPO3_13
+    ]);
 
 /**return static function (RectorConfig $rectorConfig): void {
 
