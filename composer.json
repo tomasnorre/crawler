@@ -55,8 +55,7 @@
         "symplify/phpstan-rules": "^14.2",
         "tomasvotruba/cognitive-complexity": "^1.0",
         "tomasvotruba/type-coverage": "^2.0",
-        "typo3/testing-framework": "^8.0 || ^9.0",
-        "vimeo/psalm": "^6.13"
+        "typo3/testing-framework": "^8.0 || ^9.0"
     },
     "replace": {
         "aoepeople/crawler": "self.version",

@@ -1,9 +1,327 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.19.0@a2ad69ae4f5ab1f7d225a8dc4e2ec2d9415ed599">
+<files psalm-version="6.13.1@1e3b7f0a8ab32b23197b91107adc0a7ed8a05b51">
+  <file src="Classes/Command/BuildQueueCommand.php">
+    <UnusedClass>
+      <code><![CDATA[BuildQueueCommand]]></code>
+    </UnusedClass>
+  </file>
   <file src="Classes/Command/FlushQueueCommand.php">
-    <NoValue occurrences="2">
-      <code>$queueFilter</code>
-      <code>$queueFilter</code>
+    <NoValue>
+      <code><![CDATA[$queueFilter]]></code>
+      <code><![CDATA[$queueFilter]]></code>
     </NoValue>
+    <UnusedClass>
+      <code><![CDATA[FlushQueueCommand]]></code>
+    </UnusedClass>
+  </file>
+  <file src="Classes/Command/ProcessQueueCommand.php">
+    <UnusedClass>
+      <code><![CDATA[ProcessQueueCommand]]></code>
+    </UnusedClass>
+  </file>
+  <file src="Classes/ContextMenu/ItemProvider.php">
+    <UnusedClass>
+      <code><![CDATA[ItemProvider]]></code>
+    </UnusedClass>
+  </file>
+  <file src="Classes/Controller/Ajax/ProcessStatusController.php">
+    <UnusedClass>
+      <code><![CDATA[ProcessStatusController]]></code>
+    </UnusedClass>
+  </file>
+  <file src="Classes/Controller/Backend/AbstractBackendModuleController.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[setExtensionSettings]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="Classes/Controller/Backend/BackendModuleControllerInterface.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[handleRequest]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="Classes/Controller/Backend/BackendModuleCrawlerLogController.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[setQueryBuilder]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="Classes/Controller/Backend/BackendModuleCrawlerProcessController.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="Classes/Controller/Backend/BackendModuleStartCrawlingController.php">
+    <UnusedClass>
+      <code><![CDATA[BackendModuleStartCrawlingController]]></code>
+    </UnusedClass>
+  </file>
+  <file src="Classes/Controller/CrawlerController.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+      <code><![CDATA[addQueueEntry_callBack]]></code>
+      <code><![CDATA[drawURLs_PIfilter]]></code>
+      <code><![CDATA[setExtensionSettings]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$maximumUrlsToCompile]]></code>
+      <code><![CDATA[$processID]]></code>
+      <code><![CDATA[$processRepository]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="Classes/CrawlStrategy/CrawlStrategyFactory.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="Classes/CrawlStrategy/SubProcessExecutionStrategy.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="Classes/Crawler.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="Classes/Domain/Model/Configuration.php">
+    <UnusedClass>
+      <code><![CDATA[Configuration]]></code>
+    </UnusedClass>
+  </file>
+  <file src="Classes/Domain/Model/Process.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getFinallyAssigned]]></code>
+      <code><![CDATA[getState]]></code>
+      <code><![CDATA[getSystemProcessId]]></code>
+      <code><![CDATA[isDeleted]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="Classes/Domain/Model/ProcessCollection.php">
+    <MissingTemplateParam>
+      <code><![CDATA[ProcessCollection]]></code>
+    </MissingTemplateParam>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getProcessIds]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="Classes/Domain/Model/Queue.php">
+    <UnusedClass>
+      <code><![CDATA[Queue]]></code>
+    </UnusedClass>
+  </file>
+  <file src="Classes/Domain/Model/Reason.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getBackendUserId]]></code>
+      <code><![CDATA[getCreationDate]]></code>
+      <code><![CDATA[getQueueEntryUid]]></code>
+      <code><![CDATA[getRow]]></code>
+      <code><![CDATA[getUid]]></code>
+      <code><![CDATA[setBackendUserId]]></code>
+      <code><![CDATA[setCreationDate]]></code>
+      <code><![CDATA[setQueueEntryUid]]></code>
+      <code><![CDATA[setUid]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="Classes/Domain/Repository/ConfigurationRepository.php">
+    <MissingTemplateParam>
+      <code><![CDATA[ConfigurationRepository]]></code>
+    </MissingTemplateParam>
+  </file>
+  <file src="Classes/Domain/Repository/ProcessRepository.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[setExtensionSettings]]></code>
+      <code><![CDATA[setQueryBuilder]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$queryBuilder]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="Classes/Domain/Repository/QueueRepository.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[findAll]]></code>
+      <code><![CDATA[findByProcessId]]></code>
+      <code><![CDATA[setExtensionSettings]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$extensionSettings]]></code>
+    </PossiblyUnusedProperty>
+    <UnnecessaryVarAnnotation>
+      <code><![CDATA[ExtensionConfigurationProvider]]></code>
+    </UnnecessaryVarAnnotation>
+    <UnusedVariable>
+      <code><![CDATA[$query]]></code>
+    </UnusedVariable>
+  </file>
+  <file src="Classes/Event/AfterQueueItemAddedEvent.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[setFieldArray]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="Classes/Event/AfterUrlAddedToQueueEvent.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getFieldArray]]></code>
+      <code><![CDATA[getUid]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="Classes/Event/AfterUrlCrawledEvent.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getResult]]></code>
+      <code><![CDATA[getUrl]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="Classes/Event/BeforeQueueItemAddedEvent.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getQueueId]]></code>
+      <code><![CDATA[setQueueRecord]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="Classes/Event/InvokeQueueChangeEvent.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getReasonDetailedText]]></code>
+      <code><![CDATA[getReasonText]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="Classes/Event/ModifySkipPageEvent.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getPageRow]]></code>
+      <code><![CDATA[setSkipped]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="Classes/EventListener/AfterQueueItemAddedEventListener.php">
+    <UnusedClass>
+      <code><![CDATA[AfterQueueItemAddedEventListener]]></code>
+    </UnusedClass>
+  </file>
+  <file src="Classes/EventListener/ShouldUseCachedPageDataIfAvailableEventListener.php">
+    <UnusedClass>
+      <code><![CDATA[ShouldUseCachedPageDataIfAvailableEventListener]]></code>
+    </UnusedClass>
+  </file>
+  <file src="Classes/Exception/CrawlerObjectException.php">
+    <UnusedClass>
+      <code><![CDATA[CrawlerObjectException]]></code>
+    </UnusedClass>
+  </file>
+  <file src="Classes/Exception/TimeStampException.php">
+    <UnusedClass>
+      <code><![CDATA[TimeStampException]]></code>
+    </UnusedClass>
+  </file>
+  <file src="Classes/Helper/Sleeper/NullSleeper.php">
+    <UnusedClass>
+      <code><![CDATA[NullSleeper]]></code>
+    </UnusedClass>
+  </file>
+  <file src="Classes/Helper/Sleeper/SystemSleeper.php">
+    <UnusedClass>
+      <code><![CDATA[SystemSleeper]]></code>
+    </UnusedClass>
+  </file>
+  <file src="Classes/Hooks/DataHandlerHook.php">
+    <PossiblyUnusedParam>
+      <code><![CDATA[$dataHandler]]></code>
+    </PossiblyUnusedParam>
+    <UnusedClass>
+      <code><![CDATA[DataHandlerHook]]></code>
+    </UnusedClass>
+  </file>
+  <file src="Classes/Hooks/ProcessCleanUpHook.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="Classes/Middleware/CrawlerInitialization.php">
+    <UnusedClass>
+      <code><![CDATA[CrawlerInitialization]]></code>
+    </UnusedClass>
+  </file>
+  <file src="Classes/Middleware/FrontendUserAuthenticator.php">
+    <UnusedClass>
+      <code><![CDATA[FrontendUserAuthenticator]]></code>
+    </UnusedClass>
+  </file>
+  <file src="Classes/Process/Cleaner/OldProcessCleaner.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="Classes/Process/Cleaner/OrphanProcessCleaner.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="Classes/Process/ProcessManagerFactory.php">
+    <UnusedClass>
+      <code><![CDATA[ProcessManagerFactory]]></code>
+    </UnusedClass>
+  </file>
+  <file src="Classes/QueueExecutor.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="Classes/Service/BackendModuleLinkService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="Classes/Service/BackendModuleLogService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="Classes/Service/ConfigurationService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <UnusedForeachValue>
+      <code><![CDATA[$confArray]]></code>
+    </UnusedForeachValue>
+  </file>
+  <file src="Classes/Service/ProcessService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="Classes/Service/QueueService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="Classes/Service/UrlService.php">
+    <UnusedVariable>
+      <code><![CDATA[$siteLanguage]]></code>
+      <code><![CDATA[$siteLanguage]]></code>
+    </UnusedVariable>
+  </file>
+  <file src="Classes/Utility/HookUtility.php">
+    <UnusedClass>
+      <code><![CDATA[HookUtility]]></code>
+    </UnusedClass>
+  </file>
+  <file src="Classes/Utility/TcaUtility.php">
+    <UnusedClass>
+      <code><![CDATA[TcaUtility]]></code>
+    </UnusedClass>
+  </file>
+  <file src="Classes/Value/CrawlAction.php">
+    <UnusedClass>
+      <code><![CDATA[CrawlAction]]></code>
+    </UnusedClass>
+  </file>
+  <file src="Classes/Value/QueueRow.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$configurationKey]]></code>
+      <code><![CDATA[$options]]></code>
+      <code><![CDATA[$pageTitleHTML]]></code>
+      <code><![CDATA[$parameterConfig]]></code>
+      <code><![CDATA[$parameters]]></code>
+      <code><![CDATA[$valuesExpanded]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="Classes/Writer/FileWriter/CsvWriter/CrawlerCsvWriter.php">
+    <UnusedClass>
+      <code><![CDATA[CrawlerCsvWriter]]></code>
+    </UnusedClass>
   </file>
 </files>
