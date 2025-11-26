@@ -68,7 +68,7 @@ class CrawlerInitialization implements MiddlewareInterface
         $response = $handler->handle($request);
 
         $GLOBALS['TSFE']->applicationData['tx_crawler']['vars'] = [
-            'id' => $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.page.information')->getId(),
+            'id' => $GLOBALS['TSFE']->id,
             'gr_list' => implode(',', $this->context->getAspect('frontend.user')->getGroupIds()),
             'no_cache' => !$request->getAttribute('frontend.cache.instruction')->isCachingAllowed(),
         ];
