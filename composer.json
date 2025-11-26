@@ -31,12 +31,12 @@
         "psr/log": "^1.0 || ^2.0 || ^3.0",
         "symfony/console": "^6.4 || ^7.0",
         "symfony/service-contracts": "^3.6",
-        "typo3/cms-backend": "^12.4 || ^13.4",
-        "typo3/cms-core": "^12.4 || ^13.4",
-        "typo3/cms-extbase": "^12.4 || ^13.4",
-        "typo3/cms-frontend": "^12.4 || ^13.4",
-        "typo3/cms-info": "^12.4 || ^13.4",
-        "typo3/cms-seo": "^12.4 || ^13.4"
+        "typo3/cms-backend": "^12.4 || ^13.4 || ^14.0",
+        "typo3/cms-core": "^12.4 || ^13.4 || ^14.0",
+        "typo3/cms-extbase": "^12.4 || ^13.4 || ^14.0",
+        "typo3/cms-frontend": "^12.4 || ^13.4 || ^14.0",
+        "typo3/cms-info": "^12.4 || ^13.4 || ^14.0",
+        "typo3/cms-seo": "^12.4 || ^13.4 || ^14.0"
     },
     "require-dev": {
         "codeception/codeception": "^5.0",
