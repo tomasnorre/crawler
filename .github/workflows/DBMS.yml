@@ -31,7 +31,7 @@ jobs:
     steps:
       - name: Set up PostgreSQL ${{ matrix.postgres }}
         run: |
-          docker run -e POSTGRES_DB=typo3 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=root -d -p 5432:5432 postgres:${{ matrix.postgres }}
+          docker run -e POSTGRES_DB=root -e POSTGRES_USER=root -e POSTGRES_PASSWORD=root -d -p 5432:5432 postgres:${{ matrix.postgres }}
 
       - name: Checkout
         uses: actions/checkout@v6
