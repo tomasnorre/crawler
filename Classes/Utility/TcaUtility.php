@@ -47,7 +47,13 @@ class TcaUtility
         return $configuration;
     }
 
-    private function getExtensionIcon(string $extensionKey): string
+    /**
+     * Get path to ext_icon.gif from processing instruction key
+     *
+     * @param string $extensionKey Like staticfilecache or indexed_search
+     * @return string
+     */
+    private function getExtensionIcon($extensionKey)
     {
         return ExtensionManagementUtility::getExtensionIcon(ExtensionManagementUtility::extPath($extensionKey), true);
     }
