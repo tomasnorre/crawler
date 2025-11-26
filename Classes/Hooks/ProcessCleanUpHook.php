@@ -34,6 +34,7 @@ class ProcessCleanUpHook implements CrawlerHookInterface
     ) {
     }
 
+    #[\Override]
     public function crawler_init(): void
     {
         $this->orphanCleaner->clean();

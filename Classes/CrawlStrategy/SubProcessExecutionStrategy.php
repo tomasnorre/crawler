@@ -51,6 +51,7 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
      *
      * @return array|false See CrawlStrategyInterface::fetchUrlContents()
      */
+    #[\Override]
     public function fetchUrlContents(UriInterface $url, string $crawlerId)
     {
         $url = (string) $url;

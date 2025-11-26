@@ -50,6 +50,7 @@ final class BackendModuleCrawlerProcessController extends AbstractBackendModuleC
     ) {
     }
 
+    #[\Override]
     public function handleRequest(ServerRequestInterface $request): ResponseInterface
     {
         $this->pageUid = (int) ($request->getQueryParams()['id'] ?? -1);

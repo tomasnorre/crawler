@@ -152,7 +152,6 @@ class ConfigurationService
 
                     // don't overwrite previously defined paramSets
                     if (!isset($res[$key])) {
-                        /** @var TypoScriptStringFactory $typoScriptStringFactory */
                         $typoScriptStringFactory = GeneralUtility::makeInstance(TypoScriptStringFactory::class);
                         $typoScriptTree = $typoScriptStringFactory->parseFromString(
                             $configurationRecord['processing_instruction_parameters_ts'],
@@ -203,7 +202,6 @@ class ConfigurationService
         $pidList = [];
 
         if (!empty($excludeString)) {
-            /** @var PageTreeView $tree */
             $tree = GeneralUtility::makeInstance(PageTreeView::class);
             $tree->init('AND ' . $this->getBackendUser()->getPagePermsClause(Permission::PAGE_SHOW));
 

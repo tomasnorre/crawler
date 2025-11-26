@@ -61,6 +61,7 @@ class ProcessQueueCommand extends Command
      * --- Will trigger the crawler which starts to process the queue entries
      * $ typo3 crawler:crawlQueue
      */
+    #[\Override]
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $amount = $input->getOption('amount');
@@ -105,6 +106,7 @@ class ProcessQueueCommand extends Command
         return $result & self::CLI_STATUS_ABORTED;
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('Trigger the crawler to process the queue entries');

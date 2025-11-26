@@ -6,14 +6,4 @@
       <code>$queueFilter</code>
     </NoValue>
   </file>
-  <file src="Classes/Hooks/IndexedSearchCrawlerHook.php">
-    <UndefinedConstant occurrences="1">
-      <code>LF</code>
-    </UndefinedConstant>
-  </file>
-  <file src="Classes/Utility/HookUtility.php">
-    <UndefinedConstant occurrences="1">
-      <code>TYPO3_MODE</code>
-    </UndefinedConstant>
-  </file>
 </files>

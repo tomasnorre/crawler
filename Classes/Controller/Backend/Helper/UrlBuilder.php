@@ -44,7 +44,6 @@ class UrlBuilder
         if ($id) {
             $uriParameters['id'] = $id;
         }
-        /** @var UriBuilder $uriBuilder */
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
         return $uriBuilder->buildUriFromRoute($module, $uriParameters);
     }

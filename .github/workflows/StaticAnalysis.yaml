@@ -89,11 +89,8 @@ jobs:
                 with:
                     php-version: 8.2
                     coverage: none
-                    tools: phive
-
-            -   name: "Install tools (Phive)"
-                run: "phive install --trust-gpg-keys 12CE0F1D262429A5"
-
-            -   run: composer require --dev typo3/cms-core:^13.4 --no-progress
-            -   run: tools/psalm --shepherd
+            -   name: "Install dependencies"
+                uses: ramsey/composer-install@v3
+            -   run: composer cs-fix
+            -   run: .Build/bin/psalm --no-cache --shepherd
 

@@ -143,8 +143,8 @@
             ".Build/bin/phpstan analyse --generate-baseline"
         ],
         "psalm": [
-            "[ -e tools/psalm ] || phive install",
-            "tools/psalm"
+            "[ -e .Build/bin/psalm ] || composer update",
+            ".Build/bin/psalm --no-cache"
         ],
         "rector": [
             "[ -e .Build/bin/rector ] || composer update",

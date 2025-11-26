@@ -63,6 +63,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
         $this->eventDispatcher = GeneralUtility::makeInstance(EventDispatcher::class);
     }
 
+    #[\Override]
     public function handleRequest(ServerRequestInterface $request): ResponseInterface
     {
         $this->makeCrawlerProcessableChecks($this->extensionSettings);

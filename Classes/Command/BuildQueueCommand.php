@@ -53,6 +53,7 @@ class BuildQueueCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('Create entries in the queue that can be processed at once');
@@ -118,6 +119,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
      * --- Put entries for re-caching pages from page 7 into queue, 4 every minute.
      * $ typo3 crawler:buildQueue 7 defaultConfiguration --depth 0 --mode queue --number 4
      */
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $mode = $input->getOption('mode') ?? 'queue';

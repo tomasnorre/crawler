@@ -60,7 +60,6 @@ class QueueExecutor implements SingletonInterface
         $parameters = '';
         if (isset($queueItem['parameters'])) {
             // Decode parameters:
-            /** @var JsonCompatibilityConverter $jsonCompatibleConverter */
             $jsonCompatibleConverter = GeneralUtility::makeInstance(JsonCompatibilityConverter::class);
             $parameters = $jsonCompatibleConverter->convert($queueItem['parameters']);
         }

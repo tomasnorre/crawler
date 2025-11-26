@@ -54,9 +54,9 @@ class FrontendUserAuthenticator implements MiddlewareInterface
      * @throws AspectNotFoundException
      * @throws ServiceUnavailableException
      */
+    #[\Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        /** @var JsonCompatibilityConverter $jsonCompatibilityConverter */
         $jsonCompatibilityConverter = GeneralUtility::makeInstance(JsonCompatibilityConverter::class);
 
         $crawlerInformation = $request->getHeaderLine($this->headerName);
