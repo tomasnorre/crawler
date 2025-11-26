@@ -39,11 +39,6 @@
         "typo3/cms-seo": "^13.4"
     },
     "require-dev": {
-        "codeception/codeception": "^5.0",
-        "codeception/module-asserts": "^3.0",
-        "codeception/module-filesystem": "^3.0",
-        "codeception/module-phpbrowser": "^3.0",
-        "codeception/module-webdriver": "^4.0",
         "infection/infection": "^0.29.9",
         "nikic/php-parser": "^4.13 || ^5.3",
         "phpspec/prophecy-phpunit": "^2.0",
@@ -141,7 +136,6 @@
             "rm -f rector-ci.php",
             "rm -f psalm.xml",
             "rm -f psalm-baseline.xml",
-            "rm -f codeception.yml",
             "rm -f crowdin.yml"
         ],
         "phpstan-baseline": [
@@ -165,16 +159,10 @@
             "@cs-fix",
             "@rector"
         ],
-        "test:acceptance": [
-            "[ -e .Build/bin/codecept ] || composer update",
-            ".Build/bin/codecept clean",
-            ".Build/bin/codecept run --env=local"
-        ],
         "test:all": [
             "@test:unit",
             "@test:functional",
-            "@test:functional-sqlite",
-            "@test:acceptance"
+            "@test:functional-sqlite"
         ],
         "test:coverage": [
             "mkdir -p .Logs/coverage",

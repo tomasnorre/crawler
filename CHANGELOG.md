@@ -15,6 +15,7 @@
 ### Removed
 * PHP 8.1 Support [@tomasnorre](https://github.com/tomasnorre)
 * TYPO3 12 LTS Support [@tomasnorre](https://github.com/tomasnorre)
+* Remove CodeCeption Tests and its dependencies [@tomasnorre](https://github.com/tomasnorre)
 
 #### Classes
 #### Functions & Properties
