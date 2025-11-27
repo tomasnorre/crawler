@@ -5,6 +5,7 @@
 ### Added
 
 ### Changed
+* Updated symfony-components dependencies to ^7.2
 
 ### Fixed
 
