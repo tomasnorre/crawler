@@ -9,7 +9,7 @@ on:
       - "main"
 
 jobs:
-  Acceptance-Playwright:
+  Acceptance:
     strategy:
       fail-fast: false
       matrix:
@@ -68,11 +68,11 @@ jobs:
         with:
           node-version: lts/*
       - name: Install dependencies
-        run: cd Tests/Acceptance-Playwright && npm ci
+        run: cd Tests/Acceptance && npm ci
       - name: Install Playwright Browsers
-        run: cd Tests/Acceptance-Playwright && npx playwright install --with-deps
+        run: cd Tests/Acceptance && npx playwright install --with-deps
       - name: Run Playwright tests
-        run: cd Tests/Acceptance-Playwright && npx playwright test
+        run: cd Tests/Acceptance && npx playwright test
       - uses: actions/upload-artifact@v5
         if: ${{ !cancelled() }}
         with:
