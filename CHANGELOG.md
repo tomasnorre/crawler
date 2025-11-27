@@ -6,6 +6,7 @@
 
 ### Changed
 * Updated symfony-components dependencies to ^7.2
+* Updated PHPUnit to ^11.5
 
 ### Fixed
 

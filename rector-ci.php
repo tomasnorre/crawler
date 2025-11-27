@@ -61,6 +61,7 @@ return RectorConfig::configure()
         LevelSetList::UP_TO_PHP_82,
         PHPUnitSetList::PHPUNIT_90,
         PHPUnitSetList::PHPUNIT_100,
+        PHPUnitSetList::PHPUNIT_110,
         Typo3LevelSetList::UP_TO_TYPO3_13
     ]);
 
