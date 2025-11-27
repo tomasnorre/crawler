@@ -31,7 +31,30 @@ jobs:
     steps:
       - name: Set up PostgreSQL ${{ matrix.postgres }}
         run: |
-          docker run -e POSTGRES_DB=root -e POSTGRES_USER=root -e POSTGRES_PASSWORD=root -d -p 5432:5432 postgres:${{ matrix.postgres }}
+          docker run -d \
+            -e POSTGRES_DB=root \
+            -e POSTGRES_USER=root \
+            -e POSTGRES_PASSWORD=root \
+            --shm-size=1g \
+            --tmpfs /var/lib/postgresql/data:rw,noexec,nosuid,size=1g \
+            -p 5432:5432 \
+            postgres:${{ matrix.postgres }} \
+            postgres \
+              -c shared_buffers=512MB \
+              -c work_mem=64MB \
+              -c maintenance_work_mem=256MB \
+              -c temp_buffers=128MB \
+              -c effective_cache_size=2GB \
+              -c max_wal_size=1GB \
+              -c checkpoint_timeout=30min \
+              -c checkpoint_completion_target=0.9 \
+              -c max_wal_senders=0 \
+              -c synchronous_commit=off \
+              -c fsync=off \
+              -c full_page_writes=off \
+              -c wal_level=minimal \
+              -c autovacuum=off \
+              -c archive_mode=off
 
       - name: Checkout
         uses: actions/checkout@v6
