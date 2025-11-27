@@ -50,6 +50,7 @@ class CrawlerInitialization implements MiddlewareInterface
      * @throws AspectNotFoundException
      * @throws ServiceUnavailableException
      */
+    #[\Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $queueParameters = $request->getAttribute('tx_crawler');

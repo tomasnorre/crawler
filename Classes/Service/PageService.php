@@ -88,7 +88,6 @@ class PageService
             }
         }
 
-        /** @var ModifySkipPageEvent $event */
         $event = $this->eventDispatcher->dispatch(new ModifySkipPageEvent($pageRow));
         return $event->isSkipped();
     }

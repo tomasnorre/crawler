@@ -36,6 +36,7 @@ final class CrawlAction implements \Stringable
         $this->crawlAction = $crawlAction;
     }
 
+    #[\Override]
     public function __toString(): string
     {
         return $this->crawlAction;

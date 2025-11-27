@@ -42,6 +42,7 @@ class GuzzleExecutionStrategy implements LoggerAwareInterface, CrawlStrategyInte
      *
      * @return array|false See CrawlStrategyInterface::fetchUrlContents()
      */
+    #[\Override]
     public function fetchUrlContents(UriInterface $url, string $crawlerId)
     {
         $reqHeaders = $this->buildRequestHeaders($crawlerId);

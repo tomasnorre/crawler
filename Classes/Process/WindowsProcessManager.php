@@ -25,17 +25,20 @@ namespace AOE\Crawler\Process;
  */
 class WindowsProcessManager implements ProcessManagerInterface
 {
+    #[\Override]
     public function processExists(int $pid): bool
     {
         exec('tasklist | find "' . $pid . '"', $returnArray);
         return count($returnArray) > 0 && stripos($returnArray[0], 'php') !== false;
     }
 
+    #[\Override]
     public function killProcess(int $pid): void
     {
         exec('taskkill /PID ' . $pid);
     }
 
+    #[\Override]
     public function findDispatcherProcesses(): array
     {
         $returnArray = [];

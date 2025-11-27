@@ -125,7 +125,6 @@ class CrawlerController implements LoggerAwareInterface
         );
         $this->urlService = GeneralUtility::makeInstance(UrlService::class);
 
-        /** @var ExtensionConfigurationProvider $configurationProvider */
         $configurationProvider = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
         $this->extensionSettings = $configurationProvider->getExtensionConfiguration();
 
@@ -374,7 +373,6 @@ class CrawlerController implements LoggerAwareInterface
         foreach ($rootLine as $node) {
             $pids[] = $node['uid'];
         }
-        /** @var PageTreeView $tree */
         $tree = GeneralUtility::makeInstance(PageTreeView::class);
         $perms_clause = $this->getBackendUser()->getPagePermsClause(Permission::PAGE_SHOW);
         $tree->init(empty($perms_clause) ? '' : ('AND ' . $perms_clause));
@@ -555,7 +553,6 @@ class CrawlerController implements LoggerAwareInterface
             return null;
         }
 
-        /** @var BeforeQueueItemAddedEvent $event */
         $event = $this->eventDispatcher->dispatch(new BeforeQueueItemAddedEvent((int) $queueId, $queueRec));
         $queueRec = $event->getQueueRecord();
 
@@ -573,9 +570,7 @@ class CrawlerController implements LoggerAwareInterface
 
         $result = $this->queueExecutor->executeQueueItem($queueRec, $this);
         if ($result === 'ERROR' || ($result['content'] ?? null) === null) {
-            $resultData = 'An errors happened';
         } else {
-            /** @var JsonCompatibilityConverter $jsonCompatibilityConverter */
             $jsonCompatibilityConverter = GeneralUtility::makeInstance(JsonCompatibilityConverter::class);
             $resultData = $jsonCompatibilityConverter->convert($result['content']);
 
@@ -677,7 +672,6 @@ class CrawlerController implements LoggerAwareInterface
         $this->downloadUrls = [];
 
         // Drawing tree:
-        /** @var PageTreeView $tree */
         $tree = GeneralUtility::makeInstance(PageTreeView::class);
         $perms_clause = $this->getBackendUser()->getPagePermsClause(Permission::PAGE_SHOW);
         $tree->init(empty($perms_clause) ? '' : ('AND ' . $perms_clause));

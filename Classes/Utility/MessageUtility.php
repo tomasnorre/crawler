@@ -65,7 +65,6 @@ class MessageUtility
     ): void {
         $message = GeneralUtility::makeInstance(FlashMessage::class, $message, '', $severity);
 
-        /** @var FlashMessageService $flashMessageService */
         $flashMessageService = GeneralUtility::makeInstance(FlashMessageService::class);
         $flashMessageService->getMessageQueueByIdentifier()->addMessage($message);
     }

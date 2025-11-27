@@ -53,7 +53,7 @@ class TcaUtility
         $packageManager = GeneralUtility::makeInstance(PackageManager::class);
         $package = $packageManager->getPackage($extensionKey);
         if ($package->getPackageIcon()) {
-            return $fullIconPath = $package->getPackagePath() . $package->getPackageIcon();
+            return $package->getPackagePath() . $package->getPackageIcon();
         }
         return '';
     }

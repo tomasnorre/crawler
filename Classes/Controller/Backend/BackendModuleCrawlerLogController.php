@@ -88,6 +88,7 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
         );
     }
 
+    #[\Override]
     public function handleRequest(ServerRequestInterface $request): ResponseInterface
     {
         $this->setPropertiesBasedOnPostVars($request);
