@@ -3,6 +3,7 @@
 ## Crawler 13.0.0-dev
 
 ### Added
+* PHP 8.5 Support [@tomasnorre](https://github.com/tomasnorre)
 
 ### Changed
 * Updated symfony-components dependencies to ^7.2
