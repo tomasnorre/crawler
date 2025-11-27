@@ -1,14 +1,22 @@
 services:
   db:
-    image: mariadb:10.3
+    image: mariadb:10.11
     restart: no
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: crawler
+    command:
+      - "--innodb_buffer_pool_size=1G"
+      - "--innodb_log_file_size=256M"
+      - "--innodb_flush_log_at_trx_commit=2"
+      - "--innodb_flush_method=O_DIRECT"
+      - "--skip-log-bin"
     ports:
-      - 3306:3306
+      - "3306:3306"
     tmpfs:
-      - /var/lib/mysql/:rw,noexec,nosuid
+      - /var/lib/mysql:rw,noexec,nosuid,size=2G
+    ulimits:
+      nofile: 65535
 
   db_postgres:
     image: postgres:13.5-alpine3.15
@@ -17,6 +25,31 @@ services:
       POSTGRES_DB: root
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
-      PGDATA: "/data/postgres"
+      PGDATA: "/var/lib/postgresql/data"
     ports:
-      - 5432:5432
+      - "5432:5432"
+
+    shm_size: "2g"
+
+    tmpfs:
+      - /var/lib/postgresql/data:rw,noexec,nosuid,size=2G
+
+    command: >
+      postgres
+      -c shared_buffers=1GB
+      -c work_mem=128MB
+      -c maintenance_work_mem=512MB
+      -c effective_cache_size=3GB
+      -c max_wal_size=4GB
+      -c wal_compression=on
+      -c checkpoint_timeout=1h
+      -c checkpoint_completion_target=0.9
+      -c max_wal_senders=0
+      -c synchronous_commit=off
+      -c fsync=off
+      -c full_page_writes=off
+      -c wal_level=minimal
+      -c archive_mode=off
+      -c max_worker_processes=8
+      -c max_parallel_workers=8
+      -c max_parallel_workers_per_gather=4
