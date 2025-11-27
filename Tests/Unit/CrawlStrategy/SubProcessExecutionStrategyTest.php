@@ -24,6 +24,7 @@ use AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategy;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 use TYPO3\CMS\Core\Http\Uri;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
@@ -56,12 +57,22 @@ class SubProcessExecutionStrategyTest extends UnitTestCase
     public function fetchUrlContentsInvalidSchema(): void
     {
         $logger = $this->prophesize(LoggerInterface::class);
-        $logger->debug(
-            'Scheme does not match for url "/not-an-url"',
-            [
-                'crawlerId' => '2981d019ade833a37995c1b569ef87b6b5af7287',
-            ]
-        )->shouldBeCalledOnce();
+        $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
+        if ($typo3Version->getMajorVersion() < 14) {
+            $logger->debug(
+                'Scheme does not match for url "/not-an-url"',
+                [
+                    'crawlerId' => '2981d019ade833a37995c1b569ef87b6b5af7287',
+                ]
+            )->shouldBeCalledOnce();
+        } else {
+            $logger->debug(
+                'Scheme does not match for url "not-an-url"',
+                [
+                    'crawlerId' => '2981d019ade833a37995c1b569ef87b6b5af7287',
+                ]
+            )->shouldBeCalledOnce();
+        }
 
         $crawlerId = sha1('this-is-testing');
         $url = new Uri('not-an-url');
