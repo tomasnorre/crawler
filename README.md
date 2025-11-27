@@ -33,10 +33,10 @@ composer require tomasnorre/crawler
 | 6.x.y   | 7.6-8.7   | 5.6-7.3 | Security Updates
 
 ### Documentation
-Please read the [documentation](https://docs.typo3.org/p/tomasnorre/crawler/master/en-us/)
+Please read the [documentation](https://docs.typo3.org/p/tomasnorre/crawler/main/en-us/)
 
 To render the documentation locally, please use the official TYPO3 Documentation rendering Docker Tool.
-<https://github.com/t3docs/docker-render-documentation>
+<https://docs.typo3.org/m/typo3/docs-how-to-document/main/en-us/Howto/RenderingDocs/Index.html#render-documentation-with-docker>
 
 ### Contributions
 
