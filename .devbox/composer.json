@@ -26,7 +26,8 @@
         "typo3/minimal": "^13.4",
         "typo3/cms-install": "^13.4",
         "georgringer/news": "^14",
-        "helhum/typo3-console": "^8.2"
+        "typo3/cms-reports": "^13.4",
+        "symfony/dependency-injection": "7.3.6"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest"
