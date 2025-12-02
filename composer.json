@@ -12,10 +12,10 @@
     ],
     "homepage": "https://github.com/tomasnorre/crawler",
     "support": {
-        "docs": "https://docs.typo3.org/p/tomasnorre/crawler/main/en-us/",
         "issues": "https://github.com/tomasnorre/crawler/issues",
+        "chat": "https://typo3.slack.com/archives/C087NGBKM",
         "source": "https://github.com/tomasnorre/crawler/",
-        "chat": "https://typo3.slack.com/archives/C087NGBKM"
+        "docs": "https://docs.typo3.org/p/tomasnorre/crawler/main/en-us/"
     },
     "require": {
         "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
@@ -36,8 +36,7 @@
         "typo3/cms-extbase": "^13.4 || ^14.0",
         "typo3/cms-frontend": "^13.4 || ^14.0",
         "typo3/cms-info": "^13.4 || ^14.0",
-        "typo3/cms-seo": "^13.4 || ^14.0",
-        "symfony/dependency-injection": "7.3.6"
+        "typo3/cms-seo": "^13.4 || ^14.0"
     },
     "require-dev": {
         "infection/infection": "^0.29.9",
@@ -63,6 +62,9 @@
         "aoepeople/crawler": "self.version",
         "typo3-ter/crawler": "self.version"
     },
+    "conflict": {
+        "symfony/dependency-injection": "7.4.0"
+    },
     "suggest": {
         "typo3/cms-seo": "Enables the posibility to priorities your Crawler Queue + You have seo features in the CMS it self."
     },
@@ -84,9 +86,9 @@
             "composer/package-versions-deprecated": true,
             "infection/extension-installer": true,
             "phpstan/extension-installer": true,
+            "sbuerk/typo3-cmscomposerinstallers-testingframework-bridge": true,
             "typo3/class-alias-loader": true,
-            "typo3/cms-composer-installers": true,
-            "sbuerk/typo3-cmscomposerinstallers-testingframework-bridge": true
+            "typo3/cms-composer-installers": true
         },
         "bin-dir": ".Build/bin",
         "preferred-install": {
@@ -107,9 +109,6 @@
             "web-dir": ".Build/Web"
         }
     },
-    "conflict": {
-		"symfony/dependency-injection": "7.4.0"
-	},
     "scripts": {
         "post-autoload-dump": [
             "mkdir -p .Build/Web/typo3conf/ext/",
@@ -128,6 +127,10 @@
         "extension-create-libs": [
             "@composer install -d Resources/Private/Php/Libraries"
         ],
+        "phpstan-baseline": [
+            "[ -e .Build/bin/phpstan ] || composer update",
+            ".Build/bin/phpstan analyse --generate-baseline"
+        ],
         "prepare-release": [
             "@extension-create-libs",
             "rm -rf .devbox",
@@ -142,10 +145,6 @@
             "rm -f psalm.xml",
             "rm -f psalm-baseline.xml",
             "rm -f crowdin.yml"
-        ],
-        "phpstan-baseline": [
-            "[ -e .Build/bin/phpstan ] || composer update",
-            ".Build/bin/phpstan analyse --generate-baseline"
         ],
         "psalm": [
             "[ -e .Build/bin/psalm ] || composer update",
