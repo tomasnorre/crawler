@@ -107,6 +107,9 @@
             "web-dir": ".Build/Web"
         }
     },
+    "conflict": {
+		"symfony/dependency-injection": "7.4.0"
+	},
     "scripts": {
         "post-autoload-dump": [
             "mkdir -p .Build/Web/typo3conf/ext/",

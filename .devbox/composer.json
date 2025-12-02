@@ -25,14 +25,14 @@
         "typo3/cms-tstemplate": "^13.4 || ^14.0",
         "typo3/minimal": "^13.4 || ^14.0",
         "typo3/cms-install": "^13.4 || ^14.0",
-        "georgringer/news": "^14",
-        "symfony/dependency-injection": "7.3.6"
+        "georgringer/news": "^14"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest"
     },
     "conflict": {
-        "tomasnorre/crawler": "<12.0.0"
+        "tomasnorre/crawler": "<12.0.0",
+        "symfony/dependency-injection": "7.4.0"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
