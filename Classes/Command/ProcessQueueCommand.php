@@ -40,7 +40,7 @@ class ProcessQueueCommand extends Command
     private const CLI_STATUS_REMAIN = 1;
     private const CLI_STATUS_PROCESSED = 2;
     private const CLI_STATUS_ABORTED = 4;
-    private string $processId;
+    private readonly string $processId;
     private array $extensionSettings;
 
     public function __construct(
@@ -81,7 +81,7 @@ class ProcessQueueCommand extends Command
                 // Run process:
                 $result = $this->runProcess($countInARun, $sleepTime, $sleepAfterFinish);
             } catch (\Throwable $e) {
-                $output->writeln('<warning>' . get_class($e) . ': ' . $e->getMessage() . '</warning>');
+                $output->writeln('<warning>' . $e::class . ': ' . $e->getMessage() . '</warning>');
                 $result = self::CLI_STATUS_ABORTED;
             }
 
