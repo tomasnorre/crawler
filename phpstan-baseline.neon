@@ -67,18 +67,6 @@ parameters:
 			path: Classes/Domain/Model/ProcessCollection.php
 
 		-
-			message: '#^Cannot access offset ''alturl'' on array\|bool\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Classes/Service/BackendModuleLogService.php
-
-		-
-			message: '#^Cannot access offset ''procInstructions'' on array\|bool\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Classes/Service/BackendModuleLogService.php
-
-		-
 			message: '#^Method AOE\\Crawler\\Service\\BackendModuleLogService\:\:addRows\(\) should return non\-empty\-list\<array\{titleRowSpan\: int\<1, max\>, colSpan\: int, title\: string, noEntries\?\: string, trClass\?\: string, qid\?\: array\{link\: TYPO3\\CMS\\Core\\Http\\Uri, link\-text\: string\}, refresh\?\: array\{link\: TYPO3\\CMS\\Core\\Http\\Uri, link\-text\: TYPO3\\CMS\\Core\\Imaging\\Icon, warning\: string\|TYPO3\\CMS\\Core\\Imaging\\Icon\}, columns\?\: array\{url\: mixed, scheduled\: string, exec_time\: string, result_log\: string, result_status\: string, feUserGroupList\: string, procInstructions\: string, set_id\: string, \.\.\.\}\}\> but returns array\{non\-empty\-list\<array\>, array\}\.$#'
 			identifier: return.type
 			count: 1

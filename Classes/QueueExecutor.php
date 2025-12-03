@@ -20,7 +20,6 @@ namespace AOE\Crawler;
  */
 
 use AOE\Crawler\Controller\CrawlerController;
-use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy;
 use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
 use AOE\Crawler\CrawlStrategy\CrawlStrategyInterface;
@@ -59,9 +58,7 @@ class QueueExecutor implements SingletonInterface
     {
         $parameters = '';
         if (isset($queueItem['parameters'])) {
-            // Decode parameters:
-            $jsonCompatibleConverter = GeneralUtility::makeInstance(JsonCompatibilityConverter::class);
-            $parameters = $jsonCompatibleConverter->convert($queueItem['parameters']);
+            $parameters = json_decode($queueItem['parameters'], true);
         }
 
         if (!is_array($parameters) || empty($parameters)) {

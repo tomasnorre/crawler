@@ -21,16 +21,18 @@ namespace AOE\Crawler\Tests\Unit\Controller\Backend\Helper;
  */
 
 use AOE\Crawler\Controller\Backend\Helper\ResultHandler;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Controller\Backend\Helper\ResultHandler::class)]
-#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Converter\JsonCompatibilityConverter::class)]
+#[CoversClass(ResultHandler::class)]
 class ResultHandlerTest extends UnitTestCase
 {
     protected bool $resetSingletonInstances = true;
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('getResStatusDataProvider')]
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[DataProvider('getResStatusDataProvider')]
+    #[Test]
     public function getResStatus($requestContent, string $expected): void
     {
         self::assertSame($expected, ResultHandler::getResStatus($requestContent));
@@ -84,8 +86,8 @@ class ResultHandlerTest extends UnitTestCase
         // Missing test case for the return 'Error: ' (last return)
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('getResFeVarsDataProvider')]
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[DataProvider('getResFeVarsDataProvider')]
+    #[Test]
     public function getResFeVars(array $resultData, array $expected): void
     {
         self::assertSame($expected, ResultHandler::getResFeVars($resultData));
@@ -123,8 +125,8 @@ class ResultHandlerTest extends UnitTestCase
         ];
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('getResultLogDataProvider')]
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[DataProvider('getResultLogDataProvider')]
+    #[Test]
     public function getResultLog(array $resultLog, string $expected): void
     {
         self::assertSame($expected, ResultHandler::getResultLog($resultLog));
