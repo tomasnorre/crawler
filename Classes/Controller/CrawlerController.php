@@ -20,7 +20,6 @@ namespace AOE\Crawler\Controller;
  */
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
-use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\Crawler;
 use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
@@ -567,8 +566,7 @@ class CrawlerController implements LoggerAwareInterface
 
         $result = $this->queueExecutor->executeQueueItem($queueRec, $this);
         if (!($result === 'ERROR' || ($result['content'] ?? null) === null)) {
-            $jsonCompatibilityConverter = GeneralUtility::makeInstance(JsonCompatibilityConverter::class);
-            $resultData = $jsonCompatibilityConverter->convert($result['content']);
+            $resultData = json_decode($result['content'], true);
             //atm there's no need to point to specific pollable extensions
             if (
                 is_array($resultData)
