@@ -387,7 +387,7 @@ class ConfigurationService
     private function expandPidList(array $treeCache, int $pid, int $depth, PageTreeView $tree, array $pidList): array
     {
         if (empty($treeCache[$pid][$depth])) {
-            $tree->reset();
+            //$tree->reset();
             $tree->getTree($pid, $depth);
             $treeCache[$pid][$depth] = $tree->tree;
         }

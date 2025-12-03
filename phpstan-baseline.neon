@@ -1,6 +1,15 @@
 parameters:
 	ignoreErrors:
 		-
+			message: '''
+				#^Call to deprecated method setMetaInformation\(\) of class TYPO3\\CMS\\Backend\\Template\\Components\\DocHeaderComponent\:
+				since v14, will be removed in v15\. Use setPageBreadcrumb\(\) instead\.$#
+			'''
+			identifier: method.deprecated
+			count: 1
+			path: Classes/Controller/Backend/AbstractBackendModuleController.php
+
+		-
 			message: '#^Cannot access offset ''_flush'' on array\|object\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
