@@ -37,7 +37,7 @@ parameters:
 			path: Classes/Controller/Backend/BackendModuleCrawlerProcessController.php
 
 		-
-			message: '#^Class cognitive complexity is 96, keep it under 28$#'
+			message: '#^Class cognitive complexity is 95, keep it under 28$#'
 			identifier: complexity.classLike
 			count: 1
 			path: Classes/Controller/CrawlerController.php

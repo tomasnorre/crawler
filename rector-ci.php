@@ -21,25 +21,9 @@ return RectorConfig::configure()
     ])
     ->withSkip([
         __DIR__ . '/Tests/Functional/Fixtures/Extensions/typo3_console/ext_emconf.php',
-        #__DIR__ . '/Classes/Command/ProcessQueueCommand.php',
-        #__DIR__ . '/Classes/Controller/CrawlerController.php',
-        #__DIR__ . '/Tests/Functional/Api/CrawlerApiTest.php',
-        #__DIR__ . '/Tests/Acceptance',
-        #__DIR__ . '/Documentation',
-        #Rector\DeadCode\Rector\If_\RemoveDeadInstanceOfRector::class => null,
         Rector\DeadCode\Rector\Assign\RemoveUnusedVariableAssignRector::class => [
             __DIR__ . '/Classes/Domain/Repository/QueueRepository.php'
         ],
-        #RemoveAlwaysTrueIfConditionRector::class => null,
-        #RemoveUnreachableStatementRector::class => [
-        #    __DIR__ . '/Tests/Unit/CrawlStrategy/SubProcessExecutionStrategyTest.php'
-        #],
-        #RemoveUnusedPrivatePropertyRector::class => [
-        #    __DIR__ . '/Classes/Hooks/ProcessCleanUpHook.php'
-        #],
-        #RecastingRemovalRector::class => [
-        #    __DIR__ . '/Classes/Backend/RequestForm/LogRequestForm.php'
-        #],
         ReadOnlyClassRector::class => null,
         MigrateTypoScriptFrontendControllerReadOnlyPropertiesRector::class => null,
     ])
