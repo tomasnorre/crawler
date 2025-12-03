@@ -23,7 +23,9 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Backend\Routing\Route;
 use TYPO3\CMS\Backend\Routing\Router;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
+use TYPO3\CMS\Core\Http\NormalizedParams;
 use TYPO3\CMS\Core\Http\ServerRequest;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 trait BackendRequestTestTrait
@@ -45,6 +47,12 @@ trait BackendRequestTestTrait
             'route' => '/web_info',
         ]);
         $request = $request->withAttribute('route', $route);
+
+        $typo3version = new Typo3Version();
+        if ($typo3version->getMajorVersion() >=14) {
+            $request = $request->withAttribute('normalizedParams', new NormalizedParams([], [], '', ''));
+        }
+
         $request = $request->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_BE);
         $GLOBALS['TYPO3_REQUEST'] = $request;
     }
