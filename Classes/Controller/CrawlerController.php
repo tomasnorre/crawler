@@ -20,7 +20,6 @@ namespace AOE\Crawler\Controller;
  */
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
-use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\Crawler;
 use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
@@ -366,7 +365,7 @@ class CrawlerController implements LoggerAwareInterface
             if (!is_array($value)) {
                 continue;
             }
-            $configurationsForBranch[] = str_ends_with($key, '.') ? substr($key, 0, -1) : $key;
+            $configurationsForBranch[] = str_ends_with((string) $key, '.') ? substr((string) $key, 0, -1) : $key;
         }
         $pids = [];
         $rootLine = BackendUtility::BEgetRootLine($rootid);
@@ -419,11 +418,11 @@ class CrawlerController implements LoggerAwareInterface
             ->insert(
                 QueueRepository::TABLE_NAME,
                 [
-                    'page_id' => (int) $page_id,
+                    'page_id' => $page_id,
                     'parameters' => json_encode($params),
-                    'scheduled' => (int) $schedule ?: $this->getCurrentTime(),
+                    'scheduled' => $schedule ?: $this->getCurrentTime(),
                     'exec_time' => 0,
-                    'set_id' => (int) $setId,
+                    'set_id' => $setId,
                     'result_data' => '',
                 ]
             );
@@ -483,7 +482,7 @@ class CrawlerController implements LoggerAwareInterface
             'configuration_hash' => $configurationHash,
             'scheduled' => $tstamp,
             'exec_time' => 0,
-            'set_id' => (int) $this->setID,
+            'set_id' => $this->setID,
             'result_data' => '',
             'configuration' => $subCfg['key'],
         ];
@@ -533,13 +532,10 @@ class CrawlerController implements LoggerAwareInterface
      * URL reading
      *
      ************************************/
-
     /**
      * Read URL for single queue entry
      *
-     * @param integer $queueId
      * @param boolean $force If set, will process even if exec_time has been set!
-     *
      * @return int|null
      */
     public function readUrl(int $queueId, bool $force = false, string $processId = '')
@@ -553,7 +549,7 @@ class CrawlerController implements LoggerAwareInterface
             return null;
         }
 
-        $event = $this->eventDispatcher->dispatch(new BeforeQueueItemAddedEvent((int) $queueId, $queueRec));
+        $event = $this->eventDispatcher->dispatch(new BeforeQueueItemAddedEvent($queueId, $queueRec));
         $queueRec = $event->getQueueRecord();
 
         // Set exec_time to lock record:
@@ -565,15 +561,12 @@ class CrawlerController implements LoggerAwareInterface
 
         GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(QueueRepository::TABLE_NAME)
             ->update(QueueRepository::TABLE_NAME, $field_array, [
-                'qid' => (int) $queueId,
+                'qid' => $queueId,
             ]);
 
         $result = $this->queueExecutor->executeQueueItem($queueRec, $this);
-        if ($result === 'ERROR' || ($result['content'] ?? null) === null) {
-        } else {
-            $jsonCompatibilityConverter = GeneralUtility::makeInstance(JsonCompatibilityConverter::class);
-            $resultData = $jsonCompatibilityConverter->convert($result['content']);
-
+        if (!($result === 'ERROR' || ($result['content'] ?? null) === null)) {
+            $resultData = json_decode($result['content'], true);
             //atm there's no need to point to specific pollable extensions
             if (
                 is_array($resultData)

@@ -23,7 +23,6 @@ use AOE\Crawler\Controller\Backend\Helper\RequestHelper;
 use AOE\Crawler\Controller\Backend\Helper\ResultHandler;
 use AOE\Crawler\Controller\Backend\Helper\UrlBuilder;
 use AOE\Crawler\Controller\CrawlerController;
-use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Service\BackendModuleLogService;
 use AOE\Crawler\Service\BackendModuleScriptUrlService;
@@ -71,7 +70,6 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
     public function __construct(
         private readonly QueueRepository $queueRepository,
         private readonly CsvWriterInterface $csvWriter,
-        private readonly JsonCompatibilityConverter $jsonCompatibilityConverter,
         private readonly IconFactory $iconFactory,
         private readonly CrawlerController $crawlerController,
         private readonly BackendModuleLogService $backendModuleLogService,
@@ -116,13 +114,11 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
             ->fetchAssociative();
 
         // Explode values
-        $q_entry['parameters'] = $this->jsonCompatibilityConverter->convert($q_entry['parameters']);
-        $q_entry['result_data'] = $this->jsonCompatibilityConverter->convert($q_entry['result_data']);
+        $q_entry['parameters'] = json_decode((string) $q_entry['parameters'], true);
+        $q_entry['result_data'] = json_decode((string) $q_entry['result_data'], true);
         $resStatus = ResultHandler::getResStatus($q_entry['result_data']);
         if (is_array($q_entry['result_data'])) {
-            $q_entry['result_data']['content'] = $this->jsonCompatibilityConverter->convert(
-                $q_entry['result_data']['content']
-            );
+            $q_entry['result_data']['content'] = json_decode((string) $q_entry['result_data']['content'], true);
             if (!$this->showResultLog) {
                 if (is_array($q_entry['result_data']['content'])) {
                     unset($q_entry['result_data']['content']['log']);

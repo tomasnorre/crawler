@@ -42,14 +42,9 @@ class Reason
     public const REASON_GUI_SUBMIT = 'crawler_gui_submit_reason';
     public const REASON_CLI_SUBMIT = 'crawler_cli_submit_reason';
 
-    protected array $row;
-
-    /**
-     * @param array $row
-     */
-    public function __construct($row = [])
-    {
-        $this->row = $row;
+    public function __construct(
+        protected array $row = []
+    ) {
     }
 
     public function setUid(int $uid): void

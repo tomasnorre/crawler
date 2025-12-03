@@ -23,6 +23,8 @@
 * Remove pageVeto in PageService [@tomasnorre](https://github.com/tomasnorre)
 
 #### Classes
+* JsonCompatibilityConverter
+
 #### Functions & Properties
 
 ## Crawler 12.0.10

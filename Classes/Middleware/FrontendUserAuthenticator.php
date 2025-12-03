@@ -18,7 +18,7 @@ namespace AOE\Crawler\Middleware;
  *
  * The TYPO3 project - inspiring people to share!
  */
-use AOE\Crawler\Converter\JsonCompatibilityConverter;
+
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -57,8 +57,6 @@ class FrontendUserAuthenticator implements MiddlewareInterface
     #[\Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $jsonCompatibilityConverter = GeneralUtility::makeInstance(JsonCompatibilityConverter::class);
-
         $crawlerInformation = $request->getHeaderLine($this->headerName);
         if (empty($crawlerInformation)) {
             return $handler->handle($request);
@@ -77,7 +75,7 @@ class FrontendUserAuthenticator implements MiddlewareInterface
             );
         }
 
-        $queueParameters = $jsonCompatibilityConverter->convert($queueRec['parameters']);
+        $queueParameters = json_decode((string) $queueRec['parameters'], true);
         $request = $request->withAttribute('tx_crawler', $queueParameters);
 
         // Now ensure to set the proper user groups

@@ -13,7 +13,6 @@ services:
               command: 'crawler:buildQueue'
               description: 'Create entries in the queue that can be processed at once'
         arguments:
-            $jsonCompatibilityConverter: '@AOE\Crawler\Converter\JsonCompatibilityConverter'
             $eventDispatcher: '@TYPO3\CMS\Core\EventDispatcher\EventDispatcher'
             $queueRepository: '@AOE\Crawler\Domain\Repository\QueueRepository'
             $pageRepository: '@TYPO3\CMS\Core\Domain\Repository\PageRepository'
@@ -114,7 +113,6 @@ services:
     AOE\Crawler\Service\BackendModuleLogService:
         arguments:
             $iconFactory: '@TYPO3\CMS\Core\Imaging\IconFactory'
-            $jsonCompatibilityConverter: '@AOE\Crawler\Converter\JsonCompatibilityConverter'
         public: true
 
     AOE\Crawler\Process\Cleaner\OldProcessCleaner:

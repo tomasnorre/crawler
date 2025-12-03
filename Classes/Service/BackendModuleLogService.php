@@ -21,7 +21,6 @@ namespace AOE\Crawler\Service;
 use AOE\Crawler\Controller\Backend\BackendModuleCrawlerLogController;
 use AOE\Crawler\Controller\Backend\Helper\ResultHandler;
 use AOE\Crawler\Controller\Backend\Helper\UrlBuilder;
-use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Http\Uri;
@@ -34,8 +33,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class BackendModuleLogService
 {
     public function __construct(
-        private readonly IconFactory $iconFactory,
-        private readonly JsonCompatibilityConverter $jsonCompatibilityConverter,
+        private readonly IconFactory $iconFactory
     ) {
     }
 
@@ -79,11 +77,11 @@ class BackendModuleLogService
                 // Result:
                 $resLog = ResultHandler::getResultLog($vv);
 
-                $resultData = $vv['result_data'] ? $this->jsonCompatibilityConverter->convert($vv['result_data']) : [];
+                $resultData = $vv['result_data'] ? json_decode((string) $vv['result_data'], true) : [];
                 $resStatus = ResultHandler::getResStatus($resultData);
 
                 // Compile row:
-                $parameters = $this->jsonCompatibilityConverter->convert($vv['parameters']);
+                $parameters = json_decode((string) $vv['parameters'], true);
 
                 // Put data into array:
                 $rowData = [];
