@@ -42,8 +42,6 @@ class BackendModuleLinkServiceTest extends FunctionalTestCase
     private BackendModuleLinkService $subject;
     private ModuleTemplate $moduleTemplate;
 
-    private Typo3Version $typo3Version;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -51,7 +49,6 @@ class BackendModuleLinkServiceTest extends FunctionalTestCase
         $this->setupLanguageService();
 
         $this->subject = GeneralUtility::makeInstance(BackendModuleLinkService::class);
-        $this->typo3Version = new Typo3Version();
 
         $request = (new ServerRequest('https://example.com/typo3/'))
             ->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_BE)
@@ -59,7 +56,7 @@ class BackendModuleLinkServiceTest extends FunctionalTestCase
                 'packageName' => 'tomasnorre/crawler',
             ]));
 
-        if ($this->typo3Version->getMajorVersion() >= 14) {
+        if ((new Typo3Version())->getMajorVersion() >= 14) {
             $request = $request->withAttribute('normalizedParams', new NormalizedParams([], [], '', ''));
         }
 
@@ -73,7 +70,7 @@ class BackendModuleLinkServiceTest extends FunctionalTestCase
 
         self::assertIsString($link);
         self::assertStringContainsString('Refresh', $link);
-        if ($this->typo3Version->getMajorVersion() < 14) {
+        if ((new Typo3Version())->getMajorVersion() < 14) {
             self::assertStringContainsString('href="/typo3/module/page/crawler/process', $link);
         } else {
             self::assertStringContainsString('href="typo3/module/page/crawler/process', $link);
@@ -96,7 +93,7 @@ class BackendModuleLinkServiceTest extends FunctionalTestCase
 
         self::assertIsString($link);
         self::assertStringContainsString('Add process', $link);
-        if ($this->typo3Version->getMajorVersion() < 14) {
+        if ((new Typo3Version())->getMajorVersion() < 14) {
             self::assertStringContainsString('href="/typo3/module/page/crawler/process', $link);
         } else {
             self::assertStringContainsString('href="typo3/module/page/crawler/process', $link);
@@ -117,7 +114,7 @@ class BackendModuleLinkServiceTest extends FunctionalTestCase
 
         self::assertIsString($link);
         self::assertStringContainsString('Show only running processes', $link);
-        if ($this->typo3Version->getMajorVersion() < 14) {
+        if ((new Typo3Version())->getMajorVersion() < 14) {
             self::assertStringContainsString('href="/typo3/module/page/crawler/process', $link);
         } else {
             self::assertStringContainsString('href="typo3/module/page/crawler/process', $link);
@@ -132,7 +129,7 @@ class BackendModuleLinkServiceTest extends FunctionalTestCase
 
         self::assertIsString($link);
         self::assertStringContainsString('Show finished and terminated processes', $link);
-        if ($this->typo3Version->getMajorVersion() < 14) {
+        if ((new Typo3Version())->getMajorVersion() < 14) {
             self::assertStringContainsString('href="/typo3/module/page/crawler/process', $link);
         } else {
             self::assertStringContainsString('href="typo3/module/page/crawler/process', $link);
@@ -147,7 +144,7 @@ class BackendModuleLinkServiceTest extends FunctionalTestCase
 
         self::assertIsString($link);
         self::assertStringContainsString('Stop all processes and disable crawling', $link);
-        if ($this->typo3Version->getMajorVersion() < 14) {
+        if ((new Typo3Version())->getMajorVersion() < 14) {
             self::assertStringContainsString('href="/typo3/module/page/crawler/process', $link);
         } else {
             self::assertStringContainsString('href="typo3/module/page/crawler/process', $link);
@@ -162,7 +159,7 @@ class BackendModuleLinkServiceTest extends FunctionalTestCase
 
         self::assertIsString($link);
         self::assertStringContainsString('Enable crawling', $link);
-        if ($this->typo3Version->getMajorVersion() < 14) {
+        if ((new Typo3Version())->getMajorVersion() < 14) {
             self::assertStringContainsString('href="/typo3/module/page/crawler/process', $link);
         } else {
             self::assertStringContainsString('href="typo3/module/page/crawler/process', $link);

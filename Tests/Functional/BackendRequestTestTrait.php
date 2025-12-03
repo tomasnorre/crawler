@@ -48,8 +48,7 @@ trait BackendRequestTestTrait
         ]);
         $request = $request->withAttribute('route', $route);
 
-        $typo3version = new Typo3Version();
-        if ($typo3version->getMajorVersion() >=14) {
+        if ((new Typo3Version())->getMajorVersion() >= 14) {
             $request = $request->withAttribute('normalizedParams', new NormalizedParams([], [], '', ''));
         }
 

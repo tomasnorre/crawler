@@ -20,16 +20,20 @@ namespace AOE\Crawler\Tests\Functional\Middleware;
  */
 
 use AOE\Crawler\Middleware\CrawlerInitialization;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Http\Response;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Cache\CacheInstruction;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
-#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Middleware\CrawlerInitialization::class)]
+#[CoversClass(CrawlerInitialization::class)]
 class CrawlerInitializationTest extends FunctionalTestCase
 {
     use ProphecyTrait;
@@ -40,15 +44,20 @@ class CrawlerInitializationTest extends FunctionalTestCase
     {
         parent::setUp();
         $this->subject = GeneralUtility::makeInstance(CrawlerInitialization::class);
-        $tsfe = $this->prophesize(TypoScriptFrontendController::class);
-        $GLOBALS['TSFE'] = $tsfe->reveal();
-        $GLOBALS['TSFE']->id = random_int(0, 10000);
+        if ((new Typo3Version())->getMajorVersion() < 14) {
+            $tsfe = $this->prophesize(TypoScriptFrontendController::class);
+            $GLOBALS['TSFE'] = $tsfe->reveal();
+            $GLOBALS['TSFE']->id = random_int(0, 10000);
+        }
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('processSetsTSFEApplicationDataDataProvider')]
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[DataProvider('processSetsTSFEApplicationDataDataProvider')]
+    #[Test]
     public function processSetsTSFEApplicationData(string $feGroups, array $expectedGroups): void
     {
+        if ((new Typo3Version())->getMajorVersion() === 14) {
+            self::markTestSkipped('Needs to updated with issue #1137');
+        }
         self::assertEmpty($GLOBALS['TSFE']->applicationData);
 
         $queueParameters = [
