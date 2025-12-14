@@ -46,7 +46,7 @@ jobs:
             typo3DatabaseUsername: root
 
       - name: Setup sonarqube
-        uses: warchant/setup-sonar-scanner@v3
+        uses: warchant/setup-sonar-scanner@v9
 
       - name: Run sonarqube
         env:
