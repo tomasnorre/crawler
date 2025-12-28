@@ -1,6 +1,27 @@
 version: 2
 updates:
   - package-ecosystem: "github-actions"
+    target-branch: main
+    directory: "/"
+    schedule:
+      interval: "daily"
+    reviewers:
+      - "tomasnorre"
+    assignees:
+      - "tomasnorre"
+
+  - package-ecosystem: "github-actions"
+    target-branch: v11.x
+    directory: "/"
+    schedule:
+      interval: "daily"
+    reviewers:
+      - "tomasnorre"
+    assignees:
+      - "tomasnorre"
+
+  - package-ecosystem: "github-actions"
+    target-branch: v12.x
     directory: "/"
     schedule:
       interval: "daily"
