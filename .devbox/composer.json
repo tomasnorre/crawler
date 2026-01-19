@@ -16,7 +16,7 @@
     },
     "require": {
         "georgringer/news": "^14",
-        "tnm/crawler-devbox-sitepackage": "^0.0.3",
+        "tnm/crawler-devbox-sitepackage": "^0.0.5",
         "tomasnorre/crawler": "*@dev",
         "typo3/cms-belog": "^13.4 || ^14.0",
         "typo3/cms-beuser": "^13.4 || ^14.0",
