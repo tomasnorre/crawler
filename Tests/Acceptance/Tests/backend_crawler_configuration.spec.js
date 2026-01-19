@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import * as helpers from './helpers';
 
-test('test', async ({ page }) => {
+test('Enable to create and save crawler configuration', { tag: '@v13' }, async ({ page}) => {
     await helpers.loginBackend(page)
     await page.getByTitle('List', { exact: true }).click();
     await page.locator('div.node:nth-child(2)').click();

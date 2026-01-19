@@ -35,6 +35,15 @@ jobs:
         shell: bash
         run: echo "BRANCH_NAME=$(echo ${GITHUB_HEAD_REF})" >> $GITHUB_ENV
 
+      - name: Set Playwright tag
+        shell: bash
+        run: |
+          if [[ "${{ matrix.typo3 }}" == "^13.4" ]]; then
+            echo "PW_GREP=@v13" >> $GITHUB_ENV
+          elif [[ "${{ matrix.typo3 }}" == "^14.0" ]]; then
+            echo "PW_GREP=@v14" >> $GITHUB_ENV
+          fi
+
       - uses: actions/checkout@v6
       - name: Patch composer.json for forked PR
         if: >
@@ -75,7 +84,7 @@ jobs:
       - name: Install Playwright Browsers
         run: cd Tests/Acceptance && npx playwright install --with-deps
       - name: Run Playwright tests
-        run: cd Tests/Acceptance && npx playwright test
+        run: cd Tests/Acceptance && npx playwright test --grep "$PW_GREP"
       - uses: actions/upload-artifact@v6
         if: ${{ !cancelled() }}
         with:

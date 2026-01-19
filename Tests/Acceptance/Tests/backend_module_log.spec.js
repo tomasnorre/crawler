@@ -1,7 +1,7 @@
 import {test, expect} from '@playwright/test';
 import * as helpers from './helpers';
 
-test('Can crawl manually in log module, and keep selected log depth', async ({page}) => {
+test('Can crawl manually in log module, and keep selected log depth', { tag: ['@v13'] },async ({page}) => {
     await helpers.loginBackend(page)
     await helpers.addQueueEntries(page, 'default', '99');
     await helpers.openCrawlerModuleCrawlerLog(page)
