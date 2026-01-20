@@ -32,6 +32,12 @@ module.exports = defineConfig({
 
     /* Whether to ignore HTTPS errors when sending network requests. See https://playwright.dev/docs/api/class-testoptions#test-options-ignore-https-errors*/
     ignoreHTTPSErrors: true,
+
+    // 📸 Screenshot on failure
+    screenshot: 'only-on-failure',
+
+    // 🎥 Video recording
+    video: 'retain-on-failure',
   },
   /* Configure projects for major browsers */
   projects: [
