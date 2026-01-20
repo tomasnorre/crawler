@@ -88,6 +88,8 @@ jobs:
       - uses: actions/upload-artifact@v6
         if: ${{ !cancelled() }}
         with:
-          name: playwright-report
-          path: Tests/Acceptance/playwright-report/
+          name: playwright-report-${{ matrix.typo3 }}-${{ matrix.php }}
+          path: Tests/Acceptance/playwright-report-${{ matrix.typo3 }}-${{ matrix.php }}/
           retention-days: 30
+
+
