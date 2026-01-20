@@ -43,7 +43,6 @@ return [
         'parent' => 'web_site_crawler',
         'access' => 'user',
         'path' => '/module/page/crawler/start',
-        'iconIdentifier' => 'crawler-start',
         'labels' => [
             'title' => 'Start',
         ],
@@ -57,7 +56,6 @@ return [
         'parent' => 'web_site_crawler',
         'access' => 'user',
         'path' => '/module/page/crawler/process',
-        'iconIdentifier' => 'crawler-process',
         'labels' => [
             'title' => 'Process',
         ],
@@ -71,7 +69,6 @@ return [
         'parent' => 'web_site_crawler',
         'access' => 'user',
         'path' => '/module/page/crawler/log',
-        'iconIdentifier' => 'crawler-log',
         'labels' => [
             'title' => 'Log',
         ],
