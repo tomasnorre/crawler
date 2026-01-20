@@ -234,7 +234,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             $result = $this->crawlerController->readUrlFromArray($queueRec);
 
             $resultContent = $result['content'] ?? '';
-            $requestResult = json_decode($resultContent, true);
+            $requestResult = json_decode((string) $resultContent, true);
 
             $progressBar->clear();
             if (is_array($requestResult)) {
