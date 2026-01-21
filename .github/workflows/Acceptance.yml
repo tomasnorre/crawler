@@ -82,17 +82,9 @@ jobs:
       - name: Install dependencies
         run: cd Tests/Acceptance && npm ci
       - name: Install Playwright Browsers
-        run: cd Tests/Acceptance && npx playwright install --with-deps
+        run: cd Tests/Acceptance && npx playwright install chromium --with-deps
       - name: Run Playwright tests
         run: cd Tests/Acceptance && npx playwright test --grep "$PW_GREP"
-
-      - name: Output TYPO3 Logs on failure
-        if: failure()
-        run: |
-          echo "--- TYPO3 LOGS ---"
-          ddev exec "cat var/log/typo3_*.log" || echo "No logs found"
-          echo "--- DDEV LOGS ---"
-          ddev logs
       - uses: actions/upload-artifact@v6
         if: ${{ !cancelled() }}
         with:
