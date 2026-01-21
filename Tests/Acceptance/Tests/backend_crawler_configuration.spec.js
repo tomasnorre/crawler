@@ -12,7 +12,7 @@ test('Able to create and save crawler configuration v13', { tag: '@v13' }, async
     await page.locator('iframe[name="list_frame"]').contentFrame().getByRole('button', { name: 'Save' }).click();
 });
 
-test('Able to create and save crawler configuration v14', { tag: '@wip' }, async ({ page}) => {
+test('Able to create and save crawler configuration v14', { tag: '@v14' }, async ({ page}) => {
     await helpers.loginBackend(page)
     await page.getByTitle('Records', { exact: true }).click();
     await page.locator('div').filter({ hasText: /^Welcome$/ }).first().click();

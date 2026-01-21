@@ -41,7 +41,7 @@ jobs:
           if [[ "${{ matrix.typo3 }}" == "^13.4" ]]; then
             echo "PW_GREP=@v13" >> $GITHUB_ENV
           elif [[ "${{ matrix.typo3 }}" == "^14.0" ]]; then
-            echo "PW_GREP=@wip" >> $GITHUB_ENV
+            echo "PW_GREP=@v14" >> $GITHUB_ENV
           fi
 
       - uses: actions/checkout@v6
