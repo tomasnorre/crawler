@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import * as helpers from './helpers';
 
-test('Update URL button', async ({ page }) => {
+test('Update URL button', { tag: ['@v13'] },async ({ page }) => {
     await helpers.loginBackend(page)
     await helpers.openCrawlerModuleStartCrawling(page)
     await page.locator('div.node:nth-child(2)').click();
@@ -12,7 +12,7 @@ test('Update URL button', async ({ page }) => {
     await expect(page.locator('iframe[name="list_frame"]').contentFrame().getByText('Count')).toContainText('Count: 1');
 });
 
-test('CrawlerConfigurationWithExcludePageSixPlusThree', async ({ page }) => {
+test('CrawlerConfigurationWithExcludePageSixPlusThree', { tag: ['@v13'] }, async ({ page }) => {
     await helpers.loginBackend(page)
     await helpers.openCrawlerModuleStartCrawling(page)
     await page.locator('div.node:nth-child(2)').click();
@@ -24,7 +24,7 @@ test('CrawlerConfigurationWithExcludePageSixPlusThree', async ({ page }) => {
     await expect(page.locator('iframe[name="list_frame"]').contentFrame().getByRole('document')).not.toContainText('TypeError');
 });
 
-test('UpdateUrlButtonSetDepth', async ({ page }) => {
+test('UpdateUrlButtonSetDepth', { tag: ['@v13'] }, async ({ page }) => {
     await helpers.loginBackend(page)
     await helpers.openCrawlerModuleStartCrawling(page)
     await page.locator('div.node:nth-child(2)').click();

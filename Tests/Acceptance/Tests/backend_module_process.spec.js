@@ -11,7 +11,7 @@ async function addQueueEntries(page, config, depth = '0') {
     await expect(page.locator('#nprogress')).toHaveCount(0);
 }
 
-test('Can Flush all processes', async ({page}) => {
+test('Can Flush all processes', { tag: ['@v13'] },async ({page}) => {
     await helpers.loginBackend(page)
     await addQueueEntries(page, 'default', '99');
     await helpers.openCrawlerModuleCrawlerProcesses(page)
@@ -22,7 +22,7 @@ test('Can Flush all processes', async ({page}) => {
     await expect(page.locator('iframe[name="list_frame"]').contentFrame().locator('#processes tbody tr')).toHaveCount(0)
 });
 
-test('Can disable and enable crawler', async ({page}) => {
+test('Can disable and enable crawler', { tag: ['@v13','@v14'] },async ({page}) => {
     await helpers.loginBackend(page)
     await helpers.openCrawlerModuleCrawlerProcesses(page);
     await page.locator('iframe[name="list_frame"]').contentFrame().getByRole('button', {name: 'Stop all processes and'}).click();
@@ -31,7 +31,7 @@ test('Can disable and enable crawler', async ({page}) => {
     await expect(page.locator('iframe[name="list_frame"]').contentFrame().locator('body')).toContainText('Stop all processes and disable crawling');
 });
 
-test('Can add process', async ({page}) => {
+test('Can add process', { tag: ['@v13'] },async ({page}) => {
     await helpers.loginBackend(page)
     await addQueueEntries(page, 'default')
     await expect(page.locator('iframe[name="list_frame"]').contentFrame().getByText('URLs submitted')).toContainText('1 URLs submitted');
@@ -41,7 +41,7 @@ test('Can add process', async ({page}) => {
     await expect(page.locator('iframe[name="list_frame"]').contentFrame().getByText('New process has been started')).toContainText('New process has been started');
 });
 
-test('Process successful', async ({page}) => {
+test('Process successful', { tag: ['@v13'] },async ({page}) => {
     await helpers.loginBackend(page)
     await addQueueEntries(page, 'default')
     await expect(page.locator('iframe[name="list_frame"]').contentFrame().getByText('URLs submitted')).toContainText('1 URLs submitted');

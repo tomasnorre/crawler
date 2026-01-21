@@ -21,17 +21,34 @@ module.exports = defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'dot',
+    reporter: [
+        ['html', { outputFolder: 'playwright-report', open: 'never' }],
+        ['dot'],
+    ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: 'https://crawler-devbox.ddev.site/',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
+      trace: 'retain-on-failure',
 
     /* Whether to ignore HTTPS errors when sending network requests. See https://playwright.dev/docs/api/class-testoptions#test-options-ignore-https-errors*/
     ignoreHTTPSErrors: true,
+
+    // 📸 Screenshot on failure
+    screenshot: 'only-on-failure',
+
+    // 🎥 Video recording
+    video: 'retain-on-failure',
+
+    browserName: 'chromium',
+    launchOptions: {
+      args: [
+          '--no-sandbox',
+          '--disable-dev-shm-usage',
+      ],
+    },
   },
   /* Configure projects for major browsers */
   projects: [
@@ -39,7 +56,7 @@ module.exports = defineConfig({
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
-/*
+      /*
     {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
@@ -48,7 +65,8 @@ module.exports = defineConfig({
     {
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
-    },*/
+    },
+    */
   ],
 
   /* Run your local dev server before starting the tests */
