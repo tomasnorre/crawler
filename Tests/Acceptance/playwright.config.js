@@ -41,6 +41,14 @@ module.exports = defineConfig({
 
     // 🎥 Video recording
     video: 'retain-on-failure',
+
+    browserName: 'chromium',
+    launchOptions: {
+      args: [
+          '--no-sandbox',
+          '--disable-dev-shm-usage',
+      ],
+    },
   },
   /* Configure projects for major browsers */
   projects: [
