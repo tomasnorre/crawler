@@ -6,15 +6,6 @@
  * It is recommended that you leave this file alone.
  */
 
-$GLOBALS['TYPO3_CONF_VARS']['LOG']['writerConfiguration'] = [
-    \TYPO3\CMS\Core\Log\LogLevel::DEBUG => [
-        \TYPO3\CMS\Core\Log\Writer\FileWriter::class => [
-            'logFile' => 'var/log/ci-typo3.log',
-        ],
-    ],
-];
-
-
 if (getenv('IS_DDEV_PROJECT') == 'true') {
     $GLOBALS['TYPO3_CONF_VARS'] = array_replace_recursive(
         $GLOBALS['TYPO3_CONF_VARS'],

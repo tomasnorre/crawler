@@ -18,9 +18,9 @@ jobs:
           - ^14.0
         php:
           - '8.2'
-          #- '8.3'
-          #- '8.4'
-          #- '8.5'
+          - '8.3'
+          - '8.4'
+          - '8.5'
 
     timeout-minutes: 60
     runs-on: ubuntu-24.04
@@ -91,14 +91,3 @@ jobs:
           name: playwright-report-${{ matrix.typo3 }}-${{ matrix.php }}
           path: Tests/Acceptance/playwright-report/
           retention-days: 10
-
-      - name: Upload TYPO3 logs
-        if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v6
-        with:
-          name: typo3-logs-${{ matrix.typo3 }}-${{ matrix.php }}
-          path: |
-            .devbox/var/log/
-
-
-
