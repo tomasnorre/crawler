@@ -44,6 +44,12 @@ jobs:
             echo "PW_GREP=@wip" >> $GITHUB_ENV
           fi
 
+      - name: debug
+        run: |
+          echo "display_errors=On" >> /usr/local/etc/php/conf.d/ci.ini
+          echo "display_startup_errors=On" >> /usr/local/etc/php/conf.d/ci.ini
+          echo "error_reporting=E_ALL" >> /usr/local/etc/php/conf.d/ci.ini
+
       - uses: actions/checkout@v6
       - name: Patch composer.json for forked PR
         if: >
@@ -91,5 +97,14 @@ jobs:
           name: playwright-report-${{ matrix.typo3 }}-${{ matrix.php }}
           path: Tests/Acceptance/playwright-report/
           retention-days: 10
+
+      - name: Upload TYPO3 logs
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v6
+        with:
+          name: typo3-logs-${{ matrix.typo3 }}-${{ matrix.php }}
+          path: |
+            .devbox/var/log/
+
 
 
