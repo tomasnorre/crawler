@@ -15,7 +15,7 @@ test('Able to create and save crawler configuration v13', { tag: '@v13' }, async
 test('Able to create and save crawler configuration v14', { tag: '@v14' }, async ({ page}) => {
     test.setTimeout(120000);
     await helpers.loginBackend(page)
-    await page.getByTitle('Records', { exact: true }).click();
+    await page.getByTitle('TypoScript', { exact: true }).click();
     await page.waitForTimeout(5000); // wait at least 5 seconds
     await page.getByTitle('Records', { exact: true }).click();
     await page.locator('div').filter({ hasText: /^Welcome$/ }).first().click();
