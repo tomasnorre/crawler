@@ -69,7 +69,7 @@ test('Able to create and save crawler configuration v14', { tag: '@v14' }, async
     await listFrame.getByRole('button', { name: 'Save' }).click();
 });
 
-test('backend loads without interaction', async ({ page }) => {
+test('backend loads without interaction', { tag: '@v14' },async ({ page }) => {
     await helpers.loginBackend(page);
     await page.waitForSelector('iframe[name="nav_frame"]', { timeout: 30_000 });
     await page.waitForSelector('iframe[name="list_frame"]', { timeout: 30_000 });
