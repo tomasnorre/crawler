@@ -90,6 +90,6 @@ jobs:
         with:
           name: playwright-report-${{ matrix.typo3 }}-${{ matrix.php }}
           path: Tests/Acceptance/playwright-report/
-          retention-days: 30
+          retention-days: 10
 
 

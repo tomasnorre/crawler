@@ -16,6 +16,8 @@ test('Able to create and save crawler configuration v14', { tag: '@v14' }, async
     test.setTimeout(120000);
     await helpers.loginBackend(page)
     await page.getByTitle('Records', { exact: true }).click();
+    await page.waitForTimeout(5000); // wait at least 5 seconds
+    await page.getByTitle('Records', { exact: true }).click();
     await page.locator('div').filter({ hasText: /^Welcome$/ }).first().click();
     await page.locator('iframe[name="list_frame"]').contentFrame().getByRole('button', { name: 'New Crawler Configuration' }).click();
     await expect(page.locator('iframe[name="list_frame"]').contentFrame().locator('h1')).toContainText('Create new Crawler Configuration on page "Welcome"');
