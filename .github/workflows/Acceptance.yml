@@ -82,7 +82,7 @@ jobs:
       - name: Install dependencies
         run: cd Tests/Acceptance && npm ci
       - name: Install Playwright Browsers
-        run: cd Tests/Acceptance && npx playwright install chromium --with-deps
+        run: cd Tests/Acceptance && npx playwright install --with-deps
       - name: Run Playwright tests
         run: cd Tests/Acceptance && npx playwright test --grep "$PW_GREP"
       - uses: actions/upload-artifact@v6
