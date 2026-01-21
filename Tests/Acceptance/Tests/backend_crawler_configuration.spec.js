@@ -11,12 +11,9 @@ test('Able to create and save crawler configuration v13', { tag: '@v13' }, async
     await page.locator('iframe[name="list_frame"]').contentFrame().getByLabel('Name').fill('Test Configuration');
     await page.locator('iframe[name="list_frame"]').contentFrame().getByRole('button', { name: 'Save' }).click();
 });
-
+/*
 test('Able to create and save crawler configuration v14', { tag: '@v14' }, async ({ page}) => {
-    test.setTimeout(120000);
     await helpers.loginBackend(page)
-    await page.getByTitle('TypoScript', { exact: true }).click();
-    await page.waitForTimeout(5000); // wait at least 5 seconds
     await page.getByTitle('Records', { exact: true }).click();
     await page.locator('div').filter({ hasText: /^Welcome$/ }).first().click();
     await page.locator('iframe[name="list_frame"]').contentFrame().getByRole('button', { name: 'New Crawler Configuration' }).click();
@@ -25,3 +22,32 @@ test('Able to create and save crawler configuration v14', { tag: '@v14' }, async
     await page.locator('iframe[name="list_frame"]').contentFrame().getByLabel('Name').fill('Test Configuration');
     await page.locator('iframe[name="list_frame"]').contentFrame().getByRole('button', { name: 'Save' }).click();
 });
+*/
+
+test('Able to create and save crawler configuration v14', { tag: '@v14' }, async ({ page }) => {
+    await helpers.loginBackend(page);
+
+    // Ensure backend navigation is ready
+    await page.getByTitle('Records', { exact: true }).waitFor();
+
+    await page.getByTitle('Records', { exact: true }).click();
+    await page.locator('div').filter({ hasText: /^Welcome$/ }).first().click();
+
+    const listFrameLocator = page.locator('iframe[name="list_frame"]');
+    await listFrameLocator.waitFor({ state: 'attached' });
+
+    const listFrame = await listFrameLocator.contentFrame();
+    if (!listFrame) throw new Error('list_frame not available');
+
+    await listFrame.getByRole('button', { name: 'New Crawler Configuration' }).waitFor();
+    await listFrame.getByRole('button', { name: 'New Crawler Configuration' }).click();
+
+    await expect(
+        listFrame.locator('h1')
+    ).toContainText('Create new Crawler Configuration on page "Welcome"');
+
+    await listFrame.getByLabel('Name').fill('Test Configuration');
+    await listFrame.getByRole('button', { name: 'Save' }).click();
+});
+
+
