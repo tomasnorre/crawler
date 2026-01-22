@@ -14,11 +14,12 @@ test('Can crawl manually in log module, and keep selected log depth TYPO3-13', {
     await expect(page.locator('iframe[name="list_frame"]').contentFrame().locator('select[name="logDepth"]')).valueOf('3');
 });
 
-test('Can crawl manually in log module, and keep selected log depth TYPO3-14', { tag: ['@wip'] },async ({page}) => {
-    await helpers.loginBackend(page)
+test('Can crawl manually in log module, and keep selected log depth TYPO3-14', { tag: ['@v14'] }, async ({ page }) => {
+    await helpers.loginBackend(page);
     await helpers.addQueueEntries(page, 'default', '99');
     await helpers.openCrawlerModuleCrawlerLog(page)
-    await page.locator('iframe[name="list_frame"]').contentFrame().getByText('Crawler log').isVisible();
+    const frame = page.frameLocator('iframe[name="list_frame"]');
+    await frame.getByRole('heading', { name: 'Crawler log' }).waitFor({ state: 'visible' });
     await page.locator('iframe[name="list_frame"]').contentFrame().locator('.refreshLink').first().isVisible();
     await page.locator('iframe[name="list_frame"]').contentFrame().locator('select[name="logDepth"]').selectOption('3');
     await expect(page.locator('iframe[name="list_frame"]').contentFrame().locator('select[name="logDepth"]')).toHaveValue('3');
