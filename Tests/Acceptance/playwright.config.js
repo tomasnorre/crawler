@@ -44,6 +44,7 @@ module.exports = defineConfig({
 
     browserName: 'chromium',
     launchOptions: {
+      slowMo: 100, // Delays every action by 100ms
       args: [
           '--no-sandbox',
           '--disable-dev-shm-usage',
