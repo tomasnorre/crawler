@@ -12,7 +12,7 @@ test('Able to create and save crawler configuration TYPO3-13', { tag: '@v13' }, 
     await page.locator('iframe[name="list_frame"]').contentFrame().getByRole('button', { name: 'Save' }).click();
 });
 
-test('Able to create and save crawler configuration TYPO3-14', { tag: '@wip' }, async ({ page}) => {
+test('Able to create and save crawler configuration TYPO3-14', { tag: '@v14' }, async ({ page}) => {
     await helpers.loginBackend(page)
     await page.getByTitle('Records', { exact: true }).click();
     await page.waitForLoadState('networkidle');

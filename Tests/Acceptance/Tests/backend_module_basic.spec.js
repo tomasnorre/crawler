@@ -6,7 +6,7 @@ import * as helpers from './helpers';
 test('Can see crawler backend module', { tag: ['@v13', '@v14'] }, async ({page}) => {
     await helpers.loginBackend(page)
     await helpers.openCrawlerModule(page);
-    await expect(page).toHaveURL('/typo3/module/page/crawler');
+    await expect(page).toHaveURL(/\/typo3\/module\/page\/crawler/);
 });
 
 test('Can select and see crawler module start crawling', { tag: ['@v13','@v14'] }, async ({page}) => {
