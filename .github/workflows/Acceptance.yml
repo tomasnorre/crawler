@@ -23,7 +23,7 @@ jobs:
           - "8.5"
 
     timeout-minutes: 60
-    runs-on: self-hosted
+    runs-on: ${{ matrix.typo3 == '^14.0' && 'self-hosted' || 'ubuntu-24.04' }}
     steps:
       - name: Get branch name (merge)
         if: github.event_name != 'pull_request'
