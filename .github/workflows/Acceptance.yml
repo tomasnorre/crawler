@@ -85,7 +85,7 @@ jobs:
         run: cd Tests/Acceptance && npx playwright install chromium --with-deps
       - name: Run Playwright tests
         run: cd Tests/Acceptance && npx playwright test --grep "$PW_GREP"
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
         with:
           name: playwright-report-${{ matrix.typo3 }}-${{ matrix.php }}
