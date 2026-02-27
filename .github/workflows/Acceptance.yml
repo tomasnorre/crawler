@@ -87,7 +87,7 @@ jobs:
 
       - name: Upload Codeception output
         if: ${{ failure() }}
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: codeception-results
           path: Tests/Acceptance/_output/
@@ -165,7 +165,7 @@ jobs:
         run: cd Tests/Acceptance-Playwright && npx playwright install --with-deps
       - name: Run Playwright tests
         run: cd Tests/Acceptance-Playwright && npx playwright test
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
         with:
           name: playwright-report
