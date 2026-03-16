@@ -27,7 +27,7 @@ jobs:
                     php-version: 8.1
                     coverage: none
             -   name: "Install dependencies"
-                uses: ramsey/composer-install@v3
+                uses: ramsey/composer-install@v4
             -   run: composer analyse
 
     rector:
@@ -48,7 +48,7 @@ jobs:
                     php-version: 8.1
                     coverage: none
             -   name: "Install dependencies"
-                uses: ramsey/composer-install@v3
+                uses: ramsey/composer-install@v4
             -   run: composer rector
 
     code-style:
@@ -69,7 +69,7 @@ jobs:
                     php-version: 8.1
                     coverage: none
             -   name: "Install dependencies"
-                uses: ramsey/composer-install@v3
+                uses: ramsey/composer-install@v4
             -   run: composer cs-fix
 
     Psalm:
