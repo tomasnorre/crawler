@@ -235,6 +235,16 @@ Crawler 12.0.0 was released on April 21st, 2024
 * !!! QueueRepository->getPerformanceData()
 * !!! QueueRepository->findByQueueId()
 
+## Crawler 11.0.12
+
+Crawler 11.0.12 was released on March 23rd, 2026
+
+### Added
+* Extract error information in SubProcess crawl strategy [@cweiske](https://github.com/cweiske)
+
+### Fixed
+* "Scheduled" and "Run-time" column values in backend log [cweiske](https://github.com/cweiske)
+* Clear page cache before crawling [cweiske](https://github.com/cweiske)
 ## Crawler 11.0.11
 
 Crawler 11.0.11 was released on January 20th, 2025
