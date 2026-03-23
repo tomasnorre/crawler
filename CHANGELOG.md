@@ -1,11 +1,11 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 11.0.12-dev
+## Crawler 11.0.12
+
+Crawler 11.0.12 was released on March 23rd, 2026
 
 ### Added
 * Extract error information in SubProcess crawl strategy [@cweiske](https://github.com/cweiske)
-
-### Changed
 
 ### Fixed
 * "Scheduled" and "Run-time" column values in backend log [cweiske](https://github.com/cweiske)
