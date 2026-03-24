@@ -7,6 +7,7 @@
 ### Changed
 
 ### Fixed
+* Switch to GroupResolver for beGroups [@tomasnorre](https://github.com/tomasnorre)
 
 ### Deprecated
 #### Classes
