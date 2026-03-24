@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff version="1.0">
+  <file source-language="en" datatype="plaintext" original="EXT:crawler/Resources/Private/Language/locallang.xlf" date="2020-04-15T15:00:00Z" product-name="crawler" target-language="lo">
+    <header/>
+    <body>
+      <trans-unit id="title" resname="title" approved="yes">
+        <source>Site Crawler</source>
+        <target state="final">ຕົວເລາະເກັບຂໍ້ມູນເວັບໄຊ</target>
+      </trans-unit>
+      <trans-unit id="labels.start" resname="labels.start" approved="yes">
+        <source>Start Crawling</source>
+        <target state="final">ເລີ່ມການເກັບຂໍ້ມູນ</target>
+      </trans-unit>
+      <trans-unit id="labels.log" resname="labels.log" approved="yes">
+        <source>Crawler log</source>
+        <target state="final">ບັນທຶກການເກັບຂໍ້ມູນ</target>
+      </trans-unit>
+      <trans-unit id="labels.multiprocess" resname="labels.multiprocess" approved="yes">
+        <source>Crawling Processes</source>
+        <target state="final">ຂະບວນການເກັບຂໍ້ມູນ</target>
+      </trans-unit>
+      <trans-unit id="labels.all" resname="labels.all" approved="yes">
+        <source>All</source>
+        <target state="final">ທັງໝົດ</target>
+      </trans-unit>
+      <trans-unit id="labels.pending" resname="labels.pending" approved="yes">
+        <source>Pending</source>
+        <target state="final">ຄ້າງຢູ່</target>
+      </trans-unit>
+      <trans-unit id="labels.finished" resname="labels.finished" approved="yes">
+        <source>Finished</source>
+        <target state="final">ສຳເລັດແລ້ວ</target>
+      </trans-unit>
+      <trans-unit id="labels.noPageSelected" resname="labels.noPageSelected" approved="yes">
+        <source>Please select a page in the pagetree</source>
+        <target state="final">ກະລຸນາເລືອກໜ້າໃນໂຄງສ້າງໜ້າເວັບ (pagetree)</target>
+      </trans-unit>
+      <trans-unit id="labels.noConfigSelected" resname="labels.noConfigSelected" approved="yes">
+        <source>Please select at least one configuration</source>
+        <target state="final">ກະລຸນາເລືອກຢ່າງໜ້ອຍໜຶ່ງການກຳນົດຄ່າ</target>
+      </trans-unit>
+      <trans-unit id="labels.configuration" resname="labels.configuration" approved="yes">
+        <source>Crawl configuration</source>
+        <target state="final">ການກຳນົດຄ່າການເກັບຂໍ້ມູນ</target>
+      </trans-unit>
+      <trans-unit id="labels.triggerUpdate" resname="labels.triggerUpdate" approved="yes">
+        <source>Update</source>
+        <target state="final">ອັບເດດ</target>
+      </trans-unit>
+      <trans-unit id="labels.triggerCrawl" resname="labels.triggerCrawl" approved="yes">
+        <source>Crawl URLs</source>
+        <target state="final">ເກັບຂໍ້ມູນ URL</target>
+      </trans-unit>
+      <trans-unit id="labels.triggerDownload" resname="labels.triggerDownload" approved="yes">
+        <source>Download URLs</source>
+        <target state="final">ດາວໂຫຼດ URL</target>
+      </trans-unit>
+      <trans-unit id="labels.continue" resname="labels.continue" approved="yes">
+        <source>Continue</source>
+        <target state="final">ສືບຕໍ່</target>
+      </trans-unit>
+      <trans-unit id="labels.continueinlog" resname="labels.continueinlog" approved="yes">
+        <source>Continue and show Log</source>
+        <target state="final">ສືບຕໍ່ ແລະ ສະແດງບັນທຶກ</target>
+      </trans-unit>
+      <trans-unit id="labels.count" resname="labels.count" approved="yes">
+        <source>Count</source>
+        <target state="final">ຈຳນວນ</target>
+      </trans-unit>
+      <trans-unit id="labels.time" resname="labels.time" approved="yes">
+        <source>Time</source>
+        <target state="final">ເວລາ</target>
+      </trans-unit>
+      <trans-unit id="labels.curtime" resname="labels.curtime" approved="yes">
+        <source>Current server time</source>
+        <target state="final">ເວລາເຊີເວີປັດຈຸບັນ</target>
+      </trans-unit>
+      <trans-unit id="labels.submitted" resname="labels.submitted" approved="yes">
+        <source>URLs submitted</source>
+        <target state="final">ສົ່ງ URL ແລ້ວ</target>
+      </trans-unit>
+      <trans-unit id="labels.depth" resname="labels.depth" approved="yes">
+        <source>Depth</source>
+        <target state="final">ຄວາມເລິກ</target>
+      </trans-unit>
+      <trans-unit id="labels.configurations" resname="labels.configurations" approved="yes">
+        <source>Configurations</source>
+        <target state="final">ການກຳນົດຄ່າ</target>
+      </trans-unit>
+      <trans-unit id="labels.scheduled" resname="labels.scheduled" approved="yes">
+        <source>Scheduled</source>
+        <target state="final">ກຳນົດເວລາແລ້ວ</target>
+      </trans-unit>
+      <trans-unit id="labels.pagetitle" resname="labels.pagetitle" approved="yes">
+        <source>Page title</source>
+        <target state="final">ຊື່ໜ້າ</target>
+      </trans-unit>
+      <trans-unit id="labels.key" resname="labels.key" approved="yes">
+        <source>Key</source>
+        <target state="final">ຄີ (Key)</target>
+      </trans-unit>
+      <trans-unit id="labels.parametercfg" resname="labels.parametercfg" approved="yes">
+        <source>Parameter Cfg</source>
+        <target state="final">ການກຳນົດຄ່າພາຣາມິເຕີ</target>
+      </trans-unit>
+      <trans-unit id="labels.values" resname="labels.values" approved="yes">
+        <source>Values Expanded</source>
+        <target state="final">ຄ່າທີ່ຂະຫຍາຍອອກ</target>
+      </trans-unit>
+      <trans-unit id="labels.url" resname="labels.url" approved="yes">
+        <source>URL</source>
+        <target state="final">URL</target>
+      </trans-unit>
+      <trans-unit id="labels.urls" resname="labels.urls" approved="yes">
+        <source>URLs</source>
+        <target state="final">ບັນດາ URL</target>
+      </trans-unit>
+      <trans-unit id="labels.options" resname="labels.options" approved="yes">
+        <source>Options</source>
+        <target state="final">ຕົວເລືອກ</target>
+      </trans-unit>
+      <trans-unit id="labels.parameters" resname="labels.parameters" approved="yes">
+        <source>Parameters</source>
+        <target state="final">ພາຣາມິເຕີ</target>
+      </trans-unit>
+      <trans-unit id="labels.back" resname="labels.back" approved="yes">
+        <source>Back</source>
+        <target state="final">ກັບຄືນ</target>
+      </trans-unit>
+      <trans-unit id="labels.reloadlist" resname="labels.reloadlist" approved="yes">
+        <source>Reload list</source>
+        <target state="final">ໂຫຼດລາຍຊື່ຄືນໃໝ່</target>
+      </trans-unit>
+      <trans-unit id="labels.downloadcsv" resname="labels.downloadcsv" approved="yes">
+        <source>Download entries as CSV</source>
+        <target state="final">ດາວໂຫຼດລາຍການເປັນ CSV</target>
+      </trans-unit>
+      <trans-unit id="labels.flushvisiblequeue" resname="labels.flushvisiblequeue" approved="yes">
+        <source>Flush visible entries</source>
+        <target state="final">ລ້າງລາຍການທີ່ສະແດງຢູ່</target>
+      </trans-unit>
+      <trans-unit id="labels.flushfullqueue" resname="labels.flushfullqueue" approved="yes">
+        <source>Flush entire queue</source>
+        <target state="final">ລ້າງຄິວທັງໝົດ</target>
+      </trans-unit>
+      <trans-unit id="labels.confirmyouresure" resname="labels.confirmyouresure" approved="yes">
+        <source>Are you sure?</source>
+        <target state="final">ເຈົ້າແນ່ໃຈບໍ່?</target>
+      </trans-unit>
+      <trans-unit id="labels.setid" resname="labels.setid" approved="yes">
+        <source>Set ID</source>
+        <target state="final">ຕັ້ງ ID</target>
+      </trans-unit>
+      <trans-unit id="labels.qid" resname="labels.qid" approved="yes">
+        <source>Queue id</source>
+        <target state="final">ID ຂອງຄິວ</target>
+      </trans-unit>
+      <trans-unit id="labels.resultlog" resname="labels.resultlog" approved="yes">
+        <source>Result Log</source>
+        <target state="final">ບັນທຶກຜົນລັດ</target>
+      </trans-unit>
+      <trans-unit id="labels.scheduledtime" resname="labels.scheduledtime" approved="yes">
+        <source>Scheduled</source>
+        <target state="final">ກຳນົດເວລາແລ້ວ</target>
+      </trans-unit>
+      <trans-unit id="labels.runtime" resname="labels.runtime" approved="yes">
+        <source>Run-time</source>
+        <target state="final">ເວລາເຮັດວຽກ</target>
+      </trans-unit>
+      <trans-unit id="labels.status" resname="labels.status" approved="yes">
+        <source>Status</source>
+        <target state="final">ສະຖານະ</target>
+      </trans-unit>
+      <trans-unit id="labels.groups" resname="labels.groups" approved="yes">
+        <source>Groups</source>
+        <target state="final">ກຸ່ມ</target>
+      </trans-unit>
+      <trans-unit id="labels.procinstr" resname="labels.procinstr" approved="yes">
+        <source>Proc. Instr.</source>
+        <target state="final">ຄຳແນະນຳການປະມວນຜົນ</target>
+      </trans-unit>
+      <trans-unit id="labels.newprocess" resname="labels.newprocess" approved="yes">
+        <source>New process has been started, refresh to monitor the state</source>
+        <target state="final">ຂະບວນການໃໝ່ໄດ້ເລີ່ມຂຶ້ນແລ້ວ, ກະລຸນາໂຫຼດຄືນໃໝ່ເພື່ອເບິ່ງສະຖານະ</target>
+      </trans-unit>
+      <trans-unit id="labels.newprocesserror" resname="labels.newprocesserror" approved="yes">
+        <source>Error while starting process</source>
+        <target state="final">ເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ເລີ່ມຂະບວນການ</target>
+      </trans-unit>
+      <trans-unit id="labels.time.now" resname="labels.time.now" approved="yes">
+        <source>Now</source>
+        <target state="final">ດຽວນີ້</target>
+      </trans-unit>
+      <trans-unit id="labels.time.midnight" resname="labels.time.midnight" approved="yes">
+        <source>Midnight</source>
+        <target state="final">ທ່ຽງຄືນ</target>
+      </trans-unit>
+      <trans-unit id="labels.time.4am" resname="labels.time.4am" approved="yes">
+        <source>4 AM</source>
+        <target state="final">4 ໂມງເຊົ້າ</target>
+      </trans-unit>
+      <trans-unit id="labels.display" resname="labels.display" approved="yes">
+        <source>Display</source>
+        <target state="final">ສະແດງຜົນ</target>
+      </trans-unit>
+      <trans-unit id="labels.showresultlog" resname="labels.showresultlog" approved="yes">
+        <source>Show Result Log</source>
+        <target state="final">ສະແດງບັນທຶກຜົນລັດ</target>
+      </trans-unit>
+      <trans-unit id="labels.showfevars" resname="labels.showfevars" approved="yes">
+        <source>Show FE Vars</source>
+        <target state="final">ສະແດງຕົວປ່ຽນ FE</target>
+      </trans-unit>
+      <trans-unit id="labels.noentries" resname="labels.noentries" approved="yes">
+        <source>No entries</source>
+        <target state="final">ບໍ່ມີລາຍການ</target>
+      </trans-unit>
+      <trans-unit id="labels.immediate" resname="labels.immediate" approved="yes">
+        <source>immediate</source>
+        <target state="final">ທັນທີ</target>
+      </trans-unit>
+      <trans-unit id="labels.generalinformation" resname="labels.generalinformation" approved="yes">
+        <source>General Information</source>
+        <target state="final">ຂໍ້ມູນທົ່ວໄປ</target>
+      </trans-unit>
+      <trans-unit id="labels.pendingoverview" resname="labels.pendingoverview" approved="yes">
+        <source>Pending Entries (assigned / overall)</source>
+        <target state="final">ລາຍການທີ່ຄ້າງຢູ່ (ມອບໝາຍແລ້ວ / ທັງໝົດ)</target>
+      </trans-unit>
+      <trans-unit id="labels.processcount" resname="labels.processcount" approved="yes">
+        <source>Processes count (running / max)</source>
+        <target state="final">ຈຳນວນຂະບວນການ (ກຳລັງເຮັດວຽກ / ສູງສຸດ)</target>
+      </trans-unit>
+      <trans-unit id="labels.clipath" resname="labels.clipath" approved="yes">
+        <source>CLI-Path</source>
+        <target state="final">ເສັ້ນທາງ CLI</target>
+      </trans-unit>
+      <trans-unit id="labels.processstates" resname="labels.processstates" approved="yes">
+        <source>Process States</source>
+        <target state="final">ສະຖານະຂະບວນການ</target>
+      </trans-unit>
+      <trans-unit id="labels.state" resname="labels.state" approved="yes">
+        <source>State</source>
+        <target state="final">ສະຖານະ</target>
+      </trans-unit>
+      <trans-unit id="labels.processid" resname="labels.processid" approved="yes">
+        <source>Id</source>
+        <target state="final">ID</target>
+      </trans-unit>
+      <trans-unit id="labels.time.first" resname="labels.time.first" approved="yes">
+        <source>Time first item</source>
+        <target state="final">ເວລາຂອງລາຍການທຳອິດ</target>
+      </trans-unit>
+      <trans-unit id="labels.time.last" resname="labels.time.last" approved="yes">
+        <source>Time last item</source>
+        <target state="final">ເວລາຂອງລາຍການສຸດທ້າຍ</target>
+      </trans-unit>
+      <trans-unit id="labels.time.duration" resname="labels.time.duration" approved="yes">
+        <source>Runtime</source>
+        <target state="final">ເວລາເຮັດວຽກ</target>
+      </trans-unit>
+      <trans-unit id="labels.ttl" resname="labels.ttl" approved="yes">
+        <source>TTL</source>
+        <target state="final">TTL</target>
+      </trans-unit>
+      <trans-unit id="labels.status.current" resname="labels.status.current" approved="yes">
+        <source>Processed</source>
+        <target state="final">ປະມວນຜົນແລ້ວ</target>
+      </trans-unit>
+      <trans-unit id="labels.status.initial" resname="labels.status.initial" approved="yes">
+        <source>Initially assigned</source>
+        <target state="final">ມອບໝາຍໃນເບື້ອງຕົ້ນ</target>
+      </trans-unit>
+      <trans-unit id="labels.status.finally" resname="labels.status.finally" approved="yes">
+        <source>Finally assigned</source>
+        <target state="final">ມອບໝາຍຂັ້ນສຸດທ້າຍ</target>
+      </trans-unit>
+      <trans-unit id="labels.status.progress" resname="labels.status.progress" approved="yes">
+        <source>Progress</source>
+        <target state="final">ຄວາມຄືບໜ້າ</target>
+      </trans-unit>
+      <trans-unit id="labels.process.running" resname="labels.process.running" approved="yes">
+        <source>Process running</source>
+        <target state="final">ຂະບວນການກຳລັງເຮັດວຽກ</target>
+      </trans-unit>
+      <trans-unit id="labels.process.success" resname="labels.process.success" approved="yes">
+        <source>Process completed successfully</source>
+        <target state="final">ຂະບວນການສຳເລັດຢ່າງສົມບູນ</target>
+      </trans-unit>
+      <trans-unit id="labels.process.cancelled" resname="labels.process.cancelled" approved="yes">
+        <source>Process was cancelled</source>
+        <target state="final">ຂະບວນການຖືກຍົກເລີກ</target>
+      </trans-unit>
+      <trans-unit id="labels.refresh" resname="labels.refresh" approved="yes">
+        <source>Refresh</source>
+        <target state="final">ໂຫຼດໃໝ່</target>
+      </trans-unit>
+      <trans-unit id="labels.disablecrawling" resname="labels.disablecrawling" approved="yes">
+        <source>Stop all processes and disable crawling</source>
+        <target state="final">ຢຸດທຸກຂະບວນການ ແລະ ປິດການເກັບຂໍ້ມູນ</target>
+      </trans-unit>
+      <trans-unit id="labels.enablecrawling" resname="labels.enablecrawling" approved="yes">
+        <source>Enable crawling</source>
+        <target state="final">ເປີດການເກັບຂໍ້ມູນ</target>
+      </trans-unit>
+      <trans-unit id="labels.show.running" resname="labels.show.running" approved="yes">
+        <source>Show only running processes</source>
+        <target state="final">ສະແດງສະເພາະຂະບວນການທີ່ກຳລັງເຮັດວຽກ</target>
+      </trans-unit>
+      <trans-unit id="labels.show.all" resname="labels.show.all" approved="yes">
+        <source>Show finished and terminated processes</source>
+        <target state="final">ສະແດງຂະບວນການທີ່ສຳເລັດ ແລະ ຖືກຢຸດແລ້ວ</target>
+      </trans-unit>
+      <trans-unit id="labels.process.add" resname="labels.process.add" approved="yes">
+        <source>Add process</source>
+        <target state="final">ເພີ່ມຂະບວນການ</target>
+      </trans-unit>
+      <trans-unit id="labels.process.flush" resname="labels.process.flush" approved="yes">
+        <source>Flush all processes</source>
+        <target state="final">ລ້າງທຸກຂະບວນການ</target>
+      </trans-unit>
+      <trans-unit id="time.detailed" resname="time.detailed" approved="yes">
+        <source>d-m-y H:i:s</source>
+        <target state="final">d-m-y H:i:s</target>
+      </trans-unit>
+      <trans-unit id="labels.itemsPerPage.5" resname="labels.itemsPerPage.5" approved="yes">
+        <source>limit to 5</source>
+        <target state="final">ຈຳກັດໄວ້ທີ່ 5</target>
+      </trans-unit>
+      <trans-unit id="labels.itemsPerPage.10" resname="labels.itemsPerPage.10" approved="yes">
+        <source>limit to 10</source>
+        <target state="final">ຈຳກັດໄວ້ທີ່ 10</target>
+      </trans-unit>
+      <trans-unit id="labels.itemsPerPage.50" resname="labels.itemsPerPage.50" approved="yes">
+        <source>limit to 50</source>
+        <target state="final">ຈຳກັດໄວ້ທີ່ 50</target>
+      </trans-unit>
+      <trans-unit id="labels.itemsPerPage.0" resname="labels.itemsPerPage.0" approved="yes">
+        <source>no limit</source>
+        <target state="final">ບໍ່ຈຳກັດ</target>
+      </trans-unit>
+      <trans-unit id="labels.itemsPerPage" resname="labels.itemsPerPage" approved="yes">
+        <source>Items per page</source>
+        <target state="final">ຈຳນວນລາຍການຕໍ່ໜ້າ</target>
+      </trans-unit>
+      <trans-unit id="message.noBeUserAvailable" resname="message.noBeUserAvailable" approved="yes">
+        <source>There is no be_user "_cli_crawler" available!</source>
+        <target state="final">ບໍ່ມີ be_user "_cli_crawler" ໃຫ້ໃຊ້ງານ!</target>
+      </trans-unit>
+      <trans-unit id="message.noPhpForkAvailable" resname="message.noPhpForkAvailable" approved="yes">
+        <source>There is no PHP method "popen" available!</source>
+        <target state="final">ບໍ່ມີເມທອດ PHP "popen" ໃຫ້ໃຊ້ງານ!</target>
+      </trans-unit>
+      <trans-unit id="message.beUserIsAdmin" resname="message.beUserIsAdmin" approved="yes">
+        <source>The be_user "_cli_crawler" is not allowed to have admin rights!</source>
+        <target state="final">be_user "_cli_crawler" ບໍ່ໄດ້ຮັບອະນຸຍາດໃຫ້ມີສິດຜູ້ດູແລລະບົບ (admin)!</target>
+      </trans-unit>
+      <trans-unit id="message.canNotExportEmptyQueueToCsvText" resname="message.canNotExportEmptyQueueToCsvText" approved="yes">
+        <source>An empty queue can not be exported to CSV.</source>
+        <target state="final">ບໍ່ສາມາດສົ່ງອອກຄິວທີ່ວ່າງເປົ່າເປັນ CSV ໄດ້.</target>
+      </trans-unit>
+      <trans-unit id="message.phpBinaryNotFound" resname="message.phpBinaryNotFound" approved="yes">
+        <source>No php binary found in '%s'. Please update value for 'phpPath' in crawler extension setup.
+				</source>
+        <target state="final">ບໍ່ພົບໄຟລ໌ php binary ໃນ '%s'. ກະລຸນາອັບເດດຄ່າສຳລັບ 'phpPath' ໃນການຕັ້ງຄ່າສ່ວນເສີມ crawler.</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
