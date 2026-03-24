@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns:t3="http://typo3.org/schemas/xliff" version="1.0">
+  <file t3:id="1509961542" source-language="en" datatype="plaintext" original="EXT:crawler/Resources/Private/Language/locallang_csh_tx_crawler_configuration.xlf" date="2017-11-06T10:46:00Z" product-name="crawler" target-language="lo">
+    <header/>
+    <body>
+      <trans-unit id="root_template_pid.description" resname="root_template_pid.description" approved="yes">
+        <source>Page Id the crawler will use for initializing the TSFE (required)</source>
+        <target state="final">ໄອດີໜ້າ (Page Id) ທີ່ຕົວເກັບກຳຂໍ້ມູນຈະໃຊ້ເພື່ອເລີ່ມຕົ້ນລະບົບ TSFE (ຈຳເປັນ)</target>
+      </trans-unit>
+      <trans-unit id="root_template_pid.details" resname="root_template_pid.details" xml:space="preserve" approved="yes">
+                <source>When crawling a page directly fom the TYPO3 backend, e.g. by using the "read" functionality of the "Crawler Log" module, the selected page id will be used to initialize the frontend rendering.
+                Access to the selected page &lt;strong&gt;MUST NOT&lt;/strong&gt; be restricted; crawling will fail otherwise.</source>
+            <target state="final">ເມື່ອມີການເກັບກຳຂໍ້ມູນໜ້າໃດໜຶ່ງໂດຍກົງຈາກສ່ວນ backend ຂອງ TYPO3, ເຊັ່ນ: ການໃຊ້ຟັງຊັນ "read" ຂອງໂມດູນ "Crawler Log", ໄອດີໜ້າທີ່ຖືກເລືອກຈະຖືກນຳໃຊ້ເພື່ອເລີ່ມຕົ້ນການສະແດງຜົນສ່ວນ frontend.
+                ການເຂົ້າເຖິງໜ້າທີ່ຖືກເລືອກ &lt;strong&gt;ຕ້ອງບໍ່&lt;/strong&gt; ຖືກຈຳກັດ; ຖ້າບໍ່ດັ່ງນັ້ນ ການເກັບກຳຂໍ້ມູນຈະຫຼົ້ມເຫຼວ.</target></trans-unit>
+    </body>
+  </file>
+</xliff>
