@@ -35,8 +35,7 @@
         "typo3/cms-core": "^13.4 || ^14.1",
         "typo3/cms-extbase": "^13.4 || ^14.1",
         "typo3/cms-frontend": "^13.4 || ^14.1",
-        "typo3/cms-info": "^13.4 || ^14.1",
-        "typo3/cms-seo": "^13.4 || ^14.1"
+        "typo3/cms-info": "^13.4 || ^14.1"
     },
     "require-dev": {
         "infection/infection": "^0.29.9",
@@ -56,6 +55,7 @@
         "tomasvotruba/cognitive-complexity": "^1.0",
         "tomasvotruba/type-coverage": "^2.0",
         "typo3/testing-framework": "^9.3",
+        "typo3/cms-seo": "^13.4 || ^14.1",
         "vimeo/psalm": "^6.13"
     },
     "replace": {
@@ -66,7 +66,7 @@
         "symfony/dependency-injection": "7.4.0"
     },
     "suggest": {
-        "typo3/cms-seo": "Enables the posibility to priorities your Crawler Queue + You have seo features in the CMS it self."
+        "typo3/cms-seo": "Enables the possibility to priorities your Crawler Queue + You have seo features in the CMS it self."
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

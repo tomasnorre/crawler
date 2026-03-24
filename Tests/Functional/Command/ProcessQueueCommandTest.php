@@ -31,6 +31,8 @@ class ProcessQueueCommandTest extends FunctionalTestCase
 {
     use BackendRequestTestTrait;
 
+    protected array $coreExtensionsToLoad = ['seo'];
+
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     protected CommandTester $commandTester;
