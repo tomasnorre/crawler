@@ -11,6 +11,7 @@
 * Updated PHPUnit to ^11.5
 
 ### Fixed
+* Switch to GroupResolver for beGroups [@tomasnorre](https://github.com/tomasnorre)
 
 ### Deprecated
 #### Classes
