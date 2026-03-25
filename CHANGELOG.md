@@ -12,6 +12,7 @@
 * sitemap_priority is no longer added from crawler, only when typo3-cms/seo is installed [@tomasnorre](https://github.com/tomasnorre)
 
 ### Fixed
+* Switch to GroupResolver for beGroups [@tomasnorre](https://github.com/tomasnorre)
 
 ### Deprecated
 #### Classes

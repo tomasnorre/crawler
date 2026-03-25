@@ -24,6 +24,7 @@ use AOE\Crawler\Service\ConfigurationService;
 use AOE\Crawler\Service\UrlService;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use TYPO3\CMS\Core\Authentication\GroupResolver;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
@@ -96,7 +97,8 @@ class ConfigurationServiceTest extends UnitTestCase
         $configurationService = GeneralUtility::makeInstance(
             ConfigurationService::class,
             $urlService->reveal(),
-            $configurationRepository->reveal()
+            $configurationRepository->reveal(),
+            $this->createMock(GroupResolver::class),
         );
 
         self::assertEquals(
