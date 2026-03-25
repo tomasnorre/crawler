@@ -28,7 +28,7 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 class SystemSleeperTest extends UnitTestCase
 {
     protected bool $resetSingletonInstances = true;
-    
+
     #[Test]
     public function sleepSleeps(): void
     {
