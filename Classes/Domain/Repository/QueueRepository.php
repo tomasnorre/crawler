@@ -29,6 +29,7 @@ use Psr\Log\LoggerAwareTrait;
 use Symfony\Contracts\Service\Attribute\Required;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -295,28 +296,39 @@ class QueueRepository implements LoggerAwareInterface
 
     public function fetchRecordsToBeCrawled(int $countInARun): array
     {
-        $queryBuilderSelect = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
             self::TABLE_NAME
         );
-        return $queryBuilderSelect
-            ->select('qid', 'scheduled', 'page_id', 'sitemap_priority')
+
+        $isSeoEnabled = ExtensionManagementUtility::isLoaded('seo');
+        $fields = ['qid', 'scheduled', 'page_id'];
+        if ($isSeoEnabled) {
+            $fields[] = 'sitemap_priority';
+        }
+
+        $queryBuilder
+            ->select(...$fields)
             ->from(self::TABLE_NAME)
             ->leftJoin(
                 self::TABLE_NAME,
                 'pages',
                 'p',
-                $queryBuilderSelect->expr()->eq(
-                    'p.uid',
-                    $queryBuilderSelect->quoteIdentifier(self::TABLE_NAME . '.page_id')
-                )
+                $queryBuilder->expr()->eq('p.uid', $queryBuilder->quoteIdentifier(self::TABLE_NAME . '.page_id'))
             )
             ->where(
-                $queryBuilderSelect->expr()->eq('exec_time', 0),
-                $queryBuilderSelect->expr()->eq('process_scheduled', 0),
-                $queryBuilderSelect->expr()->lte('scheduled', time())
-            )
-            ->orderBy('sitemap_priority', 'DESC')
-            ->addOrderBy('scheduled')
+                $queryBuilder->expr()->eq('exec_time', 0),
+                $queryBuilder->expr()->eq('process_scheduled', 0),
+                $queryBuilder->expr()->lte('scheduled', time())
+            );
+
+        if ($isSeoEnabled) {
+            $queryBuilder->orderBy('sitemap_priority', 'DESC');
+            $queryBuilder->addOrderBy('scheduled');
+        } else {
+            $queryBuilder->orderBy('scheduled');
+        }
+
+        return $queryBuilder
             ->addOrderBy('qid')
             ->setMaxResults($countInARun)
             ->executeQuery()
