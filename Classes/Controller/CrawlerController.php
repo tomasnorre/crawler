@@ -41,6 +41,7 @@ use Psr\Log\LoggerAwareTrait;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Authentication\GroupResolver;
 use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
@@ -121,7 +122,8 @@ class CrawlerController implements LoggerAwareInterface
         $this->configurationService = GeneralUtility::makeInstance(
             ConfigurationService::class,
             GeneralUtility::makeInstance(UrlService::class),
-            $this->configurationRepository
+            $this->configurationRepository,
+            GeneralUtility::makeInstance(GroupResolver::class),
         );
         $this->urlService = GeneralUtility::makeInstance(UrlService::class);
 

@@ -104,9 +104,3 @@ parameters:
 			identifier: complexity.classLike
 			count: 1
 			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: '#^Offset ''usergroup_cached_list'' might not exist on array\|null\.$#'
-			identifier: offsetAccess.notFound
-			count: 1
-			path: Classes/Service/ConfigurationService.php

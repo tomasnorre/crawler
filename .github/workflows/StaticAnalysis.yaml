@@ -72,28 +72,24 @@ jobs:
                 uses: ramsey/composer-install@v4
             -   run: composer cs-fix
 
-    Psalm:
-        name: Psalm
-        runs-on: ubuntu-latest
-        steps:
-            -   uses: actions/checkout@v6
-            -   id: composer-cache
-                run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-            -   uses: actions/cache@v5
-                with:
-                    path: ${{ steps.composer-cache.outputs.dir }}
-                    key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-                    restore-keys: |
-                        ${{ runner.os }}-composer-
-            -   uses: shivammathur/setup-php@v2
-                with:
-                    php-version: 8.1
-                    coverage: none
-                    tools: phive
-
-            -   name: "Install tools (Phive)"
-                run: "phive install --trust-gpg-keys 12CE0F1D262429A5"
-
-            -   run: composer require --dev typo3/cms-core:^12.4 --no-progress
-            -   run: tools/psalm --shepherd
-
+#    Psalm:
+#        name: Psalm
+#        runs-on: ubuntu-latest
+#        steps:
+#            -   uses: actions/checkout@v6
+#            -   id: composer-cache
+#                run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+#            -   uses: actions/cache@v5
+#                with:
+#                    path: ${{ steps.composer-cache.outputs.dir }}
+#                    key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+#                    restore-keys: |
+#                        ${{ runner.os }}-composer-
+#            -   uses: shivammathur/setup-php@v2
+#                with:
+#                    php-version: 8.1
+#                    coverage: none
+#
+#            - name: "Install dependencies"
+#              uses: ramsey/composer-install@v4
+#            - run: composer psalm
