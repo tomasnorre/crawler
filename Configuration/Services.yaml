@@ -69,6 +69,7 @@ services:
         arguments:
             $urlService: '@AOE\Crawler\Service\UrlService'
             $configurationRepository: '@AOE\Crawler\Domain\Repository\ConfigurationRepository'
+            $groupResolver: '@TYPO3\CMS\Core\Authentication\GroupResolver'
         public: true
 
     AOE\Crawler\Service\PageService:
