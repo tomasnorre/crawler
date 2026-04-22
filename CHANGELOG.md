@@ -10,6 +10,7 @@
 * Updated symfony-components dependencies to ^7.2
 * Updated PHPUnit to ^11.5
 * sitemap_priority is no longer added from crawler, only when typo3-cms/seo is installed [@tomasnorre](https://github.com/tomasnorre)
+  * Switched to NormalizedParams in SubProcessExecutionStrategy [@tomasnorre](https://github.com/tomasnorre)
 
 ### Fixed
 * Switch to GroupResolver for beGroups [@tomasnorre](https://github.com/tomasnorre)
