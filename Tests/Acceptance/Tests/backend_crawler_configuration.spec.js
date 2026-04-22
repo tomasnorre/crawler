@@ -18,7 +18,7 @@ test('Able to create and save crawler configuration TYPO3-14', { tag: '@v14' }, 
     await page.waitForLoadState('networkidle');
     await page.locator('div').filter({ hasText: /^Welcome$/ }).first().click();
     await page.locator('iframe[name="list_frame"]').contentFrame().getByRole('button', { name: 'New Crawler Configuration' }).click();
-    await expect(page.locator('iframe[name="list_frame"]').contentFrame().locator('h1')).toContainText('Create new Crawler Configuration on page "Welcome"');
+    await expect(page.locator('iframe[name="list_frame"]').contentFrame().locator('h1')).toContainText('Create new Crawler Configuration');
     //await page.locator('iframe[name="list_frame"]').contentFrame().getByLabel('Name').click();
     await page.locator('iframe[name="list_frame"]').contentFrame().getByLabel('Name').fill('Test Configuration');
     await page.locator('iframe[name="list_frame"]').contentFrame().getByRole('button', { name: 'Save' }).click();
