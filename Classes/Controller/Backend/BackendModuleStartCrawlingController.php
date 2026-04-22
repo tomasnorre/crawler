@@ -140,7 +140,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
             'currentPageId' => $this->pageUid,
             'noConfigurationSelected' => $noConfigurationSelected,
             'submitCrawlUrls' => $submitCrawlUrls,
-            'amountOfUrls' => count($this->crawlerController->duplicateTrack ?? []),
+            'amountOfUrls' => count($this->crawlerController->duplicateTrack),
             'selectors' => $this->generateConfigurationSelectors($this->pageUid, (string) $crawlingDepth, $request),
             'queueRows' => $queueRows,
             'displayActions' => 0,
