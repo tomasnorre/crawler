@@ -21,10 +21,12 @@ namespace AOE\Crawler\CrawlStrategy;
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Utility\PhpBinaryUtility;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use TYPO3\CMS\Core\Core\Environment;
+use TYPO3\CMS\Core\Http\NormalizedParams;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -153,9 +155,11 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
             // If empty, try to use config.absRefPrefix:
         } elseif (isset($GLOBALS['TSFE']->absRefPrefix) && !empty($GLOBALS['TSFE']->absRefPrefix)) {
             $frontendBasePath = $GLOBALS['TSFE']->absRefPrefix;
-            // If not in CLI mode the base path can be determined from $_SERVER environment:
+            // If not in CLI mode, the base path can be determined from the request
         } elseif (!Environment::isCli()) {
-            $frontendBasePath = GeneralUtility::getIndpEnv('TYPO3_SITE_PATH');
+            /** @var NormalizedParams $normalizedParams */
+            $normalizedParams = $this->getRequest()->getAttribute('normalizedParams');
+            $frontendBasePath = $normalizedParams->getSitePath();
         }
 
         // Base path must be '/<pathSegements>/':
@@ -165,5 +169,10 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
         }
 
         return $frontendBasePath;
+    }
+
+    private function getRequest(): ServerRequestInterface
+    {
+        return $GLOBALS['TYPO3_REQUEST'];
     }
 }
