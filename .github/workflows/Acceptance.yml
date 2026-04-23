@@ -17,7 +17,7 @@ jobs:
       matrix:
         typo3:
           - ^13.4
-          - ^14.0
+          - ^14.3
         php:
           - "8.2"
           - "8.3"
@@ -25,7 +25,7 @@ jobs:
           - "8.5"
 
     timeout-minutes: 60
-    runs-on: ${{ matrix.typo3 == '^14.0' && 'self-hosted' || 'ubuntu-24.04' }}
+    runs-on: ${{ matrix.typo3 == '^14.3' && 'self-hosted' || 'ubuntu-24.04' }}
     steps:
       - name: Get branch name (merge)
         if: github.event_name != 'pull_request'
@@ -42,7 +42,7 @@ jobs:
         run: |
           if [[ "${{ matrix.typo3 }}" == "^13.4" ]]; then
             echo "PW_GREP=@v13" >> $GITHUB_ENV
-          elif [[ "${{ matrix.typo3 }}" == "^14.0" ]]; then
+          elif [[ "${{ matrix.typo3 }}" == "^14.3" ]]; then
             echo "PW_GREP=@v14" >> $GITHUB_ENV
           fi
 
