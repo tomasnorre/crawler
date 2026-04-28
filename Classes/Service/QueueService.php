@@ -65,7 +65,7 @@ class QueueService
             );
 
             //reset the queue because the entries have been written to the db
-            unset($this->crawlerController->queueEntries);
+            $this->crawlerController->queueEntries = [];
         }
     }
 

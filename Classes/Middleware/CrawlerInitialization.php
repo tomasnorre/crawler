@@ -26,6 +26,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
 use TYPO3\CMS\Core\Error\Http\ServiceUnavailableException;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -68,7 +69,7 @@ class CrawlerInitialization implements MiddlewareInterface
 
         // Execute the frontend request as is
         $response = $handler->handle($request);
-      
+
         $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
         if ($typo3Version->getMajorVersion() >= 13) {
             $noCache = !$request->getAttribute('frontend.cache.instruction')->isCachingAllowed();
@@ -80,7 +81,7 @@ class CrawlerInitialization implements MiddlewareInterface
         $crawlerData['vars'] = [
             'id' => $GLOBALS['TSFE']->id,
             'gr_list' => implode(',', $this->context->getAspect('frontend.user')->getGroupIds()),
-            'no_cache' => !$request->getAttribute('frontend.cache.instruction')->isCachingAllowed(),
+            'no_cache' => $noCache,
         ];
 
         $this->runPollSuccessHooks($crawlerData);
