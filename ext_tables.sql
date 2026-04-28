@@ -61,14 +61,3 @@ CREATE TABLE tx_crawler_configuration
     exclude                              text                     NOT NULL
 
 ) ENGINE=InnoDB;
-
-#
-# Table structure for table 'pages'
-# This is added to reuse the information from typo3/cms-seo.
-# As we don't have a dependency for typo3/cms-seo it's added here to ensure that the
-# database queries isn't breaking
-#
-CREATE TABLE pages
-(
-    sitemap_priority decimal(2, 1) DEFAULT '0.5' NOT NULL
-);

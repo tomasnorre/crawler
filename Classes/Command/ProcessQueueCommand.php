@@ -40,7 +40,7 @@ class ProcessQueueCommand extends Command
     private const CLI_STATUS_REMAIN = 1;
     private const CLI_STATUS_PROCESSED = 2;
     private const CLI_STATUS_ABORTED = 4;
-    private string $processId;
+    private readonly string $processId;
     private array $extensionSettings;
 
     public function __construct(
@@ -61,6 +61,7 @@ class ProcessQueueCommand extends Command
      * --- Will trigger the crawler which starts to process the queue entries
      * $ typo3 crawler:crawlQueue
      */
+    #[\Override]
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $amount = $input->getOption('amount');
@@ -80,7 +81,7 @@ class ProcessQueueCommand extends Command
                 // Run process:
                 $result = $this->runProcess($countInARun, $sleepTime, $sleepAfterFinish);
             } catch (\Throwable $e) {
-                $output->writeln('<warning>' . get_class($e) . ': ' . $e->getMessage() . '</warning>');
+                $output->writeln('<warning>' . $e::class . ': ' . $e->getMessage() . '</warning>');
                 $result = self::CLI_STATUS_ABORTED;
             }
 
@@ -105,6 +106,7 @@ class ProcessQueueCommand extends Command
         return $result & self::CLI_STATUS_ABORTED;
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('Trigger the crawler to process the queue entries');

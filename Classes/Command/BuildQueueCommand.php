@@ -21,7 +21,6 @@ namespace AOE\Crawler\Command;
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Controller\CrawlerController;
-use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\InvokeQueueChangeEvent;
@@ -44,7 +43,6 @@ use TYPO3\CMS\Core\Utility\MathUtility;
 class BuildQueueCommand extends Command
 {
     public function __construct(
-        private readonly JsonCompatibilityConverter $jsonCompatibilityConverter,
         private readonly EventDispatcher $eventDispatcher,
         private readonly QueueRepository $queueRepository,
         private readonly PageRepository $pageRepository,
@@ -53,6 +51,7 @@ class BuildQueueCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('Create entries in the queue that can be processed at once');
@@ -118,6 +117,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
      * --- Put entries for re-caching pages from page 7 into queue, 4 every minute.
      * $ typo3 crawler:buildQueue 7 defaultConfiguration --depth 0 --mode queue --number 4
      */
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $mode = $input->getOption('mode') ?? 'queue';
@@ -217,7 +217,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
         $output->writeln('<info>Processing</info>' . PHP_EOL);
 
         foreach ($progressBar->iterate($this->crawlerController->queueEntries) as $queueRec) {
-            $p = $this->jsonCompatibilityConverter->convert($queueRec['parameters']);
+            $p = json_decode((string) $queueRec['parameters'], true);
             if (is_bool($p)) {
                 continue;
             }
@@ -234,7 +234,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             $result = $this->crawlerController->readUrlFromArray($queueRec);
 
             $resultContent = $result['content'] ?? '';
-            $requestResult = $this->jsonCompatibilityConverter->convert($resultContent);
+            $requestResult = json_decode((string) $resultContent, true);
 
             $progressBar->clear();
             if (is_array($requestResult)) {

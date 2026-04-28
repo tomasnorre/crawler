@@ -29,6 +29,7 @@ final class CrawlerCsvWriter implements CsvWriterInterface
     private const CARRIAGE_RETURN = 13;
     private const LINE_FEED = 10;
 
+    #[\Override]
     public function arrayToCsv(array $records): string
     {
         $csvLines = [];

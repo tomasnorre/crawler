@@ -21,12 +21,22 @@ use AOE\Crawler\Controller\Backend\BackendModuleCrawlerLogController;
 use AOE\Crawler\Controller\Backend\BackendModuleCrawlerProcessController;
 use AOE\Crawler\Controller\Backend\BackendModuleStartCrawlingController;
 
+if ((new \TYPO3\CMS\Core\Information\Typo3Version())->getMajorVersion() === 14) {
+    $parent = 'content';
+    $position = [
+        'after' => 'content_status',
+    ];
+} else {
+    $parent = 'web';
+    $position = [
+        'after' => 'web_info',
+    ];
+}
+
 return [
     'web_site_crawler' => [
-        'parent' => 'web',
-        'position' => [
-            'after' => 'web_info',
-        ],
+        'parent' => $parent,
+        'position' => $position,
         'access' => 'user',
         'workspaces' => 'live',
         'path' => '/module/page/crawler',
@@ -43,7 +53,6 @@ return [
         'parent' => 'web_site_crawler',
         'access' => 'user',
         'path' => '/module/page/crawler/start',
-        'iconIdentifier' => 'crawler-start',
         'labels' => [
             'title' => 'Start',
         ],
@@ -57,7 +66,6 @@ return [
         'parent' => 'web_site_crawler',
         'access' => 'user',
         'path' => '/module/page/crawler/process',
-        'iconIdentifier' => 'crawler-process',
         'labels' => [
             'title' => 'Process',
         ],
@@ -71,7 +79,6 @@ return [
         'parent' => 'web_site_crawler',
         'access' => 'user',
         'path' => '/module/page/crawler/log',
-        'iconIdentifier' => 'crawler-log',
         'labels' => [
             'title' => 'Log',
         ],

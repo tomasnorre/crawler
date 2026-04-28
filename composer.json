@@ -12,13 +12,13 @@
     ],
     "homepage": "https://github.com/tomasnorre/crawler",
     "support": {
-        "docs": "https://docs.typo3.org/p/tomasnorre/crawler/main/en-us/",
         "issues": "https://github.com/tomasnorre/crawler/issues",
+        "chat": "https://typo3.slack.com/archives/C087NGBKM",
         "source": "https://github.com/tomasnorre/crawler/",
-        "chat": "https://typo3.slack.com/archives/C087NGBKM"
+        "docs": "https://docs.typo3.org/p/tomasnorre/crawler/main/en-us/"
     },
     "require": {
-        "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
+        "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
         "ext-json": "*",
         "ext-pdo": "*",
         "ext-posix": "*",
@@ -29,45 +29,44 @@
         "psr/http-server-handler": "^1.0",
         "psr/http-server-middleware": "^1.0",
         "psr/log": "^1.0 || ^2.0 || ^3.0",
-        "symfony/console": "^6.4 || ^7.0",
+        "symfony/console": "^7.2",
         "symfony/service-contracts": "^3.6",
-        "typo3/cms-backend": "^12.4 || ^13.4",
-        "typo3/cms-core": "^12.4 || ^13.4",
-        "typo3/cms-extbase": "^12.4 || ^13.4",
-        "typo3/cms-frontend": "^12.4 || ^13.4",
-        "typo3/cms-info": "^12.4 || ^13.4",
-        "typo3/cms-seo": "^12.4 || ^13.4"
+        "typo3/cms-backend": "^13.4 || ^14.3",
+        "typo3/cms-core": "^13.4 || ^14.3",
+        "typo3/cms-extbase": "^13.4 || ^14.3",
+        "typo3/cms-frontend": "^13.4 || ^14.3",
+        "typo3/cms-info": "^13.4 || ^14.3"
     },
     "require-dev": {
-        "codeception/codeception": "^5.0",
-        "codeception/module-asserts": "^3.0",
-        "codeception/module-filesystem": "^3.0",
-        "codeception/module-phpbrowser": "^3.0",
-        "codeception/module-webdriver": "^4.0",
         "infection/infection": "^0.29.9",
         "nikic/php-parser": "^4.13 || ^5.3",
         "phpspec/prophecy-phpunit": "^2.0",
         "phpstan/extension-installer": "^1.2",
         "phpstan/phpstan": "^2.0",
         "phpstan/phpstan-deprecation-rules": "^2.0",
-        "phpunit/phpunit": "^10.5 || ^11.4",
+        "phpunit/phpunit": "^11.5",
         "roave/security-advisories": "dev-latest",
         "sbuerk/typo3-cmscomposerinstallers-testingframework-bridge": "^0.1",
         "shipmonk/composer-dependency-analyser": "^1.8",
         "ssch/typo3-rector": "^3.0",
-        "symfony/yaml": "^6.4 || ^7.0",
+        "symfony/yaml": "^7.2",
         "symplify/easy-coding-standard": "^12.2",
         "symplify/phpstan-rules": "^14.2",
         "tomasvotruba/cognitive-complexity": "^1.0",
         "tomasvotruba/type-coverage": "^2.0",
-        "typo3/testing-framework": "^8.0 || ^9.0"
+        "typo3/testing-framework": "^9.3",
+        "typo3/cms-seo": "^13.4 || ^14.3",
+        "vimeo/psalm": "^6.13"
     },
     "replace": {
         "aoepeople/crawler": "self.version",
         "typo3-ter/crawler": "self.version"
     },
+    "conflict": {
+        "symfony/dependency-injection": "7.4.0"
+    },
     "suggest": {
-        "typo3/cms-seo": "Enables the posibility to priorities your Crawler Queue + You have seo features in the CMS it self."
+        "typo3/cms-seo": "Enables the possibility to priorities your Crawler Queue + You have seo features in the CMS it self."
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
@@ -87,9 +86,9 @@
             "composer/package-versions-deprecated": true,
             "infection/extension-installer": true,
             "phpstan/extension-installer": true,
+            "sbuerk/typo3-cmscomposerinstallers-testingframework-bridge": true,
             "typo3/class-alias-loader": true,
-            "typo3/cms-composer-installers": true,
-            "sbuerk/typo3-cmscomposerinstallers-testingframework-bridge": true
+            "typo3/cms-composer-installers": true
         },
         "bin-dir": ".Build/bin",
         "preferred-install": {
@@ -128,6 +127,10 @@
         "extension-create-libs": [
             "@composer install -d Resources/Private/Php/Libraries"
         ],
+        "phpstan-baseline": [
+            "[ -e .Build/bin/phpstan ] || composer update",
+            ".Build/bin/phpstan analyse --generate-baseline"
+        ],
         "prepare-release": [
             "@extension-create-libs",
             "rm -rf .devbox",
@@ -141,16 +144,11 @@
             "rm -f rector-ci.php",
             "rm -f psalm.xml",
             "rm -f psalm-baseline.xml",
-            "rm -f codeception.yml",
             "rm -f crowdin.yml"
         ],
-        "phpstan-baseline": [
-            "[ -e .Build/bin/phpstan ] || composer update",
-            ".Build/bin/phpstan analyse --generate-baseline"
-        ],
         "psalm": [
-            "[ -e tools/psalm ] || phive install",
-            "tools/psalm"
+            "[ -e .Build/bin/psalm ] || composer update",
+            ".Build/bin/psalm --no-cache"
         ],
         "rector": [
             "[ -e .Build/bin/rector ] || composer update",
@@ -165,16 +163,10 @@
             "@cs-fix",
             "@rector"
         ],
-        "test:acceptance": [
-            "[ -e .Build/bin/codecept ] || composer update",
-            ".Build/bin/codecept clean",
-            ".Build/bin/codecept run --env=local"
-        ],
         "test:all": [
             "@test:unit",
             "@test:functional",
-            "@test:functional-sqlite",
-            "@test:acceptance"
+            "@test:functional-sqlite"
         ],
         "test:coverage": [
             "mkdir -p .Logs/coverage",

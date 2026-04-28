@@ -67,6 +67,8 @@ class BuildQueueCommandTest extends FunctionalTestCase
         ],
     ];
 
+    protected array $coreExtensionsToLoad = ['seo'];
+
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     protected QueueRepository $queueRepository;

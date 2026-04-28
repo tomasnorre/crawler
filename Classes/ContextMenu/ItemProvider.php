@@ -45,6 +45,7 @@ class ItemProvider extends AbstractProvider
     /**
      * Item is added only for crawler configurations
      */
+    #[\Override]
     public function canHandle(): bool
     {
         return $this->table === ConfigurationRepository::TABLE_NAME;
@@ -53,6 +54,7 @@ class ItemProvider extends AbstractProvider
     /**
      * This needs to be lower than priority of the RecordProvider
      */
+    #[\Override]
     public function getPriority(): int
     {
         return 50;
@@ -61,12 +63,14 @@ class ItemProvider extends AbstractProvider
     /**
      * Adds the crawler info
      */
+    #[\Override]
     public function addItems(array $items): array
     {
         $localItems = $this->prepareItems($this->itemsConfiguration);
         return $items + $localItems;
     }
 
+    #[\Override]
     protected function getAdditionalAttributes(string $itemName): array
     {
         $crawlerConfiguration = BackendUtility::getRecordWSOL($this->table, (int) $this->identifier);

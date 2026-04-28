@@ -53,7 +53,6 @@ class ProcessRepository
     #[Required]
     public function setExtensionSettings(): void
     {
-        /** @var ExtensionConfigurationProvider $configurationProvider */
         $configurationProvider = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
         $this->extensionSettings = $configurationProvider->getExtensionConfiguration();
     }
@@ -72,7 +71,6 @@ class ProcessRepository
      */
     public function findAll(): ProcessCollection
     {
-        /** @var ProcessCollection $collection */
         $collection = GeneralUtility::makeInstance(ProcessCollection::class);
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
         $queryBuilder->getRestrictions()
@@ -101,7 +99,6 @@ class ProcessRepository
 
     public function findAllActive(): ProcessCollection
     {
-        /** @var ProcessCollection $collection */
         $collection = GeneralUtility::makeInstance(ProcessCollection::class);
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
 

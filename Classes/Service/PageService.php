@@ -23,7 +23,6 @@ use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Event\ModifySkipPageEvent;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
-use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -68,50 +67,18 @@ class PageService
             }
         }
 
-        // veto hook
-        foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pageVeto'] ?? [] as $key => $func) {
-            trigger_error(
-                'The pageVeto-hook of the TYPO3 Crawler is deprecated since v11.0.0 and will be removed in v13.0,
-                please use the PSR-14 ModifySkipPageEvent instead.',
-                E_USER_DEPRECATED
-            );
-
-            $params = [
-                'pageRow' => $pageRow,
-            ];
-            // expects "false" if page is ok and "true" or a skipMessage if this page should _not_ be crawled
-            $veto = GeneralUtility::callUserFunction($func, $params, $this);
-            if ($veto !== false) {
-                if (is_string($veto)) {
-                    return $veto;
-                }
-                return 'Veto from hook "' . htmlspecialchars((string) $key) . '"';
-            }
-        }
-
-        /** @var ModifySkipPageEvent $event */
         $event = $this->eventDispatcher->dispatch(new ModifySkipPageEvent($pageRow));
         return $event->isSkipped();
     }
 
     private function getDisallowedDokTypes(): array
     {
-        return array_merge([
+        return [
             PageRepository::DOKTYPE_LINK,
             PageRepository::DOKTYPE_SHORTCUT,
             PageRepository::DOKTYPE_SPACER,
             PageRepository::DOKTYPE_SYSFOLDER,
             PageRepository::DOKTYPE_BE_USER_SECTION,
-        ], $this->getDisallowedDokTypeTYPO3v12());
-    }
-
-    private function getDisallowedDokTypeTYPO3v12(): array
-    {
-        $disallowed_v12 = [];
-        $typo3Version = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(Typo3Version::class);
-        if ($typo3Version->getMajorVersion() === 12) {
-            $disallowed_v12[] = PageRepository::DOKTYPE_RECYCLER;
-        }
-        return $disallowed_v12;
+        ];
     }
 }

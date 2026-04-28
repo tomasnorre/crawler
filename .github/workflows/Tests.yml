@@ -16,18 +16,15 @@ jobs:
       fail-fast: false
       matrix:
         typo3:
-          - '^12.4'
           - '^13.4'
+          - '^14.3'
         php:
           - '8.2'
           - '8.3'
           - '8.4'
+          - '8.5'
         mysql:
           - '8.0'
-        include:
-          - typo3: '^12.4'
-            php: '8.1'
-            mysql: '8.0'
 
     steps:
       - name: Set up MySQL ${{ matrix.mysql }}
@@ -37,7 +34,7 @@ jobs:
           mysql root password: 'root'
 
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Set up PHP Version ${{ matrix.php }}
         uses: shivammathur/setup-php@v2

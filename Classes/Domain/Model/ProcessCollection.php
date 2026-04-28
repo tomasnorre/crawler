@@ -40,6 +40,7 @@ class ProcessCollection extends \ArrayObject
      * Method to retrieve an element from the collection.
      * @throws NoIndexFoundException
      */
+    #[\Override]
     public function offsetGet(mixed $key): Process
     {
         if (!parent::offsetExists($key)) {
@@ -57,6 +58,7 @@ class ProcessCollection extends \ArrayObject
      * @param Process $value
      * @throws InvalidArgumentException
      */
+    #[\Override]
     public function offsetSet(mixed $key, $value): void
     {
         if (!$value instanceof Process) {
@@ -74,6 +76,7 @@ class ProcessCollection extends \ArrayObject
      * @param Process $value
      * @throws InvalidArgumentException
      */
+    #[\Override]
     public function append($value): void
     {
         if (!$value instanceof Process) {

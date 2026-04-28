@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <xliff version="1.0">
-  <file source-language="en" datatype="plaintext" original="EXT:crawler/Resources/Private/Language/Backend.xlf" date="2016-11-04T16:17:39Z" product-name="crawler" target-language="de">
+  <file source-language="en" datatype="plaintext" original="EXT:crawler/Resources/Private/Language/Backend.xlf" date="2016-11-04T16:17:39Z" product-name="crawler" target-language="lo">
     <header/>
     <body>
       <!-- Backend Module Labels -->
       <trans-unit id="mlang_labels_tabdescr" resname="mlang_labels_tabdescr" approved="yes">
         <source>Libraries and scripts for crawling the TYPO3 page tree. Used for re-caching, re-indexing, publishing applications etc.</source>
-        <target state="final">Bibliotheken und Skripte zum Crawlen der TYPO3-Seitenstruktur. Wird für das erneute Caching, die erneute Indizierung, die Veröffentlichung von Anwendungen usw. verwendet.</target>
+        <target state="final">ໄລບຣາຣີ ແລະ ສະຄຣິບ ສຳລັບການສຳຫຼວດໂຄງສ້າງໜ້າເວັບ TYPO3. ໃຊ້ສຳລັບການເຮັດແຄຊໃໝ່, ການເຮັດດັດຊະນີໃໝ່, ການເຜີຍແຜ່ແອັບພລິເຄຊັນ ແລະ ອື່ນໆ.</target>
       </trans-unit>
       <trans-unit id="mlang_labels_tablabel" resname="mlang_labels_tablabel" approved="yes">
         <source>Crawler</source>
@@ -14,223 +14,223 @@
       </trans-unit>
       <trans-unit id="mlang_tabs_tab" resname="mlang_tabs_tab" approved="yes">
         <source>Crawler module</source>
-        <target state="final">Crawler Module</target>
+        <target state="final">ໂມດູນ Crawler</target>
       </trans-unit>
       <!-- Old Backend Module Labels -->
       <trans-unit id="moduleFunction.tx_crawler_modfunc1" resname="moduleFunction.tx_crawler_modfunc1" approved="yes">
         <source>Site Crawler</source>
-        <target state="final">Site-Crawler</target>
+        <target state="final">ຕົວສຳຫຼວດເວັບໄຊ</target>
       </trans-unit>
       <trans-unit id="tx_crawler_configuration" resname="tx_crawler_configuration" approved="yes">
         <source>Crawler Configuration</source>
-        <target state="final">Crawler-Konfiguration</target>
+        <target state="final">ການຕັ້ງຄ່າ Crawler</target>
       </trans-unit>
       <trans-unit id="tx_crawler_configuration.name" resname="tx_crawler_configuration.name" approved="yes">
         <source>Name</source>
-        <target state="final">Name</target>
+        <target state="final">ຊື່</target>
       </trans-unit>
       <trans-unit id="tx_crawler_configuration.crawling_protocol" resname="tx_crawler_configuration.crawling_protocol" approved="yes">
         <source>Protocol for crawling</source>
-        <target state="final">Protokoll für Crawling</target>
+        <target state="final">ໂປຣໂຕຄໍ ສຳລັບການສຳຫຼວດຂໍ້ມູນ</target>
       </trans-unit>
       <trans-unit id="tx_crawler_configuration.crawling_protocol.http" resname="tx_crawler_configuration.crawling_protocol.http" approved="yes">
         <source>Force HTTP for all pages</source>
-        <target state="final">HTTP für alle Seiten erzwingen</target>
+        <target state="final">ບັງຄັບໃຊ້ HTTP ສຳລັບທຸກໜ້າ</target>
       </trans-unit>
       <trans-unit id="tx_crawler_configuration.crawling_protocol.page_config" resname="tx_crawler_configuration.crawling_protocol.page_config" approved="yes">
         <source>Keeps page configured protocol</source>
-        <target state="final">Behalte das konfigurierte Protokoll</target>
+        <target state="final">ໃຊ້ຕາມໂປຣໂຕຄໍທີ່ຕັ້ງໄວ້ໃນໜ້າເວັບ</target>
       </trans-unit>
       <trans-unit id="tx_crawler_configuration.crawling_protocol.https" resname="tx_crawler_configuration.crawling_protocol.https" approved="yes">
         <source>Force HTTPS for all pages</source>
-        <target state="final">HTTPS für alle Seiten erzwingen</target>
+        <target state="final">ບັງຄັບໃຊ້ HTTPS ສຳລັບທຸກໜ້າ</target>
       </trans-unit>
       <trans-unit id="tx_crawler_configuration.processing_instruction_filter" resname="tx_crawler_configuration.processing_instruction_filter" approved="yes">
         <source>Processing instruction filter</source>
-        <target state="final">Verarbeitungsanweisungsfilter</target>
+        <target state="final">ຕົວຕອງຄຳສັ່ງປະມວນຜົນ</target>
       </trans-unit>
       <trans-unit id="tx_crawler_configuration.processing_instruction_filter.description" resname="tx_crawler_configuration.processing_instruction_filter.description" approved="yes">
         <source>List of processing instructions to send for the request. Processing instructions are necessary
                     for the request to perform any meaningful action, since they activate third party activity.
                 </source>
-        <target state="final">Liste der für die Anfrage zu sendenden Verarbeitungsanweisungen. Diese Verarbeitungsanweisungen sind erforderlich, damit die Anfrage eine sinnvolle Aktion ausführen kann, da sie Aktivitäten von Dritten aktivieren.</target>
+        <target state="final">ລາຍການຄຳສັ່ງປະມວນຜົນທີ່ຈະສົ່ງໄປພ້ອມກັບຄຳຮ້ອງຂໍ. ຄຳສັ່ງປະມວນຜົນແມ່ນຈຳເປັນເພື່ອໃຫ້ຄຳຮ້ອງຂໍດຳເນີນການໃດໜຶ່ງທີ່ມີຄວາມໝາຍ, ເພາະມັນຈະເປີດໃຊ້ງານກິດຈະກຳຂອງພາກສ່ວນທີສາມ.</target>
       </trans-unit>
       <trans-unit id="tx_crawler_configuration.processing_instruction_parameters_ts" resname="tx_crawler_configuration.processing_instruction_parameters_ts" approved="yes">
         <source>Processing instruction parameters</source>
-        <target state="final">Verarbeitung von Anweisungsparametern</target>
+        <target state="final">ພາຣາມິເຕີຂອງຄຳສັ່ງປະມວນຜົນ</target>
       </trans-unit>
       <trans-unit id="tx_crawler_configuration.configuration" resname="tx_crawler_configuration.configuration" approved="yes">
         <source>Configuration</source>
-        <target state="final">Konfiguration</target>
+        <target state="final">ການຕັ້ງຄ່າ</target>
       </trans-unit>
       <trans-unit id="tx_crawler_configuration.base_url" resname="tx_crawler_configuration.base_url" approved="yes">
         <source>Base URL</source>
-        <target state="final">Basis-URL</target>
+        <target state="final">URL ພື້ນຖານ</target>
       </trans-unit>
       <trans-unit id="tx_crawler_configuration.base_url.description" resname="tx_crawler_configuration.base_url.description" approved="yes">
         <source>Leave empty for fetching the base URL from the Site Configuration.</source>
-        <target state="final">Zur Übernahme der Basis-URL aus der Site-Konfiguration das Feld leer lassen.</target>
+        <target state="final">ປະຫວ່າງໄວ້ເພື່ອດຶງ URL ພື້ນຖານຈາກການຕັ້ງຄ່າເວັບໄຊ.</target>
       </trans-unit>
       <trans-unit id="tx_crawler_configuration.pidsonly" resname="tx_crawler_configuration.pidsonly" approved="yes">
         <source>Pids only</source>
-        <target state="final">Nur Pids</target>
+        <target state="final">ສະເພາະ ID ໜ້າ (PIDs) ເທົ່ານັ້ນ</target>
       </trans-unit>
       <trans-unit id="tx_crawler_configuration.pidsonly.description" resname="tx_crawler_configuration.pidsonly.description" approved="yes">
         <source>List of page IDs to limit this configuration to.</source>
-        <target state="final">Liste der Seiten-IDs, auf die diese Konfiguration beschränkt werden soll.</target>
+        <target state="final">ລາຍການ ID ຂອງໜ້າທີ່ຕ້ອງການຈຳກັດການຕັ້ງຄ່ານີ້ໄວ້.</target>
       </trans-unit>
       <trans-unit id="tx_crawler_configuration.begroups" resname="tx_crawler_configuration.begroups" approved="yes">
         <source>Restrict access to</source>
-        <target state="final">Zugang einschränken auf</target>
+        <target state="final">ຈຳກັດການເຂົ້າເຖິງສຳລັບ</target>
       </trans-unit>
       <trans-unit id="tx_crawler_configuration.begroups.description" resname="tx_crawler_configuration.begroups.description" approved="yes">
         <source>Restrict access to this configuration record to selected backend user groups. Empty means no
                     restriction is set.
                 </source>
-        <target state="final">Beschränke den Zugriff auf diesen Konfigurationsdatensatz auf die ausgewählte Backend-Benutzergruppen. Leer bedeutet, dass keine Einschränkung festgelegt ist.</target>
+        <target state="final">ຈຳກັດການເຂົ້າເຖິງບັນທຶກການຕັ້ງຄ່ານີ້ໃຫ້ສະເພາະກຸ່ມຜູ້ໃຊ້ backend ທີ່ເລືອກໄວ້. ຖ້າປະຫວ່າງໄວ້ໝາຍເຖິງບໍ່ມີການຈຳກັດ.</target>
       </trans-unit>
       <trans-unit id="tx_crawler_configuration.fegroups" resname="tx_crawler_configuration.fegroups" approved="yes">
         <source>Crawl with FE user groups</source>
-        <target state="final">Crawling mit FE-Benutzergruppen</target>
+        <target state="final">ສຳຫຼວດດ້ວຍກຸ່ມຜູ້ໃຊ້ Frontend (FE)</target>
       </trans-unit>
       <trans-unit id="tx_crawler_configuration.fegroups.description" resname="tx_crawler_configuration.fegroups.description" approved="yes">
         <source>Frontend user groups to set for the request.</source>
-        <target state="final">Frontend-Benutzergruppen, die für die Anfrage gesetzt werden.</target>
+        <target state="final">ກຸ່ມຜູ້ໃຊ້ Frontend ທີ່ຈະຕັ້ງຄ່າໃຫ້ກັບຄຳຮ້ອງຂໍ.</target>
       </trans-unit>
       <trans-unit id="tx_crawler_configuration.exclude" resname="tx_crawler_configuration.exclude" approved="yes">
         <source>Exclude pages</source>
-        <target state="final">Ausgeschlossene Seiten</target>
+        <target state="final">ຍົກເວັ້ນໜ້າເວັບ</target>
       </trans-unit>
       <trans-unit id="tx_crawler_configuration.exclude.description" resname="tx_crawler_configuration.exclude.description" approved="yes">
         <source>Comma separated list of page IDs which should not be crawled. You can do recursive exclusion by adding uid+depth e.g. 6+3</source>
-        <target state="final">Durch Kommas getrennte Liste von Seiten-IDs, die nicht gecrawlt werden sollen. Du kannst rekursive Ausschlüsse vornehmen, indem du uid+depth hinzufügst, z. B. 6+3.</target>
+        <target state="final">ລາຍການ ID ຂອງໜ້າເວັບທີ່ບໍ່ຄວນສຳຫຼວດ ໂດຍຂັ້ນດ້ວຍຈຸດ. ທ່ານສາມາດຍົກເວັ້ນແບບລຳດັບຊັ້ນ (recursive) ໂດຍການເພີ່ມ uid+depth ເຊັ່ນ: 6+3</target>
       </trans-unit>
       <trans-unit id="crawler_im.name" resname="crawler_im.name" approved="yes">
         <source>Crawler queue</source>
-        <target state="final">Crawler-Warteschlange</target>
+        <target state="final">ຄິວຂອງ Crawler</target>
       </trans-unit>
       <trans-unit id="crawler_im.description" resname="crawler_im.description" approved="yes">
         <source>Running the crawler queue process to collect the relevant entries.</source>
-        <target state="final">Führe den Crawler-Warteschlangen-Prozess aus, um die relevanten Einträge zu sammeln.</target>
+        <target state="final">ກຳລັງດຳເນີນການຂະບວນການຄິວຂອງ Crawler ເພື່ອຮວບຮວມລາຍການທີ່ກ່ຽວຂ້ອງ.</target>
       </trans-unit>
       <trans-unit id="crawler_im.startPage" resname="crawler_im.startPage" approved="yes">
         <source>Start page</source>
-        <target state="final">Startseite</target>
+        <target state="final">ໜ້າເລີ່ມຕົ້ນ</target>
       </trans-unit>
       <trans-unit id="crawler_im.depth" resname="crawler_im.depth" approved="yes">
         <source>Depth</source>
-        <target state="final">Tiefe</target>
+        <target state="final">ລະດັບຄວາມເລິກ</target>
       </trans-unit>
       <trans-unit id="crawler_im.invalidStartPage" resname="crawler_im.invalidStartPage" approved="yes">
         <source>Start page must be a positive integer!</source>
-        <target state="final">Die Startseite muss eine positive Zahl sein!</target>
+        <target state="final">ໜ້າເລີ່ມຕົ້ນຕ້ອງເປັນຕົວເລກຖ້ວນບວກ!</target>
       </trans-unit>
       <trans-unit id="crawler_im.invalidDepth" resname="crawler_im.invalidDepth" approved="yes">
         <source>There is no depth set, please set it to an value!</source>
-        <target state="final">Es gibt keine Tiefe gesetzt, bitte setzen Sie sie auf einen Wert!</target>
+        <target state="final">ຍັງບໍ່ທັນໄດ້ກຳນົດລະດັບຄວາມເລິກ, ກະລຸນາກຳນົດຄ່າ!</target>
       </trans-unit>
       <trans-unit id="crawler_im.conf" resname="crawler_im.conf" approved="yes">
         <source>Configuration records</source>
-        <target state="final">Konfigurationsdatensätze</target>
+        <target state="final">ບັນທຶກການຕັ້ງຄ່າ</target>
       </trans-unit>
       <trans-unit id="crawler_im.invalidConfiguration" resname="crawler_im.invalidConfiguration" approved="yes">
         <source>There is no configuration record selected, please choose at least one or more!</source>
-        <target state="final">Es ist kein Konfigurations-Eintrag ausgewählt, bitte wählen Sie mindestens einen oder mehr!</target>
+        <target state="final">ຍັງບໍ່ມີການເລືອກບັນທຶກການຕັ້ງຄ່າ, ກະລຸນາເລືອກຢ່າງໜ້ອຍໜຶ່ງລາຍການ!</target>
       </trans-unit>
       <trans-unit id="crawler_im.timeOut" resname="crawler_im.timeOut" approved="yes">
         <source>Time out</source>
-        <target state="final">Timeout</target>
+        <target state="final">ໝົດເວລາ</target>
       </trans-unit>
       <trans-unit id="crawler_im.sleepTime" resname="crawler_im.sleepTime" approved="yes">
         <source>Sleep time</source>
-        <target state="final">Wartezeit</target>
+        <target state="final">ເວລາຢຸດພັກ</target>
       </trans-unit>
       <trans-unit id="crawler_im.invalidTimeOut" resname="crawler_im.invalidTimeOut" approved="yes">
         <source>The time out must be a positive integer!</source>
-        <target state="final">Der Timeout muss eine positive Ganzzahl sein!</target>
+        <target state="final">ເວລາໝົດກຳນົດຕ້ອງເປັນຕົວເລກຖ້ວນບວກ!</target>
       </trans-unit>
       <trans-unit id="crawler_im.invalidSleepTime" resname="crawler_im.invalidSleepTime" approved="yes">
         <source>The sleep time must be a positive integer!</source>
-        <target state="final">Die Wartezeit muss eine positive Ganzzahl sein!</target>
+        <target state="final">ເວລາຢຸດພັກຕ້ອງເປັນຕົວເລກຖ້ວນບວກ!</target>
       </trans-unit>
       <trans-unit id="crawler_im.sleepAfterFinish" resname="crawler_im.sleepAfterFinish" approved="yes">
         <source>Sleep after finish</source>
-        <target state="final">Wartezeit nach dem Beenden</target>
+        <target state="final">ຢຸດພັກຫຼັງຈາກສຳເລັດ</target>
       </trans-unit>
       <trans-unit id="crawler_im.invalidSleepAfterFinish" resname="crawler_im.invalidSleepAfterFinish" approved="yes">
         <source>The sleep after finish must be a positive integer!</source>
-        <target state="final">Die Wartezeit nach dem Beenden muss eine positive Ganzzahl sein!</target>
+        <target state="final">ເວລາຢຸດພັກຫຼັງຈາກສຳເລັດຕ້ອງເປັນຕົວເລກຖ້ວນບວກ!</target>
       </trans-unit>
       <trans-unit id="crawler_im.countInARun" resname="crawler_im.countInARun" approved="yes">
         <source>Count in a run</source>
-        <target state="final">Anzahl in einem Durchlauf</target>
+        <target state="final">ຈຳນວນຕໍ່ການເຮັດວຽກໜຶ່ງຄັ້ງ</target>
       </trans-unit>
       <trans-unit id="crawler_im.invalidCountInARun" resname="crawler_im.invalidCountInARun" approved="yes">
         <source>The count in a run must be a positive integer!</source>
-        <target state="final">Die Anzahl in einem Durchlauf muss eine positive Ganzzahl sein!</target>
+        <target state="final">ຈຳນວນຕໍ່ການເຮັດວຽກໜຶ່ງຄັ້ງຕ້ອງເປັນຕົວເລກຖ້ວນບວກ!</target>
       </trans-unit>
       <trans-unit id="crawler_crawlMultiProcess.name" resname="crawler_crawlMultiProcess.name" approved="yes">
         <source>Crawler Run Multi Process</source>
-        <target state="final">Crawler Run Multi Process</target>
+        <target state="final">ການເຮັດວຽກຂອງ Crawler ແບບຫຼາຍໂປຣເຊສ</target>
       </trans-unit>
       <trans-unit id="crawler_crawl.name" resname="crawler_crawl.name" approved="yes">
         <source>Crawler Run</source>
-        <target state="final">Crawler-Durchlauf</target>
+        <target state="final">ການເຮັດວຽກຂອງ Crawler</target>
       </trans-unit>
       <trans-unit id="crawler_crawl.description" resname="crawler_crawl.description" approved="yes">
         <source>Running the crawler to extension to process it's queue-entries.</source>
-        <target state="final">Ausführen des Crawlers zur Erweiterung, um dessen Warteschlangeneinträge zu verarbeiten.</target>
+        <target state="final">ກຳລັງເປີດໃຊ້ງານສ່ວນເສີມ Crawler ເພື່ອປະມວນຜົນລາຍການໃນຄິວ.</target>
       </trans-unit>
       <trans-unit id="crawler_flush.name" resname="crawler_flush.name" approved="yes">
         <source>Crawler Queue Flush</source>
-        <target state="final">Crawler-Warteschlange leeren</target>
+        <target state="final">ການລ້າງຄິວຂອງ Crawler</target>
       </trans-unit>
       <trans-unit id="crawler_flush.description" resname="crawler_flush.description" approved="yes">
         <source>Cleanup the crawler queue and remove unwanted or finished entries.</source>
-        <target state="final">Bereinigen der Crawler-Warteschlange und entfernen der unerwünschten oder fertigen Einträge.</target>
+        <target state="final">ລ້າງຄິວຂອງ Crawler ແລະ ລົບລາຍການທີ່ບໍ່ຕ້ອງການ ຫຼື ລາຍການທີ່ສຳເລັດແລ້ວອອກ.</target>
       </trans-unit>
       <trans-unit id="crawler_flush.mode" resname="crawler_flush.mode" approved="yes">
         <source>Flush mode</source>
-        <target state="final">Bereinigungsmodus</target>
+        <target state="final">ໂໝດການລ້າງຂໍ້ມູນ</target>
       </trans-unit>
       <trans-unit id="crawler_flush.modeAll" resname="crawler_flush.modeAll" approved="yes">
         <source>Flush all entries</source>
-        <target state="final">Alle Einträge leeren</target>
+        <target state="final">ລ້າງທຸກລາຍການ</target>
       </trans-unit>
       <trans-unit id="crawler_flush.modeFinished" resname="crawler_flush.modeFinished" approved="yes">
         <source>Flush finished entries</source>
-        <target state="final">Abgearbeitete Einträge leeren</target>
+        <target state="final">ລ້າງສະເພາະລາຍການທີ່ສຳເລັດແລ້ວ</target>
       </trans-unit>
       <trans-unit id="crawler_flush.modePending" resname="crawler_flush.modePending" approved="yes">
         <source>Flush pending entries</source>
-        <target state="final">Ausstehende Einträge leeren</target>
+        <target state="final">ລ້າງສະເພາະລາຍການທີ່ຍັງຄ້າງຢູ່</target>
       </trans-unit>
       <trans-unit id="crawler_processCleanup.name" resname="crawler_processCleanup.name" approved="yes">
         <source>Remove Processes</source>
-        <target state="final">Prozesse entfernen</target>
+        <target state="final">ລົບໂປຣເຊສ</target>
       </trans-unit>
       <trans-unit id="crawler_processCleanup.description" resname="crawler_processCleanup.description" approved="yes">
         <source>Remove Orphan processes and processes that are older than one hour</source>
-        <target state="final">Entferne verwaiste Prozesse und Prozesse, die älter als eine Stunde sind</target>
+        <target state="final">ລົບໂປຣເຊສທີ່ຄ້າງ (Orphan) ແລະ ໂປຣເຊສທີ່ມີອາຍຸເກີນໜຶ່ງຊົ່ວໂມງ</target>
       </trans-unit>
       <trans-unit id="contextMenu.label" resname="contextMenu.label" approved="yes">
         <source>Crawl</source>
-        <target state="final">Crawl</target>
+        <target state="final">ສຳຫຼວດ</target>
       </trans-unit>
       <!-- For Crawler Priority - Will be remove when support for 9 LTS is dropped -->
       <trans-unit id="pages_crawler.priority_label" resname="pages_crawler.priority_label" approved="yes">
         <source>Page priority</source>
-        <target state="final">Seitenpriorität</target>
+        <target state="final">ລຳດັບຄວາມສຳຄັນຂອງໜ້າ</target>
       </trans-unit>
       <trans-unit id="pages_crawler.priority" resname="pages_crawler.priority" approved="yes">
         <source>Priority</source>
-        <target state="final">Priorität</target>
+        <target state="final">ລຳດັບຄວາມສຳຄັນ</target>
       </trans-unit>
       <trans-unit id="pages_crawler.priority.description" resname="pages_crawler.priority.description" approved="yes">
         <source>The higher the number, the earlier will it be crawled. This is a reuse of the sitemap_priority
                     field introduced in 10LTS, to ensure compatibility after upgrade, we reuse the field.
                 </source>
-        <target state="final">Je höher die Zahl, desto früher wird die Seite gecrawlt. Dies ist eine Wiederverwendung des in 10LTS eingeführten Feldes sitemap_priority. Um die Kompatibilität nach dem Upgrade zu gewährleisten, verwenden wir dieses Feld erneut.</target>
+        <target state="final">ຕົວເລກຍິ່ງສູງ, ໜ້ານັ້ນຈະຖືກສຳຫຼວດໄວຂຶ້ນ. ນີ້ແມ່ນການນຳໃຊ້ຟີວ sitemap_priority ທີ່ມີໃນ 10LTS ຄືນໃໝ່ ເພື່ອຮັບປະກັນການເຂົ້າກັນໄດ້ຫຼັງຈາກອັບເກຣດ.</target>
       </trans-unit>
     </body>
   </file>

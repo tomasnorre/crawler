@@ -20,7 +20,6 @@ namespace AOE\Crawler\Controller;
  */
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
-use AOE\Crawler\Converter\JsonCompatibilityConverter;
 use AOE\Crawler\Crawler;
 use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
@@ -41,12 +40,13 @@ use Psr\Log\LoggerAwareTrait;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Authentication\GroupResolver;
 use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
-use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Imaging\IconSize;
 use TYPO3\CMS\Core\Type\Bitmask\Permission;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -121,15 +121,15 @@ class CrawlerController implements LoggerAwareInterface
         $this->configurationService = GeneralUtility::makeInstance(
             ConfigurationService::class,
             GeneralUtility::makeInstance(UrlService::class),
-            $this->configurationRepository
+            $this->configurationRepository,
+            GeneralUtility::makeInstance(GroupResolver::class),
         );
         $this->urlService = GeneralUtility::makeInstance(UrlService::class);
 
-        /** @var ExtensionConfigurationProvider $configurationProvider */
         $configurationProvider = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
         $this->extensionSettings = $configurationProvider->getExtensionConfiguration();
 
-        if (MathUtility::convertToPositiveInteger($this->extensionSettings['countInARun']) === 0) {
+        if (abs((int) $this->extensionSettings['countInARun']) === 0) {
             $this->extensionSettings['countInARun'] = 100;
         }
 
@@ -367,14 +367,13 @@ class CrawlerController implements LoggerAwareInterface
             if (!is_array($value)) {
                 continue;
             }
-            $configurationsForBranch[] = str_ends_with($key, '.') ? substr($key, 0, -1) : $key;
+            $configurationsForBranch[] = str_ends_with((string) $key, '.') ? substr((string) $key, 0, -1) : $key;
         }
         $pids = [];
         $rootLine = BackendUtility::BEgetRootLine($rootid);
         foreach ($rootLine as $node) {
             $pids[] = $node['uid'];
         }
-        /** @var PageTreeView $tree */
         $tree = GeneralUtility::makeInstance(PageTreeView::class);
         $perms_clause = $this->getBackendUser()->getPagePermsClause(Permission::PAGE_SHOW);
         $tree->init(empty($perms_clause) ? '' : ('AND ' . $perms_clause));
@@ -421,11 +420,11 @@ class CrawlerController implements LoggerAwareInterface
             ->insert(
                 QueueRepository::TABLE_NAME,
                 [
-                    'page_id' => (int) $page_id,
+                    'page_id' => $page_id,
                     'parameters' => json_encode($params),
-                    'scheduled' => (int) $schedule ?: $this->getCurrentTime(),
+                    'scheduled' => $schedule ?: $this->getCurrentTime(),
                     'exec_time' => 0,
-                    'set_id' => (int) $setId,
+                    'set_id' => $setId,
                     'result_data' => '',
                 ]
             );
@@ -485,7 +484,7 @@ class CrawlerController implements LoggerAwareInterface
             'configuration_hash' => $configurationHash,
             'scheduled' => $tstamp,
             'exec_time' => 0,
-            'set_id' => (int) $this->setID,
+            'set_id' => $this->setID,
             'result_data' => '',
             'configuration' => $subCfg['key'],
         ];
@@ -509,7 +508,7 @@ class CrawlerController implements LoggerAwareInterface
                     QueueRepository::TABLE_NAME
                 );
                 $connectionForCrawlerQueue->insert(QueueRepository::TABLE_NAME, $fieldArray);
-                $uid = $connectionForCrawlerQueue->lastInsertId(QueueRepository::TABLE_NAME, 'qid');
+                $uid = $connectionForCrawlerQueue->lastInsertId();
                 $rows[] = $uid;
                 $urlAdded = true;
 
@@ -535,13 +534,10 @@ class CrawlerController implements LoggerAwareInterface
      * URL reading
      *
      ************************************/
-
     /**
      * Read URL for single queue entry
      *
-     * @param integer $queueId
      * @param boolean $force If set, will process even if exec_time has been set!
-     *
      * @return int|null
      */
     public function readUrl(int $queueId, bool $force = false, string $processId = '')
@@ -555,8 +551,7 @@ class CrawlerController implements LoggerAwareInterface
             return null;
         }
 
-        /** @var BeforeQueueItemAddedEvent $event */
-        $event = $this->eventDispatcher->dispatch(new BeforeQueueItemAddedEvent((int) $queueId, $queueRec));
+        $event = $this->eventDispatcher->dispatch(new BeforeQueueItemAddedEvent($queueId, $queueRec));
         $queueRec = $event->getQueueRecord();
 
         // Set exec_time to lock record:
@@ -568,17 +563,12 @@ class CrawlerController implements LoggerAwareInterface
 
         GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(QueueRepository::TABLE_NAME)
             ->update(QueueRepository::TABLE_NAME, $field_array, [
-                'qid' => (int) $queueId,
+                'qid' => $queueId,
             ]);
 
         $result = $this->queueExecutor->executeQueueItem($queueRec, $this);
-        if ($result === 'ERROR' || ($result['content'] ?? null) === null) {
-            $resultData = 'An errors happened';
-        } else {
-            /** @var JsonCompatibilityConverter $jsonCompatibilityConverter */
-            $jsonCompatibilityConverter = GeneralUtility::makeInstance(JsonCompatibilityConverter::class);
-            $resultData = $jsonCompatibilityConverter->convert($result['content']);
-
+        if (!($result === 'ERROR' || ($result['content'] ?? null) === null)) {
+            $resultData = json_decode($result['content'], true);
             //atm there's no need to point to specific pollable extensions
             if (
                 is_array($resultData)
@@ -624,7 +614,7 @@ class CrawlerController implements LoggerAwareInterface
             QueueRepository::TABLE_NAME
         );
         $connectionForCrawlerQueue->insert(QueueRepository::TABLE_NAME, $field_array);
-        $queueId = $field_array['qid'] = $connectionForCrawlerQueue->lastInsertId(QueueRepository::TABLE_NAME, 'qid');
+        $queueId = $field_array['qid'] = $connectionForCrawlerQueue->lastInsertId();
         $result = $this->queueExecutor->executeQueueItem($field_array, $this);
 
         // Set result in log which also denotes the end of the processing of this entry.
@@ -677,7 +667,6 @@ class CrawlerController implements LoggerAwareInterface
         $this->downloadUrls = [];
 
         // Drawing tree:
-        /** @var PageTreeView $tree */
         $tree = GeneralUtility::makeInstance(PageTreeView::class);
         $perms_clause = $this->getBackendUser()->getPagePermsClause(Permission::PAGE_SHOW);
         $tree->init(empty($perms_clause) ? '' : ('AND ' . $perms_clause));
@@ -687,7 +676,7 @@ class CrawlerController implements LoggerAwareInterface
             // Set root row:
             $tree->tree[] = [
                 'row' => $pageInfo,
-                'HTML' => $this->iconFactory->getIconForRecord('pages', $pageInfo, Icon::SIZE_SMALL),
+                'HTML' => $this->iconFactory->getIconForRecord('pages', $pageInfo, IconSize::SMALL),
             ];
         }
 

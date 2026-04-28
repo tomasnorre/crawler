@@ -46,7 +46,6 @@ abstract class AbstractBackendModuleController
     #[Required]
     public function setExtensionSettings(): void
     {
-        /** @var ExtensionConfigurationProvider $configurationProvider */
         $configurationProvider = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
         $this->extensionSettings = $configurationProvider->getExtensionConfiguration();
     }

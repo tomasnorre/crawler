@@ -25,12 +25,15 @@ use AOE\Crawler\Service\UrlService;
 use PHPUnit\Framework\Attributes\Test;
 use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Authentication\GroupResolver;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 class ConfigurationServiceTest extends FunctionalTestCase
 {
     use ProphecyTrait;
+
+    protected array $coreExtensionsToLoad = ['seo'];
 
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
     private ConfigurationService $subject;
@@ -72,7 +75,8 @@ class ConfigurationServiceTest extends FunctionalTestCase
         $configurationService = GeneralUtility::makeInstance(
             ConfigurationService::class,
             $urlService,
-            $configurationRepository
+            $configurationRepository,
+            GeneralUtility::makeInstance(GroupResolver::class)
         );
 
         $configurations = $configurationService->getConfigurationFromDatabase(1, []);

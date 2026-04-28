@@ -25,6 +25,7 @@ namespace AOE\Crawler\Helper\Sleeper;
  */
 final class NullSleeper implements SleeperInterface
 {
+    #[\Override]
     public function sleep(int $seconds): void
     {
     }

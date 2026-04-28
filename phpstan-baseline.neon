@@ -1,6 +1,15 @@
 parameters:
 	ignoreErrors:
 		-
+			message: '''
+				#^Call to deprecated method setMetaInformation\(\) of class TYPO3\\CMS\\Backend\\Template\\Components\\DocHeaderComponent\:
+				since v14, will be removed in v15\. Use setPageBreadcrumb\(\) instead\.$#
+			'''
+			identifier: method.deprecated
+			count: 1
+			path: Classes/Controller/Backend/AbstractBackendModuleController.php
+
+		-
 			message: '#^Cannot access offset ''_flush'' on array\|object\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -37,7 +46,7 @@ parameters:
 			path: Classes/Controller/Backend/BackendModuleCrawlerProcessController.php
 
 		-
-			message: '#^Class cognitive complexity is 96, keep it under 28$#'
+			message: '#^Class cognitive complexity is 95, keep it under 28$#'
 			identifier: complexity.classLike
 			count: 1
 			path: Classes/Controller/CrawlerController.php
@@ -68,24 +77,12 @@ parameters:
 
 		-
 			message: '''
-				#^Call to deprecated method getExpressionBuilder\(\) of class TYPO3\\CMS\\Core\\Database\\Connection\:
-				Use \{@see createExpressionBuilder\(\)\} instead\.$#
+				#^Call to deprecated method makeLinkButton\(\) of class TYPO3\\CMS\\Backend\\Template\\Components\\ButtonBar\:
+				since v14, will be removed in v15\. Inject ComponentFactory and use ComponentFactory\:\:createLinkButton\(\) instead\.$#
 			'''
 			identifier: method.deprecated
 			count: 1
-			path: Classes/Domain/Repository/QueueRepository.php
-
-		-
-			message: '#^Cannot access offset ''alturl'' on array\|bool\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Classes/Service/BackendModuleLogService.php
-
-		-
-			message: '#^Cannot access offset ''procInstructions'' on array\|bool\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Classes/Service/BackendModuleLogService.php
+			path: Classes/Service/BackendModuleLinkService.php
 
 		-
 			message: '#^Method AOE\\Crawler\\Service\\BackendModuleLogService\:\:addRows\(\) should return non\-empty\-list\<array\{titleRowSpan\: int\<1, max\>, colSpan\: int, title\: string, noEntries\?\: string, trClass\?\: string, qid\?\: array\{link\: TYPO3\\CMS\\Core\\Http\\Uri, link\-text\: string\}, refresh\?\: array\{link\: TYPO3\\CMS\\Core\\Http\\Uri, link\-text\: TYPO3\\CMS\\Core\\Imaging\\Icon, warning\: string\|TYPO3\\CMS\\Core\\Imaging\\Icon\}, columns\?\: array\{url\: mixed, scheduled\: string, exec_time\: string, result_log\: string, result_status\: string, feUserGroupList\: string, procInstructions\: string, set_id\: string, \.\.\.\}\}\> but returns array\{non\-empty\-list\<array\>, array\}\.$#'
@@ -102,11 +99,5 @@ parameters:
 		-
 			message: '#^Class cognitive complexity is 86, keep it under 28$#'
 			identifier: complexity.classLike
-			count: 1
-			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: '#^Offset ''usergroup_cached_list'' might not exist on array\|null\.$#'
-			identifier: offsetAccess.notFound
 			count: 1
 			path: Classes/Service/ConfigurationService.php

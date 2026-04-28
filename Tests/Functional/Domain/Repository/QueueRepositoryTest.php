@@ -36,6 +36,8 @@ class QueueRepositoryTest extends FunctionalTestCase
 {
     use BackendRequestTestTrait;
 
+    protected array $coreExtensionsToLoad = ['seo'];
+
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     protected \AOE\Crawler\Domain\Repository\QueueRepository $subject;

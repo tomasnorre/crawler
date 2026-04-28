@@ -19,25 +19,29 @@ namespace AOE\Crawler\Tests\Unit;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Controller\CrawlerController;
+use AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy;
 use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
 use AOE\Crawler\QueueExecutor;
 use AOE\Crawler\Tests\Unit\CrawlStrategy\CallbackObjectForTesting;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\QueueExecutor::class)]
-#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Configuration\ExtensionConfigurationProvider::class)]
-#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Converter\JsonCompatibilityConverter::class)]
-#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy::class)]
-#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\CrawlStrategy\CrawlStrategyFactory::class)]
+#[CoversClass(QueueExecutor::class)]
+#[CoversClass(ExtensionConfigurationProvider::class)]
+#[CoversClass(CallbackExecutionStrategy::class)]
+#[CoversClass(CrawlStrategyFactory::class)]
 class QueueExecutorTest extends UnitTestCase
 {
     use ProphecyTrait;
 
-    protected \AOE\Crawler\QueueExecutor $queueExecutor;
+    protected QueueExecutor $queueExecutor;
 
     /**
      * @var CrawlerController
@@ -59,22 +63,23 @@ class QueueExecutorTest extends UnitTestCase
         );
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('invalidArgumentsReturnErrorInExecuteQueueItemDataProvider')]
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[DataProvider('invalidArgumentsReturnErrorInExecuteQueueItemDataProvider')]
+    #[Test]
     public function invalidArgumentsReturnErrorInExecuteQueueItem(array $queueItem): void
     {
         $result = $this->queueExecutor->executeQueueItem($queueItem, $this->mockedCrawlerController);
         self::assertEquals('ERROR', $result);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function executeQueueItemCallback(): void
     {
         $queueItem = [
-            'parameters' => serialize([
+            'parameters' => json_encode([
                 '_CALLBACKOBJ' => CallbackObjectForTesting::class,
             ]),
         ];
+
         $result = $this->queueExecutor->executeQueueItem($queueItem, $this->mockedCrawlerController);
 
         self::assertIsArray($result);

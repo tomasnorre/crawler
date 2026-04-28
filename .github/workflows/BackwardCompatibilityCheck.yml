@@ -16,11 +16,11 @@ jobs:
     strategy:
       matrix:
         php-version:
-          - '8.1'
+          - '8.2'
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v5"
+        uses: "actions/checkout@v6"
         with:
           fetch-depth: 0
 
@@ -35,7 +35,7 @@ jobs:
 
 
       - name: "Cache dependencies"
-        uses: "actions/cache@v4"
+        uses: "actions/cache@v5"
         with:
           path: |
             ~/.composer/cache
@@ -45,8 +45,5 @@ jobs:
 
       - name: "Roave Backward Compatibility Check"
         run: |
-          # To ensure compability with the roave tool.
-          composer remove --dev typo3/testing-framework ssch/typo3-rector symplify/easy-coding-standard typo3/testing-framework infection/infection
-          rm -rf .Build composer.lock
           composer require --dev roave/backward-compatibility-check:"^8.6"
           .Build/bin/roave-backward-compatibility-check

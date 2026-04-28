@@ -32,6 +32,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class FlushQueueCommand extends Command
 {
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('Remove queue entries and perform a cleanup');
@@ -66,11 +67,11 @@ It will remove queue entries and perform a cleanup.' . chr(10) . chr(10) .
      * --- Remove all pending queue-entries for all pages
      * $ typo3 crawler:flushQueue pending
      */
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $queueFilter = new QueueFilter($input->getArgument('mode'));
 
-        /** @var QueueRepository $queueRepository */
         $queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
 
         switch ($queueFilter) {

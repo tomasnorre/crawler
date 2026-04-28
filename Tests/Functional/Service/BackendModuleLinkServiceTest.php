@@ -26,7 +26,9 @@ use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
+use TYPO3\CMS\Core\Http\NormalizedParams;
 use TYPO3\CMS\Core\Http\ServerRequest;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Routing\Route;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
@@ -54,6 +56,10 @@ class BackendModuleLinkServiceTest extends FunctionalTestCase
                 'packageName' => 'tomasnorre/crawler',
             ]));
 
+        if ((new Typo3Version())->getMajorVersion() >= 14) {
+            $request = $request->withAttribute('normalizedParams', new NormalizedParams([], [], '', ''));
+        }
+
         $this->moduleTemplate = (GeneralUtility::makeInstance(ModuleTemplateFactory::class))->create($request);
     }
 
@@ -64,7 +70,11 @@ class BackendModuleLinkServiceTest extends FunctionalTestCase
 
         self::assertIsString($link);
         self::assertStringContainsString('Refresh', $link);
-        self::assertStringContainsString('href="/typo3/module/page/crawler/process', $link);
+        if ((new Typo3Version())->getMajorVersion() < 14) {
+            self::assertStringContainsString('href="/typo3/module/page/crawler/process', $link);
+        } else {
+            self::assertStringContainsString('href="typo3/module/page/crawler/process', $link);
+        }
         self::assertStringContainsString('SET%5B%27crawleraction%27%5D=crawleraction&amp;id=1', $link);
     }
 
@@ -83,7 +93,11 @@ class BackendModuleLinkServiceTest extends FunctionalTestCase
 
         self::assertIsString($link);
         self::assertStringContainsString('Add process', $link);
-        self::assertStringContainsString('href="/typo3/module/page/crawler/process', $link);
+        if ((new Typo3Version())->getMajorVersion() < 14) {
+            self::assertStringContainsString('href="/typo3/module/page/crawler/process', $link);
+        } else {
+            self::assertStringContainsString('href="typo3/module/page/crawler/process', $link);
+        }
         self::assertStringContainsString('action=addProcess', $link);
     }
 
@@ -100,7 +114,11 @@ class BackendModuleLinkServiceTest extends FunctionalTestCase
 
         self::assertIsString($link);
         self::assertStringContainsString('Show only running processes', $link);
-        self::assertStringContainsString('href="/typo3/module/page/crawler/process', $link);
+        if ((new Typo3Version())->getMajorVersion() < 14) {
+            self::assertStringContainsString('href="/typo3/module/page/crawler/process', $link);
+        } else {
+            self::assertStringContainsString('href="typo3/module/page/crawler/process', $link);
+        }
         self::assertStringContainsString('processListMode=simple', $link);
     }
 
@@ -111,7 +129,11 @@ class BackendModuleLinkServiceTest extends FunctionalTestCase
 
         self::assertIsString($link);
         self::assertStringContainsString('Show finished and terminated processes', $link);
-        self::assertStringContainsString('href="/typo3/module/page/crawler/process', $link);
+        if ((new Typo3Version())->getMajorVersion() < 14) {
+            self::assertStringContainsString('href="/typo3/module/page/crawler/process', $link);
+        } else {
+            self::assertStringContainsString('href="typo3/module/page/crawler/process', $link);
+        }
         self::assertStringContainsString('processListMode=detail', $link);
     }
 
@@ -122,7 +144,11 @@ class BackendModuleLinkServiceTest extends FunctionalTestCase
 
         self::assertIsString($link);
         self::assertStringContainsString('Stop all processes and disable crawling', $link);
-        self::assertStringContainsString('href="/typo3/module/page/crawler/process', $link);
+        if ((new Typo3Version())->getMajorVersion() < 14) {
+            self::assertStringContainsString('href="/typo3/module/page/crawler/process', $link);
+        } else {
+            self::assertStringContainsString('href="typo3/module/page/crawler/process', $link);
+        }
         self::assertStringContainsString('action=stopCrawling', $link);
     }
 
@@ -133,7 +159,11 @@ class BackendModuleLinkServiceTest extends FunctionalTestCase
 
         self::assertIsString($link);
         self::assertStringContainsString('Enable crawling', $link);
-        self::assertStringContainsString('href="/typo3/module/page/crawler/process', $link);
+        if ((new Typo3Version())->getMajorVersion() < 14) {
+            self::assertStringContainsString('href="/typo3/module/page/crawler/process', $link);
+        } else {
+            self::assertStringContainsString('href="typo3/module/page/crawler/process', $link);
+        }
         self::assertStringContainsString('action=resumeCrawling', $link);
     }
 }

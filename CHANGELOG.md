@@ -1,20 +1,34 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 12.0.11-dev
+## Crawler 13.0.0-dev
 
 ### Added
+* PHP 8.5 Support [@tomasnorre](https://github.com/tomasnorre)
+* TYPO3 14 Support [@tomasnorre](https://github.com/tomasnorre)
 
 ### Changed
+* Updated symfony-components dependencies to ^7.2
+* Updated PHPUnit to ^11.5
+* sitemap_priority is no longer added from crawler, only when typo3-cms/seo is installed [@tomasnorre](https://github.com/tomasnorre)
+* Switched to NormalizedParams in SubProcessExecutionStrategy [@tomasnorre](https://github.com/tomasnorre)
 * Replace deprecated applicationData with request attributes [@tomasnorre](https://github.com/tomasnorre)
 
 ### Fixed
+* Switch to GroupResolver for beGroups [@tomasnorre](https://github.com/tomasnorre)
 
 ### Deprecated
 #### Classes
 #### Functions & Properties
 
 ### Removed
+* PHP 8.1 Support [@tomasnorre](https://github.com/tomasnorre)
+* TYPO3 12 LTS Support [@tomasnorre](https://github.com/tomasnorre)
+* Remove CodeCeption Tests and its dependencies [@tomasnorre](https://github.com/tomasnorre)
+* Remove pageVeto in PageService [@tomasnorre](https://github.com/tomasnorre)
+
 #### Classes
+* JsonCompatibilityConverter
+
 #### Functions & Properties
 
 ## Crawler 12.0.10
@@ -225,6 +239,16 @@ Crawler 12.0.0 was released on April 21st, 2024
 * !!! QueueRepository->getPerformanceData()
 * !!! QueueRepository->findByQueueId()
 
+## Crawler 11.0.12
+
+Crawler 11.0.12 was released on March 23rd, 2026
+
+### Added
+* Extract error information in SubProcess crawl strategy [@cweiske](https://github.com/cweiske)
+
+### Fixed
+* "Scheduled" and "Run-time" column values in backend log [cweiske](https://github.com/cweiske)
+* Clear page cache before crawling [cweiske](https://github.com/cweiske)
 ## Crawler 11.0.11
 
 Crawler 11.0.11 was released on January 20th, 2025

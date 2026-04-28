@@ -23,8 +23,8 @@ use AOE\Crawler\Controller\Backend\Helper\UrlBuilder;
 use Psr\Http\Message\UriInterface;
 use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
-use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Imaging\IconSize;
 use TYPO3\CMS\Core\Localization\LanguageService;
 
 class BackendModuleLinkService
@@ -177,7 +177,7 @@ class BackendModuleLinkService
         $buttonBar = $moduleTemplate->getDocHeaderComponent()->getButtonBar();
         return (string) $buttonBar->makeLinkButton()
             ->setHref((string) $href)
-            ->setIcon($this->iconFactory->getIcon($iconIdentifier, Icon::SIZE_SMALL))
+            ->setIcon($this->iconFactory->getIcon($iconIdentifier, IconSize::SMALL))
             ->setTitle($title)
             ->setShowLabelText(true);
     }

@@ -51,9 +51,5 @@ tools/
 .devbox/.ddev/providers/
 .devbox/.ddev/xhprof/
 
-# Codeception Files
-Tests/Acceptance/_data/*
-Tests/Acceptance/_output/*
-
 # Generated documentation
 Documentation-GENERATED-temp

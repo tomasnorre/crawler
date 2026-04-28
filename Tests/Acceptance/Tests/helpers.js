@@ -8,7 +8,7 @@ export async function loginBackend(page) {
 }
 
 export async function openCrawlerModule(page) {
-    await page.getByText('ext_icon_crawler Crawler').click();
+    await page.getByText('Crawler module').click();
 }
 
 export async function openCrawlerModuleCrawlerProcesses(page) {

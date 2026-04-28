@@ -19,9 +19,6 @@ namespace AOE\Crawler\Controller\Backend\Helper;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Converter\JsonCompatibilityConverter;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-
 /**
  * @internal since v9.2.5
  */
@@ -34,11 +31,11 @@ class ResultHandler
     {
         $content = '';
         if (array_key_exists('result_data', $resultRow)) {
-            $requestContent = self::getJsonCompatibilityConverter()->convert($resultRow['result_data']) ?: [];
+            $requestContent = json_decode((string) $resultRow['result_data'], true) ?: [];
             if (is_bool($requestContent) || !array_key_exists('content', $requestContent)) {
                 return $content;
             }
-            $requestResult = self::getJsonCompatibilityConverter()->convert($requestContent['content']);
+            $requestResult = json_decode((string) $requestContent['content'], true);
 
             if (is_array($requestResult) && array_key_exists('log', $requestResult)) {
                 $content = implode(chr(10), $requestResult['log']);
@@ -56,7 +53,7 @@ class ResultHandler
             return 'Content index does not exists in requestContent array';
         }
 
-        $requestResult = self::getJsonCompatibilityConverter()->convert($requestContent['content']);
+        $requestResult = json_decode((string) $requestContent['content'], true);
         if (is_array($requestResult)) {
             if (empty($requestResult['errorlog'])) {
                 return 'OK';
@@ -75,15 +72,10 @@ class ResultHandler
         if (empty($resultData)) {
             return [];
         }
-        $requestResult = self::getJsonCompatibilityConverter()->convert($resultData['content']);
+        $requestResult = json_decode((string) $resultData['content'], true);
         if (is_bool($requestResult)) {
             return [];
         }
         return $requestResult['vars'] ?? [];
-    }
-
-    private static function getJsonCompatibilityConverter(): JsonCompatibilityConverter
-    {
-        return GeneralUtility::makeInstance(JsonCompatibilityConverter::class);
     }
 }

@@ -24,6 +24,7 @@ use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use Doctrine\DBAL\ArrayParameterType;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Authentication\GroupResolver;
 use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
@@ -49,7 +50,8 @@ class ConfigurationService
 
     public function __construct(
         private readonly UrlService $urlService,
-        private readonly ConfigurationRepository $configurationRepository
+        private readonly ConfigurationRepository $configurationRepository,
+        private readonly GroupResolver $groupResolver,
     ) {
         $this->extensionSettings = GeneralUtility::makeInstance(
             ExtensionConfigurationProvider::class
@@ -137,7 +139,7 @@ class ConfigurationService
         foreach ($crawlerConfigurations as $configurationRecord) {
             // check access to the configuration record
             if (empty($configurationRecord['begroups']) || $this->getBackendUser()->isAdmin() || UserService::hasGroupAccess(
-                $this->getBackendUser()->user['usergroup_cached_list'],
+                implode(',', $this->groupResolver->resolveGroupsForUser([$this->getBackendUser()], 'be_groups')),
                 $configurationRecord['begroups']
             )) {
                 $pidOnlyList = implode(',', GeneralUtility::trimExplode(',', $configurationRecord['pidsonly'], true));
@@ -152,7 +154,6 @@ class ConfigurationService
 
                     // don't overwrite previously defined paramSets
                     if (!isset($res[$key])) {
-                        /** @var TypoScriptStringFactory $typoScriptStringFactory */
                         $typoScriptStringFactory = GeneralUtility::makeInstance(TypoScriptStringFactory::class);
                         $typoScriptTree = $typoScriptStringFactory->parseFromString(
                             $configurationRecord['processing_instruction_parameters_ts'],
@@ -203,7 +204,6 @@ class ConfigurationService
         $pidList = [];
 
         if (!empty($excludeString)) {
-            /** @var PageTreeView $tree */
             $tree = GeneralUtility::makeInstance(PageTreeView::class);
             $tree->init('AND ' . $this->getBackendUser()->getPagePermsClause(Permission::PAGE_SHOW));
 
@@ -389,7 +389,7 @@ class ConfigurationService
     private function expandPidList(array $treeCache, int $pid, int $depth, PageTreeView $tree, array $pidList): array
     {
         if (empty($treeCache[$pid][$depth])) {
-            $tree->reset();
+            //$tree->reset();
             $tree->getTree($pid, $depth);
             $treeCache[$pid][$depth] = $tree->tree;
         }

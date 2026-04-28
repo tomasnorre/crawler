@@ -19,9 +19,6 @@ from serialized to json data. If you are experiencing problems with the old data
 still in your database, you can flush your complete crawler queue and the
 problem should be solved.
 
-We have build in a `JsonCompatibilityConverter` to ensure that this should not
-happen, but in case of it run:
-
 ::
 
     $ vendor/bin/typo3 crawler:flushQueue all

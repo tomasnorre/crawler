@@ -25,16 +25,19 @@ namespace AOE\Crawler\Process;
  */
 class UnixProcessManager implements ProcessManagerInterface
 {
+    #[\Override]
     public function processExists(int $pid): bool
     {
         return file_exists('/proc/' . $pid);
     }
 
+    #[\Override]
     public function killProcess(int $pid): void
     {
         posix_kill($pid, 9);
     }
 
+    #[\Override]
     public function findDispatcherProcesses(): array
     {
         $returnArray = [];

@@ -36,6 +36,7 @@ class QueueFilter implements \Stringable
         $this->queueFilter = $queueFilter;
     }
 
+    #[\Override]
     public function __toString(): string
     {
         return $this->queueFilter;
