@@ -6,7 +6,7 @@
 Pollable processing instructions
 ================================
 
-.. warning::
+.. Versionchanged:: 13.0.0
     The pollable functionality has been removed, as it was never really used
     to my knowledge, if we need to reimplement it, we would go a different route.
 
