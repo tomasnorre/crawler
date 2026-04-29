@@ -60,8 +60,6 @@ class CrawlerController implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
-    public const CLI_STATUS_POLLABLE_PROCESSED = 8;
-
     public int $setID = 0;
     public string $processID = '';
     public array $duplicateTrack = [];
@@ -535,7 +533,7 @@ class CrawlerController implements LoggerAwareInterface
      *
      ************************************/
     /**
-     * Read URL for single queue entry
+     * Read URL for a single queue entry
      *
      * @param boolean $force If set, will process even if exec_time has been set!
      * @return int|null
@@ -567,27 +565,6 @@ class CrawlerController implements LoggerAwareInterface
             ]);
 
         $result = $this->queueExecutor->executeQueueItem($queueRec, $this);
-        if (!($result === 'ERROR' || ($result['content'] ?? null) === null)) {
-            $resultData = json_decode($result['content'], true);
-            //atm there's no need to point to specific pollable extensions
-            if (
-                is_array($resultData)
-                && isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'])
-                && is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'])
-            ) {
-                foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'] as $pollable) {
-                    // only check the success value if the instruction is runnig
-                    // it is important to name the pollSuccess key same as the procInstructions key
-                    if (is_array($resultData['parameters']['procInstructions'])
-                        && in_array($pollable, $resultData['parameters']['procInstructions'], true)
-                    ) {
-                        if (!empty($resultData['success'][$pollable])) {
-                            $ret |= self::CLI_STATUS_POLLABLE_PROCESSED;
-                        }
-                    }
-                }
-            }
-        }
         // Set result in log which also denotes the end of the processing of this entry.
         $field_array = [
             'result_data' => json_encode($result),
