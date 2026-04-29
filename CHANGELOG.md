@@ -10,7 +10,8 @@
 * Updated symfony-components dependencies to ^7.2
 * Updated PHPUnit to ^11.5
 * sitemap_priority is no longer added from crawler, only when typo3-cms/seo is installed [@tomasnorre](https://github.com/tomasnorre)
-  * Switched to NormalizedParams in SubProcessExecutionStrategy [@tomasnorre](https://github.com/tomasnorre)
+* Switched to NormalizedParams in SubProcessExecutionStrategy [@tomasnorre](https://github.com/tomasnorre)
+* Replace deprecated applicationData with request attributes [@tomasnorre](https://github.com/tomasnorre)
 
 ### Fixed
 * Switch to GroupResolver for beGroups [@tomasnorre](https://github.com/tomasnorre)
@@ -40,7 +41,7 @@ Crawler 12.0.10 was released on October 28th, 2025
 * Automatic reload process status without page reload [@tomasnorre](https://github.com/tomasnorre)
 
 ### Changed
-* ProcessCleanUpHook is splitted into more classes to strive for seperations of concerns [@tomasnorre](https://github.com/tomasnorre)
+* ProcessCleanUpHook is split into more classes to strive for seperations of concerns [@tomasnorre](https://github.com/tomasnorre)
 
 ### Fixed
 * Set guzzle connect timeout to 5 seconds [@cweiske](https://github.com/cweiske)

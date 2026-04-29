@@ -30,7 +30,6 @@ use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Cache\CacheInstruction;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 #[CoversClass(CrawlerInitialization::class)]
@@ -44,21 +43,20 @@ class CrawlerInitializationTest extends FunctionalTestCase
     {
         parent::setUp();
         $this->subject = GeneralUtility::makeInstance(CrawlerInitialization::class);
-        if ((new Typo3Version())->getMajorVersion() < 14) {
-            $tsfe = $this->prophesize(TypoScriptFrontendController::class);
-            $GLOBALS['TSFE'] = $tsfe->reveal();
-            $GLOBALS['TSFE']->id = random_int(0, 10000);
-        }
     }
 
-    #[DataProvider('processSetsTSFEApplicationDataDataProvider')]
+    #[DataProvider('processSetsCrawlerDataDataProvider')]
     #[Test]
-    public function processSetsTSFEApplicationData(string $feGroups, array $expectedGroups): void
+    public function processSetsCrawlerData(string $feGroups, array $expectedGroups): void
     {
-        if ((new Typo3Version())->getMajorVersion() === 14) {
-            self::markTestSkipped('Needs to updated with issue #1137');
+        $GLOBALS['TSFE'] = (object) [
+            'id' => 1234,
+        ];
+
+        $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
+        if ($typo3Version->getMajorVersion() < 13) {
+            $this->markTestSkipped('Only tested with TYPO3 13+');
         }
-        self::assertEmpty($GLOBALS['TSFE']->applicationData);
 
         $queueParameters = [
             'url' => 'https://crawler-devbox.ddev.site',
@@ -69,7 +67,23 @@ class CrawlerInitializationTest extends FunctionalTestCase
 
         $request = $this->prophesize(ServerRequestInterface::class);
         $request->getAttribute('tx_crawler')->willReturn($queueParameters);
+
         $request->getAttribute('frontend.cache.instruction')->willReturn(new CacheInstruction());
+
+        $request->withAttribute('tx_crawler', [
+            'forceIndexing' => true,
+            'running' => true,
+            'parameters' => $queueParameters,
+            'log' => ['User Groups: ' . ($queueParameters['feUserGroupList'] ?? '')],
+        ])->willReturn($request);
+
+        $attributes = [
+            'forceIndexing' => true,
+            'running' => true,
+            'parameters' => $queueParameters,
+            'log' => ['User Groups: ' . $queueParameters['feUserGroupList']],
+        ];
+        $request->getAttribute('tx_crawler', [])->willReturn($attributes);
 
         $handlerResponse = new Response();
         $handler = $this->prophesize(RequestHandlerInterface::class);
@@ -77,19 +91,20 @@ class CrawlerInitializationTest extends FunctionalTestCase
 
         $response = $this->subject->process($request->reveal(), $handler->reveal());
 
-        self::assertTrue($GLOBALS['TSFE']->applicationData['forceIndexing']);
-        self::assertTrue($GLOBALS['TSFE']->applicationData['tx_crawler']['running']);
-        self::assertEquals($queueParameters, $GLOBALS['TSFE']->applicationData['tx_crawler']['parameters']);
-        self::assertEquals($expectedGroups, $GLOBALS['TSFE']->applicationData['tx_crawler']['log']);
-
-        self::assertArrayHasKey('id', $GLOBALS['TSFE']->applicationData['tx_crawler']['vars']);
-        self::assertArrayHasKey('gr_list', $GLOBALS['TSFE']->applicationData['tx_crawler']['vars']);
-        self::assertArrayHasKey('no_cache', $GLOBALS['TSFE']->applicationData['tx_crawler']['vars']);
-
         self::assertTrue($response->hasHeader('X-T3Crawler-Meta'));
+        $meta = unserialize($response->getHeaderLine('X-T3Crawler-Meta'));
+
+        self::assertTrue($meta['forceIndexing']);
+        self::assertTrue($meta['running']);
+        self::assertEquals($queueParameters, $meta['parameters']);
+        self::assertEquals($expectedGroups, $meta['log']);
+
+        self::assertArrayHasKey('id', $meta['vars']);
+        self::assertArrayHasKey('gr_list', $meta['vars']);
+        self::assertArrayHasKey('no_cache', $meta['vars']);
     }
 
-    public static function processSetsTSFEApplicationDataDataProvider(): iterable
+    public static function processSetsCrawlerDataDataProvider(): iterable
     {
         yield 'FE Groups set' => [
             'feGroups' => '1,2',
