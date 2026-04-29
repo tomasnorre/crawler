@@ -6,6 +6,12 @@
 Pollable processing instructions
 ================================
 
+.. Versionchanged:: 13.0.0
+    The pollable functionality has been removed, as it was never really used
+    to my knowledge, if we need to reimplement it, we would go a different route.
+
+    Please reach out, if you need this functionality.
+
 Some processing instructions are never executed on the "client side"
 (the TYPO3 frontend that is called by the crawler). This happens for
 example if a try to staticpub a page containing non-cacheable

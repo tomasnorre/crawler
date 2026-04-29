@@ -25,6 +25,7 @@
 * TYPO3 12 LTS Support [@tomasnorre](https://github.com/tomasnorre)
 * Remove CodeCeption Tests and its dependencies [@tomasnorre](https://github.com/tomasnorre)
 * Remove pageVeto in PageService [@tomasnorre](https://github.com/tomasnorre)
+* Pollable processing instructions  [@tomasnorre](https://github.com/tomasnorre)
 
 #### Classes
 * JsonCompatibilityConverter

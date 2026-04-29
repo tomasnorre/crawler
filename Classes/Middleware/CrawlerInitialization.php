@@ -77,29 +77,7 @@ class CrawlerInitialization implements MiddlewareInterface
             'no_cache' => $noCache,
         ];
 
-        $this->runPollSuccessHooks($crawlerData);
-
         // Send log data for crawler (serialized content)
         return $response->withHeader('X-T3Crawler-Meta', serialize($crawlerData));
-    }
-
-    /**
-     * Required because some extensions (staticpub) might never be requested to run due to some Core side effects
-     * and since this is considered as error the crawler should handle it properly
-     */
-    private function runPollSuccessHooks(array &$crawlerData): void
-    {
-        $procInstructions = $crawlerData['content']['parameters']['procInstructions'] ?? null;
-        if (!is_array($procInstructions)) {
-            return;
-        }
-
-        foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['pollSuccess'] ?? [] as $pollable) {
-            if (in_array($pollable, $procInstructions, true)) {
-                if (empty($crawlerData['success'][$pollable])) {
-                    $crawlerData['errorlog'][] = 'Error: Pollable extension (' . $pollable . ') did not complete successfully.';
-                }
-            }
-        }
     }
 }
