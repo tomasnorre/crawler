@@ -2,19 +2,8 @@
 
 ## Crawler 12.0.11-dev
 
-### Added
-
-### Changed
-
-### Fixed
-
-### Deprecated
-#### Classes
-#### Functions & Properties
-
-### Removed
-#### Classes
-#### Functions & Properties
+### Security
+* Switch from serialize to json_encode [@tomasnorre](https://github.com/tomasnorre)
 
 ## Crawler 12.0.10
 Crawler 12.0.10 was released on October 28th, 2025
