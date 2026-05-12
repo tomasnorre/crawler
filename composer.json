@@ -90,6 +90,11 @@
             "typo3/class-alias-loader": true,
             "typo3/cms-composer-installers": true
         },
+        "audit": {
+            "ignore": [
+                "PKSA-4g5g-4rkv-myqs"
+            ]
+        },
         "bin-dir": ".Build/bin",
         "preferred-install": {
             "*": "dist",
