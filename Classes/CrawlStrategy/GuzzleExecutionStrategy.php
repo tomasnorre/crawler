@@ -51,7 +51,7 @@ class GuzzleExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
         try {
             $url = (string) $url;
             $response = $this->getResponse($url, $options);
-            return unserialize($response->getHeaderLine('X-T3Crawler-Meta'));
+            return json_decode($response->getHeaderLine('X-T3Crawler-Meta'));
         } catch (RequestException $e) {
             $response = $e->getResponse();
             $message = ($response ? $response->getStatusCode() : 0)

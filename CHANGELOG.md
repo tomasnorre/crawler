@@ -2,6 +2,9 @@
 
 ## Crawler 11.0.12
 
+### Security
+* Switch from serialize to json_encode [@tomasnorre](https://github.com/tomasnorre)
+
 Crawler 11.0.12 was released on March 23rd, 2026
 
 ### Added
