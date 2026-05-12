@@ -40,9 +40,7 @@
             "typo3/class-alias-loader": true
         },
         "audit": {
-            "ignore": [
-                "PKSA-4g5g-4rkv-myqs"
-            ]
+            "block-insecure": false
         }
     },
     "extra": {
