@@ -214,6 +214,13 @@ Crawler 12.0.0 was released on April 21st, 2024
 * !!! QueueRepository->getPerformanceData()
 * !!! QueueRepository->findByQueueId()
 
+## Crawler 11.0.13
+
+Crawler 11.0.13 was released on May 18th, 2026
+
+### Security
+* Switch from serialize to json_encode [@tomasnorre](https://github.com/tomasnorre)
+
 ## Crawler 11.0.12
 
 Crawler 11.0.12 was released on March 23rd, 2026
