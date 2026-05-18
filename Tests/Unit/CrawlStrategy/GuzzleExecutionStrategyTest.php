@@ -48,7 +48,7 @@ class GuzzleExecutionStrategyTest extends UnitTestCase
 
         $response = $this->createPartialMock(Response::class, ['getHeaderLine']);
         $response->method('getHeaderLine')
-            ->willReturn(serialize('Crawler extension for TYPO3'));
+            ->willReturn(json_encode('Crawler extension for TYPO3'));
 
         $this->guzzleExecutionStrategy
             ->method('getResponse')
