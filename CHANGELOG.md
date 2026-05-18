@@ -1,9 +1,13 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 11.0.12
+## Crawler 11.0.13
+
+Crawler 11.0.13 was released on May 18th, 2026
 
 ### Security
 * Switch from serialize to json_encode [@tomasnorre](https://github.com/tomasnorre)
+
+## Crawler 11.0.12
 
 Crawler 11.0.12 was released on March 23rd, 2026
 
