@@ -57,7 +57,7 @@ class GuzzleExecutionStrategy implements LoggerAwareInterface, CrawlStrategyInte
             $url = (string) $url;
             $response = $this->getResponse($url, $options);
             if ($response->hasHeader('X-T3Crawler-Meta')) {
-                return unserialize($response->getHeaderLine('X-T3Crawler-Meta'));
+                return json_decode($response->getHeaderLine('X-T3Crawler-Meta'));
             }
             return [
                 'errorlog' => ['Response has no X-T3Crawler-Meta header'],

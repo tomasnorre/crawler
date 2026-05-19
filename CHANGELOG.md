@@ -1,7 +1,6 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 12.0.11-dev
-
+## Crawler 12.0.12-dev
 ### Added
 
 ### Changed
@@ -16,6 +15,12 @@
 ### Removed
 #### Classes
 #### Functions & Properties
+
+## Crawler 12.0.11
+Crawler 12.0.11 was released on May 11th, 2026
+
+### Security
+* Switch from serialize to json_encode [@tomasnorre](https://github.com/tomasnorre)
 
 ## Crawler 12.0.10
 Crawler 12.0.10 was released on October 28th, 2025
@@ -224,6 +229,13 @@ Crawler 12.0.0 was released on April 21st, 2024
 * !!! QueueRepository->getLastProcessedEntries()
 * !!! QueueRepository->getPerformanceData()
 * !!! QueueRepository->findByQueueId()
+
+## Crawler 11.0.13
+
+Crawler 11.0.13 was released on May 18th, 2026
+
+### Security
+* Switch from serialize to json_encode [@tomasnorre](https://github.com/tomasnorre)
 
 ## Crawler 11.0.12
 

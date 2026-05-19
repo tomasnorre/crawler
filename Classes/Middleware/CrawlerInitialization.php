@@ -84,7 +84,11 @@ class CrawlerInitialization implements MiddlewareInterface
         $this->runPollSuccessHooks();
 
         // Send log data for crawler (serialized content)
-        return $response->withHeader('X-T3Crawler-Meta', serialize($GLOBALS['TSFE']->applicationData['tx_crawler']));
+        $data = json_encode($GLOBALS['TSFE']->applicationData['tx_crawler']);
+        if ($data !== false) {
+            return $response->withHeader('X-T3Crawler-Meta', $data);
+        }
+        return $response;
     }
 
     /**
