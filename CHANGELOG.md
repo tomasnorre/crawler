@@ -1,5 +1,21 @@
 # Changelog TYPO3 Crawler
 
+## Crawler 12.0.12-dev
+### Added
+
+### Changed
+
+### Fixed
+* Switch to GroupResolver for beGroups [@tomasnorre](https://github.com/tomasnorre)
+
+### Deprecated
+#### Classes
+#### Functions & Properties
+
+### Removed
+#### Classes
+#### Functions & Properties
+
 ## Crawler 12.0.11
 Crawler 12.0.11 was released on May 11th, 2026
 
