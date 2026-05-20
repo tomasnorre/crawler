@@ -246,6 +246,21 @@ Crawler 12.0.0 was released on April 21st, 2024
 * !!! QueueRepository->getPerformanceData()
 * !!! QueueRepository->findByQueueId()
 
+
+## Crawler 11.0.15
+
+Crawler 11.0.15 was released on May 20th, 2026
+
+### Changed
+* Disabled automatic deployment to TYPO3 Extension Repository
+
+## Crawler 11.0.14
+
+Crawler 11.0.14 was released on May 20th, 2026
+
+### Fixed
+* Installation for non-composer projects [@tomasnorre](https://github.com/tomasnorre)
+
 ## Crawler 11.0.13
 
 Crawler 11.0.13 was released on May 18th, 2026
