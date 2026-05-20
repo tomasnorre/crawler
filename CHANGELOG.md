@@ -1,5 +1,12 @@
 # Changelog TYPO3 Crawler
 
+## Crawler 11.0.15
+
+Crawler 11.0.15 was released on May 20th, 2026
+
+### Changed
+* Disabled automatic deployment to TYPO3 Extension Repository
+
 ## Crawler 11.0.14
 
 Crawler 11.0.14 was released on May 20th, 2026
