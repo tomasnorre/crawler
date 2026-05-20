@@ -1,5 +1,12 @@
 # Changelog TYPO3 Crawler
 
+## Crawler 11.0.14
+
+Crawler 11.0.14 was released on May 20th, 2026
+
+### Fixed
+* Installation for non-composer projects [@tomasnorre](https://github.com/tomasnorre)
+
 ## Crawler 11.0.13
 
 Crawler 11.0.13 was released on May 18th, 2026
