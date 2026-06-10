@@ -22,6 +22,7 @@ namespace AOE\Crawler\Controller\Backend\Helper;
 use Psr\Http\Message\UriInterface;
 use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
+use TYPO3\CMS\Core\Http\ApplicationType;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -40,10 +41,13 @@ class UrlBuilder
         array $uriParameters = [],
         string $module = 'web_site_crawler'
     ): UriInterface {
-        $id = $GLOBALS['TYPO3_REQUEST']->getParsedBody()['id'] ?? $GLOBALS['TYPO3_REQUEST']->getQueryParams()['id'] ?? null;
-        if ($id) {
-            $uriParameters['id'] = $id;
+        $request = $GLOBALS['TYPO3_REQUEST'] ?? null;
+
+        if ($request && ApplicationType::fromRequest($request)->isBackend()) {
+            $currentQueryParams = $request->getQueryParams();
+            $uriParameters = array_merge($currentQueryParams, $uriParameters);
         }
+
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
         return $uriBuilder->buildUriFromRoute($module, $uriParameters);
     }
