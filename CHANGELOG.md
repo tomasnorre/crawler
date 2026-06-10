@@ -7,6 +7,7 @@
 
 ### Fixed
 * Switch to GroupResolver for beGroups [@tomasnorre](https://github.com/tomasnorre)
+* Add missing class for checkboxes for LogModule
 
 ### Deprecated
 #### Classes
