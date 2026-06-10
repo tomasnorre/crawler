@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+* Keep QueryParams on Refresh in Log Module [@tomasnorre](https://github.com/tomasnorre)
 * Switch to GroupResolver for beGroups [@tomasnorre](https://github.com/tomasnorre)
 
 ### Deprecated
