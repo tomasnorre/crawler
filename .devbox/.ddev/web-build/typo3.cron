@@ -1,0 +1,1 @@
+* * * * * cd /var/www/html && IS_DDEV_PROJECT=true bin/typo3 scheduler:run -vv | tee -a /var/www/html/scheduler-log.txt

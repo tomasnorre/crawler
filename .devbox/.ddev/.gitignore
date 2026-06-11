@@ -24,7 +24,8 @@
 /providers/pantheon.yaml
 /providers/platform.yaml
 /providers/upsun.yaml
-/sequelpro.spf
+/share-providers/cloudflared.sh
+/share-providers/ngrok.sh
 /traefik/config/crawler-devbox.yaml
 /traefik/certs/crawler-devbox.crt
 /traefik/certs/crawler-devbox.key
