@@ -190,6 +190,7 @@ Crawler 12.0.0 was released on April 21st, 2024
 * Fix loading middleware order to make forced indexing work again [@cweiske](https://github.com/cweiske)
 * Change tense in flush command message [@cweiske](https://github.com/cweiske)
 * Ensure that directory for lock file for enabling/disabling crawler exits
+* Add missing class for checkboxes for LogModule
 
 ### Deprecated
 
