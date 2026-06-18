@@ -46,7 +46,7 @@ jobs:
             echo "PW_GREP=@v14" >> $GITHUB_ENV
           fi
 
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Patch composer.json for forked PR
         if: >
           github.event_name == 'pull_request' &&
