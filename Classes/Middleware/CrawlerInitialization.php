@@ -27,6 +27,8 @@ use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
 use TYPO3\CMS\Core\Error\Http\ServiceUnavailableException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\Page\PageInformationCreationFailedException;
+use TYPO3\CMS\Frontend\Page\PageInformationFactory;
 
 /**
  * Evaluates HTTP headers and checks if Crawler should register itself.
@@ -42,7 +44,10 @@ class CrawlerInitialization implements MiddlewareInterface
 {
     protected Context $context;
 
-    public function __construct(?Context $context = null)
+    public function __construct(
+        private PageInformationFactory $pageInformationFactory,
+        ?Context $context = null,
+    )
     {
         $this->context = $context ?? GeneralUtility::makeInstance(Context::class);
     }
@@ -70,9 +75,17 @@ class CrawlerInitialization implements MiddlewareInterface
         $response = $handler->handle($request);
         $noCache = !$request->getAttribute('frontend.cache.instruction')->isCachingAllowed();
 
+        try {
+            $pageInformation = $request->getAttribute(
+                'frontend.page.information'
+            ) ?? $this->pageInformationFactory->create($request);
+        } catch (PageInformationCreationFailedException $exception) {
+            return $exception->getResponse();
+        }
+
         $crawlerData = $request->getAttribute('tx_crawler', []);
         $crawlerData['vars'] = [
-            'id' => $GLOBALS['TSFE']->id,
+            'id' => $pageInformation->getId(),
             'gr_list' => implode(',', $this->context->getAspect('frontend.user')->getGroupIds()),
             'no_cache' => $noCache,
         ];
