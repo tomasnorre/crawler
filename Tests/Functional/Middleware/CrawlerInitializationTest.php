@@ -45,7 +45,7 @@ class CrawlerInitializationTest extends FunctionalTestCase
     {
         parent::setUp();
         $pageInformationFactory = $this->get(PageInformationFactory::class);
-        $this->subject = GeneralUtility::makeInstance(CrawlerInitialization::class, null, $pageInformationFactory);
+        $this->subject = GeneralUtility::makeInstance(CrawlerInitialization::class, $pageInformationFactory);
     }
 
     #[DataProvider('processSetsCrawlerDataDataProvider')]
