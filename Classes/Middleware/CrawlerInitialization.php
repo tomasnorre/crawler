@@ -47,8 +47,7 @@ class CrawlerInitialization implements MiddlewareInterface
     public function __construct(
         private PageInformationFactory $pageInformationFactory,
         ?Context $context = null,
-    )
-    {
+    ) {
         $this->context = $context ?? GeneralUtility::makeInstance(Context::class);
     }
 
@@ -77,7 +76,7 @@ class CrawlerInitialization implements MiddlewareInterface
 
         try {
             $pageInformation = $request->getAttribute(
-                'frontend.page.information'
+                'frontend.page.information',
             ) ?? $this->pageInformationFactory->create($request);
         } catch (PageInformationCreationFailedException $exception) {
             return $exception->getResponse();
