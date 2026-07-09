@@ -45,7 +45,7 @@ class CrawlerInitialization implements MiddlewareInterface
     protected Context $context;
 
     public function __construct(
-        private PageInformationFactory $pageInformationFactory,
+        private readonly PageInformationFactory $pageInformationFactory,
         ?Context $context = null,
     ) {
         $this->context = $context ?? GeneralUtility::makeInstance(Context::class);
