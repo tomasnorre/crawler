@@ -101,7 +101,7 @@ class GuzzleExecutionStrategyTest extends UnitTestCase
     #[\PHPUnit\Framework\Attributes\Test]
     public function fetchUrlContentThrowsException(): void
     {
-        $message = 'Error while opening "https://not-important.tld" - 0 cURL error 6: Could not resolve host: not-important.tld (see https://curl.haxx.se/libcurl/c/libcurl-errors.html) for https://not-important.tld';
+        $message = 'Error while opening "https://not-important.tld" - 0 cURL error 6: Could not resolve host: not-important.tld (see https://curl.se/libcurl/c/libcurl-errors.html) for https://not-important.tld';
 
         $logger = $this->prophesize(LoggerInterface::class);
         $logger->debug($message, [
@@ -114,7 +114,7 @@ class GuzzleExecutionStrategyTest extends UnitTestCase
         $guzzleExecutionStrategy->setLogger($logger->reveal());
 
         self::assertStringContainsString(
-            'cURL error 6: Could not resolve host: not-important.tld (see https://curl.haxx.se/libcurl/c/libcurl-errors.html)',
+            'cURL error 6: Could not resolve host: not-important.tld (see https://curl.se/libcurl/c/libcurl-errors.html)',
             $guzzleExecutionStrategy->fetchUrlContents($url, $crawlerId)['errorlog'][0]
         );
     }
