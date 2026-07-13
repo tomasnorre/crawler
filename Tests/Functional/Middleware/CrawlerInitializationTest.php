@@ -30,6 +30,8 @@ use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Cache\CacheInstruction;
+use TYPO3\CMS\Frontend\Page\PageInformation;
+use TYPO3\CMS\Frontend\Page\PageInformationFactory;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 #[CoversClass(CrawlerInitialization::class)]
@@ -42,17 +44,14 @@ class CrawlerInitializationTest extends FunctionalTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->subject = GeneralUtility::makeInstance(CrawlerInitialization::class);
+        $pageInformationFactory = $this->get(PageInformationFactory::class);
+        $this->subject = GeneralUtility::makeInstance(CrawlerInitialization::class, $pageInformationFactory);
     }
 
     #[DataProvider('processSetsCrawlerDataDataProvider')]
     #[Test]
     public function processSetsCrawlerData(string $feGroups, array $expectedGroups): void
     {
-        $GLOBALS['TSFE'] = (object) [
-            'id' => 1234,
-        ];
-
         $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
         if ($typo3Version->getMajorVersion() < 13) {
             $this->markTestSkipped('Only tested with TYPO3 13+');
@@ -69,6 +68,11 @@ class CrawlerInitializationTest extends FunctionalTestCase
         $request->getAttribute('tx_crawler')->willReturn($queueParameters);
 
         $request->getAttribute('frontend.cache.instruction')->willReturn(new CacheInstruction());
+
+        $pageInformation = new PageInformation();
+        $pageInformation->setId(1234);
+
+        $request->getAttribute('frontend.page.information')->willReturn($pageInformation);
 
         $request->withAttribute('tx_crawler', [
             'forceIndexing' => true,
@@ -100,6 +104,7 @@ class CrawlerInitializationTest extends FunctionalTestCase
         self::assertEquals($expectedGroups, $meta['log']);
 
         self::assertArrayHasKey('id', $meta['vars']);
+        self::assertEquals(1234, $meta['vars']['id']);
         self::assertArrayHasKey('gr_list', $meta['vars']);
         self::assertArrayHasKey('no_cache', $meta['vars']);
     }

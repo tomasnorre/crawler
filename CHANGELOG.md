@@ -16,6 +16,7 @@
 ### Fixed
 * Keep QueryParams on Refresh in Log Module [@tomasnorre](https://github.com/tomasnorre)
 * Switch to GroupResolver for beGroups [@tomasnorre](https://github.com/tomasnorre)
+* Replace deprecated TSFE with frontend page information [@ghermens](https://github.com/ghermens)
 
 ### Deprecated
 #### Classes
