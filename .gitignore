@@ -14,8 +14,11 @@ nbproject
 
 # Ignore PHP/composer stuff
 .Build
+.cache/
 composer.lock
+packages/autoload-tests/
 .php_cs.cache
+public/typo3temp/
 /Resources/Private/Php/Libraries/vendor
 /Resources/Private/Php/Libraries/composer.lock
 var/log
