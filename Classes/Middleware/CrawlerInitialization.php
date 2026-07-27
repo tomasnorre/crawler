@@ -89,7 +89,12 @@ class CrawlerInitialization implements MiddlewareInterface
             'no_cache' => $noCache,
         ];
 
-        // Send log data for crawler (serialized content)
-        return $response->withHeader('X-T3Crawler-Meta', serialize($crawlerData));
+        // Send log data for crawler (JSON encoded, never serialize()d: the
+        // receiving end would unserialize() a header of the crawled response)
+        $data = json_encode($crawlerData);
+        if ($data !== false) {
+            return $response->withHeader('X-T3Crawler-Meta', $data);
+        }
+        return $response;
     }
 }
