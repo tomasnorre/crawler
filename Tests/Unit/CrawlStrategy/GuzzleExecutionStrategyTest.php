@@ -47,7 +47,7 @@ class GuzzleExecutionStrategyTest extends UnitTestCase
         $response->method('getStatusCode')
             ->willReturn(200);
         $response->method('getHeaderLine')
-            ->willReturn(serialize('Crawler extension for TYPO3'));
+            ->willReturn(json_encode('Crawler extension for TYPO3'));
         $response->method('hasHeader')
             ->willReturn(true);
 

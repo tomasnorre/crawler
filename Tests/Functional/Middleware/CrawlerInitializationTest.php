@@ -96,7 +96,7 @@ class CrawlerInitializationTest extends FunctionalTestCase
         $response = $this->subject->process($request->reveal(), $handler->reveal());
 
         self::assertTrue($response->hasHeader('X-T3Crawler-Meta'));
-        $meta = unserialize($response->getHeaderLine('X-T3Crawler-Meta'));
+        $meta = json_decode($response->getHeaderLine('X-T3Crawler-Meta'), true);
 
         self::assertTrue($meta['forceIndexing']);
         self::assertTrue($meta['running']);
