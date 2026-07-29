@@ -191,7 +191,7 @@ Options:
             - 15    maintained until 2027-11-11
             - 16    maintained until 2028-11-09
 
-    -p <8.1|8.2|8.3>
+    -p <8.2|8.3|8.4|8.5>
         Specifies the PHP minor version to be used
             - 8.2: use PHP 8.2 (default)
             - 8.3: use PHP 8.3
@@ -221,15 +221,15 @@ Options:
         Show this help.
 
 Examples:
-    # Run unit tests using PHP 8.1 (default)
+    # Run unit tests using PHP 8.2 (default)
     ./Build/Scripts/runTests.sh -s unit
-    ./Build/Scripts/runTests.sh -p 8.1 -s unit
+    ./Build/Scripts/runTests.sh -p 8.2 -s unit
 
-    # Run functional tests using PHP 8.3 and MariaDB 10.6 using pdo_mysql
-    ./Build/Scripts/runTests.sh -p 8.3 -s functional -d mariadb -i 10.6 -a pdo_mysql
+    # Run functional tests using PHP 8.4 and MariaDB 10.11 using pdo_mysql
+    ./Build/Scripts/runTests.sh -p 8.4 -s functional -d mariadb -i 10.11 -a pdo_mysql
 
-    # Run functional tests on postgres with xdebug, php 8.3 and execute a restricted set of tests
-    ./Build/Scripts/runTests.sh -x -p 8.3 -s functional -d postgres -- Tests/Functional/DummyTest.php
+    # Run functional tests on Postgres with Xdebug, PHP 8.5 and execute a restricted set of tests
+    ./Build/Scripts/runTests.sh -x -p 8.5 -s functional -d postgres -- Tests/Functional/DummyTest.php
 EOF
 }
 
