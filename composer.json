@@ -1,6 +1,6 @@
 {
     "name": "tomasnorre/crawler",
-    "description": "Crawler extension for TYPO3",
+    "description": "Site Crawler - TYPO3 Crawler crawls the TYPO3 page tree. Used for cache warmup, indexing, publishing applications etc.",
     "license": "GPL-3.0",
     "type": "typo3-cms-extension",
     "authors": [
