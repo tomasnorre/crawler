@@ -12,6 +12,7 @@
 * sitemap_priority is no longer added from crawler, only when typo3-cms/seo is installed [@tomasnorre](https://github.com/tomasnorre)
 * Switched to NormalizedParams in SubProcessExecutionStrategy [@tomasnorre](https://github.com/tomasnorre)
 * Replace deprecated applicationData with request attributes [@tomasnorre](https://github.com/tomasnorre)
+* Set composer description to TYPO3-expected value [@jonaseberle](https://github.com/jonaseberle)
 
 ### Fixed
 * Keep QueryParams on Refresh in Log Module [@tomasnorre](https://github.com/tomasnorre)
