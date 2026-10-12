@@ -1,5 +1,21 @@
 # Changelog TYPO3 Crawler
 
+## Crawler 13.0.1-dev
+
+### Added
+
+### Changed
+
+### Fixed
+
+### Deprecated
+#### Classes
+#### Functions & Properties
+
+### Removed
+#### Classes
+#### Functions & Properties
+
 ## Crawler 13.0.0
 Crawler 13.0.0 was released on October 12th, 2026
 
