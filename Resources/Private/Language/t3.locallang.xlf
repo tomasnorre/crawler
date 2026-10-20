@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff version="1.0">
+  <file source-language="en" datatype="plaintext" original="EXT:crawler/Resources/Private/Language/locallang.xlf" date="2020-04-15T15:00:00Z" product-name="crawler" target-language="t3">
+    <header/>
+    <body>
+      <trans-unit id="title" resname="title">
+        <source>Site Crawler</source>
+        <target>crwdns109856:0crwdne109856:0</target>
+      </trans-unit>
+      <trans-unit id="labels.start" resname="labels.start">
+        <source>Start Crawling</source>
+        <target>crwdns109858:0crwdne109858:0</target>
+      </trans-unit>
+      <trans-unit id="labels.log" resname="labels.log">
+        <source>Crawler log</source>
+        <target>crwdns109860:0crwdne109860:0</target>
+      </trans-unit>
+      <trans-unit id="labels.multiprocess" resname="labels.multiprocess">
+        <source>Crawling Processes</source>
+        <target>crwdns109862:0crwdne109862:0</target>
+      </trans-unit>
+      <trans-unit id="labels.all" resname="labels.all">
+        <source>All</source>
+        <target>crwdns109864:0crwdne109864:0</target>
+      </trans-unit>
+      <trans-unit id="labels.pending" resname="labels.pending">
+        <source>Pending</source>
+        <target>crwdns109866:0crwdne109866:0</target>
+      </trans-unit>
+      <trans-unit id="labels.finished" resname="labels.finished">
+        <source>Finished</source>
+        <target>crwdns109868:0crwdne109868:0</target>
+      </trans-unit>
+      <trans-unit id="labels.noPageSelected" resname="labels.noPageSelected">
+        <source>Please select a page in the pagetree</source>
+        <target>crwdns109870:0crwdne109870:0</target>
+      </trans-unit>
+      <trans-unit id="labels.noConfigSelected" resname="labels.noConfigSelected">
+        <source>Please select at least one configuration</source>
+        <target>crwdns109872:0crwdne109872:0</target>
+      </trans-unit>
+      <trans-unit id="labels.configuration" resname="labels.configuration">
+        <source>Crawl configuration</source>
+        <target>crwdns109874:0crwdne109874:0</target>
+      </trans-unit>
+      <trans-unit id="labels.triggerUpdate" resname="labels.triggerUpdate">
+        <source>Update</source>
+        <target>crwdns109876:0crwdne109876:0</target>
+      </trans-unit>
+      <trans-unit id="labels.triggerCrawl" resname="labels.triggerCrawl">
+        <source>Crawl URLs</source>
+        <target>crwdns109878:0crwdne109878:0</target>
+      </trans-unit>
+      <trans-unit id="labels.triggerDownload" resname="labels.triggerDownload">
+        <source>Download URLs</source>
+        <target>crwdns109880:0crwdne109880:0</target>
+      </trans-unit>
+      <trans-unit id="labels.continue" resname="labels.continue">
+        <source>Continue</source>
+        <target>crwdns109882:0crwdne109882:0</target>
+      </trans-unit>
+      <trans-unit id="labels.continueinlog" resname="labels.continueinlog">
+        <source>Continue and show Log</source>
+        <target>crwdns109884:0crwdne109884:0</target>
+      </trans-unit>
+      <trans-unit id="labels.count" resname="labels.count">
+        <source>Count</source>
+        <target>crwdns109886:0crwdne109886:0</target>
+      </trans-unit>
+      <trans-unit id="labels.time" resname="labels.time">
+        <source>Time</source>
+        <target>crwdns109888:0crwdne109888:0</target>
+      </trans-unit>
+      <trans-unit id="labels.curtime" resname="labels.curtime">
+        <source>Current server time</source>
+        <target>crwdns109890:0crwdne109890:0</target>
+      </trans-unit>
+      <trans-unit id="labels.submitted" resname="labels.submitted">
+        <source>URLs submitted</source>
+        <target>crwdns109892:0crwdne109892:0</target>
+      </trans-unit>
+      <trans-unit id="labels.depth" resname="labels.depth">
+        <source>Depth</source>
+        <target>crwdns109894:0crwdne109894:0</target>
+      </trans-unit>
+      <trans-unit id="labels.configurations" resname="labels.configurations">
+        <source>Configurations</source>
+        <target>crwdns109896:0crwdne109896:0</target>
+      </trans-unit>
+      <trans-unit id="labels.scheduled" resname="labels.scheduled">
+        <source>Scheduled</source>
+        <target>crwdns109898:0crwdne109898:0</target>
+      </trans-unit>
+      <trans-unit id="labels.pagetitle" resname="labels.pagetitle">
+        <source>Page title</source>
+        <target>crwdns109900:0crwdne109900:0</target>
+      </trans-unit>
+      <trans-unit id="labels.key" resname="labels.key">
+        <source>Key</source>
+        <target>crwdns109902:0crwdne109902:0</target>
+      </trans-unit>
+      <trans-unit id="labels.parametercfg" resname="labels.parametercfg">
+        <source>Parameter Cfg</source>
+        <target>crwdns109904:0crwdne109904:0</target>
+      </trans-unit>
+      <trans-unit id="labels.values" resname="labels.values">
+        <source>Values Expanded</source>
+        <target>crwdns109906:0crwdne109906:0</target>
+      </trans-unit>
+      <trans-unit id="labels.url" resname="labels.url">
+        <source>URL</source>
+        <target>crwdns109908:0crwdne109908:0</target>
+      </trans-unit>
+      <trans-unit id="labels.urls" resname="labels.urls">
+        <source>URLs</source>
+        <target>crwdns109910:0crwdne109910:0</target>
+      </trans-unit>
+      <trans-unit id="labels.options" resname="labels.options">
+        <source>Options</source>
+        <target>crwdns109912:0crwdne109912:0</target>
+      </trans-unit>
+      <trans-unit id="labels.parameters" resname="labels.parameters">
+        <source>Parameters</source>
+        <target>crwdns109914:0crwdne109914:0</target>
+      </trans-unit>
+      <trans-unit id="labels.back" resname="labels.back">
+        <source>Back</source>
+        <target>crwdns109916:0crwdne109916:0</target>
+      </trans-unit>
+      <trans-unit id="labels.reloadlist" resname="labels.reloadlist">
+        <source>Reload list</source>
+        <target>crwdns109918:0crwdne109918:0</target>
+      </trans-unit>
+      <trans-unit id="labels.downloadcsv" resname="labels.downloadcsv">
+        <source>Download entries as CSV</source>
+        <target>crwdns109920:0crwdne109920:0</target>
+      </trans-unit>
+      <trans-unit id="labels.flushvisiblequeue" resname="labels.flushvisiblequeue">
+        <source>Flush visible entries</source>
+        <target>crwdns109922:0crwdne109922:0</target>
+      </trans-unit>
+      <trans-unit id="labels.flushfullqueue" resname="labels.flushfullqueue">
+        <source>Flush entire queue</source>
+        <target>crwdns109924:0crwdne109924:0</target>
+      </trans-unit>
+      <trans-unit id="labels.confirmyouresure" resname="labels.confirmyouresure">
+        <source>Are you sure?</source>
+        <target>crwdns109926:0crwdne109926:0</target>
+      </trans-unit>
+      <trans-unit id="labels.setid" resname="labels.setid">
+        <source>Set ID</source>
+        <target>crwdns109928:0crwdne109928:0</target>
+      </trans-unit>
+      <trans-unit id="labels.qid" resname="labels.qid">
+        <source>Queue id</source>
+        <target>crwdns109930:0crwdne109930:0</target>
+      </trans-unit>
+      <trans-unit id="labels.resultlog" resname="labels.resultlog">
+        <source>Result Log</source>
+        <target>crwdns109932:0crwdne109932:0</target>
+      </trans-unit>
+      <trans-unit id="labels.scheduledtime" resname="labels.scheduledtime">
+        <source>Scheduled</source>
+        <target>crwdns109934:0crwdne109934:0</target>
+      </trans-unit>
+      <trans-unit id="labels.runtime" resname="labels.runtime">
+        <source>Run-time</source>
+        <target>crwdns109936:0crwdne109936:0</target>
+      </trans-unit>
+      <trans-unit id="labels.status" resname="labels.status">
+        <source>Status</source>
+        <target>crwdns109938:0crwdne109938:0</target>
+      </trans-unit>
+      <trans-unit id="labels.groups" resname="labels.groups">
+        <source>Groups</source>
+        <target>crwdns109940:0crwdne109940:0</target>
+      </trans-unit>
+      <trans-unit id="labels.procinstr" resname="labels.procinstr">
+        <source>Proc. Instr.</source>
+        <target>crwdns109942:0crwdne109942:0</target>
+      </trans-unit>
+      <trans-unit id="labels.newprocess" resname="labels.newprocess">
+        <source>New process has been started, refresh to monitor the state</source>
+        <target>crwdns109944:0crwdne109944:0</target>
+      </trans-unit>
+      <trans-unit id="labels.newprocesserror" resname="labels.newprocesserror">
+        <source>Error while starting process</source>
+        <target>crwdns109946:0crwdne109946:0</target>
+      </trans-unit>
+      <trans-unit id="labels.time.now" resname="labels.time.now">
+        <source>Now</source>
+        <target>crwdns109948:0crwdne109948:0</target>
+      </trans-unit>
+      <trans-unit id="labels.time.midnight" resname="labels.time.midnight">
+        <source>Midnight</source>
+        <target>crwdns109950:0crwdne109950:0</target>
+      </trans-unit>
+      <trans-unit id="labels.time.4am" resname="labels.time.4am">
+        <source>4 AM</source>
+        <target>crwdns109952:0crwdne109952:0</target>
+      </trans-unit>
+      <trans-unit id="labels.display" resname="labels.display">
+        <source>Display</source>
+        <target>crwdns109954:0crwdne109954:0</target>
+      </trans-unit>
+      <trans-unit id="labels.showresultlog" resname="labels.showresultlog">
+        <source>Show Result Log</source>
+        <target>crwdns109956:0crwdne109956:0</target>
+      </trans-unit>
+      <trans-unit id="labels.showfevars" resname="labels.showfevars">
+        <source>Show FE Vars</source>
+        <target>crwdns109958:0crwdne109958:0</target>
+      </trans-unit>
+      <trans-unit id="labels.noentries" resname="labels.noentries">
+        <source>No entries</source>
+        <target>crwdns109960:0crwdne109960:0</target>
+      </trans-unit>
+      <trans-unit id="labels.immediate" resname="labels.immediate">
+        <source>immediate</source>
+        <target>crwdns109962:0crwdne109962:0</target>
+      </trans-unit>
+      <trans-unit id="labels.generalinformation" resname="labels.generalinformation">
+        <source>General Information</source>
+        <target>crwdns109964:0crwdne109964:0</target>
+      </trans-unit>
+      <trans-unit id="labels.pendingoverview" resname="labels.pendingoverview">
+        <source>Pending Entries (assigned / overall)</source>
+        <target>crwdns109966:0crwdne109966:0</target>
+      </trans-unit>
+      <trans-unit id="labels.processcount" resname="labels.processcount">
+        <source>Processes count (running / max)</source>
+        <target>crwdns109968:0crwdne109968:0</target>
+      </trans-unit>
+      <trans-unit id="labels.clipath" resname="labels.clipath">
+        <source>CLI-Path</source>
+        <target>crwdns109970:0crwdne109970:0</target>
+      </trans-unit>
+      <trans-unit id="labels.processstates" resname="labels.processstates">
+        <source>Process States</source>
+        <target>crwdns109972:0crwdne109972:0</target>
+      </trans-unit>
+      <trans-unit id="labels.state" resname="labels.state">
+        <source>State</source>
+        <target>crwdns109974:0crwdne109974:0</target>
+      </trans-unit>
+      <trans-unit id="labels.processid" resname="labels.processid">
+        <source>Id</source>
+        <target>crwdns109976:0crwdne109976:0</target>
+      </trans-unit>
+      <trans-unit id="labels.time.first" resname="labels.time.first">
+        <source>Time first item</source>
+        <target>crwdns109978:0crwdne109978:0</target>
+      </trans-unit>
+      <trans-unit id="labels.time.last" resname="labels.time.last">
+        <source>Time last item</source>
+        <target>crwdns109980:0crwdne109980:0</target>
+      </trans-unit>
+      <trans-unit id="labels.time.duration" resname="labels.time.duration">
+        <source>Runtime</source>
+        <target>crwdns109982:0crwdne109982:0</target>
+      </trans-unit>
+      <trans-unit id="labels.ttl" resname="labels.ttl">
+        <source>TTL</source>
+        <target>crwdns109984:0crwdne109984:0</target>
+      </trans-unit>
+      <trans-unit id="labels.status.current" resname="labels.status.current">
+        <source>Processed</source>
+        <target>crwdns109986:0crwdne109986:0</target>
+      </trans-unit>
+      <trans-unit id="labels.status.initial" resname="labels.status.initial">
+        <source>Initially assigned</source>
+        <target>crwdns109988:0crwdne109988:0</target>
+      </trans-unit>
+      <trans-unit id="labels.status.finally" resname="labels.status.finally">
+        <source>Finally assigned</source>
+        <target>crwdns109990:0crwdne109990:0</target>
+      </trans-unit>
+      <trans-unit id="labels.status.progress" resname="labels.status.progress">
+        <source>Progress</source>
+        <target>crwdns109992:0crwdne109992:0</target>
+      </trans-unit>
+      <trans-unit id="labels.process.running" resname="labels.process.running">
+        <source>Process running</source>
+        <target>crwdns109994:0crwdne109994:0</target>
+      </trans-unit>
+      <trans-unit id="labels.process.success" resname="labels.process.success">
+        <source>Process completed successfully</source>
+        <target>crwdns109996:0crwdne109996:0</target>
+      </trans-unit>
+      <trans-unit id="labels.process.cancelled" resname="labels.process.cancelled">
+        <source>Process was cancelled</source>
+        <target>crwdns109998:0crwdne109998:0</target>
+      </trans-unit>
+      <trans-unit id="labels.refresh" resname="labels.refresh">
+        <source>Refresh</source>
+        <target>crwdns110000:0crwdne110000:0</target>
+      </trans-unit>
+      <trans-unit id="labels.disablecrawling" resname="labels.disablecrawling">
+        <source>Stop all processes and disable crawling</source>
+        <target>crwdns110002:0crwdne110002:0</target>
+      </trans-unit>
+      <trans-unit id="labels.enablecrawling" resname="labels.enablecrawling">
+        <source>Enable crawling</source>
+        <target>crwdns110004:0crwdne110004:0</target>
+      </trans-unit>
+      <trans-unit id="labels.show.running" resname="labels.show.running">
+        <source>Show only running processes</source>
+        <target>crwdns110006:0crwdne110006:0</target>
+      </trans-unit>
+      <trans-unit id="labels.show.all" resname="labels.show.all">
+        <source>Show finished and terminated processes</source>
+        <target>crwdns110008:0crwdne110008:0</target>
+      </trans-unit>
+      <trans-unit id="labels.process.add" resname="labels.process.add">
+        <source>Add process</source>
+        <target>crwdns110010:0crwdne110010:0</target>
+      </trans-unit>
+      <trans-unit id="labels.process.flush" resname="labels.process.flush">
+        <source>Flush all processes</source>
+        <target>crwdns342010:0crwdne342010:0</target>
+      </trans-unit>
+      <trans-unit id="time.detailed" resname="time.detailed">
+        <source>d-m-y H:i:s</source>
+        <target>crwdns110012:0crwdne110012:0</target>
+      </trans-unit>
+      <trans-unit id="labels.itemsPerPage.5" resname="labels.itemsPerPage.5">
+        <source>limit to 5</source>
+        <target>crwdns110014:0crwdne110014:0</target>
+      </trans-unit>
+      <trans-unit id="labels.itemsPerPage.10" resname="labels.itemsPerPage.10">
+        <source>limit to 10</source>
+        <target>crwdns110016:0crwdne110016:0</target>
+      </trans-unit>
+      <trans-unit id="labels.itemsPerPage.50" resname="labels.itemsPerPage.50">
+        <source>limit to 50</source>
+        <target>crwdns110018:0crwdne110018:0</target>
+      </trans-unit>
+      <trans-unit id="labels.itemsPerPage.0" resname="labels.itemsPerPage.0">
+        <source>no limit</source>
+        <target>crwdns110020:0crwdne110020:0</target>
+      </trans-unit>
+      <trans-unit id="labels.itemsPerPage" resname="labels.itemsPerPage">
+        <source>Items per page</source>
+        <target>crwdns110022:0crwdne110022:0</target>
+      </trans-unit>
+      <trans-unit id="message.noBeUserAvailable" resname="message.noBeUserAvailable">
+        <source>There is no be_user "_cli_crawler" available!</source>
+        <target>crwdns110024:0crwdne110024:0</target>
+      </trans-unit>
+      <trans-unit id="message.noPhpForkAvailable" resname="message.noPhpForkAvailable">
+        <source>There is no PHP method "popen" available!</source>
+        <target>crwdns110026:0crwdne110026:0</target>
+      </trans-unit>
+      <trans-unit id="message.beUserIsAdmin" resname="message.beUserIsAdmin">
+        <source>The be_user "_cli_crawler" is not allowed to have admin rights!</source>
+        <target>crwdns110028:0crwdne110028:0</target>
+      </trans-unit>
+      <trans-unit id="message.canNotExportEmptyQueueToCsvText" resname="message.canNotExportEmptyQueueToCsvText">
+        <source>An empty queue can not be exported to CSV.</source>
+        <target>crwdns110030:0crwdne110030:0</target>
+      </trans-unit>
+      <trans-unit id="message.phpBinaryNotFound" resname="message.phpBinaryNotFound">
+        <source>No php binary found in '%s'. Please update value for 'phpPath' in crawler extension setup.
+				</source>
+        <target>crwdns110032:0%scrwdne110032:0</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
