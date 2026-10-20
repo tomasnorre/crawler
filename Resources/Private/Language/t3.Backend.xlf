@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff version="1.0">
+  <file source-language="en" datatype="plaintext" original="EXT:crawler/Resources/Private/Language/Backend.xlf" date="2016-11-04T16:17:39Z" product-name="crawler" target-language="t3">
+    <header/>
+    <body>
+      <!-- Backend Module Labels -->
+      <trans-unit id="mlang_labels_tabdescr" resname="mlang_labels_tabdescr">
+        <source>Libraries and scripts for crawling the TYPO3 page tree. Used for re-caching, re-indexing, publishing applications etc.</source>
+        <target>crwdns228823:0crwdne228823:0</target>
+      </trans-unit>
+      <trans-unit id="mlang_labels_tablabel" resname="mlang_labels_tablabel">
+        <source>Crawler</source>
+        <target>crwdns228825:0crwdne228825:0</target>
+      </trans-unit>
+      <trans-unit id="mlang_tabs_tab" resname="mlang_tabs_tab">
+        <source>Crawler module</source>
+        <target>crwdns228827:0crwdne228827:0</target>
+      </trans-unit>
+      <!-- Old Backend Module Labels -->
+      <trans-unit id="moduleFunction.tx_crawler_modfunc1" resname="moduleFunction.tx_crawler_modfunc1">
+        <source>Site Crawler</source>
+        <target>crwdns109758:0crwdne109758:0</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration" resname="tx_crawler_configuration">
+        <source>Crawler Configuration</source>
+        <target>crwdns109760:0crwdne109760:0</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.name" resname="tx_crawler_configuration.name">
+        <source>Name</source>
+        <target>crwdns109762:0crwdne109762:0</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.crawling_protocol" resname="tx_crawler_configuration.crawling_protocol">
+        <source>Protocol for crawling</source>
+        <target>crwdns109764:0crwdne109764:0</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.crawling_protocol.http" resname="tx_crawler_configuration.crawling_protocol.http">
+        <source>Force HTTP for all pages</source>
+        <target>crwdns109766:0crwdne109766:0</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.crawling_protocol.page_config" resname="tx_crawler_configuration.crawling_protocol.page_config">
+        <source>Keeps page configured protocol</source>
+        <target>crwdns109768:0crwdne109768:0</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.crawling_protocol.https" resname="tx_crawler_configuration.crawling_protocol.https">
+        <source>Force HTTPS for all pages</source>
+        <target>crwdns109770:0crwdne109770:0</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.processing_instruction_filter" resname="tx_crawler_configuration.processing_instruction_filter">
+        <source>Processing instruction filter</source>
+        <target>crwdns109772:0crwdne109772:0</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.processing_instruction_filter.description" resname="tx_crawler_configuration.processing_instruction_filter.description">
+        <source>List of processing instructions to send for the request. Processing instructions are necessary
+                    for the request to perform any meaningful action, since they activate third party activity.
+                </source>
+        <target>crwdns110236:0crwdne110236:0</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.processing_instruction_parameters_ts" resname="tx_crawler_configuration.processing_instruction_parameters_ts">
+        <source>Processing instruction parameters</source>
+        <target>crwdns109776:0crwdne109776:0</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.configuration" resname="tx_crawler_configuration.configuration">
+        <source>Configuration</source>
+        <target>crwdns109778:0crwdne109778:0</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.base_url" resname="tx_crawler_configuration.base_url">
+        <source>Base URL</source>
+        <target>crwdns109780:0crwdne109780:0</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.base_url.description" resname="tx_crawler_configuration.base_url.description">
+        <source>Leave empty for fetching the base URL from the Site Configuration.</source>
+        <target>crwdns109782:0crwdne109782:0</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.pidsonly" resname="tx_crawler_configuration.pidsonly">
+        <source>Pids only</source>
+        <target>crwdns109784:0crwdne109784:0</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.pidsonly.description" resname="tx_crawler_configuration.pidsonly.description">
+        <source>List of page IDs to limit this configuration to.</source>
+        <target>crwdns109786:0crwdne109786:0</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.begroups" resname="tx_crawler_configuration.begroups">
+        <source>Restrict access to</source>
+        <target>crwdns109788:0crwdne109788:0</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.begroups.description" resname="tx_crawler_configuration.begroups.description">
+        <source>Restrict access to this configuration record to selected backend user groups. Empty means no
+                    restriction is set.
+                </source>
+        <target>crwdns110238:0crwdne110238:0</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.fegroups" resname="tx_crawler_configuration.fegroups">
+        <source>Crawl with FE user groups</source>
+        <target>crwdns109792:0crwdne109792:0</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.fegroups.description" resname="tx_crawler_configuration.fegroups.description">
+        <source>Frontend user groups to set for the request.</source>
+        <target>crwdns109794:0crwdne109794:0</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.exclude" resname="tx_crawler_configuration.exclude">
+        <source>Exclude pages</source>
+        <target>crwdns109796:0crwdne109796:0</target>
+      </trans-unit>
+      <trans-unit id="tx_crawler_configuration.exclude.description" resname="tx_crawler_configuration.exclude.description">
+        <source>Comma separated list of page IDs which should not be crawled. You can do recursive exclusion by adding uid+depth e.g. 6+3</source>
+        <target>crwdns144259:0crwdne144259:0</target>
+      </trans-unit>
+      <trans-unit id="crawler_im.name" resname="crawler_im.name">
+        <source>Crawler queue</source>
+        <target>crwdns109800:0crwdne109800:0</target>
+      </trans-unit>
+      <trans-unit id="crawler_im.description" resname="crawler_im.description">
+        <source>Running the crawler queue process to collect the relevant entries.</source>
+        <target>crwdns109802:0crwdne109802:0</target>
+      </trans-unit>
+      <trans-unit id="crawler_im.startPage" resname="crawler_im.startPage">
+        <source>Start page</source>
+        <target>crwdns109804:0crwdne109804:0</target>
+      </trans-unit>
+      <trans-unit id="crawler_im.depth" resname="crawler_im.depth">
+        <source>Depth</source>
+        <target>crwdns109806:0crwdne109806:0</target>
+      </trans-unit>
+      <trans-unit id="crawler_im.invalidStartPage" resname="crawler_im.invalidStartPage">
+        <source>Start page must be a positive integer!</source>
+        <target>crwdns109808:0crwdne109808:0</target>
+      </trans-unit>
+      <trans-unit id="crawler_im.invalidDepth" resname="crawler_im.invalidDepth">
+        <source>There is no depth set, please set it to an value!</source>
+        <target>crwdns109810:0crwdne109810:0</target>
+      </trans-unit>
+      <trans-unit id="crawler_im.conf" resname="crawler_im.conf">
+        <source>Configuration records</source>
+        <target>crwdns109812:0crwdne109812:0</target>
+      </trans-unit>
+      <trans-unit id="crawler_im.invalidConfiguration" resname="crawler_im.invalidConfiguration">
+        <source>There is no configuration record selected, please choose at least one or more!</source>
+        <target>crwdns109814:0crwdne109814:0</target>
+      </trans-unit>
+      <trans-unit id="crawler_im.timeOut" resname="crawler_im.timeOut">
+        <source>Time out</source>
+        <target>crwdns109816:0crwdne109816:0</target>
+      </trans-unit>
+      <trans-unit id="crawler_im.sleepTime" resname="crawler_im.sleepTime">
+        <source>Sleep time</source>
+        <target>crwdns109818:0crwdne109818:0</target>
+      </trans-unit>
+      <trans-unit id="crawler_im.invalidTimeOut" resname="crawler_im.invalidTimeOut">
+        <source>The time out must be a positive integer!</source>
+        <target>crwdns109820:0crwdne109820:0</target>
+      </trans-unit>
+      <trans-unit id="crawler_im.invalidSleepTime" resname="crawler_im.invalidSleepTime">
+        <source>The sleep time must be a positive integer!</source>
+        <target>crwdns109822:0crwdne109822:0</target>
+      </trans-unit>
+      <trans-unit id="crawler_im.sleepAfterFinish" resname="crawler_im.sleepAfterFinish">
+        <source>Sleep after finish</source>
+        <target>crwdns109824:0crwdne109824:0</target>
+      </trans-unit>
+      <trans-unit id="crawler_im.invalidSleepAfterFinish" resname="crawler_im.invalidSleepAfterFinish">
+        <source>The sleep after finish must be a positive integer!</source>
+        <target>crwdns109826:0crwdne109826:0</target>
+      </trans-unit>
+      <trans-unit id="crawler_im.countInARun" resname="crawler_im.countInARun">
+        <source>Count in a run</source>
+        <target>crwdns109828:0crwdne109828:0</target>
+      </trans-unit>
+      <trans-unit id="crawler_im.invalidCountInARun" resname="crawler_im.invalidCountInARun">
+        <source>The count in a run must be a positive integer!</source>
+        <target>crwdns109830:0crwdne109830:0</target>
+      </trans-unit>
+      <trans-unit id="crawler_crawlMultiProcess.name" resname="crawler_crawlMultiProcess.name">
+        <source>Crawler Run Multi Process</source>
+        <target>crwdns109832:0crwdne109832:0</target>
+      </trans-unit>
+      <trans-unit id="crawler_crawl.name" resname="crawler_crawl.name">
+        <source>Crawler Run</source>
+        <target>crwdns109834:0crwdne109834:0</target>
+      </trans-unit>
+      <trans-unit id="crawler_crawl.description" resname="crawler_crawl.description">
+        <source>Running the crawler to extension to process it's queue-entries.</source>
+        <target>crwdns109836:0crwdne109836:0</target>
+      </trans-unit>
+      <trans-unit id="crawler_flush.name" resname="crawler_flush.name">
+        <source>Crawler Queue Flush</source>
+        <target>crwdns109838:0crwdne109838:0</target>
+      </trans-unit>
+      <trans-unit id="crawler_flush.description" resname="crawler_flush.description">
+        <source>Cleanup the crawler queue and remove unwanted or finished entries.</source>
+        <target>crwdns109840:0crwdne109840:0</target>
+      </trans-unit>
+      <trans-unit id="crawler_flush.mode" resname="crawler_flush.mode">
+        <source>Flush mode</source>
+        <target>crwdns109842:0crwdne109842:0</target>
+      </trans-unit>
+      <trans-unit id="crawler_flush.modeAll" resname="crawler_flush.modeAll">
+        <source>Flush all entries</source>
+        <target>crwdns109844:0crwdne109844:0</target>
+      </trans-unit>
+      <trans-unit id="crawler_flush.modeFinished" resname="crawler_flush.modeFinished">
+        <source>Flush finished entries</source>
+        <target>crwdns109846:0crwdne109846:0</target>
+      </trans-unit>
+      <trans-unit id="crawler_flush.modePending" resname="crawler_flush.modePending">
+        <source>Flush pending entries</source>
+        <target>crwdns109848:0crwdne109848:0</target>
+      </trans-unit>
+      <trans-unit id="crawler_processCleanup.name" resname="crawler_processCleanup.name">
+        <source>Remove Processes</source>
+        <target>crwdns109850:0crwdne109850:0</target>
+      </trans-unit>
+      <trans-unit id="crawler_processCleanup.description" resname="crawler_processCleanup.description">
+        <source>Remove Orphan processes and processes that are older than one hour</source>
+        <target>crwdns109852:0crwdne109852:0</target>
+      </trans-unit>
+      <trans-unit id="contextMenu.label" resname="contextMenu.label">
+        <source>Crawl</source>
+        <target>crwdns109854:0crwdne109854:0</target>
+      </trans-unit>
+      <!-- For Crawler Priority - Will be remove when support for 9 LTS is dropped -->
+      <trans-unit id="pages_crawler.priority_label" resname="pages_crawler.priority_label">
+        <source>Page priority</source>
+        <target>crwdns110240:0crwdne110240:0</target>
+      </trans-unit>
+      <trans-unit id="pages_crawler.priority" resname="pages_crawler.priority">
+        <source>Priority</source>
+        <target>crwdns110242:0crwdne110242:0</target>
+      </trans-unit>
+      <trans-unit id="pages_crawler.priority.description" resname="pages_crawler.priority.description">
+        <source>The higher the number, the earlier will it be crawled. This is a reuse of the sitemap_priority
+                    field introduced in 10LTS, to ensure compatibility after upgrade, we reuse the field.
+                </source>
+        <target>crwdns110244:0crwdne110244:0</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
