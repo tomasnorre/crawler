@@ -1,6 +1,23 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 13.0.0-dev
+## Crawler 13.0.1-dev
+
+### Added
+
+### Changed
+
+### Fixed
+
+### Deprecated
+#### Classes
+#### Functions & Properties
+
+### Removed
+#### Classes
+#### Functions & Properties
+
+## Crawler 13.0.0
+Crawler 13.0.0 was released on October 12th, 2026
 
 ### Added
 * PHP 8.5 Support [@tomasnorre](https://github.com/tomasnorre)
@@ -12,16 +29,13 @@
 * sitemap_priority is no longer added from crawler, only when typo3-cms/seo is installed [@tomasnorre](https://github.com/tomasnorre)
 * Switched to NormalizedParams in SubProcessExecutionStrategy [@tomasnorre](https://github.com/tomasnorre)
 * Replace deprecated applicationData with request attributes [@tomasnorre](https://github.com/tomasnorre)
+* Set composer description to TYPO3-expected value [@jonaseberle](https://github.com/jonaseberle)
 
 ### Fixed
 * Keep QueryParams on Refresh in Log Module [@tomasnorre](https://github.com/tomasnorre)
 * Switch to GroupResolver for beGroups [@tomasnorre](https://github.com/tomasnorre)
 * Replace deprecated TSFE with frontend page information [@ghermens](https://github.com/ghermens)
 * Forward-ported switch to json [@jonaseberle](https://github.com/jonaseberle)
-
-### Deprecated
-#### Classes
-#### Functions & Properties
 
 ### Removed
 * PHP 8.1 Support [@tomasnorre](https://github.com/tomasnorre)
@@ -32,8 +46,6 @@
 
 #### Classes
 * JsonCompatibilityConverter
-
-#### Functions & Properties
 
 ## Crawler 12.0.11
 Crawler 12.0.11 was released on May 11th, 2026
