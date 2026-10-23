@@ -35,10 +35,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * @internal since v12.0.0
  */
-#[AsCommand(
-    name: 'crawler:processQueue',
-    description: 'Process queue entries',
-)]
+#[AsCommand(name: 'crawler:processQueue', description: 'Process queue entries',)]
 class ProcessQueueCommand extends Command
 {
     private const CLI_STATUS_NOTHING_PROCCESSED = 0;

@@ -40,13 +40,8 @@ use TYPO3\CMS\Core\Utility\MathUtility;
 
 /**
  * @internal since v12.0.0
- *
  */
-
-#[AsCommand(
-    name: 'crawler:buildQueue',
-    description: 'Create entries in the queue that can be processed at once',
-)]
+#[AsCommand(name: 'crawler:buildQueue', description: 'Create entries in the queue that can be processed at once',)]
 class BuildQueueCommand extends Command
 {
     public function __construct(

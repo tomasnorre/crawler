@@ -48,7 +48,7 @@ class BackendModuleStartCrawlingControllerTest extends FunctionalTestCase
             'phpBinary' => 'php',
         ];
 
-        $GLOBALS['BE_USER'] = $this->createMock(BackendUserAuthentication::class);
+        $GLOBALS['BE_USER'] = $this->createStub(BackendUserAuthentication::class);
 
         $GLOBALS['LANG'] = $this->createStub(LanguageService::class);
 

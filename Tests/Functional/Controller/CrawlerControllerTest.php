@@ -106,9 +106,7 @@ class CrawlerControllerTest extends FunctionalTestCase
             ['getDuplicateQueueItemsIfExists']
         );
 
-        $mockedQueueRepository->method('getDuplicateQueueItemsIfExists')->willReturn(
-            $mockedDuplicateRowResult
-        );
+        $mockedQueueRepository->method('getDuplicateQueueItemsIfExists')->willReturn($mockedDuplicateRowResult);
 
         $mockedCrawlerController = $this->getAccessibleMock(CrawlerController::class, null);
 

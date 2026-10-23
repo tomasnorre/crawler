@@ -31,10 +31,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * @internal since v12.0.0
  */
-#[AsCommand(
-    name: 'crawler:flushQueue',
-    description: 'Remove queue entries and perform a cleanup',
-)]
+#[AsCommand(name: 'crawler:flushQueue', description: 'Remove queue entries and perform a cleanup',)]
 class FlushQueueCommand extends Command
 {
     #[\Override]

@@ -198,12 +198,8 @@ class ProcessTest extends UnitTestCase
             '',
             false
         );
-        $queueRepositoryMock->method('findOldestEntryForProcess')->willReturn(
-            $getTimeForLastItem
-        );
-        $queueRepositoryMock->method('findYoungestEntryForProcess')->willReturn(
-            $getTimeForFirstItem
-        );
+        $queueRepositoryMock->method('findOldestEntryForProcess')->willReturn($getTimeForLastItem);
+        $queueRepositoryMock->method('findYoungestEntryForProcess')->willReturn($getTimeForFirstItem);
 
         $this->subject->_setProperty('queueRepository', $queueRepositoryMock);
         self::assertEquals($expected, $this->subject->getRuntime());
