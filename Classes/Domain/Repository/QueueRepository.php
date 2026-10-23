@@ -215,11 +215,11 @@ class QueueRepository implements LoggerAwareInterface
                 )
             );
 
-        if ($unprocessed_only !== false) {
+        if ($unprocessed_only) {
             $statement->andWhere($queryBuilder->expr()->eq('exec_time', 0));
         }
 
-        if ($timed_only !== false) {
+        if ($timed_only) {
             $statement->andWhere($queryBuilder->expr()->neq('scheduled', 0));
         }
 

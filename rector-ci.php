@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+use Rector\CodeQuality\Rector\Identical\SimplifyBoolIdenticalTrueRector;
 use Rector\Config\RectorConfig;
 use Rector\Core\Configuration\Option;
 use Rector\DeadCode\Rector\Property\RemoveSetterOnlyPropertyAndMethodCallRector;
+use Rector\Php74\Rector\If_\IfToNullCoalescingAssignRector;
 use Rector\Php82\Rector\Class_\ReadOnlyClassRector;
 use Rector\PHPUnit\Set\PHPUnitSetList;
 use Rector\Set\ValueObject\LevelSetList;
@@ -26,6 +28,10 @@ return RectorConfig::configure()
         ],
         ReadOnlyClassRector::class => null,
         MigrateTypoScriptFrontendControllerReadOnlyPropertiesRector::class => null,
+        IfToNullCoalescingAssignRector::class => null,
+        SimplifyBoolIdenticalTrueRector::class => [
+            __DIR__ . '/Tests/UnitTestsBootstrap.php'
+        ]
     ])
     ->withAutoloadPaths([
         __DIR__ . '/Classes'
@@ -34,8 +40,6 @@ return RectorConfig::configure()
     ->withSets([
         SetList::DEAD_CODE,
         LevelSetList::UP_TO_PHP_82,
-        PHPUnitSetList::PHPUNIT_90,
-        PHPUnitSetList::PHPUNIT_100,
-        PHPUnitSetList::PHPUNIT_110,
+        PHPUnitSetList::COMPOSER_BASED,
         Typo3LevelSetList::UP_TO_TYPO3_13
     ]);

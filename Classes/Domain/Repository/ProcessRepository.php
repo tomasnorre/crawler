@@ -198,7 +198,6 @@ class ProcessRepository
     /**
      * Function is moved from ProcessCleanUpHook
      *
-     * @return array
      * @see getActiveProcessesOlderThanOneHour
      */
     public function getActiveOrphanProcesses(): array
