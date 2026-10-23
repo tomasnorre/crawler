@@ -1,0 +1,2 @@
+# Safe to keep; you can delete it after upgrading to DDEV v1.25.5
+RUN (apt-get update || true) && apt-get install -y --only-upgrade 'php*'
