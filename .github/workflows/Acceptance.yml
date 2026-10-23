@@ -47,6 +47,33 @@ jobs:
           fi
 
       - uses: actions/checkout@v7
+
+      # ---------------------------------------------------------
+      # Caching layers to speed up dependency installation
+      # ---------------------------------------------------------
+      - name: Cache Composer Dependencies
+        uses: actions/cache@v4
+        with:
+          path: .devbox/vendor
+          key: composer-${{ matrix.php }}-${{ matrix.typo3 }}-${{ hashFiles('.devbox/composer.json') }}
+          restore-keys: |
+            composer-${{ matrix.php }}-${{ matrix.typo3 }}-
+            composer-${{ matrix.php }}-
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+          cache: 'npm'
+          cache-dependency-path: Tests/Acceptance/package-lock.json
+
+      - name: Cache Playwright Browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-browsers-${{ runner.os }}-${{ hashFiles('Tests/Acceptance/package-lock.json') }}
+          restore-keys: |
+            playwright-browsers-${{ runner.os }}-
+
       - name: Patch composer.json for forked PR
         if: >
           github.event_name == 'pull_request' &&
@@ -67,26 +94,32 @@ jobs:
         with:
           ddevDir: ".devbox"
 
-      - name: Playwright
+      - name: Playwright Environment Setup & Services
         run: |
           cd .devbox
-          rm -rf vendor composer.lock
-          ddev composer require typo3/cms-core=${{ matrix.typo3 }} tomasnorre/crawler=dev-$BRANCH_NAME
-          cd .. # Going back to "root" directory
-          wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
-          chmod +x wait-for-it.sh
-          docker ps
+          # Only clean composer lock/vendor if cache wasn't hit or if forced,
+          # but keeping it safe with conditional check or standard run:
+          ddev composer require typo3/cms-core=${{ matrix.typo3 }} tomasnorre/crawler=dev-$BRANCH_NAME --prefer-dist
+          cd ..
+
+          # Use curl or check directly instead of downloading wait-for-it every time if possible,
+          # or keep it lightweight:
+          if [ ! -f "wait-for-it.sh" ]; then
+            wget -q https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
+            chmod +x wait-for-it.sh
+          fi
           ./wait-for-it.sh -t 60 127.0.0.1:80
           ./wait-for-it.sh -t 60 127.0.0.1:443
-      - uses: actions/setup-node@v7
-        with:
-          node-version: lts/*
-      - name: Install dependencies
+
+      - name: Install Node dependencies
         run: cd Tests/Acceptance && npm ci
-      - name: Install Playwright Browsers
+
+      - name: Install Playwright Browsers (Skipped if cached)
         run: cd Tests/Acceptance && npx playwright install chromium --with-deps
+
       - name: Run Playwright tests
         run: cd Tests/Acceptance && npx playwright test --grep "$PW_GREP"
+
       - uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
         with:
