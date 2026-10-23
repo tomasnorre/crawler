@@ -46,15 +46,11 @@ class ProcessCollectionTest extends UnitTestCase
     public function getProcessIdsReturnsArray(): void
     {
         /** @var Process $processOne */
-        $processOne = $this->getMockBuilder(Process::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $processOne = $this->createMock(Process::class);
         $processOne->expects(self::any())->method('getProcessId')->withAnyParameters()->willReturn('11');
 
         /** @var Process $processTwo */
-        $processTwo = $this->getMockBuilder(Process::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $processTwo = $this->createMock(Process::class);
         $processTwo->expects(self::any())->method('getProcessId')->withAnyParameters()->willReturn('13');
 
         $processes = [];
@@ -104,12 +100,10 @@ class ProcessCollectionTest extends UnitTestCase
         self::assertEquals($correctObjectType, $this->subject->offsetGet(100));
     }
 
-    /**
-     * @expectedException \Exception
-     */
     #[\PHPUnit\Framework\Attributes\Test]
     public function offsetGetThrowsException(): void
     {
+        $this->expectException(\Exception::class);
         self::expectException(NoIndexFoundException::class);
         self::expectExceptionCode(1_593_714_823);
         self::expectExceptionMessageMatches('/^Index.*100.*Process are not available$/');

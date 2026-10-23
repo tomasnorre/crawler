@@ -54,11 +54,6 @@ class ProcessCleanUpHookTest extends FunctionalTestCase
         $this->subject = new ProcessCleanUpHook($this->orphanCleaner, $this->oldCleaner);
     }
 
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-    }
-
     #[Test]
     public function crawlerInitCallsBothCleaners(): void
     {

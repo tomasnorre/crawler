@@ -67,9 +67,7 @@ class CrawlerControllerTest extends FunctionalTestCase
     #[\PHPUnit\Framework\Attributes\Test]
     public function getConfigurationsForBranch(): void
     {
-        $GLOBALS['BE_USER'] = $this->getMockBuilder(BackendUserAuthentication::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $GLOBALS['BE_USER'] = $this->createStub(BackendUserAuthentication::class);
         $GLOBALS['BE_USER']->method('isAdmin')->willReturn(true);
 
         $configurationsForBranch = $this->subject->getConfigurationsForBranch(5, 99);
@@ -108,7 +106,7 @@ class CrawlerControllerTest extends FunctionalTestCase
             ['getDuplicateQueueItemsIfExists']
         );
 
-        $mockedQueueRepository->expects($this->any())->method('getDuplicateQueueItemsIfExists')->willReturn(
+        $mockedQueueRepository->method('getDuplicateQueueItemsIfExists')->willReturn(
             $mockedDuplicateRowResult
         );
 

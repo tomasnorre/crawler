@@ -100,8 +100,8 @@ class ProcessTest extends UnitTestCase
     {
         /** @var MockObject|Process $processMock */
         $processMock = self::getAccessibleMock(Process::class, ['isActive', 'getProgress'], [], '', false);
-        $processMock->expects($this->any())->method('isActive')->willReturn((bool) $active);
-        $processMock->expects($this->any())->method('getProgress')->willReturn((float) $processes);
+        $processMock->method('isActive')->willReturn((bool) $active);
+        $processMock->method('getProgress')->willReturn((float) $processes);
 
         self::assertEquals($expectedState, $processMock->getState());
     }
@@ -121,8 +121,8 @@ class ProcessTest extends UnitTestCase
             '',
             false
         );
-        $processMock->expects($this->any())->method('getAssignedItemsCount')->willReturn($countItemsAssigned);
-        $processMock->expects($this->any())->method('getAmountOfItemsProcessed')->willReturn($countItemsProcessed);
+        $processMock->method('getAssignedItemsCount')->willReturn($countItemsAssigned);
+        $processMock->method('getAmountOfItemsProcessed')->willReturn($countItemsProcessed);
 
         self::assertEquals($expectedProgress, $processMock->getProgress());
     }
@@ -198,10 +198,10 @@ class ProcessTest extends UnitTestCase
             '',
             false
         );
-        $queueRepositoryMock->expects($this->any())->method('findOldestEntryForProcess')->willReturn(
+        $queueRepositoryMock->method('findOldestEntryForProcess')->willReturn(
             $getTimeForLastItem
         );
-        $queueRepositoryMock->expects($this->any())->method('findYoungestEntryForProcess')->willReturn(
+        $queueRepositoryMock->method('findYoungestEntryForProcess')->willReturn(
             $getTimeForFirstItem
         );
 
