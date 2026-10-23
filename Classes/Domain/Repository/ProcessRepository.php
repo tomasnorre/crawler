@@ -169,7 +169,7 @@ class ProcessRepository
      * Function is moved from ProcessCleanUpHook
      * TODO: Check why we need both getActiveProcessesOlderThanOneHour and getActiveOrphanProcesses, the get getActiveOrphanProcesses does not really check for Orphan in this implementation.
      */
-    public function getActiveProcessesOlderThanOneHour()
+    public function getActiveProcessesOlderThanOneHour(): ?array
     {
         $processMaxRunTime = $this->extensionSettings['processMaxRunTime'] ?? 360;
 
@@ -201,7 +201,7 @@ class ProcessRepository
      * @return array
      * @see getActiveProcessesOlderThanOneHour
      */
-    public function getActiveOrphanProcesses()
+    public function getActiveOrphanProcesses(): array
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
         $queryBuilder->getRestrictions()
