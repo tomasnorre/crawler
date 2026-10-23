@@ -27,7 +27,7 @@ jobs:
         id: "determine-tag"
         run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
-      - uses: tomasnorre/typo3-upload-ter@v2.2.4
+      - uses: tomasnorre/typo3-upload-ter@v2.3.0
         with:
           api-token: ${{ secrets.TYPO3_API_TOKEN }}
           php-version: '8.2'
