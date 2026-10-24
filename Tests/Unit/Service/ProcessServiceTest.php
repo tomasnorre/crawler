@@ -52,7 +52,7 @@ class ProcessServiceTest extends UnitTestCase
             [$mockedProcessRepository, new NullSleeper()]
         );
 
-        $processService->expects($this->any())->method('getCrawlerCliPath')->willReturn('php');
+        $processService->method('getCrawlerCliPath')->willReturn('php');
 
         self::assertTrue($processService->startProcess());
     }
@@ -77,7 +77,7 @@ class ProcessServiceTest extends UnitTestCase
             [$mockedProcessRepository, new NullSleeper()]
         );
 
-        $processService->expects($this->any())->method('getCrawlerCliPath')->willReturn('php');
+        $processService->method('getCrawlerCliPath')->willReturn('php');
 
         self::assertTrue($processService->startProcess());
     }

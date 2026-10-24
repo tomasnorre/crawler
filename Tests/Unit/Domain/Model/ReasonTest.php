@@ -27,16 +27,6 @@ class ReasonTest extends UnitTestCase
 {
     protected bool $resetSingletonInstances = true;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-    }
-
     #[\PHPUnit\Framework\Attributes\Test]
     public function expectsConstructorToSetPropertiesFromArray(): void
     {

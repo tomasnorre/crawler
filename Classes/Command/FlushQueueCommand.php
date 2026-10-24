@@ -21,6 +21,7 @@ namespace AOE\Crawler\Command;
 
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Value\QueueFilter;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -30,6 +31,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * @internal since v12.0.0
  */
+#[AsCommand(name: 'crawler:flushQueue', description: 'Remove queue entries and perform a cleanup',)]
 class FlushQueueCommand extends Command
 {
     #[\Override]

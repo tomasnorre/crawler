@@ -25,6 +25,7 @@ use AOE\Crawler\Crawler;
 use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -34,6 +35,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * @internal since v12.0.0
  */
+#[AsCommand(name: 'crawler:processQueue', description: 'Process queue entries',)]
 class ProcessQueueCommand extends Command
 {
     private const CLI_STATUS_NOTHING_PROCCESSED = 0;

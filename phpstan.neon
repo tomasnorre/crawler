@@ -20,6 +20,22 @@ parameters:
             identifier: missingType.iterableValue
         -
             identifier: missingType.generics
+        -
+            identifier: symplify.requiredInterfaceContractNamespace
+        -
+            identifier: symplify.noReference
+        -
+            identifier: symplify.noNullableServiceInConstructor
+        -
+            identifier: symplify.requireArrayShapeReturn
+        -
+            identifier: symplify.forbiddenSwitch
+        -
+            identifier: symfony.singleRequiredMethod
+        -
+            identifier: symfony.noPublicNonActionMethodInController
+        -
+            identifier: symplify.parentMethodVisibilityOverride
 
     # composer require tomasvotruba/cognitive-complexity --dev
     cognitive_complexity:
