@@ -62,6 +62,8 @@ jobs:
           cd .devbox
           sed -i 's/php_version: "8.2"/php_version: "${{ matrix.php }}"/g' .ddev/config.yaml
           sed -i "s|$FROM_PATH|$TO_PATH|g" .ddev/docker-compose.volume.yaml
+          jq '.require["typo3/cms-core"] = "${{ matrix.typo3 }}"' composer.json > composer.json.tmp && mv composer.json.tmp composer.json
+          jq '.require["tomasnorre/crawler"] = "dev-$BRANCH_NAME"' composer.json > composer.json.tmp && mv composer.json.tmp composer.json
 
       # --- ADD CLEANUP HERE ---
       - name: Clean up existing DDEV and Docker state
@@ -78,10 +80,10 @@ jobs:
 
       - name: Playwright
         run: |
-          cd .devbox
-          rm -rf vendor composer.lock
-          ddev composer require typo3/cms-core=${{ matrix.typo3 }} tomasnorre/crawler=dev-$BRANCH_NAME
-          cd .. # Going back to "root" directory
+#          cd .devbox
+#          rm -rf vendor composer.lock
+#          ddev composer require typo3/cms-core=${{ matrix.typo3 }} tomasnorre/crawler=dev-$BRANCH_NAME
+#          cd .. # Going back to "root" directory
           wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
           chmod +x wait-for-it.sh
           docker ps
