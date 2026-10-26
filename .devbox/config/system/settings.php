@@ -13,14 +13,14 @@ return [
             'Default' => [
                 'charset' => 'utf8mb4',
                 'dbname' => 'db',
-                'driver' => 'mysqli',
-                'host' => 'db',
-                'user' => 'db',
-                'password' => 'db',
-                'port' => 3306,
                 'defaultTableOptions' => [
                     'collation' => 'utf8mb4_unicode_ci',
                 ],
+                'driver' => 'mysqli',
+                'host' => 'db',
+                'password' => 'db',
+                'port' => 3306,
+                'user' => 'db',
             ],
         ],
     ],
@@ -102,6 +102,9 @@ return [
             'slugBehaviour' => 'unique',
             'storageUidImporter' => '1',
             'tagPid' => '1',
+        ],
+        'scheduler' => [
+            'maxLifetime' => '1440',
         ],
     ],
     'FE' => [
