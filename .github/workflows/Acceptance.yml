@@ -64,7 +64,7 @@ jobs:
           sed -i 's/php_version: "8.2"/php_version: "${{ matrix.php }}"/g' .ddev/config.yaml
           sed -i "s|$FROM_PATH|$TO_PATH|g" .ddev/docker-compose.volume.yaml
           jq '.require["typo3/cms-core"] = "${{ matrix.typo3 }}"' composer.json > composer.json.tmp && mv composer.json.tmp composer.json
-          jq '.require["tomasnorre/crawler"] = "dev-$BRANCH_NAME"' composer.json > composer.json.tmp && mv composer.json.tmp composer.json
+          jq --arg branch "dev-$BRANCH_NAME" '.require["tomasnorre/crawler"] = $branch' composer.json > composer.json.tmp && mv composer.json.tmp composer.json
 
       # --- ADD CLEANUP HERE ---
       - name: Clean up existing DDEV and Docker state
