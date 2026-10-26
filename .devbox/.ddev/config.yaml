@@ -18,13 +18,10 @@ hooks:
     - exec: composer install -d /var/www/html
     # Import and upgrade Database
     - exec: /var/www/html/build-files/import-if-empty.sh
-    - exec: /var/www/html/bin/typo3 backend:lock
+    - exec: /var/www/html/bin/typo3 upgrade:run
     - exec: /var/www/html/bin/typo3 extension:setup
-    # - exec: /var/www/html/bin/typo3 database:updateschema
-    # - exec: /var/www/html/build-files/typo3-upgrade-wizard.sh
     - exec: /var/www/html/bin/typo3 cache:flush
     - exec: /var/www/html/bin/typo3 cache:warmup
-    - exec: /var/www/html/bin/typo3 backend:unlock
 omit_containers: [ ddev-ssh-agent ]
 webimage_extra_packages: [ poppler-utils ]
 use_dns_when_possible: true
