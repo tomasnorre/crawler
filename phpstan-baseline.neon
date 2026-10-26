@@ -1,6 +1,12 @@
 parameters:
 	ignoreErrors:
 		-
+			message: '#^Class cognitive complexity is 34, keep it under 28$#'
+			identifier: complexity.classLike
+			count: 1
+			path: Classes/Command/ProcessQueueCommand.php
+
+		-
 			message: '''
 				#^Call to deprecated method setMetaInformation\(\) of class TYPO3\\CMS\\Backend\\Template\\Components\\DocHeaderComponent\:
 				since v14, will be removed in v15\. Use setPageBreadcrumb\(\) instead\.$#
@@ -46,8 +52,14 @@ parameters:
 			path: Classes/Controller/Backend/BackendModuleCrawlerProcessController.php
 
 		-
-			message: '#^Class cognitive complexity is 77, keep it under 28$#'
+			message: '#^Class cognitive complexity is 96, keep it under 28$#'
 			identifier: complexity.classLike
+			count: 1
+			path: Classes/Controller/CrawlerController.php
+
+		-
+			message: '#^Cognitive complexity for "AOE\\Crawler\\Controller\\CrawlerController\:\:drawURLs_addRowsForPage\(\)" is 30, keep it under 20$#'
+			identifier: complexity.functionLike
 			count: 1
 			path: Classes/Controller/CrawlerController.php
 
@@ -85,6 +97,18 @@ parameters:
 			path: Classes/Service/BackendModuleLinkService.php
 
 		-
+			message: '#^Class cognitive complexity is 40, keep it under 28$#'
+			identifier: complexity.classLike
+			count: 1
+			path: Classes/Service/BackendModuleLogService.php
+
+		-
+			message: '#^Cognitive complexity for "AOE\\Crawler\\Service\\BackendModuleLogService\:\:addRows\(\)" is 31, keep it under 20$#'
+			identifier: complexity.functionLike
+			count: 1
+			path: Classes/Service/BackendModuleLogService.php
+
+		-
 			message: '#^Method AOE\\Crawler\\Service\\BackendModuleLogService\:\:addRows\(\) should return non\-empty\-list\<array\{titleRowSpan\: int\<1, max\>, colSpan\: int, title\: string, noEntries\?\: string, trClass\?\: string, qid\?\: array\{link\: TYPO3\\CMS\\Core\\Http\\Uri, link\-text\: string\}, refresh\?\: array\{link\: TYPO3\\CMS\\Core\\Http\\Uri, link\-text\: TYPO3\\CMS\\Core\\Imaging\\Icon, warning\: string\|TYPO3\\CMS\\Core\\Imaging\\Icon\}, columns\?\: array\{url\: mixed, scheduled\: string, exec_time\: string, result_log\: string, result_status\: string, feUserGroupList\: string, procInstructions\: string, set_id\: string, \.\.\.\}\}\> but returns array\{non\-empty\-list\<array\>, array\}\.$#'
 			identifier: return.type
 			count: 1
@@ -97,7 +121,13 @@ parameters:
 			path: Classes/Service/BackendModuleLogService.php
 
 		-
-			message: '#^Class cognitive complexity is 86, keep it under 28$#'
+			message: '#^Class cognitive complexity is 104, keep it under 28$#'
 			identifier: complexity.classLike
+			count: 1
+			path: Classes/Service/ConfigurationService.php
+
+		-
+			message: '#^Cognitive complexity for "AOE\\Crawler\\Service\\ConfigurationService\:\:expandParameters\(\)" is 23, keep it under 20$#'
+			identifier: complexity.functionLike
 			count: 1
 			path: Classes/Service/ConfigurationService.php

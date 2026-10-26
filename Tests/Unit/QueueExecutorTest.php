@@ -44,9 +44,9 @@ class QueueExecutorTest extends UnitTestCase
     protected QueueExecutor $queueExecutor;
 
     /**
-     * @var CrawlerController
+     * @var \PHPUnit\Framework\MockObject\Stub&\AOE\Crawler\Controller\CrawlerController
      */
-    protected $mockedCrawlerController;
+    protected \PHPUnit\Framework\MockObject\Stub $mockedCrawlerController;
 
     protected bool $resetSingletonInstances = true;
 
@@ -54,7 +54,7 @@ class QueueExecutorTest extends UnitTestCase
     {
         parent::setUp();
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [];
-        $this->mockedCrawlerController = $this->createMock(CrawlerController::class);
+        $this->mockedCrawlerController = $this->createStub(CrawlerController::class);
         $crawlStrategyFactory = GeneralUtility::makeInstance(CrawlStrategyFactory::class);
 
         $this->queueExecutor = new QueueExecutor(

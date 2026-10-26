@@ -26,6 +26,7 @@ use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\InvokeQueueChangeEvent;
 use AOE\Crawler\Utility\MessageUtility;
 use AOE\Crawler\Value\QueueRow;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
@@ -40,6 +41,7 @@ use TYPO3\CMS\Core\Utility\MathUtility;
 /**
  * @internal since v12.0.0
  */
+#[AsCommand(name: 'crawler:buildQueue', description: 'Create entries in the queue that can be processed at once',)]
 class BuildQueueCommand extends Command
 {
     public function __construct(

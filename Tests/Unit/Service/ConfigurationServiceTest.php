@@ -98,7 +98,7 @@ class ConfigurationServiceTest extends UnitTestCase
             ConfigurationService::class,
             $urlService->reveal(),
             $configurationRepository->reveal(),
-            $this->createMock(GroupResolver::class),
+            $this->createStub(GroupResolver::class),
         );
 
         self::assertEquals(

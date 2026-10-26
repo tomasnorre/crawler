@@ -107,19 +107,15 @@ class CrawlerControllerTest extends UnitTestCase
     ): void {
         $mockedPageService = $this->createPartialMock(PageService::class, ['checkIfPageShouldBeSkipped']);
         if ($checkIfPageSkipped) {
-            $mockedPageService->expects($this->any())->method('checkIfPageShouldBeSkipped')->willReturn(
-                $skipMessage
-            );
+            $mockedPageService->method('checkIfPageShouldBeSkipped')->willReturn($skipMessage);
         } else {
-            $mockedPageService->expects($this->any())->method('checkIfPageShouldBeSkipped')->willReturn(
-                $checkIfPageSkipped
-            );
+            $mockedPageService->method('checkIfPageShouldBeSkipped')->willReturn($checkIfPageSkipped);
         }
 
         /** @var MockObject|CrawlerController $crawlerController */
         $crawlerController = $this->createPartialMock(CrawlerController::class, ['getPageService', 'getUrlsForPageId']);
-        $crawlerController->expects($this->any())->method('getPageService')->willReturn($mockedPageService);
-        $crawlerController->expects($this->any())->method('getUrlsForPageId')->willReturn($getUrlsForPages);
+        $crawlerController->method('getPageService')->willReturn($mockedPageService);
+        $crawlerController->method('getUrlsForPageId')->willReturn($getUrlsForPages);
 
         self::assertEquals($expected, $crawlerController->getUrlsForPageRow($pageRow, $skipMessage));
     }

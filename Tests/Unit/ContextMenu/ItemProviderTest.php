@@ -36,7 +36,7 @@ class ItemProviderTest extends UnitTestCase
     protected function setUp(): void
     {
         $mockedLanguageService = self::getAccessibleMock(LanguageService::class, ['sL'], [], '', false);
-        $mockedLanguageService->expects($this->any())->method('sL')->willReturn('language string');
+        $mockedLanguageService->method('sL')->willReturn('language string');
         $GLOBALS['LANG'] = $mockedLanguageService;
         $this->oldBackendUser = $GLOBALS['BE_USER'] ?? null;
         $backendUserStub = $this->createStub(BackendUserAuthentication::class);
