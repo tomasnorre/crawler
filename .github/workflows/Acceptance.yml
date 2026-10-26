@@ -25,7 +25,7 @@ jobs:
           - "8.5"
 
     timeout-minutes: 60
-    runs-on: 'self-hosted'
+    runs-on: ${{ matrix.typo3 == '^13.4' && 'ubuntu-26.04' || 'self-hosted' }}
     steps:
       - name: Get branch name (merge)
         if: github.event_name != 'pull_request'
@@ -62,6 +62,15 @@ jobs:
           cd .devbox
           sed -i 's/php_version: "8.2"/php_version: "${{ matrix.php }}"/g' .ddev/config.yaml
           sed -i "s|$FROM_PATH|$TO_PATH|g" .ddev/docker-compose.volume.yaml
+
+      # --- ADD CLEANUP HERE ---
+      - name: Clean up existing DDEV and Docker state
+        run: |
+          cd .devbox
+          ddev delete -O -y || true
+          cd ..
+          docker volume prune -f || true
+      # ------------------------
 
       - uses: ddev/github-action-setup-ddev@v1
         with:
