@@ -57,3 +57,4 @@ tools/
 # Generated documentation
 Documentation-GENERATED-temp
 .devbox/scheduler-log.txt
+.phpactor.json
