@@ -20,9 +20,9 @@ jobs:
           #- ^14.3
         php:
           - "8.2"
-          #- "8.3"
-          #- "8.4"
-          #- "8.5"
+          - "8.3"
+          - "8.4"
+          - "8.5"
 
     timeout-minutes: 60
     runs-on: 'ubuntu-26.04'
@@ -63,15 +63,6 @@ jobs:
           sed -i 's/php_version: "8.2"/php_version: "${{ matrix.php }}"/g' .ddev/config.yaml
           sed -i "s|$FROM_PATH|$TO_PATH|g" .ddev/docker-compose.volume.yaml
 
-      # Clean up potential leftovers from previous runs
-      - name: Clean up existing DDEV and Docker state
-        run: |
-          cd .devbox
-          ddev delete -O -y || true
-          cd ..
-          docker volume prune -f || true
-      # ------------------------
-
       - uses: ddev/github-action-setup-ddev@v1
         with:
           ddevDir: ".devbox"
@@ -81,7 +72,6 @@ jobs:
           cd .devbox
           rm -rf vendor composer.lock
           ddev composer require typo3/cms-core=${{ matrix.typo3 }} tomasnorre/crawler=dev-$BRANCH_NAME
-          ddev restart
           cd .. # Going back to "root" directory
           wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
           chmod +x wait-for-it.sh
@@ -96,7 +86,7 @@ jobs:
       - name: Install Playwright Browsers
         run: cd Tests/Acceptance && npx playwright install chromium --with-deps
       - name: Run Playwright tests
-        run: cd Tests/Acceptance && npx playwright test --grep "$PW_GREP" Tests/frontend.spec.js
+        run: cd Tests/Acceptance && npx playwright test --grep "$PW_GREP"
       - uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
         with:
