@@ -12,7 +12,7 @@ on:
 jobs:
   build:
     name: Build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - name: Set up MySQL 8.0
         uses: mirromutth/mysql-action@v1.1
