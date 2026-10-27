@@ -19,7 +19,7 @@ jobs:
         php-version:
           - "8.2"
         operating-system:
-          - "ubuntu-latest"
+          - "ubuntu-26.04"
 
     steps:
       - name: "Checkout"

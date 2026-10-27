@@ -11,7 +11,7 @@ on:
 jobs:
     phpstan:
         name: PHPstan
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-26.04
         steps:
             -   uses: actions/checkout@v7
             -   id: composer-cache
@@ -32,7 +32,7 @@ jobs:
 
     rector:
         name: Rector
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-26.04
         steps:
             -   uses: actions/checkout@v7
             -   id: composer-cache
@@ -53,7 +53,7 @@ jobs:
 
     code-style:
         name: Code Style
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-26.04
         steps:
             -   uses: actions/checkout@v7
             -   id: composer-cache
@@ -74,7 +74,7 @@ jobs:
 
     Psalm:
         name: Psalm
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-26.04
         steps:
             -   uses: actions/checkout@v7
             -   id: composer-cache
