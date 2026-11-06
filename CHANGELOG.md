@@ -3,6 +3,7 @@
 ## Crawler 13.0.2-dev
 
 ### Added
+* Support for PHP 8.6
 
 ### Changed
 
