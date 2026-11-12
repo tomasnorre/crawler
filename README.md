@@ -26,7 +26,7 @@ composer require tomasnorre/crawler
 |----------|-----------|---------|---|
 | dev-main | 13.4-14.x | 8.2-8.5 |This is work in progress, for next major release 14.0.0
 | 13.x.y   | 13.4-14.x | 8.2-8.5 |Features, Bugfixes, Security Updates
-| 12.x.y   | 12.4-13.4 | 8.1-8.4 |Bugfixes, Security Updates, Since 12.0.6 TYPO3 13.4, Since 12.0.7 PHP 8.4
+| 12.x.y   | 12.4-13.4 | 8.1-8.4 |Security Updates, Since 12.0.6 TYPO3 13.4, Since 12.0.7 PHP 8.4
 | 11.x.y   | 10.4-11.5 | 7.4-8.1 |Security Updates, Since 11.0.3 PHP 8.1
 | 10.x.y   | 9.5-11.0  | 7.2-7.4 |Security Updates
 | 9.x.y    | 9.5-11.0  | 7.2-7.4 |As this version has same requirements as 10.x.y, there will be no further releases of this version, please update instead.
