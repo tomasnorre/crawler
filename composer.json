@@ -56,7 +56,7 @@
         "tomasvotruba/type-coverage": "2.5.1",
         "typo3/testing-framework": "9.7.0",
         "typo3/cms-seo": "^13.4 || ^14.3",
-        "vimeo/psalm": "6.20.1"
+        "vimeo/psalm": "7.3.0"
     },
     "replace": {
         "aoepeople/crawler": "self.version",
