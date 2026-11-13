@@ -100,6 +100,36 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
         $this->assertEmpty($CSVData);
     }
 
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function addRowsReturnsOneCsvRowPerLogEntry(): void
+    {
+        $setId = 987654;
+        $logEntries = [
+            [
+                'qid' => 20,
+                'parameters' => '{"url":"\/first","procInstructions":[""],"procInstrParams":[]}',
+                'scheduled' => 0,
+                'set_id' => $setId,
+                'result_data' => '',
+                'exec_time' => 0,
+            ],
+            [
+                'qid' => 21,
+                'parameters' => '{"url":"\/second","procInstructions":[""],"procInstrParams":[]}',
+                'scheduled' => 0,
+                'set_id' => $setId,
+                'result_data' => '',
+                'exec_time' => 0,
+            ],
+        ];
+
+        [, $csvData] = $this->subject->addRows($logEntries, $setId, 'Testing', '0', '0', true);
+
+        self::assertCount(2, $csvData);
+        self::assertSame([20, 21], array_column($csvData, 'qid'));
+        self::assertSame(['/first', '/second'], array_column($csvData, 'url'));
+    }
+
     public static function addRowsNoEntriesDataProvider(): \Iterator
     {
         $title = 'Testing';
@@ -339,15 +369,17 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
                     ],
                 ],
                 [
-                    'scheduled' => '1970-01-01 00:00',
-                    'exec_time' => '-',
-                    'result_status' => '-',
-                    'url' => '/',
-                    'feUserGroupList' => '',
-                    'procInstructions' => '',
-                    'set_id' => '987654',
-                    'result_log' => '',
-                    'qid' => 20,
+                    [
+                        'scheduled' => '1970-01-01 00:00',
+                        'exec_time' => '-',
+                        'result_status' => '-',
+                        'url' => '/',
+                        'feUserGroupList' => '',
+                        'procInstructions' => '',
+                        'set_id' => '987654',
+                        'result_log' => '',
+                        'qid' => 20,
+                    ],
                 ],
             ],
         ];

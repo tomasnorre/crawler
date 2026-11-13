@@ -21,8 +21,10 @@ namespace AOE\Crawler\Service;
 use AOE\Crawler\Controller\Backend\BackendModuleCrawlerLogController;
 use AOE\Crawler\Controller\Backend\Helper\ResultHandler;
 use AOE\Crawler\Controller\Backend\Helper\UrlBuilder;
+use Psr\Http\Message\UriInterface;
 use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Imaging\IconSize;
 use TYPO3\CMS\Core\Localization\LanguageService;
@@ -41,7 +43,7 @@ class BackendModuleLogService
      *
      * @throws RouteNotFoundException
      *
-     * @return array{0: non-empty-list<array<string, mixed>>, 1: array<string, mixed>}
+     * @return array{0: non-empty-list<array<string, mixed>>, 1: list<array<string, mixed>>}
      */
     public function addRows(
         array $logEntriesOfPage,
@@ -51,101 +53,34 @@ class BackendModuleLogService
         string $showFeVars,
         bool $CSVExport = false,
     ): array {
-        $resultArray = [];
         $contentArray = $this->configureContentArray($showResultLog, $showFeVars);
-        $csvExport = [];
 
-        if (!empty($logEntriesOfPage)) {
-            $refreshIcon = $this->iconFactory->getIcon('actions-system-refresh', IconSize::SMALL);
-            // Traverse parameter combinations:
-            $firstIteration = true;
-            foreach ($logEntriesOfPage as $vv) {
-                // Title column:
-                if ($firstIteration) {
-                    $contentArray['titleRowSpan'] = count($logEntriesOfPage);
-                    $contentArray['title'] = $titleString;
-                } else {
-                    $contentArray['title'] = '';
-                    $contentArray['titleRowSpan'] = 1;
-                }
-
-                $firstIteration = false;
-                $execTime = $vv['exec_time'] ? BackendUtility::datetime($vv['exec_time']) : '-';
-
-                // Result:
-                $resLog = ResultHandler::getResultLog($vv);
-
-                $resultData = $vv['result_data'] ? json_decode((string) $vv['result_data'], true) : [];
-                $resStatus = ResultHandler::getResStatus($resultData);
-
-                // Compile row:
-                $parameters = json_decode((string) $vv['parameters'], true);
-
-                // Put data into array:
-                $rowData = [];
-                if ($showResultLog) {
-                    $rowData['result_log'] = $resLog;
-                } else {
-                    $rowData['scheduled'] = ($vv['scheduled'] > 0) ? BackendUtility::datetime($vv['scheduled']) : '-';
-                    $rowData['exec_time'] = $execTime;
-                }
-                $rowData['result_status'] = GeneralUtility::fixed_lgd_cs($resStatus, 50);
-                $rowData['url'] = htmlspecialchars(
-                    (string) ($parameters['url'] ?? $parameters['alturl']),
-                    ENT_QUOTES | ENT_HTML5
-                );
-                $rowData['feUserGroupList'] = $parameters['feUserGroupList'] ?? '';
-                $rowData['procInstructions'] = is_array($parameters['procInstructions']) ? implode(
-                    '; ',
-                    $parameters['procInstructions']
-                ) : '';
-                $rowData['set_id'] = (string) $vv['set_id'];
-
-                $rowData = $this->populateFeVars($showFeVars, $resultData, $rowData);
-
-                $trClass = '';
-                $warningIcon = '';
-                if (str_contains($resStatus, 'Error')) {
-                    $trClass = 'bg-danger';
-                    $warningIcon = $this->iconFactory->getIcon('actions-ban', IconSize::SMALL);
-                }
-
-                // Put rows together:
-                $contentArray['trClass'] = $trClass;
-                $contentArray['qid'] = [
-                    'link' => UrlBuilder::getBackendModuleUrl(
-                        [
-                            'qid_details' => $vv['qid'],
-                            'setID' => $setId,
-                        ],
-                        BackendModuleCrawlerLogController::BACKEND_MODULE
-                    ),
-                    'link-text' => htmlspecialchars((string) $vv['qid'], ENT_QUOTES | ENT_HTML5),
-                ];
-                $contentArray['refresh'] = [
-                    'link' => UrlBuilder::getBackendModuleUrl(
-                        [
-                            'qid_read' => $vv['qid'],
-                            'setID' => $setId,
-                        ],
-                        BackendModuleCrawlerLogController::BACKEND_MODULE
-                    ),
-                    'link-text' => $refreshIcon,
-                    'warning' => $warningIcon,
-                ];
-
-                $contentArray = $this->buildColumnsInContentArray($rowData, $contentArray);
-                $resultArray[] = $contentArray;
-                if ($CSVExport) {
-                    $csvExport = $this->extractCsvExport($vv, $contentArray['columns'], $resLog);
-                }
-            }
-        } else {
-            $csvExport = [];
+        if ($logEntriesOfPage === []) {
             $contentArray['title'] = $titleString;
             $contentArray['noEntries'] = $this->getLanguageService()->sL('crawler.messages:labels.noentries');
+            return [[$contentArray], []];
+        }
 
+        $refreshIcon = $this->iconFactory->getIcon('actions-system-refresh', IconSize::SMALL);
+        $resultArray = [];
+        $csvExport = [];
+        foreach (array_values($logEntriesOfPage) as $index => $logEntry) {
+            // Only the first row carries the page title, spanning all rows of the page
+            $contentArray['title'] = $index === 0 ? $titleString : '';
+            $contentArray['titleRowSpan'] = $index === 0 ? count($logEntriesOfPage) : 1;
+
+            $contentArray = $this->buildRow(
+                $logEntry,
+                $contentArray,
+                $setId,
+                $showResultLog,
+                $showFeVars,
+                $refreshIcon
+            );
             $resultArray[] = $contentArray;
+            if ($CSVExport) {
+                $csvExport[] = $this->extractCsvExport($logEntry, $contentArray['columns']);
+            }
         }
 
         return [$resultArray, $csvExport];
@@ -162,13 +97,90 @@ class BackendModuleLogService
         return $contentArray;
     }
 
+    /**
+     * @throws RouteNotFoundException
+     */
+    private function buildRow(
+        array $logEntry,
+        array $contentArray,
+        int $setId,
+        string $showResultLog,
+        string $showFeVars,
+        Icon $refreshIcon,
+    ): array {
+        $resultData = $logEntry['result_data'] ? json_decode((string) $logEntry['result_data'], true) : [];
+        $resStatus = ResultHandler::getResStatus($resultData);
+        $isError = str_contains($resStatus, 'Error');
+
+        $rowData = $this->buildRowData($logEntry, $showResultLog, $resStatus);
+        $rowData = $this->populateFeVars($showFeVars, $resultData, $rowData);
+
+        $contentArray['trClass'] = $isError ? 'bg-danger' : '';
+        $contentArray['qid'] = [
+            'link' => $this->getModuleUrl('qid_details', $logEntry['qid'], $setId),
+            'link-text' => htmlspecialchars((string) $logEntry['qid'], ENT_QUOTES | ENT_HTML5),
+        ];
+        $contentArray['refresh'] = [
+            'link' => $this->getModuleUrl('qid_read', $logEntry['qid'], $setId),
+            'link-text' => $refreshIcon,
+            'warning' => $isError ? $this->iconFactory->getIcon('actions-ban', IconSize::SMALL) : '',
+        ];
+
+        return $this->buildColumnsInContentArray($rowData, $contentArray);
+    }
+
+    private function buildRowData(array $logEntry, string $showResultLog, string $resStatus): array
+    {
+        $parameters = json_decode((string) $logEntry['parameters'], true);
+
+        $rowData = [];
+        if ($showResultLog) {
+            $rowData['result_log'] = ResultHandler::getResultLog($logEntry);
+        } else {
+            $rowData['scheduled'] = $this->formatDateTime((int) $logEntry['scheduled']);
+            $rowData['exec_time'] = $this->formatDateTime((int) $logEntry['exec_time']);
+        }
+        $rowData['result_status'] = GeneralUtility::fixed_lgd_cs($resStatus, 50);
+        $rowData['url'] = htmlspecialchars(
+            (string) ($parameters['url'] ?? $parameters['alturl'] ?? ''),
+            ENT_QUOTES | ENT_HTML5
+        );
+        $rowData['feUserGroupList'] = $parameters['feUserGroupList'] ?? '';
+        $rowData['procInstructions'] = is_array($parameters['procInstructions'] ?? null)
+            ? implode('; ', $parameters['procInstructions'])
+            : '';
+        $rowData['set_id'] = (string) $logEntry['set_id'];
+
+        return $rowData;
+    }
+
+    private function formatDateTime(int $timestamp): string
+    {
+        return $timestamp > 0 ? BackendUtility::datetime($timestamp) : '-';
+    }
+
+    /**
+     * @throws RouteNotFoundException
+     */
+    private function getModuleUrl(string $parameterName, mixed $queueId, int $setId): UriInterface
+    {
+        return UrlBuilder::getBackendModuleUrl(
+            [
+                $parameterName => $queueId,
+                'setID' => $setId,
+            ],
+            BackendModuleCrawlerLogController::BACKEND_MODULE
+        );
+    }
+
     private function getLanguageService(): LanguageService
     {
         return $GLOBALS['LANG'];
     }
 
-    private function extractCsvExport(mixed $vv, array $columns, string $resLog): array
+    private function extractCsvExport(array $vv, array $columns): array
     {
+        $resLog = ResultHandler::getResultLog($vv);
         $csvExport = [];
         // Only for CSV (adding qid and scheduled/exec_time if needed):
         $csvExport['scheduled'] = BackendUtility::datetime($vv['scheduled']);
