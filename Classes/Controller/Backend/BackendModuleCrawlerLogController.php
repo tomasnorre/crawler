@@ -22,8 +22,8 @@ namespace AOE\Crawler\Controller\Backend;
 use AOE\Crawler\Controller\Backend\Helper\RequestHelper;
 use AOE\Crawler\Controller\Backend\Helper\ResultHandler;
 use AOE\Crawler\Controller\Backend\Helper\UrlBuilder;
-use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Queue\Message\CrawlUrlMessage;
 use AOE\Crawler\Service\BackendModuleLogService;
 use AOE\Crawler\Service\BackendModuleScriptUrlService;
 use AOE\Crawler\Utility\MessageUtility;
@@ -32,6 +32,7 @@ use AOE\Crawler\Writer\FileWriter\CsvWriter\CsvWriterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Contracts\Service\Attribute\Required;
 use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
@@ -71,7 +72,7 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
         private readonly QueueRepository $queueRepository,
         private readonly CsvWriterInterface $csvWriter,
         private readonly IconFactory $iconFactory,
-        private readonly CrawlerController $crawlerController,
+        private readonly MessageBusInterface $messageBus,
         private readonly BackendModuleLogService $backendModuleLogService,
         private readonly BackendModuleScriptUrlService $backendModuleScriptUrlService,
     ) {
@@ -141,7 +142,8 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
 
         $quidRead = RequestHelper::getIntFromRequest($request, 'qid_read');
         if ($quidRead) {
-            $this->crawlerController->readUrl($quidRead, true);
+            // Re-crawl an already crawled entry
+            $this->messageBus->dispatch(new CrawlUrlMessage($quidRead, true));
         }
 
         if ($this->queueId) {

@@ -6,6 +6,22 @@ services:
 
     AOE\Crawler\:
         resource: '../Classes/*'
+        exclude:
+            - '../Classes/Queue/Message/*'
+
+    # Doctrine transport for the crawler messages, see ext_localconf.php for the routing.
+    # Consume with: vendor/bin/typo3 messenger:consume crawler
+    crawler.messenger.transport.crawler:
+        class: 'Symfony\Component\Messenger\Bridge\Doctrine\Transport\DoctrineTransport'
+        factory: [ '@TYPO3\CMS\Core\Messenger\DoctrineTransportFactory', 'createTransport' ]
+        arguments:
+            $options:
+                queue_name: 'crawler'
+        tags:
+            - name: 'messenger.sender'
+              identifier: 'crawler'
+            - name: 'messenger.receiver'
+              identifier: 'crawler'
 
     AOE\Crawler\Command\BuildQueueCommand:
         tags:
@@ -18,19 +34,6 @@ services:
             $pageRepository: '@TYPO3\CMS\Core\Domain\Repository\PageRepository'
             $crawlerController: '@AOE\Crawler\Controller\CrawlerController'
         public: true
-
-    AOE\Crawler\Command\ProcessQueueCommand:
-      arguments:
-        $crawler: '@AOE\Crawler\Crawler'
-        $crawlerController: '@AOE\Crawler\Controller\CrawlerController'
-        $processRepository: '@AOE\Crawler\Domain\Repository\ProcessRepository'
-        $queueRepository: '@AOE\Crawler\Domain\Repository\QueueRepository'
-      public: true
-      tags:
-        -   name: 'console.command'
-            command: 'crawler:processQueue'
-            description: 'Trigger the crawler to process the queue entries'
-
 
     AOE\Crawler\Command\FlushQueueCommand:
         tags:
@@ -139,11 +142,6 @@ services:
     AOE\Crawler\ContextMenu\ItemProvider:
         tags:
             - name: backend.contextmenu.itemprovider
-
-    AOE\Crawler\EventListener\AfterQueueItemAddedEventListener:
-      tags:
-        - name: event.listener
-          identifier: 'tx-crawler-after-queue-item-added'
 
     AOE\Crawler\EventListener\ShouldUseCachedPageDataIfAvailableEventListener:
       tags:

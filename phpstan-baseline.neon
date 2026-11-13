@@ -1,12 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Class cognitive complexity is 34, keep it under 28$#'
-			identifier: complexity.classLike
-			count: 1
-			path: Classes/Command/ProcessQueueCommand.php
-
-		-
 			message: '#^Cannot access offset ''_flush'' on array\|object\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -43,7 +37,7 @@ parameters:
 			path: Classes/Controller/Backend/BackendModuleCrawlerProcessController.php
 
 		-
-			message: '#^Class cognitive complexity is 96, keep it under 28$#'
+			message: '#^Class cognitive complexity is 95, keep it under 28$#'
 			identifier: complexity.classLike
 			count: 1
 			path: Classes/Controller/CrawlerController.php

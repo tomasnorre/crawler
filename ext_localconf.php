@@ -3,6 +3,11 @@ defined('TYPO3') or die();
 
 \AOE\Crawler\Utility\HookUtility::registerHooks('crawler');
 
+// Crawl messages are sent to the "crawler" transport (see Configuration/Services.yaml) by default and are
+// processed by a worker: `vendor/bin/typo3 messenger:consume crawler`.
+// The routing can be overridden in config/system/settings.php or config/system/additional.php.
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['messenger']['routing'][\AOE\Crawler\Queue\Message\CrawlUrlMessage::class] ??= 'crawler';
+
 if (!\TYPO3\CMS\Core\Core\Environment::isComposerMode()) {
     require \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('crawler') . '/Resources/Private/Php/Libraries/vendor/autoload.php';
 }

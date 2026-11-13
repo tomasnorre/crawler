@@ -21,14 +21,11 @@ namespace AOE\Crawler\Controller;
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Crawler;
-use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
-use AOE\Crawler\Event\AfterQueueItemAddedEvent;
 use AOE\Crawler\Event\AfterUrlAddedToQueueEvent;
-use AOE\Crawler\Event\BeforeQueueItemAddedEvent;
-use AOE\Crawler\QueueExecutor;
+use AOE\Crawler\Queue\Message\CrawlUrlMessage;
 use AOE\Crawler\Service\ConfigurationService;
 use AOE\Crawler\Service\PageService;
 use AOE\Crawler\Service\ProcessInstructionService;
@@ -37,12 +34,13 @@ use AOE\Crawler\Value\QueueRow;
 use Psr\Http\Message\UriInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\DelayStamp;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Authentication\GroupResolver;
 use TYPO3\CMS\Core\Core\Bootstrap;
-use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Imaging\IconFactory;
@@ -78,7 +76,6 @@ class CrawlerController implements LoggerAwareInterface
     protected QueueRepository $queueRepository;
     protected ProcessRepository $processRepository;
     protected ConfigurationRepository $configurationRepository;
-    protected QueueExecutor $queueExecutor;
     protected int $maximumUrlsToCompile = 10000;
     protected IconFactory $iconFactory;
 
@@ -94,6 +91,7 @@ class CrawlerController implements LoggerAwareInterface
     private ConfigurationService $configurationService;
     private UrlService $urlService;
     private EventDispatcher $eventDispatcher;
+    private MessageBusInterface $messageBus;
 
     /************************************
      *
@@ -103,17 +101,11 @@ class CrawlerController implements LoggerAwareInterface
 
     public function __construct()
     {
-        $crawlStrategyFactory = GeneralUtility::makeInstance(CrawlStrategyFactory::class);
         $this->queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
         $this->processRepository = GeneralUtility::makeInstance(ProcessRepository::class);
         $this->configurationRepository = GeneralUtility::makeInstance(ConfigurationRepository::class);
         $this->pageRepository = GeneralUtility::makeInstance(PageRepository::class);
         $this->eventDispatcher = GeneralUtility::makeInstance(EventDispatcher::class);
-        $this->queueExecutor = GeneralUtility::makeInstance(
-            QueueExecutor::class,
-            $crawlStrategyFactory,
-            $this->eventDispatcher
-        );
         $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
         GeneralUtility::makeInstance(Crawler::class);
         $this->configurationService = GeneralUtility::makeInstance(
@@ -127,10 +119,6 @@ class CrawlerController implements LoggerAwareInterface
         $configurationProvider = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
         $this->extensionSettings = $configurationProvider->getExtensionConfiguration();
 
-        if (abs((int) $this->extensionSettings['countInARun']) === 0) {
-            $this->extensionSettings['countInARun'] = 100;
-        }
-
         $this->extensionSettings['processLimit'] = MathUtility::forceIntegerInRange(
             $this->extensionSettings['processLimit'],
             1,
@@ -140,6 +128,11 @@ class CrawlerController implements LoggerAwareInterface
         $this->setMaximumUrlsToCompile(
             MathUtility::forceIntegerInRange($this->extensionSettings['maxCompileUrls'], 1, 1000000000, 10000)
         );
+    }
+
+    public function injectMessageBus(MessageBusInterface $messageBus): void
+    {
+        $this->messageBus = $messageBus;
     }
 
     public function setMaximumUrlsToCompile(int $maximumUrlsToCompile): void
@@ -413,19 +406,17 @@ class CrawlerController implements LoggerAwareInterface
         int $schedule = 0
     ): void {
         $params['_CALLBACKOBJ'] = $callBack;
+        $scheduled = $schedule ?: $this->getCurrentTime();
 
-        GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(QueueRepository::TABLE_NAME)
-            ->insert(
-                QueueRepository::TABLE_NAME,
-                [
-                    'page_id' => $page_id,
-                    'parameters' => json_encode($params),
-                    'scheduled' => $schedule ?: $this->getCurrentTime(),
-                    'exec_time' => 0,
-                    'set_id' => $setId,
-                    'result_data' => '',
-                ]
-            );
+        $queueId = $this->queueRepository->add([
+            'page_id' => $page_id,
+            'parameters' => json_encode($params),
+            'scheduled' => $scheduled,
+            'exec_time' => 0,
+            'set_id' => $setId,
+            'result_data' => '',
+        ]);
+        $this->dispatchCrawlUrlMessage($queueId, $scheduled);
     }
 
     /************************************
@@ -502,15 +493,11 @@ class CrawlerController implements LoggerAwareInterface
                 );
             }
             if ($rows === []) {
-                $connectionForCrawlerQueue = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(
-                    QueueRepository::TABLE_NAME
-                );
-                $connectionForCrawlerQueue->insert(QueueRepository::TABLE_NAME, $fieldArray);
-                $uid = $connectionForCrawlerQueue->lastInsertId();
-                $rows[] = $uid;
+                $uid = $this->queueRepository->add($fieldArray);
                 $urlAdded = true;
 
-                $this->eventDispatcher->dispatch(new AfterUrlAddedToQueueEvent($uid, $fieldArray));
+                $this->eventDispatcher->dispatch(new AfterUrlAddedToQueueEvent((string) $uid, $fieldArray));
+                $this->dispatchCrawlUrlMessage($uid, (int) $tstamp);
             }
         }
 
@@ -532,78 +519,6 @@ class CrawlerController implements LoggerAwareInterface
      * URL reading
      *
      ************************************/
-    /**
-     * Read URL for a single queue entry
-     *
-     * @param boolean $force If set, will process even if exec_time has been set!
-     * @return int|null
-     */
-    public function readUrl(int $queueId, bool $force = false, string $processId = '')
-    {
-        $ret = 0;
-        $this->logger?->debug('crawler-readurl start ' . microtime(true));
-
-        $queueRec = $this->queueRepository->getQueueEntriesByQid($queueId, $force);
-
-        if (!is_array($queueRec)) {
-            return null;
-        }
-
-        $event = $this->eventDispatcher->dispatch(new BeforeQueueItemAddedEvent($queueId, $queueRec));
-        $queueRec = $event->getQueueRecord();
-
-        // Set exec_time to lock record:
-        $field_array = [
-            'exec_time' => $this->getCurrentTime(),
-        ];
-
-        $field_array['process_id_completed'] = $processId;
-
-        GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(QueueRepository::TABLE_NAME)
-            ->update(QueueRepository::TABLE_NAME, $field_array, [
-                'qid' => $queueId,
-            ]);
-
-        $result = $this->queueExecutor->executeQueueItem($queueRec, $this);
-        // Set result in log which also denotes the end of the processing of this entry.
-        $field_array = [
-            'result_data' => json_encode($result),
-        ];
-
-        $this->eventDispatcher->dispatch(new AfterQueueItemAddedEvent($queueId, $field_array));
-        $this->logger?->debug('crawler-readurl stop ' . microtime(true));
-
-        return $ret;
-    }
-
-    /**
-     * Read URL for not-yet-inserted log-entry
-     *
-     * @param array $field_array Queue field array,
-     *
-     * @return array|bool|mixed|string
-     */
-    public function readUrlFromArray($field_array)
-    {
-        // Set exec_time to lock record:
-        $field_array['exec_time'] = $this->getCurrentTime();
-        $connectionForCrawlerQueue = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(
-            QueueRepository::TABLE_NAME
-        );
-        $connectionForCrawlerQueue->insert(QueueRepository::TABLE_NAME, $field_array);
-        $queueId = $field_array['qid'] = $connectionForCrawlerQueue->lastInsertId();
-        $result = $this->queueExecutor->executeQueueItem($field_array, $this);
-
-        // Set result in log which also denotes the end of the processing of this entry.
-        $field_array = [
-            'result_data' => json_encode($result),
-        ];
-
-        $this->eventDispatcher->dispatch(new AfterQueueItemAddedEvent($queueId, $field_array));
-
-        return $result;
-    }
-
     /*****************************
      *
      * Compiling URLs to crawl - tools
@@ -831,6 +746,19 @@ class CrawlerController implements LoggerAwareInterface
         unset($configuration['paramExpanded']);
         unset($configuration['URLs']);
         return md5(serialize($configuration));
+    }
+
+    /**
+     * Hands the queue record over to the message bus. Records scheduled in the future are delayed accordingly.
+     */
+    private function dispatchCrawlUrlMessage(int $queueId, int $scheduled): void
+    {
+        $stamps = [];
+        $delayInSeconds = $scheduled - $this->getCurrentTime();
+        if ($delayInSeconds > 0) {
+            $stamps[] = new DelayStamp($delayInSeconds * 1000);
+        }
+        $this->messageBus->dispatch(new CrawlUrlMessage($queueId), $stamps);
     }
 
     protected function getPageService(): PageService

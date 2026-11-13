@@ -22,9 +22,13 @@ namespace AOE\Crawler\Tests\Functional\Controller;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Queue\Message\CrawlUrlMessage;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use AOE\Crawler\Value\QueueFilter;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\DelayStamp;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\TestingFramework\Core\AccessibleObjectInterface;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
@@ -113,6 +117,13 @@ class CrawlerControllerTest extends FunctionalTestCase
         $mockedCrawlerController->_set('registerQueueEntriesInternallyOnly', $registerQueueEntriesInternallyOnly);
         $mockedCrawlerController->_set('queueRepository', $mockedQueueRepository);
 
+        $messageBus = $this->createMock(MessageBusInterface::class);
+        $messageBus->expects($expected ? self::once() : self::never())
+            ->method('dispatch')
+            ->with(self::isInstanceOf(CrawlUrlMessage::class), [])
+            ->willReturnCallback(static fn (object $message): Envelope => new Envelope($message));
+        $mockedCrawlerController->injectMessageBus($messageBus);
+
         self::assertEquals(
             $expected,
             $mockedCrawlerController->addUrl(
@@ -124,6 +135,33 @@ class CrawlerControllerTest extends FunctionalTestCase
                 $skipInnerDuplicationCheck
             )
         );
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function addUrlDelaysMessageForEntriesScheduledInTheFuture(): void
+    {
+        $mockedQueueRepository = $this->getAccessibleMock(QueueRepository::class, ['getDuplicateQueueItemsIfExists']);
+        $mockedQueueRepository->method('getDuplicateQueueItemsIfExists')->willReturn([]);
+
+        $crawlerController = $this->getAccessibleMock(CrawlerController::class, ['getCurrentTime']);
+        $crawlerController->method('getCurrentTime')->willReturn(1_000_000);
+        $crawlerController->_set('queueRepository', $mockedQueueRepository);
+
+        $messageBus = $this->createMock(MessageBusInterface::class);
+        $messageBus->expects(self::once())
+            ->method('dispatch')
+            ->willReturnCallback(static function (object $message, array $stamps): Envelope {
+                self::assertInstanceOf(CrawlUrlMessage::class, $message);
+                self::assertCount(1, $stamps);
+                self::assertInstanceOf(DelayStamp::class, $stamps[0]);
+                self::assertSame(60_000, $stamps[0]->getDelay());
+                return new Envelope($message, $stamps);
+            });
+        $crawlerController->injectMessageBus($messageBus);
+
+        self::assertTrue($crawlerController->addUrl(1, 'https://example.com/', [
+            'key' => 'some-key',
+        ], 1_000_060));
     }
 
     public static function addUrlDataProvider(): iterable

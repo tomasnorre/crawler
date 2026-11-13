@@ -56,6 +56,50 @@ class QueueRepositoryTest extends FunctionalTestCase
         $this->subject = GeneralUtility::makeInstance(QueueRepository::class);
     }
 
+    #[Test]
+    public function addInsertsRecordAndReturnsQueueId(): void
+    {
+        $queueId = $this->subject->add([
+            'page_id' => 99,
+            'parameters' => '{"url":"https://example.com/"}',
+            'parameters_hash' => '',
+            'configuration_hash' => '',
+            'scheduled' => 0,
+            'exec_time' => 0,
+            'set_id' => 0,
+            'result_data' => '',
+            'configuration' => 'FirstConfiguration',
+        ]);
+
+        $record = $this->subject->getQueueEntriesByQid($queueId, false);
+        self::assertIsArray($record);
+        self::assertSame(99, (int) $record['page_id']);
+    }
+
+    #[Test]
+    public function updateChangesFieldsOfRecord(): void
+    {
+        $this->subject->update(1004, [
+            'exec_time' => 123,
+            'result_data' => 'result',
+        ]);
+
+        $record = $this->subject->getQueueEntriesByQid(1004, true);
+        self::assertIsArray($record);
+        self::assertSame(123, (int) $record['exec_time']);
+        self::assertSame('result', $record['result_data']);
+    }
+
+    #[Test]
+    public function getQueueEntriesByQidReturnsCrawledEntryOnlyIfForced(): void
+    {
+        // qid 1001 has an exec_time, so it is already crawled
+        self::assertFalse($this->subject->getQueueEntriesByQid(1001, false));
+        self::assertIsArray($this->subject->getQueueEntriesByQid(1001, true));
+        // qid 1004 is not crawled yet
+        self::assertIsArray($this->subject->getQueueEntriesByQid(1004, false));
+    }
+
     #[DataProvider('getFirstOrLastObjectByProcessDataProvider')]
     #[Test]
     public function getFirstOrLastObjectByProcess(
@@ -185,16 +229,6 @@ class QueueRepositoryTest extends FunctionalTestCase
     }
 
     #[Test]
-    public function cleanupQueue(): void
-    {
-        self::assertCount(15, $this->subject->findAll());
-        $this->subject->cleanupQueue();
-        self::assertCount(8, $this->subject->findAll());
-        // Called again to test the $del === 0 path of the cleanupQueue method.
-        $this->subject->cleanupQueue();
-    }
-
-    #[Test]
     public function cleanUpOldQueueEntries(): void
     {
         $recordsFromFixture = 15;
@@ -232,50 +266,6 @@ class QueueRepositoryTest extends FunctionalTestCase
 
         // Called again to test the $del === 0 path of the cleanUpOldQueueEntries method.
         $this->subject->cleanUpOldQueueEntries();
-    }
-
-    #[Test]
-    public function fetchRecordsToBeCrawled(): void
-    {
-        $recordsToBeCrawledLimitHigherThanRecordsCount = $this->subject->fetchRecordsToBeCrawled(10);
-        self::assertCount(8, $recordsToBeCrawledLimitHigherThanRecordsCount);
-
-        $recordsToBeCrawledLimitLowerThanRecordsCount = $this->subject->fetchRecordsToBeCrawled(3);
-        self::assertCount(3, $recordsToBeCrawledLimitLowerThanRecordsCount);
-    }
-
-    #[Test]
-    public function fetchRecordsToBeCrawledCheckingPriority(): void
-    {
-        $recordsToBeCrawled = $this->subject->fetchRecordsToBeCrawled(5);
-
-        $actualArray = [];
-        foreach ($recordsToBeCrawled as $record) {
-            $actualArray[] = $record['page_id'];
-        }
-
-        self::assertEquals([1, 3, 5, 2, 4], $actualArray);
-    }
-
-    #[Test]
-    public function updateProcessIdAndSchedulerForQueueIds(): void
-    {
-        $qidToUpdate = [1004, 1008, 1015, 1018];
-        $processId = md5('this-is-the-process-id');
-
-        self::assertSame(4, $this->subject->updateProcessIdAndSchedulerForQueueIds($qidToUpdate, $processId));
-    }
-
-    #[Test]
-    public function unsetProcessScheduledAndProcessIdForQueueEntries(): void
-    {
-        $unprocessedEntriesBefore = $this->subject->countAllPendingItems() - $this->subject->countAllAssignedPendingItems();
-        self::assertSame(5, $unprocessedEntriesBefore);
-        $processIds = ['4b802fa4bd183156c47836ba9c79643b'];
-        $this->subject->unsetProcessScheduledAndProcessIdForQueueEntries($processIds);
-
-        $unprocessedEntriesAfter = $this->subject->countAllPendingItems() - $this->subject->countAllAssignedPendingItems();
-        self::assertSame(7, $unprocessedEntriesAfter);
     }
 
     #[DataProvider('noUnprocessedQueueEntriesForPageWithConfigurationHashExistDataProvider')]

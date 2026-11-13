@@ -25,15 +25,6 @@ enableTimeslot=1
 ## Processing
 #########
 
-# cat=Processing; type=int [0-10000]; label= Sleep time between requests: Time in microseconds the crawler should sleep between requesting urls: low = faster / high = less stress for the server
-sleepTime = 1000
-
-# cat=Processing; type=int [0-100]; label= Sleep time after finishing: Time in seconds the crawler should sleep before finishing
-sleepAfterFinish=10
-
-# cat=Processing; type=int [1-10000]; label= Entries per run: How many queue entries should be processed in a run
-countInARun=100
-
 # cat=Processing; type=int [1-99]; label= Maximum processes
 processLimit=1
 
@@ -52,9 +43,6 @@ cleanUpProcessedAge=2
 
 # cat=Cleanup; type=int [1- 99]; label=Scheduled Age: If Clean up old queue entries is checked, then scheduled entries older than X days are deleted.
 cleanUpScheduledAge=7
-
-# cat=Cleanup; type=int [1-365]; label= Delete processed items: Delete processed items from the queue after n days (0 will keep the entries forever - the database may grow very large over time!)
-purgeQueueDays=14
 
 #########
 ## System

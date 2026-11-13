@@ -22,14 +22,11 @@ namespace AOE\Crawler\Domain\Repository;
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Value\QueueFilter;
-use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Exception;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-use Symfony\Contracts\Service\Attribute\Required;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -40,16 +37,6 @@ class QueueRepository implements LoggerAwareInterface
     use LoggerAwareTrait;
 
     final public const TABLE_NAME = 'tx_crawler_queue';
-
-    protected array $extensionSettings;
-
-    #[Required]
-    public function setExtensionSettings(): void
-    {
-        /** @var ExtensionConfigurationProvider $configurationProvider */
-        $configurationProvider = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
-        $this->extensionSettings = $configurationProvider->getExtensionConfiguration();
-    }
 
     // TODO: Should be a property on the QueueObject
     public function unsetQueueProcessId(string $processId): void
@@ -121,6 +108,27 @@ class QueueRepository implements LoggerAwareInterface
             ->fetchOne();
     }
 
+    /**
+     * Inserts a queue record and returns its uid (qid).
+     */
+    public function add(array $fieldArray): int
+    {
+        $connection = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(self::TABLE_NAME);
+        $connection->insert(self::TABLE_NAME, $fieldArray);
+        return (int) $connection->lastInsertId();
+    }
+
+    public function update(int $queueId, array $fieldArray): void
+    {
+        GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(self::TABLE_NAME)
+            ->update(self::TABLE_NAME, $fieldArray, [
+                'qid' => $queueId,
+            ]);
+    }
+
+    /**
+     * Returns the queue record, if $force is false only if it has not been crawled yet.
+     */
     public function getQueueEntriesByQid(int $queueId, bool $force): array|false
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
@@ -132,25 +140,9 @@ class QueueRepository implements LoggerAwareInterface
                 $queryBuilder->expr()->eq('qid', $queryBuilder->createNamedParameter($queueId, Connection::PARAM_INT))
             );
         if (!$force) {
-            $queryBuilder
-                ->andWhere('exec_time = 0')
-                ->andWhere('process_scheduled > 0');
+            $queryBuilder->andWhere($queryBuilder->expr()->eq('exec_time', 0));
         }
         return $queryBuilder->executeQuery()->fetchAssociative();
-    }
-
-    /**
-     * get items which have not been processed yet
-     */
-    public function getUnprocessedItems(): array
-    {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
-
-        return $queryBuilder
-            ->select('*')
-            ->from(self::TABLE_NAME)
-            ->where($queryBuilder->expr()->eq('exec_time', 0))
-            ->executeQuery()->fetchAllAssociative();
     }
 
     /**
@@ -244,29 +236,6 @@ class QueueRepository implements LoggerAwareInterface
         return $isPageInQueue;
     }
 
-    public function cleanupQueue(): void
-    {
-        $extensionSettings = GeneralUtility::makeInstance(
-            ExtensionConfigurationProvider::class
-        )->getExtensionConfiguration();
-        $purgeDays = (int) $extensionSettings['purgeQueueDays'];
-
-        if ($purgeDays > 0) {
-            $purgeDate = time() - 24 * 60 * 60 * $purgeDays;
-
-            $queryBuilderDelete = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
-                self::TABLE_NAME
-            );
-            $del = $queryBuilderDelete
-                ->delete(self::TABLE_NAME)
-                ->where('exec_time != 0 AND exec_time < ' . $purgeDate)->executeStatement();
-
-            if ($del === 0) {
-                $this->logger?->info('No records was deleted');
-            }
-        }
-    }
-
     /**
      * Cleans up entries that stayed for too long in the queue. These are default:
      * - processed entries that are over 1.5 days in age
@@ -292,77 +261,6 @@ class QueueRepository implements LoggerAwareInterface
         if ($del === 0) {
             $this->logger?->info('No records was deleted.');
         }
-    }
-
-    public function fetchRecordsToBeCrawled(int $countInARun): array
-    {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
-            self::TABLE_NAME
-        );
-
-        $isSeoEnabled = ExtensionManagementUtility::isLoaded('seo');
-        $fields = ['qid', 'scheduled', 'page_id'];
-        if ($isSeoEnabled) {
-            $fields[] = 'sitemap_priority';
-        }
-
-        $queryBuilder
-            ->select(...$fields)
-            ->from(self::TABLE_NAME)
-            ->leftJoin(
-                self::TABLE_NAME,
-                'pages',
-                'p',
-                $queryBuilder->expr()->eq('p.uid', $queryBuilder->quoteIdentifier(self::TABLE_NAME . '.page_id'))
-            )
-            ->where(
-                $queryBuilder->expr()->eq('exec_time', 0),
-                $queryBuilder->expr()->eq('process_scheduled', 0),
-                $queryBuilder->expr()->lte('scheduled', time())
-            );
-
-        if ($isSeoEnabled) {
-            $queryBuilder->orderBy('sitemap_priority', 'DESC');
-            $queryBuilder->addOrderBy('scheduled');
-        } else {
-            $queryBuilder->orderBy('scheduled');
-        }
-
-        return $queryBuilder
-            ->addOrderBy('qid')
-            ->setMaxResults($countInARun)
-            ->executeQuery()
-            ->fetchAllAssociative();
-    }
-
-    public function updateProcessIdAndSchedulerForQueueIds(array $quidList, string $processId): int
-    {
-        $queryBuilderUpdate = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
-            self::TABLE_NAME
-        );
-        return $queryBuilderUpdate
-            ->update(self::TABLE_NAME)
-            ->where($queryBuilderUpdate->expr()->in('qid', $quidList))
-            ->set('process_scheduled', (string) time())
-            ->set('process_id', $processId)
-            ->executeStatement();
-    }
-
-    public function unsetProcessScheduledAndProcessIdForQueueEntries(array $processIds): void
-    {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
-        $queryBuilder
-            ->update(self::TABLE_NAME)
-            ->where(
-                $queryBuilder->expr()->eq('exec_time', $queryBuilder->createNamedParameter(0, Connection::PARAM_INT)),
-                $queryBuilder->expr()->in(
-                    'process_id',
-                    $queryBuilder->createNamedParameter($processIds, ArrayParameterType::STRING)
-                )
-            )
-            ->set('process_scheduled', '0')
-            ->set('process_id', '0')
-            ->executeStatement();
     }
 
     /**
