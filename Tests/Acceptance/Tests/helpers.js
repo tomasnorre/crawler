@@ -1,4 +1,6 @@
 import {expect} from "@playwright/test";
+import {execSync} from "child_process";
+import path from "path";
 
 export async function loginBackend(page) {
     await page.goto('/typo3/');
@@ -29,3 +31,35 @@ export async function addQueueEntries(page, config, depth = '0') {
     await expect(page.locator('#nprogress')).toHaveCount(0);
 }
 
+
+const devboxPath = path.resolve(__dirname, '../../../.devbox');
+
+/**
+ * Runs a shell command in the web container of the devbox.
+ */
+export function ddevExec(command) {
+    return execSync(`ddev exec ${command}`, {cwd: devboxPath, encoding: 'utf8'});
+}
+
+/**
+ * Runs a SQL query against the devbox database and returns the raw result, without column names.
+ */
+export function ddevQuery(sql) {
+    return execSync('ddev mysql -N -B', {cwd: devboxPath, encoding: 'utf8', input: sql}).trim();
+}
+
+/**
+ * Runs the message bus worker until all crawl messages are handled.
+ */
+export function processCrawlerQueue(maxRuns = 12) {
+    for (let run = 0; run < maxRuns; run++) {
+        const pending = Number(ddevQuery(
+            "SELECT COUNT(*) FROM sys_messenger_messages WHERE queue_name IN ('crawler_high', 'crawler', 'crawler_low');"
+        ));
+        if (pending === 0) {
+            return;
+        }
+        ddevExec('bin/typo3 messenger:consume crawler_high crawler crawler_low --time-limit=10');
+    }
+    throw new Error('The crawler queue was not processed completely.');
+}
