@@ -63,6 +63,13 @@ Removed functionality
     `AOE\Crawler\Utility\HookUtility` and
     `AOE\Crawler\EventListener\AfterQueueItemAddedEventListener`.
 
+*   The unused classes `AOE\Crawler\Domain\Model\Configuration`,
+    `AOE\Crawler\Domain\Model\Queue`, `AOE\Crawler\Value\CrawlAction`,
+    `AOE\Crawler\Exception\CrawlerObjectException` and
+    `AOE\Crawler\Exception\TimeStampException`, and the deprecated method
+    `CrawlerController::drawURLs_PIfilter()`, use
+    `ProcessInstructionService::isAllowed()` instead.
+
 *   The hooks `$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['cli_hooks']`
     and `$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['refresh_hooks']`.
 

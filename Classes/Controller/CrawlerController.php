@@ -264,20 +264,6 @@ class CrawlerController implements LoggerAwareInterface
         return implode('<br>', $urlLog);
     }
 
-    /**
-     * Returns true if input processing instruction is among registered ones.
-     *
-     * @param string $piString PI to test
-     * @param array $incomingProcInstructions Processing instructions
-     * @return boolean
-     * @deprecated since 11.0.3 will be removed in v13.x
-     */
-    public function drawURLs_PIfilter(string $piString, array $incomingProcInstructions)
-    {
-        $processInstructionService = new ProcessInstructionService();
-        return $processInstructionService->isAllowed($piString, $incomingProcInstructions);
-    }
-
     public function getPageTSconfigForId(int $id): array
     {
         if (!$this->MP) {

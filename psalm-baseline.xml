@@ -58,7 +58,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
       <code><![CDATA[addQueueEntry_callBack]]></code>
-      <code><![CDATA[drawURLs_PIfilter]]></code>
       <code><![CDATA[getConfigurationsForBranch]]></code>
       <code><![CDATA[injectCrawlUrlMessageDispatcher]]></code>
       <code><![CDATA[setExtensionSettings]]></code>
@@ -82,16 +81,6 @@
   <file src="Classes/CrawlStrategy/SubProcessExecutionStrategy.php">
     <UnusedClass>
       <code><![CDATA[SubProcessExecutionStrategy]]></code>
-    </UnusedClass>
-  </file>
-  <file src="Classes/Domain/Model/Configuration.php">
-    <UnusedClass>
-      <code><![CDATA[Configuration]]></code>
-    </UnusedClass>
-  </file>
-  <file src="Classes/Domain/Model/Queue.php">
-    <UnusedClass>
-      <code><![CDATA[Queue]]></code>
     </UnusedClass>
   </file>
   <file src="Classes/Domain/Model/Reason.php">
@@ -185,16 +174,6 @@
       <code><![CDATA[ShouldUseCachedPageDataIfAvailableEventListener]]></code>
     </UnusedClass>
   </file>
-  <file src="Classes/Exception/CrawlerObjectException.php">
-    <UnusedClass>
-      <code><![CDATA[CrawlerObjectException]]></code>
-    </UnusedClass>
-  </file>
-  <file src="Classes/Exception/TimeStampException.php">
-    <UnusedClass>
-      <code><![CDATA[TimeStampException]]></code>
-    </UnusedClass>
-  </file>
   <file src="Classes/Hooks/DataHandlerHook.php">
     <PossiblyUnusedParam>
       <code><![CDATA[$dataHandler]]></code>
@@ -281,11 +260,6 @@
   <file src="Classes/Utility/TcaUtility.php">
     <UnusedClass>
       <code><![CDATA[TcaUtility]]></code>
-    </UnusedClass>
-  </file>
-  <file src="Classes/Value/CrawlAction.php">
-    <UnusedClass>
-      <code><![CDATA[CrawlAction]]></code>
     </UnusedClass>
   </file>
   <file src="Classes/Value/QueueRow.php">

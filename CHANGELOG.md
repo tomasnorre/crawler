@@ -29,12 +29,16 @@
 * `AOE\Crawler\Controller\Ajax\ProcessStatusController`
 * `AOE\Crawler\Controller\Backend\BackendModuleCrawlerProcessController`
 * `AOE\Crawler\Crawler`
-* `AOE\Crawler\Domain\Model\Process`
+* `AOE\Crawler\Domain\Model\Configuration`
 * `AOE\Crawler\Domain\Model\ProcessCollection`
+* `AOE\Crawler\Domain\Model\Process`
+* `AOE\Crawler\Domain\Model\Queue`
 * `AOE\Crawler\Domain\Repository\ProcessRepository`
 * `AOE\Crawler\EventListener\AfterQueueItemAddedEventListener`
+* `AOE\Crawler\Exception\CrawlerObjectException`
 * `AOE\Crawler\Exception\NoIndexFoundException`
 * `AOE\Crawler\Exception\ProcessException`
+* `AOE\Crawler\Exception\TimeStampException`
 * `AOE\Crawler\Helper\Sleeper\*`
 * `AOE\Crawler\Hooks\CrawlerHookInterface`
 * `AOE\Crawler\Hooks\ProcessCleanUpHook`
@@ -42,10 +46,12 @@
 * `AOE\Crawler\Service\BackendModuleLinkService`
 * `AOE\Crawler\Service\ProcessService`
 * `AOE\Crawler\Utility\HookUtility`
+* `AOE\Crawler\Value\CrawlAction`
 
 #### Functions & Properties
 * `CrawlerController::readUrl()`
 * `CrawlerController::readUrlFromArray()`
+* `CrawlerController::drawURLs_PIfilter()`
 * `CrawlerController::$processID`
 * `QueueRepository`: all process related methods, `getUnprocessedItems()`, `countAllPendingItems()`, `countAllAssignedPendingItems()`, `cleanupQueue()`, `fetchRecordsToBeCrawled()`
 
