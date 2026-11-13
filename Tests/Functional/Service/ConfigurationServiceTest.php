@@ -84,6 +84,26 @@ class ConfigurationServiceTest extends FunctionalTestCase
     }
 
     #[Test]
+    public function expandExcludeStringDoesNotMixSubpagesOfDifferentPages(): void
+    {
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/pages.csv');
+        $backendUser = $this->getMockBuilder(BackendUserAuthentication::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['isAdmin', 'getTSConfig', 'getPagePermsClause', 'isInWebMount', 'backendCheckLogin'])
+            ->getMock();
+        $backendUser->method('getPagePermsClause')->willReturn('1=1');
+        $backendUser->method('isInWebMount')->willReturn(1);
+        $GLOBALS['BE_USER'] = $backendUser;
+
+        // Page 3 has the subpage 6, page 5 has the subpages 7 and 8
+        $both = $this->subject->expandExcludeString('3+1,5+1');
+        $onlyPageFive = $this->subject->expandExcludeString('5+1,4');
+
+        self::assertEqualsCanonicalizing([3, 6, 5, 7, 8], $both);
+        self::assertEqualsCanonicalizing([5, 7, 8, 4], $onlyPageFive);
+    }
+
+    #[Test]
     public function getConfigurationFromDatabaseReturnsArray(): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [
