@@ -7,15 +7,6 @@ parameters:
 			path: Classes/Command/ProcessQueueCommand.php
 
 		-
-			message: '''
-				#^Call to deprecated method setMetaInformation\(\) of class TYPO3\\CMS\\Backend\\Template\\Components\\DocHeaderComponent\:
-				since v14, will be removed in v15\. Use setPageBreadcrumb\(\) instead\.$#
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: Classes/Controller/Backend/AbstractBackendModuleController.php
-
-		-
 			message: '#^Cannot access offset ''_flush'' on array\|object\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -86,15 +77,6 @@ parameters:
 			identifier: instanceof.alwaysTrue
 			count: 2
 			path: Classes/Domain/Model/ProcessCollection.php
-
-		-
-			message: '''
-				#^Call to deprecated method makeLinkButton\(\) of class TYPO3\\CMS\\Backend\\Template\\Components\\ButtonBar\:
-				since v14, will be removed in v15\. Inject ComponentFactory and use ComponentFactory\:\:createLinkButton\(\) instead\.$#
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: Classes/Service/BackendModuleLinkService.php
 
 		-
 			message: '#^Class cognitive complexity is 40, keep it under 28$#'

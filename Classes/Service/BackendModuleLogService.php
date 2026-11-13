@@ -145,9 +145,7 @@ class BackendModuleLogService
         } else {
             $csvExport = [];
             $contentArray['title'] = $titleString;
-            $contentArray['noEntries'] = $this->getLanguageService()->sL(
-                'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noentries'
-            );
+            $contentArray['noEntries'] = $this->getLanguageService()->sL('crawler.messages:labels.noentries');
 
             $resultArray[] = $contentArray;
         }

@@ -1,6 +1,6 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 13.0.2-dev
+## Crawler 14.0.0-dev
 
 ### Added
 
@@ -13,6 +13,8 @@
 #### Functions & Properties
 
 ### Removed
+* TYPO3 13 Support [@tomasnorre](https://github.com/tomasnorre)
+
 #### Classes
 #### Functions & Properties
 

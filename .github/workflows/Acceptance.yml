@@ -16,7 +16,6 @@ jobs:
       fail-fast: false
       matrix:
         typo3:
-          - ^13.4
           - ^14.3
         php:
           - "8.2"
@@ -25,8 +24,7 @@ jobs:
           - "8.5"
 
     timeout-minutes: 60
-    runs-on: ${{ matrix.typo3 == '^13.4' && 'ubuntu-26.04' || 'self-hosted' }}
-    #runs-on: 'ubuntu-26.04'
+    runs-on: 'self-hosted'
     steps:
       - name: Get branch name (merge)
         if: github.event_name != 'pull_request'
@@ -40,12 +38,7 @@ jobs:
 
       - name: Set Playwright tag
         shell: bash
-        run: |
-          if [[ "${{ matrix.typo3 }}" == "^13.4" ]]; then
-            echo "PW_GREP=@v13" >> $GITHUB_ENV
-          elif [[ "${{ matrix.typo3 }}" == "^14.3" ]]; then
-            echo "PW_GREP=@v14" >> $GITHUB_ENV
-          fi
+        run: echo "PW_GREP=@v14" >> $GITHUB_ENV
 
       - uses: actions/checkout@v7
       - name: Patch composer.json for forked PR
