@@ -42,15 +42,9 @@ from outside.
 Screenshots
 ===========
 
-The extension provides a backend module which displays the queue and log and
-allows execution and status check of the "cronscript" from the backend for
-testing purposes.
-
-..  figure:: /Images/backend_processlist.png
-
-    CLI status display
-
-CLI = Command Line Interface = shell script = cron script
+The extension provides a backend module to add pages to the queue and to
+display the queue and log. The queue is processed by the TYPO3 message bus, see
+:ref:`with-crown`.
 
 ..  figure:: /Images/backend_crawlerlog.png
 

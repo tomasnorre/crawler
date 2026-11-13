@@ -130,12 +130,13 @@ We want `crawler` to run automatically at night:
 
    - "Class" is "Execute console commands"
    - "Frequency" is every 10 minutes: `*/10 * * * *`
-   - "Schedulable Command" must be "crawler:processQueue"
+   - "Schedulable Command" must be "messenger:consume"
 
    Save and continue editing:
 
-   - "Option: amount" should be `50`, or any value that the system is
-     able to process within the 10 minutes.
+   - "Argument: receivers" must be `crawler_high crawler crawler_low`
+   - "Option: time-limit" should be `540`, so the worker stops before the
+     next run starts.
 
    Save.
 
