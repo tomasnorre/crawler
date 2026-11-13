@@ -27,7 +27,6 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Http\Response;
-use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Cache\CacheInstruction;
 use TYPO3\CMS\Frontend\Page\PageInformation;
@@ -52,11 +51,6 @@ class CrawlerInitializationTest extends FunctionalTestCase
     #[Test]
     public function processSetsCrawlerData(string $feGroups, array $expectedGroups): void
     {
-        $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
-        if ($typo3Version->getMajorVersion() < 13) {
-            $this->markTestSkipped('Only tested with TYPO3 13+');
-        }
-
         $queueParameters = [
             'url' => 'https://crawler-devbox.ddev.site',
             'feUserGroupList' => $feGroups,

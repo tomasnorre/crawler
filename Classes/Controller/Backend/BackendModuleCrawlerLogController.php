@@ -320,9 +320,7 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
     {
         if (!count($csvData)) {
             MessageUtility::addWarningMessage(
-                $this->getLanguageService()->sL(
-                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:message.canNotExportEmptyQueueToCsvText'
-                )
+                $this->getLanguageService()->sL('crawler.messages:message.canNotExportEmptyQueueToCsvText')
             );
             return;
         }

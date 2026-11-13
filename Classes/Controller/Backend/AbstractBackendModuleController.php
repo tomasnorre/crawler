@@ -56,7 +56,7 @@ abstract class AbstractBackendModuleController
         $permissionClause = $this->getBackendUserAuthentication()->getPagePermsClause(Permission::PAGE_SHOW);
         $pageRecord = BackendUtility::readPageAccess($pageUid, $permissionClause);
         if ($pageRecord) {
-            $moduleTemplate->getDocHeaderComponent()->setMetaInformation($pageRecord);
+            $moduleTemplate->getDocHeaderComponent()->setPageBreadcrumb($pageRecord);
         }
 
         return $moduleTemplate;
@@ -67,9 +67,7 @@ abstract class AbstractBackendModuleController
         if (!$this->isPhpForkAvailable()) {
             $this->isErrorDetected = true;
             MessageUtility::addErrorMessage(
-                $this->getLanguageService()->sL(
-                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:message.noPhpForkAvailable'
-                )
+                $this->getLanguageService()->sL('crawler.messages:message.noPhpForkAvailable')
             );
         }
 
@@ -80,7 +78,7 @@ abstract class AbstractBackendModuleController
             $this->isErrorDetected = true;
             MessageUtility::addErrorMessage(
                 sprintf($this->getLanguageService()->sL(
-                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:message.phpBinaryNotFound'
+                    'crawler.messages:message.phpBinaryNotFound'
                 ), htmlspecialchars((string) $extensionSettings['phpPath'], ENT_QUOTES | ENT_HTML5))
             );
         }
@@ -90,63 +88,31 @@ abstract class AbstractBackendModuleController
     {
         return [
             'logDepth' => [
-                0 => $this->getLanguageService()->sL(
-                    'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_0'
-                ),
-                1 => $this->getLanguageService()->sL(
-                    'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_1'
-                ),
-                2 => $this->getLanguageService()->sL(
-                    'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_2'
-                ),
-                3 => $this->getLanguageService()->sL(
-                    'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_3'
-                ),
-                4 => $this->getLanguageService()->sL(
-                    'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_4'
-                ),
-                99 => $this->getLanguageService()->sL(
-                    'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_infi'
-                ),
+                0 => $this->getLanguageService()->sL('core.core:labels.depth_0'),
+                1 => $this->getLanguageService()->sL('core.core:labels.depth_1'),
+                2 => $this->getLanguageService()->sL('core.core:labels.depth_2'),
+                3 => $this->getLanguageService()->sL('core.core:labels.depth_3'),
+                4 => $this->getLanguageService()->sL('core.core:labels.depth_4'),
+                99 => $this->getLanguageService()->sL('core.core:labels.depth_infi'),
             ],
             'crawlaction' => [
-                'start' => $this->getLanguageService()->sL(
-                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.start'
-                ),
-                'log' => $this->getLanguageService()->sL(
-                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.log'
-                ),
-                'multiprocess' => $this->getLanguageService()->sL(
-                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.multiprocess'
-                ),
+                'start' => $this->getLanguageService()->sL('crawler.messages:labels.start'),
+                'log' => $this->getLanguageService()->sL('crawler.messages:labels.log'),
+                'multiprocess' => $this->getLanguageService()->sL('crawler.messages:labels.multiprocess'),
             ],
             'log_resultLog' => '',
             'log_feVars' => '',
             'processListMode' => '',
             'displayLog' => [
-                'all' => $this->getLanguageService()->sL(
-                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.all'
-                ),
-                'pending' => $this->getLanguageService()->sL(
-                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.pending'
-                ),
-                'finished' => $this->getLanguageService()->sL(
-                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.finished'
-                ),
+                'all' => $this->getLanguageService()->sL('crawler.messages:labels.all'),
+                'pending' => $this->getLanguageService()->sL('crawler.messages:labels.pending'),
+                'finished' => $this->getLanguageService()->sL('crawler.messages:labels.finished'),
             ],
             'itemsPerPage' => [
-                '5' => $this->getLanguageService()->sL(
-                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.itemsPerPage.5'
-                ),
-                '10' => $this->getLanguageService()->sL(
-                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.itemsPerPage.10'
-                ),
-                '50' => $this->getLanguageService()->sL(
-                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.itemsPerPage.50'
-                ),
-                '0' => $this->getLanguageService()->sL(
-                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.itemsPerPage.0'
-                ),
+                '5' => $this->getLanguageService()->sL('crawler.messages:labels.itemsPerPage.5'),
+                '10' => $this->getLanguageService()->sL('crawler.messages:labels.itemsPerPage.10'),
+                '50' => $this->getLanguageService()->sL('crawler.messages:labels.itemsPerPage.50'),
+                '0' => $this->getLanguageService()->sL('crawler.messages:labels.itemsPerPage.0'),
             ],
         ];
     }

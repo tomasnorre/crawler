@@ -400,7 +400,11 @@
       <code><![CDATA[getLanguageService]]></code>
       <code><![CDATA[getLinkButton]]></code>
     </UnusedMethod>
+    <UnusedMethodCall>
+      <code><![CDATA[getButtonBar]]></code>
+    </UnusedMethodCall>
     <UnusedProperty>
+      <code><![CDATA[$componentFactory]]></code>
       <code><![CDATA[$iconFactory]]></code>
     </UnusedProperty>
   </file>

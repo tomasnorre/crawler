@@ -126,13 +126,11 @@ final class BackendModuleCrawlerProcessController extends AbstractBackendModuleC
             case 'addProcess':
                 if ($this->processService->startProcess() === false) {
                     throw new ProcessException($this->getLanguageService()->sL(
-                        'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.newprocesserror'
+                        'crawler.messages:labels.newprocesserror'
                     ));
                 }
                 MessageUtility::addNoticeMessage(
-                    $this->getLanguageService()->sL(
-                        'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.newprocess'
-                    )
+                    $this->getLanguageService()->sL('crawler.messages:labels.newprocess')
                 );
                 break;
             case 'flushProcess':

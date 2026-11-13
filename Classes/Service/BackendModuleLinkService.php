@@ -22,6 +22,7 @@ use AOE\Crawler\Controller\Backend\BackendModuleCrawlerProcessController;
 use AOE\Crawler\Controller\Backend\Helper\UrlBuilder;
 use Psr\Http\Message\UriInterface;
 use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
+use TYPO3\CMS\Backend\Template\Components\ComponentFactory;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Imaging\IconSize;
@@ -31,6 +32,7 @@ class BackendModuleLinkService
 {
     public function __construct(
         private readonly IconFactory $iconFactory,
+        private readonly ComponentFactory $componentFactory,
     ) {
     }
 
@@ -44,7 +46,7 @@ class BackendModuleLinkService
         return $this->getLinkButton(
             $moduleTemplate,
             'actions-refresh',
-            $this->getLanguageService()->sL('LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.refresh'),
+            $this->getLanguageService()->sL('crawler.messages:labels.refresh'),
             UrlBuilder::getBackendModuleUrl(
                 [
                     'SET[\'crawleraction\']' => 'crawleraction',
@@ -60,9 +62,7 @@ class BackendModuleLinkService
         return $this->getLinkButton(
             $moduleTemplate,
             'actions-bolt',
-            $this->getLanguageService()->sL(
-                'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.process.flush'
-            ),
+            $this->getLanguageService()->sL('crawler.messages:labels.process.flush'),
             UrlBuilder::getBackendModuleUrl(
                 [
                     'action' => 'flushProcess',
@@ -88,9 +88,7 @@ class BackendModuleLinkService
         return $this->getLinkButton(
             $moduleTemplate,
             'actions-add',
-            $this->getLanguageService()->sL(
-                'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.process.add'
-            ),
+            $this->getLanguageService()->sL('crawler.messages:labels.process.add'),
             UrlBuilder::getBackendModuleUrl(
                 [
                     'action' => 'addProcess',
@@ -110,14 +108,10 @@ class BackendModuleLinkService
         }
 
         if ($mode === 'detail') {
-            $label = $this->getLanguageService()->sL(
-                'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.show.running'
-            );
+            $label = $this->getLanguageService()->sL('crawler.messages:labels.show.running');
             $linkMode = 'simple';
         } else {
-            $label = $this->getLanguageService()->sL(
-                'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.show.all'
-            );
+            $label = $this->getLanguageService()->sL('crawler.messages:labels.show.all');
             $linkMode = 'detail';
         }
 
@@ -143,15 +137,11 @@ class BackendModuleLinkService
     {
         if ($isCrawlerEnabled) {
             $iconIdentifier = 'tx-crawler-stop';
-            $label = $this->getLanguageService()->sL(
-                'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.disablecrawling'
-            );
+            $label = $this->getLanguageService()->sL('crawler.messages:labels.disablecrawling');
             $action = 'stopCrawling';
         } else {
             $iconIdentifier = 'tx-crawler-start';
-            $label = $this->getLanguageService()->sL(
-                'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.enablecrawling'
-            );
+            $label = $this->getLanguageService()->sL('crawler.messages:labels.enablecrawling');
             $action = 'resumeCrawling';
         }
 
@@ -174,8 +164,8 @@ class BackendModuleLinkService
         string $title,
         UriInterface $href
     ): string {
-        $buttonBar = $moduleTemplate->getDocHeaderComponent()->getButtonBar();
-        return (string) $buttonBar->makeLinkButton()
+        $moduleTemplate->getDocHeaderComponent()->getButtonBar();
+        return (string) $this->componentFactory->createLinkButton()
             ->setHref((string) $href)
             ->setIcon($this->iconFactory->getIcon($iconIdentifier, IconSize::SMALL))
             ->setTitle($title)
