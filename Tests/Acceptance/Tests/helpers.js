@@ -11,10 +11,6 @@ export async function openCrawlerModule(page) {
     await page.getByText('Crawler module').click();
 }
 
-export async function openCrawlerModuleCrawlerProcesses(page) {
-    await page.goto('/typo3/module/page/crawler/process?id=1');
-}
-
 export async function openCrawlerModuleStartCrawling(page) {
     await page.goto('/typo3/module/page/crawler/start?id=1');
 }

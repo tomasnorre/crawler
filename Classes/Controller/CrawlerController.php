@@ -20,9 +20,7 @@ namespace AOE\Crawler\Controller;
  */
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
-use AOE\Crawler\Crawler;
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
-use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\AfterUrlAddedToQueueEvent;
 use AOE\Crawler\Queue\Message\CrawlUrlMessage;
@@ -59,7 +57,6 @@ class CrawlerController implements LoggerAwareInterface
     use LoggerAwareTrait;
 
     public int $setID = 0;
-    public string $processID = '';
     public array $duplicateTrack = [];
     public array $downloadUrls = [];
     public array $incomingProcInstructions = [];
@@ -74,7 +71,6 @@ class CrawlerController implements LoggerAwareInterface
      */
     public ?string $MP = null;
     protected QueueRepository $queueRepository;
-    protected ProcessRepository $processRepository;
     protected ConfigurationRepository $configurationRepository;
     protected int $maximumUrlsToCompile = 10000;
     protected IconFactory $iconFactory;
@@ -102,12 +98,10 @@ class CrawlerController implements LoggerAwareInterface
     public function __construct()
     {
         $this->queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
-        $this->processRepository = GeneralUtility::makeInstance(ProcessRepository::class);
         $this->configurationRepository = GeneralUtility::makeInstance(ConfigurationRepository::class);
         $this->pageRepository = GeneralUtility::makeInstance(PageRepository::class);
         $this->eventDispatcher = GeneralUtility::makeInstance(EventDispatcher::class);
         $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
-        GeneralUtility::makeInstance(Crawler::class);
         $this->configurationService = GeneralUtility::makeInstance(
             ConfigurationService::class,
             GeneralUtility::makeInstance(UrlService::class),
@@ -118,13 +112,6 @@ class CrawlerController implements LoggerAwareInterface
 
         $configurationProvider = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
         $this->extensionSettings = $configurationProvider->getExtensionConfiguration();
-
-        $this->extensionSettings['processLimit'] = MathUtility::forceIntegerInRange(
-            $this->extensionSettings['processLimit'],
-            1,
-            99,
-            1
-        );
         $this->setMaximumUrlsToCompile(
             MathUtility::forceIntegerInRange($this->extensionSettings['maxCompileUrls'], 1, 1000000000, 10000)
         );
@@ -748,6 +735,11 @@ class CrawlerController implements LoggerAwareInterface
         return md5(serialize($configuration));
     }
 
+    protected function getPageService(): PageService
+    {
+        return new PageService();
+    }
+
     /**
      * Hands the queue record over to the message bus. Records scheduled in the future are delayed accordingly.
      */
@@ -759,11 +751,6 @@ class CrawlerController implements LoggerAwareInterface
             $stamps[] = new DelayStamp($delayInSeconds * 1000);
         }
         $this->messageBus->dispatch(new CrawlUrlMessage($queueId), $stamps);
-    }
-
-    protected function getPageService(): PageService
-    {
-        return new PageService();
     }
 
     /**

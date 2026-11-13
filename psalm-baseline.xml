@@ -19,11 +19,6 @@
       <code><![CDATA[ItemProvider]]></code>
     </UnusedClass>
   </file>
-  <file src="Classes/Controller/Ajax/ProcessStatusController.php">
-    <UnusedClass>
-      <code><![CDATA[ProcessStatusController]]></code>
-    </UnusedClass>
-  </file>
   <file src="Classes/Controller/Backend/AbstractBackendModuleController.php">
     <UnusedClass>
       <code><![CDATA[AbstractBackendModuleController]]></code>
@@ -37,11 +32,6 @@
   <file src="Classes/Controller/Backend/BackendModuleCrawlerLogController.php">
     <UnusedClass>
       <code><![CDATA[BackendModuleCrawlerLogController]]></code>
-    </UnusedClass>
-  </file>
-  <file src="Classes/Controller/Backend/BackendModuleCrawlerProcessController.php">
-    <UnusedClass>
-      <code><![CDATA[BackendModuleCrawlerProcessController]]></code>
     </UnusedClass>
   </file>
   <file src="Classes/Controller/Backend/BackendModuleStartCrawlingController.php">
@@ -77,8 +67,6 @@
     <PossiblyUnusedProperty>
       <code><![CDATA[$configurationRepository]]></code>
       <code><![CDATA[$maximumUrlsToCompile]]></code>
-      <code><![CDATA[$processID]]></code>
-      <code><![CDATA[$processRepository]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="Classes/CrawlStrategy/CrawlStrategyFactory.php">
@@ -96,62 +84,9 @@
       <code><![CDATA[SubProcessExecutionStrategy]]></code>
     </UnusedClass>
   </file>
-  <file src="Classes/Crawler.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-      <code><![CDATA[isDisabled]]></code>
-      <code><![CDATA[setDisabled]]></code>
-    </PossiblyUnusedMethod>
-    <UnusedProperty>
-      <code><![CDATA[$processFilename]]></code>
-    </UnusedProperty>
-  </file>
   <file src="Classes/Domain/Model/Configuration.php">
     <UnusedClass>
       <code><![CDATA[Configuration]]></code>
-    </UnusedClass>
-  </file>
-  <file src="Classes/Domain/Model/Process.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-      <code><![CDATA[getAmountOfItemsProcessed]]></code>
-      <code><![CDATA[getAssignedItemsCount]]></code>
-      <code><![CDATA[getFinallyAssigned]]></code>
-      <code><![CDATA[getItemsToProcess]]></code>
-      <code><![CDATA[getProcessId]]></code>
-      <code><![CDATA[getProgress]]></code>
-      <code><![CDATA[getRuntime]]></code>
-      <code><![CDATA[getState]]></code>
-      <code><![CDATA[getSystemProcessId]]></code>
-      <code><![CDATA[getTtl]]></code>
-      <code><![CDATA[isActive]]></code>
-      <code><![CDATA[isDeleted]]></code>
-      <code><![CDATA[setActive]]></code>
-      <code><![CDATA[setAssignedItemsCount]]></code>
-      <code><![CDATA[setDeleted]]></code>
-      <code><![CDATA[setProcessId]]></code>
-      <code><![CDATA[setSystemProcessId]]></code>
-      <code><![CDATA[setTtl]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$active]]></code>
-      <code><![CDATA[$assignedItemsCount]]></code>
-      <code><![CDATA[$deleted]]></code>
-      <code><![CDATA[$processId]]></code>
-      <code><![CDATA[$queueRepository]]></code>
-      <code><![CDATA[$systemProcessId]]></code>
-      <code><![CDATA[$ttl]]></code>
-    </PossiblyUnusedProperty>
-    <UnusedMethod>
-      <code><![CDATA[getQueueRepository]]></code>
-    </UnusedMethod>
-  </file>
-  <file src="Classes/Domain/Model/ProcessCollection.php">
-    <MissingTemplateParam>
-      <code><![CDATA[ProcessCollection]]></code>
-    </MissingTemplateParam>
-    <UnusedClass>
-      <code><![CDATA[ProcessCollection]]></code>
     </UnusedClass>
   </file>
   <file src="Classes/Domain/Model/Queue.php">
@@ -179,43 +114,11 @@
       <code><![CDATA[ConfigurationRepository]]></code>
     </MissingTemplateParam>
   </file>
-  <file src="Classes/Domain/Repository/ProcessRepository.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[addProcess]]></code>
-      <code><![CDATA[countNotTimeouted]]></code>
-      <code><![CDATA[deleteProcessesMarkedAsDeleted]]></code>
-      <code><![CDATA[deleteProcessesWithoutItemsAssigned]]></code>
-      <code><![CDATA[findAll]]></code>
-      <code><![CDATA[findAllActive]]></code>
-      <code><![CDATA[findByProcessId]]></code>
-      <code><![CDATA[getActiveOrphanProcesses]]></code>
-      <code><![CDATA[getActiveProcessesOlderThanOneHour]]></code>
-      <code><![CDATA[isProcessActive]]></code>
-      <code><![CDATA[markRequestedProcessesAsNotActive]]></code>
-      <code><![CDATA[removeByProcessId]]></code>
-      <code><![CDATA[setExtensionSettings]]></code>
-      <code><![CDATA[setQueryBuilder]]></code>
-      <code><![CDATA[updateProcessAssignItemsCount]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$extensionSettings]]></code>
-      <code><![CDATA[$queryBuilder]]></code>
-    </PossiblyUnusedProperty>
-  </file>
   <file src="Classes/Domain/Repository/QueueRepository.php">
     <PossiblyUnusedMethod>
-      <code><![CDATA[countAllAssignedPendingItems]]></code>
-      <code><![CDATA[countAllPendingItems]]></code>
-      <code><![CDATA[countExecutedItemsByProcess]]></code>
-      <code><![CDATA[countNonExecutedItemsByProcess]]></code>
       <code><![CDATA[findAll]]></code>
-      <code><![CDATA[findByProcessId]]></code>
-      <code><![CDATA[findOldestEntryForProcess]]></code>
-      <code><![CDATA[findYoungestEntryForProcess]]></code>
-      <code><![CDATA[getFirstOrLastObjectByProcess]]></code>
       <code><![CDATA[getQueueEntriesForPageId]]></code>
       <code><![CDATA[isPageInQueue]]></code>
-      <code><![CDATA[unsetQueueProcessId]]></code>
     </PossiblyUnusedMethod>
     <UnusedVariable>
       <code><![CDATA[$query]]></code>
@@ -287,34 +190,9 @@
       <code><![CDATA[CrawlerObjectException]]></code>
     </UnusedClass>
   </file>
-  <file src="Classes/Exception/ProcessException.php">
-    <UnusedClass>
-      <code><![CDATA[ProcessException]]></code>
-    </UnusedClass>
-  </file>
   <file src="Classes/Exception/TimeStampException.php">
     <UnusedClass>
       <code><![CDATA[TimeStampException]]></code>
-    </UnusedClass>
-  </file>
-  <file src="Classes/Helper/Sleeper/NullSleeper.php">
-    <UnusedClass>
-      <code><![CDATA[NullSleeper]]></code>
-    </UnusedClass>
-  </file>
-  <file src="Classes/Helper/Sleeper/SleeperInterface.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[sleep]]></code>
-    </PossiblyUnusedMethod>
-  </file>
-  <file src="Classes/Helper/Sleeper/SystemSleeper.php">
-    <UnusedClass>
-      <code><![CDATA[SystemSleeper]]></code>
-    </UnusedClass>
-  </file>
-  <file src="Classes/Hooks/CrawlerHookInterface.php">
-    <UnusedClass>
-      <code><![CDATA[CrawlerHookInterface]]></code>
     </UnusedClass>
   </file>
   <file src="Classes/Hooks/DataHandlerHook.php">
@@ -323,11 +201,6 @@
     </PossiblyUnusedParam>
     <UnusedClass>
       <code><![CDATA[DataHandlerHook]]></code>
-    </UnusedClass>
-  </file>
-  <file src="Classes/Hooks/ProcessCleanUpHook.php">
-    <UnusedClass>
-      <code><![CDATA[ProcessCleanUpHook]]></code>
     </UnusedClass>
   </file>
   <file src="Classes/Middleware/CrawlerInitialization.php">
@@ -340,53 +213,6 @@
       <code><![CDATA[FrontendUserAuthenticator]]></code>
     </UnusedClass>
   </file>
-  <file src="Classes/Process/Cleaner/OldProcessCleaner.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-      <code><![CDATA[clean]]></code>
-    </PossiblyUnusedMethod>
-    <UnusedProperty>
-      <code><![CDATA[$processManager]]></code>
-      <code><![CDATA[$processRepository]]></code>
-      <code><![CDATA[$queueRepository]]></code>
-    </UnusedProperty>
-  </file>
-  <file src="Classes/Process/Cleaner/OrphanProcessCleaner.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-      <code><![CDATA[clean]]></code>
-    </PossiblyUnusedMethod>
-    <UnusedMethod>
-      <code><![CDATA[remove]]></code>
-    </UnusedMethod>
-    <UnusedProperty>
-      <code><![CDATA[$processManager]]></code>
-      <code><![CDATA[$processRepository]]></code>
-      <code><![CDATA[$queueRepository]]></code>
-    </UnusedProperty>
-  </file>
-  <file src="Classes/Process/ProcessManagerFactory.php">
-    <UnusedClass>
-      <code><![CDATA[ProcessManagerFactory]]></code>
-    </UnusedClass>
-  </file>
-  <file src="Classes/Process/ProcessManagerInterface.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[findDispatcherProcesses]]></code>
-      <code><![CDATA[killProcess]]></code>
-      <code><![CDATA[processExists]]></code>
-    </PossiblyUnusedMethod>
-  </file>
-  <file src="Classes/Process/UnixProcessManager.php">
-    <UnusedClass>
-      <code><![CDATA[UnixProcessManager]]></code>
-    </UnusedClass>
-  </file>
-  <file src="Classes/Process/WindowsProcessManager.php">
-    <UnusedClass>
-      <code><![CDATA[WindowsProcessManager]]></code>
-    </UnusedClass>
-  </file>
   <file src="Classes/Queue/Handler/CrawlUrlHandler.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
@@ -396,27 +222,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="Classes/Service/BackendModuleLinkService.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-      <code><![CDATA[getAddLink]]></code>
-      <code><![CDATA[getEnableDisableLink]]></code>
-      <code><![CDATA[getFlushLink]]></code>
-      <code><![CDATA[getModeLink]]></code>
-      <code><![CDATA[getRefreshLink]]></code>
-    </PossiblyUnusedMethod>
-    <UnusedMethod>
-      <code><![CDATA[getLanguageService]]></code>
-      <code><![CDATA[getLinkButton]]></code>
-    </UnusedMethod>
-    <UnusedMethodCall>
-      <code><![CDATA[getButtonBar]]></code>
-    </UnusedMethodCall>
-    <UnusedProperty>
-      <code><![CDATA[$componentFactory]]></code>
-      <code><![CDATA[$iconFactory]]></code>
-    </UnusedProperty>
   </file>
   <file src="Classes/Service/BackendModuleLogService.php">
     <PossiblyUnusedMethod>
@@ -451,20 +256,6 @@
       <code><![CDATA[$confArray]]></code>
     </UnusedForeachValue>
   </file>
-  <file src="Classes/Service/ProcessService.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-      <code><![CDATA[getCrawlerCliPath]]></code>
-      <code><![CDATA[startProcess]]></code>
-    </PossiblyUnusedMethod>
-    <UnusedMethod>
-      <code><![CDATA[getComposerBinPath]]></code>
-    </UnusedMethod>
-    <UnusedProperty>
-      <code><![CDATA[$processRepository]]></code>
-      <code><![CDATA[$sleeper]]></code>
-    </UnusedProperty>
-  </file>
   <file src="Classes/Service/QueueService.php">
     <UnusedClass>
       <code><![CDATA[QueueService]]></code>
@@ -475,11 +266,6 @@
       <code><![CDATA[$siteLanguage]]></code>
       <code><![CDATA[$siteLanguage]]></code>
     </UnusedVariable>
-  </file>
-  <file src="Classes/Utility/HookUtility.php">
-    <UnusedClass>
-      <code><![CDATA[HookUtility]]></code>
-    </UnusedClass>
   </file>
   <file src="Classes/Utility/MessageUtility.php">
     <PossiblyUnusedMethod>

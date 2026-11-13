@@ -21,7 +21,6 @@
         "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
         "ext-json": "*",
         "ext-pdo": "*",
-        "ext-posix": "*",
         "beberlei/assert": "^3.3",
         "doctrine/dbal": "^3.10 || ^4.3",
         "guzzlehttp/guzzle": "^6.4.1 || ^7.2",

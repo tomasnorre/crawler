@@ -125,15 +125,7 @@ class QueueServiceTest extends FunctionalTestCase
     private function setupExtensionSettings(): void
     {
         $configuration = [
-            'sleepTime' => '1000',
-            'sleepAfterFinish' => '10',
-            'countInARun' => '100',
-            'purgeQueueDays' => '14',
-            'processLimit' => '1',
-            'processMaxRunTime' => '300',
             'maxCompileUrls' => '10000',
-            'processDebug' => '0',
-            'processVerbose' => '0',
             'crawlHiddenPages' => '0',
             'phpPath' => '/usr/bin/php',
             'enableTimeslot' => '1',

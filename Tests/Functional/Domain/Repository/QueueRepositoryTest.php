@@ -19,7 +19,6 @@ namespace AOE\Crawler\Tests\Functional\Domain\Repository;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use AOE\Crawler\Value\QueueFilter;
@@ -98,119 +97,6 @@ class QueueRepositoryTest extends FunctionalTestCase
         self::assertIsArray($this->subject->getQueueEntriesByQid(1001, true));
         // qid 1004 is not crawled yet
         self::assertIsArray($this->subject->getQueueEntriesByQid(1004, false));
-    }
-
-    #[DataProvider('getFirstOrLastObjectByProcessDataProvider')]
-    #[Test]
-    public function getFirstOrLastObjectByProcess(
-        string $processId,
-        string $orderBy,
-        string $orderDirection,
-        array $expected
-    ): void {
-        $process = new Process();
-        $process->setProcessId($processId);
-
-        $mockedRepository = $this->getAccessibleMock(QueueRepository::class, null, [], '', false);
-        $result = $mockedRepository->_call('getFirstOrLastObjectByProcess', $process, $orderBy, $orderDirection);
-
-        self::assertEquals($expected, $result);
-    }
-
-    #[Test]
-    public function findYoungestEntryForProcessReturnsQueueEntry(): void
-    {
-        $process = new Process();
-        $process->setProcessId('qwerty');
-
-        self::assertEquals(
-            [
-                'qid' => 1002,
-                'page_id' => 1002,
-                'parameters' => '',
-                'parameters_hash' => '',
-                'configuration_hash' => '',
-                'scheduled' => 0,
-                'exec_time' => 10,
-                'set_id' => 0,
-                'result_data' => '',
-                'process_scheduled' => 0,
-                'process_id' => '1002',
-                'process_id_completed' => 'qwerty',
-                'configuration' => 'ThirdConfiguration',
-            ],
-            $this->subject->findYoungestEntryForProcess($process)
-        );
-    }
-
-    #[Test]
-    public function findOldestEntryForProcessReturnsQueueEntry(): void
-    {
-        $process = new Process();
-        $process->setProcessId('qwerty');
-
-        self::assertEquals(
-            [
-                'qid' => 1003,
-                'page_id' => 0,
-                'parameters' => '',
-                'parameters_hash' => '',
-                'configuration_hash' => '',
-                'scheduled' => 0,
-                'exec_time' => 20,
-                'set_id' => 0,
-                'result_data' => '',
-                'process_scheduled' => 0,
-                'process_id' => '1003',
-                'process_id_completed' => 'qwerty',
-                'configuration' => 'FirstConfiguration',
-            ],
-            $this->subject->findOldestEntryForProcess($process)
-        );
-    }
-
-    #[Test]
-    public function countExecutedItemsByProcessReturnsInteger(): void
-    {
-        $process = new Process();
-        $process->setProcessId('qwerty');
-
-        self::assertSame(2, intval($this->subject->countExecutedItemsByProcess($process)));
-    }
-
-    #[Test]
-    public function countNonExecutedItemsByProcessReturnsInteger(): void
-    {
-        $process = new Process();
-        $process->setProcessId('4b802fa4bd183156c47836ba9c79643b');
-
-        self::assertSame(2, $this->subject->countNonExecutedItemsByProcess($process));
-    }
-
-    #[Test]
-    public function countAllPendingItemsExpectedNone(): void
-    {
-        $this->subject->flushQueue(new QueueFilter());
-        self::assertSame(0, $this->subject->countAllPendingItems());
-    }
-
-    #[Test]
-    public function countAllPendingItems(): void
-    {
-        self::assertSame(8, $this->subject->countAllPendingItems());
-    }
-
-    #[Test]
-    public function countAllAssignedPendingItemsExpectedNone(): void
-    {
-        $this->subject->flushQueue(new QueueFilter());
-        self::assertSame(0, $this->subject->countAllAssignedPendingItems());
-    }
-
-    #[Test]
-    public function countAllAssignedPendingItems(): void
-    {
-        self::assertSame(3, $this->subject->countAllAssignedPendingItems());
     }
 
     #[DataProvider('isPageInQueueDataProvider')]
@@ -416,56 +302,6 @@ class QueueRepositoryTest extends FunctionalTestCase
         ];
     }
 
-    public static function getFirstOrLastObjectByProcessDataProvider(): iterable
-    {
-        yield 'Known process_id, get first' => [
-            'processId' => 'qwerty',
-            'orderBy' => 'process_id',
-            'orderDirection' => 'ASC',
-            'expected' => [
-                'qid' => 1002,
-                'page_id' => 1002,
-                'parameters' => '',
-                'parameters_hash' => '',
-                'configuration_hash' => '',
-                'scheduled' => 0,
-                'exec_time' => 10,
-                'set_id' => 0,
-                'result_data' => '',
-                'process_scheduled' => 0,
-                'process_id' => '1002',
-                'process_id_completed' => 'qwerty',
-                'configuration' => 'ThirdConfiguration',
-            ],
-        ];
-        yield 'Known process_id, get last' => [
-            'processId' => 'qwerty',
-            'orderBy' => 'process_id',
-            'orderDirection' => 'DESC',
-            'expected' => [
-                'qid' => 1003,
-                'page_id' => 0,
-                'parameters' => '',
-                'parameters_hash' => '',
-                'configuration_hash' => '',
-                'scheduled' => 0,
-                'exec_time' => 20,
-                'set_id' => 0,
-                'result_data' => '',
-                'process_scheduled' => 0,
-                'process_id' => '1003',
-                'process_id_completed' => 'qwerty',
-                'configuration' => 'FirstConfiguration',
-            ],
-        ];
-        yield 'Unknown process_id' => [
-            'processId' => 'unknown_id',
-            'orderBy' => 'process_id',
-            'orderDirection' => '',
-            'expected' => [],
-        ];
-    }
-
     public static function noUnprocessedQueueEntriesForPageWithConfigurationHashExistDataProvider(): iterable
     {
         yield 'No record found, uid not present' => [
@@ -506,9 +342,6 @@ class QueueRepositoryTest extends FunctionalTestCase
                 'scheduled' => 0,
                 'exec_time' => 10,
                 'result_data' => '',
-                'process_scheduled' => 0,
-                'process_id' => '1002',
-                'process_id_completed' => 'qwerty',
                 'configuration' => 'ThirdConfiguration',
                 'set_id' => 0,
             ]],
@@ -527,9 +360,6 @@ class QueueRepositoryTest extends FunctionalTestCase
                 'exec_time' => 0,
                 'set_id' => 123,
                 'result_data' => '',
-                'process_scheduled' => 0,
-                'process_id' => '1006',
-                'process_id_completed' => 'qwerty',
                 'configuration' => 'SecondConfiguration',
             ]],
         ];
@@ -547,9 +377,6 @@ class QueueRepositoryTest extends FunctionalTestCase
                 'exec_time' => 0,
                 'set_id' => 123,
                 'result_data' => '',
-                'process_scheduled' => 0,
-                'process_id' => '1006',
-                'process_id_completed' => 'qwerty',
                 'configuration' => 'SecondConfiguration',
             ]],
         ];

@@ -7,17 +7,9 @@
         <source>Site Crawler</source>
         <target state="final">ຕົວເລາະເກັບຂໍ້ມູນເວັບໄຊ</target>
       </trans-unit>
-      <trans-unit id="labels.start" resname="labels.start" approved="yes">
-        <source>Start Crawling</source>
-        <target state="final">ເລີ່ມການເກັບຂໍ້ມູນ</target>
-      </trans-unit>
       <trans-unit id="labels.log" resname="labels.log" approved="yes">
         <source>Crawler log</source>
         <target state="final">ບັນທຶກການເກັບຂໍ້ມູນ</target>
-      </trans-unit>
-      <trans-unit id="labels.multiprocess" resname="labels.multiprocess" approved="yes">
-        <source>Crawling Processes</source>
-        <target state="final">ຂະບວນການເກັບຂໍ້ມູນ</target>
       </trans-unit>
       <trans-unit id="labels.all" resname="labels.all" approved="yes">
         <source>All</source>
@@ -179,14 +171,6 @@
         <source>Proc. Instr.</source>
         <target state="final">ຄຳແນະນຳການປະມວນຜົນ</target>
       </trans-unit>
-      <trans-unit id="labels.newprocess" resname="labels.newprocess" approved="yes">
-        <source>New process has been started, refresh to monitor the state</source>
-        <target state="final">ຂະບວນການໃໝ່ໄດ້ເລີ່ມຂຶ້ນແລ້ວ, ກະລຸນາໂຫຼດຄືນໃໝ່ເພື່ອເບິ່ງສະຖານະ</target>
-      </trans-unit>
-      <trans-unit id="labels.newprocesserror" resname="labels.newprocesserror" approved="yes">
-        <source>Error while starting process</source>
-        <target state="final">ເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ເລີ່ມຂະບວນການ</target>
-      </trans-unit>
       <trans-unit id="labels.time.now" resname="labels.time.now" approved="yes">
         <source>Now</source>
         <target state="final">ດຽວນີ້</target>
@@ -219,34 +203,6 @@
         <source>immediate</source>
         <target state="final">ທັນທີ</target>
       </trans-unit>
-      <trans-unit id="labels.generalinformation" resname="labels.generalinformation" approved="yes">
-        <source>General Information</source>
-        <target state="final">ຂໍ້ມູນທົ່ວໄປ</target>
-      </trans-unit>
-      <trans-unit id="labels.pendingoverview" resname="labels.pendingoverview" approved="yes">
-        <source>Pending Entries (assigned / overall)</source>
-        <target state="final">ລາຍການທີ່ຄ້າງຢູ່ (ມອບໝາຍແລ້ວ / ທັງໝົດ)</target>
-      </trans-unit>
-      <trans-unit id="labels.processcount" resname="labels.processcount" approved="yes">
-        <source>Processes count (running / max)</source>
-        <target state="final">ຈຳນວນຂະບວນການ (ກຳລັງເຮັດວຽກ / ສູງສຸດ)</target>
-      </trans-unit>
-      <trans-unit id="labels.clipath" resname="labels.clipath" approved="yes">
-        <source>CLI-Path</source>
-        <target state="final">ເສັ້ນທາງ CLI</target>
-      </trans-unit>
-      <trans-unit id="labels.processstates" resname="labels.processstates" approved="yes">
-        <source>Process States</source>
-        <target state="final">ສະຖານະຂະບວນການ</target>
-      </trans-unit>
-      <trans-unit id="labels.state" resname="labels.state" approved="yes">
-        <source>State</source>
-        <target state="final">ສະຖານະ</target>
-      </trans-unit>
-      <trans-unit id="labels.processid" resname="labels.processid" approved="yes">
-        <source>Id</source>
-        <target state="final">ID</target>
-      </trans-unit>
       <trans-unit id="labels.time.first" resname="labels.time.first" approved="yes">
         <source>Time first item</source>
         <target state="final">ເວລາຂອງລາຍການທຳອິດ</target>
@@ -254,70 +210,6 @@
       <trans-unit id="labels.time.last" resname="labels.time.last" approved="yes">
         <source>Time last item</source>
         <target state="final">ເວລາຂອງລາຍການສຸດທ້າຍ</target>
-      </trans-unit>
-      <trans-unit id="labels.time.duration" resname="labels.time.duration" approved="yes">
-        <source>Runtime</source>
-        <target state="final">ເວລາເຮັດວຽກ</target>
-      </trans-unit>
-      <trans-unit id="labels.ttl" resname="labels.ttl" approved="yes">
-        <source>TTL</source>
-        <target state="final">TTL</target>
-      </trans-unit>
-      <trans-unit id="labels.status.current" resname="labels.status.current" approved="yes">
-        <source>Processed</source>
-        <target state="final">ປະມວນຜົນແລ້ວ</target>
-      </trans-unit>
-      <trans-unit id="labels.status.initial" resname="labels.status.initial" approved="yes">
-        <source>Initially assigned</source>
-        <target state="final">ມອບໝາຍໃນເບື້ອງຕົ້ນ</target>
-      </trans-unit>
-      <trans-unit id="labels.status.finally" resname="labels.status.finally" approved="yes">
-        <source>Finally assigned</source>
-        <target state="final">ມອບໝາຍຂັ້ນສຸດທ້າຍ</target>
-      </trans-unit>
-      <trans-unit id="labels.status.progress" resname="labels.status.progress" approved="yes">
-        <source>Progress</source>
-        <target state="final">ຄວາມຄືບໜ້າ</target>
-      </trans-unit>
-      <trans-unit id="labels.process.running" resname="labels.process.running" approved="yes">
-        <source>Process running</source>
-        <target state="final">ຂະບວນການກຳລັງເຮັດວຽກ</target>
-      </trans-unit>
-      <trans-unit id="labels.process.success" resname="labels.process.success" approved="yes">
-        <source>Process completed successfully</source>
-        <target state="final">ຂະບວນການສຳເລັດຢ່າງສົມບູນ</target>
-      </trans-unit>
-      <trans-unit id="labels.process.cancelled" resname="labels.process.cancelled" approved="yes">
-        <source>Process was cancelled</source>
-        <target state="final">ຂະບວນການຖືກຍົກເລີກ</target>
-      </trans-unit>
-      <trans-unit id="labels.refresh" resname="labels.refresh" approved="yes">
-        <source>Refresh</source>
-        <target state="final">ໂຫຼດໃໝ່</target>
-      </trans-unit>
-      <trans-unit id="labels.disablecrawling" resname="labels.disablecrawling" approved="yes">
-        <source>Stop all processes and disable crawling</source>
-        <target state="final">ຢຸດທຸກຂະບວນການ ແລະ ປິດການເກັບຂໍ້ມູນ</target>
-      </trans-unit>
-      <trans-unit id="labels.enablecrawling" resname="labels.enablecrawling" approved="yes">
-        <source>Enable crawling</source>
-        <target state="final">ເປີດການເກັບຂໍ້ມູນ</target>
-      </trans-unit>
-      <trans-unit id="labels.show.running" resname="labels.show.running" approved="yes">
-        <source>Show only running processes</source>
-        <target state="final">ສະແດງສະເພາະຂະບວນການທີ່ກຳລັງເຮັດວຽກ</target>
-      </trans-unit>
-      <trans-unit id="labels.show.all" resname="labels.show.all" approved="yes">
-        <source>Show finished and terminated processes</source>
-        <target state="final">ສະແດງຂະບວນການທີ່ສຳເລັດ ແລະ ຖືກຢຸດແລ້ວ</target>
-      </trans-unit>
-      <trans-unit id="labels.process.add" resname="labels.process.add" approved="yes">
-        <source>Add process</source>
-        <target state="final">ເພີ່ມຂະບວນການ</target>
-      </trans-unit>
-      <trans-unit id="labels.process.flush" resname="labels.process.flush" approved="yes">
-        <source>Flush all processes</source>
-        <target state="final">ລ້າງທຸກຂະບວນການ</target>
       </trans-unit>
       <trans-unit id="time.detailed" resname="time.detailed" approved="yes">
         <source>d-m-y H:i:s</source>
@@ -346,10 +238,6 @@
       <trans-unit id="message.noBeUserAvailable" resname="message.noBeUserAvailable" approved="yes">
         <source>There is no be_user "_cli_crawler" available!</source>
         <target state="final">ບໍ່ມີ be_user "_cli_crawler" ໃຫ້ໃຊ້ງານ!</target>
-      </trans-unit>
-      <trans-unit id="message.noPhpForkAvailable" resname="message.noPhpForkAvailable" approved="yes">
-        <source>There is no PHP method "popen" available!</source>
-        <target state="final">ບໍ່ມີເມທອດ PHP "popen" ໃຫ້ໃຊ້ງານ!</target>
       </trans-unit>
       <trans-unit id="message.beUserIsAdmin" resname="message.beUserIsAdmin" approved="yes">
         <source>The be_user "_cli_crawler" is not allowed to have admin rights!</source>

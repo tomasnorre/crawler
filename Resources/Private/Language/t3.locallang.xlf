@@ -7,17 +7,9 @@
         <source>Site Crawler</source>
         <target>crwdns109856:0crwdne109856:0</target>
       </trans-unit>
-      <trans-unit id="labels.start" resname="labels.start">
-        <source>Start Crawling</source>
-        <target>crwdns109858:0crwdne109858:0</target>
-      </trans-unit>
       <trans-unit id="labels.log" resname="labels.log">
         <source>Crawler log</source>
         <target>crwdns109860:0crwdne109860:0</target>
-      </trans-unit>
-      <trans-unit id="labels.multiprocess" resname="labels.multiprocess">
-        <source>Crawling Processes</source>
-        <target>crwdns109862:0crwdne109862:0</target>
       </trans-unit>
       <trans-unit id="labels.all" resname="labels.all">
         <source>All</source>
@@ -179,14 +171,6 @@
         <source>Proc. Instr.</source>
         <target>crwdns109942:0crwdne109942:0</target>
       </trans-unit>
-      <trans-unit id="labels.newprocess" resname="labels.newprocess">
-        <source>New process has been started, refresh to monitor the state</source>
-        <target>crwdns109944:0crwdne109944:0</target>
-      </trans-unit>
-      <trans-unit id="labels.newprocesserror" resname="labels.newprocesserror">
-        <source>Error while starting process</source>
-        <target>crwdns109946:0crwdne109946:0</target>
-      </trans-unit>
       <trans-unit id="labels.time.now" resname="labels.time.now">
         <source>Now</source>
         <target>crwdns109948:0crwdne109948:0</target>
@@ -219,34 +203,6 @@
         <source>immediate</source>
         <target>crwdns109962:0crwdne109962:0</target>
       </trans-unit>
-      <trans-unit id="labels.generalinformation" resname="labels.generalinformation">
-        <source>General Information</source>
-        <target>crwdns109964:0crwdne109964:0</target>
-      </trans-unit>
-      <trans-unit id="labels.pendingoverview" resname="labels.pendingoverview">
-        <source>Pending Entries (assigned / overall)</source>
-        <target>crwdns109966:0crwdne109966:0</target>
-      </trans-unit>
-      <trans-unit id="labels.processcount" resname="labels.processcount">
-        <source>Processes count (running / max)</source>
-        <target>crwdns109968:0crwdne109968:0</target>
-      </trans-unit>
-      <trans-unit id="labels.clipath" resname="labels.clipath">
-        <source>CLI-Path</source>
-        <target>crwdns109970:0crwdne109970:0</target>
-      </trans-unit>
-      <trans-unit id="labels.processstates" resname="labels.processstates">
-        <source>Process States</source>
-        <target>crwdns109972:0crwdne109972:0</target>
-      </trans-unit>
-      <trans-unit id="labels.state" resname="labels.state">
-        <source>State</source>
-        <target>crwdns109974:0crwdne109974:0</target>
-      </trans-unit>
-      <trans-unit id="labels.processid" resname="labels.processid">
-        <source>Id</source>
-        <target>crwdns109976:0crwdne109976:0</target>
-      </trans-unit>
       <trans-unit id="labels.time.first" resname="labels.time.first">
         <source>Time first item</source>
         <target>crwdns109978:0crwdne109978:0</target>
@@ -254,70 +210,6 @@
       <trans-unit id="labels.time.last" resname="labels.time.last">
         <source>Time last item</source>
         <target>crwdns109980:0crwdne109980:0</target>
-      </trans-unit>
-      <trans-unit id="labels.time.duration" resname="labels.time.duration">
-        <source>Runtime</source>
-        <target>crwdns109982:0crwdne109982:0</target>
-      </trans-unit>
-      <trans-unit id="labels.ttl" resname="labels.ttl">
-        <source>TTL</source>
-        <target>crwdns109984:0crwdne109984:0</target>
-      </trans-unit>
-      <trans-unit id="labels.status.current" resname="labels.status.current">
-        <source>Processed</source>
-        <target>crwdns109986:0crwdne109986:0</target>
-      </trans-unit>
-      <trans-unit id="labels.status.initial" resname="labels.status.initial">
-        <source>Initially assigned</source>
-        <target>crwdns109988:0crwdne109988:0</target>
-      </trans-unit>
-      <trans-unit id="labels.status.finally" resname="labels.status.finally">
-        <source>Finally assigned</source>
-        <target>crwdns109990:0crwdne109990:0</target>
-      </trans-unit>
-      <trans-unit id="labels.status.progress" resname="labels.status.progress">
-        <source>Progress</source>
-        <target>crwdns109992:0crwdne109992:0</target>
-      </trans-unit>
-      <trans-unit id="labels.process.running" resname="labels.process.running">
-        <source>Process running</source>
-        <target>crwdns109994:0crwdne109994:0</target>
-      </trans-unit>
-      <trans-unit id="labels.process.success" resname="labels.process.success">
-        <source>Process completed successfully</source>
-        <target>crwdns109996:0crwdne109996:0</target>
-      </trans-unit>
-      <trans-unit id="labels.process.cancelled" resname="labels.process.cancelled">
-        <source>Process was cancelled</source>
-        <target>crwdns109998:0crwdne109998:0</target>
-      </trans-unit>
-      <trans-unit id="labels.refresh" resname="labels.refresh">
-        <source>Refresh</source>
-        <target>crwdns110000:0crwdne110000:0</target>
-      </trans-unit>
-      <trans-unit id="labels.disablecrawling" resname="labels.disablecrawling">
-        <source>Stop all processes and disable crawling</source>
-        <target>crwdns110002:0crwdne110002:0</target>
-      </trans-unit>
-      <trans-unit id="labels.enablecrawling" resname="labels.enablecrawling">
-        <source>Enable crawling</source>
-        <target>crwdns110004:0crwdne110004:0</target>
-      </trans-unit>
-      <trans-unit id="labels.show.running" resname="labels.show.running">
-        <source>Show only running processes</source>
-        <target>crwdns110006:0crwdne110006:0</target>
-      </trans-unit>
-      <trans-unit id="labels.show.all" resname="labels.show.all">
-        <source>Show finished and terminated processes</source>
-        <target>crwdns110008:0crwdne110008:0</target>
-      </trans-unit>
-      <trans-unit id="labels.process.add" resname="labels.process.add">
-        <source>Add process</source>
-        <target>crwdns110010:0crwdne110010:0</target>
-      </trans-unit>
-      <trans-unit id="labels.process.flush" resname="labels.process.flush">
-        <source>Flush all processes</source>
-        <target>crwdns342010:0crwdne342010:0</target>
       </trans-unit>
       <trans-unit id="time.detailed" resname="time.detailed">
         <source>d-m-y H:i:s</source>
@@ -346,10 +238,6 @@
       <trans-unit id="message.noBeUserAvailable" resname="message.noBeUserAvailable">
         <source>There is no be_user "_cli_crawler" available!</source>
         <target>crwdns110024:0crwdne110024:0</target>
-      </trans-unit>
-      <trans-unit id="message.noPhpForkAvailable" resname="message.noPhpForkAvailable">
-        <source>There is no PHP method "popen" available!</source>
-        <target>crwdns110026:0crwdne110026:0</target>
       </trans-unit>
       <trans-unit id="message.beUserIsAdmin" resname="message.beUserIsAdmin">
         <source>The be_user "_cli_crawler" is not allowed to have admin rights!</source>

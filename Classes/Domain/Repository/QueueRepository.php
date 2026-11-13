@@ -20,7 +20,6 @@ namespace AOE\Crawler\Domain\Repository;
  */
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
-use AOE\Crawler\Domain\Model\Process;
 use AOE\Crawler\Value\QueueFilter;
 use Doctrine\DBAL\Exception;
 use Psr\Log\LoggerAwareInterface;
@@ -37,76 +36,6 @@ class QueueRepository implements LoggerAwareInterface
     use LoggerAwareTrait;
 
     final public const TABLE_NAME = 'tx_crawler_queue';
-
-    // TODO: Should be a property on the QueueObject
-    public function unsetQueueProcessId(string $processId): void
-    {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
-        $queryBuilder
-            ->update(self::TABLE_NAME)
-            ->where($queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($processId)))
-            ->set('process_id', '')
-            ->executeStatement();
-    }
-
-    /**
-     * This method is used to find the youngest entry for a given process.
-     */
-    public function findYoungestEntryForProcess(Process $process): array
-    {
-        return $this->getFirstOrLastObjectByProcess($process, 'exec_time');
-    }
-
-    /**
-     * This method is used to find the oldest entry for a given process.
-     */
-    public function findOldestEntryForProcess(Process $process): array
-    {
-        return $this->getFirstOrLastObjectByProcess($process, 'exec_time', 'DESC');
-    }
-
-    /**
-     * Counts all executed items of a process.
-     *
-     * @param Process $process
-     */
-    public function countExecutedItemsByProcess($process): int
-    {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
-
-        return (int) $queryBuilder
-            ->count('*')
-            ->from(self::TABLE_NAME)
-            ->where(
-                $queryBuilder->expr()->eq(
-                    'process_id_completed',
-                    $queryBuilder->createNamedParameter($process->getProcessId())
-                ),
-                $queryBuilder->expr()->gt('exec_time', 0)
-            )
-            ->executeQuery()
-            ->fetchOne();
-    }
-
-    /**
-     * Counts items of a process which yet have not been processed/executed
-     *
-     * @param Process $process
-     */
-    public function countNonExecutedItemsByProcess($process): int
-    {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
-
-        return (int) $queryBuilder
-            ->count('*')
-            ->from(self::TABLE_NAME)
-            ->where(
-                $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter($process->getProcessId())),
-                $queryBuilder->expr()->eq('exec_time', 0)
-            )
-            ->executeQuery()
-            ->fetchOne();
-    }
 
     /**
      * Inserts a queue record and returns its uid (qid).
@@ -143,46 +72,6 @@ class QueueRepository implements LoggerAwareInterface
             $queryBuilder->andWhere($queryBuilder->expr()->eq('exec_time', 0));
         }
         return $queryBuilder->executeQuery()->fetchAssociative();
-    }
-
-    /**
-     * This method can be used to count all queue entrys which are
-     * scheduled for now or a earlier date.
-     */
-    public function countAllPendingItems(): int
-    {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
-
-        return (int) $queryBuilder
-            ->count('*')
-            ->from(self::TABLE_NAME)
-            ->where(
-                $queryBuilder->expr()->eq('process_scheduled', 0),
-                $queryBuilder->expr()->eq('exec_time', 0),
-                $queryBuilder->expr()->lte('scheduled', time())
-            )
-            ->executeQuery()
-            ->fetchOne();
-    }
-
-    /**
-     * This method can be used to count all queue entries which are
-     * scheduled for now or an earlier date and are assigned to a process.
-     */
-    public function countAllAssignedPendingItems(): int
-    {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
-
-        return (int) $queryBuilder
-            ->count('*')
-            ->from(self::TABLE_NAME)
-            ->where(
-                $queryBuilder->expr()->neq('process_id', $queryBuilder->createNamedParameter(0, Connection::PARAM_INT)),
-                $queryBuilder->expr()->eq('exec_time', 0),
-                $queryBuilder->expr()->lte('scheduled', time())
-            )
-            ->executeQuery()
-            ->fetchOne();
     }
 
     /**
@@ -354,7 +243,6 @@ class QueueRepository implements LoggerAwareInterface
 
         $queryBuilder
             ->andWhere($queryBuilder->expr()->eq('exec_time', 0))
-            ->andWhere($queryBuilder->expr()->eq('process_id', "''"))
             ->andWhere(
                 $queryBuilder->expr()->eq(
                     'page_id',
@@ -425,47 +313,5 @@ class QueueRepository implements LoggerAwareInterface
             ->select('*')
             ->from(self::TABLE_NAME);
         return $queryBuilder->executeQuery()->fetchAllAssociative();
-    }
-
-    public function findByProcessId(string $processId): array
-    {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
-        return $queryBuilder
-            ->select('*')
-            ->from(self::TABLE_NAME)
-            ->where(
-                $queryBuilder->expr()->eq('process_id', $queryBuilder->createNamedParameter(
-                    $processId,
-                    Connection::PARAM_INT
-                ))
-            )
-            ->executeQuery()->fetchAllAssociative();
-    }
-
-    /**
-     * This internal helper method is used to create an instance of an entry object
-     *
-     * @param Process $process
-     * @param string $orderByField first matching item will be returned as object
-     * @param string $orderBySorting sorting direction
-     */
-    protected function getFirstOrLastObjectByProcess($process, $orderByField, $orderBySorting = 'ASC'): array
-    {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
-        $first = $queryBuilder
-            ->select('*')
-            ->from(self::TABLE_NAME)
-            ->where(
-                $queryBuilder->expr()->eq(
-                    'process_id_completed',
-                    $queryBuilder->createNamedParameter($process->getProcessId())
-                ),
-                $queryBuilder->expr()->gt('exec_time', 0)
-            )
-            ->setMaxResults(1)
-            ->addOrderBy($orderByField, $orderBySorting)
-            ->executeQuery()->fetchAssociative();
-
-        return $first ?: [];
     }
 }
