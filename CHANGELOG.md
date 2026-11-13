@@ -12,6 +12,7 @@
 * Translations are delivered as language packs by the TYPO3 translation server, fetch them with `typo3 language:update` or in "Manage Language Packs", otherwise labels are shown in English
 
 ### Fixed
+* Export every log entry in the crawler log CSV
 
 ### Deprecated
 #### Classes
