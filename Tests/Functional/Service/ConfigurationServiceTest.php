@@ -70,7 +70,7 @@ class ConfigurationServiceTest extends FunctionalTestCase
             ->getMock();
 
         $getTreeCalls = 0;
-        // expandExcludeString() creates one PageTreeView per call
+        // Enough page trees for building the tree of page 5 twice
         GeneralUtility::addInstance(PageTreeView::class, $this->createCountingPageTree($getTreeCalls));
         GeneralUtility::addInstance(PageTreeView::class, $this->createCountingPageTree($getTreeCalls));
 

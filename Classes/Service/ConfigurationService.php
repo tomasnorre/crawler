@@ -48,6 +48,20 @@ class ConfigurationService
     private $backendUser;
     private readonly array $extensionSettings;
 
+    /**
+     * Page ids per exclude string, keys are kept from array_unique()
+     *
+     * @var array<string, array<int, int>>
+     */
+    private array $expandedExcludeStringCache = [];
+
+    /**
+     * PageTreeView::$tree per page id and depth
+     *
+     * @var array<int, array<int, array>>
+     */
+    private array $pageTreeCache = [];
+
     public function __construct(
         private readonly UrlService $urlService,
         private readonly ConfigurationRepository $configurationRepository,
@@ -191,22 +205,18 @@ class ConfigurationService
         return $res;
     }
 
+    /**
+     * @return array<int, int>
+     */
     public function expandExcludeString(string $excludeString): array
     {
-        // internal static caches;
-        static $expandedExcludeStringCache;
-        static $treeCache = [];
-
-        if (!empty($expandedExcludeStringCache[$excludeString])) {
-            return $expandedExcludeStringCache[$excludeString];
+        if (isset($this->expandedExcludeStringCache[$excludeString])) {
+            return $this->expandedExcludeStringCache[$excludeString];
         }
 
         $pidList = [];
 
         if (!empty($excludeString)) {
-            $tree = GeneralUtility::makeInstance(PageTreeView::class);
-            $tree->init('AND ' . $this->getBackendUser()->getPagePermsClause(Permission::PAGE_SHOW));
-
             $excludeParts = GeneralUtility::trimExplode(',', $excludeString);
 
             foreach ($excludeParts as $excludePart) {
@@ -221,14 +231,14 @@ class ConfigurationService
 
                 $pidList[] = $pid;
                 if ($depth > 0) {
-                    $pidList = $this->expandPidList($treeCache, $pid, $depth, $tree, $pidList);
+                    $pidList = $this->expandPidList($pid, $depth, $pidList);
                 }
             }
         }
 
-        $expandedExcludeStringCache[$excludeString] = array_unique($pidList);
+        $this->expandedExcludeStringCache[$excludeString] = array_unique($pidList);
 
-        return $expandedExcludeStringCache[$excludeString];
+        return $this->expandedExcludeStringCache[$excludeString];
     }
 
     /**
@@ -386,15 +396,21 @@ class ConfigurationService
         return $paramArray;
     }
 
-    private function expandPidList(array $treeCache, int $pid, int $depth, PageTreeView $tree, array $pidList): array
+    /**
+     * @param list<int> $pidList
+     * @return list<int>
+     */
+    private function expandPidList(int $pid, int $depth, array $pidList): array
     {
-        if (empty($treeCache[$pid][$depth])) {
-            //$tree->reset();
+        if (!isset($this->pageTreeCache[$pid][$depth])) {
+            // A new tree per page, as getTree() appends to the tree of an existing instance
+            $tree = GeneralUtility::makeInstance(PageTreeView::class);
+            $tree->init('AND ' . $this->getBackendUser()->getPagePermsClause(Permission::PAGE_SHOW));
             $tree->getTree($pid, $depth);
-            $treeCache[$pid][$depth] = $tree->tree;
+            $this->pageTreeCache[$pid][$depth] = $tree->tree;
         }
 
-        foreach ($treeCache[$pid][$depth] as $data) {
+        foreach ($this->pageTreeCache[$pid][$depth] as $data) {
             $pidList[] = (int) $data['row']['uid'];
         }
         return $pidList;
