@@ -26,29 +26,11 @@ jobs:
     timeout-minutes: 60
     runs-on: 'self-hosted'
     steps:
-      - name: Get branch name (merge)
-        if: github.event_name != 'pull_request'
-        shell: bash
-        run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/} | tr / -)" >> $GITHUB_ENV
-
-      - name: Get branch name (pull request)
-        if: github.event_name == 'pull_request'
-        shell: bash
-        run: echo "BRANCH_NAME=$(echo ${GITHUB_HEAD_REF})" >> $GITHUB_ENV
-
       - name: Set Playwright tag
         shell: bash
         run: echo "PW_GREP=@v14" >> $GITHUB_ENV
 
       - uses: actions/checkout@v7
-      - name: Patch composer.json for forked PR
-        if: >
-          github.event_name == 'pull_request' &&
-          github.event.pull_request.head.repo.full_name != github.repository
-        run: |
-          cd .devbox
-          composer config repositories.crawler-pr '{"type": "vcs", "url": "https://github.com/${{ github.event.pull_request.head.repo.full_name }}.git"}'
-
       - name: Prepare devbox before start
         run: |
           export FROM_PATH='../../'
@@ -57,7 +39,6 @@ jobs:
           sed -i 's/php_version: "8.2"/php_version: "${{ matrix.php }}"/g' .ddev/config.yaml
           sed -i "s|$FROM_PATH|$TO_PATH|g" .ddev/docker-compose.volume.yaml
           jq '.require["typo3/cms-core"] = "${{ matrix.typo3 }}"' composer.json > composer.json.tmp && mv composer.json.tmp composer.json
-          jq --arg branch "dev-$BRANCH_NAME" '.require["tomasnorre/crawler"] = $branch' composer.json > composer.json.tmp && mv composer.json.tmp composer.json
 
       # --- ADD CLEANUP HERE ---
       - name: Clean up existing DDEV and Docker state
