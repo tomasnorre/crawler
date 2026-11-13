@@ -70,7 +70,7 @@ class CrawlUrlMessageDispatcher
         $this->messageBus->dispatch($message, $stamps);
     }
 
-    public function getPriorityForPage(int $pageId): CrawlPriority
+    private function getPriorityForPage(int $pageId): CrawlPriority
     {
         if ($pageId <= 0 || !ExtensionManagementUtility::isLoaded('seo')) {
             return CrawlPriority::Normal;
