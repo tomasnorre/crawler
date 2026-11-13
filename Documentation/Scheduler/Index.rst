@@ -35,6 +35,12 @@ So how to setup crawler scheduler tasks:
 Now you can save and close, and your scheduler tasks will be running as
 configured.
 
+The queue itself is processed by the `messenger:consume` command, which can be
+configured as a scheduler task the same way. Select the receivers
+`crawler_high crawler crawler_low` (in that order) and
+set the option `time-limit` lower than the frequency of the task, otherwise the
+worker blocks other scheduler tasks. See :ref:`with-crown` for alternatives.
+
 The configured task will look like this:
 
 ..  figure:: /Images/backend_scheduler_record.png

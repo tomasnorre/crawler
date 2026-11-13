@@ -47,15 +47,7 @@ class CrawlerControllerTest extends UnitTestCase
         $this->crawlerController->setLogger(new NullLogger());
 
         $configuration = [
-            'sleepTime' => '1000',
-            'sleepAfterFinish' => '10',
-            'countInARun' => '100',
-            'purgeQueueDays' => '14',
-            'processLimit' => '1',
-            'processMaxRunTime' => '300',
             'maxCompileUrls' => '10000',
-            'processDebug' => '0',
-            'processVerbose' => '0',
             'crawlHiddenPages' => '0',
             'phpPath' => '/usr/bin/php',
             'enableTimeslot' => '1',
@@ -74,16 +66,6 @@ class CrawlerControllerTest extends UnitTestCase
     protected function tearDown(): void
     {
         unset($this->crawlerController);
-    }
-
-    #[\PHPUnit\Framework\Attributes\DataProvider('drawURLs_PIfilterDataProvider')]
-    #[\PHPUnit\Framework\Attributes\Test]
-    public function drawURLsPIfilter(string $piString, array $incomingProcInstructions, bool $expected): void
-    {
-        self::assertEquals(
-            $expected,
-            $this->crawlerController->drawURLs_PIfilter($piString, $incomingProcInstructions)
-        );
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
@@ -267,35 +249,6 @@ class CrawlerControllerTest extends UnitTestCase
                 '-conf' => 'default,news',
             ],
             'expected' => ['default', 'news'],
-        ];
-    }
-
-    public static function drawURLs_PIfilterDataProvider(): iterable
-    {
-        yield 'Not in list' => [
-            'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
-            'incomingProcInstructions' => ['tx_unknown_extension_instruction'],
-            'expected' => false,
-        ];
-        yield 'In list' => [
-            'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
-            'incomingProcInstructions' => ['tx_indexedsearch_reindex'],
-            'expected' => true,
-        ];
-        yield 'Twice in list' => [
-            'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
-            'incomingProcInstructions' => ['tx_indexedsearch_reindex', 'tx_indexedsearch_reindex'],
-            'expected' => true,
-        ];
-        yield 'Empty incomingProcInstructions' => [
-            'piString' => '',
-            'incomingProcInstructions' => [],
-            'expected' => true,
-        ];
-        yield 'In list CAPITALIZED' => [
-            'piString' => 'tx_indexedsearch_reindex,tx_esetcache_clean_main',
-            'incomingProcInstructions' => ['TX_INDEXEDSEARCH_REINDES'],
-            'expected' => false,
         ];
     }
 

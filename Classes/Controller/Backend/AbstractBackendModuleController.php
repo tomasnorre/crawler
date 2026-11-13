@@ -38,7 +38,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 abstract class AbstractBackendModuleController
 {
-    protected bool $isErrorDetected = false;
     protected int $pageUid;
     protected ModuleTemplate $moduleTemplate;
     protected array $extensionSettings = [];
@@ -62,20 +61,19 @@ abstract class AbstractBackendModuleController
         return $moduleTemplate;
     }
 
-    protected function makeCrawlerProcessableChecks(array $extensionSettings): void
+    /**
+     * Direct requests (makeDirectRequests) render pages in a PHP sub-process, which requires a working PHP binary.
+     */
+    protected function checkPhpBinaryForDirectRequests(array $extensionSettings): void
     {
-        if (!$this->isPhpForkAvailable()) {
-            $this->isErrorDetected = true;
-            MessageUtility::addErrorMessage(
-                $this->getLanguageService()->sL('crawler.messages:message.noPhpForkAvailable')
-            );
+        if (!($extensionSettings['makeDirectRequests'] ?? false)) {
+            return;
         }
 
         $exitCode = 0;
         $out = [];
         CommandUtility::exec(PhpBinaryUtility::getPhpBinary() . ' -v', $out, $exitCode);
         if ($exitCode > 0) {
-            $this->isErrorDetected = true;
             MessageUtility::addErrorMessage(
                 sprintf($this->getLanguageService()->sL(
                     'crawler.messages:message.phpBinaryNotFound'
@@ -95,14 +93,6 @@ abstract class AbstractBackendModuleController
                 4 => $this->getLanguageService()->sL('core.core:labels.depth_4'),
                 99 => $this->getLanguageService()->sL('core.core:labels.depth_infi'),
             ],
-            'crawlaction' => [
-                'start' => $this->getLanguageService()->sL('crawler.messages:labels.start'),
-                'log' => $this->getLanguageService()->sL('crawler.messages:labels.log'),
-                'multiprocess' => $this->getLanguageService()->sL('crawler.messages:labels.multiprocess'),
-            ],
-            'log_resultLog' => '',
-            'log_feVars' => '',
-            'processListMode' => '',
             'displayLog' => [
                 'all' => $this->getLanguageService()->sL('crawler.messages:labels.all'),
                 'pending' => $this->getLanguageService()->sL('crawler.messages:labels.pending'),
@@ -125,14 +115,5 @@ abstract class AbstractBackendModuleController
     protected function getBackendUserAuthentication(): BackendUserAuthentication
     {
         return $GLOBALS['BE_USER'];
-    }
-
-    /**
-     * Indicate that the required PHP method "popen" is
-     * available in the system.
-     */
-    private function isPhpForkAvailable(): bool
-    {
-        return function_exists('popen');
     }
 }

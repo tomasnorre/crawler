@@ -2,22 +2,18 @@
 
 ..  _multi-process:
 
-=====================
-Multi process support
-=====================
+====================
+Parallel processing
+====================
 
 If you want to optimize the crawling process for speed (instead of low
 server stress), maybe because the machine is a dedicated staging
-machine you should experiment with the new multi process features.
+machine, you can run several workers at the same time:
 
-In the extension settings you can set how many processes are allowed to
-run at the same time, how many queue entries a process should grab and
-how long a process is allowed to run. Then run one (or even more)
-crawling processes per minute. You'll be able to speed up the crawler quite a lot.
+..  code-block:: bash
 
-But choose your settings carefully as it puts loads on the server.
+    vendor/bin/typo3 messenger:consume crawler_high crawler crawler_low &
+    vendor/bin/typo3 messenger:consume crawler_high crawler crawler_low &
 
-..  figure:: /Images/crawler_settings_processLimit.png
-    :alt: Backend configuration: Processing
-
-    Backend configuration: Processing
+Each queue entry is only processed by one of the workers. Choose the number of
+workers carefully as every worker puts load on the server.

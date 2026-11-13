@@ -21,7 +21,12 @@ namespace AOE\Crawler\Tests\Functional\Service;
 
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Queue\CrawlUrlMessageDispatcher;
+use AOE\Crawler\Queue\Message\CrawlUrlMessage;
 use AOE\Crawler\Service\QueueService;
+use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\MessageBusInterface;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
@@ -34,7 +39,10 @@ class QueueServiceTest extends FunctionalTestCase
      */
     protected $subject;
 
-    protected \AOE\Crawler\Domain\Repository\QueueRepository $queueRepository;
+    /**
+     * @var CrawlUrlMessage[]
+     */
+    private array $dispatchedMessages = [];
 
     protected function setUp(): void
     {
@@ -45,8 +53,14 @@ class QueueServiceTest extends FunctionalTestCase
         $crawlerController = $this->getAccessibleMock(CrawlerController::class, ['getCurrentTime'], [], '');
         $crawlerController->method('getCurrentTime')->willReturn(100000);
 
+        $messageBus = $this->createStub(MessageBusInterface::class);
+        $messageBus->method('dispatch')->willReturnCallback(function (object $message): Envelope {
+            $this->dispatchedMessages[] = $message;
+            return new Envelope($message);
+        });
+        $crawlerController->injectCrawlUrlMessageDispatcher(new CrawlUrlMessageDispatcher($messageBus));
+
         $this->subject = GeneralUtility::makeInstance(QueueService::class, $crawlerController);
-        $this->queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
     }
 
     /**
@@ -62,7 +76,8 @@ class QueueServiceTest extends FunctionalTestCase
         $this->subject->addPageToQueue(5, 9998);
         $this->subject->addPageToQueue(5, 3422);
 
-        self::assertCount(1, $this->queueRepository->getUnprocessedItems());
+        self::assertSame(1, $this->countUnprocessedQueueEntries());
+        self::assertCount(1, $this->dispatchedMessages);
     }
 
     /**
@@ -78,7 +93,8 @@ class QueueServiceTest extends FunctionalTestCase
         $this->subject->addPageToQueue(5, 100001);
         $this->subject->addPageToQueue(5, 100001);
 
-        self::assertCount(1, $this->queueRepository->getUnprocessedItems());
+        self::assertSame(1, $this->countUnprocessedQueueEntries());
+        self::assertCount(1, $this->dispatchedMessages);
     }
 
     /**
@@ -94,21 +110,23 @@ class QueueServiceTest extends FunctionalTestCase
         $this->subject->addPageToQueue(5, 100011);
         $this->subject->addPageToQueue(5, 200014);
 
-        self::assertCount(2, $this->queueRepository->getUnprocessedItems());
+        self::assertSame(2, $this->countUnprocessedQueueEntries());
+        self::assertCount(2, $this->dispatchedMessages);
+    }
+
+    private function countUnprocessedQueueEntries(): int
+    {
+        return GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable(QueueRepository::TABLE_NAME)
+            ->count('*', QueueRepository::TABLE_NAME, [
+                'exec_time' => 0,
+            ]);
     }
 
     private function setupExtensionSettings(): void
     {
         $configuration = [
-            'sleepTime' => '1000',
-            'sleepAfterFinish' => '10',
-            'countInARun' => '100',
-            'purgeQueueDays' => '14',
-            'processLimit' => '1',
-            'processMaxRunTime' => '300',
             'maxCompileUrls' => '10000',
-            'processDebug' => '0',
-            'processVerbose' => '0',
             'crawlHiddenPages' => '0',
             'phpPath' => '/usr/bin/php',
             'enableTimeslot' => '1',

@@ -6,16 +6,13 @@
 Run via backend
 ===============
 
-To process the queue you must either set up a cron-job on your server
-or use the backend to process the queue:
-
-..  figure:: /Images/backend_processlist_add_process.png
-    :alt: Process the queue via backend
-
-    Process the queue via backend
+Pages added to the queue via the :guilabel:`Start Crawling` view of the
+:guilabel:`Site Crawler` module are processed by the worker, see
+:ref:`with-crown`.
 
 You can also (re-)crawl single URLs manually from within the :guilabel:`Crawler
-log` view in the info module:
+log` view. The URL is handed to the worker again and the result is shown in the
+log once it has been crawled:
 
 ..  figure:: /Images/backend_crawlerlog_recrawl.png
     :alt: Crawl single URLs via backend

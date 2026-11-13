@@ -2,54 +2,79 @@
 
 ..  _with-crown:
 
-=============================
-Executing queue with cron-job
-=============================
+======================
+Running the worker
+======================
 
-A "cron-job" refers to a script that runs on the server with time
-intervals.
+Since version 14 the Crawler uses the
+`TYPO3 message bus <https://docs.typo3.org/permalink/t3coreapi:message-bus>`__
+instead of its own queue processing. Every URL added to the queue results in a
+`AOE\Crawler\Queue\Message\CrawlUrlMessage`, which is sent to one of three
+Doctrine transports (stored in the table `sys_messenger_messages`), depending on
+the priority of the page, see :ref:`priority-crawling`:
 
-For this to become reality you must ideally have a cron-job set up.
-This assumes you are running on Unix architecture of some sort. The
-crontab is often edited by :bash:`crontab -e` and you should insert a line
-like this:
+*   `crawler_high`
+*   `crawler`
+*   `crawler_low`
+
+The messages are processed by a worker. The order of the transports is
+important, the worker always processes the messages of the first transport
+before it looks at the next one:
+
+..  code-block:: bash
+
+    vendor/bin/typo3 messenger:consume crawler_high crawler crawler_low
+
+Several workers can run at the same time, the transports make sure that every
+message is only processed once.
+
+Keep the worker running with systemd (recommended)
+==================================================
+
+A worker stops when one of its limits is reached. Let a process manager like
+systemd restart it:
+
+..  code-block:: ini
+    :caption: /etc/systemd/system/typo3-crawler-worker.service
+
+    [Unit]
+    Description=TYPO3 Crawler worker
+
+    [Service]
+    ExecStart=/var/www/html/vendor/bin/typo3 messenger:consume crawler_high crawler crawler_low --time-limit=3600 --memory-limit=256M
+    Restart=always
+    User=www-data
+
+    [Install]
+    WantedBy=multi-user.target
+
+Run the worker with a cron-job
+==============================
+
+If you can't run a long-running process, start the worker from a cron-job and
+let it stop before the next run starts:
 
 ..  code-block:: plaintext
 
-   * * * * * vendor/bin/typo3 crawler:buildQueue <startpage> <configurationKeys> > /dev/null
+   */5 * * * * vendor/bin/typo3 messenger:consume crawler_high crawler crawler_low --time-limit=270 > /dev/null
 
-This will run the script every minute. You should try to run the
-script on the command line first to make sure it runs without any
-errors. If it doesn't output anything it was successful.
+The same command can also be configured as a scheduler task, see
+:ref:`scheduler`.
 
-You will need to have a user called `_cli_` and you must have PHP installed
-as a CGI script as well in :path:`/usr/bin/`.
+Routing
+=======
 
-The user `_cli_` is created by the framework on demand if it does not exist
-at the first command line call.
+The Crawler routes its messages to the `crawler` transport in its
+:file:`ext_localconf.php`. As long as this routing is used, the messages are
+sent to the transport matching their priority. The routing can be changed in
+:file:`config/system/settings.php` or :file:`config/system/additional.php`, e.g.
+to crawl synchronously while debugging:
 
-Make sure that the user `_cli_` has admin-rights.
+..  code-block:: php
+    :caption: config/system/additional.php
 
-In the :guilabel:`CLI status` menu of the :guilabel:`Site Crawler` info module
-you can see the status:
+    $GLOBALS['TYPO3_CONF_VARS']['SYS']['messenger']['routing'][\AOE\Crawler\Queue\Message\CrawlUrlMessage::class] = 'default';
 
-..  figure:: /Images/backend_processlist.png
-    :alt: Status page in the backend
-
-    Status page in the backend
-
-This is how it looks just after you ran the script. (You can also see
-the full path to the script in the bottom - this is the path to the
-script as you should use it on the command line / in the crontab)
-
-If the cron-script stalls there is a default delay of 1 hour before a
-new process will announce the old one dead and run a new one. If a
-cron-script takes more than 1 minute and thereby overlaps the next
-process, the next process will NOT start if it sees that the "lock-
-file" exists (unless that hour has passed).
-
-The reason why it works like this is to make sure that overlapping
-calls to the crawler CLI script will not run parallel processes. So
-the second call will just exit if it finds in the status file that the
-process is already running. But of course a crashed script will fail
-to set the status to "end" and hence this situation can occur.
+With the `default` (synchronous) transport, every URL is crawled at the moment
+it is added to the queue, which is not recommended for larger sites. When the
+routing is changed, the priority of the pages is not taken into account.

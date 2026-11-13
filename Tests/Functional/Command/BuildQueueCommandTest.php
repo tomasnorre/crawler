@@ -21,11 +21,14 @@ namespace AOE\Crawler\Tests\Functional\Command;
 
 use AOE\Crawler\Command\BuildQueueCommand;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Queue\Message\CrawlUrlMessage;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use AOE\Crawler\Tests\Functional\LanguageServiceTestTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Messenger\Transport\Serialization\PhpSerializer;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Tests\Functional\SiteHandling\SiteBasedTestTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
@@ -114,6 +117,56 @@ class BuildQueueCommandTest extends FunctionalTestCase
 
         self::assertStringContainsString($expectedOutput, $this->commandTester->getDisplay());
         self::assertCount($expectedCount, $this->queueRepository->findAll());
+    }
+
+    #[Test]
+    public function queueModeSendsCrawlMessageToTransportOfPagePriority(): void
+    {
+        $this->commandTester->execute([
+            'page' => 1,
+            'conf' => 'default',
+            '--mode' => 'queue',
+        ]);
+
+        $queueEntries = $this->queueRepository->findAll();
+        self::assertCount(1, $queueEntries);
+        self::assertSame(0, (int) $queueEntries[0]['exec_time']);
+
+        $messages = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable('sys_messenger_messages')
+            ->select(['body', 'headers'], 'sys_messenger_messages', [
+                // Page 1 has a sitemap_priority of 1.0
+                'queue_name' => 'crawler_high',
+            ])
+            ->fetchAllAssociative();
+        self::assertCount(1, $messages);
+        $message = (new PhpSerializer())->decode([
+            'body' => $messages[0]['body'],
+            'headers' => json_decode((string) $messages[0]['headers'], true),
+        ])->getMessage();
+        self::assertInstanceOf(CrawlUrlMessage::class, $message);
+        self::assertSame((int) $queueEntries[0]['qid'], $message->queueId);
+    }
+
+    #[Test]
+    public function execModeCrawlsEntriesRightAwayWithoutQueueingMessages(): void
+    {
+        $this->commandTester->execute([
+            'page' => 1,
+            'conf' => 'default',
+            '--mode' => 'exec',
+        ]);
+
+        $queueEntries = $this->queueRepository->findAll();
+        self::assertCount(1, $queueEntries);
+        self::assertGreaterThan(0, (int) $queueEntries[0]['exec_time']);
+        self::assertNotSame('', $queueEntries[0]['result_data']);
+        self::assertSame(
+            0,
+            GeneralUtility::makeInstance(ConnectionPool::class)
+                ->getConnectionForTable('sys_messenger_messages')
+                ->count('*', 'sys_messenger_messages', [])
+        );
     }
 
     public static function buildQueueCommandDataProvider(): iterable

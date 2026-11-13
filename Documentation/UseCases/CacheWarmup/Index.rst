@@ -18,7 +18,7 @@ There are 3 commands that can be of you benefit during deployments.
 
 * :bash:`vendor/bin/typo3 crawler:flushQueue`
 * :bash:`vendor/bin/typo3 crawler:buildQueue`
-* :bash:`vendor/bin/typo3 crawler:processQueue`
+* :bash:`vendor/bin/typo3 messenger:consume crawler_high crawler crawler_low`
 
 You can see more on which parameters they take in :ref:`command-controller`,
 this example will provide suggestion on how you can set it up, and you can
@@ -47,7 +47,7 @@ adjust with additional parameters if you like.
         user can have you need to create a individual crawler configuration.
 
         All those crawler configurations need to be added to the
-        `crawler:processQueue` command to be considered. If you miss this
+        `crawler:buildQueue` command to be considered. If you miss this
         some user get a warmed up cache but those with a combination of
         user groups which was not taken into account in a crawler configuration
         will get an uncached page.
@@ -64,23 +64,12 @@ adjust with additional parameters if you like.
 
 #.  Process the queue
 
-    The last step will add the pages to the queue, and you would need a scheduler
-    task setup to have them processed. Go to the :guilabel:`Scheduler` module and
-    do following steps:
+    The last step will add the pages to the queue. They are processed by a
+    worker consuming the crawler transports, see :ref:`with-crown`:
 
-    1.  Add a new Scheduler Task
-    2.  Select the :guilabel:`Execute console commands`
-    3.  Select :guilabel:`Frequency` for the execution
-    4.  Go to section :guilabel:`Schedulable Command. Save and reopen to define
-        command arguments` at the bottom.
-    5.  Select :guilabel:`crawler:processQueue` (press save)
-    6.  Select the options you want to execute the queue with, it's important to
-        check the checkboxes and not only fill in the values.
+    ..  code-block:: bash
 
-    ..  figure:: /Images/backend_scheduler_processqueue.png
-        :alt: Options of the task
-
-        Options of the task
+        vendor/bin/typo3 messenger:consume crawler_high crawler crawler_low
 
 
 With there steps you will have a website that is faster by the first visit after

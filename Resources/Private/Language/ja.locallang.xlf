@@ -7,17 +7,9 @@
         <source>Site Crawler</source>
         <target state="final">サイトクローラー</target>
       </trans-unit>
-      <trans-unit id="labels.start" resname="labels.start" approved="yes">
-        <source>Start Crawling</source>
-        <target state="final">クロールを開始</target>
-      </trans-unit>
       <trans-unit id="labels.log" resname="labels.log" approved="yes">
         <source>Crawler log</source>
         <target state="final">クローラーログ</target>
-      </trans-unit>
-      <trans-unit id="labels.multiprocess" resname="labels.multiprocess">
-        <source>Crawling Processes</source>
-        <target state="needs-translation">Crawling Processes</target>
       </trans-unit>
       <trans-unit id="labels.all" resname="labels.all" approved="yes">
         <source>All</source>
@@ -179,14 +171,6 @@
         <source>Proc. Instr.</source>
         <target state="needs-translation">Proc. Instr.</target>
       </trans-unit>
-      <trans-unit id="labels.newprocess" resname="labels.newprocess">
-        <source>New process has been started, refresh to monitor the state</source>
-        <target state="needs-translation">New process has been started, refresh to monitor the state</target>
-      </trans-unit>
-      <trans-unit id="labels.newprocesserror" resname="labels.newprocesserror">
-        <source>Error while starting process</source>
-        <target state="needs-translation">Error while starting process</target>
-      </trans-unit>
       <trans-unit id="labels.time.now" resname="labels.time.now">
         <source>Now</source>
         <target state="needs-translation">Now</target>
@@ -219,34 +203,6 @@
         <source>immediate</source>
         <target state="final">即時</target>
       </trans-unit>
-      <trans-unit id="labels.generalinformation" resname="labels.generalinformation">
-        <source>General Information</source>
-        <target state="needs-translation">General Information</target>
-      </trans-unit>
-      <trans-unit id="labels.pendingoverview" resname="labels.pendingoverview">
-        <source>Pending Entries (assigned / overall)</source>
-        <target state="needs-translation">Pending Entries (assigned / overall)</target>
-      </trans-unit>
-      <trans-unit id="labels.processcount" resname="labels.processcount">
-        <source>Processes count (running / max)</source>
-        <target state="needs-translation">Processes count (running / max)</target>
-      </trans-unit>
-      <trans-unit id="labels.clipath" resname="labels.clipath">
-        <source>CLI-Path</source>
-        <target state="needs-translation">CLI-Path</target>
-      </trans-unit>
-      <trans-unit id="labels.processstates" resname="labels.processstates">
-        <source>Process States</source>
-        <target state="needs-translation">Process States</target>
-      </trans-unit>
-      <trans-unit id="labels.state" resname="labels.state">
-        <source>State</source>
-        <target state="needs-translation">State</target>
-      </trans-unit>
-      <trans-unit id="labels.processid" resname="labels.processid">
-        <source>Id</source>
-        <target state="needs-translation">Id</target>
-      </trans-unit>
       <trans-unit id="labels.time.first" resname="labels.time.first">
         <source>Time first item</source>
         <target state="needs-translation">Time first item</target>
@@ -254,70 +210,6 @@
       <trans-unit id="labels.time.last" resname="labels.time.last">
         <source>Time last item</source>
         <target state="needs-translation">Time last item</target>
-      </trans-unit>
-      <trans-unit id="labels.time.duration" resname="labels.time.duration">
-        <source>Runtime</source>
-        <target state="needs-translation">Runtime</target>
-      </trans-unit>
-      <trans-unit id="labels.ttl" resname="labels.ttl">
-        <source>TTL</source>
-        <target state="needs-translation">TTL</target>
-      </trans-unit>
-      <trans-unit id="labels.status.current" resname="labels.status.current">
-        <source>Processed</source>
-        <target state="needs-translation">Processed</target>
-      </trans-unit>
-      <trans-unit id="labels.status.initial" resname="labels.status.initial">
-        <source>Initially assigned</source>
-        <target state="needs-translation">Initially assigned</target>
-      </trans-unit>
-      <trans-unit id="labels.status.finally" resname="labels.status.finally">
-        <source>Finally assigned</source>
-        <target state="needs-translation">Finally assigned</target>
-      </trans-unit>
-      <trans-unit id="labels.status.progress" resname="labels.status.progress">
-        <source>Progress</source>
-        <target state="needs-translation">Progress</target>
-      </trans-unit>
-      <trans-unit id="labels.process.running" resname="labels.process.running">
-        <source>Process running</source>
-        <target state="needs-translation">Process running</target>
-      </trans-unit>
-      <trans-unit id="labels.process.success" resname="labels.process.success">
-        <source>Process completed successfully</source>
-        <target state="needs-translation">Process completed successfully</target>
-      </trans-unit>
-      <trans-unit id="labels.process.cancelled" resname="labels.process.cancelled">
-        <source>Process was cancelled</source>
-        <target state="needs-translation">Process was cancelled</target>
-      </trans-unit>
-      <trans-unit id="labels.refresh" resname="labels.refresh">
-        <source>Refresh</source>
-        <target state="needs-translation">Refresh</target>
-      </trans-unit>
-      <trans-unit id="labels.disablecrawling" resname="labels.disablecrawling">
-        <source>Stop all processes and disable crawling</source>
-        <target state="needs-translation">Stop all processes and disable crawling</target>
-      </trans-unit>
-      <trans-unit id="labels.enablecrawling" resname="labels.enablecrawling">
-        <source>Enable crawling</source>
-        <target state="needs-translation">Enable crawling</target>
-      </trans-unit>
-      <trans-unit id="labels.show.running" resname="labels.show.running">
-        <source>Show only running processes</source>
-        <target state="needs-translation">Show only running processes</target>
-      </trans-unit>
-      <trans-unit id="labels.show.all" resname="labels.show.all">
-        <source>Show finished and terminated processes</source>
-        <target state="needs-translation">Show finished and terminated processes</target>
-      </trans-unit>
-      <trans-unit id="labels.process.add" resname="labels.process.add">
-        <source>Add process</source>
-        <target state="needs-translation">Add process</target>
-      </trans-unit>
-      <trans-unit id="labels.process.flush" resname="labels.process.flush">
-        <source>Flush all processes</source>
-        <target state="needs-translation">Flush all processes</target>
       </trans-unit>
       <trans-unit id="time.detailed" resname="time.detailed">
         <source>d-m-y H:i:s</source>
@@ -346,10 +238,6 @@
       <trans-unit id="message.noBeUserAvailable" resname="message.noBeUserAvailable">
         <source>There is no be_user "_cli_crawler" available!</source>
         <target state="needs-translation">There is no be_user "_cli_crawler" available!</target>
-      </trans-unit>
-      <trans-unit id="message.noPhpForkAvailable" resname="message.noPhpForkAvailable">
-        <source>There is no PHP method "popen" available!</source>
-        <target state="needs-translation">There is no PHP method "popen" available!</target>
       </trans-unit>
       <trans-unit id="message.beUserIsAdmin" resname="message.beUserIsAdmin">
         <source>The be_user "_cli_crawler" is not allowed to have admin rights!</source>
