@@ -120,7 +120,7 @@ class BuildQueueCommandTest extends FunctionalTestCase
     }
 
     #[Test]
-    public function queueModeSendsCrawlMessageToCrawlerTransport(): void
+    public function queueModeSendsCrawlMessageToTransportOfPagePriority(): void
     {
         $this->commandTester->execute([
             'page' => 1,
@@ -135,7 +135,8 @@ class BuildQueueCommandTest extends FunctionalTestCase
         $messages = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getConnectionForTable('sys_messenger_messages')
             ->select(['body', 'headers'], 'sys_messenger_messages', [
-                'queue_name' => 'crawler',
+                // Page 1 has a sitemap_priority of 1.0
+                'queue_name' => 'crawler_high',
             ])
             ->fetchAllAssociative();
         self::assertCount(1, $messages);

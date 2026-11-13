@@ -67,7 +67,7 @@
         "symfony/dependency-injection": "7.4.0"
     },
     "suggest": {
-        "typo3/cms-seo": "Enables the possibility to priorities your Crawler Queue + You have seo features in the CMS it self."
+        "typo3/cms-seo": "Enables priority crawling based on the sitemap priority of the pages"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

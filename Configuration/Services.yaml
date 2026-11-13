@@ -8,9 +8,23 @@ services:
         resource: '../Classes/*'
         exclude:
             - '../Classes/Queue/Message/*'
+            - '../Classes/Queue/CrawlPriority.php'
 
-    # Doctrine transport for the crawler messages, see ext_localconf.php for the routing.
-    # Consume with: vendor/bin/typo3 messenger:consume crawler
+    # Doctrine transports for the crawler messages, one per priority, see ext_localconf.php for the routing and
+    # AOE\Crawler\Queue\CrawlUrlMessageDispatcher for the priority handling.
+    # Consume with: vendor/bin/typo3 messenger:consume crawler_high crawler crawler_low
+    crawler.messenger.transport.crawler_high:
+        class: 'Symfony\Component\Messenger\Bridge\Doctrine\Transport\DoctrineTransport'
+        factory: [ '@TYPO3\CMS\Core\Messenger\DoctrineTransportFactory', 'createTransport' ]
+        arguments:
+            $options:
+                queue_name: 'crawler_high'
+        tags:
+            - name: 'messenger.sender'
+              identifier: 'crawler_high'
+            - name: 'messenger.receiver'
+              identifier: 'crawler_high'
+
     crawler.messenger.transport.crawler:
         class: 'Symfony\Component\Messenger\Bridge\Doctrine\Transport\DoctrineTransport'
         factory: [ '@TYPO3\CMS\Core\Messenger\DoctrineTransportFactory', 'createTransport' ]
@@ -22,6 +36,18 @@ services:
               identifier: 'crawler'
             - name: 'messenger.receiver'
               identifier: 'crawler'
+
+    crawler.messenger.transport.crawler_low:
+        class: 'Symfony\Component\Messenger\Bridge\Doctrine\Transport\DoctrineTransport'
+        factory: [ '@TYPO3\CMS\Core\Messenger\DoctrineTransportFactory', 'createTransport' ]
+        arguments:
+            $options:
+                queue_name: 'crawler_low'
+        tags:
+            - name: 'messenger.sender'
+              identifier: 'crawler_low'
+            - name: 'messenger.receiver'
+              identifier: 'crawler_low'
 
     AOE\Crawler\Command\BuildQueueCommand:
         tags:

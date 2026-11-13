@@ -1,12 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Access to an undefined property AOE\\Crawler\\Controller\\Backend\\BackendModuleCrawlerLogController\:\:\$isErrorDetected\.$#'
-			identifier: property.notFound
-			count: 1
-			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
-
-		-
 			message: '#^Cannot access offset ''_flush'' on array\|object\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -31,7 +25,7 @@ parameters:
 			path: Classes/Controller/Backend/BackendModuleCrawlerLogController.php
 
 		-
-			message: '#^Class cognitive complexity is 95, keep it under 28$#'
+			message: '#^Class cognitive complexity is 94, keep it under 28$#'
 			identifier: complexity.classLike
 			count: 1
 			path: Classes/Controller/CrawlerController.php
@@ -43,7 +37,7 @@ parameters:
 			path: Classes/Controller/CrawlerController.php
 
 		-
-			message: '#^Out of 218 possible return types, only 174 \- 79\.8 %% actually have it\. Add more return types to get over 81 %%$#'
+			message: '#^Out of 223 possible return types, only 179 \- 80\.2 %% actually have it\. Add more return types to get over 81 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 6
 			path: Classes/Controller/CrawlerController.php
@@ -61,13 +55,13 @@ parameters:
 			path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
 
 		-
-			message: '#^Out of 218 possible return types, only 174 \- 79\.8 %% actually have it\. Add more return types to get over 81 %%$#'
+			message: '#^Out of 223 possible return types, only 179 \- 80\.2 %% actually have it\. Add more return types to get over 81 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 1
 			path: Classes/CrawlStrategy/CallbackExecutionStrategy.php
 
 		-
-			message: '#^Out of 218 possible return types, only 174 \- 79\.8 %% actually have it\. Add more return types to get over 81 %%$#'
+			message: '#^Out of 223 possible return types, only 179 \- 80\.2 %% actually have it\. Add more return types to get over 81 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 1
 			path: Classes/CrawlStrategy/CrawlStrategyInterface.php
@@ -79,37 +73,37 @@ parameters:
 			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
 
 		-
-			message: '#^Out of 218 possible return types, only 174 \- 79\.8 %% actually have it\. Add more return types to get over 81 %%$#'
+			message: '#^Out of 223 possible return types, only 179 \- 80\.2 %% actually have it\. Add more return types to get over 81 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 3
 			path: Classes/CrawlStrategy/SubProcessExecutionStrategy.php
 
 		-
-			message: '#^Out of 218 possible return types, only 174 \- 79\.8 %% actually have it\. Add more return types to get over 81 %%$#'
+			message: '#^Out of 223 possible return types, only 179 \- 80\.2 %% actually have it\. Add more return types to get over 81 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 9
 			path: Classes/Domain/Model/Configuration.php
 
 		-
-			message: '#^Out of 218 possible return types, only 174 \- 79\.8 %% actually have it\. Add more return types to get over 81 %%$#'
+			message: '#^Out of 223 possible return types, only 179 \- 80\.2 %% actually have it\. Add more return types to get over 81 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 13
 			path: Classes/Domain/Model/Queue.php
 
 		-
-			message: '#^Out of 218 possible return types, only 174 \- 79\.8 %% actually have it\. Add more return types to get over 81 %%$#'
+			message: '#^Out of 223 possible return types, only 179 \- 80\.2 %% actually have it\. Add more return types to get over 81 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 7
 			path: Classes/Domain/Model/Reason.php
 
 		-
-			message: '#^Out of 218 possible return types, only 174 \- 79\.8 %% actually have it\. Add more return types to get over 81 %%$#'
+			message: '#^Out of 223 possible return types, only 179 \- 80\.2 %% actually have it\. Add more return types to get over 81 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 1
 			path: Classes/Middleware/FrontendUserAuthenticator.php
 
 		-
-			message: '#^Out of 218 possible return types, only 174 \- 79\.8 %% actually have it\. Add more return types to get over 81 %%$#'
+			message: '#^Out of 223 possible return types, only 179 \- 80\.2 %% actually have it\. Add more return types to get over 81 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 1
 			path: Classes/QueueExecutor.php
@@ -151,13 +145,13 @@ parameters:
 			path: Classes/Service/ConfigurationService.php
 
 		-
-			message: '#^Out of 218 possible return types, only 174 \- 79\.8 %% actually have it\. Add more return types to get over 81 %%$#'
+			message: '#^Out of 223 possible return types, only 179 \- 80\.2 %% actually have it\. Add more return types to get over 81 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 1
 			path: Classes/Service/ConfigurationService.php
 
 		-
-			message: '#^Out of 218 possible return types, only 174 \- 79\.8 %% actually have it\. Add more return types to get over 81 %%$#'
+			message: '#^Out of 223 possible return types, only 179 \- 80\.2 %% actually have it\. Add more return types to get over 81 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 1
 			path: Classes/Utility/TcaUtility.php

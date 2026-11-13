@@ -93,7 +93,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             'mode',
             'm',
             InputOption::VALUE_OPTIONAL,
-            'Specifies output modes url : Will list URLs which wget could use as input. queue: Will put entries in the queue, to be processed by "typo3 messenger:consume crawler". exec: Will execute all entries right away!'
+            'Specifies output modes url : Will list URLs which wget could use as input. queue: Will put entries in the queue, to be processed by "typo3 messenger:consume crawler_high crawler crawler_low". exec: Will execute all entries right away!'
         );
 
         $this->addOption(

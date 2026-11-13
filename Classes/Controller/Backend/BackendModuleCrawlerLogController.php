@@ -23,6 +23,8 @@ use AOE\Crawler\Controller\Backend\Helper\RequestHelper;
 use AOE\Crawler\Controller\Backend\Helper\ResultHandler;
 use AOE\Crawler\Controller\Backend\Helper\UrlBuilder;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Queue\CrawlPriority;
+use AOE\Crawler\Queue\CrawlUrlMessageDispatcher;
 use AOE\Crawler\Queue\Message\CrawlUrlMessage;
 use AOE\Crawler\Service\BackendModuleLogService;
 use AOE\Crawler\Service\BackendModuleScriptUrlService;
@@ -32,7 +34,6 @@ use AOE\Crawler\Writer\FileWriter\CsvWriter\CsvWriterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Contracts\Service\Attribute\Required;
 use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
@@ -72,7 +73,7 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
         private readonly QueueRepository $queueRepository,
         private readonly CsvWriterInterface $csvWriter,
         private readonly IconFactory $iconFactory,
-        private readonly MessageBusInterface $messageBus,
+        private readonly CrawlUrlMessageDispatcher $crawlUrlMessageDispatcher,
         private readonly BackendModuleLogService $backendModuleLogService,
         private readonly BackendModuleScriptUrlService $backendModuleScriptUrlService,
     ) {
@@ -97,7 +98,6 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
         ]);
 
         if (!$this->pageUid) {
-            $this->isErrorDetected = true;
             $this->moduleTemplate->assign('noPageSelected', true);
             return $this->moduleTemplate->renderResponse('Backend/ShowLog');
         }
@@ -142,8 +142,11 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
 
         $quidRead = RequestHelper::getIntFromRequest($request, 'qid_read');
         if ($quidRead) {
-            // Re-crawl an already crawled entry
-            $this->messageBus->dispatch(new CrawlUrlMessage($quidRead, true));
+            // Re-crawl an already crawled entry, requested by an editor and therefore with high priority
+            $this->crawlUrlMessageDispatcher->dispatch(
+                new CrawlUrlMessage($quidRead, true),
+                priority: CrawlPriority::High
+            );
         }
 
         if ($this->queueId) {

@@ -60,7 +60,7 @@
       <code><![CDATA[addQueueEntry_callBack]]></code>
       <code><![CDATA[drawURLs_PIfilter]]></code>
       <code><![CDATA[getConfigurationsForBranch]]></code>
-      <code><![CDATA[injectMessageBus]]></code>
+      <code><![CDATA[injectCrawlUrlMessageDispatcher]]></code>
       <code><![CDATA[setExtensionSettings]]></code>
       <code><![CDATA[setMaximumUrlsToCompile]]></code>
     </PossiblyUnusedMethod>
@@ -212,6 +212,11 @@
     <UnusedClass>
       <code><![CDATA[FrontendUserAuthenticator]]></code>
     </UnusedClass>
+  </file>
+  <file src="Classes/Queue/CrawlUrlMessageDispatcher.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="Classes/Queue/Handler/CrawlUrlHandler.php">
     <PossiblyUnusedMethod>

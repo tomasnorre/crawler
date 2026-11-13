@@ -21,6 +21,7 @@ namespace AOE\Crawler\Tests\Functional\Service;
 
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Queue\CrawlUrlMessageDispatcher;
 use AOE\Crawler\Queue\Message\CrawlUrlMessage;
 use AOE\Crawler\Service\QueueService;
 use Symfony\Component\Messenger\Envelope;
@@ -57,7 +58,7 @@ class QueueServiceTest extends FunctionalTestCase
             $this->dispatchedMessages[] = $message;
             return new Envelope($message);
         });
-        $crawlerController->injectMessageBus($messageBus);
+        $crawlerController->injectCrawlUrlMessageDispatcher(new CrawlUrlMessageDispatcher($messageBus));
 
         $this->subject = GeneralUtility::makeInstance(QueueService::class, $crawlerController);
     }

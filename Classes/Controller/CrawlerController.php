@@ -23,6 +23,7 @@ use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\AfterUrlAddedToQueueEvent;
+use AOE\Crawler\Queue\CrawlUrlMessageDispatcher;
 use AOE\Crawler\Queue\Message\CrawlUrlMessage;
 use AOE\Crawler\Service\ConfigurationService;
 use AOE\Crawler\Service\PageService;
@@ -32,8 +33,6 @@ use AOE\Crawler\Value\QueueRow;
 use Psr\Http\Message\UriInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Messenger\Stamp\DelayStamp;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
@@ -87,7 +86,7 @@ class CrawlerController implements LoggerAwareInterface
     private ConfigurationService $configurationService;
     private UrlService $urlService;
     private EventDispatcher $eventDispatcher;
-    private MessageBusInterface $messageBus;
+    private CrawlUrlMessageDispatcher $crawlUrlMessageDispatcher;
 
     /************************************
      *
@@ -117,9 +116,9 @@ class CrawlerController implements LoggerAwareInterface
         );
     }
 
-    public function injectMessageBus(MessageBusInterface $messageBus): void
+    public function injectCrawlUrlMessageDispatcher(CrawlUrlMessageDispatcher $crawlUrlMessageDispatcher): void
     {
-        $this->messageBus = $messageBus;
+        $this->crawlUrlMessageDispatcher = $crawlUrlMessageDispatcher;
     }
 
     public function setMaximumUrlsToCompile(int $maximumUrlsToCompile): void
@@ -403,7 +402,7 @@ class CrawlerController implements LoggerAwareInterface
             'set_id' => $setId,
             'result_data' => '',
         ]);
-        $this->dispatchCrawlUrlMessage($queueId, $scheduled);
+        $this->dispatchCrawlUrlMessage($queueId, $page_id, $scheduled);
     }
 
     /************************************
@@ -484,7 +483,7 @@ class CrawlerController implements LoggerAwareInterface
                 $urlAdded = true;
 
                 $this->eventDispatcher->dispatch(new AfterUrlAddedToQueueEvent((string) $uid, $fieldArray));
-                $this->dispatchCrawlUrlMessage($uid, (int) $tstamp);
+                $this->dispatchCrawlUrlMessage($uid, (int) $id, (int) $tstamp);
             }
         }
 
@@ -743,14 +742,13 @@ class CrawlerController implements LoggerAwareInterface
     /**
      * Hands the queue record over to the message bus. Records scheduled in the future are delayed accordingly.
      */
-    private function dispatchCrawlUrlMessage(int $queueId, int $scheduled): void
+    private function dispatchCrawlUrlMessage(int $queueId, int $pageId, int $scheduled): void
     {
-        $stamps = [];
-        $delayInSeconds = $scheduled - $this->getCurrentTime();
-        if ($delayInSeconds > 0) {
-            $stamps[] = new DelayStamp($delayInSeconds * 1000);
-        }
-        $this->messageBus->dispatch(new CrawlUrlMessage($queueId), $stamps);
+        $this->crawlUrlMessageDispatcher->dispatch(
+            new CrawlUrlMessage($queueId),
+            $pageId,
+            $scheduled - $this->getCurrentTime()
+        );
     }
 
     /**

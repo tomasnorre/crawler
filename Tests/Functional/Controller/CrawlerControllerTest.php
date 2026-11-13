@@ -21,6 +21,7 @@ namespace AOE\Crawler\Tests\Functional\Controller;
 
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Queue\CrawlUrlMessageDispatcher;
 use AOE\Crawler\Queue\Message\CrawlUrlMessage;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -110,9 +111,9 @@ class CrawlerControllerTest extends FunctionalTestCase
         $messageBus = $this->createMock(MessageBusInterface::class);
         $messageBus->expects($expected ? self::once() : self::never())
             ->method('dispatch')
-            ->with(self::isInstanceOf(CrawlUrlMessage::class), [])
+            ->with(self::isInstanceOf(CrawlUrlMessage::class), self::isArray())
             ->willReturnCallback(static fn (object $message): Envelope => new Envelope($message));
-        $mockedCrawlerController->injectMessageBus($messageBus);
+        $mockedCrawlerController->injectCrawlUrlMessageDispatcher(new CrawlUrlMessageDispatcher($messageBus));
 
         self::assertEquals(
             $expected,
@@ -142,12 +143,14 @@ class CrawlerControllerTest extends FunctionalTestCase
             ->method('dispatch')
             ->willReturnCallback(static function (object $message, array $stamps): Envelope {
                 self::assertInstanceOf(CrawlUrlMessage::class, $message);
-                self::assertCount(1, $stamps);
-                self::assertInstanceOf(DelayStamp::class, $stamps[0]);
-                self::assertSame(60_000, $stamps[0]->getDelay());
+                $delayStamps = array_values(
+                    array_filter($stamps, static fn (object $stamp): bool => $stamp instanceof DelayStamp)
+                );
+                self::assertCount(1, $delayStamps);
+                self::assertSame(60_000, $delayStamps[0]->getDelay());
                 return new Envelope($message, $stamps);
             });
-        $crawlerController->injectMessageBus($messageBus);
+        $crawlerController->injectCrawlUrlMessageDispatcher(new CrawlUrlMessageDispatcher($messageBus));
 
         self::assertTrue($crawlerController->addUrl(1, 'https://example.com/', [
             'key' => 'some-key',
