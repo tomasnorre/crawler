@@ -33,10 +33,19 @@ class CallbackExecutionStrategy
      * @template T of object
      * @param class-string<T> $callbackClassName
      */
-    public function fetchByCallback(string $callbackClassName, array $parameters, CrawlerController $crawlerController)
-    {
+    public function fetchByCallback(
+        string $callbackClassName,
+        array $parameters,
+        CrawlerController $crawlerController
+    ): mixed {
         // Calling custom object
-        $callBackObj = GeneralUtility::makeInstance($callbackClassName);
-        return $callBackObj->crawler_execute($parameters, $crawlerController);
+        $callback = [GeneralUtility::makeInstance($callbackClassName), 'crawler_execute'];
+        if (!is_callable($callback)) {
+            throw new \InvalidArgumentException(
+                sprintf('Callback class "%s" must implement a crawler_execute() method', $callbackClassName),
+                1763020800
+            );
+        }
+        return $callback($parameters, $crawlerController);
     }
 }
