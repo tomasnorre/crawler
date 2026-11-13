@@ -215,9 +215,13 @@
     </PossiblyUnusedMethod>
     <UnusedMethod>
       <code><![CDATA[buildColumnsInContentArray]]></code>
+      <code><![CDATA[buildRow]]></code>
+      <code><![CDATA[buildRowData]]></code>
       <code><![CDATA[escapeValue]]></code>
       <code><![CDATA[extractCsvExport]]></code>
+      <code><![CDATA[formatDateTime]]></code>
       <code><![CDATA[getLanguageService]]></code>
+      <code><![CDATA[getModuleUrl]]></code>
       <code><![CDATA[populateFeVars]]></code>
     </UnusedMethod>
     <UnusedProperty>
