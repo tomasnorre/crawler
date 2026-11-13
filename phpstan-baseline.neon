@@ -11,15 +11,3 @@ parameters:
 			identifier: complexity.functionLike
 			count: 1
 			path: Classes/Controller/CrawlerController.php
-
-		-
-			message: '#^Class cognitive complexity is 104, keep it under 28$#'
-			identifier: complexity.classLike
-			count: 1
-			path: Classes/Service/ConfigurationService.php
-
-		-
-			message: '#^Cognitive complexity for "AOE\\Crawler\\Service\\ConfigurationService\:\:expandParameters\(\)" is 23, keep it under 20$#'
-			identifier: complexity.functionLike
-			count: 1
-			path: Classes/Service/ConfigurationService.php
