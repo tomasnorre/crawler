@@ -10,9 +10,11 @@
 * The crawl result is stored by `AOE\Crawler\Queue\Handler\CrawlUrlHandler` instead of an event listener
 * Re-crawling from the Crawler log dispatches a message instead of crawling within the request
 * Translations are delivered as language packs by the TYPO3 translation server, fetch them with `typo3 language:update` or in "Manage Language Packs", otherwise labels are shown in English
+* The hook `$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/class.tx_crawler_lib.php']['expandParameters']` receives `AOE\Crawler\Service\ParameterExpander` as `pObj` instead of `AOE\Crawler\Service\ConfigurationService`
 
 ### Fixed
 * Export every log entry in the crawler log CSV
+* Build the page tree of excluded pages only once per page and depth, the cache was never filled
 
 ### Deprecated
 #### Classes
