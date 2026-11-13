@@ -24,6 +24,7 @@ use AOE\Crawler\Service\ConfigurationService;
 use AOE\Crawler\Service\UrlService;
 use PHPUnit\Framework\Attributes\Test;
 use Prophecy\PhpUnit\ProphecyTrait;
+use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Authentication\GroupResolver;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -61,6 +62,28 @@ class ConfigurationServiceTest extends FunctionalTestCase
     }
 
     #[Test]
+    public function expandExcludeStringBuildsThePageTreeOnlyOncePerPageAndDepth(): void
+    {
+        $GLOBALS['BE_USER'] = $this->getMockBuilder(BackendUserAuthentication::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['isAdmin', 'getTSConfig', 'getPagePermsClause', 'isInWebMount', 'backendCheckLogin'])
+            ->getMock();
+
+        $getTreeCalls = 0;
+        // expandExcludeString() creates one PageTreeView per call
+        GeneralUtility::addInstance(PageTreeView::class, $this->createCountingPageTree($getTreeCalls));
+        GeneralUtility::addInstance(PageTreeView::class, $this->createCountingPageTree($getTreeCalls));
+
+        // Two different exclude strings, so only the page tree cache can prevent building the tree of page 5 twice
+        $first = $this->subject->expandExcludeString('5+1');
+        $second = $this->subject->expandExcludeString('5+1,3');
+
+        self::assertSame([5, 50], array_values($first));
+        self::assertSame([5, 50, 3], array_values($second));
+        self::assertSame(1, $getTreeCalls);
+    }
+
+    #[Test]
     public function getConfigurationFromDatabaseReturnsArray(): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [
@@ -83,5 +106,22 @@ class ConfigurationServiceTest extends FunctionalTestCase
 
         self::assertArrayHasKey('default', $configurations);
         self::assertArrayHasKey('Not hidden or deleted', $configurations);
+    }
+
+    private function createCountingPageTree(int &$getTreeCalls): PageTreeView
+    {
+        $tree = $this->createMock(PageTreeView::class);
+        $tree->method('getTree')->willReturnCallback(
+            static function (int $uid) use ($tree, &$getTreeCalls): int {
+                $getTreeCalls++;
+                $tree->tree = [[
+                    'row' => [
+                        'uid' => $uid * 10,
+                    ],
+                ]];
+                return 1;
+            }
+        );
+        return $tree;
     }
 }
