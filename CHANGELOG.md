@@ -3,7 +3,9 @@
 ## Crawler 14.0.0-dev
 
 ### Added
+* Support for PHP 8.6
 * Queue entries are processed by the TYPO3 message bus (`AOE\Crawler\Queue\Message\CrawlUrlMessage`, `messenger:consume crawler_high crawler crawler_low`) [#1310](https://github.com/tomasnorre/crawler/issues/1310)
+
 
 ### Changed
 * Priority crawling uses the transports `crawler_high`, `crawler` and `crawler_low` (based on `sitemap_priority`) instead of sorting the queue
