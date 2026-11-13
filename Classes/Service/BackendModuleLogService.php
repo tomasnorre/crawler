@@ -23,8 +23,6 @@ use AOE\Crawler\Controller\Backend\Helper\ResultHandler;
 use AOE\Crawler\Controller\Backend\Helper\UrlBuilder;
 use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
-use TYPO3\CMS\Core\Http\Uri;
-use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Imaging\IconSize;
 use TYPO3\CMS\Core\Localization\LanguageService;
@@ -43,7 +41,7 @@ class BackendModuleLogService
      *
      * @throws RouteNotFoundException
      *
-     * @psalm-return non-empty-list<array{titleRowSpan: positive-int, colSpan: int, title: string, noEntries?: string, trClass?: string, qid?: array{link: Uri, link-text: string}, refresh?: array{link: Uri, link-text: Icon, warning: (Icon | string)}, columns?: array{url: (mixed | string), scheduled: string, exec_time: string, result_log: string, result_status: string, feUserGroupList: string, procInstructions: string, set_id: string, tsfe_id: string, tsfe_gr_list: string}}>
+     * @return array{0: non-empty-list<array<string, mixed>>, 1: array<string, mixed>}
      */
     public function addRows(
         array $logEntriesOfPage,
@@ -188,7 +186,7 @@ class BackendModuleLogService
     private function populateFeVars(string $showFeVars, bool|array $resultData, array $rowData): array
     {
         if ($showFeVars) {
-            $resFeVars = ResultHandler::getResFeVars($resultData ?: []);
+            $resFeVars = ResultHandler::getResFeVars(is_array($resultData) ? $resultData : []);
             $rowData['tsfe_id'] = $resFeVars['id'] ?? '';
             $rowData['tsfe_gr_list'] = $resFeVars['gr_list'] ?? '';
         }

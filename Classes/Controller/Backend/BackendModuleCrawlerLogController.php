@@ -114,16 +114,18 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
             )->executeQuery()
             ->fetchAssociative();
 
+        if ($q_entry === false) {
+            return [[], ResultHandler::getResStatus([])];
+        }
+
         // Explode values
         $q_entry['parameters'] = json_decode((string) $q_entry['parameters'], true);
         $q_entry['result_data'] = json_decode((string) $q_entry['result_data'], true);
         $resStatus = ResultHandler::getResStatus($q_entry['result_data']);
         if (is_array($q_entry['result_data'])) {
             $q_entry['result_data']['content'] = json_decode((string) $q_entry['result_data']['content'], true);
-            if (!$this->showResultLog) {
-                if (is_array($q_entry['result_data']['content'])) {
-                    unset($q_entry['result_data']['content']['log']);
-                }
+            if (!$this->showResultLog && is_array($q_entry['result_data']['content'])) {
+                unset($q_entry['result_data']['content']['log']);
             }
         }
         return [$q_entry, $resStatus];
@@ -180,9 +182,10 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
             }
 
             // If Flush button is pressed, flush tables instead of selecting entries:
-            if ($request->getParsedBody()['_flush'] ?? false) {
+            $parsedBody = (array) ($request->getParsedBody() ?? []);
+            if ($parsedBody['_flush'] ?? false) {
                 $doFlush = true;
-            } elseif ($request->getParsedBody()['_flush_all'] ?? false) {
+            } elseif ($parsedBody['_flush_all'] ?? false) {
                 $doFlush = true;
                 $this->logDisplay = 'all';
             } else {
@@ -308,7 +311,8 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
     {
         $this->pageUid = (int) ($request->getQueryParams()['id'] ?? -1);
         $this->setId = RequestHelper::getIntFromRequest($request, 'setID̈́');
-        $quidDetails = $request->getParsedBody()['qid_details'] ?? $request->getQueryParams()['qid_details'] ?? null;
+        $parsedBody = (array) ($request->getParsedBody() ?? []);
+        $quidDetails = $parsedBody['qid_details'] ?? $request->getQueryParams()['qid_details'] ?? null;
         $this->quiPath = $quidDetails ? '&qid_details=' . (int) $quidDetails : '';
         $this->queueId = $quidDetails ?? null;
         $this->logDisplay = RequestHelper::getStringFromRequest($request, 'displayLog', 'all');
