@@ -137,7 +137,7 @@ class BackendModuleLogService
                 $contentArray = $this->buildColumnsInContentArray($rowData, $contentArray);
                 $resultArray[] = $contentArray;
                 if ($CSVExport) {
-                    $csvExport = $this->extractCsvExport($vv, $contentArray['columns'], $resLog);
+                    $csvExport[] = $this->extractCsvExport($vv, $contentArray['columns'], $resLog);
                 }
             }
         } else {

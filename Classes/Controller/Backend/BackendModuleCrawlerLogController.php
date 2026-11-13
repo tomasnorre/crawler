@@ -208,7 +208,7 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
                     $queueFilter
                 );
 
-                [$logEntriesPerPage[], $row] = $this->backendModuleLogService->addRows(
+                [$logEntriesPerPage[], $csvRows] = $this->backendModuleLogService->addRows(
                     $logEntriesOfPage,
                     RequestHelper::getIntFromRequest($request, 'setID'),
                     $data['HTML'] . BackendUtility::getRecordTitle('pages', $data['row'], true),
@@ -216,7 +216,7 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
                     $this->showFeVars,
                     $this->CSVExport
                 );
-                $csvData[] = $row;
+                array_push($csvData, ...$csvRows);
 
                 if (++$count === 1000) {
                     break;
