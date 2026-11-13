@@ -21,6 +21,8 @@ namespace AOE\Crawler\Tests\Functional\Service;
 
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Service\ConfigurationService;
+use AOE\Crawler\Service\ExcludeStringExpander;
+use AOE\Crawler\Service\ParameterExpander;
 use AOE\Crawler\Service\UrlService;
 use PHPUnit\Framework\Attributes\Test;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -42,7 +44,13 @@ class ConfigurationServiceTest extends FunctionalTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->subject = $this->createPartialMock(ConfigurationService::class, []);
+        $this->subject = new ConfigurationService(
+            $this->createStub(UrlService::class),
+            $this->createStub(ConfigurationRepository::class),
+            $this->createStub(GroupResolver::class),
+            new ParameterExpander(),
+            new ExcludeStringExpander(),
+        );
     }
 
     #[Test]
@@ -119,7 +127,9 @@ class ConfigurationServiceTest extends FunctionalTestCase
             ConfigurationService::class,
             $urlService,
             $configurationRepository,
-            GeneralUtility::makeInstance(GroupResolver::class)
+            GeneralUtility::makeInstance(GroupResolver::class),
+            new ParameterExpander(),
+            new ExcludeStringExpander(),
         );
 
         $configurations = $configurationService->getConfigurationFromDatabase(1, []);

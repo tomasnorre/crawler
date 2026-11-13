@@ -26,7 +26,9 @@ use AOE\Crawler\Event\AfterUrlAddedToQueueEvent;
 use AOE\Crawler\Queue\CrawlUrlMessageDispatcher;
 use AOE\Crawler\Queue\Message\CrawlUrlMessage;
 use AOE\Crawler\Service\ConfigurationService;
+use AOE\Crawler\Service\ExcludeStringExpander;
 use AOE\Crawler\Service\PageService;
+use AOE\Crawler\Service\ParameterExpander;
 use AOE\Crawler\Service\ProcessInstructionService;
 use AOE\Crawler\Service\UrlService;
 use AOE\Crawler\Value\QueueRow;
@@ -106,6 +108,8 @@ class CrawlerController implements LoggerAwareInterface
             GeneralUtility::makeInstance(UrlService::class),
             $this->configurationRepository,
             GeneralUtility::makeInstance(GroupResolver::class),
+            GeneralUtility::makeInstance(ParameterExpander::class),
+            GeneralUtility::makeInstance(ExcludeStringExpander::class),
         );
         $this->urlService = GeneralUtility::makeInstance(UrlService::class);
 

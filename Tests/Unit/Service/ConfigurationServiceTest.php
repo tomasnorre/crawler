@@ -21,6 +21,8 @@ namespace AOE\Crawler\Tests\Unit\Service;
 
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Service\ConfigurationService;
+use AOE\Crawler\Service\ExcludeStringExpander;
+use AOE\Crawler\Service\ParameterExpander;
 use AOE\Crawler\Service\UrlService;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -29,6 +31,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 #[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Service\ConfigurationService::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Service\ParameterExpander::class)]
 #[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Service\UrlService::class)]
 #[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Configuration\ExtensionConfigurationProvider::class)]
 class ConfigurationServiceTest extends UnitTestCase
@@ -110,6 +113,8 @@ class ConfigurationServiceTest extends UnitTestCase
             $urlService->reveal(),
             $configurationRepository->reveal(),
             $this->createStub(GroupResolver::class),
+            new ParameterExpander(),
+            new ExcludeStringExpander(),
         );
 
         self::assertEquals(
@@ -553,6 +558,8 @@ class ConfigurationServiceTest extends UnitTestCase
             $urlService,
             $this->createStub(ConfigurationRepository::class),
             $this->createStub(GroupResolver::class),
+            new ParameterExpander(),
+            new ExcludeStringExpander(),
         );
     }
 
