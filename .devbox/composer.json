@@ -14,10 +14,22 @@
     "support": {
         "issues": "https://github.com/tomasnorre/crawler/issues"
     },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "packages/crawler",
+            "options": {
+                "symlink": true,
+                "versions": {
+                    "tomasnorre/crawler": "14.0.x-dev"
+                }
+            }
+        }
+    ],
     "require": {
         "georgringer/news": "^14",
         "tnm/crawler-devbox-sitepackage": "^0.0.5",
-        "tomasnorre/crawler": "*@dev",
+        "tomasnorre/crawler": "^14.0@dev",
         "typo3/cms-belog": "^14.3",
         "typo3/cms-beuser": "^14.3",
         "typo3/cms-felogin": "^14.3",
