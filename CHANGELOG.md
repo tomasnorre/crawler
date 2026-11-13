@@ -9,6 +9,7 @@
 * Priority crawling uses the transports `crawler_high`, `crawler` and `crawler_low` (based on `sitemap_priority`) instead of sorting the queue
 * The crawl result is stored by `AOE\Crawler\Queue\Handler\CrawlUrlHandler` instead of an event listener
 * Re-crawling from the Crawler log dispatches a message instead of crawling within the request
+* Translations are delivered as language packs by the TYPO3 translation server, fetch them with `typo3 language:update` or in "Manage Language Packs", otherwise labels are shown in English
 
 ### Fixed
 
@@ -23,6 +24,7 @@
 * Extension settings `sleepTime`, `sleepAfterFinish`, `countInARun`, `processLimit`, `processMaxRunTime`, `purgeQueueDays`, `processDebug`, `processVerbose`
 * Hooks `cli_hooks` and `refresh_hooks`
 * TYPO3 13 Support [@tomasnorre](https://github.com/tomasnorre)
+* Translated XLIFF files (`Resources/Private/Language/<lang>.*.xlf`, including the Crowdin In-Context pseudo-language `t3`), use the language packs instead
 
 #### Classes
 * `AOE\Crawler\Command\ProcessQueueCommand`
