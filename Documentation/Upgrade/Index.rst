@@ -98,3 +98,30 @@ Changed functionality
 
 *   Re-crawling an entry from the :guilabel:`Crawler log` dispatches a message,
     the result is visible once the worker has processed it.
+
+..  _upgrade-language-packs:
+
+Translations are delivered as language packs
+============================================
+
+The extension no longer ships translated XLIFF files, only the English labels.
+The translations are maintained on
+`Crowdin <https://crowdin.com/project/typo3-extension-crawler>`__ and
+delivered by the TYPO3 translation server as language packs, like the
+translations of the TYPO3 Core.
+
+Without language packs, the backend module and the Crawler labels are shown
+in English. Fetch or update the language packs after installing or updating
+the extension, either in the backend module
+:guilabel:`System > Maintenance > Manage Language Packs`, or on the command
+line:
+
+..  code-block:: bash
+
+    vendor/bin/typo3 language:update
+
+See `Managing translations <https://docs.typo3.org/permalink/t3coreapi:managing-translating>`__
+for details.
+
+Missing or wrong translations can be fixed on Crowdin, they are part of the
+next language pack.
