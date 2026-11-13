@@ -66,7 +66,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
     #[\Override]
     public function handleRequest(ServerRequestInterface $request): ResponseInterface
     {
-        $this->makeCrawlerProcessableChecks($this->extensionSettings);
+        $this->checkPhpBinaryForDirectRequests($this->extensionSettings);
         $this->pageUid = (int) ($request->getQueryParams()['id'] ?? -1);
         $this->moduleTemplate = $this->setupView($request, $this->pageUid);
         $this->moduleTemplate->makeDocHeaderModuleMenu([
@@ -97,9 +97,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
         $noConfigurationSelected = $this->isNoConfigurationSelected();
         if ($noConfigurationSelected) {
             MessageUtility::addWarningMessage(
-                $this->getLanguageService()->sL(
-                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.noConfigSelected'
-                )
+                $this->getLanguageService()->sL('crawler.messages:labels.noConfigSelected')
             );
         } else {
             if ($submitCrawlUrls) {
@@ -160,24 +158,12 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
         $selectors = [];
         $selectors['depth'] = $this->selectorBox(
             [
-                0 => $this->getLanguageService()->sL(
-                    'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_0'
-                ),
-                1 => $this->getLanguageService()->sL(
-                    'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_1'
-                ),
-                2 => $this->getLanguageService()->sL(
-                    'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_2'
-                ),
-                3 => $this->getLanguageService()->sL(
-                    'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_3'
-                ),
-                4 => $this->getLanguageService()->sL(
-                    'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_4'
-                ),
-                99 => $this->getLanguageService()->sL(
-                    'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_infi'
-                ),
+                0 => $this->getLanguageService()->sL('core.core:labels.depth_0'),
+                1 => $this->getLanguageService()->sL('core.core:labels.depth_1'),
+                2 => $this->getLanguageService()->sL('core.core:labels.depth_2'),
+                3 => $this->getLanguageService()->sL('core.core:labels.depth_3'),
+                4 => $this->getLanguageService()->sL('core.core:labels.depth_4'),
+                99 => $this->getLanguageService()->sL('core.core:labels.depth_infi'),
             ],
             'crawlingDepth',
             $crawlingDepth,
@@ -199,15 +185,9 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
         // Scheduled time:
         $selectors['scheduled'] = $this->selectorBox(
             [
-                'now' => $this->getLanguageService()->sL(
-                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.time.now'
-                ),
-                'midnight' => $this->getLanguageService()->sL(
-                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.time.midnight'
-                ),
-                '04:00' => $this->getLanguageService()->sL(
-                    'LLL:EXT:crawler/Resources/Private/Language/locallang.xlf:labels.time.4am'
-                ),
+                'now' => $this->getLanguageService()->sL('crawler.messages:labels.time.now'),
+                'midnight' => $this->getLanguageService()->sL('crawler.messages:labels.time.midnight'),
+                '04:00' => $this->getLanguageService()->sL('crawler.messages:labels.time.4am'),
             ],
             'tstamp',
             RequestHelper::getStringFromRequest($request, 'tstamp', 'now'),

@@ -20,12 +20,3 @@ test('Can select and see crawler module log', { tag: ['@v13','@v14'] }, async ({
     await helpers.openCrawlerModuleCrawlerLog(page);
     await expect(page).toHaveURL('/typo3/module/page/crawler/log?id=1');
 })
-
-test('Can select and see crawler module process', { tag: ['@v13','@v14'] }, async ({page}) => {
-    await helpers.loginBackend(page)
-    await helpers.openCrawlerModuleCrawlerProcesses(page)
-    await expect(page).toHaveURL('/typo3/module/page/crawler/process?id=1');
-
-    await expect(page.locator('iframe[name="list_frame"]').contentFrame().locator('.module-body')).not.toContainText('Undefined array key "processMaxRunTime" in /var/www/html/vendor/tomasnorre/crawler/Classes/Domain/Repository/ProcessRepository.php line 193');
-    await expect(page.locator('iframe[name="list_frame"]').contentFrame().locator('.module-body')).not.toContainText('Undefined array key "processMaxRunTime" in /var/www/html/vendor/tomasnorre/crawler/Classes/Domain/Repository/ProcessRepository.php line 163');
-})

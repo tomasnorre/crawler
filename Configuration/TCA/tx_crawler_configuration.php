@@ -152,7 +152,7 @@ return [
     ],
     'types' => [
         '0' => [
-            'showitem' => '--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general,name,force_ssl,processing_instruction_filter,base_url,pidsonly,exclude,configuration,processing_instruction_parameters_ts,fegroups,--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access,hidden,begroups',
+            'showitem' => '--div--;core.form.tabs:general,name,force_ssl,processing_instruction_filter,base_url,pidsonly,exclude,configuration,processing_instruction_parameters_ts,fegroups,--div--;core.form.tabs:access,hidden,begroups',
         ],
     ],
 ];

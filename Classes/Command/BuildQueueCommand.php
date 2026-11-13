@@ -24,6 +24,8 @@ use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\InvokeQueueChangeEvent;
+use AOE\Crawler\Queue\Handler\CrawlUrlHandler;
+use AOE\Crawler\Queue\Message\CrawlUrlMessage;
 use AOE\Crawler\Utility\MessageUtility;
 use AOE\Crawler\Value\QueueRow;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -49,6 +51,7 @@ class BuildQueueCommand extends Command
         private readonly QueueRepository $queueRepository,
         private readonly PageRepository $pageRepository,
         private readonly CrawlerController $crawlerController,
+        private readonly CrawlUrlHandler $crawlUrlHandler,
     ) {
         parent::__construct();
     }
@@ -90,7 +93,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             'mode',
             'm',
             InputOption::VALUE_OPTIONAL,
-            'Specifies output modes url : Will list URLs which wget could use as input. queue: Will put entries in queue table. exec: Will execute all entries right away!'
+            'Specifies output modes url : Will list URLs which wget could use as input. queue: Will put entries in the queue, to be processed by "typo3 messenger:consume crawler_high crawler crawler_low". exec: Will execute all entries right away!'
         );
 
         $this->addOption(
@@ -233,7 +236,8 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             $output->writeln('<info>' . $p['url'] . $procInstructionsString . ' => ' . '</info>');
             $progressBar->display();
 
-            $result = $this->crawlerController->readUrlFromArray($queueRec);
+            // Bypass the message queue and crawl the entry right away
+            $result = ($this->crawlUrlHandler)(new CrawlUrlMessage($this->queueRepository->add($queueRec)));
 
             $resultContent = $result['content'] ?? '';
             $requestResult = json_decode((string) $resultContent, true);

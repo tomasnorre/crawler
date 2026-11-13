@@ -31,11 +31,7 @@ parameters:
         -
             identifier: symplify.forbiddenSwitch
         -
-            identifier: symfony.singleRequiredMethod
-        -
             identifier: symfony.noPublicNonActionMethodInController
-        -
-            identifier: symplify.parentMethodVisibilityOverride
 
     # composer require tomasvotruba/cognitive-complexity --dev
     cognitive_complexity:

@@ -18,7 +18,6 @@ declare(strict_types=1);
  */
 
 use AOE\Crawler\Controller\Backend\BackendModuleCrawlerLogController;
-use AOE\Crawler\Controller\Backend\BackendModuleCrawlerProcessController;
 use AOE\Crawler\Controller\Backend\BackendModuleStartCrawlingController;
 
 if ((new \TYPO3\CMS\Core\Information\Typo3Version())->getMajorVersion() === 14) {
@@ -45,7 +44,7 @@ return [
         'iconIdentifier' => 'tx-crawler-icon',
         'routes' => [
             '_default' => [
-                'target' => BackendModuleCrawlerProcessController::class . '::handleRequest',
+                'target' => BackendModuleStartCrawlingController::class . '::handleRequest',
             ],
         ],
     ],
@@ -59,19 +58,6 @@ return [
         'routes' => [
             '_default' => [
                 'target' => BackendModuleStartCrawlingController::class . '::handleRequest',
-            ],
-        ],
-    ],
-    'web_site_crawler_process' => [
-        'parent' => 'web_site_crawler',
-        'access' => 'user',
-        'path' => '/module/page/crawler/process',
-        'labels' => [
-            'title' => 'Process',
-        ],
-        'routes' => [
-            '_default' => [
-                'target' => BackendModuleCrawlerProcessController::class . '::handleRequest',
             ],
         ],
     ],

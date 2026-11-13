@@ -66,10 +66,6 @@ class SubProcessExecutionStrategy implements LoggerAwareInterface, CrawlStrategy
             return false;
         }
 
-        if (!is_array($parsedUrl)) {
-            return [];
-        }
-
         $requestHeaders = $this->buildRequestHeaders($parsedUrl, $crawlerId);
 
         $commandParts = [

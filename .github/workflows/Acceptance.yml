@@ -16,7 +16,6 @@ jobs:
       fail-fast: false
       matrix:
         typo3:
-          - ^13.4
           - ^14.3
         php:
           - "8.2"
@@ -25,37 +24,13 @@ jobs:
           - "8.5"
 
     timeout-minutes: 60
-    runs-on: ${{ matrix.typo3 == '^13.4' && 'ubuntu-26.04' || 'self-hosted' }}
-    #runs-on: 'ubuntu-26.04'
+    runs-on: 'self-hosted'
     steps:
-      - name: Get branch name (merge)
-        if: github.event_name != 'pull_request'
-        shell: bash
-        run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/} | tr / -)" >> $GITHUB_ENV
-
-      - name: Get branch name (pull request)
-        if: github.event_name == 'pull_request'
-        shell: bash
-        run: echo "BRANCH_NAME=$(echo ${GITHUB_HEAD_REF})" >> $GITHUB_ENV
-
       - name: Set Playwright tag
         shell: bash
-        run: |
-          if [[ "${{ matrix.typo3 }}" == "^13.4" ]]; then
-            echo "PW_GREP=@v13" >> $GITHUB_ENV
-          elif [[ "${{ matrix.typo3 }}" == "^14.3" ]]; then
-            echo "PW_GREP=@v14" >> $GITHUB_ENV
-          fi
+        run: echo "PW_GREP=@v14" >> $GITHUB_ENV
 
       - uses: actions/checkout@v7
-      - name: Patch composer.json for forked PR
-        if: >
-          github.event_name == 'pull_request' &&
-          github.event.pull_request.head.repo.full_name != github.repository
-        run: |
-          cd .devbox
-          composer config repositories.crawler-pr '{"type": "vcs", "url": "https://github.com/${{ github.event.pull_request.head.repo.full_name }}.git"}'
-
       - name: Prepare devbox before start
         run: |
           export FROM_PATH='../../'
@@ -64,7 +39,6 @@ jobs:
           sed -i 's/php_version: "8.2"/php_version: "${{ matrix.php }}"/g' .ddev/config.yaml
           sed -i "s|$FROM_PATH|$TO_PATH|g" .ddev/docker-compose.volume.yaml
           jq '.require["typo3/cms-core"] = "${{ matrix.typo3 }}"' composer.json > composer.json.tmp && mv composer.json.tmp composer.json
-          jq --arg branch "dev-$BRANCH_NAME" '.require["tomasnorre/crawler"] = $branch' composer.json > composer.json.tmp && mv composer.json.tmp composer.json
 
       # --- ADD CLEANUP HERE ---
       - name: Clean up existing DDEV and Docker state

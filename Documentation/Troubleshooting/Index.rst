@@ -187,3 +187,20 @@ then a firewall probably filters incoming or outgoing HTTP headers.
 
 Crawler sends a `X-T3Crawler` header to TYPO3 and expects a `X-T3Crawler-Meta`
 in the response. If those are removed in transit, crawler will not work.
+
+..  _troubleshooting-labels-english:
+
+Backend module is shown in English
+==================================
+
+The translations of the Crawler are delivered as language packs by the TYPO3
+translation server, they are not part of the extension. If the labels of the
+Crawler are shown in English while the backend user has another language,
+update the language packs in :guilabel:`System > Maintenance > Manage Language Packs`
+or with:
+
+..  code-block:: bash
+
+    vendor/bin/typo3 language:update
+
+See :ref:`upgrade-language-packs`.

@@ -1,11 +1,17 @@
 # Changelog TYPO3 Crawler
 
-## Crawler 13.0.2-dev
+## Crawler 14.0.0-dev
 
 ### Added
 * Support for PHP 8.6
+* Queue entries are processed by the TYPO3 message bus (`AOE\Crawler\Queue\Message\CrawlUrlMessage`, `messenger:consume crawler_high crawler crawler_low`) [#1310](https://github.com/tomasnorre/crawler/issues/1310)
+
 
 ### Changed
+* Priority crawling uses the transports `crawler_high`, `crawler` and `crawler_low` (based on `sitemap_priority`) instead of sorting the queue
+* The crawl result is stored by `AOE\Crawler\Queue\Handler\CrawlUrlHandler` instead of an event listener
+* Re-crawling from the Crawler log dispatches a message instead of crawling within the request
+* Translations are delivered as language packs by the TYPO3 translation server, fetch them with `typo3 language:update` or in "Manage Language Packs", otherwise labels are shown in English
 
 ### Fixed
 
@@ -14,8 +20,44 @@
 #### Functions & Properties
 
 ### Removed
+* Command `crawler:processQueue`, use `messenger:consume crawler_high crawler crawler_low`
+* Backend module "Process" view and AJAX route `crawler_process_status`
+* Table `tx_crawler_process` and columns `process_id`, `process_id_completed`, `process_scheduled` of `tx_crawler_queue`
+* Extension settings `sleepTime`, `sleepAfterFinish`, `countInARun`, `processLimit`, `processMaxRunTime`, `purgeQueueDays`, `processDebug`, `processVerbose`
+* Hooks `cli_hooks` and `refresh_hooks`
+* TYPO3 13 Support [@tomasnorre](https://github.com/tomasnorre)
+* Translated XLIFF files (`Resources/Private/Language/<lang>.*.xlf`, including the Crowdin In-Context pseudo-language `t3`), use the language packs instead
+
 #### Classes
+* `AOE\Crawler\Command\ProcessQueueCommand`
+* `AOE\Crawler\Controller\Ajax\ProcessStatusController`
+* `AOE\Crawler\Controller\Backend\BackendModuleCrawlerProcessController`
+* `AOE\Crawler\Crawler`
+* `AOE\Crawler\Domain\Model\Configuration`
+* `AOE\Crawler\Domain\Model\ProcessCollection`
+* `AOE\Crawler\Domain\Model\Process`
+* `AOE\Crawler\Domain\Model\Queue`
+* `AOE\Crawler\Domain\Repository\ProcessRepository`
+* `AOE\Crawler\EventListener\AfterQueueItemAddedEventListener`
+* `AOE\Crawler\Exception\CrawlerObjectException`
+* `AOE\Crawler\Exception\NoIndexFoundException`
+* `AOE\Crawler\Exception\ProcessException`
+* `AOE\Crawler\Exception\TimeStampException`
+* `AOE\Crawler\Helper\Sleeper\*`
+* `AOE\Crawler\Hooks\CrawlerHookInterface`
+* `AOE\Crawler\Hooks\ProcessCleanUpHook`
+* `AOE\Crawler\Process\*`
+* `AOE\Crawler\Service\BackendModuleLinkService`
+* `AOE\Crawler\Service\ProcessService`
+* `AOE\Crawler\Utility\HookUtility`
+* `AOE\Crawler\Value\CrawlAction`
+
 #### Functions & Properties
+* `CrawlerController::readUrl()`
+* `CrawlerController::readUrlFromArray()`
+* `CrawlerController::drawURLs_PIfilter()`
+* `CrawlerController::$processID`
+* `QueueRepository`: all process related methods, `getUnprocessedItems()`, `countAllPendingItems()`, `countAllAssignedPendingItems()`, `cleanupQueue()`, `fetchRecordsToBeCrawled()`
 
 ## Crawler 13.0.1
 Crawler 13.0.1 was released on October 23rd, 2026

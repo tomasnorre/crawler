@@ -20,11 +20,14 @@ namespace AOE\Crawler\Tests\Functional\Controller;
  */
 
 use AOE\Crawler\Controller\CrawlerController;
-use AOE\Crawler\Domain\Repository\ProcessRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Queue\CrawlUrlMessageDispatcher;
+use AOE\Crawler\Queue\Message\CrawlUrlMessage;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
-use AOE\Crawler\Value\QueueFilter;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\DelayStamp;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\TestingFramework\Core\AccessibleObjectInterface;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
@@ -51,17 +54,9 @@ class CrawlerControllerTest extends FunctionalTestCase
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/pages.csv');
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/tx_crawler_configuration.csv');
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.csv');
-        $this->importCSVDataSet(__DIR__ . '/../Fixtures/tx_crawler_process.csv');
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/tt_content.csv');
 
-        $mockedQueueRepository = $this->createMock(QueueRepository::class);
-        $mockedProcessRepository = $this->createMock(ProcessRepository::class);
-
-        $this->subject = $this->getAccessibleMock(
-            CrawlerController::class,
-            null,
-            [$mockedQueueRepository, $mockedProcessRepository]
-        );
+        $this->subject = $this->getAccessibleMock(CrawlerController::class, null);
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
@@ -113,6 +108,13 @@ class CrawlerControllerTest extends FunctionalTestCase
         $mockedCrawlerController->_set('registerQueueEntriesInternallyOnly', $registerQueueEntriesInternallyOnly);
         $mockedCrawlerController->_set('queueRepository', $mockedQueueRepository);
 
+        $messageBus = $this->createMock(MessageBusInterface::class);
+        $messageBus->expects($expected ? self::once() : self::never())
+            ->method('dispatch')
+            ->with(self::isInstanceOf(CrawlUrlMessage::class), self::isArray())
+            ->willReturnCallback(static fn (object $message): Envelope => new Envelope($message));
+        $mockedCrawlerController->injectCrawlUrlMessageDispatcher(new CrawlUrlMessageDispatcher($messageBus));
+
         self::assertEquals(
             $expected,
             $mockedCrawlerController->addUrl(
@@ -124,6 +126,35 @@ class CrawlerControllerTest extends FunctionalTestCase
                 $skipInnerDuplicationCheck
             )
         );
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function addUrlDelaysMessageForEntriesScheduledInTheFuture(): void
+    {
+        $mockedQueueRepository = $this->getAccessibleMock(QueueRepository::class, ['getDuplicateQueueItemsIfExists']);
+        $mockedQueueRepository->method('getDuplicateQueueItemsIfExists')->willReturn([]);
+
+        $crawlerController = $this->getAccessibleMock(CrawlerController::class, ['getCurrentTime']);
+        $crawlerController->method('getCurrentTime')->willReturn(1_000_000);
+        $crawlerController->_set('queueRepository', $mockedQueueRepository);
+
+        $messageBus = $this->createMock(MessageBusInterface::class);
+        $messageBus->expects(self::once())
+            ->method('dispatch')
+            ->willReturnCallback(static function (object $message, array $stamps): Envelope {
+                self::assertInstanceOf(CrawlUrlMessage::class, $message);
+                $delayStamps = array_values(
+                    array_filter($stamps, static fn (object $stamp): bool => $stamp instanceof DelayStamp)
+                );
+                self::assertCount(1, $delayStamps);
+                self::assertSame(60_000, $delayStamps[0]->getDelay());
+                return new Envelope($message, $stamps);
+            });
+        $crawlerController->injectCrawlUrlMessageDispatcher(new CrawlUrlMessageDispatcher($messageBus));
+
+        self::assertTrue($crawlerController->addUrl(1, 'https://example.com/', [
+            'key' => 'some-key',
+        ], 1_000_060));
     }
 
     public static function addUrlDataProvider(): iterable
@@ -190,150 +221,6 @@ class CrawlerControllerTest extends FunctionalTestCase
             ],
             'registerQueueEntriesInternallyOnly' => true,
             'expected' => false,
-        ];
-    }
-
-    public function getLogEntriesForSetIdDataProvider(): iterable
-    {
-        yield 'Do Flush' => [
-            'setId' => 456,
-            'filter' => '',
-            'doFlush' => true,
-            'doFullFlush' => false,
-            'itemsPerPage' => 5,
-            'expected' => [],
-        ];
-        yield 'Do Full Flush' => [
-            'setId' => 456,
-            'filter' => '',
-            'doFlush' => true,
-            'doFullFlush' => true,
-            'itemsPerPage' => 5,
-            'expected' => [],
-        ];
-        yield 'Check that doFullFlush do not flush if doFlush is not true' => [
-            'setId' => 456,
-            'filter' => '',
-            'doFlush' => false,
-            'doFullFlush' => true,
-            'itemsPerPage' => 5,
-            'expected' => [[
-                'qid' => '8',
-                'page_id' => '3',
-                'parameters' => '',
-                'parameters_hash' => '',
-                'configuration_hash' => '',
-                'scheduled' => '0',
-                'exec_time' => '0',
-                'set_id' => '456',
-                'result_data' => '',
-                'process_scheduled' => '0',
-                'process_id' => '1007',
-                'process_id_completed' => 'asdfgh',
-                'configuration' => 'ThirdConfiguration',
-            ]],
-        ];
-        yield 'Get entries for set_id 456' => [
-            'setId' => 456,
-            'filter' => '',
-            'doFlush' => false,
-            'doFullFlush' => false,
-            'itemsPerPage' => 1,
-            'expected' => [[
-                'qid' => '8',
-                'page_id' => '3',
-                'parameters' => '',
-                'parameters_hash' => '',
-                'configuration_hash' => '',
-                'scheduled' => '0',
-                'exec_time' => '0',
-                'set_id' => '456',
-                'result_data' => '',
-                'process_scheduled' => '0',
-                'process_id' => '1007',
-                'process_id_completed' => 'asdfgh',
-                'configuration' => 'ThirdConfiguration',
-            ]],
-        ];
-        yield 'Do Flush Pending' => [
-            'setId' => 456,
-            'filter' => 'pending',
-            'doFlush' => true,
-            'doFullFlush' => false,
-            'itemsPerPage' => 5,
-            'expected' => [],
-        ];
-        yield 'Do Flush Finished' => [
-            'setId' => 456,
-            'filter' => 'finished',
-            'doFlush' => true,
-            'doFullFlush' => false,
-            'itemsPerPage' => 5,
-            'expected' => [],
-        ];
-    }
-
-    public function getLogEntriesForPageIdDataProvider(): iterable
-    {
-        yield 'Do Flush' => [
-            'id' => 1002,
-            'filter' => new QueueFilter(),
-            'doFlush' => true,
-            'doFullFlush' => false,
-            'itemsPerPage' => 5,
-            'expected' => [],
-        ];
-        yield 'Do Full Flush' => [
-            'id' => 1002,
-            'filter' => new QueueFilter(),
-            'doFlush' => true,
-            'doFullFlush' => true,
-            'itemsPerPage' => 5,
-            'expected' => [],
-        ];
-        yield 'Check that doFullFlush do not flush if doFlush is not true' => [
-            'id' => 2,
-            'filter' => new QueueFilter(),
-            'doFlush' => false,
-            'doFullFlush' => true,
-            'itemsPerPage' => 5,
-            'expected' => [[
-                'qid' => '6',
-                'page_id' => '2',
-                'parameters' => '',
-                'parameters_hash' => '',
-                'configuration_hash' => '7b6919e533f334550b6f19034dfd2f81',
-                'scheduled' => '0',
-                'exec_time' => '0',
-                'set_id' => '123',
-                'result_data' => '',
-                'process_scheduled' => '0',
-                'process_id' => '1006',
-                'process_id_completed' => 'qwerty',
-                'configuration' => 'SecondConfiguration',
-            ]],
-        ];
-        yield 'Get entries for page_id 2001' => [
-            'id' => 2,
-            'filter' => new QueueFilter(),
-            'doFlush' => false,
-            'doFullFlush' => false,
-            'itemsPerPage' => 1,
-            'expected' => [[
-                'qid' => '6',
-                'page_id' => '2',
-                'parameters' => '',
-                'parameters_hash' => '',
-                'configuration_hash' => '7b6919e533f334550b6f19034dfd2f81',
-                'scheduled' => '0',
-                'exec_time' => '0',
-                'set_id' => '123',
-                'result_data' => '',
-                'process_scheduled' => '0',
-                'process_id' => '1006',
-                'process_id_completed' => 'qwerty',
-                'configuration' => 'SecondConfiguration',
-            ]],
         ];
     }
 }

@@ -40,6 +40,7 @@ class MessageUtilityTest extends UnitTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->flashMessageQueue = GeneralUtility::makeInstance(
             FlashMessageService::class
         )->getMessageQueueByIdentifier();
@@ -58,6 +59,7 @@ class MessageUtilityTest extends UnitTestCase
         } else {
             unset($GLOBALS['BE_USER']);
         }
+        parent::tearDown();
     }
 
     #[\PHPUnit\Framework\Attributes\Test]

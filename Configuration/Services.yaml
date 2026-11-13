@@ -6,6 +6,48 @@ services:
 
     AOE\Crawler\:
         resource: '../Classes/*'
+        exclude:
+            - '../Classes/Queue/Message/*'
+            - '../Classes/Queue/CrawlPriority.php'
+
+    # Doctrine transports for the crawler messages, one per priority, see ext_localconf.php for the routing and
+    # AOE\Crawler\Queue\CrawlUrlMessageDispatcher for the priority handling.
+    # Consume with: vendor/bin/typo3 messenger:consume crawler_high crawler crawler_low
+    crawler.messenger.transport.crawler_high:
+        class: 'Symfony\Component\Messenger\Bridge\Doctrine\Transport\DoctrineTransport'
+        factory: [ '@TYPO3\CMS\Core\Messenger\DoctrineTransportFactory', 'createTransport' ]
+        arguments:
+            $options:
+                queue_name: 'crawler_high'
+        tags:
+            - name: 'messenger.sender'
+              identifier: 'crawler_high'
+            - name: 'messenger.receiver'
+              identifier: 'crawler_high'
+
+    crawler.messenger.transport.crawler:
+        class: 'Symfony\Component\Messenger\Bridge\Doctrine\Transport\DoctrineTransport'
+        factory: [ '@TYPO3\CMS\Core\Messenger\DoctrineTransportFactory', 'createTransport' ]
+        arguments:
+            $options:
+                queue_name: 'crawler'
+        tags:
+            - name: 'messenger.sender'
+              identifier: 'crawler'
+            - name: 'messenger.receiver'
+              identifier: 'crawler'
+
+    crawler.messenger.transport.crawler_low:
+        class: 'Symfony\Component\Messenger\Bridge\Doctrine\Transport\DoctrineTransport'
+        factory: [ '@TYPO3\CMS\Core\Messenger\DoctrineTransportFactory', 'createTransport' ]
+        arguments:
+            $options:
+                queue_name: 'crawler_low'
+        tags:
+            - name: 'messenger.sender'
+              identifier: 'crawler_low'
+            - name: 'messenger.receiver'
+              identifier: 'crawler_low'
 
     AOE\Crawler\Command\BuildQueueCommand:
         tags:
@@ -19,19 +61,6 @@ services:
             $crawlerController: '@AOE\Crawler\Controller\CrawlerController'
         public: true
 
-    AOE\Crawler\Command\ProcessQueueCommand:
-      arguments:
-        $crawler: '@AOE\Crawler\Crawler'
-        $crawlerController: '@AOE\Crawler\Controller\CrawlerController'
-        $processRepository: '@AOE\Crawler\Domain\Repository\ProcessRepository'
-        $queueRepository: '@AOE\Crawler\Domain\Repository\QueueRepository'
-      public: true
-      tags:
-        -   name: 'console.command'
-            command: 'crawler:processQueue'
-            description: 'Trigger the crawler to process the queue entries'
-
-
     AOE\Crawler\Command\FlushQueueCommand:
         tags:
             - name: 'console.command'
@@ -43,11 +72,6 @@ services:
         factory: [ '@TYPO3\CMS\Core\Database\ConnectionPool', 'getQueryBuilderForTable' ]
         arguments: [ 'tx_crawler_configuration' ]
 
-    queryBuilder.tx_crawler_process:
-        class: 'TYPO3\CMS\Core\Database\Query\QueryBuilder'
-        factory: [ '@TYPO3\CMS\Core\Database\ConnectionPool', 'getQueryBuilderForTable' ]
-        arguments: [ 'tx_crawler_process' ]
-
     queryBuilder.tx_crawler_queue:
         class: 'TYPO3\CMS\Core\Database\Query\QueryBuilder'
         factory: [ '@TYPO3\CMS\Core\Database\ConnectionPool', 'getQueryBuilderForTable' ]
@@ -56,14 +80,6 @@ services:
     AOE\Crawler\Middleware\FrontendUserAuthenticator:
         arguments:
             $queryBuilder: '@queryBuilder.tx_crawler_queue'
-
-    AOE\Crawler\Process\ProcessManagerInterface:
-      factory: [ 'AOE\Crawler\Process\ProcessManagerFactory', 'create' ]
-
-    AOE\Crawler\Service\BackendModuleLinkService:
-        arguments:
-            $iconFactory: '@TYPO3\CMS\Core\Imaging\IconFactory'
-        public: true
 
     AOE\Crawler\Service\ConfigurationService:
         arguments:
@@ -77,12 +93,6 @@ services:
             $eventDispatcher: '@TYPO3\CMS\Core\EventDispatcher\EventDispatcher'
         public: true
 
-    AOE\Crawler\Service\ProcessService:
-        arguments:
-            $processRepository: '@AOE\Crawler\Domain\Repository\ProcessRepository'
-            $sleeper: '@AOE\Crawler\Helper\Sleeper\SystemSleeper'
-        public: true
-
     AOE\Crawler\Service\QueueService:
         arguments:
             $crawlerController: '@AOE\Crawler\Controller\CrawlerController'
@@ -93,17 +103,6 @@ services:
             $crawlStrategyFactory: '@AOE\Crawler\CrawlStrategy\CrawlStrategyFactory'
             $eventDispatcher: '@TYPO3\CMS\Core\EventDispatcher\EventDispatcher'
         public: true
-
-    AOE\Crawler\Controller\Ajax\ProcessStatusController:
-        arguments:
-            $processRepository: '@AOE\Crawler\Domain\Repository\ProcessRepository'
-        public: true
-
-    AOE\Crawler\Controller\BackendModuleController:
-        tags: [ 'backend.controller' ]
-
-    AOE\Crawler\Controller\Backend\BackendModuleCrawlerProcessController:
-        tags: [ 'backend.controller' ]
 
     AOE\Crawler\Controller\Backend\BackendModuleStartCrawlingController:
         tags: [ 'backend.controller' ]
@@ -116,34 +115,9 @@ services:
             $iconFactory: '@TYPO3\CMS\Core\Imaging\IconFactory'
         public: true
 
-    AOE\Crawler\Process\Cleaner\OldProcessCleaner:
-        arguments:
-            $processRepository: '@AOE\Crawler\Domain\Repository\ProcessRepository'
-            $queueRepository: '@AOE\Crawler\Domain\Repository\QueueRepository'
-            $processManager: '@AOE\Crawler\Process\ProcessManagerInterface'
-        public: true
-
-    AOE\Crawler\Process\Cleaner\OrphanProcessCleaner:
-        arguments:
-            $processRepository: '@AOE\Crawler\Domain\Repository\ProcessRepository'
-            $queueRepository: '@AOE\Crawler\Domain\Repository\QueueRepository'
-            $processManager: '@AOE\Crawler\Process\ProcessManagerInterface'
-        public: true
-
-    AOE\Crawler\Hooks\ProcessCleanUpHook:
-        arguments:
-            $orphanCleaner: '@AOE\Crawler\Process\Cleaner\OrphanProcessCleaner'
-            $oldCleaner: '@AOE\Crawler\Process\Cleaner\OldProcessCleaner'
-        public: true
-
     AOE\Crawler\ContextMenu\ItemProvider:
         tags:
             - name: backend.contextmenu.itemprovider
-
-    AOE\Crawler\EventListener\AfterQueueItemAddedEventListener:
-      tags:
-        - name: event.listener
-          identifier: 'tx-crawler-after-queue-item-added'
 
     AOE\Crawler\EventListener\ShouldUseCachedPageDataIfAvailableEventListener:
       tags:

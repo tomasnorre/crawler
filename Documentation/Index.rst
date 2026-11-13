@@ -50,6 +50,7 @@ Libraries and scripts for crawling the TYPO3 page tree. Used for re-caching, re-
     UseCases/Index
     Features/Index
     Troubleshooting/Index
+    Upgrade/Index
     Links/Links
 
 ..  toctree::

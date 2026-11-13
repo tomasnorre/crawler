@@ -14,20 +14,32 @@
     "support": {
         "issues": "https://github.com/tomasnorre/crawler/issues"
     },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "packages/crawler",
+            "options": {
+                "symlink": true,
+                "versions": {
+                    "tomasnorre/crawler": "14.0.x-dev"
+                }
+            }
+        }
+    ],
     "require": {
         "georgringer/news": "^14",
         "tnm/crawler-devbox-sitepackage": "^0.0.5",
-        "tomasnorre/crawler": "*@dev",
-        "typo3/cms-belog": "^13.4 || ^14.3",
-        "typo3/cms-beuser": "^13.4 || ^14.3",
-        "typo3/cms-felogin": "^13.4 || ^14.3",
-        "typo3/cms-indexed-search": "^13.4 || ^14.3",
-        "typo3/cms-info": "^13.4 || ^14.3",
-        "typo3/cms-install": "^13.4 || ^14.3",
-        "typo3/cms-scheduler": "^13.4 || ^14.3",
-        "typo3/cms-tstemplate": "^13.4 || ^14.3",
-        "typo3/minimal": "^13.4 || ^14.3",
-	    "typo3/cms-core": "^13.4"
+        "tomasnorre/crawler": "^14.0@dev",
+        "typo3/cms-belog": "^14.3",
+        "typo3/cms-beuser": "^14.3",
+        "typo3/cms-felogin": "^14.3",
+        "typo3/cms-indexed-search": "^14.3",
+        "typo3/cms-info": "^14.3",
+        "typo3/cms-install": "^14.3",
+        "typo3/cms-scheduler": "^14.3",
+        "typo3/cms-tstemplate": "^14.3",
+        "typo3/minimal": "^14.3",
+	    "typo3/cms-core": "^14.3"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest"
