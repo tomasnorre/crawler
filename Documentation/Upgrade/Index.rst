@@ -99,6 +99,35 @@ Changed functionality
 *   Re-crawling an entry from the :guilabel:`Crawler log` dispatches a message,
     the result is visible once the worker has processed it.
 
+..  _upgrade-queue-callbacks:
+
+Queue callbacks implement an interface
+======================================
+
+Callbacks in the queue implement `AOE\Crawler\Queue\QueueCallbackInterface`
+instead of a `crawler_execute()` method, and no longer receive the
+`CrawlerController`. Callbacks that are services get their dependencies by
+constructor injection instead.
+
+Migration
+---------
+
+#.  Implement `QueueCallbackInterface` and rename `crawler_execute()` to
+    `execute()`:
+
+    ..  code-block:: diff
+
+        -class MyCallback
+        +final class MyCallback implements \AOE\Crawler\Queue\QueueCallbackInterface
+         {
+        -    public function crawler_execute(array $parameters, CrawlerController $crawlerController)
+        +    public function execute(array $parameters): mixed
+
+#.  Add queue entries with `QueueEntryWriter::addCallback()`, the replacement
+    of the removed `CrawlerController::addQueueEntry_callBack()`.
+
+See :ref:`queue-callbacks`.
+
 ..  _upgrade-language-packs:
 
 Translations are delivered as language packs
