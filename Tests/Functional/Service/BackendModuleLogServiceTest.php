@@ -17,6 +17,8 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
     use BackendRequestTestTrait;
     use ProphecyTrait;
 
+    protected array $coreExtensionsToLoad = ['info'];
+
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
     private BackendModuleLogService $subject;
 

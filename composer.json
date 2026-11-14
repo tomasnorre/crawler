@@ -108,7 +108,13 @@
             "dev-main": "14.0.x-dev"
         },
         "typo3/cms": {
+            "Package": {
+                "providesPackages": {
+                    "beberlei/assert": "Resources/Private/Php/Libraries/vendor"
+                }
+            },
             "extension-key": "crawler",
+            "version": "14.0.0-dev",
             "web-dir": ".Build/Web"
         }
     },

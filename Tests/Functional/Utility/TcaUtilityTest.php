@@ -25,6 +25,8 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 #[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Utility\TcaUtility::class)]
 class TcaUtilityTest extends FunctionalTestCase
 {
+    protected array $coreExtensionsToLoad = ['info'];
+
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     #[\PHPUnit\Framework\Attributes\DataProvider('getProcessingInstructionsDataProvider')]

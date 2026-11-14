@@ -32,6 +32,8 @@ class FlushQueueCommandTest extends FunctionalTestCase
 {
     use BackendRequestTestTrait;
 
+    protected array $coreExtensionsToLoad = ['info'];
+
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     protected \AOE\Crawler\Domain\Repository\QueueRepository $queueRepository;

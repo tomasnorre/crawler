@@ -35,6 +35,8 @@ class BackendModuleStartCrawlingControllerTest extends FunctionalTestCase
     use BackendRequestTestTrait;
     use ProphecyTrait;
 
+    protected array $coreExtensionsToLoad = ['info'];
+
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     #[\PHPUnit\Framework\Attributes\Test]

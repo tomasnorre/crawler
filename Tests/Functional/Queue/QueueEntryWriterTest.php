@@ -38,7 +38,7 @@ class QueueEntryWriterTest extends FunctionalTestCase
     use BackendRequestTestTrait;
     use QueueEntryWriterTestTrait;
 
-    protected array $coreExtensionsToLoad = ['seo'];
+    protected array $coreExtensionsToLoad = ['info', 'seo'];
 
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
