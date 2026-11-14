@@ -12,6 +12,9 @@ nbproject
 .TemporaryItems
 .webprj
 
+# Ignore TYPO3 Dev Companion
+.mcp.json
+
 # Ignore PHP/composer stuff
 .Build
 .cache/
