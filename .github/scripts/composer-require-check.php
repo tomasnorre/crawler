@@ -27,4 +27,14 @@ foreach ($mainRequirements['require'] as $package => $version) {
     }
 }
 
+$librariesVendor = 'Resources/Private/Php/Libraries/vendor';
+$providesPackages = $mainRequirements['extra']['typo3/cms']['Package']['providesPackages'] ?? [];
+
+foreach (array_keys($libsRequirements['require']) as $package) {
+    if (($providesPackages[$package] ?? null) !== $librariesVendor) {
+        echo "$package is missing in extra.typo3/cms.Package.providesPackages of composer.json (\"$librariesVendor\")" . chr(10);
+        $exitCode = 1;
+    }
+}
+
 exit($exitCode);

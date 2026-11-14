@@ -110,7 +110,19 @@
         "typo3/cms": {
             "Package": {
                 "providesPackages": {
-                    "beberlei/assert": "Resources/Private/Php/Libraries/vendor"
+                    "beberlei/assert": "Resources/Private/Php/Libraries/vendor",
+                    "doctrine/dbal": "Resources/Private/Php/Libraries/vendor",
+                    "guzzlehttp/guzzle": "Resources/Private/Php/Libraries/vendor",
+                    "psr/container": "Resources/Private/Php/Libraries/vendor",
+                    "psr/event-dispatcher": "Resources/Private/Php/Libraries/vendor",
+                    "psr/http-message": "Resources/Private/Php/Libraries/vendor",
+                    "psr/http-server-handler": "Resources/Private/Php/Libraries/vendor",
+                    "psr/http-server-middleware": "Resources/Private/Php/Libraries/vendor",
+                    "psr/log": "Resources/Private/Php/Libraries/vendor",
+                    "symfony/console": "Resources/Private/Php/Libraries/vendor",
+                    "symfony/dependency-injection": "Resources/Private/Php/Libraries/vendor",
+                    "symfony/messenger": "Resources/Private/Php/Libraries/vendor",
+                    "symfony/service-contracts": "Resources/Private/Php/Libraries/vendor"
                 }
             },
             "extension-key": "crawler",
