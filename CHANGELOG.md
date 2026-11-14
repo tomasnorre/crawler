@@ -58,6 +58,7 @@
 * `CrawlerController::readUrlFromArray()`
 * `CrawlerController::drawURLs_PIfilter()`
 * `CrawlerController::$processID`
+* `CrawlerController->addQueueEntry_callBack`
 * `QueueRepository`: all process related methods, `getUnprocessedItems()`, `countAllPendingItems()`, `countAllAssignedPendingItems()`, `cleanupQueue()`, `fetchRecordsToBeCrawled()`
 
 ## Crawler 13.0.1

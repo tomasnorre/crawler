@@ -359,44 +359,6 @@ class CrawlerController implements LoggerAwareInterface
 
     /************************************
      *
-     * Crawler log
-     *
-     ************************************/
-
-    /**
-     * Adding call back entries to log (called from hooks typically, see indexed search class "class.crawler.php"
-     *
-     * @param integer $setId Set ID
-     * @param array $params Parameters to pass to call back function
-     * @param string $callBack Call back object reference, eg. 'EXT:indexed_search/class.crawler.php:&tx_indexedsearch_crawler'
-     * @param integer $page_id Page ID to attach it to
-     * @param integer $schedule Time at which to activate
-     *
-     * @deprecated since 12.0.5 will be removed in 14.x
-     */
-    public function addQueueEntry_callBack(
-        int $setId,
-        array $params,
-        string $callBack,
-        int $page_id = 0,
-        int $schedule = 0
-    ): void {
-        $params['_CALLBACKOBJ'] = $callBack;
-        $scheduled = $schedule ?: $this->getCurrentTime();
-
-        $queueId = $this->queueRepository->add([
-            'page_id' => $page_id,
-            'parameters' => json_encode($params),
-            'scheduled' => $scheduled,
-            'exec_time' => 0,
-            'set_id' => $setId,
-            'result_data' => '',
-        ]);
-        $this->dispatchCrawlUrlMessage($queueId, $page_id, $scheduled);
-    }
-
-    /************************************
-     *
      * URL setting
      *
      ************************************/
