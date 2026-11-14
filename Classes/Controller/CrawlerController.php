@@ -33,8 +33,6 @@ use AOE\Crawler\Service\ProcessInstructionService;
 use AOE\Crawler\Service\UrlService;
 use AOE\Crawler\Value\QueueRow;
 use Psr\Http\Message\UriInterface;
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerAwareTrait;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
@@ -47,16 +45,13 @@ use TYPO3\CMS\Core\Imaging\IconSize;
 use TYPO3\CMS\Core\Type\Bitmask\Permission;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\MathUtility;
 
 /**
  * @package AOE\Crawler\Controller
  * @internal since v12.0.0
  */
-class CrawlerController implements LoggerAwareInterface
+class CrawlerController
 {
-    use LoggerAwareTrait;
-
     public int $setID = 0;
     public array $duplicateTrack = [];
     public array $downloadUrls = [];
@@ -73,7 +68,6 @@ class CrawlerController implements LoggerAwareInterface
     public ?string $MP = null;
     protected QueueRepository $queueRepository;
     protected ConfigurationRepository $configurationRepository;
-    protected int $maximumUrlsToCompile = 10000;
     protected IconFactory $iconFactory;
 
     /**
@@ -115,27 +109,11 @@ class CrawlerController implements LoggerAwareInterface
 
         $configurationProvider = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
         $this->extensionSettings = $configurationProvider->getExtensionConfiguration();
-        $this->setMaximumUrlsToCompile(
-            MathUtility::forceIntegerInRange($this->extensionSettings['maxCompileUrls'], 1, 1000000000, 10000)
-        );
     }
 
     public function injectCrawlUrlMessageDispatcher(CrawlUrlMessageDispatcher $crawlUrlMessageDispatcher): void
     {
         $this->crawlUrlMessageDispatcher = $crawlUrlMessageDispatcher;
-    }
-
-    public function setMaximumUrlsToCompile(int $maximumUrlsToCompile): void
-    {
-        $this->maximumUrlsToCompile = $maximumUrlsToCompile;
-    }
-
-    /**
-     * Sets the extensions settings (unserialized pendant of $TYPO3_CONF_VARS['EXT']['extConf']['crawler']).
-     */
-    public function setExtensionSettings(array $extensionSettings): void
-    {
-        $this->extensionSettings = $extensionSettings;
     }
 
     /**

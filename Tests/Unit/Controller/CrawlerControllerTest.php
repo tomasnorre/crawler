@@ -22,7 +22,6 @@ namespace AOE\Crawler\Tests\Unit\Controller;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Service\PageService;
 use PHPUnit\Framework\MockObject\MockObject;
-use Psr\Log\NullLogger;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
@@ -44,7 +43,6 @@ class CrawlerControllerTest extends UnitTestCase
     protected function setUp(): void
     {
         $this->crawlerController = $this->createPartialMock(CrawlerController::class, []);
-        $this->crawlerController->setLogger(new NullLogger());
 
         $configuration = [
             'maxCompileUrls' => '10000',
@@ -250,19 +248,5 @@ class CrawlerControllerTest extends UnitTestCase
             ],
             'expected' => ['default', 'news'],
         ];
-    }
-
-    #[\PHPUnit\Framework\Attributes\Test]
-    public function setExtensionSettings(): void
-    {
-        $extensionSettings = [
-            'makeDirectRequests' => 0,
-            'frontendBasePath' => '/',
-        ];
-
-        /** @var CrawlerController $crawlerController */
-        $crawlerController = $this->getAccessibleMock(CrawlerController::class, null, [], '', false);
-        $crawlerController->setExtensionSettings($extensionSettings);
-        self::assertEquals($extensionSettings, $crawlerController->extensionSettings);
     }
 }
