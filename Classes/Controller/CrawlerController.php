@@ -540,112 +540,31 @@ class CrawlerController
     /**
      * Create the rows for display of the page tree
      * For each page a number of rows are shown displaying GET variable configuration
+     *
+     * @return list<QueueRow>
      */
     public function drawURLs_addRowsForPage(array $pageRow, string $pageTitle, string $pageTitleHTML = ''): array
     {
         $skipMessage = '';
-
-        // Get list of configurations
-        $configurations = $this->getUrlsForPageRow($pageRow, $skipMessage);
         $configurations = ConfigurationService::removeDisallowedConfigurations(
             $this->incomingConfigurationSelection,
-            $configurations
+            $this->getUrlsForPageRow($pageRow, $skipMessage)
         );
 
-        // Traverse parameter combinations:
-        $c = 0;
-
-        $queueRowCollection = [];
-
-        if (!empty($configurations)) {
-            foreach ($configurations as $confKey => $confArray) {
-                // Title column:
-                if (!$c) {
-                    $queueRow = new QueueRow($pageTitle);
-                } else {
-                    $queueRow = new QueueRow();
-                }
-                $queueRow->setPageTitleHTML($pageTitleHTML);
-
-                if (!in_array(
-                    $pageRow['uid'],
-                    $this->configurationService->expandExcludeString($confArray['subCfg']['exclude'] ?? ''),
-                    true
-                )) {
-                    // URL list:
-                    $urlList = $this->urlListFromUrlArray(
-                        $confArray,
-                        $pageRow,
-                        $this->scheduledTime,
-                        $this->reqMinute,
-                        $this->submitCrawlUrls,
-                        $this->downloadCrawlUrls,
-                        $this->duplicateTrack,
-                        $this->downloadUrls,
-                        // if empty the urls won't be filtered by processing instructions
-                        $this->incomingProcInstructions
-                    );
-
-                    // Expanded parameters:
-                    $paramExpanded = '';
-                    $calcAccu = [];
-                    $calcRes = 1;
-                    foreach ($confArray['paramExpanded'] as $gVar => $gVal) {
-                        $paramExpanded .= '
-                            <tr>
-                                <td>' . htmlspecialchars('&' . $gVar . '=') . '<br/>' .
-                            '(' . count($gVal) . ')' .
-                            '</td>
-                                <td nowrap="nowrap">' . nl2br(
-                                htmlspecialchars(implode(chr(10), $gVal))
-                            ) . '</td>
-                            </tr>
-                        ';
-                        $calcRes *= count($gVal);
-                        $calcAccu[] = count($gVal);
-                    }
-                    if (!empty($paramExpanded)) {
-                        $paramExpanded = "<table>{$paramExpanded}</table>";
-                    }
-                    $paramExpanded .= 'Comb: ' . implode('*', $calcAccu) . '=' . $calcRes;
-
-                    // Options
-                    $queueRowOptionCollection = [];
-                    if ($confArray['subCfg']['userGroups'] ?? false) {
-                        $queueRowOptionCollection[] = 'User Groups: ' . $confArray['subCfg']['userGroups'];
-                    }
-                    if ($confArray['subCfg']['procInstrFilter'] ?? false) {
-                        $queueRowOptionCollection[] = 'ProcInstr: ' . $confArray['subCfg']['procInstrFilter'];
-                    }
-
-                    $parameterConfig = nl2br(
-                        htmlspecialchars(rawurldecode(
-                            trim(str_replace(
-                                '&',
-                                chr(10) . '&',
-                                GeneralUtility::implodeArrayForUrl('', $confArray['paramParsed'] ?? [])
-                            ))
-                        ))
-                    );
-                    $queueRow->setValuesExpanded($paramExpanded);
-                    $queueRow->setConfigurationKey($confKey);
-                    $queueRow->setUrls($urlList);
-                    $queueRow->setOptions($queueRowOptionCollection);
-                    $queueRow->setParameters(DebugUtility::viewArray($confArray['subCfg']['procInstrParams.'] ?? []));
-                    $queueRow->setParameterConfig($parameterConfig);
-                } else {
-                    $queueRow->setConfigurationKey($confKey);
-                    $queueRow->setMessage('(Page is excluded in this configuration)');
-                }
-                $queueRowCollection[] = $queueRow;
-
-                $c++;
-            }
-        } else {
-            $message = !empty($skipMessage) ? ' (' . $skipMessage . ')' : '';
+        if ($configurations === []) {
             $queueRow = new QueueRow($pageTitle);
             $queueRow->setPageTitleHTML($pageTitleHTML);
-            $queueRow->setMessage($message);
+            $queueRow->setMessage($skipMessage !== '' ? ' (' . $skipMessage . ')' : '');
+            return [$queueRow];
+        }
+
+        $queueRowCollection = [];
+        foreach ($configurations as $configurationKey => $configuration) {
+            // Only the first row of a page shows the page title
+            $queueRow = new QueueRow($queueRowCollection === [] ? $pageTitle : '');
+            $queueRow->setPageTitleHTML($pageTitleHTML);
+            $queueRow->setConfigurationKey((string) $configurationKey);
+            $this->addConfigurationToQueueRow($queueRow, $pageRow, $configuration);
             $queueRowCollection[] = $queueRow;
         }
 
@@ -667,6 +586,77 @@ class CrawlerController
     protected function getPageService(): PageService
     {
         return new PageService();
+    }
+
+    private function addConfigurationToQueueRow(QueueRow $queueRow, array $pageRow, array $configuration): void
+    {
+        $excludedPages = $this->configurationService->expandExcludeString($configuration['subCfg']['exclude'] ?? '');
+        if (in_array($pageRow['uid'], $excludedPages, true)) {
+            $queueRow->setMessage('(Page is excluded in this configuration)');
+            return;
+        }
+
+        $queueRow->setUrls($this->urlListFromUrlArray(
+            $configuration,
+            $pageRow,
+            $this->scheduledTime,
+            $this->reqMinute,
+            $this->submitCrawlUrls,
+            $this->downloadCrawlUrls,
+            $this->duplicateTrack,
+            $this->downloadUrls,
+            // if empty the urls won't be filtered by processing instructions
+            $this->incomingProcInstructions
+        ));
+        $queueRow->setValuesExpanded($this->renderExpandedParameters($configuration['paramExpanded']));
+        $queueRow->setOptions($this->getQueueRowOptions($configuration['subCfg']));
+        $queueRow->setParameters(DebugUtility::viewArray($configuration['subCfg']['procInstrParams.'] ?? []));
+        $queueRow->setParameterConfig($this->renderParameterConfig($configuration['paramParsed'] ?? []));
+    }
+
+    /**
+     * A table with the values of each parameter, followed by the number of combinations, fx. "Comb: 2*3=6"
+     */
+    private function renderExpandedParameters(array $paramExpanded): string
+    {
+        $tableRows = '';
+        $valueCounts = [];
+        foreach ($paramExpanded as $parameter => $values) {
+            $tableRows .= '
+                            <tr>
+                                <td>' . htmlspecialchars('&' . $parameter . '=') . '<br/>(' . count($values) . ')</td>
+                                <td nowrap="nowrap">' . nl2br(htmlspecialchars(implode(chr(10), $values))) . '</td>
+                            </tr>
+                        ';
+            $valueCounts[] = count($values);
+        }
+
+        $table = $tableRows !== '' ? '<table>' . $tableRows . '</table>' : '';
+        return $table . 'Comb: ' . implode('*', $valueCounts) . '=' . array_product($valueCounts);
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function getQueueRowOptions(array $subConfiguration): array
+    {
+        $options = [];
+        if ($subConfiguration['userGroups'] ?? false) {
+            $options[] = 'User Groups: ' . $subConfiguration['userGroups'];
+        }
+        if ($subConfiguration['procInstrFilter'] ?? false) {
+            $options[] = 'ProcInstr: ' . $subConfiguration['procInstrFilter'];
+        }
+        return $options;
+    }
+
+    /**
+     * The parsed parameters, one per line, fx. "&L=[0|1]"
+     */
+    private function renderParameterConfig(array $paramParsed): string
+    {
+        $parameters = GeneralUtility::implodeArrayForUrl('', $paramParsed);
+        return nl2br(htmlspecialchars(rawurldecode(trim(str_replace('&', chr(10) . '&', $parameters)))));
     }
 
     /**

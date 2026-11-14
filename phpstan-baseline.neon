@@ -1,13 +1,7 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Class cognitive complexity is 93, keep it under 28$#'
+			message: '#^Class cognitive complexity is 74, keep it under 28$#'
 			identifier: complexity.classLike
-			count: 1
-			path: Classes/Controller/CrawlerController.php
-
-		-
-			message: '#^Cognitive complexity for "AOE\\Crawler\\Controller\\CrawlerController\:\:drawURLs_addRowsForPage\(\)" is 30, keep it under 20$#'
-			identifier: complexity.functionLike
 			count: 1
 			path: Classes/Controller/CrawlerController.php
