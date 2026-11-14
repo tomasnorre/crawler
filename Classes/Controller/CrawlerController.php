@@ -78,10 +78,10 @@ class CrawlerController
     private int $reqMinute = 0;
     private bool $submitCrawlUrls = false;
     private bool $downloadCrawlUrls = false;
-    private PageRepository $pageRepository;
-    private ConfigurationService $configurationService;
-    private UrlService $urlService;
-    private EventDispatcher $eventDispatcher;
+    private readonly PageRepository $pageRepository;
+    private readonly ConfigurationService $configurationService;
+    private readonly UrlService $urlService;
+    private readonly EventDispatcher $eventDispatcher;
     private CrawlUrlMessageDispatcher $crawlUrlMessageDispatcher;
 
     /************************************
