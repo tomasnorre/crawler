@@ -59,6 +59,10 @@
 * `CrawlerController::drawURLs_PIfilter()`
 * `CrawlerController::$processID`
 * `CrawlerController->addQueueEntry_callBack`
+* `CrawlerController::setMaximumUrlsToCompile()`
+* `CrawlerController::$maximumUrlsToCompile`
+* `CrawlerController::setExtensionSettings()`
+* `CrawlerController` no longer implements `LoggerAwareInterface`, it never logged anything
 * `QueueRepository`: all process related methods, `getUnprocessedItems()`, `countAllPendingItems()`, `countAllAssignedPendingItems()`, `cleanupQueue()`, `fetchRecordsToBeCrawled()`
 
 ## Crawler 13.0.1

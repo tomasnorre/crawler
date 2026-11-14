@@ -59,12 +59,9 @@
       <code><![CDATA[__construct]]></code>
       <code><![CDATA[getConfigurationsForBranch]]></code>
       <code><![CDATA[injectCrawlUrlMessageDispatcher]]></code>
-      <code><![CDATA[setExtensionSettings]]></code>
-      <code><![CDATA[setMaximumUrlsToCompile]]></code>
     </PossiblyUnusedMethod>
     <PossiblyUnusedProperty>
       <code><![CDATA[$configurationRepository]]></code>
-      <code><![CDATA[$maximumUrlsToCompile]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="Classes/CrawlStrategy/CrawlStrategyFactory.php">
