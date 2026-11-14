@@ -57,7 +57,6 @@
   <file src="Classes/Controller/CrawlerController.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
-      <code><![CDATA[addQueueEntry_callBack]]></code>
       <code><![CDATA[getConfigurationsForBranch]]></code>
       <code><![CDATA[injectCrawlUrlMessageDispatcher]]></code>
       <code><![CDATA[setExtensionSettings]]></code>
