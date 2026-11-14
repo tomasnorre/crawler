@@ -14,4 +14,12 @@
             <directory name="Documentation" />
         </ignoreFiles>
     </projectFiles>
+    <issueHandlers>
+        <!-- Constructors are called by the dependency injection container -->
+        <PossiblyUnusedMethod>
+            <errorLevel type="suppress">
+                <referencedMethod name="*::__construct" />
+            </errorLevel>
+        </PossiblyUnusedMethod>
+    </issueHandlers>
 </psalm>

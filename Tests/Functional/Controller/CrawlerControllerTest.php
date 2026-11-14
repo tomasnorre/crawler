@@ -19,11 +19,10 @@ namespace AOE\Crawler\Tests\Functional\Controller;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\QueueRepository;
-use AOE\Crawler\Queue\CrawlUrlMessageDispatcher;
 use AOE\Crawler\Queue\Message\CrawlUrlMessage;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
+use AOE\Crawler\Tests\Functional\CrawlerControllerTestTrait;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -38,6 +37,7 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 class CrawlerControllerTest extends FunctionalTestCase
 {
     use BackendRequestTestTrait;
+    use CrawlerControllerTestTrait;
 
     protected array $coreExtensionsToLoad = ['seo'];
 
@@ -56,7 +56,7 @@ class CrawlerControllerTest extends FunctionalTestCase
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.csv');
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/tt_content.csv');
 
-        $this->subject = $this->getAccessibleMock(CrawlerController::class, null);
+        $this->subject = $this->createCrawlerController($this->createStub(MessageBusInterface::class));
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
@@ -103,17 +103,14 @@ class CrawlerControllerTest extends FunctionalTestCase
 
         $mockedQueueRepository->method('getDuplicateQueueItemsIfExists')->willReturn($mockedDuplicateRowResult);
 
-        $mockedCrawlerController = $this->getAccessibleMock(CrawlerController::class, null);
-
-        $mockedCrawlerController->_set('registerQueueEntriesInternallyOnly', $registerQueueEntriesInternallyOnly);
-        $mockedCrawlerController->_set('queueRepository', $mockedQueueRepository);
-
         $messageBus = $this->createMock(MessageBusInterface::class);
         $messageBus->expects($expected ? self::once() : self::never())
             ->method('dispatch')
             ->with(self::isInstanceOf(CrawlUrlMessage::class), self::isArray())
             ->willReturnCallback(static fn (object $message): Envelope => new Envelope($message));
-        $mockedCrawlerController->injectCrawlUrlMessageDispatcher(new CrawlUrlMessageDispatcher($messageBus));
+
+        $mockedCrawlerController = $this->createCrawlerController($messageBus, null, $mockedQueueRepository);
+        $mockedCrawlerController->registerQueueEntriesInternallyOnly = $registerQueueEntriesInternallyOnly;
 
         self::assertEquals(
             $expected,
@@ -134,10 +131,6 @@ class CrawlerControllerTest extends FunctionalTestCase
         $mockedQueueRepository = $this->getAccessibleMock(QueueRepository::class, ['getDuplicateQueueItemsIfExists']);
         $mockedQueueRepository->method('getDuplicateQueueItemsIfExists')->willReturn([]);
 
-        $crawlerController = $this->getAccessibleMock(CrawlerController::class, ['getCurrentTime']);
-        $crawlerController->method('getCurrentTime')->willReturn(1_000_000);
-        $crawlerController->_set('queueRepository', $mockedQueueRepository);
-
         $messageBus = $this->createMock(MessageBusInterface::class);
         $messageBus->expects(self::once())
             ->method('dispatch')
@@ -150,7 +143,9 @@ class CrawlerControllerTest extends FunctionalTestCase
                 self::assertSame(60_000, $delayStamps[0]->getDelay());
                 return new Envelope($message, $stamps);
             });
-        $crawlerController->injectCrawlUrlMessageDispatcher(new CrawlUrlMessageDispatcher($messageBus));
+
+        $crawlerController = $this->createCrawlerController($messageBus, ['getCurrentTime'], $mockedQueueRepository);
+        $crawlerController->method('getCurrentTime')->willReturn(1_000_000);
 
         self::assertTrue($crawlerController->addUrl(1, 'https://example.com/', [
             'key' => 'some-key',

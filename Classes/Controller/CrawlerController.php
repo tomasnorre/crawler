@@ -26,20 +26,17 @@ use AOE\Crawler\Event\AfterUrlAddedToQueueEvent;
 use AOE\Crawler\Queue\CrawlUrlMessageDispatcher;
 use AOE\Crawler\Queue\Message\CrawlUrlMessage;
 use AOE\Crawler\Service\ConfigurationService;
-use AOE\Crawler\Service\ExcludeStringExpander;
 use AOE\Crawler\Service\PageService;
-use AOE\Crawler\Service\ParameterExpander;
 use AOE\Crawler\Service\ProcessInstructionService;
 use AOE\Crawler\Service\UrlService;
 use AOE\Crawler\Value\QueueRow;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\UriInterface;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
-use TYPO3\CMS\Core\Authentication\GroupResolver;
 use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
-use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Imaging\IconSize;
 use TYPO3\CMS\Core\Type\Bitmask\Permission;
@@ -66,9 +63,6 @@ class CrawlerController
      * Mount Point
      */
     public ?string $MP = null;
-    protected QueueRepository $queueRepository;
-    protected ConfigurationRepository $configurationRepository;
-    protected IconFactory $iconFactory;
 
     /**
      * @var BackendUserAuthentication|null
@@ -78,42 +72,21 @@ class CrawlerController
     private int $reqMinute = 0;
     private bool $submitCrawlUrls = false;
     private bool $downloadCrawlUrls = false;
-    private readonly PageRepository $pageRepository;
-    private readonly ConfigurationService $configurationService;
-    private readonly UrlService $urlService;
-    private readonly EventDispatcher $eventDispatcher;
-    private CrawlUrlMessageDispatcher $crawlUrlMessageDispatcher;
 
-    /************************************
-     *
-     * Getting URLs based on Page TSconfig
-     *
-     ************************************/
-
-    public function __construct()
-    {
-        $this->queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
-        $this->configurationRepository = GeneralUtility::makeInstance(ConfigurationRepository::class);
-        $this->pageRepository = GeneralUtility::makeInstance(PageRepository::class);
-        $this->eventDispatcher = GeneralUtility::makeInstance(EventDispatcher::class);
-        $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
-        $this->configurationService = GeneralUtility::makeInstance(
-            ConfigurationService::class,
-            GeneralUtility::makeInstance(UrlService::class),
-            $this->configurationRepository,
-            GeneralUtility::makeInstance(GroupResolver::class),
-            GeneralUtility::makeInstance(ParameterExpander::class),
-            GeneralUtility::makeInstance(ExcludeStringExpander::class),
-        );
-        $this->urlService = GeneralUtility::makeInstance(UrlService::class);
-
-        $configurationProvider = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
-        $this->extensionSettings = $configurationProvider->getExtensionConfiguration();
-    }
-
-    public function injectCrawlUrlMessageDispatcher(CrawlUrlMessageDispatcher $crawlUrlMessageDispatcher): void
-    {
-        $this->crawlUrlMessageDispatcher = $crawlUrlMessageDispatcher;
+    public function __construct(
+        protected readonly QueueRepository $queueRepository,
+        protected readonly ConfigurationRepository $configurationRepository,
+        private readonly PageRepository $pageRepository,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        protected readonly IconFactory $iconFactory,
+        private readonly ConfigurationService $configurationService,
+        private readonly UrlService $urlService,
+        private readonly PageService $pageService,
+        private readonly ProcessInstructionService $processInstructionService,
+        private readonly CrawlUrlMessageDispatcher $crawlUrlMessageDispatcher,
+        ExtensionConfigurationProvider $extensionConfigurationProvider,
+    ) {
+        $this->extensionSettings = $extensionConfigurationProvider->getExtensionConfiguration();
     }
 
     /**
@@ -136,7 +109,7 @@ class CrawlerController
             return [];
         }
 
-        $message = $this->getPageService()->checkIfPageShouldBeSkipped($pageRow);
+        $message = $this->pageService->checkIfPageShouldBeSkipped($pageRow);
         if ($message === false) {
             $res = $this->getUrlsForPageId($pageRowUid);
             $skipMessage = '';
@@ -185,10 +158,8 @@ class CrawlerController
             $configurationHash
         );
 
-        $processInstructionService = new ProcessInstructionService();
-
         foreach ($vv['URLs'] as $urlQuery) {
-            if (!$processInstructionService->isAllowed(
+            if (!$this->processInstructionService->isAllowed(
                 $vv['subCfg']['procInstrFilter'] ?? '',
                 $incomingProcInstructions
             )) {
@@ -581,11 +552,6 @@ class CrawlerController
         unset($configuration['paramExpanded']);
         unset($configuration['URLs']);
         return md5(serialize($configuration));
-    }
-
-    protected function getPageService(): PageService
-    {
-        return new PageService();
     }
 
     private function addConfigurationToQueueRow(QueueRow $queueRow, array $pageRow, array $configuration): void
