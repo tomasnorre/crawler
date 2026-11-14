@@ -19,15 +19,14 @@ namespace AOE\Crawler;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy;
 use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
 use AOE\Crawler\CrawlStrategy\CrawlStrategyInterface;
 use AOE\Crawler\Event\AfterUrlCrawledEvent;
+use AOE\Crawler\Queue\QueueEntryWriter;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\SingletonInterface;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Fetches a URL based on the selected strategy or via a callback.
@@ -39,7 +38,8 @@ class QueueExecutor implements SingletonInterface
 
     public function __construct(
         CrawlStrategyFactory $crawlStrategyFactory,
-        private readonly EventDispatcher $eventDispatcher
+        private readonly EventDispatcher $eventDispatcher,
+        private readonly CallbackExecutionStrategy $callbackExecutionStrategy,
     ) {
         $this->crawlStrategy = $crawlStrategyFactory->create();
     }
@@ -54,7 +54,7 @@ class QueueExecutor implements SingletonInterface
      *         - array with single key 'content' that contains the json_encoded crawl results.
      *           See CrawlStrategyInterface::fetchUrlContents() for its structure.
      */
-    public function executeQueueItem(array $queueItem, CrawlerController $crawlerController)
+    public function executeQueueItem(array $queueItem)
     {
         $parameters = '';
         if (isset($queueItem['parameters'])) {
@@ -64,11 +64,10 @@ class QueueExecutor implements SingletonInterface
         if (!is_array($parameters) || empty($parameters)) {
             return 'ERROR';
         }
-        if (isset($parameters['_CALLBACKOBJ'])) {
-            $className = $parameters['_CALLBACKOBJ'];
-            unset($parameters['_CALLBACKOBJ']);
-            $result = GeneralUtility::makeInstance(CallbackExecutionStrategy::class)
-                ->fetchByCallback($className, $parameters, $crawlerController);
+        if (isset($parameters[QueueEntryWriter::CALLBACK_PARAMETER])) {
+            $className = $parameters[QueueEntryWriter::CALLBACK_PARAMETER];
+            unset($parameters[QueueEntryWriter::CALLBACK_PARAMETER]);
+            $result = $this->callbackExecutionStrategy->fetchByCallback((string) $className, $parameters);
             $result = [
                 'content' => json_encode($result),
             ];

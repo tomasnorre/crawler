@@ -1,0 +1,14 @@
+{
+    "name": "tomasnorre/crawler-callback-test",
+    "description": "Test extension with a queue callback for the functional tests of EXT:crawler",
+    "type": "typo3-cms-extension",
+    "license": "GPL-3.0-or-later",
+    "require": {
+        "tomasnorre/crawler": "*"
+    },
+    "extra": {
+        "typo3/cms": {
+            "extension-key": "crawler_callback_test"
+        }
+    }
+}

@@ -19,25 +19,77 @@ namespace AOE\Crawler\Tests\Unit\CrawlStrategy;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+use AOE\Crawler\Queue\QueueCallbackInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
+use Psr\Container\ContainerInterface;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy::class)]
+#[CoversClass(CallbackExecutionStrategy::class)]
 class CallbackExecutionStrategyTest extends UnitTestCase
 {
     protected bool $resetSingletonInstances = true;
 
-    #[\PHPUnit\Framework\Attributes\Test]
-    public function callbackExecutionStrategyTest(): void
+    #[Test]
+    public function executesCallbackFromTheContainer(): void
     {
-        $crawlerController = $this->createPartialMock(CrawlerController::class, []);
+        $callback = $this->createMock(QueueCallbackInterface::class);
+        $callback->expects(self::once())
+            ->method('execute')
+            ->with([
+                'name' => 'Crawler',
+            ])
+            ->willReturn('From the container');
 
-        self::assertEquals(
-            'Hi, it works!',
-            GeneralUtility::makeInstance(CallbackExecutionStrategy::class)
-                ->fetchByCallback(CallbackObjectForTesting::class, [], $crawlerController)
+        $callbacks = $this->createStub(ContainerInterface::class);
+        $callbacks->method('has')->willReturn(true);
+        $callbacks->method('get')->willReturn($callback);
+
+        self::assertSame(
+            'From the container',
+            (new CallbackExecutionStrategy($callbacks))->fetchByCallback('Vendor\\Callback', [
+                'name' => 'Crawler',
+            ])
         );
+    }
+
+    #[Test]
+    public function createsCallbackThatIsNotInTheContainer(): void
+    {
+        self::assertSame(
+            'Hi, it works! Crawler',
+            (new CallbackExecutionStrategy($this->createEmptyContainer()))->fetchByCallback(
+                CallbackObjectForTesting::class,
+                [
+                    'name' => 'Crawler',
+                ]
+            )
+        );
+    }
+
+    #[Test]
+    public function throwsExceptionForCallbackWithoutInterface(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionCode(1763020800);
+
+        (new CallbackExecutionStrategy($this->createEmptyContainer()))->fetchByCallback(\stdClass::class, []);
+    }
+
+    #[Test]
+    public function throwsExceptionForUnknownCallbackClass(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionCode(1763020800);
+
+        (new CallbackExecutionStrategy($this->createEmptyContainer()))->fetchByCallback('Vendor\\DoesNotExist', []);
+    }
+
+    private function createEmptyContainer(): ContainerInterface
+    {
+        $callbacks = $this->createStub(ContainerInterface::class);
+        $callbacks->method('has')->willReturn(false);
+        return $callbacks;
     }
 }

@@ -19,7 +19,6 @@ namespace AOE\Crawler\Queue\Handler;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\AfterQueueItemAddedEvent;
 use AOE\Crawler\Event\BeforeQueueItemAddedEvent;
@@ -39,7 +38,6 @@ final readonly class CrawlUrlHandler
     public function __construct(
         private QueueRepository $queueRepository,
         private QueueExecutor $queueExecutor,
-        private CrawlerController $crawlerController,
         private EventDispatcherInterface $eventDispatcher,
     ) {
     }
@@ -64,7 +62,7 @@ final readonly class CrawlUrlHandler
             'exec_time' => time(),
         ]);
 
-        $result = $this->queueExecutor->executeQueueItem($queueRecord, $this->crawlerController);
+        $result = $this->queueExecutor->executeQueueItem($queueRecord);
 
         /** @var AfterQueueItemAddedEvent $afterEvent */
         $afterEvent = $this->eventDispatcher->dispatch(new AfterQueueItemAddedEvent($queueId, [

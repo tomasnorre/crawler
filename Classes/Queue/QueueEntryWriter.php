@@ -41,6 +41,11 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class QueueEntryWriter
 {
     /**
+     * The parameter of a queue entry holding the class name of its QueueCallbackInterface
+     */
+    public const CALLBACK_PARAMETER = '_CALLBACKOBJ';
+
+    /**
      * The set id of the queue entries written in the current run
      */
     public int $setId = 0;
@@ -244,6 +249,37 @@ class QueueEntryWriter
         }
 
         return $urlAdded;
+    }
+
+    /**
+     * Adds a queue entry that calls a QueueCallbackInterface instead of crawling a URL. Returns the queue id.
+     *
+     * @param class-string<QueueCallbackInterface> $callbackClassName
+     * @param array $parameters Handed over to QueueCallbackInterface::execute(), must be JSON encodable
+     * @param int $pageId The page the queue entry is shown with in the crawler log
+     * @param int $scheduled When to execute the callback, 0 for now
+     * @psalm-api Used by other extensions, see Documentation/Features/QueueCallbacks
+     */
+    public function addCallback(
+        string $callbackClassName,
+        array $parameters = [],
+        int $pageId = 0,
+        int $scheduled = 0
+    ): int {
+        $scheduled = $scheduled ?: $this->getCurrentTime();
+        $parameters[self::CALLBACK_PARAMETER] = $callbackClassName;
+
+        $queueId = $this->queueRepository->add([
+            'page_id' => $pageId,
+            'parameters' => json_encode($parameters, JSON_THROW_ON_ERROR),
+            'scheduled' => $scheduled,
+            'exec_time' => 0,
+            'set_id' => $this->setId,
+            'result_data' => '',
+        ]);
+        $this->dispatchCrawlUrlMessage($queueId, $pageId, $scheduled);
+
+        return $queueId;
     }
 
     /**

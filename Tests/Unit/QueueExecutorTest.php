@@ -20,15 +20,16 @@ namespace AOE\Crawler\Tests\Unit;
  */
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
-use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy;
 use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
+use AOE\Crawler\Queue\QueueEntryWriter;
 use AOE\Crawler\QueueExecutor;
 use AOE\Crawler\Tests\Unit\CrawlStrategy\CallbackObjectForTesting;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Psr\Container\ContainerInterface;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
@@ -43,23 +44,21 @@ class QueueExecutorTest extends UnitTestCase
 
     protected QueueExecutor $queueExecutor;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&\AOE\Crawler\Controller\CrawlerController
-     */
-    protected \PHPUnit\Framework\MockObject\Stub $mockedCrawlerController;
-
     protected bool $resetSingletonInstances = true;
 
     protected function setUp(): void
     {
         parent::setUp();
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [];
-        $this->mockedCrawlerController = $this->createStub(CrawlerController::class);
         $crawlStrategyFactory = GeneralUtility::makeInstance(CrawlStrategyFactory::class);
+
+        $callbacks = $this->createStub(ContainerInterface::class);
+        $callbacks->method('has')->willReturn(false);
 
         $this->queueExecutor = new QueueExecutor(
             $crawlStrategyFactory,
-            $this->prophesize(EventDispatcher::class)->reveal()
+            $this->prophesize(EventDispatcher::class)->reveal(),
+            new CallbackExecutionStrategy($callbacks),
         );
     }
 
@@ -67,7 +66,7 @@ class QueueExecutorTest extends UnitTestCase
     #[Test]
     public function invalidArgumentsReturnErrorInExecuteQueueItem(array $queueItem): void
     {
-        $result = $this->queueExecutor->executeQueueItem($queueItem, $this->mockedCrawlerController);
+        $result = $this->queueExecutor->executeQueueItem($queueItem);
         self::assertEquals('ERROR', $result);
     }
 
@@ -76,15 +75,16 @@ class QueueExecutorTest extends UnitTestCase
     {
         $queueItem = [
             'parameters' => json_encode([
-                '_CALLBACKOBJ' => CallbackObjectForTesting::class,
+                'name' => 'Crawler',
+                QueueEntryWriter::CALLBACK_PARAMETER => CallbackObjectForTesting::class,
             ]),
         ];
 
-        $result = $this->queueExecutor->executeQueueItem($queueItem, $this->mockedCrawlerController);
+        $result = $this->queueExecutor->executeQueueItem($queueItem);
 
-        self::assertIsArray($result);
-        self::assertArrayHasKey('content', $result);
-        self::assertStringContainsString('Hi, it works!', $result['content']);
+        self::assertSame([
+            'content' => json_encode('Hi, it works! Crawler'),
+        ], $result);
     }
 
     public static function invalidArgumentsReturnErrorInExecuteQueueItemDataProvider(): iterable

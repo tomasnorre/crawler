@@ -19,33 +19,52 @@ namespace AOE\Crawler\CrawlStrategy;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Controller\CrawlerController;
+use AOE\Crawler\Queue\QueueCallbackInterface;
+use Psr\Container\ContainerInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Used for hooks (e.g. crawling external files)
+ * Executes the QueueCallbackInterface of a queue entry added with QueueEntryWriter::addCallback().
+ *
  * @internal since v12.0.0
  */
 class CallbackExecutionStrategy
 {
     /**
-     * In the future, the callback should implement an interface.
-     * @template T of object
-     * @param class-string<T> $callbackClassName
+     * @param ContainerInterface $callbacks The callbacks registered in the dependency injection container,
+     *                                      by class name
      */
-    public function fetchByCallback(
-        string $callbackClassName,
-        array $parameters,
-        CrawlerController $crawlerController
-    ): mixed {
-        // Calling custom object
-        $callback = [GeneralUtility::makeInstance($callbackClassName), 'crawler_execute'];
-        if (!is_callable($callback)) {
+    public function __construct(
+        private readonly ContainerInterface $callbacks,
+    ) {
+    }
+
+    public function fetchByCallback(string $callbackClassName, array $parameters): mixed
+    {
+        return $this->getCallback($callbackClassName)->execute($parameters);
+    }
+
+    private function getCallback(string $callbackClassName): QueueCallbackInterface
+    {
+        if ($this->callbacks->has($callbackClassName)) {
+            $callback = $this->callbacks->get($callbackClassName);
+        } elseif (class_exists($callbackClassName)) {
+            // Callbacks of extensions without autoconfiguration
+            $callback = GeneralUtility::makeInstance($callbackClassName);
+        } else {
+            $callback = null;
+        }
+
+        if (!$callback instanceof QueueCallbackInterface) {
             throw new \InvalidArgumentException(
-                sprintf('Callback class "%s" must implement a crawler_execute() method', $callbackClassName),
+                sprintf(
+                    'Callback class "%s" must exist and implement %s',
+                    $callbackClassName,
+                    QueueCallbackInterface::class
+                ),
                 1763020800
             );
         }
-        return $callback($parameters, $crawlerController);
+        return $callback;
     }
 }

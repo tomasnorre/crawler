@@ -17,3 +17,4 @@ Features
     Hooks/Index
     Events/Index
     PriorityCrawling/Index
+    QueueCallbacks/Index

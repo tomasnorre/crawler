@@ -1,0 +1,8 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    AOE\Crawler\Tests\Functional\Fixtures\Extensions\crawler_callback_test\Classes\:
+        resource: '../Classes/*'
