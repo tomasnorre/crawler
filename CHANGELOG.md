@@ -13,13 +13,15 @@
 * Re-crawling from the Crawler log dispatches a message instead of crawling within the request
 * Translations are delivered as language packs by the TYPO3 translation server, fetch them with `typo3 language:update` or in "Manage Language Packs", otherwise labels are shown in English
 * The hook `$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/class.tx_crawler_lib.php']['expandParameters']` receives `AOE\Crawler\Service\ParameterExpander` as `pObj` instead of `AOE\Crawler\Service\ConfigurationService`
-* `CrawlerController` gets its services by constructor injection, create it with the dependency injection container
 * `AOE\Crawler\Service\PageConfigurationResolver` finds the crawler configurations of pages instead of `CrawlerController`
 * `AOE\Crawler\Queue\QueueEntryWriter` writes the URLs of crawler configurations to the queue instead of `CrawlerController`
 * The hook `$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['getPageTSconfigForId']` receives `AOE\Crawler\Service\PageConfigurationResolver` as parent object instead of `AOE\Crawler\Controller\CrawlerController`
 * The hook `$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['processUrls']` receives `AOE\Crawler\Service\PageConfigurationResolver` as parent object instead of `AOE\Crawler\Controller\CrawlerController`
 * Callbacks in the queue implement `AOE\Crawler\Queue\QueueCallbackInterface` instead of a `crawler_execute()` method, and no longer receive the `CrawlerController`
 * `QueueExecutor::executeQueueItem()` no longer takes the `CrawlerController`
+* `AOE\Crawler\Service\PageTreeUrlCollector` collects the URLs of the page tree instead of `CrawlerController`
+* `CrawlerController::getPageTreeAndUrls()` is now `PageTreeUrlCollector::collect()`
+* `CrawlerController::drawURLs_addRowsForPage()` is now `PageTreeUrlCollector::getQueueRowsForPage()`, it takes the mount point as parameter
 
 ### Fixed
 * Export every log entry in the crawler log CSV
@@ -43,6 +45,7 @@
 * `AOE\Crawler\Command\ProcessQueueCommand`
 * `AOE\Crawler\Controller\Ajax\ProcessStatusController`
 * `AOE\Crawler\Controller\Backend\BackendModuleCrawlerProcessController`
+* `AOE\Crawler\Controller\CrawlerController`, use `AOE\Crawler\Service\PageTreeUrlCollector`
 * `AOE\Crawler\Crawler`
 * `AOE\Crawler\Domain\Model\Configuration`
 * `AOE\Crawler\Domain\Model\ProcessCollection`
@@ -87,6 +90,7 @@
 * `CrawlerController::$queueEntries`
 * `CrawlerController::$urlList`
 * `CrawlerController::$extensionSettings`
+* `CrawlerController::$MP`
 * `QueueRepository`: all process related methods, `getUnprocessedItems()`, `countAllPendingItems()`, `countAllAssignedPendingItems()`, `cleanupQueue()`, `fetchRecordsToBeCrawled()`
 
 ## Crawler 13.0.1

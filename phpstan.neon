@@ -30,8 +30,6 @@ parameters:
             identifier: symplify.requireArrayShapeReturn
         -
             identifier: symplify.forbiddenSwitch
-        -
-            identifier: symfony.noPublicNonActionMethodInController
 
     # composer require tomasvotruba/cognitive-complexity --dev
     cognitive_complexity:
