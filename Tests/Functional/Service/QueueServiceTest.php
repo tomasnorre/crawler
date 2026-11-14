@@ -22,7 +22,7 @@ namespace AOE\Crawler\Tests\Functional\Service;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Queue\Message\CrawlUrlMessage;
 use AOE\Crawler\Service\QueueService;
-use AOE\Crawler\Tests\Functional\CrawlerControllerTestTrait;
+use AOE\Crawler\Tests\Functional\QueueEntryWriterTestTrait;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -31,7 +31,7 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 class QueueServiceTest extends FunctionalTestCase
 {
-    use CrawlerControllerTestTrait;
+    use QueueEntryWriterTestTrait;
 
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
@@ -57,10 +57,10 @@ class QueueServiceTest extends FunctionalTestCase
             return new Envelope($message);
         });
 
-        $crawlerController = $this->createCrawlerController($messageBus, ['getCurrentTime']);
-        $crawlerController->method('getCurrentTime')->willReturn(100000);
+        $queueEntryWriter = $this->createQueueEntryWriter($messageBus, ['getCurrentTime']);
+        $queueEntryWriter->method('getCurrentTime')->willReturn(100000);
 
-        $this->subject = new QueueService($crawlerController, $this->createPageConfigurationResolver());
+        $this->subject = new QueueService($queueEntryWriter, $this->createPageConfigurationResolver());
     }
 
     /**

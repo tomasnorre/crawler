@@ -19,18 +19,11 @@ namespace AOE\Crawler\Tests\Unit\Controller;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Controller\CrawlerController;
-use AOE\Crawler\Domain\Repository\QueueRepository;
-use AOE\Crawler\Queue\CrawlUrlMessageDispatcher;
+use AOE\Crawler\Queue\QueueEntryWriter;
 use AOE\Crawler\Service\ConfigurationService;
 use AOE\Crawler\Service\PageConfigurationResolver;
-use AOE\Crawler\Service\ProcessInstructionService;
-use AOE\Crawler\Service\UrlService;
 use AOE\Crawler\Value\QueueRow;
-use PHPUnit\Framework\MockObject\MockObject;
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Messenger\MessageBusInterface;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\DebugUtility;
@@ -64,82 +57,6 @@ class CrawlerControllerTest extends UnitTestCase
             'cleanUpScheduledAge' => '7',
         ];
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = $configuration;
-    }
-
-    #[\PHPUnit\Framework\Attributes\Test]
-    public function getConfigurationHash(): void
-    {
-        $crawlerController = $this->getAccessibleMock(CrawlerController::class, null, [], '', false);
-
-        $configuration = [
-            'paramExpanded' => 'extendedParameter',
-            'URLs' => 'URLs',
-            'NotImportantParameter' => 'value not important',
-        ];
-
-        $originalCheckSum = md5(serialize($configuration));
-
-        self::assertNotEquals(
-            $originalCheckSum,
-            $crawlerController->_call('getConfigurationHash', $configuration)
-        );
-
-        unset($configuration['paramExpanded'], $configuration['URLs']);
-        $newCheckSum = md5(serialize($configuration));
-        self::assertEquals($newCheckSum, $crawlerController->_call('getConfigurationHash', $configuration));
-    }
-
-    #[\PHPUnit\Framework\Attributes\DataProvider('getConfigurationHasReturnsExpectedValueDataProvider')]
-    #[\PHPUnit\Framework\Attributes\Test]
-    public function getConfigurationHasReturnsExpectedValue(array $configuration, string $expected): void
-    {
-        $crawlerLib = $this->getAccessibleMock(CrawlerController::class, null, [], '', false);
-
-        self::assertEquals($expected, $crawlerLib->_call('getConfigurationHash', $configuration));
-    }
-
-    public static function getConfigurationHasReturnsExpectedValueDataProvider(): iterable
-    {
-        yield 'Configuration with either paramExpanded nor URLs set' => [
-            'configuration' => [
-                'testKey' => 'testValue',
-                'paramExpanded' => '',
-                'URLs' => '',
-            ],
-            'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22',
-        ];
-        yield 'Configuration with only paramExpanded set' => [
-            'configuration' => [
-                'testKey' => 'testValue',
-                'paramExpanded' => 'Value not important',
-                'URLs' => '',
-            ],
-            'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22',
-        ];
-        yield 'Configuration with only URLS set' => [
-            'configuration' => [
-                'testKey' => 'testValue',
-                'paramExpanded' => '',
-                'URLs' => 'Value not important',
-            ],
-            'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22',
-        ];
-        yield 'Configuration with both paramExpanded and URLS set' => [
-            'configuration' => [
-                'testKey' => 'testValue',
-                'paramExpanded' => 'Value not important',
-                'URLs' => 'Value not important',
-            ],
-            'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22',
-        ];
-        yield 'Configuration with both paramExpanded and URLS set, will return same hash' => [
-            'configuration' => [
-                'testKey' => 'testValue',
-                'paramExpanded' => 'Value not important, but different than test case before',
-                'URLs' => 'Value not important, but different than test case before',
-            ],
-            'expected' => 'a73d2e7035f7fa032237c8cf0eb5be22',
-        ];
     }
 
     public function getConfigurationKeysDataProvider(): iterable
@@ -295,7 +212,7 @@ class CrawlerControllerTest extends UnitTestCase
     private function createControllerForRows(
         array $configurations,
         string|false $skipMessage = false
-    ): CrawlerController&MockObject {
+    ): CrawlerController {
         $pageConfigurationResolver = $this->createStub(PageConfigurationResolver::class);
         $pageConfigurationResolver->method('getConfigurationsForPageRow')->willReturnCallback(
             static function (array $pageRow, string &$pageSkipMessage) use ($configurations, $skipMessage): array {
@@ -312,43 +229,18 @@ class CrawlerControllerTest extends UnitTestCase
             )
         );
 
-        $crawlerController = $this->createCrawlerController(
-            ['urlListFromUrlArray'],
-            $pageConfigurationResolver,
-            $configurationService
-        );
-        $crawlerController->method('urlListFromUrlArray')->willReturnCallback(
+        $queueEntryWriter = $this->createStub(QueueEntryWriter::class);
+        $queueEntryWriter->method('compileUrlList')->willReturnCallback(
             static fn (array $configuration): string => 'URLs of ' . $configuration['subCfg']['key']
         );
 
-        return $crawlerController;
-    }
-
-    /**
-     * @param list<non-empty-string> $mockedMethods
-     */
-    private function createCrawlerController(
-        array $mockedMethods,
-        PageConfigurationResolver $pageConfigurationResolver,
-        ConfigurationService $configurationService
-    ): CrawlerController&MockObject {
-        return $this->getMockBuilder(CrawlerController::class)
-            ->setConstructorArgs([
-                $this->createStub(QueueRepository::class),
-                $this->createStub(PageRepository::class),
-                $this->createStub(EventDispatcherInterface::class),
-                $this->createStub(IconFactory::class),
-                $configurationService,
-                $pageConfigurationResolver,
-                $this->createStub(UrlService::class),
-                new ProcessInstructionService(),
-                new CrawlUrlMessageDispatcher($this->createStub(MessageBusInterface::class)),
-                $this->createConfiguredStub(ExtensionConfigurationProvider::class, [
-                    'getExtensionConfiguration' => [],
-                ]),
-            ])
-            ->onlyMethods($mockedMethods)
-            ->getMock();
+        return new CrawlerController(
+            $this->createStub(PageRepository::class),
+            $this->createStub(IconFactory::class),
+            $configurationService,
+            $pageConfigurationResolver,
+            $queueEntryWriter,
+        );
     }
 
     private function getConfiguration(

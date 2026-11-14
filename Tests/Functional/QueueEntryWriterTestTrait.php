@@ -20,10 +20,10 @@ namespace AOE\Crawler\Tests\Functional;
  */
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
-use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Queue\CrawlUrlMessageDispatcher;
+use AOE\Crawler\Queue\QueueEntryWriter;
 use AOE\Crawler\Service\ConfigurationService;
 use AOE\Crawler\Service\PageConfigurationResolver;
 use AOE\Crawler\Service\PageService;
@@ -31,37 +31,33 @@ use AOE\Crawler\Service\ProcessInstructionService;
 use AOE\Crawler\Service\UrlService;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Messenger\MessageBusInterface;
-use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
-use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\TestingFramework\Core\AccessibleObjectInterface;
 
 /**
- * Creates a CrawlerController with the real services of the functional test instance.
+ * Creates the queue services with the real services of the functional test instance.
  */
-trait CrawlerControllerTestTrait
+trait QueueEntryWriterTestTrait
 {
     /**
-     * @param list<non-empty-string>|null $mockedMethods
+     * @param list<non-empty-string> $mockedMethods
      */
-    private function createCrawlerController(
+    private function createQueueEntryWriter(
         MessageBusInterface $messageBus,
-        ?array $mockedMethods = null,
+        array $mockedMethods = [],
         ?QueueRepository $queueRepository = null,
-    ): CrawlerController&AccessibleObjectInterface&MockObject {
-        return $this->getAccessibleMock(CrawlerController::class, $mockedMethods, [
-            $queueRepository ?? GeneralUtility::makeInstance(QueueRepository::class),
-            GeneralUtility::makeInstance(PageRepository::class),
-            GeneralUtility::makeInstance(EventDispatcher::class),
-            GeneralUtility::makeInstance(IconFactory::class),
-            GeneralUtility::makeInstance(ConfigurationService::class),
-            $this->createPageConfigurationResolver(),
-            GeneralUtility::makeInstance(UrlService::class),
-            GeneralUtility::makeInstance(ProcessInstructionService::class),
-            new CrawlUrlMessageDispatcher($messageBus),
-            GeneralUtility::makeInstance(ExtensionConfigurationProvider::class),
-        ]);
+    ): QueueEntryWriter&MockObject {
+        return $this->getMockBuilder(QueueEntryWriter::class)
+            ->setConstructorArgs([
+                $queueRepository ?? GeneralUtility::makeInstance(QueueRepository::class),
+                GeneralUtility::makeInstance(EventDispatcher::class),
+                GeneralUtility::makeInstance(UrlService::class),
+                GeneralUtility::makeInstance(ProcessInstructionService::class),
+                new CrawlUrlMessageDispatcher($messageBus),
+                GeneralUtility::makeInstance(ExtensionConfigurationProvider::class),
+            ])
+            ->onlyMethods($mockedMethods)
+            ->getMock();
     }
 
     private function createPageConfigurationResolver(): PageConfigurationResolver

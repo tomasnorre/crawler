@@ -94,8 +94,6 @@ services:
         public: true
 
     AOE\Crawler\Service\QueueService:
-        arguments:
-            $crawlerController: '@AOE\Crawler\Controller\CrawlerController'
         public: true
 
     AOE\Crawler\QueueExecutor:
