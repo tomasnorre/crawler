@@ -19,18 +19,10 @@ namespace AOE\Crawler\Controller;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
-use AOE\Crawler\Domain\Repository\QueueRepository;
-use AOE\Crawler\Event\AfterUrlAddedToQueueEvent;
-use AOE\Crawler\Queue\CrawlUrlMessageDispatcher;
-use AOE\Crawler\Queue\Message\CrawlUrlMessage;
+use AOE\Crawler\Queue\QueueEntryWriter;
 use AOE\Crawler\Service\ConfigurationService;
 use AOE\Crawler\Service\PageConfigurationResolver;
-use AOE\Crawler\Service\ProcessInstructionService;
-use AOE\Crawler\Service\UrlService;
 use AOE\Crawler\Value\QueueRow;
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Psr\Http\Message\UriInterface;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
@@ -48,15 +40,10 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class CrawlerController
 {
-    public int $setID = 0;
     public array $duplicateTrack = [];
     public array $downloadUrls = [];
     public array $incomingProcInstructions = [];
     public array $incomingConfigurationSelection = [];
-    public bool $registerQueueEntriesInternallyOnly = false;
-    public array $queueEntries = [];
-    public array $urlList = [];
-    public array $extensionSettings = [];
 
     /**
      * Mount Point
@@ -73,221 +60,13 @@ class CrawlerController
     private bool $downloadCrawlUrls = false;
 
     public function __construct(
-        protected readonly QueueRepository $queueRepository,
         private readonly PageRepository $pageRepository,
-        private readonly EventDispatcherInterface $eventDispatcher,
         protected readonly IconFactory $iconFactory,
         private readonly ConfigurationService $configurationService,
         private readonly PageConfigurationResolver $pageConfigurationResolver,
-        private readonly UrlService $urlService,
-        private readonly ProcessInstructionService $processInstructionService,
-        private readonly CrawlUrlMessageDispatcher $crawlUrlMessageDispatcher,
-        ExtensionConfigurationProvider $extensionConfigurationProvider,
+        private readonly QueueEntryWriter $queueEntryWriter,
     ) {
-        $this->extensionSettings = $extensionConfigurationProvider->getExtensionConfiguration();
     }
-
-    /**
-     * Creates a list of URLs from input array (and submits them to queue if asked for)
-     * See Web > Info module script + "indexed_search"'s crawler hook-client using this!
-     *
-     * @param array $vv Information about URLs from pageRow to crawl.
-     * @param array $pageRow Page row
-     * @param int $scheduledTime Unix time to schedule indexing to, typically time()
-     * @param int $reqMinute Number of requests per minute (creates the interleave between requests)
-     * @param bool $submitCrawlUrls If set, submits the URLs to queue
-     * @param bool $downloadCrawlUrls If set (and submitcrawlUrls is false) will fill $downloadUrls with entries)
-     * @param array $duplicateTrack Array which is passed by reference and contains the an id per url to secure we will not crawl duplicates
-     * @param array $downloadUrls Array which will be filled with URLS for download if flag is set.
-     * @param array $incomingProcInstructions Array of processing instructions
-     * @return string List of URLs (meant for display in backend module)
-     */
-    public function urlListFromUrlArray(
-        array $vv,
-        array $pageRow,
-        int $scheduledTime,
-        int $reqMinute,
-        bool $submitCrawlUrls,
-        bool $downloadCrawlUrls,
-        array &$duplicateTrack,
-        array &$downloadUrls,
-        array $incomingProcInstructions
-    ): string {
-        if (!is_array($vv['URLs'])) {
-            return 'ERROR - no URL generated';
-        }
-        $urlLog = [];
-        $pageId = (int) $pageRow['uid'];
-        $configurationHash = $this->getConfigurationHash($vv);
-        $skipInnerCheck = $this->queueRepository->noUnprocessedQueueEntriesForPageWithConfigurationHashExist(
-            $pageId,
-            $configurationHash
-        );
-
-        foreach ($vv['URLs'] as $urlQuery) {
-            if (!$this->processInstructionService->isAllowed(
-                $vv['subCfg']['procInstrFilter'] ?? '',
-                $incomingProcInstructions
-            )) {
-                continue;
-            }
-            $url = $this->urlService->getUrlFromPageAndQueryParameters(
-                $pageId,
-                $urlQuery,
-                $vv['subCfg']['baseUrl'] ?? null,
-                (int) ($vv['subCfg']['force_ssl'] ?? 0)
-            );
-
-            if (!$url instanceof UriInterface) {
-                continue;
-            }
-
-            $url = (string) $url;
-
-            // Create key by which to determine unique-ness:
-            $uKey = $url . '|' . ($vv['subCfg']['userGroups'] ?? '') . '|' . ($vv['subCfg']['procInstrFilter'] ?? '');
-
-            if (isset($duplicateTrack[$uKey])) {
-                //if the url key is registered just display it and do not resubmit is
-                $urlLog[] = '<em><span class="text-muted">' . htmlspecialchars($url) . '</span></em>';
-            } else {
-                // Scheduled time:
-                $schTime = $scheduledTime + round(count($duplicateTrack) * (60 / $reqMinute));
-                $schTime = intval($schTime / 60) * 60;
-                $formattedDate = BackendUtility::datetime($schTime);
-                $this->urlList[] = '[' . $formattedDate . '] ' . $url;
-                $urlList = '[' . $formattedDate . '] ' . htmlspecialchars($url);
-
-                // Submit for crawling!
-                if ($submitCrawlUrls) {
-                    $added = $this->addUrl(
-                        $pageId,
-                        $url,
-                        $vv['subCfg'],
-                        $scheduledTime,
-                        $configurationHash,
-                        $skipInnerCheck
-                    );
-                    if ($added === false) {
-                        $urlList .= ' (URL already existed)';
-                    }
-                } elseif ($downloadCrawlUrls) {
-                    $downloadUrls[$url] = $url;
-                }
-                $urlLog[] = $urlList;
-            }
-            $duplicateTrack[$uKey] = true;
-        }
-
-        // Todo: Find a better option to have this correct in both backend (<br>) and cli (<new line>)
-        return implode('<br>', $urlLog);
-    }
-
-    /************************************
-     *
-     * URL setting
-     *
-     ************************************/
-
-    /**
-     * Setting a URL for crawling:
-     *
-     * @param integer $id Page ID
-     * @param string $url Complete URL
-     * @param array $subCfg Sub configuration array (from TS config)
-     * @param integer $tstamp Scheduled-time
-     * @param string $configurationHash (optional) configuration hash
-     * @param bool $skipInnerDuplicationCheck (optional) skip inner duplication check
-     * @return bool
-     */
-    public function addUrl(
-        $id,
-        $url,
-        array $subCfg,
-        $tstamp,
-        $configurationHash = '',
-        $skipInnerDuplicationCheck = false
-    ) {
-        $urlAdded = false;
-        $rows = [];
-
-        // Creating parameters:
-        $parameters = [
-            'url' => $url,
-        ];
-
-        // fe user group simulation:
-        $uGs = implode(',', array_unique(GeneralUtility::intExplode(',', $subCfg['userGroups'] ?? '', true)));
-        if ($uGs) {
-            $parameters['feUserGroupList'] = $uGs;
-        }
-
-        // Setting processing instructions
-        $parameters['procInstructions'] = GeneralUtility::trimExplode(',', $subCfg['procInstrFilter'] ?? '');
-        if (is_array($subCfg['procInstrParams.'] ?? false)) {
-            $parameters['procInstrParams'] = $subCfg['procInstrParams.'];
-        }
-
-        // Compile value array:
-        $parameters_serialized = json_encode($parameters) ?: '';
-        $fieldArray = [
-            'page_id' => (int) $id,
-            'parameters' => $parameters_serialized,
-            'parameters_hash' => md5($parameters_serialized),
-            'configuration_hash' => $configurationHash,
-            'scheduled' => $tstamp,
-            'exec_time' => 0,
-            'set_id' => $this->setID,
-            'result_data' => '',
-            'configuration' => $subCfg['key'],
-        ];
-
-        if ($this->registerQueueEntriesInternallyOnly) {
-            //the entries will only be registered and not stored to the database
-            $this->queueEntries[] = $fieldArray;
-        } else {
-            if (!$skipInnerDuplicationCheck) {
-                // check if there is already an equal entry
-                $rows = $this->queueRepository->getDuplicateQueueItemsIfExists(
-                    (bool) $this->extensionSettings['enableTimeslot'],
-                    $tstamp,
-                    $this->getCurrentTime(),
-                    $fieldArray['page_id'],
-                    $fieldArray['parameters_hash']
-                );
-            }
-            if ($rows === []) {
-                $uid = $this->queueRepository->add($fieldArray);
-                $urlAdded = true;
-
-                $this->eventDispatcher->dispatch(new AfterUrlAddedToQueueEvent((string) $uid, $fieldArray));
-                $this->dispatchCrawlUrlMessage($uid, (int) $id, (int) $tstamp);
-            }
-        }
-
-        return $urlAdded;
-    }
-
-    /**
-     * Returns the current system time
-     *
-     * @return int
-     */
-    public function getCurrentTime()
-    {
-        return time();
-    }
-
-    /************************************
-     *
-     * URL reading
-     *
-     ************************************/
-    /*****************************
-     *
-     * Compiling URLs to crawl - tools
-     *
-     *****************************/
 
     /**
      * This draws the pageTree with URLs for e.g the Backend Log Module
@@ -419,18 +198,6 @@ class CrawlerController
         return $queueRowCollection;
     }
 
-    /**
-     * Returns a md5 hash generated from a serialized configuration array.
-     *
-     * @return string
-     */
-    protected function getConfigurationHash(array $configuration)
-    {
-        unset($configuration['paramExpanded']);
-        unset($configuration['URLs']);
-        return md5(serialize($configuration));
-    }
-
     private function addConfigurationToQueueRow(QueueRow $queueRow, array $pageRow, array $configuration): void
     {
         $excludedPages = $this->configurationService->expandExcludeString($configuration['subCfg']['exclude'] ?? '');
@@ -439,7 +206,7 @@ class CrawlerController
             return;
         }
 
-        $queueRow->setUrls($this->urlListFromUrlArray(
+        $queueRow->setUrls($this->queueEntryWriter->compileUrlList(
             $configuration,
             $pageRow,
             $this->scheduledTime,
@@ -500,18 +267,6 @@ class CrawlerController
     {
         $parameters = GeneralUtility::implodeArrayForUrl('', $paramParsed);
         return nl2br(htmlspecialchars(rawurldecode(trim(str_replace('&', chr(10) . '&', $parameters)))));
-    }
-
-    /**
-     * Hands the queue record over to the message bus. Records scheduled in the future are delayed accordingly.
-     */
-    private function dispatchCrawlUrlMessage(int $queueId, int $pageId, int $scheduled): void
-    {
-        $this->crawlUrlMessageDispatcher->dispatch(
-            new CrawlUrlMessage($queueId),
-            $pageId,
-            $scheduled - $this->getCurrentTime()
-        );
     }
 
     /**

@@ -24,6 +24,7 @@ use AOE\Crawler\Controller\Backend\Helper\UrlBuilder;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Event\InvokeQueueChangeEvent;
+use AOE\Crawler\Queue\QueueEntryWriter;
 use AOE\Crawler\Service\PageConfigurationResolver;
 use AOE\Crawler\Utility\MessageUtility;
 use Psr\Http\Message\ResponseInterface;
@@ -55,6 +56,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
     public function __construct(
         private readonly CrawlerController $crawlerController,
         private readonly PageConfigurationResolver $pageConfigurationResolver,
+        private readonly QueueEntryWriter $queueEntryWriter,
         private readonly UriBuilder $backendUriBuilder,
     ) {
     }
@@ -92,8 +94,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
 
         $this->incomingConfigurationSelection = RequestHelper::getArrayFromRequest($request, 'configurationSelection');
 
-        //$this->crawlerController = $this->getCrawlerController();
-        $this->crawlerController->setID = GeneralUtility::md5int(microtime());
+        $this->queueEntryWriter->setId = GeneralUtility::md5int(microtime());
 
         $queueRows = '';
         $noConfigurationSelected = $this->isNoConfigurationSelected();

@@ -26,6 +26,7 @@ use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\InvokeQueueChangeEvent;
 use AOE\Crawler\Queue\Handler\CrawlUrlHandler;
 use AOE\Crawler\Queue\Message\CrawlUrlMessage;
+use AOE\Crawler\Queue\QueueEntryWriter;
 use AOE\Crawler\Utility\MessageUtility;
 use AOE\Crawler\Value\QueueRow;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -51,6 +52,7 @@ class BuildQueueCommand extends Command
         private readonly QueueRepository $queueRepository,
         private readonly PageRepository $pageRepository,
         private readonly CrawlerController $crawlerController,
+        private readonly QueueEntryWriter $queueEntryWriter,
         private readonly CrawlUrlHandler $crawlUrlHandler,
     ) {
         parent::__construct();
@@ -132,7 +134,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
         )->getExtensionConfiguration();
 
         if ($mode === 'exec') {
-            $this->crawlerController->registerQueueEntriesInternallyOnly = true;
+            $this->queueEntryWriter->registerQueueEntriesInternallyOnly = true;
         }
 
         $pageId = MathUtility::forceIntegerInRange((int) $input->getArgument('page'), 0);
@@ -156,7 +158,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             $this->queueRepository->cleanUpOldQueueEntries();
         }
 
-        $this->crawlerController->setID = GeneralUtility::md5int(microtime());
+        $this->queueEntryWriter->setId = GeneralUtility::md5int(microtime());
         $queueRows = $this->getQueueRows($pageId, $input, $mode, $configurationKeys);
 
         match ($mode) {
@@ -198,7 +200,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
     {
         $output->writeln(
             '<info>' . count(
-                $this->crawlerController->urlList
+                $this->queueEntryWriter->urlList
             ) . ' entries found for processing. (Use "mode" to decide action):</info>' . PHP_EOL
         );
         $this->outputUrls($queueRows, $output);
@@ -207,7 +209,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
     private function outputModeQueue(OutputInterface $output, array $queueRows): void
     {
         $output->writeln(
-            '<info>Putting ' . count($this->crawlerController->urlList) . ' entries in queue:</info>' . PHP_EOL
+            '<info>Putting ' . count($this->queueEntryWriter->urlList) . ' entries in queue:</info>' . PHP_EOL
         );
         $this->outputUrls($queueRows, $output);
     }
@@ -216,12 +218,12 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
     {
         $progressBar = new ProgressBar($output);
         $output->writeln(
-            '<info>Executing ' . count($this->crawlerController->urlList) . ' requests right away:</info>'
+            '<info>Executing ' . count($this->queueEntryWriter->urlList) . ' requests right away:</info>'
         );
         $this->outputUrls($queueRows, $output);
         $output->writeln('<info>Processing</info>' . PHP_EOL);
 
-        foreach ($progressBar->iterate($this->crawlerController->queueEntries) as $queueRec) {
+        foreach ($progressBar->iterate($this->queueEntryWriter->queueEntries) as $queueRec) {
             $p = json_decode((string) $queueRec['parameters'], true);
             if (is_bool($p)) {
                 continue;
@@ -267,7 +269,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
         return $this->crawlerController->getPageTreeAndUrls(
             $pageId,
             MathUtility::forceIntegerInRange((int) $input->getOption('depth'), 0, 99),
-            $this->crawlerController->getCurrentTime(),
+            $this->queueEntryWriter->getCurrentTime(),
             MathUtility::forceIntegerInRange((int) $input->getOption('number') ?: 30, 1, 1000),
             $mode === 'queue' || $mode === 'exec',
             $mode === 'url',
