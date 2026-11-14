@@ -24,10 +24,12 @@ use AOE\Crawler\Queue\Message\CrawlUrlMessage;
 use AOE\Crawler\Queue\QueueEntryWriter;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use AOE\Crawler\Tests\Functional\QueueEntryWriterTestTrait;
+use AOE\Crawler\Tests\Unit\CrawlStrategy\CallbackObjectForTesting;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 #[CoversClass(QueueEntryWriter::class)]
@@ -112,6 +114,41 @@ class QueueEntryWriterTest extends FunctionalTestCase
         self::assertTrue($subject->addUrl(1, 'https://example.com/', [
             'key' => 'some-key',
         ], 1_000_060));
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function addCallbackStoresQueueEntryAndDispatchesMessage(): void
+    {
+        $dispatchedMessages = [];
+        $messageBus = $this->createMock(MessageBusInterface::class);
+        $messageBus->expects(self::once())
+            ->method('dispatch')
+            ->willReturnCallback(static function (object $message, array $stamps) use (&$dispatchedMessages): Envelope {
+                $dispatchedMessages[] = $message;
+                return new Envelope($message, $stamps);
+            });
+
+        $subject = $this->createQueueEntryWriter($messageBus, ['getCurrentTime']);
+        $subject->method('getCurrentTime')->willReturn(1_000_000);
+        $subject->setId = 42;
+
+        $queueId = $subject->addCallback(CallbackObjectForTesting::class, [
+            'name' => 'Crawler',
+        ], 5);
+
+        $queueEntry = GeneralUtility::makeInstance(QueueRepository::class)->getQueueEntriesByQid($queueId, true);
+        self::assertIsArray($queueEntry);
+        self::assertSame(5, (int) $queueEntry['page_id']);
+        self::assertSame(42, (int) $queueEntry['set_id']);
+        self::assertSame(1_000_000, (int) $queueEntry['scheduled']);
+        self::assertSame([
+            'name' => 'Crawler',
+            QueueEntryWriter::CALLBACK_PARAMETER => CallbackObjectForTesting::class,
+        ], json_decode((string) $queueEntry['parameters'], true));
+
+        self::assertCount(1, $dispatchedMessages);
+        self::assertInstanceOf(CrawlUrlMessage::class, $dispatchedMessages[0]);
+        self::assertSame($queueId, $dispatchedMessages[0]->queueId);
     }
 
     public static function addUrlDataProvider(): iterable

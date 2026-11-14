@@ -19,7 +19,6 @@ namespace AOE\Crawler\Tests\Unit\Queue\Handler;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\AfterQueueItemAddedEvent;
 use AOE\Crawler\Event\BeforeQueueItemAddedEvent;
@@ -47,12 +46,7 @@ class CrawlUrlHandlerTest extends UnitTestCase
         $this->queueRepository = $this->createMock(QueueRepository::class);
         $this->queueExecutor = $this->createMock(QueueExecutor::class);
         $this->eventDispatcher = $this->createMock(EventDispatcherInterface::class);
-        $this->subject = new CrawlUrlHandler(
-            $this->queueRepository,
-            $this->queueExecutor,
-            $this->createStub(CrawlerController::class),
-            $this->eventDispatcher,
-        );
+        $this->subject = new CrawlUrlHandler($this->queueRepository, $this->queueExecutor, $this->eventDispatcher);
     }
 
     #[Test]

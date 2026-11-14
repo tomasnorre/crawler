@@ -19,19 +19,15 @@ namespace AOE\Crawler\Tests\Unit\CrawlStrategy;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Controller\CrawlerController;
+use AOE\Crawler\Queue\QueueCallbackInterface;
 
 /**
  * @codeCoverageIgnore
- * @ignoreAnnotation("noRector")
  */
-class CallbackObjectForTesting
+class CallbackObjectForTesting implements QueueCallbackInterface
 {
-    /**
-     * @noRector Rector\DeadCode\Rector\ClassMethod\RemoveUnusedParameterRector
-     */
-    public function crawler_execute(array $parameters, CrawlerController $crawlerController): string
+    public function execute(array $parameters): mixed
     {
-        return 'Hi, it works!';
+        return 'Hi, it works!' . (isset($parameters['name']) ? ' ' . $parameters['name'] : '');
     }
 }

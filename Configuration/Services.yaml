@@ -102,6 +102,11 @@ services:
             $eventDispatcher: '@TYPO3\CMS\Core\EventDispatcher\EventDispatcher'
         public: true
 
+    # The callbacks of all extensions, see AOE\Crawler\Queue\QueueCallbackInterface
+    AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy:
+        arguments:
+            $callbacks: !tagged_locator { tag: 'crawler.queue_callback' }
+
     AOE\Crawler\Controller\Backend\BackendModuleStartCrawlingController:
         tags: [ 'backend.controller' ]
 
