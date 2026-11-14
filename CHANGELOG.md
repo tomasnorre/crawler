@@ -12,6 +12,9 @@
 * Translations are delivered as language packs by the TYPO3 translation server, fetch them with `typo3 language:update` or in "Manage Language Packs", otherwise labels are shown in English
 * The hook `$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/class.tx_crawler_lib.php']['expandParameters']` receives `AOE\Crawler\Service\ParameterExpander` as `pObj` instead of `AOE\Crawler\Service\ConfigurationService`
 * `CrawlerController` gets its services by constructor injection, create it with the dependency injection container
+* `AOE\Crawler\Service\PageConfigurationResolver` finds the crawler configurations of pages instead of `CrawlerController`
+* The hook `$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['getPageTSconfigForId']` receives `AOE\Crawler\Service\PageConfigurationResolver` as parent object instead of `AOE\Crawler\Controller\CrawlerController`
+* The hook `$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['processUrls']` receives `AOE\Crawler\Service\PageConfigurationResolver` as parent object instead of `AOE\Crawler\Controller\CrawlerController`
 
 ### Fixed
 * Export every log entry in the crawler log CSV
@@ -66,6 +69,10 @@
 * `CrawlerController` no longer implements `LoggerAwareInterface`, it never logged anything
 * `CrawlerController::injectCrawlUrlMessageDispatcher()`
 * `CrawlerController::getPageService()`
+* `CrawlerController::getUrlsForPageRow()`
+* `CrawlerController::getUrlsForPageId()`
+* `CrawlerController::getPageTSconfigForId()`
+* `CrawlerController::getConfigurationsForBranch()`
 * `QueueRepository`: all process related methods, `getUnprocessedItems()`, `countAllPendingItems()`, `countAllAssignedPendingItems()`, `cleanupQueue()`, `fetchRecordsToBeCrawled()`
 
 ## Crawler 13.0.1

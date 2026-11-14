@@ -20,13 +20,12 @@ namespace AOE\Crawler\Controller;
  */
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
-use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\AfterUrlAddedToQueueEvent;
 use AOE\Crawler\Queue\CrawlUrlMessageDispatcher;
 use AOE\Crawler\Queue\Message\CrawlUrlMessage;
 use AOE\Crawler\Service\ConfigurationService;
-use AOE\Crawler\Service\PageService;
+use AOE\Crawler\Service\PageConfigurationResolver;
 use AOE\Crawler\Service\ProcessInstructionService;
 use AOE\Crawler\Service\UrlService;
 use AOE\Crawler\Value\QueueRow;
@@ -75,50 +74,17 @@ class CrawlerController
 
     public function __construct(
         protected readonly QueueRepository $queueRepository,
-        protected readonly ConfigurationRepository $configurationRepository,
         private readonly PageRepository $pageRepository,
         private readonly EventDispatcherInterface $eventDispatcher,
         protected readonly IconFactory $iconFactory,
         private readonly ConfigurationService $configurationService,
+        private readonly PageConfigurationResolver $pageConfigurationResolver,
         private readonly UrlService $urlService,
-        private readonly PageService $pageService,
         private readonly ProcessInstructionService $processInstructionService,
         private readonly CrawlUrlMessageDispatcher $crawlUrlMessageDispatcher,
         ExtensionConfigurationProvider $extensionConfigurationProvider,
     ) {
         $this->extensionSettings = $extensionConfigurationProvider->getExtensionConfiguration();
-    }
-
-    /**
-     * Wrapper method for getUrlsForPageId()
-     * It returns an array of configurations and no urls!
-     *
-     * @param array $pageRow Page record with at least dok-type and uid columns.
-     * @see getUrlsForPageId()
-     */
-    public function getUrlsForPageRow(array $pageRow, string &$skipMessage = ''): array
-    {
-        if (!isset($pageRow['uid'])) {
-            $skipMessage = "pageRow['uid'] is missing";
-            return [];
-        }
-
-        $pageRowUid = intval($pageRow['uid']);
-        if (!$pageRowUid) {
-            $skipMessage = 'PageUid "' . $pageRow['uid'] . '" was not an integer';
-            return [];
-        }
-
-        $message = $this->pageService->checkIfPageShouldBeSkipped($pageRow);
-        if ($message === false) {
-            $res = $this->getUrlsForPageId($pageRowUid);
-            $skipMessage = '';
-        } else {
-            $skipMessage = $message;
-            $res = [];
-        }
-
-        return $res;
     }
 
     /**
@@ -215,95 +181,6 @@ class CrawlerController
 
         // Todo: Find a better option to have this correct in both backend (<br>) and cli (<new line>)
         return implode('<br>', $urlLog);
-    }
-
-    public function getPageTSconfigForId(int $id): array
-    {
-        if (!$this->MP) {
-            $pageTSconfig = BackendUtility::getPagesTSconfig($id);
-        } else {
-            [, $mountPointId] = explode('-', $this->MP);
-            $pageTSconfig = BackendUtility::getPagesTSconfig((int) $mountPointId);
-        }
-
-        // Call a hook to alter configuration
-        if (
-            isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['getPageTSconfigForId'])
-            && is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['getPageTSconfigForId'])
-        ) {
-            $params = [
-                'pageId' => $id,
-                'pageTSConfig' => &$pageTSconfig,
-            ];
-            foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['getPageTSconfigForId'] as $userFunc) {
-                GeneralUtility::callUserFunction($userFunc, $params, $this);
-            }
-        }
-        return $pageTSconfig;
-    }
-
-    /**
-     * This method returns an array of configurations.
-     * Adds no urls!
-     */
-    public function getUrlsForPageId(int $pageId): array
-    {
-        // Get page TSconfig for page ID
-        $pageTSconfig = $this->getPageTSconfigForId($pageId);
-
-        $mountPoint = $this->MP ?? '';
-
-        $res = [];
-
-        // Fetch Crawler Configuration from pageTSConfig
-        $res = $this->configurationService->getConfigurationFromPageTS($pageTSconfig, $pageId, $res, $mountPoint);
-
-        // Get configuration from tx_crawler_configuration records up the rootline
-        $res = $this->configurationService->getConfigurationFromDatabase($pageId, $res);
-
-        foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['processUrls'] ?? [] as $func) {
-            $params = [
-                'res' => &$res,
-            ];
-            GeneralUtility::callUserFunction($func, $params, $this);
-        }
-        return $res;
-    }
-
-    /**
-     * Find all configurations of subpages of a page
-     * TODO: Write Functional Tests
-     */
-    public function getConfigurationsForBranch(int $rootid, int $depth): array
-    {
-        $configurationsForBranch = [];
-        $pageTSconfig = $this->getPageTSconfigForId($rootid);
-        $sets = $pageTSconfig['tx_crawler.']['crawlerCfg.']['paramSets.'] ?? [];
-        foreach ($sets as $key => $value) {
-            if (!is_array($value)) {
-                continue;
-            }
-            $configurationsForBranch[] = str_ends_with((string) $key, '.') ? substr((string) $key, 0, -1) : $key;
-        }
-        $pids = [];
-        $rootLine = BackendUtility::BEgetRootLine($rootid);
-        foreach ($rootLine as $node) {
-            $pids[] = $node['uid'];
-        }
-        $tree = GeneralUtility::makeInstance(PageTreeView::class);
-        $perms_clause = $this->getBackendUser()->getPagePermsClause(Permission::PAGE_SHOW);
-        $tree->init(empty($perms_clause) ? '' : ('AND ' . $perms_clause));
-        $tree->getTree($rootid, $depth, '');
-        foreach ($tree->tree as $node) {
-            $pids[] = $node['row']['uid'];
-        }
-
-        $configurations = $this->configurationRepository->getCrawlerConfigurationRecordsFromRootLine($rootid, $pids);
-
-        foreach ($configurations as $configuration) {
-            $configurationsForBranch[] = $configuration['name'];
-        }
-        return $configurationsForBranch;
     }
 
     /************************************
@@ -519,7 +396,7 @@ class CrawlerController
         $skipMessage = '';
         $configurations = ConfigurationService::removeDisallowedConfigurations(
             $this->incomingConfigurationSelection,
-            $this->getUrlsForPageRow($pageRow, $skipMessage)
+            $this->pageConfigurationResolver->getConfigurationsForPageRow($pageRow, $skipMessage, $this->MP ?? '')
         );
 
         if ($configurations === []) {

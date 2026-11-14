@@ -1,7 +1,7 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Class cognitive complexity is 74, keep it under 28$#'
+			message: '#^Class cognitive complexity is 54, keep it under 28$#'
 			identifier: complexity.classLike
 			count: 1
 			path: Classes/Controller/CrawlerController.php
