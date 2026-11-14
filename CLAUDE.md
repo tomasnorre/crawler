@@ -50,7 +50,8 @@ Crawls the TYPO3 page tree for cache warmup, indexing and publishing.
 - All static checks: `composer static`
 - Library requirements: `php .github/scripts/composer-require-check.php` – every `require` of `composer.json`
   (except PHP, `ext-*` and `typo3/cms-*`) must also be in `Resources/Private/Php/Libraries/composer.json`
-  with the same version constraint
+  with the same version constraint, and in `extra.typo3/cms.Package.providesPackages` of `composer.json`
+  mapped to `Resources/Private/Php/Libraries/vendor` (non-Composer installations load the libraries from there)
 - Docs: `make docs` / `make test-docs`
 
 Before calling a task done, run the unit tests, `composer test:functional-sqlite`, `composer analyse`, `composer psalm` and `composer cs-fix -- --fix`.
