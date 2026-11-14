@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Functional\Controller;
+namespace AOE\Crawler\Tests\Functional\Queue;
 
 /*
  * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
@@ -21,20 +21,20 @@ namespace AOE\Crawler\Tests\Functional\Controller;
 
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Queue\Message\CrawlUrlMessage;
+use AOE\Crawler\Queue\QueueEntryWriter;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
-use AOE\Crawler\Tests\Functional\CrawlerControllerTestTrait;
+use AOE\Crawler\Tests\Functional\QueueEntryWriterTestTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
-/**
- * @package AOE\Crawler\Tests\Functional\Controller
- */
-class CrawlerControllerTest extends FunctionalTestCase
+#[CoversClass(QueueEntryWriter::class)]
+class QueueEntryWriterTest extends FunctionalTestCase
 {
     use BackendRequestTestTrait;
-    use CrawlerControllerTestTrait;
+    use QueueEntryWriterTestTrait;
 
     protected array $coreExtensionsToLoad = ['seo'];
 
@@ -50,7 +50,6 @@ class CrawlerControllerTest extends FunctionalTestCase
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/tx_crawler_configuration.csv');
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.csv');
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/tt_content.csv');
-
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('addUrlDataProvider')]
@@ -79,19 +78,12 @@ class CrawlerControllerTest extends FunctionalTestCase
             ->with(self::isInstanceOf(CrawlUrlMessage::class), self::isArray())
             ->willReturnCallback(static fn (object $message): Envelope => new Envelope($message));
 
-        $mockedCrawlerController = $this->createCrawlerController($messageBus, null, $mockedQueueRepository);
-        $mockedCrawlerController->registerQueueEntriesInternallyOnly = $registerQueueEntriesInternallyOnly;
+        $subject = $this->createQueueEntryWriter($messageBus, [], $mockedQueueRepository);
+        $subject->registerQueueEntriesInternallyOnly = $registerQueueEntriesInternallyOnly;
 
         self::assertEquals(
             $expected,
-            $mockedCrawlerController->addUrl(
-                $id,
-                $url,
-                $subCfg,
-                $tstamp,
-                $configurationHash,
-                $skipInnerDuplicationCheck
-            )
+            $subject->addUrl($id, $url, $subCfg, $tstamp, $configurationHash, $skipInnerDuplicationCheck)
         );
     }
 
@@ -114,10 +106,10 @@ class CrawlerControllerTest extends FunctionalTestCase
                 return new Envelope($message, $stamps);
             });
 
-        $crawlerController = $this->createCrawlerController($messageBus, ['getCurrentTime'], $mockedQueueRepository);
-        $crawlerController->method('getCurrentTime')->willReturn(1_000_000);
+        $subject = $this->createQueueEntryWriter($messageBus, ['getCurrentTime'], $mockedQueueRepository);
+        $subject->method('getCurrentTime')->willReturn(1_000_000);
 
-        self::assertTrue($crawlerController->addUrl(1, 'https://example.com/', [
+        self::assertTrue($subject->addUrl(1, 'https://example.com/', [
             'key' => 'some-key',
         ], 1_000_060));
     }

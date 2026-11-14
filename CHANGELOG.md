@@ -13,6 +13,7 @@
 * The hook `$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/class.tx_crawler_lib.php']['expandParameters']` receives `AOE\Crawler\Service\ParameterExpander` as `pObj` instead of `AOE\Crawler\Service\ConfigurationService`
 * `CrawlerController` gets its services by constructor injection, create it with the dependency injection container
 * `AOE\Crawler\Service\PageConfigurationResolver` finds the crawler configurations of pages instead of `CrawlerController`
+* `AOE\Crawler\Queue\QueueEntryWriter` writes the URLs of crawler configurations to the queue instead of `CrawlerController`
 * The hook `$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['getPageTSconfigForId']` receives `AOE\Crawler\Service\PageConfigurationResolver` as parent object instead of `AOE\Crawler\Controller\CrawlerController`
 * The hook `$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['processUrls']` receives `AOE\Crawler\Service\PageConfigurationResolver` as parent object instead of `AOE\Crawler\Controller\CrawlerController`
 
@@ -73,6 +74,14 @@
 * `CrawlerController::getUrlsForPageId()`
 * `CrawlerController::getPageTSconfigForId()`
 * `CrawlerController::getConfigurationsForBranch()`
+* `CrawlerController::urlListFromUrlArray()`
+* `CrawlerController::addUrl()`
+* `CrawlerController::getCurrentTime()`
+* `CrawlerController::$setID`
+* `CrawlerController::$registerQueueEntriesInternallyOnly`
+* `CrawlerController::$queueEntries`
+* `CrawlerController::$urlList`
+* `CrawlerController::$extensionSettings`
 * `QueueRepository`: all process related methods, `getUnprocessedItems()`, `countAllPendingItems()`, `countAllAssignedPendingItems()`, `cleanupQueue()`, `fetchRecordsToBeCrawled()`
 
 ## Crawler 13.0.1

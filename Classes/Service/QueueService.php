@@ -19,7 +19,7 @@ namespace AOE\Crawler\Service;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Controller\CrawlerController;
+use AOE\Crawler\Queue\QueueEntryWriter;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -29,11 +29,11 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class QueueService
 {
     public function __construct(
-        private readonly CrawlerController $crawlerController,
+        private readonly QueueEntryWriter $queueEntryWriter,
         private readonly PageConfigurationResolver $pageConfigurationResolver,
     ) {
-        if ($this->crawlerController->setID <= 0) {
-            $this->crawlerController->setID = GeneralUtility::md5int(microtime());
+        if ($this->queueEntryWriter->setId <= 0) {
+            $this->queueEntryWriter->setId = GeneralUtility::md5int(microtime());
         }
     }
 
@@ -52,8 +52,8 @@ class QueueService
 
         foreach ($configurations as $configuration) {
             //enable inserting of entries
-            $this->crawlerController->registerQueueEntriesInternallyOnly = false;
-            $this->crawlerController->urlListFromUrlArray(
+            $this->queueEntryWriter->registerQueueEntriesInternallyOnly = false;
+            $this->queueEntryWriter->compileUrlList(
                 $configuration,
                 $pageData,
                 $time,
@@ -66,7 +66,7 @@ class QueueService
             );
 
             //reset the queue because the entries have been written to the db
-            $this->crawlerController->queueEntries = [];
+            $this->queueEntryWriter->queueEntries = [];
         }
     }
 
