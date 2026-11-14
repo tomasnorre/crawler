@@ -20,6 +20,7 @@
 ### Fixed
 * Export every log entry in the crawler log CSV
 * Build the page tree of excluded pages only once per page and depth, the cache was never filled
+* Keep the selected set in the crawler log when changing a filter, the set id was never read from the request
 
 ### Deprecated
 #### Classes

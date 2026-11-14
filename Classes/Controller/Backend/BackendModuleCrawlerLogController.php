@@ -310,7 +310,7 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
     private function setPropertiesBasedOnPostVars(ServerRequestInterface $request): void
     {
         $this->pageUid = (int) ($request->getQueryParams()['id'] ?? -1);
-        $this->setId = RequestHelper::getIntFromRequest($request, 'setID̈́');
+        $this->setId = RequestHelper::getIntFromRequest($request, 'setID');
         $parsedBody = (array) ($request->getParsedBody() ?? []);
         $quidDetails = $parsedBody['qid_details'] ?? $request->getQueryParams()['qid_details'] ?? null;
         $this->quiPath = $quidDetails ? '&qid_details=' . (int) $quidDetails : '';
