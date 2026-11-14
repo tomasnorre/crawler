@@ -20,8 +20,12 @@ namespace AOE\Crawler\Tests\Unit\Controller;
  */
 
 use AOE\Crawler\Controller\CrawlerController;
+use AOE\Crawler\Service\ConfigurationService;
 use AOE\Crawler\Service\PageService;
+use AOE\Crawler\Value\QueueRow;
 use PHPUnit\Framework\MockObject\MockObject;
+use TYPO3\CMS\Core\Utility\DebugUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
@@ -248,5 +252,185 @@ class CrawlerControllerTest extends UnitTestCase
             ],
             'expected' => ['default', 'news'],
         ];
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function drawURLsAddRowsForPageShowsSkipMessageWhenPageHasNoConfigurations(): void
+    {
+        $crawlerController = $this->createControllerForRows([], 'Because page is hidden');
+
+        $expected = new QueueRow('Page title');
+        $expected->setPageTitleHTML('<icon/>');
+        $expected->setMessage(' (Because page is hidden)');
+
+        self::assertEquals(
+            [$expected],
+            $crawlerController->drawURLs_addRowsForPage([
+                'uid' => 5,
+            ], 'Page title', '<icon/>')
+        );
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function drawURLsAddRowsForPageShowsEmptyMessageWhenPageHasNoConfigurationsAndIsNotSkipped(): void
+    {
+        $crawlerController = $this->createControllerForRows([]);
+
+        $expected = new QueueRow('Page title');
+        $expected->setPageTitleHTML('<icon/>');
+
+        self::assertEquals(
+            [$expected],
+            $crawlerController->drawURLs_addRowsForPage([
+                'uid' => 5,
+            ], 'Page title', '<icon/>')
+        );
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function drawURLsAddRowsForPageMarksExcludedPages(): void
+    {
+        $crawlerController = $this->createControllerForRows([
+            'default' => $this->getConfiguration('default', [
+                'exclude' => '3,5',
+            ]),
+        ]);
+
+        $expected = new QueueRow('Page title');
+        $expected->setPageTitleHTML('<icon/>');
+        $expected->setConfigurationKey('default');
+        $expected->setMessage('(Page is excluded in this configuration)');
+
+        self::assertEquals(
+            [$expected],
+            $crawlerController->drawURLs_addRowsForPage([
+                'uid' => 5,
+            ], 'Page title', '<icon/>')
+        );
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function drawURLsAddRowsForPageAddsOneRowPerConfiguration(): void
+    {
+        $procInstrParams = [
+            'tx_indexedsearch_reindex.' => [
+                'mode' => 'full',
+            ],
+        ];
+        $crawlerController = $this->createControllerForRows([
+            'default' => $this->getConfiguration('default', [
+                'userGroups' => '1,2',
+                'procInstrFilter' => 'tx_indexedsearch_reindex',
+                'procInstrParams.' => $procInstrParams,
+            ], [
+                'L' => ['0', '1'],
+                'tx_news[news]' => ['<b>'],
+            ], [
+                'L' => '[0|1]',
+            ]),
+            'news' => $this->getConfiguration('news'),
+        ]);
+
+        $default = new QueueRow('Page title');
+        $default->setPageTitleHTML('<icon/>');
+        $default->setConfigurationKey('default');
+        $default->setUrls('URLs of default');
+        $default->setOptions(['User Groups: 1,2', 'ProcInstr: tx_indexedsearch_reindex']);
+        $default->setParameters(DebugUtility::viewArray($procInstrParams));
+        $default->setParameterConfig('&amp;L=[0|1]');
+        $default->setValuesExpanded(
+            '<table>' . $this->getExpandedParameterRow('&amp;L=', 2, '0<br />' . chr(10) . '1')
+            . $this->getExpandedParameterRow('&amp;tx_news[news]=', 1, '&lt;b&gt;')
+            . '</table>Comb: 2*1=2'
+        );
+
+        $news = new QueueRow();
+        $news->setPageTitleHTML('<icon/>');
+        $news->setConfigurationKey('news');
+        $news->setUrls('URLs of news');
+        $news->setParameters(DebugUtility::viewArray([]));
+        $news->setValuesExpanded('Comb: =1');
+
+        self::assertEquals(
+            [$default, $news],
+            $crawlerController->drawURLs_addRowsForPage([
+                'uid' => 5,
+            ], 'Page title', '<icon/>')
+        );
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function drawURLsAddRowsForPageOnlyShowsSelectedConfigurations(): void
+    {
+        $crawlerController = $this->createControllerForRows([
+            'default' => $this->getConfiguration('default'),
+            'news' => $this->getConfiguration('news'),
+        ]);
+        $crawlerController->incomingConfigurationSelection = ['news'];
+
+        $rows = $crawlerController->drawURLs_addRowsForPage([
+            'uid' => 5,
+        ], 'Page title');
+
+        self::assertCount(1, $rows);
+        self::assertSame('news', $rows[0]->configurationKey);
+        self::assertSame('Page title', $rows[0]->pageTitle);
+    }
+
+    private function createControllerForRows(
+        array $configurations,
+        string|false $skipMessage = false
+    ): CrawlerController&MockObject {
+        $pageService = $this->createPartialMock(PageService::class, ['checkIfPageShouldBeSkipped']);
+        $pageService->method('checkIfPageShouldBeSkipped')->willReturn($skipMessage);
+
+        $configurationService = $this->createMock(ConfigurationService::class);
+        $configurationService->method('expandExcludeString')->willReturnCallback(
+            static fn (string $exclude): array => array_map(
+                intval(...),
+                GeneralUtility::intExplode(',', $exclude, true)
+            )
+        );
+
+        $crawlerController = $this->createPartialMock(
+            CrawlerController::class,
+            ['getPageService', 'getUrlsForPageId', 'urlListFromUrlArray']
+        );
+        $crawlerController->method('getPageService')->willReturn($pageService);
+        $crawlerController->method('getUrlsForPageId')->willReturn($configurations);
+        $crawlerController->method('urlListFromUrlArray')->willReturnCallback(
+            static fn (array $configuration): string => 'URLs of ' . $configuration['subCfg']['key']
+        );
+        (new \ReflectionProperty(CrawlerController::class, 'configurationService'))
+            ->setValue($crawlerController, $configurationService);
+
+        return $crawlerController;
+    }
+
+    private function getConfiguration(
+        string $key,
+        array $subConfiguration = [],
+        array $paramExpanded = [],
+        array $paramParsed = []
+    ): array {
+        return [
+            'subCfg' => [
+                'key' => $key,
+                ...$subConfiguration,
+            ],
+            'paramParsed' => $paramParsed,
+            'paramExpanded' => $paramExpanded,
+            'URLs' => [],
+        ];
+    }
+
+    private function getExpandedParameterRow(string $parameter, int $count, string $values): string
+    {
+        return '
+                            <tr>
+                                <td>' . $parameter . '<br/>(' . $count . ')</td>
+                                <td nowrap="nowrap">' . $values . '</td>
+                            </tr>
+                        ';
     }
 }
