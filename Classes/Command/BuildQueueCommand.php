@@ -20,13 +20,13 @@ namespace AOE\Crawler\Command;
  */
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
-use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\InvokeQueueChangeEvent;
 use AOE\Crawler\Queue\Handler\CrawlUrlHandler;
 use AOE\Crawler\Queue\Message\CrawlUrlMessage;
 use AOE\Crawler\Queue\QueueEntryWriter;
+use AOE\Crawler\Service\PageTreeUrlCollector;
 use AOE\Crawler\Utility\MessageUtility;
 use AOE\Crawler\Value\QueueRow;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -51,7 +51,7 @@ class BuildQueueCommand extends Command
         private readonly EventDispatcher $eventDispatcher,
         private readonly QueueRepository $queueRepository,
         private readonly PageRepository $pageRepository,
-        private readonly CrawlerController $crawlerController,
+        private readonly PageTreeUrlCollector $pageTreeUrlCollector,
         private readonly QueueEntryWriter $queueEntryWriter,
         private readonly CrawlUrlHandler $crawlUrlHandler,
     ) {
@@ -163,7 +163,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
 
         match ($mode) {
             'url' => $output->writeln(
-                '<info>' . implode(PHP_EOL, $this->crawlerController->downloadUrls) . PHP_EOL . '</info>'
+                '<info>' . implode(PHP_EOL, $this->pageTreeUrlCollector->downloadUrls) . PHP_EOL . '</info>'
             ),
             'exec' => $this->outputModeExec($output, $queueRows),
             'queue' => $this->outputModeQueue($output, $queueRows),
@@ -266,7 +266,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
 
     private function getQueueRows(int $pageId, InputInterface $input, mixed $mode, array $configurationKeys): array
     {
-        return $this->crawlerController->getPageTreeAndUrls(
+        return $this->pageTreeUrlCollector->collect(
             $pageId,
             MathUtility::forceIntegerInRange((int) $input->getOption('depth'), 0, 99),
             $this->queueEntryWriter->getCurrentTime(),
