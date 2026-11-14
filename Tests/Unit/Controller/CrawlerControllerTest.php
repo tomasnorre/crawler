@@ -19,11 +19,21 @@ namespace AOE\Crawler\Tests\Unit\Controller;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Controller\CrawlerController;
+use AOE\Crawler\Domain\Repository\ConfigurationRepository;
+use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Queue\CrawlUrlMessageDispatcher;
 use AOE\Crawler\Service\ConfigurationService;
 use AOE\Crawler\Service\PageService;
+use AOE\Crawler\Service\ProcessInstructionService;
+use AOE\Crawler\Service\UrlService;
 use AOE\Crawler\Value\QueueRow;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
@@ -96,9 +106,7 @@ class CrawlerControllerTest extends UnitTestCase
             $mockedPageService->method('checkIfPageShouldBeSkipped')->willReturn($checkIfPageSkipped);
         }
 
-        /** @var MockObject|CrawlerController $crawlerController */
-        $crawlerController = $this->createPartialMock(CrawlerController::class, ['getPageService', 'getUrlsForPageId']);
-        $crawlerController->method('getPageService')->willReturn($mockedPageService);
+        $crawlerController = $this->createCrawlerController(['getUrlsForPageId'], $mockedPageService);
         $crawlerController->method('getUrlsForPageId')->willReturn($getUrlsForPages);
 
         self::assertEquals($expected, $crawlerController->getUrlsForPageRow($pageRow, $skipMessage));
@@ -392,19 +400,45 @@ class CrawlerControllerTest extends UnitTestCase
             )
         );
 
-        $crawlerController = $this->createPartialMock(
-            CrawlerController::class,
-            ['getPageService', 'getUrlsForPageId', 'urlListFromUrlArray']
+        $crawlerController = $this->createCrawlerController(
+            ['getUrlsForPageId', 'urlListFromUrlArray'],
+            $pageService,
+            $configurationService
         );
-        $crawlerController->method('getPageService')->willReturn($pageService);
         $crawlerController->method('getUrlsForPageId')->willReturn($configurations);
         $crawlerController->method('urlListFromUrlArray')->willReturnCallback(
             static fn (array $configuration): string => 'URLs of ' . $configuration['subCfg']['key']
         );
-        (new \ReflectionProperty(CrawlerController::class, 'configurationService'))
-            ->setValue($crawlerController, $configurationService);
 
         return $crawlerController;
+    }
+
+    /**
+     * @param list<non-empty-string> $mockedMethods
+     */
+    private function createCrawlerController(
+        array $mockedMethods,
+        PageService $pageService,
+        ?ConfigurationService $configurationService = null
+    ): CrawlerController&MockObject {
+        return $this->getMockBuilder(CrawlerController::class)
+            ->setConstructorArgs([
+                $this->createStub(QueueRepository::class),
+                $this->createStub(ConfigurationRepository::class),
+                $this->createStub(PageRepository::class),
+                $this->createStub(EventDispatcherInterface::class),
+                $this->createStub(IconFactory::class),
+                $configurationService ?? $this->createStub(ConfigurationService::class),
+                $this->createStub(UrlService::class),
+                $pageService,
+                new ProcessInstructionService(),
+                new CrawlUrlMessageDispatcher($this->createStub(MessageBusInterface::class)),
+                $this->createConfiguredStub(ExtensionConfigurationProvider::class, [
+                    'getExtensionConfiguration' => [],
+                ]),
+            ])
+            ->onlyMethods($mockedMethods)
+            ->getMock();
     }
 
     private function getConfiguration(

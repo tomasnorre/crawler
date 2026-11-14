@@ -11,6 +11,7 @@
 * Re-crawling from the Crawler log dispatches a message instead of crawling within the request
 * Translations are delivered as language packs by the TYPO3 translation server, fetch them with `typo3 language:update` or in "Manage Language Packs", otherwise labels are shown in English
 * The hook `$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/class.tx_crawler_lib.php']['expandParameters']` receives `AOE\Crawler\Service\ParameterExpander` as `pObj` instead of `AOE\Crawler\Service\ConfigurationService`
+* `CrawlerController` gets its services by constructor injection, create it with the dependency injection container
 
 ### Fixed
 * Export every log entry in the crawler log CSV
@@ -63,6 +64,8 @@
 * `CrawlerController::$maximumUrlsToCompile`
 * `CrawlerController::setExtensionSettings()`
 * `CrawlerController` no longer implements `LoggerAwareInterface`, it never logged anything
+* `CrawlerController::injectCrawlUrlMessageDispatcher()`
+* `CrawlerController::getPageService()`
 * `QueueRepository`: all process related methods, `getUnprocessedItems()`, `countAllPendingItems()`, `countAllAssignedPendingItems()`, `cleanupQueue()`, `fetchRecordsToBeCrawled()`
 
 ## Crawler 13.0.1

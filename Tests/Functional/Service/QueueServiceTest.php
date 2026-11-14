@@ -19,11 +19,10 @@ namespace AOE\Crawler\Tests\Functional\Service;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Repository\QueueRepository;
-use AOE\Crawler\Queue\CrawlUrlMessageDispatcher;
 use AOE\Crawler\Queue\Message\CrawlUrlMessage;
 use AOE\Crawler\Service\QueueService;
+use AOE\Crawler\Tests\Functional\CrawlerControllerTestTrait;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -32,6 +31,8 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 class QueueServiceTest extends FunctionalTestCase
 {
+    use CrawlerControllerTestTrait;
+
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     /**
@@ -50,15 +51,14 @@ class QueueServiceTest extends FunctionalTestCase
 
         $this->setupExtensionSettings();
 
-        $crawlerController = $this->getAccessibleMock(CrawlerController::class, ['getCurrentTime'], [], '');
-        $crawlerController->method('getCurrentTime')->willReturn(100000);
-
         $messageBus = $this->createStub(MessageBusInterface::class);
         $messageBus->method('dispatch')->willReturnCallback(function (object $message): Envelope {
             $this->dispatchedMessages[] = $message;
             return new Envelope($message);
         });
-        $crawlerController->injectCrawlUrlMessageDispatcher(new CrawlUrlMessageDispatcher($messageBus));
+
+        $crawlerController = $this->createCrawlerController($messageBus, ['getCurrentTime']);
+        $crawlerController->method('getCurrentTime')->willReturn(100000);
 
         $this->subject = GeneralUtility::makeInstance(QueueService::class, $crawlerController);
     }

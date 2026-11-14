@@ -56,9 +56,7 @@
   </file>
   <file src="Classes/Controller/CrawlerController.php">
     <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
       <code><![CDATA[getConfigurationsForBranch]]></code>
-      <code><![CDATA[injectCrawlUrlMessageDispatcher]]></code>
     </PossiblyUnusedMethod>
     <PossiblyUnusedProperty>
       <code><![CDATA[$configurationRepository]]></code>
@@ -188,24 +186,8 @@
       <code><![CDATA[FrontendUserAuthenticator]]></code>
     </UnusedClass>
   </file>
-  <file src="Classes/Queue/CrawlUrlMessageDispatcher.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-  </file>
-  <file src="Classes/Queue/Handler/CrawlUrlHandler.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-  </file>
-  <file src="Classes/QueueExecutor.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-  </file>
   <file src="Classes/Service/BackendModuleLogService.php">
     <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
       <code><![CDATA[addRows]]></code>
       <code><![CDATA[configureContentArray]]></code>
     </PossiblyUnusedMethod>
@@ -233,9 +215,6 @@
     </UnusedMethod>
   </file>
   <file src="Classes/Service/ConfigurationService.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
     <UnusedForeachValue>
       <code><![CDATA[$confArray]]></code>
     </UnusedForeachValue>
