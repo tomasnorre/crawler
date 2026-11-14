@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Tests\Unit\Controller;
+namespace AOE\Crawler\Tests\Unit\Service;
 
 /*
  * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
@@ -19,10 +19,10 @@ namespace AOE\Crawler\Tests\Unit\Controller;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Queue\QueueEntryWriter;
 use AOE\Crawler\Service\ConfigurationService;
 use AOE\Crawler\Service\PageConfigurationResolver;
+use AOE\Crawler\Service\PageTreeUrlCollector;
 use AOE\Crawler\Value\QueueRow;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Imaging\IconFactory;
@@ -33,8 +33,8 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 /**
  * @package AOE\Crawler\Tests
  */
-#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Controller\CrawlerController::class)]
-class CrawlerControllerTest extends UnitTestCase
+#[\PHPUnit\Framework\Attributes\CoversClass(PageTreeUrlCollector::class)]
+final class PageTreeUrlCollectorTest extends UnitTestCase
 {
     protected bool $resetSingletonInstances = true;
 
@@ -59,37 +59,10 @@ class CrawlerControllerTest extends UnitTestCase
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = $configuration;
     }
 
-    public function getConfigurationKeysDataProvider(): iterable
-    {
-        yield 'cliObject with no -conf' => [
-            'config' => [
-                '-d' => 4,
-                '-o' => 'url',
-            ],
-            'expected' => [],
-        ];
-        yield 'cliObject with one -conf' => [
-            'config' => [
-                '-d' => 4,
-                '-o' => 'url',
-                '-conf' => 'default',
-            ],
-            'expected' => ['default'],
-        ];
-        yield 'cliObject with two -conf' => [
-            'config' => [
-                '-d' => 4,
-                '-o' => 'url',
-                '-conf' => 'default,news',
-            ],
-            'expected' => ['default', 'news'],
-        ];
-    }
-
     #[\PHPUnit\Framework\Attributes\Test]
-    public function drawURLsAddRowsForPageShowsSkipMessageWhenPageHasNoConfigurations(): void
+    public function getQueueRowsForPageShowsSkipMessageWhenPageHasNoConfigurations(): void
     {
-        $crawlerController = $this->createControllerForRows([], 'Because page is hidden');
+        $pageTreeUrlCollector = $this->createCollectorForRows([], 'Because page is hidden');
 
         $expected = new QueueRow('Page title');
         $expected->setPageTitleHTML('<icon/>');
@@ -97,32 +70,32 @@ class CrawlerControllerTest extends UnitTestCase
 
         self::assertEquals(
             [$expected],
-            $crawlerController->drawURLs_addRowsForPage([
+            $pageTreeUrlCollector->getQueueRowsForPage([
                 'uid' => 5,
             ], 'Page title', '<icon/>')
         );
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
-    public function drawURLsAddRowsForPageShowsEmptyMessageWhenPageHasNoConfigurationsAndIsNotSkipped(): void
+    public function getQueueRowsForPageShowsEmptyMessageWhenPageHasNoConfigurationsAndIsNotSkipped(): void
     {
-        $crawlerController = $this->createControllerForRows([]);
+        $pageTreeUrlCollector = $this->createCollectorForRows([]);
 
         $expected = new QueueRow('Page title');
         $expected->setPageTitleHTML('<icon/>');
 
         self::assertEquals(
             [$expected],
-            $crawlerController->drawURLs_addRowsForPage([
+            $pageTreeUrlCollector->getQueueRowsForPage([
                 'uid' => 5,
             ], 'Page title', '<icon/>')
         );
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
-    public function drawURLsAddRowsForPageMarksExcludedPages(): void
+    public function getQueueRowsForPageMarksExcludedPages(): void
     {
-        $crawlerController = $this->createControllerForRows([
+        $pageTreeUrlCollector = $this->createCollectorForRows([
             'default' => $this->getConfiguration('default', [
                 'exclude' => '3,5',
             ]),
@@ -135,21 +108,21 @@ class CrawlerControllerTest extends UnitTestCase
 
         self::assertEquals(
             [$expected],
-            $crawlerController->drawURLs_addRowsForPage([
+            $pageTreeUrlCollector->getQueueRowsForPage([
                 'uid' => 5,
             ], 'Page title', '<icon/>')
         );
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
-    public function drawURLsAddRowsForPageAddsOneRowPerConfiguration(): void
+    public function getQueueRowsForPageAddsOneRowPerConfiguration(): void
     {
         $procInstrParams = [
             'tx_indexedsearch_reindex.' => [
                 'mode' => 'full',
             ],
         ];
-        $crawlerController = $this->createControllerForRows([
+        $pageTreeUrlCollector = $this->createCollectorForRows([
             'default' => $this->getConfiguration('default', [
                 'userGroups' => '1,2',
                 'procInstrFilter' => 'tx_indexedsearch_reindex',
@@ -185,22 +158,22 @@ class CrawlerControllerTest extends UnitTestCase
 
         self::assertEquals(
             [$default, $news],
-            $crawlerController->drawURLs_addRowsForPage([
+            $pageTreeUrlCollector->getQueueRowsForPage([
                 'uid' => 5,
             ], 'Page title', '<icon/>')
         );
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
-    public function drawURLsAddRowsForPageOnlyShowsSelectedConfigurations(): void
+    public function getQueueRowsForPageOnlyShowsSelectedConfigurations(): void
     {
-        $crawlerController = $this->createControllerForRows([
+        $pageTreeUrlCollector = $this->createCollectorForRows([
             'default' => $this->getConfiguration('default'),
             'news' => $this->getConfiguration('news'),
         ]);
-        $crawlerController->incomingConfigurationSelection = ['news'];
+        $pageTreeUrlCollector->incomingConfigurationSelection = ['news'];
 
-        $rows = $crawlerController->drawURLs_addRowsForPage([
+        $rows = $pageTreeUrlCollector->getQueueRowsForPage([
             'uid' => 5,
         ], 'Page title');
 
@@ -209,10 +182,34 @@ class CrawlerControllerTest extends UnitTestCase
         self::assertSame('Page title', $rows[0]->pageTitle);
     }
 
-    private function createControllerForRows(
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function getQueueRowsForPageResolvesConfigurationsWithMountPoint(): void
+    {
+        $pageConfigurationResolver = $this->createMock(PageConfigurationResolver::class);
+        $pageConfigurationResolver->expects(self::once())
+            ->method('getConfigurationsForPageRow')
+            ->with([
+                'uid' => 5,
+            ], self::anything(), '3-7')
+            ->willReturn([]);
+
+        $pageTreeUrlCollector = new PageTreeUrlCollector(
+            $this->createStub(PageRepository::class),
+            $this->createStub(IconFactory::class),
+            $this->createStub(ConfigurationService::class),
+            $pageConfigurationResolver,
+            $this->createStub(QueueEntryWriter::class),
+        );
+
+        $pageTreeUrlCollector->getQueueRowsForPage([
+            'uid' => 5,
+        ], 'Page title', '', '3-7');
+    }
+
+    private function createCollectorForRows(
         array $configurations,
         string|false $skipMessage = false
-    ): CrawlerController {
+    ): PageTreeUrlCollector {
         $pageConfigurationResolver = $this->createStub(PageConfigurationResolver::class);
         $pageConfigurationResolver->method('getConfigurationsForPageRow')->willReturnCallback(
             static function (array $pageRow, string &$pageSkipMessage) use ($configurations, $skipMessage): array {
@@ -234,7 +231,7 @@ class CrawlerControllerTest extends UnitTestCase
             static fn (array $configuration): string => 'URLs of ' . $configuration['subCfg']['key']
         );
 
-        return new CrawlerController(
+        return new PageTreeUrlCollector(
             $this->createStub(PageRepository::class),
             $this->createStub(IconFactory::class),
             $configurationService,

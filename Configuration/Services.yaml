@@ -58,7 +58,6 @@ services:
             $eventDispatcher: '@TYPO3\CMS\Core\EventDispatcher\EventDispatcher'
             $queueRepository: '@AOE\Crawler\Domain\Repository\QueueRepository'
             $pageRepository: '@TYPO3\CMS\Core\Domain\Repository\PageRepository'
-            $crawlerController: '@AOE\Crawler\Controller\CrawlerController'
         public: true
 
     AOE\Crawler\Command\FlushQueueCommand:

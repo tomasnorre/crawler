@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Controller;
+namespace AOE\Crawler\Service;
 
 /*
  * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>
@@ -20,8 +20,6 @@ namespace AOE\Crawler\Controller;
  */
 
 use AOE\Crawler\Queue\QueueEntryWriter;
-use AOE\Crawler\Service\ConfigurationService;
-use AOE\Crawler\Service\PageConfigurationResolver;
 use AOE\Crawler\Value\QueueRow;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -35,20 +33,18 @@ use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * @package AOE\Crawler\Controller
- * @internal since v12.0.0
+ * Walks the page tree and collects the URLs of the crawler configurations of each page,
+ * as rows for display in the backend module and the CLI. Depending on the options,
+ * the URLs are added to the queue or collected for download.
+ *
+ * @internal
  */
-class CrawlerController
+final class PageTreeUrlCollector
 {
     public array $duplicateTrack = [];
     public array $downloadUrls = [];
     public array $incomingProcInstructions = [];
     public array $incomingConfigurationSelection = [];
-
-    /**
-     * Mount Point
-     */
-    public ?string $MP = null;
 
     /**
      * @var BackendUserAuthentication|null
@@ -61,7 +57,7 @@ class CrawlerController
 
     public function __construct(
         private readonly PageRepository $pageRepository,
-        protected readonly IconFactory $iconFactory,
+        private readonly IconFactory $iconFactory,
         private readonly ConfigurationService $configurationService,
         private readonly PageConfigurationResolver $pageConfigurationResolver,
         private readonly QueueEntryWriter $queueEntryWriter,
@@ -69,28 +65,28 @@ class CrawlerController
     }
 
     /**
-     * This draws the pageTree with URLs for e.g the Backend Log Module
+     * Returns the rows of the page tree with their URLs, fx. for the backend module
      *
-     * @param integer $id Root page id to start from.
-     * @param integer $depth Depth of tree, 0=only id-page, 1= on sublevel, 99 = infinite
-     * @param integer $scheduledTime Unix Time when the URL is timed to be visited when put in queue
-     * @param integer $reqMinute Number of requests per minute (creates the interleave between requests)
-     * @param boolean $submitCrawlUrls If set, submits the URLs to queue in database (real crawling)
-     * @param boolean $downloadCrawlUrls If set (and submitcrawlUrls is false) will fill $downloadUrls with entries)
-     * @param array $incomingProcInstructions Array of processing instructions
-     * @param array $configurationSelection Array of configuration keys
-     * @return array
+     * @param int $id Root page id to start from
+     * @param int $depth Depth of tree, 0 = only the root page, 1 = one sublevel, 99 = infinite
+     * @param int $scheduledTime Unix time when the URLs are timed to be visited when put in queue
+     * @param int $reqMinute Number of requests per minute (creates the interleave between requests)
+     * @param bool $submitCrawlUrls If set, submits the URLs to the queue (real crawling)
+     * @param bool $downloadCrawlUrls If set (and $submitCrawlUrls is not), fills $downloadUrls with the URLs
+     * @param array $incomingProcInstructions Processing instructions, if empty the URLs are not filtered by them
+     * @param array $configurationSelection Configuration keys, if empty all configurations are used
+     * @return list<QueueRow>
      */
-    public function getPageTreeAndUrls(
-        $id,
-        $depth,
-        $scheduledTime,
-        $reqMinute,
-        $submitCrawlUrls,
-        $downloadCrawlUrls,
+    public function collect(
+        int $id,
+        int $depth,
+        int $scheduledTime,
+        int $reqMinute,
+        bool $submitCrawlUrls,
+        bool $downloadCrawlUrls,
         array $incomingProcInstructions,
         array $configurationSelection
-    ) {
+    ): array {
         $this->scheduledTime = $scheduledTime;
         $this->reqMinute = $reqMinute;
         $this->submitCrawlUrls = $submitCrawlUrls;
@@ -124,24 +120,25 @@ class CrawlerController
 
         // Traverse page tree:
         foreach ($tree->tree as $data) {
-            $this->MP = null;
+            $mountPoint = '';
 
             // recognize mount points
             if ($data['row']['doktype'] === PageRepository::DOKTYPE_MOUNTPOINT) {
                 $mountpage = $this->pageRepository->getPage($data['row']['uid']);
 
                 // fetch mounted pages
-                $this->MP = $mountpage['mount_pid'] . '-' . $data['row']['uid'];
+                $mountPoint = $mountpage['mount_pid'] . '-' . $data['row']['uid'];
 
                 $mountTree = GeneralUtility::makeInstance(PageTreeView::class);
                 $mountTree->init(empty($perms_clause) ? '' : ('AND ' . $perms_clause));
                 $mountTree->getTree($mountpage['mount_pid'], $depth);
 
                 foreach ($mountTree->tree as $mountData) {
-                    $queueRows = array_merge($queueRows, $this->drawURLs_addRowsForPage(
+                    $queueRows = array_merge($queueRows, $this->getQueueRowsForPage(
                         $mountData['row'],
                         BackendUtility::getRecordTitle('pages', $mountData['row'], true),
-                        (string) $data['HTML']
+                        (string) $data['HTML'],
+                        $mountPoint
                     ));
                 }
 
@@ -149,15 +146,16 @@ class CrawlerController
                 if ($mountpage['mount_pid_ol']) {
                     $data['row']['uid'] = $mountpage['mount_pid'];
                 } else {
-                    // if the mount_pid_ol is not set the MP must not be used for the mountpoint page
-                    $this->MP = null;
+                    // if the mount_pid_ol is not set the mount point must not be used for the mountpoint page
+                    $mountPoint = '';
                 }
             }
 
-            $queueRows = array_merge($queueRows, $this->drawURLs_addRowsForPage(
+            $queueRows = array_merge($queueRows, $this->getQueueRowsForPage(
                 $data['row'],
                 BackendUtility::getRecordTitle('pages', $data['row'], true),
-                (string) $data['HTML']
+                (string) $data['HTML'],
+                $mountPoint
             ));
         }
 
@@ -165,17 +163,21 @@ class CrawlerController
     }
 
     /**
-     * Create the rows for display of the page tree
-     * For each page a number of rows are shown displaying GET variable configuration
+     * Returns the rows of a page, one per configuration showing its URLs and parameters
      *
+     * @param string $mountPoint The mount point the page is shown in, fx. "3-7", or empty
      * @return list<QueueRow>
      */
-    public function drawURLs_addRowsForPage(array $pageRow, string $pageTitle, string $pageTitleHTML = ''): array
-    {
+    public function getQueueRowsForPage(
+        array $pageRow,
+        string $pageTitle,
+        string $pageTitleHTML = '',
+        string $mountPoint = ''
+    ): array {
         $skipMessage = '';
         $configurations = ConfigurationService::removeDisallowedConfigurations(
             $this->incomingConfigurationSelection,
-            $this->pageConfigurationResolver->getConfigurationsForPageRow($pageRow, $skipMessage, $this->MP ?? '')
+            $this->pageConfigurationResolver->getConfigurationsForPageRow($pageRow, $skipMessage, $mountPoint)
         );
 
         if ($configurations === []) {
