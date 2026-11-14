@@ -26,4 +26,5 @@ jobs:
           with:
             php-version: 8.2
             coverage: none
+      -   run: composer install --no-progress
       -   run: php .github/scripts/composer-require-check.php

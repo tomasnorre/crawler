@@ -1,53 +1,58 @@
 <?php
 
 /*
- * Non-Composer (classic mode) installations get the libraries of the extension from
- * Resources/Private/Php/Libraries/vendor, which `composer extension-create-libs` builds from
- * Resources/Private/Php/Libraries/composer.json. TYPO3 only loads that vendor folder for the
- * packages listed in extra.typo3/cms.Package.providesPackages of composer.json.
+ * Non-Composer (classic mode) installations only have the packages TYPO3 ships itself, and the ones an
+ * extension provides in extra.typo3/cms.Package.providesPackages of its composer.json.
  *
- * Every library in "require" of composer.json (except PHP, ext-* and typo3/cms-*) therefore has to be
- * - in Resources/Private/Php/Libraries/composer.json with the same version constraint, and
- * - in providesPackages, pointing to Resources/Private/Php/Libraries/vendor.
+ * Every library in "require" of composer.json (except PHP and ext-*) therefore has to be
+ * - a dependency of the typo3/cms-* packages the extension requires, or
+ * - listed in providesPackages.
+ *
+ * Needs `composer install` first, it reads the installed packages from .Build/vendor.
  */
 
 $exitCode = 0;
-$librariesVendor = 'Resources/Private/Php/Libraries/vendor';
 
-$mainComposerJson = __DIR__ . '/../../composer.json';
-$libsComposerJson = __DIR__ . '/../../Resources/Private/Php/Libraries/composer.json';
+$composerJson = json_decode(file_get_contents(__DIR__ . '/../../composer.json'), true);
+$installedJsonPath = __DIR__ . '/../../.Build/vendor/composer/installed.json';
+if (!is_file($installedJsonPath)) {
+    echo "$installedJsonPath not found, run composer install first" . chr(10);
+    exit(1);
+}
+$installedJson = json_decode(file_get_contents($installedJsonPath), true);
 
-$mainRequirements = json_decode(file_get_contents($mainComposerJson), true);
-$libsRequirements = json_decode(file_get_contents($libsComposerJson), true);
-$providesPackages = $mainRequirements['extra']['typo3/cms']['Package']['providesPackages'] ?? [];
+$installedPackages = [];
+foreach ($installedJson['packages'] ?? $installedJson as $package) {
+    $installedPackages[$package['name']] = $package;
+}
 
-foreach ($mainRequirements['require'] as $package => $version) {
+$requirements = array_keys($composerJson['require']);
+$providesPackages = $composerJson['extra']['typo3/cms']['Package']['providesPackages'] ?? [];
 
-    if (
-        $package === 'php'
-        || false !== strpos($package, 'ext-')
-        || false !== strpos($package, 'typo3/cms')
-        || false !== strpos($package, 'cweagans/composer-patches')
-    ) {
+// Everything the required TYPO3 packages pull in is shipped by TYPO3 in classic mode
+$shippedByTypo3 = [];
+$queue = array_values(array_filter($requirements, static fn(string $package): bool => str_starts_with($package, 'typo3/cms-')));
+while ($queue !== []) {
+    $package = array_shift($queue);
+    if (isset($shippedByTypo3[$package])) {
         continue;
     }
-
-    if (!array_key_exists($package, $libsRequirements['require'])
-        || $libsRequirements['require'][$package] !== $version
-    ) {
-        echo "$package:$version is missing in Resources/Private/Php/Libraries/composer.json" . chr(10);
-        $exitCode = 1;
+    $shippedByTypo3[$package] = true;
+    foreach (array_keys($installedPackages[$package]['require'] ?? []) as $dependency) {
+        $queue[] = $dependency;
     }
-
-    if (($providesPackages[$package] ?? null) !== $librariesVendor) {
-        echo "$package is missing in extra.typo3/cms.Package.providesPackages of composer.json (\"$librariesVendor\")" . chr(10);
-        $exitCode = 1;
+    foreach (array_keys($installedPackages[$package]['provide'] ?? []) as $provided) {
+        $shippedByTypo3[$provided] = true;
     }
 }
 
-foreach (array_keys($libsRequirements['require']) as $package) {
-    if (($providesPackages[$package] ?? null) !== $librariesVendor) {
-        echo "$package of Resources/Private/Php/Libraries/composer.json is missing in extra.typo3/cms.Package.providesPackages of composer.json (\"$librariesVendor\")" . chr(10);
+foreach ($requirements as $package) {
+    if ($package === 'php' || str_starts_with($package, 'ext-')) {
+        continue;
+    }
+    if (!isset($shippedByTypo3[$package]) && !array_key_exists($package, $providesPackages)) {
+        echo "$package is neither shipped by TYPO3 nor listed in extra.typo3/cms.Package.providesPackages of composer.json, "
+            . 'non-Composer installations would miss it' . chr(10);
         $exitCode = 1;
     }
 }
