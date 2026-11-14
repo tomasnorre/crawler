@@ -60,7 +60,7 @@ class QueueServiceTest extends FunctionalTestCase
         $crawlerController = $this->createCrawlerController($messageBus, ['getCurrentTime']);
         $crawlerController->method('getCurrentTime')->willReturn(100000);
 
-        $this->subject = GeneralUtility::makeInstance(QueueService::class, $crawlerController);
+        $this->subject = new QueueService($crawlerController, $this->createPageConfigurationResolver());
     }
 
     /**

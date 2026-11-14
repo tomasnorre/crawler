@@ -29,7 +29,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class QueueService
 {
     public function __construct(
-        private readonly CrawlerController $crawlerController
+        private readonly CrawlerController $crawlerController,
+        private readonly PageConfigurationResolver $pageConfigurationResolver,
     ) {
         if ($this->crawlerController->setID <= 0) {
             $this->crawlerController->setID = GeneralUtility::md5int(microtime());
@@ -39,7 +40,7 @@ class QueueService
     public function addPageToQueue(int $pageUid, int $time = 0): void
     {
         $pageData = GeneralUtility::makeInstance(PageRepository::class)->getPage($pageUid, true);
-        $configurations = $this->crawlerController->getUrlsForPageRow($pageData);
+        $configurations = $this->pageConfigurationResolver->getConfigurationsForPageRow($pageData);
         // Currently this is only used from the DataHandlerHook, and we don't know of any allowed/disallowed configurations,
         // when clearing the cache, therefore we allow all configurations in this case.
         // This next lines could be skipped as it will return the incoming configurations, but for visibility and

@@ -21,11 +21,10 @@ namespace AOE\Crawler\Tests\Unit\Controller;
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Controller\CrawlerController;
-use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Queue\CrawlUrlMessageDispatcher;
 use AOE\Crawler\Service\ConfigurationService;
-use AOE\Crawler\Service\PageService;
+use AOE\Crawler\Service\PageConfigurationResolver;
 use AOE\Crawler\Service\ProcessInstructionService;
 use AOE\Crawler\Service\UrlService;
 use AOE\Crawler\Value\QueueRow;
@@ -44,11 +43,6 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 #[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Controller\CrawlerController::class)]
 class CrawlerControllerTest extends UnitTestCase
 {
-    /**
-     * @var CrawlerController
-     */
-    protected $crawlerController;
-
     protected bool $resetSingletonInstances = true;
 
     /**
@@ -56,7 +50,7 @@ class CrawlerControllerTest extends UnitTestCase
      */
     protected function setUp(): void
     {
-        $this->crawlerController = $this->createPartialMock(CrawlerController::class, []);
+        parent::setUp();
 
         $configuration = [
             'maxCompileUrls' => '10000',
@@ -70,46 +64,6 @@ class CrawlerControllerTest extends UnitTestCase
             'cleanUpScheduledAge' => '7',
         ];
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = $configuration;
-    }
-
-    /**
-     * Resets the test environment after the test.
-     */
-    protected function tearDown(): void
-    {
-        unset($this->crawlerController);
-    }
-
-    #[\PHPUnit\Framework\Attributes\Test]
-    public function getUrlsForPageRowSetsSkipMessageIfUidNotAnInteger(): void
-    {
-        $skipMessage = '';
-        $this->crawlerController->getUrlsForPageRow([
-            'uid' => 'string',
-        ], $skipMessage);
-        self::assertEquals('PageUid "string" was not an integer', $skipMessage);
-    }
-
-    #[\PHPUnit\Framework\Attributes\DataProvider('getUrlsForPageRowDataProvider')]
-    #[\PHPUnit\Framework\Attributes\Test]
-    public function getUrlsForPageRow(
-        bool $checkIfPageSkipped,
-        array $getUrlsForPages,
-        array $pageRow,
-        string $skipMessage,
-        array $expected
-    ): void {
-        $mockedPageService = $this->createPartialMock(PageService::class, ['checkIfPageShouldBeSkipped']);
-        if ($checkIfPageSkipped) {
-            $mockedPageService->method('checkIfPageShouldBeSkipped')->willReturn($skipMessage);
-        } else {
-            $mockedPageService->method('checkIfPageShouldBeSkipped')->willReturn($checkIfPageSkipped);
-        }
-
-        $crawlerController = $this->createCrawlerController(['getUrlsForPageId'], $mockedPageService);
-        $crawlerController->method('getUrlsForPageId')->willReturn($getUrlsForPages);
-
-        self::assertEquals($expected, $crawlerController->getUrlsForPageRow($pageRow, $skipMessage));
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
@@ -133,53 +87,6 @@ class CrawlerControllerTest extends UnitTestCase
         unset($configuration['paramExpanded'], $configuration['URLs']);
         $newCheckSum = md5(serialize($configuration));
         self::assertEquals($newCheckSum, $crawlerController->_call('getConfigurationHash', $configuration));
-    }
-
-    public static function getUrlsForPageRowDataProvider(): iterable
-    {
-        yield 'Message equals false, returns Urls from getUrlsForPages()' => [
-            'checkIfPageSkipped' => false,
-            'getUrlsForPages' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
-            'pageRow' => [
-                'uid' => 2001,
-            ],
-            'skipMessage' => 'Just variable placeholder, not used in tests as parsed as reference',
-            'expected' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
-        ];
-        yield 'Message string not empty, returns empty array' => [
-            'checkIfPageSkipped' => true,
-            'getUrlsForPages' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
-            'pageRow' => [
-                'uid' => 2001,
-            ],
-            'skipMessage' => 'Just variable placeholder, not used in tests as parsed as reference',
-            'expected' => [],
-        ];
-        yield 'PageRow Uid is string with int value' => [
-            'checkIfPageSkipped' => false,
-            'getUrlsForPages' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
-            'pageRow' => [
-                'uid' => '2001',
-            ],
-            'skipMessage' => 'Just variable placeholder, not used in tests as parsed as reference',
-            'expected' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
-        ];
-        yield 'PageRow Uid is string with string value' => [
-            'checkIfPageSkipped' => true,
-            'getUrlsForPages' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
-            'pageRow' => [
-                'uid' => 'string',
-            ],
-            'skipMessage' => 'PageUid "string" was not an integer',
-            'expected' => [],
-        ];
-        yield 'PageRow-array does not contain uid' => [
-            'checkIfPageSkipped' => true,
-            'getUrlsForPages' => ['index.php?q=search&page=1', 'index.php?q=search&page=2'],
-            'pageRow' => [],
-            'skipMessage' => 'pagRow[\'uid\'] is missing',
-            'expected' => [],
-        ];
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('getConfigurationHasReturnsExpectedValueDataProvider')]
@@ -389,10 +296,15 @@ class CrawlerControllerTest extends UnitTestCase
         array $configurations,
         string|false $skipMessage = false
     ): CrawlerController&MockObject {
-        $pageService = $this->createPartialMock(PageService::class, ['checkIfPageShouldBeSkipped']);
-        $pageService->method('checkIfPageShouldBeSkipped')->willReturn($skipMessage);
+        $pageConfigurationResolver = $this->createStub(PageConfigurationResolver::class);
+        $pageConfigurationResolver->method('getConfigurationsForPageRow')->willReturnCallback(
+            static function (array $pageRow, string &$pageSkipMessage) use ($configurations, $skipMessage): array {
+                $pageSkipMessage = $skipMessage === false ? '' : $skipMessage;
+                return $skipMessage === false ? $configurations : [];
+            }
+        );
 
-        $configurationService = $this->createMock(ConfigurationService::class);
+        $configurationService = $this->createStub(ConfigurationService::class);
         $configurationService->method('expandExcludeString')->willReturnCallback(
             static fn (string $exclude): array => array_map(
                 intval(...),
@@ -401,11 +313,10 @@ class CrawlerControllerTest extends UnitTestCase
         );
 
         $crawlerController = $this->createCrawlerController(
-            ['getUrlsForPageId', 'urlListFromUrlArray'],
-            $pageService,
+            ['urlListFromUrlArray'],
+            $pageConfigurationResolver,
             $configurationService
         );
-        $crawlerController->method('getUrlsForPageId')->willReturn($configurations);
         $crawlerController->method('urlListFromUrlArray')->willReturnCallback(
             static fn (array $configuration): string => 'URLs of ' . $configuration['subCfg']['key']
         );
@@ -418,19 +329,18 @@ class CrawlerControllerTest extends UnitTestCase
      */
     private function createCrawlerController(
         array $mockedMethods,
-        PageService $pageService,
-        ?ConfigurationService $configurationService = null
+        PageConfigurationResolver $pageConfigurationResolver,
+        ConfigurationService $configurationService
     ): CrawlerController&MockObject {
         return $this->getMockBuilder(CrawlerController::class)
             ->setConstructorArgs([
                 $this->createStub(QueueRepository::class),
-                $this->createStub(ConfigurationRepository::class),
                 $this->createStub(PageRepository::class),
                 $this->createStub(EventDispatcherInterface::class),
                 $this->createStub(IconFactory::class),
-                $configurationService ?? $this->createStub(ConfigurationService::class),
+                $configurationService,
+                $pageConfigurationResolver,
                 $this->createStub(UrlService::class),
-                $pageService,
                 new ProcessInstructionService(),
                 new CrawlUrlMessageDispatcher($this->createStub(MessageBusInterface::class)),
                 $this->createConfiguredStub(ExtensionConfigurationProvider::class, [

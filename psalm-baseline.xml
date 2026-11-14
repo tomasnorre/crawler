@@ -54,14 +54,6 @@
       <code><![CDATA[UrlBuilder]]></code>
     </UnusedClass>
   </file>
-  <file src="Classes/Controller/CrawlerController.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[getConfigurationsForBranch]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$configurationRepository]]></code>
-    </PossiblyUnusedProperty>
-  </file>
   <file src="Classes/CrawlStrategy/CrawlStrategyFactory.php">
     <UnusedClass>
       <code><![CDATA[CrawlStrategyFactory]]></code>

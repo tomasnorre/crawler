@@ -23,12 +23,9 @@ use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Queue\Message\CrawlUrlMessage;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use AOE\Crawler\Tests\Functional\CrawlerControllerTestTrait;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
-use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
-use TYPO3\TestingFramework\Core\AccessibleObjectInterface;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
@@ -43,8 +40,6 @@ class CrawlerControllerTest extends FunctionalTestCase
 
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
-    protected AccessibleObjectInterface|MockObject $subject;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -56,31 +51,6 @@ class CrawlerControllerTest extends FunctionalTestCase
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/tx_crawler_queue.csv');
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/tt_content.csv');
 
-        $this->subject = $this->createCrawlerController($this->createStub(MessageBusInterface::class));
-    }
-
-    #[\PHPUnit\Framework\Attributes\Test]
-    public function getConfigurationsForBranch(): void
-    {
-        $GLOBALS['BE_USER'] = $this->createStub(BackendUserAuthentication::class);
-        $GLOBALS['BE_USER']->method('isAdmin')->willReturn(true);
-
-        $configurationsForBranch = $this->subject->getConfigurationsForBranch(5, 99);
-
-        self::assertNotEmpty($configurationsForBranch);
-        self::assertCount(4, $configurationsForBranch);
-
-        // sort is done as MySQL and SQLite doesn't sort the same way even though sorting is by "name ASC"
-        sort($configurationsForBranch);
-        $expected = [
-            'default',
-            'Not hidden or deleted',
-            'Not hidden or deleted - uid 5',
-            'Not hidden or deleted - uid 6',
-        ];
-        sort($expected);
-
-        self::assertEquals($expected, $configurationsForBranch);
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('addUrlDataProvider')]

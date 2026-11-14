@@ -24,6 +24,7 @@ use AOE\Crawler\Controller\Backend\Helper\UrlBuilder;
 use AOE\Crawler\Controller\CrawlerController;
 use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Event\InvokeQueueChangeEvent;
+use AOE\Crawler\Service\PageConfigurationResolver;
 use AOE\Crawler\Utility\MessageUtility;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -53,6 +54,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
 
     public function __construct(
         private readonly CrawlerController $crawlerController,
+        private readonly PageConfigurationResolver $pageConfigurationResolver,
         private readonly UriBuilder $backendUriBuilder,
     ) {
     }
@@ -171,7 +173,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
         );
 
         // Configurations
-        $availableConfigurations = $this->crawlerController->getConfigurationsForBranch(
+        $availableConfigurations = $this->pageConfigurationResolver->getConfigurationNamesForBranch(
             $pageId,
             (int) $crawlingDepth,
         );

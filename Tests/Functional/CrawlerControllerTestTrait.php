@@ -25,6 +25,7 @@ use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Queue\CrawlUrlMessageDispatcher;
 use AOE\Crawler\Service\ConfigurationService;
+use AOE\Crawler\Service\PageConfigurationResolver;
 use AOE\Crawler\Service\PageService;
 use AOE\Crawler\Service\ProcessInstructionService;
 use AOE\Crawler\Service\UrlService;
@@ -51,16 +52,24 @@ trait CrawlerControllerTestTrait
     ): CrawlerController&AccessibleObjectInterface&MockObject {
         return $this->getAccessibleMock(CrawlerController::class, $mockedMethods, [
             $queueRepository ?? GeneralUtility::makeInstance(QueueRepository::class),
-            GeneralUtility::makeInstance(ConfigurationRepository::class),
             GeneralUtility::makeInstance(PageRepository::class),
             GeneralUtility::makeInstance(EventDispatcher::class),
             GeneralUtility::makeInstance(IconFactory::class),
             GeneralUtility::makeInstance(ConfigurationService::class),
+            $this->createPageConfigurationResolver(),
             GeneralUtility::makeInstance(UrlService::class),
-            GeneralUtility::makeInstance(PageService::class),
             GeneralUtility::makeInstance(ProcessInstructionService::class),
             new CrawlUrlMessageDispatcher($messageBus),
             GeneralUtility::makeInstance(ExtensionConfigurationProvider::class),
         ]);
+    }
+
+    private function createPageConfigurationResolver(): PageConfigurationResolver
+    {
+        return new PageConfigurationResolver(
+            GeneralUtility::makeInstance(PageService::class),
+            GeneralUtility::makeInstance(ConfigurationService::class),
+            GeneralUtility::makeInstance(ConfigurationRepository::class),
+        );
     }
 }
