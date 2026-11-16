@@ -20,6 +20,7 @@ namespace AOE\Crawler\Service;
  */
 
 use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Backend\Routing\Route;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -35,8 +36,11 @@ class BackendModuleScriptUrlService
         $mainParams = [
             'id' => $pageUid,
         ];
-        $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
         $route = $request->getAttribute('route');
+        if (!$route instanceof Route) {
+            throw new \RuntimeException('The request has no backend route to build the script URL from', 1763290800);
+        }
+        $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
         $scriptUrl = (string) $uriBuilder->buildUriFromRoute($route->getOption('_identifier'), $mainParams);
 
         return $scriptUrl . ($queryString . $this->getAdditionalQueryParams(

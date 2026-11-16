@@ -74,7 +74,8 @@ class CrawlerInitialization implements MiddlewareInterface
 
         // Execute the frontend request as is
         $response = $handler->handle($request);
-        $noCache = !$request->getAttribute('frontend.cache.instruction')->isCachingAllowed();
+        // Without a cache instruction, caching is allowed, like for a new CacheInstruction
+        $noCache = !($request->getAttribute('frontend.cache.instruction')?->isCachingAllowed() ?? true);
 
         try {
             $pageInformation = $request->getAttribute(

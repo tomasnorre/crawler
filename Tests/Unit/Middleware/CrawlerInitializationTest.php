@@ -61,7 +61,7 @@ class CrawlerInitializationTest extends UnitTestCase
     #[\PHPUnit\Framework\Attributes\Test]
     public function processAddsCrawlerMetaHeaderToResponse(
         array $queueParameters,
-        bool $cachingAllowed,
+        ?bool $cachingAllowed,
         array $expectedMeta
     ): void {
         $context = new Context();
@@ -72,14 +72,17 @@ class CrawlerInitializationTest extends UnitTestCase
         );
         $pageInformation = new PageInformation();
         $pageInformation->setId(5);
-        $cacheInstruction = new CacheInstruction();
-        if (!$cachingAllowed) {
-            $cacheInstruction->disableCache('Testing');
-        }
         $request = (new ServerRequest('https://example.com/'))
             ->withAttribute('tx_crawler', $queueParameters)
-            ->withAttribute('frontend.cache.instruction', $cacheInstruction)
             ->withAttribute('frontend.page.information', $pageInformation);
+        // null: the request has no cache instruction
+        if ($cachingAllowed !== null) {
+            $cacheInstruction = new CacheInstruction();
+            if (!$cachingAllowed) {
+                $cacheInstruction->disableCache('Testing');
+            }
+            $request = $request->withAttribute('frontend.cache.instruction', $cacheInstruction);
+        }
         $handler = $this->createMock(RequestHandlerInterface::class);
         $handler->expects(self::once())->method('handle')->willReturnCallback(
             static function (ServerRequestInterface $request) use ($queueParameters): ResponseInterface {
@@ -105,6 +108,25 @@ class CrawlerInitializationTest extends UnitTestCase
                 'url' => 'https://example.com/',
             ],
             true,
+            [
+                'forceIndexing' => true,
+                'running' => true,
+                'parameters' => [
+                    'url' => 'https://example.com/',
+                ],
+                'log' => ['User Groups: '],
+                'vars' => [
+                    'id' => 5,
+                    'gr_list' => '0,-2,1',
+                    'no_cache' => false,
+                ],
+            ],
+        ];
+        yield 'Without cache instruction' => [
+            [
+                'url' => 'https://example.com/',
+            ],
+            null,
             [
                 'forceIndexing' => true,
                 'running' => true,

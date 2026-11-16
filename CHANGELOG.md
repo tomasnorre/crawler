@@ -27,6 +27,8 @@
 * `QueueEntryWriter` is final
 * `QueueEntryWriter::getCurrentTime()` is removed, use `Psr\Clock\ClockInterface`
 * `BuildQueueCommand` and `FlushQueueCommand` read their arguments and options with fixed types through the internal `AOE\Crawler\Command\TypedInput` instead of casting them inline
+* `BackendModuleScriptUrlService::buildScriptUrl()` throws a `RuntimeException` if the request has no backend route, instead of failing with an error
+* `CrawlerInitialization` treats a request without a `frontend.cache.instruction` attribute as cacheable, instead of failing with an error
 
 ### Fixed
 * Clearing the page cache queues the URLs of all crawler configurations of the page again, configurations without a processing instruction were skipped once an extension registered processing instructions

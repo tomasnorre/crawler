@@ -15,6 +15,12 @@ parameters:
 
     inferPrivatePropertyTypeFromConstructor: true
 
+    # Request attributes that saschaegerer/phpstan-typo3 doesn't know by default
+    typo3:
+        requestGetAttributeMapping:
+            route: TYPO3\CMS\Backend\Routing\Route
+            tx_crawler: 'array<string, mixed>'
+
     ignoreErrors:
         -
             identifier: missingType.iterableValue
