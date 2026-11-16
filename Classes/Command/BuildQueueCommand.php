@@ -130,13 +130,14 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
     #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $mode = $input->getOption('mode') ?? 'queue';
+        $typedInput = new TypedInput($input);
+        $mode = $typedInput->getStringOption('mode', 'queue');
 
         $extensionSettings = GeneralUtility::makeInstance(
             ExtensionConfigurationProvider::class
         )->getExtensionConfiguration();
 
-        $pageId = MathUtility::forceIntegerInRange((int) $input->getArgument('page'), 0);
+        $pageId = MathUtility::forceIntegerInRange($typedInput->getIntArgument('page'), 0);
         if ($pageId === 0 || empty($this->pageRepository->getPage($pageId))) {
             $message = "Page {$pageId} is not a valid page, please check you root page id and try again.";
             MessageUtility::addErrorMessage($message);
@@ -144,7 +145,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             return Command::FAILURE;
         }
 
-        $configurationKeys = $this->getConfigurationKeys((string) $input->getArgument('conf'));
+        $configurationKeys = $this->getConfigurationKeys($typedInput->getStringArgument('conf'));
 
         if ($mode === 'queue' || $mode === 'exec') {
             $reason = new Reason();
@@ -157,10 +158,10 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             $this->queueRepository->cleanUpOldQueueEntries();
         }
 
-        $run = $this->createCrawlRun($input, $mode, $configurationKeys);
+        $run = $this->createCrawlRun($typedInput, $mode, $configurationKeys);
         $queueRows = $this->pageTreeUrlCollector->collect(
             $pageId,
-            MathUtility::forceIntegerInRange((int) $input->getOption('depth'), 0, 99),
+            MathUtility::forceIntegerInRange($typedInput->getIntOption('depth'), 0, 99),
             $run
         );
 
@@ -261,11 +262,11 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
         $output->writeln('');
     }
 
-    private function createCrawlRun(InputInterface $input, mixed $mode, array $configurationKeys): CrawlRun
+    private function createCrawlRun(TypedInput $input, string $mode, array $configurationKeys): CrawlRun
     {
         return new CrawlRun(
             $this->clock->now()->getTimestamp(),
-            MathUtility::forceIntegerInRange((int) $input->getOption('number') ?: 30, 1, 1000),
+            MathUtility::forceIntegerInRange($input->getIntOption('number') ?: 30, 1, 1000),
             submitUrls: $mode === 'queue' || $mode === 'exec',
             collectDownloadUrls: $mode === 'url',
             // Entries of the exec mode are crawled right away, instead of being stored in the queue first

@@ -9,6 +9,7 @@ services:
         exclude:
             - '../Classes/Queue/Message/*'
             - '../Classes/Queue/CrawlPriority.php'
+            - '../Classes/Command/TypedInput.php'
 
     # Doctrine transports for the crawler messages, one per priority, see ext_localconf.php for the routing and
     # AOE\Crawler\Queue\CrawlUrlMessageDispatcher for the priority handling.
