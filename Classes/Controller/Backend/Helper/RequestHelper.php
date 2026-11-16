@@ -28,25 +28,14 @@ final class RequestHelper
 {
     public static function getIntFromRequest(ServerRequestInterface $request, string $key, int $default = 0): int
     {
-        $body = $request->getParsedBody();
-        $query = $request->getQueryParams();
+        $value = self::getValue($request, $key);
 
-        $value = (is_array($body) ? ($body[$key] ?? null) : null)
-            ?? ($query[$key] ?? null)
-            ?? $default;
-
-        return (int) $value;
+        return is_scalar($value) ? (int) $value : $default;
     }
 
     public static function getBoolFromRequest(ServerRequestInterface $request, string $key): bool
     {
-        $body = $request->getParsedBody();
-        $query = $request->getQueryParams();
-
-        $value = (is_array($body) ? ($body[$key] ?? null) : null)
-            ?? ($query[$key] ?? null);
-
-        return !empty($value);
+        return !empty(self::getValue($request, $key));
     }
 
     public static function getStringFromRequest(
@@ -54,24 +43,14 @@ final class RequestHelper
         string $key,
         string $default = ''
     ): string {
-        $body = $request->getParsedBody();
-        $query = $request->getQueryParams();
-
-        $value = (is_array($body) ? ($body[$key] ?? null) : null)
-            ?? ($query[$key] ?? null)
-            ?? $default;
+        $value = self::getValue($request, $key);
 
         return is_scalar($value) ? (string) $value : $default;
     }
 
     public static function getArrayFromRequest(ServerRequestInterface $request, string $key): array
     {
-        $body = $request->getParsedBody();
-        $query = $request->getQueryParams();
-
-        $source = is_array($body) ? $body : $query;
-        $value = $source[$key] ?? $query[$key] ?? null;
-
+        $value = self::getValue($request, $key);
         if (is_string($value)) {
             $value = json_decode($value, true);
         }
@@ -79,4 +58,16 @@ final class RequestHelper
         return is_array($value) ? $value : [];
     }
 
+    /**
+     * Returns the value from the parsed body, or from the query parameters if the parsed body doesn't have it
+     */
+    private static function getValue(ServerRequestInterface $request, string $key): mixed
+    {
+        $body = $request->getParsedBody();
+        if (is_array($body) && isset($body[$key])) {
+            return $body[$key];
+        }
+
+        return $request->getQueryParams()[$key] ?? null;
+    }
 }

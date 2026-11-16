@@ -40,16 +40,18 @@ class PhpBinaryUtility
             throw new ExtensionSettingsException('ExtensionSettings are empty', 1_587_066_853);
         }
 
-        if (empty($extensionSettings['phpPath'])) {
-            $phpPath = CommandUtility::getCommand($extensionSettings['phpBinary']);
-            if ($phpPath === false) {
-                throw new CommandNotFoundException(
-                    'The phpBinary: "' . $extensionSettings['phpBinary'] . '" could not be found!',
-                    1_587_068_215
-                );
-            }
-        } else {
-            $phpPath = $extensionSettings['phpPath'];
+        if (!empty($extensionSettings['phpPath'])) {
+            return (string) $extensionSettings['phpPath'];
+        }
+
+        $phpBinary = (string) ($extensionSettings['phpBinary'] ?? '');
+        $phpPath = CommandUtility::getCommand($phpBinary);
+        // CommandUtility::getCommand('') returns a directory instead of false
+        if ($phpBinary === '' || !is_string($phpPath)) {
+            throw new CommandNotFoundException(
+                'The phpBinary: "' . $phpBinary . '" could not be found!',
+                1_587_068_215
+            );
         }
 
         return $phpPath;

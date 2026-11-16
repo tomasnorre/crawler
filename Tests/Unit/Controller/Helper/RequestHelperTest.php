@@ -269,4 +269,89 @@ class RequestHelperTest extends UnitTestCase
         $this->assertEmpty(RequestHelper::getArrayFromRequest($serverRequest, 'value'));
     }
 
+    #[Test]
+    public function getIntFromRequestReturnsGivenDefault(): void
+    {
+        self::assertSame(30, RequestHelper::getIntFromRequest(new ServerRequest(), 'value', 30));
+    }
+
+    #[Test]
+    public function getIntFromRequestReturnsDefaultForArrayValue(): void
+    {
+        $serverRequest = (new ServerRequest())->withQueryParams([
+            'value' => ['5'],
+        ]);
+
+        self::assertSame(30, RequestHelper::getIntFromRequest($serverRequest, 'value', 30));
+    }
+
+    #[Test]
+    public function getStringFromRequestReturnsDefaultForArrayValue(): void
+    {
+        $serverRequest = (new ServerRequest())->withQueryParams([
+            'value' => ['5'],
+        ]);
+
+        self::assertSame('fallback', RequestHelper::getStringFromRequest($serverRequest, 'value', 'fallback'));
+    }
+
+    #[Test]
+    public function getValueFallsBackToQueryParamsIfParsedBodyHasNoValue(): void
+    {
+        $serverRequest = (new ServerRequest())
+            ->withParsedBody([
+                'other' => 'parsedBody',
+                'value' => null,
+            ])
+            ->withQueryParams([
+                'value' => 'queryParams',
+            ]);
+
+        self::assertSame('queryParams', RequestHelper::getStringFromRequest($serverRequest, 'value'));
+    }
+
+    #[Test]
+    public function getValueUsesQueryParamsIfParsedBodyIsNoArray(): void
+    {
+        $serverRequest = (new ServerRequest())
+            ->withParsedBody(new \stdClass())
+            ->withQueryParams([
+                'value' => '7',
+            ]);
+
+        self::assertSame(7, RequestHelper::getIntFromRequest($serverRequest, 'value'));
+    }
+
+    #[Test]
+    public function getArrayFromRequestDecodesJsonString(): void
+    {
+        $serverRequest = (new ServerRequest())->withQueryParams([
+            'value' => '{"int":123,"string":"hello world"}',
+        ]);
+
+        self::assertSame([
+            'int' => 123,
+            'string' => 'hello world',
+        ], RequestHelper::getArrayFromRequest($serverRequest, 'value'));
+    }
+
+    #[Test]
+    public function getArrayFromRequestReturnsEmptyArrayForInvalidJson(): void
+    {
+        $serverRequest = (new ServerRequest())->withQueryParams([
+            'value' => 'no json',
+        ]);
+
+        self::assertSame([], RequestHelper::getArrayFromRequest($serverRequest, 'value'));
+    }
+
+    #[Test]
+    public function getArrayFromRequestReturnsEmptyArrayForScalarValue(): void
+    {
+        $serverRequest = (new ServerRequest())->withQueryParams([
+            'value' => 5,
+        ]);
+
+        self::assertSame([], RequestHelper::getArrayFromRequest($serverRequest, 'value'));
+    }
 }
