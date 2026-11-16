@@ -58,7 +58,7 @@ class QueueServiceTest extends UnitTestCase
     }
 
     #[Test]
-    public function addPageToQueueOnlyAddsConfigurationsOfRegisteredProcessingInstructions(): void
+    public function addPageToQueueAddsAllConfigurationsIfProcessingInstructionsAreRegistered(): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'] = [
             'indexed_search' => [
@@ -68,10 +68,19 @@ class QueueServiceTest extends UnitTestCase
         ];
 
         $addedEntries = [];
-        $this->createSubject($addedEntries, 1)->addPageToQueue(5);
+        $this->createSubject($addedEntries, 3)->addPageToQueue(5);
 
-        self::assertSame(['indexing'], array_column($addedEntries, 'configuration'));
-        self::assertSame([0], array_column($addedEntries, 'scheduled'));
+        self::assertSame(['default', 'indexing', 'other'], array_column($addedEntries, 'configuration'));
+        self::assertSame(
+            ['[""]', '["tx_indexedsearch_reindex"]', '["tx_other"]'],
+            array_map(
+                static fn (array $entry): string => json_encode(
+                    json_decode($entry['parameters'], true)['procInstructions']
+                ),
+                $addedEntries
+            )
+        );
+        self::assertSame([0, 0, 0], array_column($addedEntries, 'scheduled'));
     }
 
     #[Test]
