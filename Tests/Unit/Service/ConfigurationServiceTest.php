@@ -26,7 +26,11 @@ use AOE\Crawler\Service\ParameterExpander;
 use AOE\Crawler\Service\UrlService;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Psr\Container\ContainerInterface;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Authentication\GroupResolver;
+use TYPO3\CMS\Core\TypoScript\Tokenizer\LosslessTokenizer;
+use TYPO3\CMS\Core\TypoScript\TypoScriptStringFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
@@ -51,6 +55,77 @@ class ConfigurationServiceTest extends UnitTestCase
             $expected,
             ConfigurationService::removeDisallowedConfigurations($allowed, $configuration)
         );
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('backendGroupAccessDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function getConfigurationFromDatabaseRespectsBackendGroupsOfNonAdminUser(
+        string $beGroups,
+        bool $expectedToBeProcessed
+    ): void {
+        $backendUser = $this->createStub(BackendUserAuthentication::class);
+        $backendUser->method('isAdmin')->willReturn(false);
+        $backendUser->user = [
+            'uid' => 1,
+            'usergroup' => '3',
+        ];
+        $GLOBALS['BE_USER'] = $backendUser;
+        $groupResolver = $this->createMock(GroupResolver::class);
+        $groupResolver->expects(self::once())->method('resolveGroupsForUser')
+            ->with($backendUser->user, 'be_groups')
+            ->willReturn([
+                [
+                    'uid' => 4,
+                    'title' => 'Subgroup',
+                ],
+                [
+                    'uid' => 3,
+                    'title' => 'Editors',
+                ],
+            ]);
+        $configurationRepository = $this->createStub(ConfigurationRepository::class);
+        $configurationRepository->method('getCrawlerConfigurationRecordsFromRootLine')->willReturn([
+            [
+                'uid' => 7,
+                'name' => 'default',
+                'begroups' => $beGroups,
+                'pidsonly' => '',
+                'exclude' => '',
+                'configuration' => '&L=1',
+                'processing_instruction_parameters_ts' => '',
+                'processing_instruction_filter' => '',
+                'base_url' => '',
+                'force_ssl' => '0',
+                'fegroups' => '',
+            ],
+        ]);
+        if ($expectedToBeProcessed) {
+            GeneralUtility::addInstance(
+                TypoScriptStringFactory::class,
+                new TypoScriptStringFactory($this->createStub(ContainerInterface::class), new LosslessTokenizer())
+            );
+        }
+        $urlService = $this->createStub(UrlService::class);
+        $urlService->method('compileUrls')->willReturn([]);
+        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [];
+        $subject = new ConfigurationService(
+            $urlService,
+            $configurationRepository,
+            $groupResolver,
+            new ParameterExpander(),
+            new ExcludeStringExpander(),
+        );
+
+        $result = $subject->getConfigurationFromDatabase(5, []);
+
+        self::assertSame($expectedToBeProcessed, isset($result['default']));
+    }
+
+    public static function backendGroupAccessDataProvider(): iterable
+    {
+        yield 'Group of the user' => ['3', true];
+        yield 'Subgroup of the user' => ['5,4', true];
+        yield 'Other group' => ['5', false];
     }
 
     public static function removeDisallowedConfigurationsDataProvider(): iterable

@@ -28,6 +28,7 @@
 * `QueueEntryWriter::getCurrentTime()` is removed, use `Psr\Clock\ClockInterface`
 
 ### Fixed
+* Crawler configuration records restricted to backend groups are available to non-admin users in these groups again
 * Export every log entry in the crawler log CSV
 * Build the page tree of excluded pages only once per page and depth, the cache was never filled
 * Keep the selected set in the crawler log when changing a filter, the set id was never read from the request
