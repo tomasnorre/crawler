@@ -63,6 +63,15 @@ class BackendModuleScriptUrlServiceTest extends UnitTestCase
         );
     }
 
+    #[Test]
+    public function buildScriptUrlThrowsExceptionIfRequestHasNoRoute(): void
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionCode(1763290800);
+
+        (new BackendModuleScriptUrlService())->buildScriptUrl(new ServerRequest(), 'displayLog', 5, []);
+    }
+
     public static function buildScriptUrlDataProvider(): iterable
     {
         yield 'No query parameters' => [[], '', '/typo3/module/crawler/log?id=5&displayLog=${value}'];
