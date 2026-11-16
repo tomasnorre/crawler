@@ -20,6 +20,7 @@ namespace AOE\Crawler\Tests\Functional\Queue;
  */
 
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Queue\CrawlRun;
 use AOE\Crawler\Queue\Message\CrawlUrlMessage;
 use AOE\Crawler\Queue\QueueEntryWriter;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
@@ -81,12 +82,13 @@ class QueueEntryWriterTest extends FunctionalTestCase
             ->willReturnCallback(static fn (object $message): Envelope => new Envelope($message));
 
         $subject = $this->createQueueEntryWriter($messageBus, [], $mockedQueueRepository);
-        $subject->registerQueueEntriesInternallyOnly = $registerQueueEntriesInternallyOnly;
+        $run = new CrawlRun(0, 30, collectQueueEntriesOnly: $registerQueueEntriesInternallyOnly);
 
         self::assertEquals(
             $expected,
-            $subject->addUrl($id, $url, $subCfg, $tstamp, $configurationHash, $skipInnerDuplicationCheck)
+            $subject->addUrl($run, $id, $url, $subCfg, $tstamp, $configurationHash, $skipInnerDuplicationCheck)
         );
+        self::assertCount($registerQueueEntriesInternallyOnly ? 1 : 0, $run->getQueueEntries());
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
@@ -111,7 +113,7 @@ class QueueEntryWriterTest extends FunctionalTestCase
         $subject = $this->createQueueEntryWriter($messageBus, ['getCurrentTime'], $mockedQueueRepository);
         $subject->method('getCurrentTime')->willReturn(1_000_000);
 
-        self::assertTrue($subject->addUrl(1, 'https://example.com/', [
+        self::assertTrue($subject->addUrl(new CrawlRun(0, 30), 1, 'https://example.com/', [
             'key' => 'some-key',
         ], 1_000_060));
     }
@@ -130,11 +132,9 @@ class QueueEntryWriterTest extends FunctionalTestCase
 
         $subject = $this->createQueueEntryWriter($messageBus, ['getCurrentTime']);
         $subject->method('getCurrentTime')->willReturn(1_000_000);
-        $subject->setId = 42;
-
         $queueId = $subject->addCallback(CallbackObjectForTesting::class, [
             'name' => 'Crawler',
-        ], 5);
+        ], 5, setId: 42);
 
         $queueEntry = GeneralUtility::makeInstance(QueueRepository::class)->getQueueEntriesByQid($queueId, true);
         self::assertIsArray($queueEntry);

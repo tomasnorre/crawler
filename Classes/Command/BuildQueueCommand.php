@@ -23,6 +23,7 @@ use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\InvokeQueueChangeEvent;
+use AOE\Crawler\Queue\CrawlRun;
 use AOE\Crawler\Queue\Handler\CrawlUrlHandler;
 use AOE\Crawler\Queue\Message\CrawlUrlMessage;
 use AOE\Crawler\Queue\QueueEntryWriter;
@@ -133,10 +134,6 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             ExtensionConfigurationProvider::class
         )->getExtensionConfiguration();
 
-        if ($mode === 'exec') {
-            $this->queueEntryWriter->registerQueueEntriesInternallyOnly = true;
-        }
-
         $pageId = MathUtility::forceIntegerInRange((int) $input->getArgument('page'), 0);
         if ($pageId === 0 || empty($this->pageRepository->getPage($pageId))) {
             $message = "Page {$pageId} is not a valid page, please check you root page id and try again.";
@@ -158,16 +155,18 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             $this->queueRepository->cleanUpOldQueueEntries();
         }
 
-        $this->queueEntryWriter->setId = GeneralUtility::md5int(microtime());
-        $queueRows = $this->getQueueRows($pageId, $input, $mode, $configurationKeys);
+        $run = $this->createCrawlRun($input, $mode, $configurationKeys);
+        $queueRows = $this->pageTreeUrlCollector->collect(
+            $pageId,
+            MathUtility::forceIntegerInRange((int) $input->getOption('depth'), 0, 99),
+            $run
+        );
 
         match ($mode) {
-            'url' => $output->writeln(
-                '<info>' . implode(PHP_EOL, $this->pageTreeUrlCollector->downloadUrls) . PHP_EOL . '</info>'
-            ),
-            'exec' => $this->outputModeExec($output, $queueRows),
-            'queue' => $this->outputModeQueue($output, $queueRows),
-            default => $this->outputModeDefault($output, $queueRows),
+            'url' => $output->writeln('<info>' . implode(PHP_EOL, $run->getDownloadUrls()) . PHP_EOL . '</info>'),
+            'exec' => $this->outputModeExec($output, $queueRows, $run),
+            'queue' => $this->outputModeQueue($output, $queueRows, $run),
+            default => $this->outputModeDefault($output, $queueRows, $run),
         };
 
         return Command::SUCCESS;
@@ -196,34 +195,30 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
         }
     }
 
-    private function outputModeDefault(OutputInterface $output, array $queueRows): void
+    private function outputModeDefault(OutputInterface $output, array $queueRows, CrawlRun $run): void
     {
         $output->writeln(
             '<info>' . count(
-                $this->queueEntryWriter->urlList
+                $run->getUrlList()
             ) . ' entries found for processing. (Use "mode" to decide action):</info>' . PHP_EOL
         );
         $this->outputUrls($queueRows, $output);
     }
 
-    private function outputModeQueue(OutputInterface $output, array $queueRows): void
+    private function outputModeQueue(OutputInterface $output, array $queueRows, CrawlRun $run): void
     {
-        $output->writeln(
-            '<info>Putting ' . count($this->queueEntryWriter->urlList) . ' entries in queue:</info>' . PHP_EOL
-        );
+        $output->writeln('<info>Putting ' . count($run->getUrlList()) . ' entries in queue:</info>' . PHP_EOL);
         $this->outputUrls($queueRows, $output);
     }
 
-    private function outputModeExec(OutputInterface $output, array $queueRows): void
+    private function outputModeExec(OutputInterface $output, array $queueRows, CrawlRun $run): void
     {
         $progressBar = new ProgressBar($output);
-        $output->writeln(
-            '<info>Executing ' . count($this->queueEntryWriter->urlList) . ' requests right away:</info>'
-        );
+        $output->writeln('<info>Executing ' . count($run->getUrlList()) . ' requests right away:</info>');
         $this->outputUrls($queueRows, $output);
         $output->writeln('<info>Processing</info>' . PHP_EOL);
 
-        foreach ($progressBar->iterate($this->queueEntryWriter->queueEntries) as $queueRec) {
+        foreach ($progressBar->iterate($run->getQueueEntries()) as $queueRec) {
             $p = json_decode((string) $queueRec['parameters'], true);
             if (is_bool($p)) {
                 continue;
@@ -264,17 +259,16 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
         $output->writeln('');
     }
 
-    private function getQueueRows(int $pageId, InputInterface $input, mixed $mode, array $configurationKeys): array
+    private function createCrawlRun(InputInterface $input, mixed $mode, array $configurationKeys): CrawlRun
     {
-        return $this->pageTreeUrlCollector->collect(
-            $pageId,
-            MathUtility::forceIntegerInRange((int) $input->getOption('depth'), 0, 99),
+        return new CrawlRun(
             $this->queueEntryWriter->getCurrentTime(),
             MathUtility::forceIntegerInRange((int) $input->getOption('number') ?: 30, 1, 1000),
-            $mode === 'queue' || $mode === 'exec',
-            $mode === 'url',
-            [],
-            $configurationKeys
+            submitUrls: $mode === 'queue' || $mode === 'exec',
+            collectDownloadUrls: $mode === 'url',
+            // Entries of the exec mode are crawled right away, instead of being stored in the queue first
+            collectQueueEntriesOnly: $mode === 'exec',
+            configurationSelection: $configurationKeys,
         );
     }
 }

@@ -23,7 +23,7 @@ use AOE\Crawler\Controller\Backend\Helper\RequestHelper;
 use AOE\Crawler\Controller\Backend\Helper\UrlBuilder;
 use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Event\InvokeQueueChangeEvent;
-use AOE\Crawler\Queue\QueueEntryWriter;
+use AOE\Crawler\Queue\CrawlRun;
 use AOE\Crawler\Service\PageConfigurationResolver;
 use AOE\Crawler\Service\PageTreeUrlCollector;
 use AOE\Crawler\Utility\MessageUtility;
@@ -56,7 +56,6 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
     public function __construct(
         private readonly PageTreeUrlCollector $pageTreeUrlCollector,
         private readonly PageConfigurationResolver $pageConfigurationResolver,
-        private readonly QueueEntryWriter $queueEntryWriter,
         private readonly UriBuilder $backendUriBuilder,
     ) {
     }
@@ -94,7 +93,13 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
 
         $this->incomingConfigurationSelection = RequestHelper::getArrayFromRequest($request, 'configurationSelection');
 
-        $this->queueEntryWriter->setId = GeneralUtility::md5int(microtime());
+        $run = new CrawlRun(
+            $scheduledTime,
+            $this->reqMinute,
+            submitUrls: $submitCrawlUrls,
+            collectDownloadUrls: $downloadCrawlUrls,
+            configurationSelection: $this->incomingConfigurationSelection,
+        );
 
         $queueRows = '';
         $noConfigurationSelected = $this->isNoConfigurationSelected();
@@ -112,21 +117,11 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
                 $this->eventDispatcher->dispatch(new InvokeQueueChangeEvent($reason));
             }
 
-            $queueRows = $this->pageTreeUrlCollector->collect(
-                $this->pageUid,
-                $crawlingDepth,
-                $scheduledTime,
-                $this->reqMinute,
-                $submitCrawlUrls,
-                $downloadCrawlUrls,
-                // Do not filter any processing instructions
-                [],
-                $this->incomingConfigurationSelection
-            );
+            $queueRows = $this->pageTreeUrlCollector->collect($this->pageUid, $crawlingDepth, $run);
         }
 
         // Download Urls to crawl:
-        $downloadUrls = $this->pageTreeUrlCollector->downloadUrls;
+        $downloadUrls = $run->getDownloadUrls();
         if ($downloadCrawlUrls) {
             // Creating output header:
             header('Content-Type: application/octet-stream');
@@ -141,7 +136,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
             'currentPageId' => $this->pageUid,
             'noConfigurationSelected' => $noConfigurationSelected,
             'submitCrawlUrls' => $submitCrawlUrls,
-            'amountOfUrls' => count($this->pageTreeUrlCollector->duplicateTrack),
+            'amountOfUrls' => $run->countHandledUrls(),
             'selectors' => $this->generateConfigurationSelectors($this->pageUid, (string) $crawlingDepth, $request),
             'queueRows' => $queueRows,
             'displayActions' => 0,

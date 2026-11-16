@@ -19,6 +19,7 @@ namespace AOE\Crawler\Tests\Unit\Service;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Queue\CrawlRun;
 use AOE\Crawler\Queue\QueueEntryWriter;
 use AOE\Crawler\Service\ConfigurationService;
 use AOE\Crawler\Service\PageConfigurationResolver;
@@ -70,7 +71,7 @@ final class PageTreeUrlCollectorTest extends UnitTestCase
 
         self::assertEquals(
             [$expected],
-            $pageTreeUrlCollector->getQueueRowsForPage([
+            $pageTreeUrlCollector->getQueueRowsForPage(new CrawlRun(0, 30), [
                 'uid' => 5,
             ], 'Page title', '<icon/>')
         );
@@ -86,7 +87,7 @@ final class PageTreeUrlCollectorTest extends UnitTestCase
 
         self::assertEquals(
             [$expected],
-            $pageTreeUrlCollector->getQueueRowsForPage([
+            $pageTreeUrlCollector->getQueueRowsForPage(new CrawlRun(0, 30), [
                 'uid' => 5,
             ], 'Page title', '<icon/>')
         );
@@ -108,7 +109,7 @@ final class PageTreeUrlCollectorTest extends UnitTestCase
 
         self::assertEquals(
             [$expected],
-            $pageTreeUrlCollector->getQueueRowsForPage([
+            $pageTreeUrlCollector->getQueueRowsForPage(new CrawlRun(0, 30), [
                 'uid' => 5,
             ], 'Page title', '<icon/>')
         );
@@ -158,7 +159,7 @@ final class PageTreeUrlCollectorTest extends UnitTestCase
 
         self::assertEquals(
             [$default, $news],
-            $pageTreeUrlCollector->getQueueRowsForPage([
+            $pageTreeUrlCollector->getQueueRowsForPage(new CrawlRun(0, 30), [
                 'uid' => 5,
             ], 'Page title', '<icon/>')
         );
@@ -171,9 +172,9 @@ final class PageTreeUrlCollectorTest extends UnitTestCase
             'default' => $this->getConfiguration('default'),
             'news' => $this->getConfiguration('news'),
         ]);
-        $pageTreeUrlCollector->incomingConfigurationSelection = ['news'];
+        $run = new CrawlRun(0, 30, configurationSelection: ['news']);
 
-        $rows = $pageTreeUrlCollector->getQueueRowsForPage([
+        $rows = $pageTreeUrlCollector->getQueueRowsForPage($run, [
             'uid' => 5,
         ], 'Page title');
 
@@ -201,7 +202,7 @@ final class PageTreeUrlCollectorTest extends UnitTestCase
             $this->createStub(QueueEntryWriter::class),
         );
 
-        $pageTreeUrlCollector->getQueueRowsForPage([
+        $pageTreeUrlCollector->getQueueRowsForPage(new CrawlRun(0, 30), [
             'uid' => 5,
         ], 'Page title', '', '3-7');
     }

@@ -45,28 +45,6 @@ class QueueEntryWriter
      */
     public const CALLBACK_PARAMETER = '_CALLBACKOBJ';
 
-    /**
-     * The set id of the queue entries written in the current run
-     */
-    public int $setId = 0;
-
-    /**
-     * If set, the queue entries are only collected in $queueEntries and not stored in the database
-     */
-    public bool $registerQueueEntriesInternallyOnly = false;
-
-    /**
-     * The queue entries collected when $registerQueueEntriesInternallyOnly is set
-     */
-    public array $queueEntries = [];
-
-    /**
-     * The URLs with their scheduled time, fx. "[14-11-26 12:00] https://example.com/"
-     *
-     * @var list<string>
-     */
-    public array $urlList = [];
-
     private readonly array $extensionSettings;
 
     public function __construct(
@@ -81,31 +59,15 @@ class QueueEntryWriter
     }
 
     /**
-     * Creates the URLs of a configuration and, if $submitCrawlUrls is set, adds them to the queue.
-     * See Web > Info module script + "indexed_search"'s crawler hook-client using this!
+     * Creates the URLs of a configuration and, depending on the options of the run, adds them to the queue
+     * or collects them for download.
      *
      * @param array $configuration A configuration of the page, see PageConfigurationResolver
      * @param array $pageRow Page row
-     * @param int $scheduledTime Unix time to schedule indexing to, typically time()
-     * @param int $reqMinute Number of requests per minute (creates the interleave between requests)
-     * @param bool $submitCrawlUrls If set, submits the URLs to queue
-     * @param bool $downloadCrawlUrls If set (and $submitCrawlUrls is not) fills $downloadUrls with the URLs
-     * @param array $duplicateTrack An id per URL, so URLs already handled in this run are not added again
-     * @param array $downloadUrls Filled with the URLs, if $downloadCrawlUrls is set
-     * @param array $incomingProcInstructions Processing instructions, if empty the URLs are not filtered by them
      * @return string List of URLs (meant for display in backend module)
      */
-    public function compileUrlList(
-        array $configuration,
-        array $pageRow,
-        int $scheduledTime,
-        int $reqMinute,
-        bool $submitCrawlUrls,
-        bool $downloadCrawlUrls,
-        array &$duplicateTrack,
-        array &$downloadUrls,
-        array $incomingProcInstructions
-    ): string {
+    public function compileUrlList(array $configuration, array $pageRow, CrawlRun $run): string
+    {
         if (!is_array($configuration['URLs'])) {
             return 'ERROR - no URL generated';
         }
@@ -120,7 +82,7 @@ class QueueEntryWriter
         foreach ($configuration['URLs'] as $urlQuery) {
             if (!$this->processInstructionService->isAllowed(
                 $configuration['subCfg']['procInstrFilter'] ?? '',
-                $incomingProcInstructions
+                $run->processingInstructions
             )) {
                 continue;
             }
@@ -140,36 +102,37 @@ class QueueEntryWriter
             // Create key by which to determine unique-ness:
             $uKey = $url . '|' . ($configuration['subCfg']['userGroups'] ?? '') . '|' . ($configuration['subCfg']['procInstrFilter'] ?? '');
 
-            if (isset($duplicateTrack[$uKey])) {
+            if ($run->isUrlHandled($uKey)) {
                 //if the url key is registered just display it and do not resubmit is
                 $urlLog[] = '<em><span class="text-muted">' . htmlspecialchars($url) . '</span></em>';
             } else {
                 // Scheduled time:
-                $schTime = $scheduledTime + round(count($duplicateTrack) * (60 / $reqMinute));
+                $schTime = $run->scheduledTime + round($run->countHandledUrls() * (60 / $run->requestsPerMinute));
                 $schTime = intval($schTime / 60) * 60;
                 $formattedDate = BackendUtility::datetime($schTime);
-                $this->urlList[] = '[' . $formattedDate . '] ' . $url;
+                $run->addUrlListEntry('[' . $formattedDate . '] ' . $url);
                 $urlList = '[' . $formattedDate . '] ' . htmlspecialchars($url);
 
                 // Submit for crawling!
-                if ($submitCrawlUrls) {
+                if ($run->submitUrls) {
                     $added = $this->addUrl(
+                        $run,
                         $pageId,
                         $url,
                         $configuration['subCfg'],
-                        $scheduledTime,
+                        $run->scheduledTime,
                         $configurationHash,
                         $skipInnerCheck
                     );
                     if ($added === false) {
                         $urlList .= ' (URL already existed)';
                     }
-                } elseif ($downloadCrawlUrls) {
-                    $downloadUrls[$url] = $url;
+                } elseif ($run->collectDownloadUrls) {
+                    $run->addDownloadUrl($url);
                 }
                 $urlLog[] = $urlList;
             }
-            $duplicateTrack[$uKey] = true;
+            $run->markUrlHandled($uKey);
         }
 
         // Todo: Find a better option to have this correct in both backend (<br>) and cli (<new line>)
@@ -178,12 +141,14 @@ class QueueEntryWriter
 
     /**
      * Adds a URL to the queue, unless an equal entry is already queued. Returns whether it was added.
+     * If the run only collects queue entries, the entry is added to the run instead and false is returned.
      *
      * @param array $subCfg Sub configuration array (from TS config)
      * @param int $scheduled Scheduled time
      * @param bool $skipInnerDuplicationCheck Skip the check for an equal entry
      */
     public function addUrl(
+        CrawlRun $run,
         int $pageId,
         string $url,
         array $subCfg,
@@ -220,14 +185,14 @@ class QueueEntryWriter
             'configuration_hash' => $configurationHash,
             'scheduled' => $scheduled,
             'exec_time' => 0,
-            'set_id' => $this->setId,
+            'set_id' => $run->setId,
             'result_data' => '',
             'configuration' => $subCfg['key'],
         ];
 
-        if ($this->registerQueueEntriesInternallyOnly) {
+        if ($run->collectQueueEntriesOnly) {
             //the entries will only be registered and not stored to the database
-            $this->queueEntries[] = $fieldArray;
+            $run->addQueueEntry($fieldArray);
         } else {
             if (!$skipInnerDuplicationCheck) {
                 // check if there is already an equal entry
@@ -258,13 +223,15 @@ class QueueEntryWriter
      * @param array $parameters Handed over to QueueCallbackInterface::execute(), must be JSON encodable
      * @param int $pageId The page the queue entry is shown with in the crawler log
      * @param int $scheduled When to execute the callback, 0 for now
+     * @param int $setId The set the queue entry belongs to, fx. to filter the crawler log
      * @psalm-api Used by other extensions, see Documentation/Features/QueueCallbacks
      */
     public function addCallback(
         string $callbackClassName,
         array $parameters = [],
         int $pageId = 0,
-        int $scheduled = 0
+        int $scheduled = 0,
+        int $setId = 0
     ): int {
         $scheduled = $scheduled ?: $this->getCurrentTime();
         $parameters[self::CALLBACK_PARAMETER] = $callbackClassName;
@@ -274,7 +241,7 @@ class QueueEntryWriter
             'parameters' => json_encode($parameters, JSON_THROW_ON_ERROR),
             'scheduled' => $scheduled,
             'exec_time' => 0,
-            'set_id' => $this->setId,
+            'set_id' => $setId,
             'result_data' => '',
         ]);
         $this->dispatchCrawlUrlMessage($queueId, $pageId, $scheduled);
