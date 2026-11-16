@@ -125,8 +125,9 @@ check_url() {
 }
 
 step "Start the web server on ${BASE_URL}"
-# The Development context shows the details of exceptions in the response
-(cd "${PUBLIC_DIR}" && TYPO3_CONTEXT=Development php -S "${HOST}" index.php > "${WORK_DIR}/php-server.log" 2>&1) &
+# The Development context shows the details of exceptions in the response. The router script needs an absolute
+# path: it becomes SCRIPT_FILENAME for /typo3/, and TYPO3 derives its public path from it
+(cd "${PUBLIC_DIR}" && TYPO3_CONTEXT=Development php -S "${HOST}" -t "${PUBLIC_DIR}" "${PUBLIC_DIR}/index.php" > "${WORK_DIR}/php-server.log" 2>&1) &
 SERVER_PID=$!
 trap 'kill ${SERVER_PID} 2>/dev/null || true' EXIT
 for _ in $(seq 1 30); do
