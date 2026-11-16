@@ -13,7 +13,7 @@ test.describe('Indexing', () => {
         helpers.processCrawlerQueue();
 
         // Make sure the page is not indexed before it is crawled.
-        helpers.ddevQuery(`DELETE FROM index_phash WHERE data_page_id = ${pageId};`);
+        helpers.query(`DELETE FROM index_phash WHERE data_page_id = ${pageId};`);
         await expect(await searchResult(page)).toHaveCount(0);
     });
 
@@ -31,7 +31,7 @@ test.describe('Indexing', () => {
     test('Pages added with the buildQueue command are indexed', {tag: ['@v14']}, async ({page}) => {
         const lastQueueId = getLastQueueId();
 
-        helpers.ddevExec(`bin/typo3 crawler:buildQueue ${pageId} default --mode=queue`);
+        helpers.typo3(`crawler:buildQueue ${pageId} default --mode=queue`);
         helpers.processCrawlerQueue();
 
         expect(isCrawledSince(lastQueueId), 'Page is crawled by the worker').toBe(true);
@@ -40,13 +40,13 @@ test.describe('Indexing', () => {
 
     test('Pages crawled again from the log module are indexed again', {tag: ['@v14']}, async ({page}) => {
         // Crawl the page once, then remove it from the index again.
-        helpers.ddevExec(`bin/typo3 crawler:buildQueue ${pageId} default --mode=exec`);
-        helpers.ddevQuery(`DELETE FROM index_phash WHERE data_page_id = ${pageId};`);
-        const queueId = Number(helpers.ddevQuery(
+        helpers.typo3(`crawler:buildQueue ${pageId} default --mode=exec`);
+        helpers.query(`DELETE FROM index_phash WHERE data_page_id = ${pageId};`);
+        const queueId = Number(helpers.query(
             `SELECT MAX(qid) FROM tx_crawler_queue WHERE page_id = ${pageId} AND exec_time > 0 ` +
             "AND parameters LIKE '%tx_indexedsearch_reindex%';"
         ));
-        helpers.ddevQuery(`UPDATE tx_crawler_queue SET exec_time = 1 WHERE qid = ${queueId};`);
+        helpers.query(`UPDATE tx_crawler_queue SET exec_time = 1 WHERE qid = ${queueId};`);
 
         await helpers.loginBackend(page);
         await page.goto(`/typo3/module/page/crawler/log?id=${pageId}`);
@@ -57,18 +57,18 @@ test.describe('Indexing', () => {
         ]);
         helpers.processCrawlerQueue();
 
-        const execTime = Number(helpers.ddevQuery(`SELECT exec_time FROM tx_crawler_queue WHERE qid = ${queueId};`));
+        const execTime = Number(helpers.query(`SELECT exec_time FROM tx_crawler_queue WHERE qid = ${queueId};`));
         expect(execTime, 'Queue entry is crawled again').toBeGreaterThan(1);
         await expect(await searchResult(page)).toHaveCount(1);
     });
 });
 
 function getLastQueueId() {
-    return Number(helpers.ddevQuery('SELECT COALESCE(MAX(qid), 0) FROM tx_crawler_queue;'));
+    return Number(helpers.query('SELECT COALESCE(MAX(qid), 0) FROM tx_crawler_queue;'));
 }
 
 function isCrawledSince(lastQueueId) {
-    return helpers.ddevQuery(
+    return helpers.query(
         'SELECT COUNT(*) FROM tx_crawler_queue ' +
         `WHERE qid > ${lastQueueId} AND page_id = ${pageId} AND exec_time > 0 ` +
         "AND parameters LIKE '%tx_indexedsearch_reindex%';"

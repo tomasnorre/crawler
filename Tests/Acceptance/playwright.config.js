@@ -27,8 +27,8 @@ module.exports = defineConfig({
     ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: 'https://crawler-devbox.ddev.site/',
+    /* Base URL to use in actions like `await page.goto('/')`, the devbox unless ACCEPTANCE_BASE_URL is set. */
+    baseURL: process.env.ACCEPTANCE_BASE_URL || 'https://crawler-devbox.ddev.site/',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
       trace: 'retain-on-failure',
