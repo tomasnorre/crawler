@@ -1,0 +1,17 @@
+name: Test documentation
+
+on: [ push, pull_request ]
+
+jobs:
+  tests:
+    name: Render documentation
+    runs-on: ubuntu-26.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Test if the documentation will render without warnings
+        run: |
+          mkdir -p Documentation-GENERATED-temp \
+          && docker run --rm --pull always -v $(pwd):/project \
+             ghcr.io/typo3-documentation/render-guides:latest --config=Documentation --no-progress --minimal-test
