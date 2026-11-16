@@ -1,0 +1,55 @@
+name: Classic Mode
+
+# Installs TYPO3 without Composer (classic mode) with the crawler extension as packaged for the TER,
+# and checks that it works, see Build/Scripts/classicModeTest.sh.
+# The nightly run catches new TYPO3 releases breaking the extension in classic mode.
+
+on:
+  pull_request:
+    branches:
+      - "**"
+  push:
+    branches:
+      - "main"
+  schedule:
+    - cron: "37 2 * * *"
+  workflow_dispatch:
+
+jobs:
+  ClassicMode:
+    name: Classic mode (TYPO3 ${{ matrix.typo3 }}, PHP ${{ matrix.php }})
+    runs-on: ubuntu-26.04
+    timeout-minutes: 20
+
+    strategy:
+      fail-fast: false
+      matrix:
+        typo3:
+          - "14"
+        php:
+          - "8.2"
+          - "8.5"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: intl, pdo_sqlite, gd, zip, mbstring, xml
+          coverage: none
+
+      - name: Install TYPO3 in classic mode and crawl
+        run: Build/Scripts/classicModeTest.sh "${{ matrix.typo3 }}" "${{ runner.temp }}/typo3-classic"
+
+      - name: Upload logs
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: classic-mode-logs-${{ matrix.typo3 }}-${{ matrix.php }}
+          path: |
+            ${{ runner.temp }}/typo3-classic/php-server.log
+            ${{ runner.temp }}/typo3-classic/public/typo3temp/var/log/
+          retention-days: 10

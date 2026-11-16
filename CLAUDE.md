@@ -45,6 +45,8 @@ Crawls the TYPO3 page tree for cache warmup, indexing and publishing.
 - All tests: `composer test:all`
 - Mutation tests: `composer test:mutation`
 - Acceptance tests: `cd .devbox && ddev start`, then `cd Tests/Acceptance && npx playwright test --grep @v14`
+- Classic mode (non-Composer) test: `Build/Scripts/classicModeTest.sh` – downloads TYPO3, installs it with the
+  committed extension (HEAD) as packaged for the TER and crawls it. Runs in CI as `.github/workflows/ClassicMode.yml`
 - Static analysis: `composer analyse` (PHPStan), `composer psalm`, `composer rector`
 - Code style check: `composer cs-fix`; apply fixes: `composer cs-fix -- --fix`
 - All static checks: `composer static`
