@@ -83,7 +83,12 @@ class ResultHandlerTest extends UnitTestCase
             ],
             'expected' => 'Error - no info, sorry!',
         ];
-        // Missing test case for the return 'Error: ' (last return)
+        yield 'requestResult is an integer' => [
+            'requestContent' => [
+                'content' => 1,
+            ],
+            'expected' => 'Error - no info, sorry!',
+        ];
     }
 
     #[DataProvider('getResFeVarsDataProvider')]
@@ -112,6 +117,12 @@ class ResultHandlerTest extends UnitTestCase
                 'content' => json_encode([
                     'vars' => [],
                 ], JSON_THROW_ON_ERROR),
+            ],
+            'expected' => [],
+        ];
+        yield 'Result data content is an integer' => [
+            'resultData' => [
+                'content' => 1,
             ],
             'expected' => [],
         ];
@@ -146,7 +157,20 @@ class ResultHandlerTest extends UnitTestCase
             ],
             'expected' => '',
         ];
-        /* Bug We don't handle when result row doesn't contain content key */
+        yield 'resultLog key result_data is an integer' => [
+            'resultLog' => [
+                'result_data' => 0,
+            ],
+            'expected' => '',
+        ];
+        yield 'resultLog key result_data exists, content is an integer' => [
+            'resultLog' => [
+                'result_data' => json_encode([
+                    'content' => 1,
+                ], JSON_THROW_ON_ERROR),
+            ],
+            'expected' => '',
+        ];
         yield 'resultLog key result_data exits, is not empty, but does not contain content key' => [
             'resultLog' => [
                 'result_data' => json_encode([

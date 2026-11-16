@@ -67,4 +67,86 @@ class BackendModuleCrawlerLogControllerTest extends UnitTestCase
             'expectedSetId' => 0,
         ];
     }
+
+    #[DataProvider('requestPropertiesDataProvider')]
+    #[Test]
+    public function readsThePropertiesFromTheRequest(ServerRequest $request, array $expectedProperties): void
+    {
+        $subject = (new \ReflectionClass(BackendModuleCrawlerLogController::class))->newInstanceWithoutConstructor();
+
+        (new \ReflectionMethod($subject, 'setPropertiesBasedOnPostVars'))->invoke($subject, $request);
+
+        $properties = [];
+        foreach (array_keys($expectedProperties) as $propertyName) {
+            $properties[$propertyName] = (new \ReflectionProperty($subject, $propertyName))->getValue($subject);
+        }
+        self::assertSame($expectedProperties, $properties);
+    }
+
+    public static function requestPropertiesDataProvider(): iterable
+    {
+        yield 'Defaults' => [
+            'request' => new ServerRequest(),
+            'expectedProperties' => [
+                'pageUid' => -1,
+                'quiPath' => '',
+                'queueId' => null,
+                'logDisplay' => 'all',
+                'itemsPerPage' => 10,
+                'showResultLog' => '0',
+                'showFeVars' => '0',
+                'logDepth' => '0',
+            ],
+        ];
+        yield 'Values in the query parameters' => [
+            'request' => (new ServerRequest())->withQueryParams([
+                'id' => '5',
+                'qid_details' => '12abc',
+                'displayLog' => 'finished',
+                'itemsPerPage' => '50',
+                'ShowResultLog' => '1',
+                'ShowFeVars' => '1',
+                'logDepth' => '2',
+            ]),
+            'expectedProperties' => [
+                'pageUid' => 5,
+                'quiPath' => '&qid_details=12',
+                'queueId' => '12abc',
+                'logDisplay' => 'finished',
+                'itemsPerPage' => 50,
+                'showResultLog' => '1',
+                'showFeVars' => '1',
+                'logDepth' => '2',
+            ],
+        ];
+        yield 'Queue id in the parsed body wins over the query parameters' => [
+            'request' => (new ServerRequest())->withQueryParams([
+                'qid_details' => '12',
+            ])->withParsedBody([
+                'qid_details' => '13',
+            ]),
+            'expectedProperties' => [
+                'quiPath' => '&qid_details=13',
+                'queueId' => '13',
+            ],
+        ];
+        yield 'Parsed body is an object' => [
+            'request' => (new ServerRequest())->withQueryParams([
+                'qid_details' => '12',
+            ])->withParsedBody(new \stdClass()),
+            'expectedProperties' => [
+                'quiPath' => '&qid_details=12',
+                'queueId' => '12',
+            ],
+        ];
+        yield 'No queue id' => [
+            'request' => (new ServerRequest())->withQueryParams([
+                'qid_details' => '0',
+            ]),
+            'expectedProperties' => [
+                'quiPath' => '',
+                'queueId' => '0',
+            ],
+        ];
+    }
 }
