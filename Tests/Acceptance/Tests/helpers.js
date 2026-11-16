@@ -36,7 +36,7 @@ const devboxPath = path.resolve(__dirname, '../../../.devbox');
 
 /*
  * The tests run against the devbox by default. To run them against another installation, like the classic mode
- * installation of Build/Scripts/classicModeTest.sh, set
+ * installation of Build/Scripts/classicModeSetup.sh, set
  *   ACCEPTANCE_BASE_URL       its URL
  *   ACCEPTANCE_TYPO3_COMMAND  the command running the TYPO3 CLI, fx. "php public/typo3/sysext/core/bin/typo3"
  *   ACCEPTANCE_SQL_COMMAND    the command running the SQL query from stdin, printing the result without column names

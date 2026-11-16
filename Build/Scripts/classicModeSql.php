@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * Runs SQL against the database of a TYPO3 classic mode installation, used by Build/Scripts/classicModeTest.sh
+ * Runs SQL against the database of a TYPO3 classic mode installation, used by Build/Scripts/classicModeSetup.sh
  * and by the acceptance tests when they run against that installation.
  *
  * Usage: php Build/Scripts/classicModeSql.php <public directory> [--import|--eval <PHP code>]

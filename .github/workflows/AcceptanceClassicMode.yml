@@ -1,9 +1,8 @@
-name: Classic Mode
+name: Acceptance Tests Classic Mode
 
-# Installs TYPO3 without Composer (classic mode) with the crawler extension as packaged for the TER,
-# and checks that it works, see Build/Scripts/classicModeTest.sh.
-# The second job runs the acceptance tests (Tests/Acceptance) against a classic mode installation with the
-# content of the devbox. The nightly run catches new TYPO3 releases breaking the extension in classic mode.
+# Installs TYPO3 without Composer (classic mode) with the crawler extension as packaged for the TER and the content
+# of the devbox, see Build/Scripts/classicModeSetup.sh, and runs the acceptance tests (Tests/Acceptance) against it.
+# The nightly run catches new TYPO3 releases breaking the extension in classic mode.
 
 on:
   pull_request:
@@ -17,46 +16,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  ClassicMode:
-    name: Classic mode (TYPO3 ${{ matrix.typo3 }}, PHP ${{ matrix.php }})
-    runs-on: ubuntu-26.04
-    timeout-minutes: 20
-
-    strategy:
-      fail-fast: false
-      matrix:
-        typo3:
-          - "14"
-        php:
-          - "8.2"
-          - "8.5"
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-
-      - name: Set up PHP ${{ matrix.php }}
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php }}
-          extensions: intl, pdo_sqlite, gd, zip, mbstring, xml
-          coverage: none
-
-      - name: Install TYPO3 in classic mode and crawl
-        run: Build/Scripts/classicModeTest.sh "${{ matrix.typo3 }}" "${{ runner.temp }}/typo3-classic"
-
-      - name: Upload logs
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@v7
-        with:
-          name: classic-mode-logs-${{ matrix.typo3 }}-${{ matrix.php }}
-          path: |
-            ${{ runner.temp }}/typo3-classic/php-server.log
-            ${{ runner.temp }}/typo3-classic/public/typo3temp/var/log/
-          retention-days: 10
-
-  ClassicModeAcceptance:
-    name: Classic mode acceptance tests (TYPO3 ${{ matrix.typo3 }}, PHP ${{ matrix.php }})
+  AcceptanceClassicMode:
+    name: Acceptance Tests Classic Mode (TYPO3 ${{ matrix.typo3 }}, PHP ${{ matrix.php }})
     runs-on: ubuntu-26.04
     timeout-minutes: 45
 
@@ -98,7 +59,7 @@ jobs:
           coverage: none
 
       - name: Install TYPO3 in classic mode with the devbox
-        run: Build/Scripts/classicModeTest.sh "${{ matrix.typo3 }}" "${{ runner.temp }}/typo3-classic" devbox
+        run: Build/Scripts/classicModeSetup.sh "${{ matrix.typo3 }}" "${{ runner.temp }}/typo3-classic"
 
       - uses: actions/setup-node@v7
         with:

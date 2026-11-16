@@ -45,10 +45,10 @@ Crawls the TYPO3 page tree for cache warmup, indexing and publishing.
 - All tests: `composer test:all`
 - Mutation tests: `composer test:mutation`
 - Acceptance tests: `cd .devbox && ddev start`, then `cd Tests/Acceptance && npx playwright test --grep @v14`
-- Classic mode (non-Composer) test: `Build/Scripts/classicModeTest.sh` – downloads TYPO3, installs it with the
-  committed extension (HEAD) as packaged for the TER and crawls it. Runs in CI as `.github/workflows/ClassicMode.yml`.
-  With the setup argument `devbox` it installs the devbox content on MariaDB/MySQL and keeps the web server running,
-  CI then runs the acceptance tests against it (`ACCEPTANCE_BASE_URL`, `ACCEPTANCE_TYPO3_COMMAND`, `ACCEPTANCE_SQL_COMMAND`)
+- Acceptance tests in classic mode (non-Composer): `Build/Scripts/classicModeSetup.sh` downloads TYPO3, installs it
+  with the committed extension (HEAD) as packaged for the TER and the devbox content on MariaDB/MySQL, and keeps the
+  web server running. CI runs the acceptance tests against it (`ACCEPTANCE_BASE_URL`, `ACCEPTANCE_TYPO3_COMMAND`,
+  `ACCEPTANCE_SQL_COMMAND`), see `.github/workflows/AcceptanceClassicMode.yml`
 - Static analysis: `composer analyse` (PHPStan), `composer psalm`, `composer rector`
 - Code style check: `composer cs-fix`; apply fixes: `composer cs-fix -- --fix`
 - All static checks: `composer static`
