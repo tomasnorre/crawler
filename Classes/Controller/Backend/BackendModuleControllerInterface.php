@@ -9,6 +9,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * @internal since v12.0.0
+ *
+ * @psalm-api handleRequest() is called by the backend routing, see Configuration/Backend/Modules.php
  */
 interface BackendModuleControllerInterface
 {

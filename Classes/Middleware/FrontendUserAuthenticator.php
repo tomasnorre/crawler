@@ -37,6 +37,8 @@ use TYPO3\CMS\Frontend\Controller\ErrorController;
  * Evaluates HTTP headers and checks if Crawler should register itself.
  *
  * @internal since v12.0.0
+ *
+ * @psalm-api Middleware, registered in Configuration/RequestMiddlewares.php
  */
 class FrontendUserAuthenticator implements MiddlewareInterface
 {

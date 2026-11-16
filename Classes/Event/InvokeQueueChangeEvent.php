@@ -23,6 +23,8 @@ use AOE\Crawler\Domain\Model\Reason;
 
 /**
  * @internal since v12.0.0
+ *
+ * @psalm-api PSR-14 event for integrators
  */
 final class InvokeQueueChangeEvent
 {

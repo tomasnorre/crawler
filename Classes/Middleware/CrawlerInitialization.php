@@ -39,6 +39,8 @@ use TYPO3\CMS\Frontend\Page\PageInformationFactory;
  * Finally, at the very end, if the crawler is still running, output the data and replace the response.
  *
  * @internal since v12.0.0
+ *
+ * @psalm-api Middleware, registered in Configuration/RequestMiddlewares.php
  */
 class CrawlerInitialization implements MiddlewareInterface
 {

@@ -48,6 +48,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * @internal since v12.0.0
+ *
+ * @psalm-api Backend module, registered in Configuration/Backend/Modules.php
  */
 final class BackendModuleCrawlerLogController extends AbstractBackendModuleController implements BackendModuleControllerInterface
 {

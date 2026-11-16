@@ -27,6 +27,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * @internal since v9.2.5
+ *
+ * @psalm-api Hook, registered in ext_localconf.php
  */
 class DataHandlerHook
 {

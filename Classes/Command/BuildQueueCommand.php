@@ -44,6 +44,8 @@ use TYPO3\CMS\Core\Utility\MathUtility;
 
 /**
  * @internal since v12.0.0
+ *
+ * @psalm-api Console command, registered in Configuration/Services.yaml
  */
 #[AsCommand(name: 'crawler:buildQueue', description: 'Create entries in the queue that can be processed at once',)]
 class BuildQueueCommand extends Command
