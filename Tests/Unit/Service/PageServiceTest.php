@@ -83,6 +83,28 @@ class PageServiceTest extends UnitTestCase
             'expected' => '',
         ];
 
+        yield 'Extension Setting empty and page is hidden' => [
+            'extensionSetting' => [],
+            'pageRow' => [
+                'doktype' => 1,
+                'hidden' => 1,
+            ],
+            'excludeDoktype' => [],
+            'expected' => 'Because page is hidden',
+        ];
+
+        yield 'Extension Setting crawl hidden pages and page is hidden' => [
+            'extensionSetting' => [
+                'crawlHiddenPages' => true,
+            ],
+            'pageRow' => [
+                'doktype' => 1,
+                'hidden' => 1,
+            ],
+            'excludeDoktype' => [],
+            'expected' => '',
+        ];
+
         yield 'Extension Setting do not crawl hidden pages and page is hidden' => [
             'extensionSetting' => [
                 'crawlHiddenPages' => false,

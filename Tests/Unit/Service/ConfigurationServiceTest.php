@@ -619,9 +619,241 @@ class ConfigurationServiceTest extends UnitTestCase
         self::assertSame(['1', ...range(2, 1000)], $result['default']['paramExpanded']['L']);
     }
 
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function getConfigurationFromPageTSContinuesWithNextParamSetIfPageIsNotInPidsOnly(): void
+    {
+        $pageTsConfig = $this->getPageTsConfig([
+            'first' => '&L=1',
+            'second' => '&L=2',
+            'third' => '&L=3',
+        ], [
+            'first' => [
+                'pidsOnly' => 5,
+            ],
+            'second' => [
+                'pidsOnly' => 6,
+            ],
+        ]);
+
+        $result = $this->getConfigurationService()->getConfigurationFromPageTS($pageTsConfig, 5, []);
+
+        self::assertSame(['first', 'third'], array_keys($result));
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function getConfigurationFromDatabaseBuildsConfigurationFromRecord(): void
+    {
+        $urlService = $this->createMock(UrlService::class);
+        $urlService->expects(self::once())->method('compileUrls')
+            ->with([
+                'L' => ['1'],
+                'tx_news' => ['2', 3],
+            ], ['?id=5'], 10_000)
+            ->willReturn(['?id=5&L=1']);
+        $result = $this->getConfigurationService(
+            $urlService,
+            configurationRepository: $this->getConfigurationRepository(5, [
+                $this->getConfigurationRecord([
+                    'processing_instruction_parameters_ts' => "foo = bar\nbaz.qux = 1",
+                    'processing_instruction_filter' => 'tx_indexedsearch_reindex',
+                    'base_url' => 'https://example.com/',
+                    'force_ssl' => '1',
+                    'fegroups' => '1,2',
+                    'exclude' => '6',
+                    'configuration' => '&L=1&tx_news=[2-3]',
+                ]),
+            ])
+        )->getConfigurationFromDatabase(5, []);
+
+        self::assertSame([
+            'default' => [
+                'subCfg' => [
+                    'procInstrFilter' => 'tx_indexedsearch_reindex',
+                    'procInstrParams.' => [
+                        'foo' => 'bar',
+                        'baz.' => [
+                            'qux' => '1',
+                        ],
+                    ],
+                    'baseUrl' => 'https://example.com/',
+                    'force_ssl' => 1,
+                    'userGroups' => '1,2',
+                    'exclude' => '6',
+                    'key' => 'default',
+                ],
+                'paramParsed' => [
+                    'L' => '1',
+                    'tx_news' => '[2-3]',
+                ],
+                'paramExpanded' => [
+                    'L' => ['1'],
+                    'tx_news' => ['2', 3],
+                ],
+                'origin' => 'tx_crawler_configuration_7',
+                'URLs' => ['?id=5&L=1'],
+            ],
+        ], $result);
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function getConfigurationFromDatabaseKeepsPreviouslyDefinedConfigurations(): void
+    {
+        $result = $this->getConfigurationService(
+            configurationRepository: $this->getConfigurationRepository(5, [
+                $this->getConfigurationRecord([
+                    'name' => 'default',
+                ]),
+                $this->getConfigurationRecord([
+                    'name' => 'news',
+                    'uid' => 8,
+                ]),
+            ])
+        )->getConfigurationFromDatabase(5, [
+            'default' => 'from page TSconfig',
+        ]);
+
+        self::assertSame(['default', 'news'], array_keys($result));
+        self::assertSame('from page TSconfig', $result['default']);
+        self::assertSame('tx_crawler_configuration_8', $result['news']['origin']);
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('getConfigurationFromDatabaseRespectsPidsOnlyAndExcludeDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function getConfigurationFromDatabaseRespectsPidsOnlyAndExclude(
+        array $record,
+        bool $expectedToBeProcessed
+    ): void {
+        $result = $this->getConfigurationService(
+            configurationRepository: $this->getConfigurationRepository(5, [
+                $this->getConfigurationRecord($record),
+                $this->getConfigurationRecord([
+                    'name' => 'last',
+                ]),
+            ], $expectedToBeProcessed ? 2 : 1)
+        )->getConfigurationFromDatabase(5, []);
+
+        self::assertSame($expectedToBeProcessed, isset($result['default']));
+        self::assertArrayHasKey('last', $result);
+    }
+
+    public static function getConfigurationFromDatabaseRespectsPidsOnlyAndExcludeDataProvider(): iterable
+    {
+        yield 'Page is in pidsonly' => [[
+            'pidsonly' => '3, 5',
+        ], true];
+        yield 'Page is in pidsonly given as integer' => [[
+            'pidsonly' => 5,
+        ], true];
+        yield 'Page is not in pidsonly' => [[
+            'pidsonly' => '3,4',
+        ], false];
+        yield 'Page is excluded' => [[
+            'exclude' => '4,5',
+        ], false];
+        yield 'Page is excluded by integer' => [[
+            'exclude' => 5,
+        ], false];
+        yield 'Other page is excluded' => [[
+            'exclude' => '4',
+        ], true];
+        yield 'Configuration without parameters' => [[
+            'configuration' => null,
+        ], true];
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function getConfigurationFromDatabaseUsesConfigurationsRestrictedToBackendGroupsForAdmins(): void
+    {
+        $backendUser = $this->createMock(BackendUserAuthentication::class);
+        $backendUser->expects(self::once())->method('backendCheckLogin');
+        $backendUser->method('isAdmin')->willReturn(true);
+        $GLOBALS['BE_USER'] = $backendUser;
+        $groupResolver = $this->createMock(GroupResolver::class);
+        $groupResolver->expects(self::never())->method('resolveGroupsForUser');
+
+        $result = $this->getConfigurationService(
+            configurationRepository: $this->getConfigurationRepository(5, [
+                $this->getConfigurationRecord([
+                    'begroups' => '3',
+                ]),
+            ]),
+            groupResolver: $groupResolver
+        )->getConfigurationFromDatabase(5, []);
+
+        self::assertArrayHasKey('default', $result);
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function getConfigurationFromDatabaseSkipsConfigurationsRestrictedToOtherBackendGroups(): void
+    {
+        $backendUser = $this->createStub(BackendUserAuthentication::class);
+        $backendUser->method('isAdmin')->willReturn(false);
+        $GLOBALS['BE_USER'] = $backendUser;
+        $groupResolver = $this->createStub(GroupResolver::class);
+        $groupResolver->method('resolveGroupsForUser')->willReturn([]);
+
+        $result = $this->getConfigurationService(
+            configurationRepository: $this->getConfigurationRepository(5, [
+                $this->getConfigurationRecord([
+                    'begroups' => '3',
+                ]),
+            ], 0),
+            groupResolver: $groupResolver
+        )->getConfigurationFromDatabase(5, []);
+
+        self::assertSame([], $result);
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function expandExcludeStringReturnsPageIdsWithoutSubpages(): void
+    {
+        self::assertSame([3, 5], $this->getConfigurationService()->expandExcludeString('3, 5,3'));
+    }
+
+    /**
+     * @param int $processedRecords The number of records a configuration is built of
+     */
+    private function getConfigurationRepository(
+        int $pageId,
+        array $records,
+        int $processedRecords = 1
+    ): ConfigurationRepository {
+        for ($i = 0; $i < $processedRecords; $i++) {
+            GeneralUtility::addInstance(
+                TypoScriptStringFactory::class,
+                new TypoScriptStringFactory($this->createStub(ContainerInterface::class), new LosslessTokenizer())
+            );
+        }
+        $configurationRepository = $this->createMock(ConfigurationRepository::class);
+        $configurationRepository->expects(self::once())
+            ->method('getCrawlerConfigurationRecordsFromRootLine')
+            ->with($pageId)
+            ->willReturn($records);
+        return $configurationRepository;
+    }
+
+    private function getConfigurationRecord(array $overrides = []): array
+    {
+        return array_merge([
+            'uid' => 7,
+            'name' => 'default',
+            'begroups' => '',
+            'pidsonly' => '',
+            'exclude' => '',
+            'configuration' => '&L=1',
+            'processing_instruction_parameters_ts' => '',
+            'processing_instruction_filter' => '',
+            'base_url' => '',
+            'force_ssl' => '0',
+            'fegroups' => '',
+        ], $overrides);
+    }
+
     private function getConfigurationService(
         ?UrlService $urlService = null,
-        array $extensionSettings = []
+        array $extensionSettings = [],
+        ?ConfigurationRepository $configurationRepository = null,
+        ?GroupResolver $groupResolver = null,
     ): ConfigurationService {
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = $extensionSettings;
         if ($urlService === null) {
@@ -631,8 +863,8 @@ class ConfigurationServiceTest extends UnitTestCase
 
         return new ConfigurationService(
             $urlService,
-            $this->createStub(ConfigurationRepository::class),
-            $this->createStub(GroupResolver::class),
+            $configurationRepository ?? $this->createStub(ConfigurationRepository::class),
+            $groupResolver ?? $this->createStub(GroupResolver::class),
             new ParameterExpander(),
             new ExcludeStringExpander(),
         );
