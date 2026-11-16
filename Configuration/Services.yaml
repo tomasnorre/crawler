@@ -49,22 +49,13 @@ services:
             - name: 'messenger.receiver'
               identifier: 'crawler_low'
 
+    # The commands are registered by their #[AsCommand] attribute. Don't add a console.command tag as well:
+    # TYPO3 would register the command a second time, as an alias of itself, and hide it from `typo3 list`.
     AOE\Crawler\Command\BuildQueueCommand:
-        tags:
-            - name: 'console.command'
-              command: 'crawler:buildQueue'
-              description: 'Create entries in the queue that can be processed at once'
         arguments:
             $eventDispatcher: '@TYPO3\CMS\Core\EventDispatcher\EventDispatcher'
             $queueRepository: '@AOE\Crawler\Domain\Repository\QueueRepository'
             $pageRepository: '@TYPO3\CMS\Core\Domain\Repository\PageRepository'
-        public: true
-
-    AOE\Crawler\Command\FlushQueueCommand:
-        tags:
-            - name: 'console.command'
-              command: 'crawler:flushQueue'
-              description: 'Remove queue entries and perform a cleanup'
 
     queryBuilder.tx_crawler_configuration:
         class: 'TYPO3\CMS\Core\Database\Query\QueryBuilder'
