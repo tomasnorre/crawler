@@ -29,8 +29,9 @@ use AOE\Crawler\Service\PageConfigurationResolver;
 use AOE\Crawler\Service\PageService;
 use AOE\Crawler\Service\ProcessInstructionService;
 use AOE\Crawler\Service\UrlService;
-use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Clock\ClockInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
+use TYPO3\CMS\Core\Clock\SystemClock;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -39,25 +40,20 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 trait QueueEntryWriterTestTrait
 {
-    /**
-     * @param list<non-empty-string> $mockedMethods
-     */
     private function createQueueEntryWriter(
         MessageBusInterface $messageBus,
-        array $mockedMethods = [],
         ?QueueRepository $queueRepository = null,
-    ): QueueEntryWriter&MockObject {
-        return $this->getMockBuilder(QueueEntryWriter::class)
-            ->setConstructorArgs([
-                $queueRepository ?? GeneralUtility::makeInstance(QueueRepository::class),
-                GeneralUtility::makeInstance(EventDispatcher::class),
-                GeneralUtility::makeInstance(UrlService::class),
-                GeneralUtility::makeInstance(ProcessInstructionService::class),
-                new CrawlUrlMessageDispatcher($messageBus),
-                GeneralUtility::makeInstance(ExtensionConfigurationProvider::class),
-            ])
-            ->onlyMethods($mockedMethods)
-            ->getMock();
+        ?ClockInterface $clock = null,
+    ): QueueEntryWriter {
+        return new QueueEntryWriter(
+            $queueRepository ?? GeneralUtility::makeInstance(QueueRepository::class),
+            GeneralUtility::makeInstance(EventDispatcher::class),
+            GeneralUtility::makeInstance(UrlService::class),
+            GeneralUtility::makeInstance(ProcessInstructionService::class),
+            new CrawlUrlMessageDispatcher($messageBus),
+            GeneralUtility::makeInstance(ExtensionConfigurationProvider::class),
+            $clock ?? new SystemClock(),
+        );
     }
 
     private function createPageConfigurationResolver(): PageConfigurationResolver

@@ -24,6 +24,7 @@ use AOE\Crawler\Event\AfterQueueItemAddedEvent;
 use AOE\Crawler\Event\BeforeQueueItemAddedEvent;
 use AOE\Crawler\Queue\Message\CrawlUrlMessage;
 use AOE\Crawler\QueueExecutor;
+use Psr\Clock\ClockInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
@@ -39,6 +40,7 @@ final readonly class CrawlUrlHandler
         private QueueRepository $queueRepository,
         private QueueExecutor $queueExecutor,
         private EventDispatcherInterface $eventDispatcher,
+        private ClockInterface $clock,
     ) {
     }
 
@@ -59,7 +61,7 @@ final readonly class CrawlUrlHandler
         $queueRecord = $beforeEvent->getQueueRecord();
 
         $this->queueRepository->update($queueId, [
-            'exec_time' => time(),
+            'exec_time' => $this->clock->now()->getTimestamp(),
         ]);
 
         $result = $this->queueExecutor->executeQueueItem($queueRecord);

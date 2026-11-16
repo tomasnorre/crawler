@@ -25,6 +25,7 @@ use AOE\Crawler\Event\AfterUrlAddedToQueueEvent;
 use AOE\Crawler\Queue\Message\CrawlUrlMessage;
 use AOE\Crawler\Service\ProcessInstructionService;
 use AOE\Crawler\Service\UrlService;
+use Psr\Clock\ClockInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\UriInterface;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -34,11 +35,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * Creates the URLs of crawler configurations, writes them to the queue (tx_crawler_queue)
  * and hands them over to the message bus.
  *
- * Not final, so tests can replace getCurrentTime().
- *
  * @internal
  */
-class QueueEntryWriter
+final class QueueEntryWriter
 {
     /**
      * The parameter of a queue entry holding the class name of its QueueCallbackInterface
@@ -54,6 +53,7 @@ class QueueEntryWriter
         private readonly ProcessInstructionService $processInstructionService,
         private readonly CrawlUrlMessageDispatcher $crawlUrlMessageDispatcher,
         ExtensionConfigurationProvider $extensionConfigurationProvider,
+        private readonly ClockInterface $clock,
     ) {
         $this->extensionSettings = $extensionConfigurationProvider->getExtensionConfiguration();
     }
@@ -195,7 +195,7 @@ class QueueEntryWriter
                 $rows = $this->queueRepository->getDuplicateQueueItemsIfExists(
                     (bool) $this->extensionSettings['enableTimeslot'],
                     $scheduled,
-                    $this->getCurrentTime(),
+                    $this->clock->now()->getTimestamp(),
                     $fieldArray['page_id'],
                     $fieldArray['parameters_hash']
                 );
@@ -229,7 +229,7 @@ class QueueEntryWriter
         int $scheduled = 0,
         int $setId = 0
     ): int {
-        $scheduled = $scheduled ?: $this->getCurrentTime();
+        $scheduled = $scheduled ?: $this->clock->now()->getTimestamp();
         $parameters[self::CALLBACK_PARAMETER] = $callbackClassName;
 
         $queueId = $this->queueRepository->add([
@@ -246,17 +246,9 @@ class QueueEntryWriter
     }
 
     /**
-     * Returns the current system time
-     */
-    public function getCurrentTime(): int
-    {
-        return time();
-    }
-
-    /**
      * Returns a md5 hash generated from a serialized configuration array.
      */
-    protected function getConfigurationHash(array $configuration): string
+    private function getConfigurationHash(array $configuration): string
     {
         unset($configuration['paramExpanded']);
         unset($configuration['URLs']);
@@ -271,7 +263,7 @@ class QueueEntryWriter
         $this->crawlUrlMessageDispatcher->dispatch(
             new CrawlUrlMessage($queueId),
             $pageId,
-            $scheduled - $this->getCurrentTime()
+            $scheduled - $this->clock->now()->getTimestamp()
         );
     }
 }

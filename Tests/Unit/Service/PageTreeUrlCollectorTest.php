@@ -19,13 +19,22 @@ namespace AOE\Crawler\Tests\Unit\Service;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
+use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Queue\CrawlRun;
+use AOE\Crawler\Queue\CrawlUrlMessageDispatcher;
 use AOE\Crawler\Queue\QueueEntryWriter;
 use AOE\Crawler\Service\ConfigurationService;
 use AOE\Crawler\Service\PageConfigurationResolver;
 use AOE\Crawler\Service\PageTreeUrlCollector;
+use AOE\Crawler\Service\ProcessInstructionService;
+use AOE\Crawler\Service\UrlService;
+use AOE\Crawler\Tests\Unit\FrozenClock;
 use AOE\Crawler\Value\QueueRow;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Psr\Http\Message\UriInterface;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -141,7 +150,7 @@ final class PageTreeUrlCollectorTest extends UnitTestCase
         $default = new QueueRow('Page title');
         $default->setPageTitleHTML('<icon/>');
         $default->setConfigurationKey('default');
-        $default->setUrls('URLs of default');
+        $default->setUrls($this->getUrls('default'));
         $default->setOptions(['User Groups: 1,2', 'ProcInstr: tx_indexedsearch_reindex']);
         $default->setParameters(DebugUtility::viewArray($procInstrParams));
         $default->setParameterConfig('&amp;L=[0|1]<br />' . chr(10) . '&amp;S=x');
@@ -154,7 +163,7 @@ final class PageTreeUrlCollectorTest extends UnitTestCase
         $news = new QueueRow();
         $news->setPageTitleHTML('<icon/>');
         $news->setConfigurationKey('news');
-        $news->setUrls('URLs of news');
+        $news->setUrls($this->getUrls('news'));
         $news->setParameters(DebugUtility::viewArray([]));
         $news->setValuesExpanded('Comb: =1');
 
@@ -214,7 +223,7 @@ final class PageTreeUrlCollectorTest extends UnitTestCase
             $this->createStub(IconFactory::class),
             $this->createStub(ConfigurationService::class),
             $pageConfigurationResolver,
-            $this->createStub(QueueEntryWriter::class),
+            $this->createQueueEntryWriter(),
         );
 
         $pageTreeUrlCollector->getQueueRowsForPage(new CrawlRun(0, 30), [
@@ -242,18 +251,45 @@ final class PageTreeUrlCollectorTest extends UnitTestCase
             )
         );
 
-        $queueEntryWriter = $this->createStub(QueueEntryWriter::class);
-        $queueEntryWriter->method('compileUrlList')->willReturnCallback(
-            static fn (array $configuration): string => 'URLs of ' . $configuration['subCfg']['key']
-        );
-
         return new PageTreeUrlCollector(
             $this->createStub(PageRepository::class),
             $this->createStub(IconFactory::class),
             $configurationService,
             $pageConfigurationResolver,
-            $queueEntryWriter,
+            $this->createQueueEntryWriter(),
         );
+    }
+
+    /**
+     * A QueueEntryWriter that builds the URL "https://example.com/?<query>" of each query of a configuration
+     */
+    private function createQueueEntryWriter(): QueueEntryWriter
+    {
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy'] = 'Y-m-d';
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['hhmm'] = 'H:i';
+
+        $urlService = $this->createStub(UrlService::class);
+        $urlService->method('getUrlFromPageAndQueryParameters')->willReturnCallback(
+            static fn (int $pageId, string $query): UriInterface => new Uri('https://example.com/?' . $query)
+        );
+
+        return new QueueEntryWriter(
+            $this->createStub(QueueRepository::class),
+            $this->createStub(EventDispatcherInterface::class),
+            $urlService,
+            new ProcessInstructionService(),
+            $this->createStub(CrawlUrlMessageDispatcher::class),
+            $this->createStub(ExtensionConfigurationProvider::class),
+            new FrozenClock(0),
+        );
+    }
+
+    /**
+     * The URL list QueueEntryWriter::compileUrlList() returns for the URL of a configuration, scheduled to 0
+     */
+    private function getUrls(string $configurationKey): string
+    {
+        return '[' . date('Y-m-d H:i', 0) . '] https://example.com/?config=' . $configurationKey;
     }
 
     private function getConfiguration(
@@ -269,7 +305,7 @@ final class PageTreeUrlCollectorTest extends UnitTestCase
             ],
             'paramParsed' => $paramParsed,
             'paramExpanded' => $paramExpanded,
-            'URLs' => [],
+            'URLs' => ['config=' . $key],
         ];
     }
 

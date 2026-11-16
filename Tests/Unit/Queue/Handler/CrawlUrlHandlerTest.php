@@ -25,6 +25,7 @@ use AOE\Crawler\Event\BeforeQueueItemAddedEvent;
 use AOE\Crawler\Queue\Handler\CrawlUrlHandler;
 use AOE\Crawler\Queue\Message\CrawlUrlMessage;
 use AOE\Crawler\QueueExecutor;
+use AOE\Crawler\Tests\Unit\FrozenClock;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -46,7 +47,12 @@ class CrawlUrlHandlerTest extends UnitTestCase
         $this->queueRepository = $this->createMock(QueueRepository::class);
         $this->queueExecutor = $this->createMock(QueueExecutor::class);
         $this->eventDispatcher = $this->createMock(EventDispatcherInterface::class);
-        $this->subject = new CrawlUrlHandler($this->queueRepository, $this->queueExecutor, $this->eventDispatcher);
+        $this->subject = new CrawlUrlHandler(
+            $this->queueRepository,
+            $this->queueExecutor,
+            $this->eventDispatcher,
+            new FrozenClock(1_000_000),
+        );
     }
 
     #[Test]
@@ -103,7 +109,9 @@ class CrawlUrlHandlerTest extends UnitTestCase
 
         // First the record is locked by setting exec_time, then the result is stored.
         self::assertSame(12, $updates[0][0]);
-        self::assertArrayHasKey('exec_time', $updates[0][1]);
+        self::assertSame([
+            'exec_time' => 1_000_000,
+        ], $updates[0][1]);
         self::assertSame([12, [
             'result_data' => json_encode($result),
             'added_by_listener' => 1,
