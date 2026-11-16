@@ -89,12 +89,16 @@ typo3 extension:activate info
 typo3 extension:activate crawler
 typo3 extension:setup
 typo3 cache:flush
-typo3 extension:list | grep -qw crawler || fail "The crawler extension is not active"
+EXTENSIONS="$(typo3 extension:list)"
+grep -qw crawler <<< "${EXTENSIONS}" || fail "The crawler extension is not active"
 
 step "Check the crawler commands"
-typo3 list crawler
-typo3 list crawler | grep -q 'crawler:buildQueue' || fail "crawler:buildQueue is missing"
-typo3 list crawler | grep -q 'crawler:flushQueue' || fail "crawler:flushQueue is missing"
+# Symfony leaves out commands it cannot create, so call them directly to show the reason
+typo3 crawler:buildQueue --help -vvv || fail "crawler:buildQueue cannot be run"
+typo3 crawler:flushQueue --help -vvv || fail "crawler:flushQueue cannot be run"
+COMMANDS="$(typo3 list --raw)"
+grep -q '^crawler:buildQueue ' <<< "${COMMANDS}" || fail "crawler:buildQueue is not listed"
+grep -q '^crawler:flushQueue ' <<< "${COMMANDS}" || fail "crawler:flushQueue is not listed"
 
 step "Add a crawler configuration to the root page"
 sql '
@@ -123,7 +127,7 @@ BACKEND_STATUS="$(curl --silent --location --output /dev/null --write-out '%{htt
 step "Build the URL list"
 URLS="$(typo3 crawler:buildQueue 1 default --depth 0 --mode url)"
 echo "${URLS}"
-echo "${URLS}" | grep -qF "${BASE_URL}" || fail "crawler:buildQueue --mode url lists no URL of ${BASE_URL}"
+grep -qF "${BASE_URL}" <<< "${URLS}" || fail "crawler:buildQueue --mode url lists no URL of ${BASE_URL}"
 
 step "Queue the URLs and crawl them with the message bus"
 typo3 crawler:buildQueue 1 default --depth 0 --mode queue
@@ -150,6 +154,6 @@ step "Crawl the URLs right away"
 typo3 crawler:flushQueue all
 EXEC_OUTPUT="$(typo3 crawler:buildQueue 1 default --depth 0 --mode exec)"
 echo "${EXEC_OUTPUT}"
-echo "${EXEC_OUTPUT}" | grep -q 'OK:' || fail "crawler:buildQueue --mode exec did not crawl successfully"
+grep -q 'OK:' <<< "${EXEC_OUTPUT}" || fail "crawler:buildQueue --mode exec did not crawl successfully"
 
 step "TYPO3 ${TYPO3_VERSION} in classic mode works with the crawler extension"
