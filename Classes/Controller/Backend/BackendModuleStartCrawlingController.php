@@ -33,12 +33,13 @@ use Psr\Http\Message\UriInterface;
 use Symfony\Contracts\Service\Attribute\Required;
 use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
-use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * @internal since v12.0.0
+ *
+ * @psalm-api Backend module, registered in Configuration/Backend/Modules.php
  */
 class BackendModuleStartCrawlingController extends AbstractBackendModuleController implements BackendModuleControllerInterface
 {
@@ -80,7 +81,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
         return $this->moduleTemplate->renderResponse('Backend/ShowCrawlerInformation');
     }
 
-    private function assignValues(ServerRequestInterface $request): ModuleTemplate
+    private function assignValues(ServerRequestInterface $request): void
     {
         $logUrl = $this->backendUriBuilder->buildUriFromRoute('web_site_crawler_log', [
             'id' => $this->pageUid,
@@ -132,7 +133,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
             exit;
         }
 
-        return $this->moduleTemplate->assignMultiple([
+        $this->moduleTemplate->assignMultiple([
             'currentPageId' => $this->pageUid,
             'noConfigurationSelected' => $noConfigurationSelected,
             'submitCrawlUrls' => $submitCrawlUrls,

@@ -9,6 +9,8 @@ use TYPO3\CMS\Frontend\Event\ShouldUseCachedPageDataIfAvailableEvent;
 /**
  * Disable frontend cache when the HTTP request has crawler parameters,
  * so that page indexing hooks are triggered.
+ *
+ * @psalm-api Event listener, registered by its attribute
  */
 class ShouldUseCachedPageDataIfAvailableEventListener
 {

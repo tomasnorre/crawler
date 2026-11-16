@@ -27,6 +27,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Provides a ContextMenu item
  * @internal since v9.2.5
+ *
+ * @psalm-api Context menu item provider, registered by autoconfiguration
  */
 class ItemProvider extends AbstractProvider
 {

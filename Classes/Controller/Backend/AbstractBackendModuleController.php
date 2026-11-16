@@ -42,6 +42,9 @@ abstract class AbstractBackendModuleController
     protected ModuleTemplate $moduleTemplate;
     protected array $extensionSettings = [];
 
+    /**
+     * @psalm-api Called by the dependency injection container, see #[Required]
+     */
     #[Required]
     public function setExtensionSettings(): void
     {

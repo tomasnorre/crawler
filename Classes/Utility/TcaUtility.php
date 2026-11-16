@@ -24,6 +24,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * @internal since v9.2.5
+ *
+ * @psalm-api itemsProcFunc in Configuration/TCA/tx_crawler_configuration.php
  */
 class TcaUtility
 {
