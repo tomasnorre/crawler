@@ -115,7 +115,11 @@ check_url() {
     status="$(curl --silent --location --output "${WORK_DIR}/response.html" --write-out '%{http_code} %{url_effective}' "${url}")"
     echo "${description}: ${status}"
     if [ "${status%% *}" != "200" ]; then
-        sed -e 's/<[^>]*>/ /g' -e '/^[[:space:]]*$/d' "${WORK_DIR}/response.html" | head -n 60
+        php -r '
+            $html = preg_replace("#<(style|script)\\b.*?</\\1>#is", "", (string) file_get_contents($argv[1]));
+            $text = html_entity_decode(strip_tags(preg_replace("#<(br|p|div|h\d|li|tr|pre|span)\b#i", "\n$0", $html)));
+            echo substr(preg_replace("/\n\s*\n+/", "\n", $text), 0, 6000), "\n";
+        ' "${WORK_DIR}/response.html"
         fail "${description} returned ${status}"
     fi
 }
