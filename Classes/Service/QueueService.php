@@ -51,31 +51,12 @@ class QueueService
         // later implementation it's kept as it do no harm.
         $allowedConfigurations = [];
         $configurations = ConfigurationService::removeDisallowedConfigurations($allowedConfigurations, $configurations);
-        $run = new CrawlRun(
-            $time,
-            300,
-            submitUrls: true,
-            processingInstructions: array_keys($this->getCrawlerProcInstructions()),
-            setId: $this->setId,
-        );
+        // No processing instructions are selected, so the URLs of all configurations are added,
+        // each with the processing instructions of its configuration
+        $run = new CrawlRun($time, 300, submitUrls: true, setId: $this->setId);
 
         foreach ($configurations as $configuration) {
             $this->queueEntryWriter->compileUrlList($configuration, $pageData, $run);
         }
-    }
-
-    /**
-     * Reads the registered processingInstructions of the crawler
-     */
-    private function getCrawlerProcInstructions(): array
-    {
-        $crawlerProcInstructions = [];
-        if (!empty($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'])) {
-            foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'] as $configuration) {
-                $crawlerProcInstructions[$configuration['key']] = $configuration['value'];
-            }
-        }
-
-        return $crawlerProcInstructions;
     }
 }
