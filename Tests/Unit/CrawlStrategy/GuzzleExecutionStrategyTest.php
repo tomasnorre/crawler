@@ -20,8 +20,11 @@ namespace AOE\Crawler\Tests\Unit\CrawlStrategy;
  */
 
 use AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategy;
+use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\RequestException;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
+use TYPO3\CMS\Core\Http\Request;
 use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
@@ -117,5 +120,106 @@ class GuzzleExecutionStrategyTest extends UnitTestCase
             'cURL error 6: Could not resolve host: not-important.tld (see https://curl.se/libcurl/c/libcurl-errors.html)',
             $guzzleExecutionStrategy->fetchUrlContents($url, $crawlerId)['errorlog'][0]
         );
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function fetchUrlContentsRequestsUrlWithCrawlerHeaders(): void
+    {
+        $subject = $this->createPartialMock(GuzzleExecutionStrategy::class, ['getResponse']);
+        $subject->expects(self::once())->method('getResponse')->with('https://example.com/page', [
+            'headers' => [
+                'Connection' => 'close',
+                'X-T3Crawler' => 'crawler-id',
+                'User-Agent' => 'TYPO3 crawler',
+            ],
+            'connect_timeout' => 5.0,
+        ])->willReturn(new Response('php://temp', 200, [
+            'X-T3Crawler-Meta' => '{"vars":{"status":"200 OK"}}',
+        ]));
+
+        self::assertSame([
+            'vars' => [
+                'status' => '200 OK',
+            ],
+        ], $subject->fetchUrlContents(new Uri('https://example.com/page'), 'crawler-id'));
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function fetchUrlContentsAuthenticatesWithUserInfoOfUrl(): void
+    {
+        $subject = $this->createPartialMock(GuzzleExecutionStrategy::class, ['getResponse']);
+        $subject->expects(self::once())->method('getResponse')->with(
+            'https://user:secret@example.com/',
+            self::callback(static function (array $options): bool {
+                self::assertSame(['user', 'secret'], $options['auth']);
+                return true;
+            })
+        )->willReturn(new Response('php://temp', 404, [], 'Not Found'));
+
+        self::assertSame([
+            'errorlog' => ['Response has no X-T3Crawler-Meta header'],
+            'vars' => [
+                'status' => '404 Not Found',
+            ],
+        ], $subject->fetchUrlContents(new Uri('https://user:secret@example.com/'), 'crawler-id'));
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function fetchUrlContentsReturnsStatusOfErrorResponse(): void
+    {
+        $exception = new RequestException(
+            'Server error',
+            new Request('https://example.com/', 'GET'),
+            new Response('php://temp', 503, [], 'Service Unavailable')
+        );
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects(self::once())->method('debug')->with(
+            'Error while opening "https://example.com/" - 503 Service Unavailable',
+            [
+                'crawlerId' => 'crawler-id',
+            ]
+        );
+        $subject = $this->createPartialMock(GuzzleExecutionStrategy::class, ['getResponse']);
+        $subject->method('getResponse')->willThrowException($exception);
+        $subject->setLogger($logger);
+
+        self::assertSame([
+            'errorlog' => ['503 Service Unavailable'],
+        ], $subject->fetchUrlContents(new Uri('https://example.com/'), 'crawler-id'));
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function fetchUrlContentsReturnsMessageOfRequestExceptionWithoutResponse(): void
+    {
+        $subject = $this->createPartialMock(GuzzleExecutionStrategy::class, ['getResponse']);
+        $subject->method('getResponse')->willThrowException(
+            new RequestException('Too many redirects', new Request('https://example.com/', 'GET'))
+        );
+        $subject->setLogger($this->createStub(LoggerInterface::class));
+
+        self::assertSame([
+            'errorlog' => ['0 Too many redirects'],
+        ], $subject->fetchUrlContents(new Uri('https://example.com/'), 'crawler-id'));
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function fetchUrlContentsReturnsCodeAndMessageOfConnectException(): void
+    {
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects(self::once())->method('debug')->with(
+            'Error while opening "https://example.com/" - 0 Connection refused',
+            [
+                'crawlerId' => 'crawler-id',
+            ]
+        );
+        $subject = $this->createPartialMock(GuzzleExecutionStrategy::class, ['getResponse']);
+        $subject->method('getResponse')->willThrowException(
+            new ConnectException('Connection refused', new Request('https://example.com/', 'GET'))
+        );
+        $subject->setLogger($logger);
+
+        self::assertSame([
+            'errorlog' => ['0 Connection refused'],
+        ], $subject->fetchUrlContents(new Uri('https://example.com/'), 'crawler-id'));
     }
 }
