@@ -19,6 +19,7 @@ namespace AOE\Crawler\Service;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Queue\CrawlRun;
 use AOE\Crawler\Queue\QueueEntryWriter;
 use AOE\Crawler\Value\QueueRow;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
@@ -34,26 +35,17 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Walks the page tree and collects the URLs of the crawler configurations of each page,
- * as rows for display in the backend module and the CLI. Depending on the options,
+ * as rows for display in the backend module and the CLI. Depending on the options of the CrawlRun,
  * the URLs are added to the queue or collected for download.
  *
  * @internal
  */
 final class PageTreeUrlCollector
 {
-    public array $duplicateTrack = [];
-    public array $downloadUrls = [];
-    public array $incomingProcInstructions = [];
-    public array $incomingConfigurationSelection = [];
-
     /**
      * @var BackendUserAuthentication|null
      */
     private $backendUser;
-    private int $scheduledTime = 0;
-    private int $reqMinute = 0;
-    private bool $submitCrawlUrls = false;
-    private bool $downloadCrawlUrls = false;
 
     public function __construct(
         private readonly PageRepository $pageRepository,
@@ -65,38 +57,15 @@ final class PageTreeUrlCollector
     }
 
     /**
-     * Returns the rows of the page tree with their URLs, fx. for the backend module
+     * Returns the rows of the page tree with their URLs, fx. for the backend module.
+     * The URLs are handled according to the options of the run, which also collects them.
      *
      * @param int $id Root page id to start from
      * @param int $depth Depth of tree, 0 = only the root page, 1 = one sublevel, 99 = infinite
-     * @param int $scheduledTime Unix time when the URLs are timed to be visited when put in queue
-     * @param int $reqMinute Number of requests per minute (creates the interleave between requests)
-     * @param bool $submitCrawlUrls If set, submits the URLs to the queue (real crawling)
-     * @param bool $downloadCrawlUrls If set (and $submitCrawlUrls is not), fills $downloadUrls with the URLs
-     * @param array $incomingProcInstructions Processing instructions, if empty the URLs are not filtered by them
-     * @param array $configurationSelection Configuration keys, if empty all configurations are used
      * @return list<QueueRow>
      */
-    public function collect(
-        int $id,
-        int $depth,
-        int $scheduledTime,
-        int $reqMinute,
-        bool $submitCrawlUrls,
-        bool $downloadCrawlUrls,
-        array $incomingProcInstructions,
-        array $configurationSelection
-    ): array {
-        $this->scheduledTime = $scheduledTime;
-        $this->reqMinute = $reqMinute;
-        $this->submitCrawlUrls = $submitCrawlUrls;
-        $this->downloadCrawlUrls = $downloadCrawlUrls;
-        $this->incomingProcInstructions = $incomingProcInstructions;
-        $this->incomingConfigurationSelection = $configurationSelection;
-
-        $this->duplicateTrack = [];
-        $this->downloadUrls = [];
-
+    public function collect(int $id, int $depth, CrawlRun $run): array
+    {
         // Drawing tree:
         $tree = GeneralUtility::makeInstance(PageTreeView::class);
         $perms_clause = $this->getBackendUser()->getPagePermsClause(Permission::PAGE_SHOW);
@@ -135,6 +104,7 @@ final class PageTreeUrlCollector
 
                 foreach ($mountTree->tree as $mountData) {
                     $queueRows = array_merge($queueRows, $this->getQueueRowsForPage(
+                        $run,
                         $mountData['row'],
                         BackendUtility::getRecordTitle('pages', $mountData['row'], true),
                         (string) $data['HTML'],
@@ -152,6 +122,7 @@ final class PageTreeUrlCollector
             }
 
             $queueRows = array_merge($queueRows, $this->getQueueRowsForPage(
+                $run,
                 $data['row'],
                 BackendUtility::getRecordTitle('pages', $data['row'], true),
                 (string) $data['HTML'],
@@ -169,6 +140,7 @@ final class PageTreeUrlCollector
      * @return list<QueueRow>
      */
     public function getQueueRowsForPage(
+        CrawlRun $run,
         array $pageRow,
         string $pageTitle,
         string $pageTitleHTML = '',
@@ -176,7 +148,7 @@ final class PageTreeUrlCollector
     ): array {
         $skipMessage = '';
         $configurations = ConfigurationService::removeDisallowedConfigurations(
-            $this->incomingConfigurationSelection,
+            $run->configurationSelection,
             $this->pageConfigurationResolver->getConfigurationsForPageRow($pageRow, $skipMessage, $mountPoint)
         );
 
@@ -193,33 +165,26 @@ final class PageTreeUrlCollector
             $queueRow = new QueueRow($queueRowCollection === [] ? $pageTitle : '');
             $queueRow->setPageTitleHTML($pageTitleHTML);
             $queueRow->setConfigurationKey((string) $configurationKey);
-            $this->addConfigurationToQueueRow($queueRow, $pageRow, $configuration);
+            $this->addConfigurationToQueueRow($queueRow, $pageRow, $configuration, $run);
             $queueRowCollection[] = $queueRow;
         }
 
         return $queueRowCollection;
     }
 
-    private function addConfigurationToQueueRow(QueueRow $queueRow, array $pageRow, array $configuration): void
-    {
+    private function addConfigurationToQueueRow(
+        QueueRow $queueRow,
+        array $pageRow,
+        array $configuration,
+        CrawlRun $run
+    ): void {
         $excludedPages = $this->configurationService->expandExcludeString($configuration['subCfg']['exclude'] ?? '');
         if (in_array($pageRow['uid'], $excludedPages, true)) {
             $queueRow->setMessage('(Page is excluded in this configuration)');
             return;
         }
 
-        $queueRow->setUrls($this->queueEntryWriter->compileUrlList(
-            $configuration,
-            $pageRow,
-            $this->scheduledTime,
-            $this->reqMinute,
-            $this->submitCrawlUrls,
-            $this->downloadCrawlUrls,
-            $this->duplicateTrack,
-            $this->downloadUrls,
-            // if empty the urls won't be filtered by processing instructions
-            $this->incomingProcInstructions
-        ));
+        $queueRow->setUrls($this->queueEntryWriter->compileUrlList($configuration, $pageRow, $run));
         $queueRow->setValuesExpanded($this->renderExpandedParameters($configuration['paramExpanded']));
         $queueRow->setOptions($this->getQueueRowOptions($configuration['subCfg']));
         $queueRow->setParameters(DebugUtility::viewArray($configuration['subCfg']['procInstrParams.'] ?? []));

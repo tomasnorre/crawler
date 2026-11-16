@@ -19,6 +19,7 @@ namespace AOE\Crawler\Tests\Unit\Service;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Queue\CrawlRun;
 use AOE\Crawler\Queue\QueueEntryWriter;
 use AOE\Crawler\Service\ConfigurationService;
 use AOE\Crawler\Service\PageConfigurationResolver;
@@ -70,7 +71,7 @@ final class PageTreeUrlCollectorTest extends UnitTestCase
 
         self::assertEquals(
             [$expected],
-            $pageTreeUrlCollector->getQueueRowsForPage([
+            $pageTreeUrlCollector->getQueueRowsForPage(new CrawlRun(0, 30), [
                 'uid' => 5,
             ], 'Page title', '<icon/>')
         );
@@ -86,7 +87,7 @@ final class PageTreeUrlCollectorTest extends UnitTestCase
 
         self::assertEquals(
             [$expected],
-            $pageTreeUrlCollector->getQueueRowsForPage([
+            $pageTreeUrlCollector->getQueueRowsForPage(new CrawlRun(0, 30), [
                 'uid' => 5,
             ], 'Page title', '<icon/>')
         );
@@ -108,7 +109,7 @@ final class PageTreeUrlCollectorTest extends UnitTestCase
 
         self::assertEquals(
             [$expected],
-            $pageTreeUrlCollector->getQueueRowsForPage([
+            $pageTreeUrlCollector->getQueueRowsForPage(new CrawlRun(0, 30), [
                 'uid' => 5,
             ], 'Page title', '<icon/>')
         );
@@ -132,6 +133,7 @@ final class PageTreeUrlCollectorTest extends UnitTestCase
                 'tx_news[news]' => ['<b>'],
             ], [
                 'L' => '[0|1]',
+                'S' => 'x',
             ]),
             'news' => $this->getConfiguration('news'),
         ]);
@@ -142,7 +144,7 @@ final class PageTreeUrlCollectorTest extends UnitTestCase
         $default->setUrls('URLs of default');
         $default->setOptions(['User Groups: 1,2', 'ProcInstr: tx_indexedsearch_reindex']);
         $default->setParameters(DebugUtility::viewArray($procInstrParams));
-        $default->setParameterConfig('&amp;L=[0|1]');
+        $default->setParameterConfig('&amp;L=[0|1]<br />' . chr(10) . '&amp;S=x');
         $default->setValuesExpanded(
             '<table>' . $this->getExpandedParameterRow('&amp;L=', 2, '0<br />' . chr(10) . '1')
             . $this->getExpandedParameterRow('&amp;tx_news[news]=', 1, '&lt;b&gt;')
@@ -158,7 +160,7 @@ final class PageTreeUrlCollectorTest extends UnitTestCase
 
         self::assertEquals(
             [$default, $news],
-            $pageTreeUrlCollector->getQueueRowsForPage([
+            $pageTreeUrlCollector->getQueueRowsForPage(new CrawlRun(0, 30), [
                 'uid' => 5,
             ], 'Page title', '<icon/>')
         );
@@ -171,15 +173,29 @@ final class PageTreeUrlCollectorTest extends UnitTestCase
             'default' => $this->getConfiguration('default'),
             'news' => $this->getConfiguration('news'),
         ]);
-        $pageTreeUrlCollector->incomingConfigurationSelection = ['news'];
+        $run = new CrawlRun(0, 30, configurationSelection: ['news']);
 
-        $rows = $pageTreeUrlCollector->getQueueRowsForPage([
+        $rows = $pageTreeUrlCollector->getQueueRowsForPage($run, [
             'uid' => 5,
         ], 'Page title');
 
         self::assertCount(1, $rows);
         self::assertSame('news', $rows[0]->configurationKey);
         self::assertSame('Page title', $rows[0]->pageTitle);
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function getQueueRowsForPageUsesNumericConfigurationKeysAsString(): void
+    {
+        $pageTreeUrlCollector = $this->createCollectorForRows([
+            7 => $this->getConfiguration('seven'),
+        ]);
+
+        $rows = $pageTreeUrlCollector->getQueueRowsForPage(new CrawlRun(0, 30), [
+            'uid' => 5,
+        ], 'Page title');
+
+        self::assertSame('7', $rows[0]->configurationKey);
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
@@ -201,7 +217,7 @@ final class PageTreeUrlCollectorTest extends UnitTestCase
             $this->createStub(QueueEntryWriter::class),
         );
 
-        $pageTreeUrlCollector->getQueueRowsForPage([
+        $pageTreeUrlCollector->getQueueRowsForPage(new CrawlRun(0, 30), [
             'uid' => 5,
         ], 'Page title', '', '3-7');
     }

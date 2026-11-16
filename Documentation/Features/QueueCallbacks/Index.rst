@@ -104,5 +104,10 @@ Inject the `QueueEntryWriter` into your own service:
 `$scheduled`
     The Unix timestamp to execute the callback at, `0` (the default) for now.
 
+`$setId`
+    The set the queue entry belongs to, `0` by default. Give several queue
+    entries the same set id to show them together in the
+    :guilabel:`Crawler log`.
+
 The queue entry is dispatched to the message bus like a URL, and processed by
 the worker, see :ref:`upgrade-message-bus`.

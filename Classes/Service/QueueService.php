@@ -19,6 +19,7 @@ namespace AOE\Crawler\Service;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Queue\CrawlRun;
 use AOE\Crawler\Queue\QueueEntryWriter;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -28,13 +29,16 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class QueueService
 {
+    /**
+     * The set id of all queue entries added by this service
+     */
+    private readonly int $setId;
+
     public function __construct(
         private readonly QueueEntryWriter $queueEntryWriter,
         private readonly PageConfigurationResolver $pageConfigurationResolver,
     ) {
-        if ($this->queueEntryWriter->setId <= 0) {
-            $this->queueEntryWriter->setId = GeneralUtility::md5int(microtime());
-        }
+        $this->setId = GeneralUtility::md5int(microtime());
     }
 
     public function addPageToQueue(int $pageUid, int $time = 0): void
@@ -47,26 +51,16 @@ class QueueService
         // later implementation it's kept as it do no harm.
         $allowedConfigurations = [];
         $configurations = ConfigurationService::removeDisallowedConfigurations($allowedConfigurations, $configurations);
-        $downloadUrls = [];
-        $duplicateTrack = [];
+        $run = new CrawlRun(
+            $time,
+            300,
+            submitUrls: true,
+            processingInstructions: array_keys($this->getCrawlerProcInstructions()),
+            setId: $this->setId,
+        );
 
         foreach ($configurations as $configuration) {
-            //enable inserting of entries
-            $this->queueEntryWriter->registerQueueEntriesInternallyOnly = false;
-            $this->queueEntryWriter->compileUrlList(
-                $configuration,
-                $pageData,
-                $time,
-                300,
-                true,
-                false,
-                $duplicateTrack,
-                $downloadUrls,
-                array_keys($this->getCrawlerProcInstructions())
-            );
-
-            //reset the queue because the entries have been written to the db
-            $this->queueEntryWriter->queueEntries = [];
+            $this->queueEntryWriter->compileUrlList($configuration, $pageData, $run);
         }
     }
 
