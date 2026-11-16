@@ -26,6 +26,7 @@ use AOE\Crawler\Queue\QueueEntryWriter;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use AOE\Crawler\Tests\Functional\QueueEntryWriterTestTrait;
 use AOE\Crawler\Tests\Unit\CrawlStrategy\CallbackObjectForTesting;
+use AOE\Crawler\Tests\Unit\FrozenClock;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -81,7 +82,7 @@ class QueueEntryWriterTest extends FunctionalTestCase
             ->with(self::isInstanceOf(CrawlUrlMessage::class), self::isArray())
             ->willReturnCallback(static fn (object $message): Envelope => new Envelope($message));
 
-        $subject = $this->createQueueEntryWriter($messageBus, [], $mockedQueueRepository);
+        $subject = $this->createQueueEntryWriter($messageBus, $mockedQueueRepository);
         $run = new CrawlRun(0, 30, collectQueueEntriesOnly: $registerQueueEntriesInternallyOnly);
 
         self::assertEquals(
@@ -110,8 +111,7 @@ class QueueEntryWriterTest extends FunctionalTestCase
                 return new Envelope($message, $stamps);
             });
 
-        $subject = $this->createQueueEntryWriter($messageBus, ['getCurrentTime'], $mockedQueueRepository);
-        $subject->method('getCurrentTime')->willReturn(1_000_000);
+        $subject = $this->createQueueEntryWriter($messageBus, $mockedQueueRepository, new FrozenClock(1_000_000));
 
         self::assertTrue($subject->addUrl(new CrawlRun(0, 30), 1, 'https://example.com/', [
             'key' => 'some-key',
@@ -130,8 +130,7 @@ class QueueEntryWriterTest extends FunctionalTestCase
                 return new Envelope($message, $stamps);
             });
 
-        $subject = $this->createQueueEntryWriter($messageBus, ['getCurrentTime']);
-        $subject->method('getCurrentTime')->willReturn(1_000_000);
+        $subject = $this->createQueueEntryWriter($messageBus, clock: new FrozenClock(1_000_000));
         $queueId = $subject->addCallback(CallbackObjectForTesting::class, [
             'name' => 'Crawler',
         ], 5, setId: 42);

@@ -26,6 +26,7 @@ use AOE\Crawler\Queue\CrawlUrlMessageDispatcher;
 use AOE\Crawler\Queue\QueueEntryWriter;
 use AOE\Crawler\Service\ProcessInstructionService;
 use AOE\Crawler\Service\UrlService;
+use AOE\Crawler\Tests\Unit\FrozenClock;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -40,8 +41,6 @@ class QueueEntryWriterTest extends UnitTestCase
     #[Test]
     public function getConfigurationHashIgnoresExpandedParametersAndUrls(): void
     {
-        $subject = $this->getAccessibleMock(QueueEntryWriter::class, null, [], '', false);
-
         $configuration = [
             'paramExpanded' => 'extendedParameter',
             'URLs' => 'URLs',
@@ -50,20 +49,18 @@ class QueueEntryWriterTest extends UnitTestCase
 
         $originalCheckSum = md5(serialize($configuration));
 
-        self::assertNotEquals($originalCheckSum, $subject->_call('getConfigurationHash', $configuration));
+        self::assertNotEquals($originalCheckSum, $this->getConfigurationHash($configuration));
 
         unset($configuration['paramExpanded'], $configuration['URLs']);
         $newCheckSum = md5(serialize($configuration));
-        self::assertEquals($newCheckSum, $subject->_call('getConfigurationHash', $configuration));
+        self::assertEquals($newCheckSum, $this->getConfigurationHash($configuration));
     }
 
     #[DataProvider('getConfigurationHashReturnsExpectedValueDataProvider')]
     #[Test]
     public function getConfigurationHashReturnsExpectedValue(array $configuration, string $expected): void
     {
-        $subject = $this->getAccessibleMock(QueueEntryWriter::class, null, [], '', false);
-
-        self::assertEquals($expected, $subject->_call('getConfigurationHash', $configuration));
+        self::assertEquals($expected, $this->getConfigurationHash($configuration));
     }
 
     public static function getConfigurationHashReturnsExpectedValueDataProvider(): iterable
@@ -287,7 +284,14 @@ class QueueEntryWriterTest extends UnitTestCase
             new ProcessInstructionService(),
             $this->createStub(CrawlUrlMessageDispatcher::class),
             $extensionConfigurationProvider,
+            new FrozenClock(1_000_000),
         );
+    }
+
+    private function getConfigurationHash(array $configuration): string
+    {
+        return (new \ReflectionMethod(QueueEntryWriter::class, 'getConfigurationHash'))
+            ->invoke($this->createSubjectForCompileUrlList(), $configuration);
     }
 
     private function getConfiguration(array $urls, string $procInstrFilter = '', ?string $userGroups = null): array

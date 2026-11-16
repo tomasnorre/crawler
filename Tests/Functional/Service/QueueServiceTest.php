@@ -23,6 +23,7 @@ use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Queue\Message\CrawlUrlMessage;
 use AOE\Crawler\Service\QueueService;
 use AOE\Crawler\Tests\Functional\QueueEntryWriterTestTrait;
+use AOE\Crawler\Tests\Unit\FrozenClock;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -59,8 +60,7 @@ class QueueServiceTest extends FunctionalTestCase
             return new Envelope($message);
         });
 
-        $queueEntryWriter = $this->createQueueEntryWriter($messageBus, ['getCurrentTime']);
-        $queueEntryWriter->method('getCurrentTime')->willReturn(100000);
+        $queueEntryWriter = $this->createQueueEntryWriter($messageBus, clock: new FrozenClock(100000));
 
         $this->subject = new QueueService($queueEntryWriter, $this->createPageConfigurationResolver());
     }

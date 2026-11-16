@@ -27,6 +27,7 @@ use AOE\Crawler\Queue\CrawlRun;
 use AOE\Crawler\Service\PageConfigurationResolver;
 use AOE\Crawler\Service\PageTreeUrlCollector;
 use AOE\Crawler\Utility\MessageUtility;
+use Psr\Clock\ClockInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
@@ -58,6 +59,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
         private readonly PageTreeUrlCollector $pageTreeUrlCollector,
         private readonly PageConfigurationResolver $pageConfigurationResolver,
         private readonly UriBuilder $backendUriBuilder,
+        private readonly ClockInterface $clock,
     ) {
     }
 
@@ -234,17 +236,14 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
 
     private function getScheduledTime(string $time): int
     {
-        $scheduledTime = match ($time) {
-            'midnight' => mktime(0, 0, 0),
-            '04:00' => mktime(0, 0, 0) + 4 * 3600,
-            default => time(),
+        $now = $this->clock->now();
+        $midnight = $now->setTime(0, 0)->getTimestamp();
+
+        return match ($time) {
+            'midnight' => $midnight,
+            '04:00' => $midnight + 4 * 3600,
+            default => $now->getTimestamp(),
         };
-
-        if (!$scheduledTime) {
-            return time();
-        }
-
-        return $scheduledTime;
     }
 
     /**

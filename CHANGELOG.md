@@ -23,6 +23,9 @@
 * `CrawlerController::getPageTreeAndUrls()` is now `PageTreeUrlCollector::collect()`
 * `CrawlerController::drawURLs_addRowsForPage()` is now `PageTreeUrlCollector::getQueueRowsForPage()`, it takes the mount point as parameter
 * The options and results of compiling the URLs are kept in `AOE\Crawler\Queue\CrawlRun`, which `QueueEntryWriter` and `PageTreeUrlCollector` take as parameter instead of keeping them in properties
+* `QueueEntryWriter`, `CrawlUrlHandler`, `BuildQueueCommand` and `BackendModuleStartCrawlingController` get the current time from the PSR-20 clock `Psr\Clock\ClockInterface` instead of `time()`
+* `QueueEntryWriter` is final
+* `QueueEntryWriter::getCurrentTime()` is removed, use `Psr\Clock\ClockInterface`
 
 ### Fixed
 * Export every log entry in the crawler log CSV

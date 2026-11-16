@@ -26,10 +26,10 @@ use AOE\Crawler\Event\InvokeQueueChangeEvent;
 use AOE\Crawler\Queue\CrawlRun;
 use AOE\Crawler\Queue\Handler\CrawlUrlHandler;
 use AOE\Crawler\Queue\Message\CrawlUrlMessage;
-use AOE\Crawler\Queue\QueueEntryWriter;
 use AOE\Crawler\Service\PageTreeUrlCollector;
 use AOE\Crawler\Utility\MessageUtility;
 use AOE\Crawler\Value\QueueRow;
+use Psr\Clock\ClockInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -55,8 +55,8 @@ class BuildQueueCommand extends Command
         private readonly QueueRepository $queueRepository,
         private readonly PageRepository $pageRepository,
         private readonly PageTreeUrlCollector $pageTreeUrlCollector,
-        private readonly QueueEntryWriter $queueEntryWriter,
         private readonly CrawlUrlHandler $crawlUrlHandler,
+        private readonly ClockInterface $clock,
     ) {
         parent::__construct();
     }
@@ -264,7 +264,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
     private function createCrawlRun(InputInterface $input, mixed $mode, array $configurationKeys): CrawlRun
     {
         return new CrawlRun(
-            $this->queueEntryWriter->getCurrentTime(),
+            $this->clock->now()->getTimestamp(),
             MathUtility::forceIntegerInRange((int) $input->getOption('number') ?: 30, 1, 1000),
             submitUrls: $mode === 'queue' || $mode === 'exec',
             collectDownloadUrls: $mode === 'url',
