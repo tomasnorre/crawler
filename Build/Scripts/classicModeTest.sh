@@ -2,26 +2,40 @@
 
 #
 # Installs TYPO3 in classic mode (without Composer) with the crawler extension as it is packaged for the TER,
-# and checks that the crawler works: its commands are available, it builds a queue and crawls it,
-# directly and through the message bus.
+# and checks that it works.
 #
 # The extension is taken from the committed state (HEAD), packaged with `git archive`,
 # so files marked with export-ignore in .gitattributes are left out, like in the TER package.
 #
-# Usage: Build/Scripts/classicModeTest.sh [TYPO3 version] [working directory]
+# Usage: Build/Scripts/classicModeTest.sh [TYPO3 version] [working directory] [setup]
 #   TYPO3 version      Version to download from get.typo3.org, fx. "14" for the latest 14.x or "14.3.0", default "14"
 #   working directory  Where TYPO3 is installed, must not exist yet, default: a new temporary directory
+#   setup              "minimal" (default): an SQLite installation with a crawler configuration. Checks that the
+#                      crawler commands are available, and that the crawler builds a queue and crawls it,
+#                      directly and through the message bus. The web server is stopped at the end.
+#                      "devbox": the content, site and extensions of the devbox (.devbox) on MySQL/MariaDB, for the
+#                      acceptance tests (Tests/Acceptance). The web server keeps running for them.
+#                      The database is configured by DB_HOST, DB_PORT, DB_NAME, DB_USER and DB_PASSWORD,
+#                      default 127.0.0.1, 3306 and "db" for the rest, it must be empty.
 #
-# Needs PHP with pdo_sqlite, curl, tar and git. TYPO3 is served by the PHP built-in web server on port 8080.
+# Needs PHP with pdo_sqlite (minimal) or mysqli and pdo_mysql (devbox), curl, tar and git.
+# TYPO3 is served by the PHP built-in web server on port 8080.
 #
 
 set -euo pipefail
 
 TYPO3_VERSION="${1:-14}"
 WORK_DIR="${2:-$(mktemp -d)}"
+SETUP="${3:-minimal}"
 EXTENSION_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 HOST="127.0.0.1:8080"
 BASE_URL="http://${HOST}/"
+
+# Extensions of the devbox which are not part of TYPO3, the versions installed by .devbox/composer.json
+DEVBOX_EXTENSIONS=(
+    "news https://codeload.github.com/georgringer/news/tar.gz/36a5a983022f5648352975142d9daef6f77a657d"
+    "crawler_devbox_sitepackage https://codeload.github.com/tomasnorre/crawler-devbox-sitepackage/tar.gz/718d7b794df01ce3f3ecd353ad914eca98f0dc7e"
+)
 
 step() {
     echo
@@ -43,15 +57,16 @@ typo3() {
     php "${TYPO3_BIN}" "$@"
 }
 
-# Runs PHP code with a PDO connection to the SQLite database of the installation as $pdo
+# Runs PHP code with a PDO connection to the database of the installation as $pdo,
+# further arguments are available from $argv[4]
 sql() {
-    php -r '
-        $settings = require $argv[1] . "/typo3conf/system/settings.php";
-        $pdo = new PDO("sqlite:" . $settings["DB"]["Connections"]["Default"]["path"]);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        eval($argv[2]);
-    ' "${PUBLIC_DIR}" "$1"
+    php "${EXTENSION_DIR}/Build/Scripts/classicModeSql.php" "${PUBLIC_DIR}" --eval "$@"
 }
+
+case "${SETUP}" in
+    minimal | devbox) ;;
+    *) fail "Unknown setup \"${SETUP}\", use \"minimal\" or \"devbox\"" ;;
+esac
 
 step "Download TYPO3 ${TYPO3_VERSION}"
 curl --fail --silent --show-error --location "https://get.typo3.org/${TYPO3_VERSION}/tar.gz" --output typo3.tar.gz
@@ -71,26 +86,78 @@ git -C "${EXTENSION_DIR}" archive --format=tar --prefix=crawler/ HEAD | tar -x -
 [ ! -e "${PUBLIC_DIR}/typo3conf/ext/crawler/Tests" ] || fail "Tests/ is part of the package, check .gitattributes"
 [ -f "${PUBLIC_DIR}/typo3conf/ext/crawler/composer.json" ] || fail "composer.json is missing in the package"
 
+if [ "${SETUP}" = "devbox" ]; then
+    step "Add the extensions of the devbox"
+    for extension in "${DEVBOX_EXTENSIONS[@]}"; do
+        read -r key url <<< "${extension}"
+        mkdir -p "${PUBLIC_DIR}/typo3conf/ext/${key}"
+        curl --fail --silent --show-error --location "${url}" \
+            | tar -xz --strip-components=1 -C "${PUBLIC_DIR}/typo3conf/ext/${key}"
+        echo "Added ${key}"
+    done
+fi
+
 step "Set up TYPO3"
 TYPO3_SETUP_ADMIN_PASSWORD="$(php -r 'echo bin2hex(random_bytes(8));')Aa1!"
 export TYPO3_SETUP_ADMIN_PASSWORD
-typo3 setup \
-    --no-interaction \
-    --force \
-    --driver=sqlite \
-    --admin-username=admin \
-    --admin-email=admin@example.com \
-    --project-name="Crawler classic mode" \
-    --create-site="${BASE_URL}" \
-    --server-type=other
+if [ "${SETUP}" = "devbox" ]; then
+    export TYPO3_DB_DRIVER=mysqli
+    export TYPO3_DB_HOST="${DB_HOST:-127.0.0.1}"
+    export TYPO3_DB_PORT="${DB_PORT:-3306}"
+    export TYPO3_DB_DBNAME="${DB_NAME:-db}"
+    export TYPO3_DB_USERNAME="${DB_USER:-db}"
+    export TYPO3_DB_PASSWORD="${DB_PASSWORD:-db}"
+    typo3 setup \
+        --no-interaction \
+        --force \
+        --admin-username=admin \
+        --admin-email=admin@example.com \
+        --project-name="Crawler classic mode" \
+        --server-type=other
+else
+    typo3 setup \
+        --no-interaction \
+        --force \
+        --driver=sqlite \
+        --admin-username=admin \
+        --admin-email=admin@example.com \
+        --project-name="Crawler classic mode" \
+        --create-site="${BASE_URL}" \
+        --server-type=other
+fi
 
 step "Activate the crawler extension"
 typo3 extension:activate info
 typo3 extension:activate crawler
+if [ "${SETUP}" = "devbox" ]; then
+    # The extensions .devbox/composer.json installs, besides the ones every installation has
+    for extension in fluid_styled_content rte_ckeditor seo belog beuser felogin indexed_search scheduler tstemplate \
+        news crawler_devbox_sitepackage; do
+        typo3 extension:activate "${extension}"
+    done
+fi
 typo3 extension:setup
 typo3 cache:flush
 EXTENSIONS="$(typo3 extension:list)"
 grep -qw crawler <<< "${EXTENSIONS}" || fail "The crawler extension is not active"
+
+if [ "${SETUP}" = "devbox" ]; then
+    step "Import the content and the site of the devbox"
+    gzip -dc "${EXTENSION_DIR}/.devbox/build-files/db-14.sql.gz" \
+        | php "${EXTENSION_DIR}/Build/Scripts/classicModeSql.php" "${PUBLIC_DIR}" --import
+    # Adds what the extensions need beyond the dump
+    typo3 extension:setup
+    # The crawler configurations of the devbox crawl the devbox host
+    sql '
+        $pdo->prepare("UPDATE tx_crawler_configuration SET base_url = ? WHERE base_url <> ?")
+            ->execute([rtrim($argv[4], "/"), ""]);
+        $pdo->exec("DELETE FROM tx_crawler_queue");
+    ' "${BASE_URL}"
+    mkdir -p "${PUBLIC_DIR}/typo3conf/sites"
+    cp -R "${EXTENSION_DIR}/.devbox/config/sites/." "${PUBLIC_DIR}/typo3conf/sites/"
+    cp -R "${EXTENSION_DIR}/.devbox/public/fileadmin" "${PUBLIC_DIR}/"
+    typo3 cache:flush
+fi
 
 step "Check the crawler commands"
 # Call the commands directly as well, an error creating them is shown on stderr
@@ -100,14 +167,16 @@ COMMANDS="$(typo3 list --raw)"
 grep -q '^crawler:buildQueue ' <<< "${COMMANDS}" || fail "crawler:buildQueue is not listed"
 grep -q '^crawler:flushQueue ' <<< "${COMMANDS}" || fail "crawler:flushQueue is not listed"
 
-step "Add a crawler configuration to the root page"
-sql '
-    $pdo->prepare("INSERT INTO tx_crawler_configuration
-        (pid, tstamp, crdate, name, configuration, base_url, pidsonly, exclude, begroups, fegroups,
-         processing_instruction_filter, processing_instruction_parameters_ts, force_ssl)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
-        ->execute([1, time(), time(), "default", "", "", "", "", "0", "0", "", "", 0]);
-'
+if [ "${SETUP}" = "minimal" ]; then
+    step "Add a crawler configuration to the root page"
+    sql '
+        $pdo->prepare("INSERT INTO tx_crawler_configuration
+            (pid, tstamp, crdate, name, configuration, base_url, pidsonly, exclude, begroups, fegroups,
+             processing_instruction_filter, processing_instruction_parameters_ts, force_ssl)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+            ->execute([1, time(), time(), "default", "", "", "", "", "0", "0", "", "", 0]);
+    '
+fi
 
 # Requests a URL, follows redirects and fails with the response if the final status is not 200
 check_url() {
@@ -140,10 +209,14 @@ $_SERVER['SCRIPT_FILENAME'] = $publicDir . '/index.php';
 chdir($publicDir);
 require $publicDir . '/index.php';
 PHP
-# The Development context shows the details of exceptions in the response
-(cd "${PUBLIC_DIR}" && TYPO3_CONTEXT=Development php -S "${HOST}" -t "${PUBLIC_DIR}" "${WORK_DIR}/router.php" > "${WORK_DIR}/php-server.log" 2>&1) &
+# The Development context shows the details of exceptions in the response. Several workers let the backend
+# load its frames and the crawler request pages while a request is running.
+(cd "${PUBLIC_DIR}" && TYPO3_CONTEXT=Development PHP_CLI_SERVER_WORKERS=4 \
+    php -S "${HOST}" -t "${PUBLIC_DIR}" "${WORK_DIR}/router.php" > "${WORK_DIR}/php-server.log" 2>&1) &
 SERVER_PID=$!
-trap 'kill ${SERVER_PID} 2>/dev/null || true' EXIT
+if [ "${SETUP}" = "minimal" ]; then
+    trap 'kill ${SERVER_PID} 2>/dev/null || true' EXIT
+fi
 for _ in $(seq 1 30); do
     curl --silent --output /dev/null "${BASE_URL}" && break
     sleep 1
@@ -152,6 +225,11 @@ done
 step "Check the frontend and the backend"
 check_url "The frontend" "${BASE_URL}"
 check_url "The backend login" "${BASE_URL}typo3/"
+
+if [ "${SETUP}" = "devbox" ]; then
+    step "TYPO3 ${TYPO3_VERSION} in classic mode with the devbox is running on ${BASE_URL} (PID ${SERVER_PID})"
+    exit 0
+fi
 
 step "Build the URL list"
 URLS="$(typo3 crawler:buildQueue 1 default --depth 0 --mode url)"

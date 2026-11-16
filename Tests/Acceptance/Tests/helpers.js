@@ -34,18 +34,28 @@ export async function addQueueEntries(page, config, depth = '0') {
 
 const devboxPath = path.resolve(__dirname, '../../../.devbox');
 
-/**
- * Runs a shell command in the web container of the devbox.
+/*
+ * The tests run against the devbox by default. To run them against another installation, like the classic mode
+ * installation of Build/Scripts/classicModeTest.sh, set
+ *   ACCEPTANCE_BASE_URL       its URL
+ *   ACCEPTANCE_TYPO3_COMMAND  the command running the TYPO3 CLI, fx. "php public/typo3/sysext/core/bin/typo3"
+ *   ACCEPTANCE_SQL_COMMAND    the command running the SQL query from stdin, printing the result without column names
  */
-export function ddevExec(command) {
-    return execSync(`ddev exec ${command}`, {cwd: devboxPath, encoding: 'utf8'});
+const typo3Command = process.env.ACCEPTANCE_TYPO3_COMMAND || 'ddev exec bin/typo3';
+const sqlCommand = process.env.ACCEPTANCE_SQL_COMMAND || 'ddev mysql -N -B';
+
+/**
+ * Runs a TYPO3 CLI command, fx. typo3('crawler:buildQueue 1 default').
+ */
+export function typo3(command) {
+    return execSync(`${typo3Command} ${command}`, {cwd: devboxPath, encoding: 'utf8'});
 }
 
 /**
- * Runs a SQL query against the devbox database and returns the raw result, without column names.
+ * Runs a SQL query against the database and returns the raw result, without column names.
  */
-export function ddevQuery(sql) {
-    return execSync('ddev mysql -N -B', {cwd: devboxPath, encoding: 'utf8', input: sql}).trim();
+export function query(sql) {
+    return execSync(sqlCommand, {cwd: devboxPath, encoding: 'utf8', input: sql}).trim();
 }
 
 /**
@@ -53,13 +63,13 @@ export function ddevQuery(sql) {
  */
 export function processCrawlerQueue(maxRuns = 12) {
     for (let run = 0; run < maxRuns; run++) {
-        const pending = Number(ddevQuery(
+        const pending = Number(query(
             "SELECT COUNT(*) FROM sys_messenger_messages WHERE queue_name IN ('crawler_high', 'crawler', 'crawler_low');"
         ));
         if (pending === 0) {
             return;
         }
-        ddevExec('bin/typo3 messenger:consume crawler_high crawler crawler_low --time-limit=10');
+        typo3('messenger:consume crawler_high crawler crawler_low --time-limit=10');
     }
     throw new Error('The crawler queue was not processed completely.');
 }
