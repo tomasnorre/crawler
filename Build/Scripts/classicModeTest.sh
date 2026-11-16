@@ -109,8 +109,20 @@ sql '
         ->execute([1, time(), time(), "default", "", "", "", "", "0", "0", "", "", 0]);
 '
 
+# Requests a URL, follows redirects and fails with the response if the final status is not 200
+check_url() {
+    local description="$1" url="$2" status
+    status="$(curl --silent --location --output "${WORK_DIR}/response.html" --write-out '%{http_code} %{url_effective}' "${url}")"
+    echo "${description}: ${status}"
+    if [ "${status%% *}" != "200" ]; then
+        sed -e 's/<[^>]*>/ /g' -e '/^[[:space:]]*$/d' "${WORK_DIR}/response.html" | head -n 60
+        fail "${description} returned ${status}"
+    fi
+}
+
 step "Start the web server on ${BASE_URL}"
-(cd "${PUBLIC_DIR}" && php -S "${HOST}" index.php > "${WORK_DIR}/php-server.log" 2>&1) &
+# The Development context shows the details of exceptions in the response
+(cd "${PUBLIC_DIR}" && TYPO3_CONTEXT=Development php -S "${HOST}" index.php > "${WORK_DIR}/php-server.log" 2>&1) &
 SERVER_PID=$!
 trap 'kill ${SERVER_PID} 2>/dev/null || true' EXIT
 for _ in $(seq 1 30); do
@@ -119,10 +131,8 @@ for _ in $(seq 1 30); do
 done
 
 step "Check the frontend and the backend"
-FRONTEND_STATUS="$(curl --silent --output /dev/null --write-out '%{http_code}' "${BASE_URL}")"
-[ "${FRONTEND_STATUS}" = "200" ] || fail "The frontend returned ${FRONTEND_STATUS}"
-BACKEND_STATUS="$(curl --silent --location --output /dev/null --write-out '%{http_code}' "${BASE_URL}typo3/")"
-[ "${BACKEND_STATUS}" = "200" ] || fail "The backend login returned ${BACKEND_STATUS}"
+check_url "The frontend" "${BASE_URL}"
+check_url "The backend login" "${BASE_URL}typo3/"
 
 step "Build the URL list"
 URLS="$(typo3 crawler:buildQueue 1 default --depth 0 --mode url)"
