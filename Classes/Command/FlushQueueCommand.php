@@ -74,7 +74,7 @@ It will remove queue entries and perform a cleanup.' . chr(10) . chr(10) .
     #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $queueFilter = new QueueFilter($input->getArgument('mode'));
+        $queueFilter = new QueueFilter((new TypedInput($input))->getStringArgument('mode'));
 
         $queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
 

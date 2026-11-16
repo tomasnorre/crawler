@@ -26,6 +26,7 @@
 * `QueueEntryWriter`, `CrawlUrlHandler`, `BuildQueueCommand` and `BackendModuleStartCrawlingController` get the current time from the PSR-20 clock `Psr\Clock\ClockInterface` instead of `time()`
 * `QueueEntryWriter` is final
 * `QueueEntryWriter::getCurrentTime()` is removed, use `Psr\Clock\ClockInterface`
+* `BuildQueueCommand` and `FlushQueueCommand` read their arguments and options with fixed types through the internal `AOE\Crawler\Command\TypedInput` instead of casting them inline
 
 ### Fixed
 * Clearing the page cache queues the URLs of all crawler configurations of the page again, configurations without a processing instruction were skipped once an extension registered processing instructions
