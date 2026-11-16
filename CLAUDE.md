@@ -69,6 +69,10 @@ Before calling a task done, run the unit tests, `composer test:functional-sqlite
 - Every feature gets an acceptance test written in Playwright (tag it `@v14`)
 - One feature, one PR
 - One bugfix, one PR. Always write a failing test that reproduces the bug first, then fix it.
+- Mutation scores must never decrease. When a change is made in either `Classes/` or `Tests/`, run `composer test:mutation` and compare
+  the MSI and Covered Code MSI with `minMsi` and `minCoveredMsi` in `infection.json.dist`:
+  - Lower: add or improve tests until the score is back up. Never lower the thresholds.
+  - Higher: raise `minMsi` / `minCoveredMsi` to the new values (rounded down to whole numbers) in the same PR.
 - Add an entry to `CHANGELOG.md` under the current dev version (Added / Changed / Fixed / Deprecated / Removed)
 - Breaking changes: prefix the commit with `!!!` and list them in the CHANGELOG under "Removed" or "Changed"
 - Commit messages follow the TYPO3 style: `[FEATURE]`, `[BUGFIX]`, `[TASK]`, `[DOCS]` prefix, imperative mood, e.g. `[BUGFIX] Export every log entry in the crawler log CSV`
