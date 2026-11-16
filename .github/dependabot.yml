@@ -1,5 +1,23 @@
 version: 2
 updates:
+  - package-ecosystem: "composer"
+    target-branch: main
+    directory: "/"
+    schedule:
+      interval: "daily"
+    allow:
+      - dependency-type: "development"
+    groups:
+      dev-dependencies:
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
+    reviewers:
+      - "tomasnorre"
+    assignees:
+      - "tomasnorre"
+
   - package-ecosystem: "github-actions"
     target-branch: main
     directory: "/"
