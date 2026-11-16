@@ -12,9 +12,9 @@
          displayDetailsOnTestsThatTriggerNotices="false"
          displayDetailsOnTestsThatTriggerWarnings="false"
          failOnDeprecation="false"
-         failOnNotice="false"
+         failOnNotice="true"
          failOnRisky="false"
-         failOnWarning="false"
+         failOnWarning="true"
          requireCoverageMetadata="true"
          executionOrder="random"
 >

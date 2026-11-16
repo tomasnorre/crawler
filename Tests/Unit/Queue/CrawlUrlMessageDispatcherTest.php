@@ -29,10 +29,13 @@ use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
 use Symfony\Component\Messenger\Stamp\TransportNamesStamp;
+use TYPO3\CMS\Core\Package\PackageManager;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
- * Covers the dispatching without a page, the priority of pages is covered by the functional test.
+ * Covers the dispatching without a page and without EXT:seo,
+ * the priority of pages from their sitemap_priority is covered by the functional test.
  */
 #[CoversClass(CrawlUrlMessageDispatcher::class)]
 class CrawlUrlMessageDispatcherTest extends UnitTestCase
@@ -40,6 +43,8 @@ class CrawlUrlMessageDispatcherTest extends UnitTestCase
     private ?Envelope $dispatchedEnvelope = null;
 
     private CrawlUrlMessageDispatcher $subject;
+
+    private ?PackageManager $originalPackageManager = null;
 
     protected function setUp(): void
     {
@@ -56,6 +61,9 @@ class CrawlUrlMessageDispatcherTest extends UnitTestCase
     protected function tearDown(): void
     {
         unset($GLOBALS['TYPO3_CONF_VARS']['SYS']['messenger']);
+        if ($this->originalPackageManager instanceof PackageManager) {
+            ExtensionManagementUtility::setPackageManager($this->originalPackageManager);
+        }
         parent::tearDown();
     }
 
@@ -146,5 +154,59 @@ class CrawlUrlMessageDispatcherTest extends UnitTestCase
         yield 'Synchronous transport' => ['default'];
         yield 'Other transport' => ['async'];
         yield 'Additional transport' => [['crawler', 'async']];
+    }
+
+    #[Test]
+    public function dispatchSendsMessageOfPageToNormalTransportIfSeoIsNotLoaded(): void
+    {
+        $this->setSeoLoaded(false);
+
+        // The sitemap_priority is not looked up, which would fail without a database
+        $this->subject->dispatch(new CrawlUrlMessage(12), 5);
+
+        self::assertNotNull($this->dispatchedEnvelope);
+        self::assertSame(
+            ['crawler'],
+            $this->dispatchedEnvelope->last(TransportNamesStamp::class)?->getTransportNames()
+        );
+    }
+
+    #[DataProvider('pageIdWithoutPageDataProvider')]
+    #[Test]
+    public function dispatchSendsMessageWithoutPageToNormalTransportIfSeoIsLoaded(?int $pageId): void
+    {
+        $this->setSeoLoaded(true);
+
+        // The sitemap_priority is not looked up, which would fail without a database
+        if ($pageId === null) {
+            $this->subject->dispatch(new CrawlUrlMessage(12));
+        } else {
+            $this->subject->dispatch(new CrawlUrlMessage(12), $pageId);
+        }
+
+        self::assertNotNull($this->dispatchedEnvelope);
+        self::assertSame(
+            ['crawler'],
+            $this->dispatchedEnvelope->last(TransportNamesStamp::class)?->getTransportNames()
+        );
+    }
+
+    public static function pageIdWithoutPageDataProvider(): iterable
+    {
+        yield 'Default page id' => [null];
+        yield 'Page id 0' => [0];
+    }
+
+    private function setSeoLoaded(bool $loaded): void
+    {
+        $packageManagerProperty = new \ReflectionProperty(ExtensionManagementUtility::class, 'packageManager');
+        if ($packageManagerProperty->isInitialized()) {
+            $this->originalPackageManager = $packageManagerProperty->getValue();
+        }
+        $packageManager = $this->createStub(PackageManager::class);
+        $packageManager->method('isPackageActive')->willReturnCallback(
+            static fn (string $key): bool => $key === 'seo' && $loaded
+        );
+        ExtensionManagementUtility::setPackageManager($packageManager);
     }
 }

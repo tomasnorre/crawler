@@ -22,6 +22,8 @@ namespace AOE\Crawler\Tests\Unit;
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy;
 use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
+use AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategy;
+use AOE\Crawler\Event\AfterUrlCrawledEvent;
 use AOE\Crawler\Queue\QueueEntryWriter;
 use AOE\Crawler\QueueExecutor;
 use AOE\Crawler\Tests\Unit\CrawlStrategy\CallbackObjectForTesting;
@@ -31,6 +33,7 @@ use PHPUnit\Framework\Attributes\Test;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
+use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
@@ -87,6 +90,53 @@ class QueueExecutorTest extends UnitTestCase
         ], $result);
     }
 
+    #[Test]
+    public function executeQueueItemFetchesUrlWithCrawlStrategyAndDispatchesEvent(): void
+    {
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'] = 'encryption-key';
+        $crawlStrategy = $this->createMock(GuzzleExecutionStrategy::class);
+        $crawlStrategy->expects(self::once())->method('fetchUrlContents')
+            ->with(new Uri('https://example.com/'), '12:' . md5('12|34|encryption-key'))
+            ->willReturn([
+                'vars' => [
+                    'id' => 5,
+                ],
+            ]);
+        $eventDispatcher = $this->createMock(EventDispatcher::class);
+        $eventDispatcher->expects(self::once())->method('dispatch')->with(self::callback(
+            static fn (AfterUrlCrawledEvent $event): bool => $event->getUrl() === 'https://example.com/'
+                && $event->getResult() === [
+                    'content' => '{"vars":{"id":5}}',
+                ]
+        ))->willReturnArgument(0);
+
+        $result = $this->createQueueExecutor($crawlStrategy, $eventDispatcher)->executeQueueItem([
+            'qid' => 12,
+            'set_id' => 34,
+            'parameters' => '{"url":"https:\/\/example.com\/"}',
+        ]);
+
+        self::assertSame([
+            'content' => '{"vars":{"id":5}}',
+        ], $result);
+    }
+
+    #[Test]
+    public function executeQueueItemReturnsFalseIfUrlCouldNotBeFetched(): void
+    {
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'] = 'encryption-key';
+        $crawlStrategy = $this->createStub(GuzzleExecutionStrategy::class);
+        $crawlStrategy->method('fetchUrlContents')->willReturn(false);
+        $eventDispatcher = $this->createMock(EventDispatcher::class);
+        $eventDispatcher->expects(self::never())->method('dispatch');
+
+        self::assertFalse($this->createQueueExecutor($crawlStrategy, $eventDispatcher)->executeQueueItem([
+            'qid' => 12,
+            'set_id' => 34,
+            'parameters' => '{"url":"https:\/\/example.com\/"}',
+        ]));
+    }
+
     public static function invalidArgumentsReturnErrorInExecuteQueueItemDataProvider(): iterable
     {
         yield 'No parameters set' => [
@@ -103,10 +153,31 @@ class QueueExecutorTest extends UnitTestCase
                 'parameters' => serialize('Simple string'),
             ],
         ];
+        yield 'Parameters set, but an empty JSON array' => [
+            'queueItem' => [
+                'parameters' => '[]',
+            ],
+        ];
         yield 'Parameters set, cannot be converted' => [
             'queueItem' => [
                 'parameters' => 'A simple string not encoded',
             ],
         ];
+    }
+
+    private function createQueueExecutor(
+        GuzzleExecutionStrategy $crawlStrategy,
+        EventDispatcher $eventDispatcher
+    ): QueueExecutor {
+        // The factory creates the Guzzle strategy, as direct requests are not enabled
+        GeneralUtility::addInstance(GuzzleExecutionStrategy::class, $crawlStrategy);
+        $extensionConfigurationProvider = $this->createStub(ExtensionConfigurationProvider::class);
+        $extensionConfigurationProvider->method('getExtensionConfiguration')->willReturn([]);
+
+        return new QueueExecutor(
+            new CrawlStrategyFactory($extensionConfigurationProvider),
+            $eventDispatcher,
+            new CallbackExecutionStrategy($this->createStub(ContainerInterface::class)),
+        );
     }
 }
