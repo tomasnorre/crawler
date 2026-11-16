@@ -71,6 +71,12 @@ class QueueEntryWriter
         if (!is_array($configuration['URLs'])) {
             return 'ERROR - no URL generated';
         }
+        if (!$this->processInstructionService->isAllowed(
+            $configuration['subCfg']['procInstrFilter'] ?? '',
+            $run->processingInstructions
+        )) {
+            return '';
+        }
         $urlLog = [];
         $pageId = (int) $pageRow['uid'];
         $configurationHash = $this->getConfigurationHash($configuration);
@@ -78,14 +84,10 @@ class QueueEntryWriter
             $pageId,
             $configurationHash
         );
+        $userGroups = $configuration['subCfg']['userGroups'] ?? '';
+        $processingInstructionFilter = $configuration['subCfg']['procInstrFilter'] ?? '';
 
         foreach ($configuration['URLs'] as $urlQuery) {
-            if (!$this->processInstructionService->isAllowed(
-                $configuration['subCfg']['procInstrFilter'] ?? '',
-                $run->processingInstructions
-            )) {
-                continue;
-            }
             $url = $this->urlService->getUrlFromPageAndQueryParameters(
                 $pageId,
                 $urlQuery,
@@ -99,17 +101,11 @@ class QueueEntryWriter
 
             $url = (string) $url;
 
-            // Create key by which to determine unique-ness:
-            $uKey = $url . '|' . ($configuration['subCfg']['userGroups'] ?? '') . '|' . ($configuration['subCfg']['procInstrFilter'] ?? '');
-
-            if ($run->isUrlHandled($uKey)) {
+            if ($run->isUrlHandled($url, $userGroups, $processingInstructionFilter)) {
                 //if the url key is registered just display it and do not resubmit is
                 $urlLog[] = '<em><span class="text-muted">' . htmlspecialchars($url) . '</span></em>';
             } else {
-                // Scheduled time:
-                $schTime = $run->scheduledTime + round($run->countHandledUrls() * (60 / $run->requestsPerMinute));
-                $schTime = intval($schTime / 60) * 60;
-                $formattedDate = BackendUtility::datetime($schTime);
+                $formattedDate = BackendUtility::datetime($run->getScheduledTimeOfNextUrl());
                 $run->addUrlListEntry('[' . $formattedDate . '] ' . $url);
                 $urlList = '[' . $formattedDate . '] ' . htmlspecialchars($url);
 
@@ -132,7 +128,7 @@ class QueueEntryWriter
                 }
                 $urlLog[] = $urlList;
             }
-            $run->markUrlHandled($uKey);
+            $run->markUrlHandled($url, $userGroups, $processingInstructionFilter);
         }
 
         // Todo: Find a better option to have this correct in both backend (<br>) and cli (<new line>)

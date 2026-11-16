@@ -117,11 +117,11 @@ class QueueEntryWriterTest extends UnitTestCase
         $subject = $this->createSubjectForCompileUrlList();
         $configuration = $this->getConfiguration(['L=0', 'L=1']);
 
-        $subject->compileUrlList($configuration, [
-            'uid' => 5,
+        $firstUrls = $subject->compileUrlList($configuration, [
+            'uid' => '5',
         ], $run);
         $urls = $subject->compileUrlList($configuration, [
-            'uid' => 5,
+            'uid' => '5',
         ], $run);
 
         self::assertSame([
@@ -130,6 +130,11 @@ class QueueEntryWriterTest extends UnitTestCase
         ], $run->getDownloadUrls());
         self::assertSame(2, $run->countHandledUrls());
         self::assertCount(2, $run->getUrlList());
+        $formattedDate = date('Y-m-d H:i', $run->scheduledTime - $run->scheduledTime % 60);
+        self::assertSame(
+            '[' . $formattedDate . '] https://example.com/?L=0<br>[' . $formattedDate . '] https://example.com/?L=1',
+            $firstUrls
+        );
         self::assertSame(
             '<em><span class="text-muted">https://example.com/?L=0</span></em><br>'
             . '<em><span class="text-muted">https://example.com/?L=1</span></em>',
@@ -171,15 +176,104 @@ class QueueEntryWriterTest extends UnitTestCase
         self::assertSame([], $run->getDownloadUrls());
     }
 
-    private function createSubjectForCompileUrlList(): QueueEntryWriter
+    #[Test]
+    public function compileUrlListUsesUrlsOfMatchingProcessingInstructions(): void
+    {
+        $run = new CrawlRun(1_000_000, 30, processingInstructions: ['tx_indexedsearch_reindex']);
+
+        $this->createSubjectForCompileUrlList()->compileUrlList(
+            $this->getConfiguration(['L=0'], 'tx_indexedsearch_reindex'),
+            [
+                'uid' => 5,
+            ],
+            $run
+        );
+
+        self::assertTrue($run->isUrlHandled('https://example.com/?L=0', '', 'tx_indexedsearch_reindex'));
+    }
+
+    #[Test]
+    public function compileUrlListHandlesUrlOncePerUserGroupsAndProcessingInstructionFilter(): void
+    {
+        $run = new CrawlRun(1_000_000, 30);
+        $subject = $this->createSubjectForCompileUrlList();
+        $pageRow = [
+            'uid' => 5,
+        ];
+
+        $subject->compileUrlList($this->getConfiguration(['L=0']), $pageRow, $run);
+        $subject->compileUrlList($this->getConfiguration(['L=0'], '', '1,2'), $pageRow, $run);
+        $subject->compileUrlList($this->getConfiguration(['L=0'], 'tx_indexedsearch_reindex'), $pageRow, $run);
+        $subject->compileUrlList($this->getConfiguration(['L=0'], 'tx_indexedsearch_reindex', '1,2'), $pageRow, $run);
+
+        self::assertSame(4, $run->countHandledUrls());
+        self::assertTrue($run->isUrlHandled('https://example.com/?L=0', '1,2', 'tx_indexedsearch_reindex'));
+    }
+
+    #[Test]
+    public function compileUrlListSkipsQueryParametersWithoutUrl(): void
+    {
+        $run = new CrawlRun(1_000_000, 30, collectDownloadUrls: true);
+
+        $urls = $this->createSubjectForCompileUrlList()->compileUrlList($this->getConfiguration(['none', 'L=1']), [
+            'uid' => 5,
+        ], $run);
+
+        self::assertSame(1, $run->countHandledUrls());
+        self::assertSame([
+            'https://example.com/?L=1' => 'https://example.com/?L=1',
+        ], $run->getDownloadUrls());
+        self::assertStringNotContainsString('none', $urls);
+    }
+
+    #[Test]
+    public function compileUrlListBuildsUrlsWithBaseUrlAndForceSsl(): void
+    {
+        $urlService = $this->createMock(UrlService::class);
+        $urlService->expects(self::exactly(2))
+            ->method('getUrlFromPageAndQueryParameters')
+            ->willReturnCallback(static function (
+                int $pageId,
+                string $query,
+                ?string $baseUrl,
+                int $forceSsl
+            ): UriInterface {
+                self::assertSame(5, $pageId);
+                self::assertSame('L=0', $query);
+                return new Uri(($baseUrl ?? 'https://example.com/') . '?force_ssl=' . $forceSsl);
+            });
+        $subject = $this->createSubjectForCompileUrlList($urlService);
+        $run = new CrawlRun(1_000_000, 30, collectDownloadUrls: true);
+
+        $subject->compileUrlList($this->getConfiguration(['L=0']), [
+            'uid' => 5,
+        ], $run);
+        $configuration = $this->getConfiguration(['L=0']);
+        $configuration['subCfg']['baseUrl'] = 'https://base.example.com/';
+        $configuration['subCfg']['force_ssl'] = '1';
+        $subject->compileUrlList($configuration, [
+            'uid' => 5,
+        ], $run);
+
+        self::assertSame([
+            'https://example.com/?force_ssl=0',
+            'https://base.example.com/?force_ssl=1',
+        ], array_values($run->getDownloadUrls()));
+    }
+
+    private function createSubjectForCompileUrlList(?UrlService $urlService = null): QueueEntryWriter
     {
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy'] = 'Y-m-d';
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['hhmm'] = 'H:i';
 
-        $urlService = $this->createStub(UrlService::class);
-        $urlService->method('getUrlFromPageAndQueryParameters')->willReturnCallback(
-            static fn (int $pageId, string $query): UriInterface => new Uri('https://example.com/?' . $query)
-        );
+        if ($urlService === null) {
+            $urlService = $this->createStub(UrlService::class);
+            $urlService->method('getUrlFromPageAndQueryParameters')->willReturnCallback(
+                static fn (int $pageId, string $query): ?UriInterface => $query === 'none'
+                    ? null
+                    : new Uri('https://example.com/?' . $query)
+            );
+        }
 
         $extensionConfigurationProvider = $this->createStub(ExtensionConfigurationProvider::class);
         $extensionConfigurationProvider->method('getExtensionConfiguration')->willReturn([
@@ -196,13 +290,19 @@ class QueueEntryWriterTest extends UnitTestCase
         );
     }
 
-    private function getConfiguration(array $urls, string $procInstrFilter = ''): array
+    private function getConfiguration(array $urls, string $procInstrFilter = '', ?string $userGroups = null): array
     {
+        $subConfiguration = [
+            'key' => 'default',
+        ];
+        if ($procInstrFilter !== '') {
+            $subConfiguration['procInstrFilter'] = $procInstrFilter;
+        }
+        if ($userGroups !== null) {
+            $subConfiguration['userGroups'] = $userGroups;
+        }
         return [
-            'subCfg' => [
-                'key' => 'default',
-                'procInstrFilter' => $procInstrFilter,
-            ],
+            'subCfg' => $subConfiguration,
             'URLs' => $urls,
         ];
     }

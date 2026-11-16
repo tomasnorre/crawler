@@ -35,11 +35,12 @@ final class CrawlRun
     public readonly int $setId;
 
     /**
-     * An id per URL, so URLs already handled in this run are not added again
+     * The URLs already handled in this run, by a key of URL, user groups and processing instruction filter,
+     * so they are not added again
      *
-     * @var array<string, true>
+     * @var array<string, string>
      */
-    private array $handledUrlKeys = [];
+    private array $handledUrls = [];
 
     /**
      * @var array<string, string>
@@ -79,14 +80,14 @@ final class CrawlRun
         $this->setId = $setId ?? GeneralUtility::md5int(microtime());
     }
 
-    public function isUrlHandled(string $urlKey): bool
+    public function isUrlHandled(string $url, string $userGroups = '', string $processingInstructionFilter = ''): bool
     {
-        return isset($this->handledUrlKeys[$urlKey]);
+        return isset($this->handledUrls[$this->getUrlKey($url, $userGroups, $processingInstructionFilter)]);
     }
 
-    public function markUrlHandled(string $urlKey): void
+    public function markUrlHandled(string $url, string $userGroups = '', string $processingInstructionFilter = ''): void
     {
-        $this->handledUrlKeys[$urlKey] = true;
+        $this->handledUrls[$this->getUrlKey($url, $userGroups, $processingInstructionFilter)] = $url;
     }
 
     /**
@@ -94,7 +95,17 @@ final class CrawlRun
      */
     public function countHandledUrls(): int
     {
-        return count($this->handledUrlKeys);
+        return count($this->handledUrls);
+    }
+
+    /**
+     * The time the next URL is scheduled to, full minutes after $scheduledTime:
+     * every URL handled before adds 60 / $requestsPerMinute seconds.
+     */
+    public function getScheduledTimeOfNextUrl(): int
+    {
+        $scheduledTime = $this->scheduledTime + round($this->countHandledUrls() * (60 / $this->requestsPerMinute));
+        return intval($scheduledTime / 60) * 60;
     }
 
     public function addDownloadUrl(string $url): void
@@ -142,5 +153,10 @@ final class CrawlRun
     public function getQueueEntries(): array
     {
         return $this->queueEntries;
+    }
+
+    private function getUrlKey(string $url, string $userGroups, string $processingInstructionFilter): string
+    {
+        return json_encode([$url, $userGroups, $processingInstructionFilter], JSON_THROW_ON_ERROR);
     }
 }
