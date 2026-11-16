@@ -28,6 +28,7 @@
 * `QueueEntryWriter::getCurrentTime()` is removed, use `Psr\Clock\ClockInterface`
 
 ### Fixed
+* Clearing the page cache queues the URLs of all crawler configurations of the page again, configurations without a processing instruction were skipped once an extension registered processing instructions
 * Crawler configuration records restricted to backend groups are available to non-admin users in these groups again
 * Export every log entry in the crawler log CSV
 * Build the page tree of excluded pages only once per page and depth, the cache was never filled
