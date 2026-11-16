@@ -34,6 +34,9 @@ Crawls the TYPO3 page tree for cache warmup, indexing and publishing.
 - `declare(strict_types=1);` in every PHP file
 - New classes are `final` by default (many older classes aren't yet – don't change that unasked)
 - Use constructor injection, no `GeneralUtility::makeInstance()` for services
+- Prefer TYPO3 Core functionality over external Composer packages, fx. `RequestFactory` for HTTP requests or the
+  `ConnectionPool` for database access. Only add a new package when TYPO3 Core offers nothing suitable.
+  Packages the code uses directly stay listed in `composer.json`, even when TYPO3 Core already requires them
 - Keep methods small: cognitive complexity is checked by PHPStan
 - Don't add new entries to `phpstan-baseline.neon` or `psalm-baseline.xml`; fix the code instead.
   Shrinking the baselines is welcome.
