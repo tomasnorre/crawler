@@ -23,8 +23,8 @@ jobs:
           - "8.4"
           - "8.5"
 
-    timeout-minutes: 60
-    runs-on: 'self-hosted'
+    timeout-minutes: 30
+    runs-on: ubuntu-26.04
     steps:
       - name: Set Playwright tag
         shell: bash
@@ -40,26 +40,15 @@ jobs:
           sed -i "s|$FROM_PATH|$TO_PATH|g" .ddev/docker-compose.volume.yaml
           jq '.require["typo3/cms-core"] = "${{ matrix.typo3 }}"' composer.json > composer.json.tmp && mv composer.json.tmp composer.json
 
-      # --- ADD CLEANUP HERE ---
-      - name: Clean up existing DDEV and Docker state
-        run: |
-          cd .devbox
-          ddev delete -O -y || true
-          cd ..
-          docker volume prune -f || true
-      # ------------------------
-
-      - uses: ddev/github-action-setup-ddev@v1
+      # Starts the devbox; "ddev start" returns once the post-start hooks have run
+      - uses: ddev/github-action-setup-ddev@fdf2f5c97943bae638f31df6df86f1defa6210c0 # v1.12.1
         with:
           ddevDir: ".devbox"
+          version: "1.25.5"
 
-      - name: Playwright
-        run: |
-          wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
-          chmod +x wait-for-it.sh
-          docker ps
-          ./wait-for-it.sh -t 60 127.0.0.1:80
-          ./wait-for-it.sh -t 60 127.0.0.1:443
+      - name: Check that the devbox responds
+        run: curl --fail --silent --show-error --insecure --output /dev/null --retry 10 --retry-delay 3 --retry-all-errors https://crawler-devbox.ddev.site/
+
       - uses: actions/setup-node@v7
         with:
           node-version: lts/*
@@ -74,4 +63,20 @@ jobs:
         with:
           name: playwright-report-${{ matrix.typo3 }}-${{ matrix.php }}
           path: Tests/Acceptance/playwright-report/
+          retention-days: 10
+
+      - name: Collect DDEV logs
+        if: ${{ failure() }}
+        working-directory: .devbox
+        run: |
+          mkdir -p ../ddev-logs
+          ddev describe > ../ddev-logs/describe.txt 2>&1 || true
+          ddev logs --service web > ../ddev-logs/web.log 2>&1 || true
+          ddev logs --service db > ../ddev-logs/db.log 2>&1 || true
+          docker ps --all > ../ddev-logs/docker-ps.txt 2>&1 || true
+      - uses: actions/upload-artifact@v7
+        if: ${{ failure() }}
+        with:
+          name: ddev-logs-${{ matrix.typo3 }}-${{ matrix.php }}
+          path: ddev-logs/
           retention-days: 10
