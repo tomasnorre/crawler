@@ -147,9 +147,10 @@ class ConfigurationService
         if (empty($configurationRecord['begroups']) || $this->getBackendUser()->isAdmin()) {
             return true;
         }
+        $groups = $this->groupResolver->resolveGroupsForUser($this->getBackendUser()->user ?? [], 'be_groups');
         return UserService::hasGroupAccess(
-            implode(',', $this->groupResolver->resolveGroupsForUser([$this->getBackendUser()], 'be_groups')),
-            $configurationRecord['begroups']
+            implode(',', array_column($groups, 'uid')),
+            (string) $configurationRecord['begroups']
         );
     }
 
