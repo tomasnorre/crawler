@@ -93,9 +93,9 @@ EXTENSIONS="$(typo3 extension:list)"
 grep -qw crawler <<< "${EXTENSIONS}" || fail "The crawler extension is not active"
 
 step "Check the crawler commands"
-# Symfony leaves out commands it cannot create, so call them directly to show the reason
-typo3 crawler:buildQueue --help -vvv || fail "crawler:buildQueue cannot be run"
-typo3 crawler:flushQueue --help -vvv || fail "crawler:flushQueue cannot be run"
+# Call the commands directly as well, an error creating them is shown on stderr
+typo3 crawler:buildQueue --help > /dev/null || fail "crawler:buildQueue cannot be run"
+typo3 crawler:flushQueue --help > /dev/null || fail "crawler:flushQueue cannot be run"
 COMMANDS="$(typo3 list --raw)"
 grep -q '^crawler:buildQueue ' <<< "${COMMANDS}" || fail "crawler:buildQueue is not listed"
 grep -q '^crawler:flushQueue ' <<< "${COMMANDS}" || fail "crawler:flushQueue is not listed"
