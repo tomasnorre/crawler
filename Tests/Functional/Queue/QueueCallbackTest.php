@@ -35,6 +35,8 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 #[CoversClass(QueueExecutor::class)]
 class QueueCallbackTest extends FunctionalTestCase
 {
+    protected array $coreExtensionsToLoad = ['info'];
+
     protected array $testExtensionsToLoad = [
         'typo3conf/ext/crawler',
         __DIR__ . '/../Fixtures/Extensions/crawler_callback_test',

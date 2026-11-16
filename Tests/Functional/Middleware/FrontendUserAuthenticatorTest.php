@@ -38,6 +38,8 @@ class FrontendUserAuthenticatorTest extends FunctionalTestCase
 {
     use ProphecyTrait;
 
+    protected array $coreExtensionsToLoad = ['info'];
+
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     private FrontendUserAuthenticator $subject;

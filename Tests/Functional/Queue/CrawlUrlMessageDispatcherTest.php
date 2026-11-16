@@ -32,7 +32,7 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 class CrawlUrlMessageDispatcherTest extends FunctionalTestCase
 {
-    protected array $coreExtensionsToLoad = ['seo'];
+    protected array $coreExtensionsToLoad = ['info', 'seo'];
 
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 

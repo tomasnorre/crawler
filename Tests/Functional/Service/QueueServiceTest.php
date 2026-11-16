@@ -33,6 +33,8 @@ class QueueServiceTest extends FunctionalTestCase
 {
     use QueueEntryWriterTestTrait;
 
+    protected array $coreExtensionsToLoad = ['info'];
+
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     /**

@@ -1,10 +1,6 @@
 <?php
 defined('TYPO3') or die();
 
-if (!\TYPO3\CMS\Core\Core\Environment::isComposerMode()) {
-    require \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('crawler') . '/Resources/Private/Php/Libraries/vendor/autoload.php';
-}
-
 // Crawl messages are sent to the crawler transports (see Configuration/Services.yaml) by default, the transport is
 // chosen based on the priority of the page (AOE\Crawler\Queue\CrawlUrlMessageDispatcher). They are processed by a
 // worker, which handles higher priorities first: `vendor/bin/typo3 messenger:consume crawler_high crawler crawler_low`.

@@ -19,19 +19,27 @@ namespace AOE\Crawler\Value;
  * The TYPO3 project - inspiring people to share!
  */
 
-use Assert\Assert;
-
 /**
  * @internal since v9.2.5
  */
 class QueueFilter implements \Stringable
 {
+    private const VALID_FILTERS = ['all', 'pending', 'finished'];
+
     private readonly string $queueFilter;
 
     public function __construct(string $queueFilter = 'all')
     {
-        Assert::that($queueFilter)
-            ->inArray(['all', 'pending', 'finished']);
+        if (!in_array($queueFilter, self::VALID_FILTERS, true)) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Queue filter "%s" is invalid, use one of: %s',
+                    $queueFilter,
+                    implode(', ', self::VALID_FILTERS)
+                ),
+                1794663700
+            );
+        }
 
         $this->queueFilter = $queueFilter;
     }

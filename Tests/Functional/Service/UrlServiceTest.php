@@ -62,6 +62,8 @@ class UrlServiceTest extends FunctionalTestCase
         ],
     ];
 
+    protected array $coreExtensionsToLoad = ['info'];
+
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 
     protected UrlService $subject;

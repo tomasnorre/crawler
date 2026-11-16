@@ -21,7 +21,6 @@
         "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
         "ext-json": "*",
         "ext-pdo": "*",
-        "beberlei/assert": "^3.3",
         "doctrine/dbal": "^3.10 || ^4.3",
         "guzzlehttp/guzzle": "^6.4.1 || ^7.2",
         "psr/container": "^2.0",
@@ -108,7 +107,11 @@
             "dev-main": "14.0.x-dev"
         },
         "typo3/cms": {
+            "Package": {
+                "providesPackages": {}
+            },
             "extension-key": "crawler",
+            "version": "14.0.0-dev",
             "web-dir": ".Build/Web"
         }
     },
@@ -116,8 +119,7 @@
         "post-autoload-dump": [
             "mkdir -p .Build/Web/typo3conf/ext/",
             "[ -L .Build/Web/typo3conf/ext/crawler ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/crawler",
-            "export TYPO3_PATH_WEB=$PWD/.Build/Web",
-            "@extension-create-libs"
+            "export TYPO3_PATH_WEB=$PWD/.Build/Web"
         ],
         "analyse": [
             "[ -e .Build/bin/phpstan ] || composer update",
@@ -127,15 +129,11 @@
             "[ -e .Build/bin/ecs ] || composer update",
             ".Build/bin/ecs check"
         ],
-        "extension-create-libs": [
-            "@composer install -d Resources/Private/Php/Libraries"
-        ],
         "phpstan-baseline": [
             "[ -e .Build/bin/phpstan ] || composer update",
             ".Build/bin/phpstan analyse --generate-baseline"
         ],
         "prepare-release": [
-            "@extension-create-libs",
             "rm -rf .devbox",
             "rm -rf Build",
             "rm -rf Tests/",
@@ -179,21 +177,18 @@
         ],
         "test:functional": [
             "@test:reset-vars",
-            "@extension-create-libs",
             "@test:set-vars",
             "[ -e .Build/bin/phpunit ] || composer update",
             "TYPO3_PATH_WEB=$PWD/.Build/Web .Build/bin/phpunit -c Tests/FunctionalTests.xml"
         ],
         "test:functional-postgre": [
             "@test:reset-vars",
-            "@extension-create-libs",
             "@test:set-vars",
             "[ -e .Build/bin/phpunit ] || composer update",
             "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseDriver=pdo_pgsql .Build/bin/phpunit -c Tests/FunctionalTests.xml"
         ],
         "test:functional-sqlite": [
             "@test:reset-vars",
-            "@extension-create-libs",
             "@test:set-vars",
             "[ -e .Build/bin/phpunit ] || composer update",
             "TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseDriver=pdo_sqlite .Build/bin/phpunit -c Tests/FunctionalTests.xml"

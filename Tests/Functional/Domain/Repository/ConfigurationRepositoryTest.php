@@ -27,7 +27,7 @@ class ConfigurationRepositoryTest extends FunctionalTestCase
 {
     private const PAGE_WITHOUT_CONFIGURATIONS = 11;
 
-    protected array $coreExtensionsToLoad = ['seo'];
+    protected array $coreExtensionsToLoad = ['info', 'seo'];
 
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
 

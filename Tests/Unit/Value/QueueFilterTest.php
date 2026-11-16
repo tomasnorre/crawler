@@ -45,6 +45,7 @@ class QueueFilterTest extends UnitTestCase
     public function constructorThrowsException(): void
     {
         self::expectException(\InvalidArgumentException::class);
+        self::expectExceptionCode(1794663700);
         new QueueFilter('INVALID');
     }
 }

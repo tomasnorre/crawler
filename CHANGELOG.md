@@ -40,6 +40,9 @@
 * Hooks `cli_hooks` and `refresh_hooks`
 * TYPO3 13 Support [@tomasnorre](https://github.com/tomasnorre)
 * Translated XLIFF files (`Resources/Private/Language/<lang>.*.xlf`, including the Crowdin In-Context pseudo-language `t3`), use the language packs instead
+* `ext_emconf.php`, the extension metadata (version, `providesPackages`) is read from `composer.json` [Deprecation #108345](https://docs.typo3.org/permalink/changelog:deprecation-108345-1774126701@14.3)
+* Dependency `beberlei/assert`
+* Bundled libraries in `Resources/Private/Php/Libraries` and the Composer script `extension-create-libs`, non-Composer installations use the libraries TYPO3 ships
 
 #### Classes
 * `AOE\Crawler\Command\ProcessQueueCommand`

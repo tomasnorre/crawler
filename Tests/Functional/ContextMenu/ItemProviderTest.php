@@ -27,6 +27,8 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 class ItemProviderTest extends FunctionalTestCase
 {
+    protected array $coreExtensionsToLoad = ['info'];
+
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
     private $oldBackendUser;
 
