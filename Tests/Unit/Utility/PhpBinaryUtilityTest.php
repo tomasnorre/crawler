@@ -51,6 +51,42 @@ class PhpBinaryUtilityTest extends UnitTestCase
         PhpBinaryUtility::getPhpBinary();
     }
 
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function getPhpBinaryThrowsExceptionIfNoBinaryIsConfigured(): void
+    {
+        $this->expectExceptionCode(1_587_068_215);
+        $this->expectExceptionMessage('The phpBinary: "" could not be found!');
+        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [
+            'phpPath' => '',
+        ];
+
+        PhpBinaryUtility::getPhpBinary();
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function getPhpBinaryThrowsExceptionForNonStringBinary(): void
+    {
+        $this->expectExceptionCode(1_587_068_215);
+        $this->expectExceptionMessage('The phpBinary: "123" could not be found!');
+        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [
+            'phpPath' => '',
+            'phpBinary' => 123,
+        ];
+
+        PhpBinaryUtility::getPhpBinary();
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function getPhpBinaryReturnsNonStringPhpPathAsString(): void
+    {
+        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [
+            'phpPath' => 123,
+            'phpBinary' => 'php',
+        ];
+
+        self::assertSame('123', PhpBinaryUtility::getPhpBinary());
+    }
+
     #[\PHPUnit\Framework\Attributes\DataProvider('getPhpBinaryDataProvider')]
     #[\PHPUnit\Framework\Attributes\Test]
     public function getPhpBinary(string $phpPath, string $phpBinary, string $expected): void
