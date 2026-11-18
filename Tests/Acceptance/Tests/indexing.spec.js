@@ -1,4 +1,4 @@
-import {test, expect} from '@playwright/test';
+import {test, expect} from './fixtures';
 import * as helpers from './helpers';
 
 // "Subpage Three", which is crawled by the "default" configuration with the indexed_search reindex instruction

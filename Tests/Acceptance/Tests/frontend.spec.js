@@ -1,5 +1,5 @@
 // @ts-check
-const {test, expect} = require('@playwright/test');
+const {test, expect} = require('./fixtures');
 
 test('Can see homepage',{ tag: ['@v14'] }, async ({page}) => {
     await page.goto('/');

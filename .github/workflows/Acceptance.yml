@@ -22,7 +22,14 @@ jobs:
           - "8.3"
           - "8.4"
           - "8.5"
+        # Evaluates Lightpanda (https://lightpanda.io/) as a faster browser for the acceptance tests, see #1319
+        browser:
+          - chromium
+          - lightpanda
 
+    name: Acceptance (${{ matrix.typo3 }}, ${{ matrix.php }}, ${{ matrix.browser }})
+    # Lightpanda is evaluated only, its failures don't fail the build
+    continue-on-error: ${{ matrix.browser == 'lightpanda' }}
     timeout-minutes: 30
     runs-on: ubuntu-26.04
     steps:
@@ -55,13 +62,27 @@ jobs:
       - name: Install dependencies
         run: cd Tests/Acceptance && npm ci
       - name: Install Playwright Browsers
+        if: ${{ matrix.browser == 'chromium' }}
         run: cd Tests/Acceptance && npx playwright install chromium --with-deps
+      - name: Start Lightpanda
+        if: ${{ matrix.browser == 'lightpanda' }}
+        run: |
+          curl --fail --silent --show-error --location --output "$RUNNER_TEMP/lightpanda" \
+            "https://github.com/lightpanda-io/browser/releases/download/${LIGHTPANDA_VERSION}/lightpanda-x86_64-linux"
+          chmod +x "$RUNNER_TEMP/lightpanda"
+          # The devbox uses a certificate of the DDEV CA, which Lightpanda doesn't know
+          nohup "$RUNNER_TEMP/lightpanda" serve --host 127.0.0.1 --port 9222 --insecure-disable-tls-host-verification \
+            > "$RUNNER_TEMP/lightpanda.log" 2>&1 &
+          curl --silent --output /dev/null --retry 10 --retry-delay 1 --retry-connrefused http://127.0.0.1:9222/json/version
+          echo "PLAYWRIGHT_CDP_ENDPOINT=ws://127.0.0.1:9222" >> $GITHUB_ENV
+        env:
+          LIGHTPANDA_VERSION: "1.0.4"
       - name: Run Playwright tests
         run: cd Tests/Acceptance && npx playwright test --grep "$PW_GREP"
       - uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
         with:
-          name: playwright-report-${{ matrix.typo3 }}-${{ matrix.php }}
+          name: playwright-report-${{ matrix.typo3 }}-${{ matrix.php }}-${{ matrix.browser }}
           path: Tests/Acceptance/playwright-report/
           retention-days: 10
 
@@ -74,9 +95,10 @@ jobs:
           ddev logs --service web > ../ddev-logs/web.log 2>&1 || true
           ddev logs --service db > ../ddev-logs/db.log 2>&1 || true
           docker ps --all > ../ddev-logs/docker-ps.txt 2>&1 || true
+          cp "$RUNNER_TEMP/lightpanda.log" ../ddev-logs/ 2>/dev/null || true
       - uses: actions/upload-artifact@v7
         if: ${{ failure() }}
         with:
-          name: ddev-logs-${{ matrix.typo3 }}-${{ matrix.php }}
+          name: ddev-logs-${{ matrix.typo3 }}-${{ matrix.php }}-${{ matrix.browser }}
           path: ddev-logs/
           retention-days: 10

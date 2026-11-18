@@ -1,6 +1,9 @@
 // @ts-check
 const { defineConfig, devices } = require('@playwright/test');
 
+/* Set when the tests run in a browser connected over CDP, fx. Lightpanda, see Tests/fixtures.js. */
+const usesCdpBrowser = !!process.env.PLAYWRIGHT_CDP_ENDPOINT;
+
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
@@ -31,16 +34,17 @@ module.exports = defineConfig({
     baseURL: process.env.ACCEPTANCE_BASE_URL || 'https://crawler-devbox.ddev.site/',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-      trace: 'retain-on-failure',
+      // Lightpanda renders nothing, so there are no screenshots, videos or trace snapshots of it
+      trace: usesCdpBrowser ? 'off' : 'retain-on-failure',
 
     /* Whether to ignore HTTPS errors when sending network requests. See https://playwright.dev/docs/api/class-testoptions#test-options-ignore-https-errors*/
     ignoreHTTPSErrors: true,
 
     // 📸 Screenshot on failure
-    screenshot: 'only-on-failure',
+    screenshot: usesCdpBrowser ? 'off' : 'only-on-failure',
 
     // 🎥 Video recording
-    video: 'retain-on-failure',
+    video: usesCdpBrowser ? 'off' : 'retain-on-failure',
 
     browserName: 'chromium',
     launchOptions: {

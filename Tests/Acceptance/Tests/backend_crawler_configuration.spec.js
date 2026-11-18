@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import {test, expect} from './fixtures';
 import * as helpers from './helpers';
 
 test('Able to create and save crawler configuration TYPO3-14', { tag: '@v14' }, async ({ page}) => {

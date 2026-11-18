@@ -1,4 +1,4 @@
-import {test, expect} from '@playwright/test';
+import {test, expect} from './fixtures';
 import * as helpers from './helpers';
 
 test('Can crawl manually in log module, and keep selected log depth TYPO3-14', { tag: ['@v14'] }, async ({ page }) => {

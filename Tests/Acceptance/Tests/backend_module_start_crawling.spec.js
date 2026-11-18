@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import {test, expect} from './fixtures';
 import * as helpers from './helpers';
 
 test('Update URL button', { tag: ['@v14'] },async ({ page }) => {
