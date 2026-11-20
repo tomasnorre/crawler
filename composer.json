@@ -43,7 +43,6 @@
     "require-dev": {
         "infection/infection": "0.29.14",
         "nikic/php-parser": "^4.13 || ^5.3",
-        "phpspec/prophecy-phpunit": "2.5.0",
         "phpstan/extension-installer": "1.4.3",
         "phpstan/phpstan": "2.3.1",
         "phpstan/phpstan-deprecation-rules": "2.0.5",

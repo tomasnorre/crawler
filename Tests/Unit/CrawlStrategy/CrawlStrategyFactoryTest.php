@@ -23,7 +23,6 @@ use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
 use AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategy;
 use AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategy;
-use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
@@ -32,8 +31,6 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 #[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategy::class)]
 class CrawlStrategyFactoryTest extends UnitTestCase
 {
-    use ProphecyTrait;
-
     protected bool $resetSingletonInstances = true;
 
     #[\PHPUnit\Framework\Attributes\Test]
@@ -82,11 +79,11 @@ class CrawlStrategyFactoryTest extends UnitTestCase
             'frontendBasePath' => '/',
         ];
 
-        $extensionConfigurationProvider = $this->prophesize(ExtensionConfigurationProvider::class);
-        $extensionConfigurationProvider->getExtensionConfiguration()->willReturn($configuration);
+        $extensionConfigurationProvider = $this->createStub(ExtensionConfigurationProvider::class);
+        $extensionConfigurationProvider->method('getExtensionConfiguration')->willReturn($configuration);
         $crawlStrategy = GeneralUtility::makeInstance(
             CrawlStrategyFactory::class,
-            $extensionConfigurationProvider->reveal()
+            $extensionConfigurationProvider
         )->create();
 
         self::assertInstanceOf(SubProcessExecutionStrategy::class, $crawlStrategy);
@@ -100,11 +97,11 @@ class CrawlStrategyFactoryTest extends UnitTestCase
             'frontendBasePath' => '/',
         ];
 
-        $extensionConfigurationProvider = $this->prophesize(ExtensionConfigurationProvider::class);
-        $extensionConfigurationProvider->getExtensionConfiguration()->willReturn($configuration);
+        $extensionConfigurationProvider = $this->createStub(ExtensionConfigurationProvider::class);
+        $extensionConfigurationProvider->method('getExtensionConfiguration')->willReturn($configuration);
         $crawlStrategy = GeneralUtility::makeInstance(
             CrawlStrategyFactory::class,
-            $extensionConfigurationProvider->reveal()
+            $extensionConfigurationProvider
         )->create();
 
         self::assertInstanceOf(GuzzleExecutionStrategy::class, $crawlStrategy);

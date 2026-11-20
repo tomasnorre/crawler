@@ -24,8 +24,6 @@ use AOE\Crawler\Service\ConfigurationService;
 use AOE\Crawler\Service\ExcludeStringExpander;
 use AOE\Crawler\Service\ParameterExpander;
 use AOE\Crawler\Service\UrlService;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Authentication\GroupResolver;
@@ -40,8 +38,6 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 #[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Configuration\ExtensionConfigurationProvider::class)]
 class ConfigurationServiceTest extends UnitTestCase
 {
-    use ProphecyTrait;
-
     protected bool $resetSingletonInstances = true;
 
     #[\PHPUnit\Framework\Attributes\DataProvider('removeDisallowedConfigurationsDataProvider')]
@@ -180,13 +176,12 @@ class ConfigurationServiceTest extends UnitTestCase
     ): void {
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [];
 
-        $urlService = $this->prophesize(UrlService::class);
-        $urlService->compileUrls(Argument::any(), Argument::any(), Argument::any())->willReturn($compiledUrls);
-        $configurationRepository = $this->prophesize(ConfigurationRepository::class);
+        $urlService = $this->createStub(UrlService::class);
+        $urlService->method('compileUrls')->willReturn($compiledUrls);
         $configurationService = GeneralUtility::makeInstance(
             ConfigurationService::class,
-            $urlService->reveal(),
-            $configurationRepository->reveal(),
+            $urlService,
+            $this->createStub(ConfigurationRepository::class),
             $this->createStub(GroupResolver::class),
             new ParameterExpander(),
             new ExcludeStringExpander(),

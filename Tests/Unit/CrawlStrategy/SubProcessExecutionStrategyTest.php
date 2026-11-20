@@ -21,7 +21,6 @@ namespace AOE\Crawler\Tests\Unit\CrawlStrategy;
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategy;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Information\Typo3Version;
@@ -34,8 +33,6 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 #[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategy::class)]
 class SubProcessExecutionStrategyTest extends UnitTestCase
 {
-    use ProphecyTrait;
-
     private const ERROR_PAGE = '<div class="typo3-error-page"><p class="typo3-error-page-statuscode">' . PHP_EOL
         . '404' . PHP_EOL . '</p>'
         . '<h1 class="typo3-error-page-title">' . PHP_EOL . 'Page Not Found' . PHP_EOL . '</h1>'
@@ -69,11 +66,11 @@ class SubProcessExecutionStrategyTest extends UnitTestCase
             'frontendBasePath' => '/',
         ];
 
-        $extensionConfigurationProvider = $this->prophesize(ExtensionConfigurationProvider::class);
-        $extensionConfigurationProvider->getExtensionConfiguration()->willReturn($configuration);
+        $extensionConfigurationProvider = $this->createStub(ExtensionConfigurationProvider::class);
+        $extensionConfigurationProvider->method('getExtensionConfiguration')->willReturn($configuration);
         $crawlStrategy = GeneralUtility::makeInstance(
             SubProcessExecutionStrategy::class,
-            $extensionConfigurationProvider->reveal()
+            $extensionConfigurationProvider
         );
 
         self::assertInstanceOf(SubProcessExecutionStrategy::class, $crawlStrategy);
@@ -82,28 +79,19 @@ class SubProcessExecutionStrategyTest extends UnitTestCase
     #[\PHPUnit\Framework\Attributes\Test]
     public function fetchUrlContentsInvalidSchema(): void
     {
-        $logger = $this->prophesize(LoggerInterface::class);
         $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
-        if ($typo3Version->getMajorVersion() < 14) {
-            $logger->debug(
-                'Scheme does not match for url "/not-an-url"',
-                [
-                    'crawlerId' => '2981d019ade833a37995c1b569ef87b6b5af7287',
-                ]
-            )->shouldBeCalledOnce();
-        } else {
-            $logger->debug(
-                'Scheme does not match for url "not-an-url"',
-                [
-                    'crawlerId' => '2981d019ade833a37995c1b569ef87b6b5af7287',
-                ]
-            )->shouldBeCalledOnce();
-        }
+        $expectedMessage = $typo3Version->getMajorVersion() < 14
+            ? 'Scheme does not match for url "/not-an-url"'
+            : 'Scheme does not match for url "not-an-url"';
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects(self::once())->method('debug')->with($expectedMessage, [
+            'crawlerId' => '2981d019ade833a37995c1b569ef87b6b5af7287',
+        ]);
 
         $crawlerId = sha1('this-is-testing');
         $url = new Uri('not-an-url');
         $subProcessExecutionStrategy = $this->createPartialMock(SubProcessExecutionStrategy::class, []);
-        $subProcessExecutionStrategy->setLogger($logger->reveal());
+        $subProcessExecutionStrategy->setLogger($logger);
 
         self::assertFalse($subProcessExecutionStrategy->fetchUrlContents($url, $crawlerId));
     }

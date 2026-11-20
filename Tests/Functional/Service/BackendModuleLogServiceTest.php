@@ -6,7 +6,6 @@ namespace AOE\Crawler\Tests\Functional\Service;
 
 use AOE\Crawler\Service\BackendModuleLogService;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
-use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
@@ -15,8 +14,6 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 class BackendModuleLogServiceTest extends FunctionalTestCase
 {
     use BackendRequestTestTrait;
-    use ProphecyTrait;
-
     protected array $coreExtensionsToLoad = ['info'];
 
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];

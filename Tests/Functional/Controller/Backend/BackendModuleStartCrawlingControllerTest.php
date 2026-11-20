@@ -21,7 +21,6 @@ namespace AOE\Crawler\Tests\Functional\Controller\Backend;
 
 use AOE\Crawler\Controller\Backend\BackendModuleStartCrawlingController;
 use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
-use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Http\ServerRequest;
@@ -33,8 +32,6 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 class BackendModuleStartCrawlingControllerTest extends FunctionalTestCase
 {
     use BackendRequestTestTrait;
-    use ProphecyTrait;
-
     protected array $coreExtensionsToLoad = ['info'];
 
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
