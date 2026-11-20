@@ -58,6 +58,17 @@ final class FrontendSubRequestExecutionStrategy implements LoggerAwareInterface,
      */
     private const CONTEXT_ASPECTS = ['date', 'visibility', 'workspace', 'backend.user', 'frontend.user', 'language'];
 
+    /**
+     * The time globals of TYPO3, with the seconds they are rounded to.
+     * TYPO3 sets them once, when the worker process starts.
+     */
+    private const REQUEST_TIME_GLOBALS = [
+        'EXEC_TIME' => 1,
+        'SIM_EXEC_TIME' => 1,
+        'ACCESS_TIME' => 60,
+        'SIM_ACCESS_TIME' => 60,
+    ];
+
     private const GLOBALS_TO_RESTORE = [
         'TYPO3_REQUEST',
         'EXEC_TIME',
@@ -207,8 +218,9 @@ final class FrontendSubRequestExecutionStrategy implements LoggerAwareInterface,
     private function setRequestTime(): void
     {
         $now = $this->clock->now()->getTimestamp();
-        $GLOBALS['EXEC_TIME'] = $GLOBALS['SIM_EXEC_TIME'] = $now;
-        $GLOBALS['ACCESS_TIME'] = $GLOBALS['SIM_ACCESS_TIME'] = $now - $now % 60;
+        foreach (self::REQUEST_TIME_GLOBALS as $name => $seconds) {
+            $GLOBALS[$name] = $now - $now % $seconds;
+        }
     }
 
     /**
@@ -231,11 +243,10 @@ final class FrontendSubRequestExecutionStrategy implements LoggerAwareInterface,
     private function restoreGlobals(array $globals): void
     {
         foreach (self::GLOBALS_TO_RESTORE as $name) {
-            if (array_key_exists($name, $globals)) {
-                $GLOBALS[$name] = $globals[$name];
-            } else {
-                unset($GLOBALS[$name]);
-            }
+            unset($GLOBALS[$name]);
+        }
+        foreach ($globals as $name => $value) {
+            $GLOBALS[$name] = $value;
         }
     }
 

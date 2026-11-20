@@ -46,6 +46,11 @@ class FrontendSubRequestExecutionStrategyTest extends UnitTestCase
     private const CRAWLER_ID = '1006:8e6edae3da393a9412898ef59e6cf925';
     private const NOW = 1763640042;
 
+    /**
+     * The globals the strategy changes, the time globals are listed after TYPO3_REQUEST
+     */
+    private const GLOBAL_NAMES = ['TYPO3_REQUEST', 'EXEC_TIME', 'SIM_EXEC_TIME', 'ACCESS_TIME', 'SIM_ACCESS_TIME'];
+
     private Application&MockObject $application;
     private Context $context;
     private PageRenderer&MockObject $pageRenderer;
@@ -61,7 +66,7 @@ class FrontendSubRequestExecutionStrategyTest extends UnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        foreach (['TYPO3_REQUEST', 'EXEC_TIME', 'SIM_EXEC_TIME', 'ACCESS_TIME', 'SIM_ACCESS_TIME'] as $name) {
+        foreach (self::GLOBAL_NAMES as $name) {
             if (array_key_exists($name, $GLOBALS)) {
                 $this->globalsBackup[$name] = $GLOBALS[$name];
             }
@@ -74,13 +79,9 @@ class FrontendSubRequestExecutionStrategyTest extends UnitTestCase
 
     protected function tearDown(): void
     {
-        unset(
-            $GLOBALS['TYPO3_REQUEST'],
-            $GLOBALS['EXEC_TIME'],
-            $GLOBALS['SIM_EXEC_TIME'],
-            $GLOBALS['ACCESS_TIME'],
-            $GLOBALS['SIM_ACCESS_TIME']
-        );
+        foreach (self::GLOBAL_NAMES as $name) {
+            unset($GLOBALS[$name]);
+        }
         foreach ($this->globalsBackup as $name => $value) {
             $GLOBALS[$name] = $value;
         }
@@ -482,17 +483,11 @@ class FrontendSubRequestExecutionStrategyTest extends UnitTestCase
     #[Test]
     public function fetchUrlContentsRunsFrontendAtCurrentTime(): void
     {
-        $GLOBALS['EXEC_TIME'] = $GLOBALS['SIM_EXEC_TIME'] = 1000;
-        $GLOBALS['ACCESS_TIME'] = $GLOBALS['SIM_ACCESS_TIME'] = 960;
+        $this->setTimeGlobals([1000, 1000, 960, 960]);
         $timesDuringRequest = [];
         $this->application->method('handle')->willReturnCallback(
-            static function () use (&$timesDuringRequest): ResponseInterface {
-                $timesDuringRequest = [
-                    $GLOBALS['EXEC_TIME'],
-                    $GLOBALS['SIM_EXEC_TIME'],
-                    $GLOBALS['ACCESS_TIME'],
-                    $GLOBALS['SIM_ACCESS_TIME'],
-                ];
+            function () use (&$timesDuringRequest): ResponseInterface {
+                $timesDuringRequest = $this->getTimeGlobals();
                 return new Response();
             }
         );
@@ -501,10 +496,7 @@ class FrontendSubRequestExecutionStrategyTest extends UnitTestCase
 
         $accessTime = self::NOW - self::NOW % 60;
         self::assertSame([self::NOW, self::NOW, $accessTime, $accessTime], $timesDuringRequest);
-        self::assertSame(1000, $GLOBALS['EXEC_TIME']);
-        self::assertSame(1000, $GLOBALS['SIM_EXEC_TIME']);
-        self::assertSame(960, $GLOBALS['ACCESS_TIME']);
-        self::assertSame(960, $GLOBALS['SIM_ACCESS_TIME']);
+        self::assertSame([1000, 1000, 960, 960], $this->getTimeGlobals());
     }
 
     #[Test]
@@ -535,9 +527,13 @@ class FrontendSubRequestExecutionStrategyTest extends UnitTestCase
     }
 
     #[Test]
-    public function fetchUrlContentsRemovesRequestOfFrontendWithoutWorkerRequest(): void
+    public function fetchUrlContentsRemovesGlobalsWhichTheWorkerHasNot(): void
     {
-        unset($GLOBALS['TYPO3_REQUEST'], $GLOBALS['ACCESS_TIME']);
+        foreach (self::GLOBAL_NAMES as $name) {
+            unset($GLOBALS[$name]);
+        }
+        // Without EXEC_TIME, the Context could not create its default date aspect
+        $this->context->setAspect('date', new DateTimeAspect(new \DateTimeImmutable('@' . self::NOW)));
         $this->application->method('handle')->willReturnCallback(
             static function (ServerRequestInterface $request): ResponseInterface {
                 $GLOBALS['TYPO3_REQUEST'] = $request;
@@ -547,8 +543,7 @@ class FrontendSubRequestExecutionStrategyTest extends UnitTestCase
 
         $this->createSubject()->fetchUrlContents(new Uri('https://example.com/'), self::CRAWLER_ID);
 
-        self::assertArrayNotHasKey('TYPO3_REQUEST', $GLOBALS);
-        self::assertArrayNotHasKey('ACCESS_TIME', $GLOBALS);
+        self::assertSame([], array_intersect_key($GLOBALS, array_flip(self::GLOBAL_NAMES)));
     }
 
     #[Test]
@@ -585,6 +580,24 @@ class FrontendSubRequestExecutionStrategyTest extends UnitTestCase
             ],
             $subject->fetchUrlContents(new Uri('https://example.com/'), self::CRAWLER_ID)
         );
+    }
+
+    /**
+     * @param list<int> $times EXEC_TIME, SIM_EXEC_TIME, ACCESS_TIME, SIM_ACCESS_TIME
+     */
+    private function setTimeGlobals(array $times): void
+    {
+        foreach (array_slice(self::GLOBAL_NAMES, 1) as $index => $name) {
+            $GLOBALS[$name] = $times[$index];
+        }
+    }
+
+    /**
+     * @return list<mixed> EXEC_TIME, SIM_EXEC_TIME, ACCESS_TIME, SIM_ACCESS_TIME
+     */
+    private function getTimeGlobals(): array
+    {
+        return array_map(static fn (string $name): mixed => $GLOBALS[$name], array_slice(self::GLOBAL_NAMES, 1));
     }
 
     private function respondWith(ResponseInterface ...$responses): void
