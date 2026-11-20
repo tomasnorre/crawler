@@ -6,6 +6,7 @@
 * Queue entries are processed by the TYPO3 message bus (`AOE\Crawler\Queue\Message\CrawlUrlMessage`, `messenger:consume crawler_high crawler crawler_low`) [#1310](https://github.com/tomasnorre/crawler/issues/1310)
 * `AOE\Crawler\Queue\QueueCallbackInterface` for callbacks in the queue, registered by autoconfiguration
 * `AOE\Crawler\Queue\QueueEntryWriter::addCallback()` adds a callback to the queue, optionally with a set id
+* Support for PHP 8.6
 
 ### Changed
 * Priority crawling uses the transports `crawler_high`, `crawler` and `crawler_low` (based on `sitemap_priority`) instead of sorting the queue
