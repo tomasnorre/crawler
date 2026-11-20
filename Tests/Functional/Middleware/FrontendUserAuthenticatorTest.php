@@ -23,12 +23,12 @@ use AOE\Crawler\Middleware\FrontendUserAuthenticator;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Cache\Backend\NullBackend;
 use TYPO3\CMS\Core\Http\NormalizedParams;
 use TYPO3\CMS\Core\Http\Response;
+use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
@@ -36,8 +36,6 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 #[CoversClass(FrontendUserAuthenticator::class)]
 class FrontendUserAuthenticatorTest extends FunctionalTestCase
 {
-    use ProphecyTrait;
-
     protected array $coreExtensionsToLoad = ['info'];
 
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
@@ -55,17 +53,14 @@ class FrontendUserAuthenticatorTest extends FunctionalTestCase
     {
         $this->markTestSkipped('WIP');
         $this->setGlobalsSys();
-        $request = $this->prophesize(ServerRequestInterface::class);
-        $request->getHeaderLine('X-T3CRAWLER')->willReturn('404:entry-not-found');
-        $request->getHeaderLine('Accept')->willReturn('');
-        $request->getAttribute('site')->willReturn('');
-        $request->getAttribute('normalizedParams')->willReturn(NormalizedParams::createFromRequest($request->reveal()));
+        $request = (new ServerRequest('https://crawler-devbox.ddev.site/'))
+            ->withHeader('X-T3CRAWLER', '404:entry-not-found');
+        $request = $request->withAttribute('normalizedParams', NormalizedParams::createFromRequest($request));
 
-        $handlerResponse = new Response();
-        $handler = $this->prophesize(RequestHandlerInterface::class);
-        $handler->handle($request->reveal())->willReturn($handlerResponse);
+        $handler = $this->createStub(RequestHandlerInterface::class);
+        $handler->method('handle')->willReturn(new Response());
 
-        $response = $this->subject->process($request->reveal(), $handler->reveal());
+        $response = $this->subject->process($request, $handler);
 
         self::assertStringContainsString('No crawler entry found', $response->getBody()->getContents());
     }
@@ -83,20 +78,21 @@ class FrontendUserAuthenticatorTest extends FunctionalTestCase
             'procInstrParams' => [],
         ];
 
-        $request = $this->prophesize(ServerRequestInterface::class);
-        $request->getHeaderLine('X-T3CRAWLER')->willReturn($headerLine);
-        $crawlerRequest = $this->prophesize(ServerRequestInterface::class);
-        $crawlerRequest->getAttribute('frontend.user')->willReturn(
-            $this->prophesize(FrontendUserAuthentication::class)
-        );
-        $request->withAttribute('tx_crawler', $queueParametersArray)->willReturn($crawlerRequest);
-        $request->withAttribute('tx_crawler', false)->willReturn($crawlerRequest);
+        $request = (new ServerRequest('https://crawler-devbox.ddev.site/'))
+            ->withHeader('X-T3CRAWLER', $headerLine)
+            ->withAttribute('frontend.user', $this->createStub(FrontendUserAuthentication::class));
 
         $handlerResponse = new Response();
-        $handler = $this->prophesize(RequestHandlerInterface::class);
-        $handler->handle($crawlerRequest->reveal())->willReturn($handlerResponse);
+        $handler = $this->createMock(RequestHandlerInterface::class);
+        $handler->expects(self::once())->method('handle')->with(
+            self::callback(
+                static fn (ServerRequestInterface $handledRequest): bool => $handledRequest->getAttribute(
+                    'tx_crawler'
+                ) === $queueParametersArray
+            )
+        )->willReturn($handlerResponse);
 
-        $response = $this->subject->process($request->reveal(), $handler->reveal());
+        $response = $this->subject->process($request, $handler);
 
         $feGroupsArray = explode(',', $feGroups);
 

@@ -23,10 +23,10 @@ use AOE\Crawler\Middleware\CrawlerInitialization;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Http\Response;
+use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Cache\CacheInstruction;
 use TYPO3\CMS\Frontend\Page\PageInformation;
@@ -36,8 +36,6 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 #[CoversClass(CrawlerInitialization::class)]
 class CrawlerInitializationTest extends FunctionalTestCase
 {
-    use ProphecyTrait;
-
     private CrawlerInitialization $subject;
 
     protected function setUp(): void
@@ -58,36 +56,32 @@ class CrawlerInitializationTest extends FunctionalTestCase
             'procInstrParams' => [],
         ];
 
-        $request = $this->prophesize(ServerRequestInterface::class);
-        $request->getAttribute('tx_crawler')->willReturn($queueParameters);
-
-        $request->getAttribute('frontend.cache.instruction')->willReturn(new CacheInstruction());
-
         $pageInformation = new PageInformation();
         $pageInformation->setId(1234);
 
-        $request->getAttribute('frontend.page.information')->willReturn($pageInformation);
+        $request = (new ServerRequest('https://crawler-devbox.ddev.site/'))
+            ->withAttribute('tx_crawler', $queueParameters)
+            ->withAttribute('frontend.cache.instruction', new CacheInstruction())
+            ->withAttribute('frontend.page.information', $pageInformation);
 
-        $request->withAttribute('tx_crawler', [
-            'forceIndexing' => true,
-            'running' => true,
-            'parameters' => $queueParameters,
-            'log' => ['User Groups: ' . ($queueParameters['feUserGroupList'] ?? '')],
-        ])->willReturn($request);
-
-        $attributes = [
+        $expectedCrawlerAttribute = [
             'forceIndexing' => true,
             'running' => true,
             'parameters' => $queueParameters,
             'log' => ['User Groups: ' . $queueParameters['feUserGroupList']],
         ];
-        $request->getAttribute('tx_crawler', [])->willReturn($attributes);
 
         $handlerResponse = new Response();
-        $handler = $this->prophesize(RequestHandlerInterface::class);
-        $handler->handle($request->reveal())->willReturn($handlerResponse);
+        $handler = $this->createMock(RequestHandlerInterface::class);
+        $handler->expects(self::once())->method('handle')->with(
+            self::callback(
+                static fn (ServerRequestInterface $handledRequest): bool => $handledRequest->getAttribute(
+                    'tx_crawler'
+                ) === $expectedCrawlerAttribute
+            )
+        )->willReturn($handlerResponse);
 
-        $response = $this->subject->process($request->reveal(), $handler->reveal());
+        $response = $this->subject->process($request, $handler);
 
         self::assertTrue($response->hasHeader('X-T3Crawler-Meta'));
         $meta = json_decode($response->getHeaderLine('X-T3Crawler-Meta'), true);

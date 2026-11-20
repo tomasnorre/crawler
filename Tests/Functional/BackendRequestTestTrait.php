@@ -19,7 +19,6 @@ namespace AOE\Crawler\Tests\Functional;
  * The TYPO3 project - inspiring people to share!
  */
 
-use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Backend\Routing\Route;
 use TYPO3\CMS\Backend\Routing\Router;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
@@ -30,8 +29,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 trait BackendRequestTestTrait
 {
-    use ProphecyTrait;
-
     /**
      * This is needed as long as TYPO3 Backend does not bootstrap a request object which can be handed into modules,
      * and the Functional Test Suite cannot boot up a Backend with all the middlewares in place (thus, loading

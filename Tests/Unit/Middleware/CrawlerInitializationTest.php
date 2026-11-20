@@ -20,7 +20,6 @@ namespace AOE\Crawler\Tests\Unit\Middleware;
  */
 
 use AOE\Crawler\Middleware\CrawlerInitialization;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -36,8 +35,6 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 #[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Middleware\CrawlerInitialization::class)]
 class CrawlerInitializationTest extends UnitTestCase
 {
-    use ProphecyTrait;
-
     protected bool $resetSingletonInstances = true;
 
     #[\PHPUnit\Framework\Attributes\Test]
@@ -45,14 +42,16 @@ class CrawlerInitializationTest extends UnitTestCase
     {
         $subject = self::getAccessibleMock(CrawlerInitialization::class, null, [], '', false);
 
-        $request = $this->prophesize(ServerRequestInterface::class);
-        $request->getAttribute('tx_crawler')->willReturn(null);
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->expects(self::once())->method('getAttribute')->with('tx_crawler')->willReturn(null);
 
         $handlerResponse = new Response();
-        $handler = $this->prophesize(RequestHandlerInterface::class);
-        $handler->handle($request->reveal())->willReturn($handlerResponse);
+        $handler = $this->createMock(RequestHandlerInterface::class);
+        $handler->expects(self::once())->method('handle')->with(self::identicalTo($request))->willReturn(
+            $handlerResponse
+        );
 
-        $response = $subject->process($request->reveal(), $handler->reveal());
+        $response = $subject->process($request, $handler);
 
         self::assertSame($handlerResponse, $response);
     }

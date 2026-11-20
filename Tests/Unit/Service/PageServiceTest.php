@@ -25,7 +25,6 @@ use AOE\Crawler\Service\PageService;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
@@ -35,8 +34,6 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 #[CoversClass(PageService::class)]
 class PageServiceTest extends UnitTestCase
 {
-    use ProphecyTrait;
-
     protected PageService $subject;
 
     protected bool $resetSingletonInstances = true;

@@ -21,7 +21,6 @@ namespace AOE\Crawler\Tests\Unit\Middleware;
 
 use AOE\Crawler\Middleware\FrontendUserAuthenticator;
 use Doctrine\DBAL\Result;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -39,8 +38,6 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 #[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Middleware\FrontendUserAuthenticator::class)]
 class FrontendUserAuthenticatorTest extends UnitTestCase
 {
-    use ProphecyTrait;
-
     protected \TYPO3\TestingFramework\Core\AccessibleObjectInterface|\PHPUnit\Framework\MockObject\MockObject $subject;
     protected bool $resetSingletonInstances = true;
 
@@ -54,14 +51,16 @@ class FrontendUserAuthenticatorTest extends UnitTestCase
     #[\PHPUnit\Framework\Attributes\Test]
     public function processRequestNotHandled(): void
     {
-        $request = $this->prophesize(ServerRequestInterface::class);
-        $request->getHeaderLine('X-T3CRAWLER')->willReturn('');
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->expects(self::once())->method('getHeaderLine')->with('X-T3CRAWLER')->willReturn('');
 
         $handlerResponse = new Response();
-        $handler = $this->prophesize(RequestHandlerInterface::class);
-        $handler->handle($request->reveal())->willReturn($handlerResponse);
+        $handler = $this->createMock(RequestHandlerInterface::class);
+        $handler->expects(self::once())->method('handle')->with(self::identicalTo($request))->willReturn(
+            $handlerResponse
+        );
 
-        $response = $this->subject->process($request->reveal(), $handler->reveal());
+        $response = $this->subject->process($request, $handler);
 
         self::assertSame($handlerResponse, $response);
     }

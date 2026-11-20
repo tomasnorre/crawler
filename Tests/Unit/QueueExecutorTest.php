@@ -30,7 +30,6 @@ use AOE\Crawler\Tests\Unit\CrawlStrategy\CallbackObjectForTesting;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Http\Uri;
@@ -43,8 +42,6 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 #[CoversClass(CrawlStrategyFactory::class)]
 class QueueExecutorTest extends UnitTestCase
 {
-    use ProphecyTrait;
-
     protected QueueExecutor $queueExecutor;
 
     protected bool $resetSingletonInstances = true;
@@ -60,7 +57,7 @@ class QueueExecutorTest extends UnitTestCase
 
         $this->queueExecutor = new QueueExecutor(
             $crawlStrategyFactory,
-            $this->prophesize(EventDispatcher::class)->reveal(),
+            $this->createStub(EventDispatcher::class),
             new CallbackExecutionStrategy($callbacks),
         );
     }

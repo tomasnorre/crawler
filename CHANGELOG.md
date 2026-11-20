@@ -29,6 +29,7 @@
 * `BuildQueueCommand` and `FlushQueueCommand` read their arguments and options with fixed types through the internal `AOE\Crawler\Command\TypedInput` instead of casting them inline
 * `BackendModuleScriptUrlService::buildScriptUrl()` throws a `RuntimeException` if the request has no backend route, instead of failing with an error
 * `CrawlerInitialization` treats a request without a `frontend.cache.instruction` attribute as cacheable, instead of failing with an error
+* The tests use PHPUnit test doubles instead of Prophecy, `phpspec/prophecy-phpunit` is no longer a dev dependency
 
 ### Fixed
 * `RequestHelper::getIntFromRequest()` returns the default for array values in the request, instead of `1`

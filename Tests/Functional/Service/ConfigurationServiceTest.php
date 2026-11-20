@@ -25,7 +25,6 @@ use AOE\Crawler\Service\ExcludeStringExpander;
 use AOE\Crawler\Service\ParameterExpander;
 use AOE\Crawler\Service\UrlService;
 use PHPUnit\Framework\Attributes\Test;
-use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Authentication\GroupResolver;
@@ -34,8 +33,6 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 class ConfigurationServiceTest extends FunctionalTestCase
 {
-    use ProphecyTrait;
-
     protected array $coreExtensionsToLoad = ['info', 'seo'];
 
     protected array $testExtensionsToLoad = ['typo3conf/ext/crawler'];
