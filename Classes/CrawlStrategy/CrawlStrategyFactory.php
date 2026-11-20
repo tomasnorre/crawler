@@ -5,32 +5,29 @@ declare(strict_types=1);
 namespace AOE\Crawler\CrawlStrategy;
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+use Psr\Container\ContainerInterface;
+use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
 
 /**
  * @internal since v12.0.0
  */
-final class CrawlStrategyFactory
+final readonly class CrawlStrategyFactory
 {
-    private readonly ExtensionConfigurationProvider $configurationProvider;
-
-    public function __construct(?ExtensionConfigurationProvider $configurationProvider = null)
-    {
-        $this->configurationProvider = $configurationProvider ?? GeneralUtility::makeInstance(
-            ExtensionConfigurationProvider::class
-        );
+    public function __construct(
+        private ExtensionConfigurationProvider $configurationProvider,
+        #[AutowireLocator(services: [GuzzleExecutionStrategy::class, FrontendSubRequestExecutionStrategy::class])]
+        private ContainerInterface $strategies,
+    ) {
     }
 
     public function create(): CrawlStrategyInterface
     {
         $extensionSettings = $this->configurationProvider->getExtensionConfiguration();
-        if ($extensionSettings['makeDirectRequests'] ?? false) {
-            /** @var CrawlStrategyInterface $instance */
-            $instance = GeneralUtility::makeInstance(SubProcessExecutionStrategy::class, $this->configurationProvider);
-        } else {
-            $instance = GeneralUtility::makeInstance(GuzzleExecutionStrategy::class, $this->configurationProvider);
-        }
+        $strategy = ($extensionSettings['makeDirectRequests'] ?? false)
+            ? FrontendSubRequestExecutionStrategy::class
+            : GuzzleExecutionStrategy::class;
 
-        return $instance;
+        /** @var CrawlStrategyInterface */
+        return $this->strategies->get($strategy);
     }
 }

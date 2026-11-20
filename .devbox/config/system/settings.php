@@ -50,8 +50,6 @@ return [
             'frontendBasePath' => '/',
             'makeDirectRequests' => '1',
             'maxCompileUrls' => '10000',
-            'phpBinary' => 'php',
-            'phpPath' => '',
             'processDebug' => '0',
             'processLimit' => '4',
             'processMaxRunTime' => '300',

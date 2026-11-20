@@ -187,10 +187,6 @@
 			<trans-unit id="message.canNotExportEmptyQueueToCsvText" resname="message.canNotExportEmptyQueueToCsvText">
 				<source>An empty queue can not be exported to CSV.</source>
 			</trans-unit>
-			<trans-unit id="message.phpBinaryNotFound" resname="message.phpBinaryNotFound">
-				<source>No php binary found in '%s'. Please update value for 'phpPath' in crawler extension setup.
-				</source>
-			</trans-unit>
 
 		</body>
 	</file>

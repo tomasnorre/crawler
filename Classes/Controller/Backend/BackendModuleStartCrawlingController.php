@@ -72,7 +72,6 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
     #[\Override]
     public function handleRequest(ServerRequestInterface $request): ResponseInterface
     {
-        $this->checkPhpBinaryForDirectRequests($this->extensionSettings);
         $this->pageUid = (int) ($request->getQueryParams()['id'] ?? -1);
         $this->moduleTemplate = $this->setupView($request, $this->pageUid);
         $this->moduleTemplate->makeDocHeaderModuleMenu([

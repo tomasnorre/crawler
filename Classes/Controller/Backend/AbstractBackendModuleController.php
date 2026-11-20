@@ -19,18 +19,13 @@ namespace AOE\Crawler\Controller\Backend;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
-use AOE\Crawler\Utility\MessageUtility;
-use AOE\Crawler\Utility\PhpBinaryUtility;
 use Psr\Http\Message\ServerRequestInterface;
-use Symfony\Contracts\Service\Attribute\Required;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Type\Bitmask\Permission;
-use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -40,17 +35,6 @@ abstract class AbstractBackendModuleController
 {
     protected int $pageUid;
     protected ModuleTemplate $moduleTemplate;
-    protected array $extensionSettings = [];
-
-    /**
-     * @psalm-api Called by the dependency injection container, see #[Required]
-     */
-    #[Required]
-    public function setExtensionSettings(): void
-    {
-        $configurationProvider = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
-        $this->extensionSettings = $configurationProvider->getExtensionConfiguration();
-    }
 
     protected function setupView(ServerRequestInterface $request, int $pageUid): ModuleTemplate
     {
@@ -62,27 +46,6 @@ abstract class AbstractBackendModuleController
         }
 
         return $moduleTemplate;
-    }
-
-    /**
-     * Direct requests (makeDirectRequests) render pages in a PHP sub-process, which requires a working PHP binary.
-     */
-    protected function checkPhpBinaryForDirectRequests(array $extensionSettings): void
-    {
-        if (!($extensionSettings['makeDirectRequests'] ?? false)) {
-            return;
-        }
-
-        $exitCode = 0;
-        $out = [];
-        CommandUtility::exec(PhpBinaryUtility::getPhpBinary() . ' -v', $out, $exitCode);
-        if ($exitCode > 0) {
-            MessageUtility::addErrorMessage(
-                sprintf($this->getLanguageService()->sL(
-                    'crawler.messages:message.phpBinaryNotFound'
-                ), htmlspecialchars((string) $extensionSettings['phpPath'], ENT_QUOTES | ENT_HTML5))
-            );
-        }
     }
 
     protected function getModuleMenu(): array

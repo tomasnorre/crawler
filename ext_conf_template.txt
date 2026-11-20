@@ -2,13 +2,13 @@
 ## Settings
 #########
 
-# cat=Settings; type=string; label=Frontend website base path: Base path of the website frontend (e.g. if you call http://mydomain.com/cms/index.php in the browser the base path is "/cms/"). Leave empty to use the value of config.absRefPrefix instead.
+# cat=Settings; type=string; label=Frontend website base path: Base path of the website frontend for direct requests (e.g. if you call http://mydomain.com/cms/index.php in the browser the base path is "/cms/").
 frontendBasePath=/
 
 # cat=Settings; type=boolean; label= Crawl hidden pages: Crawl hidden pages (By default they won't be crawled)
 crawlHiddenPages=0
 
-# cat=Settings; type=boolean; label= Make direct requests: If checked the crawler will make direct requests by including the index.php file instead of getting the page content via http(s)
+# cat=Settings; type=boolean; label= Make direct requests: If checked the crawler renders the pages within its worker process instead of getting the page content via http(s)
 makeDirectRequests=0
 
 #########
@@ -33,13 +33,3 @@ cleanUpProcessedAge=2
 
 # cat=Cleanup; type=int [1- 99]; label=Scheduled Age: If Clean up old queue entries is checked, then scheduled entries older than X days are deleted.
 cleanUpScheduledAge=7
-
-#########
-## System
-#########
-
-# cat=System; type=string; label= Name of the php binary used for direct requests (makeDirectRequests), default is php
-phpBinary=php
-
-# cat=System; type=string; label= PHP Path: Local path to php binary file (e.g. "/usr/bin/php"), you should ONLY use this when the resolved php-binary isn't the correct one.
-phpPath=
