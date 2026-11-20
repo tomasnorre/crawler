@@ -39,10 +39,11 @@ const devboxPath = path.resolve(__dirname, '../../../.devbox');
  * installation of Build/Scripts/classicModeSetup.sh, set
  *   ACCEPTANCE_BASE_URL       its URL
  *   ACCEPTANCE_TYPO3_COMMAND  the command running the TYPO3 CLI, fx. "php public/typo3/sysext/core/bin/typo3"
- *   ACCEPTANCE_SQL_COMMAND    the command running the SQL query from stdin, printing the result without column names
+ *   ACCEPTANCE_SQL_COMMAND    the command running the SQL query from stdin, printing the raw result without column names
  */
 const typo3Command = process.env.ACCEPTANCE_TYPO3_COMMAND || 'ddev exec bin/typo3';
-const sqlCommand = process.env.ACCEPTANCE_SQL_COMMAND || 'ddev mysql -N -B';
+// --raw: in batch mode, mysql escapes backslashes and line breaks in the values, fx. of JSON
+const sqlCommand = process.env.ACCEPTANCE_SQL_COMMAND || 'ddev mysql --batch --skip-column-names --raw';
 
 /**
  * Runs a TYPO3 CLI command, fx. typo3('crawler:buildQueue 1 default').
