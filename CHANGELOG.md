@@ -39,6 +39,7 @@
 * Build the page tree of excluded pages only once per page and depth, the cache was never filled
 * Keep the selected set in the crawler log when changing a filter, the set id was never read from the request
 * List `crawler:buildQueue` and `crawler:flushQueue` in `typo3 list`, they were registered a second time as aliases of themselves
+* Install the DDEV devbox again, it upgrades PHP to the latest patch version from deb.sury.org, `roave/security-advisories` blocked the install on the outdated PHP of the DDEV image
 
 ### Deprecated
 #### Classes
