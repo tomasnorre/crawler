@@ -191,12 +191,13 @@ Options:
             - 15    maintained until 2027-11-11
             - 16    maintained until 2028-11-09
 
-    -p <8.2|8.3|8.4|8.5>
+    -p <8.2|8.3|8.4|8.5|8.6>
         Specifies the PHP minor version to be used
             - 8.2: use PHP 8.2 (default)
             - 8.3: use PHP 8.3
             - 8.4: use PHP 8.4
             - 8.5: use PHP 8.5
+            - 8.6: use PHP 8.6
 
     -x
         Only with -s functional|unit
@@ -228,8 +229,8 @@ Examples:
     # Run functional tests using PHP 8.4 and MariaDB 10.11 using pdo_mysql
     ./Build/Scripts/runTests.sh -p 8.4 -s functional -d mariadb -i 10.11 -a pdo_mysql
 
-    # Run functional tests on Postgres with Xdebug, PHP 8.5 and execute a restricted set of tests
-    ./Build/Scripts/runTests.sh -x -p 8.5 -s functional -d postgres -- Tests/Functional/DummyTest.php
+    # Run functional tests on Postgres with Xdebug, PHP 8.6 and execute a restricted set of tests
+    ./Build/Scripts/runTests.sh -x -p 8.6 -s functional -d postgres -- Tests/Functional/DummyTest.php
 EOF
 }
 
@@ -281,7 +282,7 @@ while getopts "a:b:d:i:s:p:xy:nhu" OPT; do
             ;;
         p)
             PHP_VERSION=${OPTARG}
-            if ! [[ ${PHP_VERSION} =~ ^(8\.2|8\.3|8\.4|8\.5)$ ]]; then
+            if ! [[ ${PHP_VERSION} =~ ^(8\.2|8\.3|8\.4|8\.5|8\.6)$ ]]; then
                 INVALID_OPTIONS+=("p ${OPTARG}")
             fi
             ;;
