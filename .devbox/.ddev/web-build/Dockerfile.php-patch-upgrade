@@ -1,0 +1,8 @@
+# Upgrade the PHP of the project to the latest patch version from deb.sury.org.
+# The DDEV web image is built before PHP patch releases come out, so its PHP
+# can have known security issues, which roave/security-advisories refuses to install on.
+RUN (apt-get update || true) \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --only-upgrade \
+        -o Dpkg::Options::="--force-confold" --no-install-recommends --no-install-suggests \
+        $(dpkg-query -W -f='${db:Status-Abbrev} ${Package}\n' "php${DDEV_PHP_VERSION}-*" | awk '$1 == "ii" {print $2}') \
+    && rm -rf /var/lib/apt/lists/*
