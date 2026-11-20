@@ -29,15 +29,13 @@ problem should be solved.
 Make Direct Request doesn't work
 ================================
 
-If you are using direct request, see :ref:`extension-manager-configuration`,
-and it doesn't give you any result, or that the scheduler tasks stalls.
+With direct requests, see :ref:`extension-manager-configuration-direct-requests`,
+the worker renders the pages itself. The URL of a queue entry has to match
+a site configuration of the installation, otherwise the page is not found and
+the crawler log shows `404 Not Found`.
 
-It can be because of a faulty configured `TrustedHostPattern`, this can be
-changed in the :file:`LocalConfiguration.php`.
-
-..  code-block:: php
-
-    $GLOBALS['TYPO3_CONF_VARS']['SYS']['trustedHostsPattern'] = '<your-pattern>';
+If your frontend is located in a subdirectory, set `frontendBasePath` in the
+extension configuration, fx. `/cms/`.
 
 ..  _troubleshooting-cli-all:
 
@@ -83,29 +81,6 @@ this in the backend via :guilabel:`Analyze Database Structure` tool or if you
 have `TYPO3 Console <https://extensions.typo3.org/extension/typo3_console/>`_
 installed via command line command
 :bash:`vendor/bin/typo3cms database:updateschema`.
-
-..  _troubleshooting-php-path-not-correct:
-
-TYPO3 shows error if the PHP path is not correct
-================================================
-
-In some cases you get an error, if the PHP path is not set correctly. It occures
-if you select the Site Crawler in Info-module.
-
-..  figure:: /Images/backend_info_php_error.png
-    :alt: Error message in Info-module
-
-    Error message in Info-module
-
-In this case you have to set the path to your PHP in the Extension configuration.
-
-..  figure:: /Images/backend_php_path_configuration.png
-    :alt: Correct PHP path settings
-
-    Correct PHP path settings in Extension configuration
-
-Please be sure to add the correct path to your PHP. The path in this screenshot
-might be different to your PHP path.
 
 ..  _troubleshooting-htmlspecialchars:
 

@@ -16,11 +16,6 @@
       <code><![CDATA[GuzzleExecutionStrategy]]></code>
     </UnusedClass>
   </file>
-  <file src="Classes/CrawlStrategy/SubProcessExecutionStrategy.php">
-    <UnusedClass>
-      <code><![CDATA[SubProcessExecutionStrategy]]></code>
-    </UnusedClass>
-  </file>
   <file src="Classes/Domain/Model/Reason.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[getBackendUserId]]></code>

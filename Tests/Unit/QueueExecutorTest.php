@@ -33,7 +33,6 @@ use PHPUnit\Framework\Attributes\Test;
 use Psr\Container\ContainerInterface;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Http\Uri;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 #[CoversClass(QueueExecutor::class)]
@@ -49,8 +48,7 @@ class QueueExecutorTest extends UnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [];
-        $crawlStrategyFactory = GeneralUtility::makeInstance(CrawlStrategyFactory::class);
+        $crawlStrategyFactory = $this->createCrawlStrategyFactory(new GuzzleExecutionStrategy());
 
         $callbacks = $this->createStub(ContainerInterface::class);
         $callbacks->method('has')->willReturn(false);
@@ -166,15 +164,23 @@ class QueueExecutorTest extends UnitTestCase
         GuzzleExecutionStrategy $crawlStrategy,
         EventDispatcher $eventDispatcher
     ): QueueExecutor {
-        // The factory creates the Guzzle strategy, as direct requests are not enabled
-        GeneralUtility::addInstance(GuzzleExecutionStrategy::class, $crawlStrategy);
-        $extensionConfigurationProvider = $this->createStub(ExtensionConfigurationProvider::class);
-        $extensionConfigurationProvider->method('getExtensionConfiguration')->willReturn([]);
-
         return new QueueExecutor(
-            new CrawlStrategyFactory($extensionConfigurationProvider),
+            $this->createCrawlStrategyFactory($crawlStrategy),
             $eventDispatcher,
             new CallbackExecutionStrategy($this->createStub(ContainerInterface::class)),
         );
+    }
+
+    /**
+     * The factory creates the Guzzle strategy, as direct requests are not enabled
+     */
+    private function createCrawlStrategyFactory(GuzzleExecutionStrategy $crawlStrategy): CrawlStrategyFactory
+    {
+        $extensionConfigurationProvider = $this->createStub(ExtensionConfigurationProvider::class);
+        $extensionConfigurationProvider->method('getExtensionConfiguration')->willReturn([]);
+        $strategies = $this->createStub(ContainerInterface::class);
+        $strategies->method('get')->willReturnMap([[GuzzleExecutionStrategy::class, $crawlStrategy]]);
+
+        return new CrawlStrategyFactory($extensionConfigurationProvider, $strategies);
     }
 }

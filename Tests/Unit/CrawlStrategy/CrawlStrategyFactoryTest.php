@@ -21,89 +21,51 @@ namespace AOE\Crawler\Tests\Unit\CrawlStrategy;
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
+use AOE\Crawler\CrawlStrategy\CrawlStrategyInterface;
+use AOE\Crawler\CrawlStrategy\FrontendSubRequestExecutionStrategy;
 use AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategy;
-use AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategy;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use Psr\Container\ContainerInterface;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\CrawlStrategy\CrawlStrategyFactory::class)]
-#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Configuration\ExtensionConfigurationProvider::class)]
-#[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategy::class)]
+#[CoversClass(CrawlStrategyFactory::class)]
 class CrawlStrategyFactoryTest extends UnitTestCase
 {
-    protected bool $resetSingletonInstances = true;
-
-    #[\PHPUnit\Framework\Attributes\Test]
-    public function crawlerStrategyFactoryReturnsGuzzleExecutionStrategy(): void
+    public static function createReturnsStrategyOfSettingsDataProvider(): iterable
     {
-        $configuration = [
-            'makeDirectRequests' => 0,
-            'frontendBasePath' => '/',
+        yield 'direct requests disabled' => [
+            'settings' => [
+                'makeDirectRequests' => '0',
+            ],
+            'expected' => GuzzleExecutionStrategy::class,
         ];
-        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = $configuration;
-        $crawlStrategy = GeneralUtility::makeInstance(CrawlStrategyFactory::class)->create();
-
-        self::assertInstanceOf(GuzzleExecutionStrategy::class, $crawlStrategy);
+        yield 'direct requests enabled' => [
+            'settings' => [
+                'makeDirectRequests' => '1',
+            ],
+            'expected' => FrontendSubRequestExecutionStrategy::class,
+        ];
+        yield 'direct requests not configured' => [
+            'settings' => [],
+            'expected' => GuzzleExecutionStrategy::class,
+        ];
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
-    public function crawlerStrategyFactoryReturnsSubProcessExecutionStrategy(): void
+    #[DataProvider('createReturnsStrategyOfSettingsDataProvider')]
+    #[Test]
+    public function createReturnsStrategyOfSettings(array $settings, string $expected): void
     {
-        $configuration = [
-            'makeDirectRequests' => 1,
-            'frontendBasePath' => '/',
-        ];
-        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = $configuration;
-        $crawlStrategy = GeneralUtility::makeInstance(CrawlStrategyFactory::class)->create();
+        $configurationProvider = $this->createStub(ExtensionConfigurationProvider::class);
+        $configurationProvider->method('getExtensionConfiguration')->willReturn($settings);
 
-        self::assertInstanceOf(SubProcessExecutionStrategy::class, $crawlStrategy);
-    }
+        $strategy = $this->createStub(CrawlStrategyInterface::class);
+        $strategies = $this->createMock(ContainerInterface::class);
+        $strategies->expects(self::once())->method('get')->with($expected)->willReturn($strategy);
 
-    #[\PHPUnit\Framework\Attributes\Test]
-    public function crawlerStrategyFactoryReturnsGuzzleExecutionStrategyAsItIsDefault(): void
-    {
-        $configuration = [
-            'frontendBasePath' => '/',
-        ];
-        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = $configuration;
-        $crawlStrategy = GeneralUtility::makeInstance(CrawlStrategyFactory::class)->create();
+        $subject = new CrawlStrategyFactory($configurationProvider, $strategies);
 
-        self::assertInstanceOf(GuzzleExecutionStrategy::class, $crawlStrategy);
-    }
-
-    #[\PHPUnit\Framework\Attributes\Test]
-    public function crawlerStrategyFactoryConstructedWithConfigurationProviderReturnsSubProcess(): void
-    {
-        $configuration = [
-            'makeDirectRequests' => 1,
-            'frontendBasePath' => '/',
-        ];
-
-        $extensionConfigurationProvider = $this->createStub(ExtensionConfigurationProvider::class);
-        $extensionConfigurationProvider->method('getExtensionConfiguration')->willReturn($configuration);
-        $crawlStrategy = GeneralUtility::makeInstance(
-            CrawlStrategyFactory::class,
-            $extensionConfigurationProvider
-        )->create();
-
-        self::assertInstanceOf(SubProcessExecutionStrategy::class, $crawlStrategy);
-    }
-
-    #[\PHPUnit\Framework\Attributes\Test]
-    public function crawlerStrategyFactoryConstructedWithConfigurationProviderReturnsGuzzle(): void
-    {
-        $configuration = [
-            'makeDirectRequests' => 0,
-            'frontendBasePath' => '/',
-        ];
-
-        $extensionConfigurationProvider = $this->createStub(ExtensionConfigurationProvider::class);
-        $extensionConfigurationProvider->method('getExtensionConfiguration')->willReturn($configuration);
-        $crawlStrategy = GeneralUtility::makeInstance(
-            CrawlStrategyFactory::class,
-            $extensionConfigurationProvider
-        )->create();
-
-        self::assertInstanceOf(GuzzleExecutionStrategy::class, $crawlStrategy);
+        self::assertSame($strategy, $subject->create());
     }
 }

@@ -58,7 +58,6 @@ final class PageTreeUrlCollectorTest extends UnitTestCase
         $configuration = [
             'maxCompileUrls' => '10000',
             'crawlHiddenPages' => '0',
-            'phpPath' => '/usr/bin/php',
             'enableTimeslot' => '1',
             'makeDirectRequests' => '0',
             'frontendBasePath' => '/',

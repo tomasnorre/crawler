@@ -30,10 +30,13 @@
 * `BackendModuleScriptUrlService::buildScriptUrl()` throws a `RuntimeException` if the request has no backend route, instead of failing with an error
 * `CrawlerInitialization` treats a request without a `frontend.cache.instruction` attribute as cacheable, instead of failing with an error
 * The tests use PHPUnit test doubles instead of Prophecy, `phpspec/prophecy-phpunit` is no longer a dev dependency
+* Direct requests (`makeDirectRequests`) render the pages within the worker process by handing a request to the TYPO3 frontend application, instead of running `cli/bootstrap.php` in a PHP sub-process [#974](https://github.com/tomasnorre/crawler/issues/974)
+* Direct requests report the crawler data of the page (`vars`, `log`, `parameters`) like HTTP requests do, instead of the HTML of the page
+* `CrawlStrategyFactory` takes the crawl strategies as a service locator, the `ExtensionConfigurationProvider` is required
+* The extension setting `frontendBasePath` no longer falls back to `config.absRefPrefix`, it defaults to `/`
 
 ### Fixed
 * `RequestHelper::getIntFromRequest()` returns the default for array values in the request, instead of `1`
-* `PhpBinaryUtility::getPhpBinary()` throws a `CommandNotFoundException` if no `phpBinary` is configured, instead of returning a directory
 * Clearing the page cache queues the URLs of all crawler configurations of the page again, configurations without a processing instruction were skipped once an extension registered processing instructions
 * Crawler configuration records restricted to backend groups are available to non-admin users in these groups again
 * Export every log entry in the crawler log CSV
@@ -57,6 +60,9 @@
 * `ext_emconf.php`, the extension metadata (version, `providesPackages`) is read from `composer.json` [Deprecation #108345](https://docs.typo3.org/permalink/changelog:deprecation-108345-1774126701@14.3)
 * Dependency `beberlei/assert`
 * Bundled libraries in `Resources/Private/Php/Libraries` and the Composer script `extension-create-libs`, non-Composer installations use the libraries TYPO3 ships
+* `cli/bootstrap.php` and `cli/conf.php`, direct requests render the pages within the worker
+* Extension settings `phpBinary` and `phpPath`, direct requests need no PHP binary
+* Label `message.phpBinaryNotFound`
 
 #### Classes
 * `AOE\Crawler\Command\ProcessQueueCommand`
@@ -64,13 +70,16 @@
 * `AOE\Crawler\Controller\Backend\BackendModuleCrawlerProcessController`
 * `AOE\Crawler\Controller\CrawlerController`, use `AOE\Crawler\Service\PageTreeUrlCollector`
 * `AOE\Crawler\Crawler`
+* `AOE\Crawler\CrawlStrategy\SubProcessExecutionStrategy`, use `AOE\Crawler\CrawlStrategy\FrontendSubRequestExecutionStrategy`
 * `AOE\Crawler\Domain\Model\Configuration`
 * `AOE\Crawler\Domain\Model\ProcessCollection`
 * `AOE\Crawler\Domain\Model\Process`
 * `AOE\Crawler\Domain\Model\Queue`
 * `AOE\Crawler\Domain\Repository\ProcessRepository`
 * `AOE\Crawler\EventListener\AfterQueueItemAddedEventListener`
+* `AOE\Crawler\Exception\CommandNotFoundException`
 * `AOE\Crawler\Exception\CrawlerObjectException`
+* `AOE\Crawler\Exception\ExtensionSettingsException`
 * `AOE\Crawler\Exception\NoIndexFoundException`
 * `AOE\Crawler\Exception\ProcessException`
 * `AOE\Crawler\Exception\TimeStampException`
@@ -81,6 +90,7 @@
 * `AOE\Crawler\Service\BackendModuleLinkService`
 * `AOE\Crawler\Service\ProcessService`
 * `AOE\Crawler\Utility\HookUtility`
+* `AOE\Crawler\Utility\PhpBinaryUtility`
 * `AOE\Crawler\Value\CrawlAction`
 
 #### Functions & Properties
@@ -108,6 +118,9 @@
 * `CrawlerController::$urlList`
 * `CrawlerController::$extensionSettings`
 * `CrawlerController::$MP`
+* `AbstractBackendModuleController::checkPhpBinaryForDirectRequests()`
+* `AbstractBackendModuleController::setExtensionSettings()`
+* `AbstractBackendModuleController::$extensionSettings`
 * `QueueRepository`: all process related methods, `getUnprocessedItems()`, `countAllPendingItems()`, `countAllAssignedPendingItems()`, `cleanupQueue()`, `fetchRecordsToBeCrawled()`
 
 ## Crawler 13.0.1

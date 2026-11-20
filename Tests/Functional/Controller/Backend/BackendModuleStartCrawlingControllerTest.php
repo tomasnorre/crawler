@@ -44,7 +44,7 @@ class BackendModuleStartCrawlingControllerTest extends FunctionalTestCase
 
         // Set extension settings
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [
-            'phpBinary' => 'php',
+            'makeDirectRequests' => '0',
         ];
 
         $GLOBALS['BE_USER'] = $this->createStub(BackendUserAuthentication::class);

@@ -1,0 +1,5 @@
+"tx_crawler_queue"
+,"qid","page_id","parameters","result_data","exec_time","scheduled","set_id","configuration","configuration_hash"
+,2001,1,"{""url"":""https://acme.com/"",""feUserGroupList"":""1"",""procInstructions"":[""""],""procInstrParams"":[]}","",0,0,123,"default","hash-2001"
+,2002,2,"{""url"":""https://acme.com/page-uid-2"",""feUserGroupList"":""1,2"",""procInstructions"":[""""],""procInstrParams"":[]}","",0,0,123,"default","hash-2002"
+,2003,1,"{""url"":""https://acme.com/does-not-exist"",""feUserGroupList"":"""",""procInstructions"":[""""],""procInstrParams"":[]}","",0,0,123,"default","hash-2003"
