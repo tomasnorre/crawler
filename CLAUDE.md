@@ -6,7 +6,7 @@ Crawls the TYPO3 page tree for cache warmup, indexing and publishing.
 ## Stack
 
 - TYPO3 14.3 (TYPO3 13 support has been removed on `main`)
-- PHP 8.2, 8.3, 8.4, 8.5
+- PHP 8.2, 8.3, 8.4, 8.5, 8.6
 - MariaDB 10.4.3+ / MySQL 8.0.17+ / PostgreSQL 10.0+ / SQLite 3.8.3+
 - PHPUnit 11 (unit + functional via `typo3/testing-framework`), PHPUnit test doubles (no Prophecy)
 - Infection for mutation testing

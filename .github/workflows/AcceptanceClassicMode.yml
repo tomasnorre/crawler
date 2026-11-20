@@ -28,7 +28,7 @@ jobs:
           - "14"
         php:
           - "8.2"
-          - "8.5"
+          - "8.6"
 
     services:
       # The database of the devbox, see .devbox/.ddev/config.yaml
