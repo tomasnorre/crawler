@@ -8,6 +8,11 @@ When you have a PR, please run the following checks first.
     * Ensures that coding standards are respected
 * `composer analyse`
     * Will run PHPStan and do a static code analysis, this is not adjust completely in build yet, but please try to avoid adding new violations. ;)
+* `composer test:coverage && composer test:patch-coverage`
+    * Requires Xdebug. Checks that the executable lines you changed in `Classes/` are covered by the unit or functional tests,
+      compared with `origin/main` (set another base with `PATCH_COVERAGE_BASE`). Commit your changes first, only committed
+      changes are compared, and the coverage has to be created from the same code.
+    * The CI runs the same check on every pull request and fails when changed lines aren't covered.
 
 ### Writing documentation
 
