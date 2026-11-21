@@ -69,6 +69,9 @@ Before calling a task done, run the unit tests, `composer test:functional-sqlite
 - Every feature gets an acceptance test written in Playwright (tag it `@v14`)
 - One feature, one PR
 - One bugfix, one PR. Always write a failing test that reproduces the bug first, then fix it.
+- Reference the GitHub issue in the footer as `Resolves: #123`.
+- Work on a topic branch off `main` and open a pull request; do not commit to
+  `main` directly.
 - Mutation scores must never decrease. When a change is made in either `Classes/` or `Tests/`, run `composer test:mutation` and compare
   the MSI and Covered Code MSI with `minMsi` and `minCoveredMsi` in `infection.json.dist`:
   - Lower: add or improve tests until the score is back up. Never lower the thresholds.
@@ -77,3 +80,10 @@ Before calling a task done, run the unit tests, `composer test:functional-sqlite
 - Breaking changes: prefix the commit with `!!!` and list them in the CHANGELOG under "Removed" or "Changed"
 - Commit messages follow the TYPO3 style: `[FEATURE]`, `[BUGFIX]`, `[TASK]`, `[DOCS]` prefix, imperative mood, e.g. `[BUGFIX] Export every log entry in the crawler log CSV`
 - Update `Documentation/` when behaviour, configuration or public API changes
+- Do not credit tooling or assistants in commit messages.
+
+## Security
+
+- Never commit secrets or credentials.
+- Report potential security issues privately to the TYPO3 Security Team
+  (<security@typo3.org>) instead of opening a public GitHub issue.
