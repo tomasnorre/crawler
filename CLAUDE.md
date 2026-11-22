@@ -77,6 +77,8 @@ Before calling a task done, run the unit tests, `composer test:functional-sqlite
   - Lower: add or improve tests until the score is back up. Never lower the thresholds.
   - Higher: raise `minMsi` / `minCoveredMsi` to the new values (rounded down to whole numbers) in the same PR.
 - Add an entry to `CHANGELOG.md` under the current dev version (Added / Changed / Fixed / Deprecated / Removed)
+  for changes of the extension's functionality. CI and development workflow changes (GitHub workflows, `Build/`,
+  composer scripts, dev dependencies, tests, devbox) get no CHANGELOG entry
 - Breaking changes: prefix the commit with `!!!` and list them in the CHANGELOG under "Removed" or "Changed"
 - Commit messages follow the TYPO3 style: `[FEATURE]`, `[BUGFIX]`, `[TASK]`, `[DOCS]` prefix, imperative mood, e.g. `[BUGFIX] Export every log entry in the crawler log CSV`
 - Update `Documentation/` when behaviour, configuration or public API changes
