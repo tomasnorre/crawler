@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/15.5/phpunit.xsd"
          backupGlobals="true"
          beStrictAboutTestsThatDoNotTestAnything="false"
          bootstrap="UnitTestsBootstrap.php"
@@ -11,7 +11,7 @@
          displayDetailsOnTestsThatTriggerErrors="false"
          displayDetailsOnTestsThatTriggerNotices="false"
          displayDetailsOnTestsThatTriggerWarnings="false"
-         failOnDeprecation="false"
+         failOnDeprecation="true"
          failOnNotice="true"
          failOnRisky="false"
          failOnWarning="true"
@@ -29,4 +29,13 @@
         <ini name="display_errors" value="1"/>
         <env name="TYPO3_CONTEXT" value="Testing"/>
     </php>
+    <!--
+		Added to only fail if deprecation inside the EXT:crawler and not within
+		it's sub-dependencies.
+	-->
+    <source restrictDeprecations="true">
+        <include>
+            <directory>../../Classes</directory>
+        </include>
+    </source>
 </phpunit>
