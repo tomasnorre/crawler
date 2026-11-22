@@ -62,7 +62,8 @@ class PageConfigurationResolver
 
         $pageId = (int) $pageRow['uid'];
         if ($pageId === 0) {
-            $skipMessage = 'PageUid "' . $pageRow['uid'] . '" was not an integer';
+            $uid = $pageRow['uid'];
+            $skipMessage = 'PageUid "' . (is_scalar($uid) ? $uid : get_debug_type($uid)) . '" was not an integer';
             return [];
         }
 

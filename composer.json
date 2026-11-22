@@ -45,7 +45,7 @@
         "infection/infection": "0.29.14",
         "nikic/php-parser": "^4.13 || ^5.3",
         "phpstan/extension-installer": "1.4.3",
-        "phpstan/phpstan": "2.3.1",
+        "phpstan/phpstan": "2.3.7",
         "phpstan/phpstan-deprecation-rules": "2.0.5",
         "phpunit/phpcov": "10.0.1",
         "phpunit/phpunit": "11.5.57",
