@@ -46,6 +46,7 @@
         "phpstan/extension-installer": "1.4.3",
         "phpstan/phpstan": "2.3.1",
         "phpstan/phpstan-deprecation-rules": "2.0.5",
+        "phpunit/phpcov": "10.0.1",
         "phpunit/phpunit": "11.5.57",
         "roave/security-advisories": "dev-latest",
         "saschaegerer/phpstan-typo3": "3.1.0",
@@ -171,10 +172,16 @@
             "@test:functional-sqlite"
         ],
         "test:coverage": [
+            "[ -e .Build/bin/phpcov ] || composer update",
+            "rm -rf .Logs/coverage .Logs/coverage.cov .Logs/coverage-html",
             "mkdir -p .Logs/coverage",
-            "XDEBUG_MODE=coverage .Build/bin/phpunit --coverage-filter Classes --coverage-php .Logs/coverage/unit_clover.cov -c Tests/UnitTests.xml Tests/Unit ",
-            "XDEBUG_MODE=coverage .Build/bin/phpunit --coverage-filter Classes --coverage-php .Logs/coverage/functional_clover.cov -c Tests/FunctionalTests.xml Tests/Functional ",
-            "XDEBUG_MODE=coverage .Build/bin/phpunit-merger coverage .Logs/coverage/ --html=report .Logs/coverage.xml;"
+            "XDEBUG_MODE=coverage TYPO3_PATH_WEB=.Build/Web .Build/bin/phpunit --coverage-filter Classes --coverage-php .Logs/coverage/unit.cov -c Tests/UnitTests.xml",
+            "XDEBUG_MODE=coverage TYPO3_PATH_WEB=$PWD/.Build/Web typo3DatabaseDriver=pdo_sqlite .Build/bin/phpunit --coverage-filter Classes --coverage-php .Logs/coverage/functional.cov -c Tests/FunctionalTests.xml",
+            ".Build/bin/phpcov merge --php .Logs/coverage.cov --html .Logs/coverage-html .Logs/coverage"
+        ],
+        "test:patch-coverage": [
+            "[ -e .Logs/coverage.cov ] || composer test:coverage",
+            "Build/Scripts/patchCoverage.sh ${PATCH_COVERAGE_BASE:-origin/main}"
         ],
         "test:functional": [
             "@test:reset-vars",

@@ -47,6 +47,9 @@ Crawls the TYPO3 page tree for cache warmup, indexing and publishing.
 - Functional tests: `composer test:functional-sqlite` (needs no DB server), `composer test:functional` (MySQL), `composer test:functional-postgre`
 - All tests: `composer test:all`
 - Mutation tests: `composer test:mutation`
+- Coverage (needs Xdebug): `composer test:coverage` merges unit + functional coverage into `.Logs/coverage.cov`.
+  `composer test:patch-coverage` checks that changed executable lines in `Classes/` (committed, vs. `origin/main`)
+  are covered; CI runs it on every PR (`.github/workflows/Coveralls.yml`)
 - Acceptance tests: `cd .devbox && ddev start`, then `cd Tests/Acceptance && npx playwright test --grep @v14`
 - Acceptance tests in classic mode (non-Composer): `Build/Scripts/classicModeSetup.sh` downloads TYPO3, installs it
   with the committed extension (HEAD) as packaged for the TER and the devbox content on MariaDB/MySQL, and keeps the

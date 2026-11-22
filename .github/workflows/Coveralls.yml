@@ -22,6 +22,9 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          # The merge commit of a pull request and its first parent (the base branch) for the patch coverage
+          fetch-depth: 2
 
       - name: Set up PHP Version 8.2
         uses: shivammathur/setup-php@v2
@@ -34,13 +37,14 @@ jobs:
 
       - name: Unit Tests
         run: |
+          mkdir -p .Logs/coverage
           export "UNIT_XML"=Tests/UnitTests.xml
-          XDEBUG_MODE=coverage .Build/bin/phpunit --coverage-filter Classes --coverage-clover=unittest-coverage.clover --colors -c $UNIT_XML Tests/Unit
+          XDEBUG_MODE=coverage .Build/bin/phpunit --coverage-filter Classes --coverage-clover=unittest-coverage.clover --coverage-php=.Logs/coverage/unit.cov --colors -c $UNIT_XML Tests/Unit
 
       - name: Functional Tests
         run: |
           export "FUNCTIONAL_XML"=Tests/FunctionalTests.xml
-          XDEBUG_MODE=coverage .Build/bin/phpunit --coverage-filter Classes --coverage-clover=functional-coverage.clover --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
+          XDEBUG_MODE=coverage .Build/bin/phpunit --coverage-filter Classes --coverage-clover=functional-coverage.clover --coverage-php=.Logs/coverage/functional.cov --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
         env:
           typo3DatabaseHost: 127.0.0.1
           typo3DatabaseName: typo3
@@ -54,3 +58,9 @@ jobs:
           composer global require php-coveralls/php-coveralls --no-progress --no-suggest --no-interaction
           /home/runner/.composer/vendor/bin/php-coveralls -c .coveralls.yml -vvv --json_path=Tests/coveralls-upload.json
         #continue-on-error: true
+
+      - name: Patch coverage
+        if: github.event_name == 'pull_request'
+        run: |
+          .Build/bin/phpcov merge --php .Logs/coverage.cov .Logs/coverage
+          Build/Scripts/patchCoverage.sh HEAD^1
