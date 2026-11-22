@@ -90,6 +90,14 @@ class PageConfigurationResolverTest extends UnitTestCase
             'expected' => [],
             'expectedSkipMessage' => 'PageUid "string" was not an integer',
         ];
+        yield 'Page uid is an empty array' => [
+            'pageRow' => [
+                'uid' => [],
+            ],
+            'pageSkipMessage' => false,
+            'expected' => [],
+            'expectedSkipMessage' => 'PageUid "array" was not an integer',
+        ];
         yield 'Page row has no uid' => [
             'pageRow' => [],
             'pageSkipMessage' => false,
