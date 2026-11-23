@@ -12,11 +12,6 @@
         {
             "matchDepTypes": ["require"],
             "enabled": false
-        },
-        {
-            "matchDepTypes": ["require-dev"],
-            "matchUpdateTypes": ["minor", "patch"],
-            "groupName": "dev-dependencies"
         }
     ]
 }
