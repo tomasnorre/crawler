@@ -75,6 +75,9 @@ Before calling a task done, run the unit tests, `composer test:functional-sqlite
 - Reference the GitHub issue in the footer as `Resolves: #123`.
 - Work on a topic branch off `main` and open a pull request; do not commit to
   `main` directly.
+- Never touch `main` or the release branches (`v<digit>.x`, fx. `v12.x`, `v13.x`) directly: no commits, pushes,
+  force-pushes, rebases, resets or deletions, locally or on the remote. They only change through merged pull requests.
+  Branch cleanups leave them alone.
 - Mutation scores must never decrease. When a change is made in either `Classes/` or `Tests/`, run `composer test:mutation` and compare
   the MSI and Covered Code MSI with `minMsi` and `minCoveredMsi` in `infection.json.dist`:
   - Lower: add or improve tests until the score is back up. Never lower the thresholds.
