@@ -203,7 +203,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
      * @param array $optArray Options key(value) => label pairs
      * @param string $name Selector box name
      * @param string|array|null $value Selector box value (array for multiple...)
-     * @param boolean $multiple If set, will draw multiple box.
+     * @param bool $multiple If set, will draw multiple box.
      *
      * @return string HTML select element
      */

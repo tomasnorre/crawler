@@ -123,7 +123,6 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
      * --- Re-cache pages from page 7 and two levels down, executed immediately
      * $ typo3 crawler:buildQueue 7 defaultConfiguration --depth 2 --mode exec
      *
-     *
      * --- Put entries for re-caching pages from page 7 into queue, 4 every minute.
      * $ typo3 crawler:buildQueue 7 defaultConfiguration --depth 0 --mode queue --number 4
      */
@@ -233,7 +232,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             } else {
                 $procInstructionsString = ' (' . implode(',', $p['procInstructions']) . ')';
             }
-            $output->writeln('<info>' . $p['url'] . $procInstructionsString . ' => ' . '</info>');
+            $output->writeln('<info>' . $p['url'] . $procInstructionsString . ' => </info>');
             $progressBar->display();
 
             // Bypass the message queue and crawl the entry right away

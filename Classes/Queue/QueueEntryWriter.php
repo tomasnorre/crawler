@@ -63,7 +63,6 @@ final class QueueEntryWriter
      * or collects them for download.
      *
      * @param array $configuration A configuration of the page, see PageConfigurationResolver
-     * @param array $pageRow Page row
      * @return string List of URLs (meant for display in backend module)
      */
     public function compileUrlList(array $configuration, array $pageRow, CrawlRun $run): string
@@ -102,7 +101,7 @@ final class QueueEntryWriter
             $url = (string) $url;
 
             if ($run->isUrlHandled($url, $userGroups, $processingInstructionFilter)) {
-                //if the url key is registered just display it and do not resubmit is
+                // if the url key is registered just display it and do not resubmit is
                 $urlLog[] = '<em><span class="text-muted">' . htmlspecialchars($url) . '</span></em>';
             } else {
                 $formattedDate = BackendUtility::datetime($run->getScheduledTimeOfNextUrl());
@@ -187,7 +186,7 @@ final class QueueEntryWriter
         ];
 
         if ($run->collectQueueEntriesOnly) {
-            //the entries will only be registered and not stored to the database
+            // the entries will only be registered and not stored to the database
             $run->addQueueEntry($fieldArray);
         } else {
             if (!$skipInnerDuplicationCheck) {

@@ -165,10 +165,9 @@ class UrlServiceTest extends FunctionalTestCase
             'queryString' => '',
             'alternativeBaseUrl' => '',
             'httpsOrHttp' => 1,
-            'expected' =>
-                $uri->withScheme('https')
-                    ->withHost('acme.us')
-                    ->withPath('/'),
+            'expected' => $uri->withScheme('https')
+                ->withHost('acme.us')
+                ->withPath('/'),
         ];
         yield 'With PageId and QueryString' => [
             'pageId' => 1,
@@ -185,32 +184,29 @@ class UrlServiceTest extends FunctionalTestCase
             'queryString' => 'id=21&L=1&q=crawler',
             'alternativeBaseUrl' => '',
             'httpsOrHttp' => 1,
-            'expected' =>
-                $uri->withScheme('https')
-                    ->withHost('acme.fr')
-                    ->withPath('/')
-                    ->withQuery('q=crawler'),
+            'expected' => $uri->withScheme('https')
+                ->withHost('acme.fr')
+                ->withPath('/')
+                ->withQuery('q=crawler'),
         ];
         yield 'With alternative BaseUrl' => [
             'pageId' => 1,
             'queryString' => '',
             'alternativeBaseUrl' => 'https://www.acme.co.uk',
             'httpsOrHttp' => 1,
-            'expected' =>
-                $uri->withScheme('https')
-                    ->withHost('www.acme.co.uk')
-                    ->withPath('/'),
+            'expected' => $uri->withScheme('https')
+                ->withHost('www.acme.co.uk')
+                ->withPath('/'),
         ];
         yield 'With alternative BaseUrl and port' => [
             'pageId' => 1,
             'queryString' => '',
             'alternativeBaseUrl' => 'https://www.acme.co.uk:443',
             'httpsOrHttp' => 1,
-            'expected' =>
-                $uri->withScheme('https')
-                    ->withHost('www.acme.co.uk')
-                    ->withPath('/')
-                    ->withPort(443),
+            'expected' => $uri->withScheme('https')
+                ->withHost('www.acme.co.uk')
+                ->withPath('/')
+                ->withPort(443),
         ];
     }
 }
