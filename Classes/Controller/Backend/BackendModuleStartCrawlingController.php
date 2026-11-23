@@ -28,8 +28,10 @@ use AOE\Crawler\Service\PageConfigurationResolver;
 use AOE\Crawler\Service\PageTreeUrlCollector;
 use AOE\Crawler\Utility\MessageUtility;
 use Psr\Clock\ClockInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\UriInterface;
 use Symfony\Contracts\Service\Attribute\Required;
 use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
@@ -60,6 +62,8 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
         private readonly PageConfigurationResolver $pageConfigurationResolver,
         private readonly UriBuilder $backendUriBuilder,
         private readonly ClockInterface $clock,
+        private readonly ResponseFactoryInterface $responseFactory,
+        private readonly StreamFactoryInterface $streamFactory,
     ) {
     }
 
@@ -78,11 +82,14 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
             'id' => $request->getQueryParams()['id'] ?? -1,
         ]);
 
-        $this->assignValues($request);
-        return $this->moduleTemplate->renderResponse('Backend/ShowCrawlerInformation');
+        return $this->assignValues($request)
+            ?? $this->moduleTemplate->renderResponse('Backend/ShowCrawlerInformation');
     }
 
-    private function assignValues(ServerRequestInterface $request): void
+    /**
+     * Assigns the values to the view, or returns the download response when the URLs were requested as a download.
+     */
+    private function assignValues(ServerRequestInterface $request): ?ResponseInterface
     {
         $logUrl = $this->backendUriBuilder->buildUriFromRoute('web_site_crawler_log', [
             'id' => $this->pageUid,
@@ -122,16 +129,8 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
             $queueRows = $this->pageTreeUrlCollector->collect($this->pageUid, $crawlingDepth, $run);
         }
 
-        // Download Urls to crawl:
-        $downloadUrls = $run->getDownloadUrls();
         if ($downloadCrawlUrls) {
-            // Creating output header:
-            header('Content-Type: application/octet-stream');
-            header('Content-Disposition: attachment; filename=CrawlerUrls.txt');
-
-            // Printing the content of the CSV lines:
-            echo implode(chr(self::CARRIAGE_RETURN) . chr(self::LINE_FEED), $downloadUrls);
-            exit;
+            return $this->createDownloadResponse($run->getDownloadUrls());
         }
 
         $this->moduleTemplate->assignMultiple([
@@ -145,6 +144,23 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
             'actionUrl' => $this->getActionUrl(),
             'logUrl' => $logUrl,
         ]);
+
+        return null;
+    }
+
+    /**
+     * The URLs to crawl as a text file download, one URL per line.
+     *
+     * @param array<string> $downloadUrls
+     */
+    private function createDownloadResponse(array $downloadUrls): ResponseInterface
+    {
+        $body = implode(chr(self::CARRIAGE_RETURN) . chr(self::LINE_FEED), $downloadUrls);
+
+        return $this->responseFactory->createResponse()
+            ->withHeader('Content-Type', 'application/octet-stream')
+            ->withHeader('Content-Disposition', 'attachment; filename=CrawlerUrls.txt')
+            ->withBody($this->streamFactory->createStream($body));
     }
 
     /**

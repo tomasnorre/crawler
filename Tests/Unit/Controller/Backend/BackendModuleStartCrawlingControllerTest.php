@@ -25,6 +25,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Psr\Clock\ClockInterface;
+use TYPO3\CMS\Core\Http\ResponseFactory;
+use TYPO3\CMS\Core\Http\StreamFactory;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 #[CoversClass(BackendModuleStartCrawlingController::class)]
@@ -53,12 +55,30 @@ final class BackendModuleStartCrawlingControllerTest extends UnitTestCase
         yield 'unknown option is now' => ['tomorrow', '2026-11-16 15:30:42'];
     }
 
+    #[Test]
+    public function createDownloadResponseReturnsTheUrlsAsTextFileDownload(): void
+    {
+        $subject = $this->createSubjectWithClock(new FrozenClock('2026-11-16 15:30:42'));
+
+        $response = (new \ReflectionMethod($subject, 'createDownloadResponse'))->invoke($subject, [
+            'https://example.com/' => 'https://example.com/',
+            'https://example.com/page' => 'https://example.com/page',
+        ]);
+
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame('application/octet-stream', $response->getHeaderLine('Content-Type'));
+        self::assertSame('attachment; filename=CrawlerUrls.txt', $response->getHeaderLine('Content-Disposition'));
+        self::assertSame("https://example.com/\r\nhttps://example.com/page", (string) $response->getBody());
+    }
+
     private function createSubjectWithClock(ClockInterface $clock): BackendModuleStartCrawlingController
     {
         $subject = (new \ReflectionClass(BackendModuleStartCrawlingController::class))->newInstanceWithoutConstructor();
         \Closure::bind(
             static function (BackendModuleStartCrawlingController $subject) use ($clock): void {
                 $subject->clock = $clock;
+                $subject->responseFactory = new ResponseFactory();
+                $subject->streamFactory = new StreamFactory();
             },
             null,
             BackendModuleStartCrawlingController::class
