@@ -223,7 +223,7 @@ class QueueRepository implements LoggerAwareInterface
         $queryBuilder
             ->select('qid')
             ->from(self::TABLE_NAME);
-        //if this entry is scheduled with "now"
+        // if this entry is scheduled with "now"
         if ($timestamp <= $currentTime) {
             if ($enableTimeslot) {
                 $timeBegin = $currentTime - 100;
@@ -236,7 +236,7 @@ class QueueRepository implements LoggerAwareInterface
                     ->where($queryBuilder->expr()->lte('scheduled', $currentTime));
             }
         } elseif ($timestamp > $currentTime) {
-            //entry with a timestamp in the future need to have the same schedule time
+            // entry with a timestamp in the future need to have the same schedule time
             $queryBuilder
                 ->where($queryBuilder->expr()->eq('scheduled', $timestamp));
         }

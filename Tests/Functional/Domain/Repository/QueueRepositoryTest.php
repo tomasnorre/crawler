@@ -28,9 +28,6 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
-/**
- * @package AOE\Crawler\Tests\Functional\Domain\Repository
- */
 class QueueRepositoryTest extends FunctionalTestCase
 {
     use BackendRequestTestTrait;
