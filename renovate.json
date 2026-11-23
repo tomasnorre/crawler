@@ -4,6 +4,7 @@
     "enabledManagers": ["composer"],
     "baseBranches": ["main"],
     "rangeStrategy": "bump",
+    "constraintsFiltering": "strict",
     "ignoreDeps": ["typo3/cms-seo"],
     "assignees": ["tomasnorre"],
     "reviewers": ["tomasnorre"],
