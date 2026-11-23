@@ -1,9 +1,9 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-    "extends": ["config:recommended"],
+    "extends": ["config:recommended", ":disableDependencyDashboard"],
     "enabledManagers": ["composer"],
     "baseBranches": ["main"],
-    "schedule": ["before 6am"],
+    "rangeStrategy": "bump",
     "assignees": ["tomasnorre"],
     "reviewers": ["tomasnorre"],
     "packageRules": [
