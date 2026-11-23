@@ -46,7 +46,7 @@
         "phpstan/extension-installer": "1.4.3",
         "phpstan/phpstan": "2.3.7",
         "phpstan/phpstan-deprecation-rules": "2.0.5",
-        "phpunit/phpcov": "10.0.1",
+        "phpunit/phpcov": "13.2.1",
         "phpunit/phpunit": "11.5.57",
         "roave/security-advisories": "dev-latest",
         "saschaegerer/phpstan-typo3": "3.1.0",
