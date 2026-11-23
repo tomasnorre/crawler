@@ -40,9 +40,6 @@ use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-/**
- * @package AOE\Crawler\Tests
- */
 #[\PHPUnit\Framework\Attributes\CoversClass(PageTreeUrlCollector::class)]
 final class PageTreeUrlCollectorTest extends UnitTestCase
 {

@@ -160,7 +160,7 @@ class RequestHelperTest extends UnitTestCase
     #[Test]
     public function getStringFromRequestFromParsedBody()
     {
-        $value = substr(str_shuffle(MD5(microtime())), 0, 10);
+        $value = substr(str_shuffle(md5(microtime())), 0, 10);
         $serverRequest = new ServerRequest();
         $serverRequest = $serverRequest->withParsedBody([
             'value' => $value,
@@ -171,7 +171,7 @@ class RequestHelperTest extends UnitTestCase
     #[Test]
     public function getStringFromRequestFromQueryParams()
     {
-        $value = substr(str_shuffle(MD5(microtime())), 0, 10);
+        $value = substr(str_shuffle(md5(microtime())), 0, 10);
         $serverRequest = new ServerRequest();
         $serverRequest = $serverRequest->withQueryParams([
             'value' => $value,

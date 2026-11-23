@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace AOE\Crawler\Domain\Model;
 
-/***************************************************************
+/*
  *  Copyright notice
  *
  *  (c) 2019 AOE GmbH <dev@aoe.com>
@@ -26,7 +26,7 @@ namespace AOE\Crawler\Domain\Model;
  *  GNU General Public License for more details.
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ */
 
 /**
  * @internal since v9.2.5

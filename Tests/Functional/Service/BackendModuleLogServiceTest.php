@@ -59,7 +59,7 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
 
         // Todo: Enabled again
         // Disabled for now, as failing. Better a test less that no test.
-        //$this->assertEquals($resultArray['qid']['link_text'], $logEntries['qid']);
+        // $this->assertEquals($resultArray['qid']['link_text'], $logEntries['qid']);
         $this->assertArrayHasKey('link', $resultArray['qid']);
         $this->assertArrayHasKey('link', $resultArray['refresh']);
         $this->assertArrayHasKey('link-text', $resultArray['refresh']);

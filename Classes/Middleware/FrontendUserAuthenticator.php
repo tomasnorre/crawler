@@ -65,7 +65,7 @@ class FrontendUserAuthenticator implements MiddlewareInterface
         }
 
         // Authenticate crawler request:
-        //@todo: ask service to exclude current call for special reasons: for example no relevance because the language version is not affected
+        // @todo: ask service to exclude current call for special reasons: for example no relevance because the language version is not affected
         [$queueId, $hash] = explode(':', $crawlerInformation);
         $queueRec = $this->findByQueueId($queueId);
 
