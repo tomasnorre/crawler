@@ -43,7 +43,7 @@
         "typo3/cms-info": "^14.3"
     },
     "require-dev": {
-        "infection/infection": "0.29.14",
+        "infection/infection": "0.32.6",
         "phpstan/extension-installer": "1.4.3",
         "phpstan/phpstan": "2.3.7",
         "phpstan/phpstan-deprecation-rules": "2.0.6",
@@ -201,7 +201,7 @@
         ],
         "test:mutation": [
             "[ -e .Build/bin/infection ] || composer update",
-            "XDEBUG_MODE=coverage .Build/bin/infection --threads=8 --filter=Classes"
+            "XDEBUG_MODE=coverage .Build/bin/infection --threads=8 --filter=Classes --with-uncovered"
         ],
         "test:reset-vars": [
             "export typo3DatabaseName=''",

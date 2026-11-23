@@ -12,8 +12,8 @@
     "phpUnit": {
         "configDir": "Tests\/"
     },
-    "minMsi": 53,
-    "minCoveredMsi": 97,
+    "minMsi": 54,
+    "minCoveredMsi": 98,
     "logs": {
         "text": "infection.log",
         "github": true,
@@ -23,7 +23,6 @@
     },
     "mutators": {
         "@default": true,
-        "IdenticalEqual": false,
         "NotIdenticalNotEqual": false
     }
 }
