@@ -201,7 +201,7 @@
         ],
         "test:mutation": [
             "[ -e .Build/bin/infection ] || composer update",
-            "XDEBUG_MODE=coverage .Build/bin/infection --threads=8 --filter=Classes"
+            "XDEBUG_MODE=coverage .Build/bin/infection --threads=8 --filter=Classes --with-uncovered"
         ],
         "test:reset-vars": [
             "export typo3DatabaseName=''",
