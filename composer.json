@@ -50,7 +50,6 @@
         "phpunit/phpunit": "11.5.58",
         "roave/security-advisories": "dev-latest",
         "saschaegerer/phpstan-typo3": "3.1.0",
-        "sbuerk/typo3-cmscomposerinstallers-testingframework-bridge": "^0.1",
         "shipmonk/composer-dependency-analyser": "1.8.4",
         "ssch/typo3-rector": "3.17.0",
         "symfony/yaml": "^7.2",
@@ -90,7 +89,6 @@
             "composer/package-versions-deprecated": true,
             "infection/extension-installer": true,
             "phpstan/extension-installer": true,
-            "sbuerk/typo3-cmscomposerinstallers-testingframework-bridge": true,
             "typo3/class-alias-loader": true,
             "typo3/cms-composer-installers": true
         },
