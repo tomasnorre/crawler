@@ -117,7 +117,7 @@ jobs:
           - '11.4'    # LTS, EOL May 2029
           - '11.8'    # LTS, EOL Jun 2028
           - '12.3'    # LTS, EOL Jun 2029
-          - '13.1'    # newest rolling; replace with 13.3 when it ships (mid-2027)
+          - '13.0'    # newest rolling; replace with 13.3 when it ships (mid-2027)
         typo3:
           - '^14.3'
         php:
