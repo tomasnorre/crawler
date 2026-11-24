@@ -41,11 +41,37 @@ class QueueFilterTest extends UnitTestCase
         self::assertEquals(self::VALID_VALUE, $queueFilter->__toString());
     }
 
+    /**
+     * all, pending and finished are the only values a QueueFilter can hold
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('validValueDataProvider')]
     #[\PHPUnit\Framework\Attributes\Test]
-    public function constructorThrowsException(): void
+    public function constructorAcceptsValidValue(string $value): void
+    {
+        self::assertSame($value, (string) new QueueFilter($value));
+    }
+
+    public static function validValueDataProvider(): iterable
+    {
+        yield 'all' => ['all'];
+        yield 'pending' => ['pending'];
+        yield 'finished' => ['finished'];
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalidValueDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function constructorThrowsException(string $value): void
     {
         self::expectException(\InvalidArgumentException::class);
         self::expectExceptionCode(1794663700);
-        new QueueFilter('INVALID');
+        new QueueFilter($value);
+    }
+
+    public static function invalidValueDataProvider(): iterable
+    {
+        yield 'Unknown value' => ['INVALID'];
+        yield 'Empty value' => [''];
+        yield 'Upper case value' => ['Finished'];
+        yield 'Value with whitespace' => ['pending '];
     }
 }
