@@ -20,6 +20,7 @@ namespace AOE\Crawler\Tests\Functional\Domain\Repository;
  */
 
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
@@ -39,7 +40,7 @@ class ConfigurationRepositoryTest extends FunctionalTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->subject = GeneralUtility::makeInstance(ConfigurationRepository::class);
+        $this->subject = new ConfigurationRepository(GeneralUtility::makeInstance(ConnectionPool::class));
         $this->importCSVDataSet(__DIR__ . '/../../Fixtures/tx_crawler_configuration.csv');
         $this->importCSVDataSet(__DIR__ . '/../../Fixtures/pages.csv');
     }

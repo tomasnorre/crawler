@@ -28,6 +28,7 @@ use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Authentication\GroupResolver;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
@@ -116,7 +117,7 @@ class ConfigurationServiceTest extends FunctionalTestCase
         ];
 
         $urlService = GeneralUtility::makeInstance(UrlService::class);
-        $configurationRepository = GeneralUtility::makeInstance(ConfigurationRepository::class);
+        $configurationRepository = new ConfigurationRepository(GeneralUtility::makeInstance(ConnectionPool::class));
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/tx_crawler_configuration.csv');
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/pages.csv');
 
