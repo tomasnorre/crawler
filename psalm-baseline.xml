@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="7.3.0@6480ee65f252d9829b0c5a49d44c1fa263babfa2">
-  <file src="Classes/Command/FlushQueueCommand.php">
-    <NoValue>
-      <code><![CDATA[$queueFilter]]></code>
-      <code><![CDATA[$queueFilter]]></code>
-    </NoValue>
-  </file>
   <file src="Classes/CrawlStrategy/CrawlStrategyFactory.php">
     <UnusedClass>
       <code><![CDATA[CrawlStrategyFactory]]></code>
@@ -33,9 +27,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[findAll]]></code>
     </PossiblyUnusedMethod>
-    <UnusedVariable>
-      <code><![CDATA[$query]]></code>
-    </UnusedVariable>
   </file>
   <file src="Classes/Hooks/DataHandlerHook.php">
     <PossiblyUnusedParam>

@@ -26,6 +26,7 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -192,18 +193,7 @@ class QueueRepository implements LoggerAwareInterface
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
 
-        switch ($queueFilter) {
-            case 'all':
-                // No where claus needed delete everything
-                break;
-            case 'pending':
-                $queryBuilder->andWhere($queryBuilder->expr()->eq('exec_time', 0));
-                break;
-            case 'finished':
-            default:
-                $queryBuilder->andWhere($queryBuilder->expr()->gt('exec_time', 0));
-                break;
-        }
+        $this->addQueueFilterRestriction($queryBuilder, $queueFilter);
 
         $queryBuilder
             ->delete(self::TABLE_NAME)
@@ -279,21 +269,7 @@ class QueueRepository implements LoggerAwareInterface
             )
             ->orderBy('scheduled', 'DESC');
 
-        $expressionBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getConnectionForTable(self::TABLE_NAME)
-            ->getExpressionBuilder();
-        $query = $expressionBuilder->and();
-        // PHPStorm adds the highlight that the $addWhere is immediately overwritten,
-        // but the $query = $expressionBuilder->andX() ensures that the $addWhere is written correctly with AND
-        // between the statements, it's not a mistake in the code.
-        switch ($queueFilter) {
-            case 'pending':
-                $queryBuilder->andWhere($queryBuilder->expr()->eq('exec_time', 0));
-                break;
-            case 'finished':
-                $queryBuilder->andWhere($queryBuilder->expr()->gt('exec_time', 0));
-                break;
-        }
+        $this->addQueueFilterRestriction($queryBuilder, $queueFilter);
 
         if ($itemsPerPage > 0) {
             $queryBuilder
@@ -301,6 +277,21 @@ class QueueRepository implements LoggerAwareInterface
         }
 
         return $queryBuilder->executeQuery()->fetchAllAssociative();
+    }
+
+    /**
+     * Restricts the query to the pending or finished queue entries, "all" adds no restriction
+     */
+    private function addQueueFilterRestriction(QueryBuilder $queryBuilder, QueueFilter $queueFilter): void
+    {
+        $restriction = match ((string) $queueFilter) {
+            'pending' => $queryBuilder->expr()->eq('exec_time', 0),
+            'finished' => $queryBuilder->expr()->gt('exec_time', 0),
+            default => null,
+        };
+        if ($restriction !== null) {
+            $queryBuilder->andWhere($restriction);
+        }
     }
 
     /**
