@@ -43,11 +43,11 @@ jobs:
           tools: composer:v2
           coverage: none
 
-      - name: Install dependencies with typo3/cms-core:${{ matrix.typo3 }}
-        run: |
-          composer require typo3/cms-core:${{ matrix.typo3 }} --no-progress
-          git checkout composer.json
-          ln -nfs .Build/vendor/typo3/cms/typo3 typo3
+      - name: Require typo3/cms-core:${{ matrix.typo3 }}
+        run: composer require typo3/cms-core:${{ matrix.typo3 }} --no-update
+
+      - name: Install dependencies
+        uses: ramsey/composer-install@v4
 
       - name: Wait for PostgreSQL
         run: |
@@ -89,9 +89,11 @@ jobs:
           tools: composer:v2
           coverage: none
 
-      - name: Install dependencies with typo3/cms-core:${{ matrix.typo3 }}
-        run: |
-          composer require typo3/cms-core:${{ matrix.typo3 }} --no-progress
+      - name: Require typo3/cms-core:${{ matrix.typo3 }}
+        run: composer require typo3/cms-core:${{ matrix.typo3 }} --no-update
+
+      - name: Install dependencies
+        uses: ramsey/composer-install@v4
 
       - name: Functional Tests
         run: composer test:functional-sqlite
@@ -138,11 +140,11 @@ jobs:
           tools: composer:v2
           coverage: none
 
-      - name: Install dependencies with typo3/cms-core:${{ matrix.typo3 }}
-        run: |
-          composer require typo3/cms-core:${{ matrix.typo3 }} --no-progress
-          git checkout composer.json
-          ln -nfs .Build/vendor/typo3/cms/typo3 typo3
+      - name: Require typo3/cms-core:${{ matrix.typo3 }}
+        run: composer require typo3/cms-core:${{ matrix.typo3 }} --no-update
+
+      - name: Install dependencies
+        uses: ramsey/composer-install@v4
 
       - name: Functional Tests
         run: |
@@ -183,11 +185,11 @@ jobs:
           tools: composer:v2
           coverage: none
 
-      - name: Install dependencies with typo3/cms-core:${{ matrix.typo3 }}
-        run: |
-          composer require typo3/cms-core:${{ matrix.typo3 }} --no-progress
-          git checkout composer.json
-          ln -nfs .Build/vendor/typo3/cms/typo3 typo3
+      - name: Require typo3/cms-core:${{ matrix.typo3 }}
+        run: composer require typo3/cms-core:${{ matrix.typo3 }} --no-update
+
+      - name: Install dependencies
+        uses: ramsey/composer-install@v4
 
       - name: Functional Tests
         run: |
