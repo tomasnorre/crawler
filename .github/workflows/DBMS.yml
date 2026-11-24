@@ -124,6 +124,7 @@ jobs:
           - '14'
         php:
           - '8.2'
+        composerInstall: [ 'composerInstallLowest', 'composerInstallHighest' ]
     steps:
       - name: Checkout
         uses: actions/checkout@v7
