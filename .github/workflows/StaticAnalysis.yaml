@@ -14,14 +14,6 @@ jobs:
         runs-on: ubuntu-26.04
         steps:
             -   uses: actions/checkout@v7
-            -   id: composer-cache
-                run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-            -   uses: actions/cache@v6
-                with:
-                    path: ${{ steps.composer-cache.outputs.dir }}
-                    key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-                    restore-keys: |
-                        ${{ runner.os }}-composer-
             -   uses: shivammathur/setup-php@v2
                 with:
                     php-version: 8.2
@@ -35,14 +27,6 @@ jobs:
         runs-on: ubuntu-26.04
         steps:
             -   uses: actions/checkout@v7
-            -   id: composer-cache
-                run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-            -   uses: actions/cache@v6
-                with:
-                    path: ${{ steps.composer-cache.outputs.dir }}
-                    key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-                    restore-keys: |
-                        ${{ runner.os }}-composer-
             -   uses: shivammathur/setup-php@v2
                 with:
                     php-version: 8.2
@@ -56,14 +40,6 @@ jobs:
         runs-on: ubuntu-26.04
         steps:
             -   uses: actions/checkout@v7
-            -   id: composer-cache
-                run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-            -   uses: actions/cache@v6
-                with:
-                    path: ${{ steps.composer-cache.outputs.dir }}
-                    key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-                    restore-keys: |
-                        ${{ runner.os }}-composer-
             -   uses: shivammathur/setup-php@v2
                 with:
                     php-version: 8.2
@@ -77,14 +53,6 @@ jobs:
         runs-on: ubuntu-26.04
         steps:
             -   uses: actions/checkout@v7
-            -   id: composer-cache
-                run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-            -   uses: actions/cache@v6
-                with:
-                    path: ${{ steps.composer-cache.outputs.dir }}
-                    key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-                    restore-keys: |
-                        ${{ runner.os }}-composer-
             -   uses: shivammathur/setup-php@v2
                 with:
                     php-version: 8.2
