@@ -103,7 +103,6 @@ jobs:
       fail-fast: false
       matrix:
         mariadb:
-          - '10.3'
           - '10.4'
           - '10.5'
           - '10.6'
