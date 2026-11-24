@@ -31,48 +31,20 @@ jobs:
           - '16'
           - '17'
         typo3:
-          - '^14.3'
+          - '14'
         php:
           - '8.2'
-    steps:
-      - name: Set up PostgreSQL ${{ matrix.postgres }}
-        run: |
-          docker run -e POSTGRES_DB=root -e POSTGRES_USER=root -e POSTGRES_PASSWORD=root -d -p 5432:5432 postgres:${{ matrix.postgres }}
+        composerInstall: [ 'composerInstallLowest', 'composerInstallHighest' ]
 
+    steps:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Set up PHP Version ${{ matrix.php }}
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php }}
-          tools: composer:v2
-          coverage: none
+      - name: Install testing system
+        run: Build/Scripts/runTests.sh -t ${{ matrix.typo3 }} -p ${{ matrix.php }}  -s ${{ matrix.composerInstall }}
 
-      - name: Require typo3/cms-core:${{ matrix.typo3 }}
-        run: composer require typo3/cms-core:${{ matrix.typo3 }} --no-update
-
-      - name: Install dependencies
-        uses: ramsey/composer-install@v4
-
-      - name: Wait for PostgreSQL
-        run: |
-          while ! nc -z localhost 5432; do
-            sleep 1;
-          done;
-          echo Database is up;
-
-      - name: Functional Tests
-        run: |
-          export "FUNCTIONAL_XML"=Tests/FunctionalTests.xml
-          rm -rf .Build/Web/typo3temp/
-          .Build/bin/phpunit --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
-        env:
-          typo3DatabaseDriver: pdo_pgsql
-          typo3DatabaseHost: 127.0.0.1
-          typo3DatabaseName: typo3
-          typo3DatabasePassword: root
-          typo3DatabaseUsername: root
+      - name: Functional Tests with postgres
+        run: Build/Scripts/runTests.sh -t ${{ matrix.typo3 }} -p ${{ matrix.php }} -d postgres -i ${{ matrix.postgres }} -s functional
 
   SQLite:
     name: SQLite

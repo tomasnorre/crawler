@@ -19,7 +19,7 @@ services:
       nofile: 65535
 
   db_postgres:
-    image: postgres:13.5-alpine3.15
+    image: postgres:13-alpine3.15
     restart: no
     environment:
       POSTGRES_DB: root
