@@ -31,7 +31,9 @@ class AfterUrlCrawledEventTest extends UnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->subject = new AfterUrlCrawledEvent('/contact', []);
+        $this->subject = new AfterUrlCrawledEvent('/contact', [
+            'content' => '{}',
+        ]);
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
@@ -39,6 +41,8 @@ class AfterUrlCrawledEventTest extends UnitTestCase
     {
         self::assertEquals('/contact', $this->subject->getUrl());
 
-        self::assertEquals([], $this->subject->getResult());
+        self::assertSame([
+            'content' => '{}',
+        ], $this->subject->getResult());
     }
 }

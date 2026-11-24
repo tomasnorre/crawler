@@ -26,6 +26,9 @@ namespace AOE\Crawler\Event;
  */
 final class AfterUrlAddedToQueueEvent
 {
+    /**
+     * @param array<string, mixed> $fieldArray
+     */
     public function __construct(
         private readonly string $uid,
         private readonly array $fieldArray
@@ -37,6 +40,9 @@ final class AfterUrlAddedToQueueEvent
         return $this->uid;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getFieldArray(): array
     {
         return $this->fieldArray;

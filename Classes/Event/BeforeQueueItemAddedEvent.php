@@ -26,6 +26,9 @@ namespace AOE\Crawler\Event;
  */
 final class BeforeQueueItemAddedEvent
 {
+    /**
+     * @param array<string, mixed> $queueRecord
+     */
     public function __construct(
         private readonly int $queueId,
         private array $queueRecord
@@ -37,11 +40,17 @@ final class BeforeQueueItemAddedEvent
         return $this->queueId;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getQueueRecord(): array
     {
         return $this->queueRecord;
     }
 
+    /**
+     * @param array<string, mixed> $queueRecord
+     */
     public function setQueueRecord(array $queueRecord): void
     {
         $this->queueRecord = $queueRecord;

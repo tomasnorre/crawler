@@ -28,6 +28,7 @@ final class AfterQueueItemAddedEvent
 {
     /**
      * @param int|string $queueId
+     * @param array<string, mixed> $fieldArray
      */
     public function __construct(
         private $queueId,
@@ -40,11 +41,17 @@ final class AfterQueueItemAddedEvent
         return $this->queueId;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getFieldArray(): array
     {
         return $this->fieldArray;
     }
 
+    /**
+     * @param array<string, mixed> $fieldArray
+     */
     public function setFieldArray(array $fieldArray): void
     {
         $this->fieldArray = $fieldArray;
