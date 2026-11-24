@@ -40,7 +40,8 @@ run_class() {
 export -f run_class
 
 # The largest classes first, so that a long-running one doesn't start last
-find Tests/Functional -name '*Test.php' -printf '%s\t%p\n' | sort -rn | cut -f 2 > "$logs/classes"
+# (wc, as the find of the container images can't print the size)
+find Tests/Functional -name '*Test.php' -exec wc -c {} \; | sort -rn | sed 's/^ *[0-9]* //' > "$logs/classes"
 
 if [ ! -s "$logs/classes" ]; then
     echo "No functional tests found." >&2

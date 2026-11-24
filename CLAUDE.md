@@ -47,6 +47,8 @@ Crawls the TYPO3 page tree for cache warmup, indexing and publishing.
 - Functional tests: `composer test:functional-sqlite` (needs no DB server), `composer test:functional` (MySQL), `composer test:functional-postgre`
 - Functional tests with process isolation, as in CI: `Build/Scripts/functionalTestsParallel.sh` runs several test classes
   at a time, the database is configured with the `typo3Database*` environment variables
+- Functional tests on a specific database version in containers, as in the DBMS checks:
+  `Build/Scripts/runTests.sh -b docker -p 8.2 -d mariadb -i 10.11 -s functional` (Docker or Podman, see `-h`)
 - All tests: `composer test:all`
 - Mutation tests: `composer test:mutation`
 - Coverage (needs Xdebug): `composer test:coverage` merges unit + functional coverage into `.Logs/coverage.cov`.
