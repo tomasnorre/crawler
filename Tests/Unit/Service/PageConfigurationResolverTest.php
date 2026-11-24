@@ -51,9 +51,8 @@ class PageConfigurationResolverTest extends UnitTestCase
         $subject = $this->createSubject($pageSkipMessage);
         $subject->method('getConfigurationsForPage')->willReturn(self::CONFIGURATIONS);
 
-        $skipMessage = 'Message from earlier calls';
-        self::assertSame($expected, $subject->getConfigurationsForPageRow($pageRow, $skipMessage));
-        self::assertSame($expectedSkipMessage, $skipMessage);
+        self::assertSame($expected, $subject->getConfigurationsForPageRow($pageRow));
+        self::assertSame($expectedSkipMessage, $subject->getSkipReason($pageRow));
     }
 
     public static function getConfigurationsForPageRowDataProvider(): iterable
@@ -115,13 +114,9 @@ class PageConfigurationResolverTest extends UnitTestCase
             ->with(2001, '5-12')
             ->willReturn(self::CONFIGURATIONS);
 
-        $skipMessage = '';
-        self::assertSame(
-            self::CONFIGURATIONS,
-            $subject->getConfigurationsForPageRow([
-                'uid' => 2001,
-            ], $skipMessage, '5-12')
-        );
+        self::assertSame(self::CONFIGURATIONS, $subject->getConfigurationsForPageRow([
+            'uid' => 2001,
+        ], '5-12'));
     }
 
     private function createSubject(string|false $pageSkipMessage): PageConfigurationResolver&MockObject

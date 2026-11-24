@@ -27,8 +27,6 @@ parameters:
         -
             identifier: missingType.generics
         -
-            identifier: symplify.noReference
-        -
             identifier: symplify.noNullableServiceInConstructor
         -
             identifier: symplify.requireArrayShapeReturn

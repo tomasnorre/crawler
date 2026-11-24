@@ -207,11 +207,10 @@ final class PageTreeUrlCollectorTest extends UnitTestCase
     public function getQueueRowsForPageResolvesConfigurationsWithMountPoint(): void
     {
         $pageConfigurationResolver = $this->createMock(PageConfigurationResolver::class);
+        $pageConfigurationResolver->method('getSkipReason')->willReturn('');
         $pageConfigurationResolver->expects(self::once())
-            ->method('getConfigurationsForPageRow')
-            ->with([
-                'uid' => 5,
-            ], self::anything(), '3-7')
+            ->method('getConfigurationsForPage')
+            ->with(5, '3-7')
             ->willReturn([]);
 
         $pageTreeUrlCollector = new PageTreeUrlCollector(
@@ -232,12 +231,8 @@ final class PageTreeUrlCollectorTest extends UnitTestCase
         string|false $skipMessage = false
     ): PageTreeUrlCollector {
         $pageConfigurationResolver = $this->createStub(PageConfigurationResolver::class);
-        $pageConfigurationResolver->method('getConfigurationsForPageRow')->willReturnCallback(
-            static function (array $pageRow, string &$pageSkipMessage) use ($configurations, $skipMessage): array {
-                $pageSkipMessage = $skipMessage === false ? '' : $skipMessage;
-                return $skipMessage === false ? $configurations : [];
-            }
-        );
+        $pageConfigurationResolver->method('getSkipReason')->willReturn($skipMessage === false ? '' : $skipMessage);
+        $pageConfigurationResolver->method('getConfigurationsForPage')->willReturn($configurations);
 
         $configurationService = $this->createStub(ConfigurationService::class);
         $configurationService->method('expandExcludeString')->willReturnCallback(
