@@ -21,9 +21,9 @@ namespace AOE\Crawler\Tests\Unit\CrawlStrategy;
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
-use AOE\Crawler\CrawlStrategy\CrawlStrategyInterface;
 use AOE\Crawler\CrawlStrategy\FrontendSubRequestExecutionStrategy;
 use AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategy;
+use AOE\Crawler\CrawlStrategy\Interface\CrawlStrategyInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;

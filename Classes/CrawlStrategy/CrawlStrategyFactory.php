@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AOE\Crawler\CrawlStrategy;
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
+use AOE\Crawler\CrawlStrategy\Interface\CrawlStrategyInterface;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
 

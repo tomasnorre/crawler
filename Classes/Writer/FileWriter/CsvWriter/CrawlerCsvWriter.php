@@ -19,6 +19,7 @@ namespace AOE\Crawler\Writer\FileWriter\CsvWriter;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Writer\FileWriter\CsvWriter\Interface\CsvWriterInterface;
 use TYPO3\CMS\Core\Utility\CsvUtility;
 
 /**

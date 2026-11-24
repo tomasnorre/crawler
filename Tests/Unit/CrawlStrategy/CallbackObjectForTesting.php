@@ -19,7 +19,7 @@ namespace AOE\Crawler\Tests\Unit\CrawlStrategy;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Queue\QueueCallbackInterface;
+use AOE\Crawler\Queue\Interface\QueueCallbackInterface;
 
 /**
  * @codeCoverageIgnore

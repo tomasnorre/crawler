@@ -19,7 +19,7 @@ namespace AOE\Crawler\CrawlStrategy;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Queue\QueueCallbackInterface;
+use AOE\Crawler\Queue\Interface\QueueCallbackInterface;
 use Psr\Container\ContainerInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 

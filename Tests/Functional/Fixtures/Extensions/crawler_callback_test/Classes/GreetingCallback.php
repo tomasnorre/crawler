@@ -19,7 +19,7 @@ namespace AOE\Crawler\Tests\Functional\Fixtures\Extensions\crawler_callback_test
  * The TYPO3 project - inspiring people to share!
  */
 
-use AOE\Crawler\Queue\QueueCallbackInterface;
+use AOE\Crawler\Queue\Interface\QueueCallbackInterface;
 use TYPO3\CMS\Core\Information\Typo3Version;
 
 /**

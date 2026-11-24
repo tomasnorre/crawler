@@ -20,7 +20,7 @@ namespace AOE\Crawler\Tests\Unit\CrawlStrategy;
  */
 
 use AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy;
-use AOE\Crawler\Queue\QueueCallbackInterface;
+use AOE\Crawler\Queue\Interface\QueueCallbackInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use Psr\Container\ContainerInterface;

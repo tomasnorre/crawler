@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\CrawlStrategy;
+namespace AOE\Crawler\CrawlStrategy\Interface;
 
 /*
  * (c) 2021 Tomas Norre Mikkelsen <tomasnorre@gmail.com>

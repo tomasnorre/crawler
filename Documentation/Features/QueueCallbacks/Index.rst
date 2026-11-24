@@ -7,7 +7,7 @@ Queue callbacks
 ===============
 
 ..  versionadded:: 14.0.0
-    Callbacks implement `AOE\Crawler\Queue\QueueCallbackInterface`, see
+    Callbacks implement `AOE\Crawler\Queue\Interface\QueueCallbackInterface`, see
     :ref:`upgrade-queue-callbacks`.
 
 Besides URLs, the queue can hold callbacks: instead of crawling a URL, the
@@ -18,7 +18,7 @@ result is stored with the queue entry and shown in the :guilabel:`Crawler log`.
 Implement the callback
 ======================
 
-A callback implements `AOE\Crawler\Queue\QueueCallbackInterface`. It is a
+A callback implements `AOE\Crawler\Queue\Interface\QueueCallbackInterface`. It is a
 service, so it gets its dependencies by constructor injection:
 
 ..  code-block:: php
@@ -30,7 +30,7 @@ service, so it gets its dependencies by constructor injection:
 
     namespace MyVendor\MyExtension\Crawler;
 
-    use AOE\Crawler\Queue\QueueCallbackInterface;
+    use AOE\Crawler\Queue\Interface\QueueCallbackInterface;
     use MyVendor\MyExtension\Service\FileIndexer;
 
     final readonly class ReindexFileCallback implements QueueCallbackInterface

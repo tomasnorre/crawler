@@ -19,6 +19,7 @@ namespace AOE\Crawler\CrawlStrategy;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\CrawlStrategy\Interface\CrawlStrategyInterface;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
 use Psr\Http\Message\ResponseInterface;

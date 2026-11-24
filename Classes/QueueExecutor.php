@@ -21,7 +21,7 @@ namespace AOE\Crawler;
 
 use AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy;
 use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
-use AOE\Crawler\CrawlStrategy\CrawlStrategyInterface;
+use AOE\Crawler\CrawlStrategy\Interface\CrawlStrategyInterface;
 use AOE\Crawler\Event\AfterUrlCrawledEvent;
 use AOE\Crawler\Queue\QueueEntryWriter;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;

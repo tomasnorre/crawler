@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Controller\Backend;
+namespace AOE\Crawler\Controller\Backend\Interface;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
