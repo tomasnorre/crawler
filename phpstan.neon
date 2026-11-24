@@ -24,8 +24,6 @@ parameters:
     ignoreErrors:
         -
             identifier: missingType.iterableValue
-        -
-            identifier: symplify.noNullableServiceInConstructor
 
     # composer require tomasvotruba/cognitive-complexity --dev
     cognitive_complexity:

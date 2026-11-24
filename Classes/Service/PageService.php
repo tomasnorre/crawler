@@ -30,11 +30,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class PageService
 {
-    private readonly EventDispatcher $eventDispatcher;
-
-    public function __construct(?EventDispatcher $eventDispatcher = null)
-    {
-        $this->eventDispatcher = $eventDispatcher ?? GeneralUtility::makeInstance(EventDispatcher::class);
+    public function __construct(
+        private readonly EventDispatcher $eventDispatcher
+    ) {
     }
 
     /**
