@@ -25,9 +25,9 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Http\ServerRequest;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Cache\CacheInstruction;
 use TYPO3\CMS\Frontend\Page\PageInformation;
 use TYPO3\CMS\Frontend\Page\PageInformationFactory;
@@ -42,7 +42,7 @@ class CrawlerInitializationTest extends FunctionalTestCase
     {
         parent::setUp();
         $pageInformationFactory = $this->get(PageInformationFactory::class);
-        $this->subject = GeneralUtility::makeInstance(CrawlerInitialization::class, $pageInformationFactory);
+        $this->subject = new CrawlerInitialization($pageInformationFactory, $this->get(Context::class));
     }
 
     #[DataProvider('processSetsCrawlerDataDataProvider')]

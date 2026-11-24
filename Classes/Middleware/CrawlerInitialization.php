@@ -26,7 +26,6 @@ use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
 use TYPO3\CMS\Core\Error\Http\ServiceUnavailableException;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Page\PageInformationCreationFailedException;
 use TYPO3\CMS\Frontend\Page\PageInformationFactory;
 
@@ -44,13 +43,10 @@ use TYPO3\CMS\Frontend\Page\PageInformationFactory;
  */
 class CrawlerInitialization implements MiddlewareInterface
 {
-    protected Context $context;
-
     public function __construct(
         private readonly PageInformationFactory $pageInformationFactory,
-        ?Context $context = null,
+        protected readonly Context $context,
     ) {
-        $this->context = $context ?? GeneralUtility::makeInstance(Context::class);
     }
 
     /**

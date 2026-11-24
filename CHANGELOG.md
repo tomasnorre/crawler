@@ -34,6 +34,9 @@
 * Direct requests (`makeDirectRequests`) render the pages within the worker process by handing a request to the TYPO3 frontend application, instead of running `cli/bootstrap.php` in a PHP sub-process [#974](https://github.com/tomasnorre/crawler/issues/974)
 * Direct requests report the crawler data of the page (`vars`, `log`, `parameters`) like HTTP requests do, instead of the HTML of the page
 * `CrawlStrategyFactory` takes the crawl strategies as a service locator, the `ExtensionConfigurationProvider` is required
+* `CrawlerInitialization` requires the `Context` in its constructor
+* `FrontendUserAuthenticator` requires the `Context` in its constructor
+* `PageService` requires the `EventDispatcher` in its constructor
 * The extension setting `frontendBasePath` no longer falls back to `config.absRefPrefix`, it defaults to `/`
 
 ### Fixed
