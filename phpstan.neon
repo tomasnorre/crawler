@@ -27,8 +27,6 @@ parameters:
         -
             identifier: symplify.noNullableServiceInConstructor
         -
-            identifier: symplify.requireArrayShapeReturn
-        -
             identifier: symplify.forbiddenSwitch
 
     # composer require tomasvotruba/cognitive-complexity --dev
