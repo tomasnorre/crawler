@@ -41,6 +41,9 @@ class ConfigurationRepository
 
     /**
      * Traverses up the rootline of a page and fetches all crawler records.
+     *
+     * @param list<int> $parentIds
+     * @return list<array<string, mixed>>
      */
     public function getCrawlerConfigurationRecordsFromRootLine(int $pageId, array $parentIds = []): array
     {

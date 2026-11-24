@@ -22,8 +22,23 @@ parameters:
             tx_crawler: 'array<string, mixed>'
 
     ignoreErrors:
+        # Being removed folder by folder, drop a path once its errors are fixed
         -
             identifier: missingType.iterableValue
+            paths:
+                - Classes/Command/*
+                - Classes/Configuration/*
+                - Classes/ContextMenu/*
+                - Classes/Controller/*
+                - Classes/CrawlStrategy/*
+                - Classes/Event/*
+                - Classes/Hooks/*
+                - Classes/Middleware/*
+                - Classes/Queue/*
+                - Classes/QueueExecutor.php
+                - Classes/Service/*
+                - Classes/Utility/*
+                - Classes/Writer/*
 
     # composer require tomasvotruba/cognitive-complexity --dev
     cognitive_complexity:

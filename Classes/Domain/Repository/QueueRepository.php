@@ -40,6 +40,8 @@ class QueueRepository implements LoggerAwareInterface
 
     /**
      * Inserts a queue record and returns its uid (qid).
+     *
+     * @param array<string, mixed> $fieldArray
      */
     public function add(array $fieldArray): int
     {
@@ -48,6 +50,9 @@ class QueueRepository implements LoggerAwareInterface
         return (int) $connection->lastInsertId();
     }
 
+    /**
+     * @param array<string, mixed> $fieldArray
+     */
     public function update(int $queueId, array $fieldArray): void
     {
         GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(self::TABLE_NAME)
@@ -58,6 +63,8 @@ class QueueRepository implements LoggerAwareInterface
 
     /**
      * Returns the queue record, if $force is false only if it has not been crawled yet.
+     *
+     * @return array<string, mixed>|false
      */
     public function getQueueEntriesByQid(int $queueId, bool $force): array|false
     {
@@ -200,6 +207,9 @@ class QueueRepository implements LoggerAwareInterface
             ->executeStatement();
     }
 
+    /**
+     * @return list<mixed> the qids of the duplicate queue entries
+     */
     public function getDuplicateQueueItemsIfExists(
         bool $enableTimeslot,
         int $timestamp,
@@ -255,6 +265,9 @@ class QueueRepository implements LoggerAwareInterface
         return $rows;
     }
 
+    /**
+     * @return list<array<string, mixed>>
+     */
     public function getQueueEntriesForPageId(int $id, int $itemsPerPage, QueueFilter $queueFilter): array
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
@@ -295,6 +308,7 @@ class QueueRepository implements LoggerAwareInterface
     }
 
     /**
+     * @return list<array<string, mixed>>
      * @throws Exception
      */
     public function findAll(): array
