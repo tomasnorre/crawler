@@ -4,9 +4,15 @@ on:
   pull_request:
     branches:
       - "**"
+    paths-ignore:
+      - "Documentation/**"
+      - "**.md"
   push:
     branches:
       - "main"
+    paths-ignore:
+      - "Documentation/**"
+      - "**.md"
 
 jobs:
   mutation-tests:
