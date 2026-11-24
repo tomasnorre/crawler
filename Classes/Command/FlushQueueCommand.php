@@ -78,24 +78,11 @@ It will remove queue entries and perform a cleanup.' . chr(10) . chr(10) .
 
         $queueRepository = GeneralUtility::makeInstance(QueueRepository::class);
 
-        switch ($queueFilter) {
-            case 'all':
-                $queueRepository->flushQueue($queueFilter);
-                $output->writeln('<info>All entries in Crawler queue have been flushed</info>');
-                break;
-            case 'finished':
-            case 'pending':
-                $queueRepository->flushQueue($queueFilter);
-                $output->writeln(
-                    '<info>All entries in Crawler queue with status "' . $queueFilter . '" have been flushed</info>'
-                );
-                break;
-            default:
-                $output->writeln(
-                    '<info>No matching parameters found.' . PHP_EOL . 'Try "typo3 help crawler:flushQueue" to see your options</info>'
-                );
-                break;
-        }
+        $queueRepository->flushQueue($queueFilter);
+        $output->writeln(match ((string) $queueFilter) {
+            'all' => '<info>All entries in Crawler queue have been flushed</info>',
+            default => '<info>All entries in Crawler queue with status "' . $queueFilter . '" have been flushed</info>',
+        });
 
         return Command::SUCCESS;
     }

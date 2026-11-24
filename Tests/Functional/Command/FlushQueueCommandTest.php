@@ -87,4 +87,39 @@ class FlushQueueCommandTest extends FunctionalTestCase
             'expectedCount' => 8,
         ];
     }
+
+    /**
+     * The modes other than all, pending and finished never reach the flushing: QueueFilter rejects them
+     */
+    #[DataProvider('invalidModeDataProvider')]
+    #[Test]
+    public function flushQueueCommandThrowsExceptionForInvalidModeAndKeepsTheQueue(string $mode): void
+    {
+        try {
+            $this->commandTester->execute([
+                'mode' => $mode,
+            ]);
+            self::fail('Expected an exception for the mode "' . $mode . '"');
+        } catch (\InvalidArgumentException $exception) {
+            self::assertSame(1794663700, $exception->getCode());
+        }
+
+        self::assertCount(15, $this->queueRepository->findAll());
+    }
+
+    public static function invalidModeDataProvider(): iterable
+    {
+        yield 'Unknown mode' => [
+            'mode' => 'invalid',
+        ];
+        yield 'Empty mode' => [
+            'mode' => '',
+        ];
+        yield 'Upper case mode' => [
+            'mode' => 'ALL',
+        ];
+        yield 'Mode with whitespace' => [
+            'mode' => ' pending ',
+        ];
+    }
 }
