@@ -31,9 +31,10 @@ jobs:
           - "8.6"
 
     services:
-      # The database of the devbox, see .devbox/.ddev/config.yaml
+      # The database of the devbox, see .devbox/.ddev/config.yaml. Pulled from the Amazon ECR Public mirror of the
+      # Docker official images, as Docker Hub rate-limits anonymous pulls
       mariadb:
-        image: mariadb:10.11
+        image: public.ecr.aws/docker/library/mariadb:10.11
         env:
           MARIADB_DATABASE: db
           MARIADB_USER: db

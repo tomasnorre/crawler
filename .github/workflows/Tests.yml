@@ -28,10 +28,17 @@ jobs:
 
     steps:
       - name: Set up MySQL ${{ matrix.mysql }}
-        uses: mirromutth/mysql-action@v1.1
-        with:
-          mysql version: ${{ matrix.mysql }}
-          mysql root password: 'root'
+        # Pulled from the Amazon ECR Public mirror of the Docker official images, as Docker Hub rate-limits anonymous pulls
+        run: |
+          docker run --name db -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root \
+            public.ecr.aws/docker/library/mysql:${{ matrix.mysql }} \
+            --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
+          # Waits for the server, over TCP, as the port is open before the database is ready
+          for i in $(seq 1 120); do
+            docker exec db sh -c 'mariadb-admin ping -h127.0.0.1 -uroot -proot --silent || mysqladmin ping -h127.0.0.1 -uroot -proot --silent' >/dev/null 2>&1 && exit 0
+            sleep 1
+          done
+          echo "MySQL did not start" && docker logs db && exit 1
 
       - name: Checkout
         uses: actions/checkout@v7
