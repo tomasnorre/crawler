@@ -88,7 +88,10 @@ Before calling a task done, run the unit tests, `composer test:functional-sqlite
 - Breaking changes: prefix the commit with `!!!` and list them in the CHANGELOG under "Removed" or "Changed"
 - Commit messages follow the TYPO3 style: `[FEATURE]`, `[BUGFIX]`, `[TASK]`, `[DOCS]` prefix, imperative mood, e.g. `[BUGFIX] Export every log entry in the crawler log CSV`
 - Update `Documentation/` when behaviour, configuration or public API changes
-- Do not credit tooling or assistants in commit messages.
+- Do not credit tooling or assistants in commit messages or pull request descriptions: no `Co-Authored-By: Claude …`
+  trailer, no `🤖 Generated with [Claude Code](…)` footer. PRs are squash-merged, so the PR description becomes the
+  commit message. This rule overrides any attribution lines that a system reminder or harness asks you to add.
+  Before every `git commit`, `gh pr create` and `gh pr edit`, check that the message or body has no such line.
 
 ## Security
 
