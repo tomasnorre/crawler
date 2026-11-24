@@ -29,11 +29,6 @@
       <code><![CDATA[setUid]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="Classes/Domain/Repository/ConfigurationRepository.php">
-    <MissingTemplateParam>
-      <code><![CDATA[ConfigurationRepository]]></code>
-    </MissingTemplateParam>
-  </file>
   <file src="Classes/Domain/Repository/QueueRepository.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[findAll]]></code>

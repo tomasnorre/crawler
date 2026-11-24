@@ -27,6 +27,7 @@ use AOE\Crawler\Tests\Functional\BackendRequestTestTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
@@ -53,7 +54,7 @@ class PageConfigurationResolverTest extends FunctionalTestCase
         $this->subject = new PageConfigurationResolver(
             GeneralUtility::makeInstance(PageService::class),
             GeneralUtility::makeInstance(ConfigurationService::class),
-            GeneralUtility::makeInstance(ConfigurationRepository::class),
+            new ConfigurationRepository(GeneralUtility::makeInstance(ConnectionPool::class)),
         );
     }
 

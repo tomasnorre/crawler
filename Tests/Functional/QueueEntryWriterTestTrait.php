@@ -32,6 +32,7 @@ use AOE\Crawler\Service\UrlService;
 use Psr\Clock\ClockInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use TYPO3\CMS\Core\Clock\SystemClock;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -61,7 +62,7 @@ trait QueueEntryWriterTestTrait
         return new PageConfigurationResolver(
             GeneralUtility::makeInstance(PageService::class),
             GeneralUtility::makeInstance(ConfigurationService::class),
-            GeneralUtility::makeInstance(ConfigurationRepository::class),
+            new ConfigurationRepository(GeneralUtility::makeInstance(ConnectionPool::class)),
         );
     }
 }
