@@ -58,9 +58,8 @@ jobs:
 
       - name: Functional Tests
         run: |
-          export "FUNCTIONAL_XML"=Tests/FunctionalTests.xml
           rm -rf .Build/Web/typo3temp/
-          .Build/bin/phpunit --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
+          Build/Scripts/functionalTestsParallel.sh
         env:
           typo3DatabaseDriver: pdo_pgsql
           typo3DatabaseHost: 127.0.0.1
@@ -146,9 +145,7 @@ jobs:
           ln -nfs .Build/vendor/typo3/cms/typo3 typo3
 
       - name: Functional Tests
-        run: |
-          export "FUNCTIONAL_XML"=Tests/FunctionalTests.xml
-          .Build/bin/phpunit --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
+        run: Build/Scripts/functionalTestsParallel.sh
         env:
           typo3DatabaseHost: 127.0.0.1
           typo3DatabaseName: typo3
@@ -191,9 +188,7 @@ jobs:
           ln -nfs .Build/vendor/typo3/cms/typo3 typo3
 
       - name: Functional Tests
-        run: |
-          export "FUNCTIONAL_XML"=Tests/FunctionalTests.xml
-          .Build/bin/phpunit --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
+        run: Build/Scripts/functionalTestsParallel.sh
         env:
           typo3DatabaseHost: 127.0.0.1
           typo3DatabaseName: typo3
