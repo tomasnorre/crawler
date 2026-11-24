@@ -146,17 +146,17 @@ final class PageTreeUrlCollector
         string $pageTitleHTML = '',
         string $mountPoint = ''
     ): array {
-        $skipMessage = '';
+        $skipMessage = $this->pageConfigurationResolver->getSkipReason($pageRow);
+        if ($skipMessage !== '') {
+            return [$this->createRowWithoutConfiguration($pageTitle, $pageTitleHTML, ' (' . $skipMessage . ')')];
+        }
+
         $configurations = ConfigurationService::removeDisallowedConfigurations(
             $run->configurationSelection,
-            $this->pageConfigurationResolver->getConfigurationsForPageRow($pageRow, $skipMessage, $mountPoint)
+            $this->pageConfigurationResolver->getConfigurationsForPage((int) $pageRow['uid'], $mountPoint)
         );
-
         if ($configurations === []) {
-            $queueRow = new QueueRow($pageTitle);
-            $queueRow->setPageTitleHTML($pageTitleHTML);
-            $queueRow->setMessage($skipMessage !== '' ? ' (' . $skipMessage . ')' : '');
-            return [$queueRow];
+            return [$this->createRowWithoutConfiguration($pageTitle, $pageTitleHTML, '')];
         }
 
         $queueRowCollection = [];
@@ -170,6 +170,14 @@ final class PageTreeUrlCollector
         }
 
         return $queueRowCollection;
+    }
+
+    private function createRowWithoutConfiguration(string $pageTitle, string $pageTitleHTML, string $message): QueueRow
+    {
+        $queueRow = new QueueRow($pageTitle);
+        $queueRow->setPageTitleHTML($pageTitleHTML);
+        $queueRow->setMessage($message);
+        return $queueRow;
     }
 
     private function addConfigurationToQueueRow(

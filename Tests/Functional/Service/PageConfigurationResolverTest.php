@@ -77,4 +77,32 @@ class PageConfigurationResolverTest extends FunctionalTestCase
 
         self::assertSame($expected, $configurationNames);
     }
+
+    #[Test]
+    public function getPageTSconfigForIdHookChangesPageTSconfig(): void
+    {
+        $GLOBALS['BE_USER'] = $this->createStub(BackendUserAuthentication::class);
+        $GLOBALS['BE_USER']->method('isAdmin')->willReturn(true);
+        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['getPageTSconfigForId'][] =
+            static function (array &$params): void {
+                $params['pageTSConfig']['tx_crawler.']['crawlerCfg.']['paramSets.']['fromHook_' . $params['pageId'] . '.'] = [];
+            };
+
+        self::assertContains('fromHook_5', $this->subject->getConfigurationNamesForBranch(5, 0));
+    }
+
+    #[Test]
+    public function processUrlsHookChangesConfigurations(): void
+    {
+        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['processUrls'][] =
+            static function (array &$params): void {
+                $params['res']['fromHook'] = [
+                    'urls' => [],
+                ];
+            };
+
+        self::assertSame([
+            'urls' => [],
+        ], $this->subject->getConfigurationsForPage(5)['fromHook'] ?? null);
+    }
 }

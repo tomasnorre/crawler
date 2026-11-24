@@ -44,37 +44,38 @@ class PageConfigurationResolver
     }
 
     /**
-     * Returns the configurations of the page. If the page is not crawled, it returns an empty array
-     * and sets the reason in $skipMessage.
+     * Returns the configurations of the page. If the page is not crawled, it returns an empty array,
+     * see getSkipReason() for the reason.
      *
      * @param array $pageRow Page record with at least the doktype and uid columns
      * @param string $mountPoint The mount point as "<mounted page>-<mount point page>", fx. "5-12"
      */
-    public function getConfigurationsForPageRow(
-        array $pageRow,
-        string &$skipMessage = '',
-        string $mountPoint = ''
-    ): array {
-        if (!isset($pageRow['uid'])) {
-            $skipMessage = "pageRow['uid'] is missing";
+    public function getConfigurationsForPageRow(array $pageRow, string $mountPoint = ''): array
+    {
+        if ($this->getSkipReason($pageRow) !== '') {
             return [];
         }
+        return $this->getConfigurationsForPage((int) $pageRow['uid'], $mountPoint);
+    }
 
-        $pageId = (int) $pageRow['uid'];
-        if ($pageId === 0) {
+    /**
+     * Returns why the page is not crawled, or an empty string if it is crawled.
+     *
+     * @param array $pageRow Page record with at least the doktype and uid columns
+     */
+    public function getSkipReason(array $pageRow): string
+    {
+        if (!isset($pageRow['uid'])) {
+            return "pageRow['uid'] is missing";
+        }
+
+        if ((int) $pageRow['uid'] === 0) {
             $uid = $pageRow['uid'];
-            $skipMessage = 'PageUid "' . (is_scalar($uid) ? $uid : get_debug_type($uid)) . '" was not an integer';
-            return [];
+            return 'PageUid "' . (is_scalar($uid) ? $uid : get_debug_type($uid)) . '" was not an integer';
         }
 
         $message = $this->pageService->checkIfPageShouldBeSkipped($pageRow);
-        if ($message !== false) {
-            $skipMessage = $message;
-            return [];
-        }
-
-        $skipMessage = '';
-        return $this->getConfigurationsForPage($pageId, $mountPoint);
+        return $message === false ? '' : $message;
     }
 
     /**
@@ -97,9 +98,10 @@ class PageConfigurationResolver
 
         foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['processUrls'] ?? [] as $func) {
             $params = [
-                'res' => &$configurations,
+                'res' => $configurations,
             ];
             GeneralUtility::callUserFunction($func, $params, $this);
+            $configurations = $params['res'];
         }
         return $configurations;
     }
@@ -145,11 +147,12 @@ class PageConfigurationResolver
         if (is_array($hooks)) {
             $params = [
                 'pageId' => $pageId,
-                'pageTSConfig' => &$pageTSconfig,
+                'pageTSConfig' => $pageTSconfig,
             ];
             foreach ($hooks as $userFunc) {
                 GeneralUtility::callUserFunction($userFunc, $params, $this);
             }
+            $pageTSconfig = $params['pageTSConfig'];
         }
         return $pageTSconfig;
     }

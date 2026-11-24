@@ -145,8 +145,8 @@ class ParameterExpander
         }
 
         $_params = [
-            'pObj' => &$this,
-            'paramArray' => &$paramArray,
+            'pObj' => $this,
+            'paramArray' => $paramArray,
             'currentKey' => $parameter,
             'currentValue' => $path,
             'pid' => $pid,
@@ -154,7 +154,7 @@ class ParameterExpander
         foreach ($hooks as $_funcRef) {
             GeneralUtility::callUserFunction($_funcRef, $_params, $this);
         }
-        return $paramArray;
+        return $_params['paramArray'];
     }
 
     private function extractParamsFromCustomTable(
