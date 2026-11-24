@@ -22,16 +22,16 @@ jobs:
       fail-fast: false
       matrix:
         postgres:
-          - '10'
-          - '11'
-          - '12'
-          - '13'
-          - '14'
-          - '15'
-          - '16'
-          - '17'
-          - '18'
-          - '19'
+          - '10'   # EOL Nov 2022 (unsupported)
+          - '11'   # EOL Nov 2023 (unsupported)
+          - '12'   # EOL Nov 2024 (unsupported)
+          - '13'   # EOL Nov 2025 (unsupported)
+          - '14'   # EOL Nov 2026 (unsupported)
+          - '15'   # EOL Nov 2027
+          - '16'   # EOL Nov 2028
+          - '17'   # EOL Nov 2029
+          - '18'   # EOL Nov 2030
+          - '19'   # EOL Nov 2031
         typo3:
           - '^14.3'
         php:
@@ -113,27 +113,11 @@ jobs:
       fail-fast: false
       matrix:
         mariadb:
-          - '10.4'
-          - '10.5'
-          - '10.6'
-          - '10.7'
-          - '10.8'
-          - '10.9'
-          - '10.10'
-          - '10.11'
-          - '11.1'
-          - '11.2'
-          - '11.3'
-          - '11.4'
-          - '11.5'
-          - '11.6'
-          - '12.0'
-          - '12.1'
-          - '12.2'
-          - '12.3'
-          - '13.0'
-          - '13.1'
-          - '13.2'
+          - '10.11'   # LTS, community EOL Feb 2028
+          - '11.4'    # LTS, EOL May 2029
+          - '11.8'    # LTS, EOL Jun 2028
+          - '12.3'    # LTS, EOL Jun 2029
+          - '13.1'    # newest rolling; replace with 13.3 when it ships (mid-2027)
         typo3:
           - '^14.3'
         php:
@@ -178,7 +162,9 @@ jobs:
       fail-fast: false
       matrix:
         mysql:
-          - '8.0'
+          - '8.0'   # EOL Apr 2026 (unsupported)
+          - '8.4'   # LTS, premier support to Apr 2029, EOL Apr 2032
+          - '9.7'   # LTS, premier support to Apr 2031, EOL Apr 2034
         typo3:
           - '^14.3'
         php:
