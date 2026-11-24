@@ -24,8 +24,10 @@ use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
 use Psr\Log\LoggerInterface;
 use TYPO3\CMS\Core\Http\Request;
+use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Http\Uri;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 #[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategy::class)]
@@ -101,22 +103,37 @@ class GuzzleExecutionStrategyTest extends UnitTestCase
     #[\PHPUnit\Framework\Attributes\Test]
     public function fetchUrlContentThrowsException(): void
     {
-        $message = 'Error while opening "https://not-important.tld" - 0 cURL error 6: Could not resolve host: not-important.tld (see https://curl.se/libcurl/c/libcurl-errors.html) for https://not-important.tld';
+        $errorMessage = 'cURL error 6: Could not resolve host: not-important.tld (see https://curl.se/libcurl/c/libcurl-errors.html) for https://not-important.tld';
+        $crawlerId = sha1('this-is-testing');
+
+        // Replaces only the RequestFactory instead of getResponse(), so getResponse() is covered without network access.
+        $requestFactory = $this->createMock(RequestFactory::class);
+        $requestFactory->expects(self::once())->method('request')->with('https://not-important.tld', 'GET', [
+            'headers' => [
+                'Connection' => 'close',
+                'X-T3Crawler' => $crawlerId,
+                'User-Agent' => 'TYPO3 crawler',
+            ],
+            'connect_timeout' => 5.0,
+        ])->willThrowException(
+            new ConnectException($errorMessage, new Request('https://not-important.tld', 'GET'))
+        );
+        GeneralUtility::addInstance(RequestFactory::class, $requestFactory);
 
         $logger = $this->createMock(LoggerInterface::class);
-        $logger->expects(self::once())->method('debug')->with($message, [
-            'crawlerId' => '2981d019ade833a37995c1b569ef87b6b5af7287',
-        ]);
+        $logger->expects(self::once())->method('debug')->with(
+            'Error while opening "https://not-important.tld" - 0 ' . $errorMessage,
+            [
+                'crawlerId' => '2981d019ade833a37995c1b569ef87b6b5af7287',
+            ]
+        );
 
-        $crawlerId = sha1('this-is-testing');
-        $url = new Uri('https://not-important.tld');
         $guzzleExecutionStrategy = $this->createPartialMock(GuzzleExecutionStrategy::class, []);
         $guzzleExecutionStrategy->setLogger($logger);
 
-        self::assertStringContainsString(
-            'cURL error 6: Could not resolve host: not-important.tld (see https://curl.se/libcurl/c/libcurl-errors.html)',
-            $guzzleExecutionStrategy->fetchUrlContents($url, $crawlerId)['errorlog'][0]
-        );
+        self::assertSame([
+            'errorlog' => ['0 ' . $errorMessage],
+        ], $guzzleExecutionStrategy->fetchUrlContents(new Uri('https://not-important.tld'), $crawlerId));
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
