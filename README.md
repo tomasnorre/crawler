@@ -16,10 +16,6 @@ You can include the crawler in your TYPO3 project with composer or from the [TYP
 composer require tomasnorre/crawler
 ```
 
-**Crawler processes**
-
-![backend_processlist](https://user-images.githubusercontent.com/1212481/142763110-936be57c-1e9e-4d62-afbe-4134b139fd56.png)
-
 ## Versions and Support
 
 | Release  | TYPO3     | PHP     | Fixes will contain
