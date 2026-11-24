@@ -212,6 +212,18 @@ Options:
             - 10.11  long-term, maintained until 2028-02
             - 11.0   development series
             - 11.1   short-term development series
+            - 11.2
+            - 11.3
+            - 11.4
+            - 11.5
+            - 11.6
+            - 12.0
+            - 12.1
+            - 12.2
+            - 12.3
+            - 13.0
+            - 13.1
+            - 13.2
         With "-d mysql":
             - 8.0   maintained until 2026-04 (default)
         With "-d postgres":
@@ -222,6 +234,9 @@ Options:
             - 14    maintained until 2026-11-12
             - 15    maintained until 2027-11-11
             - 16    maintained until 2028-11-09
+            - 17    maintained until 2029-11-08
+            - 18    maintained until 2030-11-14
+            - 19    maintained until 2031-11-19
 
     -t <13|14>
         Only with -s composerInstall|composerInstallMin|composerInstallMax
