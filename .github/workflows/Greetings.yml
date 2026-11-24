@@ -1,7 +1,9 @@
 name: Greetings
 on:
-  - pull_request
-  - issues
+  pull_request:
+    types: [opened]
+  issues:
+    types: [opened]
 
 jobs:
   greeting:
