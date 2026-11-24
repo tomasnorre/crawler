@@ -108,6 +108,9 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
         return $this->moduleTemplate->renderResponse('Backend/ShowLog');
     }
 
+    /**
+     * @return array{array<string, mixed>, string} The queue entry with decoded parameters and result data, and its result status
+     */
     private function getQueueEntry(mixed $queueId): array
     {
         $q_entry = $this->queryBuilder
