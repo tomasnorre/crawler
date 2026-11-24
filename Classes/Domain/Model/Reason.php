@@ -42,6 +42,9 @@ class Reason
     public const REASON_GUI_SUBMIT = 'crawler_gui_submit_reason';
     public const REASON_CLI_SUBMIT = 'crawler_cli_submit_reason';
 
+    /**
+     * @param array<string, mixed> $row
+     */
     public function __construct(
         protected array $row = []
     ) {
@@ -158,7 +161,7 @@ class Reason
     /**
      * Returns the properties of the object as array
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function getRow()
     {

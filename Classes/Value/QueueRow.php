@@ -30,6 +30,9 @@ class QueueRow
     public string $parameterConfig = '';
     public string $valuesExpanded = '';
     public string $urls = '';
+    /**
+     * @var list<string>
+     */
     public array $options = [];
     public string $parameters = '';
 
@@ -68,6 +71,9 @@ class QueueRow
         $this->urls = $urls;
     }
 
+    /**
+     * @param list<string> $options
+     */
     public function setOptions(array $options): void
     {
         $this->options = $options;
