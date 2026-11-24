@@ -28,6 +28,9 @@ final class ModifySkipPageEvent
 {
     private false|string $skipped = false;
 
+    /**
+     * @param array<string, mixed> $pageRow
+     */
     public function __construct(
         private readonly array $pageRow
     ) {
@@ -43,6 +46,9 @@ final class ModifySkipPageEvent
         $this->skipped = $skipped;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getPageRow(): array
     {
         return $this->pageRow;

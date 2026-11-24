@@ -26,6 +26,9 @@ namespace AOE\Crawler\Event;
  */
 final class AfterUrlCrawledEvent
 {
+    /**
+     * @param array{content: string|false} $result the JSON encoded crawl result
+     */
     public function __construct(
         private readonly string $url,
         private readonly array $result
@@ -37,6 +40,9 @@ final class AfterUrlCrawledEvent
         return $this->url;
     }
 
+    /**
+     * @return array{content: string|false} the JSON encoded crawl result
+     */
     public function getResult(): array
     {
         return $this->result;
