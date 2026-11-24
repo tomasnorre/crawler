@@ -57,7 +57,7 @@ jobs:
         php:
           - '8.2'
         typo3:
-          - '^14.3'
+          - '14'
         composerInstall: [ 'composerInstallLowest', 'composerInstallHighest' ]
     steps:
       - name: Checkout
@@ -98,7 +98,7 @@ jobs:
           - '13.1'
           - '13.2'
         typo3:
-          - '^14.3'
+          - '14'
         php:
           - '8.2'
         composerInstall: [ 'composerInstallLowest', 'composerInstallHighest' ]
@@ -121,7 +121,7 @@ jobs:
         mysql:
           - '8.0'
         typo3:
-          - '^14.3'
+          - '14'
         php:
           - '8.2'
     steps:
