@@ -27,8 +27,6 @@ parameters:
         -
             identifier: missingType.generics
         -
-            identifier: symplify.requiredInterfaceContractNamespace
-        -
             identifier: symplify.noReference
         -
             identifier: symplify.noNullableServiceInConstructor

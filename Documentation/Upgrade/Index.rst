@@ -104,7 +104,7 @@ Changed functionality
 Queue callbacks implement an interface
 ======================================
 
-Callbacks in the queue implement `AOE\Crawler\Queue\QueueCallbackInterface`
+Callbacks in the queue implement `AOE\Crawler\Queue\Interface\QueueCallbackInterface`
 instead of a `crawler_execute()` method, and no longer receive the
 `CrawlerController`. Callbacks that are services get their dependencies by
 constructor injection instead.
@@ -118,7 +118,7 @@ Migration
     ..  code-block:: diff
 
         -class MyCallback
-        +final class MyCallback implements \AOE\Crawler\Queue\QueueCallbackInterface
+        +final class MyCallback implements \AOE\Crawler\Queue\Interface\QueueCallbackInterface
          {
         -    public function crawler_execute(array $parameters, CrawlerController $crawlerController)
         +    public function execute(array $parameters): mixed

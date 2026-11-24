@@ -4,7 +4,7 @@
 
 ### Added
 * Queue entries are processed by the TYPO3 message bus (`AOE\Crawler\Queue\Message\CrawlUrlMessage`, `messenger:consume crawler_high crawler crawler_low`) [#1310](https://github.com/tomasnorre/crawler/issues/1310)
-* `AOE\Crawler\Queue\QueueCallbackInterface` for callbacks in the queue, registered by autoconfiguration
+* `AOE\Crawler\Queue\Interface\QueueCallbackInterface` for callbacks in the queue, registered by autoconfiguration
 * `AOE\Crawler\Queue\QueueEntryWriter::addCallback()` adds a callback to the queue, optionally with a set id
 * Support for PHP 8.6
 
@@ -18,7 +18,7 @@
 * `AOE\Crawler\Queue\QueueEntryWriter` writes the URLs of crawler configurations to the queue instead of `CrawlerController`
 * The hook `$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['getPageTSconfigForId']` receives `AOE\Crawler\Service\PageConfigurationResolver` as parent object instead of `AOE\Crawler\Controller\CrawlerController`
 * The hook `$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['processUrls']` receives `AOE\Crawler\Service\PageConfigurationResolver` as parent object instead of `AOE\Crawler\Controller\CrawlerController`
-* Callbacks in the queue implement `AOE\Crawler\Queue\QueueCallbackInterface` instead of a `crawler_execute()` method, and no longer receive the `CrawlerController`
+* Callbacks in the queue implement `AOE\Crawler\Queue\Interface\QueueCallbackInterface` instead of a `crawler_execute()` method, and no longer receive the `CrawlerController`
 * `QueueExecutor::executeQueueItem()` no longer takes the `CrawlerController`
 * `AOE\Crawler\Service\PageTreeUrlCollector` collects the URLs of the page tree instead of `CrawlerController`
 * `CrawlerController::getPageTreeAndUrls()` is now `PageTreeUrlCollector::collect()`

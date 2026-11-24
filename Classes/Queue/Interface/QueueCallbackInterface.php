@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOE\Crawler\Queue;
+namespace AOE\Crawler\Queue\Interface;
 
 /*
  * (c) 2026 Tomas Norre Mikkelsen <tomasnorre@gmail.com>

@@ -21,6 +21,7 @@ namespace AOE\Crawler\Controller\Backend;
 
 use AOE\Crawler\Controller\Backend\Helper\RequestHelper;
 use AOE\Crawler\Controller\Backend\Helper\UrlBuilder;
+use AOE\Crawler\Controller\Backend\Interface\BackendModuleControllerInterface;
 use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Event\InvokeQueueChangeEvent;
 use AOE\Crawler\Queue\CrawlRun;

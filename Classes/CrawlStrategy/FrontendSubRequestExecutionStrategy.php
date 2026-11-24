@@ -20,6 +20,7 @@ namespace AOE\Crawler\CrawlStrategy;
  */
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
+use AOE\Crawler\CrawlStrategy\Interface\CrawlStrategyInterface;
 use Psr\Clock\ClockInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
