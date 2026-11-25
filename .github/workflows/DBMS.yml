@@ -33,20 +33,48 @@ jobs:
           - '18'   # EOL Nov 2030
           - '19'   # EOL Nov 2031
         typo3:
-          - '14'
+          - '^14.3'
         php:
           - '8.2'
-        composerInstall: [ 'composerInstallLowest', 'composerInstallHighest' ]
-
     steps:
+      - name: Set up PostgreSQL ${{ matrix.postgres }}
+        run: |
+          docker run -e POSTGRES_DB=root -e POSTGRES_USER=root -e POSTGRES_PASSWORD=root -d -p 5432:5432 postgres:${{ matrix.postgres }}
+
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Install testing system
-        run: Build/Scripts/runTests.sh -b docker -t ${{ matrix.typo3 }} -p ${{ matrix.php }}  -s ${{ matrix.composerInstall }}
+      - name: Set up PHP Version ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+          coverage: none
 
-      - name: Functional Tests with postgres
-        run: Build/Scripts/runTests.sh -b docker -t ${{ matrix.typo3 }} -p ${{ matrix.php }} -d postgres -i ${{ matrix.postgres }} -s functional
+      - name: Require typo3/cms-core:${{ matrix.typo3 }}
+        run: composer require typo3/cms-core:${{ matrix.typo3 }} --no-update
+
+      - name: Install dependencies
+        uses: ramsey/composer-install@v4
+
+      - name: Wait for PostgreSQL
+        run: |
+          while ! nc -z localhost 5432; do
+            sleep 1;
+          done;
+          echo Database is up;
+
+      - name: Functional Tests
+        run: |
+          export "FUNCTIONAL_XML"=Tests/FunctionalTests.xml
+          rm -rf .Build/Web/typo3temp/
+          .Build/bin/phpunit --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
+        env:
+          typo3DatabaseDriver: pdo_pgsql
+          typo3DatabaseHost: 127.0.0.1
+          typo3DatabaseName: typo3
+          typo3DatabasePassword: root
+          typo3DatabaseUsername: root
 
   SQLite:
     name: SQLite
@@ -57,17 +85,26 @@ jobs:
         php:
           - '8.2'
         typo3:
-          - '14'
-        composerInstall: [ 'composerInstallLowest', 'composerInstallHighest' ]
+          - '^14.3'
     steps:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Install testing system
-        run: Build/Scripts/runTests.sh -b docker -t ${{ matrix.typo3 }} -p ${{ matrix.php }}  -s ${{ matrix.composerInstall }}
+      - name: Set up PHP Version ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+          coverage: none
 
-      - name: Functional Tests with postgres
-        run: Build/Scripts/runTests.sh -b docker -t ${{ matrix.typo3 }} -p ${{ matrix.php }} -d sqlite -s functional
+      - name: Require typo3/cms-core:${{ matrix.typo3 }}
+        run: composer require typo3/cms-core:${{ matrix.typo3 }} --no-update
+
+      - name: Install dependencies
+        uses: ramsey/composer-install@v4
+
+      - name: Functional Tests
+        run: composer test:functional-sqlite
 
   MariaDB:
     name: MariaDB
@@ -80,21 +117,43 @@ jobs:
           - '11.4'    # LTS, EOL May 2029
           - '11.8'    # LTS, EOL Jun 2028
           - '12.3'    # LTS, EOL Jun 2029
-          - '13.1'    # newest rolling; replace with 13.3 when it ships (mid-2027)
+          - '13.0'    # newest rolling; replace with 13.3 when it ships (mid-2027)
         typo3:
-          - '14'
+          - '^14.3'
         php:
           - '8.2'
-        composerInstall: [ 'composerInstallLowest', 'composerInstallHighest' ]
     steps:
+      - name: Set up MariaDB ${{ matrix.mariadb }}
+        uses: getong/mariadb-action@v1.11
+        with:
+          mariadb version: ${{ matrix.mariadb }}
+          mysql root password: 'root'
+
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Install testing system
-        run: Build/Scripts/runTests.sh -b docker -t ${{ matrix.typo3 }} -p ${{ matrix.php }}  -s ${{ matrix.composerInstall }}
+      - name: Set up PHP Version ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+          coverage: none
 
-      - name: Functional Tests with postgres
-        run: Build/Scripts/runTests.sh -b docker -t ${{ matrix.typo3 }} -p ${{ matrix.php }} -d mariadb -a mysqli -i ${{ matrix.mariadb }} -s functional
+      - name: Require typo3/cms-core:${{ matrix.typo3 }}
+        run: composer require typo3/cms-core:${{ matrix.typo3 }} --no-update
+
+      - name: Install dependencies
+        uses: ramsey/composer-install@v4
+
+      - name: Functional Tests
+        run: |
+          export "FUNCTIONAL_XML"=Tests/FunctionalTests.xml
+          .Build/bin/phpunit --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
+        env:
+          typo3DatabaseHost: 127.0.0.1
+          typo3DatabaseName: typo3
+          typo3DatabasePassword: root
+          typo3DatabaseUsername: root
 
   MySQL:
     name: MySQL
@@ -107,16 +166,38 @@ jobs:
           - '8.4'   # LTS, premier support to Apr 2029, EOL Apr 2032
           - '9.7'   # LTS, premier support to Apr 2031, EOL Apr 2034
         typo3:
-          - '14'
+          - '^14.3'
         php:
           - '8.2'
-        composerInstall: [ 'composerInstallLowest', 'composerInstallHighest' ]
     steps:
+      - name: Set up MySQL ${{ matrix.mysql }}
+        uses: mirromutth/mysql-action@v1.1
+        with:
+          mysql version: ${{ matrix.mysql }}
+          mysql root password: 'root'
+
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Install testing system
-        run: Build/Scripts/runTests.sh -b docker -t ${{ matrix.typo3 }} -p ${{ matrix.php }}  -s ${{ matrix.composerInstall }}
+      - name: Set up PHP Version ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+          coverage: none
 
-      - name: Functional Tests with postgres
-        run: Build/Scripts/runTests.sh -b docker -t ${{ matrix.typo3 }} -p ${{ matrix.php }} -d mysql -a mysqli -i ${{ matrix.mysql }} -s functional
+      - name: Require typo3/cms-core:${{ matrix.typo3 }}
+        run: composer require typo3/cms-core:${{ matrix.typo3 }} --no-update
+
+      - name: Install dependencies
+        uses: ramsey/composer-install@v4
+
+      - name: Functional Tests
+        run: |
+          export "FUNCTIONAL_XML"=Tests/FunctionalTests.xml
+          .Build/bin/phpunit --colors -c $FUNCTIONAL_XML Tests/Functional --process-isolation
+        env:
+          typo3DatabaseHost: 127.0.0.1
+          typo3DatabaseName: typo3
+          typo3DatabasePassword: root
+          typo3DatabaseUsername: root
