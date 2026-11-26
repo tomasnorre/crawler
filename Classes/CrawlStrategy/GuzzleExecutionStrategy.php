@@ -41,7 +41,7 @@ class GuzzleExecutionStrategy implements LoggerAwareInterface, CrawlStrategyInte
     /**
      * Sets up a CURL / Guzzle Request for fetching the request.
      *
-     * @return array|false See CrawlStrategyInterface::fetchUrlContents()
+     * @return array See CrawlStrategyInterface::fetchUrlContents()
      */
     #[\Override]
     public function fetchUrlContents(UriInterface $url, string $crawlerId): array
@@ -58,8 +58,9 @@ class GuzzleExecutionStrategy implements LoggerAwareInterface, CrawlStrategyInte
         try {
             $url = (string) $url;
             $response = $this->getResponse($url, $options);
-            if ($response->hasHeader('X-T3Crawler-Meta')) {
-                return json_decode($response->getHeaderLine('X-T3Crawler-Meta'), true);
+            $meta = json_decode($response->getHeaderLine('X-T3Crawler-Meta'), true);
+            if (is_array($meta)) {
+                return $meta;
             }
             return [
                 'errorlog' => ['Response has no X-T3Crawler-Meta header'],

@@ -45,13 +45,14 @@ class GuzzleExecutionStrategyTest extends UnitTestCase
         parent::setUp();
         $this->guzzleExecutionStrategy = $this->createPartialMock(GuzzleExecutionStrategy::class, ['getResponse']);
 
-        $response = $this->createPartialMock(Response::class, ['getHeaderLine', 'getStatusCode', 'hasHeader']);
+        $response = $this->createPartialMock(Response::class, ['getHeaderLine', 'getStatusCode']);
         $response->method('getStatusCode')
             ->willReturn(200);
         $response->method('getHeaderLine')
-            ->willReturn(json_encode('Crawler extension for TYPO3'));
-        $response->method('hasHeader')
-            ->willReturn(true);
+            ->willReturn(json_encode([
+                'content' => 'Crawler extension for TYPO3',
+                'running' => true,
+            ]));
 
         $this->guzzleExecutionStrategy
             ->method('getResponse')
@@ -64,10 +65,29 @@ class GuzzleExecutionStrategyTest extends UnitTestCase
         $crawlerId = sha1('this-is-testing');
         $url = new Uri('https://not-important.tld');
 
-        self::assertStringContainsString(
-            'Crawler extension for TYPO3',
+        self::assertSame(
+            [
+                'content' => 'Crawler extension for TYPO3',
+                'running' => true,
+            ],
             $this->guzzleExecutionStrategy->fetchUrlContents($url, $crawlerId)
         );
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function fetchUrlContentsTreatsMetaHeaderWithoutArrayAsMissing(): void
+    {
+        $subject = $this->createPartialMock(GuzzleExecutionStrategy::class, ['getResponse']);
+        $subject->method('getResponse')->willReturn(new Response('php://temp', 200, [
+            'X-T3Crawler-Meta' => '"Crawler extension for TYPO3"',
+        ]));
+
+        self::assertSame([
+            'errorlog' => ['Response has no X-T3Crawler-Meta header'],
+            'vars' => [
+                'status' => '200 OK',
+            ],
+        ], $subject->fetchUrlContents(new Uri('https://not-important.tld'), 'crawler-id'));
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
