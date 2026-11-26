@@ -2,14 +2,13 @@
 
 declare(strict_types=1);
 
-use Rector\CodeQuality\Rector\Identical\SimplifyBoolIdenticalTrueRector;
+use Rector\CodeQuality\Rector\ClassMethod\InlineArrayReturnAssignRector;
 use Rector\Config\RectorConfig;
 use Rector\Core\Configuration\Option;
 use Rector\DeadCode\Rector\Property\RemoveSetterOnlyPropertyAndMethodCallRector;
 use Rector\Php74\Rector\If_\IfToNullCoalescingAssignRector;
 use Rector\Php82\Rector\Class_\ReadOnlyClassRector;
 use Rector\PHPUnit\Set\PHPUnitSetList;
-use Rector\Set\ValueObject\LevelSetList;
 use Rector\Set\ValueObject\SetList;
 use Ssch\TYPO3Rector\Set\Typo3LevelSetList;
 use Ssch\TYPO3Rector\TYPO313\v0\MigrateTypoScriptFrontendControllerReadOnlyPropertiesRector;
@@ -31,6 +30,9 @@ return RectorConfig::configure()
         ReadOnlyClassRector::class => null,
         MigrateTypoScriptFrontendControllerReadOnlyPropertiesRector::class => null,
         IfToNullCoalescingAssignRector::class => null,
+        InlineArrayReturnAssignRector::class => [
+            __DIR__ . '/Classes/Service/ConfigurationService.php',
+        ]
     ])
     ->withAutoloadPaths([
         __DIR__ . '/Classes'
