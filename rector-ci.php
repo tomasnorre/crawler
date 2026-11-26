@@ -24,12 +24,7 @@ return RectorConfig::configure()
         __DIR__ . '/Tests/Functional/Fixtures/Extensions/typo3_console/ext_emconf.php',
         __DIR__ . '/Tests/UnitTestsBootstrap.php',
         __DIR__ . '/Tests/FunctionalTestsBootstrap.php',
-        Rector\DeadCode\Rector\Assign\RemoveUnusedVariableAssignRector::class => [
-            __DIR__ . '/Classes/Domain/Repository/QueueRepository.php'
-        ],
         ReadOnlyClassRector::class => null,
-        MigrateTypoScriptFrontendControllerReadOnlyPropertiesRector::class => null,
-        IfToNullCoalescingAssignRector::class => null,
         InlineArrayReturnAssignRector::class => [
             __DIR__ . '/Classes/Service/ConfigurationService.php',
         ]

@@ -251,9 +251,7 @@ final class PageTreeUrlCollector
     {
         // Make sure the _cli_ user is loaded
         Bootstrap::initializeBackendAuthentication();
-        if ($this->backendUser === null) {
-            $this->backendUser = $GLOBALS['BE_USER'];
-        }
+        $this->backendUser ??= $GLOBALS['BE_USER'];
         return $this->backendUser;
     }
 }
