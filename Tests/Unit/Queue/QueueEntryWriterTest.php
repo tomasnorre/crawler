@@ -550,7 +550,7 @@ class QueueEntryWriterTest extends UnitTestCase
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy'] = 'Y-m-d';
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['hhmm'] = 'H:i';
 
-        if ($urlService === null) {
+        if (!$urlService instanceof \AOE\Crawler\Service\UrlService) {
             $urlService = $this->createStub(UrlService::class);
             $urlService->method('getUrlFromPageAndQueryParameters')->willReturnCallback(
                 static fn (int $pageId, string $query): ?UriInterface => $query === 'none'

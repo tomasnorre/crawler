@@ -28,7 +28,7 @@ class ProcessInstructionService
 {
     public function isAllowed(string $processInstruction, array $incoming): bool
     {
-        if (empty($incoming)) {
+        if ($incoming === []) {
             return true;
         }
 

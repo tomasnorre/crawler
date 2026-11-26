@@ -851,7 +851,7 @@ class ConfigurationServiceTest extends UnitTestCase
         ?GroupResolver $groupResolver = null,
     ): ConfigurationService {
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = $extensionSettings;
-        if ($urlService === null) {
+        if (!$urlService instanceof \AOE\Crawler\Service\UrlService) {
             $urlService = $this->createStub(UrlService::class);
             $urlService->method('compileUrls')->willReturn([]);
         }

@@ -47,7 +47,7 @@ class ConfigurationRepository
      */
     public function getCrawlerConfigurationRecordsFromRootLine(int $pageId, array $parentIds = []): array
     {
-        if (empty($parentIds)) {
+        if ($parentIds === []) {
             $pageIdsInRootLine = [];
             $rootLine = BackendUtility::BEgetRootLine($pageId);
 

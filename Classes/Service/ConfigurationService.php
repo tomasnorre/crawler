@@ -53,7 +53,7 @@ class ConfigurationService
 
     public static function removeDisallowedConfigurations(array $allowedConfigurations, array $configurations): array
     {
-        if (empty($allowedConfigurations)) {
+        if ($allowedConfigurations === []) {
             return $configurations;
         }
         // 	remove configuration that does not match the current selection

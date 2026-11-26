@@ -69,7 +69,7 @@ class ResultHandler
      */
     public static function getResFeVars(array $resultData): array
     {
-        if (empty($resultData)) {
+        if ($resultData === []) {
             return [];
         }
         $requestResult = json_decode((string) $resultData['content'], true);

@@ -112,7 +112,7 @@ class UrlService
      */
     public function compileUrls(array $paramArray, array $urls, int $maxUrlToCompile = 10): array
     {
-        if (empty($paramArray)) {
+        if ($paramArray === []) {
             return $urls;
         }
         $varName = key($paramArray);

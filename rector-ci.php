@@ -2,14 +2,13 @@
 
 declare(strict_types=1);
 
-use Rector\CodeQuality\Rector\Identical\SimplifyBoolIdenticalTrueRector;
+use Rector\CodeQuality\Rector\ClassMethod\InlineArrayReturnAssignRector;
 use Rector\Config\RectorConfig;
 use Rector\Core\Configuration\Option;
 use Rector\DeadCode\Rector\Property\RemoveSetterOnlyPropertyAndMethodCallRector;
 use Rector\Php74\Rector\If_\IfToNullCoalescingAssignRector;
 use Rector\Php82\Rector\Class_\ReadOnlyClassRector;
 use Rector\PHPUnit\Set\PHPUnitSetList;
-use Rector\Set\ValueObject\LevelSetList;
 use Rector\Set\ValueObject\SetList;
 use Ssch\TYPO3Rector\Set\Typo3LevelSetList;
 use Ssch\TYPO3Rector\TYPO313\v0\MigrateTypoScriptFrontendControllerReadOnlyPropertiesRector;
@@ -23,14 +22,11 @@ return RectorConfig::configure()
     ])
     ->withSkip([
         __DIR__ . '/Tests/Functional/Fixtures/Extensions/typo3_console/ext_emconf.php',
-        Rector\DeadCode\Rector\Assign\RemoveUnusedVariableAssignRector::class => [
-            __DIR__ . '/Classes/Domain/Repository/QueueRepository.php'
-        ],
+        __DIR__ . '/Tests/UnitTestsBootstrap.php',
+        __DIR__ . '/Tests/FunctionalTestsBootstrap.php',
         ReadOnlyClassRector::class => null,
-        MigrateTypoScriptFrontendControllerReadOnlyPropertiesRector::class => null,
-        IfToNullCoalescingAssignRector::class => null,
-        SimplifyBoolIdenticalTrueRector::class => [
-            __DIR__ . '/Tests/UnitTestsBootstrap.php'
+        InlineArrayReturnAssignRector::class => [
+            __DIR__ . '/Classes/Service/ConfigurationService.php',
         ]
     ])
     ->withAutoloadPaths([
@@ -39,6 +35,8 @@ return RectorConfig::configure()
     ->withImportNames(false)
     ->withSets([
         SetList::DEAD_CODE,
+        SetList::CODE_QUALITY,
+        SetList::TYPE_DECLARATION,
         PHPUnitSetList::COMPOSER_BASED,
         Typo3LevelSetList::UP_TO_TYPO3_14
     ])->withPhpSets(php82: true);

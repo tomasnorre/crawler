@@ -163,7 +163,7 @@ class Reason
      *
      * @return array<string, mixed>
      */
-    public function getRow()
+    public function getRow(): array
     {
         return $this->row;
     }

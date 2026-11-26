@@ -56,7 +56,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
     /**
      * @var array holds the selection of configuration from the configuration selector box
      */
-    private $incomingConfigurationSelection = [];
+    private array $incomingConfigurationSelection = [];
 
     public function __construct(
         private readonly PageTreeUrlCollector $pageTreeUrlCollector,
@@ -193,7 +193,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
             (int) $crawlingDepth,
         );
         $selectors['configurations'] = $this->selectorBox(
-            empty($availableConfigurations) ? [] : array_combine($availableConfigurations, $availableConfigurations),
+            $availableConfigurations === [] ? [] : array_combine($availableConfigurations, $availableConfigurations),
             'configurationSelection',
             $this->incomingConfigurationSelection,
             true
@@ -224,7 +224,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
      *
      * @return string HTML select element
      */
-    private function selectorBox($optArray, $name, string|array|null $value, bool $multiple): string
+    private function selectorBox(array $optArray, string $name, string|array|null $value, bool $multiple): string
     {
         if (!is_string($value) && !is_array($value)) {
             $value = '';
@@ -272,7 +272,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
 
     private function isNoConfigurationSelected(): bool
     {
-        return empty($this->incomingConfigurationSelection)
+        return $this->incomingConfigurationSelection === []
             || (count($this->incomingConfigurationSelection) === 1 && empty($this->incomingConfigurationSelection[0]));
     }
 }

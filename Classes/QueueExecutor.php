@@ -54,14 +54,14 @@ class QueueExecutor implements SingletonInterface
      *         - array with single key 'content' that contains the json_encoded crawl results.
      *           See CrawlStrategyInterface::fetchUrlContents() for its structure.
      */
-    public function executeQueueItem(array $queueItem)
+    public function executeQueueItem(array $queueItem): string|array|false
     {
         $parameters = '';
         if (isset($queueItem['parameters'])) {
             $parameters = json_decode($queueItem['parameters'], true);
         }
 
-        if (!is_array($parameters) || empty($parameters)) {
+        if (!is_array($parameters) || $parameters === []) {
             return 'ERROR';
         }
         if (isset($parameters[QueueEntryWriter::CALLBACK_PARAMETER])) {

@@ -23,6 +23,7 @@ use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy;
 use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
 use AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategy;
+use AOE\Crawler\CrawlStrategy\Interface\CrawlStrategyInterface;
 use AOE\Crawler\Event\AfterUrlCrawledEvent;
 use AOE\Crawler\Queue\QueueEntryWriter;
 use AOE\Crawler\QueueExecutor;
@@ -120,7 +121,7 @@ class QueueExecutorTest extends UnitTestCase
     public function executeQueueItemReturnsFalseIfUrlCouldNotBeFetched(): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'] = 'encryption-key';
-        $crawlStrategy = $this->createStub(GuzzleExecutionStrategy::class);
+        $crawlStrategy = $this->createStub(CrawlStrategyInterface::class);
         $crawlStrategy->method('fetchUrlContents')->willReturn(false);
         $eventDispatcher = $this->createMock(EventDispatcher::class);
         $eventDispatcher->expects(self::never())->method('dispatch');
@@ -161,7 +162,7 @@ class QueueExecutorTest extends UnitTestCase
     }
 
     private function createQueueExecutor(
-        GuzzleExecutionStrategy $crawlStrategy,
+        CrawlStrategyInterface $crawlStrategy,
         EventDispatcher $eventDispatcher
     ): QueueExecutor {
         return new QueueExecutor(
@@ -174,7 +175,7 @@ class QueueExecutorTest extends UnitTestCase
     /**
      * The factory creates the Guzzle strategy, as direct requests are not enabled
      */
-    private function createCrawlStrategyFactory(GuzzleExecutionStrategy $crawlStrategy): CrawlStrategyFactory
+    private function createCrawlStrategyFactory(CrawlStrategyInterface $crawlStrategy): CrawlStrategyFactory
     {
         $extensionConfigurationProvider = $this->createStub(ExtensionConfigurationProvider::class);
         $extensionConfigurationProvider->method('getExtensionConfiguration')->willReturn([]);

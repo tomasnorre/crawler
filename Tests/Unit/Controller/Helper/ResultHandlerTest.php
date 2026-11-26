@@ -33,7 +33,7 @@ class ResultHandlerTest extends UnitTestCase
 
     #[DataProvider('getResStatusDataProvider')]
     #[Test]
-    public function getResStatus($requestContent, string $expected): void
+    public function getResStatus(array $requestContent, string $expected): void
     {
         self::assertSame($expected, ResultHandler::getResStatus($requestContent));
     }

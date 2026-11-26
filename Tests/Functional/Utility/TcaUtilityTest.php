@@ -31,7 +31,7 @@ class TcaUtilityTest extends FunctionalTestCase
 
     #[\PHPUnit\Framework\Attributes\DataProvider('getProcessingInstructionsDataProvider')]
     #[\PHPUnit\Framework\Attributes\Test]
-    public function getProcessingInstructions($procInstructions, array $configuration, $expected): void
+    public function getProcessingInstructions(array $procInstructions, array $configuration, array $expected): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'] = $procInstructions;
 
