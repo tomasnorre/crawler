@@ -179,17 +179,17 @@ class ConfigurationService
         string $baseUrl,
         string $origin
     ): array {
-        return [
-            'subCfg' => $subCfg,
-            'paramParsed' => GeneralUtility::explodeUrl2Array($parameters),
-            'paramExpanded' => $this->parameterExpander->expand($configuration['paramParsed'], $pageId),
-            'origin' => $origin,
-            'URLs' => $this->urlService->compileUrls(
-                $configuration['paramExpanded'],
-                [$baseUrl],
-                $this->getMaxUrlsToCompile()
-            ),
-        ];
+        $configuration = [];
+        $configuration['subCfg'] = $subCfg;
+        $configuration['paramParsed'] = GeneralUtility::explodeUrl2Array($parameters);
+        $configuration['paramExpanded'] = $this->parameterExpander->expand($configuration['paramParsed'], $pageId);
+        $configuration['origin'] = $origin;
+        $configuration['URLs'] = $this->urlService->compileUrls(
+            $configuration['paramExpanded'],
+            [$baseUrl],
+            $this->getMaxUrlsToCompile()
+        );
+        return $configuration;
     }
 
     private function getMaxUrlsToCompile(): int

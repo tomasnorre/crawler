@@ -38,7 +38,7 @@ class GuzzleExecutionStrategyTest extends UnitTestCase
     /**
      * @var GuzzleExecutionStrategy
      */
-    protected $guzzleExecutionStrategy;
+    protected \PHPUnit\Framework\MockObject\MockObject $guzzleExecutionStrategy;
 
     protected function setUp(): void
     {

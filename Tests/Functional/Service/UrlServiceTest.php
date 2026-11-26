@@ -94,10 +94,10 @@ class UrlServiceTest extends FunctionalTestCase
     #[DataProvider('getUrlFromPageAndQueryParametersReturnExpectedUrlDataProvider')]
     #[Test]
     public function getUrlFromPageAndQueryParametersReturnExpectedUrl(
-        $pageId,
-        $queryString,
-        $alternativeBaseUrl,
-        $httpsOrHttp,
+        int $pageId,
+        string $queryString,
+        string $alternativeBaseUrl,
+        int $httpsOrHttp,
         Uri $expected
     ): void {
         $actual = $this->subject->getUrlFromPageAndQueryParameters(

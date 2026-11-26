@@ -56,7 +56,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
     /**
      * @var array holds the selection of configuration from the configuration selector box
      */
-    private $incomingConfigurationSelection = [];
+    private array $incomingConfigurationSelection = [];
 
     public function __construct(
         private readonly PageTreeUrlCollector $pageTreeUrlCollector,
@@ -224,7 +224,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
      *
      * @return string HTML select element
      */
-    private function selectorBox($optArray, $name, string|array|null $value, bool $multiple): string
+    private function selectorBox(array $optArray, string $name, string|array|null $value, bool $multiple): string
     {
         if (!is_string($value) && !is_array($value)) {
             $value = '';

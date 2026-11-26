@@ -86,6 +86,9 @@ class BackendModuleLogService
         return [$resultArray, $csvExport];
     }
 
+    /**
+     * @return array{titleRowSpan: int, colSpan: int}
+     */
     public function configureContentArray(string $showResultLog, string $showFeVars): array
     {
         return [

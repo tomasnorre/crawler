@@ -31,10 +31,7 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 class MessageUtilityTest extends UnitTestCase
 {
     protected bool $resetSingletonInstances = true;
-    /**
-     * @var BackendUserAuthentication|null
-     */
-    private $oldBackendUser;
+    private ?\TYPO3\CMS\Core\Authentication\BackendUserAuthentication $oldBackendUser;
 
     private \TYPO3\CMS\Core\Messaging\FlashMessageQueue $flashMessageQueue;
 
@@ -54,7 +51,7 @@ class MessageUtilityTest extends UnitTestCase
 
     protected function tearDown(): void
     {
-        if ($this->oldBackendUser) {
+        if ($this->oldBackendUser instanceof \TYPO3\CMS\Core\Authentication\BackendUserAuthentication) {
             $GLOBALS['BE_USER'] = $this->oldBackendUser;
         } else {
             unset($GLOBALS['BE_USER']);

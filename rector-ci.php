@@ -24,6 +24,7 @@ return RectorConfig::configure()
     ->withSkip([
         __DIR__ . '/Tests/Functional/Fixtures/Extensions/typo3_console/ext_emconf.php',
         __DIR__ . '/Tests/UnitTestsBootstrap.php',
+        __DIR__ . '/Tests/FunctionalTestsBootstrap.php',
         Rector\DeadCode\Rector\Assign\RemoveUnusedVariableAssignRector::class => [
             __DIR__ . '/Classes/Domain/Repository/QueueRepository.php'
         ],
@@ -38,6 +39,7 @@ return RectorConfig::configure()
     ->withSets([
         SetList::DEAD_CODE,
         SetList::CODE_QUALITY,
+        SetList::TYPE_DECLARATION,
         PHPUnitSetList::COMPOSER_BASED,
         Typo3LevelSetList::UP_TO_TYPO3_14
     ])->withPhpSets(php82: true);

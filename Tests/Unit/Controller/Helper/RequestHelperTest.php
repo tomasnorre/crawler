@@ -31,7 +31,7 @@ class RequestHelperTest extends UnitTestCase
     protected bool $resetSingletonInstances = true;
 
     #[Test]
-    public function getIntFromRequestFromParsedBody()
+    public function getIntFromRequestFromParsedBody(): void
     {
         $value = random_int(1, 100);
         $serverRequest = new ServerRequest();
@@ -42,7 +42,7 @@ class RequestHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function getIntFromRequestFromQueryParams()
+    public function getIntFromRequestFromQueryParams(): void
     {
         $value = random_int(1, 100);
         $serverRequest = new ServerRequest();
@@ -53,7 +53,7 @@ class RequestHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function getIntFromRequestFromQueryParamsIntAsStringValue()
+    public function getIntFromRequestFromQueryParamsIntAsStringValue(): void
     {
         $value = '1000';
         $serverRequest = new ServerRequest();
@@ -64,7 +64,7 @@ class RequestHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function getIntFromRequestWithBothParsedBodyAndQueryParams()
+    public function getIntFromRequestWithBothParsedBodyAndQueryParams(): void
     {
         $serverRequest = new ServerRequest();
         $serverRequest = $serverRequest->withParsedBody([
@@ -77,14 +77,14 @@ class RequestHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function getIntFromRequestReturnDefault()
+    public function getIntFromRequestReturnDefault(): void
     {
         $serverRequest = new ServerRequest();
         $this->assertSame(0, RequestHelper::getIntFromRequest($serverRequest, 'value'));
     }
 
     #[Test]
-    public function getBoolFromRequestFromParsedBody()
+    public function getBoolFromRequestFromParsedBody(): void
     {
         $value = true;
         $serverRequest = new ServerRequest();
@@ -95,7 +95,7 @@ class RequestHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function getBoolFromRequestFromQueryParams()
+    public function getBoolFromRequestFromQueryParams(): void
     {
         $value = true;
         $serverRequest = new ServerRequest();
@@ -106,7 +106,7 @@ class RequestHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function getBoolFromRequestWithBothParsedBodyAndQueryParams()
+    public function getBoolFromRequestWithBothParsedBodyAndQueryParams(): void
     {
         $serverRequest = new ServerRequest();
         $serverRequest = $serverRequest->withParsedBody([
@@ -119,7 +119,7 @@ class RequestHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function getBoolFromRequestFromQueryParamsExpectFalse()
+    public function getBoolFromRequestFromQueryParamsExpectFalse(): void
     {
         $value = false;
         $serverRequest = new ServerRequest();
@@ -130,14 +130,14 @@ class RequestHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function getBoolFromRequestReturnDefault()
+    public function getBoolFromRequestReturnDefault(): void
     {
         $serverRequest = new ServerRequest();
         $this->assertFalse(RequestHelper::getBoolFromRequest($serverRequest, 'value'));
     }
 
     #[Test]
-    public function getBoolFromRequestFromQueryParamsReturnTrueWithCrawl()
+    public function getBoolFromRequestFromQueryParamsReturnTrueWithCrawl(): void
     {
         $value = '_crawl';
         $serverRequest = new ServerRequest();
@@ -147,7 +147,7 @@ class RequestHelperTest extends UnitTestCase
         $this->assertSame(true, RequestHelper::getBoolFromRequest($serverRequest, 'value'));
     }
     #[Test]
-    public function getBoolFromRequestFromQueryParamsReturnTrueWithDownload()
+    public function getBoolFromRequestFromQueryParamsReturnTrueWithDownload(): void
     {
         $value = '_download';
         $serverRequest = new ServerRequest();
@@ -158,7 +158,7 @@ class RequestHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function getStringFromRequestFromParsedBody()
+    public function getStringFromRequestFromParsedBody(): void
     {
         $value = substr(str_shuffle(md5(microtime())), 0, 10);
         $serverRequest = new ServerRequest();
@@ -169,7 +169,7 @@ class RequestHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function getStringFromRequestFromQueryParams()
+    public function getStringFromRequestFromQueryParams(): void
     {
         $value = substr(str_shuffle(md5(microtime())), 0, 10);
         $serverRequest = new ServerRequest();
@@ -180,7 +180,7 @@ class RequestHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function getStringFromRequestWithBothParsedBodyAndQueryParams()
+    public function getStringFromRequestWithBothParsedBodyAndQueryParams(): void
     {
         $serverRequest = new ServerRequest();
         $serverRequest = $serverRequest->withParsedBody([
@@ -193,7 +193,7 @@ class RequestHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function getStringFromRequestStringAsIntValue()
+    public function getStringFromRequestStringAsIntValue(): void
     {
         $serverRequest = new ServerRequest();
         $serverRequest = $serverRequest->withQueryParams([
@@ -203,14 +203,14 @@ class RequestHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function getStringFromRequestReturnDefault()
+    public function getStringFromRequestReturnDefault(): void
     {
         $serverRequest = new ServerRequest();
         $this->assertEmpty(RequestHelper::getStringFromRequest($serverRequest, 'value'));
     }
 
     #[Test]
-    public function getArrayFromRequestFromParsedBody()
+    public function getArrayFromRequestFromParsedBody(): void
     {
         $value = [
             'int' => 123,
@@ -225,7 +225,7 @@ class RequestHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function getArrayFromRequestFromQueryParams()
+    public function getArrayFromRequestFromQueryParams(): void
     {
         $value = [
             'int' => 123,
@@ -240,7 +240,7 @@ class RequestHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function getArrayFromRequestWithBothParsedBodyAndQueryParams()
+    public function getArrayFromRequestWithBothParsedBodyAndQueryParams(): void
     {
         $parsedBody = [
             'int' => 123,
@@ -263,7 +263,7 @@ class RequestHelperTest extends UnitTestCase
     }
 
     #[Test]
-    public function getArrayFromRequestReturnDefault()
+    public function getArrayFromRequestReturnDefault(): void
     {
         $serverRequest = new ServerRequest();
         $this->assertEmpty(RequestHelper::getArrayFromRequest($serverRequest, 'value'));

@@ -32,10 +32,8 @@ class TcaUtility
     /**
      * Get crawler processing instructions.
      * This function is called as a itemsProcFunc in tx_crawler_configuration.processing_instruction_filter
-     *
-     * @return array
      */
-    public function getProcessingInstructions(array $configuration)
+    public function getProcessingInstructions(array $configuration): array
     {
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'] ?? null)) {
             foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['procInstructions'] as $extensionKey => $extensionConfiguration) {
