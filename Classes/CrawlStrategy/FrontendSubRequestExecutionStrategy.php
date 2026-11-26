@@ -105,7 +105,7 @@ final class FrontendSubRequestExecutionStrategy implements LoggerAwareInterface,
         } catch (\Throwable $exception) {
             return $this->buildErrorResult($url, $crawlerId, $exception->getMessage());
         }
-        if ($response === null) {
+        if (!$response instanceof \Psr\Http\Message\ResponseInterface) {
             return $this->buildErrorResult(
                 $url,
                 $crawlerId,
@@ -125,7 +125,7 @@ final class FrontendSubRequestExecutionStrategy implements LoggerAwareInterface,
         do {
             $response = $this->handleIsolated($this->buildRequest($url, $crawlerId));
             $location = $this->getRedirectLocation($response, $url);
-            if ($location === null) {
+            if (!$location instanceof \Psr\Http\Message\UriInterface) {
                 return $response;
             }
             $url = $location;

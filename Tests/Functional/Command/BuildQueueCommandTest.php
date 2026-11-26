@@ -109,7 +109,7 @@ class BuildQueueCommandTest extends FunctionalTestCase
     public function buildQueueCommandTest(array $parameters, string $expectedOutput, int $expectedCount): void
     {
         $arguments = [];
-        if (!empty($parameters)) {
+        if ($parameters !== []) {
             $arguments = $parameters;
         }
 

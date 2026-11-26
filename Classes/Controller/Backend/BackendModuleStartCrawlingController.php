@@ -193,7 +193,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
             (int) $crawlingDepth,
         );
         $selectors['configurations'] = $this->selectorBox(
-            empty($availableConfigurations) ? [] : array_combine($availableConfigurations, $availableConfigurations),
+            $availableConfigurations === [] ? [] : array_combine($availableConfigurations, $availableConfigurations),
             'configurationSelection',
             $this->incomingConfigurationSelection,
             true
@@ -272,7 +272,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
 
     private function isNoConfigurationSelected(): bool
     {
-        return empty($this->incomingConfigurationSelection)
+        return $this->incomingConfigurationSelection === []
             || (count($this->incomingConfigurationSelection) === 1 && empty($this->incomingConfigurationSelection[0]));
     }
 }

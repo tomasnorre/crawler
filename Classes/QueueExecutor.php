@@ -61,7 +61,7 @@ class QueueExecutor implements SingletonInterface
             $parameters = json_decode($queueItem['parameters'], true);
         }
 
-        if (!is_array($parameters) || empty($parameters)) {
+        if (!is_array($parameters) || $parameters === []) {
             return 'ERROR';
         }
         if (isset($parameters[QueueEntryWriter::CALLBACK_PARAMETER])) {

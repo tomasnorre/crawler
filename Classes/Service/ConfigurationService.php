@@ -53,7 +53,7 @@ class ConfigurationService
 
     public static function removeDisallowedConfigurations(array $allowedConfigurations, array $configurations): array
     {
-        if (empty($allowedConfigurations)) {
+        if ($allowedConfigurations === []) {
             return $configurations;
         }
         // 	remove configuration that does not match the current selection
@@ -179,17 +179,17 @@ class ConfigurationService
         string $baseUrl,
         string $origin
     ): array {
-        $configuration = [];
-        $configuration['subCfg'] = $subCfg;
-        $configuration['paramParsed'] = GeneralUtility::explodeUrl2Array($parameters);
-        $configuration['paramExpanded'] = $this->parameterExpander->expand($configuration['paramParsed'], $pageId);
-        $configuration['origin'] = $origin;
-        $configuration['URLs'] = $this->urlService->compileUrls(
-            $configuration['paramExpanded'],
-            [$baseUrl],
-            $this->getMaxUrlsToCompile()
-        );
-        return $configuration;
+        return [
+            'subCfg' => $subCfg,
+            'paramParsed' => GeneralUtility::explodeUrl2Array($parameters),
+            'paramExpanded' => $this->parameterExpander->expand($configuration['paramParsed'], $pageId),
+            'origin' => $origin,
+            'URLs' => $this->urlService->compileUrls(
+                $configuration['paramExpanded'],
+                [$baseUrl],
+                $this->getMaxUrlsToCompile()
+            ),
+        ];
     }
 
     private function getMaxUrlsToCompile(): int
