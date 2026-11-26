@@ -23,15 +23,13 @@ return RectorConfig::configure()
     ])
     ->withSkip([
         __DIR__ . '/Tests/Functional/Fixtures/Extensions/typo3_console/ext_emconf.php',
+        __DIR__ . '/Tests/UnitTestsBootstrap.php',
         Rector\DeadCode\Rector\Assign\RemoveUnusedVariableAssignRector::class => [
             __DIR__ . '/Classes/Domain/Repository/QueueRepository.php'
         ],
         ReadOnlyClassRector::class => null,
         MigrateTypoScriptFrontendControllerReadOnlyPropertiesRector::class => null,
         IfToNullCoalescingAssignRector::class => null,
-        SimplifyBoolIdenticalTrueRector::class => [
-            __DIR__ . '/Tests/UnitTestsBootstrap.php'
-        ]
     ])
     ->withAutoloadPaths([
         __DIR__ . '/Classes'
