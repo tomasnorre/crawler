@@ -31,7 +31,7 @@ test.describe('Exclude from crawling', () => {
         await helpers.loginBackend(page);
         await page.goto(`/typo3/record/edit?edit[pages][${pageId}]=edit`);
         const form = await editForm(page);
-        await form.getByRole('tab', {name: 'Behaviour'}).click();
+        await form.getByRole('tab', {name: 'Behavior'}).click();
 
         await form.getByLabel('Exclude from crawling', {exact: true}).check();
         await form.getByLabel('Exclude subpages from crawling too', {exact: true}).check();

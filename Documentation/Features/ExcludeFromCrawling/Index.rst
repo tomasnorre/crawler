@@ -11,7 +11,7 @@ Exclude from crawling
 Editors can exclude a page from crawling in the page properties, like
 :guilabel:`Exclude from search`. No crawler configuration has to be changed.
 
-Open the page properties, go to the :guilabel:`Behaviour` tab and use the
+Open the page properties, go to the :guilabel:`Behavior` tab and use the
 :guilabel:`Crawler` section:
 
 :guilabel:`Exclude from crawling`
