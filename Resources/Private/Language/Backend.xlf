@@ -26,7 +26,7 @@
                 <source>The crawler skips this page in every crawler configuration.</source>
             </trans-unit>
             <trans-unit id="pages.tx_crawler_exclude_subpages" resname="pages.tx_crawler_exclude_subpages">
-                <source>Exclude subpages from crawling too</source>
+                <source>Exclude subpages from crawling</source>
             </trans-unit>
             <trans-unit id="pages.tx_crawler_exclude_subpages.description" resname="pages.tx_crawler_exclude_subpages.description">
                 <source>Only together with "Exclude from crawling": the crawler also skips all subpages of this page, on every level.</source>

@@ -34,7 +34,7 @@ test.describe('Exclude from crawling', () => {
         await form.getByRole('tab', {name: 'Behavior'}).click();
 
         await form.getByLabel('Exclude from crawling', {exact: true}).check();
-        await form.getByLabel('Exclude subpages from crawling too', {exact: true}).check();
+        await form.getByLabel('Exclude subpages from crawling', {exact: true}).check();
         await form.getByRole('button', {name: 'Save'}).click();
         await expect(page.locator('#nprogress')).toHaveCount(0);
 

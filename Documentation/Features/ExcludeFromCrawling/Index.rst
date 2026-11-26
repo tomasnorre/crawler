@@ -17,7 +17,7 @@ Open the page properties, go to the :guilabel:`Behavior` tab and use the
 :guilabel:`Exclude from crawling`
     The crawler skips this page. Its subpages are still crawled.
 
-:guilabel:`Exclude subpages from crawling too`
+:guilabel:`Exclude subpages from crawling`
     Only together with :guilabel:`Exclude from crawling`: the crawler also
     skips all subpages of this page, on every level. Enabled on a page that is
     not excluded itself, the option does nothing.
@@ -32,14 +32,14 @@ Example
 ..  code-block:: none
 
     Root
-    ├── Page1             "Exclude from crawling"                          → skipped
-    │   ├── subpage1                                                       → crawled
-    │   ├── subpage2      "Exclude from crawling" + "Exclude subpages too" → skipped
-    │   │   ├── subsubpage1                                                → skipped
-    │   │   └── subsubpage2                                                → skipped
-    │   └── subpage3                                                       → crawled
-    ├── Page2                                                              → crawled
-    └── Page3                                                              → crawled
+    ├── Page1             "Exclude from crawling"                                    → skipped
+    │   ├── subpage1                                                                 → crawled
+    │   ├── subpage2      "Exclude from crawling" + "Exclude subpages from crawling" → skipped
+    │   │   ├── subsubpage1                                                          → skipped
+    │   │   └── subsubpage2                                                          → skipped
+    │   └── subpage3                                                                 → crawled
+    ├── Page2                                                                        → crawled
+    └── Page3                                                                        → crawled
 
 How it works
 ============
@@ -52,7 +52,7 @@ skips the page if
 
 *   the page itself has :guilabel:`Exclude from crawling` enabled, or
 *   a parent page, on any level, has both :guilabel:`Exclude from crawling`
-    and :guilabel:`Exclude subpages from crawling too` enabled.
+    and :guilabel:`Exclude subpages from crawling` enabled.
 
 This applies to everything that adds pages to the queue: the
 :guilabel:`Start Crawling` backend module, the `crawler:buildQueue` command and

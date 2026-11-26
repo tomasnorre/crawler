@@ -7,7 +7,7 @@
 * `AOE\Crawler\Queue\Interface\QueueCallbackInterface` for callbacks in the queue, registered by autoconfiguration
 * `AOE\Crawler\Queue\QueueEntryWriter::addCallback()` adds a callback to the queue, optionally with a set id
 * Support for PHP 8.6
-* Page properties "Exclude from crawling" and "Exclude subpages from crawling too" skip a page, or a page and its subpages, in every crawler configuration [#849](https://github.com/tomasnorre/crawler/issues/849)
+* Page properties "Exclude from crawling" and "Exclude subpages from crawling" skip a page, or a page and its subpages, in every crawler configuration [#849](https://github.com/tomasnorre/crawler/issues/849)
 * `AOE\Crawler\Service\PageRootlineProvider` reads the rootline of a page with the crawler exclusion fields
 
 ### Changed
