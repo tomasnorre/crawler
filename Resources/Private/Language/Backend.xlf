@@ -15,6 +15,23 @@
                 <source>Crawler module</source>
             </trans-unit>
 
+            <!-- Page properties -->
+            <trans-unit id="pages.palettes.crawler" resname="pages.palettes.crawler">
+                <source>Crawler</source>
+            </trans-unit>
+            <trans-unit id="pages.tx_crawler_exclude" resname="pages.tx_crawler_exclude">
+                <source>Exclude from crawling</source>
+            </trans-unit>
+            <trans-unit id="pages.tx_crawler_exclude.description" resname="pages.tx_crawler_exclude.description">
+                <source>The crawler skips this page in every crawler configuration.</source>
+            </trans-unit>
+            <trans-unit id="pages.tx_crawler_exclude_subpages" resname="pages.tx_crawler_exclude_subpages">
+                <source>Exclude subpages from crawling too</source>
+            </trans-unit>
+            <trans-unit id="pages.tx_crawler_exclude_subpages.description" resname="pages.tx_crawler_exclude_subpages.description">
+                <source>Only together with "Exclude from crawling": the crawler also skips all subpages of this page, on every level.</source>
+            </trans-unit>
+
             <!-- Old Backend Module Labels -->
             <trans-unit id="moduleFunction.tx_crawler_modfunc1" resname="moduleFunction.tx_crawler_modfunc1">
                 <source>Site Crawler</source>

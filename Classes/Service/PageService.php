@@ -31,7 +31,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class PageService
 {
     public function __construct(
-        private readonly EventDispatcher $eventDispatcher
+        private readonly EventDispatcher $eventDispatcher,
+        private readonly PageRootlineProvider $pageRootlineProvider,
     ) {
     }
 
@@ -65,8 +66,37 @@ class PageService
             }
         }
 
+        $exclusionReason = $this->getExclusionReason((int) ($pageRow['uid'] ?? 0));
+        if ($exclusionReason !== false) {
+            return $exclusionReason;
+        }
+
         $event = $this->eventDispatcher->dispatch(new ModifySkipPageEvent($pageRow));
         return $event->isSkipped();
+    }
+
+    /**
+     * Checks the "Exclude from crawling" page properties of the page and its parent pages.
+     * A page is excluded if it is excluded itself, or if a parent page excludes its subpages too.
+     */
+    private function getExclusionReason(int $pageId): false|string
+    {
+        if ($pageId === 0) {
+            return false;
+        }
+
+        foreach ($this->pageRootlineProvider->getRootlineWithExclusionFields($pageId) as $page) {
+            if ($page['uid'] === $pageId) {
+                if ($page[PageRootlineProvider::FIELD_EXCLUDE]) {
+                    return 'Because page is excluded from crawling';
+                }
+                continue;
+            }
+            if ($page[PageRootlineProvider::FIELD_EXCLUDE] && $page[PageRootlineProvider::FIELD_EXCLUDE_SUBPAGES]) {
+                return sprintf('Because parent page "%d" is excluded from crawling with its subpages', $page['uid']);
+            }
+        }
+        return false;
     }
 
     private function getDisallowedDokTypes(): array

@@ -7,6 +7,8 @@
 * `AOE\Crawler\Queue\Interface\QueueCallbackInterface` for callbacks in the queue, registered by autoconfiguration
 * `AOE\Crawler\Queue\QueueEntryWriter::addCallback()` adds a callback to the queue, optionally with a set id
 * Support for PHP 8.6
+* Page properties "Exclude from crawling" and "Exclude subpages from crawling too" skip a page, or a page and its subpages, in every crawler configuration [#849](https://github.com/tomasnorre/crawler/issues/849)
+* `AOE\Crawler\Service\PageRootlineProvider` reads the rootline of a page with the crawler exclusion fields
 
 ### Changed
 * Priority crawling uses the transports `crawler_high`, `crawler` and `crawler_low` (based on `sitemap_priority`) instead of sorting the queue
@@ -37,6 +39,7 @@
 * `CrawlerInitialization` requires the `Context` in its constructor
 * `FrontendUserAuthenticator` requires the `Context` in its constructor
 * `PageService` requires the `EventDispatcher` in its constructor
+* `PageService` requires the `PageRootlineProvider` in its constructor
 * The extension setting `frontendBasePath` no longer falls back to `config.absRefPrefix`, it defaults to `/`
 
 ### Fixed

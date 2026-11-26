@@ -12,6 +12,7 @@ Features
     :glob:
 
     AutomaticAddPagesToQueue/Index
+    ExcludeFromCrawling/Index
     PollableProcessingInstructions/Index
     MultiprocessSupport/Index
     Hooks/Index

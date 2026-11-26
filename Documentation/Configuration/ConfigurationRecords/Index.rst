@@ -53,7 +53,8 @@ Exclude pages
     Comma separated list of page ids which should not be crawled.
     You can do recursive exclusion by adding `uid`+`depth` e.g. 6+3,
     this will ensure that all pages including pageUid 6 and 3 levels down
-    will not be crawled.
+    will not be crawled. To exclude a page from all configurations, see
+    :ref:`exclude-from-crawling`.
 
 Configuration
     Parameter configuration. The values of GET variables are according to a
