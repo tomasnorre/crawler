@@ -71,6 +71,69 @@ final class BackendModuleStartCrawlingControllerTest extends UnitTestCase
         self::assertSame("https://example.com/\r\nhttps://example.com/page", (string) $response->getBody());
     }
 
+    #[DataProvider('selectorBoxDataProvider')]
+    #[Test]
+    public function selectorBoxRendersTheOptionsAndMarksTheSelectedOnes(
+        string|array|null $value,
+        bool $multiple,
+        string $expected
+    ): void {
+        $subject = $this->createSubjectWithClock(new FrozenClock('2026-11-16 15:30:42'));
+
+        $html = (new \ReflectionMethod($subject, 'selectorBox'))->invoke(
+            $subject,
+            [
+                0 => 'This page',
+                'default' => 'Default & "more"',
+            ],
+            'na"me',
+            $value,
+            $multiple
+        );
+
+        self::assertSame($expected, (string) preg_replace('/\s*\n\s*/', '', $html));
+    }
+
+    public static function selectorBoxDataProvider(): iterable
+    {
+        yield 'single, nothing selected' => [
+            null,
+            false,
+            '<select class="form-select" name="na&quot;me"><option value="0" >This page</option>'
+            . '<option value="default" >Default &amp; &quot;more&quot;</option></select>',
+        ];
+        yield 'single, string key selected' => [
+            'default',
+            false,
+            '<select class="form-select" name="na&quot;me"><option value="0" >This page</option>'
+            . '<option value="default"  selected="selected">Default &amp; &quot;more&quot;</option></select>',
+        ];
+        yield 'single, integer key selected by string' => [
+            '0',
+            false,
+            '<select class="form-select" name="na&quot;me"><option value="0"  selected="selected">This page</option>'
+            . '<option value="default" >Default &amp; &quot;more&quot;</option></select>',
+        ];
+        yield 'single, array value selects nothing' => [
+            ['default'],
+            false,
+            '<select class="form-select" name="na&quot;me"><option value="0" >This page</option>'
+            . '<option value="default" >Default &amp; &quot;more&quot;</option></select>',
+        ];
+        yield 'multiple, keys selected strictly' => [
+            ['default', '0'],
+            true,
+            '<select class="form-select" name="na&quot;me[]" multiple><option value="0" >This page</option>'
+            . '<option value="default"  selected="selected">Default &amp; &quot;more&quot;</option></select>',
+        ];
+        yield 'multiple, string value is used as array' => [
+            'default',
+            true,
+            '<select class="form-select" name="na&quot;me[]" multiple><option value="0" >This page</option>'
+            . '<option value="default"  selected="selected">Default &amp; &quot;more&quot;</option></select>',
+        ];
+    }
+
     private function createSubjectWithClock(ClockInterface $clock): BackendModuleStartCrawlingController
     {
         $subject = (new \ReflectionClass(BackendModuleStartCrawlingController::class))->newInstanceWithoutConstructor();

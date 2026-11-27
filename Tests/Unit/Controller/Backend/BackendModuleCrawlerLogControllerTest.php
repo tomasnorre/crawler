@@ -20,6 +20,9 @@ namespace AOE\Crawler\Tests\Unit\Controller\Backend;
  */
 
 use AOE\Crawler\Controller\Backend\BackendModuleCrawlerLogController;
+use AOE\Crawler\Queue\CrawlPriority;
+use AOE\Crawler\Queue\CrawlUrlMessageDispatcher;
+use AOE\Crawler\Queue\Message\CrawlUrlMessage;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -148,5 +151,87 @@ class BackendModuleCrawlerLogControllerTest extends UnitTestCase
                 'queueId' => '0',
             ],
         ];
+    }
+
+    /**
+     * Flushing the queue keeps the log display, unless all entries are flushed. The "Flush" button wins.
+     */
+    #[DataProvider('flushDataProvider')]
+    #[Test]
+    public function isFlushRequestedChecksTheFlushButtons(
+        array $parsedBody,
+        bool $expectedFlush,
+        string $expectedLogDisplay
+    ): void {
+        $subject = (new \ReflectionClass(BackendModuleCrawlerLogController::class))->newInstanceWithoutConstructor();
+        $logDisplay = new \ReflectionProperty($subject, 'logDisplay');
+        $logDisplay->setValue($subject, 'pending');
+
+        self::assertSame(
+            $expectedFlush,
+            (new \ReflectionMethod($subject, 'isFlushRequested'))->invoke($subject, $parsedBody)
+        );
+        self::assertSame($expectedLogDisplay, $logDisplay->getValue($subject));
+    }
+
+    public static function flushDataProvider(): iterable
+    {
+        yield 'No flush' => [[], false, 'pending'];
+        yield 'Flush button not pressed' => [[
+            '_flush' => '0',
+            '_flush_all' => '',
+        ], false, 'pending'];
+        yield 'Flush' => [[
+            '_flush' => '1',
+        ], true, 'pending'];
+        yield 'Flush all' => [[
+            '_flush_all' => '1',
+        ], true, 'all'];
+        yield 'Flush and flush all' => [[
+            '_flush' => '1',
+            '_flush_all' => '1',
+        ], true, 'pending'];
+    }
+
+    #[Test]
+    public function dispatchRecrawlRequestDispatchesTheEntryWithHighPriority(): void
+    {
+        $dispatcher = $this->createMock(CrawlUrlMessageDispatcher::class);
+        $dispatcher->expects(self::once())
+            ->method('dispatch')
+            ->with(new CrawlUrlMessage(42, true), 0, 0, CrawlPriority::High);
+        $subject = $this->createSubjectWithDispatcher($dispatcher);
+
+        (new \ReflectionMethod($subject, 'dispatchRecrawlRequest'))->invoke(
+            $subject,
+            (new ServerRequest())->withQueryParams([
+                'qid_read' => 42,
+            ])
+        );
+    }
+
+    #[Test]
+    public function dispatchRecrawlRequestDoesNothingWithoutQueueId(): void
+    {
+        $dispatcher = $this->createMock(CrawlUrlMessageDispatcher::class);
+        $dispatcher->expects(self::never())->method('dispatch');
+        $subject = $this->createSubjectWithDispatcher($dispatcher);
+
+        (new \ReflectionMethod($subject, 'dispatchRecrawlRequest'))->invoke($subject, new ServerRequest());
+    }
+
+    private function createSubjectWithDispatcher(
+        CrawlUrlMessageDispatcher $dispatcher
+    ): BackendModuleCrawlerLogController {
+        $subject = (new \ReflectionClass(BackendModuleCrawlerLogController::class))->newInstanceWithoutConstructor();
+        \Closure::bind(
+            static function (BackendModuleCrawlerLogController $subject) use ($dispatcher): void {
+                $subject->crawlUrlMessageDispatcher = $dispatcher;
+            },
+            null,
+            BackendModuleCrawlerLogController::class
+        )($subject);
+
+        return $subject;
     }
 }

@@ -232,11 +232,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
 
         $options = [];
         foreach ($optArray as $key => $val) {
-            $selected = (
-                !$multiple && is_string($value) && !strcmp($value, (string) $key)
-            ) || (
-                $multiple && in_array($key, (array) $value, true)
-            );
+            $selected = $this->isOptionSelected($key, $value, $multiple);
             $options[] = '
                 <option value="' . $key . '" ' . ($selected ? ' selected="selected"' : '') . '>' . htmlspecialchars(
                 (string) $val,
@@ -248,6 +244,14 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
             $name . ($multiple ? '[]' : ''),
             ENT_QUOTES | ENT_HTML5
         ) . '"' . ($multiple ? ' multiple' : '') . '>' . implode('', $options) . '</select>';
+    }
+
+    private function isOptionSelected(int|string $key, string|array $value, bool $multiple): bool
+    {
+        if ($multiple) {
+            return in_array($key, (array) $value, true);
+        }
+        return is_string($value) && !strcmp($value, (string) $key);
     }
 
     private function getScheduledTime(string $time): int

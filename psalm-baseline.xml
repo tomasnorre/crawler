@@ -38,12 +38,6 @@
       <code><![CDATA[$confArray]]></code>
     </UnusedForeachValue>
   </file>
-  <file src="Classes/Service/UrlService.php">
-    <UnusedVariable>
-      <code><![CDATA[$siteLanguage]]></code>
-      <code><![CDATA[$siteLanguage]]></code>
-    </UnusedVariable>
-  </file>
   <file src="Classes/Utility/MessageUtility.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[addNoticeMessage]]></code>
