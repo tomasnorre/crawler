@@ -30,6 +30,9 @@ final class CrawlerCsvWriter implements CsvWriterInterface
     private const CARRIAGE_RETURN = 13;
     private const LINE_FEED = 10;
 
+    /**
+     * @param non-empty-array<array<array-key, mixed>> $records
+     */
     #[\Override]
     public function arrayToCsv(array $records): string
     {
@@ -44,6 +47,9 @@ final class CrawlerCsvWriter implements CsvWriterInterface
         return implode(chr(self::CARRIAGE_RETURN) . chr(self::LINE_FEED), $csvLines);
     }
 
+    /**
+     * @param non-empty-array<array<array-key, mixed>> $lines
+     */
     private function getRowHeaders(array $lines): string
     {
         $fieldNames = array_map(strval(...), array_keys(current($lines)));

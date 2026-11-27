@@ -33,7 +33,6 @@ parameters:
                 - Classes/Queue/*
                 - Classes/QueueExecutor.php
                 - Classes/Service/*
-                - Classes/Writer/*
 
     # composer require tomasvotruba/type-coverage --dev
     # Typed class constants need PHP 8.3, PHP 8.2 is still supported

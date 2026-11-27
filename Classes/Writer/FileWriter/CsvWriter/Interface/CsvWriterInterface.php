@@ -24,5 +24,8 @@ namespace AOE\Crawler\Writer\FileWriter\CsvWriter\Interface;
  */
 interface CsvWriterInterface
 {
+    /**
+     * @param non-empty-array<array<array-key, mixed>> $records
+     */
     public function arrayToCsv(array $records): string;
 }
