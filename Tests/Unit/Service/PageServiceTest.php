@@ -21,12 +21,12 @@ namespace AOE\Crawler\Tests\Unit\Service;
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\Event\ModifySkipPageEvent;
+use AOE\Crawler\Service\PageRootlineProvider;
 use AOE\Crawler\Service\PageService;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 #[CoversClass(ExtensionConfigurationProvider::class)]
@@ -34,6 +34,35 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 #[CoversClass(PageService::class)]
 class PageServiceTest extends UnitTestCase
 {
+    /**
+     * The page tree of the exclusion tests, as uid => [pid, tx_crawler_exclude, tx_crawler_exclude_subpages]
+     *
+     *  Root (1)
+     *  ├── Page1 (2)           excluded, subpages included
+     *  │   ├── subpage1 (3)    included
+     *  │   ├── subpage2 (4)    excluded with its subpages
+     *  │   │   ├── subsubpage1 (5)  excluded by subpage2
+     *  │   │   └── subsubpage2 (6)  excluded by subpage2
+     *  │   │       └── subsubsubpage (7)  excluded by subpage2
+     *  │   └── subpage3 (8)    included
+     *  ├── Page2 (9)           included, "exclude subpages" set without "exclude"
+     *  │   └── subpage4 (10)   included
+     *  └── Page3 (11)          included
+     */
+    private const PAGE_TREE = [
+        1 => [0, false, false],
+        2 => [1, true, false],
+        3 => [2, false, false],
+        4 => [2, true, true],
+        5 => [4, false, false],
+        6 => [4, false, false],
+        7 => [6, false, false],
+        8 => [2, false, false],
+        9 => [1, false, true],
+        10 => [9, false, false],
+        11 => [1, false, false],
+    ];
+
     protected PageService $subject;
 
     protected bool $resetSingletonInstances = true;
@@ -47,7 +76,7 @@ class PageServiceTest extends UnitTestCase
         $mockedEventDispatcher = $this->createStub(EventDispatcher::class);
         $mockedEventDispatcher->method('dispatch')->willReturn($modifySkipPageEvent);
 
-        $this->subject = GeneralUtility::makeInstance(PageService::class, $mockedEventDispatcher);
+        $this->subject = new PageService($mockedEventDispatcher, $this->createPageRootlineProviderStub());
     }
 
     #[DataProvider('checkIfPageShouldBeSkippedDataProvider')]
@@ -174,5 +203,124 @@ class PageServiceTest extends UnitTestCase
             'excludeDoktype' => [],
             'expected' => 'Because doktype "254" is not allowed',
         ];
+    }
+
+    #[DataProvider('checkIfPageShouldBeSkippedForExcludedPagesDataProvider')]
+    #[Test]
+    public function checkIfPageShouldBeSkippedForExcludedPages(int $pageId, false|string $expected): void
+    {
+        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [];
+
+        self::assertSame($expected, $this->subject->checkIfPageShouldBeSkipped([
+            'uid' => $pageId,
+            'doktype' => 1,
+            'hidden' => 0,
+        ]));
+    }
+
+    public static function checkIfPageShouldBeSkippedForExcludedPagesDataProvider(): iterable
+    {
+        yield 'Root page is included' => [1, false];
+        yield 'Page excluded without its subpages is skipped' => [2, 'Because page is excluded from crawling'];
+        yield 'Subpage of a page excluded without its subpages is included' => [3, false];
+        yield 'Page excluded with its subpages is skipped' => [4, 'Because page is excluded from crawling'];
+        yield 'Subpage of a page excluded with its subpages is skipped' => [
+            5,
+            'Because parent page "4" is excluded from crawling with its subpages',
+        ];
+        yield 'Second subpage of a page excluded with its subpages is skipped' => [
+            6,
+            'Because parent page "4" is excluded from crawling with its subpages',
+        ];
+        yield 'Page two levels below a page excluded with its subpages is skipped' => [
+            7,
+            'Because parent page "4" is excluded from crawling with its subpages',
+        ];
+        yield 'Sibling of a page excluded with its subpages is included' => [8, false];
+        yield 'Page with "exclude subpages" but not excluded itself is included' => [9, false];
+        yield 'Subpage of a page with "exclude subpages" but not excluded itself is included' => [10, false];
+        yield 'Page without exclusion is included' => [11, false];
+        yield 'Page without rootline is included' => [999, false];
+    }
+
+    /**
+     * Used by the CrawlUrlHandler, which checks the exclusion again before crawling a queued URL
+     */
+    #[Test]
+    public function getExclusionReasonReturnsTheReasonOfAParentPage(): void
+    {
+        self::assertSame(
+            'Because parent page "4" is excluded from crawling with its subpages',
+            $this->subject->getExclusionReason(6)
+        );
+        self::assertFalse($this->subject->getExclusionReason(3));
+    }
+
+    #[Test]
+    public function checkIfPageShouldBeSkippedReturnsExclusionBeforeDispatchingTheEvent(): void
+    {
+        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [];
+        $eventDispatcher = $this->createMock(EventDispatcher::class);
+        $eventDispatcher->expects(self::never())->method('dispatch');
+        $subject = new PageService($eventDispatcher, $this->createPageRootlineProviderStub());
+
+        self::assertSame(
+            'Because page is excluded from crawling',
+            $subject->checkIfPageShouldBeSkipped([
+                'uid' => 2,
+                'doktype' => 1,
+            ])
+        );
+    }
+
+    #[DataProvider('pageRowsWithoutPageUidDataProvider')]
+    #[Test]
+    public function checkIfPageShouldBeSkippedDoesNotReadRootlineWithoutPageUid(array $pageRow): void
+    {
+        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['crawler'] = [];
+        $pageRootlineProvider = $this->createMock(PageRootlineProvider::class);
+        $pageRootlineProvider->expects(self::never())->method('getRootlineWithExclusionFields');
+        $modifySkipPageEvent = new ModifySkipPageEvent([]);
+        $modifySkipPageEvent->setSkipped(false);
+        $eventDispatcher = $this->createStub(EventDispatcher::class);
+        $eventDispatcher->method('dispatch')->willReturn($modifySkipPageEvent);
+        $subject = new PageService($eventDispatcher, $pageRootlineProvider);
+
+        self::assertFalse($subject->checkIfPageShouldBeSkipped($pageRow));
+    }
+
+    public static function pageRowsWithoutPageUidDataProvider(): iterable
+    {
+        yield 'Page uid is missing' => [[
+            'doktype' => 1,
+        ]];
+        yield 'Page uid is 0' => [[
+            'uid' => 0,
+            'doktype' => 1,
+        ]];
+    }
+
+    /**
+     * Returns the rootlines of PAGE_TREE, the way PageRootlineProvider does: the page itself first, the root page last
+     */
+    private function createPageRootlineProviderStub(): PageRootlineProvider
+    {
+        $pageRootlineProvider = $this->createStub(PageRootlineProvider::class);
+        $pageRootlineProvider->method('getRootlineWithExclusionFields')->willReturnCallback(
+            static function (int $pageId): array {
+                $rootline = [];
+                while (isset(self::PAGE_TREE[$pageId])) {
+                    [$pid, $exclude, $excludeSubpages] = self::PAGE_TREE[$pageId];
+                    $rootline[] = [
+                        'uid' => $pageId,
+                        'tx_crawler_exclude' => $exclude,
+                        'tx_crawler_exclude_subpages' => $excludeSubpages,
+                    ];
+                    $pageId = $pid;
+                }
+                return $rootline;
+            }
+        );
+        return $pageRootlineProvider;
     }
 }

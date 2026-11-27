@@ -1,0 +1,14 @@
+"pages"
+,"uid","pid","title","doktype","slug","tx_crawler_exclude","tx_crawler_exclude_subpages","deleted"
+,1,0,"Root",1,"/",0,0,0
+,2,1,"Page1",1,"/page1",1,0,0
+,3,2,"subpage1",1,"/page1/subpage1",0,0,0
+,4,2,"subpage2",1,"/page1/subpage2",1,1,0
+,5,4,"subsubpage1",1,"/page1/subpage2/subsubpage1",0,0,0
+,6,4,"subsubpage2",1,"/page1/subpage2/subsubpage2",0,0,0
+,7,2,"subpage3",1,"/page1/subpage3",0,0,0
+,8,1,"Page2",1,"/page2",0,0,0
+,9,1,"Page3",1,"/page3",0,0,0
+,10,1,"Deleted page excluded with its subpages",1,"/deleted",1,1,1
+,11,10,"Subpage of deleted page",1,"/deleted/subpage",0,0,0
+,12,12,"Page that is its own parent",1,"/loop",0,0,0
