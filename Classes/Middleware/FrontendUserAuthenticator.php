@@ -101,6 +101,9 @@ class FrontendUserAuthenticator implements MiddlewareInterface
         return $this->context;
     }
 
+    /**
+     * @param array<string, mixed>|null $queueRec
+     */
     private function isRequestHashMatchingQueueRecord(?array $queueRec, string $hash): bool
     {
         if ($queueRec === null || !array_key_exists('qid', $queueRec) || !array_key_exists('set_id', $queueRec)) {
@@ -127,6 +130,9 @@ class FrontendUserAuthenticator implements MiddlewareInterface
         return $frontendUser;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function findByQueueId(string $queueId): array
     {
         $queueRec = $this->queryBuilder
