@@ -43,6 +43,43 @@ test.describe('Exclude from crawling', () => {
         )).toBe('1-1');
     });
 
+    test('Saving a page excluded from crawling does not add it to the queue', {tag: '@v14'}, async ({page}) => {
+        helpers.query(`DELETE FROM tx_crawler_queue WHERE page_id = ${pageId};`);
+
+        await helpers.loginBackend(page);
+        await page.goto(`/typo3/record/edit?edit[pages][${pageId}]=edit`);
+        const form = await editForm(page);
+        await form.getByRole('tab', {name: 'Behavior'}).click();
+        await form.getByLabel('Exclude from crawling', {exact: true}).check();
+        await form.getByRole('button', {name: 'Save'}).click();
+        await expect(page.locator('#nprogress')).toHaveCount(0);
+        await expect.poll(() => helpers.query(
+            `SELECT tx_crawler_exclude FROM pages WHERE uid = ${pageId};`
+        )).toBe('1');
+
+        expect(helpers.query(`SELECT COUNT(*) FROM tx_crawler_queue WHERE page_id = ${pageId};`)).toBe('0');
+    });
+
+    test('Pages queued before they are excluded from crawling are not crawled', {tag: '@v14'}, async () => {
+        test.setTimeout(180_000);
+        const branch = `${pageId}, 8, 9, 10`;
+        // Process entries left by other tests, otherwise they prevent adding the pages to the queue again.
+        helpers.processCrawlerQueue();
+        helpers.query(`DELETE FROM tx_crawler_queue WHERE page_id IN (${branch});`);
+
+        helpers.typo3(`crawler:buildQueue ${pageId} default --depth=1 --mode=queue`);
+        setExclusion(1, 1);
+        helpers.processCrawlerQueue();
+
+        expect(Number(helpers.query(
+            `SELECT COUNT(*) FROM tx_crawler_queue WHERE page_id IN (${branch}) AND exec_time > 0;`
+        )), 'The queue entries of the branch are processed').toBe(4);
+        expect(helpers.query(
+            `SELECT COUNT(*) FROM tx_crawler_queue WHERE page_id IN (${branch}) ` +
+            "AND result_data NOT LIKE '%excluded from crawling%';"
+        ), 'No page of the branch is crawled').toBe('0');
+    });
+
     test('Page excluded from crawling is skipped, its subpages are crawled', {tag: '@v14'}, async () => {
         setExclusion(1, 0);
 
