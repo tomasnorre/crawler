@@ -31,7 +31,6 @@ parameters:
                 - Classes/Controller/*
                 - Classes/CrawlStrategy/*
                 - Classes/Queue/*
-                - Classes/QueueExecutor.php
                 - Classes/Service/*
                 - Classes/Writer/*
 
