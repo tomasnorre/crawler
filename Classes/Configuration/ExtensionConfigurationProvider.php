@@ -35,6 +35,8 @@ class ExtensionConfigurationProvider implements LoggerAwareInterface
 
     /**
      * Return full extension configuration array.
+     *
+     * @return array<string, mixed>
      */
     public function getExtensionConfiguration(): array
     {
