@@ -20,6 +20,7 @@ namespace AOE\Crawler\Tests\Unit\Middleware;
  */
 
 use AOE\Crawler\Middleware\CrawlerInitialization;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -27,8 +28,10 @@ use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\UserAspect;
 use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Http\ServerRequest;
+use TYPO3\CMS\Core\Routing\PageArguments;
 use TYPO3\CMS\Frontend\Cache\CacheInstruction;
 use TYPO3\CMS\Frontend\Page\PageInformation;
+use TYPO3\CMS\Frontend\Page\PageInformationCreationFailedException;
 use TYPO3\CMS\Frontend\Page\PageInformationFactory;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
@@ -98,6 +101,64 @@ class CrawlerInitializationTest extends UnitTestCase
         $response = $subject->process($request, $handler);
 
         self::assertSame($expectedMeta, json_decode($response->getHeaderLine('X-T3Crawler-Meta'), true));
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function processReturnsResponseOfFailedPageInformationCreation(): void
+    {
+        $errorResponse = new Response('php://temp', 404);
+        $eventDispatcher = $this->createStub(EventDispatcherInterface::class);
+        $eventDispatcher->method('dispatch')->willThrowException(
+            new PageInformationCreationFailedException($errorResponse, 1_764_201_600)
+        );
+        $pageInformationFactory = (new \ReflectionClass(
+            PageInformationFactory::class
+        ))->newInstanceWithoutConstructor();
+        // The factory is final, so its event dispatcher makes create() fail
+        \Closure::bind(
+            static function (PageInformationFactory $factory) use ($eventDispatcher): void {
+                $factory->eventDispatcher = $eventDispatcher;
+            },
+            null,
+            PageInformationFactory::class
+        )($pageInformationFactory);
+        $subject = new CrawlerInitialization($pageInformationFactory, new Context());
+        $request = (new ServerRequest('https://example.com/'))
+            ->withAttribute('tx_crawler', [
+                'url' => 'https://example.com/',
+            ])
+            ->withAttribute('routing', new PageArguments(5, '0', []));
+        $handler = $this->createStub(RequestHandlerInterface::class);
+        $handler->method('handle')->willReturn(new Response());
+
+        self::assertSame($errorResponse, $subject->process($request, $handler));
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function processOmitsCrawlerMetaHeaderIfDataCannotBeJsonEncoded(): void
+    {
+        $context = new Context();
+        $context->setAspect('frontend.user', new UserAspect(null, [0, -2]));
+        $subject = new CrawlerInitialization(
+            (new \ReflectionClass(PageInformationFactory::class))->newInstanceWithoutConstructor(),
+            $context
+        );
+        $pageInformation = new PageInformation();
+        $pageInformation->setId(5);
+        $request = (new ServerRequest('https://example.com/'))
+            ->withAttribute('tx_crawler', [
+                // Invalid UTF-8 cannot be JSON encoded
+                'url' => "https://example.com/\xB1\x31",
+            ])
+            ->withAttribute('frontend.page.information', $pageInformation);
+        $handlerResponse = new Response();
+        $handler = $this->createStub(RequestHandlerInterface::class);
+        $handler->method('handle')->willReturn($handlerResponse);
+
+        $response = $subject->process($request, $handler);
+
+        self::assertSame($handlerResponse, $response);
+        self::assertFalse($response->hasHeader('X-T3Crawler-Meta'));
     }
 
     public static function processAddsCrawlerMetaHeaderDataProvider(): iterable

@@ -25,6 +25,7 @@ use AOE\Crawler\Service\QueueService;
 use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 #[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Hooks\DataHandlerHook::class)]
@@ -183,6 +184,23 @@ class DataHandlerHookTest extends UnitTestCase
             ],
             $this->createStub(DataHandler::class)
         );
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function gettersReturnInstancesFromGeneralUtility(): void
+    {
+        $queueRepository = $this->createStub(QueueRepository::class);
+        $queueService = $this->createStub(QueueService::class);
+        $pageRepository = $this->createStub(PageRepository::class);
+        GeneralUtility::addInstance(QueueRepository::class, $queueRepository);
+        GeneralUtility::addInstance(QueueService::class, $queueService);
+        GeneralUtility::addInstance(PageRepository::class, $pageRepository);
+
+        $dataHandlerHook = new DataHandlerHook();
+
+        self::assertSame($queueRepository, $dataHandlerHook->getQueueRepository());
+        self::assertSame($queueService, $dataHandlerHook->getQueueService());
+        self::assertSame($pageRepository, $dataHandlerHook->getPageRepository());
     }
 
     /**

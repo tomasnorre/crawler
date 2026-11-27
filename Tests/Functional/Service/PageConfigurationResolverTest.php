@@ -106,4 +106,28 @@ class PageConfigurationResolverTest extends FunctionalTestCase
             'urls' => [],
         ], $this->subject->getConfigurationsForPage(5)['fromHook'] ?? null);
     }
+
+    #[Test]
+    public function getConfigurationsForPageReadsPageTSconfigOfTheMountPointPage(): void
+    {
+        $this->getConnectionPool()->getConnectionForTable('pages')->update(
+            'pages',
+            [
+                'TSconfig' => 'tx_crawler.mountPointMarker = page 3',
+            ],
+            [
+                'uid' => 3,
+            ]
+        );
+        $markers = [];
+        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['crawler']['getPageTSconfigForId'][] =
+            static function (array &$params) use (&$markers): void {
+                $markers[] = $params['pageTSConfig']['tx_crawler.']['mountPointMarker'] ?? null;
+            };
+
+        $this->subject->getConfigurationsForPage(5);
+        $this->subject->getConfigurationsForPage(5, '5-3');
+
+        self::assertSame([null, 'page 3'], $markers);
+    }
 }

@@ -64,4 +64,15 @@ class ConfigurationRepositoryTest extends FunctionalTestCase
             self::assertContains((int) $configuration['uid'], [1, 5, 6, 8]);
         }
     }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function getCrawlerConfigurationRecordsFromRootLineUsesGivenParentIdsInsteadOfRootLine(): void
+    {
+        $configurations = $this->subject->getCrawlerConfigurationRecordsFromRootLine(
+            self::PAGE_WITHOUT_CONFIGURATIONS,
+            [5]
+        );
+
+        self::assertEqualsCanonicalizing([5, 6], array_map(intval(...), array_column($configurations, 'uid')));
+    }
 }
