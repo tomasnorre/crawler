@@ -238,7 +238,7 @@ final class BuildQueueCommandTest extends UnitTestCase
 
         $message = "Page {$expectedPageId} is not a valid page, please check you root page id and try again.";
         self::assertSame(Command::FAILURE, $status);
-        self::assertSame(self::format('<info>' . $message . '</info>') . PHP_EOL, $commandTester->getDisplay());
+        self::assertSame($this->format('<info>' . $message . '</info>') . PHP_EOL, $commandTester->getDisplay());
 
         $flashMessages = GeneralUtility::makeInstance(FlashMessageService::class)
             ->getMessageQueueByIdentifier()
@@ -397,11 +397,9 @@ final class BuildQueueCommandTest extends UnitTestCase
 
         self::assertSame(Command::SUCCESS, $status);
         self::assertSame(
-            self::format(
-                '<info>https://example.com/2?config=default' . PHP_EOL
-                . 'https://example.com/2?config=news' . PHP_EOL
-                . 'https://example.com/3?config=default' . PHP_EOL . '</info>'
-            ) . PHP_EOL,
+            $this->format('<info>https://example.com/2?config=default' . PHP_EOL
+            . 'https://example.com/2?config=news' . PHP_EOL
+            . 'https://example.com/3?config=default' . PHP_EOL . '</info>') . PHP_EOL,
             $commandTester->getDisplay()
         );
     }
@@ -422,7 +420,7 @@ final class BuildQueueCommandTest extends UnitTestCase
 
         self::assertSame(Command::SUCCESS, $status);
         self::assertSame(
-            self::format('<info>Putting 3 entries in queue:</info>' . PHP_EOL) . PHP_EOL
+            $this->format('<info>Putting 3 entries in queue:</info>' . PHP_EOL) . PHP_EOL
             . $this->getFormattedUrlRows(),
             $commandTester->getDisplay()
         );
@@ -444,7 +442,7 @@ final class BuildQueueCommandTest extends UnitTestCase
 
         self::assertSame(Command::SUCCESS, $status);
         self::assertSame(
-            self::format(
+            $this->format(
                 '<info>3 entries found for processing. (Use "mode" to decide action):</info>' . PHP_EOL
             ) . PHP_EOL
             . $this->getFormattedUrlRows(),
@@ -467,7 +465,7 @@ final class BuildQueueCommandTest extends UnitTestCase
         ]);
 
         self::assertSame(
-            self::format('<info>' . implode(PHP_EOL, $expectedUrls) . PHP_EOL . '</info>') . PHP_EOL,
+            $this->format('<info>' . implode(PHP_EOL, $expectedUrls) . PHP_EOL . '</info>') . PHP_EOL,
             $commandTester->getDisplay()
         );
     }
@@ -548,7 +546,7 @@ final class BuildQueueCommandTest extends UnitTestCase
         ]);
 
         self::assertStringEndsWith(
-            self::format('<info>' . $expectedLastUrls . '</info>') . PHP_EOL,
+            $this->format('<info>' . $expectedLastUrls . '</info>') . PHP_EOL,
             $commandTester->getDisplay()
         );
     }
@@ -578,7 +576,7 @@ final class BuildQueueCommandTest extends UnitTestCase
             ->invoke($this->createCommand(), [$queueRow], $output);
 
         self::assertSame(
-            self::format(
+            $this->format(
                 '<comment>Page "Page title" is not added to queue (Because page is hidden)</comment>'
             ) . PHP_EOL,
             $output->fetch()
@@ -646,10 +644,10 @@ final class BuildQueueCommandTest extends UnitTestCase
 
         // QueueEntryWriter::addUrl() reports entries that are only collected as not added
         self::assertStringStartsWith(
-            self::format('<info>Executing 2 requests right away:</info>') . PHP_EOL
-            . self::format('<info>' . $this->getUrlLine(2, 'default') . ' (URL already existed)</info>') . PHP_EOL
-            . self::format('<info>' . $this->getUrlLine(2, 'index') . ' (URL already existed)</info>') . PHP_EOL
-            . self::format('<info>Processing</info>' . PHP_EOL) . PHP_EOL,
+            $this->format('<info>Executing 2 requests right away:</info>') . PHP_EOL
+            . $this->format('<info>' . $this->getUrlLine(2, 'default') . ' (URL already existed)</info>') . PHP_EOL
+            . $this->format('<info>' . $this->getUrlLine(2, 'index') . ' (URL already existed)</info>') . PHP_EOL
+            . $this->format('<info>Processing</info>' . PHP_EOL) . PHP_EOL,
             $display
         );
 
@@ -692,7 +690,7 @@ final class BuildQueueCommandTest extends UnitTestCase
         ]);
 
         self::assertStringContainsString(
-            self::CLEAR_LINE . self::format('<info>https://example.com/' . $expectedSuffix . ' => </info>') . PHP_EOL,
+            self::CLEAR_LINE . $this->format('<info>https://example.com/' . $expectedSuffix . ' => </info>') . PHP_EOL,
             $output
         );
     }
@@ -718,7 +716,7 @@ final class BuildQueueCommandTest extends UnitTestCase
         ]);
 
         self::assertStringContainsString(
-            self::CLEAR_LINE . self::format(
+            self::CLEAR_LINE . $this->format(
                 '<error>Error checking Crawler Result:  ' . $expectedOutput . '...' . PHP_EOL . '</error>' . PHP_EOL
             ) . PHP_EOL,
             $output
@@ -759,7 +757,7 @@ final class BuildQueueCommandTest extends UnitTestCase
         ]);
 
         self::assertSame(1, substr_count($output, ' => '));
-        self::assertStringContainsString(self::format('<info>https://example.com/ => </info>'), $output);
+        self::assertStringContainsString($this->format('<info>https://example.com/ => </info>'), $output);
     }
 
     /**
@@ -795,9 +793,9 @@ final class BuildQueueCommandTest extends UnitTestCase
 
     private function getExecutedEntryPattern(string $url, string $result, string $progressBarPattern): string
     {
-        return '~' . preg_quote(self::CLEAR_LINE . self::format('<info>' . $url . ' => </info>') . PHP_EOL, '~')
+        return '~' . preg_quote(self::CLEAR_LINE . $this->format('<info>' . $url . ' => </info>') . PHP_EOL, '~')
             . preg_quote(self::CLEAR_LINE, '~') . $progressBarPattern
-            . preg_quote(self::CLEAR_LINE . self::format('<info>' . $result . '</info>' . PHP_EOL) . PHP_EOL, '~')
+            . preg_quote(self::CLEAR_LINE . $this->format('<info>' . $result . '</info>' . PHP_EOL) . PHP_EOL, '~')
             . preg_quote(self::CLEAR_LINE, '~') . $progressBarPattern . '~';
     }
 
@@ -827,10 +825,10 @@ final class BuildQueueCommandTest extends UnitTestCase
      */
     private function getFormattedUrlRows(): string
     {
-        return self::format('<info>' . $this->getUrlLine(2, 'default') . '</info>') . PHP_EOL
-            . self::format('<info>' . $this->getUrlLine(2, 'news') . '</info>') . PHP_EOL
-            . self::format('<info>' . $this->getUrlLine(3, 'default') . '</info>') . PHP_EOL
-            . self::format('<comment>Page "" is not added to queue (Because page is hidden)</comment>') . PHP_EOL;
+        return $this->format('<info>' . $this->getUrlLine(2, 'default') . '</info>') . PHP_EOL
+            . $this->format('<info>' . $this->getUrlLine(2, 'news') . '</info>') . PHP_EOL
+            . $this->format('<info>' . $this->getUrlLine(3, 'default') . '</info>') . PHP_EOL
+            . $this->format('<comment>Page "" is not added to queue (Because page is hidden)</comment>') . PHP_EOL;
     }
 
     private function getTreePage(int $uid, string $skipReason = ''): array
@@ -868,7 +866,7 @@ final class BuildQueueCommandTest extends UnitTestCase
     /**
      * Formats a message like the decorated output of the command
      */
-    private static function format(string $message): string
+    private function format(string $message): string
     {
         return (string) (new OutputFormatter(true))->format($message);
     }
