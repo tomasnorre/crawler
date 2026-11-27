@@ -1,0 +1,8 @@
+"pages"
+,"uid","pid","sorting","title","doktype","is_siteroot","slug","mount_pid","mount_pid_ol","TSconfig"
+,1,0,1,"Root",1,1,"/",0,0,"tx_crawler.crawlerCfg.paramSets.default = &L=[0]
+tx_crawler.crawlerCfg.paramSets.default.procInstrFilter = tx_indexedsearch_reindex"
+,2,1,1,"Mounted page",1,0,"/mounted",0,0,""
+,3,2,1,"Subpage of mounted page",1,0,"/mounted/subpage",0,0,""
+,4,1,2,"Mount point",7,0,"/mount-point",2,0,""
+,5,1,3,"Mount point with overlay",7,0,"/mount-point-overlay",2,1,""
