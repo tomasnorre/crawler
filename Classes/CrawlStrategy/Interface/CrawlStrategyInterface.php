@@ -38,5 +38,5 @@ interface CrawlStrategyInterface
      *                     - log: array of strings
      *                     - vars: array
      */
-    public function fetchUrlContents(UriInterface $url, string $crawlerId);
+    public function fetchUrlContents(UriInterface $url, string $crawlerId): array|false;
 }

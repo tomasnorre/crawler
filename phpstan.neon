@@ -45,11 +45,9 @@ parameters:
         function: 20
 
     # composer require tomasvotruba/type-coverage --dev
+    # Typed class constants need PHP 8.3, PHP 8.2 is still supported
     type_coverage:
-        return_type: 81
-        param_type: 79
-        property_type: 79
-        constant: 0
+        constant_type: 0
 
 services:
     -

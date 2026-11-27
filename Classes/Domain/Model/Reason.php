@@ -55,86 +55,65 @@ class Reason
         $this->row['uid'] = $uid;
     }
 
-    /**
-     * @return int
-     */
-    public function getUid()
+    public function getUid(): int
     {
         return $this->row['uid'];
     }
 
     /**
      * Method to set a timestamp for the creation time of this record
-     *
-     * @param int $time
      */
-    public function setCreationDate($time): void
+    public function setCreationDate(int $time): void
     {
         $this->row['crdate'] = $time;
     }
 
-    /**
-     * @return int
-     */
-    public function getCreationDate()
+    public function getCreationDate(): int
     {
         return $this->row['crdate'];
     }
 
     /**
      * This method can be used to set a user id of the user who has created this reason entry
-     *
-     * @param int $user_id
      */
-    public function setBackendUserId($user_id): void
+    public function setBackendUserId(int $user_id): void
     {
         $this->row['cruser_id'] = $user_id;
     }
 
-    /**
-     * @return int
-     */
-    public function getBackendUserId()
+    public function getBackendUserId(): int
     {
         return $this->row['cruser_id'];
     }
 
     /**
      * Method to set the type of the reason for this reason instance (see constances)
-     *
-     * @param string $string
      */
-    public function setReason($string): void
+    public function setReason(string $string): void
     {
         $this->row['reason'] = $string;
     }
 
     /**
      * This method returns the attached reason text.
-     *
-     * @return string
      */
-    public function getReason()
+    public function getReason(): string
     {
         return $this->row['reason'];
     }
 
     /**
      * This method can be used to assign a detail text to the crawler reason
-     *
-     * @param string $detail_text
      */
-    public function setDetailText($detail_text): void
+    public function setDetailText(string $detail_text): void
     {
         $this->row['detail_text'] = $detail_text;
     }
 
     /**
      * Returns the attachet detail text.
-     *
-     * @return string
      */
-    public function getDetailText()
+    public function getDetailText(): string
     {
         return $this->row['detail_text'];
     }
@@ -142,18 +121,13 @@ class Reason
     /**
      * This method is used to set the uid of the queue entry
      * where the reason is relevant for.
-     *
-     * @param int $entry_uid
      */
-    public function setQueueEntryUid($entry_uid): void
+    public function setQueueEntryUid(int $entry_uid): void
     {
         $this->row['queue_entry_uid'] = $entry_uid;
     }
 
-    /**
-     * @return int
-     */
-    public function getQueueEntryUid()
+    public function getQueueEntryUid(): int
     {
         return $this->row['queue_entry_uid'];
     }
