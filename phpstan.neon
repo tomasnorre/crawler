@@ -34,7 +34,6 @@ parameters:
                 - Classes/Queue/*
                 - Classes/QueueExecutor.php
                 - Classes/Service/*
-                - Classes/Utility/*
                 - Classes/Writer/*
 
     # composer require tomasvotruba/type-coverage --dev
