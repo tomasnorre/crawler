@@ -27,7 +27,6 @@ parameters:
             identifier: missingType.iterableValue
             paths:
                 - Classes/Command/*
-                - Classes/Configuration/*
                 - Classes/ContextMenu/*
                 - Classes/Controller/*
                 - Classes/CrawlStrategy/*
