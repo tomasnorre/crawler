@@ -115,10 +115,7 @@ class FrontendUserAuthenticator implements MiddlewareInterface
         );
     }
 
-    /**
-     * @return mixed|string|FrontendUserAuthentication
-     */
-    private function getFrontendUser(string $grList, ServerRequestInterface $request)
+    private function getFrontendUser(string $grList, ServerRequestInterface $request): FrontendUserAuthentication
     {
         /** @var FrontendUserAuthentication $frontendUser */
         $frontendUser = $request->getAttribute('frontend.user');

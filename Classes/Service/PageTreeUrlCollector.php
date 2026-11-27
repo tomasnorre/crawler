@@ -42,11 +42,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 final class PageTreeUrlCollector
 {
-    /**
-     * @var BackendUserAuthentication|null
-     */
-    private $backendUser;
-
     public function __construct(
         private readonly PageRepository $pageRepository,
         private readonly IconFactory $iconFactory,
@@ -244,14 +239,10 @@ final class PageTreeUrlCollector
         return nl2br(htmlspecialchars(rawurldecode(trim(str_replace('&', chr(10) . '&', $parameters)))));
     }
 
-    /**
-     * @return BackendUserAuthentication
-     */
-    private function getBackendUser()
+    private function getBackendUser(): BackendUserAuthentication
     {
         // Make sure the _cli_ user is loaded
         Bootstrap::initializeBackendAuthentication();
-        $this->backendUser ??= $GLOBALS['BE_USER'];
-        return $this->backendUser;
+        return $GLOBALS['BE_USER'];
     }
 }

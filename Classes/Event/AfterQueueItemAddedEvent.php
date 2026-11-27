@@ -27,11 +27,10 @@ namespace AOE\Crawler\Event;
 final class AfterQueueItemAddedEvent
 {
     /**
-     * @param int|string $queueId
      * @param array<string, mixed> $fieldArray
      */
     public function __construct(
-        private $queueId,
+        private readonly int|string $queueId,
         private array $fieldArray
     ) {
     }
