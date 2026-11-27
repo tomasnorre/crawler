@@ -102,6 +102,8 @@ class ParameterExpander
 
     /**
      * Parses "_TABLE:pages; _PID:123" into ['_TABLE' => 'pages', '_PID' => '123']
+     *
+     * @return array<string, string>
      */
     private function parseTableOptions(string $part): array
     {
@@ -120,11 +122,8 @@ class ParameterExpander
      */
     private function addValuesInRange(array $range, array $paramArray, int|string $parameter): array
     {
-        $start = $range[1];
-        $end = $range[2];
-        if ($start > $end) {
-            [$start, $end] = [$end, $start];
-        }
+        $start = min($range[1], $range[2]);
+        $end = max($range[1], $range[2]);
 
         $runAwayBrake = self::MAX_RANGE_VALUES;
         for ($value = $start; $value <= $end; $value++) {
@@ -157,6 +156,9 @@ class ParameterExpander
         return $_params['paramArray'];
     }
 
+    /**
+     * @param array<string, string> $tableOptions
+     */
     private function extractParamsFromCustomTable(
         array $tableOptions,
         int $pid,
@@ -170,8 +172,8 @@ class ParameterExpander
         }
 
         $lookUpPid = isset($tableOptions['_PID']) ? (int) $tableOptions['_PID'] : $pid;
-        $recursiveDepth = (int) ($tableOptions['_RECURSIVE'] ?? 0);
-        $pidField = trim((string) ($tableOptions['_PIDFIELD'] ?? 'pid'));
+        $recursiveDepth = (int) ($tableOptions['_RECURSIVE'] ?? '');
+        $pidField = $tableOptions['_PIDFIELD'] ?? 'pid';
 
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($table);
         $queryBuilder->getRestrictions()

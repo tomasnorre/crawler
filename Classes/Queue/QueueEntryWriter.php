@@ -169,8 +169,9 @@ final class QueueEntryWriter
 
         // Setting processing instructions
         $parameters['procInstructions'] = GeneralUtility::trimExplode(',', $subCfg['procInstrFilter'] ?? '');
-        if (is_array($subCfg['procInstrParams.'] ?? false)) {
-            $parameters['procInstrParams'] = $subCfg['procInstrParams.'];
+        $procInstrParams = $subCfg['procInstrParams.'] ?? null;
+        if (is_array($procInstrParams)) {
+            $parameters['procInstrParams'] = $procInstrParams;
         }
 
         // Compile value array:
