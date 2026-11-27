@@ -39,8 +39,6 @@ class FlushQueueCommand extends Command
     #[\Override]
     protected function configure(): void
     {
-        $this->setDescription('Remove queue entries and perform a cleanup');
-
         $this->setHelp(
             'Try "typo3 help crawler:flushQueue" to see your options' . chr(10) . chr(10) .
             'Works as a CLI interface to some functionality from the Web > Info > Site Crawler module;
