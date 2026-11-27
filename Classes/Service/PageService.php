@@ -88,15 +88,34 @@ class PageService
         }
 
         foreach ($this->pageRootlineProvider->getRootlineWithExclusionFields($pageId) as $page) {
-            if ($page['uid'] === $pageId) {
-                if ($page[PageRootlineProvider::FIELD_EXCLUDE]) {
-                    return 'Because page is excluded from crawling';
-                }
-                continue;
+            $reason = $page['uid'] === $pageId
+                ? $this->getOwnExclusionReason($page)
+                : $this->getParentExclusionReason($page);
+            if ($reason !== false) {
+                return $reason;
             }
-            if ($page[PageRootlineProvider::FIELD_EXCLUDE] && $page[PageRootlineProvider::FIELD_EXCLUDE_SUBPAGES]) {
-                return sprintf('Because parent page "%d" is excluded from crawling with its subpages', $page['uid']);
-            }
+        }
+        return false;
+    }
+
+    /**
+     * @param array{uid: int, tx_crawler_exclude: bool, tx_crawler_exclude_subpages: bool} $page
+     */
+    private function getOwnExclusionReason(array $page): false|string
+    {
+        if ($page[PageRootlineProvider::FIELD_EXCLUDE]) {
+            return 'Because page is excluded from crawling';
+        }
+        return false;
+    }
+
+    /**
+     * @param array{uid: int, tx_crawler_exclude: bool, tx_crawler_exclude_subpages: bool} $page
+     */
+    private function getParentExclusionReason(array $page): false|string
+    {
+        if ($page[PageRootlineProvider::FIELD_EXCLUDE] && $page[PageRootlineProvider::FIELD_EXCLUDE_SUBPAGES]) {
+            return sprintf('Because parent page "%d" is excluded from crawling with its subpages', $page['uid']);
         }
         return false;
     }

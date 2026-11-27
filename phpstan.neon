@@ -39,11 +39,6 @@ parameters:
                 - Classes/Utility/*
                 - Classes/Writer/*
 
-    # composer require tomasvotruba/cognitive-complexity --dev
-    cognitive_complexity:
-        class: 28
-        function: 20
-
     # composer require tomasvotruba/type-coverage --dev
     type_coverage:
         return_type: 81

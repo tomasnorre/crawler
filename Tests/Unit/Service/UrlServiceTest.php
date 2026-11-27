@@ -20,11 +20,17 @@ namespace AOE\Crawler\Tests\Unit\Service;
  */
 
 use AOE\Crawler\Service\UrlService;
+use Doctrine\DBAL\Result;
+use Psr\Http\Message\UriInterface;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\Expression\ExpressionBuilder;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Routing\RouterInterface;
 use TYPO3\CMS\Core\Routing\SiteMatcher;
 use TYPO3\CMS\Core\Site\Entity\NullSite;
 use TYPO3\CMS\Core\Site\Entity\Site;
+use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
@@ -218,5 +224,73 @@ class UrlServiceTest extends UnitTestCase
             'https://base.example.com/page?foo=bar',
         ];
         yield 'Force http' => ['', null, -1, [], 'http://example.com/page'];
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function getUrlFromPageAndQueryParametersThrowsExceptionForUnknownLanguage(): void
+    {
+        $site = $this->createStub(Site::class);
+        $site->method('getLanguageById')->willThrowException(new \InvalidArgumentException('', 1522960188));
+        $siteMatcher = $this->createStub(SiteMatcher::class);
+        $siteMatcher->method('matchByPageId')->willReturn($site);
+        GeneralUtility::setSingletonInstance(SiteMatcher::class, $siteMatcher);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionCode(1522960188);
+
+        $this->urlService->getUrlFromPageAndQueryParameters(5, '&L=0', null, 0);
+    }
+
+    /**
+     * A URL of a translation is only built if the page, or its translation into the language
+     * or one of its fallback languages, exists.
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('pageExistsInLanguageDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function getUrlFromPageAndQueryParametersChecksThatThePageExistsInTheLanguage(
+        array|false $row,
+        ?string $expected
+    ): void {
+        $siteLanguage = $this->createStub(SiteLanguage::class);
+        $siteLanguage->method('getFallbackLanguageIds')->willReturn([0]);
+        $router = $this->createStub(RouterInterface::class);
+        $router->method('generateUri')->willReturn(new Uri('https://example.com/fr/page'));
+        $site = $this->createMock(Site::class);
+        $site->method('getLanguageById')->with(1)->willReturn($siteLanguage);
+        $site->method('getRouter')->willReturn($router);
+        $siteMatcher = $this->createStub(SiteMatcher::class);
+        $siteMatcher->method('matchByPageId')->willReturn($site);
+        GeneralUtility::setSingletonInstance(SiteMatcher::class, $siteMatcher);
+
+        $result = $this->createStub(Result::class);
+        $result->method('fetchAssociative')->willReturn($row);
+        $expressionBuilder = $this->createMock(ExpressionBuilder::class);
+        $expressionBuilder->expects(self::once())->method('in')->with('sys_language_uid', [1, 0])->willReturn('');
+        $expressionBuilder->method('eq')->willReturn('');
+        $queryBuilder = $this->createStub(QueryBuilder::class);
+        $queryBuilder->method('expr')->willReturn($expressionBuilder);
+        $queryBuilder->method('select')->willReturnSelf();
+        $queryBuilder->method('from')->willReturnSelf();
+        $queryBuilder->method('orWhere')->willReturnSelf();
+        $queryBuilder->method('andWhere')->willReturnSelf();
+        $queryBuilder->method('executeQuery')->willReturn($result);
+        $connectionPool = $this->createStub(ConnectionPool::class);
+        $connectionPool->method('getQueryBuilderForTable')->willReturn($queryBuilder);
+        GeneralUtility::addInstance(ConnectionPool::class, $connectionPool);
+
+        $url = $this->urlService->getUrlFromPageAndQueryParameters(5, '&L=1', null, 0);
+
+        self::assertSame($expected, $url instanceof UriInterface ? (string) $url : null);
+    }
+
+    public static function pageExistsInLanguageDataProvider(): iterable
+    {
+        yield 'Page exists in the language' => [
+            [
+                'uid' => 5,
+            ],
+            'https://example.com/fr/page',
+        ];
+        yield 'Page does not exist in the language' => [false, null];
     }
 }

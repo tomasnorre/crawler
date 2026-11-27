@@ -51,55 +51,92 @@ class UrlService
         $url = new Uri();
         $site = GeneralUtility::makeInstance(SiteMatcher::class)->matchByPageId($pageId);
         if ($site instanceof Site) {
-            $queryString = ltrim($queryString, '?&');
-            $queryParts = [];
-            parse_str($queryString, $queryParts);
-            unset($queryParts['id']);
-
-            if (isset($queryParts['L']) && !empty($queryParts['L'])) {
-                $requestedLanguage = $site->getLanguageById((int) $queryParts['L']);
-                $languages = array_merge([(int) $queryParts['L']], $requestedLanguage->getFallbackLanguageIds());
-
-                $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('pages');
-                $query = $queryBuilder->select('*')
-                    ->from('pages')
-                    ->orWhere(
-                        $queryBuilder->expr()->eq('uid', $pageId),
-                        $queryBuilder->expr()->eq('l10n_parent', $pageId)
-                    )->andWhere($queryBuilder->expr()->in('sys_language_uid', $languages))->executeQuery();
-                $rows = $query->fetchAssociative();
-
-                if (empty($rows)) {
-                    return null;
-                }
-            }
-
-            // workaround as long as we don't have native language support in crawler configurations
-            if (isset($queryParts['L'])) {
-                $queryParts['_language'] = $queryParts['L'];
-                unset($queryParts['L']);
-                $siteLanguage = $site->getLanguageById((int) $queryParts['_language']);
-            } else {
-                $siteLanguage = $site->getDefaultLanguage();
-            }
-            $url = $site->getRouter()->generateUri($pageId, $queryParts);
-            if (!empty($alternativeBaseUrl)) {
-                $alternativeBaseUrl = new Uri($alternativeBaseUrl);
-                $url = $url->withHost($alternativeBaseUrl->getHost());
-                $url = $url->withScheme($alternativeBaseUrl->getScheme());
-                $url = $url->withPort($alternativeBaseUrl->getPort());
-                if ($userInfo = $alternativeBaseUrl->getUserInfo()) {
-                    $url = $url->withUserInfo($userInfo);
-                }
+            $url = $this->getUrlFromSite($site, $pageId, $queryString, $alternativeBaseUrl);
+            if (!$url instanceof UriInterface) {
+                return null;
             }
         }
 
+        return $this->applyScheme($url, $httpsOrHttp);
+    }
+
+    /**
+     * @throws InvalidRouteArgumentsException
+     * @throws Exception
+     */
+    private function getUrlFromSite(
+        Site $site,
+        int $pageId,
+        string $queryString,
+        ?string $alternativeBaseUrl
+    ): ?UriInterface {
+        $queryString = ltrim($queryString, '?&');
+        $queryParts = [];
+        parse_str($queryString, $queryParts);
+        unset($queryParts['id']);
+
+        if (!empty($queryParts['L']) && !$this->pageExistsInLanguage($site, $pageId, (int) $queryParts['L'])) {
+            return null;
+        }
+
+        // workaround as long as we don't have native language support in crawler configurations
+        if (isset($queryParts['L'])) {
+            $queryParts['_language'] = $queryParts['L'];
+            unset($queryParts['L']);
+            // Throws an exception if the site has no such language
+            $site->getLanguageById((int) $queryParts['_language']);
+        }
+        $url = $site->getRouter()->generateUri($pageId, $queryParts);
+        if (!empty($alternativeBaseUrl)) {
+            $url = $this->applyAlternativeBaseUrl($url, new Uri($alternativeBaseUrl));
+        }
+        return $url;
+    }
+
+    /**
+     * Checks whether the page, or one of its translations into the language or its fallback languages, exists
+     *
+     * @throws Exception
+     */
+    private function pageExistsInLanguage(Site $site, int $pageId, int $languageId): bool
+    {
+        $requestedLanguage = $site->getLanguageById($languageId);
+        $languages = array_merge([$languageId], $requestedLanguage->getFallbackLanguageIds());
+
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('pages');
+        $query = $queryBuilder->select('*')
+            ->from('pages')
+            ->orWhere(
+                $queryBuilder->expr()->eq('uid', $pageId),
+                $queryBuilder->expr()->eq('l10n_parent', $pageId)
+            )->andWhere($queryBuilder->expr()->in('sys_language_uid', $languages))->executeQuery();
+        $rows = $query->fetchAssociative();
+
+        return !empty($rows);
+    }
+
+    private function applyAlternativeBaseUrl(UriInterface $url, UriInterface $alternativeBaseUrl): UriInterface
+    {
+        $url = $url->withHost($alternativeBaseUrl->getHost());
+        $url = $url->withScheme($alternativeBaseUrl->getScheme());
+        $url = $url->withPort($alternativeBaseUrl->getPort());
+        if ($userInfo = $alternativeBaseUrl->getUserInfo()) {
+            $url = $url->withUserInfo($userInfo);
+        }
+        return $url;
+    }
+
+    /**
+     * @param int $httpsOrHttp see tx_crawler_configuration.force_ssl
+     */
+    private function applyScheme(UriInterface $url, int $httpsOrHttp): UriInterface
+    {
         if ($httpsOrHttp === -1) {
-            $url = $url->withScheme('http');
-        } elseif ($httpsOrHttp === 1) {
-            $url = $url->withScheme('https');
+            return $url->withScheme('http');
         }
-
+        if ($httpsOrHttp === 1) {
+            return $url->withScheme('https');
+        }
         return $url;
     }
 
@@ -123,12 +160,21 @@ class UrlService
         foreach ($urls as $url) {
             foreach ($valueSet as $val) {
                 if (count($newUrls) < $maxUrlToCompile) {
-                    $newUrls[] = $url . (strcmp((string) $val, '') ? '&' . rawurlencode(
-                        (string) $varName
-                    ) . '=' . rawurlencode((string) $val) : '');
+                    $newUrls[] = $url . $this->buildQueryParameter((string) $varName, (string) $val);
                 }
             }
         }
         return $this->compileUrls($paramArray, $newUrls, $maxUrlToCompile);
+    }
+
+    /**
+     * Returns the query parameter to append to a URL, or an empty string for an empty value
+     */
+    private function buildQueryParameter(string $name, string $value): string
+    {
+        if ($value === '') {
+            return '';
+        }
+        return '&' . rawurlencode($name) . '=' . rawurlencode($value);
     }
 }

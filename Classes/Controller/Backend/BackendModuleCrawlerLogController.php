@@ -138,6 +138,102 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
     }
 
     /**
+     * Re-crawls an already crawled entry, requested by an editor and therefore with high priority
+     */
+    private function dispatchRecrawlRequest(ServerRequestInterface $request): void
+    {
+        $quidRead = RequestHelper::getIntFromRequest($request, 'qid_read');
+        if ($quidRead) {
+            $this->crawlUrlMessageDispatcher->dispatch(
+                new CrawlUrlMessage($quidRead, true),
+                priority: CrawlPriority::High
+            );
+        }
+    }
+
+    /**
+     * Returns the log entries per page and the CSV rows of the selected page tree
+     *
+     * @return array{0: array, 1: array}
+     */
+    private function getLogEntriesOfPageTree(ServerRequestInterface $request): array
+    {
+        $tree = $this->buildPageTree();
+
+        // If Flush button is pressed, flush tables instead of selecting entries:
+        $doFlush = $this->isFlushRequested((array) ($request->getParsedBody() ?? []));
+
+        $queueFilter = new QueueFilter($this->logDisplay);
+
+        if ($doFlush) {
+            $this->queueRepository->flushQueue($queueFilter);
+        }
+
+        $logEntriesPerPage = [];
+        $csvData = [];
+        // Traverse page tree, limited to 1000 pages:
+        foreach (array_slice($tree->tree, 0, 1000) as $data) {
+            $logEntriesOfPage = $this->queueRepository->getQueueEntriesForPageId(
+                (int) $data['row']['uid'],
+                $this->itemsPerPage,
+                $queueFilter
+            );
+
+            [$logEntriesPerPage[], $csvRows] = $this->backendModuleLogService->addRows(
+                $logEntriesOfPage,
+                RequestHelper::getIntFromRequest($request, 'setID'),
+                $data['HTML'] . BackendUtility::getRecordTitle('pages', $data['row'], true),
+                $this->showResultLog,
+                $this->showFeVars,
+                $this->CSVExport
+            );
+            array_push($csvData, ...$csvRows);
+        }
+
+        return [$logEntriesPerPage, $csvData];
+    }
+
+    /**
+     * Flushing all entries also switches the log display to all entries
+     */
+    private function isFlushRequested(array $parsedBody): bool
+    {
+        if ($parsedBody['_flush'] ?? false) {
+            return true;
+        }
+        if ($parsedBody['_flush_all'] ?? false) {
+            $this->logDisplay = 'all';
+            return true;
+        }
+        return false;
+    }
+
+    private function buildPageTree(): PageTreeView
+    {
+        $tree = GeneralUtility::makeInstance(PageTreeView::class);
+        $perms_clause = $GLOBALS['BE_USER']->getPagePermsClause(1);
+        $tree->init('AND ' . $perms_clause);
+
+        // Set root row:
+        $pageinfo = BackendUtility::readPageAccess($this->pageUid, $perms_clause);
+
+        if (is_array($pageinfo)) {
+            $HTML = $this->iconFactory->getIconForRecord('pages', $pageinfo, IconSize::SMALL)->render();
+            $tree->tree[] = [
+                'row' => $pageinfo,
+                'HTML' => $HTML,
+            ];
+        }
+
+        // Get branch beneath:
+        if ($this->logDepth) {
+            $tree->getTree($this->pageUid, (int) $this->logDepth);
+        }
+
+        return $tree;
+    }
+
+    /**
      * @throws RouteNotFoundException
      */
     private function assignValues(ServerRequestInterface $request): ModuleTemplate
@@ -148,14 +244,7 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
         $logEntriesPerPage = [];
         $csvData = [];
 
-        $quidRead = RequestHelper::getIntFromRequest($request, 'qid_read');
-        if ($quidRead) {
-            // Re-crawl an already crawled entry, requested by an editor and therefore with high priority
-            $this->crawlUrlMessageDispatcher->dispatch(
-                new CrawlUrlMessage($quidRead, true),
-                priority: CrawlPriority::High
-            );
-        }
+        $this->dispatchRecrawlRequest($request);
 
         if ($this->queueId) {
             // Get entry record:
@@ -165,70 +254,7 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
                 'queueDetails' => DebugUtility::viewArray($q_entry),
             ]);
         } else {
-            // Show list
-            // Drawing tree:
-            $tree = GeneralUtility::makeInstance(PageTreeView::class);
-            $perms_clause = $GLOBALS['BE_USER']->getPagePermsClause(1);
-            $tree->init('AND ' . $perms_clause);
-
-            // Set root row:
-            $pageinfo = BackendUtility::readPageAccess($this->pageUid, $perms_clause);
-
-            if (is_array($pageinfo)) {
-                $HTML = $this->iconFactory->getIconForRecord('pages', $pageinfo, IconSize::SMALL)->render();
-                $tree->tree[] = [
-                    'row' => $pageinfo,
-                    'HTML' => $HTML,
-                ];
-            }
-
-            // Get branch beneath:
-            if ($this->logDepth) {
-                $tree->getTree($this->pageUid, (int) $this->logDepth);
-            }
-
-            // If Flush button is pressed, flush tables instead of selecting entries:
-            $parsedBody = (array) ($request->getParsedBody() ?? []);
-            if ($parsedBody['_flush'] ?? false) {
-                $doFlush = true;
-            } elseif ($parsedBody['_flush_all'] ?? false) {
-                $doFlush = true;
-                $this->logDisplay = 'all';
-            } else {
-                $doFlush = false;
-            }
-
-            $queueFilter = new QueueFilter($this->logDisplay);
-
-            if ($doFlush) {
-                $this->queueRepository->flushQueue($queueFilter);
-            }
-
-            // Traverse page tree:
-            $count = 0;
-
-            foreach ($tree->tree as $data) {
-                $logEntriesOfPage = $this->queueRepository->getQueueEntriesForPageId(
-                    (int) $data['row']['uid'],
-                    $this->itemsPerPage,
-                    $queueFilter
-                );
-
-                [$logEntriesPerPage[], $csvRows] = $this->backendModuleLogService->addRows(
-                    $logEntriesOfPage,
-                    RequestHelper::getIntFromRequest($request, 'setID'),
-                    $data['HTML'] . BackendUtility::getRecordTitle('pages', $data['row'], true),
-                    $this->showResultLog,
-                    $this->showFeVars,
-                    $this->CSVExport
-                );
-                array_push($csvData, ...$csvRows);
-
-                if (++$count === 1000) {
-                    break;
-                }
-            }
-
+            [$logEntriesPerPage, $csvData] = $this->getLogEntriesOfPageTree($request);
             $this->moduleTemplate->assign('logEntriesPerPage', $logEntriesPerPage);
         }
 

@@ -219,44 +219,56 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
         $output->writeln('<info>Processing</info>' . PHP_EOL);
 
         foreach ($progressBar->iterate($run->getQueueEntries()) as $queueRec) {
-            $p = json_decode((string) $queueRec['parameters'], true);
-            if (is_bool($p)) {
-                continue;
-            }
-
-            $progressBar->clear();
-            if (empty($p['procInstructions'][0])) {
-                $procInstructionsString = '';
-            } else {
-                $procInstructionsString = ' (' . implode(',', $p['procInstructions']) . ')';
-            }
-            $output->writeln('<info>' . $p['url'] . $procInstructionsString . ' => </info>');
-            $progressBar->display();
-
-            // Bypass the message queue and crawl the entry right away
-            $result = ($this->crawlUrlHandler)(new CrawlUrlMessage($this->queueRepository->add($queueRec)));
-
-            $resultContent = $result['content'] ?? '';
-            $requestResult = json_decode((string) $resultContent, true);
-
-            $progressBar->clear();
-            if (is_array($requestResult)) {
-                $resLog = array_key_exists('log', $requestResult)
-                && is_array($requestResult['log']) ? chr(9) . chr(9) .
-                    implode(PHP_EOL . chr(9) . chr(9), $requestResult['log']) : '';
-                $output->writeln('<info>OK: ' . $resLog . '</info>' . PHP_EOL);
-            } else {
-                $output->writeln(
-                    '<error>Error checking Crawler Result:  ' . substr(
-                        (string) preg_replace('/\s+/', ' ', strip_tags((string) $resultContent)),
-                        0,
-                        30000
-                    ) . '...' . PHP_EOL . '</error>' . PHP_EOL
-                );
-            }
-            $progressBar->display();
+            $this->executeQueueEntry($output, $progressBar, $queueRec);
         }
         $output->writeln('');
+    }
+
+    private function executeQueueEntry(OutputInterface $output, ProgressBar $progressBar, array $queueRec): void
+    {
+        $p = json_decode((string) $queueRec['parameters'], true);
+        if (is_bool($p)) {
+            return;
+        }
+
+        $progressBar->clear();
+        $output->writeln('<info>' . $p['url'] . $this->getProcInstructionsString($p) . ' => </info>');
+        $progressBar->display();
+
+        // Bypass the message queue and crawl the entry right away
+        $result = ($this->crawlUrlHandler)(new CrawlUrlMessage($this->queueRepository->add($queueRec)));
+
+        $progressBar->clear();
+        $this->outputCrawlResult($output, (string) ($result['content'] ?? ''));
+        $progressBar->display();
+    }
+
+    private function getProcInstructionsString(array $parameters): string
+    {
+        if (empty($parameters['procInstructions'][0])) {
+            return '';
+        }
+        return ' (' . implode(',', $parameters['procInstructions']) . ')';
+    }
+
+    private function outputCrawlResult(OutputInterface $output, string $resultContent): void
+    {
+        $requestResult = json_decode($resultContent, true);
+        if (!is_array($requestResult)) {
+            $output->writeln(
+                '<error>Error checking Crawler Result:  ' . substr(
+                    (string) preg_replace('/\s+/', ' ', strip_tags($resultContent)),
+                    0,
+                    30000
+                ) . '...' . PHP_EOL . '</error>' . PHP_EOL
+            );
+            return;
+        }
+
+        $resLog = array_key_exists('log', $requestResult)
+        && is_array($requestResult['log']) ? chr(9) . chr(9) .
+            implode(PHP_EOL . chr(9) . chr(9), $requestResult['log']) : '';
+        $output->writeln('<info>OK: ' . $resLog . '</info>' . PHP_EOL);
     }
 
     private function createCrawlRun(TypedInput $input, string $mode, array $configurationKeys): CrawlRun

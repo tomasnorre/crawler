@@ -105,35 +105,58 @@ final class QueueEntryWriter
                 // if the url key is registered just display it and do not resubmit is
                 $urlLog[] = '<em><span class="text-muted">' . htmlspecialchars($url) . '</span></em>';
             } else {
-                $formattedDate = BackendUtility::datetime($run->getScheduledTimeOfNextUrl());
-                $run->addUrlListEntry('[' . $formattedDate . '] ' . $url);
-                $urlList = '[' . $formattedDate . '] ' . htmlspecialchars($url);
-
-                // Submit for crawling!
-                if ($run->submitUrls) {
-                    $added = $this->addUrl(
-                        $run,
-                        $pageId,
-                        $url,
-                        $configuration['subCfg'],
-                        $run->scheduledTime,
-                        $configurationHash,
-                        $skipInnerCheck
-                    );
-                    // Collected queue entries are never stored, so addUrl() returns false for them as well
-                    if ($added === false && !$run->collectQueueEntriesOnly) {
-                        $urlList .= ' (URL already existed)';
-                    }
-                } elseif ($run->collectDownloadUrls) {
-                    $run->addDownloadUrl($url);
-                }
-                $urlLog[] = $urlList;
+                $urlLog[] = $this->handleUrl(
+                    $run,
+                    $pageId,
+                    $url,
+                    $configuration['subCfg'],
+                    $configurationHash,
+                    $skipInnerCheck
+                );
             }
             $run->markUrlHandled($url, $userGroups, $processingInstructionFilter);
         }
 
         // Todo: Find a better option to have this correct in both backend (<br>) and cli (<new line>)
         return implode('<br>', $urlLog);
+    }
+
+    /**
+     * Submits the URL for crawling or collects it for download, depending on the options of the run
+     *
+     * @return string The log line of the URL
+     */
+    private function handleUrl(
+        CrawlRun $run,
+        int $pageId,
+        string $url,
+        array $subConfiguration,
+        string $configurationHash,
+        bool $skipInnerCheck
+    ): string {
+        $formattedDate = BackendUtility::datetime($run->getScheduledTimeOfNextUrl());
+        $run->addUrlListEntry('[' . $formattedDate . '] ' . $url);
+        $urlLog = '[' . $formattedDate . '] ' . htmlspecialchars($url);
+
+        if ($run->submitUrls) {
+            // Submit for crawling!
+            $added = $this->addUrl(
+                $run,
+                $pageId,
+                $url,
+                $subConfiguration,
+                $run->scheduledTime,
+                $configurationHash,
+                $skipInnerCheck
+            );
+            // Collected queue entries are never stored, so addUrl() returns false for them as well
+            if ($added === false && !$run->collectQueueEntriesOnly) {
+                $urlLog .= ' (URL already existed)';
+            }
+        } elseif ($run->collectDownloadUrls) {
+            $run->addDownloadUrl($url);
+        }
+        return $urlLog;
     }
 
     /**

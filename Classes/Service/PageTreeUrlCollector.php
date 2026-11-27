@@ -66,24 +66,8 @@ final class PageTreeUrlCollector
      */
     public function collect(int $id, int $depth, CrawlRun $run): array
     {
-        // Drawing tree:
-        $tree = GeneralUtility::makeInstance(PageTreeView::class);
         $perms_clause = $this->getBackendUser()->getPagePermsClause(Permission::PAGE_SHOW);
-        $tree->init(empty($perms_clause) ? '' : ('AND ' . $perms_clause));
-
-        $pageInfo = BackendUtility::readPageAccess($id, $perms_clause);
-        if (is_array($pageInfo)) {
-            // Set root row:
-            $tree->tree[] = [
-                'row' => $pageInfo,
-                'HTML' => $this->iconFactory->getIconForRecord('pages', $pageInfo, IconSize::SMALL),
-            ];
-        }
-
-        // Get branch beneath:
-        if ($depth) {
-            $tree->getTree($id, $depth, '');
-        }
+        $tree = $this->buildPageTree($id, $depth, $perms_clause);
 
         $queueRows = [];
 
@@ -97,20 +81,14 @@ final class PageTreeUrlCollector
 
                 // fetch mounted pages
                 $mountPoint = $mountpage['mount_pid'] . '-' . $data['row']['uid'];
-
-                $mountTree = GeneralUtility::makeInstance(PageTreeView::class);
-                $mountTree->init(empty($perms_clause) ? '' : ('AND ' . $perms_clause));
-                $mountTree->getTree($mountpage['mount_pid'], $depth);
-
-                foreach ($mountTree->tree as $mountData) {
-                    $queueRows = array_merge($queueRows, $this->getQueueRowsForPage(
-                        $run,
-                        $mountData['row'],
-                        BackendUtility::getRecordTitle('pages', $mountData['row'], true),
-                        (string) $data['HTML'],
-                        $mountPoint
-                    ));
-                }
+                $queueRows = array_merge($queueRows, $this->getQueueRowsForMountedPages(
+                    $run,
+                    (int) $mountpage['mount_pid'],
+                    $depth,
+                    $perms_clause,
+                    (string) $data['HTML'],
+                    $mountPoint
+                ));
 
                 // replace page when mount_pid_ol is enabled
                 if ($mountpage['mount_pid_ol']) {
@@ -131,6 +109,62 @@ final class PageTreeUrlCollector
         }
 
         return $queueRows;
+    }
+
+    private function buildPageTree(int $id, int $depth, string $perms_clause): PageTreeView
+    {
+        // Drawing tree:
+        $tree = $this->createPageTreeView($perms_clause);
+
+        $pageInfo = BackendUtility::readPageAccess($id, $perms_clause);
+        if (is_array($pageInfo)) {
+            // Set root row:
+            $tree->tree[] = [
+                'row' => $pageInfo,
+                'HTML' => $this->iconFactory->getIconForRecord('pages', $pageInfo, IconSize::SMALL),
+            ];
+        }
+
+        // Get branch beneath:
+        if ($depth) {
+            $tree->getTree($id, $depth, '');
+        }
+
+        return $tree;
+    }
+
+    /**
+     * @return list<QueueRow>
+     */
+    private function getQueueRowsForMountedPages(
+        CrawlRun $run,
+        int $mountPid,
+        int $depth,
+        string $perms_clause,
+        string $pageTitleHTML,
+        string $mountPoint
+    ): array {
+        $mountTree = $this->createPageTreeView($perms_clause);
+        $mountTree->getTree($mountPid, $depth);
+
+        $queueRows = [];
+        foreach ($mountTree->tree as $mountData) {
+            $queueRows = array_merge($queueRows, $this->getQueueRowsForPage(
+                $run,
+                $mountData['row'],
+                BackendUtility::getRecordTitle('pages', $mountData['row'], true),
+                $pageTitleHTML,
+                $mountPoint
+            ));
+        }
+        return $queueRows;
+    }
+
+    private function createPageTreeView(string $perms_clause): PageTreeView
+    {
+        $tree = GeneralUtility::makeInstance(PageTreeView::class);
+        $tree->init(empty($perms_clause) ? '' : ('AND ' . $perms_clause));
+        return $tree;
     }
 
     /**
