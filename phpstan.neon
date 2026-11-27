@@ -30,7 +30,6 @@ parameters:
                 - Classes/ContextMenu/*
                 - Classes/Controller/*
                 - Classes/CrawlStrategy/*
-                - Classes/Middleware/*
                 - Classes/Queue/*
                 - Classes/QueueExecutor.php
                 - Classes/Service/*
