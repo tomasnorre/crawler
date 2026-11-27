@@ -120,7 +120,8 @@ final class QueueEntryWriter
                         $configurationHash,
                         $skipInnerCheck
                     );
-                    if ($added === false) {
+                    // Collected queue entries are never stored, so addUrl() returns false for them as well
+                    if ($added === false && !$run->collectQueueEntriesOnly) {
                         $urlList .= ' (URL already existed)';
                     }
                 } elseif ($run->collectDownloadUrls) {
