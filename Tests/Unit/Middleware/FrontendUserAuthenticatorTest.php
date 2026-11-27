@@ -105,15 +105,24 @@ class FrontendUserAuthenticatorTest extends UnitTestCase
         $request = (new ServerRequest('https://example.com/'))
             ->withHeader('X-T3CRAWLER', '12:' . $this->getHash(12, 34))
             ->withAttribute('frontend.user', $frontendUser);
+        $userOnFetchGroupData = null;
         $frontendUser->expects(self::once())->method('fetchGroupData')->with(
             self::callback(
                 static fn (ServerRequestInterface $request): bool => $request->getAttribute('tx_crawler') !== null
             )
-        );
+        )->willReturnCallback(static function () use ($frontendUser, &$userOnFetchGroupData): void {
+            $userOnFetchGroupData = $frontendUser->user;
+        });
 
         $handledRequest = null;
         $subject->process($request, $this->createHandler($handledRequest));
 
+        // The groups are fetched for a user without id and name
+        self::assertSame([
+            'usergroup' => '0,-2,1,2',
+            'uid' => 0,
+            'username' => '',
+        ], $userOnFetchGroupData);
         self::assertSame([
             'usergroup' => '0,-2,1,2',
             'uid' => PHP_INT_MAX,
@@ -121,6 +130,7 @@ class FrontendUserAuthenticatorTest extends UnitTestCase
         ], $frontendUser->user);
         $userAspect = $context->getAspect('frontend.user');
         self::assertInstanceOf(UserAspect::class, $userAspect);
+        self::assertSame(PHP_INT_MAX, $userAspect->get('id'));
         self::assertEquals([0, -2, 1, 2], $userAspect->get('groupIds'));
     }
 

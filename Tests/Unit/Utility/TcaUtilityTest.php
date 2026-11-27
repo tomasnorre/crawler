@@ -99,6 +99,8 @@ class TcaUtilityTest extends UnitTestCase
                     'icon' => '',
                 ],
             ],
+            'table' => 'tx_crawler_configuration',
+            'field' => 'processing_instruction_filter',
         ], (new TcaUtility())->getProcessingInstructions([
             'items' => [
                 [
@@ -106,6 +108,8 @@ class TcaUtilityTest extends UnitTestCase
                     'value' => 'existing',
                 ],
             ],
+            'table' => 'tx_crawler_configuration',
+            'field' => 'processing_instruction_filter',
         ]));
     }
 }

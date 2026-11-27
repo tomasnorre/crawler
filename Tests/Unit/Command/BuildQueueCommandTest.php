@@ -46,6 +46,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\UriInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Formatter\OutputFormatter;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Tester\CommandTester;
 use TYPO3\CMS\Backend\Tree\View\PageTreeView;
@@ -405,6 +406,28 @@ final class BuildQueueCommandTest extends UnitTestCase
     }
 
     #[Test]
+    public function urlModeWritesTheUrlsInOneClosedInfoTag(): void
+    {
+        $this->givenPagesWithConfigurations();
+        $this->addInstancesForExecution();
+        $output = new MessageRecordingOutput();
+
+        $status = $this->createCommand()->run(new ArrayInput([
+            'page' => (string) self::ROOT_PAGE_ID,
+            'conf' => '',
+            '--mode' => 'url',
+            '--depth' => '1',
+        ]), $output);
+
+        self::assertSame(Command::SUCCESS, $status);
+        self::assertSame([
+            '<info>https://example.com/2?config=default' . PHP_EOL
+            . 'https://example.com/2?config=news' . PHP_EOL
+            . 'https://example.com/3?config=default' . PHP_EOL . '</info>',
+        ], $output->lines);
+    }
+
+    #[Test]
     public function queueModeAddsTheUrlsToTheQueue(): void
     {
         $this->givenPagesWithConfigurations();
@@ -570,11 +593,15 @@ final class BuildQueueCommandTest extends UnitTestCase
     {
         $queueRow = new QueueRow('Page title');
         $queueRow->setMessage(' (Because page is hidden)');
-        $output = new BufferedOutput(decorated: true);
+        $output = new MessageRecordingOutput(decorated: true);
 
         (new \ReflectionMethod(BuildQueueCommand::class, 'outputUrls'))
             ->invoke($this->createCommand(), [$queueRow], $output);
 
+        self::assertSame(
+            ['<comment>Page "Page title" is not added to queue (Because page is hidden)</comment>'],
+            $output->lines
+        );
         self::assertSame(
             $this->format(
                 '<comment>Page "Page title" is not added to queue (Because page is hidden)</comment>'
@@ -881,6 +908,16 @@ final class BuildQueueCommandTest extends UnitTestCase
         bool $cleanUpOldQueueEntries = false,
         bool $readsPageTree = true
     ): CommandTester {
+        $this->addInstancesForExecution($cleanUpOldQueueEntries, $readsPageTree);
+
+        return new CommandTester($this->createCommand());
+    }
+
+    /**
+     * Adds the instances one execution of the command creates with GeneralUtility::makeInstance()
+     */
+    private function addInstancesForExecution(bool $cleanUpOldQueueEntries = false, bool $readsPageTree = true): void
+    {
         $extensionConfigurationProvider = $this->createStub(ExtensionConfigurationProvider::class);
         $extensionConfigurationProvider->method('getExtensionConfiguration')->willReturn([
             'cleanUpOldQueueEntries' => $cleanUpOldQueueEntries ? '1' : '0',
@@ -889,8 +926,6 @@ final class BuildQueueCommandTest extends UnitTestCase
         if ($readsPageTree) {
             GeneralUtility::addInstance(PageTreeView::class, $this->pageTree);
         }
-
-        return new CommandTester($this->createCommand());
     }
 
     private function createCommand(): BuildQueueCommand

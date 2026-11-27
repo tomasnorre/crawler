@@ -96,7 +96,8 @@ class ExcludeStringExpanderTest extends UnitTestCase
     private function setBackendUser(): void
     {
         $backendUser = $this->createMock(BackendUserAuthentication::class);
-        $backendUser->method('backendCheckLogin');
+        // The backend user is authenticated before the page permissions are read
+        $backendUser->expects(self::atLeastOnce())->method('backendCheckLogin');
         $backendUser->method('getPagePermsClause')->with(Permission::PAGE_SHOW)->willReturn('perms_clause');
         $GLOBALS['BE_USER'] = $backendUser;
     }

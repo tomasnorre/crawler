@@ -79,7 +79,7 @@ class ConfigurationService
             }
             $key = str_replace('.', '', (string) $key);
             // Sub configuration for a single configuration string:
-            $subCfg = (array) $crawlerCfg[$key . '.'];
+            $subCfg = $values;
             $subCfg['key'] = $key;
 
             if (strcmp($subCfg['procInstrFilter'] ?? '', '')) {
@@ -139,7 +139,7 @@ class ConfigurationService
         if ($pidsOnly === '') {
             return true;
         }
-        return in_array((string) $pageId, GeneralUtility::trimExplode(',', $pidsOnly, true), true);
+        return in_array((string) $pageId, GeneralUtility::trimExplode(',', $pidsOnly), true);
     }
 
     private function hasAccess(array $configurationRecord): bool

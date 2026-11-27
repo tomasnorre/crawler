@@ -36,13 +36,6 @@ class ExcludeStringExpander
     private const DEFAULT_SUBPAGE_DEPTH = 99;
 
     /**
-     * Page ids per exclude string, keys are kept from array_unique()
-     *
-     * @var array<string, array<int, int>>
-     */
-    private array $expandedExcludeStringCache = [];
-
-    /**
      * PageTreeView::$tree per page id and depth
      *
      * @var array<int, array<int, array>>
@@ -57,10 +50,6 @@ class ExcludeStringExpander
      */
     public function expand(string $excludeString): array
     {
-        if (isset($this->expandedExcludeStringCache[$excludeString])) {
-            return $this->expandedExcludeStringCache[$excludeString];
-        }
-
         $pidList = [];
         foreach (GeneralUtility::trimExplode(',', $excludeString, true) as $excludePart) {
             [$pid, $depth] = $this->parseExcludePart($excludePart);
@@ -70,9 +59,7 @@ class ExcludeStringExpander
             }
         }
 
-        $this->expandedExcludeStringCache[$excludeString] = array_unique($pidList);
-
-        return $this->expandedExcludeStringCache[$excludeString];
+        return array_unique($pidList);
     }
 
     /**
@@ -81,7 +68,7 @@ class ExcludeStringExpander
     private function parseExcludePart(string $excludePart): array
     {
         $parts = GeneralUtility::trimExplode('+', $excludePart);
-        $depth = (int) ($parts[1] ?? 0);
+        $depth = (int) ($parts[1] ?? '');
         if ($depth === 0 && str_contains($excludePart, '+')) {
             $depth = self::DEFAULT_SUBPAGE_DEPTH;
         }

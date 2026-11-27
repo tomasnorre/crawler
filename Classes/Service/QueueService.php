@@ -30,6 +30,11 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class QueueService
 {
     /**
+     * The requests per minute only schedule the URL list of the crawl run, which isn't used here
+     */
+    private const REQUESTS_PER_MINUTE = 300;
+
+    /**
      * The set id of all queue entries added by this service
      */
     private readonly int $setId;
@@ -53,7 +58,7 @@ class QueueService
         $configurations = ConfigurationService::removeDisallowedConfigurations($allowedConfigurations, $configurations);
         // No processing instructions are selected, so the URLs of all configurations are added,
         // each with the processing instructions of its configuration
-        $run = new CrawlRun($time, 300, submitUrls: true, setId: $this->setId);
+        $run = new CrawlRun($time, self::REQUESTS_PER_MINUTE, submitUrls: true, setId: $this->setId);
 
         foreach ($configurations as $configuration) {
             $this->queueEntryWriter->compileUrlList($configuration, $pageData, $run);
