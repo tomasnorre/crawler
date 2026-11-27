@@ -190,6 +190,40 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
             ]], []],
         ];
 
+        yield 'Log entry without processing instructions' => [
+            'title' => $title,
+            'setId' => $setId,
+            'showResultLog' => '1',
+            'showFeVars' => '1',
+            'CSVExport' => false,
+            'logEntries' => [
+                [
+                    'qid' => 20,
+                    'parameters' => '{"url":"\\/"}',
+                    'scheduled' => $scheduled,
+                    'set_id' => $setId,
+                    'result_data' => '',
+                    'exec_time' => 0,
+                ],
+            ],
+            'expected' => [[[
+                'titleRowSpan' => 1,
+                'colSpan' => 11,
+                'title' => $title,
+                'trClass' => '',
+                'columns' => [
+                    'result_log' => '',
+                    'result_status' => '-',
+                    'url' => '/',
+                    'feUserGroupList' => '',
+                    'procInstructions' => '',
+                    'set_id' => '987654',
+                    'tsfe_id' => '',
+                    'tsfe_gr_list' => '',
+                ],
+            ]], []],
+        ];
+
         yield 'two log entries' => [
             'title' => $title,
             'setId' => $setId,

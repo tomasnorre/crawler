@@ -120,6 +120,20 @@ class UrlServiceTest extends FunctionalTestCase
         self::assertEquals($expected->getUserInfo(), $actual->getUserInfo());
     }
 
+    #[Test]
+    public function getUrlFromPageAndQueryParametersReturnsNullIfPageIsNotAvailableInRequestedLanguage(): void
+    {
+        $this->getConnectionPool()->getConnectionForTable('pages')->insert('pages', [
+            'uid' => 3,
+            'pid' => 1,
+            'title' => 'Hidden',
+            'slug' => '/hidden',
+            'hidden' => 1,
+        ]);
+
+        self::assertNull($this->subject->getUrlFromPageAndQueryParameters(3, 'L=1', '', 1));
+    }
+
     public static function getUrlFromPageAndQueryParametersReturnExpectedUrlDataProvider(): iterable
     {
         $uri = new Uri();

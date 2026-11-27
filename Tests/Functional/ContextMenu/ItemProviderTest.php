@@ -23,6 +23,7 @@ use AOE\Crawler\ContextMenu\ItemProvider;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Localization\LanguageService;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 class ItemProviderTest extends FunctionalTestCase
@@ -67,5 +68,33 @@ class ItemProviderTest extends FunctionalTestCase
         $subject = new ItemProvider();
         self::assertArrayHasKey('crawler', $subject->addItems($newItems));
         self::assertArrayHasKey('other-ext', $subject->addItems($newItems));
+    }
+
+    #[Test]
+    public function addItemsAddsAttributesToStartCrawlingWithTheConfiguration(): void
+    {
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/tx_crawler_configuration.csv');
+        $subject = new ItemProvider();
+        $subject->setContext('tx_crawler_configuration', '1');
+
+        self::assertSame(
+            [
+                'data-dispatch-action' => 'TYPO3.ModuleMenu.showModule',
+                'data-dispatch-args-list' => 'web_site_crawler_start,&' . GeneralUtility::quoteJSvalue(
+                    '&SET[function]=AOE\\Crawler\\Backend\\BackendModule&SET[crawlaction]=start'
+                    . '&configurationSelection[]=Not hidden or deleted'
+                ),
+            ],
+            $subject->addItems([])['crawler']['additionalAttributes']
+        );
+    }
+
+    #[Test]
+    public function addItemsAddsNoAttributesForMissingConfiguration(): void
+    {
+        $subject = new ItemProvider();
+        $subject->setContext('tx_crawler_configuration', '4711');
+
+        self::assertSame([], $subject->addItems([])['crawler']['additionalAttributes']);
     }
 }

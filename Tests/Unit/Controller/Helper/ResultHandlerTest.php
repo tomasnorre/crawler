@@ -126,6 +126,18 @@ class ResultHandlerTest extends UnitTestCase
             ],
             'expected' => [],
         ];
+        yield 'Result data content is not valid JSON' => [
+            'resultData' => [
+                'content' => '{not json',
+            ],
+            'expected' => [],
+        ];
+        yield 'Result data content is JSON encoded false' => [
+            'resultData' => [
+                'content' => 'false',
+            ],
+            'expected' => [],
+        ];
         yield 'Result data vars is present and not empty' => [
             'resultData' => [
                 'content' => json_encode([

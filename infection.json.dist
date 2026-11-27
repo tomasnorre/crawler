@@ -12,7 +12,7 @@
     "phpUnit": {
         "configDir": "Tests\/"
     },
-    "minMsi": 68,
+    "minMsi": 69,
     "minCoveredMsi": 99,
     "logs": {
         "text": "infection.log",
