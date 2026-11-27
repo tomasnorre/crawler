@@ -75,6 +75,9 @@ Before calling a task done, run the unit tests, `composer test:functional-sqlite
 - Reference the GitHub issue in the footer as `Resolves: #123`.
 - Work on a topic branch off `main` and open a pull request; do not commit to
   `main` directly.
+- Name branches `<type>/<description>`, with a short kebab-case description and one of these types:
+  `task/`, `feature/`, `bugfix/`, `ci/`, `docs/` (fx. `bugfix/export-every-log-entry`).
+  Never put the name of an agent or tool (fx. `claude`, `codex`, `copilot`) in a branch or worktree name.
 - Never touch `main` or the release branches (`v<digit>.x`, fx. `v12.x`, `v13.x`) directly: no commits, pushes,
   force-pushes, rebases, resets or deletions, locally or on the remote. They only change through merged pull requests.
   Branch cleanups leave them alone.
