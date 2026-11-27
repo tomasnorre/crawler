@@ -243,6 +243,19 @@ class PageServiceTest extends UnitTestCase
         yield 'Page without rootline is included' => [999, false];
     }
 
+    /**
+     * Used by the CrawlUrlHandler, which checks the exclusion again before crawling a queued URL
+     */
+    #[Test]
+    public function getExclusionReasonReturnsTheReasonOfAParentPage(): void
+    {
+        self::assertSame(
+            'Because parent page "4" is excluded from crawling with its subpages',
+            $this->subject->getExclusionReason(6)
+        );
+        self::assertFalse($this->subject->getExclusionReason(3));
+    }
+
     #[Test]
     public function checkIfPageShouldBeSkippedReturnsExclusionBeforeDispatchingTheEvent(): void
     {

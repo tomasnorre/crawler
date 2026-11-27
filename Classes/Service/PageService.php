@@ -78,8 +78,10 @@ class PageService
     /**
      * Checks the "Exclude from crawling" page properties of the page and its parent pages.
      * A page is excluded if it is excluded itself, or if a parent page excludes its subpages too.
+     *
+     * @return false|string false if the page is not excluded, otherwise the reason
      */
-    private function getExclusionReason(int $pageId): false|string
+    public function getExclusionReason(int $pageId): false|string
     {
         if ($pageId === 0) {
             return false;

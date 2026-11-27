@@ -11,3 +11,4 @@
 ,9,1,"Page3",1,"/page3",0,0,0
 ,10,1,"Deleted page excluded with its subpages",1,"/deleted",1,1,1
 ,11,10,"Subpage of deleted page",1,"/deleted/subpage",0,0,0
+,12,12,"Page that is its own parent",1,"/loop",0,0,0

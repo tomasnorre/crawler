@@ -25,6 +25,7 @@ use AOE\Crawler\Event\BeforeQueueItemAddedEvent;
 use AOE\Crawler\Queue\Handler\CrawlUrlHandler;
 use AOE\Crawler\Queue\Message\CrawlUrlMessage;
 use AOE\Crawler\QueueExecutor;
+use AOE\Crawler\Service\PageService;
 use AOE\Crawler\Tests\Unit\FrozenClock;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -39,6 +40,7 @@ class CrawlUrlHandlerTest extends UnitTestCase
     private QueueRepository&MockObject $queueRepository;
     private QueueExecutor&MockObject $queueExecutor;
     private EventDispatcherInterface&MockObject $eventDispatcher;
+    private PageService&MockObject $pageService;
     private CrawlUrlHandler $subject;
 
     protected function setUp(): void
@@ -47,11 +49,13 @@ class CrawlUrlHandlerTest extends UnitTestCase
         $this->queueRepository = $this->createMock(QueueRepository::class);
         $this->queueExecutor = $this->createMock(QueueExecutor::class);
         $this->eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $this->pageService = $this->createMock(PageService::class);
         $this->subject = new CrawlUrlHandler(
             $this->queueRepository,
             $this->queueExecutor,
             $this->eventDispatcher,
             new FrozenClock(1_000_000),
+            $this->pageService,
         );
     }
 
@@ -62,8 +66,45 @@ class CrawlUrlHandlerTest extends UnitTestCase
         $this->queueExecutor->expects(self::never())->method('executeQueueItem');
         $this->queueRepository->expects(self::never())->method('update');
         $this->eventDispatcher->expects(self::never())->method('dispatch');
+        $this->pageService->expects(self::never())->method('getExclusionReason');
 
         self::assertNull(($this->subject)(new CrawlUrlMessage(12)));
+    }
+
+    #[Test]
+    public function doesNotCrawlQueueRecordOfPageExcludedFromCrawling(): void
+    {
+        $this->queueRepository->method('getQueueEntriesByQid')->with(12, false)->willReturn([
+            'qid' => 12,
+            'page_id' => 7,
+            'parameters' => '{"url":"https://example.com/"}',
+        ]);
+        $this->pageService->expects(self::once())->method('getExclusionReason')->with(7)
+            ->willReturn('Because page is excluded from crawling');
+        $this->queueExecutor->expects(self::never())->method('executeQueueItem');
+        $this->eventDispatcher->expects(self::never())->method('dispatch');
+        $this->queueRepository->expects(self::once())->method('update')->with(12, [
+            'exec_time' => 1_000_000,
+            'result_data' => '{"content":"{\\"errorlog\\":[\\"Skipped: Because page is excluded from crawling\\"]}"}',
+        ]);
+
+        self::assertNull(($this->subject)(new CrawlUrlMessage(12)));
+    }
+
+    #[Test]
+    public function crawlsQueueRecordOfPageNotExcludedFromCrawling(): void
+    {
+        $queueRecord = [
+            'qid' => 12,
+            'page_id' => 7,
+            'parameters' => '{"url":"https://example.com/"}',
+        ];
+        $this->queueRepository->method('getQueueEntriesByQid')->with(12, false)->willReturn($queueRecord);
+        $this->pageService->expects(self::once())->method('getExclusionReason')->with(7)->willReturn(false);
+        $this->eventDispatcher->method('dispatch')->willReturnArgument(0);
+        $this->queueExecutor->expects(self::once())->method('executeQueueItem')->with($queueRecord)->willReturn(false);
+
+        self::assertFalse(($this->subject)(new CrawlUrlMessage(12)));
     }
 
     #[Test]
@@ -81,6 +122,8 @@ class CrawlUrlHandlerTest extends UnitTestCase
         ];
 
         $this->queueRepository->method('getQueueEntriesByQid')->with(12, true)->willReturn($queueRecord);
+        // The record has no page_id, fx. a callback
+        $this->pageService->expects(self::once())->method('getExclusionReason')->with(0)->willReturn(false);
         $this->eventDispatcher->expects(self::exactly(2))->method('dispatch')->willReturnCallback(
             static function (object $event) use ($modifiedQueueRecord): object {
                 if ($event instanceof BeforeQueueItemAddedEvent) {

@@ -44,7 +44,7 @@ final class PageRootlineProviderTest extends FunctionalTestCase
     #[Test]
     public function getRootlineWithExclusionFieldsStartsWithThePageAndEndsWithTheRootPage(): void
     {
-        $subject = GeneralUtility::makeInstance(PageRootlineProvider::class);
+        $subject = new PageRootlineProvider($this->getConnectionPool());
 
         self::assertSame(
             [
@@ -73,10 +73,40 @@ final class PageRootlineProviderTest extends FunctionalTestCase
         );
     }
 
+    /**
+     * The message bus worker runs for a long time, the exclusion can change in the meantime
+     */
+    #[Test]
+    public function getRootlineWithExclusionFieldsReadsChangedExclusionAgain(): void
+    {
+        $subject = new PageRootlineProvider($this->getConnectionPool());
+        self::assertFalse($subject->getRootlineWithExclusionFields(3)[0]['tx_crawler_exclude']);
+
+        $this->getConnectionPool()->getConnectionForTable('pages')->update(
+            'pages',
+            [
+                'tx_crawler_exclude' => 1,
+            ],
+            [
+                'uid' => 3,
+            ]
+        );
+
+        self::assertTrue($subject->getRootlineWithExclusionFields(3)[0]['tx_crawler_exclude']);
+    }
+
+    #[Test]
+    public function getRootlineWithExclusionFieldsStopsAfterHundredLevelsForLoopsInThePageTree(): void
+    {
+        $subject = new PageRootlineProvider($this->getConnectionPool());
+
+        self::assertCount(100, $subject->getRootlineWithExclusionFields(12));
+    }
+
     #[Test]
     public function getRootlineWithExclusionFieldsReturnsEmptyArrayForMissingPage(): void
     {
-        $subject = GeneralUtility::makeInstance(PageRootlineProvider::class);
+        $subject = new PageRootlineProvider($this->getConnectionPool());
 
         self::assertSame([], $subject->getRootlineWithExclusionFields(999));
     }

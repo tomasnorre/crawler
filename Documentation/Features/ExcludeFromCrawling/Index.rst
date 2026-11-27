@@ -65,6 +65,14 @@ The :guilabel:`Start Crawling` module and the `queue` mode of
 *   `Because page is excluded from crawling`
 *   `Because parent page "4" is excluded from crawling with its subpages`
 
+Pages that are already in the queue when they are excluded are not crawled
+either: the worker (`messenger:consume`) checks the exclusion again right
+before it crawls a URL. The queue entry is marked as processed without
+crawling, and the :guilabel:`Crawler log` shows the reason as status, fx.
+`Skipped: Because page is excluded from crawling`. As the worker reads the
+rootline from the database for every URL, a running worker picks up changes
+of the exclusion right away, it does not have to be restarted.
+
 Some details:
 
 *   The rootline follows the real location of a page in the page tree. A page
