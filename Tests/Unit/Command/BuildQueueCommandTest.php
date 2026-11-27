@@ -642,11 +642,10 @@ final class BuildQueueCommandTest extends UnitTestCase
         self::assertSame('default', $addedEntries[0]['configuration']);
         self::assertSame('index', $addedEntries[1]['configuration']);
 
-        // QueueEntryWriter::addUrl() reports entries that are only collected as not added
         self::assertStringStartsWith(
             $this->format('<info>Executing 2 requests right away:</info>') . PHP_EOL
-            . $this->format('<info>' . $this->getUrlLine(2, 'default') . ' (URL already existed)</info>') . PHP_EOL
-            . $this->format('<info>' . $this->getUrlLine(2, 'index') . ' (URL already existed)</info>') . PHP_EOL
+            . $this->format('<info>' . $this->getUrlLine(2, 'default') . '</info>') . PHP_EOL
+            . $this->format('<info>' . $this->getUrlLine(2, 'index') . '</info>') . PHP_EOL
             . $this->format('<info>Processing</info>' . PHP_EOL) . PHP_EOL,
             $display
         );
