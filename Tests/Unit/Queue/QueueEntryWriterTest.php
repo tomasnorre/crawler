@@ -332,6 +332,23 @@ class QueueEntryWriterTest extends UnitTestCase
     }
 
     #[Test]
+    public function compileUrlListDoesNotMarkUrlsAsExistingIfQueueEntriesAreOnlyCollected(): void
+    {
+        $queueRepository = $this->createMock(QueueRepository::class);
+        $queueRepository->method('noUnprocessedQueueEntriesForPageWithConfigurationHashExist')->willReturn(false);
+        $queueRepository->expects(self::never())->method('add');
+        $run = new CrawlRun(1_000_000, 30, submitUrls: true, collectQueueEntriesOnly: true);
+
+        $urls = $this->createSubjectForCompileUrlList(queueRepository: $queueRepository)
+            ->compileUrlList($this->getConfiguration(['L=0']), [
+                'uid' => 5,
+            ], $run);
+
+        self::assertStringEndsWith('] https://example.com/?L=0', $urls);
+        self::assertCount(1, $run->getQueueEntries());
+    }
+
+    #[Test]
     public function compileUrlListSkipsDuplicateCheckIfNoUnprocessedEntriesOfTheConfigurationExist(): void
     {
         $queueRepository = $this->createMock(QueueRepository::class);
