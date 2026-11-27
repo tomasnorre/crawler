@@ -33,6 +33,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class DataHandlerHook
 {
     /**
+     * @param array{pageIdArray: array<int|string>, functionID: string, table?: string, uid?: int, cacheCmd?: int|string} $parameters
+     *
      * @noRector \Rector\DeadCode\Rector\ClassMethod\RemoveUnusedParameterRector
      */
     public function addFlushedPagesToCrawlerQueue(array $parameters, DataHandler $dataHandler): void

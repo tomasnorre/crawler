@@ -31,7 +31,6 @@ parameters:
                 - Classes/ContextMenu/*
                 - Classes/Controller/*
                 - Classes/CrawlStrategy/*
-                - Classes/Hooks/*
                 - Classes/Middleware/*
                 - Classes/Queue/*
                 - Classes/QueueExecutor.php
