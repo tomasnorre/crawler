@@ -33,7 +33,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class ItemProvider extends AbstractProvider
 {
     /**
-     * @var array
+     * @var array<string, array<string, string>>
      */
     protected $itemsConfiguration = [
         'crawler' => [
@@ -64,6 +64,9 @@ class ItemProvider extends AbstractProvider
 
     /**
      * Adds the crawler info
+     *
+     * @param array<array-key, mixed> $items
+     * @return array<array-key, mixed>
      */
     #[\Override]
     public function addItems(array $items): array
@@ -72,6 +75,9 @@ class ItemProvider extends AbstractProvider
         return $items + $localItems;
     }
 
+    /**
+     * @return array<string, string>
+     */
     #[\Override]
     protected function getAdditionalAttributes(string $itemName): array
     {
