@@ -29,6 +29,7 @@ use AOE\Crawler\Event\AfterUrlCrawledEvent;
 use AOE\Crawler\Queue\QueueEntryWriter;
 use AOE\Crawler\QueueExecutor;
 use AOE\Crawler\Tests\Unit\CrawlStrategy\CallbackObjectForTesting;
+use AOE\Crawler\Value\CrawlResult;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -66,8 +67,14 @@ class QueueExecutorTest extends UnitTestCase
     #[Test]
     public function invalidArgumentsReturnErrorInExecuteQueueItem(array $queueItem): void
     {
-        $result = $this->queueExecutor->executeQueueItem($queueItem);
-        self::assertEquals('ERROR', $result);
+        $eventDispatcher = $this->createMock(EventDispatcher::class);
+        $eventDispatcher->expects(self::never())->method('dispatch');
+        $crawlStrategy = $this->createMock(CrawlStrategyInterface::class);
+        $crawlStrategy->expects(self::never())->method('fetchUrlContents');
+
+        $result = $this->createQueueExecutor($crawlStrategy, $eventDispatcher)->executeQueueItem($queueItem);
+
+        self::assertEquals(CrawlResult::error(QueueExecutor::INVALID_PARAMETERS_MESSAGE), $result);
     }
 
     #[Test]
@@ -82,29 +89,26 @@ class QueueExecutorTest extends UnitTestCase
 
         $result = $this->queueExecutor->executeQueueItem($queueItem);
 
-        self::assertSame([
-            'content' => json_encode('Hi, it works! Crawler'),
-        ], $result);
+        self::assertSame('Hi, it works! Crawler', $result->getContent());
     }
 
     #[Test]
     public function executeQueueItemFetchesUrlWithCrawlStrategyAndDispatchesEvent(): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'] = 'encryption-key';
+        $crawlResult = CrawlResult::fromContent([
+            'vars' => [
+                'id' => 5,
+            ],
+        ]);
         $crawlStrategy = $this->createMock(GuzzleExecutionStrategy::class);
         $crawlStrategy->expects(self::once())->method('fetchUrlContents')
             ->with(new Uri('https://example.com/'), '12:' . md5('12|34|encryption-key'))
-            ->willReturn([
-                'vars' => [
-                    'id' => 5,
-                ],
-            ]);
+            ->willReturn($crawlResult);
         $eventDispatcher = $this->createMock(EventDispatcher::class);
         $eventDispatcher->expects(self::once())->method('dispatch')->with(self::callback(
             static fn (AfterUrlCrawledEvent $event): bool => $event->getUrl() === 'https://example.com/'
-                && $event->getResult() === [
-                    'content' => '{"vars":{"id":5}}',
-                ]
+                && $event->getResult() === $crawlResult
         ))->willReturnArgument(0);
 
         $result = $this->createQueueExecutor($crawlStrategy, $eventDispatcher)->executeQueueItem([
@@ -113,25 +117,7 @@ class QueueExecutorTest extends UnitTestCase
             'parameters' => '{"url":"https:\/\/example.com\/"}',
         ]);
 
-        self::assertSame([
-            'content' => '{"vars":{"id":5}}',
-        ], $result);
-    }
-
-    #[Test]
-    public function executeQueueItemReturnsFalseIfUrlCouldNotBeFetched(): void
-    {
-        $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'] = 'encryption-key';
-        $crawlStrategy = $this->createStub(CrawlStrategyInterface::class);
-        $crawlStrategy->method('fetchUrlContents')->willReturn(false);
-        $eventDispatcher = $this->createMock(EventDispatcher::class);
-        $eventDispatcher->expects(self::never())->method('dispatch');
-
-        self::assertFalse($this->createQueueExecutor($crawlStrategy, $eventDispatcher)->executeQueueItem([
-            'qid' => 12,
-            'set_id' => 34,
-            'parameters' => '{"url":"https:\/\/example.com\/"}',
-        ]));
+        self::assertSame($crawlResult, $result);
     }
 
     public static function invalidArgumentsReturnErrorInExecuteQueueItemDataProvider(): iterable

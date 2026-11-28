@@ -20,7 +20,6 @@ namespace AOE\Crawler\Controller\Backend;
  */
 
 use AOE\Crawler\Controller\Backend\Helper\RequestHelper;
-use AOE\Crawler\Controller\Backend\Helper\ResultHandler;
 use AOE\Crawler\Controller\Backend\Helper\UrlBuilder;
 use AOE\Crawler\Controller\Backend\Interface\BackendModuleControllerInterface;
 use AOE\Crawler\Domain\Repository\QueueRepository;
@@ -30,6 +29,7 @@ use AOE\Crawler\Queue\Message\CrawlUrlMessage;
 use AOE\Crawler\Service\BackendModuleLogService;
 use AOE\Crawler\Service\BackendModuleScriptUrlService;
 use AOE\Crawler\Utility\MessageUtility;
+use AOE\Crawler\Value\CrawlResult;
 use AOE\Crawler\Value\QueueFilter;
 use AOE\Crawler\Writer\FileWriter\CsvWriter\Interface\CsvWriterInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -124,20 +124,35 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
             ->fetchAssociative();
 
         if ($q_entry === false) {
-            return [[], ResultHandler::getResStatus([])];
+            return [[], BackendModuleLogService::STATUS_NOT_CRAWLED];
         }
+        return $this->decodeQueueEntry($q_entry);
+    }
 
-        // Explode values
+    /**
+     * @param array<string, mixed> $q_entry
+     * @return array{array<string, mixed>, string} The queue entry with decoded parameters and result data, and its result status
+     */
+    private function decodeQueueEntry(array $q_entry): array
+    {
         $q_entry['parameters'] = json_decode((string) $q_entry['parameters'], true);
-        $q_entry['result_data'] = json_decode((string) $q_entry['result_data'], true);
-        $resStatus = ResultHandler::getResStatus($q_entry['result_data']);
-        if (is_array($q_entry['result_data'])) {
-            $q_entry['result_data']['content'] = json_decode((string) $q_entry['result_data']['content'], true);
-            if (!$this->showResultLog && is_array($q_entry['result_data']['content'])) {
-                unset($q_entry['result_data']['content']['log']);
-            }
+        $result = CrawlResult::fromResultData((string) $q_entry['result_data']);
+        $q_entry['result_data'] = $result instanceof CrawlResult ? [
+            'content' => $this->getDisplayedContent($result),
+        ] : null;
+        return [$q_entry, $result?->getStatus() ?? BackendModuleLogService::STATUS_NOT_CRAWLED];
+    }
+
+    /**
+     * The content of the crawl result, without the log unless the result log is shown
+     */
+    private function getDisplayedContent(CrawlResult $result): mixed
+    {
+        $content = $result->getContent();
+        if (!$this->showResultLog && is_array($content)) {
+            unset($content['log']);
         }
-        return [$q_entry, $resStatus];
+        return $content;
     }
 
     /**

@@ -37,6 +37,7 @@ use AOE\Crawler\Service\PageTreeUrlCollector;
 use AOE\Crawler\Service\ProcessInstructionService;
 use AOE\Crawler\Service\UrlService;
 use AOE\Crawler\Tests\Unit\FrozenClock;
+use AOE\Crawler\Value\CrawlResult;
 use AOE\Crawler\Value\QueueRow;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -644,16 +645,12 @@ final class BuildQueueCommandTest extends UnitTestCase
         $this->queueExecutor->expects(self::exactly(2))
             ->method('executeQueueItem')
             ->willReturnOnConsecutiveCalls(
-                [
-                    'content' => json_encode([
-                        'log' => ['First line', 'Second line'],
-                    ]),
-                ],
-                [
-                    'content' => json_encode([
-                        'vars' => [],
-                    ]),
-                ],
+                CrawlResult::fromContent([
+                    'log' => ['First line', 'Second line'],
+                ]),
+                CrawlResult::fromContent([
+                    'vars' => [],
+                ]),
             );
 
         $commandTester = $this->createCommandTester();
@@ -705,9 +702,7 @@ final class BuildQueueCommandTest extends UnitTestCase
         array $processingInstructions,
         string $expectedSuffix
     ): void {
-        $this->givenCrawlResult([
-            'content' => '[]',
-        ]);
+        $this->givenCrawlResult(CrawlResult::fromContent([]));
 
         $output = $this->invokeOutputModeExec([
             [
@@ -732,7 +727,7 @@ final class BuildQueueCommandTest extends UnitTestCase
 
     #[Test]
     #[DataProvider('invalidCrawlResultDataProvider')]
-    public function outputModeExecShowsInvalidCrawlResults(mixed $result, string $expectedOutput): void
+    public function outputModeExecShowsInvalidCrawlResults(CrawlResult $result, string $expectedOutput): void
     {
         $this->givenCrawlResult($result);
 
@@ -748,22 +743,46 @@ final class BuildQueueCommandTest extends UnitTestCase
             ) . PHP_EOL,
             $output
         );
+        self::assertStringNotContainsString('OK:', $output);
+    }
+
+    #[Test]
+    public function outputModeExecShowsErrorIfQueueEntryIsNotCrawled(): void
+    {
+        $this->queueRepository->expects(self::once())->method('add')->willReturn(1);
+        // The entry is gone or already crawled, the handler returns no result
+        $this->queueRepository->method('getQueueEntriesByQid')->willReturn(false);
+        $this->queueExecutor->expects(self::never())->method('executeQueueItem');
+
+        $output = $this->invokeOutputModeExec([
+            [
+                'url' => 'https://example.com/',
+            ],
+        ]);
+
+        self::assertStringContainsString(
+            $this->format('<error>Error checking Crawler Result:  null...' . PHP_EOL . '</error>' . PHP_EOL),
+            $output
+        );
     }
 
     public static function invalidCrawlResultDataProvider(): iterable
     {
         yield 'HTML content' => [
-            [
-                'content' => '<html><body><p>Fatal' . chr(10) . '   error</p></body></html>',
-            ],
+            CrawlResult::fromContent('<html><body><p>Fatal' . chr(10) . '   error</p></body></html>'),
             'Fatal error',
         ];
-        yield 'no content' => [[], ''];
-        yield 'no result' => [false, ''];
+        yield 'no content' => [CrawlResult::fromContent(null), 'null'];
+        yield 'false' => [CrawlResult::fromContent(false), 'false'];
+        yield 'scalar return value of a callback' => [CrawlResult::fromContent(42), '42'];
+        yield 'object return value of a callback' => [
+            CrawlResult::fromContent((object) [
+                'greeting' => 'Hi',
+            ]),
+            '{"greeting":"Hi"}',
+        ];
         yield 'long content is shortened' => [
-            [
-                'content' => str_repeat('a', 30001),
-            ],
+            CrawlResult::fromContent(str_repeat('a', 30001)),
             str_repeat('a', 30000),
         ];
     }
@@ -772,9 +791,7 @@ final class BuildQueueCommandTest extends UnitTestCase
     public function outputModeExecSkipsQueueEntriesWithoutParameters(): void
     {
         // Only the second entry is crawled
-        $this->givenCrawlResult([
-            'content' => '[]',
-        ], 1);
+        $this->givenCrawlResult(CrawlResult::fromContent([]), 1);
 
         $output = $this->invokeOutputModeExec([
             false,
@@ -790,7 +807,7 @@ final class BuildQueueCommandTest extends UnitTestCase
     /**
      * Each queue entry is added to the queue as entry 1 and crawled with the given result
      */
-    private function givenCrawlResult(mixed $result, int $numberOfEntries = 1): void
+    private function givenCrawlResult(CrawlResult $result, int $numberOfEntries = 1): void
     {
         $this->queueRepository->expects(self::exactly($numberOfEntries))->method('add')->willReturn(1);
         $this->queueRepository->method('getQueueEntriesByQid')->willReturn([

@@ -367,6 +367,65 @@ class BackendModuleLogServiceTest extends FunctionalTestCase
             ]], []],
         ];
 
+        yield 'One crawled log entry with result log and frontend variables, CSVExport is true' => [
+            'title' => $title,
+            'setId' => $setId,
+            'showResultLog' => '1',
+            'showFeVars' => '1',
+            'CSVExport' => true,
+            'logEntries' => [
+                [
+                    'qid' => 21,
+                    'parameters' => '{"url":"\/","feUserGroupList":"1","procInstructions":["tx_indexedsearch_reindex"]}',
+                    'scheduled' => 0,
+                    'set_id' => $setId,
+                    'result_data' => json_encode([
+                        'content' => json_encode([
+                            'log' => ['User Groups: 1', 'Second line'],
+                            'vars' => [
+                                'id' => 5,
+                                'gr_list' => '0,-2,1',
+                            ],
+                        ]),
+                    ]),
+                    'exec_time' => 0,
+                ],
+            ],
+            'expected' => [
+                [
+                    [
+                        'titleRowSpan' => 1,
+                        'colSpan' => 11,
+                        'title' => $title,
+                        'trClass' => '',
+                        'columns' => [
+                            'result_log' => 'User Groups: 1<br />' . chr(10) . 'Second line',
+                            'result_status' => 'OK',
+                            'url' => '/',
+                            'feUserGroupList' => '1',
+                            'procInstructions' => 'tx_indexedsearch_reindex',
+                            'set_id' => '987654',
+                            'tsfe_id' => '5',
+                            'tsfe_gr_list' => '0,-2,1',
+                        ],
+                    ],
+                ],
+                [
+                    [
+                        'scheduled' => '1970-01-01 00:00',
+                        'exec_time' => '-',
+                        'result_status' => 'OK',
+                        'url' => '/',
+                        'feUserGroupList' => '1',
+                        'procInstructions' => 'tx_indexedsearch_reindex',
+                        'set_id' => '987654',
+                        'result_log' => 'User Groups: 1// Second line',
+                        'qid' => 21,
+                    ],
+                ],
+            ],
+        ];
+
         yield 'One log entry, CSVExport is true' => [
             'title' => $title,
             'setId' => $setId,

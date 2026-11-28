@@ -19,6 +19,7 @@ namespace AOE\Crawler\CrawlStrategy\Interface;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Value\CrawlResult;
 use Psr\Http\Message\UriInterface;
 
 /**
@@ -27,16 +28,7 @@ use Psr\Http\Message\UriInterface;
 interface CrawlStrategyInterface
 {
     /**
-     * Fetch the given URL and return its textual response
-     *
-     * @return array<array-key, mixed>|false "false" on errors without explanation.
-     *                     Array may contain the following optional keys:
-     *                     - errorlog: array of string error messages
-     *                     - content: HTML content (string)
-     *                     - running: bool
-     *                     - parameters: array
-     *                     - log: array of strings
-     *                     - vars: array
+     * Fetch the given URL and return the crawler data the page reports, or the error
      */
-    public function fetchUrlContents(UriInterface $url, string $crawlerId): array|false;
+    public function fetchUrlContents(UriInterface $url, string $crawlerId): CrawlResult;
 }

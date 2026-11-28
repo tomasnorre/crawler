@@ -8,8 +8,11 @@ use AOE\Crawler\Event\AfterUrlCrawledEvent;
 
 final class AfterUrlCrawledEventListener
 {
-    public function __invoke(AfterUrlCrawledEvent $afterUrlCrawledEvent)
+    public function __invoke(AfterUrlCrawledEvent $afterUrlCrawledEvent): void
     {
-        // VarnishBanUrl($afterUrlCrawledEvent->$afterUrl());
+        // The crawl result, fx. getStatus(), getErrorLog(), getLog() or getVars()
+        if ($afterUrlCrawledEvent->getResult()->getErrorLog() === []) {
+            // VarnishBanUrl($afterUrlCrawledEvent->getUrl());
+        }
     }
 }

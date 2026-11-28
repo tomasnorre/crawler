@@ -89,7 +89,7 @@ class FrontendSubRequestExecutionStrategyTest extends UnitTestCase
         parent::tearDown();
     }
 
-    public static function fetchUrlContentsReturnsFalseForUrlsWithoutHttpDataProvider(): iterable
+    public static function fetchUrlContentsReturnsErrorForUrlsWithoutHttpDataProvider(): iterable
     {
         yield 'no scheme' => [
             'url' => new Uri('not-an-url'),
@@ -102,9 +102,9 @@ class FrontendSubRequestExecutionStrategyTest extends UnitTestCase
         ];
     }
 
-    #[DataProvider('fetchUrlContentsReturnsFalseForUrlsWithoutHttpDataProvider')]
+    #[DataProvider('fetchUrlContentsReturnsErrorForUrlsWithoutHttpDataProvider')]
     #[Test]
-    public function fetchUrlContentsReturnsFalseForUrlsWithoutHttp(Uri $url): void
+    public function fetchUrlContentsReturnsErrorForUrlsWithoutHttp(Uri $url): void
     {
         $this->application->expects(self::never())->method('handle');
         $this->logger->expects(self::once())->method('debug')->with(
@@ -114,7 +114,12 @@ class FrontendSubRequestExecutionStrategyTest extends UnitTestCase
             ]
         );
 
-        self::assertFalse($this->createSubject()->fetchUrlContents($url, self::CRAWLER_ID));
+        self::assertSame(
+            [
+                'errorlog' => [sprintf('Scheme does not match for url "%s"', $url)],
+            ],
+            $this->createSubject()->fetchUrlContents($url, self::CRAWLER_ID)->getContent()
+        );
     }
 
     #[Test]
@@ -125,7 +130,7 @@ class FrontendSubRequestExecutionStrategyTest extends UnitTestCase
         $this->createSubject()->fetchUrlContents(
             new Uri('https://user:p%40ss@example.com:8443/page?id=12&foo[bar]=baz'),
             self::CRAWLER_ID
-        );
+        )->getContent();
 
         self::assertCount(1, $this->handledRequests);
         $request = $this->handledRequests[0];
@@ -161,7 +166,7 @@ class FrontendSubRequestExecutionStrategyTest extends UnitTestCase
     {
         $this->respondWith(new Response());
 
-        $this->createSubject()->fetchUrlContents(new Uri('http://example.com/'), self::CRAWLER_ID);
+        $this->createSubject()->fetchUrlContents(new Uri('http://example.com/'), self::CRAWLER_ID)->getContent();
 
         $request = $this->handledRequests[0];
         self::assertFalse($request->hasHeader('Authorization'));
@@ -179,7 +184,7 @@ class FrontendSubRequestExecutionStrategyTest extends UnitTestCase
     {
         $this->respondWith(new Response());
 
-        $this->createSubject()->fetchUrlContents(new Uri('https://example.com/'), self::CRAWLER_ID);
+        $this->createSubject()->fetchUrlContents(new Uri('https://example.com/'), self::CRAWLER_ID)->getContent();
 
         self::assertSame('443', $this->handledRequests[0]->getServerParams()['SERVER_PORT']);
     }
@@ -234,7 +239,10 @@ class FrontendSubRequestExecutionStrategyTest extends UnitTestCase
     {
         $this->respondWith(new Response());
 
-        $this->createSubject($settings)->fetchUrlContents(new Uri('https://example.com/'), self::CRAWLER_ID);
+        $this->createSubject($settings)->fetchUrlContents(
+            new Uri('https://example.com/'),
+            self::CRAWLER_ID
+        )->getContent();
 
         self::assertSame($expected, $this->handledRequests[0]->getServerParams()['SCRIPT_NAME']);
     }
@@ -252,7 +260,7 @@ class FrontendSubRequestExecutionStrategyTest extends UnitTestCase
 
         self::assertSame(
             $meta,
-            $this->createSubject()->fetchUrlContents(new Uri('https://example.com/'), self::CRAWLER_ID)
+            $this->createSubject()->fetchUrlContents(new Uri('https://example.com/'), self::CRAWLER_ID)->getContent()
         );
     }
 
@@ -268,7 +276,7 @@ class FrontendSubRequestExecutionStrategyTest extends UnitTestCase
                     'status' => '200 OK',
                 ],
             ],
-            $this->createSubject()->fetchUrlContents(new Uri('https://example.com/'), self::CRAWLER_ID)
+            $this->createSubject()->fetchUrlContents(new Uri('https://example.com/'), self::CRAWLER_ID)->getContent()
         );
     }
 
@@ -305,7 +313,7 @@ class FrontendSubRequestExecutionStrategyTest extends UnitTestCase
             [
                 'errorlog' => [$expected],
             ],
-            $this->createSubject()->fetchUrlContents(new Uri('https://example.com/'), self::CRAWLER_ID)
+            $this->createSubject()->fetchUrlContents(new Uri('https://example.com/'), self::CRAWLER_ID)->getContent()
         );
     }
 
@@ -324,7 +332,7 @@ class FrontendSubRequestExecutionStrategyTest extends UnitTestCase
             [
                 'errorlog' => ['Rendering failed'],
             ],
-            $this->createSubject()->fetchUrlContents(new Uri('https://example.com/'), self::CRAWLER_ID)
+            $this->createSubject()->fetchUrlContents(new Uri('https://example.com/'), self::CRAWLER_ID)->getContent()
         );
     }
 
@@ -352,7 +360,10 @@ class FrontendSubRequestExecutionStrategyTest extends UnitTestCase
             (new Response())->withHeader('X-T3Crawler-Meta', (string) json_encode($meta))
         );
 
-        $result = $this->createSubject()->fetchUrlContents(new Uri('https://example.com:8443/'), self::CRAWLER_ID);
+        $result = $this->createSubject()->fetchUrlContents(
+            new Uri('https://example.com:8443/'),
+            self::CRAWLER_ID
+        )->getContent();
 
         self::assertSame($meta, $result);
         self::assertCount(2, $this->handledRequests);
@@ -421,7 +432,10 @@ class FrontendSubRequestExecutionStrategyTest extends UnitTestCase
         }
         $this->respondWith($response);
 
-        $result = $this->createSubject()->fetchUrlContents(new Uri('https://example.com/'), self::CRAWLER_ID);
+        $result = $this->createSubject()->fetchUrlContents(
+            new Uri('https://example.com/'),
+            self::CRAWLER_ID
+        )->getContent();
 
         self::assertCount(1, $this->handledRequests);
         self::assertSame($expected, $result);
@@ -437,7 +451,7 @@ class FrontendSubRequestExecutionStrategyTest extends UnitTestCase
 
         self::assertSame(
             [],
-            $this->createSubject()->fetchUrlContents(new Uri('https://example.com/'), self::CRAWLER_ID)
+            $this->createSubject()->fetchUrlContents(new Uri('https://example.com/'), self::CRAWLER_ID)->getContent()
         );
         self::assertCount(2, $this->handledRequests);
     }
@@ -450,7 +464,7 @@ class FrontendSubRequestExecutionStrategyTest extends UnitTestCase
             (new Response())->withHeader('X-T3Crawler-Meta', '[]')
         );
 
-        $this->createSubject()->fetchUrlContents(new Uri('https://example.com/'), self::CRAWLER_ID);
+        $this->createSubject()->fetchUrlContents(new Uri('https://example.com/'), self::CRAWLER_ID)->getContent();
 
         self::assertCount(2, $this->handledRequests);
     }
@@ -461,7 +475,10 @@ class FrontendSubRequestExecutionStrategyTest extends UnitTestCase
         $redirect = (new Response('php://temp', 302))->withHeader('Location', '/loop');
         $this->respondWith(...array_fill(0, 6, $redirect));
 
-        $result = $this->createSubject()->fetchUrlContents(new Uri('https://example.com/'), self::CRAWLER_ID);
+        $result = $this->createSubject()->fetchUrlContents(
+            new Uri('https://example.com/'),
+            self::CRAWLER_ID
+        )->getContent();
 
         self::assertCount(6, $this->handledRequests);
         self::assertSame([
@@ -475,7 +492,10 @@ class FrontendSubRequestExecutionStrategyTest extends UnitTestCase
         $redirect = (new Response('php://temp', 302))->withHeader('Location', '/next');
         $this->respondWith(...[...array_fill(0, 5, $redirect), (new Response())->withHeader('X-T3Crawler-Meta', '[]')]);
 
-        $result = $this->createSubject()->fetchUrlContents(new Uri('https://example.com/'), self::CRAWLER_ID);
+        $result = $this->createSubject()->fetchUrlContents(
+            new Uri('https://example.com/'),
+            self::CRAWLER_ID
+        )->getContent();
 
         self::assertCount(6, $this->handledRequests);
         self::assertSame([], $result);
@@ -493,7 +513,7 @@ class FrontendSubRequestExecutionStrategyTest extends UnitTestCase
             }
         );
 
-        $this->createSubject()->fetchUrlContents(new Uri('https://example.com/'), self::CRAWLER_ID);
+        $this->createSubject()->fetchUrlContents(new Uri('https://example.com/'), self::CRAWLER_ID)->getContent();
 
         $accessTime = self::NOW - self::NOW % 60;
         self::assertSame([self::NOW, self::NOW, $accessTime, $accessTime], $timesDuringRequest);
@@ -519,7 +539,7 @@ class FrontendSubRequestExecutionStrategyTest extends UnitTestCase
             }
         );
 
-        $this->createSubject()->fetchUrlContents(new Uri('https://example.com/'), self::CRAWLER_ID);
+        $this->createSubject()->fetchUrlContents(new Uri('https://example.com/'), self::CRAWLER_ID)->getContent();
 
         self::assertSame($workerRequest, $GLOBALS['TYPO3_REQUEST']);
         self::assertSame($frontendUser, $this->context->getAspect('frontend.user'));
@@ -542,7 +562,7 @@ class FrontendSubRequestExecutionStrategyTest extends UnitTestCase
             }
         );
 
-        $this->createSubject()->fetchUrlContents(new Uri('https://example.com/'), self::CRAWLER_ID);
+        $this->createSubject()->fetchUrlContents(new Uri('https://example.com/'), self::CRAWLER_ID)->getContent();
 
         self::assertSame([], array_intersect_key($GLOBALS, array_flip(self::GLOBAL_NAMES)));
     }
@@ -563,7 +583,7 @@ class FrontendSubRequestExecutionStrategyTest extends UnitTestCase
             }
         );
 
-        $this->createSubject()->fetchUrlContents(new Uri('https://example.com/'), self::CRAWLER_ID);
+        $this->createSubject()->fetchUrlContents(new Uri('https://example.com/'), self::CRAWLER_ID)->getContent();
 
         self::assertSame(['reset', 'handle', 'reset'], $calls);
     }
@@ -574,12 +594,17 @@ class FrontendSubRequestExecutionStrategyTest extends UnitTestCase
         $this->respondWith(new Response('php://temp', 404));
         $subject = $this->createSubject(withLogger: false);
 
-        self::assertFalse($subject->fetchUrlContents(new Uri('not-an-url'), self::CRAWLER_ID));
+        self::assertSame(
+            [
+                'errorlog' => ['Scheme does not match for url "not-an-url"'],
+            ],
+            $subject->fetchUrlContents(new Uri('not-an-url'), self::CRAWLER_ID)->getContent()
+        );
         self::assertSame(
             [
                 'errorlog' => ['404 Not Found'],
             ],
-            $subject->fetchUrlContents(new Uri('https://example.com/'), self::CRAWLER_ID)
+            $subject->fetchUrlContents(new Uri('https://example.com/'), self::CRAWLER_ID)->getContent()
         );
     }
 

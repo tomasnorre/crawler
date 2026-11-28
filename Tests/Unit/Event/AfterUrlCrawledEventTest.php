@@ -20,29 +20,21 @@ namespace AOE\Crawler\Tests\Unit\Event;
  */
 
 use AOE\Crawler\Event\AfterUrlCrawledEvent;
+use AOE\Crawler\Value\CrawlResult;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 #[\PHPUnit\Framework\Attributes\CoversClass(\AOE\Crawler\Event\AfterUrlCrawledEvent::class)]
 class AfterUrlCrawledEventTest extends UnitTestCase
 {
     protected bool $resetSingletonInstances = true;
-    private AfterUrlCrawledEvent $subject;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->subject = new AfterUrlCrawledEvent('/contact', [
-            'content' => '{}',
-        ]);
-    }
 
     #[\PHPUnit\Framework\Attributes\Test]
     public function defaultValueTest(): void
     {
-        self::assertEquals('/contact', $this->subject->getUrl());
+        $result = CrawlResult::fromContent([]);
+        $subject = new AfterUrlCrawledEvent('/contact', $result);
 
-        self::assertSame([
-            'content' => '{}',
-        ], $this->subject->getResult());
+        self::assertEquals('/contact', $subject->getUrl());
+        self::assertSame($result, $subject->getResult());
     }
 }

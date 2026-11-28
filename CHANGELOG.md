@@ -43,6 +43,13 @@
 * `PageService` requires the `PageRootlineProvider` in its constructor
 * The extension setting `frontendBasePath` no longer falls back to `config.absRefPrefix`, it defaults to `/`
 * `ExtensionConfigurationProvider::getExtensionSettings()` returns the extension settings as `AOE\Crawler\Configuration\ExtensionSettings` with typed properties, missing or invalid settings get the defaults of `ext_conf_template.txt`
+* !!! `AfterUrlCrawledEvent::getResult()` returns the crawl result as `AOE\Crawler\Value\CrawlResult` instead of an array with the JSON encoded result in `content`
+* `CrawlStrategyInterface::fetchUrlContents()` returns `AOE\Crawler\Value\CrawlResult` instead of an array or `false`
+* `QueueExecutor::executeQueueItem()` returns `AOE\Crawler\Value\CrawlResult` instead of an array, `"ERROR"` or `false`
+* `CrawlUrlHandler` returns `AOE\Crawler\Value\CrawlResult` or `null` instead of an array, a string or `false`
+* `crawler:buildQueue --mode exec` shows a crawl result without crawler data JSON encoded, fx. `null` if the entry was not crawled
+* A queue entry whose parameters cannot be read gets the error "The parameters of the queue entry could not be read" as result instead of `"ERROR"`
+* Direct requests of a URL without http(s) scheme report the error "Scheme does not match for url" as result instead of no result, and dispatch `AfterUrlCrawledEvent` like other failed requests
 
 ### Fixed
 * `RequestHelper::getIntFromRequest()` returns the default for array values in the request, instead of `1`
@@ -54,6 +61,7 @@
 * `crawler:buildQueue --mode exec` no longer lists every URL with "(URL already existed)"
 * List `crawler:buildQueue` and `crawler:flushQueue` in `typo3 list`, they were registered a second time as aliases of themselves
 * Install the DDEV devbox again, it upgrades PHP to the latest patch version from deb.sury.org, `roave/security-advisories` blocked the install on the outdated PHP of the DDEV image
+* The crawler log shows queue entries with the result `"ERROR"` (parameters that could not be read) instead of failing with a `TypeError`
 
 ### Deprecated
 #### Classes
@@ -76,6 +84,7 @@
 
 #### Classes
 * `AOE\Crawler\Command\ProcessQueueCommand`
+* `AOE\Crawler\Controller\Backend\Helper\ResultHandler`, use `AOE\Crawler\Value\CrawlResult`
 * `AOE\Crawler\Controller\Ajax\ProcessStatusController`
 * `AOE\Crawler\Controller\Backend\BackendModuleCrawlerProcessController`
 * `AOE\Crawler\Controller\CrawlerController`, use `AOE\Crawler\Service\PageTreeUrlCollector`
