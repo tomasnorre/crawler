@@ -174,6 +174,8 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
 
     /**
      * Obtains configuration keys from the CLI arguments
+     *
+     * @return list<string>
      */
     private function getConfigurationKeys(string $conf): array
     {
@@ -181,9 +183,11 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
         return $parameter !== '' ? GeneralUtility::trimExplode(',', $parameter) : [];
     }
 
+    /**
+     * @param list<QueueRow> $queueRows
+     */
     private function outputUrls(array $queueRows, OutputInterface $output): void
     {
-        /** @var QueueRow $row */
         foreach ($queueRows as $row) {
             if (empty($row->message)) {
                 $output->writeln('<info>' . $row->urls . '</info>');
@@ -195,6 +199,9 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
         }
     }
 
+    /**
+     * @param list<QueueRow> $queueRows
+     */
     private function outputModeDefault(OutputInterface $output, array $queueRows, CrawlRun $run): void
     {
         $output->writeln(
@@ -205,12 +212,18 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
         $this->outputUrls($queueRows, $output);
     }
 
+    /**
+     * @param list<QueueRow> $queueRows
+     */
     private function outputModeQueue(OutputInterface $output, array $queueRows, CrawlRun $run): void
     {
         $output->writeln('<info>Putting ' . count($run->getUrlList()) . ' entries in queue:</info>' . PHP_EOL);
         $this->outputUrls($queueRows, $output);
     }
 
+    /**
+     * @param list<QueueRow> $queueRows
+     */
     private function outputModeExec(OutputInterface $output, array $queueRows, CrawlRun $run): void
     {
         $progressBar = new ProgressBar($output);
@@ -224,6 +237,9 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
         $output->writeln('');
     }
 
+    /**
+     * @param array<string, mixed> $queueRec
+     */
     private function executeQueueEntry(OutputInterface $output, ProgressBar $progressBar, array $queueRec): void
     {
         $p = json_decode((string) $queueRec['parameters'], true);
@@ -243,6 +259,9 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
         $progressBar->display();
     }
 
+    /**
+     * @param array<string, mixed> $parameters
+     */
     private function getProcInstructionsString(array $parameters): string
     {
         if (empty($parameters['procInstructions'][0])) {
@@ -271,6 +290,9 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
         $output->writeln('<info>OK: ' . $resLog . '</info>' . PHP_EOL);
     }
 
+    /**
+     * @param list<string> $configurationKeys
+     */
     private function createCrawlRun(TypedInput $input, string $mode, array $configurationKeys): CrawlRun
     {
         return new CrawlRun(
