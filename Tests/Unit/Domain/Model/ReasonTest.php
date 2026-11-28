@@ -28,20 +28,82 @@ class ReasonTest extends UnitTestCase
     protected bool $resetSingletonInstances = true;
 
     #[\PHPUnit\Framework\Attributes\Test]
-    public function expectsConstructorToSetPropertiesFromArray(): void
+    public function constructorSetsPropertiesFromRow(): void
     {
-        $propertiesArray = [
+        $reason = new Reason([
             'uid' => 209,
-        ];
-        $reason = new Reason($propertiesArray);
+            'crdate' => 1_525_456_537,
+            'cruser_id' => 2,
+            'reason' => Reason::REASON_GUI_SUBMIT,
+            'detail_text' => 'This is the detail text',
+            'queue_entry_uid' => 302,
+        ]);
 
-        self::assertSame($propertiesArray, $reason->getRow());
+        self::assertSame(209, $reason->getUid());
+        self::assertSame(1_525_456_537, $reason->getCreationDate());
+        self::assertSame(2, $reason->getBackendUserId());
+        self::assertSame(Reason::REASON_GUI_SUBMIT, $reason->getReason());
+        self::assertSame('This is the detail text', $reason->getDetailText());
+        self::assertSame(302, $reason->getQueueEntryUid());
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function constructorCastsDatabaseValues(): void
+    {
+        $reason = new Reason([
+            'uid' => '209',
+            'crdate' => '1525456537',
+            'cruser_id' => '2',
+            'reason' => 42,
+            'detail_text' => 1.5,
+            'queue_entry_uid' => '302',
+        ]);
+
+        self::assertSame(209, $reason->getUid());
+        self::assertSame(1_525_456_537, $reason->getCreationDate());
+        self::assertSame(2, $reason->getBackendUserId());
+        self::assertSame('42', $reason->getReason());
+        self::assertSame('1.5', $reason->getDetailText());
+        self::assertSame(302, $reason->getQueueEntryUid());
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function constructorFallsBackToDefaultsForMissingValues(): void
+    {
+        $reason = new Reason();
+
+        self::assertSame(0, $reason->getUid());
+        self::assertSame(0, $reason->getCreationDate());
+        self::assertSame(0, $reason->getBackendUserId());
+        self::assertSame('', $reason->getReason());
+        self::assertSame('', $reason->getDetailText());
+        self::assertSame(0, $reason->getQueueEntryUid());
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function constructorFallsBackToDefaultsForInvalidValues(): void
+    {
+        $reason = new Reason([
+            'uid' => 'abc',
+            'crdate' => null,
+            'cruser_id' => [2],
+            'reason' => ['reason'],
+            'detail_text' => new \stdClass(),
+            'queue_entry_uid' => true,
+        ]);
+
+        self::assertSame(0, $reason->getUid());
+        self::assertSame(0, $reason->getCreationDate());
+        self::assertSame(0, $reason->getBackendUserId());
+        self::assertSame('', $reason->getReason());
+        self::assertSame('', $reason->getDetailText());
+        self::assertSame(0, $reason->getQueueEntryUid());
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
     public function settersWillSetValuesAndGettersWillRetrieveTheValues(): void
     {
-        $reason = new Reason([]);
+        $reason = new Reason();
 
         $reason->setUid(321);
         $reason->setCreationDate(1_525_456_537);
@@ -50,15 +112,11 @@ class ReasonTest extends UnitTestCase
         $reason->setDetailText('This is the detail text');
         $reason->setQueueEntryUid(302);
 
-        $expectedArray = [
-            'uid' => $reason->getUid(),
-            'crdate' => $reason->getCreationDate(),
-            'cruser_id' => $reason->getBackendUserId(),
-            'reason' => $reason->getReason(),
-            'detail_text' => $reason->getDetailText(),
-            'queue_entry_uid' => $reason->getQueueEntryUid(),
-        ];
-
-        self::assertSame($expectedArray, $reason->getRow());
+        self::assertSame(321, $reason->getUid());
+        self::assertSame(1_525_456_537, $reason->getCreationDate());
+        self::assertSame(2, $reason->getBackendUserId());
+        self::assertSame(Reason::REASON_DEFAULT, $reason->getReason());
+        self::assertSame('This is the detail text', $reason->getDetailText());
+        self::assertSame(302, $reason->getQueueEntryUid());
     }
 }

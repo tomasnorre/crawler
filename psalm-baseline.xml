@@ -10,19 +10,6 @@
       <code><![CDATA[GuzzleExecutionStrategy]]></code>
     </UnusedClass>
   </file>
-  <file src="Classes/Domain/Model/Reason.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[getBackendUserId]]></code>
-      <code><![CDATA[getCreationDate]]></code>
-      <code><![CDATA[getQueueEntryUid]]></code>
-      <code><![CDATA[getRow]]></code>
-      <code><![CDATA[getUid]]></code>
-      <code><![CDATA[setBackendUserId]]></code>
-      <code><![CDATA[setCreationDate]]></code>
-      <code><![CDATA[setQueueEntryUid]]></code>
-      <code><![CDATA[setUid]]></code>
-    </PossiblyUnusedMethod>
-  </file>
   <file src="Classes/Domain/Repository/QueueRepository.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[findAll]]></code>
