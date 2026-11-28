@@ -48,6 +48,9 @@ final class RequestHelper
         return is_scalar($value) ? (string) $value : $default;
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     public static function getArrayFromRequest(ServerRequestInterface $request, string $key): array
     {
         $value = self::getValue($request, $key);

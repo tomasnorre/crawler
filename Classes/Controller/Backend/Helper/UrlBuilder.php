@@ -33,7 +33,7 @@ class UrlBuilder
     /**
      * Returns the URL to the current module, including $_GET['id'].
      *
-     * @param array $uriParameters optional parameters to add to the URL
+     * @param array<string, mixed> $uriParameters optional parameters to add to the URL
      *
      * @throws RouteNotFoundException
      */

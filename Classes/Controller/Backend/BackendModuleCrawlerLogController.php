@@ -58,6 +58,9 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
 
     private QueryBuilder $queryBuilder;
     private bool $CSVExport = false;
+    /**
+     * @var array<string, array<array-key, string>>
+     */
     private readonly array $backendModuleMenu;
     private int $setId;
     private string $quiPath;
@@ -154,7 +157,7 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
     /**
      * Returns the log entries per page and the CSV rows of the selected page tree
      *
-     * @return array{0: array, 1: array}
+     * @return array{0: list<non-empty-list<array<string, mixed>>>, 1: list<array<string, mixed>>}
      */
     private function getLogEntriesOfPageTree(ServerRequestInterface $request): array
     {
@@ -195,6 +198,8 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
 
     /**
      * Flushing all entries also switches the log display to all entries
+     *
+     * @param array<array-key, mixed> $parsedBody
      */
     private function isFlushRequested(array $parsedBody): bool
     {
@@ -356,6 +361,8 @@ final class BackendModuleCrawlerLogController extends AbstractBackendModuleContr
 
     /**
      * Outputs the CSV file and sets the correct headers
+     *
+     * @param list<array<string, mixed>> $csvData
      */
     private function outputCsvFile(array $csvData): void
     {

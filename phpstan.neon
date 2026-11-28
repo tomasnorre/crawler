@@ -26,7 +26,6 @@ parameters:
         -
             identifier: missingType.iterableValue
             paths:
-                - Classes/Controller/*
                 - Classes/Queue/*
 
     # composer require tomasvotruba/type-coverage --dev

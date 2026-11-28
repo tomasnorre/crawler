@@ -48,6 +48,9 @@ abstract class AbstractBackendModuleController
         return $moduleTemplate;
     }
 
+    /**
+     * @return array<string, array<array-key, string>>
+     */
     protected function getModuleMenu(): array
     {
         return [

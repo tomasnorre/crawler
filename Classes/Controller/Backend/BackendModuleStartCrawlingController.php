@@ -54,7 +54,7 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
     private EventDispatcher $eventDispatcher;
 
     /**
-     * @var array holds the selection of configuration from the configuration selector box
+     * @var array<array-key, mixed> holds the selection of configuration from the configuration selector box
      */
     private array $incomingConfigurationSelection = [];
 
@@ -166,6 +166,8 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
 
     /**
      * Generates the configuration selectors for compiling URLs:
+     *
+     * @return array<string, string>
      */
     private function generateConfigurationSelectors(
         int $pageId,
@@ -217,9 +219,9 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
     /**
      * Create selector box
      *
-     * @param array $optArray Options key(value) => label pairs
+     * @param array<array-key, string> $optArray Options key(value) => label pairs
      * @param string $name Selector box name
-     * @param string|array|null $value Selector box value (array for multiple...)
+     * @param string|array<array-key, mixed>|null $value Selector box value (array for multiple...)
      * @param bool $multiple If set, will draw multiple box.
      *
      * @return string HTML select element
@@ -246,6 +248,9 @@ class BackendModuleStartCrawlingController extends AbstractBackendModuleControll
         ) . '"' . ($multiple ? ' multiple' : '') . '>' . implode('', $options) . '</select>';
     }
 
+    /**
+     * @param string|array<array-key, mixed> $value
+     */
     private function isOptionSelected(int|string $key, string|array $value, bool $multiple): bool
     {
         if ($multiple) {
