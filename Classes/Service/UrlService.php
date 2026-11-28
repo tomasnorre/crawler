@@ -144,8 +144,9 @@ class UrlService
      * Compiling URLs from parameter array (output of expandParameters())
      * The number of URLs will be the multiplication of the number of parameter values for each key
      *
-     * @param array $paramArray Output of expandParameters(): Array with keys (GET var names) and for each an array of values
-     * @param array $urls URLs accumulated in this array (for recursion)
+     * @param array<array-key, array<array-key, mixed>> $paramArray Output of expandParameters(): Array with keys (GET var names) and for each an array of values
+     * @param list<string> $urls URLs accumulated in this array (for recursion)
+     * @return list<string>
      */
     public function compileUrls(array $paramArray, array $urls, int $maxUrlToCompile = 10): array
     {

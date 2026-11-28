@@ -37,6 +37,9 @@ class ConfigurationService
 {
     private const DEFAULT_MAX_URLS_TO_COMPILE = 10_000;
 
+    /**
+     * @var array<string, mixed>
+     */
     private readonly array $extensionSettings;
 
     public function __construct(
@@ -51,6 +54,11 @@ class ConfigurationService
         )->getExtensionConfiguration();
     }
 
+    /**
+     * @param array<array-key, string> $allowedConfigurations
+     * @param array<array-key, array<string, mixed>> $configurations
+     * @return array<array-key, array<string, mixed>>
+     */
     public static function removeDisallowedConfigurations(array $allowedConfigurations, array $configurations): array
     {
         if ($allowedConfigurations === []) {
@@ -66,6 +74,11 @@ class ConfigurationService
         return $configurations;
     }
 
+    /**
+     * @param array<array-key, mixed> $pageTSConfig
+     * @param array<array-key, array<string, mixed>> $res
+     * @return array<array-key, array<string, mixed>>
+     */
     public function getConfigurationFromPageTS(
         array $pageTSConfig,
         int $pageId,
@@ -97,6 +110,10 @@ class ConfigurationService
         return $res;
     }
 
+    /**
+     * @param array<array-key, array<string, mixed>> $res
+     * @return array<array-key, array<string, mixed>>
+     */
     public function getConfigurationFromDatabase(int $pageId, array $res): array
     {
         $crawlerConfigurations = $this->configurationRepository->getCrawlerConfigurationRecordsFromRootLine($pageId);
@@ -142,6 +159,9 @@ class ConfigurationService
         return in_array((string) $pageId, GeneralUtility::trimExplode(',', $pidsOnly), true);
     }
 
+    /**
+     * @param array<string, mixed> $configurationRecord
+     */
     private function hasAccess(array $configurationRecord): bool
     {
         if (empty($configurationRecord['begroups']) || $this->getBackendUser()->isAdmin()) {
@@ -154,6 +174,10 @@ class ConfigurationService
         );
     }
 
+    /**
+     * @param array<string, mixed> $configurationRecord
+     * @return array<string, mixed>
+     */
     private function buildSubConfigurationFromRecord(array $configurationRecord): array
     {
         $typoScriptTree = GeneralUtility::makeInstance(TypoScriptStringFactory::class)->parseFromString(
@@ -172,6 +196,10 @@ class ConfigurationService
         ];
     }
 
+    /**
+     * @param array<string, mixed> $subCfg
+     * @return array<string, mixed>
+     */
     private function buildConfiguration(
         array $subCfg,
         string $parameters,

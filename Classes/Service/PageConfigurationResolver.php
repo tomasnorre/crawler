@@ -47,8 +47,9 @@ class PageConfigurationResolver
      * Returns the configurations of the page. If the page is not crawled, it returns an empty array,
      * see getSkipReason() for the reason.
      *
-     * @param array $pageRow Page record with at least the doktype and uid columns
+     * @param array<string, mixed> $pageRow Page record with at least the doktype and uid columns
      * @param string $mountPoint The mount point as "<mounted page>-<mount point page>", fx. "5-12"
+     * @return array<array-key, array<string, mixed>>
      */
     public function getConfigurationsForPageRow(array $pageRow, string $mountPoint = ''): array
     {
@@ -61,7 +62,7 @@ class PageConfigurationResolver
     /**
      * Returns why the page is not crawled, or an empty string if it is crawled.
      *
-     * @param array $pageRow Page record with at least the doktype and uid columns
+     * @param array<string, mixed> $pageRow Page record with at least the doktype and uid columns
      */
     public function getSkipReason(array $pageRow): string
     {
@@ -82,6 +83,7 @@ class PageConfigurationResolver
      * Returns the configurations of the page, without checking if the page should be crawled.
      *
      * @param string $mountPoint The mount point as "<mounted page>-<mount point page>", fx. "5-12"
+     * @return array<array-key, array<string, mixed>>
      */
     public function getConfigurationsForPage(int $pageId, string $mountPoint = ''): array
     {
@@ -133,6 +135,9 @@ class PageConfigurationResolver
         return $configurationNames;
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     private function getPageTSconfig(int $pageId, string $mountPoint = ''): array
     {
         if ($mountPoint === '') {

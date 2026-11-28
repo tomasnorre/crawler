@@ -38,7 +38,7 @@ class ExcludeStringExpander
     /**
      * PageTreeView::$tree per page id and depth
      *
-     * @var array<int, array<int, array>>
+     * @var array<int, array<int, array<array-key, mixed>>>
      */
     private array $pageTreeCache = [];
 

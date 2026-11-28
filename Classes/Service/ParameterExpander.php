@@ -44,6 +44,9 @@ class ParameterExpander
      *         - "_TABLE:[TCA table name];[_PID:[optional page id, default is current page]];[_ENABLELANG:1]" = Look up of table records from PID, filtering out deleted records. Example "_TABLE:tt_content; _PID:123"
      *        _ENABLELANG:1 picks only original records without their language overlays
      *         - Default: Literal value
+     *
+     * @param array<array-key, mixed> $paramArray
+     * @return array<array-key, mixed>
      */
     public function expand(array $paramArray, int $pid): array
     {
@@ -54,6 +57,10 @@ class ParameterExpander
         return $paramArray;
     }
 
+    /**
+     * @param array<array-key, mixed> $paramArray
+     * @return array<array-key, mixed>
+     */
     private function expandParameter(array $paramArray, int|string $parameter, string $value, int $pid): array
     {
         // Values not wrapped in square brackets are literal values
@@ -76,6 +83,10 @@ class ParameterExpander
         return $paramArray;
     }
 
+    /**
+     * @param array<array-key, mixed> $paramArray
+     * @return array<array-key, mixed>
+     */
     private function expandPart(array $paramArray, int|string $parameter, string $part, int $pid): array
     {
         // Integer range, fx. 1-34 or -40--30 (reads minus 40 to minus 30)
@@ -119,6 +130,8 @@ class ParameterExpander
      * Adds the values of the range, from low to high, limited to MAX_RANGE_VALUES values
      *
      * @param array<int, string> $range The preg_match() result with the range limits at index 1 and 2
+     * @param array<array-key, mixed> $paramArray
+     * @return array<array-key, mixed>
      */
     private function addValuesInRange(array $range, array $paramArray, int|string $parameter): array
     {
@@ -136,6 +149,10 @@ class ParameterExpander
         return $paramArray;
     }
 
+    /**
+     * @param array<array-key, mixed> $paramArray
+     * @return array<array-key, mixed>
+     */
     private function runExpandParametersHook(array $paramArray, int|string $parameter, string $path, int $pid): array
     {
         $hooks = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['crawler/class.tx_crawler_lib.php']['expandParameters'] ?? null;
@@ -158,6 +175,8 @@ class ParameterExpander
 
     /**
      * @param array<string, string> $tableOptions
+     * @param array<array-key, mixed> $paramArray
+     * @return array<array-key, mixed>
      */
     private function extractParamsFromCustomTable(
         array $tableOptions,
@@ -215,6 +234,9 @@ class ParameterExpander
         return $paramArray;
     }
 
+    /**
+     * @return array<int, int>
+     */
     private function getPidArray(int $recursiveDepth, int $lookUpPid): array
     {
         if ($recursiveDepth <= 0) {

@@ -167,6 +167,7 @@ final class PageTreeUrlCollector
      *
      * @param string $mountPoint The mount point the page is shown in, fx. "3-7", or empty
      * @return list<QueueRow>
+     * @param array<string, mixed> $pageRow
      */
     public function getQueueRowsForPage(
         CrawlRun $run,
@@ -209,6 +210,10 @@ final class PageTreeUrlCollector
         return $queueRow;
     }
 
+    /**
+     * @param array<string, mixed> $pageRow
+     * @param array<string, mixed> $configuration
+     */
     private function addConfigurationToQueueRow(
         QueueRow $queueRow,
         array $pageRow,
@@ -230,6 +235,8 @@ final class PageTreeUrlCollector
 
     /**
      * A table with the values of each parameter, followed by the number of combinations, fx. "Comb: 2*3=6"
+     *
+     * @param array<array-key, array<array-key, mixed>> $paramExpanded
      */
     private function renderExpandedParameters(array $paramExpanded): string
     {
@@ -251,6 +258,7 @@ final class PageTreeUrlCollector
 
     /**
      * @return list<string>
+     * @param array<string, mixed> $subConfiguration
      */
     private function getQueueRowOptions(array $subConfiguration): array
     {
@@ -266,6 +274,8 @@ final class PageTreeUrlCollector
 
     /**
      * The parsed parameters, one per line, fx. "&L=[0|1]"
+     *
+     * @param array<array-key, mixed> $paramParsed
      */
     private function renderParameterConfig(array $paramParsed): string
     {
