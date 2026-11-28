@@ -220,6 +220,77 @@ class BackendModuleCrawlerLogControllerTest extends UnitTestCase
         (new \ReflectionMethod($subject, 'dispatchRecrawlRequest'))->invoke($subject, new ServerRequest());
     }
 
+    public static function queueEntryDataProvider(): iterable
+    {
+        $resultData = json_encode([
+            'content' => json_encode([
+                'errorlog' => ['404 Not Found'],
+                'log' => ['User Groups: 1'],
+            ]),
+        ]);
+        yield 'not crawled' => [
+            'showResultLog' => '1',
+            'resultData' => '',
+            'expectedResultData' => null,
+            'expectedStatus' => '-',
+        ];
+        yield 'crawled, with result log' => [
+            'showResultLog' => '1',
+            'resultData' => $resultData,
+            'expectedResultData' => [
+                'content' => [
+                    'errorlog' => ['404 Not Found'],
+                    'log' => ['User Groups: 1'],
+                ],
+            ],
+            'expectedStatus' => '404 Not Found',
+        ];
+        yield 'crawled, without result log' => [
+            'showResultLog' => '0',
+            'resultData' => $resultData,
+            'expectedResultData' => [
+                'content' => [
+                    'errorlog' => ['404 Not Found'],
+                ],
+            ],
+            'expectedStatus' => '404 Not Found',
+        ];
+        yield 'return value of a callback' => [
+            'showResultLog' => '0',
+            'resultData' => '{"content":"\\"Hi\\""}',
+            'expectedResultData' => [
+                'content' => 'Hi',
+            ],
+            'expectedStatus' => 'Error - no info, sorry!',
+        ];
+    }
+
+    #[DataProvider('queueEntryDataProvider')]
+    #[Test]
+    public function decodeQueueEntryDecodesParametersAndResult(
+        string $showResultLog,
+        string $resultData,
+        ?array $expectedResultData,
+        string $expectedStatus
+    ): void {
+        $subject = (new \ReflectionClass(BackendModuleCrawlerLogController::class))->newInstanceWithoutConstructor();
+        (new \ReflectionProperty($subject, 'showResultLog'))->setValue($subject, $showResultLog);
+
+        $decoded = (new \ReflectionMethod($subject, 'decodeQueueEntry'))->invoke($subject, [
+            'qid' => 12,
+            'parameters' => '{"url":"https:\\/\\/example.com\\/"}',
+            'result_data' => $resultData,
+        ]);
+
+        self::assertSame([[
+            'qid' => 12,
+            'parameters' => [
+                'url' => 'https://example.com/',
+            ],
+            'result_data' => $expectedResultData,
+        ], $expectedStatus], $decoded);
+    }
+
     private function createSubjectWithDispatcher(
         CrawlUrlMessageDispatcher $dispatcher
     ): BackendModuleCrawlerLogController {

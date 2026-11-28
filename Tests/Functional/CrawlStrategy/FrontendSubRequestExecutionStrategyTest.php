@@ -173,9 +173,9 @@ class FrontendSubRequestExecutionStrategyTest extends FunctionalTestCase
             ->fetchAssociative();
         self::assertIsArray($queueItem);
 
-        $result = $this->subject->executeQueueItem($queueItem);
+        $content = $this->subject->executeQueueItem($queueItem)->getContent();
 
-        self::assertIsArray($result);
-        return json_decode((string) $result['content'], true);
+        self::assertIsArray($content);
+        return $content;
     }
 }

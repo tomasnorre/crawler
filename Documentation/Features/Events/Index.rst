@@ -49,6 +49,10 @@ AfterUrlCrawledEvent
 This event enables you to trigger, e.g a Vanish Ban for a specific URL after it's freshly
 crawled. This ensures that your varnish cache will be up to date as well.
 
+:php:`getResult()` returns the crawl result as :php:`AOE\Crawler\Value\CrawlResult`. It gives
+the errors (:php:`getErrorLog()`), the log (:php:`getLog()`) and the frontend variables
+(:php:`getVars()`) the crawled page reported, and its status (:php:`getStatus()`, "OK" or the errors).
+
 ..  rst-class:: bignums-xxl
 
 #.  Create the event listener

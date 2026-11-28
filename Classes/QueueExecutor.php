@@ -24,6 +24,7 @@ use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
 use AOE\Crawler\CrawlStrategy\Interface\CrawlStrategyInterface;
 use AOE\Crawler\Event\AfterUrlCrawledEvent;
 use AOE\Crawler\Queue\QueueEntryWriter;
+use AOE\Crawler\Value\CrawlResult;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\SingletonInterface;
@@ -34,6 +35,8 @@ use TYPO3\CMS\Core\SingletonInterface;
  */
 class QueueExecutor implements SingletonInterface
 {
+    public const INVALID_PARAMETERS_MESSAGE = 'The parameters of the queue entry could not be read';
+
     protected CrawlStrategyInterface $crawlStrategy;
 
     public function __construct(
@@ -49,13 +52,8 @@ class QueueExecutor implements SingletonInterface
      * In the future, updating the queue item & additional signal/slot/events should also happen in here.
      *
      * @param array<string, mixed> $queueItem
-     * @return array{content: string|false}|false|string Possible return values:
-     *         - "false" for unexplained errors
-     *         - string "ERROR" when queueItem parameters could not be parsed
-     *         - array with single key 'content' that contains the json_encoded crawl results.
-     *           See CrawlStrategyInterface::fetchUrlContents() for its structure.
      */
-    public function executeQueueItem(array $queueItem): string|array|false
+    public function executeQueueItem(array $queueItem): CrawlResult
     {
         $parameters = '';
         if (isset($queueItem['parameters'])) {
@@ -63,27 +61,21 @@ class QueueExecutor implements SingletonInterface
         }
 
         if (!is_array($parameters) || $parameters === []) {
-            return 'ERROR';
+            return CrawlResult::error(self::INVALID_PARAMETERS_MESSAGE);
         }
         if (isset($parameters[QueueEntryWriter::CALLBACK_PARAMETER])) {
             $className = $parameters[QueueEntryWriter::CALLBACK_PARAMETER];
             unset($parameters[QueueEntryWriter::CALLBACK_PARAMETER]);
-            $result = $this->callbackExecutionStrategy->fetchByCallback((string) $className, $parameters);
-            $result = [
-                'content' => json_encode($result),
-            ];
+            $result = CrawlResult::fromContent(
+                $this->callbackExecutionStrategy->fetchByCallback((string) $className, $parameters)
+            );
         } else {
             // Regular FE request
             $crawlerId = $this->generateCrawlerIdFromQueueItem($queueItem);
 
             $url = new Uri($parameters['url']);
             $result = $this->crawlStrategy->fetchUrlContents($url, $crawlerId);
-            if ($result !== false) {
-                $result = [
-                    'content' => json_encode($result),
-                ];
-                $this->eventDispatcher->dispatch(new AfterUrlCrawledEvent($parameters['url'], $result));
-            }
+            $this->eventDispatcher->dispatch(new AfterUrlCrawledEvent($parameters['url'], $result));
         }
         return $result;
     }

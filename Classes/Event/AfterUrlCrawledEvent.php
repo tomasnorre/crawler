@@ -19,6 +19,8 @@ namespace AOE\Crawler\Event;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Value\CrawlResult;
+
 /**
  * @internal since v12.0.0
  *
@@ -26,12 +28,9 @@ namespace AOE\Crawler\Event;
  */
 final class AfterUrlCrawledEvent
 {
-    /**
-     * @param array{content: string|false} $result the JSON encoded crawl result
-     */
     public function __construct(
         private readonly string $url,
-        private readonly array $result
+        private readonly CrawlResult $result
     ) {
     }
 
@@ -40,10 +39,7 @@ final class AfterUrlCrawledEvent
         return $this->url;
     }
 
-    /**
-     * @return array{content: string|false} the JSON encoded crawl result
-     */
-    public function getResult(): array
+    public function getResult(): CrawlResult
     {
         return $this->result;
     }

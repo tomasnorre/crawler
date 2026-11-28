@@ -70,7 +70,7 @@ class GuzzleExecutionStrategyTest extends UnitTestCase
                 'content' => 'Crawler extension for TYPO3',
                 'running' => true,
             ],
-            $this->guzzleExecutionStrategy->fetchUrlContents($url, $crawlerId)
+            $this->guzzleExecutionStrategy->fetchUrlContents($url, $crawlerId)->getContent()
         );
     }
 
@@ -87,7 +87,7 @@ class GuzzleExecutionStrategyTest extends UnitTestCase
             'vars' => [
                 'status' => '200 OK',
             ],
-        ], $subject->fetchUrlContents(new Uri('https://not-important.tld'), 'crawler-id'));
+        ], $subject->fetchUrlContents(new Uri('https://not-important.tld'), 'crawler-id')->getContent());
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
@@ -108,7 +108,7 @@ class GuzzleExecutionStrategyTest extends UnitTestCase
         $crawlerId = sha1('this-is-testing');
         $url = new Uri('https://not-important.tld');
 
-        $response = $this->guzzleExecutionStrategy->fetchUrlContents($url, $crawlerId);
+        $response = $this->guzzleExecutionStrategy->fetchUrlContents($url, $crawlerId)->getContent();
         $this->assertEquals(
             [
                 'errorlog' => ['Response has no X-T3Crawler-Meta header'],
@@ -153,7 +153,7 @@ class GuzzleExecutionStrategyTest extends UnitTestCase
 
         self::assertSame([
             'errorlog' => ['0 ' . $errorMessage],
-        ], $guzzleExecutionStrategy->fetchUrlContents(new Uri('https://not-important.tld'), $crawlerId));
+        ], $guzzleExecutionStrategy->fetchUrlContents(new Uri('https://not-important.tld'), $crawlerId)->getContent());
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
@@ -175,7 +175,7 @@ class GuzzleExecutionStrategyTest extends UnitTestCase
             'vars' => [
                 'status' => '200 OK',
             ],
-        ], $subject->fetchUrlContents(new Uri('https://example.com/page'), 'crawler-id'));
+        ], $subject->fetchUrlContents(new Uri('https://example.com/page'), 'crawler-id')->getContent());
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
@@ -195,7 +195,7 @@ class GuzzleExecutionStrategyTest extends UnitTestCase
             'vars' => [
                 'status' => '404 Not Found',
             ],
-        ], $subject->fetchUrlContents(new Uri('https://user:secret@example.com/'), 'crawler-id'));
+        ], $subject->fetchUrlContents(new Uri('https://user:secret@example.com/'), 'crawler-id')->getContent());
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
@@ -219,7 +219,7 @@ class GuzzleExecutionStrategyTest extends UnitTestCase
 
         self::assertSame([
             'errorlog' => ['503 Service Unavailable'],
-        ], $subject->fetchUrlContents(new Uri('https://example.com/'), 'crawler-id'));
+        ], $subject->fetchUrlContents(new Uri('https://example.com/'), 'crawler-id')->getContent());
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
@@ -233,7 +233,7 @@ class GuzzleExecutionStrategyTest extends UnitTestCase
 
         self::assertSame([
             'errorlog' => ['0 Too many redirects'],
-        ], $subject->fetchUrlContents(new Uri('https://example.com/'), 'crawler-id'));
+        ], $subject->fetchUrlContents(new Uri('https://example.com/'), 'crawler-id')->getContent());
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
@@ -254,6 +254,6 @@ class GuzzleExecutionStrategyTest extends UnitTestCase
 
         self::assertSame([
             'errorlog' => ['0 Connection refused'],
-        ], $subject->fetchUrlContents(new Uri('https://example.com/'), 'crawler-id'));
+        ], $subject->fetchUrlContents(new Uri('https://example.com/'), 'crawler-id')->getContent());
     }
 }

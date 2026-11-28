@@ -55,8 +55,6 @@ class QueueCallbackTest extends FunctionalTestCase
         $result = $this->get(QueueExecutor::class)->executeQueueItem($queueItem);
 
         $expected = 'Hello Crawler from TYPO3 ' . (new Typo3Version())->getMajorVersion();
-        self::assertSame([
-            'content' => json_encode($expected),
-        ], $result);
+        self::assertSame($expected, $result->getContent());
     }
 }

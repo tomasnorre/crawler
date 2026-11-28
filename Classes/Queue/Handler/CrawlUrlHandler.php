@@ -25,6 +25,7 @@ use AOE\Crawler\Event\BeforeQueueItemAddedEvent;
 use AOE\Crawler\Queue\Message\CrawlUrlMessage;
 use AOE\Crawler\QueueExecutor;
 use AOE\Crawler\Service\PageService;
+use AOE\Crawler\Value\CrawlResult;
 use Psr\Clock\ClockInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -47,11 +48,10 @@ final readonly class CrawlUrlHandler
     }
 
     /**
-     * @return array{content: string|false}|string|false|null The crawl result, see QueueExecutor::executeQueueItem(),
-     *                                 or null if the queue record does not exist (anymore), is already crawled
-     *                                 or its page is excluded from crawling.
+     * @return CrawlResult|null The crawl result, or null if the queue record does not exist (anymore),
+     *                          is already crawled or its page is excluded from crawling.
      */
-    public function __invoke(CrawlUrlMessage $message): array|string|false|null
+    public function __invoke(CrawlUrlMessage $message): ?CrawlResult
     {
         $queueId = $message->queueId;
         $queueRecord = $this->queueRepository->getQueueEntriesByQid($queueId, $message->force);
@@ -76,7 +76,7 @@ final readonly class CrawlUrlHandler
 
         /** @var AfterQueueItemAddedEvent $afterEvent */
         $afterEvent = $this->eventDispatcher->dispatch(new AfterQueueItemAddedEvent($queueId, [
-            'result_data' => json_encode($result),
+            'result_data' => $result->toResultData(),
         ]));
         $this->queueRepository->update($queueId, $afterEvent->getFieldArray());
 
@@ -95,11 +95,7 @@ final readonly class CrawlUrlHandler
 
         $this->queueRepository->update($queueId, [
             'exec_time' => $this->clock->now()->getTimestamp(),
-            'result_data' => json_encode([
-                'content' => json_encode([
-                    'errorlog' => ['Skipped: ' . $exclusionReason],
-                ]),
-            ]),
+            'result_data' => CrawlResult::error('Skipped: ' . $exclusionReason)->toResultData(),
         ]);
         return true;
     }

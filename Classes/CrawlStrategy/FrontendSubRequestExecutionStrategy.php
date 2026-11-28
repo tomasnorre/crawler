@@ -21,6 +21,7 @@ namespace AOE\Crawler\CrawlStrategy;
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
 use AOE\Crawler\CrawlStrategy\Interface\CrawlStrategyInterface;
+use AOE\Crawler\Value\CrawlResult;
 use Psr\Clock\ClockInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -87,17 +88,15 @@ final class FrontendSubRequestExecutionStrategy implements LoggerAwareInterface,
     ) {
     }
 
-    /**
-     * @return array<array-key, mixed>|false See CrawlStrategyInterface::fetchUrlContents()
-     */
     #[\Override]
-    public function fetchUrlContents(UriInterface $url, string $crawlerId): array|false
+    public function fetchUrlContents(UriInterface $url, string $crawlerId): CrawlResult
     {
         if (!$this->isHttpUrl($url)) {
-            $this->logger?->debug(sprintf('Scheme does not match for url "%s"', $url), [
+            $message = sprintf('Scheme does not match for url "%s"', $url);
+            $this->logger?->debug($message, [
                 'crawlerId' => $crawlerId,
             ]);
-            return false;
+            return CrawlResult::error($message);
         }
 
         try {
@@ -275,10 +274,7 @@ final class FrontendSubRequestExecutionStrategy implements LoggerAwareInterface,
         }
     }
 
-    /**
-     * @return array<array-key, mixed>
-     */
-    private function buildResult(ResponseInterface $response, UriInterface $url, string $crawlerId): array
+    private function buildResult(ResponseInterface $response, UriInterface $url, string $crawlerId): CrawlResult
     {
         $status = $response->getStatusCode() . ' ' . $response->getReasonPhrase();
         if ($response->getStatusCode() >= 400) {
@@ -287,28 +283,20 @@ final class FrontendSubRequestExecutionStrategy implements LoggerAwareInterface,
 
         $meta = json_decode($response->getHeaderLine('X-T3Crawler-Meta'), true);
         if (is_array($meta)) {
-            return $meta;
+            return CrawlResult::fromContent($meta);
         }
 
-        return [
-            'errorlog' => ['Response has no X-T3Crawler-Meta header'],
-            'vars' => [
-                'status' => $status,
-            ],
-        ];
+        return CrawlResult::error('Response has no X-T3Crawler-Meta header', [
+            'status' => $status,
+        ]);
     }
 
-    /**
-     * @return array{errorlog: list<string>}
-     */
-    private function buildErrorResult(UriInterface $url, string $crawlerId, string $message): array
+    private function buildErrorResult(UriInterface $url, string $crawlerId, string $message): CrawlResult
     {
         $this->logger?->debug(sprintf('Error while opening "%s" - %s', $url, $message), [
             'crawlerId' => $crawlerId,
         ]);
-        return [
-            'errorlog' => [$message],
-        ];
+        return CrawlResult::error($message);
     }
 
     private function isHttpUrl(UriInterface $url): bool

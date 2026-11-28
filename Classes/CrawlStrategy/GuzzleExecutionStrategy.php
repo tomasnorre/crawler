@@ -20,6 +20,7 @@ namespace AOE\Crawler\CrawlStrategy;
  */
 
 use AOE\Crawler\CrawlStrategy\Interface\CrawlStrategyInterface;
+use AOE\Crawler\Value\CrawlResult;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
 use Psr\Http\Message\ResponseInterface;
@@ -40,11 +41,9 @@ class GuzzleExecutionStrategy implements LoggerAwareInterface, CrawlStrategyInte
 
     /**
      * Sets up a CURL / Guzzle Request for fetching the request.
-     *
-     * @return array See CrawlStrategyInterface::fetchUrlContents()
      */
     #[\Override]
-    public function fetchUrlContents(UriInterface $url, string $crawlerId): array
+    public function fetchUrlContents(UriInterface $url, string $crawlerId): CrawlResult
     {
         $reqHeaders = $this->buildRequestHeaders($crawlerId);
 
@@ -60,14 +59,11 @@ class GuzzleExecutionStrategy implements LoggerAwareInterface, CrawlStrategyInte
             $response = $this->getResponse($url, $options);
             $meta = json_decode($response->getHeaderLine('X-T3Crawler-Meta'), true);
             if (is_array($meta)) {
-                return $meta;
+                return CrawlResult::fromContent($meta);
             }
-            return [
-                'errorlog' => ['Response has no X-T3Crawler-Meta header'],
-                'vars' => [
-                    'status' => $response->getStatusCode() . ' ' . $response->getReasonPhrase(),
-                ],
-            ];
+            return CrawlResult::error('Response has no X-T3Crawler-Meta header', [
+                'status' => $response->getStatusCode() . ' ' . $response->getReasonPhrase(),
+            ]);
         } catch (RequestException $e) {
             $response = $e->getResponse();
             $message = ($response instanceof \Psr\Http\Message\ResponseInterface ? $response->getStatusCode() : 0)
@@ -80,9 +76,7 @@ class GuzzleExecutionStrategy implements LoggerAwareInterface, CrawlStrategyInte
                     'crawlerId' => $crawlerId,
                 ]
             );
-            return [
-                'errorlog' => [$message],
-            ];
+            return CrawlResult::error($message);
         } catch (ConnectException $e) {
             $message = $e->getCode() . chr(32) . $e->getMessage();
 
@@ -92,9 +86,7 @@ class GuzzleExecutionStrategy implements LoggerAwareInterface, CrawlStrategyInte
                     'crawlerId' => $crawlerId,
                 ]
             );
-            return [
-                'errorlog' => [$message],
-            ];
+            return CrawlResult::error($message);
         }
     }
 

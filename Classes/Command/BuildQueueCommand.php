@@ -28,6 +28,7 @@ use AOE\Crawler\Queue\Handler\CrawlUrlHandler;
 use AOE\Crawler\Queue\Message\CrawlUrlMessage;
 use AOE\Crawler\Service\PageTreeUrlCollector;
 use AOE\Crawler\Utility\MessageUtility;
+use AOE\Crawler\Value\CrawlResult;
 use AOE\Crawler\Value\QueueRow;
 use Psr\Clock\ClockInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -255,7 +256,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
         $result = ($this->crawlUrlHandler)(new CrawlUrlMessage($this->queueRepository->add($queueRec)));
 
         $progressBar->clear();
-        $this->outputCrawlResult($output, (string) ($result['content'] ?? ''));
+        $this->outputCrawlResult($output, $result);
         $progressBar->display();
     }
 
@@ -270,13 +271,14 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
         return ' (' . implode(',', $parameters['procInstructions']) . ')';
     }
 
-    private function outputCrawlResult(OutputInterface $output, string $resultContent): void
+    private function outputCrawlResult(OutputInterface $output, ?CrawlResult $result): void
     {
-        $requestResult = json_decode($resultContent, true);
-        if (!is_array($requestResult)) {
+        if (!$result?->hasCrawlerData()) {
+            $content = $result?->getContent();
+            $content = is_string($content) ? $content : json_encode($content, JSON_THROW_ON_ERROR);
             $output->writeln(
                 '<error>Error checking Crawler Result:  ' . substr(
-                    (string) preg_replace('/\s+/', ' ', strip_tags($resultContent)),
+                    (string) preg_replace('/\s+/', ' ', strip_tags($content)),
                     0,
                     30000
                 ) . '...' . PHP_EOL . '</error>' . PHP_EOL
@@ -284,9 +286,8 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             return;
         }
 
-        $resLog = array_key_exists('log', $requestResult)
-        && is_array($requestResult['log']) ? chr(9) . chr(9) .
-            implode(PHP_EOL . chr(9) . chr(9), $requestResult['log']) : '';
+        $log = $result->getLog();
+        $resLog = $log === [] ? '' : chr(9) . chr(9) . implode(PHP_EOL . chr(9) . chr(9), $log);
         $output->writeln('<info>OK: ' . $resLog . '</info>' . PHP_EOL);
     }
 

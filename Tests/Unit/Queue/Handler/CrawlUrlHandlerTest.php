@@ -27,6 +27,7 @@ use AOE\Crawler\Queue\Message\CrawlUrlMessage;
 use AOE\Crawler\QueueExecutor;
 use AOE\Crawler\Service\PageService;
 use AOE\Crawler\Tests\Unit\FrozenClock;
+use AOE\Crawler\Value\CrawlResult;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -102,9 +103,12 @@ class CrawlUrlHandlerTest extends UnitTestCase
         $this->queueRepository->method('getQueueEntriesByQid')->with(12, false)->willReturn($queueRecord);
         $this->pageService->expects(self::once())->method('getExclusionReason')->with(7)->willReturn(false);
         $this->eventDispatcher->method('dispatch')->willReturnArgument(0);
-        $this->queueExecutor->expects(self::once())->method('executeQueueItem')->with($queueRecord)->willReturn(false);
+        $result = CrawlResult::fromContent([]);
+        $this->queueExecutor->expects(self::once())->method('executeQueueItem')->with($queueRecord)->willReturn(
+            $result
+        );
 
-        self::assertFalse(($this->subject)(new CrawlUrlMessage(12)));
+        self::assertSame($result, ($this->subject)(new CrawlUrlMessage(12)));
     }
 
     #[Test]
@@ -117,9 +121,11 @@ class CrawlUrlHandlerTest extends UnitTestCase
         $modifiedQueueRecord = $queueRecord + [
             'modified' => true,
         ];
-        $result = [
-            'content' => '{"vars":{"status":"200 OK"}}',
-        ];
+        $result = CrawlResult::fromContent([
+            'vars' => [
+                'status' => '200 OK',
+            ],
+        ]);
 
         $this->queueRepository->method('getQueueEntriesByQid')->with(12, true)->willReturn($queueRecord);
         // The record has no page_id, fx. a callback
@@ -156,7 +162,7 @@ class CrawlUrlHandlerTest extends UnitTestCase
             'exec_time' => 1_000_000,
         ], $updates[0][1]);
         self::assertSame([12, [
-            'result_data' => json_encode($result),
+            'result_data' => '{"content":"{\\"vars\\":{\\"status\\":\\"200 OK\\"}}"}',
             'added_by_listener' => 1,
         ]], $updates[1]);
     }

@@ -19,8 +19,8 @@ namespace AOE\Crawler\Service;
  * The TYPO3 project - inspiring people to share!
  */
 use AOE\Crawler\Controller\Backend\BackendModuleCrawlerLogController;
-use AOE\Crawler\Controller\Backend\Helper\ResultHandler;
 use AOE\Crawler\Controller\Backend\Helper\UrlBuilder;
+use AOE\Crawler\Value\CrawlResult;
 use Psr\Http\Message\UriInterface;
 use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -32,6 +32,11 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class BackendModuleLogService
 {
+    /**
+     * The result status of a queue entry that is not crawled yet
+     */
+    public const STATUS_NOT_CRAWLED = '-';
+
     public function __construct(
         private readonly IconFactory $iconFactory
     ) {
@@ -114,12 +119,12 @@ class BackendModuleLogService
         string $showFeVars,
         Icon $refreshIcon,
     ): array {
-        $resultData = $logEntry['result_data'] ? json_decode((string) $logEntry['result_data'], true) : [];
-        $resStatus = ResultHandler::getResStatus($resultData);
+        $result = CrawlResult::fromResultData((string) $logEntry['result_data']);
+        $resStatus = $result?->getStatus() ?? self::STATUS_NOT_CRAWLED;
         $isError = str_contains($resStatus, 'Error');
 
-        $rowData = $this->buildRowData($logEntry, $showResultLog, $resStatus);
-        $rowData = $this->populateFeVars($showFeVars, $resultData, $rowData);
+        $rowData = $this->buildRowData($logEntry, $showResultLog, $resStatus, $result);
+        $rowData = $this->populateFeVars($showFeVars, $result, $rowData);
 
         $contentArray['trClass'] = $isError ? 'bg-danger' : '';
         $contentArray['qid'] = [
@@ -139,13 +144,17 @@ class BackendModuleLogService
      * @param array<string, mixed> $logEntry
      * @return array<string, mixed>
      */
-    private function buildRowData(array $logEntry, string $showResultLog, string $resStatus): array
-    {
+    private function buildRowData(
+        array $logEntry,
+        string $showResultLog,
+        string $resStatus,
+        ?CrawlResult $result
+    ): array {
         $parameters = json_decode((string) $logEntry['parameters'], true);
 
         $rowData = [];
         if ($showResultLog) {
-            $rowData['result_log'] = ResultHandler::getResultLog($logEntry);
+            $rowData['result_log'] = $this->getResultLog($result);
         } else {
             $rowData['scheduled'] = $this->formatDateTime((int) $logEntry['scheduled']);
             $rowData['exec_time'] = $this->formatDateTime((int) $logEntry['exec_time']);
@@ -195,7 +204,7 @@ class BackendModuleLogService
      */
     private function extractCsvExport(array $vv, array $columns): array
     {
-        $resLog = ResultHandler::getResultLog($vv);
+        $resLog = $this->getResultLog(CrawlResult::fromResultData((string) ($vv['result_data'] ?? '')));
         $csvExport = [];
         // Only for CSV (adding qid and scheduled/exec_time if needed):
         $csvExport['scheduled'] = BackendUtility::datetime($vv['scheduled']);
@@ -210,15 +219,19 @@ class BackendModuleLogService
         return $csvExport;
     }
 
+    private function getResultLog(?CrawlResult $result): string
+    {
+        return implode(chr(10), $result?->getLog() ?? []);
+    }
+
     /**
-     * @param bool|array<array-key, mixed> $resultData
      * @param array<string, mixed> $rowData
      * @return array<string, mixed>
      */
-    private function populateFeVars(string $showFeVars, bool|array $resultData, array $rowData): array
+    private function populateFeVars(string $showFeVars, ?CrawlResult $result, array $rowData): array
     {
         if ($showFeVars) {
-            $resFeVars = ResultHandler::getResFeVars(is_array($resultData) ? $resultData : []);
+            $resFeVars = $result?->getVars() ?? [];
             $rowData['tsfe_id'] = $resFeVars['id'] ?? '';
             $rowData['tsfe_gr_list'] = $resFeVars['gr_list'] ?? '';
         }
