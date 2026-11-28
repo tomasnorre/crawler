@@ -23,8 +23,7 @@ final readonly class CrawlStrategyFactory
 
     public function create(): CrawlStrategyInterface
     {
-        $extensionSettings = $this->configurationProvider->getExtensionConfiguration();
-        $strategy = ($extensionSettings['makeDirectRequests'] ?? false)
+        $strategy = $this->configurationProvider->getExtensionSettings()->makeDirectRequests
             ? FrontendSubRequestExecutionStrategy::class
             : GuzzleExecutionStrategy::class;
 

@@ -20,6 +20,7 @@ namespace AOE\Crawler\Tests\Unit\CrawlStrategy;
  */
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
+use AOE\Crawler\Configuration\ExtensionSettings;
 use AOE\Crawler\CrawlStrategy\FrontendSubRequestExecutionStrategy;
 use AOE\Crawler\Tests\Unit\FrozenClock;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -613,7 +614,7 @@ class FrontendSubRequestExecutionStrategyTest extends UnitTestCase
     private function createSubject(array $settings = [], bool $withLogger = true): FrontendSubRequestExecutionStrategy
     {
         $configurationProvider = $this->createStub(ExtensionConfigurationProvider::class);
-        $configurationProvider->method('getExtensionConfiguration')->willReturn($settings);
+        $configurationProvider->method('getExtensionSettings')->willReturn(ExtensionSettings::fromArray($settings));
 
         $subject = new FrontendSubRequestExecutionStrategy(
             $this->application,

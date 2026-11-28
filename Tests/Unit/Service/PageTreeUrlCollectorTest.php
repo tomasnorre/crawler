@@ -20,6 +20,7 @@ namespace AOE\Crawler\Tests\Unit\Service;
  */
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
+use AOE\Crawler\Configuration\ExtensionSettings;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Queue\CrawlRun;
 use AOE\Crawler\Queue\CrawlUrlMessageDispatcher;
@@ -264,13 +265,16 @@ final class PageTreeUrlCollectorTest extends UnitTestCase
             static fn (int $pageId, string $query): UriInterface => new Uri('https://example.com/?' . $query)
         );
 
+        $extensionConfigurationProvider = $this->createStub(ExtensionConfigurationProvider::class);
+        $extensionConfigurationProvider->method('getExtensionSettings')->willReturn(new ExtensionSettings());
+
         return new QueueEntryWriter(
             $this->createStub(QueueRepository::class),
             $this->createStub(EventDispatcherInterface::class),
             $urlService,
             new ProcessInstructionService(),
             $this->createStub(CrawlUrlMessageDispatcher::class),
-            $this->createStub(ExtensionConfigurationProvider::class),
+            $extensionConfigurationProvider,
             new FrozenClock(0),
         );
     }

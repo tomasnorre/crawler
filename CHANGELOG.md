@@ -42,6 +42,7 @@
 * `PageService` requires the `EventDispatcher` in its constructor
 * `PageService` requires the `PageRootlineProvider` in its constructor
 * The extension setting `frontendBasePath` no longer falls back to `config.absRefPrefix`, it defaults to `/`
+* `ExtensionConfigurationProvider::getExtensionSettings()` returns the extension settings as `AOE\Crawler\Configuration\ExtensionSettings` with typed properties, missing or invalid settings get the defaults of `ext_conf_template.txt`
 
 ### Fixed
 * `RequestHelper::getIntFromRequest()` returns the default for array values in the request, instead of `1`
@@ -103,6 +104,7 @@
 * `AOE\Crawler\Value\CrawlAction`
 
 #### Functions & Properties
+* `ExtensionConfigurationProvider::getExtensionConfiguration()`
 * `CrawlerController::readUrl()`
 * `CrawlerController::readUrlFromArray()`
 * `CrawlerController::drawURLs_PIfilter()`

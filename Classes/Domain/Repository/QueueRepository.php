@@ -142,10 +142,10 @@ class QueueRepository implements LoggerAwareInterface
     {
         $extensionSettings = GeneralUtility::makeInstance(
             ExtensionConfigurationProvider::class
-        )->getExtensionConfiguration();
+        )->getExtensionSettings();
         // 24*60*60 Seconds in 24 hours
-        $processedAgeInSeconds = $extensionSettings['cleanUpProcessedAge'] * 86400;
-        $scheduledAgeInSeconds = $extensionSettings['cleanUpScheduledAge'] * 86400;
+        $processedAgeInSeconds = $extensionSettings->cleanUpProcessedAge * 86400;
+        $scheduledAgeInSeconds = $extensionSettings->cleanUpScheduledAge * 86400;
 
         $now = time();
         $condition = '(exec_time<>0 AND exec_time<' . ($now - $processedAgeInSeconds) . ') OR scheduled<=' . ($now - $scheduledAgeInSeconds);
