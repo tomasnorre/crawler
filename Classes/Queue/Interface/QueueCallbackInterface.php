@@ -36,7 +36,7 @@ interface QueueCallbackInterface
     /**
      * Called when the crawler processes the queue entry.
      *
-     * @param array $parameters The parameters given to QueueEntryWriter::addCallback()
+     * @param array<array-key, mixed> $parameters The parameters given to QueueEntryWriter::addCallback()
      * @return mixed The result, stored JSON encoded as the result of the queue entry and shown in the crawler log
      */
     public function execute(array $parameters): mixed;

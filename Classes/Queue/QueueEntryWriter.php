@@ -45,6 +45,9 @@ final class QueueEntryWriter
      */
     public const CALLBACK_PARAMETER = '_CALLBACKOBJ';
 
+    /**
+     * @var array<string, mixed>
+     */
     private readonly array $extensionSettings;
 
     public function __construct(
@@ -63,7 +66,8 @@ final class QueueEntryWriter
      * Creates the URLs of a configuration and, depending on the options of the run, adds them to the queue
      * or collects them for download.
      *
-     * @param array $configuration A configuration of the page, see PageConfigurationResolver
+     * @param array<string, mixed> $configuration A configuration of the page, see PageConfigurationResolver
+     * @param array<string, mixed> $pageRow
      * @return string List of URLs (meant for display in backend module)
      */
     public function compileUrlList(array $configuration, array $pageRow, CrawlRun $run): string
@@ -125,6 +129,7 @@ final class QueueEntryWriter
      * Submits the URL for crawling or collects it for download, depending on the options of the run
      *
      * @return string The log line of the URL
+     * @param array<string, mixed> $subConfiguration
      */
     private function handleUrl(
         CrawlRun $run,
@@ -163,7 +168,7 @@ final class QueueEntryWriter
      * Adds a URL to the queue, unless an equal entry is already queued. Returns whether it was added.
      * If the run only collects queue entries, the entry is added to the run instead and false is returned.
      *
-     * @param array $subCfg Sub configuration array (from TS config)
+     * @param array<string, mixed> $subCfg Sub configuration array (from TS config)
      * @param int $scheduled Scheduled time
      * @param bool $skipInnerDuplicationCheck Skip the check for an equal entry
      */
@@ -241,7 +246,7 @@ final class QueueEntryWriter
      * Adds a queue entry that calls a QueueCallbackInterface instead of crawling a URL. Returns the queue id.
      *
      * @param class-string<QueueCallbackInterface> $callbackClassName
-     * @param array $parameters Handed over to QueueCallbackInterface::execute(), must be JSON encodable
+     * @param array<array-key, mixed> $parameters Handed over to QueueCallbackInterface::execute(), must be JSON encodable
      * @param int $pageId The page the queue entry is shown with in the crawler log
      * @param int $scheduled When to execute the callback, 0 for now
      * @param int $setId The set the queue entry belongs to, fx. to filter the crawler log
@@ -272,6 +277,8 @@ final class QueueEntryWriter
 
     /**
      * Returns a md5 hash generated from a serialized configuration array.
+     *
+     * @param array<string, mixed> $configuration
      */
     private function getConfigurationHash(array $configuration): string
     {

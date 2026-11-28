@@ -21,13 +21,6 @@ parameters:
             route: TYPO3\CMS\Backend\Routing\Route
             tx_crawler: 'array<string, mixed>'
 
-    ignoreErrors:
-        # Being removed folder by folder, drop a path once its errors are fixed
-        -
-            identifier: missingType.iterableValue
-            paths:
-                - Classes/Queue/*
-
     # composer require tomasvotruba/type-coverage --dev
     # Typed class constants need PHP 8.3, PHP 8.2 is still supported
     type_coverage:
