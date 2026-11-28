@@ -23,9 +23,12 @@ use AOE\Crawler\Controller\Backend\BackendModuleCrawlerLogController;
 use AOE\Crawler\Queue\CrawlPriority;
 use AOE\Crawler\Queue\CrawlUrlMessageDispatcher;
 use AOE\Crawler\Queue\Message\CrawlUrlMessage;
+use Doctrine\DBAL\Result;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3\CMS\Core\Database\Query\Expression\ExpressionBuilder;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
@@ -289,6 +292,71 @@ class BackendModuleCrawlerLogControllerTest extends UnitTestCase
             ],
             'result_data' => $expectedResultData,
         ], $expectedStatus], $decoded);
+    }
+
+    #[Test]
+    public function getQueueEntryReturnsNoEntryAndNotCrawledStatusIfQueueEntryDoesNotExist(): void
+    {
+        $subject = $this->createSubjectWithQueryBuilder($this->createQueryBuilder('12', false), '1');
+
+        self::assertSame([[], '-'], (new \ReflectionMethod($subject, 'getQueueEntry'))->invoke($subject, '12'));
+    }
+
+    #[Test]
+    public function getQueueEntryReturnsDecodedQueueEntryAndItsStatus(): void
+    {
+        $subject = $this->createSubjectWithQueryBuilder($this->createQueryBuilder('12', [
+            'qid' => 12,
+            'parameters' => '{"url":"https:\\/\\/example.com\\/"}',
+            'result_data' => json_encode([
+                'content' => json_encode([
+                    'errorlog' => ['404 Not Found'],
+                ]),
+            ]),
+        ]), '1');
+
+        self::assertSame([[
+            'qid' => 12,
+            'parameters' => [
+                'url' => 'https://example.com/',
+            ],
+            'result_data' => [
+                'content' => [
+                    'errorlog' => ['404 Not Found'],
+                ],
+            ],
+        ], '404 Not Found'], (new \ReflectionMethod($subject, 'getQueueEntry'))->invoke($subject, '12'));
+    }
+
+    private function createSubjectWithQueryBuilder(
+        QueryBuilder $queryBuilder,
+        string $showResultLog
+    ): BackendModuleCrawlerLogController {
+        $subject = (new \ReflectionClass(BackendModuleCrawlerLogController::class))->newInstanceWithoutConstructor();
+        (new \ReflectionProperty($subject, 'queryBuilder'))->setValue($subject, $queryBuilder);
+        (new \ReflectionProperty($subject, 'showResultLog'))->setValue($subject, $showResultLog);
+        return $subject;
+    }
+
+    /**
+     * A query builder that selects the queue entry with the given qid and returns the given row
+     *
+     * @param array<string, mixed>|false $row
+     */
+    private function createQueryBuilder(string $queueId, array|false $row): QueryBuilder
+    {
+        $expressionBuilder = $this->createMock(ExpressionBuilder::class);
+        $expressionBuilder->expects(self::once())->method('eq')->with('qid', ':qid')->willReturn('qid = :qid');
+        $result = $this->createStub(Result::class);
+        $result->method('fetchAssociative')->willReturn($row);
+        $queryBuilder = $this->createMock(QueryBuilder::class);
+        $queryBuilder->method('expr')->willReturn($expressionBuilder);
+        $queryBuilder->expects(self::once())->method('createNamedParameter')->with($queueId)->willReturn(':qid');
+        $queryBuilder->expects(self::once())->method('from')->with('tx_crawler_queue')->willReturnSelf();
+        $queryBuilder->expects(self::once())->method('select')->with('*')->willReturnSelf();
+        $queryBuilder->expects(self::once())->method('where')->with('qid = :qid')->willReturnSelf();
+        $queryBuilder->expects(self::once())->method('executeQuery')->willReturn($result);
+        return $queryBuilder;
     }
 
     private function createSubjectWithDispatcher(
