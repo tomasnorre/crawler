@@ -28,6 +28,7 @@ use AOE\Crawler\QueueExecutor;
 use AOE\Crawler\Service\PageService;
 use AOE\Crawler\Tests\Unit\FrozenClock;
 use AOE\Crawler\Value\CrawlResult;
+use AOE\Crawler\Value\QueueEntry;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -63,7 +64,7 @@ class CrawlUrlHandlerTest extends UnitTestCase
     #[Test]
     public function doesNothingIfQueueRecordIsNotFoundOrAlreadyCrawled(): void
     {
-        $this->queueRepository->method('getQueueEntriesByQid')->with(12, false)->willReturn(false);
+        $this->queueRepository->method('getQueueEntriesByQid')->with(12, false)->willReturn(null);
         $this->queueExecutor->expects(self::never())->method('executeQueueItem');
         $this->queueRepository->expects(self::never())->method('update');
         $this->eventDispatcher->expects(self::never())->method('dispatch');
@@ -75,11 +76,11 @@ class CrawlUrlHandlerTest extends UnitTestCase
     #[Test]
     public function doesNotCrawlQueueRecordOfPageExcludedFromCrawling(): void
     {
-        $this->queueRepository->method('getQueueEntriesByQid')->with(12, false)->willReturn([
-            'qid' => 12,
-            'page_id' => 7,
-            'parameters' => '{"url":"https://example.com/"}',
-        ]);
+        $this->queueRepository->method('getQueueEntriesByQid')->with(12, false)->willReturn(new QueueEntry(
+            qid: 12,
+            pageId: 7,
+            parameters: '{"url":"https://example.com/"}',
+        ));
         $this->pageService->expects(self::once())->method('getExclusionReason')->with(7)
             ->willReturn('Because page is excluded from crawling');
         $this->queueExecutor->expects(self::never())->method('executeQueueItem');
@@ -95,16 +96,12 @@ class CrawlUrlHandlerTest extends UnitTestCase
     #[Test]
     public function crawlsQueueRecordOfPageNotExcludedFromCrawling(): void
     {
-        $queueRecord = [
-            'qid' => 12,
-            'page_id' => 7,
-            'parameters' => '{"url":"https://example.com/"}',
-        ];
-        $this->queueRepository->method('getQueueEntriesByQid')->with(12, false)->willReturn($queueRecord);
+        $queueEntry = new QueueEntry(qid: 12, pageId: 7, parameters: '{"url":"https://example.com/"}');
+        $this->queueRepository->method('getQueueEntriesByQid')->with(12, false)->willReturn($queueEntry);
         $this->pageService->expects(self::once())->method('getExclusionReason')->with(7)->willReturn(false);
         $this->eventDispatcher->method('dispatch')->willReturnArgument(0);
         $result = CrawlResult::fromContent([]);
-        $this->queueExecutor->expects(self::once())->method('executeQueueItem')->with($queueRecord)->willReturn(
+        $this->queueExecutor->expects(self::once())->method('executeQueueItem')->with($queueEntry)->willReturn(
             $result
         );
 
@@ -114,26 +111,23 @@ class CrawlUrlHandlerTest extends UnitTestCase
     #[Test]
     public function crawlsQueueRecordAndStoresResult(): void
     {
-        $queueRecord = [
-            'qid' => 12,
-            'parameters' => '{"url":"https://example.com/"}',
-        ];
-        $modifiedQueueRecord = $queueRecord + [
-            'modified' => true,
-        ];
+        $queueEntry = new QueueEntry(qid: 12, parameters: '{"url":"https://example.com/"}', setId: 34);
+        $modifiedQueueEntry = new QueueEntry(qid: 12, parameters: '{"url":"https://example.com/other"}', setId: 34);
         $result = CrawlResult::fromContent([
             'vars' => [
                 'status' => '200 OK',
             ],
         ]);
 
-        $this->queueRepository->method('getQueueEntriesByQid')->with(12, true)->willReturn($queueRecord);
+        $this->queueRepository->method('getQueueEntriesByQid')->with(12, true)->willReturn($queueEntry);
         // The record has no page_id, fx. a callback
         $this->pageService->expects(self::once())->method('getExclusionReason')->with(0)->willReturn(false);
         $this->eventDispatcher->expects(self::exactly(2))->method('dispatch')->willReturnCallback(
-            static function (object $event) use ($modifiedQueueRecord): object {
+            static function (object $event) use ($queueEntry, $modifiedQueueEntry): object {
                 if ($event instanceof BeforeQueueItemAddedEvent) {
-                    $event->setQueueRecord($modifiedQueueRecord);
+                    self::assertSame(12, $event->getQueueId());
+                    self::assertSame($queueEntry->toRow(), $event->getQueueRecord());
+                    $event->setQueueRecord($modifiedQueueEntry->toRow());
                 }
                 if ($event instanceof AfterQueueItemAddedEvent) {
                     $event->setFieldArray($event->getFieldArray() + [
@@ -144,7 +138,7 @@ class CrawlUrlHandlerTest extends UnitTestCase
             }
         );
         $this->queueExecutor->expects(self::once())->method('executeQueueItem')
-            ->with($modifiedQueueRecord)
+            ->with($modifiedQueueEntry)
             ->willReturn($result);
 
         $updates = [];

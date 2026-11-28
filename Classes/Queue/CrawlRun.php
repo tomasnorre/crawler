@@ -19,6 +19,7 @@ namespace AOE\Crawler\Queue;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AOE\Crawler\Value\QueueEntry;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -53,7 +54,7 @@ final class CrawlRun
     private array $urlList = [];
 
     /**
-     * @var list<array<string, mixed>>
+     * @var list<QueueEntry>
      */
     private array $queueEntries = [];
 
@@ -137,10 +138,7 @@ final class CrawlRun
         return $this->urlList;
     }
 
-    /**
-     * @param array<string, mixed> $queueEntry
-     */
-    public function addQueueEntry(array $queueEntry): void
+    public function addQueueEntry(QueueEntry $queueEntry): void
     {
         $this->queueEntries[] = $queueEntry;
     }
@@ -148,7 +146,7 @@ final class CrawlRun
     /**
      * The queue entries collected when $collectQueueEntriesOnly is set
      *
-     * @return list<array<string, mixed>>
+     * @return list<QueueEntry>
      */
     public function getQueueEntries(): array
     {

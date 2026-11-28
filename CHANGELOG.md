@@ -48,6 +48,11 @@
 * `QueueExecutor::executeQueueItem()` returns `AOE\Crawler\Value\CrawlResult` instead of an array, `"ERROR"` or `false`
 * `CrawlUrlHandler` returns `AOE\Crawler\Value\CrawlResult` or `null` instead of an array, a string or `false`
 * `crawler:buildQueue --mode exec` shows a crawl result without crawler data JSON encoded, fx. `null` if the entry was not crawled
+* `QueueRepository::getQueueEntriesByQid()` returns `AOE\Crawler\Value\QueueEntry` or `null` instead of an array or `false`
+* `QueueExecutor::executeQueueItem()` takes `AOE\Crawler\Value\QueueEntry` instead of an array
+* `CrawlRun::addQueueEntry()` and `CrawlRun::getQueueEntries()` use `AOE\Crawler\Value\QueueEntry` instead of arrays
+* The parameters of queue entries are built and read by `AOE\Crawler\Value\QueueParameters`, their JSON is unchanged
+* The queue record of `BeforeQueueItemAddedEvent` holds the fields of `tx_crawler_queue` the crawler knows, columns added by other extensions are left out
 * A queue entry whose parameters cannot be read gets the error "The parameters of the queue entry could not be read" as result instead of `"ERROR"`
 * Direct requests of a URL without http(s) scheme report the error "Scheme does not match for url" as result instead of no result, and dispatch `AfterUrlCrawledEvent` like other failed requests
 

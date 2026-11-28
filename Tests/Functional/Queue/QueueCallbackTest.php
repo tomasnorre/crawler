@@ -23,6 +23,7 @@ use AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy;
 use AOE\Crawler\Queue\QueueEntryWriter;
 use AOE\Crawler\QueueExecutor;
 use AOE\Crawler\Tests\Functional\Fixtures\Extensions\crawler_callback_test\Classes\GreetingCallback;
+use AOE\Crawler\Value\QueueEntry;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Information\Typo3Version;
@@ -52,7 +53,7 @@ class QueueCallbackTest extends FunctionalTestCase
             ]),
         ];
 
-        $result = $this->get(QueueExecutor::class)->executeQueueItem($queueItem);
+        $result = $this->get(QueueExecutor::class)->executeQueueItem(QueueEntry::fromRow($queueItem));
 
         $expected = 'Hello Crawler from TYPO3 ' . (new Typo3Version())->getMajorVersion();
         self::assertSame($expected, $result->getContent());

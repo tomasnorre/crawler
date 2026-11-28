@@ -29,6 +29,8 @@ use AOE\Crawler\Queue\Message\CrawlUrlMessage;
 use AOE\Crawler\Service\PageTreeUrlCollector;
 use AOE\Crawler\Utility\MessageUtility;
 use AOE\Crawler\Value\CrawlResult;
+use AOE\Crawler\Value\QueueEntry;
+use AOE\Crawler\Value\QueueParameters;
 use AOE\Crawler\Value\QueueRow;
 use Psr\Clock\ClockInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -232,43 +234,41 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
         $this->outputUrls($queueRows, $output);
         $output->writeln('<info>Processing</info>' . PHP_EOL);
 
-        foreach ($progressBar->iterate($run->getQueueEntries()) as $queueRec) {
-            $this->executeQueueEntry($output, $progressBar, $queueRec);
+        foreach ($progressBar->iterate($run->getQueueEntries()) as $queueEntry) {
+            $this->executeQueueEntry($output, $progressBar, $queueEntry);
         }
         $output->writeln('');
     }
 
-    /**
-     * @param array<string, mixed> $queueRec
-     */
-    private function executeQueueEntry(OutputInterface $output, ProgressBar $progressBar, array $queueRec): void
+    private function executeQueueEntry(OutputInterface $output, ProgressBar $progressBar, QueueEntry $queueEntry): void
     {
-        $p = json_decode((string) $queueRec['parameters'], true);
-        if (is_bool($p)) {
+        $parameters = $queueEntry->getQueueParameters();
+        if (!$parameters instanceof QueueParameters) {
             return;
         }
 
         $progressBar->clear();
-        $output->writeln('<info>' . $p['url'] . $this->getProcInstructionsString($p) . ' => </info>');
+        $output->writeln(
+            '<info>' . $parameters->getUrl() . $this->getProcInstructionsString($parameters) . ' => </info>'
+        );
         $progressBar->display();
 
         // Bypass the message queue and crawl the entry right away
-        $result = ($this->crawlUrlHandler)(new CrawlUrlMessage($this->queueRepository->add($queueRec)));
+        $queueId = $this->queueRepository->add($queueEntry->toFieldArray());
+        $result = ($this->crawlUrlHandler)(new CrawlUrlMessage($queueId));
 
         $progressBar->clear();
         $this->outputCrawlResult($output, $result);
         $progressBar->display();
     }
 
-    /**
-     * @param array<string, mixed> $parameters
-     */
-    private function getProcInstructionsString(array $parameters): string
+    private function getProcInstructionsString(QueueParameters $parameters): string
     {
-        if (empty($parameters['procInstructions'][0])) {
+        $processingInstructions = $parameters->getProcessingInstructions();
+        if (empty($processingInstructions[0])) {
             return '';
         }
-        return ' (' . implode(',', $parameters['procInstructions']) . ')';
+        return ' (' . implode(',', $processingInstructions) . ')';
     }
 
     private function outputCrawlResult(OutputInterface $output, ?CrawlResult $result): void

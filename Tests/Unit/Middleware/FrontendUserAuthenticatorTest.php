@@ -90,6 +90,27 @@ class FrontendUserAuthenticatorTest extends UnitTestCase
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
+    public function processAddsNoQueueParametersIfQueueRecordHasNone(): void
+    {
+        $context = $this->createMock(Context::class);
+        $context->expects(self::never())->method('setAspect');
+        $subject = new FrontendUserAuthenticator($this->createQueryBuilder('12', [
+            'qid' => 12,
+            'set_id' => 34,
+            'parameters' => '',
+        ]), $context);
+        $request = (new ServerRequest('https://example.com/'))
+            ->withHeader('X-T3CRAWLER', '12:' . $this->getHash(12, 34));
+
+        $handledRequest = null;
+        $response = $subject->process($request, $this->createHandler($handledRequest));
+
+        self::assertSame(200, $response->getStatusCode());
+        self::assertInstanceOf(ServerRequestInterface::class, $handledRequest);
+        self::assertNull($handledRequest->getAttribute('tx_crawler'));
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
     public function processSetsFrontendUserGroupsOfQueueRecord(): void
     {
         $context = new Context();

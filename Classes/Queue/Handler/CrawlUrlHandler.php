@@ -26,6 +26,7 @@ use AOE\Crawler\Queue\Message\CrawlUrlMessage;
 use AOE\Crawler\QueueExecutor;
 use AOE\Crawler\Service\PageService;
 use AOE\Crawler\Value\CrawlResult;
+use AOE\Crawler\Value\QueueEntry;
 use Psr\Clock\ClockInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -54,25 +55,25 @@ final readonly class CrawlUrlHandler
     public function __invoke(CrawlUrlMessage $message): ?CrawlResult
     {
         $queueId = $message->queueId;
-        $queueRecord = $this->queueRepository->getQueueEntriesByQid($queueId, $message->force);
-        if (!is_array($queueRecord)) {
+        $queueEntry = $this->queueRepository->getQueueEntriesByQid($queueId, $message->force);
+        if (!$queueEntry instanceof QueueEntry) {
             return null;
         }
 
         // The page can be excluded from crawling after it was added to the queue
-        if ($this->skipExcludedPage($queueId, (int) ($queueRecord['page_id'] ?? 0))) {
+        if ($this->skipExcludedPage($queueId, $queueEntry->pageId)) {
             return null;
         }
 
         /** @var BeforeQueueItemAddedEvent $beforeEvent */
-        $beforeEvent = $this->eventDispatcher->dispatch(new BeforeQueueItemAddedEvent($queueId, $queueRecord));
-        $queueRecord = $beforeEvent->getQueueRecord();
+        $beforeEvent = $this->eventDispatcher->dispatch(new BeforeQueueItemAddedEvent($queueId, $queueEntry->toRow()));
+        $queueEntry = QueueEntry::fromRow($beforeEvent->getQueueRecord());
 
         $this->queueRepository->update($queueId, [
             'exec_time' => $this->clock->now()->getTimestamp(),
         ]);
 
-        $result = $this->queueExecutor->executeQueueItem($queueRecord);
+        $result = $this->queueExecutor->executeQueueItem($queueEntry);
 
         /** @var AfterQueueItemAddedEvent $afterEvent */
         $afterEvent = $this->eventDispatcher->dispatch(new AfterQueueItemAddedEvent($queueId, [

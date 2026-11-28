@@ -20,6 +20,7 @@ namespace AOE\Crawler\Domain\Repository;
  */
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
+use AOE\Crawler\Value\QueueEntry;
 use AOE\Crawler\Value\QueueFilter;
 use Doctrine\DBAL\Exception;
 use Psr\Log\LoggerAwareInterface;
@@ -62,11 +63,9 @@ class QueueRepository implements LoggerAwareInterface
     }
 
     /**
-     * Returns the queue record, if $force is false only if it has not been crawled yet.
-     *
-     * @return array<string, mixed>|false
+     * Returns the queue entry, if $force is false only if it has not been crawled yet.
      */
-    public function getQueueEntriesByQid(int $queueId, bool $force): array|false
+    public function getQueueEntriesByQid(int $queueId, bool $force): ?QueueEntry
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
 
@@ -79,7 +78,8 @@ class QueueRepository implements LoggerAwareInterface
         if (!$force) {
             $queryBuilder->andWhere($queryBuilder->expr()->eq('exec_time', 0));
         }
-        return $queryBuilder->executeQuery()->fetchAssociative();
+        $row = $queryBuilder->executeQuery()->fetchAssociative();
+        return is_array($row) ? QueueEntry::fromRow($row) : null;
     }
 
     /**

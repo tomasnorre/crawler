@@ -30,6 +30,7 @@ use AOE\Crawler\Queue\QueueEntryWriter;
 use AOE\Crawler\Service\ProcessInstructionService;
 use AOE\Crawler\Service\UrlService;
 use AOE\Crawler\Tests\Unit\FrozenClock;
+use AOE\Crawler\Value\QueueEntry;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -495,18 +496,16 @@ class QueueEntryWriterTest extends UnitTestCase
 
         self::assertFalse($added);
         $expectedParameters = '{"url":"https:\/\/example.com\/","procInstructions":[""]}';
-        self::assertSame([
-            [
-                'page_id' => 5,
-                'parameters' => $expectedParameters,
-                'parameters_hash' => md5($expectedParameters),
-                'configuration_hash' => 'hash',
-                'scheduled' => 1_000_000,
-                'exec_time' => 0,
-                'set_id' => 99,
-                'result_data' => '',
-                'configuration' => 'default',
-            ],
+        self::assertEquals([
+            new QueueEntry(
+                pageId: 5,
+                parameters: $expectedParameters,
+                parametersHash: md5($expectedParameters),
+                configurationHash: 'hash',
+                scheduled: 1_000_000,
+                setId: 99,
+                configuration: 'default',
+            ),
         ], $run->getQueueEntries());
     }
 
@@ -517,10 +516,13 @@ class QueueEntryWriterTest extends UnitTestCase
         $queueRepository->expects(self::once())->method('add')->with([
             'page_id' => 0,
             'parameters' => '{"_CALLBACKOBJ":"Vendor\\\\Callback"}',
+            'parameters_hash' => '',
+            'configuration_hash' => '',
             'scheduled' => 1_000_000,
             'exec_time' => 0,
             'set_id' => 0,
             'result_data' => '',
+            'configuration' => '',
         ])->willReturn(21);
         $crawlUrlMessageDispatcher = $this->createMock(CrawlUrlMessageDispatcher::class);
         $crawlUrlMessageDispatcher->expects(self::once())->method('dispatch')
@@ -540,10 +542,13 @@ class QueueEntryWriterTest extends UnitTestCase
         $queueRepository->expects(self::once())->method('add')->with([
             'page_id' => 5,
             'parameters' => '{"foo":"bar","_CALLBACKOBJ":"Vendor\\\\Callback"}',
+            'parameters_hash' => '',
+            'configuration_hash' => '',
             'scheduled' => 1_000_120,
             'exec_time' => 0,
             'set_id' => 7,
             'result_data' => '',
+            'configuration' => '',
         ])->willReturn(22);
         $crawlUrlMessageDispatcher = $this->createMock(CrawlUrlMessageDispatcher::class);
         $crawlUrlMessageDispatcher->expects(self::once())->method('dispatch')

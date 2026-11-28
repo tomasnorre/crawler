@@ -24,6 +24,7 @@ use AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy;
 use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
 use AOE\Crawler\CrawlStrategy\FrontendSubRequestExecutionStrategy;
 use AOE\Crawler\QueueExecutor;
+use AOE\Crawler\Value\QueueEntry;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use Psr\Clock\ClockInterface;
@@ -173,7 +174,7 @@ class FrontendSubRequestExecutionStrategyTest extends FunctionalTestCase
             ->fetchAssociative();
         self::assertIsArray($queueItem);
 
-        $content = $this->subject->executeQueueItem($queueItem)->getContent();
+        $content = $this->subject->executeQueueItem(QueueEntry::fromRow($queueItem))->getContent();
 
         self::assertIsArray($content);
         return $content;
