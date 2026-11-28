@@ -64,7 +64,7 @@ final class CrawlRun
      * @param bool $collectDownloadUrls If set (and $submitUrls is not), the URLs are collected for download
      * @param bool $collectQueueEntriesOnly If set, queue entries are only collected and not stored in the database
      * @param list<string> $processingInstructions If not empty, only URLs of these processing instructions are used
-     * @param array $configurationSelection If not empty, only these configuration keys are used
+     * @param array<array-key, string> $configurationSelection If not empty, only these configuration keys are used
      * @param int|null $setId The set id of the queue entries, a new one if null
      */
     public function __construct(

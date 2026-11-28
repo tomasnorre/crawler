@@ -47,7 +47,7 @@ final readonly class CrawlUrlHandler
     }
 
     /**
-     * @return array|string|false|null The crawl result, see QueueExecutor::executeQueueItem(),
+     * @return array{content: string|false}|string|false|null The crawl result, see QueueExecutor::executeQueueItem(),
      *                                 or null if the queue record does not exist (anymore), is already crawled
      *                                 or its page is excluded from crawling.
      */
