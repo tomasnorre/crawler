@@ -23,8 +23,9 @@ use AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy;
 use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
 use AOE\Crawler\CrawlStrategy\Interface\CrawlStrategyInterface;
 use AOE\Crawler\Event\AfterUrlCrawledEvent;
-use AOE\Crawler\Queue\QueueEntryWriter;
 use AOE\Crawler\Value\CrawlResult;
+use AOE\Crawler\Value\QueueEntry;
+use AOE\Crawler\Value\QueueParameters;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\SingletonInterface;
@@ -48,45 +49,25 @@ class QueueExecutor implements SingletonInterface
     }
 
     /**
-     * Takes a queue record and fetches the contents of the URL.
-     * In the future, updating the queue item & additional signal/slot/events should also happen in here.
-     *
-     * @param array<string, mixed> $queueItem
+     * Crawls the URL of a queue entry or calls its queue callback
      */
-    public function executeQueueItem(array $queueItem): CrawlResult
+    public function executeQueueItem(QueueEntry $queueEntry): CrawlResult
     {
-        $parameters = '';
-        if (isset($queueItem['parameters'])) {
-            $parameters = json_decode($queueItem['parameters'], true);
-        }
-
-        if (!is_array($parameters) || $parameters === []) {
+        $parameters = $queueEntry->getQueueParameters();
+        if (!$parameters instanceof QueueParameters) {
             return CrawlResult::error(self::INVALID_PARAMETERS_MESSAGE);
         }
-        if (isset($parameters[QueueEntryWriter::CALLBACK_PARAMETER])) {
-            $className = $parameters[QueueEntryWriter::CALLBACK_PARAMETER];
-            unset($parameters[QueueEntryWriter::CALLBACK_PARAMETER]);
-            $result = CrawlResult::fromContent(
-                $this->callbackExecutionStrategy->fetchByCallback((string) $className, $parameters)
-            );
-        } else {
-            // Regular FE request
-            $crawlerId = $this->generateCrawlerIdFromQueueItem($queueItem);
-
-            $url = new Uri($parameters['url']);
-            $result = $this->crawlStrategy->fetchUrlContents($url, $crawlerId);
-            $this->eventDispatcher->dispatch(new AfterUrlCrawledEvent($parameters['url'], $result));
+        if ($parameters->isCallback()) {
+            return CrawlResult::fromContent($this->callbackExecutionStrategy->fetchByCallback(
+                $parameters->getCallbackClassName(),
+                $parameters->getCallbackParameters()
+            ));
         }
-        return $result;
-    }
 
-    /**
-     * @param array<string, mixed> $queueItem
-     */
-    private function generateCrawlerIdFromQueueItem(array $queueItem): string
-    {
-        return $queueItem['qid'] . ':' . md5(
-            $queueItem['qid'] . '|' . $queueItem['set_id'] . '|' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']
-        );
+        // Regular FE request
+        $crawlerId = $queueEntry->getCrawlerId((string) $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']);
+        $result = $this->crawlStrategy->fetchUrlContents(new Uri($parameters->getUrl()), $crawlerId);
+        $this->eventDispatcher->dispatch(new AfterUrlCrawledEvent($parameters->getUrl(), $result));
+        return $result;
     }
 }

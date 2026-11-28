@@ -38,6 +38,7 @@ use AOE\Crawler\Service\ProcessInstructionService;
 use AOE\Crawler\Service\UrlService;
 use AOE\Crawler\Tests\Unit\FrozenClock;
 use AOE\Crawler\Value\CrawlResult;
+use AOE\Crawler\Value\QueueEntry;
 use AOE\Crawler\Value\QueueRow;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -635,12 +636,12 @@ final class BuildQueueCommandTest extends UnitTestCase
                 return 100 + count($addedEntries);
             });
         $this->queueRepository->method('getQueueEntriesByQid')
-            ->willReturnCallback(static function (int $queueId, bool $force) use (&$addedEntries): array {
+            ->willReturnCallback(static function (int $queueId, bool $force) use (&$addedEntries): QueueEntry {
                 self::assertFalse($force);
-                return [
+                return QueueEntry::fromRow([
                     'qid' => $queueId,
                     ...$addedEntries[$queueId - 101],
-                ];
+                ]);
             });
         $this->queueExecutor->expects(self::exactly(2))
             ->method('executeQueueItem')
@@ -751,7 +752,7 @@ final class BuildQueueCommandTest extends UnitTestCase
     {
         $this->queueRepository->expects(self::once())->method('add')->willReturn(1);
         // The entry is gone or already crawled, the handler returns no result
-        $this->queueRepository->method('getQueueEntriesByQid')->willReturn(false);
+        $this->queueRepository->method('getQueueEntriesByQid')->willReturn(null);
         $this->queueExecutor->expects(self::never())->method('executeQueueItem');
 
         $output = $this->invokeOutputModeExec([
@@ -810,10 +811,7 @@ final class BuildQueueCommandTest extends UnitTestCase
     private function givenCrawlResult(CrawlResult $result, int $numberOfEntries = 1): void
     {
         $this->queueRepository->expects(self::exactly($numberOfEntries))->method('add')->willReturn(1);
-        $this->queueRepository->method('getQueueEntriesByQid')->willReturn([
-            'qid' => 1,
-            'page_id' => 2,
-        ]);
+        $this->queueRepository->method('getQueueEntriesByQid')->willReturn(new QueueEntry(qid: 1, pageId: 2));
         $this->queueExecutor->method('executeQueueItem')->willReturn($result);
     }
 
@@ -824,9 +822,7 @@ final class BuildQueueCommandTest extends UnitTestCase
     {
         $run = new CrawlRun(0, 30);
         foreach ($parameters as $entryParameters) {
-            $run->addQueueEntry([
-                'parameters' => json_encode($entryParameters),
-            ]);
+            $run->addQueueEntry(new QueueEntry(parameters: (string) json_encode($entryParameters)));
         }
 
         $output = new BufferedOutput(decorated: true);

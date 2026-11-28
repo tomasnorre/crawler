@@ -20,6 +20,8 @@ namespace AOE\Crawler\Middleware;
  */
 
 use AOE\Crawler\Domain\Repository\QueueRepository;
+use AOE\Crawler\Value\QueueEntry;
+use AOE\Crawler\Value\QueueParameters;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -64,22 +66,22 @@ class FrontendUserAuthenticator implements MiddlewareInterface
         // Authenticate crawler request:
         // @todo: ask service to exclude current call for special reasons: for example no relevance because the language version is not affected
         [$queueId, $hash] = explode(':', $crawlerInformation);
-        $queueRec = $this->findByQueueId($queueId);
+        $queueEntry = $this->findByQueueId($queueId);
 
         // If a crawler record was found and hash was matching, set it up
-        if (!$this->isRequestHashMatchingQueueRecord($queueRec, $hash)) {
+        if (!$this->isRequestHashMatchingQueueEntry($queueEntry, $hash)) {
             return GeneralUtility::makeInstance(ErrorController::class)->unavailableAction(
                 $request,
                 'No crawler entry found'
             );
         }
 
-        $queueParameters = json_decode((string) $queueRec['parameters'], true);
-        $request = $request->withAttribute('tx_crawler', $queueParameters);
+        $queueParameters = $queueEntry->getQueueParameters();
+        $request = $request->withAttribute('tx_crawler', $queueParameters?->toArray());
 
         // Now ensure to set the proper user groups
-        if (is_array($queueParameters)) {
-            $grList = $queueParameters['feUserGroupList'] ?? '';
+        if ($queueParameters instanceof QueueParameters) {
+            $grList = $queueParameters->getFeUserGroupList();
             if ($grList) {
                 $frontendUser = $this->getFrontendUser($grList, $request);
 
@@ -102,19 +104,17 @@ class FrontendUserAuthenticator implements MiddlewareInterface
     }
 
     /**
-     * @param array<string, mixed>|null $queueRec
+     * @phpstan-assert-if-true QueueEntry $queueEntry
      */
-    private function isRequestHashMatchingQueueRecord(?array $queueRec, string $hash): bool
+    private function isRequestHashMatchingQueueEntry(?QueueEntry $queueEntry, string $hash): bool
     {
-        if ($queueRec === null || !array_key_exists('qid', $queueRec) || !array_key_exists('set_id', $queueRec)) {
+        if (!$queueEntry instanceof QueueEntry) {
             return false;
         }
 
         return hash_equals(
-            $hash,
-            md5(
-                $queueRec['qid'] . '|' . $queueRec['set_id'] . '|' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']
-            )
+            $queueEntry->getCrawlerHash((string) $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']),
+            $hash
         );
     }
 
@@ -130,10 +130,7 @@ class FrontendUserAuthenticator implements MiddlewareInterface
         return $frontendUser;
     }
 
-    /**
-     * @return array<string, mixed>
-     */
-    private function findByQueueId(string $queueId): array
+    private function findByQueueId(string $queueId): ?QueueEntry
     {
         $queueRec = $this->queryBuilder
             ->select('*')
@@ -148,6 +145,6 @@ class FrontendUserAuthenticator implements MiddlewareInterface
             $queueRec['parameters'] = str_replace("'", '"', (string) $queueRec['parameters']);
         }
 
-        return is_array($queueRec) ? $queueRec : [];
+        return is_array($queueRec) ? QueueEntry::fromRow($queueRec) : null;
     }
 }

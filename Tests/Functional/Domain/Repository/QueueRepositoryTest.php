@@ -67,9 +67,10 @@ class QueueRepositoryTest extends FunctionalTestCase
             'configuration' => 'FirstConfiguration',
         ]);
 
-        $record = $this->subject->getQueueEntriesByQid($queueId, false);
-        self::assertIsArray($record);
-        self::assertSame(99, (int) $record['page_id']);
+        $queueEntry = $this->subject->getQueueEntriesByQid($queueId, false);
+        self::assertSame($queueId, $queueEntry?->qid);
+        self::assertSame(99, $queueEntry->pageId);
+        self::assertSame('FirstConfiguration', $queueEntry->configuration);
     }
 
     #[Test]
@@ -80,20 +81,19 @@ class QueueRepositoryTest extends FunctionalTestCase
             'result_data' => 'result',
         ]);
 
-        $record = $this->subject->getQueueEntriesByQid(1004, true);
-        self::assertIsArray($record);
-        self::assertSame(123, (int) $record['exec_time']);
-        self::assertSame('result', $record['result_data']);
+        $queueEntry = $this->subject->getQueueEntriesByQid(1004, true);
+        self::assertSame(123, $queueEntry?->execTime);
+        self::assertSame('result', $queueEntry->resultData);
     }
 
     #[Test]
     public function getQueueEntriesByQidReturnsCrawledEntryOnlyIfForced(): void
     {
         // qid 1001 has an exec_time, so it is already crawled
-        self::assertFalse($this->subject->getQueueEntriesByQid(1001, false));
-        self::assertIsArray($this->subject->getQueueEntriesByQid(1001, true));
+        self::assertNull($this->subject->getQueueEntriesByQid(1001, false));
+        self::assertSame(1001, $this->subject->getQueueEntriesByQid(1001, true)?->qid);
         // qid 1004 is not crawled yet
-        self::assertIsArray($this->subject->getQueueEntriesByQid(1004, false));
+        self::assertSame(1004, $this->subject->getQueueEntriesByQid(1004, false)?->qid);
     }
 
     #[DataProvider('isPageInQueueDataProvider')]

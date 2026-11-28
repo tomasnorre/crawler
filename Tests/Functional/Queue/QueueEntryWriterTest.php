@@ -136,14 +136,13 @@ class QueueEntryWriterTest extends FunctionalTestCase
         ], 5, setId: 42);
 
         $queueEntry = GeneralUtility::makeInstance(QueueRepository::class)->getQueueEntriesByQid($queueId, true);
-        self::assertIsArray($queueEntry);
-        self::assertSame(5, (int) $queueEntry['page_id']);
-        self::assertSame(42, (int) $queueEntry['set_id']);
-        self::assertSame(1_000_000, (int) $queueEntry['scheduled']);
+        self::assertSame(5, $queueEntry?->pageId);
+        self::assertSame(42, $queueEntry->setId);
+        self::assertSame(1_000_000, $queueEntry->scheduled);
         self::assertSame([
             'name' => 'Crawler',
             QueueEntryWriter::CALLBACK_PARAMETER => CallbackObjectForTesting::class,
-        ], json_decode((string) $queueEntry['parameters'], true));
+        ], $queueEntry->getQueueParameters()?->toArray());
 
         self::assertCount(1, $dispatchedMessages);
         self::assertInstanceOf(CrawlUrlMessage::class, $dispatchedMessages[0]);

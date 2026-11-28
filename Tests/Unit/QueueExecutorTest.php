@@ -30,6 +30,7 @@ use AOE\Crawler\Queue\QueueEntryWriter;
 use AOE\Crawler\QueueExecutor;
 use AOE\Crawler\Tests\Unit\CrawlStrategy\CallbackObjectForTesting;
 use AOE\Crawler\Value\CrawlResult;
+use AOE\Crawler\Value\QueueEntry;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -72,7 +73,9 @@ class QueueExecutorTest extends UnitTestCase
         $crawlStrategy = $this->createMock(CrawlStrategyInterface::class);
         $crawlStrategy->expects(self::never())->method('fetchUrlContents');
 
-        $result = $this->createQueueExecutor($crawlStrategy, $eventDispatcher)->executeQueueItem($queueItem);
+        $result = $this->createQueueExecutor($crawlStrategy, $eventDispatcher)->executeQueueItem(
+            QueueEntry::fromRow($queueItem)
+        );
 
         self::assertEquals(CrawlResult::error(QueueExecutor::INVALID_PARAMETERS_MESSAGE), $result);
     }
@@ -87,7 +90,7 @@ class QueueExecutorTest extends UnitTestCase
             ]),
         ];
 
-        $result = $this->queueExecutor->executeQueueItem($queueItem);
+        $result = $this->queueExecutor->executeQueueItem(QueueEntry::fromRow($queueItem));
 
         self::assertSame('Hi, it works! Crawler', $result->getContent());
     }
@@ -111,11 +114,11 @@ class QueueExecutorTest extends UnitTestCase
                 && $event->getResult() === $crawlResult
         ))->willReturnArgument(0);
 
-        $result = $this->createQueueExecutor($crawlStrategy, $eventDispatcher)->executeQueueItem([
+        $result = $this->createQueueExecutor($crawlStrategy, $eventDispatcher)->executeQueueItem(QueueEntry::fromRow([
             'qid' => 12,
             'set_id' => 34,
             'parameters' => '{"url":"https:\/\/example.com\/"}',
-        ]);
+        ]));
 
         self::assertSame($crawlResult, $result);
     }

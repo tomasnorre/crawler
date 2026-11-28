@@ -20,6 +20,7 @@ namespace AOE\Crawler\Tests\Unit\Queue;
  */
 
 use AOE\Crawler\Queue\CrawlRun;
+use AOE\Crawler\Value\QueueEntry;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -132,13 +133,10 @@ final class CrawlRunTest extends UnitTestCase
         $subject = new CrawlRun(0, 30);
 
         $subject->addUrlListEntry('[14-11-26 12:00] https://example.com/');
-        $subject->addQueueEntry([
-            'page_id' => 1,
-        ]);
+        $queueEntry = new QueueEntry(pageId: 1);
+        $subject->addQueueEntry($queueEntry);
 
         self::assertSame(['[14-11-26 12:00] https://example.com/'], $subject->getUrlList());
-        self::assertSame([[
-            'page_id' => 1,
-        ]], $subject->getQueueEntries());
+        self::assertSame([$queueEntry], $subject->getQueueEntries());
     }
 }

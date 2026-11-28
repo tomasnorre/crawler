@@ -27,6 +27,8 @@ use AOE\Crawler\Queue\Interface\QueueCallbackInterface;
 use AOE\Crawler\Queue\Message\CrawlUrlMessage;
 use AOE\Crawler\Service\ProcessInstructionService;
 use AOE\Crawler\Service\UrlService;
+use AOE\Crawler\Value\QueueEntry;
+use AOE\Crawler\Value\QueueParameters;
 use Psr\Clock\ClockInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\UriInterface;
@@ -44,7 +46,7 @@ final class QueueEntryWriter
     /**
      * The parameter of a queue entry holding the class name of its QueueCallbackInterface
      */
-    public const CALLBACK_PARAMETER = '_CALLBACKOBJ';
+    public const CALLBACK_PARAMETER = QueueParameters::CALLBACK_PARAMETER;
 
     private readonly ExtensionSettings $extensionSettings;
 
@@ -182,41 +184,21 @@ final class QueueEntryWriter
         $urlAdded = false;
         $rows = [];
 
-        // Creating parameters:
-        $parameters = [
-            'url' => $url,
-        ];
-
-        // fe user group simulation:
-        $uGs = implode(',', array_unique(GeneralUtility::intExplode(',', $subCfg['userGroups'] ?? '', true)));
-        if ($uGs) {
-            $parameters['feUserGroupList'] = $uGs;
-        }
-
-        // Setting processing instructions
-        $parameters['procInstructions'] = GeneralUtility::trimExplode(',', $subCfg['procInstrFilter'] ?? '');
-        $procInstrParams = $subCfg['procInstrParams.'] ?? null;
-        if (is_array($procInstrParams)) {
-            $parameters['procInstrParams'] = $procInstrParams;
-        }
-
-        // Compile value array:
-        $parameters_serialized = json_encode($parameters) ?: '';
-        $fieldArray = [
-            'page_id' => $pageId,
-            'parameters' => $parameters_serialized,
-            'parameters_hash' => md5($parameters_serialized),
-            'configuration_hash' => $configurationHash,
-            'scheduled' => $scheduled,
-            'exec_time' => 0,
-            'set_id' => $run->setId,
-            'result_data' => '',
-            'configuration' => $subCfg['key'],
-        ];
+        $parameters = $this->createUrlParameters($url, $subCfg)->toJson();
+        $queueEntry = new QueueEntry(
+            pageId: $pageId,
+            parameters: $parameters,
+            parametersHash: md5($parameters),
+            configurationHash: $configurationHash,
+            scheduled: $scheduled,
+            setId: $run->setId,
+            configuration: (string) $subCfg['key'],
+        );
+        $fieldArray = $queueEntry->toFieldArray();
 
         if ($run->collectQueueEntriesOnly) {
             // the entries will only be registered and not stored to the database
-            $run->addQueueEntry($fieldArray);
+            $run->addQueueEntry($queueEntry);
         } else {
             if (!$skipInnerDuplicationCheck) {
                 // check if there is already an equal entry
@@ -224,8 +206,8 @@ final class QueueEntryWriter
                     $this->extensionSettings->enableTimeslot,
                     $scheduled,
                     $this->clock->now()->getTimestamp(),
-                    $fieldArray['page_id'],
-                    $fieldArray['parameters_hash']
+                    $queueEntry->pageId,
+                    $queueEntry->parametersHash
                 );
             }
             if ($rows === []) {
@@ -238,6 +220,22 @@ final class QueueEntryWriter
         }
 
         return $urlAdded;
+    }
+
+    /**
+     * @param array<string, mixed> $subCfg
+     */
+    private function createUrlParameters(string $url, array $subCfg): QueueParameters
+    {
+        // fe user group simulation, "0" are no user groups
+        $userGroups = implode(',', array_unique(GeneralUtility::intExplode(',', $subCfg['userGroups'] ?? '', true)));
+        $processingInstructionParameters = $subCfg['procInstrParams.'] ?? null;
+        return QueueParameters::forUrl(
+            $url,
+            $userGroups === '0' ? '' : $userGroups,
+            GeneralUtility::trimExplode(',', $subCfg['procInstrFilter'] ?? ''),
+            is_array($processingInstructionParameters) ? $processingInstructionParameters : null,
+        );
     }
 
     /**
@@ -258,16 +256,13 @@ final class QueueEntryWriter
         int $setId = 0
     ): int {
         $scheduled = $scheduled ?: $this->clock->now()->getTimestamp();
-        $parameters[self::CALLBACK_PARAMETER] = $callbackClassName;
 
-        $queueId = $this->queueRepository->add([
-            'page_id' => $pageId,
-            'parameters' => json_encode($parameters, JSON_THROW_ON_ERROR),
-            'scheduled' => $scheduled,
-            'exec_time' => 0,
-            'set_id' => $setId,
-            'result_data' => '',
-        ]);
+        $queueId = $this->queueRepository->add((new QueueEntry(
+            pageId: $pageId,
+            parameters: QueueParameters::forCallback($callbackClassName, $parameters)->toJson(),
+            scheduled: $scheduled,
+            setId: $setId,
+        ))->toFieldArray());
         $this->dispatchCrawlUrlMessage($queueId, $pageId, $scheduled);
 
         return $queueId;
