@@ -39,6 +39,9 @@ class CallbackExecutionStrategy
     ) {
     }
 
+    /**
+     * @param array<array-key, mixed> $parameters
+     */
     public function fetchByCallback(string $callbackClassName, array $parameters): mixed
     {
         return $this->getCallback($callbackClassName)->execute($parameters);

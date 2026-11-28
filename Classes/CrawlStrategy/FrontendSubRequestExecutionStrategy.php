@@ -88,7 +88,7 @@ final class FrontendSubRequestExecutionStrategy implements LoggerAwareInterface,
     }
 
     /**
-     * @return array|false See CrawlStrategyInterface::fetchUrlContents()
+     * @return array<array-key, mixed>|false See CrawlStrategyInterface::fetchUrlContents()
      */
     #[\Override]
     public function fetchUrlContents(UriInterface $url, string $crawlerId): array|false
@@ -172,6 +172,8 @@ final class FrontendSubRequestExecutionStrategy implements LoggerAwareInterface,
 
     /**
      * The server parameters the frontend reads through NormalizedParams
+     *
+     * @return array<string, string>
      */
     private function buildServerParams(UriInterface $url): array
     {
@@ -273,6 +275,9 @@ final class FrontendSubRequestExecutionStrategy implements LoggerAwareInterface,
         }
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     private function buildResult(ResponseInterface $response, UriInterface $url, string $crawlerId): array
     {
         $status = $response->getStatusCode() . ' ' . $response->getReasonPhrase();
@@ -293,6 +298,9 @@ final class FrontendSubRequestExecutionStrategy implements LoggerAwareInterface,
         ];
     }
 
+    /**
+     * @return array{errorlog: list<string>}
+     */
     private function buildErrorResult(UriInterface $url, string $crawlerId, string $message): array
     {
         $this->logger?->debug(sprintf('Error while opening "%s" - %s', $url, $message), [

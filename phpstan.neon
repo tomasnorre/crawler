@@ -28,7 +28,6 @@ parameters:
             paths:
                 - Classes/Command/*
                 - Classes/Controller/*
-                - Classes/CrawlStrategy/*
                 - Classes/Queue/*
                 - Classes/Service/*
 

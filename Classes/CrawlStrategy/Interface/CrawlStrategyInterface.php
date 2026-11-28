@@ -29,7 +29,7 @@ interface CrawlStrategyInterface
     /**
      * Fetch the given URL and return its textual response
      *
-     * @return array|false "false" on errors without explanation.
+     * @return array<array-key, mixed>|false "false" on errors without explanation.
      *                     Array may contain the following optional keys:
      *                     - errorlog: array of string error messages
      *                     - content: HTML content (string)
