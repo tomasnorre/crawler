@@ -20,6 +20,7 @@ namespace AOE\Crawler\Tests\Unit;
  */
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
+use AOE\Crawler\Configuration\ExtensionSettings;
 use AOE\Crawler\CrawlStrategy\CallbackExecutionStrategy;
 use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
 use AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategy;
@@ -178,7 +179,7 @@ class QueueExecutorTest extends UnitTestCase
     private function createCrawlStrategyFactory(CrawlStrategyInterface $crawlStrategy): CrawlStrategyFactory
     {
         $extensionConfigurationProvider = $this->createStub(ExtensionConfigurationProvider::class);
-        $extensionConfigurationProvider->method('getExtensionConfiguration')->willReturn([]);
+        $extensionConfigurationProvider->method('getExtensionSettings')->willReturn(new ExtensionSettings());
         $strategies = $this->createStub(ContainerInterface::class);
         $strategies->method('get')->willReturnMap([[GuzzleExecutionStrategy::class, $crawlStrategy]]);
 

@@ -20,6 +20,7 @@ namespace AOE\Crawler\Tests\Functional\Configuration;
  */
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
+use AOE\Crawler\Configuration\ExtensionSettings;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
@@ -29,7 +30,6 @@ class ExtensionConfigurationProviderTest extends FunctionalTestCase
     {
         $subject = GeneralUtility::makeInstance(ExtensionConfigurationProvider::class);
 
-        self::assertIsArray($subject->getExtensionConfiguration());
-        self::assertEmpty($subject->getExtensionConfiguration());
+        self::assertEquals(new ExtensionSettings(), $subject->getExtensionSettings());
     }
 }

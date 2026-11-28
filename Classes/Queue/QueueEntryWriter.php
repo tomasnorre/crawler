@@ -20,6 +20,7 @@ namespace AOE\Crawler\Queue;
  */
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
+use AOE\Crawler\Configuration\ExtensionSettings;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\AfterUrlAddedToQueueEvent;
 use AOE\Crawler\Queue\Interface\QueueCallbackInterface;
@@ -45,10 +46,7 @@ final class QueueEntryWriter
      */
     public const CALLBACK_PARAMETER = '_CALLBACKOBJ';
 
-    /**
-     * @var array<string, mixed>
-     */
-    private readonly array $extensionSettings;
+    private readonly ExtensionSettings $extensionSettings;
 
     public function __construct(
         private readonly QueueRepository $queueRepository,
@@ -59,7 +57,7 @@ final class QueueEntryWriter
         ExtensionConfigurationProvider $extensionConfigurationProvider,
         private readonly ClockInterface $clock,
     ) {
-        $this->extensionSettings = $extensionConfigurationProvider->getExtensionConfiguration();
+        $this->extensionSettings = $extensionConfigurationProvider->getExtensionSettings();
     }
 
     /**
@@ -223,7 +221,7 @@ final class QueueEntryWriter
             if (!$skipInnerDuplicationCheck) {
                 // check if there is already an equal entry
                 $rows = $this->queueRepository->getDuplicateQueueItemsIfExists(
-                    (bool) $this->extensionSettings['enableTimeslot'],
+                    $this->extensionSettings->enableTimeslot,
                     $scheduled,
                     $this->clock->now()->getTimestamp(),
                     $fieldArray['page_id'],

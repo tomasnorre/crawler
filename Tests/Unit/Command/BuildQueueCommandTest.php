@@ -21,6 +21,7 @@ namespace AOE\Crawler\Tests\Unit\Command;
 
 use AOE\Crawler\Command\BuildQueueCommand;
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
+use AOE\Crawler\Configuration\ExtensionSettings;
 use AOE\Crawler\Domain\Model\Reason;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\InvokeQueueChangeEvent;
@@ -919,9 +920,9 @@ final class BuildQueueCommandTest extends UnitTestCase
     private function addInstancesForExecution(bool $cleanUpOldQueueEntries = false, bool $readsPageTree = true): void
     {
         $extensionConfigurationProvider = $this->createStub(ExtensionConfigurationProvider::class);
-        $extensionConfigurationProvider->method('getExtensionConfiguration')->willReturn([
-            'cleanUpOldQueueEntries' => $cleanUpOldQueueEntries ? '1' : '0',
-        ]);
+        $extensionConfigurationProvider->method('getExtensionSettings')->willReturn(
+            new ExtensionSettings(cleanUpOldQueueEntries: $cleanUpOldQueueEntries)
+        );
         GeneralUtility::addInstance(ExtensionConfigurationProvider::class, $extensionConfigurationProvider);
         if ($readsPageTree) {
             GeneralUtility::addInstance(PageTreeView::class, $this->pageTree);
@@ -967,9 +968,9 @@ final class BuildQueueCommandTest extends UnitTestCase
         );
 
         $extensionConfigurationProvider = $this->createStub(ExtensionConfigurationProvider::class);
-        $extensionConfigurationProvider->method('getExtensionConfiguration')->willReturn([
-            'enableTimeslot' => '1',
-        ]);
+        $extensionConfigurationProvider->method('getExtensionSettings')->willReturn(
+            new ExtensionSettings(enableTimeslot: true)
+        );
         $this->writerQueueRepository->method('getDuplicateQueueItemsIfExists')->willReturn([]);
 
         return new PageTreeUrlCollector(

@@ -20,6 +20,7 @@ namespace AOE\Crawler\Tests\Unit\Service;
  */
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
+use AOE\Crawler\Configuration\ExtensionSettings;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Queue\CrawlUrlMessageDispatcher;
 use AOE\Crawler\Queue\QueueEntryWriter;
@@ -146,9 +147,9 @@ class QueueServiceTest extends UnitTestCase
             static fn (int $pageId, string $query): Uri => new Uri('https://example.com/' . $query)
         );
         $extensionConfigurationProvider = $this->createStub(ExtensionConfigurationProvider::class);
-        $extensionConfigurationProvider->method('getExtensionConfiguration')->willReturn([
-            'enableTimeslot' => '1',
-        ]);
+        $extensionConfigurationProvider->method('getExtensionSettings')->willReturn(
+            new ExtensionSettings(enableTimeslot: true)
+        );
 
         return new QueueEntryWriter(
             $queueRepository,

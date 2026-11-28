@@ -20,6 +20,7 @@ namespace AOE\Crawler\Service;
  */
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
+use AOE\Crawler\Configuration\ExtensionSettings;
 use AOE\Crawler\Domain\Repository\ConfigurationRepository;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Authentication\GroupResolver;
@@ -28,19 +29,13 @@ use TYPO3\CMS\Core\EventDispatcher\NoopEventDispatcher;
 use TYPO3\CMS\Core\TypoScript\AST\AstBuilder;
 use TYPO3\CMS\Core\TypoScript\TypoScriptStringFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\MathUtility;
 
 /**
  * @internal since v9.2.5
  */
 class ConfigurationService
 {
-    private const DEFAULT_MAX_URLS_TO_COMPILE = 10_000;
-
-    /**
-     * @var array<string, mixed>
-     */
-    private readonly array $extensionSettings;
+    private readonly ExtensionSettings $extensionSettings;
 
     public function __construct(
         private readonly UrlService $urlService,
@@ -51,7 +46,7 @@ class ConfigurationService
     ) {
         $this->extensionSettings = GeneralUtility::makeInstance(
             ExtensionConfigurationProvider::class
-        )->getExtensionConfiguration();
+        )->getExtensionSettings();
     }
 
     /**
@@ -215,19 +210,9 @@ class ConfigurationService
         $configuration['URLs'] = $this->urlService->compileUrls(
             $configuration['paramExpanded'],
             [$baseUrl],
-            $this->getMaxUrlsToCompile()
+            $this->extensionSettings->maxCompileUrls
         );
         return $configuration;
-    }
-
-    private function getMaxUrlsToCompile(): int
-    {
-        return MathUtility::forceIntegerInRange(
-            $this->extensionSettings['maxCompileUrls'] ?? self::DEFAULT_MAX_URLS_TO_COMPILE,
-            1,
-            1_000_000_000,
-            self::DEFAULT_MAX_URLS_TO_COMPILE
-        );
     }
 
     private function getBackendUser(): BackendUserAuthentication

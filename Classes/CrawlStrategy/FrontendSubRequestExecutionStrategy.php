@@ -322,10 +322,7 @@ final class FrontendSubRequestExecutionStrategy implements LoggerAwareInterface,
      */
     private function getFrontendBasePath(): string
     {
-        $frontendBasePath = trim(
-            (string) ($this->configurationProvider->getExtensionConfiguration()['frontendBasePath'] ?? ''),
-            '/'
-        );
+        $frontendBasePath = trim($this->configurationProvider->getExtensionSettings()->frontendBasePath, '/');
         return $frontendBasePath === '' ? '/' : '/' . $frontendBasePath . '/';
     }
 }

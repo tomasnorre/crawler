@@ -34,17 +34,16 @@ class ExtensionConfigurationProvider implements LoggerAwareInterface
     use LoggerAwareTrait;
 
     /**
-     * Return full extension configuration array.
-     *
-     * @return array<string, mixed>
+     * The extension settings, with defaults for missing or invalid values
      */
-    public function getExtensionConfiguration(): array
+    public function getExtensionSettings(): ExtensionSettings
     {
         try {
-            return GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('crawler');
+            $settings = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('crawler');
         } catch (ExtensionConfigurationExtensionNotConfiguredException|ExtensionConfigurationPathDoesNotExistException $e) {
             $this->logger?->error($e->getMessage());
+            $settings = [];
         }
-        return [];
+        return ExtensionSettings::fromArray(is_array($settings) ? $settings : []);
     }
 }

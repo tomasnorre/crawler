@@ -20,6 +20,7 @@ namespace AOE\Crawler\Tests\Unit\Queue;
  */
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
+use AOE\Crawler\Configuration\ExtensionSettings;
 use AOE\Crawler\Domain\Repository\QueueRepository;
 use AOE\Crawler\Event\AfterUrlAddedToQueueEvent;
 use AOE\Crawler\Queue\CrawlRun;
@@ -432,7 +433,7 @@ class QueueEntryWriterTest extends UnitTestCase
         $subject = $this->createSubjectForCompileUrlList(
             queueRepository: $queueRepository,
             crawlUrlMessageDispatcher: $crawlUrlMessageDispatcher,
-            enableTimeslot: '0',
+            enableTimeslot: false,
         );
 
         self::assertTrue($subject->addUrl(new CrawlRun(1_000_000, 30), 5, 'https://example.com/', [
@@ -562,7 +563,7 @@ class QueueEntryWriterTest extends UnitTestCase
         ?QueueRepository $queueRepository = null,
         ?EventDispatcherInterface $eventDispatcher = null,
         ?CrawlUrlMessageDispatcher $crawlUrlMessageDispatcher = null,
-        string $enableTimeslot = '1',
+        bool $enableTimeslot = true,
     ): QueueEntryWriter {
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy'] = 'Y-m-d';
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['hhmm'] = 'H:i';
@@ -577,9 +578,9 @@ class QueueEntryWriterTest extends UnitTestCase
         }
 
         $extensionConfigurationProvider = $this->createStub(ExtensionConfigurationProvider::class);
-        $extensionConfigurationProvider->method('getExtensionConfiguration')->willReturn([
-            'enableTimeslot' => $enableTimeslot,
-        ]);
+        $extensionConfigurationProvider->method('getExtensionSettings')->willReturn(
+            new ExtensionSettings(enableTimeslot: $enableTimeslot)
+        );
 
         return new QueueEntryWriter(
             $queueRepository ?? $this->createStub(QueueRepository::class),

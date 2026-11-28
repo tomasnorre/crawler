@@ -20,6 +20,7 @@ namespace AOE\Crawler\Tests\Unit\CrawlStrategy;
  */
 
 use AOE\Crawler\Configuration\ExtensionConfigurationProvider;
+use AOE\Crawler\Configuration\ExtensionSettings;
 use AOE\Crawler\CrawlStrategy\CrawlStrategyFactory;
 use AOE\Crawler\CrawlStrategy\FrontendSubRequestExecutionStrategy;
 use AOE\Crawler\CrawlStrategy\GuzzleExecutionStrategy;
@@ -58,7 +59,7 @@ class CrawlStrategyFactoryTest extends UnitTestCase
     public function createReturnsStrategyOfSettings(array $settings, string $expected): void
     {
         $configurationProvider = $this->createStub(ExtensionConfigurationProvider::class);
-        $configurationProvider->method('getExtensionConfiguration')->willReturn($settings);
+        $configurationProvider->method('getExtensionSettings')->willReturn(ExtensionSettings::fromArray($settings));
 
         $strategy = $this->createStub(CrawlStrategyInterface::class);
         $strategies = $this->createMock(ContainerInterface::class);

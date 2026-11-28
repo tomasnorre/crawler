@@ -132,7 +132,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
 
         $extensionSettings = GeneralUtility::makeInstance(
             ExtensionConfigurationProvider::class
-        )->getExtensionConfiguration();
+        )->getExtensionSettings();
 
         $pageId = MathUtility::forceIntegerInRange($typedInput->getIntArgument('page'), 0);
         if ($pageId === 0 || empty($this->pageRepository->getPage($pageId))) {
@@ -151,7 +151,7 @@ re-indexing or static publishing from command line.' . chr(10) . chr(10) .
             $this->eventDispatcher->dispatch(new InvokeQueueChangeEvent($reason));
         }
 
-        if ($extensionSettings['cleanUpOldQueueEntries']) {
+        if ($extensionSettings->cleanUpOldQueueEntries) {
             $this->queueRepository->cleanUpOldQueueEntries();
         }
 
