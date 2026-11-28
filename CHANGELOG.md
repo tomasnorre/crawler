@@ -28,6 +28,7 @@
 * The options and results of compiling the URLs are kept in `AOE\Crawler\Queue\CrawlRun`, which `QueueEntryWriter` and `PageTreeUrlCollector` take as parameter instead of keeping them in properties
 * `QueueEntryWriter`, `CrawlUrlHandler`, `BuildQueueCommand` and `BackendModuleStartCrawlingController` get the current time from the PSR-20 clock `Psr\Clock\ClockInterface` instead of `time()`
 * `QueueEntryWriter` is final
+* `AOE\Crawler\Domain\Model\Reason` keeps its values in typed properties instead of the row array, missing values default to `0` or `''`
 * `QueueEntryWriter::getCurrentTime()` is removed, use `Psr\Clock\ClockInterface`
 * `BuildQueueCommand` and `FlushQueueCommand` read their arguments and options with fixed types through the internal `AOE\Crawler\Command\TypedInput` instead of casting them inline
 * `BackendModuleScriptUrlService::buildScriptUrl()` throws a `RuntimeException` if the request has no backend route, instead of failing with an error
@@ -130,6 +131,8 @@
 * `AbstractBackendModuleController::setExtensionSettings()`
 * `AbstractBackendModuleController::$extensionSettings`
 * `QueueRepository`: all process related methods, `getUnprocessedItems()`, `countAllPendingItems()`, `countAllAssignedPendingItems()`, `cleanupQueue()`, `fetchRecordsToBeCrawled()`
+* `Reason::getRow()`
+* `Reason::$row`
 
 ## Crawler 13.0.1
 Crawler 13.0.1 was released on October 23rd, 2026

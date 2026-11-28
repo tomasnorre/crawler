@@ -30,6 +30,8 @@ namespace AOE\Crawler\Domain\Model;
 
 /**
  * @internal since v9.2.5
+ *
+ * @psalm-api data object passed to integrators with InvokeQueueChangeEvent
  */
 class Reason
 {
@@ -42,22 +44,39 @@ class Reason
     public const REASON_GUI_SUBMIT = 'crawler_gui_submit_reason';
     public const REASON_CLI_SUBMIT = 'crawler_cli_submit_reason';
 
+    protected int $uid;
+
+    protected int $creationDate;
+
+    protected int $backendUserId;
+
+    protected string $reason;
+
+    protected string $detailText;
+
+    protected int $queueEntryUid;
+
     /**
      * @param array<string, mixed> $row
      */
-    public function __construct(
-        protected array $row = []
-    ) {
+    public function __construct(array $row = [])
+    {
+        $this->uid = $this->intValue($row, 'uid');
+        $this->creationDate = $this->intValue($row, 'crdate');
+        $this->backendUserId = $this->intValue($row, 'cruser_id');
+        $this->reason = $this->stringValue($row, 'reason');
+        $this->detailText = $this->stringValue($row, 'detail_text');
+        $this->queueEntryUid = $this->intValue($row, 'queue_entry_uid');
     }
 
     public function setUid(int $uid): void
     {
-        $this->row['uid'] = $uid;
+        $this->uid = $uid;
     }
 
     public function getUid(): int
     {
-        return $this->row['uid'];
+        return $this->uid;
     }
 
     /**
@@ -65,33 +84,33 @@ class Reason
      */
     public function setCreationDate(int $time): void
     {
-        $this->row['crdate'] = $time;
+        $this->creationDate = $time;
     }
 
     public function getCreationDate(): int
     {
-        return $this->row['crdate'];
+        return $this->creationDate;
     }
 
     /**
      * This method can be used to set a user id of the user who has created this reason entry
      */
-    public function setBackendUserId(int $user_id): void
+    public function setBackendUserId(int $userId): void
     {
-        $this->row['cruser_id'] = $user_id;
+        $this->backendUserId = $userId;
     }
 
     public function getBackendUserId(): int
     {
-        return $this->row['cruser_id'];
+        return $this->backendUserId;
     }
 
     /**
-     * Method to set the type of the reason for this reason instance (see constances)
+     * Method to set the type of the reason for this reason instance (see constants)
      */
-    public function setReason(string $string): void
+    public function setReason(string $reason): void
     {
-        $this->row['reason'] = $string;
+        $this->reason = $reason;
     }
 
     /**
@@ -99,46 +118,54 @@ class Reason
      */
     public function getReason(): string
     {
-        return $this->row['reason'];
+        return $this->reason;
     }
 
     /**
      * This method can be used to assign a detail text to the crawler reason
      */
-    public function setDetailText(string $detail_text): void
+    public function setDetailText(string $detailText): void
     {
-        $this->row['detail_text'] = $detail_text;
+        $this->detailText = $detailText;
     }
 
     /**
-     * Returns the attachet detail text.
+     * Returns the attached detail text.
      */
     public function getDetailText(): string
     {
-        return $this->row['detail_text'];
+        return $this->detailText;
     }
 
     /**
      * This method is used to set the uid of the queue entry
      * where the reason is relevant for.
      */
-    public function setQueueEntryUid(int $entry_uid): void
+    public function setQueueEntryUid(int $entryUid): void
     {
-        $this->row['queue_entry_uid'] = $entry_uid;
+        $this->queueEntryUid = $entryUid;
     }
 
     public function getQueueEntryUid(): int
     {
-        return $this->row['queue_entry_uid'];
+        return $this->queueEntryUid;
     }
 
     /**
-     * Returns the properties of the object as array
-     *
-     * @return array<string, mixed>
+     * @param array<string, mixed> $row
      */
-    public function getRow(): array
+    private function intValue(array $row, string $key): int
     {
-        return $this->row;
+        $value = $row[$key] ?? 0;
+        return is_numeric($value) ? (int) $value : 0;
+    }
+
+    /**
+     * @param array<string, mixed> $row
+     */
+    private function stringValue(array $row, string $key): string
+    {
+        $value = $row[$key] ?? '';
+        return is_scalar($value) ? (string) $value : '';
     }
 }
