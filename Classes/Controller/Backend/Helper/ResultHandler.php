@@ -26,6 +26,8 @@ class ResultHandler
 {
     /**
      * Extract the log information from the current row and retrieve it as formatted string.
+     *
+     * @param array<string, mixed> $resultRow
      */
     public static function getResultLog(array $resultRow): string
     {
@@ -44,6 +46,9 @@ class ResultHandler
         return $content;
     }
 
+    /**
+     * @param array<array-key, mixed>|bool $requestContent
+     */
     public static function getResStatus(array|bool $requestContent): string
     {
         if (empty($requestContent)) {
@@ -66,6 +71,9 @@ class ResultHandler
 
     /**
      * Find Fe vars
+     *
+     * @param array<array-key, mixed> $resultData
+     * @return array<array-key, mixed>
      */
     public static function getResFeVars(array $resultData): array
     {
