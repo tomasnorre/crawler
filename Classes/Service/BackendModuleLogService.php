@@ -44,6 +44,7 @@ class BackendModuleLogService
      * @throws RouteNotFoundException
      *
      * @return array{0: non-empty-list<array<string, mixed>>, 1: list<array<string, mixed>>}
+     * @param array<array-key, array<string, mixed>> $logEntriesOfPage
      */
     public function addRows(
         array $logEntriesOfPage,
@@ -101,6 +102,9 @@ class BackendModuleLogService
 
     /**
      * @throws RouteNotFoundException
+     * @param array<string, mixed> $logEntry
+     * @param array<string, mixed> $contentArray
+     * @return array<string, mixed>
      */
     private function buildRow(
         array $logEntry,
@@ -131,6 +135,10 @@ class BackendModuleLogService
         return $this->buildColumnsInContentArray($rowData, $contentArray);
     }
 
+    /**
+     * @param array<string, mixed> $logEntry
+     * @return array<string, mixed>
+     */
     private function buildRowData(array $logEntry, string $showResultLog, string $resStatus): array
     {
         $parameters = json_decode((string) $logEntry['parameters'], true);
@@ -180,6 +188,11 @@ class BackendModuleLogService
         return $GLOBALS['LANG'];
     }
 
+    /**
+     * @param array<string, mixed> $vv
+     * @param array<string, mixed> $columns
+     * @return array<string, mixed>
+     */
     private function extractCsvExport(array $vv, array $columns): array
     {
         $resLog = ResultHandler::getResultLog($vv);
@@ -197,6 +210,11 @@ class BackendModuleLogService
         return $csvExport;
     }
 
+    /**
+     * @param bool|array<array-key, mixed> $resultData
+     * @param array<string, mixed> $rowData
+     * @return array<string, mixed>
+     */
     private function populateFeVars(string $showFeVars, bool|array $resultData, array $rowData): array
     {
         if ($showFeVars) {
@@ -207,6 +225,11 @@ class BackendModuleLogService
         return $rowData;
     }
 
+    /**
+     * @param array<string, mixed> $rowData
+     * @param array<string, mixed> $contentArray
+     * @return array<string, mixed>
+     */
     private function buildColumnsInContentArray(array $rowData, array $contentArray): array
     {
         foreach ($rowData as $field => $value) {

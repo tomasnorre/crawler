@@ -30,7 +30,6 @@ parameters:
                 - Classes/Controller/*
                 - Classes/CrawlStrategy/*
                 - Classes/Queue/*
-                - Classes/Service/*
 
     # composer require tomasvotruba/type-coverage --dev
     # Typed class constants need PHP 8.3, PHP 8.2 is still supported

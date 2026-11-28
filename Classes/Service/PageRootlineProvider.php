@@ -73,6 +73,9 @@ class PageRootlineProvider
         return $pages;
     }
 
+    /**
+     * @return array<string, mixed>|false
+     */
     private function getPage(int $pageId): array|false
     {
         $queryBuilder = $this->connectionPool->getQueryBuilderForTable('pages');

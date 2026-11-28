@@ -26,6 +26,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class BackendModuleScriptUrlService
 {
+    /**
+     * @param array<array-key, mixed> $queryParameters
+     */
     public function buildScriptUrl(
         ServerRequestInterface $request,
         string $elementName,
@@ -49,8 +52,10 @@ class BackendModuleScriptUrlService
         ) . '&' . $elementName . '=${value}');
     }
 
-    /*
+    /**
      * Build query string with affected checkbox/dropdown value removed.
+     *
+     * @param array<array-key, mixed> $queryParameters
      */
     private function getAdditionalQueryParams(string $keyToBeRemoved, array $queryParameters): string
     {

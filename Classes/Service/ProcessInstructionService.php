@@ -26,6 +26,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class ProcessInstructionService
 {
+    /**
+     * @param array<array-key, string> $incoming
+     */
     public function isAllowed(string $processInstruction, array $incoming): bool
     {
         if ($incoming === []) {

@@ -40,6 +40,7 @@ class PageService
      * Check if the given page should be crawled
      *
      * @return false|string false if the page should be crawled (not excluded), true / skipMessage if it should be skipped
+     * @param array<string, mixed> $pageRow
      */
     public function checkIfPageShouldBeSkipped(array $pageRow): false|string
     {
@@ -120,6 +121,9 @@ class PageService
         return false;
     }
 
+    /**
+     * @return list<int>
+     */
     private function getDisallowedDokTypes(): array
     {
         return [
